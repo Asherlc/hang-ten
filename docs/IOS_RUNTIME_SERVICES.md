@@ -102,8 +102,9 @@ Ten plan metadata, end collection, then finish the workout. It runs only when
 authorization is granted and the end date is later than the start date.
 Every builder stage reports failure back to `AppStore`; the local session stays
 logged, while the Progress card explains that the Health write failed. The
-saved interval is the plan's active duration from its actual start, excluding
-manual pause time and any delay before the athlete taps Log session.
+saved interval keeps the session's original start date and ends at the earlier
+of the planned active-duration end or the athlete's Log session time. This
+prevents an early completion from writing a future HealthKit end date.
 
 The denied-state button is labeled Open app settings because iOS does not
 provide a public deep link to the exact Health permission row. Authorization

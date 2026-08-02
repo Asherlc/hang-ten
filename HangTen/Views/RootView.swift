@@ -630,6 +630,29 @@ private struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+enum WorkoutSessionPolicy {
+    static func isFirstStart(routineStartedAt: Date?) -> Bool {
+        routineStartedAt == nil
+    }
+
+    static func runStartDate(routineStartedAt: Date?, now: Date) -> Date {
+        isFirstStart(routineStartedAt: routineStartedAt)
+            ? now.addingTimeInterval(3)
+            : now
+    }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        planDuration: TimeInterval,
+        loggedAt: Date
+    ) -> DateInterval {
+        DateInterval(
+            start: sessionStartedAt,
+            end: min(sessionStartedAt.addingTimeInterval(planDuration), loggedAt)
+        )
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -794,7 +817,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -862,7 +885,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
 					.frame(width: 224)
 			}
 		}
@@ -918,6 +941,7 @@ struct WorkoutView: View {
 			.font(.system(size: 13, weight: .bold, design: .rounded))
 			.foregroundStyle(Color.hangGreenDark)
 			.disabled(!canNavigate)
+			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
 			.accessibilityIdentifier("workout.routinePicker")
 		}
 	}
@@ -987,6 +1011,7 @@ struct WorkoutView: View {
             .font(.system(size: 13, weight: .bold, design: .rounded))
             .foregroundStyle(Color.hangGreenDark)
             .disabled(!canNavigate)
+            .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.routinePicker")
 
             Text(isComplete ? "Nice work." : countdown > 0 ? step.title : isResting ? "Step off and shake out" : step.title)
@@ -1061,7 +1086,7 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(isComplete: Bool, countdown: Int) -> some View {
+    private func controlGroup(step: WorkoutStep, isComplete: Bool, countdown: Int) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
 
@@ -1077,6 +1102,7 @@ struct WorkoutView: View {
             }
             .buttonStyle(.plain)
             .disabled(!canNavigate)
+            .accessibilityLabel("Skip step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.skipStep")
         }
     }
@@ -1098,7 +1124,7 @@ struct WorkoutView: View {
                         ? "Log session"
                         : countdown > 0
                             ? "Cancel countdown"
-                            : (startedAt == nil && pausedElapsed == 0 ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
+                            : (startedAt == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt) ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
                 )
                 if isComplete {
                     Image(systemName: "arrow.right")
@@ -1124,8 +1150,10 @@ struct WorkoutView: View {
             self.startedAt = nil
 			audioCoach.stop()
         } else {
-            let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
-            if pausedElapsed == 0 {
+            let now = Date()
+            let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
+            let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
+            if isFirstStart {
                 routineStartedAt = start
             }
             startedAt = start
@@ -1165,11 +1193,15 @@ struct WorkoutView: View {
             return
         }
         didComplete = true
-        let endDate = Date()
-        let startDate = routineStartedAt ?? endDate.addingTimeInterval(-plan.duration)
-		let activeWorkoutEnd = startDate.addingTimeInterval(plan.duration)
+		let loggedAt = Date()
+        let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
+		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+			sessionStartedAt: startDate,
+			planDuration: plan.duration,
+			loggedAt: loggedAt
+		)
 		audioCoach.stop()
-        store.markSessionComplete(plan, startDate: startDate, endDate: activeWorkoutEnd)
+        store.markSessionComplete(plan, startDate: interval.start, endDate: interval.end)
         dismiss()
     }
 

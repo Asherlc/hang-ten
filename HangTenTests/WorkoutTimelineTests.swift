@@ -52,6 +52,22 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(timeline.elapsedInStep(at: 65), 5)
     }
 
+    func testNegativeElapsedClampsToTheFirstStep() {
+        let timeline = WorkoutTimeline(steps: steps)
+
+        XCTAssertEqual(timeline.step(at: -1)?.id, "first")
+        XCTAssertEqual(timeline.elapsedInStep(at: -1), 0)
+    }
+
+    func testElapsedAtOrPastPlanDurationClampsToTheFinalStep() {
+        let timeline = WorkoutTimeline(steps: steps)
+
+        XCTAssertEqual(timeline.step(at: 90)?.id, "third")
+        XCTAssertEqual(timeline.elapsedInStep(at: 90), 10)
+        XCTAssertEqual(timeline.step(at: 120)?.id, "third")
+        XCTAssertEqual(timeline.elapsedInStep(at: 120), 10)
+    }
+
     func testSelectionTargetsDifferentStepStartsAndCurrentStepIsNoOp() {
         let timeline = WorkoutTimeline(steps: steps)
 
@@ -82,5 +98,33 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertNil(timeline.startOffset(for: "missing"))
         XCTAssertNil(timeline.selectionTarget(for: "missing", at: 0))
         XCTAssertNil(timeline.skipTarget(from: 0))
+    }
+}
+
+final class WorkoutSessionPolicyTests: XCTestCase {
+    func testPausedSessionAtStepOneIsNotAFirstStartAndResumesImmediately() {
+        let originalRoutineStart = Date(timeIntervalSinceReferenceDate: 1_000)
+        let resumedAt = Date(timeIntervalSinceReferenceDate: 1_120)
+
+        XCTAssertTrue(WorkoutSessionPolicy.isFirstStart(routineStartedAt: nil))
+        XCTAssertFalse(WorkoutSessionPolicy.isFirstStart(routineStartedAt: originalRoutineStart))
+        XCTAssertEqual(
+            WorkoutSessionPolicy.runStartDate(routineStartedAt: originalRoutineStart, now: resumedAt),
+            resumedAt
+        )
+    }
+
+    func testCompletionIntervalPreservesSessionStartAndNeverEndsAfterLogTime() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+        let loggedAt = Date(timeIntervalSinceReferenceDate: 1_120)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 600,
+            loggedAt: loggedAt
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, loggedAt)
     }
 }
