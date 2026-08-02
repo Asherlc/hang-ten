@@ -118,11 +118,11 @@ Create `Contents.json` with:
 Run:
 
 ```bash
-plutil -lint HangTen/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
+jq empty HangTen/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
 test -f HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
 ```
 
-Expected: `OK` from `plutil` and a successful file existence check.
+Expected: `jq` exits successfully and the file existence check succeeds.
 
 - [ ] **Step 3: Commit the asset metadata**
 
