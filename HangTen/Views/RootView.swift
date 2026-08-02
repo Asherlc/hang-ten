@@ -651,6 +651,7 @@ struct WorkoutView: View {
     @State private var completedSession: WorkoutSessionRecord?
     @State private var summarySession: WorkoutSessionRecord?
     @State private var didSaveSession = false
+    @State private var didInterruptRecorder = false
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -1119,6 +1120,7 @@ struct WorkoutView: View {
     }
 
     private func endSession() {
+        interruptRecorderIfNeeded()
         startedAt = nil
 		audioCoach.stop()
         dismiss()
@@ -1165,7 +1167,8 @@ struct WorkoutView: View {
 		let elapsed = currentElapsed(at: measurement.timestamp)
 		guard elapsed < plan.duration else { return }
 		let currentStep = step(at: elapsed)
-		guard !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
 
 		recorder.consume(
 			measurement,
@@ -1227,8 +1230,11 @@ struct WorkoutView: View {
 	}
 
 	private func interruptRecorderIfNeeded() {
-		guard !didComplete, startedAt != nil || pausedElapsed > 0 else { return }
-		recorder.interrupt(at: currentElapsed(at: Date()))
+		let now = Date()
+		let hasStartedActiveWork = startedAt.map { $0 <= now } ?? false
+		guard !didComplete, !didInterruptRecorder, hasStartedActiveWork || pausedElapsed > 0 else { return }
+		recorder.interrupt(at: currentElapsed(at: now))
+		didInterruptRecorder = true
 	}
 
     private func currentElapsed(at date: Date) -> TimeInterval {

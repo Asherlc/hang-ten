@@ -44,4 +44,31 @@ final class MotherboardModelsTests: XCTestCase {
         let data = try JSONEncoder().encode(record)
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data), record)
     }
+
+    func testRestStepsAreDistinctFromActiveStepsWhenTheirFullDurationIsRest() {
+        let rest = WorkoutStep(
+            id: "rest",
+            number: 1,
+            title: "Rest",
+            instruction: "Shake out.",
+            accessory: "Recovery",
+            duration: 10,
+            phase: .rest,
+            targets: []
+        )
+        let hang = WorkoutStep(
+            id: "hang",
+            number: 2,
+            title: "Hang",
+            instruction: "Hang on.",
+            accessory: "Active",
+            duration: 10,
+            phase: .hang,
+            targets: []
+        )
+
+        XCTAssertEqual(rest.activeDuration, rest.duration)
+        XCTAssertTrue(rest.isRestStep)
+        XCTAssertFalse(hang.isRestStep)
+    }
 }
