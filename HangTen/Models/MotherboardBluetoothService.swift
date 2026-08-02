@@ -72,10 +72,7 @@ final class MotherboardBluetoothService: ObservableObject {
     func disconnect() {
         wantsConnection = false
         reconnectAttempts = 0
-        transport.stopScan()
-        transport.setTXNotificationsEnabled(false)
-        transport.disconnect()
-        resetSession()
+        cleanupTransportSession()
         state = .disconnected
     }
 
@@ -133,14 +130,12 @@ final class MotherboardBluetoothService: ObservableObject {
 
         case .unauthorized:
             wantsConnection = false
-            transport.stopScan()
-            resetSession()
+            cleanupTransportSession()
             state = .unauthorized
 
         case .unknown, .resetting, .unsupported, .poweredOff:
             wantsConnection = false
-            transport.stopScan()
-            resetSession()
+            cleanupTransportSession()
             state = .bluetoothUnavailable
         }
     }
@@ -149,12 +144,15 @@ final class MotherboardBluetoothService: ObservableObject {
         for event in parser.append(data, receivedAt: receivedAt) {
             switch event {
             case .calibration(let row):
+                guard (0...3).contains(row.sensor), (0...3).contains(row.calibrationPoint) else {
+                    continue
+                }
                 calibrationRows.removeAll {
                     $0.sensor == row.sensor && $0.calibrationPoint == row.calibrationPoint
                 }
                 calibrationRows.append(row)
 
-                guard calibrationRows.count == 16 else { continue }
+                guard hasCompleteCalibration else { continue }
                 calibration = MotherboardCalibration(rows: calibrationRows)
                 startStreaming()
 
@@ -173,6 +171,8 @@ final class MotherboardBluetoothService: ObservableObject {
                 state = .streaming
 
             case .error(let message):
+                wantsConnection = false
+                cleanupTransportSession()
                 lastError = message
                 state = .failed
             }
@@ -180,9 +180,7 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     private func handleDisconnect(_ message: String?) {
-        transport.stopScan()
-        transport.setTXNotificationsEnabled(false)
-        resetSession()
+        cleanupTransportSession()
         lastError = message
 
         guard wantsConnection, reconnectAttempts < 3 else {
@@ -193,6 +191,23 @@ final class MotherboardBluetoothService: ObservableObject {
         reconnectAttempts += 1
         state = .scanning
         transport.startScan()
+    }
+
+    private var hasCompleteCalibration: Bool {
+        (0..<4).allSatisfy { sensor in
+            (0..<4).allSatisfy { calibrationPoint in
+                calibrationRows.contains {
+                    $0.sensor == sensor && $0.calibrationPoint == calibrationPoint
+                }
+            }
+        }
+    }
+
+    private func cleanupTransportSession() {
+        transport.stopScan()
+        transport.setTXNotificationsEnabled(false)
+        transport.disconnect()
+        resetSession()
     }
 
     private func resetSession() {
@@ -246,6 +261,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     func disconnect() {
         stopScan()
         guard let selectedPeripheral else { return }
+        clearSelectedPeripheral()
         centralManager.cancelPeripheralConnection(selectedPeripheral)
     }
 
@@ -278,6 +294,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     }
 
     private func reportFailure(_ error: Error?, fallback: String) {
+        disconnect()
         eventHandler?(.disconnected(error?.localizedDescription ?? fallback))
     }
 }
@@ -325,13 +342,11 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
 
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         guard peripheral == selectedPeripheral else { return }
-        clearSelectedPeripheral()
         reportFailure(error, fallback: "Could not connect to Motherboard.")
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         guard peripheral == selectedPeripheral else { return }
-        clearSelectedPeripheral()
         reportFailure(error, fallback: "Motherboard disconnected.")
     }
 }

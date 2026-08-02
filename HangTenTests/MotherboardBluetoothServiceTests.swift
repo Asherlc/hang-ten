@@ -21,6 +21,32 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(transport.commands, [Data("C".utf8), Data("S30".utf8)])
     }
 
+    func testCalibrationRequiresEverySensorAndValidPointBeforeStartingStream() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connect(service, with: transport)
+
+        for point in 0..<16 {
+            transport.emit(.notification(
+                Data("0,\(point),1,\(point * 100),\r\n".utf8),
+                Date(timeIntervalSince1970: Double(point))
+            ))
+        }
+
+        XCTAssertEqual(transport.commands, [Data("C".utf8)])
+
+        for sensor in 0..<4 {
+            for point in 0..<4 {
+                transport.emit(.notification(
+                    Data("\(sensor),\(point),\(point),\(point * 100),\r\n".utf8),
+                    Date(timeIntervalSince1970: Double(sensor * 4 + point))
+                ))
+            }
+        }
+
+        XCTAssertEqual(transport.commands, [Data("C".utf8), Data("S30".utf8)])
+    }
+
     func testDisconnectPublishesUnavailableStateWithoutInventingMeasurement() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
@@ -94,8 +120,41 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         }
 
         XCTAssertEqual(transport.startScanCount, 4)
+        XCTAssertEqual(transport.disconnectCount, 4)
+        XCTAssertFalse(transport.hasSelectedPeripheral)
         XCTAssertEqual(service.state, .disconnected)
         XCTAssertEqual(service.lastError, "lost")
+    }
+
+    func testDisconnectCleansTransportAndSessionBeforeRetrying() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connect(service, with: transport)
+
+        transport.emit(.disconnected("lost"))
+
+        XCTAssertEqual(
+            transport.operations.suffix(4),
+            ["stopScan", "notify:off", "disconnect", "scan"]
+        )
+        XCTAssertEqual(transport.disconnectCount, 1)
+        XCTAssertFalse(transport.hasSelectedPeripheral)
+        XCTAssertNil(service.latestMeasurement)
+        XCTAssertNil(service.batteryValue)
+        XCTAssertEqual(service.lastError, "lost")
+        XCTAssertEqual(service.state, .scanning)
+    }
+
+    func testExplicitDisconnectClearsSelectedTransportImmediately() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connect(service, with: transport)
+
+        service.disconnect()
+
+        XCTAssertEqual(transport.disconnectCount, 1)
+        XCTAssertFalse(transport.hasSelectedPeripheral)
+        XCTAssertEqual(service.state, .disconnected)
     }
 
     private func connect(
@@ -116,6 +175,8 @@ private final class FakeMotherboardTransport: MotherboardTransport {
     var operations: [String] = []
     var startScanCount = 0
     var connectCount = 0
+    var disconnectCount = 0
+    var hasSelectedPeripheral = false
     func startScan() {
         startScanCount += 1
         operations.append("scan")
@@ -123,9 +184,14 @@ private final class FakeMotherboardTransport: MotherboardTransport {
     func stopScan() { operations.append("stopScan") }
     func connect(to device: MotherboardDiscoveredDevice) {
         connectCount += 1
+        hasSelectedPeripheral = true
         operations.append("connect")
     }
-    func disconnect() { operations.append("disconnect") }
+    func disconnect() {
+        disconnectCount += 1
+        hasSelectedPeripheral = false
+        operations.append("disconnect")
+    }
     func setTXNotificationsEnabled(_ enabled: Bool) {
         operations.append(enabled ? "notify:on" : "notify:off")
     }

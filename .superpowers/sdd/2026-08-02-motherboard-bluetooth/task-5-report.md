@@ -22,6 +22,15 @@ Implemented the Task 5 CoreBluetooth transport and `@MainActor` Motherboard serv
 - GREEN passed with the same bounded build-for-testing command: `** TEST BUILD SUCCEEDED **`.
 - XCTest execution was intentionally not invoked; this Task 5 handoff requires bounded build-for-testing rather than waiting on simulator runtime availability.
 
+## Review follow-up
+
+- Calibration now starts streaming only when every `(sensor, calibrationPoint)` pair in `0...3 × 0...3` has arrived; rows with out-of-range points cannot contribute.
+- The fake transport now verifies that a disconnect clears its selected connection before retrying or reporting final disconnection. New tests cover incomplete/out-of-range calibration, retry cleanup, and explicit disconnect cleanup.
+- `CoreBluetoothMotherboardTransport.disconnect()` clears its selected peripheral synchronously before cancelling it. Failure reporting and service error/disconnect handling stop scanning/notifications, disconnect, clear parser/calibration/measurement state, and only then publish failure or retry state.
+- The bounded focused `build-for-testing` command passed again after the review fix.
+
 ## Commit
 
 `feat: connect to Motherboard over CoreBluetooth`
+
+Review follow-up commit: `fix: harden Motherboard calibration and disconnect cleanup`
