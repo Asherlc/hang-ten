@@ -44,6 +44,23 @@ For a three-second segment, speak the short start command and the complete
 3-2-1 as one utterance; do not let periodic view updates interrupt or skip a
 count in such a short interval.
 
+## Workout step navigation
+
+A new workout session starts at step 1. Step selection and Skip step are
+disabled until the initial three-second countdown has finished, and remain
+disabled while that countdown is running.
+
+The Routine sheet lets the athlete select any other step directly. A running
+seek rebases the elapsed clock at the selected step's start and stays running;
+a paused seek replaces the paused elapsed position and stays paused. Selecting
+the current step is a no-op. Skip step seeks to the end of the current
+`WorkoutStep`, including its timed rest interval, so it advances to the next
+step's start; skipping the final step reaches the existing completion state.
+
+Every seek stops the active audio utterance and re-anchors audio to the new
+elapsed position. The normal cue for the selected step can therefore play once
+without a stale cue continuing from the prior step.
+
 ## Portrait and landscape
 
 The target supports portrait, landscape-left, and landscape-right on iPhone,
