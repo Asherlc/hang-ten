@@ -34,6 +34,7 @@
 		AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000028 /* WorkoutSessionStore.swift */; };
 		AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */; };
 		AA0000000000000000000027 /* MotherboardBluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000030 /* MotherboardBluetoothService.swift */; };
+		AA0000000000000000000028 /* AppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000031 /* AppStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		BB0000000000000000000028 /* WorkoutSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardBluetoothServiceTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000030 /* MotherboardBluetoothService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardBluetoothService.swift; sourceTree = "<group>"; };
+		BB0000000000000000000031 /* AppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
 				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
 				BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */,
+				BB0000000000000000000031 /* AppStoreTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
 				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
 				AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */,
+				AA0000000000000000000028 /* AppStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

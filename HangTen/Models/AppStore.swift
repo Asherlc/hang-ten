@@ -1,17 +1,33 @@
 import Foundation
 import Combine
 
+@MainActor
 final class AppStore: ObservableObject {
     @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
     @Published var sessionsCompleted = 0
     @Published var lastSessionTitle: String?
+	@Published private(set) var sessionHistory: [WorkoutSessionRecord]
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
+	private let motherboardBluetoothService: MotherboardBluetoothService
+	private let motherboardSettingsStore: MotherboardSettingsStore
+	private let workoutSessionStore: WorkoutSessionStoring
 	private let healthKitService: HealthKitService
 
-	init(healthKitService: HealthKitService = HealthKitService()) {
+	init(
+		healthKitService: HealthKitService = HealthKitService(),
+		motherboardBluetoothService: MotherboardBluetoothService? = nil,
+		motherboardSettingsStore: MotherboardSettingsStore = MotherboardSettingsStore(),
+		workoutSessionStore: WorkoutSessionStoring = WorkoutSessionStore()
+	) {
 		self.healthKitService = healthKitService
+		self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
+			transport: CoreBluetoothMotherboardTransport()
+		)
+		self.motherboardSettingsStore = motherboardSettingsStore
+		self.workoutSessionStore = workoutSessionStore
+		sessionHistory = workoutSessionStore.sessions
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
@@ -83,7 +99,16 @@ final class AppStore: ObservableObject {
         return board.holds.filter { $0.kind == kind }.map(\.id)
     }
 
-    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+    func markSessionComplete(
+		_ plan: TrainingPlan,
+		startDate: Date,
+		endDate: Date,
+		session: WorkoutSessionRecord? = nil
+	) {
+		if let session {
+			workoutSessionStore.append(session)
+			sessionHistory = workoutSessionStore.sessions
+		}
         sessionsCompleted += 1
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil
