@@ -139,4 +139,3 @@ and force accuracy, firmware compatibility, and real disconnect timing.
 
 - `43a7c62 docs: add Motherboard simulator review flow`
 - Follow-up commit: `fix: repeat Motherboard simulator stream`
-
