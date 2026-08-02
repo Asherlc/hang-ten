@@ -23,6 +23,44 @@
 
 ---
 
+### Task 0: Persist the subagent workflow instruction
+
+**Files:**
+- Create: `AGENTS.md`
+
+**Interfaces:**
+- Produces a repository-level instruction that requires future implementation
+  and configuration work to use a fresh subagent with review checkpoints.
+
+- [ ] **Step 1: Add the repository instruction.**
+
+  Create `AGENTS.md` with this exact policy:
+
+  ```markdown
+  # Agent instructions
+
+  ## Delegation
+
+  Use a fresh subagent for every implementation task or configuration change.
+  When an approved implementation plan exists, follow subagent-driven
+  development with per-task implementation and review checkpoints. Do not
+  make implementation changes directly in the controller session.
+  ```
+
+- [ ] **Step 2: Check the instruction file.**
+
+  Run `rtk git diff --check` and confirm the file contains the policy above
+  without unrelated repository instructions.
+
+- [ ] **Step 3: Commit the repository instruction.**
+
+  ```sh
+  rtk git add AGENTS.md
+  rtk git commit -m "chore: require subagent implementation workflow"
+  ```
+
+---
+
 ### Task 1: Add the XCTest target and write the red timeline tests
 
 **Files:**
