@@ -156,7 +156,9 @@ routine change, preview every distinct hold target and finger cue.
   select a later step and confirm that the workout keeps running from that
   step's start. Pause, select an earlier step, and confirm it stays paused at
   that step's start. Tap the current row and confirm it is a no-op.
-- Skip a timed-rest step and confirm the next step starts after the full step
+- Skip during timed work and confirm that it advances at the current step's
+  full boundary, including any following rest.
+- Skip during timed rest and confirm the next step starts after the full step
   duration, including rest. Skip the final step and confirm the existing
   completion state appears. Repeat the Routine and Skip step checks in both
   portrait and landscape, inspecting the resulting timer, board highlights,
