@@ -64,7 +64,7 @@ struct MotherboardProtocolParser {
 
     private static func calibrationRow(from line: String) -> MotherboardCalibrationRow? {
         let fields = line.split(separator: ",", omittingEmptySubsequences: false)
-        guard fields.count == 4,
+        guard fields.count == 4 || (fields.count == 5 && fields[4].isEmpty),
               let sensor = Int(fields[0]), (0...3).contains(sensor),
               let calibrationPoint = Int(fields[1]),
               let massKGF = Double(fields[2]), massKGF.isFinite,

@@ -24,6 +24,16 @@ final class MotherboardProtocolTests: XCTestCase {
         ])
     }
 
+    func testParserAcceptsOneEmptyTrailingCalibrationField() {
+        var parser = MotherboardProtocolParser()
+        let date = Date(timeIntervalSince1970: 1)
+        let data = Data("0,0,1,0,\r\n0,0,1,0,extra\r\n0,0,1,0,,\r\n".utf8)
+
+        XCTAssertEqual(parser.append(data, receivedAt: date), [
+            .calibration(MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 1, adc: 0))
+        ])
+    }
+
     func testCalibrationInterpolatesAndSubtractsPerSensorTare() {
         let calibration = MotherboardCalibration(rows: [
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 0, adc: 0),
