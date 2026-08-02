@@ -9,20 +9,25 @@ final class AppStore: ObservableObject {
 	@Published private(set) var healthAuthorizationError: String?
 
 	private let healthKitService: HealthKitService
+	private let planStore: PlanLibraryStore
 
-	init(healthKitService: HealthKitService = HealthKitService()) {
+	init(
+		planStore: PlanLibraryStore = .builtIn,
+		healthKitService: HealthKitService = HealthKitService()
+	) {
+		self.planStore = planStore
 		self.healthKitService = healthKitService
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
     var plans: [TrainingPlan] {
-        PlanCatalog.all.filter { plan in
+        planStore.plans.filter { plan in
             plan.boardID == nil || plan.boardID == selectedBoard.id
         }
     }
 
     var featuredPlan: TrainingPlan {
-        plans.first ?? PlanCatalog.metoliusTenMinute
+        plans.first ?? planStore.plan(id: "metolius.compact-ii.ten-minute") ?? PlanCatalog.metoliusTenMinute
     }
 
     func board(for plan: TrainingPlan) -> TrainingBoard {

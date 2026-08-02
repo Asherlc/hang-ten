@@ -23,6 +23,9 @@ Fingy useful: the current cue highlights the holds to use on a board map.
 - A reusable board design language: future hangboards provide normalized
   silhouette, plane, and hold geometry while sharing the same sculpted
   materials, depth classes, mirroring, highlights, and hit testing.
+- Versioned `Codable` plan definitions with reusable workout blocks, semantic
+  board mappings, source metadata, and validation before a routine reaches the
+  timer.
 
 ## Run
 
@@ -41,29 +44,38 @@ xcodebuild -project HangTen.xcodeproj \
 1. Add another TrainingBoard to BoardCatalog.all in
    HangTen/Models/TrainingModels.swift.
 2. Give each hold a stable board-scoped ID and normalized HoldFrame.
-3. Create a board-specific `BoardDesign` extension beside
+3. Verify the board's silhouette, hold count, row order, spacing, and depth
+   against the manufacturer's product imagery. Keep the product/reference URL
+   with the board metadata.
+4. Create a board-specific `BoardDesign` extension beside
    `MetoliusCompactIIDesign.swift`. Describe only normalized geometry:
    silhouette, material planes, and hold pieces. Paired geometry should be
    defined once and mirrored.
-4. Register the design in `BoardDesignCatalog`. `BoardDesignLanguage.swift`
+5. Register the design in `BoardDesignCatalog`. `BoardDesignCatalog` exposes
+   coverage checks so every catalog hold has bespoke geometry.
+   `BoardDesignLanguage.swift`
    resolves every piece through the shared textureless sculpted-wood renderer.
    The same contact path is used for the inactive cavity, active fill, and
    derived interaction region, so highlights cannot drift out of alignment.
-5. Set each hold's `gripType` and `cueStyle` so the board map and hand diagram
+6. Set each hold's `gripType` and `cueStyle` so the board map and hand diagram
    describe the intended contact position.
-6. Add a TrainingPlan that references the new board ID, or use
-   HoldTarget.kind(...) for a plan that should resolve by hold type.
+7. Add a semantic board mapping in the versioned plan library, then reference
+   semantic target IDs from plan definitions. Do not bake a physical board's
+   hold IDs into a reusable routine.
 
-Boards without bespoke artwork continue to use the neutral vector fallback.
-Board photos are reference metadata only; runtime geometry remains
-deterministic and scalable.
+Every catalog board is expected to have bespoke artwork and complete hold
+coverage; `BoardDesignCatalog.catalogCoverageIssues` makes missing geometry
+visible during review. Board photos are reference metadata only; runtime
+geometry remains deterministic and scalable.
 
-Official routines live in `PlanCatalog` in
-`HangTen/Models/TrainingModels.swift`. Each routine keeps its source label and
-URL next to its board-specific hold targets. The timer supports variable hang
-durations so short max hangs, repeaters, long density intervals, and extended
-force-board recovery periods are represented without rounding everything to a
-ten-second cue.
+Official routines resolve through `PlanCatalog` from the validated
+`PlanLibraryDefinition` in `HangTen/Models/PlanStorage.swift`. Definitions
+carry a schema version, reusable block references, semantic board targets,
+source metadata, and stable step IDs. `PlanLibraryStore` can decode/encode or
+read/write the same document format for future bundled or user-authored
+libraries. The timer supports variable hang durations so short max hangs,
+repeaters, long density intervals, and extended force-board recovery periods
+are represented without rounding everything to a ten-second cue.
 
 Manufacturer routines should be added with their official source URL and
 source label. The catalog is intentionally source-linked so board-specific

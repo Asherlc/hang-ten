@@ -5,6 +5,28 @@ enum BoardDesignCatalog {
         designs[boardID]
     }
 
+    /// A board can only be considered production-ready when its bespoke design
+    /// covers every hold in the board catalog. This keeps a future board from
+    /// silently falling back to a generic rectangle after its photo has been
+    /// added.
+    static func coverageIssues(for board: TrainingBoard) -> [String] {
+        var issues: [String] = []
+        if designs[board.id] == nil {
+            issues.append("Missing bespoke design for board \"\(board.id)\".")
+            return issues
+        }
+
+        let designedHoldIDs = Set(designs[board.id]?.holds.map(\.holdID) ?? [])
+        for holdID in board.holds.map(\.id) where !designedHoldIDs.contains(holdID) {
+            issues.append("Board \"\(board.id)\" has no designed geometry for hold \"\(holdID)\".")
+        }
+        return issues
+    }
+
+    static var catalogCoverageIssues: [String] {
+        BoardCatalog.all.flatMap(coverageIssues(for:))
+    }
+
     private static let designs: [String: BoardDesign] = [
         BoardCatalog.compactII.id: .metoliusCompactII
     ]
@@ -190,16 +212,6 @@ extension BoardDesign {
                 shape: .roundedRect(cornerRadiusFraction: 0.50),
                 role: .topSeam
             ),
-            BoardLayer(
-                frame: CGRect(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
-                shape: outerLower,
-                role: .shelf
-            ),
-            BoardLayer(
-                frame: CGRect(x: 0.805, y: 0.620, width: 0.160, height: 0.245),
-                shape: outerLower.mirroredHorizontally,
-                role: .shelf
-            )
         ]
 
         var holds: [BoardHoldPiece] = []
@@ -234,11 +246,11 @@ extension BoardDesign {
 
         holds.append(
             BoardHoldPiece(
-                id: "sloper-center-surface",
+                id: "sloper-center-upper",
                 holdID: "sloper-center",
-                frame: CGRect(x: 0.352, y: 0.058, width: 0.296, height: 0.105),
-                shape: .roundedRect(cornerRadiusFraction: 0.025),
-                treatment: .surface
+                frame: CGRect(x: 0.431, y: 0.365, width: 0.136, height: 0.148),
+                shape: .roundedRect(cornerRadiusFraction: 0.35),
+                treatment: .recess(.deepSlot)
             )
         )
 
@@ -250,12 +262,20 @@ extension BoardDesign {
             shape: outerUpper,
             treatment: .shelf(.broadJug)
         )
+        addPair(
+            leftID: "jug-left",
+            rightID: "jug-right",
+            suffix: "lower-shelf",
+            leftFrame: CGRect(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
+            shape: outerLower,
+            treatment: .shelf(.broadJug)
+        )
 
         addPair(
             leftID: "edge-29-left",
             rightID: "edge-29-right",
             suffix: "upper",
-            leftFrame: CGRect(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
+            leftFrame: CGRect(x: 0.217, y: 0.365, width: 0.107, height: 0.148),
             shape: .roundedRect(cornerRadiusFraction: 0.40),
             treatment: .recess(.deepSlot)
         )
@@ -263,25 +283,16 @@ extension BoardDesign {
             leftID: "pocket-4-deep-left",
             rightID: "pocket-4-deep-right",
             suffix: "upper",
-            leftFrame: CGRect(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
+            leftFrame: CGRect(x: 0.344, y: 0.370, width: 0.067, height: 0.147),
             shape: .roundedRect(cornerRadiusFraction: 0.44),
             treatment: .recess(.deepSlot)
-        )
-        holds.append(
-            BoardHoldPiece(
-                id: "upper-center-edge",
-                holdID: "upper-center-edge",
-                frame: CGRect(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
-                shape: .roundedRect(cornerRadiusFraction: 0.35),
-                treatment: .recess(.deepSlot)
-            )
         )
 
         addPair(
             leftID: "edge-19-left",
             rightID: "edge-19-right",
             suffix: "lower",
-            leftFrame: CGRect(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
+            leftFrame: CGRect(x: 0.228, y: 0.733, width: 0.107, height: 0.140),
             shape: .roundedRect(cornerRadiusFraction: 0.40),
             treatment: .recess(.shallowSlot)
         )
@@ -289,7 +300,7 @@ extension BoardDesign {
             leftID: "pocket-3-shallow-left",
             rightID: "pocket-3-shallow-right",
             suffix: "lower",
-            leftFrame: CGRect(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
+            leftFrame: CGRect(x: 0.348, y: 0.733, width: 0.067, height: 0.140),
             shape: .roundedRect(cornerRadiusFraction: 0.44),
             treatment: .recess(.shallowSlot)
         )

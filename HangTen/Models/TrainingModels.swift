@@ -12,7 +12,7 @@ struct HoldFrame: Hashable {
     }
 }
 
-enum HoldKind: String, CaseIterable, Hashable, Identifiable {
+enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case edge
     case pocket
@@ -63,7 +63,7 @@ enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
     }
 }
 
-enum GripType: String, CaseIterable, Hashable, Identifiable {
+enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case openHand
     case halfCrimp
     case fullCrimp
@@ -160,7 +160,7 @@ struct HoldTarget: Hashable {
     }
 }
 
-enum WorkoutPhase: String, Hashable {
+enum WorkoutPhase: String, Codable, Hashable {
     case warmUp
     case hang
     case rest
@@ -276,6 +276,31 @@ struct TrainingPlan: Identifiable, Hashable {
     let sourceURL: URL
     let boardID: String?
     let steps: [WorkoutStep]
+    /// Metadata is populated when a plan is resolved from the versioned plan
+    /// library. The default keeps the legacy seed initializer source-compatible.
+    let metadata: PlanMetadata?
+
+    init(
+        id: String,
+        title: String,
+        subtitle: String,
+        level: String,
+        sourceLabel: String,
+        sourceURL: URL,
+        boardID: String?,
+        steps: [WorkoutStep],
+        metadata: PlanMetadata? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+        self.level = level
+        self.sourceLabel = sourceLabel
+        self.sourceURL = sourceURL
+        self.boardID = boardID
+        self.steps = steps
+        self.metadata = metadata
+    }
 
     var duration: TimeInterval {
         steps.reduce(0) { $0 + $1.duration }
@@ -416,7 +441,10 @@ enum BoardCatalog {
     }
 }
 
-enum PlanCatalog {
+/// The original in-code plan seed is retained as a migration fixture while
+/// the app moves to `PlanLibraryDefinition` storage. It is intentionally not
+/// used by the UI directly; `PlanCatalog` is provided by PlanStorage.swift.
+enum LegacyPlanSeedCatalog {
     static let metoliusTenMinute = TrainingPlan(
         id: "metolius.compact-ii.ten-minute",
         title: "Metolius 10-minute sequence",
