@@ -3,6 +3,33 @@ import XCTest
 
 @MainActor
 final class AppStoreTests: XCTestCase {
+    func testLaunchRestoresDashboardCountersFromNewestSavedHistory() {
+        let defaults = makeDefaults()
+        let sessionStore = WorkoutSessionStore(defaults: defaults)
+        let older = workoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planTitle: "Older plan",
+            recordedAt: 20
+        )
+        let newer = workoutSessionRecord(
+            id: UUID(uuidString: "BBBBBBBB-CCCC-DDDD-EEEE-FFFFFFFFFFFF")!,
+            planTitle: "Newest plan",
+            recordedAt: 30
+        )
+        sessionStore.append(older)
+        sessionStore.append(newer)
+
+        let store = AppStore(
+            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
+            workoutSessionStore: sessionStore
+        )
+
+        XCTAssertEqual(store.sessionHistory, [newer, older])
+        XCTAssertEqual(store.sessionsCompleted, 2)
+        XCTAssertEqual(store.lastSessionTitle, "Newest plan")
+    }
+
     func testCompletionPersistsSuppliedRecordAndExposesSessionHistory() {
         let defaults = makeDefaults()
         let sessionStore = WorkoutSessionStore(defaults: defaults)
@@ -45,7 +72,7 @@ final class AppStoreTests: XCTestCase {
 
         XCTAssertEqual(store.sessionHistory, [existingRecord])
         XCTAssertEqual(sessionStore.sessions, [existingRecord])
-        XCTAssertEqual(store.sessionsCompleted, 1)
+        XCTAssertEqual(store.sessionsCompleted, 2)
         XCTAssertEqual(store.lastSessionTitle, PlanCatalog.metoliusTenMinute.title)
     }
 
@@ -56,14 +83,18 @@ final class AppStoreTests: XCTestCase {
         return defaults
     }
 
-    private func workoutSessionRecord() -> WorkoutSessionRecord {
+    private func workoutSessionRecord(
+        id: UUID = UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+        planTitle: String = "Plan",
+        recordedAt: TimeInterval = 20
+    ) -> WorkoutSessionRecord {
         WorkoutSessionRecord(
-            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            id: id,
             planID: "plan",
-            planTitle: "Plan",
-            recordedAt: Date(timeIntervalSince1970: 20),
-            startDate: Date(timeIntervalSince1970: 10),
-            endDate: Date(timeIntervalSince1970: 20),
+            planTitle: planTitle,
+            recordedAt: Date(timeIntervalSince1970: recordedAt),
+            startDate: Date(timeIntervalSince1970: recordedAt - 10),
+            endDate: Date(timeIntervalSince1970: recordedAt),
             motherboardIdentifier: nil,
             batteryValue: nil,
             steps: []

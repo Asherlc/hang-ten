@@ -133,7 +133,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.latestMeasurement?.timestamp, date)
     }
 
-    func testUnauthorizedStateRemainsUnauthorizedWhenPowerChanges() {
+    func testUnauthorizedStateRecoversWhenBluetoothBecomesPoweredOn() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
 
@@ -141,8 +141,17 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.powerChanged(.unauthorized))
         XCTAssertEqual(service.state, .unauthorized)
 
-        transport.emit(.powerChanged(.poweredOn))
+        transport.emit(.powerChanged(.unauthorized))
         XCTAssertEqual(service.state, .unauthorized)
+
+        transport.emit(.powerChanged(.poweredOn))
+
+        XCTAssertEqual(service.state, .idle)
+        XCTAssertEqual(transport.startScanCount, 1)
+
+        service.connect()
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertEqual(transport.startScanCount, 2)
     }
 
     func testPoweredOnRecoversFromPoweredOffAndAllowsExplicitRescan() {
@@ -221,6 +230,30 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.tareSamplesCollected, 0)
         service.tare()
         XCTAssertFalse(service.isTaring)
+    }
+
+    func testStopStreamingCleansUpToIdleAndAllowsExplicitReconnect() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 100)
+
+        service.stopStreaming()
+
+        XCTAssertEqual(service.state, .idle)
+        XCTAssertNil(service.latestMeasurement)
+        XCTAssertNil(service.batteryValue)
+        XCTAssertNil(service.connectedDeviceID)
+        XCTAssertEqual(
+            Array(transport.operations.suffix(3)),
+            ["stopScan", "notify:off", "disconnect"]
+        )
+
+        service.connect()
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertEqual(transport.operations.last, "scan")
+        XCTAssertEqual(transport.startScanCount, 2)
     }
 
     func testIntentionalNotificationDisableIsNotReportedAsFailure() {

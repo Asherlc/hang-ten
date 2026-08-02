@@ -119,8 +119,11 @@ final class MotherboardBluetoothService: ObservableObject {
 
     func stopStreaming() {
         guard state == .streaming else { return }
-        transport.setTXNotificationsEnabled(false)
-        state = .calibrating
+        wantsConnection = false
+        reconnectAttempts = 0
+        cleanupTransportSession()
+        lastError = nil
+        state = .idle
     }
 
     func tare() {
@@ -173,10 +176,11 @@ final class MotherboardBluetoothService: ObservableObject {
 
         switch powerState {
         case .poweredOn:
-            guard state == .bluetoothUnavailable,
+            guard (state == .bluetoothUnavailable || state == .unauthorized),
                   previousPowerState == .poweredOff ||
                     previousPowerState == .unknown ||
-                    previousPowerState == .resetting else { return }
+                    previousPowerState == .resetting ||
+                    previousPowerState == .unauthorized else { return }
             lastError = nil
             state = .idle
 

@@ -27,7 +27,10 @@ final class AppStore: ObservableObject {
 		)
 		self.motherboardSettingsStore = motherboardSettingsStore
 		self.workoutSessionStore = workoutSessionStore
-		sessionHistory = workoutSessionStore.sessions
+		let loadedSessions = workoutSessionStore.sessions
+		sessionHistory = loadedSessions
+		sessionsCompleted = loadedSessions.count
+		lastSessionTitle = loadedSessions.first?.planTitle
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
