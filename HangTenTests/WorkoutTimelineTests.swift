@@ -71,6 +71,7 @@ final class WorkoutTimelineTests: XCTestCase {
         let timeline = WorkoutTimeline(steps: steps)
 
         XCTAssertEqual(timeline.skipTarget(from: 85), 90)
+        XCTAssertEqual(timeline.selectionTarget(for: "third", at: 65), 80)
     }
 
     func testEmptyTimelineHasNoNavigationTargets() {

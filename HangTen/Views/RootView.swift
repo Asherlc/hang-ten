@@ -650,6 +650,10 @@ struct WorkoutView: View {
         store.board(for: plan)
     }
 
+    private var timeline: WorkoutTimeline {
+        WorkoutTimeline(steps: plan.steps)
+    }
+
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
@@ -1138,25 +1142,43 @@ struct WorkoutView: View {
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
-        var cursor: TimeInterval = 0
-        for step in plan.steps {
-            if elapsed < cursor + step.duration {
-                return step
-            }
-            cursor += step.duration
-        }
-        return plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+        timeline.step(at: elapsed) ?? plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
     }
 
     private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
-        var cursor: TimeInterval = 0
-        for step in plan.steps {
-            if elapsed < cursor + step.duration {
-                return max(0, elapsed - cursor)
-            }
-            cursor += step.duration
+        timeline.elapsedInStep(at: elapsed)
+    }
+
+    private var canNavigate: Bool {
+        let now = Date()
+        return routineStartedAt != nil
+            && countdownRemaining(at: now) == 0
+            && currentElapsed(at: now) < plan.duration
+    }
+
+    private func seek(to targetElapsed: TimeInterval) {
+        let target = min(max(0, targetElapsed), plan.duration)
+        pausedElapsed = target
+        if startedAt != nil {
+            startedAt = Date()
         }
-        return plan.steps.last?.duration ?? 0
+        audioCoach.stop()
+    }
+
+    private func jump(to step: WorkoutStep) {
+        guard canNavigate else { return }
+
+        let elapsed = currentElapsed(at: Date())
+        guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
+        seek(to: target)
+    }
+
+    private func skipCurrentStep() {
+        guard canNavigate else { return }
+
+        let elapsed = currentElapsed(at: Date())
+        guard let target = timeline.skipTarget(from: elapsed) else { return }
+        seek(to: target)
     }
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
