@@ -80,12 +80,45 @@ Final quick verification before commit:
 - `rtk git diff --check`: exit 0, no whitespace errors.
 - Worktree contained only the ten scoped source/test files plus this report.
 
-## Verification limitations
+## Initial verification limitations
 
 - No focused XCTest assertion completed because both explicit workspace simulators stalled before XCTest startup.
 - Per the final user directive, no further simulator waiting or full XCTest attempt was made after those bounded stalls.
 - The successful generic Debug `build-for-testing` preceded three small source-only corrections: reentrant timeout scheduling order, normalized assignment persistence, and routing `interrupt(at:)` through `pause(at:)`. Those corrections were inspected and `git diff --check` passed, but a fresh post-correction build was not run because the user directed immediate report and commit.
 - No physical Motherboard or physical iPhone validation was attempted, as required.
+
+The simulator XCTest limitations above describe the original fix commit. They were resolved by the focused follow-up verification below.
+
+## Follow-up stale test correction
+
+Fresh full-suite execution after commit `93af1f3` found one stale test expectation. `testFragmentedRawPacketPublishesMeasurementAndBatteryAfterCalibration` completed calibration, which correctly sent `S30`, but did not deliver the required `Stream:30` acknowledgement before its fragmented raw frame. The service therefore correctly remained `.calibrating` and ignored the raw packet.
+
+The test now emits the successful acknowledgement before the raw frame through a dedicated `emitStreamAcknowledgement(on:)` helper. Other successful-stream tests use the same helper. `emitCompleteCalibration(on:)` remains calibration-only so `testWrongStreamAcknowledgementDoesNotPublishStreaming` continues to prove that `Stream:15` does not enter `.streaming`.
+
+Focused service verification:
+
+```sh
+rtk xcodebuild test \
+  -project HangTen.xcodeproj -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' \
+  -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 \
+  -derivedDataPath .context/DerivedData-final-review-followup \
+  -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: exit 0, `** TEST SUCCEEDED **`; 18 tests executed with 0 failures in the service suite. The corrected fragmented-packet test passed, and the wrong-acknowledgement test also passed.
+
+Bounded full-suite verification on the same explicit workspace simulator and Derived Data path:
+
+```sh
+rtk xcodebuild test \
+  -project HangTen.xcodeproj -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' \
+  -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 \
+  -derivedDataPath .context/DerivedData-final-review-followup
+```
+
+Result: exit 0, `** TEST SUCCEEDED **`; 51 tests executed with 0 failures in 1.600 seconds. Xcode continued to print the pre-existing `DVTDeviceOperation` empty build-number diagnostics, but they did not block build or test execution.
 
 ## Files changed
 
@@ -95,7 +128,7 @@ Final quick verification before commit:
 - `HangTen/Models/MotherboardWorkoutRecorder.swift`
 - `HangTen/Models/SimulatedMotherboardTransport.swift`
 - `HangTen/Views/RootView.swift`
-- `HangTenTests/MotherboardBluetoothServiceTests.swift`
+- `HangTenTests/MotherboardBluetoothServiceTests.swift` (including the follow-up acknowledgement fixture correction)
 - `HangTenTests/MotherboardModelsTests.swift`
 - `HangTenTests/MotherboardProtocolTests.swift`
 - `HangTenTests/MotherboardWorkoutRecorderTests.swift`

@@ -119,6 +119,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 ))
             }
         }
+        emitStreamAcknowledgement(on: transport)
 
         let date = Date(timeIntervalSince1970: 99)
         let frame = Data("01006400000000000000000000000000\r\n".utf8)
@@ -168,7 +169,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.disconnected("first loss"))
         connectAfterScan(service, with: transport)
         emitCompleteCalibration(on: transport)
-        transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
+        emitStreamAcknowledgement(on: transport)
 
         XCTAssertNil(service.lastError)
         for _ in 0..<4 {
@@ -245,7 +246,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         connect(service, with: transport)
         emitCompleteCalibration(on: transport)
-        transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
+        emitStreamAcknowledgement(on: transport)
         try await Task.sleep(for: .milliseconds(50))
 
         XCTAssertEqual(service.state, .streaming)
@@ -315,6 +316,10 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
                 ))
             }
         }
+    }
+
+    private func emitStreamAcknowledgement(on transport: FakeMotherboardTransport) {
+        transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
     }
 }
 
