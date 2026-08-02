@@ -24,7 +24,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main'
     name: Archive, sign, and upload
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 60
     environment:
       name: app-store-connect
@@ -84,6 +84,9 @@ jobs:
           fi
           echo "BUILD_NUMBER=$build_number" >> "$GITHUB_ENV"
           echo "Using App Store build number $build_number"
+
+      - name: Validate App Store metadata
+        run: scripts/validate-app-store-metadata.sh
 
       - name: Archive signed release
         env:
