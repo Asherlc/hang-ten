@@ -39,7 +39,9 @@ require_png_dimensions() {
 require_setting() {
   local settings="$1"
   local expected="$2"
-  sed 's/^[[:space:]]*//' <<< "$settings" | grep -Fqx "$expected" \
+  local normalized_settings
+  normalized_settings="$(sed 's/^[[:space:]]*//' <<< "$settings")"
+  grep -Fqx "$expected" <<< "$normalized_settings" \
     || fail "missing build setting: $expected"
 }
 
