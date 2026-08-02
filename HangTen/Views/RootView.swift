@@ -630,6 +630,29 @@ private struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+enum WorkoutSessionPolicy {
+    static func isFirstStart(routineStartedAt: Date?) -> Bool {
+        routineStartedAt == nil
+    }
+
+    static func runStartDate(routineStartedAt: Date?, now: Date) -> Date {
+        isFirstStart(routineStartedAt: routineStartedAt)
+            ? now.addingTimeInterval(3)
+            : now
+    }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        planDuration: TimeInterval,
+        loggedAt: Date
+    ) -> DateInterval {
+        DateInterval(
+            start: sessionStartedAt,
+            end: min(sessionStartedAt.addingTimeInterval(planDuration), loggedAt)
+        )
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -643,11 +666,16 @@ struct WorkoutView: View {
     @State private var pausedElapsed: TimeInterval = 0
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
+    @State private var showsStepPicker = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
 
     private var board: TrainingBoard {
         store.board(for: plan)
+    }
+
+    private var timeline: WorkoutTimeline {
+        WorkoutTimeline(steps: plan.steps)
     }
 
     var body: some View {
@@ -701,6 +729,11 @@ struct WorkoutView: View {
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
+				}
+				.sheet(isPresented: $showsStepPicker) {
+					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
+						jump(to: selectedStep)
+					}
 				}
 			}
 		}
@@ -784,7 +817,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlButton(isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -852,7 +885,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlButton(isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
 					.frame(width: 224)
 			}
 		}
@@ -901,6 +934,15 @@ struct WorkoutView: View {
 			)
 			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
 			.foregroundStyle(Color.hangInk)
+
+			Button("Routine") {
+				showsStepPicker = true
+			}
+			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+			.disabled(!canNavigate)
+			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
+			.accessibilityIdentifier("workout.routinePicker")
 		}
 	}
 
@@ -962,6 +1004,15 @@ struct WorkoutView: View {
                     fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
                 )
             }
+
+            Button("Routine") {
+                showsStepPicker = true
+            }
+            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangGreenDark)
+            .disabled(!canNavigate)
+            .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
+            .accessibilityIdentifier("workout.routinePicker")
 
             Text(isComplete ? "Nice work." : countdown > 0 ? step.title : isResting ? "Step off and shake out" : step.title)
                 .font(.system(size: 30, weight: .bold, design: .rounded))
@@ -1035,6 +1086,27 @@ struct WorkoutView: View {
         .hangCard()
     }
 
+    private func controlGroup(step: WorkoutStep, isComplete: Bool, countdown: Int) -> some View {
+        VStack(spacing: 10) {
+            controlButton(isComplete: isComplete, countdown: countdown)
+
+            Button {
+                skipCurrentStep()
+            } label: {
+                Label("Skip step", systemImage: "forward.fill")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .padding(.vertical, 10)
+                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(!canNavigate)
+            .accessibilityLabel("Skip step \(step.number): \(step.title)")
+            .accessibilityIdentifier("workout.skipStep")
+        }
+    }
+
     private func controlButton(isComplete: Bool, countdown: Int) -> some View {
         Button {
             if isComplete {
@@ -1052,7 +1124,7 @@ struct WorkoutView: View {
                         ? "Log session"
                         : countdown > 0
                             ? "Cancel countdown"
-                            : (startedAt == nil && pausedElapsed == 0 ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
+                            : (startedAt == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt) ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
                 )
                 if isComplete {
                     Image(systemName: "arrow.right")
@@ -1078,8 +1150,10 @@ struct WorkoutView: View {
             self.startedAt = nil
 			audioCoach.stop()
         } else {
-            let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
-            if pausedElapsed == 0 {
+            let now = Date()
+            let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
+            let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
+            if isFirstStart {
                 routineStartedAt = start
             }
             startedAt = start
@@ -1119,11 +1193,15 @@ struct WorkoutView: View {
             return
         }
         didComplete = true
-        let endDate = Date()
-        let startDate = routineStartedAt ?? endDate.addingTimeInterval(-plan.duration)
-		let activeWorkoutEnd = startDate.addingTimeInterval(plan.duration)
+		let loggedAt = Date()
+        let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
+		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+			sessionStartedAt: startDate,
+			planDuration: plan.duration,
+			loggedAt: loggedAt
+		)
 		audioCoach.stop()
-        store.markSessionComplete(plan, startDate: startDate, endDate: activeWorkoutEnd)
+        store.markSessionComplete(plan, startDate: interval.start, endDate: interval.end)
         dismiss()
     }
 
@@ -1138,25 +1216,43 @@ struct WorkoutView: View {
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
-        var cursor: TimeInterval = 0
-        for step in plan.steps {
-            if elapsed < cursor + step.duration {
-                return step
-            }
-            cursor += step.duration
-        }
-        return plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+        timeline.step(at: elapsed) ?? plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
     }
 
     private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
-        var cursor: TimeInterval = 0
-        for step in plan.steps {
-            if elapsed < cursor + step.duration {
-                return max(0, elapsed - cursor)
-            }
-            cursor += step.duration
+        timeline.elapsedInStep(at: elapsed)
+    }
+
+    private var canNavigate: Bool {
+        let now = Date()
+        return routineStartedAt != nil
+            && countdownRemaining(at: now) == 0
+            && currentElapsed(at: now) < plan.duration
+    }
+
+    private func seek(to targetElapsed: TimeInterval) {
+        let target = min(max(0, targetElapsed), plan.duration)
+        pausedElapsed = target
+        if startedAt != nil {
+            startedAt = Date()
         }
-        return plan.steps.last?.duration ?? 0
+        audioCoach.stop()
+    }
+
+    private func jump(to step: WorkoutStep) {
+        guard canNavigate else { return }
+
+        let elapsed = currentElapsed(at: Date())
+        guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
+        seek(to: target)
+    }
+
+    private func skipCurrentStep() {
+        guard canNavigate else { return }
+
+        let elapsed = currentElapsed(at: Date())
+        guard let target = timeline.skipTarget(from: elapsed) else { return }
+        seek(to: target)
     }
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
