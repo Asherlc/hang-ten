@@ -24,6 +24,8 @@
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
+		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
+		AA0000000000000000000019 /* MotherboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* MotherboardModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,8 @@
 		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000022 /* MotherboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +110,7 @@
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
+				BB0000000000000000000022 /* MotherboardModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -136,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
+				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -166,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
+				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +280,7 @@
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
+				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
