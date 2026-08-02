@@ -1,0 +1,144 @@
+name: Release to App Store Connect
+
+# A successful CI run on main is the only release trigger. There is deliberately
+# no manual or pull-request trigger, so every uploaded build has passed CI.
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-store-connect-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    name: Archive, sign, and upload
+    runs-on: macos-15
+    timeout-minutes: 60
+    environment:
+      name: app-store-connect
+      url: https://appstoreconnect.apple.com/
+
+    steps:
+      # Check out the exact commit whose CI run succeeded, not whichever commit
+      # happens to be at the tip of main when this workflow starts.
+      # actions/checkout v4.2.2
+      - name: Check out tested commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+
+      # Apple-Actions/download-provisioning-profiles v6.1.0
+      - name: Download App Store provisioning profile
+        id: provisioning-profiles
+        uses: Apple-Actions/download-provisioning-profiles@473562c853e9f580367eeff7c180258653e416e0
+        with:
+          bundle-id: com.hangten.training
+          profile-type: IOS_APP_STORE
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      # Apple-Actions/import-codesign-certs v7.0.0
+      - name: Import Apple Distribution certificate
+        uses: Apple-Actions/import-codesign-certs@b2e261033a9e248f91a9b57201e8d1e12b15a24e
+        with:
+          p12-file-base64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+
+      - name: Resolve signing profile
+        env:
+          PROFILES_JSON: ${{ steps.provisioning-profiles.outputs.profiles }}
+        run: |
+          set -euo pipefail
+          profile_uuid="$(jq -er '.[0].udid' <<< "$PROFILES_JSON")"
+          echo "PROVISIONING_PROFILE_UUID=$profile_uuid" >> "$GITHUB_ENV"
+
+      - name: Select unique App Store build number
+        run: |
+          set -euo pipefail
+          # Keep retries unique: a rerun gets a new attempt component.
+          build_number=$((GITHUB_RUN_NUMBER * 1000 + GITHUB_RUN_ATTEMPT))
+          if (( build_number > 2147483647 )); then
+            echo "Build number $build_number exceeds Apple's supported range" >&2
+            exit 1
+          fi
+          echo "BUILD_NUMBER=$build_number" >> "$GITHUB_ENV"
+          echo "Using App Store build number $build_number"
+
+      - name: Archive signed release
+        env:
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          archive_path="$PWD/build/HangTen.xcarchive"
+          mkdir -p "$PWD/build"
+          xcodebuild \
+            -project HangTen.xcodeproj \
+            -scheme HangTen \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "$archive_path" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            clean archive
+
+      - name: Verify archived bundle
+        run: |
+          set -euo pipefail
+          app_path="$PWD/build/HangTen.xcarchive/Products/Applications/HangTen.app"
+          test -d "$app_path"
+          echo "Version: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app_path/Info.plist")"
+          echo "Build: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app_path/Info.plist")"
+          codesign --verify --deep --strict --verbose=2 "$app_path"
+
+      - name: Export App Store package
+        env:
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          export_options="$PWD/build/ExportOptions.plist"
+          cp .github/ExportOptions.plist "$export_options"
+          /usr/libexec/PlistBuddy -c "Set :teamID $APPLE_TEAM_ID" "$export_options"
+          /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:com.hangten.training $PROVISIONING_PROFILE_UUID" "$export_options"
+          xcodebuild \
+            -exportArchive \
+            -archivePath "$PWD/build/HangTen.xcarchive" \
+            -exportOptionsPlist "$export_options" \
+            -exportPath "$PWD/build/export"
+          test -s "$PWD/build/export/HangTen.ipa"
+
+      # Apple-Actions/upload-testflight-build v5.2.1
+      - name: Upload to App Store Connect
+        uses: Apple-Actions/upload-testflight-build@41bb718fb7b8e0c9824fa3fbe8cd7e6018839a4c
+        with:
+          app-path: build/export/HangTen.ipa
+          app-type: ios
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          backend: appstore-api
+          uses-non-exempt-encryption: 'false'
+          wait-for-processing: 'true'
