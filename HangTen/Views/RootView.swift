@@ -1259,6 +1259,8 @@ struct WorkoutView: View {
 
 struct ProgressDashboardView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.openURL) private var openURL
 	@Environment(\.scenePhase) private var scenePhase
 	@State private var didRequestHealthReview = false
@@ -1279,6 +1281,10 @@ struct ProgressDashboardView: View {
 
                     streakCard
                     boardInfo
+                    MotherboardCard(
+                        service: motherboardBluetoothService,
+                        settings: motherboardSettingsStore
+                    )
                     healthCard
                     recoveryCard
                 }
@@ -1287,7 +1293,19 @@ struct ProgressDashboardView: View {
                 .padding(.bottom, 30)
             }
             .background(Color.hangBackground)
-            .toolbar(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        MotherboardSettingsView(
+                            service: motherboardBluetoothService,
+                            settings: motherboardSettingsStore
+                        )
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel("Motherboard settings")
+                }
+            }
         }
 		.onAppear {
 			store.refreshHealthAuthorization()
