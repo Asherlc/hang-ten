@@ -53,6 +53,11 @@ Put a bespoke design beside `MetoliusCompactIIDesign.swift` and register it in
 same `BoardHoldPiece.holdID`, and no rendered hold ID may be orphaned. A DEBUG
 assertion enforces this equality for registered designs.
 
+Add the board's semantic mapping to the versioned plan document through
+`BuiltInPlanLibraryDefinition` in `PlanStorage.swift`, then regenerate
+`PlanLibrary.json` with `scripts/export-plan-library.sh`. A plan is shown only
+when every target resolves on the selected board.
+
 ## 3. Use raster references as calibration, not interaction geometry
 
 A generated raster concept can be useful when the first vector draft is too
@@ -157,3 +162,4 @@ active-path alignment. Build only after every model hold resolves to artwork.
 - Surface, shelf, and recess highlights align pixel-for-pixel.
 - Portrait and landscape simulator screenshots reviewed.
 - Relevant routines resolve to non-empty, truthful hold sets.
+- Versioned board mappings validate and `PlanLibrary.json` is regenerated.

@@ -20,8 +20,10 @@ separate semantic-resolution layer.
    exercises. Mark provenance honestly.
 5. Target exact board IDs for numbered routines and the narrowest truthful
    `HoldFeature` for board-flexible routines.
-6. Verify every target resolves on every board where the plan appears.
-7. Preview representative text, timer, audio, hand cue, and active-hold states
+6. Regenerate `HangTen/Resources/PlanLibrary.json` with
+   `scripts/export-plan-library.sh`, then run the script again with `--check`.
+7. Verify every target resolves on every board where the plan appears.
+8. Preview representative text, timer, audio, hand cue, and active-hold states
    in the dedicated simulator.
 
 ## Non-negotiable rules

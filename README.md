@@ -29,9 +29,11 @@ cannot drift away from the hold.
   functional-strength workouts after authorization.
 - A source-linked plan library and lightweight local session progress.
 
-The Metolius routines are stored in `PlanCatalog` and the board/hold metadata
-is stored in `BoardCatalog`, both in
-`HangTen/Models/TrainingModels.swift`.
+Runtime routine definitions are stored in
+`HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
+decodes and validates that schema-versioned document; the source-audited seed
+in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
+and hold metadata lives in `BoardCatalog` in `TrainingModels.swift`.
 
 ## Run
 
@@ -57,6 +59,13 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
+
+Regenerate the bundled routine document after an audited plan change:
+
+```sh
+scripts/export-plan-library.sh
+scripts/export-plan-library.sh --check
+```
 
 ## Routine scope
 

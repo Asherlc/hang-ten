@@ -12,7 +12,7 @@ struct HoldFrame: Hashable {
     }
 }
 
-enum HoldKind: String, CaseIterable, Hashable, Identifiable {
+enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case edge
     case pocket
@@ -48,7 +48,7 @@ enum HoldCueStyle: String, Hashable {
 /// Manufacturer routines often name a hold by function instead of by board
 /// ID. Features let a board declare the closest physical match once, keeping
 /// routine content unchanged as more boards are added.
-enum HoldFeature: String, Hashable {
+enum HoldFeature: String, Codable, Hashable {
     case jug
     case roundSloper
     case largeSlope
@@ -81,7 +81,7 @@ enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
     }
 }
 
-enum GripType: String, CaseIterable, Hashable, Identifiable {
+enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case openHand
     case halfCrimp
     case fullCrimp
@@ -202,6 +202,10 @@ struct HoldTarget: Hashable {
         HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [])
     }
 
+    static func ids(_ holdIDs: [String]) -> HoldTarget {
+        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [])
+    }
+
     static func kind(_ kind: HoldKind) -> HoldTarget {
         HoldTarget(holdIDs: [], kind: kind, feature: nil, fallbackFeatures: [])
     }
@@ -219,7 +223,7 @@ struct HoldTarget: Hashable {
     }
 }
 
-enum WorkoutPhase: String, Hashable {
+enum WorkoutPhase: String, Codable, Hashable {
     case warmUp
     case hang
     case rest
@@ -340,7 +344,7 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 }
 
-enum RoutineProvenance: String, Hashable {
+enum RoutineProvenance: String, Codable, Hashable {
     case official
     case adapted
 
@@ -581,7 +585,7 @@ enum BoardCatalog {
     }
 }
 
-enum PlanCatalog {
+enum LegacyPlanSeedCatalog {
     private static let sourceURL = URL(
         string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
     )!

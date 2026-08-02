@@ -66,7 +66,20 @@ adaptation is sensible.
 
 ## 4. Model intervals according to the source
 
-Add plans in `PlanCatalog` in `HangTen/Models/TrainingModels.swift`.
+The app reads runtime plans from the schema-versioned
+`HangTen/Resources/PlanLibrary.json`. Add the audited plan to
+`LegacyPlanSeedCatalog` in `TrainingModels.swift`, where it acts as the export
+fixture, then run:
+
+```sh
+scripts/export-plan-library.sh
+scripts/export-plan-library.sh --check
+```
+
+`PlanStorage.swift` turns the fixture into reusable block definitions,
+semantic targets, source metadata, and provenance, then validates the bundled
+JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
+against the fixture.
 
 For Metolius ten-minute task cycles:
 
@@ -130,7 +143,7 @@ targets, grip cues, and timing against a stable audit fingerprint. Update that
 fingerprint only after repeating the line-by-line primary-source audit; never
 change it merely to silence an assertion.
 
-Other research and coach protocols in `PlanCatalog` are deliberately marked
+Other research and coach protocols in the plan library are deliberately marked
 `adapted`: their app versions add guidance, warm-up/cooldown steps, or Compact
 II hold mapping. Do not use those plans as precedent for assigning `official`
 provenance to a modified manufacturer routine.
@@ -149,4 +162,5 @@ Preview representative steps with the DEBUG routes documented in
 - Every target resolves to at least one factual hold on each compatible board.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
+- `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
 - Representative timer, audio, text, and highlight states reviewed.

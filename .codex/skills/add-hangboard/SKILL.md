@@ -19,9 +19,11 @@ source, metadata, geometry, and validation contract.
 4. Build normalized vector geometry from silhouette to planes to contact
    shapes. Define paired geometry once and mirror it.
 5. Register the design and keep the model and rendered hold-ID sets identical.
-6. Resolve representative routines and ensure every requested feature maps to
+6. Add the board's versioned semantic mapping, regenerate `PlanLibrary.json`,
+   and verify it with `scripts/export-plan-library.sh --check`.
+7. Resolve representative routines and ensure every requested feature maps to
    a factual hold.
-7. Use the dedicated-simulator workflow to inspect inactive and active surface,
+8. Use the dedicated-simulator workflow to inspect inactive and active surface,
    shelf, deep-recess, and shallow-recess states in portrait and landscape.
 
 ## Non-negotiable rules
