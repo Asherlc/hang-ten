@@ -34,6 +34,7 @@ struct WorkoutStepPickerView: View {
         let isCurrent = step.id == currentStepID
 
         return Button {
+            guard !isCurrent else { return }
             onSelect(step)
             dismiss()
         } label: {
