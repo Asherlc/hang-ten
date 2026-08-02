@@ -27,6 +27,10 @@ cannot drift away from the hold.
 - Portrait and landscape workout layouts.
 - An explicit Apple Health permission card. Completed sessions save as
   functional-strength workouts after authorization.
+- A Motherboard Bluetooth sensor card for live force, calibration, tare, and
+  threshold-based loaded-time recording. Its protocol is reverse-engineered;
+  see [runtime-service notes](docs/IOS_RUNTIME_SERVICES.md) for its limits and
+  physical-device validation requirements.
 - A source-linked plan library and lightweight local session progress.
 
 Runtime routine definitions are stored in

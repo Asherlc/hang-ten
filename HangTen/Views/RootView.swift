@@ -4,7 +4,8 @@ import UIKit
 struct RootView: View {
     @State private var selectedTab: Int = {
         #if DEBUG
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" {
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" ||
+            ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
             return 2
         }
         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLANS"] == "1" {

@@ -4,6 +4,45 @@ This document records the runtime behavior that spans the workout UI, audio,
 orientation, and Apple Health. Use it with the isolated simulator guide when
 changing any of those systems.
 
+## Motherboard Bluetooth sensor
+
+The optional Motherboard sensor is a live force input, not a workout timer.
+The user explicitly taps Connect sensor in Progress; the app then scans for
+the Bluetooth service, connects, enables TX notifications, requests the
+device's calibration rows, and starts its 30 Hz stream only after complete
+four-sensor calibration. iOS Bluetooth permission therefore follows a clear
+user action on physical devices rather than an automatic production launch.
+
+Notifications may be fragmented or contain more than one line. The service
+buffers them until CRLF-delimited calibration rows, stream acknowledgements,
+or 16-byte hex raw packets can be parsed. Calibration maps each sensor's ADC
+values to kgf, and Tare subtracts the current per-sensor reading. The workout
+recorder uses the notification timestamp and the configured kgf threshold,
+release ratio, debounce, and merge gap to calculate loaded intervals; the
+workout clock remains the authority for planned time. Rest steps stay
+unmeasured. A disconnect or parser error clears the transient measurement and
+calibration state, records the unavailable/error state, and leaves the workout
+timer controls usable. Completed summaries can therefore include both measured
+and unmeasured steps.
+
+The UART-style service UUIDs, calibration-row format, stream commands, and raw
+packet layout are reverse-engineered from observed Motherboard behavior. They
+are not an official manufacturer SDK or protocol guarantee. Do not treat the
+displayed load as a certified measurement, and revalidate against the physical
+device after firmware changes.
+
+`HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
+selects Progress and replaces the CoreBluetooth transport with a deterministic
+fixture that sends real calibration and raw notification frames through
+`MotherboardBluetoothService`. The fixture's stable timestamped sequence
+contains unloaded, loaded, peak, and released samples, so the same service,
+meter, settings, threshold, and recorder paths are exercised without system
+Bluetooth. Release builds always construct `CoreBluetoothMotherboardTransport`
+regardless of that environment variable. The fixture does not validate radio
+permissions, discovery, GATT behavior, device calibration accuracy, firmware
+compatibility, disconnect timing, or force accuracy; all of those require a
+physical Motherboard before release.
+
 ## Workout clock and spoken cues
 
 `WorkoutView` uses one elapsed session clock. `TimelineView` samples it four
