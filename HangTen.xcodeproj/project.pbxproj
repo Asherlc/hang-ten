@@ -30,6 +30,8 @@
 		AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* MotherboardProtocol.swift */; };
 		AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */; };
 		AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */; };
+		AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */; };
+		AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000028 /* WorkoutSessionStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +61,8 @@
 		BB0000000000000000000024 /* MotherboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocol.swift; sourceTree = "<group>"; };
 		BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutRecorderTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutRecorder.swift; sourceTree = "<group>"; };
+		BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000028 /* WorkoutSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 				BB0000000000000000000022 /* MotherboardModels.swift */,
 				BB0000000000000000000024 /* MotherboardProtocol.swift */,
 				BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */,
+				BB0000000000000000000028 /* WorkoutSessionStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -154,6 +159,7 @@
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
 				BB0000000000000000000023 /* MotherboardProtocolTests.swift */,
 				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
+				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -187,6 +193,7 @@
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
 				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
 				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
+				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +304,7 @@
 				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
 				AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */,
+				AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
