@@ -36,6 +36,37 @@ xcodebuild -project HangTen.xcodeproj \
   CODE_SIGNING_ALLOWED=NO build
 ~~~
 
+## Continuous integration and delivery
+
+GitHub Actions runs the simulator Debug build and device Release build for
+every pull request targeting `main` and every push to `main`. A successful
+`main` run automatically archives the exact tested commit, signs it, and
+uploads the IPA to App Store Connect/TestFlight.
+
+The release workflow uses a GitHub environment named `app-store-connect`.
+Configure that environment with no required reviewers for zero-touch delivery,
+and restrict it to the `main` branch. Add these environment secrets:
+
+- `APPSTORE_API_PRIVATE_KEY`: the App Store Connect API `.p8` private key.
+- `APPSTORE_CERTIFICATES_FILE_BASE64`: a base64-encoded Apple Distribution
+  `.p12` containing its private key.
+- `APPSTORE_CERTIFICATES_PASSWORD`: the `.p12` password.
+
+Add these environment variables:
+
+- `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
+- `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
+- `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
+
+The API key needs the Admin role for provisioning-profile access, and App Store Connect must already
+contain an app record for `com.hangten.training` plus an App Store provisioning
+profile for that bundle ID. The workflow assigns a unique build number for
+each run and retry. Update `MARKETING_VERSION` in the Xcode project when
+shipping a new App Store version.
+
+This automates delivery to App Store Connect/TestFlight. Apple still controls
+App Review and the final public App Store release decision.
+
 ## Adding another board
 
 1. Add another TrainingBoard to BoardCatalog.all in
