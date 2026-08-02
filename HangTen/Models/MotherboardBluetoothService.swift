@@ -43,6 +43,7 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var latestMeasurement: MotherboardMeasurement?
     @Published private(set) var batteryValue: UInt16?
     @Published private(set) var lastError: String?
+    @Published private(set) var connectedDeviceID: UUID?
 
     private let transport: MotherboardTransport
     private var parser: MotherboardProtocolParser
@@ -102,6 +103,7 @@ final class MotherboardBluetoothService: ObservableObject {
         case .discovered(let device):
             guard wantsConnection, state == .scanning else { return }
             transport.stopScan()
+            connectedDeviceID = device.id
             state = .connecting
             transport.connect(to: device)
 
@@ -217,6 +219,7 @@ final class MotherboardBluetoothService: ObservableObject {
         tareKGF = Array(repeating: 0.0, count: 4)
         latestMeasurement = nil
         batteryValue = nil
+        connectedDeviceID = nil
     }
 }
 

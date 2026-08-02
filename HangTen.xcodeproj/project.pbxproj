@@ -36,6 +36,8 @@
 		AA0000000000000000000027 /* MotherboardBluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000030 /* MotherboardBluetoothService.swift */; };
 		AA0000000000000000000028 /* AppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000031 /* AppStoreTests.swift */; };
 		AA0000000000000000000032 /* MotherboardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000032 /* MotherboardViews.swift */; };
+		AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000033 /* WorkoutSummaryTests.swift */; };
+		AA0000000000000000000034 /* WorkoutSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000034 /* WorkoutSummaryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,8 @@
 		BB0000000000000000000030 /* MotherboardBluetoothService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardBluetoothService.swift; sourceTree = "<group>"; };
 		BB0000000000000000000031 /* AppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000032 /* MotherboardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardViews.swift; sourceTree = "<group>"; };
+		BB0000000000000000000033 /* WorkoutSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000034 /* WorkoutSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +152,7 @@
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
+				BB0000000000000000000034 /* WorkoutSummaryView.swift */,
 				BB0000000000000000000008 /* GripDiagramView.swift */,
 			);
 			path = Views;
@@ -172,6 +177,7 @@
 				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
 				BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */,
 				BB0000000000000000000031 /* AppStoreTests.swift */,
+				BB0000000000000000000033 /* WorkoutSummaryTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -208,6 +214,7 @@
 				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
 				AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */,
 				AA0000000000000000000028 /* AppStoreTests.swift in Sources */,
+				AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +328,7 @@
 				AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */,
 				AA0000000000000000000027 /* MotherboardBluetoothService.swift in Sources */,
 				AA0000000000000000000032 /* MotherboardViews.swift in Sources */,
+				AA0000000000000000000034 /* WorkoutSummaryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

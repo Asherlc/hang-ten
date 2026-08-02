@@ -25,10 +25,11 @@ struct MotherboardWorkoutRecorder {
     private let configuration: MotherboardDetectionConfiguration
     private var states: [String: StepState] = [:]
     private var stepOrder: [String] = []
-    private var currentStepID: String?
+    private(set) var currentStepID: String?
 
     private(set) var currentLoadKGF: Double?
     private(set) var currentPeakLoadKGF: Double?
+    private(set) var currentLoadedDuration: TimeInterval = 0
 
     var isLoaded: Bool {
         guard let currentStepID else { return false }
@@ -95,6 +96,7 @@ struct MotherboardWorkoutRecorder {
         }
 
         states[stepID] = state
+        currentLoadedDuration = loadedDuration(in: state, at: time)
     }
 
     mutating func endStep(
@@ -109,6 +111,7 @@ struct MotherboardWorkoutRecorder {
         state.status = status
         states[stepID] = state
         currentStepID = stepID
+        currentLoadedDuration = loadedDuration(in: state, at: state.timeOffset + workoutElapsed)
     }
 
     mutating func interrupt(at workoutElapsed: TimeInterval) {
@@ -118,6 +121,7 @@ struct MotherboardWorkoutRecorder {
         state.pendingRelease = nil
         state.status = .interrupted
         states[currentStepID] = state
+        currentLoadedDuration = loadedDuration(in: state, at: state.timeOffset + workoutElapsed)
     }
 
     mutating func finish(at workoutElapsed: TimeInterval) -> [WorkoutStepMeasurement] {
@@ -126,6 +130,9 @@ struct MotherboardWorkoutRecorder {
             closeInterval(in: &state, at: state.timeOffset + workoutElapsed)
             state.pendingStart = nil
             state.pendingRelease = nil
+            if state.sampleCount > 0, state.status == .unmeasured {
+                state.status = .measured
+            }
             states[stepID] = state
         }
 
@@ -180,5 +187,11 @@ struct MotherboardWorkoutRecorder {
         state.intervals.append(LoadInterval(start: start, end: end))
         state.openStart = nil
         state.pendingRelease = nil
+    }
+
+    private func loadedDuration(in state: StepState, at time: TimeInterval) -> TimeInterval {
+        let closedDuration = state.intervals.reduce(0) { $0 + $1.duration }
+        guard let openStart = state.openStart else { return closedDuration }
+        return closedDuration + max(0, state.clippedTime(time) - openStart)
     }
 }

@@ -207,18 +207,22 @@ struct MotherboardMeterView: View {
                     .font(.system(size: 12, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
+
+            Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
         }
         .padding(14)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     private var currentForceText: String {
-        guard let measurement else { return "—" }
+        guard let measurement else { return "Not measured" }
         return measurement.aggregateLoadKGF.forceString(in: unit)
     }
 
     private var peakForceText: String {
-        guard let peakLoadKGF else { return "—" }
+        guard let peakLoadKGF else { return "Not measured" }
         return peakLoadKGF.forceString(in: unit)
     }
 }

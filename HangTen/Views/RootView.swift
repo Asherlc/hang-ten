@@ -632,6 +632,8 @@ private struct WorkoutAudioMoment: Hashable {
 
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.dismiss) private var dismiss
 	@Environment(\.scenePhase) private var scenePhase
 	@StateObject private var audioCoach = WorkoutAudioCoach()
@@ -645,6 +647,10 @@ struct WorkoutView: View {
     @State private var showEndConfirmation = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
+    @State private var recorder = MotherboardWorkoutRecorder()
+    @State private var completedSession: WorkoutSessionRecord?
+    @State private var summarySession: WorkoutSessionRecord?
+    @State private var didSaveSession = false
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -698,6 +704,10 @@ struct WorkoutView: View {
 				}
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.background(Color.hangBackground)
+				.onChange(of: isComplete) { _, routineComplete in
+					guard routineComplete else { return }
+					finalizeRoutine()
+				}
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
@@ -734,8 +744,17 @@ struct WorkoutView: View {
         } message: {
             Text("This will stop the timer without logging a workout to Apple Health.")
         }
+		.sheet(item: $summarySession) { session in
+			WorkoutSummaryView(
+				session: session,
+				unit: motherboardSettingsStore.forceUnit,
+				onSave: { save(session) },
+				onDiscard: { summarySession = nil }
+			)
+		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
+			configureRecorder()
 			#if DEBUG
 			if !didApplyReviewStep {
 				didApplyReviewStep = true
@@ -758,7 +777,12 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
+		.onChange(of: motherboardBluetoothService.latestMeasurement) { _, measurement in
+			guard let measurement else { return }
+			consume(measurement)
+		}
 		.onDisappear {
+			interruptRecorderIfNeeded()
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
@@ -797,6 +821,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
+				meter(step: step)
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, 16)
@@ -855,6 +880,7 @@ struct WorkoutView: View {
 				controlButton(isComplete: isComplete, countdown: countdown)
 					.frame(width: 224)
 			}
+			meter(step: step)
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
@@ -1114,18 +1140,96 @@ struct WorkoutView: View {
 	}
 
     private func completeSession() {
-        guard !didComplete else {
-            dismiss()
-            return
+        finalizeRoutine()
+        if let completedSession {
+            summarySession = completedSession
         }
-        didComplete = true
-        let endDate = Date()
-        let startDate = routineStartedAt ?? endDate.addingTimeInterval(-plan.duration)
-		let activeWorkoutEnd = startDate.addingTimeInterval(plan.duration)
-		audioCoach.stop()
-        store.markSessionComplete(plan, startDate: startDate, endDate: activeWorkoutEnd)
-        dismiss()
     }
+
+	private func meter(step: WorkoutStep) -> some View {
+		MotherboardMeterView(
+			measurement: motherboardBluetoothService.latestMeasurement,
+			peakLoadKGF: recorder.currentPeakLoadKGF,
+			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
+			plannedActiveDuration: step.activeDuration,
+			unit: motherboardSettingsStore.forceUnit,
+			state: motherboardBluetoothService.state
+		)
+	}
+
+	private func consume(_ measurement: MotherboardMeasurement) {
+		guard let startedAt,
+			  startedAt <= measurement.timestamp,
+			  countdownRemaining(at: measurement.timestamp) == 0 else { return }
+
+		let elapsed = currentElapsed(at: measurement.timestamp)
+		guard elapsed < plan.duration else { return }
+		let currentStep = step(at: elapsed)
+		guard !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.consume(
+			measurement,
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			workoutElapsed: elapsed,
+			isActive: true
+		)
+	}
+
+	private func finalizeRoutine() {
+		guard !didComplete else { return }
+		didComplete = true
+
+		let completedMeasurements = Dictionary(
+			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
+		)
+		let steps = plan.steps.map { step in
+			completedMeasurements[step.id] ?? WorkoutStepMeasurement(
+				stepID: step.id,
+				plannedActiveDuration: step.activeDuration,
+				intervals: [],
+				peakLoadKGF: nil,
+				sampleCount: 0,
+				status: .unmeasured
+			)
+		}
+		let recordedAt = Date()
+		let startDate = routineStartedAt ?? recordedAt.addingTimeInterval(-plan.duration)
+		let endDate = startDate.addingTimeInterval(plan.duration)
+		let session = WorkoutSessionRecord(
+			id: UUID(),
+			planID: plan.id,
+			planTitle: plan.title,
+			recordedAt: recordedAt,
+			startDate: startDate,
+			endDate: endDate,
+			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
+			batteryValue: motherboardBluetoothService.batteryValue,
+			steps: steps
+		)
+		completedSession = session
+		summarySession = session
+	}
+
+	private func configureRecorder() {
+		guard startedAt == nil, pausedElapsed == 0, !didComplete else { return }
+		recorder = MotherboardWorkoutRecorder(configuration: .init(
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
+		))
+	}
+
+	private func save(_ session: WorkoutSessionRecord) {
+		guard !didSaveSession, completedSession?.id == session.id else { return }
+		didSaveSession = true
+		store.markSessionComplete(plan, startDate: session.startDate, endDate: session.endDate, session: session)
+		summarySession = nil
+		dismiss()
+	}
+
+	private func interruptRecorderIfNeeded() {
+		guard !didComplete, startedAt != nil || pausedElapsed > 0 else { return }
+		recorder.interrupt(at: currentElapsed(at: Date()))
+	}
 
     private func currentElapsed(at date: Date) -> TimeInterval {
         let activeElapsed = startedAt.map { max(0, date.timeIntervalSince($0)) } ?? 0
