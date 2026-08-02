@@ -1,24 +1,27 @@
-# Task 5 report — WorkoutSessionStore
+# Task 5 report — Motherboard CoreBluetooth service
 
 ## DONE
 
-Implemented only the injectable Codable workout-session history store. The task brief at `task-5-brief.md` describes the subsequent Bluetooth transport work, so this implementation follows the direct Task 5 request for `WorkoutSessionStore` and does not begin that transport work or the later AppStore/HangTenApp dependency wiring.
+Implemented the Task 5 CoreBluetooth transport and `@MainActor` Motherboard service without changing the completed `WorkoutSessionStore` prework from `b6cc64e`.
 
 ## Files changed
 
-- `HangTen/Models/WorkoutSessionStore.swift` — `WorkoutSessionStoring` plus a `UserDefaults`-injected JSON store. It reads/writes the stable `workout.sessionHistory` key, sorts newest-first by `recordedAt` and UUID tie-breaker, retains 20 entries, tolerates missing/malformed values as an empty history, and persists append/removal operations. Only `WorkoutSessionRecord` summaries are stored; no raw samples are retained.
-- `HangTenTests/WorkoutSessionStoreTests.swift` — behavior tests for absent/malformed data, cross-instance persistence, deterministic ordering, the 20-record bound, and persisted removal.
-- `HangTen.xcodeproj/project.pbxproj` — hand-maintained source and test-file references/build-phase entries.
+- `HangTen/Models/MotherboardBluetoothService.swift` — app-level transport events/models, service coordinator, Nordic UART CoreBluetooth delegate transport, calibration/streaming/tare handling, measurement and battery publishing, and disconnect/retry cleanup.
+- `HangTenTests/MotherboardBluetoothServiceTests.swift` — existing RED fake-transport tests retained for command ordering, calibration, fragmented packets, power states, and reconnect limits.
+- `HangTen.xcodeproj/project.pbxproj` — service and test target references plus the Debug/Release Bluetooth usage description.
 
-## TDD evidence
+## Behavior delivered
 
-- RED: after adding the tests and Xcode references, `xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination "generic/platform=iOS Simulator"` failed because `HangTen/Models/WorkoutSessionStore.swift` was missing.
-- GREEN: the same bounded command passed after the implementation (`** TEST BUILD SUCCEEDED **`). `git diff --check` also passed.
+- Scans for Nordic UART service `6E400001-B5A3-F393-E0A9-E50E24DCCA9E`, filters supplied names to `Motherboard`, discovers RX/TX, enables TX notifications, and writes with response when available.
+- Notification enable precedes `C`; the service waits for all sixteen calibration rows before writing `S30`.
+- Parsed raw packets publish decoded measurements and battery state. Disconnects clear session data, retain the reported error, and make no measurements.
 
-## Test limitation
+## Verification
 
-Runtime XCTest was deliberately not invoked: the task ledger records a local simulator-service hang for focused and full tests. The bounded build-for-testing command compiled and linked the complete test bundle, including `WorkoutSessionStoreTests`, without waiting for a simulator runtime.
+- RED confirmed with bounded `xcodebuild build-for-testing ... -only-testing:HangTenTests/MotherboardBluetoothServiceTests`: expected missing `MotherboardBluetoothService`, `MotherboardTransport`, event, and device types.
+- GREEN passed with the same bounded build-for-testing command: `** TEST BUILD SUCCEEDED **`.
+- XCTest execution was intentionally not invoked; this Task 5 handoff requires bounded build-for-testing rather than waiting on simulator runtime availability.
 
 ## Commit
 
-`feat: persist workout session history` (this scoped implementation and report).
+`feat: connect to Motherboard over CoreBluetooth`
