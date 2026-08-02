@@ -1,0 +1,1288 @@
+import SwiftUI
+import UIKit
+
+struct RootView: View {
+    @State private var selectedTab = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Today", systemImage: "sun.max.fill")
+                }
+                .tag(0)
+
+            PlansView()
+                .tabItem {
+                    Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+                }
+                .tag(1)
+
+            ProgressDashboardView()
+                .tabItem {
+                    Label("Progress", systemImage: "chart.bar.xaxis")
+                }
+                .tag(2)
+        }
+        .tint(.hangGreenDark)
+    }
+}
+
+struct HomeView: View {
+    @EnvironmentObject private var store: AppStore
+    @State private var showsPlanReview: Bool = {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
+        #else
+        return false
+        #endif
+    }()
+	@State private var showsWorkoutReview: Bool = {
+		#if DEBUG
+		return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT"] == "1"
+		#else
+		return false
+		#endif
+	}()
+
+    var body: some View {
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 22) {
+                    homeHeader
+                    featuredPlan
+                    boardCard
+                    quickStats
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, 30)
+            }
+            .background(Color.hangBackground)
+            .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(isPresented: $showsPlanReview) {
+                PlanDetailView(plan: store.featuredPlan)
+            }
+			.navigationDestination(isPresented: $showsWorkoutReview) {
+				WorkoutView(plan: store.featuredPlan)
+			}
+        }
+    }
+
+    private var homeHeader: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 6) {
+                SectionLabel(title: "Hang Ten")
+                Text("Train with intention.")
+                    .font(.system(size: 31, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Your board. Your holds. Your next session.")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+
+            Spacer()
+
+            ZStack {
+                Circle()
+                    .fill(Color.hangGreen)
+                    .frame(width: 48, height: 48)
+                Image(systemName: "figure.climbing")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(Color.hangInk)
+            }
+        }
+    }
+
+    private var featuredPlan: some View {
+        NavigationLink(destination: PlanDetailView(plan: store.featuredPlan)) {
+            VStack(alignment: .leading, spacing: 17) {
+                HStack {
+                    Pill(title: "NEXT UP", tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.28))
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(store.featuredPlan.title)
+                        .font(.system(size: 23, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text(store.featuredPlan.subtitle)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                HStack(spacing: 8) {
+                    Label(store.featuredPlan.durationLabel, systemImage: "timer")
+                    Text("·")
+                    Label(store.featuredPlan.level, systemImage: "chart.bar")
+                }
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.hangInk.opacity(0.72))
+
+                HStack {
+                    Text("View session")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                    Spacer()
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 14, weight: .bold))
+                }
+                .foregroundStyle(Color.hangInk)
+                .padding(.top, 2)
+            }
+            .hangCard()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var boardCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 5) {
+                    SectionLabel(title: "Your board")
+                    Text(store.selectedBoard.name)
+                        .font(.system(size: 21, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text(store.selectedBoard.dimensions)
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+
+                Spacer()
+
+                Menu {
+                    ForEach(BoardCatalog.all) { board in
+                        Button {
+                            store.selectedBoard = board
+                        } label: {
+                            Label(
+                                board.name,
+                                systemImage: board.id == store.selectedBoard.id ? "checkmark" : "rectangle"
+                            )
+                        }
+                    }
+                } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
+                        .padding(10)
+                        .background(Color.hangBackground, in: Circle())
+                }
+                .accessibilityLabel("Choose hangboard")
+            }
+
+            BoardMapView(board: store.selectedBoard, showsLabels: false)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+
+            HStack(spacing: 7) {
+                Circle()
+                    .fill(Color.holdActive)
+                    .frame(width: 8, height: 8)
+                Text("Active holds appear in red")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                Spacer()
+                Link(destination: store.selectedBoard.productURL) {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
+                .accessibilityLabel("Open board product page")
+            }
+        }
+        .hangCard()
+    }
+
+    private var quickStats: some View {
+        HStack(spacing: 12) {
+            StatCard(value: "\(store.sessionsCompleted)", label: "Sessions", icon: "checkmark.seal.fill")
+            StatCard(value: "10", label: "Minutes", icon: "flame.fill")
+            StatCard(value: "Open", label: "Grip focus", icon: "hand.raised.fill")
+        }
+    }
+}
+
+private struct StatCard: View {
+    let value: String
+    let label: String
+    let icon: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            Text(value)
+                .font(.system(size: 21, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text(label)
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+}
+
+struct PlansView: View {
+    @EnvironmentObject private var store: AppStore
+
+    var body: some View {
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        SectionLabel(title: "Training library")
+                        Text("Choose your session.")
+                            .font(.system(size: 31, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.hangInk)
+                        Text("Every plan maps its instructions to the holds on your selected board.")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    ForEach(store.plans) { plan in
+                        NavigationLink(destination: PlanDetailView(plan: plan)) {
+                            PlanCard(plan: plan, board: store.board(for: plan))
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    sourceCard
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, 30)
+            }
+            .background(Color.hangBackground)
+            .toolbar(.hidden, for: .navigationBar)
+        }
+    }
+
+    private var sourceCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "link")
+                    .foregroundStyle(Color.hangGreenDark)
+                SectionLabel(title: "Built from the source")
+            }
+            Text("The first plan follows Metolius's ten-minute sequence format, translated to the Compact II hold names and geometry.")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Link(destination: PlanCatalog.metoliusTenMinute.sourceURL) {
+                HStack {
+                    Text("Read Metolius's guide")
+                    Image(systemName: "arrow.up.right")
+                }
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangGreenDark)
+            }
+        }
+        .hangCard()
+    }
+}
+
+private struct PlanCard: View {
+    let plan: TrainingPlan
+    let board: TrainingBoard
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Spacer()
+                Text(plan.durationLabel)
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(plan.title)
+                    .font(.system(size: 21, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text(plan.subtitle)
+                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 8) {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                Text(board.name)
+                Spacer()
+                Image(systemName: "chevron.right")
+            }
+            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .foregroundStyle(Color.hangGreenDark)
+        }
+        .hangCard()
+    }
+}
+
+struct PlanDetailView: View {
+    @EnvironmentObject private var store: AppStore
+    let plan: TrainingPlan
+
+    private var board: TrainingBoard {
+        store.board(for: plan)
+    }
+
+    private var firstStepHoldIDs: Set<String> {
+        guard let firstStep = plan.steps.first else { return [] }
+        return store.holdIDs(for: firstStep, on: board)
+    }
+
+    private var firstStepHold: BoardHold? {
+        board.holds.first { firstStepHoldIDs.contains($0.id) }
+    }
+
+    private var firstStepGripType: GripType? {
+        #if DEBUG
+        if let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP"],
+           let reviewGrip = GripType(rawValue: rawValue) {
+            return reviewGrip
+        }
+        #endif
+        return plan.steps.first?.gripType
+    }
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 21) {
+                titleBlock
+                boardPreview
+                stepsCard
+                sourceCard
+                safetyNote
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 116)
+        }
+        .background(Color.hangBackground)
+        .navigationTitle("Plan")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var titleBlock: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Spacer()
+                Label(plan.durationLabel, systemImage: "timer")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            Text(plan.title)
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text(plan.subtitle)
+                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+
+            NavigationLink(destination: WorkoutView(plan: plan)) {
+                HStack {
+                    Image(systemName: "play.fill")
+                    Text("Start routine")
+                    Spacer()
+                    Text(plan.durationLabel)
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                }
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+                .padding(.horizontal, 17)
+                .padding(.vertical, 15)
+                .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    private var boardPreview: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                SectionLabel(title: "First hold cue")
+                Text(board.name)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            }
+            BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
+                .padding(.horizontal, 12)
+            if let firstStepHold {
+                GripDiagramView(hold: firstStepHold, gripType: firstStepGripType)
+            }
+        }
+        .hangCard()
+    }
+
+    private var stepsCard: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                SectionLabel(title: "Session flow")
+                Spacer()
+                Text("\(plan.steps.count) cues")
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+            .padding(.bottom, 14)
+
+            ForEach(Array(plan.steps.enumerated()), id: \.element.id) { index, step in
+                StepRow(step: step, isLast: index == plan.steps.count - 1)
+            }
+
+        }
+        .hangCard()
+    }
+
+    private var safetyNote: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(Color.warmUp)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Train within your limits")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Warm up thoroughly, keep the board secure, and stop if you feel pain. This app is a timer and hold cue, not medical advice.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(16)
+        .background(Color.warmUp.opacity(0.13), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var sourceCard: some View {
+        Link(destination: plan.sourceURL) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "book.pages.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(Color.hangGreenDark)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Source: \(plan.sourceLabel)")
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text("Open the original Metolius guidance for the full context behind this sequence.")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "arrow.up.right")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(Color.hangGreenDark)
+            }
+            .hangCard(padding: 16)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct StepRow: View {
+    let step: WorkoutStep
+    let isLast: Bool
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(spacing: 0) {
+                ZStack {
+                    Circle()
+                        .fill(step.phase.tint.opacity(0.17))
+                        .frame(width: 31, height: 31)
+                    Text("\(step.number)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(step.phase.tint)
+                }
+                if !isLast {
+                    Rectangle()
+                        .fill(Color.hangLine)
+                        .frame(width: 1, height: 44)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(step.title)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Spacer()
+                    Text(step.durationLabel)
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+                Text(step.instruction)
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(step.accessory)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(step.phase.tint)
+            }
+            .padding(.bottom, isLast ? 0 : 12)
+        }
+    }
+}
+
+private struct WorkoutAudioMoment: Hashable {
+	let key: String
+	let phrase: String
+}
+
+struct WorkoutView: View {
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.dismiss) private var dismiss
+	@StateObject private var audioCoach = WorkoutAudioCoach()
+	@AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
+
+    let plan: TrainingPlan
+
+    @State private var startedAt: Date?
+    @State private var pausedElapsed: TimeInterval = 0
+    @State private var routineStartedAt: Date?
+    @State private var showEndConfirmation = false
+    @State private var didComplete = false
+
+    private var board: TrainingBoard {
+        store.board(for: plan)
+    }
+
+    var body: some View {
+		GeometryReader { geometry in
+			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+				let elapsed = currentElapsed(at: context.date)
+				let step = step(at: elapsed)
+				let stepElapsed = elapsedInStep(at: elapsed)
+				let countdown = countdownRemaining(at: context.date)
+				let isComplete = elapsed >= plan.duration
+				let isResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+				let highlightedIDs = store.holdIDs(for: step, on: board)
+				let activeHoldIDs = countdown > 0 || isComplete || isResting ? [] : highlightedIDs
+				let activeHold = board.holds.first { activeHoldIDs.contains($0.id) }
+				let isLandscape = geometry.size.width > geometry.size.height
+				let audioMoment = audioMoment(
+					step: step,
+					stepElapsed: stepElapsed,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete
+				)
+
+				Group {
+					if isLandscape {
+						landscapeSession(
+							step: step,
+							stepElapsed: stepElapsed,
+							elapsed: elapsed,
+							countdown: countdown,
+							isResting: isResting,
+							isComplete: isComplete,
+							activeHoldIDs: activeHoldIDs,
+							activeHold: activeHold
+						)
+					} else {
+						portraitSession(
+							step: step,
+							stepElapsed: stepElapsed,
+							elapsed: elapsed,
+							countdown: countdown,
+							isResting: isResting,
+							isComplete: isComplete,
+							activeHoldIDs: activeHoldIDs,
+							activeHold: activeHold
+						)
+					}
+				}
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.background(Color.hangBackground)
+				.onChange(of: audioMoment) { _, moment in
+					guard audioCuesEnabled, let moment else { return }
+					audioCoach.speak(moment.phrase)
+				}
+			}
+		}
+        .navigationTitle("Session")
+        .navigationBarTitleDisplayMode(.inline)
+		.toolbar(.hidden, for: .tabBar)
+        .toolbar {
+			ToolbarItemGroup(placement: .topBarTrailing) {
+				Button {
+					audioCuesEnabled.toggle()
+					if !audioCuesEnabled {
+						audioCoach.stop()
+					}
+				} label: {
+					Image(systemName: audioCuesEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+				}
+				.accessibilityLabel(audioCuesEnabled ? "Turn off spoken cues" : "Turn on spoken cues")
+
+				Button("End") {
+					showEndConfirmation = true
+				}
+				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangGreenDark)
+			}
+        }
+        .confirmationDialog("End this session?", isPresented: $showEndConfirmation, titleVisibility: .visible) {
+            Button("End session", role: .destructive) {
+                endSession()
+            }
+            Button("Keep training", role: .cancel) {}
+        } message: {
+            Text("This will stop the timer without logging a workout to Apple Health.")
+        }
+		.onDisappear {
+			audioCoach.stop()
+		}
+    }
+
+	private func portraitSession(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool,
+		activeHoldIDs: Set<String>,
+		activeHold: BoardHold?
+	) -> some View {
+		ScrollView(showsIndicators: false) {
+			VStack(alignment: .leading, spacing: 19) {
+				sessionHeader(
+					step: step,
+					stepElapsed: stepElapsed,
+					elapsed: elapsed,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete
+				)
+				controlButton(isComplete: isComplete, countdown: countdown)
+				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+					.padding(.horizontal, 2)
+				if countdown == 0, !isComplete, !isResting, let activeHold {
+					GripDiagramView(hold: activeHold, gripType: step.gripType)
+				}
+				cueCard(
+					step: step,
+					stepElapsed: stepElapsed,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete
+				)
+			}
+			.padding(.horizontal, 20)
+			.padding(.top, 16)
+			.padding(.bottom, 34)
+		}
+	}
+
+	private func landscapeSession(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool,
+		activeHoldIDs: Set<String>,
+		activeHold: BoardHold?
+	) -> some View {
+		VStack(spacing: 9) {
+			landscapeHeader(
+				step: step,
+				stepElapsed: stepElapsed,
+				countdown: countdown,
+				isResting: isResting,
+				isComplete: isComplete
+			)
+
+			ProgressView(value: min(elapsed, plan.duration), total: plan.duration)
+				.tint(Color.hangGreenDark)
+
+			HStack(spacing: 12) {
+				if countdown == 0, !isComplete, !isResting, let activeHold {
+					let gripType = step.gripType ?? activeHold.gripType
+					GripHandCueCard(hold: activeHold, gripType: gripType, side: .left)
+						.frame(width: 142)
+				}
+
+				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+					.frame(maxWidth: .infinity)
+					.frame(maxHeight: 130)
+
+				if countdown == 0, !isComplete, !isResting, let activeHold {
+					let gripType = step.gripType ?? activeHold.gripType
+					GripHandCueCard(hold: activeHold, gripType: gripType, side: .right)
+						.frame(width: 142)
+				}
+			}
+			.frame(maxHeight: 132)
+
+			HStack(alignment: .center, spacing: 12) {
+				landscapeCueCard(
+					step: step,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete
+				)
+				controlButton(isComplete: isComplete, countdown: countdown)
+					.frame(width: 224)
+			}
+		}
+		.padding(.horizontal, 16)
+		.padding(.vertical, 10)
+	}
+
+	private func landscapeHeader(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool
+	) -> some View {
+		HStack(alignment: .center, spacing: 16) {
+			VStack(alignment: .leading, spacing: 3) {
+				SectionLabel(
+					title: isComplete
+						? "Session complete"
+						: countdown > 0
+							? "Get ready"
+							: "Step \(step.number) of \(plan.steps.count)"
+				)
+				Text(isComplete ? "Nice work." : isResting ? "Step off and shake out" : step.title)
+					.font(.system(size: 22, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangInk)
+					.lineLimit(1)
+			}
+
+			Spacer(minLength: 12)
+
+			Pill(
+				title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
+				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint,
+				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
+			)
+
+			Text(
+				timeLabel(
+					isComplete
+						? 0
+						: countdown > 0
+							? TimeInterval(countdown)
+							: intervalRemaining(step: step, stepElapsed: stepElapsed)
+				)
+			)
+			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+			.foregroundStyle(Color.hangInk)
+		}
+	}
+
+	private func landscapeCueCard(
+		step: WorkoutStep,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool
+	) -> some View {
+		VStack(alignment: .leading, spacing: 5) {
+			SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
+			Text(
+				isComplete
+					? "Cool down, then log how your fingers feel."
+					: countdown > 0
+						? "Get into position for \(step.title.lowercased())."
+						: isResting
+							? "Step off, shake out, and breathe."
+							: step.instruction
+			)
+			.font(.system(size: 14, weight: .semibold, design: .rounded))
+			.foregroundStyle(Color.hangInk)
+			.lineLimit(2)
+			.minimumScaleFactor(0.82)
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.hangCard(padding: 12)
+	}
+
+    private func sessionHeader(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        elapsed: TimeInterval,
+        countdown: Int,
+        isResting: Bool,
+        isComplete: Bool
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 13) {
+            HStack {
+                SectionLabel(
+                    title: isComplete
+                        ? "Session complete"
+                        : countdown > 0
+                            ? "Get ready"
+                            : "Step \(step.number) of \(plan.steps.count)"
+                )
+                Spacer()
+                Pill(
+                    title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
+                    tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint,
+                    fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
+                )
+            }
+
+            Text(isComplete ? "Nice work." : countdown > 0 ? step.title : isResting ? "Step off and shake out" : step.title)
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+
+            HStack(alignment: .firstTextBaseline, spacing: 7) {
+                Text(
+                    timeLabel(
+                        isComplete
+                            ? 0
+                            : countdown > 0
+                                ? TimeInterval(countdown)
+                                : intervalRemaining(step: step, stepElapsed: stepElapsed)
+                    )
+                )
+                    .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
+                    .foregroundStyle(Color.hangInk)
+                Text(
+                    isComplete
+                        ? "ready to log"
+                        : countdown > 0
+                            ? "starting in"
+                            : isResting ? "rest" : "left in cue"
+                )
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+
+            ProgressView(value: min(elapsed, plan.duration), total: plan.duration)
+                .tint(Color.hangGreenDark)
+        }
+    }
+
+    private func cueCard(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        countdown: Int,
+        isResting: Bool,
+        isComplete: Bool
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 11) {
+            HStack {
+                SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
+                Spacer()
+                if !isComplete, countdown == 0 {
+                    Text(intervalLabel(for: step))
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(isResting ? Color.restBlue : step.phase.tint)
+                }
+            }
+
+            Text(
+                isComplete
+                    ? "Take a few easy minutes to cool down, then log how your fingers feel."
+                    : countdown > 0
+                        ? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
+                        : isResting
+                            ? "Step off the board, shake out, and breathe. Your next hold cue will appear when the rest interval ends."
+                            : step.instruction
+            )
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if !isComplete, countdown == 0 {
+                Text(isResting ? "Rest interval · next cue follows automatically" : step.accessory)
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(isResting ? Color.restBlue : step.phase.tint)
+            }
+        }
+        .hangCard()
+    }
+
+    private func controlButton(isComplete: Bool, countdown: Int) -> some View {
+        Button {
+            if isComplete {
+                completeSession()
+            } else if countdown > 0 {
+                cancelCountdown()
+            } else {
+                toggleRunning()
+            }
+        } label: {
+            HStack {
+                Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (startedAt == nil ? "play.fill" : "pause.fill"))
+                Text(
+                    isComplete
+                        ? "Log session"
+                        : countdown > 0
+                            ? "Cancel countdown"
+                            : (startedAt == nil && pausedElapsed == 0 ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
+                )
+                Spacer()
+                if isComplete {
+                    Image(systemName: "arrow.right")
+                }
+            }
+            .font(.system(size: 16, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangInk)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
+            .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 17, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func toggleRunning() {
+        if let startedAt {
+            if startedAt > Date() {
+                cancelCountdown()
+                return
+            }
+            pausedElapsed += Date().timeIntervalSince(startedAt)
+            self.startedAt = nil
+        } else {
+            let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
+            if pausedElapsed == 0 {
+                routineStartedAt = start
+            }
+            startedAt = start
+        }
+    }
+
+    private func cancelCountdown() {
+        startedAt = nil
+        routineStartedAt = nil
+    }
+
+    private func endSession() {
+        startedAt = nil
+        dismiss()
+    }
+
+    private func completeSession() {
+        guard !didComplete else {
+            dismiss()
+            return
+        }
+        didComplete = true
+        let endDate = Date()
+        let startDate = routineStartedAt ?? endDate.addingTimeInterval(-plan.duration)
+        store.markSessionComplete(plan, startDate: startDate, endDate: endDate)
+        dismiss()
+    }
+
+    private func currentElapsed(at date: Date) -> TimeInterval {
+        let activeElapsed = startedAt.map { max(0, date.timeIntervalSince($0)) } ?? 0
+        return min(plan.duration, pausedElapsed + max(0, activeElapsed))
+    }
+
+    private func countdownRemaining(at date: Date) -> Int {
+        guard let startedAt, pausedElapsed == 0, startedAt > date else { return 0 }
+        return max(1, Int(ceil(startedAt.timeIntervalSince(date))))
+    }
+
+    private func step(at elapsed: TimeInterval) -> WorkoutStep {
+        var cursor: TimeInterval = 0
+        for step in plan.steps {
+            if elapsed < cursor + step.duration {
+                return step
+            }
+            cursor += step.duration
+        }
+        return plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+    }
+
+    private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
+        var cursor: TimeInterval = 0
+        for step in plan.steps {
+            if elapsed < cursor + step.duration {
+                return max(0, elapsed - cursor)
+            }
+            cursor += step.duration
+        }
+        return plan.steps.last?.duration ?? 0
+    }
+
+    private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
+        step.hasRestInterval && stepElapsed >= step.activeDuration
+    }
+
+    private func intervalRemaining(step: WorkoutStep, stepElapsed: TimeInterval) -> TimeInterval {
+        if isRestInterval(step: step, stepElapsed: stepElapsed) {
+            return max(0, step.duration - stepElapsed)
+        }
+        return max(0, step.activeDuration - stepElapsed)
+    }
+
+    private func intervalLabel(for step: WorkoutStep) -> String {
+        step.hasRestInterval ? "Hang" : step.phase.label
+    }
+
+    private func timeLabel(_ value: TimeInterval) -> String {
+        let seconds = max(0, Int(value.rounded(.up)))
+        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+    }
+
+	private func audioMoment(
+		step: WorkoutStep,
+		stepElapsed: TimeInterval,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool
+	) -> WorkoutAudioMoment? {
+		guard startedAt != nil else { return nil }
+
+		if countdown > 0 {
+			return WorkoutAudioMoment(
+				key: "initial-\(countdown)",
+				phrase: "\(countdown)"
+			)
+		}
+
+		if isComplete {
+			return WorkoutAudioMoment(
+				key: "session-complete",
+				phrase: "Session complete"
+			)
+		}
+
+		let segmentName = isResting ? "rest" : "active"
+		let segmentElapsed = isResting
+			? max(0, stepElapsed - step.activeDuration)
+			: stepElapsed
+
+		if segmentElapsed < 0.55 {
+			return WorkoutAudioMoment(
+				key: "\(step.id)-\(segmentName)-start",
+				phrase: isResting ? "Rest" : spokenStartPhrase(for: step)
+			)
+		}
+
+		let secondsRemaining = Int(
+			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
+		)
+		if (1...3).contains(secondsRemaining) {
+			return WorkoutAudioMoment(
+				key: "\(step.id)-\(segmentName)-\(secondsRemaining)",
+				phrase: "\(secondsRemaining)"
+			)
+		}
+
+		return nil
+	}
+
+	private func spokenStartPhrase(for step: WorkoutStep) -> String {
+		switch step.phase {
+		case .hang:
+			return "Hang. \(step.title)"
+		case .warmUp:
+			return "Begin warm up. \(step.title)"
+		case .pull:
+			return "Begin. \(step.title)"
+		case .coolDown:
+			return "Begin cool down. \(step.title)"
+		case .rest:
+			return "Rest"
+		}
+	}
+}
+
+struct ProgressDashboardView: View {
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 21) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        SectionLabel(title: "Keep showing up")
+                        Text("Your progress.")
+                            .font(.system(size: 31, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.hangInk)
+                        Text("Small, consistent sessions build durable finger strength.")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                    }
+
+                    streakCard
+                    boardInfo
+                    healthCard
+                    recoveryCard
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, 30)
+            }
+            .background(Color.hangBackground)
+            .toolbar(.hidden, for: .navigationBar)
+        }
+		.onAppear {
+			store.refreshHealthAuthorization()
+		}
+    }
+
+    private var streakCard: some View {
+        HStack(spacing: 17) {
+            ZStack {
+                Circle()
+                    .stroke(Color.hangGreen.opacity(0.25), lineWidth: 10)
+                Circle()
+                    .trim(from: 0, to: store.sessionsCompleted == 0 ? 0.05 : 0.68)
+                    .stroke(Color.hangGreenDark, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                Text("\(store.sessionsCompleted)")
+                    .font(.system(size: 25, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            }
+            .frame(width: 88, height: 88)
+
+            VStack(alignment: .leading, spacing: 6) {
+                SectionLabel(title: "Sessions logged")
+                Text(store.sessionsCompleted == 0 ? "Your first one is waiting." : "You’re building momentum.")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text(store.lastSessionTitle ?? "Start with the Metolius sequence.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .lineLimit(2)
+            }
+        }
+        .hangCard()
+    }
+
+    private var boardInfo: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            SectionLabel(title: "Current setup")
+            HStack {
+                Image(systemName: "rectangle.portrait.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(width: 34, height: 34)
+                    .background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(store.selectedBoard.name)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text(store.selectedBoard.dimensions)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+                Spacer()
+                Link(destination: store.selectedBoard.productURL) {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
+            }
+        }
+        .hangCard()
+    }
+
+    private var recoveryCard: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "moon.stars.fill")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Color.coolDownPurple)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Recovery matters")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Train only when you feel recovered. If your warm-up feels unusually hard, take the rest day.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(16)
+        .background(Color.coolDownPurple.opacity(0.11), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+    private var healthCard: some View {
+		VStack(alignment: .leading, spacing: 12) {
+			HStack(alignment: .top, spacing: 12) {
+				Image(systemName: "heart.text.square.fill")
+					.font(.system(size: 18, weight: .bold))
+					.foregroundStyle(Color.holdActiveDeep)
+					.frame(width: 34, height: 34)
+					.background(Color.holdActive.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+				VStack(alignment: .leading, spacing: 5) {
+					HStack {
+						Text("Apple Health")
+							.font(.system(size: 15, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+						Spacer()
+						Pill(
+							title: store.healthAuthorizationState.statusLabel,
+							tint: healthStatusTint,
+							fill: healthStatusTint.opacity(0.12)
+						)
+					}
+
+					Text(store.healthAuthorizationState.detail)
+						.font(.system(size: 13, weight: .medium, design: .rounded))
+						.foregroundStyle(Color.hangMuted)
+						.fixedSize(horizontal: false, vertical: true)
+				}
+			}
+
+			if let healthAuthorizationError = store.healthAuthorizationError {
+				Text(healthAuthorizationError)
+					.font(.system(size: 12, weight: .semibold, design: .rounded))
+					.foregroundStyle(Color.holdActiveDeep)
+			}
+
+			if store.healthAuthorizationState == .notDetermined ||
+				store.healthAuthorizationState == .denied {
+				Button(action: handleHealthAuthorization) {
+					HStack {
+						Image(systemName: store.healthAuthorizationState == .denied ? "gear" : "heart.fill")
+						Text(store.healthAuthorizationState == .denied ? "Open Health settings" : "Connect Apple Health")
+						Spacer()
+						Image(systemName: "arrow.right")
+					}
+					.font(.system(size: 14, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangInk)
+					.padding(.horizontal, 14)
+					.padding(.vertical, 12)
+					.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+				}
+				.buttonStyle(.plain)
+			}
+		}
+		.padding(16)
+		.background(Color.holdActive.opacity(0.08), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+
+	private var healthStatusTint: Color {
+		switch store.healthAuthorizationState {
+		case .authorized:
+			.hangGreenDark
+		case .denied:
+			.holdActiveDeep
+		case .notDetermined, .unavailable:
+			.hangMuted
+		}
+	}
+
+	private func handleHealthAuthorization() {
+		if store.healthAuthorizationState == .denied,
+		   let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+			openURL(settingsURL)
+		} else {
+			store.requestHealthAuthorization()
+		}
+	}
+}
