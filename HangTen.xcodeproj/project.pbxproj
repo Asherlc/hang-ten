@@ -22,6 +22,8 @@
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
+		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
+		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,9 @@
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
+		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +58,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC0000000000000000000004 /* HangTenTests Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000017 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -60,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				DD0000000000000000000002 /* HangTen */,
+				DD0000000000000000000007 /* HangTenTests */,
 				DD0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,7 +132,44 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		DD0000000000000000000007 /* HangTenTests */ = {
+			isa = PBXGroup;
+			children = (
+				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
+			);
+			path = HangTenTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		990000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE0000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE0000000000000000000001;
+			remoteInfo = HangTen;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		990000000000000000000002 /* HangTen target dependency */ = {
+			isa = PBXTargetDependency;
+			target = EE0000000000000000000001 /* HangTen */;
+			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC0000000000000000000005 /* HangTenTests Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		EE0000000000000000000001 /* HangTen */ = {
@@ -138,6 +189,23 @@
 			productReference = BB0000000000000000000010 /* HangTen.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EE0000000000000000000002 /* HangTenTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */;
+			buildPhases = (
+				CC0000000000000000000005 /* HangTenTests Sources */,
+				CC0000000000000000000004 /* HangTenTests Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				990000000000000000000002 /* HangTen target dependency */,
+			);
+			name = HangTenTests;
+			productName = HangTenTests;
+			productReference = BB0000000000000000000019 /* HangTenTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -150,6 +218,10 @@
 				TargetAttributes = {
 					EE0000000000000000000001 = {
 						CreatedOnToolsVersion = 26.6;
+					};
+					EE0000000000000000000002 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = EE0000000000000000000001;
 					};
 				};
 			};
@@ -167,6 +239,7 @@
 			projectRoot = "";
 			targets = (
 				EE0000000000000000000001 /* HangTen */,
+				EE0000000000000000000002 /* HangTenTests */,
 			);
 		};
 /* End PBXProject section */
@@ -345,6 +418,36 @@
 			};
 			name = Release;
 		};
+		FF0000000000000000000023 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HangTen.app/HangTen";
+			};
+			name = Debug;
+		};
+		FF0000000000000000000024 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HangTen.app/HangTen";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -362,6 +465,15 @@
 			buildConfigurations = (
 				FF0000000000000000000021 /* Debug */,
 				FF0000000000000000000022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF0000000000000000000023 /* Debug */,
+				FF0000000000000000000024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
