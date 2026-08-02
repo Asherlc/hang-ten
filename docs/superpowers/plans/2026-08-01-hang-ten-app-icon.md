@@ -53,7 +53,7 @@ Run:
 ```bash
 cp /Users/asherlc/.codex/generated_images/019fc0a6-4db9-7c73-8e16-09dd5c3da72a/exec-44531cb7-b2ce-45b8-ab00-9daf80209e8c.png \
   HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-sips --resampleWidth 1024 --resampleHeight 1024 \
+sips -z 1024 1024 \
   HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
 ```
 
