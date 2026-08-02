@@ -143,5 +143,4 @@ jobs:
           api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           backend: appstore-api
-          uses-non-exempt-encryption: 'false'
           wait-for-processing: 'true'
