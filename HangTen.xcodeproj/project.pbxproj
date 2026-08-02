@@ -23,6 +23,7 @@
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000019 /* WorkoutTimelineTests.swift */; };
+		AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* WorkoutTimeline.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
 		BB0000000000000000000019 /* WorkoutTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimelineTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000020 /* WorkoutTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimeline.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
+				BB0000000000000000000020 /* WorkoutTimeline.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
+				AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
