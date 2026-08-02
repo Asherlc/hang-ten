@@ -74,4 +74,40 @@ final class MotherboardWorkoutRecorderTests: XCTestCase {
         XCTAssertEqual(result.intervals, [LoadInterval(start: 10, end: 15)])
         XCTAssertEqual(result.status, .measured)
     }
+
+    func testLateFirstSampleClipsToExplicitScheduledActiveBoundary() {
+        var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 2.5, releaseRatio: 0.8, debounceDuration: 0, mergeGapDuration: 0))
+        recorder.consume(measurement(load: 3, at: 10), stepID: "step", plannedActiveDuration: 5, workoutElapsed: 4, stepStartElapsed: 0, isActive: true)
+        recorder.consume(measurement(load: 3, at: 12), stepID: "step", plannedActiveDuration: 5, workoutElapsed: 6, stepStartElapsed: 0, isActive: true)
+        recorder.pause(at: 6)
+
+        let result = recorder.finish(at: 6)[0]
+        XCTAssertEqual(result.intervals, [LoadInterval(start: 4, end: 5)])
+    }
+
+    func testPauseFlushesAndPreventsMergeAcrossResume() {
+        var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 2.5, releaseRatio: 0.8, debounceDuration: 0, mergeGapDuration: 2))
+        recorder.consume(measurement(load: 3, at: 1), stepID: "step", plannedActiveDuration: 10, workoutElapsed: 1, stepStartElapsed: 0, isActive: true)
+        recorder.pause(at: 2)
+        recorder.consume(measurement(load: 3, at: 10), stepID: "step", plannedActiveDuration: 10, workoutElapsed: 2, stepStartElapsed: 0, isActive: true)
+        recorder.consume(measurement(load: 0, at: 11), stepID: "step", plannedActiveDuration: 10, workoutElapsed: 3, stepStartElapsed: 0, isActive: true)
+
+        let result = recorder.finish(at: 3)[0]
+        XCTAssertEqual(result.intervals, [
+            LoadInterval(start: 1, end: 2),
+            LoadInterval(start: 2, end: 3)
+        ])
+    }
+
+    func testLivePeakResetsWhenActiveStepChanges() {
+        var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 2.5, releaseRatio: 0.8, debounceDuration: 0, mergeGapDuration: 0))
+        recorder.consume(measurement(load: 10, at: 1), stepID: "first", plannedActiveDuration: 5, workoutElapsed: 1, stepStartElapsed: 0, isActive: true)
+        recorder.pause(at: 5)
+        recorder.consume(measurement(load: 3, at: 6), stepID: "second", plannedActiveDuration: 5, workoutElapsed: 6, stepStartElapsed: 5, isActive: true)
+
+        XCTAssertEqual(recorder.currentPeakLoadKGF, 3)
+        let results = recorder.finish(at: 6)
+        XCTAssertEqual(results[0].peakLoadKGF, 10)
+        XCTAssertEqual(results[1].peakLoadKGF, 3)
+    }
 }

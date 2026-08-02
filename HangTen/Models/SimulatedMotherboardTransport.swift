@@ -49,7 +49,9 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
     }
 
     func setTXNotificationsEnabled(_ enabled: Bool) {
-        if !enabled {
+        if enabled {
+            eventHandler?(.notificationsReady)
+        } else {
             cancelStream()
         }
     }
@@ -59,6 +61,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
         case "C":
             emitCalibration()
         case "S30":
+            eventHandler?(.notification(Data("Stream:30\r\n".utf8), Date()))
             scheduleStream()
         default:
             break

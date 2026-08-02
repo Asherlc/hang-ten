@@ -103,7 +103,13 @@ final class MotherboardSettingsStore: ObservableObject {
     }
 
     @Published var thresholdKGF: Double {
-        didSet { defaults.set(thresholdKGF, forKey: Key.thresholdKGF) }
+        didSet {
+            let normalized = Self.normalizedThreshold(thresholdKGF)
+            if thresholdKGF != normalized {
+                thresholdKGF = normalized
+            }
+            defaults.set(normalized, forKey: Key.thresholdKGF)
+        }
     }
 
     init(defaults: UserDefaults = .standard) {
@@ -117,10 +123,12 @@ final class MotherboardSettingsStore: ObservableObject {
         }
 
         let storedThreshold = defaults.object(forKey: Key.thresholdKGF) as? Double
-        if let storedThreshold, storedThreshold.isFinite, storedThreshold >= 0.1 {
-            thresholdKGF = storedThreshold
-        } else {
-            thresholdKGF = 2.5
-        }
+        thresholdKGF = Self.normalizedThreshold(storedThreshold ?? 2.5)
+        defaults.set(thresholdKGF, forKey: Key.thresholdKGF)
+    }
+
+    private static func normalizedThreshold(_ value: Double) -> Double {
+        guard value.isFinite, value >= 0.1 else { return 2.5 }
+        return min(value, 50)
     }
 }

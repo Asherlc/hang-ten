@@ -21,8 +21,23 @@ enum MotherboardTransportEvent {
     case discovered(MotherboardDiscoveredDevice)
     case connected
     case characteristicsReady
+    case notificationsReady
     case notification(Data, Date)
     case disconnected(String?)
+}
+
+struct MotherboardServiceTimeouts {
+    let scan: TimeInterval
+    let connect: TimeInterval
+    let calibration: TimeInterval
+    let streamAcknowledgement: TimeInterval
+
+    static let production = MotherboardServiceTimeouts(
+        scan: 15,
+        connect: 10,
+        calibration: 10,
+        streamAcknowledgement: 5
+    )
 }
 
 @MainActor
@@ -46,16 +61,23 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var connectedDeviceID: UUID?
 
     private let transport: MotherboardTransport
+    private let timeouts: MotherboardServiceTimeouts
     private var parser: MotherboardProtocolParser
     private var calibrationRows: [MotherboardCalibrationRow] = []
     private var calibration: MotherboardCalibration?
     private var tareKGF = Array(repeating: 0.0, count: 4)
     private var wantsConnection = false
     private var reconnectAttempts = 0
+    private var timeoutTask: Task<Void, Never>?
 
-    init(transport: MotherboardTransport, parser: MotherboardProtocolParser = .init()) {
+    init(
+        transport: MotherboardTransport,
+        parser: MotherboardProtocolParser = .init(),
+        timeouts: MotherboardServiceTimeouts = .production
+    ) {
         self.transport = transport
         self.parser = parser
+        self.timeouts = timeouts
         transport.eventHandler = { [weak self] event in
             self?.handle(event)
         }
@@ -67,6 +89,7 @@ final class MotherboardBluetoothService: ObservableObject {
         lastError = nil
         resetSession()
         state = .scanning
+        scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
         transport.startScan()
     }
 
@@ -79,9 +102,11 @@ final class MotherboardBluetoothService: ObservableObject {
 
     func startStreaming() {
         guard calibration != nil, state != .streaming else { return }
-        transport.setTXNotificationsEnabled(true)
+        scheduleTimeout(
+            after: timeouts.streamAcknowledgement,
+            message: "Motherboard did not acknowledge the 30 Hz stream. Reconnect the sensor and try again."
+        )
         transport.write(MotherboardProtocol.streamCommand(rate: 30))
-        state = .streaming
     }
 
     func stopStreaming() {
@@ -102,9 +127,11 @@ final class MotherboardBluetoothService: ObservableObject {
 
         case .discovered(let device):
             guard wantsConnection, state == .scanning else { return }
+            cancelTimeout()
             transport.stopScan()
             connectedDeviceID = device.id
             state = .connecting
+            scheduleTimeout(after: timeouts.connect, message: "Motherboard connection timed out. Move the sensor closer and try again.")
             transport.connect(to: device)
 
         case .connected:
@@ -115,6 +142,11 @@ final class MotherboardBluetoothService: ObservableObject {
             guard wantsConnection else { return }
             state = .calibrating
             transport.setTXNotificationsEnabled(true)
+
+        case .notificationsReady:
+            guard wantsConnection, state == .calibrating else { return }
+            cancelTimeout()
+            scheduleTimeout(after: timeouts.calibration, message: "Motherboard calibration timed out. Reconnect the sensor and try again.")
             transport.write(MotherboardProtocol.command("C"))
 
         case .notification(let data, let receivedAt):
@@ -159,7 +191,7 @@ final class MotherboardBluetoothService: ObservableObject {
                 startStreaming()
 
             case .rawPacket(let packet, let timestamp):
-                guard let calibration else { continue }
+                guard state == .streaming, let calibration else { continue }
                 let measurement = MotherboardProtocol.decode(
                     packet,
                     timestamp: timestamp,
@@ -169,14 +201,15 @@ final class MotherboardBluetoothService: ObservableObject {
                 latestMeasurement = measurement
                 batteryValue = measurement.batteryValue
 
-            case .streamStarted:
+            case .streamStarted(let rate):
+                guard rate == 30, calibration != nil else { continue }
+                cancelTimeout()
                 state = .streaming
+                reconnectAttempts = 0
+                lastError = nil
 
             case .error(let message):
-                wantsConnection = false
-                cleanupTransportSession()
-                lastError = message
-                state = .failed
+                fail(message)
             }
         }
     }
@@ -192,6 +225,7 @@ final class MotherboardBluetoothService: ObservableObject {
 
         reconnectAttempts += 1
         state = .scanning
+        scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
         transport.startScan()
     }
 
@@ -206,6 +240,7 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     private func cleanupTransportSession() {
+        cancelTimeout()
         transport.stopScan()
         transport.setTXNotificationsEnabled(false)
         transport.disconnect()
@@ -221,32 +256,78 @@ final class MotherboardBluetoothService: ObservableObject {
         batteryValue = nil
         connectedDeviceID = nil
     }
+
+    private func scheduleTimeout(after delay: TimeInterval, message: String) {
+        cancelTimeout()
+        let nanoseconds = UInt64(max(0, delay) * 1_000_000_000)
+        timeoutTask = Task { [weak self] in
+            do {
+                try await Task.sleep(nanoseconds: nanoseconds)
+            } catch {
+                return
+            }
+            guard !Task.isCancelled else { return }
+            self?.fail(message)
+        }
+    }
+
+    private func cancelTimeout() {
+        timeoutTask?.cancel()
+        timeoutTask = nil
+    }
+
+    private func fail(_ message: String) {
+        wantsConnection = false
+        cleanupTransportSession()
+        lastError = message
+        state = .failed
+    }
 }
+
+protocol MotherboardCentralManaging: AnyObject {
+    var state: CBManagerState { get }
+    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?)
+    func stopScan()
+    func connect(_ peripheral: CBPeripheral, options: [String: Any]?)
+    func cancelPeripheralConnection(_ peripheral: CBPeripheral)
+}
+
+extension CBCentralManager: MotherboardCentralManaging {}
 
 @MainActor
 final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     var eventHandler: ((MotherboardTransportEvent) -> Void)?
 
-    private var centralManager: CBCentralManager!
+    private let centralManagerFactory: (CBCentralManagerDelegate) -> MotherboardCentralManaging
+    private var centralManager: MotherboardCentralManaging?
     private var discoveredPeripherals: [UUID: CBPeripheral] = [:]
     private var selectedPeripheral: CBPeripheral?
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
     private var scanRequested = false
 
-    override init() {
+    override convenience init() {
+        self.init { delegate in
+            CBCentralManager(delegate: delegate, queue: .main)
+        }
+    }
+
+    init(centralManagerFactory: @escaping (CBCentralManagerDelegate) -> MotherboardCentralManaging) {
+        self.centralManagerFactory = centralManagerFactory
         super.init()
-        centralManager = CBCentralManager(delegate: self, queue: .main)
     }
 
     func startScan() {
         scanRequested = true
+        if centralManager == nil {
+            centralManager = centralManagerFactory(self)
+        }
         beginScanIfPossible()
     }
 
     func stopScan() {
         scanRequested = false
-        centralManager.stopScan()
+        centralManager?.stopScan()
     }
 
     func connect(to device: MotherboardDiscoveredDevice) {
@@ -258,14 +339,14 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
         selectedPeripheral = peripheral
         peripheral.delegate = self
-        centralManager.connect(peripheral)
+        centralManager?.connect(peripheral, options: nil)
     }
 
     func disconnect() {
         stopScan()
         guard let selectedPeripheral else { return }
         clearSelectedPeripheral()
-        centralManager.cancelPeripheralConnection(selectedPeripheral)
+        centralManager?.cancelPeripheralConnection(selectedPeripheral)
     }
 
     func setTXNotificationsEnabled(_ enabled: Bool) {
@@ -282,7 +363,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     }
 
     private func beginScanIfPossible() {
-        guard centralManager.state == .poweredOn else { return }
+        guard let centralManager, centralManager.state == .poweredOn else { return }
         centralManager.scanForPeripherals(
             withServices: [CBUUID(nsuuid: MotherboardProtocol.serviceUUID)],
             options: nil
@@ -395,8 +476,14 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBPeripheralDelegat
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        guard characteristic == txCharacteristic, let error else { return }
-        reportFailure(error, fallback: "Motherboard notifications could not be enabled.")
+        guard characteristic == txCharacteristic else { return }
+        if let error {
+            reportFailure(error, fallback: "Motherboard notifications could not be enabled.")
+        } else if characteristic.isNotifying {
+            eventHandler?(.notificationsReady)
+        } else {
+            reportFailure(nil, fallback: "Motherboard notifications could not be enabled.")
+        }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {

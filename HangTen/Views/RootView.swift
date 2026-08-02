@@ -710,6 +710,13 @@ struct WorkoutView: View {
 					guard routineComplete else { return }
 					finalizeRoutine()
 				}
+				.onChange(of: step.id) { _, _ in
+					recorder.pause(at: elapsed)
+				}
+				.onChange(of: isResting) { _, resting in
+					guard resting else { return }
+					recorder.pause(at: elapsed)
+				}
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
@@ -782,6 +789,10 @@ struct WorkoutView: View {
 		.onChange(of: motherboardBluetoothService.latestMeasurement) { _, measurement in
 			guard let measurement else { return }
 			consume(measurement)
+		}
+		.onChange(of: motherboardBluetoothService.state) { previousState, state in
+			guard previousState == .streaming, state != .streaming else { return }
+			recorder.pause(at: currentElapsed(at: Date()))
 		}
 		.onDisappear {
 			interruptRecorderIfNeeded()
@@ -1102,7 +1113,9 @@ struct WorkoutView: View {
                 cancelCountdown()
                 return
             }
-            pausedElapsed += Date().timeIntervalSince(startedAt)
+            let now = Date()
+            recorder.pause(at: currentElapsed(at: now))
+            pausedElapsed += now.timeIntervalSince(startedAt)
             self.startedAt = nil
 			audioCoach.stop()
         } else {
@@ -1137,7 +1150,9 @@ struct WorkoutView: View {
 			return
 		}
 
-		pausedElapsed += Date().timeIntervalSince(startedAt)
+		let now = Date()
+		recorder.pause(at: currentElapsed(at: now))
+		pausedElapsed += now.timeIntervalSince(startedAt)
 		self.startedAt = nil
 		audioCoach.stop()
 	}
@@ -1152,7 +1167,7 @@ struct WorkoutView: View {
 	private func meter(step: WorkoutStep) -> some View {
 		MotherboardMeterView(
 			measurement: motherboardBluetoothService.latestMeasurement,
-			peakLoadKGF: recorder.currentPeakLoadKGF,
+			peakLoadKGF: recorder.currentStepID == step.id ? recorder.currentPeakLoadKGF : nil,
 			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
 			plannedActiveDuration: step.activeDuration,
 			unit: motherboardSettingsStore.forceUnit,
@@ -1176,6 +1191,7 @@ struct WorkoutView: View {
 			stepID: currentStep.id,
 			plannedActiveDuration: currentStep.activeDuration,
 			workoutElapsed: elapsed,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
 			isActive: true
 		)
 	}
@@ -1183,6 +1199,7 @@ struct WorkoutView: View {
 	private func finalizeRoutine() {
 		guard !didComplete else { return }
 		didComplete = true
+		recorder.pause(at: plan.duration)
 
 		let completedMeasurements = Dictionary(
 			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
@@ -1268,6 +1285,17 @@ struct WorkoutView: View {
             cursor += step.duration
         }
         return plan.steps.last?.duration ?? 0
+    }
+
+    private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
+        var cursor: TimeInterval = 0
+        for step in plan.steps {
+            if elapsed < cursor + step.duration {
+                return cursor
+            }
+            cursor += step.duration
+        }
+        return max(0, cursor - (plan.steps.last?.duration ?? 0))
     }
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {

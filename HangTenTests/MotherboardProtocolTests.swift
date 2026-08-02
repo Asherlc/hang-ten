@@ -50,14 +50,26 @@ final class MotherboardProtocolTests: XCTestCase {
         XCTAssertEqual(result.aggregateLoadKGF, 4, accuracy: 0.0001)
     }
 
-    func testCalibrationSortsPointsAndExtrapolatesAtBothEnds() {
+    func testCalibrationSortsPointsAndClampsAtBothEndpoints() {
         let calibration = MotherboardCalibration(rows: [
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 1, massKGF: 10, adc: 100),
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 0, adc: 0)
         ])
 
-        XCTAssertEqual(calibration.massKGF(sensor: 0, adc: -50), -5)
-        XCTAssertEqual(calibration.massKGF(sensor: 0, adc: 150), 15)
+        XCTAssertEqual(calibration.massKGF(sensor: 0, adc: -50), 0)
+        XCTAssertEqual(calibration.massKGF(sensor: 0, adc: 150), 10)
+    }
+
+    func testParserRejectsAndResetsAnOversizedUnterminatedFrame() {
+        var parser = MotherboardProtocolParser(maximumBufferSize: 8)
+        let date = Date(timeIntervalSince1970: 1)
+
+        XCTAssertEqual(parser.append(Data("123456789".utf8), receivedAt: date), [
+            .error("Motherboard response exceeded the receive buffer limit.")
+        ])
+        XCTAssertEqual(parser.append(Data("Stream:30\r\n".utf8), receivedAt: date), [
+            .streamStarted(rate: 30)
+        ])
     }
 
     func testDecodeKeepsNegativeSensorLoadsButClampsAggregateToZero() {

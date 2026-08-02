@@ -22,6 +22,24 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(second.thresholdKGF, 4.25, accuracy: 0.0001)
     }
 
+    func testThresholdNormalizesPersistedAndAssignedValuesToUIRange() {
+        let suite = "MotherboardModelsThresholdTests"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(75.0, forKey: "motherboard.thresholdKGF")
+
+        let store = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(store.thresholdKGF, 50, accuracy: 0.0001)
+
+        store.thresholdKGF = 0
+        XCTAssertEqual(store.thresholdKGF, 2.5, accuracy: 0.0001)
+        store.thresholdKGF = 75
+        XCTAssertEqual(store.thresholdKGF, 50, accuracy: 0.0001)
+        store.thresholdKGF = .infinity
+        XCTAssertEqual(store.thresholdKGF, 2.5, accuracy: 0.0001)
+        XCTAssertEqual(defaults.double(forKey: "motherboard.thresholdKGF"), 2.5, accuracy: 0.0001)
+    }
+
     func testSessionRecordRoundTripsThroughCodable() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,

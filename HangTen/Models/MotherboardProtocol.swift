@@ -22,8 +22,11 @@ enum MotherboardProtocolEvent: Equatable {
 
 struct MotherboardProtocolParser {
     private var buffer = Data()
+    private let maximumBufferSize: Int
 
-    init() {}
+    init(maximumBufferSize: Int = 4_096) {
+        self.maximumBufferSize = max(1, maximumBufferSize)
+    }
 
     mutating func append(_ data: Data, receivedAt: Date) -> [MotherboardProtocolEvent] {
         buffer.append(data)
@@ -38,6 +41,10 @@ struct MotherboardProtocolParser {
                 continue
             }
             events.append(event)
+        }
+        if buffer.count > maximumBufferSize {
+            buffer.removeAll(keepingCapacity: true)
+            events.append(.error("Motherboard response exceeded the receive buffer limit."))
         }
         return events
     }
@@ -128,16 +135,14 @@ struct MotherboardCalibration: Equatable {
             return first.massKGF
         }
 
-        let segment: (MotherboardCalibrationRow, MotherboardCalibrationRow)
         if adc <= first.adc {
-            segment = (first, rows[1])
+            return first.massKGF
         } else if let last = rows.last, adc >= last.adc {
-            segment = (rows[rows.count - 2], last)
-        } else {
-            let upperIndex = rows.firstIndex { $0.adc >= adc } ?? rows.count - 1
-            segment = (rows[upperIndex - 1], rows[upperIndex])
+            return last.massKGF
         }
 
+        let upperIndex = rows.firstIndex { $0.adc >= adc } ?? rows.count - 1
+        let segment = (rows[upperIndex - 1], rows[upperIndex])
         let (lower, upper) = segment
         let adcRange = Double(upper.adc) - Double(lower.adc)
         guard adcRange != 0 else { return upper.massKGF }
