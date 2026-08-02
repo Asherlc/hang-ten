@@ -2,8 +2,9 @@
 
 ## Phosphor Icons
 
-The hand cue assets `hand-palm`, `hand-grabbing`, `hand-fist`, and `hand-fill`
-are adapted from [Phosphor Icons](https://github.com/phosphor-icons/core).
+The hand cue assets `hand-palm`, `hand-grabbing`, `hand-fist`, `hand-fill`, and
+`hand-peace` are adapted from
+[Phosphor Icons](https://github.com/phosphor-icons/core).
 
 MIT License
 

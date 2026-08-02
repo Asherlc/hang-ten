@@ -2,7 +2,18 @@ import SwiftUI
 import UIKit
 
 struct RootView: View {
-    @State private var selectedTab = 0
+    @State private var selectedTab: Int = {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" {
+            return 2
+        }
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLANS"] == "1" {
+            return 1
+        }
+        #else
+        #endif
+        return 0
+    }()
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -25,6 +36,28 @@ struct RootView: View {
                 .tag(2)
         }
         .tint(.hangGreenDark)
+        .onAppear {
+            #if DEBUG
+            let environment = ProcessInfo.processInfo.environment
+            let orientationMask: UIInterfaceOrientationMask?
+            if environment["HANGTEN_REVIEW_LANDSCAPE"] == "1" {
+                orientationMask = .landscapeRight
+            } else if environment["HANGTEN_REVIEW_PORTRAIT"] == "1" {
+                orientationMask = .portrait
+            } else {
+                orientationMask = nil
+            }
+
+            guard let orientationMask,
+                  let windowScene = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first else { return }
+
+            windowScene.requestGeometryUpdate(
+                .iOS(interfaceOrientations: orientationMask)
+            )
+            #endif
+        }
     }
 }
 
@@ -61,10 +94,18 @@ struct HomeView: View {
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $showsPlanReview) {
-                PlanDetailView(plan: store.featuredPlan)
+                if let plan = store.featuredPlan {
+                    PlanDetailView(plan: plan)
+                } else {
+                    noCompatiblePlan
+                }
             }
 			.navigationDestination(isPresented: $showsWorkoutReview) {
-				WorkoutView(plan: store.featuredPlan)
+				if let plan = store.featuredPlan {
+					WorkoutView(plan: plan)
+				} else {
+					noCompatiblePlan
+				}
 			}
         }
     }
@@ -94,11 +135,18 @@ struct HomeView: View {
         }
     }
 
+    @ViewBuilder
     private var featuredPlan: some View {
-        NavigationLink(destination: PlanDetailView(plan: store.featuredPlan)) {
+        if let plan = store.featuredPlan {
+            NavigationLink(destination: PlanDetailView(plan: plan)) {
             VStack(alignment: .leading, spacing: 17) {
                 HStack {
                     Pill(title: "NEXT UP", tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.28))
+                    Pill(
+                        title: plan.provenance.label.uppercased(),
+                        tint: Color.hangGreenDark,
+                        fill: Color.hangGreen.opacity(0.18)
+                    )
                     Spacer()
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 14, weight: .bold))
@@ -106,19 +154,19 @@ struct HomeView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Text(store.featuredPlan.title)
+                    Text(plan.title)
                         .font(.system(size: 23, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text(store.featuredPlan.subtitle)
+                    Text(plan.subtitle)
                         .font(.system(size: 14, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
                 HStack(spacing: 8) {
-                    Label(store.featuredPlan.durationLabel, systemImage: "timer")
+                    Label(plan.durationLabel, systemImage: "timer")
                     Text("·")
-                    Label(store.featuredPlan.level, systemImage: "chart.bar")
+                    Label(plan.level, systemImage: "chart.bar")
                 }
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.hangInk.opacity(0.72))
@@ -134,8 +182,24 @@ struct HomeView: View {
                 .padding(.top, 2)
             }
             .hangCard()
+            }
+            .buttonStyle(.plain)
+        } else {
+            noCompatiblePlan
         }
-        .buttonStyle(.plain)
+    }
+
+    private var noCompatiblePlan: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionLabel(title: "No compatible routine")
+            Text("This board needs a routine whose hold targets resolve exactly.")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text("Choose another board or add a source-audited routine before starting a session.")
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+        }
+        .hangCard()
     }
 
     private var boardCard: some View {
@@ -244,17 +308,27 @@ struct PlansView: View {
                         Text("Choose your session.")
                             .font(.system(size: 31, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.hangInk)
-                        Text("Every plan maps its instructions to the holds on your selected board.")
+                        Text("Official manufacturer sequences and source-linked adapted protocols, matched to your board.")
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    ForEach(store.plans) { plan in
-                        NavigationLink(destination: PlanDetailView(plan: plan)) {
-                            PlanCard(plan: plan, board: store.board(for: plan))
+                    if store.plans.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            SectionLabel(title: "No compatible routines")
+                            Text("No plan currently resolves every required hold on \(store.selectedBoard.name).")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
                         }
-                        .buttonStyle(.plain)
+                        .hangCard()
+                    } else {
+                        ForEach(store.plans) { plan in
+                            NavigationLink(destination: PlanDetailView(plan: plan)) {
+                                PlanCard(plan: plan, board: store.board(for: plan))
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
 
                     sourceCard
@@ -275,7 +349,7 @@ struct PlansView: View {
                     .foregroundStyle(Color.hangGreenDark)
                 SectionLabel(title: "Built from the source")
             }
-            Text("Choose from research-backed and widely used protocols, translated to the holds on your selected board. Each plan keeps its original source attached.")
+            Text("The three Metolius sequences preserve their official task data. Research and coach protocols are labeled Adapted when Hang Ten adds guidance or maps them to this board; every plan retains its own source link.")
                 .font(.system(size: 14, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
@@ -300,6 +374,11 @@ private struct PlanCard: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Pill(
+                    title: plan.provenance.label,
+                    tint: Color.hangGreenDark,
+                    fill: Color.hangGreen.opacity(0.16)
+                )
                 Spacer()
                 Text(plan.durationLabel)
                     .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -378,6 +457,11 @@ struct PlanDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Pill(
+                    title: plan.provenance.label,
+                    tint: Color.hangGreenDark,
+                    fill: Color.hangGreen.opacity(0.16)
+                )
                 Spacer()
                 Label(plan.durationLabel, systemImage: "timer")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -422,6 +506,12 @@ struct PlanDetailView: View {
             if let firstStepHold {
                 GripDiagramView(hold: firstStepHold, gripType: firstStepGripType)
             }
+			if store.usesFallbackMapping(plan, on: board) {
+				Text("Board mapping note: a source-specific hold variant uses the closest manufacturer-documented feature available on this board. The prescribed task text remains unchanged.")
+					.font(.system(size: 12, weight: .medium, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+					.fixedSize(horizontal: false, vertical: true)
+			}
         }
         .hangCard()
     }
@@ -474,7 +564,7 @@ struct PlanDetailView: View {
                     Text("Source: \(plan.sourceLabel)")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text("Open the original source for the timing, loading, and safety context behind this session.")
+                    Text(plan.provenance.detail)
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -503,7 +593,7 @@ private struct StepRow: View {
                         .frame(width: 31, height: 31)
                     Text("\(step.number)")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(step.phase.tint)
+                        .foregroundStyle(step.phase.textTint)
                 }
                 if !isLast {
                     Rectangle()
@@ -528,7 +618,7 @@ private struct StepRow: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Text(step.accessory)
                     .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(step.phase.tint)
+                    .foregroundStyle(step.phase.textTint)
             }
             .padding(.bottom, isLast ? 0 : 12)
         }
@@ -543,6 +633,7 @@ private struct WorkoutAudioMoment: Hashable {
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+	@Environment(\.scenePhase) private var scenePhase
 	@StateObject private var audioCoach = WorkoutAudioCoach()
 	@AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
 
@@ -553,6 +644,7 @@ struct WorkoutView: View {
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
     @State private var didComplete = false
+    @State private var didApplyReviewStep = false
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -606,7 +698,7 @@ struct WorkoutView: View {
 				}
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.background(Color.hangBackground)
-				.onChange(of: audioMoment) { _, moment in
+				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
 				}
@@ -642,7 +734,32 @@ struct WorkoutView: View {
         } message: {
             Text("This will stop the timer without logging a workout to Apple Health.")
         }
+		.onAppear {
+			UIApplication.shared.isIdleTimerDisabled = true
+			#if DEBUG
+			if !didApplyReviewStep {
+				didApplyReviewStep = true
+				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
+				   let requestedStep = Int(rawStep),
+				   requestedStep > 1 {
+					pausedElapsed = plan.steps
+						.prefix(min(requestedStep - 1, plan.steps.count))
+						.reduce(0) { $0 + $1.duration }
+				}
+			}
+
+			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
+			   startedAt == nil {
+				toggleRunning()
+			}
+			#endif
+		}
+		.onChange(of: scenePhase) { _, phase in
+			guard phase != .active else { return }
+			pauseForInterruption()
+		}
 		.onDisappear {
+			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
     }
@@ -769,7 +886,7 @@ struct WorkoutView: View {
 
 			Pill(
 				title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
-				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint,
+				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
 				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
 			)
 
@@ -808,6 +925,14 @@ struct WorkoutView: View {
 			.foregroundStyle(Color.hangInk)
 			.lineLimit(2)
 			.minimumScaleFactor(0.82)
+
+			if !isComplete, countdown == 0, !isResting {
+				Text(step.accessory)
+					.font(.system(size: 11, weight: .bold, design: .rounded))
+					.foregroundStyle(step.phase.textTint)
+					.lineLimit(1)
+					.minimumScaleFactor(0.78)
+			}
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.hangCard(padding: 12)
@@ -833,7 +958,7 @@ struct WorkoutView: View {
                 Spacer()
                 Pill(
                     title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
-                    tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint,
+                    tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
                     fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
                 )
             }
@@ -859,7 +984,7 @@ struct WorkoutView: View {
                         ? "ready to log"
                         : countdown > 0
                             ? "starting in"
-                            : isResting ? "rest" : "left in cue"
+                            : isResting ? "rest" : step.hasRestInterval ? "left in cue" : "left in cycle"
                 )
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
@@ -884,7 +1009,7 @@ struct WorkoutView: View {
                 if !isComplete, countdown == 0 {
                     Text(intervalLabel(for: step))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(isResting ? Color.restBlue : step.phase.tint)
+                        .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
                 }
             }
 
@@ -904,7 +1029,7 @@ struct WorkoutView: View {
             if !isComplete, countdown == 0 {
                 Text(isResting ? "Rest interval · next cue follows automatically" : step.accessory)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(isResting ? Color.restBlue : step.phase.tint)
+                    .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
             }
         }
         .hangCard()
@@ -929,11 +1054,11 @@ struct WorkoutView: View {
                             ? "Cancel countdown"
                             : (startedAt == nil && pausedElapsed == 0 ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
                 )
-                Spacer()
                 if isComplete {
                     Image(systemName: "arrow.right")
                 }
             }
+			.frame(maxWidth: .infinity, alignment: .center)
             .font(.system(size: 16, weight: .bold, design: .rounded))
             .foregroundStyle(Color.hangInk)
             .padding(.horizontal, 18)
@@ -951,6 +1076,7 @@ struct WorkoutView: View {
             }
             pausedElapsed += Date().timeIntervalSince(startedAt)
             self.startedAt = nil
+			audioCoach.stop()
         } else {
             let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
             if pausedElapsed == 0 {
@@ -963,12 +1089,29 @@ struct WorkoutView: View {
     private func cancelCountdown() {
         startedAt = nil
         routineStartedAt = nil
+		audioCoach.stop()
     }
 
     private func endSession() {
         startedAt = nil
+		audioCoach.stop()
         dismiss()
     }
+
+	private func pauseForInterruption() {
+		guard let startedAt else {
+			audioCoach.stop()
+			return
+		}
+		if startedAt > Date() {
+			cancelCountdown()
+			return
+		}
+
+		pausedElapsed += Date().timeIntervalSince(startedAt)
+		self.startedAt = nil
+		audioCoach.stop()
+	}
 
     private func completeSession() {
         guard !didComplete else {
@@ -978,7 +1121,9 @@ struct WorkoutView: View {
         didComplete = true
         let endDate = Date()
         let startDate = routineStartedAt ?? endDate.addingTimeInterval(-plan.duration)
-        store.markSessionComplete(plan, startDate: startDate, endDate: endDate)
+		let activeWorkoutEnd = startDate.addingTimeInterval(plan.duration)
+		audioCoach.stop()
+        store.markSessionComplete(plan, startDate: startDate, endDate: activeWorkoutEnd)
         dismiss()
     }
 
@@ -1026,7 +1171,10 @@ struct WorkoutView: View {
     }
 
     private func intervalLabel(for step: WorkoutStep) -> String {
-        step.hasRestInterval ? "Hang" : step.phase.label
+        if step.phase == .rest {
+            return step.phase.label
+        }
+        return step.hasRestInterval ? "Hang" : "Cycle"
     }
 
     private func timeLabel(_ value: TimeInterval) -> String {
@@ -1061,18 +1209,25 @@ struct WorkoutView: View {
 		let segmentElapsed = isResting
 			? max(0, stepElapsed - step.activeDuration)
 			: stepElapsed
+		let segmentDuration = isResting ? step.restDuration : step.activeDuration
 
 		if segmentElapsed < 0.55 {
+			let phrase: String
+			if segmentDuration <= 3 {
+				phrase = isResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
+			} else {
+				phrase = isResting ? "Rest" : spokenStartPhrase(for: step)
+			}
 			return WorkoutAudioMoment(
 				key: "\(step.id)-\(segmentName)-start",
-				phrase: isResting ? "Rest" : spokenStartPhrase(for: step)
+				phrase: phrase
 			)
 		}
 
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)
-		if (1...3).contains(secondsRemaining) {
+		if segmentDuration > 3, (1...3).contains(secondsRemaining) {
 			return WorkoutAudioMoment(
 				key: "\(step.id)-\(segmentName)-\(secondsRemaining)",
 				phrase: "\(secondsRemaining)"
@@ -1083,6 +1238,10 @@ struct WorkoutView: View {
 	}
 
 	private func spokenStartPhrase(for step: WorkoutStep) -> String {
+		if step.timedWorkDuration == nil, step.phase != .rest {
+			return "Begin minute \(step.number). \(step.title)"
+		}
+
 		switch step.phase {
 		case .hang:
 			return "Hang. \(step.title)"
@@ -1101,6 +1260,8 @@ struct WorkoutView: View {
 struct ProgressDashboardView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.openURL) private var openURL
+	@Environment(\.scenePhase) private var scenePhase
+	@State private var didRequestHealthReview = false
 
     var body: some View {
         NavigationStack {
@@ -1130,6 +1291,20 @@ struct ProgressDashboardView: View {
         }
 		.onAppear {
 			store.refreshHealthAuthorization()
+			#if DEBUG
+			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_REQUEST_HEALTH"] == "1",
+			   !didRequestHealthReview {
+				didRequestHealthReview = true
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+					store.requestHealthAuthorization()
+				}
+			}
+			#endif
+		}
+		.onChange(of: scenePhase) { _, phase in
+			if phase == .active {
+				store.refreshHealthAuthorization()
+			}
 		}
     }
 
@@ -1249,7 +1424,7 @@ struct ProgressDashboardView: View {
 				Button(action: handleHealthAuthorization) {
 					HStack {
 						Image(systemName: store.healthAuthorizationState == .denied ? "gear" : "heart.fill")
-						Text(store.healthAuthorizationState == .denied ? "Open Health settings" : "Connect Apple Health")
+						Text(store.healthAuthorizationState == .denied ? "Open app settings" : "Connect Apple Health")
 						Spacer()
 						Image(systemName: "arrow.right")
 					}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate Hang Ten iOS"
+  short_description: "Build and review Hang Ten in an isolated simulator"
+  default_prompt: "Use $validate-hang-ten-ios to validate Hang Ten in a dedicated iOS Simulator."

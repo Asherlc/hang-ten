@@ -1,40 +1,51 @@
 # Hang Ten
 
-Hang Ten is a SwiftUI prototype for guided hangboard sessions. It starts with the
-Metolius Wood Grips Compact II and is designed around the interaction that makes
-Fingy useful: the current cue highlights the holds to use on a board map.
+Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
+athlete the exact holds to use, the intended grip and fingers, and the current
+task without making them translate a paper routine while they train.
+
+The first supported board is the Metolius Wood Grips Compact II. Its map is a
+deterministic, textureless vector illustration based on Metolius's product
+photography and hold-depth diagram. The same declared contact path renders a
+hold cavity, its active red highlight, and its interaction area, so a highlight
+cannot drift away from the hold.
 
 ## Included
 
-- Today screen with the next session and selected board.
-- Metolius ten-minute sequence format translated to Compact II hold IDs.
-- Research-backed and widely used protocols: Max Hangs, F80/F100 force-board
-  sessions, Eva IntHangs, 7/3 Repeaters, and Abrahangs.
-- Coach-developed variants: 7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and
-  Zlagboard 60/60 Endurance.
-- Plan detail view with the complete session flow and source link.
-- Live guided timer with a start countdown, hang/rest intervals, pause/resume,
-  and automatic hold cues.
-- Explicit open-hand, half-crimp, full-crimp, pocket, and sloper metadata with
-  a two-hand finger-position diagram.
-- Completed routines can be saved to Apple Health as functional strength
-  workouts after the system permission prompt.
-- Progress screen with lightweight session history.
-- A reusable board design language: future hangboards provide normalized
-  silhouette, plane, and hold geometry while sharing the same sculpted
-  materials, depth classes, mirroring, highlights, and hit testing.
+- A reusable hangboard design language with normalized geometry, mirrored
+  pairs, dimensional planes, recess depths, and exact-path highlights.
+- An audited Compact II hold map covering its jugs, flat and round slopers,
+  29/19 mm edges, and 2-, 3-, and 4-finger pockets.
+- All three official Metolius board-flexible ten-minute sequences: Entry,
+  Intermediate, and Advanced.
+- Source-linked adapted protocols already merged into the project: Max Hangs,
+  F80/F100 force-board sessions, Eva IntHangs, 7/3 Repeaters, Abrahangs,
+  7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and Zlagboard 60/60.
+- A runnable minute-by-minute session with pause/resume, a spoken 3-2-1 start
+  countdown, task cues, final three-second cues, and completion audio.
+- Mirrored Phosphor hand cues for grip pose and participating fingers.
+- Portrait and landscape workout layouts.
+- An explicit Apple Health permission card. Completed sessions save as
+  functional-strength workouts after authorization.
+- A source-linked plan library and lightweight local session progress.
+
+Runtime routine definitions are stored in
+`HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
+decodes and validates that schema-versioned document; the source-audited seed
+in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
+and hold metadata lives in `BoardCatalog` in `TrainingModels.swift`.
 
 ## Run
 
-Open HangTen.xcodeproj in Xcode 26 or build from the repository root:
+Open `HangTen.xcodeproj` in Xcode 26, or build from the repository root:
 
-~~~sh
+```sh
 xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
   -configuration Debug \
-  CODE_SIGNING_ALLOWED=NO build
-~~~
+  build
+```
 
 ## Continuous integration and delivery
 
@@ -58,65 +69,63 @@ Add these environment variables:
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
 
-The API key needs the Admin role for provisioning-profile access, and App Store Connect must already
-contain an app record for `com.hangten.training` plus an App Store provisioning
-profile for that bundle ID. The workflow assigns a unique build number for
-each run and retry. Update `MARKETING_VERSION` in the Xcode project when
-shipping a new App Store version.
+The API key needs the Admin role for provisioning-profile access, and App Store
+Connect must already contain an app record for `com.hangten.training` plus an
+App Store provisioning profile for that bundle ID. The workflow assigns a
+unique build number for each run and retry. Update `MARKETING_VERSION` in the
+Xcode project when shipping a new App Store version.
 
 This automates delivery to App Store Connect/TestFlight. Apple still controls
 App Review and the final public App Store release decision.
 
-## Adding another board
+In a parallel-agent environment, do not install to an arbitrary `booted`
+simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.md).
 
-1. Add another TrainingBoard to BoardCatalog.all in
-   HangTen/Models/TrainingModels.swift.
-2. Give each hold a stable board-scoped ID and normalized HoldFrame.
-3. Create a board-specific `BoardDesign` extension beside
-   `MetoliusCompactIIDesign.swift`. Describe only normalized geometry:
-   silhouette, material planes, and hold pieces. Paired geometry should be
-   defined once and mirrored.
-4. Register the design in `BoardDesignCatalog`. `BoardDesignLanguage.swift`
-   resolves every piece through the shared textureless sculpted-wood renderer.
-   The same contact path is used for the inactive cavity, active fill, and
-   derived interaction region, so highlights cannot drift out of alignment.
-5. Set each hold's `gripType` and `cueStyle` so the board map and hand diagram
-   describe the intended contact position.
-6. Add a TrainingPlan that references the new board ID, or use
-   HoldTarget.kind(...) for a plan that should resolve by hold type.
+## Extension guides
 
-Boards without bespoke artwork continue to use the neutral vector fallback.
-Board photos are reference metadata only; runtime geometry remains
-deterministic and scalable.
+- [Add a hangboard](docs/ADDING_A_BOARD.md)
+- [Add a training routine](docs/ADDING_A_ROUTINE.md)
+- [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
+- [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
-Official routines live in `PlanCatalog` in
-`HangTen/Models/TrainingModels.swift`. Each routine keeps its source label and
-URL next to its board-specific hold targets. The timer supports variable hang
-durations so short max hangs, repeaters, long density intervals, and extended
-force-board recovery periods are represented without rounding everything to a
-ten-second cue.
+Matching repo skills live under `.codex/skills/` and load these guides before
+making changes.
 
-Manufacturer routines should be added with their official source URL and
-source label. The catalog is intentionally source-linked so board-specific
-plans can be audited as more manufacturers are added.
+Regenerate the bundled routine document after an audited plan change:
 
-## Training source and safety
+```sh
+scripts/export-plan-library.sh
+scripts/export-plan-library.sh --check
+```
 
-The Metolius plan follows the published ten-minute sequence format and uses the
-official guidance around warm-up, open-hand grip, recovery, and secure
-installation. The other plans are timer-and-hold-cue translations of the
-linked research protocols or coaching methods; they are not a substitute for
-individual programming or professional medical advice. Force-board plans use
-the Compact II's 19 mm edge as a visual proxy, so use a calibrated force board
-when following the study's percentage targets. Verify every hold against the
-physical board before training.
+## Routine scope
 
-Evidence overview:
-https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/
+Metolius publishes a generic ten-minute guide whose tasks name semantic hold
+types such as “Round Sloper” and “Large Edge.” Hang Ten preserves those three
+task sequences and resolves each named type to the selected board's audited
+hold metadata.
 
-- Metolius Wood Grips II Training Board:
-  https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards
-- Metolius Contact Training Guide:
-  https://www.metoliusclimbing.com/pages/contact-training-guide
-- Metolius Training Board Manual:
-  https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826
+Metolius also publishes separate Contact and Simulator 3D guides. Those use
+numbered holds tied to their respective boards, so they are intentionally not
+presented as Compact II routines. Add each only after its physical board map is
+implemented and its numbered holds can be resolved exactly.
+
+The additional research and coach protocols are visibly marked Adapted because
+their app versions add guidance, warm-up/cooldown steps, or Compact II hold
+mapping. Their individual source links remain attached; they are not presented
+as unchanged manufacturer routines.
+
+## Safety
+
+Hangboard training can injure fingers, arms, and shoulders. Warm up thoroughly,
+use a securely installed board, avoid overtraining, and stop if you feel pain.
+Hang Ten is a timer and visual cue, not medical advice. Read the linked
+manufacturer guidance before training.
+
+## Sources and licenses
+
+- [Metolius Wood Grips II product page](https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards)
+- [Metolius ten-minute hangboard guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+- [Metolius training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
+- [Phosphor Icons](https://github.com/phosphor-icons/core), used under the MIT
+  license; see `THIRD_PARTY_NOTICES.md`.

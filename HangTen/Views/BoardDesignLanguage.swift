@@ -114,10 +114,10 @@ struct BoardDesign {
             var shelfContext = context
             shelfContext.addFilter(
                 .shadow(
-                    color: palette.recessShadow.opacity(0.55),
-                    radius: max(0.6, boardRect.height * 0.010),
+                    color: palette.recessShadow.opacity(0.88),
+                    radius: max(0.7, boardRect.height * 0.012),
                     x: 0,
-                    y: boardRect.height * 0.007
+                    y: boardRect.height * 0.010
                 )
             )
             shelfContext.fill(
@@ -297,8 +297,8 @@ struct BoardPalette {
         topSeam: Color(red: 0.790, green: 0.710, blue: 0.555).opacity(0.35),
         bevelTop: Color(red: 0.885, green: 0.817, blue: 0.650),
         bevelBottom: Color(red: 0.800, green: 0.715, blue: 0.535),
-        shelfTop: Color(red: 0.820, green: 0.750, blue: 0.580),
-        shelfBottom: Color(red: 0.790, green: 0.710, blue: 0.530),
+        shelfTop: Color(red: 0.795, green: 0.715, blue: 0.535),
+        shelfBottom: Color(red: 0.735, green: 0.635, blue: 0.445),
         recessTop: Color(red: 0.647, green: 0.573, blue: 0.412),
         recessBottom: Color(red: 0.682, green: 0.612, blue: 0.439),
         shallowRecessTop: Color(red: 0.704, green: 0.625, blue: 0.465),

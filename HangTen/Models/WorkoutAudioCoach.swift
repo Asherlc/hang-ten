@@ -1,11 +1,13 @@
 import AVFoundation
 import Combine
+import OSLog
 
 @MainActor
 final class WorkoutAudioCoach: NSObject, ObservableObject {
     @Published private(set) var isSpeaking = false
 
     private let synthesizer = AVSpeechSynthesizer()
+    private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
 
     override init() {
@@ -26,12 +28,14 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         utterance.rate = phrase.count <= 2 ? 0.50 : 0.47
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
+        logger.notice("Speaking cue: \(phrase, privacy: .public)")
         synthesizer.speak(utterance)
     }
 
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
+        deactivateAudioSession()
     }
 
     private var preferredLanguageCode: String {
@@ -45,6 +49,15 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
         try? session.setActive(true)
+    }
+
+    private func deactivateAudioSession() {
+        guard configuredAudioSession else { return }
+        configuredAudioSession = false
+        try? AVAudioSession.sharedInstance().setActive(
+            false,
+            options: .notifyOthersOnDeactivation
+        )
     }
 }
 
@@ -64,6 +77,9 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor in
             isSpeaking = false
+            if !self.synthesizer.isSpeaking {
+                self.deactivateAudioSession()
+            }
         }
     }
 
@@ -73,6 +89,9 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor in
             isSpeaking = false
+            if !self.synthesizer.isSpeaking {
+                self.deactivateAudioSession()
+            }
         }
     }
 }
