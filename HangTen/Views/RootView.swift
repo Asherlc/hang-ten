@@ -275,13 +275,13 @@ struct PlansView: View {
                     .foregroundStyle(Color.hangGreenDark)
                 SectionLabel(title: "Built from the source")
             }
-            Text("The first plan follows Metolius's ten-minute sequence format, translated to the Compact II hold names and geometry.")
+            Text("Choose from research-backed and widely used protocols, translated to the holds on your selected board. Each plan keeps its original source attached.")
                 .font(.system(size: 14, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
-            Link(destination: PlanCatalog.metoliusTenMinute.sourceURL) {
+            Link(destination: PlanCatalog.evidenceOverviewURL) {
                 HStack {
-                    Text("Read Metolius's guide")
+                    Text("Read the evidence overview")
                     Image(systemName: "arrow.up.right")
                 }
                 .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -474,7 +474,7 @@ struct PlanDetailView: View {
                     Text("Source: \(plan.sourceLabel)")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text("Open the original Metolius guidance for the full context behind this sequence.")
+                    Text("Open the original source for the timing, loading, and safety context behind this session.")
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)

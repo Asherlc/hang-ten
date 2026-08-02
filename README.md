@@ -8,6 +8,10 @@ Fingy useful: the current cue highlights the holds to use on a board map.
 
 - Today screen with the next session and selected board.
 - Metolius ten-minute sequence format translated to Compact II hold IDs.
+- Research-backed and widely used protocols: Max Hangs, F80/F100 force-board
+  sessions, Eva IntHangs, 7/3 Repeaters, and Abrahangs.
+- Coach-developed variants: 7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and
+  Zlagboard 60/60 Endurance.
 - Plan detail view with the complete session flow and source link.
 - Live guided timer with a start countdown, hang/rest intervals, pause/resume,
   and automatic hold cues.
@@ -55,8 +59,11 @@ Board photos are reference metadata only; runtime geometry remains
 deterministic and scalable.
 
 Official routines live in `PlanCatalog` in
-`HangTen/Models/TrainingModels.swift`. Each routine keeps its manufacturer
-source label and URL next to its board-specific hold targets.
+`HangTen/Models/TrainingModels.swift`. Each routine keeps its source label and
+URL next to its board-specific hold targets. The timer supports variable hang
+durations so short max hangs, repeaters, long density intervals, and extended
+force-board recovery periods are represented without rounding everything to a
+ten-second cue.
 
 Manufacturer routines should be added with their official source URL and
 source label. The catalog is intentionally source-linked so board-specific
@@ -64,13 +71,17 @@ plans can be audited as more manufacturers are added.
 
 ## Training source and safety
 
-The first plan follows Metolius's published ten-minute sequence format and uses
-the official guidance around warm-up, open-hand grip, recovery, and secure
-installation. It is an app-level translation to the Compact II rather than a
-replacement for the guide that shipped with the board. The Compact II view uses
-a clean, smooth illustrated rendering based on the official product geometry
-and places the active cue over the corresponding cavity; verify every hold
-against the physical board before training.
+The Metolius plan follows the published ten-minute sequence format and uses the
+official guidance around warm-up, open-hand grip, recovery, and secure
+installation. The other plans are timer-and-hold-cue translations of the
+linked research protocols or coaching methods; they are not a substitute for
+individual programming or professional medical advice. Force-board plans use
+the Compact II's 19 mm edge as a visual proxy, so use a calibrated force board
+when following the study's percentage targets. Verify every hold against the
+physical board before training.
+
+Evidence overview:
+https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/
 
 - Metolius Wood Grips II Training Board:
   https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards
