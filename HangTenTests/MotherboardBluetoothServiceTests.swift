@@ -133,7 +133,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.latestMeasurement?.timestamp, date)
     }
 
-    func testPowerAuthorizationAndAvailabilityArePublished() {
+    func testUnauthorizedStateRemainsUnauthorizedWhenPowerChanges() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
 
@@ -141,8 +141,111 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.powerChanged(.unauthorized))
         XCTAssertEqual(service.state, .unauthorized)
 
+        transport.emit(.powerChanged(.poweredOn))
+        XCTAssertEqual(service.state, .unauthorized)
+    }
+
+    func testPoweredOnRecoversFromPoweredOffAndAllowsExplicitRescan() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+
+        service.connect()
         transport.emit(.powerChanged(.poweredOff))
         XCTAssertEqual(service.state, .bluetoothUnavailable)
+
+        transport.emit(.powerChanged(.poweredOn))
+        XCTAssertEqual(service.state, .idle)
+        XCTAssertEqual(transport.startScanCount, 1)
+
+        service.connect()
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertEqual(transport.startScanCount, 2)
+        XCTAssertEqual(
+            transport.operations,
+            ["scan", "stopScan", "notify:off", "disconnect", "scan"]
+        )
+    }
+
+    func testPoweredOnRecoversAfterTransientBluetoothReset() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+
+        service.connect()
+        transport.emit(.powerChanged(.resetting))
+        XCTAssertEqual(service.state, .bluetoothUnavailable)
+
+        transport.emit(.powerChanged(.poweredOn))
+
+        XCTAssertEqual(service.state, .idle)
+        XCTAssertEqual(transport.startScanCount, 1)
+    }
+
+    func testTareAveragesTheNextMeasurementWindow() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport, tareSampleCount: 3)
+        connectAndStartStreaming(service, with: transport)
+
+        service.tare()
+        XCTAssertTrue(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 0)
+        XCTAssertEqual(service.tareSampleTarget, 3)
+
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 100)
+        XCTAssertTrue(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 1)
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 200)
+        XCTAssertEqual(service.tareSamplesCollected, 2)
+        emitRawPacket(on: transport, sampleNumber: 3, adc: 300)
+
+        XCTAssertFalse(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 0)
+
+        emitRawPacket(on: transport, sampleNumber: 4, adc: 200)
+        XCTAssertEqual(service.latestMeasurement?.sensorLoadsKGF ?? [], [0, 0, 0, 0])
+        XCTAssertEqual(service.latestMeasurement?.aggregateLoadKGF ?? -1, 0, accuracy: 0.0001)
+    }
+
+    func testDisconnectCancelsTareWindowAndClearsItsSamples() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport, tareSampleCount: 3)
+        connectAndStartStreaming(service, with: transport)
+
+        service.tare()
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 100)
+        XCTAssertTrue(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 1)
+
+        service.disconnect()
+
+        XCTAssertFalse(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 0)
+        service.tare()
+        XCTAssertFalse(service.isTaring)
+    }
+
+    func testIntentionalNotificationDisableIsNotReportedAsFailure() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        var disconnectMessages: [String?] = []
+        transport.eventHandler = { event in
+            guard case .disconnected(let message) = event else { return }
+            disconnectMessages.append(message)
+        }
+
+        transport.setTXNotificationsEnabled(false)
+        transport.handleNotificationStateUpdate(isNotifying: false, error: nil)
+        XCTAssertTrue(disconnectMessages.isEmpty)
+        transport.handleNotificationStateUpdate(isNotifying: false, error: TestNotificationError.failed)
+        XCTAssertTrue(disconnectMessages.isEmpty)
+
+        transport.handleNotificationStateUpdate(isNotifying: true, error: TestNotificationError.failed)
+        XCTAssertEqual(disconnectMessages.count, 1)
+        XCTAssertNotNil(disconnectMessages[0])
+
+        transport.setTXNotificationsEnabled(true)
+        transport.handleNotificationStateUpdate(isNotifying: false, error: nil)
+        XCTAssertEqual(disconnectMessages.count, 2)
+        XCTAssertEqual(disconnectMessages[1], "Motherboard notifications could not be enabled.")
     }
 
     func testUnexpectedDisconnectRetriesAtMostThreeTimes() {
@@ -321,6 +424,36 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     private func emitStreamAcknowledgement(on transport: FakeMotherboardTransport) {
         transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
     }
+
+    private func connectAndStartStreaming(
+        _ service: MotherboardBluetoothService,
+        with transport: FakeMotherboardTransport
+    ) {
+        connect(service, with: transport)
+        emitCompleteCalibration(on: transport)
+        emitStreamAcknowledgement(on: transport)
+        XCTAssertEqual(service.state, .streaming)
+    }
+
+    private func emitRawPacket(
+        on transport: FakeMotherboardTransport,
+        sampleNumber: UInt16,
+        adc: Int32
+    ) {
+        var bytes = [
+            UInt8(sampleNumber & 0x00FF),
+            UInt8(sampleNumber >> 8),
+            UInt8(90),
+            UInt8(0)
+        ]
+        for _ in 0..<4 {
+            bytes.append(UInt8(truncatingIfNeeded: adc))
+            bytes.append(UInt8(truncatingIfNeeded: adc >> 8))
+            bytes.append(UInt8(truncatingIfNeeded: adc >> 16))
+        }
+        let line = bytes.map { String(format: "%02X", $0) }.joined() + "\r\n"
+        transport.emit(.notification(Data(line.utf8), Date()))
+    }
 }
 
 private final class FakeCentralManager: MotherboardCentralManaging {
@@ -334,6 +467,10 @@ private final class FakeCentralManager: MotherboardCentralManaging {
     func stopScan() {}
     func connect(_ peripheral: CBPeripheral, options: [String: Any]?) {}
     func cancelPeripheralConnection(_ peripheral: CBPeripheral) {}
+}
+
+private enum TestNotificationError: Error {
+    case failed
 }
 
 private final class FakeMotherboardTransport: MotherboardTransport {

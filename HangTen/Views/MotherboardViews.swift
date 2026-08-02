@@ -151,12 +151,14 @@ struct MotherboardSettingsView: View {
             Section {
                 LabeledContent("Connection", value: service.state.label)
 
-                Button("Tare", action: service.tare)
-                    .disabled(service.state != .streaming)
+                Button(action: service.tare) {
+                    Text(service.isTaring ? "Taring \(service.tareSamplesCollected)/\(service.tareSampleTarget)…" : "Tare")
+                }
+                .disabled(service.state != .streaming || service.isTaring)
             } header: {
                 Text("Sensor")
             } footer: {
-                Text("Tare zeroes the current load and is available while the sensor is streaming.")
+                Text("Tare averages the next \(service.tareSampleTarget) unloaded samples and is available while the sensor is streaming.")
             }
         }
         .navigationTitle("Sensor settings")

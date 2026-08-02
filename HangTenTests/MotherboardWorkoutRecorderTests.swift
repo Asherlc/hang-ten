@@ -110,4 +110,33 @@ final class MotherboardWorkoutRecorderTests: XCTestCase {
         XCTAssertEqual(results[0].peakLoadKGF, 10)
         XCTAssertEqual(results[1].peakLoadKGF, 3)
     }
+
+    func testReconnectDoesNotPreventLaterStepFromBeingInterrupted() {
+        var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 2.5, releaseRatio: 0.8, debounceDuration: 0, mergeGapDuration: 0))
+        recorder.consume(measurement(load: 4, at: 1), stepID: "first", plannedActiveDuration: 5, workoutElapsed: 1, stepStartElapsed: 0, isActive: true)
+        recorder.interrupt(at: 2)
+
+        recorder.consume(measurement(load: 4, at: 6), stepID: "second", plannedActiveDuration: 5, workoutElapsed: 6, stepStartElapsed: 5, isActive: true)
+        recorder.interrupt(at: 7)
+
+        let results = recorder.finish(at: 7)
+        XCTAssertEqual(results.map(\.status), [.interrupted, .interrupted])
+    }
+
+    func testInterruptionCanPersistCurrentStepBeforeItsFirstSample() {
+        var recorder = MotherboardWorkoutRecorder()
+
+        recorder.interrupt(
+            stepID: "step",
+            plannedActiveDuration: 5,
+            stepStartElapsed: 0,
+            at: 2
+        )
+
+        let result = recorder.finish(at: 2)
+
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].status, .interrupted)
+        XCTAssertEqual(result[0].sampleCount, 0)
+    }
 }

@@ -59,6 +59,10 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var batteryValue: UInt16?
     @Published private(set) var lastError: String?
     @Published private(set) var connectedDeviceID: UUID?
+    @Published private(set) var isTaring = false
+    @Published private(set) var tareSamplesCollected = 0
+
+    let tareSampleTarget: Int
 
     private let transport: MotherboardTransport
     private let timeouts: MotherboardServiceTimeouts
@@ -66,18 +70,22 @@ final class MotherboardBluetoothService: ObservableObject {
     private var calibrationRows: [MotherboardCalibrationRow] = []
     private var calibration: MotherboardCalibration?
     private var tareKGF = Array(repeating: 0.0, count: 4)
+    private var tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
     private var wantsConnection = false
     private var reconnectAttempts = 0
     private var timeoutTask: Task<Void, Never>?
+    private var lastPowerState: MotherboardBluetoothPowerState = .unknown
 
     init(
         transport: MotherboardTransport,
         parser: MotherboardProtocolParser = .init(),
-        timeouts: MotherboardServiceTimeouts = .production
+        timeouts: MotherboardServiceTimeouts = .production,
+        tareSampleCount: Int = 15
     ) {
         self.transport = transport
         self.parser = parser
         self.timeouts = timeouts
+        tareSampleTarget = max(1, tareSampleCount)
         transport.eventHandler = { [weak self] event in
             self?.handle(event)
         }
@@ -116,8 +124,10 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     func tare() {
-        guard let latestMeasurement else { return }
-        tareKGF = zip(tareKGF, latestMeasurement.sensorLoadsKGF).map(+)
+        guard state == .streaming, !isTaring else { return }
+        tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+        tareSamplesCollected = 0
+        isTaring = true
     }
 
     private func handle(_ event: MotherboardTransportEvent) {
@@ -158,9 +168,17 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     private func handle(_ powerState: MotherboardBluetoothPowerState) {
+        let previousPowerState = lastPowerState
+        lastPowerState = powerState
+
         switch powerState {
         case .poweredOn:
-            break
+            guard state == .bluetoothUnavailable,
+                  previousPowerState == .poweredOff ||
+                    previousPowerState == .unknown ||
+                    previousPowerState == .resetting else { return }
+            lastError = nil
+            state = .idle
 
         case .unauthorized:
             wantsConnection = false
@@ -168,6 +186,7 @@ final class MotherboardBluetoothService: ObservableObject {
             state = .unauthorized
 
         case .unknown, .resetting, .unsupported, .poweredOff:
+            guard state != .unauthorized else { return }
             wantsConnection = false
             cleanupTransportSession()
             state = .bluetoothUnavailable
@@ -200,6 +219,7 @@ final class MotherboardBluetoothService: ObservableObject {
                 )
                 latestMeasurement = measurement
                 batteryValue = measurement.batteryValue
+                collectTareSample(measurement)
 
             case .streamStarted(let rate):
                 guard rate == 30, calibration != nil else { continue }
@@ -252,9 +272,28 @@ final class MotherboardBluetoothService: ObservableObject {
         calibrationRows = []
         calibration = nil
         tareKGF = Array(repeating: 0.0, count: 4)
+        cancelTare()
         latestMeasurement = nil
         batteryValue = nil
         connectedDeviceID = nil
+    }
+
+    private func collectTareSample(_ measurement: MotherboardMeasurement) {
+        guard isTaring, measurement.sensorLoadsKGF.count == tareAccumulatorKGF.count else { return }
+        tareAccumulatorKGF = zip(tareAccumulatorKGF, measurement.sensorLoadsKGF).map(+)
+        tareSamplesCollected += 1
+
+        guard tareSamplesCollected >= tareSampleTarget else { return }
+        let divisor = Double(tareSamplesCollected)
+        let average = tareAccumulatorKGF.map { $0 / divisor }
+        tareKGF = zip(tareKGF, average).map(+)
+        cancelTare()
+    }
+
+    private func cancelTare() {
+        isTaring = false
+        tareSamplesCollected = 0
+        tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
     }
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {
@@ -305,6 +344,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
     private var scanRequested = false
+    private var txNotificationsRequested = false
 
     override convenience init() {
         self.init { delegate in
@@ -344,12 +384,14 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     func disconnect() {
         stopScan()
+        txNotificationsRequested = false
         guard let selectedPeripheral else { return }
         clearSelectedPeripheral()
         centralManager?.cancelPeripheralConnection(selectedPeripheral)
     }
 
     func setTXNotificationsEnabled(_ enabled: Bool) {
+        txNotificationsRequested = enabled
         guard let selectedPeripheral, let txCharacteristic else { return }
         selectedPeripheral.setNotifyValue(enabled, for: txCharacteristic)
     }
@@ -375,11 +417,26 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         selectedPeripheral = nil
         rxCharacteristic = nil
         txCharacteristic = nil
+        txNotificationsRequested = false
     }
 
     private func reportFailure(_ error: Error?, fallback: String) {
         disconnect()
         eventHandler?(.disconnected(error?.localizedDescription ?? fallback))
+    }
+
+    func handleNotificationStateUpdate(isNotifying: Bool, error: Error?) {
+        if let error {
+            guard txNotificationsRequested || isNotifying else { return }
+            let action = txNotificationsRequested ? "enabled" : "disabled"
+            reportFailure(error, fallback: "Motherboard notifications could not be \(action).")
+        } else if txNotificationsRequested, isNotifying {
+            eventHandler?(.notificationsReady)
+        } else if txNotificationsRequested {
+            reportFailure(nil, fallback: "Motherboard notifications could not be enabled.")
+        } else if isNotifying {
+            reportFailure(nil, fallback: "Motherboard notifications could not be disabled.")
+        }
     }
 }
 
@@ -477,13 +534,7 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBPeripheralDelegat
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         guard characteristic == txCharacteristic else { return }
-        if let error {
-            reportFailure(error, fallback: "Motherboard notifications could not be enabled.")
-        } else if characteristic.isNotifying {
-            eventHandler?(.notificationsReady)
-        } else {
-            reportFailure(nil, fallback: "Motherboard notifications could not be enabled.")
-        }
+        handleNotificationStateUpdate(isNotifying: characteristic.isNotifying, error: error)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {

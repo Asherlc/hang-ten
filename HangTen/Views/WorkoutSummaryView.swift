@@ -1,32 +1,132 @@
 import SwiftUI
 
+enum WorkoutSummaryMode: Equatable {
+    case pending
+    case history
+
+    var isReadOnly: Bool {
+        self == .history
+    }
+}
+
 struct WorkoutSummaryView: View {
     let session: WorkoutSessionRecord
     let unit: MotherboardForceUnit
     let onSave: () -> Void
     let onDiscard: () -> Void
+    let mode: WorkoutSummaryMode
+
+    init(
+        session: WorkoutSessionRecord,
+        unit: MotherboardForceUnit,
+        onSave: @escaping () -> Void,
+        onDiscard: @escaping () -> Void
+    ) {
+        self.session = session
+        self.unit = unit
+        self.onSave = onSave
+        self.onDiscard = onDiscard
+        mode = .pending
+    }
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(session.planTitle)
-                            .font(.system(size: 24, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangInk)
-                        Text(session.recordedAt.formatted(date: .long, time: .shortened))
-                            .font(.system(size: 13, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
-                    }
-                    .padding(.vertical, 4)
-                }
+            WorkoutSummaryContent(
+                session: session,
+                unit: unit,
+                mode: mode,
+                onSave: mode.isReadOnly ? nil : onSave,
+                onDiscard: mode.isReadOnly ? nil : onDiscard
+            )
+            .navigationTitle("Session summary")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
 
-                Section("Measured load") {
-                    ForEach(session.steps, id: \.stepID) { step in
-                        stepRow(step)
+struct WorkoutSessionHistoryView: View {
+    let sessions: [WorkoutSessionRecord]
+    let unit: MotherboardForceUnit
+
+    var body: some View {
+        List {
+            if sessions.isEmpty {
+                ContentUnavailableView(
+                    "No saved sessions",
+                    systemImage: "clock.arrow.circlepath",
+                    description: Text("Save a measured workout to review it here.")
+                )
+            } else {
+                ForEach(sessions) { session in
+                    NavigationLink {
+                        WorkoutSummaryContent(
+                            session: session,
+                            unit: unit,
+                            mode: .history
+                        )
+                        .navigationTitle("Session summary")
+                        .navigationBarTitleDisplayMode(.inline)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(session.planTitle)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
+                            Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
+                                .font(.system(size: 12, weight: .medium, design: .rounded))
+                                .foregroundStyle(Color.hangMuted)
+                        }
+                        .padding(.vertical, 3)
                     }
                 }
+            }
+        }
+        .navigationTitle("Session history")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
 
+private struct WorkoutSummaryContent: View {
+    let session: WorkoutSessionRecord
+    let unit: MotherboardForceUnit
+    let mode: WorkoutSummaryMode
+    var onSave: (() -> Void)?
+    var onDiscard: (() -> Void)?
+
+    init(
+        session: WorkoutSessionRecord,
+        unit: MotherboardForceUnit,
+        mode: WorkoutSummaryMode = .history,
+        onSave: (() -> Void)? = nil,
+        onDiscard: (() -> Void)? = nil
+    ) {
+        self.session = session
+        self.unit = unit
+        self.mode = mode
+        self.onSave = onSave
+        self.onDiscard = onDiscard
+    }
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(session.planTitle)
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text(session.recordedAt.formatted(date: .long, time: .shortened))
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section("Measured load") {
+                ForEach(session.steps, id: \.stepID) { step in
+                    stepRow(step)
+                }
+            }
+
+            if !mode.isReadOnly, let onSave, let onDiscard {
                 Section {
                     Button("Save session", action: onSave)
                         .frame(maxWidth: .infinity)
@@ -39,8 +139,6 @@ struct WorkoutSummaryView: View {
                     Text("Saving logs this completed routine and writes it to Apple Health. Discarding keeps nothing.")
                 }
             }
-            .navigationTitle("Session summary")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 

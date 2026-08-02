@@ -2,6 +2,11 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testHistorySummaryModeIsReadOnly() {
+        XCTAssertFalse(WorkoutSummaryMode.pending.isReadOnly)
+        XCTAssertTrue(WorkoutSummaryMode.history.isReadOnly)
+    }
+
     func testSummaryUsesActualLoadedDurationAndPeakInSelectedUnit() {
         let step = WorkoutStepMeasurement(
             stepID: "step",

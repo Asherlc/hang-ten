@@ -758,7 +758,7 @@ struct WorkoutView: View {
 				session: session,
 				unit: motherboardSettingsStore.forceUnit,
 				onSave: { save(session) },
-				onDiscard: { summarySession = nil }
+				onDiscard: { discard(session) }
 			)
 		}
 		.onAppear {
@@ -792,7 +792,7 @@ struct WorkoutView: View {
 		}
 		.onChange(of: motherboardBluetoothService.state) { previousState, state in
 			guard previousState == .streaming, state != .streaming else { return }
-			recorder.pause(at: currentElapsed(at: Date()))
+			interruptRecorderForSensorLoss()
 		}
 		.onDisappear {
 			interruptRecorderIfNeeded()
@@ -1247,6 +1247,34 @@ struct WorkoutView: View {
 		dismiss()
 	}
 
+	private func discard(_ session: WorkoutSessionRecord) {
+		guard completedSession?.id == session.id else { return }
+		summarySession = nil
+		completedSession = nil
+		startedAt = nil
+		audioCoach.stop()
+		dismiss()
+	}
+
+	private func interruptRecorderForSensorLoss() {
+		let now = Date()
+		guard let startedAt,
+			  startedAt <= now,
+			  !didComplete else { return }
+
+		let elapsed = currentElapsed(at: now)
+		let currentStep = step(at: elapsed)
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.interrupt(
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
+			at: elapsed
+		)
+	}
+
 	private func interruptRecorderIfNeeded() {
 		let now = Date()
 		let hasStartedActiveWork = startedAt.map { $0 <= now } ?? false
@@ -1419,6 +1447,7 @@ struct ProgressDashboardView: View {
                     }
 
                     streakCard
+					sessionHistoryCard
                     boardInfo
                     MotherboardCard(
                         service: motherboardBluetoothService,
@@ -1493,6 +1522,46 @@ struct ProgressDashboardView: View {
         }
         .hangCard()
     }
+
+	private var sessionHistoryCard: some View {
+		NavigationLink {
+			WorkoutSessionHistoryView(
+				sessions: store.sessionHistory,
+				unit: motherboardSettingsStore.forceUnit
+			)
+		} label: {
+			HStack(spacing: 14) {
+				Image(systemName: "clock.arrow.circlepath")
+					.font(.system(size: 18, weight: .bold))
+					.foregroundStyle(Color.hangGreenDark)
+					.frame(width: 36, height: 36)
+					.background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+
+				VStack(alignment: .leading, spacing: 3) {
+					Text("Session history")
+						.font(.system(size: 15, weight: .bold, design: .rounded))
+						.foregroundStyle(Color.hangInk)
+					Text(sessionHistoryDetail)
+						.font(.system(size: 12, weight: .medium, design: .rounded))
+						.foregroundStyle(Color.hangMuted)
+						.lineLimit(1)
+				}
+				Spacer()
+				Image(systemName: "chevron.right")
+					.font(.system(size: 12, weight: .bold))
+					.foregroundStyle(Color.hangMuted)
+			}
+		}
+		.buttonStyle(.plain)
+		.hangCard()
+	}
+
+	private var sessionHistoryDetail: String {
+		guard let latest = store.sessionHistory.first else {
+			return "Saved sessions will appear here."
+		}
+		return "\(store.sessionHistory.count) saved · Latest \(latest.recordedAt.formatted(date: .abbreviated, time: .omitted))"
+	}
 
     private var boardInfo: some View {
         VStack(alignment: .leading, spacing: 14) {

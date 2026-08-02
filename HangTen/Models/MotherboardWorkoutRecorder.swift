@@ -133,10 +133,34 @@ struct MotherboardWorkoutRecorder {
     }
 
     mutating func interrupt(at workoutElapsed: TimeInterval) {
-        pause(at: workoutElapsed)
-        guard let currentStepID, var state = states[currentStepID] else { return }
+        guard let currentStepID, let state = states[currentStepID] else { return }
+        interrupt(
+            stepID: currentStepID,
+            plannedActiveDuration: state.plannedActiveDuration,
+            stepStartElapsed: state.stepStartElapsed,
+            at: workoutElapsed
+        )
+    }
+
+    mutating func interrupt(
+        stepID: String,
+        plannedActiveDuration: TimeInterval,
+        stepStartElapsed: TimeInterval,
+        at workoutElapsed: TimeInterval
+    ) {
+        var state = state(
+            for: stepID,
+            plannedActiveDuration: plannedActiveDuration,
+            stepStartElapsed: stepStartElapsed
+        )
+        closeInterval(in: &state, at: workoutElapsed)
+        state.pendingStart = nil
+        state.pendingRelease = nil
+        state.permitsMergeWithPrevious = false
         state.status = .interrupted
-        states[currentStepID] = state
+        states[stepID] = state
+        currentStepID = stepID
+        currentLoadedDuration = loadedDuration(in: state, at: workoutElapsed)
     }
 
     mutating func finish(at workoutElapsed: TimeInterval) -> [WorkoutStepMeasurement] {
