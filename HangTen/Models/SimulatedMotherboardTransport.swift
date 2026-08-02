@@ -20,7 +20,8 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
         id: UUID(uuidString: "0F0F0F0F-0000-4000-8000-000000000009")!,
         name: "Motherboard Simulator"
     )
-    private var streamWorkItems: [DispatchWorkItem] = []
+    private var streamTimer: DispatchSourceTimer?
+    private var nextSampleIndex = 0
     private var isStreaming = false
 
     init(samples: [MotherboardMeasurement] = SimulatedMotherboardTransport.defaultSamples) {
@@ -75,24 +76,30 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
 
     private func scheduleStream() {
         cancelStream()
-        isStreaming = true
+        guard !samples.isEmpty else { return }
 
-        guard let firstTimestamp = samples.first?.timestamp else { return }
-        for sample in samples {
-            let delay = max(0, sample.timestamp.timeIntervalSince(firstTimestamp))
-            let workItem = DispatchWorkItem { [weak self] in
-                guard let self, self.isStreaming else { return }
-                self.eventHandler?(.notification(Self.rawFrame(for: sample), sample.timestamp))
-            }
-            streamWorkItems.append(workItem)
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+        isStreaming = true
+        let timer = DispatchSource.makeTimerSource(queue: .main)
+        timer.setEventHandler { [weak self] in
+            self?.emitNextSample()
         }
+        timer.schedule(deadline: .now(), repeating: .milliseconds(300))
+        streamTimer = timer
+        timer.resume()
+    }
+
+    private func emitNextSample() {
+        guard isStreaming, !samples.isEmpty else { return }
+        let sample = samples[nextSampleIndex]
+        nextSampleIndex = (nextSampleIndex + 1) % samples.count
+        eventHandler?(.notification(Self.rawFrame(for: sample), Date()))
     }
 
     private func cancelStream() {
         isStreaming = false
-        streamWorkItems.forEach { $0.cancel() }
-        streamWorkItems.removeAll()
+        nextSampleIndex = 0
+        streamTimer?.cancel()
+        streamTimer = nil
     }
 
     private static func rawFrame(for measurement: MotherboardMeasurement) -> Data {

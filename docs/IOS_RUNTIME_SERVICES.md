@@ -34,11 +34,13 @@ device after firmware changes.
 `HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
 selects Progress and replaces the CoreBluetooth transport with a deterministic
 fixture that sends real calibration and raw notification frames through
-`MotherboardBluetoothService`. The fixture's stable timestamped sequence
-contains unloaded, loaded, peak, and released samples, so the same service,
-meter, settings, threshold, and recorder paths are exercised without system
-Bluetooth. Release builds always construct `CoreBluetoothMotherboardTransport`
-regardless of that environment variable. The fixture does not validate radio
+`MotherboardBluetoothService`. Its deterministic unloaded, loaded, peak, and
+released pattern repeats while streaming, but every raw notification is stamped
+when it is delivered so a routine started after launch can be recorded. The
+same service, meter, settings, threshold, and recorder paths are exercised
+without system Bluetooth. Release builds always construct
+`CoreBluetoothMotherboardTransport` regardless of that environment variable.
+The fixture does not validate radio
 permissions, discovery, GATT behavior, device calibration accuracy, firmware
 compatibility, disconnect timing, or force accuracy; all of those require a
 physical Motherboard before release.
