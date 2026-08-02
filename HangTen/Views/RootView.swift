@@ -643,6 +643,7 @@ struct WorkoutView: View {
     @State private var pausedElapsed: TimeInterval = 0
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
+    @State private var showsStepPicker = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
 
@@ -705,6 +706,11 @@ struct WorkoutView: View {
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
+				}
+				.sheet(isPresented: $showsStepPicker) {
+					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
+						jump(to: selectedStep)
+					}
 				}
 			}
 		}
@@ -788,7 +794,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlButton(isComplete: isComplete, countdown: countdown)
+				controlGroup(isComplete: isComplete, countdown: countdown)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -856,7 +862,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlButton(isComplete: isComplete, countdown: countdown)
+				controlGroup(isComplete: isComplete, countdown: countdown)
 					.frame(width: 224)
 			}
 		}
@@ -905,6 +911,14 @@ struct WorkoutView: View {
 			)
 			.font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
 			.foregroundStyle(Color.hangInk)
+
+			Button("Routine") {
+				showsStepPicker = true
+			}
+			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+			.disabled(!canNavigate)
+			.accessibilityIdentifier("workout.routinePicker")
 		}
 	}
 
@@ -966,6 +980,14 @@ struct WorkoutView: View {
                     fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
                 )
             }
+
+            Button("Routine") {
+                showsStepPicker = true
+            }
+            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangGreenDark)
+            .disabled(!canNavigate)
+            .accessibilityIdentifier("workout.routinePicker")
 
             Text(isComplete ? "Nice work." : countdown > 0 ? step.title : isResting ? "Step off and shake out" : step.title)
                 .font(.system(size: 30, weight: .bold, design: .rounded))
@@ -1037,6 +1059,26 @@ struct WorkoutView: View {
             }
         }
         .hangCard()
+    }
+
+    private func controlGroup(isComplete: Bool, countdown: Int) -> some View {
+        VStack(spacing: 10) {
+            controlButton(isComplete: isComplete, countdown: countdown)
+
+            Button {
+                skipCurrentStep()
+            } label: {
+                Label("Skip step", systemImage: "forward.fill")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .padding(.vertical, 10)
+                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(!canNavigate)
+            .accessibilityIdentifier("workout.skipStep")
+        }
     }
 
     private func controlButton(isComplete: Bool, countdown: Int) -> some View {
