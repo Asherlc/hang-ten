@@ -24,3 +24,11 @@ Simulator test execution was intentionally not run: the request required avoidin
 ## Commits
 
 - Implementation: `ba6cfcb feat: record actual Motherboard load intervals`
+
+## Review fix — preserve normal rest-only finalization
+
+- Root cause: `finish(at:)` unconditionally changed `.unmeasured` states to `.measured`, including steps that had only non-active/rest observations.
+- Regression test: `testFinishKeepsRestOnlyStepUnmeasured` creates a rest-only step, finishes normally, and asserts `.unmeasured`, no intervals, and zero active samples.
+- Fix: removed only the unconditional status conversion. Explicit `endStep(..., status: .measured)` and `interrupt(...)` continue to set `.measured` and `.interrupted` respectively.
+- Verification: focused and full bounded `xcodebuild build-for-testing` commands both exited 0 with `** TEST BUILD SUCCEEDED **`.
+- Runtime limitation: the focused XCTest command was protected by a 45-second alarm and terminated with signal 14 during simulator launch after compiling/linking; no XCTest assertions were executed in that attempt.

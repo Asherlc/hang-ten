@@ -126,9 +126,6 @@ struct MotherboardWorkoutRecorder {
             closeInterval(in: &state, at: state.timeOffset + workoutElapsed)
             state.pendingStart = nil
             state.pendingRelease = nil
-            if state.status == .unmeasured {
-                state.status = .measured
-            }
             states[stepID] = state
         }
 

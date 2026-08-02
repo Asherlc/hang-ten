@@ -39,6 +39,16 @@ final class MotherboardWorkoutRecorderTests: XCTestCase {
         XCTAssertTrue(result[1].intervals.isEmpty)
     }
 
+    func testFinishKeepsRestOnlyStepUnmeasured() {
+        var recorder = MotherboardWorkoutRecorder()
+        recorder.consume(measurement(load: 10, at: 3), stepID: "rest", plannedActiveDuration: 5, workoutElapsed: 3, isActive: false)
+
+        let result = recorder.finish(at: 5)
+        XCTAssertEqual(result[0].status, .unmeasured)
+        XCTAssertTrue(result[0].intervals.isEmpty)
+        XCTAssertEqual(result[0].sampleCount, 0)
+    }
+
     func testDebounceUsesReleaseHysteresisAndTracksActiveSamples() {
         var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 5, releaseRatio: 0.8, debounceDuration: 1, mergeGapDuration: 0))
         recorder.consume(measurement(load: 5, at: 1), stepID: "step", plannedActiveDuration: 10, workoutElapsed: 1, isActive: true)
