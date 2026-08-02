@@ -1,0 +1,3108 @@
+{
+  "blocks" : [
+    {
+      "id" : "shared.progressive-warm-up",
+      "steps" : [
+        {
+          "accessory" : "Easy movement · do not fatigue",
+          "duration" : 180,
+          "gripType" : "openHand",
+          "id" : "warm-up",
+          "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
+          "phase" : "warmUp",
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Progressive warm-up"
+        }
+      ],
+      "title" : "Progressive warm-up"
+    },
+    {
+      "id" : "shared.cool-down",
+      "steps" : [
+        {
+          "accessory" : "Easy movement · gentle release",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "cool-down",
+          "instruction" : "Stay on the easy jugs and let your breathing settle before you step away.",
+          "phase" : "coolDown",
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Cool down"
+        }
+      ],
+      "title" : "Cool down"
+    },
+    {
+      "id" : "metolius.compact-ii.ten-minute.warm-up",
+      "steps" : [
+        {
+          "accessory" : "Ease in — this should feel easy.",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "warm-up-jugs",
+          "instruction" : "Move gently on the outer jugs. Keep your grip open and your elbows soft.",
+          "phase" : "warmUp",
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Easy warm-up"
+        }
+      ],
+      "title" : "Easy warm-up"
+    },
+    {
+      "id" : "metolius.compact-ii.ten-minute.main",
+      "steps" : [
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "hang-29mm",
+          "instruction" : "Dead hang with both hands on the deep edges. Use assistance if needed.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "29 mm edge"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "fourFingerPocket",
+          "id" : "hang-deep-pocket",
+          "instruction" : "Hang on the deep four-finger pockets with an open hand.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Deep pockets"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "sloper",
+          "id" : "hang-sloper",
+          "instruction" : "Stay relaxed through the shoulders and keep contact even across both hands.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "center-sloper"
+            }
+          ],
+          "title" : "Center sloper"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "threeFingerPocket",
+          "id" : "hang-three-finger",
+          "instruction" : "Use the deeper portion of the three-finger pockets first; stop before form breaks.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "three-finger-pockets"
+            }
+          ],
+          "title" : "Three-finger pockets"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "hang-19mm",
+          "instruction" : "Use an open-hand edge grip. Take weight off with your feet or a pulley when necessary.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "19 mm edge"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeat-deep-pocket",
+          "instruction" : "Return to the deep pockets at a controlled intensity. Quality beats fatigue.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Pocket repeat"
+        },
+        {
+          "accessory" : "10s hang · 50s rest",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "repeat-29mm",
+          "instruction" : "Repeat the 29 mm edge with smooth shoulders and no sudden loading.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Edge repeat"
+        },
+        {
+          "accessory" : "Stop well before failure.",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "pull-ups-jugs",
+          "instruction" : "Use the outer jugs for a few strict, controlled reps. Keep the lower body quiet.",
+          "phase" : "pull",
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Smooth pull-ups"
+        }
+      ],
+      "title" : "Metolius 10-minute sequence"
+    },
+    {
+      "id" : "research.max-hangs.main",
+      "steps" : [
+        {
+          "accessory" : "7s hang · 3m recovery · half crimp",
+          "activeDuration" : 7,
+          "duration" : 187,
+          "gripType" : "halfCrimp",
+          "id" : "max-hangs-1",
+          "instruction" : "Use added weight or assistance so seven seconds is near-max without losing shoulder position or grip shape.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Max hang · set 1"
+        },
+        {
+          "accessory" : "7s hang · 3m recovery · half crimp",
+          "activeDuration" : 7,
+          "duration" : 187,
+          "gripType" : "halfCrimp",
+          "id" : "max-hangs-2",
+          "instruction" : "Repeat the same load or make a small adjustment. Stop before form breaks.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Max hang · set 2"
+        },
+        {
+          "accessory" : "7s hang · 3m recovery · half crimp",
+          "activeDuration" : 7,
+          "duration" : 187,
+          "gripType" : "halfCrimp",
+          "id" : "max-hangs-3",
+          "instruction" : "Keep the effort high and the movement quiet. Do not turn this into a full-crimp test.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Max hang · set 3"
+        },
+        {
+          "accessory" : "7s hang · 3m recovery · half crimp",
+          "activeDuration" : 7,
+          "duration" : 187,
+          "gripType" : "halfCrimp",
+          "id" : "max-hangs-4",
+          "instruction" : "Take the full recovery and reproduce your best controlled effort.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Max hang · set 4"
+        },
+        {
+          "accessory" : "7s hang · final effort",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "halfCrimp",
+          "id" : "max-hangs-5",
+          "instruction" : "Finish with one high-quality effort. Log the load or assistance used today.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Max hang · set 5"
+        }
+      ],
+      "title" : "Max Hangs"
+    },
+    {
+      "id" : "research.force-feedback-f80.main",
+      "steps" : [
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-1",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-2",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-3",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-4",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-5",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 5"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-6",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 6"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-7",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 7"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-8",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 8"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-9",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 9"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-10",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 10"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-11",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 11"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-1-rep-12",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 1, rep 12"
+        },
+        {
+          "accessory" : "8m recovery · step off the board",
+          "duration" : 480,
+          "id" : "f80-set-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Eight-minute set recovery"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-1",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-2",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-3",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-4",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-5",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 5"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-6",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 6"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-7",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 7"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-8",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 8"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-9",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 9"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-10",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 10"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-11",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 11"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-2-rep-12",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 2, rep 12"
+        },
+        {
+          "accessory" : "8m recovery · step off the board",
+          "duration" : 480,
+          "id" : "f80-set-2-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Eight-minute set recovery"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-1",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-2",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-3",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-4",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-5",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 5"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-6",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 6"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-7",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 7"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-8",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 8"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-9",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 9"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-10",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 10"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-11",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 11"
+        },
+        {
+          "accessory" : "10s hang · 6s rest · 80% target",
+          "activeDuration" : 10,
+          "duration" : 16,
+          "gripType" : "halfCrimp",
+          "id" : "f80-set-3-rep-12",
+          "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "F80 · set 3, rep 12"
+        }
+      ],
+      "title" : "F80 Force Board"
+    },
+    {
+      "id" : "research.force-feedback-f100.main",
+      "steps" : [
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-1-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-1-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-2-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-2-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-3-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-3-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-4-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-4-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-5-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-5-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-6-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 306,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-1-round-6-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-1-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-1-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-2-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-2-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-3-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-3-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-4-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-4-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-5-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 174,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-5-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-6-left",
+          "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-left"
+              ]
+            }
+          ],
+          "title" : "F100 · left hand"
+        },
+        {
+          "accessory" : "6s max · alternate hands",
+          "activeDuration" : 6,
+          "duration" : 6,
+          "gripType" : "halfCrimp",
+          "id" : "f100-set-2-round-6-right",
+          "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-19-right"
+              ]
+            }
+          ],
+          "title" : "F100 · right hand"
+        }
+      ],
+      "title" : "F100 Force Board"
+    },
+    {
+      "id" : "research.eva-int-hangs.main",
+      "steps" : [
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-1-rep-1",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 1, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-1-rep-2",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 1, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-1-rep-3",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 1, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-1-rep-4",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 1, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-1-rep-5",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 1, rep 5"
+        },
+        {
+          "accessory" : "1m recovery · shake out",
+          "duration" : 60,
+          "id" : "int-hangs-set-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "One-minute set recovery"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-2-rep-1",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 2, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-2-rep-2",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 2, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-2-rep-3",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 2, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-2-rep-4",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 2, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-2-rep-5",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 2, rep 5"
+        },
+        {
+          "accessory" : "1m recovery · shake out",
+          "duration" : 60,
+          "id" : "int-hangs-set-2-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "One-minute set recovery"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-3-rep-1",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 3, rep 1"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-3-rep-2",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 3, rep 2"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-3-rep-3",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 3, rep 3"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 15,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-3-rep-4",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 3, rep 4"
+        },
+        {
+          "accessory" : "10s hang · 5s rest · 5 reps",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "int-hangs-set-3-rep-5",
+          "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "IntHang · set 3, rep 5"
+        }
+      ],
+      "title" : "Eva IntHangs"
+    },
+    {
+      "id" : "research.seven-three-repeaters.main",
+      "steps" : [
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-1",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-2",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-3",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 3"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-4",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 4"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-5",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 5"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "openHand",
+          "id" : "repeaters-grip-1-rep-6",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7\/3 · 29 mm open edge, rep 6"
+        },
+        {
+          "accessory" : "2m recovery · switch grip",
+          "duration" : 120,
+          "id" : "repeaters-grip-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Two-minute grip recovery"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-1",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-2",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-3",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 3"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-4",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 4"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-5",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 5"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "fourFingerPocket",
+          "id" : "repeaters-grip-2-rep-6",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7\/3 · Deep four-finger pocket, rep 6"
+        },
+        {
+          "accessory" : "2m recovery · switch grip",
+          "duration" : 120,
+          "id" : "repeaters-grip-2-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Two-minute grip recovery"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-1",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-2",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-3",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 3"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-4",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 4"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-5",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 5"
+        },
+        {
+          "accessory" : "7s hang · 3s rest · 6 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "halfCrimp",
+          "id" : "repeaters-grip-3-rep-6",
+          "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7\/3 · 19 mm half crimp, rep 6"
+        }
+      ],
+      "title" : "7\/3 Repeaters"
+    },
+    {
+      "id" : "research.abrahangs.warm-up",
+      "steps" : [
+        {
+          "accessory" : "Easy movement · do not fatigue",
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "abrahangs-warm-up",
+          "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
+          "phase" : "warmUp",
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Progressive warm-up"
+        }
+      ],
+      "title" : "Progressive warm-up"
+    },
+    {
+      "id" : "research.abrahangs.main",
+      "steps" : [
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "abrahangs-grip-1",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Abrahang · 29 mm open edge"
+        },
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "fourFingerPocket",
+          "id" : "abrahangs-grip-2",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Abrahang · Deep four-finger pocket"
+        },
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "sloper",
+          "id" : "abrahangs-grip-3",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "center-sloper"
+            }
+          ],
+          "title" : "Abrahang · Center sloper"
+        },
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "threeFingerPocket",
+          "id" : "abrahangs-grip-4",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "three-finger-pockets"
+            }
+          ],
+          "title" : "Abrahang · Three-finger pocket"
+        },
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "abrahangs-grip-5",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "Abrahang · 19 mm open edge"
+        },
+        {
+          "accessory" : "10s hang · 50s rest · feet supported",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "abrahangs-grip-6",
+          "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Abrahang · 29 mm half crimp"
+        }
+      ],
+      "title" : "Abrahangs"
+    },
+    {
+      "id" : "coach.horst-seven-fifty-three.main",
+      "steps" : [
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-1-rep-1",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7–53 · 29 mm half crimp, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-1-rep-2",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7–53 · 29 mm half crimp, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-1-rep-3",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "7–53 · 29 mm half crimp, rep 3"
+        },
+        {
+          "accessory" : "3m recovery · switch grip",
+          "duration" : 180,
+          "id" : "horst-753-grip-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute grip recovery"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-2-rep-1",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7–53 · 19 mm half crimp, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-2-rep-2",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7–53 · 19 mm half crimp, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "halfCrimp",
+          "id" : "horst-753-grip-2-rep-3",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-19"
+            }
+          ],
+          "title" : "7–53 · 19 mm half crimp, rep 3"
+        },
+        {
+          "accessory" : "3m recovery · switch grip",
+          "duration" : 180,
+          "id" : "horst-753-grip-2-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute grip recovery"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "fourFingerPocket",
+          "id" : "horst-753-grip-3-rep-1",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7–53 · Deep four-finger pocket, rep 1"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 60,
+          "gripType" : "fourFingerPocket",
+          "id" : "horst-753-grip-3-rep-2",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7–53 · Deep four-finger pocket, rep 2"
+        },
+        {
+          "accessory" : "7s hang · 53s rest · 3 reps",
+          "activeDuration" : 7,
+          "duration" : 7,
+          "gripType" : "fourFingerPocket",
+          "id" : "horst-753-grip-3-rep-3",
+          "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "7–53 · Deep four-finger pocket, rep 3"
+        }
+      ],
+      "title" : "7–53 Max Hangs"
+    },
+    {
+      "id" : "coach.bechtel-three-six-nine.main",
+      "steps" : [
+        {
+          "accessory" : "3s hang · 30s rest",
+          "activeDuration" : 3,
+          "duration" : 33,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-1-3",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 1 · 3 seconds"
+        },
+        {
+          "accessory" : "6s hang · 30s rest",
+          "activeDuration" : 6,
+          "duration" : 36,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-1-6",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 1 · 6 seconds"
+        },
+        {
+          "accessory" : "9s hang · 30s rest",
+          "activeDuration" : 9,
+          "duration" : 9,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-1-9",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 1 · 9 seconds"
+        },
+        {
+          "accessory" : "3m recovery · repeat the ladder",
+          "duration" : 180,
+          "id" : "ladders-round-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute ladder recovery"
+        },
+        {
+          "accessory" : "3s hang · 30s rest",
+          "activeDuration" : 3,
+          "duration" : 33,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-2-3",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 2 · 3 seconds"
+        },
+        {
+          "accessory" : "6s hang · 30s rest",
+          "activeDuration" : 6,
+          "duration" : 36,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-2-6",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 2 · 6 seconds"
+        },
+        {
+          "accessory" : "9s hang · 30s rest",
+          "activeDuration" : 9,
+          "duration" : 9,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-2-9",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 2 · 9 seconds"
+        },
+        {
+          "accessory" : "3m recovery · repeat the ladder",
+          "duration" : 180,
+          "id" : "ladders-round-2-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute ladder recovery"
+        },
+        {
+          "accessory" : "3s hang · 30s rest",
+          "activeDuration" : 3,
+          "duration" : 33,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-3-3",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 3 · 3 seconds"
+        },
+        {
+          "accessory" : "6s hang · 30s rest",
+          "activeDuration" : 6,
+          "duration" : 36,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-3-6",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 3 · 6 seconds"
+        },
+        {
+          "accessory" : "9s hang · 30s rest",
+          "activeDuration" : 9,
+          "duration" : 9,
+          "gripType" : "halfCrimp",
+          "id" : "ladders-round-3-9",
+          "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Ladder 3 · 9 seconds"
+        }
+      ],
+      "title" : "3–6–9 Ladders"
+    },
+    {
+      "id" : "coach.density-hangs.main",
+      "steps" : [
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-1-rep-1",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 1, rep 1"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-1-rep-2",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 1, rep 2"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 30,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-1-rep-3",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 1, rep 3"
+        },
+        {
+          "accessory" : "3m recovery · repeat the hold",
+          "duration" : 180,
+          "id" : "density-hold-1-set-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute set recovery"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-2-rep-1",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 2, rep 1"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-2-rep-2",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 2, rep 2"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 30,
+          "gripType" : "openHand",
+          "id" : "density-hold-1-set-2-rep-3",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "Density · 29 mm open edge, set 2, rep 3"
+        },
+        {
+          "accessory" : "3m recovery · change hold",
+          "duration" : 180,
+          "id" : "density-hold-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute hold recovery"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-1-rep-1",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 1, rep 1"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-1-rep-2",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 1, rep 2"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 30,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-1-rep-3",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 1, rep 3"
+        },
+        {
+          "accessory" : "3m recovery · repeat the hold",
+          "duration" : 180,
+          "id" : "density-hold-2-set-1-recovery",
+          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "phase" : "rest",
+          "targets" : [
+
+          ],
+          "title" : "Three-minute set recovery"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-2-rep-1",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 2, rep 1"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 45,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-2-rep-2",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 2, rep 2"
+        },
+        {
+          "accessory" : "30s hang · 15s rest · 2:1 density",
+          "activeDuration" : 30,
+          "duration" : 30,
+          "gripType" : "fourFingerPocket",
+          "id" : "density-hold-2-set-2-rep-3",
+          "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "deep-four-finger-pockets"
+            }
+          ],
+          "title" : "Density · Deep four-finger pocket, set 2, rep 3"
+        }
+      ],
+      "title" : "Density Hangs"
+    },
+    {
+      "id" : "device.zlagboard-sixty-sixty.main",
+      "steps" : [
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-1",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 1"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-2",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 2"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-3",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 3"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-4",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 4"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-5",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 5"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-6",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 6"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-7",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 7"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-8",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 8"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 120,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-9",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 9"
+        },
+        {
+          "accessory" : "60s hang · 60s rest · feet supported",
+          "activeDuration" : 60,
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "zlagboard-interval-10",
+          "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+          "phase" : "hang",
+          "targets" : [
+            {
+              "semantic" : "edge-29"
+            }
+          ],
+          "title" : "60\/60 · interval 10"
+        }
+      ],
+      "title" : "Zlagboard 60\/60 Endurance"
+    }
+  ],
+  "boardMappings" : [
+    {
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "semanticHolds" : {
+        "center-sloper" : {
+          "holdIDs" : [
+            "sloper-center"
+          ]
+        },
+        "deep-four-finger-pockets" : {
+          "holdIDs" : [
+            "pocket-4-deep-left",
+            "pocket-4-deep-right"
+          ]
+        },
+        "edge-19" : {
+          "holdIDs" : [
+            "edge-19-left",
+            "edge-19-right"
+          ]
+        },
+        "edge-29" : {
+          "holdIDs" : [
+            "edge-29-left",
+            "edge-29-right"
+          ]
+        },
+        "lower-center-sloper" : {
+          "holdIDs" : [
+            "sloper-center-lower"
+          ]
+        },
+        "outer-jugs" : {
+          "holdIDs" : [
+            "jug-left",
+            "jug-right"
+          ]
+        },
+        "three-finger-pockets" : {
+          "holdIDs" : [
+            "pocket-3-shallow-left",
+            "pocket-3-shallow-right"
+          ]
+        }
+      }
+    }
+  ],
+  "metadata" : {
+    "defaultPlanID" : "metolius.compact-ii.ten-minute",
+    "generatedAt" : "2026-08-01",
+    "id" : "hang-ten.built-in",
+    "notes" : [
+      "Built-in routines are source-linked timer and hold-cue translations.",
+      "Board mappings keep plan targets semantic and board-specific IDs replaceable."
+    ],
+    "title" : "Hang Ten training plans",
+    "version" : "1.0.0"
+  },
+  "plans" : [
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.compact-ii.ten-minute.warm-up"
+        },
+        {
+          "blockID" : "metolius.compact-ii.ten-minute.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "cool-down-jugs"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "metolius.compact-ii.ten-minute",
+      "metadata" : {
+        "category" : "manufacturer",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Foundation",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Metolius Contact Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/contact-training-guide",
+        "subtitle" : "A guided Compact II translation of Metolius's ten-minute format.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius 10-minute sequence"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "max-hangs-warm-up"
+          ]
+        },
+        {
+          "blockID" : "research.max-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "max-hangs-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.max-hangs",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Advanced",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Lattice max hang protocol",
+        "sourceURL" : "https:\/\/latticetraining.com\/workout\/1c4cc25a-ebe8-4930-8541-5b604a831c5f\/half-4-hang-max\/",
+        "subtitle" : "Heavy 7-second hangs for peak finger strength.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "Max Hangs"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "f80-warm-up"
+          ]
+        },
+        {
+          "blockID" : "research.force-feedback-f80.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "f80-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.force-feedback-f80",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Advanced",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Frontiers force-feedback hangboard study",
+        "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
+        "subtitle" : "80% force-feedback repeaters for strength and endurance.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "F80 Force Board"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "f100-warm-up"
+          ]
+        },
+        {
+          "blockID" : "research.force-feedback-f100.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "f100-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.force-feedback-f100",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Expert",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Frontiers force-feedback hangboard study",
+        "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
+        "subtitle" : "Maximal force-feedback hangs with full recovery.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "F100 Force Board"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "int-hangs-warm-up"
+          ]
+        },
+        {
+          "blockID" : "research.eva-int-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "int-hangs-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.eva-int-hangs",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate+",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Eva López hangboard comparison",
+        "sourceURL" : "https:\/\/pubmed.ncbi.nlm.nih.gov\/30988852\/",
+        "subtitle" : "Intermittent 10\/5 hangs for finger endurance.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "Eva IntHangs"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "repeaters-warm-up"
+          ]
+        },
+        {
+          "blockID" : "research.seven-three-repeaters.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "repeaters-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.seven-three-repeaters",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Beastmaker 7\/3 study protocol",
+        "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.888158\/full",
+        "subtitle" : "The classic repeater format across three board positions.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "7\/3 Repeaters"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "research.abrahangs.warm-up"
+        },
+        {
+          "blockID" : "research.abrahangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "abrahangs-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "research.abrahangs",
+      "metadata" : {
+        "category" : "research",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Supplemental",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Lattice Abrahangs protocol",
+        "sourceURL" : "https:\/\/latticetraining.com\/workout\/1832c13b-14c1-444c-82a2-e72b22a6fb13\/abrahangs-protocol",
+        "subtitle" : "Low-intensity, feet-supported hangs across varied grips.",
+        "tags" : [
+          "built-in",
+          "research"
+        ],
+        "title" : "Abrahangs"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "horst-753-warm-up"
+          ]
+        },
+        {
+          "blockID" : "coach.horst-seven-fifty-three.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "horst-753-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "coach.horst-seven-fifty-three",
+      "metadata" : {
+        "category" : "coach",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Advanced",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Eric Hörst fingerboard protocols",
+        "sourceURL" : "https:\/\/trainingforclimbing.com\/4-fingerboard-strength-protocols-that-work\/",
+        "subtitle" : "Short maximal hangs with long, complete recoveries.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "7–53 Max Hangs"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "ladders-warm-up"
+          ]
+        },
+        {
+          "blockID" : "coach.bechtel-three-six-nine.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "ladders-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "coach.bechtel-three-six-nine",
+      "metadata" : {
+        "category" : "coach",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate+",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Steve Bechtel 3–6–9 ladder protocol",
+        "sourceURL" : "https:\/\/strengthclimbing.com\/steve-bechtels-3-6-9-ladders\/",
+        "subtitle" : "A progressive volume ladder for controlled finger strength.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "3–6–9 Ladders"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "density-warm-up"
+          ]
+        },
+        {
+          "blockID" : "coach.density-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "density-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "coach.density-hangs",
+      "metadata" : {
+        "category" : "coach",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate+",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Tyler Nelson density hang protocol",
+        "sourceURL" : "https:\/\/strengthclimbing.com\/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing\/",
+        "subtitle" : "Longer submaximal hangs for finger capacity.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Density Hangs"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "shared.progressive-warm-up",
+          "stepIDs" : [
+            "zlagboard-warm-up"
+          ]
+        },
+        {
+          "blockID" : "device.zlagboard-sixty-sixty.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "zlagboard-cool-down"
+          ]
+        }
+      ],
+      "boardID" : "metolius.wood-grips-compact-ii",
+      "id" : "device.zlagboard-sixty-sixty",
+      "metadata" : {
+        "category" : "device",
+        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate",
+        "notes" : [
+          "Preserved from the original Hang Ten routine catalog."
+        ],
+        "sourceLabel" : "Zlagboard endurance protocol",
+        "sourceURL" : "https:\/\/strengthclimbing.com\/zlagboard-forearm-endurance-workout\/",
+        "subtitle" : "Ten long intervals with foot-supported scaling.",
+        "tags" : [
+          "built-in",
+          "device"
+        ],
+        "title" : "Zlagboard 60\/60 Endurance"
+      }
+    }
+  ],
+  "schemaVersion" : 1
+}
