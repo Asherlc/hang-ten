@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add a Training Routine"
+  short_description: "Import an audited manufacturer training routine"
+  default_prompt: "Use $add-training-routine to add an official training routine to Hang Ten."

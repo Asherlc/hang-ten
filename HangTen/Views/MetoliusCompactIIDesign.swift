@@ -5,9 +5,25 @@ enum BoardDesignCatalog {
         designs[boardID]
     }
 
-    private static let designs: [String: BoardDesign] = [
-        BoardCatalog.compactII.id: .metoliusCompactII
-    ]
+    private static let designs: [String: BoardDesign] = {
+        let result: [String: BoardDesign] = [
+            BoardCatalog.compactII.id: .metoliusCompactII
+        ]
+
+        #if DEBUG
+        for board in BoardCatalog.all {
+            guard let design = result[board.id] else { continue }
+            let modelHoldIDs = Set(board.holds.map(\.id))
+            let renderedHoldIDs = Set(design.holds.map(\.holdID))
+            assert(
+                modelHoldIDs == renderedHoldIDs,
+                "Board hold metadata and rendered geometry differ for \(board.id)"
+            )
+        }
+        #endif
+
+        return result
+    }()
 }
 
 extension BoardDesign {
@@ -164,7 +180,35 @@ extension BoardDesign {
             ])
         )
 
-        var layers: [BoardLayer] = [
+        // The Compact II's outer jugs are the rounded top caps, not the
+        // horizontal side rails beneath them. This path follows the visible
+        // cap and is clipped to the board silhouette by the shared renderer.
+        let outerJugTop = BoardShape.path(
+            BoardNormalizedPath(commands: [
+                .move(CGPoint(x: 0.36, y: 0.00)),
+                .line(CGPoint(x: 0.88, y: 0.00)),
+                .curve(
+                    to: CGPoint(x: 1.00, y: 0.18),
+                    control1: CGPoint(x: 0.96, y: 0.00),
+                    control2: CGPoint(x: 1.00, y: 0.08)
+                ),
+                .line(CGPoint(x: 1.00, y: 0.93)),
+                .line(CGPoint(x: 0.18, y: 0.93)),
+                .curve(
+                    to: CGPoint(x: 0.00, y: 0.46),
+                    control1: CGPoint(x: 0.07, y: 0.88),
+                    control2: CGPoint(x: 0.00, y: 0.67)
+                ),
+                .curve(
+                    to: CGPoint(x: 0.36, y: 0.00),
+                    control1: CGPoint(x: 0.00, y: 0.16),
+                    control2: CGPoint(x: 0.15, y: 0.01)
+                ),
+                .close
+            ])
+        )
+
+        let layers: [BoardLayer] = [
             BoardLayer(
                 frame: CGRect(x: 0.158, y: 0.035, width: 0.684, height: 0.128),
                 shape: topPlane,
@@ -189,16 +233,6 @@ extension BoardDesign {
                 frame: CGRect(x: 0.648, y: 0.060, width: 0.004, height: 0.101),
                 shape: .roundedRect(cornerRadiusFraction: 0.50),
                 role: .topSeam
-            ),
-            BoardLayer(
-                frame: CGRect(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
-                shape: outerLower,
-                role: .shelf
-            ),
-            BoardLayer(
-                frame: CGRect(x: 0.805, y: 0.620, width: 0.160, height: 0.245),
-                shape: outerLower.mirroredHorizontally,
-                role: .shelf
             )
         ]
 
@@ -232,36 +266,53 @@ extension BoardDesign {
             )
         }
 
+        addPair(
+            leftID: "jug-left",
+            rightID: "jug-right",
+            suffix: "top-cap",
+            leftFrame: CGRect(x: 0.000, y: 0.000, width: 0.165, height: 0.255),
+            shape: outerJugTop,
+            treatment: .surface
+        )
+
+        addPair(
+            leftID: "sloper-flat-left",
+            rightID: "sloper-flat-right",
+            suffix: "top-surface",
+            leftFrame: CGRect(x: 0.158, y: 0.035, width: 0.190, height: 0.128),
+            shape: .roundedRect(cornerRadiusFraction: 0.025),
+            treatment: .surface
+        )
         holds.append(
             BoardHoldPiece(
-                id: "sloper-center-surface",
-                holdID: "sloper-center",
-                frame: CGRect(x: 0.352, y: 0.058, width: 0.296, height: 0.105),
+                id: "sloper-round-center-surface",
+                holdID: "sloper-round-center",
+                frame: CGRect(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
                 shape: .roundedRect(cornerRadiusFraction: 0.025),
                 treatment: .surface
             )
         )
 
         addPair(
-            leftID: "jug-left",
-            rightID: "jug-right",
-            suffix: "upper-shelf",
+            leftID: "edge-29-left",
+            rightID: "edge-29-right",
+            suffix: "upper-side-rail",
             leftFrame: CGRect(x: 0.021, y: 0.245, width: 0.165, height: 0.270),
             shape: outerUpper,
             treatment: .shelf(.broadJug)
         )
 
         addPair(
-            leftID: "edge-29-left",
-            rightID: "edge-29-right",
+            leftID: "pocket-29-three-left",
+            rightID: "pocket-29-three-right",
             suffix: "upper",
             leftFrame: CGRect(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
             shape: .roundedRect(cornerRadiusFraction: 0.40),
             treatment: .recess(.deepSlot)
         )
         addPair(
-            leftID: "pocket-4-deep-left",
-            rightID: "pocket-4-deep-right",
+            leftID: "pocket-29-two-left",
+            rightID: "pocket-29-two-right",
             suffix: "upper",
             leftFrame: CGRect(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
             shape: .roundedRect(cornerRadiusFraction: 0.44),
@@ -269,8 +320,8 @@ extension BoardDesign {
         )
         holds.append(
             BoardHoldPiece(
-                id: "upper-center-edge",
-                holdID: "upper-center-edge",
+                id: "pocket-29-four-center-upper",
+                holdID: "pocket-29-four-center",
                 frame: CGRect(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
                 shape: .roundedRect(cornerRadiusFraction: 0.35),
                 treatment: .recess(.deepSlot)
@@ -280,14 +331,22 @@ extension BoardDesign {
         addPair(
             leftID: "edge-19-left",
             rightID: "edge-19-right",
+            suffix: "lower-side-rail",
+            leftFrame: CGRect(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
+            shape: outerLower,
+            treatment: .shelf(.broadJug)
+        )
+        addPair(
+            leftID: "pocket-19-three-left",
+            rightID: "pocket-19-three-right",
             suffix: "lower",
             leftFrame: CGRect(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
             shape: .roundedRect(cornerRadiusFraction: 0.40),
             treatment: .recess(.shallowSlot)
         )
         addPair(
-            leftID: "pocket-3-shallow-left",
-            rightID: "pocket-3-shallow-right",
+            leftID: "pocket-19-two-left",
+            rightID: "pocket-19-two-right",
             suffix: "lower",
             leftFrame: CGRect(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
             shape: .roundedRect(cornerRadiusFraction: 0.44),
@@ -295,8 +354,8 @@ extension BoardDesign {
         )
         holds.append(
             BoardHoldPiece(
-                id: "sloper-center-lower",
-                holdID: "sloper-center-lower",
+                id: "pocket-19-four-center-lower",
+                holdID: "pocket-19-four-center",
                 frame: CGRect(x: 0.425, y: 0.733, width: 0.150, height: 0.140),
                 shape: .roundedRect(cornerRadiusFraction: 0.35),
                 treatment: .recess(.shallowSlot)

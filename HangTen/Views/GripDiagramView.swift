@@ -21,12 +21,17 @@ struct GripDiagramView: View {
         case .fullCrimp: "Full crimp"
         case .fourFingerPocket: "Four-finger pocket"
         case .threeFingerPocket: "Three-finger pocket"
+        case .twoFingerPocket: "Two-finger pocket"
         case .sloper: "Open-hand sloper"
         }
     }
 
     private var fingerCountLabel: String {
-        gripType.activeFingers.contains(.pinky) ? "Four fingers" : "Front three"
+        switch gripType.activeFingers.count {
+        case 2: "Middle two fingers"
+        case 3: "Front three fingers"
+        default: "Four fingers"
+        }
     }
 
     var body: some View {
@@ -117,7 +122,12 @@ struct GripHandCueCard: View {
     private var fingerSetCue: some View {
         CueGlyph(label: fingerSetLabel) {
             Group {
-                if gripType.activeFingers.contains(.pinky) {
+                if gripType == .twoFingerPocket {
+                    Image("PhosphorHandTwo")
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                } else if gripType.activeFingers.contains(.pinky) {
                     Image(systemName: "hand.raised.fill")
                         .resizable()
                         .scaledToFit()
@@ -147,25 +157,29 @@ struct GripHandCueCard: View {
             return "PhosphorHandGrabbing"
         case .fullCrimp:
             return "PhosphorHandFist"
-        case .openHand, .fourFingerPocket, .threeFingerPocket, .sloper:
+        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper:
             return "PhosphorHandPalm"
         }
     }
 
     private var gripPoseLabel: String {
         if hold.kind == .jug {
-            return "Jug"
+            return "Jug grip"
         }
 
         return switch gripType {
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
-        case .openHand, .fourFingerPocket, .threeFingerPocket, .sloper: "Open"
+        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper: "Open hand"
         }
     }
 
     private var fingerSetLabel: String {
-        gripType.activeFingers.contains(.pinky) ? "Four" : "Front three"
+        switch gripType.activeFingers.count {
+        case 2: "Middle 2"
+        case 3: "Front 3"
+        default: "4 fingers"
+        }
     }
 }
 
@@ -176,13 +190,13 @@ private struct CueGlyph<Glyph: View>: View {
     var body: some View {
         VStack(spacing: 4) {
             glyph()
-                .frame(width: 35, height: 41)
+                .frame(width: 39, height: 44)
 
             Text(label)
-                .font(.system(size: 9, weight: .semibold, design: .rounded))
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .lineLimit(1)
-                .minimumScaleFactor(0.72)
+                .minimumScaleFactor(0.68)
         }
         .frame(maxWidth: .infinity)
     }

@@ -1,6 +1,26 @@
 import Foundation
 import HealthKit
 
+private enum HealthWorkoutWriteError: LocalizedError {
+    case beginCollection
+    case addMetadata
+    case endCollection
+    case finishWorkout
+
+    var errorDescription: String? {
+        switch self {
+        case .beginCollection:
+            "Apple Health could not begin recording this workout."
+        case .addMetadata:
+            "Apple Health could not attach the routine details."
+        case .endCollection:
+            "Apple Health could not finish collecting this workout."
+        case .finishWorkout:
+            "Apple Health did not save this workout."
+        }
+    }
+}
+
 enum HealthAuthorizationState: String, Hashable {
     case unavailable
     case notDetermined
@@ -64,23 +84,55 @@ final class HealthKitService {
         }
     }
 
-    func saveCompletedWorkout(title: String, startDate: Date, endDate: Date) {
-        guard authorizationState == .authorized, endDate > startDate else { return }
+    func saveCompletedWorkout(
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        completion: @escaping (Error?) -> Void
+    ) {
+        guard authorizationState == .authorized, endDate > startDate else {
+            completion(nil)
+            return
+        }
 
-        let workout = HKWorkout(
-            activityType: .functionalStrengthTraining,
-            start: startDate,
-            end: endDate,
-            duration: endDate.timeIntervalSince(startDate),
-            totalEnergyBurned: nil,
-            totalDistance: nil,
-            device: nil,
-            metadata: [
-                HKMetadataKeyWorkoutBrandName: "Hang Ten",
-                "HangTen.PlanName": title
-            ]
+        let configuration = HKWorkoutConfiguration()
+        configuration.activityType = .functionalStrengthTraining
+
+        let builder = HKWorkoutBuilder(
+            healthStore: healthStore,
+            configuration: configuration,
+            device: .local()
         )
 
-        healthStore.save(workout) { _, _ in }
+        builder.beginCollection(withStart: startDate) { success, error in
+            guard success else {
+                completion(error ?? HealthWorkoutWriteError.beginCollection)
+                return
+            }
+
+            builder.addMetadata([
+                HKMetadataKeyWorkoutBrandName: "Hang Ten",
+                "HangTen.PlanName": title
+            ]) { metadataSaved, error in
+                guard metadataSaved else {
+                    completion(error ?? HealthWorkoutWriteError.addMetadata)
+                    return
+                }
+
+                builder.endCollection(withEnd: endDate) { collectionEnded, error in
+                    guard collectionEnded else {
+                        completion(error ?? HealthWorkoutWriteError.endCollection)
+                        return
+                    }
+                    builder.finishWorkout { workout, error in
+                        guard workout != nil else {
+                            completion(error ?? HealthWorkoutWriteError.finishWorkout)
+                            return
+                        }
+                        completion(nil)
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,176 @@
+# Isolated iOS Simulator validation
+
+Conductor can run several agents against the same Mac simultaneously. A device
+addressed as `booted` is therefore shared mutable state: another agent can
+install a different build under the same bundle ID while a review is in
+progress. Hang Ten validation must use a dedicated device and its explicit
+UUID for every command.
+
+## Create and identify a dedicated device
+
+Inspect available identifiers:
+
+```sh
+xcrun simctl list devicetypes
+xcrun simctl list runtimes
+```
+
+Create a uniquely named device using identifiers copied from those lists:
+
+```sh
+xcrun simctl create \
+  "HangTen <workspace> Review" \
+  <device-type-id> \
+  <runtime-id>
+```
+
+Save the returned UUID. Do not use `booted`, a common device name, a broad
+process kill, or another workspace's review device in later commands.
+
+## Boot and wait for real readiness
+
+Fresh simulators can report `Booted` before launch services are ready. Boot the
+exact UUID, then poll a short command with a timeout:
+
+```sh
+xcrun simctl boot <uuid>
+
+simulator_ready=0
+for attempt in {1..40}; do
+  if perl -e 'alarm 4; exec @ARGV' \
+    xcrun simctl spawn <uuid> launchctl print system >/dev/null; then
+    simulator_ready=1
+    break
+  fi
+  sleep 3
+done
+
+if (( simulator_ready == 0 )); then
+  echo "Simulator did not become ready" >&2
+  exit 1
+fi
+```
+
+`xcrun simctl bootstatus <uuid> -b` is convenient when it returns normally, but
+the bounded readiness poll proved more reliable on a newly created device.
+
+## Build for that destination
+
+Use a workspace-specific Derived Data path and explicit destination:
+
+```sh
+xcodebuild \
+  -project HangTen.xcodeproj \
+  -scheme HangTen \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=<uuid>' \
+  -derivedDataPath .context/DerivedData-lima \
+  build
+```
+
+`CODE_SIGNING_ALLOWED=NO` is acceptable for a compile-only check. Do not use it
+for HealthKit permission validation: the installed app needs its simulator
+signature and generated simulated HealthKit entitlement. Xcode may keep that
+entitlement in an intermediate `HangTen.app-Simulated.xcent` file even when
+`codesign -d --entitlements` reports an empty entitlement dictionary for the
+simulator app. Inspect the `*-Simulated.xcent` file for
+`com.apple.developer.healthkit = true` when validating a simulator build.
+
+## Install and launch explicitly
+
+```sh
+xcrun simctl terminate <uuid> com.hangten.training || true
+xcrun simctl install \
+  <uuid> \
+  .context/DerivedData-lima/Build/Products/Debug-iphonesimulator/HangTen.app
+xcrun simctl launch <uuid> com.hangten.training
+```
+
+First install or launch on a fresh device can take noticeably longer. Bound a
+stuck command with `perl -e 'alarm 40; exec @ARGV' ...`, then inspect device
+logs before assuming it failed.
+
+Confirm the installed container when builds from several workspaces share a
+bundle ID:
+
+```sh
+xcrun simctl get_app_container <uuid> com.hangten.training app
+```
+
+When provenance is in doubt, compare a checksum or identifying strings from
+the built and installed `HangTen` binaries. This caught a shared-device case in
+which an older routine build replaced the app between screenshots.
+
+## DEBUG review routes
+
+Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
+
+| Variable | Effect |
+| --- | --- |
+| `HANGTEN_REVIEW_PLAN=1` | Open the featured plan detail. |
+| `HANGTEN_REVIEW_PLANS=1` | Select the full Plans tab. |
+| `HANGTEN_REVIEW_PLAN_ID=<TrainingPlan.id>` | Make a specific plan the featured plan. |
+| `HANGTEN_REVIEW_WORKOUT=1` | Open the featured workout. |
+| `HANGTEN_REVIEW_STEP=<step number>` | Preview any plan step without waiting. |
+| `HANGTEN_REVIEW_GRIP=<GripType raw value>` | Override the plan-detail grip preview. |
+| `HANGTEN_REVIEW_HEALTH=1` | Select the Progress tab and Health card. |
+| `HANGTEN_REVIEW_REQUEST_HEALTH=1` | Request the Health permission sheet after opening Progress. DEBUG validation only. |
+| `HANGTEN_REVIEW_LANDSCAPE=1` | Request landscape-right scene geometry. |
+| `HANGTEN_REVIEW_PORTRAIT=1` | Request portrait scene geometry. |
+| `HANGTEN_REVIEW_AUTOSTART=1` | Start the three-second countdown on launch. |
+
+Example:
+
+```sh
+SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 \
+SIMCTL_CHILD_HANGTEN_REVIEW_STEP=2 \
+SIMCTL_CHILD_HANGTEN_REVIEW_LANDSCAPE=1 \
+xcrun simctl launch <uuid> com.hangten.training
+```
+
+These hooks are compiled only in DEBUG and do not affect production launches.
+
+## Capture and orient screenshots
+
+```sh
+xcrun simctl io <uuid> screenshot .context/workout-raw.png
+cp .context/workout-raw.png .context/workout-landscape.png
+sips -r 270 .context/workout-landscape.png
+```
+
+On the simulator runtimes used during development, a landscape interface could
+still be emitted in the hardware-native portrait pixel buffer. Inspect the raw
+image before rotating; use 90 instead of 270 when the interface is turned the
+other direction.
+
+Review portrait and landscape separately. For a board change, capture inactive
+and highlighted surface, shelf, deep-recess, and shallow-recess states. For a
+routine change, preview every distinct hold target and finger cue.
+
+## Validate runtime services
+
+- Start a routine and observe 3, 2, 1, task-start, final-three, and completion
+  speech with audio enabled. Repeat with the speaker toggle disabled.
+- Rotate while paused and while running; timer state and selected holds must
+  remain stable.
+- Launch with `HANGTEN_REVIEW_HEALTH=1`, tap Connect Apple Health, inspect the
+  system permission sheet, and complete a short debug session on a signed
+  build. Simulator behavior does not replace a physical-device HealthKit test
+  before release.
+- For non-interactive screenshot validation, combine
+  `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_REQUEST_HEALTH=1`. The latter
+  invokes the same authorization method as the visible button and exists only
+  in DEBUG; production permission requests remain user-initiated.
+
+See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
+
+## Cleanup
+
+Shut down only the dedicated UUID you created:
+
+```sh
+xcrun simctl shutdown <uuid>
+```
+
+Do not delete or shut down a shared/unknown simulator. Delete the dedicated
+device only when its exact UUID and ownership are certain.

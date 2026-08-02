@@ -45,6 +45,24 @@ enum HoldCueStyle: String, Hashable {
     case rounded
 }
 
+/// Manufacturer routines often name a hold by function instead of by board
+/// ID. Features let a board declare the closest physical match once, keeping
+/// routine content unchanged as more boards are added.
+enum HoldFeature: String, Hashable {
+    case jug
+    case roundSloper
+    case largeSlope
+    case largeEdge
+    case mediumEdge
+    case smallEdge
+    case pocket
+    case twoFingerPocket
+    case threeFingerPocket
+    case fourFingerPocket
+    case fourFingerFlatEdge
+    case fourFingerIncutEdge
+}
+
 enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
     case index
     case middle
@@ -69,6 +87,7 @@ enum GripType: String, CaseIterable, Hashable, Identifiable {
     case fullCrimp
     case fourFingerPocket
     case threeFingerPocket
+    case twoFingerPocket
     case sloper
 
     var id: String { rawValue }
@@ -80,6 +99,7 @@ enum GripType: String, CaseIterable, Hashable, Identifiable {
         case .fullCrimp: "Full crimp"
         case .fourFingerPocket: "Four-finger pocket"
         case .threeFingerPocket: "Three-finger pocket"
+        case .twoFingerPocket: "Two-finger pocket"
         case .sloper: "Open-hand sloper"
         }
     }
@@ -90,6 +110,8 @@ enum GripType: String, CaseIterable, Hashable, Identifiable {
             Set(FingerSlot.allCases)
         case .threeFingerPocket:
             [.index, .middle, .ring]
+        case .twoFingerPocket:
+            [.middle, .ring]
         }
     }
 
@@ -107,6 +129,7 @@ struct BoardHold: Identifiable, Hashable {
     let gripType: GripType
     let cueStyle: HoldCueStyle
     let frame: HoldFrame
+    let features: Set<HoldFeature>
 
     init(
         id: String,
@@ -116,7 +139,8 @@ struct BoardHold: Identifiable, Hashable {
         kind: HoldKind,
         frame: HoldFrame,
         gripType: GripType = .openHand,
-        cueStyle: HoldCueStyle? = nil
+        cueStyle: HoldCueStyle? = nil,
+        features: Set<HoldFeature>? = nil
     ) {
         self.id = id
         self.name = name
@@ -126,6 +150,27 @@ struct BoardHold: Identifiable, Hashable {
         self.gripType = gripType
         self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : .slot))
         self.frame = frame
+        self.features = features ?? Self.defaultFeatures(kind: kind, gripType: gripType)
+    }
+
+    private static func defaultFeatures(kind: HoldKind, gripType: GripType) -> Set<HoldFeature> {
+        switch kind {
+        case .jug:
+            return [.jug]
+        case .edge:
+            return []
+        case .pocket:
+            switch gripType {
+            case .twoFingerPocket:
+                return [.pocket, .twoFingerPocket]
+            case .threeFingerPocket:
+                return [.pocket, .threeFingerPocket]
+            default:
+                return [.pocket, .fourFingerPocket]
+            }
+        case .sloper:
+            return []
+        }
     }
 }
 
@@ -150,13 +195,27 @@ struct TrainingBoard: Identifiable, Hashable {
 struct HoldTarget: Hashable {
     let holdIDs: [String]
     let kind: HoldKind?
+    let feature: HoldFeature?
+    let fallbackFeatures: [HoldFeature]
 
     static func ids(_ holdIDs: String...) -> HoldTarget {
-        HoldTarget(holdIDs: holdIDs, kind: nil)
+        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [])
     }
 
     static func kind(_ kind: HoldKind) -> HoldTarget {
-        HoldTarget(holdIDs: [], kind: kind)
+        HoldTarget(holdIDs: [], kind: kind, feature: nil, fallbackFeatures: [])
+    }
+
+    static func feature(
+        _ feature: HoldFeature,
+        fallback fallbackFeatures: HoldFeature...
+    ) -> HoldTarget {
+        HoldTarget(
+            holdIDs: [],
+            kind: nil,
+            feature: feature,
+            fallbackFeatures: fallbackFeatures
+        )
     }
 }
 
@@ -186,6 +245,18 @@ enum WorkoutPhase: String, Hashable {
         case .coolDown: .coolDownPurple
         }
     }
+
+    /// Dark companion colors keep phase text readable on cream while `tint`
+    /// remains available for fills, progress, and other non-text accents.
+    var textTint: Color {
+        switch self {
+        case .warmUp: Color(red: 0.45, green: 0.25, blue: 0.06)
+        case .hang: .hangGreenDark
+        case .rest: Color(red: 0.18, green: 0.34, blue: 0.52)
+        case .pull: Color(red: 0.55, green: 0.20, blue: 0.08)
+        case .coolDown: Color(red: 0.34, green: 0.22, blue: 0.48)
+        }
+    }
 }
 
 struct WorkoutStep: Identifiable, Hashable {
@@ -198,6 +269,10 @@ struct WorkoutStep: Identifiable, Hashable {
     let phase: WorkoutPhase
     let targets: [HoldTarget]
     let gripType: GripType?
+    /// When set, the app splits the minute into timed work and timed rest.
+    /// Manufacturer task cycles leave this nil because the athlete completes
+    /// the listed reps/hangs, then rests for whatever remains in the minute.
+    let timedWorkDuration: TimeInterval?
 
     init(
         id: String,
@@ -208,7 +283,8 @@ struct WorkoutStep: Identifiable, Hashable {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        timedWorkDuration: TimeInterval? = nil
     ) {
         self.id = id
         self.number = number
@@ -219,10 +295,11 @@ struct WorkoutStep: Identifiable, Hashable {
         self.phase = phase
         self.targets = targets
         self.gripType = gripType
+        self.timedWorkDuration = timedWorkDuration
     }
 
     var activeDuration: TimeInterval {
-        phase == .hang ? min(10, duration) : duration
+        min(timedWorkDuration ?? duration, duration)
     }
 
     var hasRestInterval: Bool {
@@ -246,6 +323,42 @@ struct WorkoutStep: Identifiable, Hashable {
         }
         return "\(remainder)s"
     }
+
+    func withNumber(_ number: Int) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: number,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType,
+            timedWorkDuration: timedWorkDuration
+        )
+    }
+}
+
+enum RoutineProvenance: String, Hashable {
+    case official
+    case adapted
+
+    var label: String {
+        switch self {
+        case .official: "Official"
+        case .adapted: "Adapted"
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .official:
+            "Task order, repetitions, and prescribed times match the linked manufacturer routine."
+        case .adapted:
+            "This app version changes or supplements the source for guided timing, safety, or board fit."
+        }
+    }
 }
 
 struct TrainingPlan: Identifiable, Hashable {
@@ -255,6 +368,7 @@ struct TrainingPlan: Identifiable, Hashable {
     let level: String
     let sourceLabel: String
     let sourceURL: URL
+    let provenance: RoutineProvenance
     let boardID: String?
     let steps: [WorkoutStep]
 
@@ -289,7 +403,7 @@ enum BoardCatalog {
                 shortLabel: "J",
                 detail: "Open-hand jug",
                 kind: .jug,
-                frame: HoldFrame(x: 0.03, y: 0.09, width: 0.15, height: 0.82)
+                frame: HoldFrame(x: 0.000, y: 0.000, width: 0.165, height: 0.255)
             ),
             BoardHold(
                 id: "jug-right",
@@ -297,93 +411,163 @@ enum BoardCatalog {
                 shortLabel: "J",
                 detail: "Open-hand jug",
                 kind: .jug,
-                frame: HoldFrame(x: 0.82, y: 0.09, width: 0.15, height: 0.82)
+                frame: HoldFrame(x: 0.835, y: 0.000, width: 0.165, height: 0.255)
             ),
             BoardHold(
-                id: "sloper-center",
-                name: "Center sloper",
-                shortLabel: "S",
-                detail: "Rounded open-hand hold",
+                id: "sloper-flat-left",
+                name: "Left 56 mm flat sloper",
+                shortLabel: "56F",
+                detail: "Flat open-hand sloper",
                 kind: .sloper,
-                frame: HoldFrame(x: 0.431, y: 0.35, width: 0.136, height: 0.17),
-                gripType: .sloper
+                frame: HoldFrame(x: 0.158, y: 0.035, width: 0.190, height: 0.128),
+                gripType: .sloper,
+                features: [.largeSlope]
+            ),
+            BoardHold(
+                id: "sloper-flat-right",
+                name: "Right 56 mm flat sloper",
+                shortLabel: "56F",
+                detail: "Flat open-hand sloper",
+                kind: .sloper,
+                frame: HoldFrame(x: 0.652, y: 0.035, width: 0.190, height: 0.128),
+                gripType: .sloper,
+                features: [.largeSlope]
+            ),
+            BoardHold(
+                id: "sloper-round-center",
+                name: "Center 56 mm round sloper",
+                shortLabel: "56R",
+                detail: "Round open-hand sloper",
+                kind: .sloper,
+                frame: HoldFrame(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
+                gripType: .sloper,
+                features: [.roundSloper]
             ),
             BoardHold(
                 id: "edge-29-left",
                 name: "Left 29 mm edge",
-                shortLabel: "29",
-                detail: "Deep edge",
+                shortLabel: "29E",
+                detail: "Large edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.217, y: 0.35, width: 0.107, height: 0.17)
+                frame: HoldFrame(x: 0.021, y: 0.245, width: 0.165, height: 0.270),
+                features: [.largeEdge]
             ),
             BoardHold(
                 id: "edge-29-right",
                 name: "Right 29 mm edge",
-                shortLabel: "29",
-                detail: "Deep edge",
+                shortLabel: "29E",
+                detail: "Large edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.680, y: 0.35, width: 0.107, height: 0.17)
+                frame: HoldFrame(x: 0.814, y: 0.245, width: 0.165, height: 0.270),
+                features: [.largeEdge]
+            ),
+            BoardHold(
+                id: "pocket-29-three-left",
+                name: "Left 29 mm three-finger pocket",
+                shortLabel: "29·3",
+                detail: "Three-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
+                gripType: .threeFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-29-three-right",
+                name: "Right 29 mm three-finger pocket",
+                shortLabel: "29·3",
+                detail: "Three-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.692, y: 0.365, width: 0.109, height: 0.148),
+                gripType: .threeFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-29-two-left",
+                name: "Left 29 mm two-finger pocket",
+                shortLabel: "29·2",
+                detail: "Two-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
+                gripType: .twoFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-29-two-right",
+                name: "Right 29 mm two-finger pocket",
+                shortLabel: "29·2",
+                detail: "Two-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.595, y: 0.370, width: 0.077, height: 0.147),
+                gripType: .twoFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-29-four-center",
+                name: "Center 29 mm four-finger pocket",
+                shortLabel: "29·4",
+                detail: "Four-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
+                gripType: .fourFingerPocket
             ),
             BoardHold(
                 id: "edge-19-left",
                 name: "Left 19 mm edge",
-                shortLabel: "19",
-                detail: "Shallow edge",
+                shortLabel: "19E",
+                detail: "Small edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.228, y: 0.70, width: 0.107, height: 0.17)
+                frame: HoldFrame(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
+                features: [.mediumEdge, .smallEdge]
             ),
             BoardHold(
                 id: "edge-19-right",
                 name: "Right 19 mm edge",
-                shortLabel: "19",
-                detail: "Shallow edge",
+                shortLabel: "19E",
+                detail: "Small edge",
                 kind: .edge,
-                frame: HoldFrame(x: 0.680, y: 0.70, width: 0.107, height: 0.17)
+                frame: HoldFrame(x: 0.805, y: 0.620, width: 0.160, height: 0.245),
+                features: [.mediumEdge, .smallEdge]
             ),
             BoardHold(
-                id: "pocket-4-deep-left",
-                name: "Deep four-finger pocket, left",
-                shortLabel: "4D",
-                detail: "Four-finger pocket",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.344, y: 0.35, width: 0.067, height: 0.17),
-                gripType: .fourFingerPocket
-            ),
-            BoardHold(
-                id: "pocket-4-deep-right",
-                name: "Deep four-finger pocket, right",
-                shortLabel: "4D",
-                detail: "Four-finger pocket",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.596, y: 0.35, width: 0.068, height: 0.17),
-                gripType: .fourFingerPocket
-            ),
-            BoardHold(
-                id: "pocket-3-shallow-left",
-                name: "Shallow three-finger pocket, left",
-                shortLabel: "3S",
+                id: "pocket-19-three-left",
+                name: "Left 19 mm three-finger pocket",
+                shortLabel: "19·3",
                 detail: "Three-finger pocket",
                 kind: .pocket,
-                frame: HoldFrame(x: 0.348, y: 0.70, width: 0.067, height: 0.17),
+                frame: HoldFrame(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
                 gripType: .threeFingerPocket
             ),
             BoardHold(
-                id: "pocket-3-shallow-right",
-                name: "Shallow three-finger pocket, right",
-                shortLabel: "3S",
+                id: "pocket-19-three-right",
+                name: "Right 19 mm three-finger pocket",
+                shortLabel: "19·3",
                 detail: "Three-finger pocket",
                 kind: .pocket,
-                frame: HoldFrame(x: 0.596, y: 0.70, width: 0.068, height: 0.17),
+                frame: HoldFrame(x: 0.680, y: 0.733, width: 0.104, height: 0.140),
                 gripType: .threeFingerPocket
             ),
             BoardHold(
-                id: "sloper-center-lower",
-                name: "Lower center sloper",
-                shortLabel: "S",
-                detail: "Rounded open-hand hold",
-                kind: .sloper,
-                frame: HoldFrame(x: 0.431, y: 0.70, width: 0.136, height: 0.17),
-                gripType: .sloper
+                id: "pocket-19-two-left",
+                name: "Left 19 mm two-finger pocket",
+                shortLabel: "19·2",
+                detail: "Two-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
+                gripType: .twoFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-19-two-right",
+                name: "Right 19 mm two-finger pocket",
+                shortLabel: "19·2",
+                detail: "Two-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.591, y: 0.733, width: 0.073, height: 0.140),
+                gripType: .twoFingerPocket
+            ),
+            BoardHold(
+                id: "pocket-19-four-center",
+                name: "Center 19 mm four-finger pocket",
+                shortLabel: "19·4",
+                detail: "Four-finger pocket",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.425, y: 0.733, width: 0.150, height: 0.140),
+                gripType: .fourFingerPocket
             )
         ],
         productURL: URL(string: "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards")!,
@@ -398,127 +582,894 @@ enum BoardCatalog {
 }
 
 enum PlanCatalog {
-    static let metoliusTenMinute = TrainingPlan(
-        id: "metolius.compact-ii.ten-minute",
-        title: "Metolius 10-minute sequence",
-        subtitle: "A guided Compact II translation of Metolius's ten-minute format.",
-        level: "Foundation",
-        sourceLabel: "Metolius Contact Training Guide",
-        sourceURL: URL(string: "https://www.metoliusclimbing.com/pages/contact-training-guide")!,
-        boardID: BoardCatalog.compactII.id,
+    private static let sourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
+    )!
+
+    private static let sourceLabel = "Metolius 10 Minute Sequences — Hangboard Training Guide"
+
+    #if DEBUG
+    private static func officialAuditFingerprint(_ plans: [TrainingPlan]) -> UInt64 {
+        let source = plans.map { plan in
+            let steps = plan.steps.map { step in
+                let targets = step.targets.map { target in
+                    [
+                        target.holdIDs.joined(separator: ","),
+                        target.kind?.rawValue ?? "-",
+                        target.feature?.rawValue ?? "-",
+                        target.fallbackFeatures.map(\.rawValue).joined(separator: ",")
+                    ].joined(separator: ":")
+                }.joined(separator: ";")
+
+                return [
+                    step.id,
+                    String(step.number),
+                    step.title,
+                    step.instruction,
+                    step.accessory,
+                    String(step.duration),
+                    step.phase.rawValue,
+                    targets,
+                    step.gripType?.rawValue ?? "-",
+                    step.timedWorkDuration.map { String($0) } ?? "-"
+                ].joined(separator: "|")
+            }.joined(separator: "\n")
+
+            return [
+                plan.id,
+                plan.title,
+                plan.subtitle,
+                plan.level,
+                plan.sourceLabel,
+                plan.sourceURL.absoluteString,
+                plan.provenance.rawValue,
+                plan.boardID ?? "-",
+                steps
+            ].joined(separator: "|")
+        }.joined(separator: "\n---\n")
+
+        return source.utf8.reduce(UInt64(14_695_981_039_346_656_037)) { hash, byte in
+            (hash ^ UInt64(byte)) &* 1_099_511_628_211
+        }
+    }
+    #endif
+
+    private static func minute(
+        planID: String,
+        number: Int,
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> WorkoutStep {
+        WorkoutStep(
+            id: "\(planID).minute-\(number)",
+            number: number,
+            title: title,
+            instruction: instruction,
+            accessory: "Follow the prescribed task times, then rest for the remainder of the cycle.",
+            duration: 60,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static let metoliusEntry = TrainingPlan(
+        id: "metolius.generic-ten-minute.entry",
+        title: "Metolius 10-minute · Entry",
+        subtitle: "The official board-flexible entry sequence, guided minute by minute.",
+        level: "Entry",
+        sourceLabel: sourceLabel,
+        sourceURL: sourceURL,
+        provenance: .official,
+        boardID: nil,
         steps: [
-            WorkoutStep(
-                id: "warm-up-jugs",
-                number: 1,
-                title: "Easy warm-up",
-                instruction: "Move gently on the outer jugs. Keep your grip open and your elbows soft.",
-                accessory: "Ease in — this should feel easy.",
-                duration: 60,
-                phase: .warmUp,
-                targets: [.ids("jug-left", "jug-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 1, title: "Jug hang",
+                instruction: "Hang from the jugs for 15 seconds.",
+                phase: .hang, targets: [.feature(.jug)]
             ),
-            WorkoutStep(
-                id: "hang-29mm",
-                number: 2,
-                title: "29 mm edge",
-                instruction: "Dead hang with both hands on the deep edges. Use assistance if needed.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("edge-29-left", "edge-29-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 2, title: "Sloper pull-up",
+                instruction: "Do 1 pull-up on a round sloper.",
+                phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper
             ),
-            WorkoutStep(
-                id: "hang-deep-pocket",
-                number: 3,
-                title: "Deep pockets",
-                instruction: "Hang on the deep four-finger pockets with an open hand.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("pocket-4-deep-left", "pocket-4-deep-right")],
-                gripType: .fourFingerPocket
+            minute(
+                planID: "entry", number: 3, title: "Medium-edge hang",
+                instruction: "Hang from a medium edge for 10 seconds.",
+                phase: .hang, targets: [.feature(.mediumEdge)]
             ),
-            WorkoutStep(
-                id: "hang-sloper",
-                number: 4,
-                title: "Center sloper",
-                instruction: "Stay relaxed through the shoulders and keep contact even across both hands.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("sloper-center")],
-                gripType: .sloper
+            minute(
+                planID: "entry", number: 4, title: "Pocket hang + shrugs",
+                instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.",
+                phase: .hang, targets: [.feature(.pocket)]
             ),
-            WorkoutStep(
-                id: "hang-three-finger",
-                number: 5,
-                title: "Three-finger pockets",
-                instruction: "Use the deeper portion of the three-finger pockets first; stop before form breaks.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("pocket-3-shallow-left", "pocket-3-shallow-right")],
-                gripType: .threeFingerPocket
+            minute(
+                planID: "entry", number: 5, title: "Large edge + pull-ups",
+                instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.",
+                phase: .hang, targets: [.feature(.largeEdge)]
             ),
-            WorkoutStep(
-                id: "hang-19mm",
-                number: 6,
-                title: "19 mm edge",
-                instruction: "Use an open-hand edge grip. Take weight off with your feet or a pulley when necessary.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("edge-19-left", "edge-19-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 6, title: "Sloper + knee raises",
+                instruction: "Hang from a round sloper for 10 seconds, then do 5 knee raises on a pocket.",
+                phase: .hang, targets: [.feature(.roundSloper), .feature(.pocket)], gripType: .sloper
             ),
-            WorkoutStep(
-                id: "repeat-deep-pocket",
-                number: 7,
-                title: "Pocket repeat",
-                instruction: "Return to the deep pockets at a controlled intensity. Quality beats fatigue.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("pocket-4-deep-left", "pocket-4-deep-right")],
-                gripType: .fourFingerPocket
+            minute(
+                planID: "entry", number: 7, title: "Large-edge pull-ups",
+                instruction: "Do 4 pull-ups on a large edge.",
+                phase: .pull, targets: [.feature(.largeEdge)]
             ),
-            WorkoutStep(
-                id: "repeat-29mm",
-                number: 8,
-                title: "Edge repeat",
-                instruction: "Repeat the 29 mm edge with smooth shoulders and no sudden loading.",
-                accessory: "10s hang · 50s rest",
-                duration: 60,
-                phase: .hang,
-                targets: [.ids("edge-29-left", "edge-29-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 8, title: "Medium-edge hang",
+                instruction: "Hang from a medium edge for 10 seconds.",
+                phase: .hang, targets: [.feature(.mediumEdge)]
             ),
-            WorkoutStep(
-                id: "pull-ups-jugs",
-                number: 9,
-                title: "Smooth pull-ups",
-                instruction: "Use the outer jugs for a few strict, controlled reps. Keep the lower body quiet.",
-                accessory: "Stop well before failure.",
-                duration: 60,
-                phase: .pull,
-                targets: [.ids("jug-left", "jug-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 9, title: "Jug pull-ups",
+                instruction: "Do 3 pull-ups on the jugs.",
+                phase: .pull, targets: [.feature(.jug)]
             ),
-            WorkoutStep(
-                id: "cool-down-jugs",
-                number: 10,
-                title: "Cool down",
-                instruction: "Stay on the easy jugs and let your breathing settle before you step away.",
-                accessory: "Easy movement · gentle release",
-                duration: 60,
-                phase: .coolDown,
-                targets: [.ids("jug-left", "jug-right")],
-                gripType: .openHand
+            minute(
+                planID: "entry", number: 10, title: "Maximum sloper hang",
+                instruction: "Hang from a round sloper for as long as you can.",
+                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
             )
         ]
     )
 
-    static let all: [TrainingPlan] = [metoliusTenMinute]
+    static let metoliusIntermediate = TrainingPlan(
+        id: "metolius.generic-ten-minute.intermediate",
+        title: "Metolius 10-minute · Intermediate",
+        subtitle: "The official board-flexible intermediate sequence, guided minute by minute.",
+        level: "Intermediate",
+        sourceLabel: sourceLabel,
+        sourceURL: sourceURL,
+        provenance: .official,
+        boardID: nil,
+        steps: [
+            minute(
+                planID: "intermediate", number: 1, title: "Large edge",
+                instruction: "Hang from a large edge for 15 seconds, then do 3 pull-ups.",
+                phase: .hang, targets: [.feature(.largeEdge)]
+            ),
+            minute(
+                planID: "intermediate", number: 2, title: "Sloper + medium edge",
+                instruction: "Do 2 pull-ups on a round sloper, then hang from a medium edge for 20 seconds.",
+                phase: .hang, targets: [.feature(.roundSloper), .feature(.mediumEdge)]
+            ),
+            minute(
+                planID: "intermediate", number: 3, title: "Small edge + pocket",
+                instruction: "Hang from a small edge for 20 seconds, then hold a pocket at a 90° bent arm for 15 seconds.",
+                phase: .hang, targets: [.feature(.smallEdge), .feature(.pocket)]
+            ),
+            minute(
+                planID: "intermediate", number: 4, title: "Round sloper",
+                instruction: "Hang from a round sloper for 30 seconds.",
+                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
+            ),
+            minute(
+                planID: "intermediate", number: 5, title: "Large edge + pocket",
+                instruction: "Hang from a large edge for 20 seconds, then do 4 pull-ups on a pocket.",
+                phase: .hang, targets: [.feature(.largeEdge), .feature(.pocket)]
+            ),
+            minute(
+                planID: "intermediate", number: 6, title: "Offset pulls",
+                instruction: "Do 3 offset pulls per arm with the high hand on a jug and low hand on a small edge; change hands and repeat.",
+                phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]
+            ),
+            minute(
+                planID: "intermediate", number: 7, title: "Knee raises + edge hang",
+                instruction: "Do 15 knee raises on the jugs, then hang from a medium edge for 15 seconds.",
+                phase: .hang, targets: [.feature(.jug), .feature(.mediumEdge)]
+            ),
+            minute(
+                planID: "intermediate", number: 8, title: "Medium edge",
+                instruction: "Hang from a medium edge for 25 seconds.",
+                phase: .hang, targets: [.feature(.mediumEdge)]
+            ),
+            minute(
+                planID: "intermediate", number: 9, title: "Slope + jugs",
+                instruction: "Hang from a slope for 15 seconds, then do 3 pull-ups on the jugs.",
+                phase: .hang, targets: [.feature(.largeSlope), .feature(.jug)]
+            ),
+            minute(
+                planID: "intermediate", number: 10, title: "Maximum sloper hang",
+                instruction: "Hang from a round sloper for as long as you can.",
+                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
+            )
+        ]
+    )
+
+    static let metoliusAdvanced = TrainingPlan(
+        id: "metolius.generic-ten-minute.advanced",
+        title: "Metolius 10-minute · Advanced",
+        subtitle: "The official board-flexible advanced sequence, guided minute by minute.",
+        level: "Advanced",
+        sourceLabel: sourceLabel,
+        sourceURL: sourceURL,
+        provenance: .official,
+        boardID: nil,
+        steps: [
+            minute(
+                planID: "advanced", number: 1, title: "Large slope + flat edge",
+                instruction: "Hold a straight-arm hang on a large slope for 20 seconds, then do 3 pull-ups on a four-finger flat edge.",
+                phase: .hang,
+                targets: [
+                    .feature(.largeSlope),
+                    .feature(.fourFingerFlatEdge, fallback: .largeEdge)
+                ]
+            ),
+            minute(
+                planID: "advanced", number: 2, title: "Bent arm + core",
+                instruction: "Hold a slightly bent-arm hang on a large slope for 20 seconds; stay on for a 20-second L-sit or 20 hanging knee curls.",
+                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
+            ),
+            minute(
+                planID: "advanced", number: 3, title: "Pocket pull-ups + hang",
+                instruction: "Do 5 pull-ups on a three-finger pocket; stay on for a 25-second straight-arm hang.",
+                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .threeFingerPocket
+            ),
+            minute(
+                planID: "advanced", number: 4, title: "Hold ladder",
+                instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
+                phase: .hang,
+                targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)]
+            ),
+            minute(
+                planID: "advanced", number: 5, title: "Single-arm flat edge",
+                instruction: "Hang one-armed from a four-finger flat edge for 20 seconds; switch hands and repeat.",
+                phase: .hang,
+                targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+            ),
+            minute(
+                planID: "advanced", number: 6, title: "Offset pull-ups",
+                instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket; change hands and repeat.",
+                phase: .pull, targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+            ),
+            minute(
+                planID: "advanced", number: 7, title: "Incut edge + pocket",
+                instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds, then a straight-arm three-finger-pocket hang for 15 seconds.",
+                phase: .hang,
+                targets: [
+                    .feature(.fourFingerIncutEdge, fallback: .largeEdge),
+                    .feature(.threeFingerPocket)
+                ]
+            ),
+            minute(
+                planID: "advanced", number: 8, title: "L-sit + lever",
+                instruction: "Do 3 L-sit pull-ups, bending your knees if needed; then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
+                phase: .pull, targets: [.feature(.largeSlope)]
+            ),
+            minute(
+                planID: "advanced", number: 9, title: "Two fingers + power pulls",
+                instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets, then do 3 power pull-ups with weight or helper resistance.",
+                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .twoFingerPocket
+            ),
+            minute(
+                planID: "advanced", number: 10, title: "Maximum slope hangs",
+                instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
+                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
+            )
+        ]
+    )
+
+    static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
+
+    private static func warmUpStep(id: String, duration: TimeInterval = 180) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 0,
+            title: "Progressive warm-up",
+            instruction: "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
+            accessory: "Easy movement · do not fatigue",
+            duration: duration,
+            phase: .warmUp,
+            targets: [.ids("jug-left", "jug-right")],
+            gripType: .openHand
+        )
+    }
+
+    private static func hangStep(
+        id: String,
+        title: String,
+        instruction: String,
+        accessory: String,
+        active: TimeInterval,
+        rest: TimeInterval,
+        targets: [HoldTarget],
+        gripType: GripType
+    ) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 0,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: active + rest,
+            phase: .hang,
+            targets: targets,
+            gripType: gripType,
+            timedWorkDuration: active
+        )
+    }
+
+    private static func recoveryStep(id: String, title: String, duration: TimeInterval, accessory: String) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 0,
+            title: title,
+            instruction: "Step off the board, shake out, and breathe before the next effort.",
+            accessory: accessory,
+            duration: duration,
+            phase: .rest,
+            targets: []
+        )
+    }
+
+    private static func coolDownStep(id: String) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 0,
+            title: "Cool down",
+            instruction: "Stay on the easy jugs and let your breathing settle before you step away.",
+            accessory: "Easy movement · gentle release",
+            duration: 60,
+            phase: .coolDown,
+            targets: [.ids("jug-left", "jug-right")],
+            gripType: .openHand
+        )
+    }
+
+    private static func numbered(_ steps: [WorkoutStep]) -> [WorkoutStep] {
+        steps.enumerated().map { index, step in
+            step.withNumber(index + 1)
+        }
+    }
+
+    static let maxHangs = TrainingPlan(
+        id: "research.max-hangs",
+        title: "Max Hangs",
+        subtitle: "Heavy 7-second hangs for peak finger strength.",
+        level: "Advanced",
+        sourceLabel: "Lattice max hang protocol",
+        sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered([
+            warmUpStep(id: "max-hangs-warm-up"),
+            hangStep(
+                id: "max-hangs-1",
+                title: "Max hang · set 1",
+                instruction: "Use added weight or assistance so seven seconds is near-max without losing shoulder position or grip shape.",
+                accessory: "7s hang · 3m recovery · half crimp",
+                active: 7,
+                rest: 180,
+                targets: [.ids("edge-19-left", "edge-19-right")],
+                gripType: .halfCrimp
+            ),
+            hangStep(
+                id: "max-hangs-2",
+                title: "Max hang · set 2",
+                instruction: "Repeat the same load or make a small adjustment. Stop before form breaks.",
+                accessory: "7s hang · 3m recovery · half crimp",
+                active: 7,
+                rest: 180,
+                targets: [.ids("edge-19-left", "edge-19-right")],
+                gripType: .halfCrimp
+            ),
+            hangStep(
+                id: "max-hangs-3",
+                title: "Max hang · set 3",
+                instruction: "Keep the effort high and the movement quiet. Do not turn this into a full-crimp test.",
+                accessory: "7s hang · 3m recovery · half crimp",
+                active: 7,
+                rest: 180,
+                targets: [.ids("edge-19-left", "edge-19-right")],
+                gripType: .halfCrimp
+            ),
+            hangStep(
+                id: "max-hangs-4",
+                title: "Max hang · set 4",
+                instruction: "Take the full recovery and reproduce your best controlled effort.",
+                accessory: "7s hang · 3m recovery · half crimp",
+                active: 7,
+                rest: 180,
+                targets: [.ids("edge-19-left", "edge-19-right")],
+                gripType: .halfCrimp
+            ),
+            hangStep(
+                id: "max-hangs-5",
+                title: "Max hang · set 5",
+                instruction: "Finish with one high-quality effort. Log the load or assistance used today.",
+                accessory: "7s hang · final effort",
+                active: 7,
+                rest: 0,
+                targets: [.ids("edge-19-left", "edge-19-right")],
+                gripType: .halfCrimp
+            ),
+            coolDownStep(id: "max-hangs-cool-down")
+        ])
+    )
+
+    static let forceF80 = TrainingPlan(
+        id: "research.force-feedback-f80",
+        title: "F80 Force Board",
+        subtitle: "80% force-feedback repeaters for strength and endurance.",
+        level: "Advanced",
+        sourceLabel: "Frontiers force-feedback hangboard study",
+        sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "f80-warm-up")]
+            for set in 1...3 {
+                for rep in 1...12 {
+                    steps.append(
+                        hangStep(
+                            id: "f80-set-\(set)-rep-\(rep)",
+                            title: "F80 · set \(set), rep \(rep)",
+                            instruction: "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
+                            accessory: "10s hang · 6s rest · 80% target",
+                            active: 10,
+                            rest: 6,
+                            targets: [.ids("edge-19-left", "edge-19-right")],
+                            gripType: .halfCrimp
+                        )
+                    )
+                }
+                if set < 3 {
+                    steps.append(
+                        recoveryStep(
+                            id: "f80-set-\(set)-recovery",
+                            title: "Eight-minute set recovery",
+                            duration: 480,
+                            accessory: "8m recovery · step off the board"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "f80-cool-down"))
+            return steps
+        }())
+    )
+
+    static let forceF100 = TrainingPlan(
+        id: "research.force-feedback-f100",
+        title: "F100 Force Board",
+        subtitle: "Maximal force-feedback hangs with full recovery.",
+        level: "Expert",
+        sourceLabel: "Frontiers force-feedback hangboard study",
+        sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "f100-warm-up")]
+            for set in 1...2 {
+                for round in 1...6 {
+                    steps.append(
+                        hangStep(
+                            id: "f100-set-\(set)-round-\(round)-left",
+                            title: "F100 · left hand",
+                            instruction: "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
+                            accessory: "6s max · alternate hands",
+                            active: 6,
+                            rest: 0,
+                            targets: [.ids("edge-19-left")],
+                            gripType: .halfCrimp
+                        )
+                    )
+                    steps.append(
+                        hangStep(
+                            id: "f100-set-\(set)-round-\(round)-right",
+                            title: "F100 · right hand",
+                            instruction: "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
+                            accessory: "6s max · alternate hands",
+                            active: 6,
+                            rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
+                            targets: [.ids("edge-19-right")],
+                            gripType: .halfCrimp
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "f100-cool-down"))
+            return steps
+        }())
+    )
+
+    static let evaIntHangs = TrainingPlan(
+        id: "research.eva-int-hangs",
+        title: "Eva IntHangs",
+        subtitle: "Intermittent 10/5 hangs for finger endurance.",
+        level: "Intermediate+",
+        sourceLabel: "Eva López hangboard comparison",
+        sourceURL: URL(string: "https://pubmed.ncbi.nlm.nih.gov/30988852/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "int-hangs-warm-up")]
+            for set in 1...3 {
+                for rep in 1...5 {
+                    steps.append(
+                        hangStep(
+                            id: "int-hangs-set-\(set)-rep-\(rep)",
+                            title: "IntHang · set \(set), rep \(rep)",
+                            instruction: "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
+                            accessory: "10s hang · 5s rest · 5 reps",
+                            active: 10,
+                            rest: rep < 5 ? 5 : 0,
+                            targets: [.ids("edge-19-left", "edge-19-right")],
+                            gripType: .halfCrimp
+                        )
+                    )
+                }
+                if set < 3 {
+                    steps.append(
+                        recoveryStep(
+                            id: "int-hangs-set-\(set)-recovery",
+                            title: "One-minute set recovery",
+                            duration: 60,
+                            accessory: "1m recovery · shake out"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "int-hangs-cool-down"))
+            return steps
+        }())
+    )
+
+    static let repeaters = TrainingPlan(
+        id: "research.seven-three-repeaters",
+        title: "7/3 Repeaters",
+        subtitle: "The classic repeater format across three board positions.",
+        level: "Intermediate",
+        sourceLabel: "Beastmaker 7/3 study protocol",
+        sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "repeaters-warm-up")]
+            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
+                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket),
+                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
+            ]
+
+            for (index, grip) in grips.enumerated() {
+                for rep in 1...6 {
+                    steps.append(
+                        hangStep(
+                            id: "repeaters-grip-\(index + 1)-rep-\(rep)",
+                            title: "7/3 · \(grip.title), rep \(rep)",
+                            instruction: "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
+                            accessory: "7s hang · 3s rest · 6 reps",
+                            active: 7,
+                            rest: rep < 6 ? 3 : 0,
+                            targets: grip.targets,
+                            gripType: grip.grip
+                        )
+                    )
+                }
+                if index < grips.count - 1 {
+                    steps.append(
+                        recoveryStep(
+                            id: "repeaters-grip-\(index + 1)-recovery",
+                            title: "Two-minute grip recovery",
+                            duration: 120,
+                            accessory: "2m recovery · switch grip"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "repeaters-cool-down"))
+            return steps
+        }())
+    )
+
+    static let abrahangs = TrainingPlan(
+        id: "research.abrahangs",
+        title: "Abrahangs",
+        subtitle: "Low-intensity, feet-supported hangs across varied grips.",
+        level: "Supplemental",
+        sourceLabel: "Lattice Abrahangs protocol",
+        sourceURL: URL(string: "https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "abrahangs-warm-up", duration: 120)]
+            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
+                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket),
+                ("Center sloper", [.ids("sloper-round-center")], .sloper),
+                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .threeFingerPocket),
+                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),
+                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp)
+            ]
+
+            for (index, grip) in grips.enumerated() {
+                steps.append(
+                    hangStep(
+                        id: "abrahangs-grip-\(index + 1)",
+                        title: "Abrahang · \(grip.title)",
+                        instruction: "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
+                        accessory: "10s hang · 50s rest · feet supported",
+                        active: 10,
+                        rest: 50,
+                        targets: grip.targets,
+                        gripType: grip.grip
+                    )
+                )
+            }
+            steps.append(coolDownStep(id: "abrahangs-cool-down"))
+            return steps
+        }())
+    )
+
+    static let horst753 = TrainingPlan(
+        id: "coach.horst-seven-fifty-three",
+        title: "7–53 Max Hangs",
+        subtitle: "Short maximal hangs with long, complete recoveries.",
+        level: "Advanced",
+        sourceLabel: "Eric Hörst fingerboard protocols",
+        sourceURL: URL(string: "https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "horst-753-warm-up")]
+            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
+                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp),
+                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket)
+            ]
+
+            for (index, grip) in grips.enumerated() {
+                for rep in 1...3 {
+                    steps.append(
+                        hangStep(
+                            id: "horst-753-grip-\(index + 1)-rep-\(rep)",
+                            title: "7–53 · \(grip.title), rep \(rep)",
+                            instruction: "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+                            accessory: "7s hang · 53s rest · 3 reps",
+                            active: 7,
+                            rest: rep < 3 ? 53 : 0,
+                            targets: grip.targets,
+                            gripType: grip.grip
+                        )
+                    )
+                }
+                if index < grips.count - 1 {
+                    steps.append(
+                        recoveryStep(
+                            id: "horst-753-grip-\(index + 1)-recovery",
+                            title: "Three-minute grip recovery",
+                            duration: 180,
+                            accessory: "3m recovery · switch grip"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "horst-753-cool-down"))
+            return steps
+        }())
+    )
+
+    static let ladders = TrainingPlan(
+        id: "coach.bechtel-three-six-nine",
+        title: "3–6–9 Ladders",
+        subtitle: "A progressive volume ladder for controlled finger strength.",
+        level: "Intermediate+",
+        sourceLabel: "Steve Bechtel 3–6–9 ladder protocol",
+        sourceURL: URL(string: "https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "ladders-warm-up")]
+            for round in 1...3 {
+                for (index, hangSeconds) in [3, 6, 9].enumerated() {
+                    steps.append(
+                        hangStep(
+                            id: "ladders-round-\(round)-\(hangSeconds)",
+                            title: "Ladder \(round) · \(hangSeconds) seconds",
+                            instruction: "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
+                            accessory: "\(hangSeconds)s hang · 30s rest",
+                            active: TimeInterval(hangSeconds),
+                            rest: index < 2 ? 30 : 0,
+                            targets: [.ids("edge-29-left", "edge-29-right")],
+                            gripType: .halfCrimp
+                        )
+                    )
+                }
+                if round < 3 {
+                    steps.append(
+                        recoveryStep(
+                            id: "ladders-round-\(round)-recovery",
+                            title: "Three-minute ladder recovery",
+                            duration: 180,
+                            accessory: "3m recovery · repeat the ladder"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "ladders-cool-down"))
+            return steps
+        }())
+    )
+
+    static let densityHangs = TrainingPlan(
+        id: "coach.density-hangs",
+        title: "Density Hangs",
+        subtitle: "Longer submaximal hangs for finger capacity.",
+        level: "Intermediate+",
+        sourceLabel: "Tyler Nelson density hang protocol",
+        sourceURL: URL(string: "https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "density-warm-up")]
+            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
+                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket)
+            ]
+
+            for (holdIndex, grip) in grips.enumerated() {
+                for set in 1...2 {
+                    for rep in 1...3 {
+                        steps.append(
+                            hangStep(
+                                id: "density-hold-\(holdIndex + 1)-set-\(set)-rep-\(rep)",
+                                title: "Density · \(grip.title), set \(set), rep \(rep)",
+                                instruction: "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
+                                accessory: "30s hang · 15s rest · 2:1 density",
+                                active: 30,
+                                rest: rep < 3 ? 15 : 0,
+                                targets: grip.targets,
+                                gripType: grip.grip
+                            )
+                        )
+                    }
+                    if set < 2 {
+                        steps.append(
+                            recoveryStep(
+                                id: "density-hold-\(holdIndex + 1)-set-\(set)-recovery",
+                                title: "Three-minute set recovery",
+                                duration: 180,
+                                accessory: "3m recovery · repeat the hold"
+                            )
+                        )
+                    }
+                }
+                if holdIndex < grips.count - 1 {
+                    steps.append(
+                        recoveryStep(
+                            id: "density-hold-\(holdIndex + 1)-recovery",
+                            title: "Three-minute hold recovery",
+                            duration: 180,
+                            accessory: "3m recovery · change hold"
+                        )
+                    )
+                }
+            }
+            steps.append(coolDownStep(id: "density-cool-down"))
+            return steps
+        }())
+    )
+
+    static let zlagboardEndurance = TrainingPlan(
+        id: "device.zlagboard-sixty-sixty",
+        title: "Zlagboard 60/60 Endurance",
+        subtitle: "Ten long intervals with foot-supported scaling.",
+        level: "Intermediate",
+        sourceLabel: "Zlagboard endurance protocol",
+        sourceURL: URL(string: "https://strengthclimbing.com/zlagboard-forearm-endurance-workout/")!,
+        provenance: .adapted,
+        boardID: BoardCatalog.compactII.id,
+        steps: numbered({
+            var steps = [warmUpStep(id: "zlagboard-warm-up")]
+            for interval in 1...10 {
+                steps.append(
+                    hangStep(
+                        id: "zlagboard-interval-\(interval)",
+                        title: "60/60 · interval \(interval)",
+                        instruction: "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
+                        accessory: "60s hang · 60s rest · feet supported",
+                        active: 60,
+                        rest: interval < 10 ? 60 : 0,
+                        targets: [.ids("edge-29-left", "edge-29-right")],
+                        gripType: .openHand
+                    )
+                )
+            }
+            steps.append(coolDownStep(id: "zlagboard-cool-down"))
+            return steps
+        }())
+    )
+
+
+    /// Kept as the stable featured-plan symbol used by navigation fallbacks.
+    static let metoliusTenMinute = metoliusEntry
+
+    static let all: [TrainingPlan] = {
+        let officialPlans = [metoliusEntry, metoliusIntermediate, metoliusAdvanced]
+        let adaptedPlans = [
+            maxHangs,
+            forceF80,
+            forceF100,
+            evaIntHangs,
+            repeaters,
+            abrahangs,
+            horst753,
+            ladders,
+            densityHangs,
+            zlagboardEndurance
+        ]
+
+        #if DEBUG
+        assert(officialPlans.count == 3, "The official Metolius guide has three routines")
+        assert(
+            officialAuditFingerprint(officialPlans) == 9_492_510_929_454_363_776,
+            "Official Metolius prescription drifted from the source-audited snapshot"
+        )
+        for plan in officialPlans {
+            assert(plan.provenance == .official)
+            assert(plan.sourceURL == sourceURL)
+            assert(plan.steps.count == 10)
+            assert(plan.duration == 600)
+            assert(plan.steps.map(\.number) == Array(1...10))
+            assert(plan.steps.allSatisfy { $0.duration == 60 })
+            assert(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
+        }
+        assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
+
+        let plans = officialPlans + adaptedPlans
+        func targetResolves(_ target: HoldTarget, on board: TrainingBoard) -> Bool {
+            let boardHoldIDs = Set(board.holds.map(\.id))
+            if !target.holdIDs.isEmpty {
+                return Set(target.holdIDs).isSubset(of: boardHoldIDs)
+            }
+            if let feature = target.feature {
+                let acceptedFeatures = [feature] + target.fallbackFeatures
+                return board.holds.contains { hold in
+                    !hold.features.isDisjoint(with: acceptedFeatures)
+                }
+            }
+            if let kind = target.kind {
+                return board.holds.contains { $0.kind == kind }
+            }
+            return false
+        }
+
+        assert(Set(plans.map(\.id)).count == plans.count)
+        for plan in plans {
+            assert(Set(plan.steps.map(\.id)).count == plan.steps.count)
+
+            if let boardID = plan.boardID {
+                assert(BoardCatalog.all.contains { $0.id == boardID })
+            } else {
+                assert(
+                    plan.steps.flatMap(\.targets).allSatisfy { $0.holdIDs.isEmpty },
+                    "Board-flexible plans must use semantic targets"
+                )
+            }
+            let candidateBoards = plan.boardID.map { [BoardCatalog.board(for: $0)] }
+                ?? BoardCatalog.all
+            let compatibleBoards = candidateBoards.filter { board in
+                plan.steps.flatMap(\.targets).allSatisfy {
+                    targetResolves($0, on: board)
+                }
+            }
+            assert(!compatibleBoards.isEmpty, "No board can run \(plan.id)")
+
+            for board in compatibleBoards {
+                for target in plan.steps.flatMap(\.targets) {
+                    assert(targetResolves(target, on: board))
+                }
+            }
+        }
+        #endif
+
+        return officialPlans + adaptedPlans
+    }()
 }
