@@ -154,7 +154,9 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         sessions.append(session)
-        completion(.failure(Failure()))
+        DispatchQueue.main.async {
+            completion(.failure(Failure()))
+        }
     }
 
     func remove(
@@ -162,11 +164,15 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         sessions.removeAll { $0.id == session.id }
-        completion(.failure(Failure()))
+        DispatchQueue.main.async {
+            completion(.failure(Failure()))
+        }
     }
 
     func flush(completion: @escaping (Result<Void, Error>) -> Void) {
-        completion(.failure(Failure()))
+        DispatchQueue.main.async {
+            completion(.failure(Failure()))
+        }
     }
 
     func flush() {}

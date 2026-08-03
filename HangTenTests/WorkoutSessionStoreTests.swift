@@ -124,6 +124,27 @@ final class WorkoutSessionStoreTests: XCTestCase {
         wait(for: [completion], timeout: 2)
     }
 
+    func testRemoveCompletionRunsOnMainQueueAndCanFlush() {
+        let completion = expectation(description: "remove completion flushes")
+        let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+        store.append(record)
+
+        store.remove(record) { result in
+            XCTAssertTrue(Thread.isMainThread)
+            store.flush()
+
+            switch result {
+            case .success:
+                completion.fulfill()
+            case .failure(let error):
+                XCTFail("Expected remove to succeed, got \(error)")
+            }
+        }
+
+        wait(for: [completion], timeout: 2)
+    }
+
     func testFlushCompletionRunsOnMainQueue() {
         let completion = expectation(description: "flush completion")
         let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
