@@ -83,7 +83,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
             removedIDs.insert(session.id)
         }
         enqueueWrite(
-            sessions: retainedIDs.contains(session.id) ? [session] : [],
+            sessions: sessions,
             retainedIDs: retainedIDs,
             removing: removedIDs,
             completion: completion
@@ -93,7 +93,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
         sessions.removeAll { $0.id == session.id }
         enqueueWrite(
-            sessions: [],
+            sessions: sessions,
             retainedIDs: Set(sessions.map(\.id)),
             removing: [session.id],
             completion: completion
@@ -138,10 +138,17 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                 at: directory,
                 includingPropertiesForKeys: nil
             )
-            let storedSessions = files
-                .filter { $0.pathExtension == "json" }
-                .compactMap { try? decoder.decode(WorkoutSessionRecord.self, from: Data(contentsOf: $0)) }
-            return (Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount)), true, nil)
+            var storedSessions: [WorkoutSessionRecord] = []
+            var loadError: String?
+            for file in files where file.pathExtension == "json" {
+                do {
+                    let data = try Data(contentsOf: file)
+                    storedSessions.append(try decoder.decode(WorkoutSessionRecord.self, from: data))
+                } catch {
+                    loadError = loadError ?? "Could not load \(file.lastPathComponent): \(error.localizedDescription)"
+                }
+            }
+            return (Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount)), true, loadError)
         } catch {
             return ([], true, "Could not load workout sessions: \(error.localizedDescription)")
         }

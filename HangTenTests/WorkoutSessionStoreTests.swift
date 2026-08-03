@@ -134,6 +134,43 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertFalse(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.contains(oldRecord))
     }
 
+    func testAppendRecoveryRewritesAnEarlierFailedSession() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try Data("not a directory".utf8).write(to: directory)
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        let second = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 20)
+
+        store.append(first)
+        store.flush()
+        XCTAssertNotNil(store.persistenceError)
+
+        try FileManager.default.removeItem(at: directory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        store.append(second)
+        store.flush()
+
+        XCTAssertNil(store.persistenceError)
+        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
+    }
+
+    func testCorruptSessionFilePreservesReadableHistoryAndSurfacesLoadError() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let valid = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        try JSONEncoder().encode(valid).write(
+            to: directory.appendingPathComponent("session-\(valid.id.uuidString).json")
+        )
+        try Data("not JSON".utf8).write(
+            to: directory.appendingPathComponent("session-00000000-0000-0000-0000-000000000002.json")
+        )
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+
+        XCTAssertEqual(store.sessions, [valid])
+        XCTAssertNotNil(store.persistenceError)
+    }
+
     func testRemoveDeletesSavedSessionAndPersistsTheChange() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)

@@ -9,7 +9,7 @@
 
 - Preparation now requires a user action to start tare and, after the service's tare-completion signal, a separate user action to start the timed relaxed-jug-hang capture. The DEBUG simulator reset remains immediately before the service tare request.
 - Decoding preserves raw ADC values and signed sensor-load semantics while converting overflowed or NaN derived loads to finite saturated values. The regression verifies JSON encoding succeeds.
-- Workout records now persist as `session-<UUID>.json` files under Application Support/Hang Ten/Workout Sessions on a serial utility queue. The in-memory history updates immediately; `flush()` makes queued writes deterministic for tests; `persistenceError` exposes write/load failures. Valid legacy history migrates only when the file store does not exist, and the legacy UserDefaults blob is removed after successful migration.
+- Workout records now persist as `session-<UUID>.json` files under Application Support/Hang Ten/Workout Sessions on a serial utility queue. The in-memory history updates immediately; synchronous `flush()` makes queued writes deterministic, while callback-based saves report failures to the dashboard. A readiness marker is written after all files succeed. Valid legacy history retries whenever that marker is absent, and the legacy UserDefaults blob is removed only after successful migration. Failed writes remain dirty because later saves rewrite all retained records; corrupt individual files preserve readable history and surface a load error.
 - The DEBUG fixture has 40 relaxed jug-hang samples at 300 ms (12 seconds), then retains dynamic unequal active samples. The maximum 10-second preparation regression confirms the active phase is not consumed.
 
 ## Final evidence
