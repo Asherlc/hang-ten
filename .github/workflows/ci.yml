@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+  merge_group:
 
 permissions:
   contents: read
@@ -70,3 +71,112 @@ jobs:
           name: ci-build-logs-${{ matrix.configuration }}-${{ matrix.sdk }}-${{ github.run_id }}
           path: ${{ runner.temp }}/hang-ten-logs/
           if-no-files-found: ignore
+
+  test:
+    name: Test (iOS Simulator)
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Create test simulator
+        id: create-simulator
+        run: |
+          set -euo pipefail
+
+          device_type_id="$(
+            xcrun simctl list devicetypes \
+              | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' \
+              | head -n 1
+          )"
+          if [[ -z "$device_type_id" ]]; then
+            echo "Required iPhone 17 simulator device type is unavailable." >&2
+            exit 1
+          fi
+
+          runtime_id="$(
+            xcrun simctl list runtimes available \
+              | awk '
+                /^[[:space:]]*iOS [0-9]/ {
+                  version = $2
+                  runtime = $NF
+                  if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) {
+                    print version "|" runtime
+                  }
+                }
+              ' \
+              | awk -F'|' '
+                {
+                  split($1, version, /\./)
+                  printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2
+                }
+              ' \
+              | sort \
+              | tail -n 1 \
+              | cut -d'|' -f 2-
+          )"
+          if [[ -z "$runtime_id" ]]; then
+            echo "No available iOS simulator runtime was found." >&2
+            exit 1
+          fi
+
+          simulator_name="Hang Ten CI iPhone 17 $(uuidgen)"
+          simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+          if [[ -z "$simulator_udid" ]]; then
+            echo "Failed to create the owned iPhone 17 simulator." >&2
+            exit 1
+          fi
+
+          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$simulator_udid"
+          xcrun simctl bootstatus "$simulator_udid" -b
+
+      - name: Run XCTest suite
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/hang-ten-test-logs" "$RUNNER_TEMP/hang-ten-test-derived-data"
+          xcodebuild \
+            -project HangTen.xcodeproj \
+            -scheme HangTen \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
+            -parallel-testing-enabled NO \
+            -maximum-parallel-testing-workers 1 \
+            -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
+            -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload test diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-test-results-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/HangTenTests.xcresult
+            ${{ runner.temp }}/hang-ten-test-logs/
+          if-no-files-found: ignore
+
+      - name: Delete test simulator
+        if: always()
+        env:
+          SIMULATOR_UDID: ${{ steps.create-simulator.outputs.udid }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$SIMULATOR_UDID" ]]; then
+            xcrun simctl delete "$SIMULATOR_UDID"
+          fi
