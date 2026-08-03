@@ -44,6 +44,8 @@ case "$2" in
     Hang Ten Worcester Preview (40404040-4040-4040-4040-404040404040) (Shutdown)
     Hang Ten Worcester Reviewing (50505050-5050-5050-5050-505050505050) (Shutdown)
     HangTen bariloche Task5 (60606060-6060-6060-6060-606060606060) (Shutdown)
+    Hang Ten Worcester Validation Review (71717171-7171-7171-7171-717171717171) (Shutdown)
+    Hang Ten Worcester Scratch Review (72727272-7272-7272-7272-727272727272) (Shutdown)
     HangTennis Review (31313131-3131-3131-3131-313131313131) (Shutdown)
     Hang Tenacious Review (32323232-3232-3232-3232-323232323232) (Shutdown)
 DEVICES
@@ -171,8 +173,8 @@ assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333
 assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
-assert_contains 'Would delete HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010)' "$dry_run"
 assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
+assert_not_contains '10101010-1010-1010-1010-101010101010' "$dry_run"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
 assert_not_contains 'iPhone Review' "$dry_run"
 assert_not_contains 'abababab-abab-abab-abab-abababababab' "$dry_run"
@@ -182,6 +184,8 @@ assert_not_contains '50505050-5050-5050-5050-505050505050' "$dry_run"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
 assert_not_contains '31313131-3131-3131-3131-313131313131' "$dry_run"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$dry_run"
+assert_not_contains '71717171-7171-7171-7171-717171717171' "$dry_run"
+assert_not_contains '72727272-7272-7272-7272-727272727272' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
@@ -197,8 +201,8 @@ assert_contains 'delete 33333333-3333-3333-3333-333333333333' "$prune_calls"
 assert_contains 'delete 77777777-7777-7777-7777-777777777777' "$prune_calls"
 assert_contains 'delete 88888888-8888-8888-8888-888888888888' "$prune_calls"
 assert_contains 'delete 99999999-9999-9999-9999-999999999999' "$prune_calls"
-assert_contains 'delete 10101010-1010-1010-1010-101010101010' "$prune_calls"
 assert_contains 'delete 20202020-2020-2020-2020-202020202020' "$prune_calls"
+assert_not_contains 'delete 10101010-1010-1010-1010-101010101010' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$prune_calls"
@@ -209,6 +213,8 @@ assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
 assert_not_contains '31313131-3131-3131-3131-313131313131' "$prune_calls"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$prune_calls"
+assert_not_contains '71717171-7171-7171-7171-717171717171' "$prune_calls"
+assert_not_contains '72727272-7272-7272-7272-727272727272' "$prune_calls"
 assert_all_call_log_contains_list_devices
 
 assert_rejects_malformed_args_without_xcrun() {
