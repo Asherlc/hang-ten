@@ -33,7 +33,7 @@ device_record_for_uuid() {
 run_archive_cleanup() {
   local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
   local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
-  local manifest devices uuid record device_name device_state
+  local manifest devices uuid record device_name device_state workspace_prefix
   local result_status=0
 
   if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
@@ -42,6 +42,7 @@ run_archive_cleanup() {
   fi
 
   manifest="$workspace_path/.context/conductor-owned-simulators"
+  workspace_prefix="Hang Ten Conductor ${workspace_name} "
   [[ -f "$manifest" ]] || return 0
   devices=$(xcrun simctl list devices)
 
@@ -57,7 +58,7 @@ run_archive_cleanup() {
     device_name=${record%%$'\t'*}
     device_state=${record#*$'\t'}
 
-    if [[ "$device_name" != *'Hang Ten Conductor '* || "$device_name" != *"$workspace_name"* ]]; then
+    if [[ "$device_name" != "$workspace_prefix"* ]]; then
       print -u2 -- "Skipping simulator not owned by workspace $workspace_name: $uuid"
       result_status=1
       continue
@@ -91,7 +92,7 @@ run_prune() {
   devices=$(xcrun simctl list devices)
   while IFS=$'\t' read -r device_name uuid device_state; do
     [[ "$device_state" == Shutdown ]] || continue
-    [[ "$device_name" == HangTen* || "$device_name" == 'Hang Ten'* ]] || continue
+    [[ "$device_name" == HangTen*' Review' || "$device_name" == 'Hang Ten'*' Review' ]] || continue
 
     if [[ "$option" == --delete ]]; then
       if ! xcrun simctl delete "$uuid"; then

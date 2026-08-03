@@ -29,9 +29,15 @@ case "$2" in
     Hang Ten Conductor alpha Running (22222222-2222-2222-2222-222222222222) (Booted)
     Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333) (Shutdown)
     iPhone 17 Pro (44444444-4444-4444-4444-444444444444) (Shutdown)
+    Hang Ten Conductor alphabet Review (55555555-5555-5555-5555-555555555555) (Shutdown)
+    Hang Ten Conductor alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
 DEVICES
     ;;
-  shutdown|delete)
+  shutdown)
+    print -r -- "$2 $3" >> "$XCRUN_CALL_LOG"
+    [[ "${SHUTDOWN_FAIL_UUID:-}" != "$3" ]] || exit 1
+    ;;
+  delete)
     print -r -- "$2 $3" >> "$XCRUN_CALL_LOG"
     [[ "${DELETE_FAIL_UUID:-}" != "$3" ]] || exit 1
     ;;
@@ -100,10 +106,39 @@ fi
 mismatched_calls=$(<"$call_log")
 assert_not_contains 'delete 33333333-3333-3333-3333-333333333333' "$mismatched_calls"
 
+print -r -- '55555555-5555-5555-5555-555555555555' > "$manifest"
+: > "$call_log"
+if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+  print -u2 -- 'archive accepted a workspace name with alpha as a substring'
+  exit 1
+fi
+alphabet_calls=$(<"$call_log")
+assert_not_contains 'delete 55555555-5555-5555-5555-555555555555' "$alphabet_calls"
+
+print -r -- '22222222-2222-2222-2222-222222222222' > "$manifest"
+: > "$call_log"
+if SHUTDOWN_FAIL_UUID=22222222-2222-2222-2222-222222222222 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+  print -u2 -- 'archive returned success after a shutdown failure'
+  exit 1
+fi
+shutdown_failure_calls=$(<"$call_log")
+assert_contains 'shutdown 22222222-2222-2222-2222-222222222222' "$shutdown_failure_calls"
+assert_not_contains 'delete 22222222-2222-2222-2222-222222222222' "$shutdown_failure_calls"
+
+print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
+: > "$call_log"
+if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+  print -u2 -- 'archive returned success after a delete failure'
+  exit 1
+fi
+archive_delete_failure_calls=$(<"$call_log")
+assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_delete_failure_calls"
+
 : > "$call_log"
 dry_run=$(run_cleanup prune)
 assert_contains 'Would delete Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333)' "$dry_run"
+assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
@@ -116,5 +151,14 @@ assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_calls"
 assert_contains 'delete 33333333-3333-3333-3333-333333333333' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
+assert_not_contains '66666666-6666-6666-6666-666666666666' "$prune_calls"
+
+: > "$call_log"
+if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 run_cleanup prune --delete; then
+  print -u2 -- 'prune returned success after a delete failure'
+  exit 1
+fi
+prune_delete_failure_calls=$(<"$call_log")
+assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_delete_failure_calls"
 
 print -- 'conductor resource cleanup tests passed'
