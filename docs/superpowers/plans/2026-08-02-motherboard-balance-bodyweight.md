@@ -1,6 +1,6 @@
 # Motherboard Balance and Bodyweight Calibration Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for this plan. Dispatch a fresh implementer subagent for each task, then require a separate task-scoped spec-compliance and code-quality review checkpoint before moving on; after all tasks, run a broad whole-branch review. This workflow is mandatory. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add left/right Motherboard load proportions, live percentage-of-bodyweight feedback, and a tare/bodyweight setup sequence before sensor-backed workouts.
 

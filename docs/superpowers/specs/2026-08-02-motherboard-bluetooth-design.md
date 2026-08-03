@@ -32,7 +32,7 @@ Not in scope:
   Motherboard uses BLE GATT and normally does not require bonding.
 - Force-controlled workout progression or automatic timer changes.
 - Background streaming after the workout is suspended.
-- Persisting every 30 Hz raw sample or exporting raw sensor data.
+- Exporting raw sensor data outside the saved session. Eligible 30 Hz granular measurements are retained in the saved session, including raw ADC values.
 - Supporting other force meters or arbitrary BLE UART devices.
 - Replacing the existing Apple Health workout record with force samples.
 
@@ -130,9 +130,13 @@ The recorder never changes the elapsed value calculated by `WorkoutView`.
 A Codable local store injected into `AppStore`. A saved `WorkoutSessionRecord`
 contains the plan identity, date, routine start/end, Motherboard identifier
 when available, battery snapshot, and per-step recorder results. It persists
-derived results as a JSON data value in user defaults; raw 30 Hz samples are
-not retained. The store supports loading history and appending a completed
-summary without making Apple Health responsible for force data.
+derived results plus each eligible granular `MotherboardMeasurement` received
+after countdown completion and before the plan duration ends, including rest
+intervals and raw ADC values. Samples are not downsampled or truncated within
+a session, so there is no per-session sample-count or byte cap. The store
+retains only the 20 newest session records and removes older session files.
+It supports loading history and appending a completed summary without making
+Apple Health responsible for force data.
 
 ## User experience
 

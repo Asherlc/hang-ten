@@ -48,6 +48,12 @@ Result: exit 0; `HangTen.app` exists at the expected Debug simulator product pat
 
 At 30 Hz, a ten-minute routine stores about 18,000 measurements. JSON persistence therefore adds several megabytes per session and can grow to tens of megabytes when the session history retains up to 20 records. This task deliberately preserves every running-routine notification rather than downsampling it.
 
+There is no per-session sample-count or byte cap. Retention is bounded by the
+collector's routine-start/countdown/plan-duration eligibility boundary and by
+the store's 20-newest-session history limit; each retained session keeps every
+eligible measurement. A per-session storage cap remains a documented follow-up
+if future data-volume requirements call for one.
+
 ## Review-fix RED
 
 Added deterministic tests for an extracted granular-sample collector. The tests cover setup and paused state exclusion, countdown exclusion, active and rest interval inclusion, plan-duration exclusion, and preserving every eligible low- or high-load publication unchanged.

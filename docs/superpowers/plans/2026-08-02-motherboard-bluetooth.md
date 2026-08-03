@@ -1,6 +1,6 @@
 # Griptonite Motherboard Bluetooth Integration Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for this plan. Dispatch a fresh implementer subagent for each task, then require a separate task-scoped spec-compliance and code-quality review checkpoint before moving on; after all tasks, run a broad whole-branch review. This workflow is mandatory. Steps use checkbox syntax for tracking.
 
 **Goal:** Add native CoreBluetooth support for the Griptonite Motherboard, show live calibrated force during timer-led workouts, record actual loaded intervals and peaks, and persist session summaries with configurable display settings.
 
@@ -61,7 +61,7 @@ Modify these existing files:
 - Produces a buildable HangTenTests XCTest bundle that imports the app as @testable import HangTen.
 - Later tasks use rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro'.
 
-- [ ] **Step 1: Write the test-target smoke test**
+- [x] **Step 1: Write the test-target smoke test**
 
 Create the test before any feature production code:
 
@@ -76,7 +76,7 @@ final class TestTargetSmokeTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the test and verify the target is missing**
+- [x] **Step 2: Run the test and verify the target is missing**
 
 Run:
 
@@ -88,17 +88,17 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: failure because HangTenTests is not yet present in the project.
 
-- [ ] **Step 3: Add the test target and shared Test action**
+- [x] **Step 3: Add the test target and shared Test action**
 
 Add a HangTenTests group, file reference, build-file entry, and native unit-test target to the hand-maintained project. Configure it with GENERATE_INFOPLIST_FILE = YES, PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.tests, IPHONEOS_DEPLOYMENT_TARGET = 17.0, SWIFT_VERSION = 5.0, TEST_HOST = $(BUILT_PRODUCTS_DIR)/HangTen.app/HangTen, and a dependency on the HangTen app target. Link XCTest.framework in the test target’s Frameworks phase. Add the smoke test to the test target Sources phase.
 
 Create a shared scheme whose Test action builds the HangTen app and runs HangTenTests, with the same iOS Simulator destination used by the repository validation guide.
 
-- [ ] **Step 4: Run the focused test and verify it passes**
+- [x] **Step 4: Run the focused test and verify it passes**
 
 Run the command from Step 2. Expected: one passing test and no compiler warnings.
 
-- [ ] **Step 5: Commit the test infrastructure**
+- [x] **Step 5: Commit the test infrastructure**
 
 ~~~sh
 rtk git add HangTenTests HangTen.xcodeproj/project.pbxproj HangTen.xcodeproj/xcshareddata/xcschemes/HangTen.xcscheme
@@ -187,7 +187,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
 
 Also add MotherboardSettingsStore, backed by an injected UserDefaults, with @Published var forceUnit (default .kgf) and @Published var thresholdKGF (default 2.5). Keep all saved/session values canonical in kgf.
 
-- [ ] **Step 1: Write failing model and settings tests**
+- [x] **Step 1: Write failing model and settings tests**
 
 ~~~swift
 import XCTest
@@ -239,7 +239,7 @@ final class MotherboardModelsTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the tests to verify the expected missing-type failures**
+- [x] **Step 2: Run the tests to verify the expected missing-type failures**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -249,11 +249,11 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failures naming the not-yet-defined Motherboard types.
 
-- [ ] **Step 3: Implement the models and settings store**
+- [x] **Step 3: Implement the models and settings store**
 
 Use 9.80665 N per kgf and 2.20462262185 lbf per kgf. Store settings under stable keys motherboard.forceUnit and motherboard.thresholdKGF; decode invalid stored values back to the defaults. Clamp a loaded threshold below 0.1 kgf back to 2.5 kgf so corrupted defaults cannot create an always-on detector.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run both the model test command and:
 
@@ -264,7 +264,7 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit the value types**
+- [x] **Step 5: Commit the value types**
 
 ~~~sh
 rtk git add HangTen/Models/MotherboardModels.swift HangTenTests/MotherboardModelsTests.swift HangTen.xcodeproj/project.pbxproj
@@ -322,7 +322,7 @@ enum MotherboardProtocol {
 }
 ~~~
 
-- [ ] **Step 1: Write failing parser tests**
+- [x] **Step 1: Write failing parser tests**
 
 Use the 16-byte fixture 34126400020100feffff030201000000, which represents sample 0x1234, battery 0x0064, ADC values 0x000102, -2, 0x010203, and 0.
 
@@ -371,7 +371,7 @@ final class MotherboardProtocolTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the focused tests and verify they fail for missing parser types**
+- [x] **Step 2: Run the focused tests and verify they fail for missing parser types**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -381,17 +381,17 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failures because the parser and protocol types do not exist.
 
-- [ ] **Step 3: Implement framing, decoding, and calibration**
+- [x] **Step 3: Implement framing, decoding, and calibration**
 
 Append incoming bytes to a Data buffer, split only on CRLF, and leave the final incomplete line in the buffer. Parse calibration rows with four fields and reject rows whose sensor is outside 0...3. Decode the hexadecimal frame only when it has exactly 32 hex characters. Implement signed 24-bit decoding by sign-extending bit 23 into an Int32. Sort calibration points by ADC before interpolating; use the first/last point for values outside the calibrated range. Return four sensor loads, subtract the supplied four-element tare vector, clamp aggregate load at zero, and keep the per-sensor values for distribution display.
 
 Build commands with UTF-8 bytes and clamp streamCommand(rate:) to a positive decimal rate; streamCommand(rate: 30) must equal Data("S30".utf8).
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run the protocol test command and the full xcodebuild test command from Task 2. Expected: all parser, model, and existing tests pass.
 
-- [ ] **Step 5: Commit the parser**
+- [x] **Step 5: Commit the parser**
 
 ~~~sh
 rtk git add HangTen/Models/MotherboardProtocol.swift HangTenTests/MotherboardProtocolTests.swift HangTen.xcodeproj/project.pbxproj
@@ -427,7 +427,7 @@ struct MotherboardWorkoutRecorder {
 }
 ~~~
 
-- [ ] **Step 1: Write failing recorder tests**
+- [x] **Step 1: Write failing recorder tests**
 
 ~~~swift
 import XCTest
@@ -473,7 +473,7 @@ final class MotherboardWorkoutRecorderTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the focused tests and verify the recorder is missing**
+- [x] **Step 2: Run the focused tests and verify the recorder is missing**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -483,15 +483,15 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failures naming the missing recorder.
 
-- [ ] **Step 3: Implement the recorder state machine**
+- [x] **Step 3: Implement the recorder state machine**
 
 Keep a dictionary keyed by step ID plus an ordered step list. On the first sample at or above thresholdKGF, start a pending/active interval. Require debounceDuration of qualifying samples before committing a pending start. End the interval after debounceDuration below thresholdKGF × releaseRatio; merge a new start into the prior interval when the gap is no longer than mergeGapDuration. Update peak and sample count only for active samples. endStep closes an open interval at the boundary and writes .measured; interrupt closes any open interval and writes .interrupted for the current step; finish flushes and returns results in first-seen step order. A sample with isActive == false must not start or extend an interval.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run the recorder test command and the full test command. Expected: all tests pass, including threshold hysteresis and step-boundary behavior.
 
-- [ ] **Step 5: Commit the recorder**
+- [x] **Step 5: Commit the recorder**
 
 ~~~sh
 rtk git add HangTen/Models/MotherboardWorkoutRecorder.swift HangTenTests/MotherboardWorkoutRecorderTests.swift HangTen.xcodeproj/project.pbxproj
@@ -557,7 +557,7 @@ final class MotherboardBluetoothService: ObservableObject {
 
 Implement CoreBluetoothMotherboardTransport with CBCentralManagerDelegate and CBPeripheralDelegate. Scan with the NUS service UUID, accept only a discovered name equal to Motherboard when a name is supplied, discover the NUS service, discover RX/TX characteristics, enable TX notifications, and map delegate callbacks to MotherboardTransportEvent. Use .withResponse when the RX characteristic supports it and .withoutResponse otherwise.
 
-- [ ] **Step 1: Write failing service/coordinator tests using a fake transport**
+- [x] **Step 1: Write failing service/coordinator tests using a fake transport**
 
 ~~~swift
 import XCTest
@@ -606,7 +606,7 @@ private final class FakeMotherboardTransport: MotherboardTransport {
 }
 ~~~
 
-- [ ] **Step 2: Run the focused tests and verify service types are missing**
+- [x] **Step 2: Run the focused tests and verify service types are missing**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -616,17 +616,17 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failures because the transport and service do not yet exist.
 
-- [ ] **Step 3: Implement the service and transport**
+- [x] **Step 3: Implement the service and transport**
 
 Wire the transport event handler in the service initializer. connect() calls startScan(), characteristicsReady enables notifications and writes C, and the service writes S30 only after it has received all four sensors × four calibration points. For each raw-packet event, run MotherboardProtocol.decode with the current calibration and four-element tare vector, publish the measurement, and update batteryValue. disconnect() stops scanning/streaming and clears the selected peripheral. Map power states and transport failures to the documented connection states without throwing into SwiftUI.
 
 Add NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard." to both Debug and Release target build settings. Do not add background Bluetooth modes because the existing workout pauses when inactive.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run the service test command and the full test command. Expected: all tests pass, including command ordering and no-measurement-on-disconnect.
 
-- [ ] **Step 5: Commit the BLE service**
+- [x] **Step 5: Commit the BLE service**
 
 ~~~sh
 rtk git add HangTen/Models/MotherboardBluetoothService.swift HangTenTests/MotherboardBluetoothServiceTests.swift HangTen.xcodeproj/project.pbxproj
@@ -671,7 +671,7 @@ func markSessionComplete(
 
 Append a supplied session before incrementing the existing counter; retain the existing Apple Health write and error behavior.
 
-- [ ] **Step 1: Write failing store tests**
+- [x] **Step 1: Write failing store tests**
 
 ~~~swift
 import XCTest
@@ -695,7 +695,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the focused test and verify the store is missing**
+- [x] **Step 2: Run the focused test and verify the store is missing**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -705,15 +705,15 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failure because WorkoutSessionStore is not defined.
 
-- [ ] **Step 3: Implement the store and AppStore injection**
+- [x] **Step 3: Implement the store and AppStore injection**
 
 Persist the array as JSON under workout.sessionHistory. If decoding fails, expose an empty history and replace the invalid value on the next append. In HangTenApp, construct one MotherboardBluetoothService using CoreBluetoothMotherboardTransport, one settings store, and one session store; inject them into AppStore so Progress and Workout observe the same connection and history.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run the store test and full suite. Expected: existing AppStore/HealthKit behavior still compiles and all tests pass.
 
-- [ ] **Step 5: Commit persistence and dependency injection**
+- [x] **Step 5: Commit persistence and dependency injection**
 
 ~~~sh
 rtk git add HangTen/Models/WorkoutSessionStore.swift HangTen/Models/AppStore.swift HangTen/HangTenApp.swift HangTenTests/WorkoutSessionStoreTests.swift HangTen.xcodeproj/project.pbxproj
@@ -751,19 +751,19 @@ struct MotherboardMeterView: View {
 }
 ~~~
 
-- [ ] **Step 1: Add the UI files and project references with no behavior change**
+- [x] **Step 1: Add the UI files and project references with no behavior change**
 
 Add the new Swift file references/build entries and compile the app. Keep the existing tab layout unchanged until the card is wired.
 
-- [ ] **Step 2: Implement the Training sensor card**
+- [x] **Step 2: Implement the Training sensor card**
 
 Add a card below boardInfo in ProgressDashboardView. Render the state label, latest formatted force, battery value, and the last error. The primary action calls service.connect() from idle/disconnected/failed and service.disconnect() while connected/streaming. If Bluetooth is unauthorized or powered off, show explanatory text and use UIApplication.openSettingsURLString for the existing app-settings behavior.
 
-- [ ] **Step 3: Implement Settings navigation and controls**
+- [x] **Step 3: Implement Settings navigation and controls**
 
 Add a gear toolbar button to ProgressDashboardView that pushes MotherboardSettingsView. Use a Picker for .kgf, .lbf, and .newtons; use a decimal Slider/stepper bound to settings.thresholdKGF; show the canonical kgf threshold alongside the converted display value; and add a Tare button that calls service.tare() only when streaming. Changing a setting must update UserDefaults through MotherboardSettingsStore.
 
-- [ ] **Step 4: Build and review the UI without Bluetooth hardware**
+- [x] **Step 4: Build and review the UI without Bluetooth hardware**
 
 ~~~sh
 rtk xcodebuild build -project HangTen.xcodeproj -scheme HangTen \
@@ -772,7 +772,7 @@ rtk xcodebuild build -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: the app compiles with no new warnings. Resolve SwiftUI type-checking issues before proceeding.
 
-- [ ] **Step 5: Commit the sensor and settings UI**
+- [x] **Step 5: Commit the sensor and settings UI**
 
 ~~~sh
 rtk git add HangTen/Views/MotherboardViews.swift HangTen/Views/RootView.swift HangTen.xcodeproj/project.pbxproj
@@ -799,7 +799,7 @@ struct WorkoutSummaryView: View {
 }
 ~~~
 
-- [ ] **Step 1: Write failing summary-formatting tests**
+- [x] **Step 1: Write failing summary-formatting tests**
 
 Add pure formatting helpers in MotherboardModels.swift or WorkoutSummaryView.swift only after the test is written:
 
@@ -820,7 +820,7 @@ final class WorkoutSummaryTests: XCTestCase {
 }
 ~~~
 
-- [ ] **Step 2: Run the focused test and verify the summary helper is missing**
+- [x] **Step 2: Run the focused test and verify the summary helper is missing**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -830,25 +830,25 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failure because actualLoadedDuration is not yet defined.
 
-- [ ] **Step 3: Implement summary data and view**
+- [x] **Step 3: Implement summary data and view**
 
 Add actualLoadedDuration as the sum of interval durations. Render a summary header with plan/date, then one row per step showing planned duration, actual loaded duration, interval count/details when there is more than one, peak force, and .unmeasured/.interrupted status. The Save action is the only path that invokes the existing AppStore completion method; Discard dismisses without incrementing sessions or writing Apple Health.
 
-- [ ] **Step 4: Attach the recorder to WorkoutView**
+- [x] **Step 4: Attach the recorder to WorkoutView**
 
 Observe the shared MotherboardBluetoothService.latestMeasurement in WorkoutView. For each new measurement, calculate the workout elapsed time using the sample timestamp and existing startedAt/pausedElapsed state, find the current WorkoutStep, and call recorder.consume only when countdown is zero, the routine is not complete, and isRestInterval is false. Keep the existing TimelineView clock and audio code unchanged apart from passing live meter values into portrait and landscape layouts.
 
 When the routine reaches completion, call recorder.finish(at: plan.duration), construct a WorkoutSessionRecord with the service identifier/battery and plan steps, then present WorkoutSummaryView. On summary Save, call store.markSessionComplete(plan:startDate:endDate:session:) and dismiss. On WorkoutView.onDisappear, call recorder.interrupt only for an active unfinished session and never call the completion path.
 
-- [ ] **Step 5: Add the live meter to both layouts**
+- [x] **Step 5: Add the live meter to both layouts**
 
 Place MotherboardMeterView in the existing portrait cue stack and landscape lower row. Display current/peak force in the selected unit, actual loaded / planned active time, and a compact connection status. If no measurement exists, show “Not measured”; do not disable Start, Pause, End, or Log session.
 
-- [ ] **Step 6: Run focused and full tests**
+- [x] **Step 6: Run focused and full tests**
 
 Run summary tests and the full XCTest command. Expected: all tests pass and the app builds in Debug.
 
-- [ ] **Step 7: Commit workout integration**
+- [x] **Step 7: Commit workout integration**
 
 ~~~sh
 rtk git add HangTen/Views/WorkoutSummaryView.swift HangTen/Views/RootView.swift HangTenTests/WorkoutSummaryTests.swift HangTen.xcodeproj/project.pbxproj
@@ -878,7 +878,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
 #endif
 ~~~
 
-- [ ] **Step 1: Write the simulator fixture test**
+- [x] **Step 1: Write the simulator fixture test**
 
 ~~~swift
 #if DEBUG
@@ -896,7 +896,7 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
 #endif
 ~~~
 
-- [ ] **Step 2: Run the focused test and verify the fixture is missing**
+- [x] **Step 2: Run the focused test and verify the fixture is missing**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -906,15 +906,15 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: compilation failure because the DEBUG transport is not defined.
 
-- [ ] **Step 3: Implement the deterministic transport and review route**
+- [x] **Step 3: Implement the deterministic transport and review route**
 
 Make the fixture emit a fixed sequence of unloaded, loaded, peak, and unloaded measurements at stable timestamps. When HANGTEN_REVIEW_MOTHERBOARD=1 is set in DEBUG, construct MotherboardBluetoothService with the simulated transport and make the Progress card show Connected/Streaming without requiring system Bluetooth. Keep production builds on CoreBluetoothMotherboardTransport regardless of the environment variable.
 
-- [ ] **Step 4: Document runtime behavior and limitations**
+- [x] **Step 4: Document runtime behavior and limitations**
 
 Add a README “Motherboard sensor” bullet and link to the protocol notes. In docs/IOS_RUNTIME_SERVICES.md, document the user-initiated Bluetooth permission flow, notification buffering, calibration, timer-led recording, disconnect/unmeasured behavior, DEBUG simulator route, and physical-device validation requirement. State that the protocol is reverse-engineered and not an official manufacturer SDK.
 
-- [ ] **Step 5: Run simulator build and visual review**
+- [ ] **Step 5: Run simulator build and visual review** *(blocked: the dedicated simulator rendered blank/boot-spinner surfaces; the simulator build passed, but no visual pass is claimed.)*
 
 Follow docs/IOS_SIMULATOR_VALIDATION.md and the repository’s validate-hang-ten-ios skill. Use an isolated simulator and HANGTEN_REVIEW_MOTHERBOARD=1 to verify:
 
@@ -924,7 +924,7 @@ Follow docs/IOS_SIMULATOR_VALIDATION.md and the repository’s validate-hang-ten
 - a simulated completed routine presents measured and unmeasured summary states;
 - disconnect/error state leaves the timer controls usable.
 
-- [ ] **Step 6: Commit simulator support and docs**
+- [x] **Step 6: Commit simulator support and docs**
 
 ~~~sh
 rtk git add HangTen/Models/SimulatedMotherboardTransport.swift HangTen/HangTenApp.swift HangTen/Views/RootView.swift README.md docs/IOS_RUNTIME_SERVICES.md HangTenTests/SimulatedMotherboardTransportTests.swift HangTen.xcodeproj/project.pbxproj
@@ -937,7 +937,7 @@ rtk git commit -m "docs: add Motherboard simulator review flow"
 
 - Modify only files required by verification fixes; do not broaden the feature.
 
-- [ ] **Step 1: Run the complete unit-test suite**
+- [x] **Step 1: Run the complete unit-test suite**
 
 ~~~sh
 rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
@@ -946,7 +946,7 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: all XCTest cases pass with no warnings.
 
-- [ ] **Step 2: Run the standard simulator Debug build**
+- [x] **Step 2: Run the standard simulator Debug build**
 
 ~~~sh
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen \
@@ -955,15 +955,15 @@ rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen \
 
 Expected: a successful simulator Debug build according to the local environment.
 
-- [ ] **Step 3: Run the isolated visual validation**
+- [ ] **Step 3: Run the isolated visual validation** *(blocked: the dedicated simulator rendered blank/boot-spinner surfaces; no visual pass is claimed.)*
 
 Use the repository’s isolated simulator guide and validate-hang-ten-ios skill. Validate portrait, landscape, countdown, pause/resume, session summary, settings, and error states with the DEBUG simulator transport.
 
-- [ ] **Step 4: Validate a real Motherboard on a physical iPhone**
+- [ ] **Step 4: Validate a real Motherboard on a physical iPhone** *(pending physical-device release-gate validation.)*
 
 With the Motherboard powered and disconnected from Grippy/other apps, verify: Bluetooth permission, discovery by NUS/name, calibration completion, 30 Hz stream, current and peak load, software tare, threshold crossings, multiple hangs in one step, pause/rest exclusion, disconnect recovery, and saved summary values. Confirm that the existing Apple Health workout is still saved only from the completed summary Save path.
 
-- [ ] **Step 5: Review the final diff and commit any verification-only fixes**
+- [x] **Step 5: Review the final diff and commit any verification-only fixes**
 
 ~~~sh
 rtk git status --short
