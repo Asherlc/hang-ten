@@ -892,7 +892,7 @@ private struct StepRow: View {
     }
 }
 
-private struct WorkoutAudioMoment: Hashable {
+struct WorkoutAudioMoment: Hashable {
 	let key: String
 	let phrase: String
 }
@@ -918,6 +918,32 @@ struct MotherboardWorkoutMeasurementCollector {
     mutating func reset() {
         measurements = []
     }
+}
+
+enum WorkoutAudioCuePolicy {
+	static func moment(
+		stepID: String,
+		segmentName: String,
+		initialCountdown: Int,
+		intervalSecondsRemaining: Int,
+		isComplete: Bool
+	) -> WorkoutAudioMoment? {
+		if (1...3).contains(initialCountdown) {
+			return WorkoutAudioMoment(
+				key: "initial-\(initialCountdown)",
+				phrase: "\(initialCountdown)"
+			)
+		}
+
+		guard !isComplete, (1...3).contains(intervalSecondsRemaining) else {
+			return nil
+		}
+
+		return WorkoutAudioMoment(
+			key: "\(stepID)-\(segmentName)-\(intervalSecondsRemaining)",
+			phrase: "\(intervalSecondsRemaining)"
+		)
+	}
 }
 
 enum WorkoutSessionPolicy {
@@ -1955,69 +1981,17 @@ struct WorkoutView: View {
 	) -> WorkoutAudioMoment? {
 		guard startedAt != nil else { return nil }
 
-		if countdown > 0 {
-			return WorkoutAudioMoment(
-				key: "initial-\(countdown)",
-				phrase: "\(countdown)"
-			)
-		}
-
-		if isComplete {
-			return WorkoutAudioMoment(
-				key: "session-complete",
-				phrase: "Session complete"
-			)
-		}
-
-		let segmentName = isResting ? "rest" : "active"
-		let segmentElapsed = isResting
-			? max(0, stepElapsed - step.activeDuration)
-			: stepElapsed
-		let segmentDuration = isResting ? step.restDuration : step.activeDuration
-
-		if segmentElapsed < 0.55 {
-			let phrase: String
-			if segmentDuration <= 3 {
-				phrase = isResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
-			} else {
-				phrase = isResting ? "Rest" : spokenStartPhrase(for: step)
-			}
-			return WorkoutAudioMoment(
-				key: "\(step.id)-\(segmentName)-start",
-				phrase: phrase
-			)
-		}
-
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)
-		if segmentDuration > 3, (1...3).contains(secondsRemaining) {
-			return WorkoutAudioMoment(
-				key: "\(step.id)-\(segmentName)-\(secondsRemaining)",
-				phrase: "\(secondsRemaining)"
-			)
-		}
 
-		return nil
-	}
-
-	private func spokenStartPhrase(for step: WorkoutStep) -> String {
-		if step.timedWorkDuration == nil, step.phase != .rest {
-			return "Begin minute \(step.number). \(step.title)"
-		}
-
-		switch step.phase {
-		case .hang:
-			return "Hang. \(step.title)"
-		case .warmUp:
-			return "Begin warm up. \(step.title)"
-		case .pull:
-			return "Begin. \(step.title)"
-		case .coolDown:
-			return "Begin cool down. \(step.title)"
-		case .rest:
-			return "Rest"
-		}
+		return WorkoutAudioCuePolicy.moment(
+			stepID: step.id,
+			segmentName: isResting ? "rest" : "active",
+			initialCountdown: countdown,
+			intervalSecondsRemaining: secondsRemaining,
+			isComplete: isComplete
+		)
 	}
 }
 
