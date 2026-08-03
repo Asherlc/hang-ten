@@ -1005,11 +1005,12 @@ enum WorkoutSessionPolicy {
     static func completedWorkoutInterval(
         sessionStartedAt: Date,
         planDuration: TimeInterval,
-        loggedAt: Date
+        elapsed: TimeInterval
     ) -> DateInterval {
-        DateInterval(
+        let activeElapsed = min(planDuration, max(0, elapsed))
+        return DateInterval(
             start: sessionStartedAt,
-            end: min(sessionStartedAt.addingTimeInterval(planDuration), loggedAt)
+            end: sessionStartedAt.addingTimeInterval(activeElapsed)
         )
     }
 }
@@ -1017,21 +1018,21 @@ enum WorkoutSessionPolicy {
 enum WorkoutStopwatchLifecycle {
     static func finalizeStopwatches(
         for stepID: String,
-        at date: Date,
+        at monotonicTime: TimeInterval,
         in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
     ) {
         for key in stopwatches.keys where key.stepID == stepID {
-            finalizeStopwatch(for: key, at: date, in: &stopwatches)
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
         }
     }
 
     static func finalizeStopwatch(
         for key: WorkoutActivitySegmentKey,
-        at date: Date,
+        at monotonicTime: TimeInterval,
         in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
     ) {
         guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
-        stopwatch.stop(at: date)
+        stopwatch.stop(at: monotonicTime)
         stopwatches[key] = stopwatch
     }
 }
@@ -1047,8 +1048,7 @@ struct WorkoutView: View {
 
     let plan: TrainingPlan
 
-    @State private var startedAt: Date?
-    @State private var pausedElapsed: TimeInterval = 0
+    @State private var workoutClock = WorkoutClock()
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
     @State private var showsStepPicker = false
@@ -1078,10 +1078,11 @@ struct WorkoutView: View {
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
-				let elapsed = currentElapsed(at: context.date)
+				let monotonicTime = WorkoutClock.monotonicTime
+				let elapsed = currentElapsed
 				let step = step(at: elapsed)
 				let stepElapsed = elapsedInStep(at: elapsed)
-				let countdown = countdownRemaining(at: context.date)
+				let countdown = countdownRemaining
 				let isComplete = elapsed >= plan.duration
 				let isResting = isRestInterval(step: step, stepElapsed: stepElapsed)
 				let highlightedIDs = store.holdIDs(for: step, on: board)
@@ -1102,7 +1103,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
-							date: context.date,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -1114,7 +1115,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
-							date: context.date,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -1142,14 +1143,14 @@ struct WorkoutView: View {
 				}
 				.onChange(of: isComplete, initial: true) { _, complete in
 					guard complete else { return }
-					finalizeAllStopwatches(at: context.date)
+					finalizeAllStopwatches(at: monotonicTime)
 				}
 				.onChange(of: step.id) { previousStepID, _ in
-					finalizeStopwatches(for: previousStepID, at: context.date)
+					finalizeStopwatches(for: previousStepID, at: monotonicTime)
 				}
 				.onChange(of: isResting) { wasResting, resting in
 					guard resting, !wasResting else { return }
-					finalizeCurrentStopwatch(at: context.date)
+					finalizeCurrentStopwatch(at: monotonicTime)
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
@@ -1226,25 +1227,26 @@ struct WorkoutView: View {
 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
 				   let requestedStep = Int(rawStep),
 				   requestedStep > 1 {
-					pausedElapsed = plan.steps
+					workoutClock.seek(to: plan.steps
 						.prefix(min(requestedStep - 1, plan.steps.count))
-						.reduce(0) { $0 + $1.duration }
+						.reduce(0) { $0 + $1.duration })
 				}
 			}
 
-				if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
-				   startedAt == nil {
-					didCompleteWorkoutPreparation = true
-					toggleRunning()
-				}
-				#endif
-				initializeStopwatches()
+			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
+			   !workoutClock.isRunning {
+				didCompleteWorkoutPreparation = true
+				toggleRunning()
+			}
+			#endif
+			initializeStopwatches()
 		}
 		.onChange(of: scenePhase) { _, phase in
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+			guard workoutClock.isRunning else { return }
 			consume(measurement)
 			capture(measurement)
 		}
@@ -1254,7 +1256,7 @@ struct WorkoutView: View {
 		}
 		.onDisappear {
 			interruptRecorderIfNeeded()
-			finalizeAllStopwatches(at: Date())
+			finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
@@ -1264,7 +1266,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
-		date: Date,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1281,7 +1283,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -1306,7 +1308,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
-		date: Date,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1351,7 +1353,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 					.frame(width: 224)
 			}
 			meter(step: step)
@@ -1553,12 +1555,12 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, date: Date) -> some View {
+    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, monotonicTime: TimeInterval) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
-                stopwatchControl(for: key, at: date)
+                stopwatchControl(for: key, at: monotonicTime)
             }
 
             Button {
@@ -1589,13 +1591,13 @@ struct WorkoutView: View {
             }
         } label: {
             HStack {
-                Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (startedAt == nil ? "play.fill" : "pause.fill"))
+                Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (workoutClock.isRunning ? "pause.fill" : "play.fill"))
                 Text(
                     isComplete
                         ? "Log session"
                         : countdown > 0
                             ? "Cancel countdown"
-                            : (startedAt == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt) ? "Start routine" : (startedAt == nil ? "Resume" : "Pause"))
+                            : (!workoutClock.isRunning && WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt) ? "Start routine" : (workoutClock.isRunning ? "Pause" : "Resume"))
                 )
                 if isComplete {
                     Image(systemName: "arrow.right")
@@ -1611,9 +1613,9 @@ struct WorkoutView: View {
         .buttonStyle(.plain)
     }
 
-    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at date: Date) -> some View {
+    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
         let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
-        let elapsed = stopwatch.elapsed(at: date) ?? 0
+        let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
         let label = stopwatch.isFinalized
             ? "Stopwatch finalized"
             : stopwatch.isRunning
@@ -1629,7 +1631,7 @@ struct WorkoutView: View {
                 .frame(maxWidth: .infinity)
 
             Button {
-                toggleStopwatch(for: key, at: Date())
+                toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
             } label: {
                 Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
                     .frame(maxWidth: .infinity)
@@ -1648,17 +1650,16 @@ struct WorkoutView: View {
     }
 
     private func toggleRunning() {
-		if let startedAt {
-			if startedAt > Date() {
+		if workoutClock.isRunning {
+			if countdownRemaining > 0 {
 				cancelCountdown()
 				return
-				}
-				let now = Date()
-				recorder.pause(at: currentElapsed(at: now))
-				pausedElapsed += now.timeIntervalSince(startedAt)
-				self.startedAt = nil
-				pauseStopwatches(at: now)
-				audioCoach.stop()
+			}
+			let monotonicTime = WorkoutClock.monotonicTime
+			recorder.pause(at: currentElapsed)
+			pauseStopwatches(at: monotonicTime)
+			workoutClock.pause()
+			audioCoach.stop()
 		} else if needsWorkoutPreparation {
 			showsWorkoutPreparation = true
 		} else {
@@ -1669,47 +1670,45 @@ struct WorkoutView: View {
                 routineStartedAt = start
                 motherboardMeasurementCollector.reset()
             }
-            startedAt = start
+			workoutClock.start(initialCountdown: isFirstStart ? 3 : 0)
         }
     }
 
     private func cancelCountdown() {
-        startedAt = nil
+        workoutClock.reset()
         routineStartedAt = nil
 		audioCoach.stop()
     }
 
 	private func endSession() {
-	        interruptRecorderIfNeeded()
-	        finalizeAllStopwatches(at: Date())
-	        startedAt = nil
+		interruptRecorderIfNeeded()
+		finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
+		workoutClock.reset()
 		audioCoach.stop()
         dismiss()
     }
 
 	private func pauseForInterruption() {
-		pauseStopwatches(at: Date())
-		guard let startedAt else {
+		pauseStopwatches(at: WorkoutClock.monotonicTime)
+		guard workoutClock.isRunning else {
 			audioCoach.stop()
 			return
 		}
-		if startedAt > Date() {
+		if countdownRemaining > 0 {
 			cancelCountdown()
 			return
 		}
 
-		let now = Date()
-		recorder.pause(at: currentElapsed(at: now))
-		pausedElapsed += now.timeIntervalSince(startedAt)
-		self.startedAt = nil
+		recorder.pause(at: currentElapsed)
+		workoutClock.pause()
 		audioCoach.stop()
 	}
 
 	private func completeSession() {
-		let loggedAt = Date()
-		finalizeAllStopwatches(at: loggedAt)
+		let loggedAtMonotonic = WorkoutClock.monotonicTime
+		finalizeAllStopwatches(at: loggedAtMonotonic)
 		completedStopwatchDurations = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
-			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAt) else { return }
+			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAtMonotonic) else { return }
 			result[entry.key] = elapsed
 		}
 		finalizeRoutine()
@@ -1733,11 +1732,9 @@ struct WorkoutView: View {
 	}
 
 	private func consume(_ measurement: MotherboardMeasurement) {
-		guard let startedAt,
-			  startedAt <= measurement.timestamp,
-			  countdownRemaining(at: measurement.timestamp) == 0 else { return }
+		guard workoutClock.isRunning, countdownRemaining == 0 else { return }
 
-		let elapsed = currentElapsed(at: measurement.timestamp)
+		let elapsed = currentElapsed
 		guard elapsed < plan.duration else { return }
 		let currentStep = step(at: elapsed)
 		guard !currentStep.isRestStep,
@@ -1754,11 +1751,12 @@ struct WorkoutView: View {
 	}
 
 	private func capture(_ measurement: MotherboardMeasurement) {
+		guard workoutClock.isRunning else { return }
 		motherboardMeasurementCollector.capture(
 			measurement,
-			startedAt: startedAt,
-			countdownRemaining: countdownRemaining(at: measurement.timestamp),
-			workoutElapsed: currentElapsed(at: measurement.timestamp),
+			startedAt: routineStartedAt,
+			countdownRemaining: countdownRemaining,
+			workoutElapsed: currentElapsed,
 			planDuration: plan.duration
 		)
 	}
@@ -1786,7 +1784,7 @@ struct WorkoutView: View {
 		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
 			planDuration: plan.duration,
-			loggedAt: recordedAt
+			elapsed: currentElapsed
 		).end
 		let session = WorkoutSessionRecord(
 			id: UUID(),
@@ -1807,7 +1805,7 @@ struct WorkoutView: View {
 	}
 
 	private func configureRecorder() {
-		guard startedAt == nil, pausedElapsed == 0, !didComplete else { return }
+		guard !workoutClock.isRunning, workoutClock.elapsed == 0, !didComplete else { return }
 		recorder = MotherboardWorkoutRecorder(configuration: .init(
 			thresholdKGF: motherboardSettingsStore.thresholdKGF
 		))
@@ -1815,7 +1813,7 @@ struct WorkoutView: View {
 
 	private var needsWorkoutPreparation: Bool {
 		MotherboardWorkoutPreparation.requiresPreparation(
-			isInitialStart: startedAt == nil && pausedElapsed == 0 && !didCompleteWorkoutPreparation,
+			isInitialStart: !workoutClock.isRunning && workoutClock.elapsed == 0 && !didCompleteWorkoutPreparation,
 			isStreaming: motherboardBluetoothService.state == .streaming
 		)
 	}
@@ -1839,18 +1837,16 @@ struct WorkoutView: View {
 		guard completedSession?.id == session.id else { return }
 		summarySession = nil
 		completedSession = nil
-		startedAt = nil
+		workoutClock.reset()
+		routineStartedAt = nil
 		audioCoach.stop()
 		dismiss()
 	}
 
 	private func interruptRecorderForSensorLoss() {
-		let now = Date()
-		guard let startedAt,
-			  startedAt <= now,
-			  !didComplete else { return }
+		guard workoutClock.isRunning, countdownRemaining == 0, !didComplete else { return }
 
-		let elapsed = currentElapsed(at: now)
+		let elapsed = currentElapsed
 		let currentStep = step(at: elapsed)
 		guard !currentStep.isRestStep,
 			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
@@ -1864,21 +1860,19 @@ struct WorkoutView: View {
 	}
 
 	private func interruptRecorderIfNeeded() {
-		let now = Date()
-		let hasStartedActiveWork = startedAt.map { $0 <= now } ?? false
-		guard !didComplete, !didInterruptRecorder, hasStartedActiveWork || pausedElapsed > 0 else { return }
-		recorder.interrupt(at: currentElapsed(at: now))
+		let hasStartedActiveWork = workoutClock.isRunning && countdownRemaining == 0
+		let hasElapsedWork = workoutClock.elapsed > 0
+		guard !didComplete, !didInterruptRecorder, hasStartedActiveWork || hasElapsedWork else { return }
+		recorder.interrupt(at: currentElapsed)
 		didInterruptRecorder = true
 	}
 
-    private func currentElapsed(at date: Date) -> TimeInterval {
-        let activeElapsed = startedAt.map { max(0, date.timeIntervalSince($0)) } ?? 0
-        return min(plan.duration, pausedElapsed + max(0, activeElapsed))
+    private var currentElapsed: TimeInterval {
+        min(plan.duration, workoutClock.elapsed)
     }
 
-    private func countdownRemaining(at date: Date) -> Int {
-        guard let startedAt, pausedElapsed == 0, startedAt > date else { return 0 }
-        return max(1, Int(ceil(startedAt.timeIntervalSince(date))))
+    private var countdownRemaining: Int {
+        workoutClock.countdownRemaining
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
@@ -1890,36 +1884,32 @@ struct WorkoutView: View {
     }
 
     private var canNavigate: Bool {
-        let now = Date()
         return routineStartedAt != nil
-            && countdownRemaining(at: now) == 0
-            && currentElapsed(at: now) < plan.duration
+            && countdownRemaining == 0
+            && currentElapsed < plan.duration
     }
 
     private func seek(to targetElapsed: TimeInterval) {
         let target = min(max(0, targetElapsed), plan.duration)
-        pausedElapsed = target
-        if startedAt != nil {
-            startedAt = Date()
-        }
+        workoutClock.seek(to: target)
         audioCoach.stop()
     }
 
     private func jump(to step: WorkoutStep) {
         guard canNavigate else { return }
 
-        let elapsed = currentElapsed(at: Date())
+        let elapsed = currentElapsed
         guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
-		finalizeCurrentStopwatch(at: Date())
+		finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
         seek(to: target)
     }
 
     private func skipCurrentStep() {
         guard canNavigate else { return }
 
-        let elapsed = currentElapsed(at: Date())
+        let elapsed = currentElapsed
         guard let target = timeline.skipTarget(from: elapsed) else { return }
-		finalizeCurrentStopwatch(at: Date())
+		finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
         seek(to: target)
     }
 
@@ -1950,39 +1940,39 @@ struct WorkoutView: View {
 		return keys.first(where: { !(stopwatches[$0]?.isFinalized ?? false) }) ?? keys.last
 	}
 
-	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at date: Date) {
+	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) {
 		guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
 		if stopwatch.isRunning {
-			stopwatch.pause(at: date)
+			stopwatch.pause(at: monotonicTime)
 		} else {
-			stopwatch.start(at: date)
+			stopwatch.start(at: monotonicTime)
 		}
 		stopwatches[key] = stopwatch
 	}
 
-	private func pauseStopwatches(at date: Date) {
+	private func pauseStopwatches(at monotonicTime: TimeInterval) {
 		for key in stopwatches.keys {
 			guard var stopwatch = stopwatches[key], stopwatch.isRunning else { continue }
-			stopwatch.pause(at: date)
+			stopwatch.pause(at: monotonicTime)
 			stopwatches[key] = stopwatch
 		}
 	}
 
-	private func finalizeCurrentStopwatch(at date: Date) {
-		let elapsed = currentElapsed(at: date)
+	private func finalizeCurrentStopwatch(at monotonicTime: TimeInterval) {
+		let elapsed = currentElapsed
 		let step = step(at: elapsed)
 		guard let key = currentStopwatchKey(for: step) else { return }
-		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: date, in: &stopwatches)
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
 	}
 
-	private func finalizeStopwatches(for stepID: String, at date: Date) {
-		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: date, in: &stopwatches)
+	private func finalizeStopwatches(for stepID: String, at monotonicTime: TimeInterval) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: monotonicTime, in: &stopwatches)
 	}
 
-	private func finalizeAllStopwatches(at date: Date) {
+	private func finalizeAllStopwatches(at monotonicTime: TimeInterval) {
 		for key in stopwatches.keys {
 			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
-			stopwatch.stop(at: date)
+			stopwatch.stop(at: monotonicTime)
 			stopwatches[key] = stopwatch
 		}
 	}
@@ -2022,7 +2012,7 @@ struct WorkoutView: View {
 		isResting: Bool,
 		isComplete: Bool
 	) -> WorkoutAudioMoment? {
-		guard startedAt != nil else { return nil }
+		guard workoutClock.isRunning else { return nil }
 
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
