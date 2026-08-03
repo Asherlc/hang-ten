@@ -31,6 +31,7 @@ case "$2" in
     iPhone 17 Pro (44444444-4444-4444-4444-444444444444) (Shutdown)
     Hang Ten Conductor alphabet Review (55555555-5555-5555-5555-555555555555) (Shutdown)
     Hang Ten Conductor alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
+    iPhone Review (abababab-abab-abab-abab-abababababab) (Shutdown)
     Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
     Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
     HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010) (Shutdown)
@@ -153,6 +154,8 @@ assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999
 assert_contains 'Would delete HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010)' "$dry_run"
 assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
+assert_not_contains 'iPhone Review' "$dry_run"
+assert_not_contains 'abababab-abab-abab-abab-abababababab' "$dry_run"
 assert_not_contains '30303030-3030-3030-3030-303030303030' "$dry_run"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$dry_run"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$dry_run"
@@ -175,10 +178,31 @@ assert_contains 'delete 20202020-2020-2020-2020-202020202020' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$prune_calls"
+assert_not_contains 'abababab-abab-abab-abab-abababababab' "$prune_calls"
 assert_not_contains '30303030-3030-3030-3030-303030303030' "$prune_calls"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
+
+assert_prune_rejects_malformed_args() {
+  local description=$1
+  shift
+  local exit_status=0
+
+  : > "$call_log"
+  run_cleanup "$@" >/dev/null 2>&1 || exit_status=$?
+  [[ "$exit_status" -ne 0 ]] || {
+    print -u2 -- "$description accepted malformed prune arguments"
+    exit 1
+  }
+  [[ ! -s "$call_log" ]] || {
+    print -u2 -- "$description invoked simctl delete or shutdown"
+    exit 1
+  }
+}
+
+assert_prune_rejects_malformed_args 'prune typo' prune typo
+assert_prune_rejects_malformed_args 'prune --delete typo' prune --delete typo
 
 : > "$call_log"
 if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 run_cleanup prune --delete; then

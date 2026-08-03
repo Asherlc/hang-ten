@@ -134,7 +134,13 @@ run_prune() {
 }
 
 case "${1:-}" in
-  archive) run_archive_cleanup ;;
-  prune) run_prune "${2:-}" ;;
+  archive)
+    [[ "$#" -eq 1 ]] || { usage >&2; exit 2; }
+    run_archive_cleanup
+    ;;
+  prune)
+    [[ "$#" -le 2 ]] || { usage >&2; exit 2; }
+    run_prune "${2:-}"
+    ;;
   *) usage >&2; exit 2 ;;
 esac
