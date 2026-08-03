@@ -1,5 +1,84 @@
 import Foundation
 
+// The source catalog uses contextual shorthand for these factories. Keep the
+// compatibility surface beside the plan-library exporter so the catalog can
+// compile without changing the source-audited TrainingModels definitions.
+extension MetoliusTaskDefinition {
+    static func pullUps(
+        count: Int,
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        MetoliusCycleBuilder.pullUps(
+            count: count,
+            title: title,
+            instruction: instruction,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func repetitions(
+        count: Int,
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        MetoliusCycleBuilder.repetitions(
+            count: count,
+            title: title,
+            instruction: instruction,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func fixed(
+        title: String,
+        instruction: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        MetoliusCycleBuilder.fixed(
+            title: title,
+            instruction: instruction,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func choice(
+        title: String,
+        instruction: String,
+        accessory: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        MetoliusCycleBuilder.choice(
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+}
+
 // MARK: - Versioned plan definitions
 
 /// The schema version is part of the persisted document rather than being
@@ -510,8 +589,8 @@ enum PlanLibraryValidator {
             if activeDuration > step.duration {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration cannot exceed total duration."))
             }
-            if step.phase != .hang {
-                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang steps."))
+            if step.phase != .hang && step.phase != .pull {
+                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
         }
         if step.phase != .rest && step.targets.isEmpty {
@@ -1022,6 +1101,16 @@ enum BuiltInPlanLibraryDefinition {
             category = "manufacturer"
         }
 
+        let notes: [String]
+        if plan.id.hasPrefix("metolius.generic-ten-minute.") {
+            notes = [
+                "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
+                "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+            ]
+        } else {
+            notes = ["Preserved from the original Hang Ten routine catalog."]
+        }
+
         let metadata = PlanMetadata(
             title: plan.title,
             subtitle: plan.subtitle,
@@ -1032,7 +1121,7 @@ enum BuiltInPlanLibraryDefinition {
             category: category,
             tags: ["built-in", category],
             equipment: ["hangboard"],
-            notes: ["Preserved from the original Hang Ten routine catalog."],
+            notes: notes,
             disclaimer: "Warm up thoroughly, keep the board secure, and stop if you feel pain."
         )
 

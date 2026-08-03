@@ -60,9 +60,13 @@ appear outside the timed plan and should link back to the manufacturer.
 Concise app wording may paraphrase the prose, but it must retain all task data.
 Link to the source rather than copying a long guide verbatim.
 
-Set `provenance: .official` only when the prescription above is unchanged. Use
-`.adapted` when any task, count, time, order, or interval changes—even if the
-adaptation is sensible.
+Set `provenance: .official` only when the prescription above—including task
+timing and interval structure—is unchanged. Use `.adapted` when any task,
+count, time, order, or interval changes, even if the adaptation is sensible.
+A faithful expansion that keeps every source task, count, qualifier, and
+source-order relationship but adds explicit app-guided task/rest timing is an
+`.adapted` import; document the app timing rather than presenting it as the
+manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
@@ -81,13 +85,18 @@ semantic targets, source metadata, and provenance, then validates the bundled
 JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
 against the fixture.
 
-For Metolius ten-minute task cycles:
+For an unchanged official import, preserve the source's ten-minute task-cycle
+structure exactly and leave `timedWorkDuration` `nil` unless the source
+explicitly defines a continuous timed work segment. For a faithful adapted
+Metolius expansion:
 
-- create exactly ten `WorkoutStep` values;
-- set each `duration` to 60 seconds;
-- leave `timedWorkDuration` as `nil`;
-- preserve all tasks for that minute in one instruction;
-- tell the athlete to rest for whatever remains after completing the tasks.
+- retain ten source cycles of 60 seconds each and preserve task order;
+- give each listed task its own guided step and add an explicit rest step for
+  the unused portion of that source minute;
+- use five seconds per pull-up and one second per other counted repetition
+  only when Metolius gives no duration, and state that these are app defaults;
+- keep explicit source hang durations unchanged and preserve stay-on,
+  hand-switch, maximum, failure, and no-rest qualifiers.
 
 Do not set `timedWorkDuration` to the first hang duration. A minute can contain
 multiple hangs, pull-ups, a hand switch, or a “stay on” transition, and the

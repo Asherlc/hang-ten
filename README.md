@@ -16,8 +16,9 @@ cannot drift away from the hold.
   pairs, dimensional planes, recess depths, and exact-path highlights.
 - An audited Compact II hold map covering its jugs, flat and round slopers,
   29/19 mm edges, and 2-, 3-, and 4-finger pockets.
-- All three official Metolius board-flexible ten-minute sequences: Entry,
-  Intermediate, and Advanced.
+- All three source-linked Metolius board-flexible ten-minute sequences: Entry,
+  Intermediate, and Advanced, represented as faithful task-order expansions
+  with adapted guided timing.
 - Source-linked adapted protocols already merged into the project: Max Hangs,
   F80/F100 force-board sessions, Eva IntHangs, 7/3 Repeaters, Abrahangs,
   7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and Zlagboard 60/60.
@@ -103,15 +104,19 @@ scripts/export-plan-library.sh --check
 
 Metolius publishes a generic ten-minute guide whose tasks name semantic hold
 types such as “Round Sloper” and “Large Edge.” Hang Ten preserves those three
-task sequences and resolves each named type to the selected board's audited
-hold metadata.
+source sequences as ten 60-second cycles and resolves each named type to the
+selected board's audited hold metadata. The app expands each cycle into
+guided task and rest steps; when the source gives no duration, the app-defined
+adaptation uses five seconds per pull-up and one second per other counted
+repetition. Those timing defaults are app guidance, not Metolius prescriptions.
 
 Metolius also publishes separate Contact and Simulator 3D guides. Those use
 numbered holds tied to their respective boards, so they are intentionally not
 presented as Compact II routines. Add each only after its physical board map is
 implemented and its numbered holds can be resolved exactly.
 
-The additional research and coach protocols are visibly marked Adapted because
+The Metolius task expansions and the additional research and coach protocols
+are visibly marked Adapted because
 their app versions add guidance, warm-up/cooldown steps, or Compact II hold
 mapping. Their individual source links remain attached; they are not presented
 as unchanged manufacturer routines.
