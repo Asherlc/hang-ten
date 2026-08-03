@@ -75,6 +75,21 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [newer, older])
     }
 
+    func testImmediateFlushWaitsForInitialLegacyMigration() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        defaults.set(try JSONEncoder().encode([record]), forKey: "workout.sessionHistory")
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: directory.appendingPathComponent("legacy-migration-complete").path
+        ))
+        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), ["session-\(record.id.uuidString).json"])
+        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
+    }
+
     func testUnmarkedStoreRetriesMigrationFromValidLegacyHistory() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)

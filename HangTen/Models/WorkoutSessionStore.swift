@@ -257,39 +257,50 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         persistenceQueue.async { [self] in
-            let result: Result<Void, Error>
-            do {
-                let sessionsToWrite = sessions
-                let retainedIDs = Set(sessionsToWrite.map(\.id))
-                try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-                for session in sessionsToWrite {
-                    let data = try encoder.encode(session)
-                    try data.write(to: fileURL(for: session.id), options: .atomic)
-                }
-                for id in idsToRemove.subtracting(retainedIDs) {
-                    let fileURL = fileURL(for: id)
-                    guard fileManager.fileExists(atPath: fileURL.path) else { continue }
-                    try fileManager.removeItem(at: fileURL)
-                }
-                try removeUnretainedSessionFiles(except: retainedIDs)
-                if markLegacyMigrationComplete {
-                    try Data().write(to: migrationMarkerURL, options: .atomic)
-                }
-                if removeLegacyHistoryOnSuccess {
-                    defaults.removeObject(forKey: Key.sessionHistory)
-                }
-                if markLegacyMigrationComplete {
-                    setMigrationState(.notPending)
-                }
-                setPersistenceError(nil)
-                result = .success(())
-            } catch {
-                setPersistenceError("Could not save workout sessions: \(error.localizedDescription)")
-                result = .failure(error)
-            }
+            let result = write(
+                removing: idsToRemove,
+                markLegacyMigrationComplete: markLegacyMigrationComplete,
+                removeLegacyHistoryOnSuccess: removeLegacyHistoryOnSuccess
+            )
             DispatchQueue.main.async {
                 completion(result)
             }
+        }
+    }
+
+    private func write(
+        removing idsToRemove: Set<UUID>,
+        markLegacyMigrationComplete: Bool = false,
+        removeLegacyHistoryOnSuccess: Bool = false
+    ) -> Result<Void, Error> {
+        do {
+            let sessionsToWrite = sessions
+            let retainedIDs = Set(sessionsToWrite.map(\.id))
+            try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+            for session in sessionsToWrite {
+                let data = try encoder.encode(session)
+                try data.write(to: fileURL(for: session.id), options: .atomic)
+            }
+            for id in idsToRemove.subtracting(retainedIDs) {
+                let fileURL = fileURL(for: id)
+                guard fileManager.fileExists(atPath: fileURL.path) else { continue }
+                try fileManager.removeItem(at: fileURL)
+            }
+            try removeUnretainedSessionFiles(except: retainedIDs)
+            if markLegacyMigrationComplete {
+                try Data().write(to: migrationMarkerURL, options: .atomic)
+            }
+            if removeLegacyHistoryOnSuccess {
+                defaults.removeObject(forKey: Key.sessionHistory)
+            }
+            if markLegacyMigrationComplete {
+                setMigrationState(.notPending)
+            }
+            setPersistenceError(nil)
+            return .success(())
+        } catch {
+            setPersistenceError("Could not save workout sessions: \(error.localizedDescription)")
+            return .failure(error)
         }
     }
 
@@ -365,23 +376,20 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
             return
         }
 
-        enqueueWrite(
+        let migrationResult = write(
             removing: [],
             markLegacyMigrationComplete: true,
-            removeLegacyHistoryOnSuccess: true,
-            completion: { [weak self] migrationResult in
-                guard let self else { return }
-                switch migrationResult {
-                case .success:
-                    if case .failure(let error) = loadResult {
-                        self.setPersistenceError(error.localizedDescription)
-                    }
-                    self.finishLoading(loadResult)
-                case .failure:
-                    self.finishLoading(migrationResult)
-                }
-            }
+            removeLegacyHistoryOnSuccess: true
         )
+        switch migrationResult {
+        case .success:
+            if case .failure(let error) = loadResult {
+                setPersistenceError(error.localizedDescription)
+            }
+            finishLoading(loadResult)
+        case .failure:
+            finishLoading(migrationResult)
+        }
     }
 
     private func finishLoading(_ result: Result<Void, Error>) {
