@@ -83,7 +83,7 @@ struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     homeHeader
-                    featuredPlan
+                    favoritesSection
                     boardCard
                     quickStats
                 }
@@ -94,20 +94,24 @@ struct HomeView: View {
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = store.featuredPlan {
+                if let plan = reviewPlan {
                     PlanDetailView(plan: plan)
                 } else {
                     noCompatiblePlan
                 }
             }
 			.navigationDestination(isPresented: $showsWorkoutReview) {
-				if let plan = store.featuredPlan {
+				if let plan = reviewPlan {
 					WorkoutView(plan: plan)
 				} else {
 					noCompatiblePlan
 				}
 			}
         }
+    }
+
+    private var reviewPlan: TrainingPlan? {
+        store.featuredPlan
     }
 
     private var homeHeader: some View {
@@ -136,56 +140,31 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    private var featuredPlan: some View {
-        if let plan = store.featuredPlan {
-            NavigationLink(destination: PlanDetailView(plan: plan)) {
+    private var favoritesSection: some View {
+        if store.favoritePlans.isEmpty {
             VStack(alignment: .leading, spacing: 17) {
-                HStack {
-                    Pill(title: "NEXT UP", tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.28))
-                    Pill(
-                        title: plan.provenance.label.uppercased(),
-                        tint: Color.hangGreenDark,
-                        fill: Color.hangGreen.opacity(0.18)
-                    )
-                    Spacer()
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(plan.title)
-                        .font(.system(size: 23, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(plan.subtitle)
-                        .font(.system(size: 14, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                HStack(spacing: 8) {
-                    Label(plan.durationLabel, systemImage: "timer")
-                    Text("·")
-                    Label(plan.level, systemImage: "chart.bar")
-                }
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangInk.opacity(0.72))
-
-                HStack {
-                    Text("View session")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                    Spacer()
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 14, weight: .bold))
-                }
-                .foregroundStyle(Color.hangInk)
-                .padding(.top, 2)
+                SectionLabel(title: "Favorites")
+                Text("Favorite routines from Plans to keep them handy here.")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Your favorites will appear here when they are compatible with your selected board.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
             }
             .hangCard()
-            }
-            .buttonStyle(.plain)
         } else {
-            noCompatiblePlan
+            VStack(alignment: .leading, spacing: 12) {
+                SectionLabel(title: "Favorites")
+                ForEach(store.favoritePlans) { plan in
+                    FavoritePlanCard(
+                        plan: plan,
+                        board: store.board(for: plan),
+                        isFavorite: store.isFavorite(plan)
+                    ) {
+                        store.toggleFavorite(plan)
+                    }
+                }
+            }
         }
     }
 
@@ -324,10 +303,13 @@ struct PlansView: View {
                         .hangCard()
                     } else {
                         ForEach(store.plans) { plan in
-                            NavigationLink(destination: PlanDetailView(plan: plan)) {
-                                PlanCard(plan: plan, board: store.board(for: plan))
+                            FavoritePlanCard(
+                                plan: plan,
+                                board: store.board(for: plan),
+                                isFavorite: store.isFavorite(plan)
+                            ) {
+                                store.toggleFavorite(plan)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
 
@@ -405,6 +387,43 @@ private struct PlanCard: View {
             .foregroundStyle(Color.hangGreenDark)
         }
         .hangCard()
+    }
+}
+
+private struct FavoritePlanCard: View {
+    let plan: TrainingPlan
+    let board: TrainingBoard
+    let isFavorite: Bool
+    let onToggle: () -> Void
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            NavigationLink(destination: PlanDetailView(plan: plan)) {
+                PlanCard(plan: plan, board: board)
+            }
+            .buttonStyle(.plain)
+
+            Button(action: onToggle) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        isFavorite ? Color.hangGreen.opacity(0.28) : Color.hangCream,
+                        in: Circle()
+                    )
+                    .overlay {
+                        Circle()
+                            .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+                    }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isFavorite
+                    ? "Remove \(plan.title) from favorites"
+                    : "Add \(plan.title) to favorites"
+            )
+        }
     }
 }
 
