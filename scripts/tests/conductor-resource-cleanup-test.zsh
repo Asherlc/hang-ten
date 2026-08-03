@@ -30,6 +30,7 @@ case "$2" in
 == Devices ==
 -- iOS 26.5 --
     Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111) (Shutdown)
+    Hang Ten Conductor alpha Review Booted (74747474-7474-7474-7474-747474747474) (Booted)
     Hang Ten Conductor alpha Running (22222222-2222-2222-2222-222222222222) (Booted)
     Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333) (Shutdown)
     iPhone 17 Pro (44444444-4444-4444-4444-444444444444) (Shutdown)
@@ -175,6 +176,7 @@ assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7
 assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
 assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
+assert_not_contains '74747474-7474-7474-7474-747474747474' "$dry_run"
 assert_not_contains '10101010-1010-1010-1010-101010101010' "$dry_run"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
 assert_not_contains 'iPhone Review' "$dry_run"
@@ -204,6 +206,7 @@ assert_contains 'delete 77777777-7777-7777-7777-777777777777' "$prune_calls"
 assert_contains 'delete 88888888-8888-8888-8888-888888888888' "$prune_calls"
 assert_contains 'delete 99999999-9999-9999-9999-999999999999' "$prune_calls"
 assert_contains 'delete 20202020-2020-2020-2020-202020202020' "$prune_calls"
+assert_not_contains 'delete 74747474-7474-7474-7474-747474747474' "$prune_calls"
 assert_not_contains 'delete 10101010-1010-1010-1010-101010101010' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
@@ -244,6 +247,7 @@ assert_rejects_malformed_args_without_xcrun() {
 
 assert_rejects_malformed_args_without_xcrun 'prune typo' prune typo
 assert_rejects_malformed_args_without_xcrun 'prune --delete typo' prune --delete typo
+assert_rejects_malformed_args_without_xcrun 'prune empty option' prune ''
 assert_rejects_malformed_args_without_xcrun 'archive extra argument' archive extra
 
 : > "$call_log"

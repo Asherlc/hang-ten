@@ -140,7 +140,7 @@ case "${1:-}" in
     run_archive_cleanup
     ;;
   prune)
-    [[ "$#" -le 2 ]] || { usage >&2; exit 2; }
+    [[ "$#" -eq 1 || ( "$#" -eq 2 && "$2" == --delete ) ]] || { usage >&2; exit 2; }
     run_prune "${2:-}"
     ;;
   *) usage >&2; exit 2 ;;
