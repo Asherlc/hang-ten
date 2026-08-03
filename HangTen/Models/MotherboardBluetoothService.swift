@@ -146,11 +146,18 @@ final class MotherboardBluetoothService: ObservableObject {
         isTaring = true
     }
 
+    func cancelPreparationMeasurements() {
+        cancelTare()
+        cancelBodyweightMeasurement()
+        bodyweightKGF = nil
+    }
+
     @discardableResult
     func beginBodyweightMeasurement(duration: TimeInterval) -> Bool {
         guard state == .streaming, duration.isFinite, duration > 0 else { return false }
 
         cancelBodyweightMeasurement()
+        bodyweightKGF = nil
         let measurementDuration = min(duration, Self.maximumBodyweightMeasurementDuration)
         let nanoseconds = UInt64(measurementDuration * 1_000_000_000)
         isMeasuringBodyweight = true
@@ -353,9 +360,7 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func completeBodyweightMeasurement() {
         guard isMeasuringBodyweight else { return }
-        if let bodyweightMeanKGF {
-            bodyweightKGF = bodyweightMeanKGF
-        }
+        bodyweightKGF = bodyweightMeanKGF
         cancelBodyweightMeasurement()
     }
 

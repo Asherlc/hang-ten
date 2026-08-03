@@ -37,6 +37,7 @@ struct MotherboardCard: View {
                 peakLoadKGF: nil,
                 actualLoadedTime: 0,
                 plannedActiveDuration: 0,
+                bodyweightKGF: service.bodyweightKGF,
                 unit: settings.forceUnit,
                 state: service.state
             )
@@ -171,6 +172,7 @@ struct MotherboardMeterView: View {
     let peakLoadKGF: Double?
     let actualLoadedTime: TimeInterval
     let plannedActiveDuration: TimeInterval
+    let bodyweightKGF: Double?
     let unit: MotherboardForceUnit
     let state: MotherboardConnectionState
 

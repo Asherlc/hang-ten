@@ -142,7 +142,8 @@ struct MotherboardWorkoutPreparationView: View {
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
 
-            if let bodyweightKGF = preparation.bodyweightKGF, preparation.canContinue {
+            if let bodyweightKGF = preparation.bodyweightKGF,
+               preparation.canContinue(isStreaming: service.state == .streaming) {
                 Text("Captured baseline: \(forceText(bodyweightKGF))")
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
@@ -156,10 +157,13 @@ struct MotherboardWorkoutPreparationView: View {
                     .disabled(service.state != .streaming)
 
                 Button("Continue") {
+                    guard service.state == .streaming,
+                          preparation.canContinue(isStreaming: true) else { return }
                     onComplete(bodyweightKGF)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color.hangGreenDark)
+                .disabled(service.state != .streaming)
             }
 
             Button("Skip bodyweight", action: skipPreparation)
@@ -185,15 +189,9 @@ struct MotherboardWorkoutPreparationView: View {
     }
 
     private func handleStreamingLoss() {
-        if didRequestTare, preparation.step == .tare {
-            didRequestTare = false
-            preparation.completeTare(isStreaming: false)
-        }
-
-        if didStartBodyweightCapture, preparation.step == .bodyweight {
-            didStartBodyweightCapture = false
-            preparation.completeBodyweight(with: nil, isStreaming: false)
-        }
+        didRequestTare = false
+        didStartBodyweightCapture = false
+        preparation.invalidateForStreamingLoss()
     }
 
     private func retryTare() {
@@ -209,6 +207,9 @@ struct MotherboardWorkoutPreparationView: View {
     }
 
     private func skipPreparation() {
+        service.cancelPreparationMeasurements()
+        didRequestTare = false
+        didStartBodyweightCapture = false
         preparation.skip()
         onSkip()
     }

@@ -24,8 +24,9 @@ struct MotherboardWorkoutPreparation: Equatable {
     private(set) var result: MotherboardWorkoutPreparationResult = .inProgress
     private(set) var failure: MotherboardWorkoutPreparationFailure?
 
-    var canContinue: Bool {
-        guard step == .ready,
+    func canContinue(isStreaming: Bool) -> Bool {
+        guard isStreaming,
+              step == .ready,
               case let .completed(bodyweightKGF: capturedBodyweight) = result,
               let capturedBodyweight,
               capturedBodyweight.isFinite,
@@ -78,6 +79,20 @@ struct MotherboardWorkoutPreparation: Equatable {
         failure = nil
         step = .bodyweight
         result = .inProgress
+    }
+
+    mutating func invalidateForStreamingLoss() {
+        guard result != .skipped else { return }
+
+        switch step {
+        case .tare:
+            failure = .tareInterrupted
+        case .bodyweight, .ready:
+            bodyweightKGF = nil
+            failure = .bodyweightCaptureInterrupted
+            step = .bodyweight
+            result = .inProgress
+        }
     }
 
     mutating func skip() {

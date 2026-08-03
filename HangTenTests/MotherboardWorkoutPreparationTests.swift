@@ -17,7 +17,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertEqual(preparation.step, .ready)
         XCTAssertEqual(preparation.bodyweightKGF, 63.5)
         XCTAssertEqual(preparation.result, .completed(bodyweightKGF: 63.5))
-        XCTAssertTrue(preparation.canContinue)
+        XCTAssertTrue(preparation.canContinue(isStreaming: true))
     }
 
     func testInvalidBodyweightCaptureRemainsOnBodyweightStep() {
@@ -31,7 +31,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
             XCTAssertNil(preparation.bodyweightKGF)
             XCTAssertEqual(preparation.result, .inProgress)
             XCTAssertEqual(preparation.failure, .invalidBodyweightCapture)
-            XCTAssertFalse(preparation.canContinue)
+            XCTAssertFalse(preparation.canContinue(isStreaming: true))
 
             preparation.retryBodyweight()
         }
@@ -63,14 +63,30 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertNil(preparation.bodyweightKGF)
         XCTAssertEqual(preparation.result, .inProgress)
         XCTAssertEqual(preparation.failure, .bodyweightCaptureInterrupted)
-        XCTAssertFalse(preparation.canContinue)
+        XCTAssertFalse(preparation.canContinue(isStreaming: true))
 
         preparation.retryBodyweight()
         preparation.completeBodyweight(with: 63.5, isStreaming: true)
 
         XCTAssertEqual(preparation.step, .ready)
         XCTAssertEqual(preparation.bodyweightKGF, 63.5)
-        XCTAssertTrue(preparation.canContinue)
+        XCTAssertTrue(preparation.canContinue(isStreaming: true))
+    }
+
+    func testStreamingLossAfterReadyInvalidatesTheCapturedBaseline() {
+        var preparation = MotherboardWorkoutPreparation()
+        preparation.completeTare(isStreaming: true)
+        preparation.completeBodyweight(with: 63.5, isStreaming: true)
+
+        XCTAssertFalse(preparation.canContinue(isStreaming: false))
+
+        preparation.invalidateForStreamingLoss()
+
+        XCTAssertEqual(preparation.step, .bodyweight)
+        XCTAssertNil(preparation.bodyweightKGF)
+        XCTAssertEqual(preparation.result, .inProgress)
+        XCTAssertEqual(preparation.failure, .bodyweightCaptureInterrupted)
+        XCTAssertFalse(preparation.canContinue(isStreaming: false))
     }
 
     func testSkipIsTerminalAtEveryPreparationStage() {

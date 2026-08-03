@@ -78,6 +78,67 @@ rtk proxy xcodebuild -quiet -project HangTen.xcodeproj -scheme HangTen -configur
 Result: PASS, exit 0. Xcode emitted only the existing simulator build-number
 warnings.
 
+## Latest review-fix lifecycle evidence
+
+### RED
+
+Added deterministic regression coverage for a ready capture invalidated by
+stream loss, an empty second capture after a valid baseline, and cancellation
+of tare/bodyweight work while the sensor keeps streaming.
+
+Preparation RED command:
+
+```sh
+rtk proxy timeout 180s xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-lifecycle-red -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardWorkoutPreparationTests
+```
+
+Result: intentional RED, exit 65. The new test failed to compile because
+`invalidateForStreamingLoss()` and streaming-aware `canContinue` did not yet
+exist.
+
+Service RED command:
+
+```sh
+rtk proxy timeout 180s xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-lifecycle-service-red -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: intentional RED, exit 65. Compilation failed because the preparation
+view called the not-yet-existing `cancelPreparationMeasurements()` service API.
+
+### GREEN
+
+- A state loss now converts a ready capture back to bodyweight/retry,
+  clears its baseline, and prevents Continue unless the service remains
+  streaming.
+- Beginning a capture clears `bodyweightKGF`; completion assigns the sampled
+  mean directly, including `nil` for zero valid samples.
+- `cancelPreparationMeasurements()` cancels tare and capture without changing
+  connection state and clears the temporary baseline. Skip invokes it before
+  starting the workout countdown.
+- The accepted workout baseline now reaches `MotherboardMeterView`; the sensor
+  card passes the service baseline. Rendering remains deferred to Task 4.
+
+### Final verification
+
+Focused test command:
+
+```sh
+rtk proxy timeout 240s xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-lifecycle-final-tests -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardWorkoutPreparationTests -only-testing:HangTenTests/MotherboardWorkoutRecorderTests -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: PASS, exit 0. 55 tests ran: 7 preparation, 10 recorder, and 38
+Bluetooth-service tests. Xcode emitted only the pre-existing simulator
+build-number warnings.
+
+Debug simulator build command:
+
+```sh
+rtk proxy timeout 240s xcodebuild -quiet -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-lifecycle-final-build build
+```
+
+Result: PASS, exit 0. Xcode emitted only the pre-existing simulator
+build-number warnings.
+
 ## Review-fix evidence
 
 ### Cancellation and invalid-baseline handling

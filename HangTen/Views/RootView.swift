@@ -1195,6 +1195,7 @@ struct WorkoutView: View {
 			peakLoadKGF: recorder.currentStepID == step.id ? recorder.currentPeakLoadKGF : nil,
 			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
 			plannedActiveDuration: step.activeDuration,
+			bodyweightKGF: bodyweightKGF,
 			unit: motherboardSettingsStore.forceUnit,
 			state: motherboardBluetoothService.state
 		)
