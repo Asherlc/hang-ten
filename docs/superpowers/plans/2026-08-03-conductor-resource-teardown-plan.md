@@ -284,7 +284,7 @@ if pgrep -x Xcode >/dev/null || pgrep -x xcodebuild >/dev/null; then
   exit 1
 fi
 mkdir -p .context
-find "$derived_data_root" -mindepth 1 -maxdepth 1 -print0 | sort -z > .context/derived-data-before.bin
+find "$derived_data_root" -mindepth 1 -maxdepth 1 -print0 > .context/derived-data-before.bin
 tr '\0' '\n' < .context/derived-data-before.bin > .context/derived-data-before.txt
 du -sh "$derived_data_root"
 scripts/conductor-resource-cleanup.sh prune

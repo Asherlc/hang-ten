@@ -377,7 +377,7 @@ SIMCTL_CHILD_HANGTEN_REVIEW_PLANS=1 rtk xcrun simctl launch "${review_device_uui
   ownership-aware archive cleanup command:
 
 ```bash
-CONDUCTOR_WORKSPACE_PATH="$PWD" \
-CONDUCTOR_WORKSPACE_NAME="$CONDUCTOR_WORKSPACE_NAME" \
-scripts/conductor-resource-cleanup.sh archive
+CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+"$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 ```
