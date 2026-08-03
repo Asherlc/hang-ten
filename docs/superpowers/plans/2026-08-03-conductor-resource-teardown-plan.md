@@ -277,7 +277,9 @@ This operation is authorized by the user's one-time cache request but is not rec
 
 - [ ] **Step 1: Check active Xcode work and snapshot exact cache children**
 
-~~~
+~~~zsh
+set -euo pipefail
+
 derived_data_root=/Users/asherlc/Library/Developer/Xcode/DerivedData
 if pgrep -x Xcode >/dev/null || pgrep -x xcodebuild >/dev/null; then
   echo "Xcode or xcodebuild is active; stop before purging DerivedData." >&2
@@ -285,12 +287,15 @@ if pgrep -x Xcode >/dev/null || pgrep -x xcodebuild >/dev/null; then
 fi
 mkdir -p .context
 find "$derived_data_root" -mindepth 1 -maxdepth 1 -print0 > .context/derived-data-before.bin
-tr '\0' '\n' < .context/derived-data-before.bin > .context/derived-data-before.txt
 du -sh "$derived_data_root"
 scripts/conductor-resource-cleanup.sh prune
 ~~~
 
-Review the dry-run list. Every simulator target must be a shutdown Hang Ten review device. Every DerivedData target must be an immediate child of the explicit DerivedData path.
+This block is zsh-specific because the deletion step uses zsh path modifiers.
+Review the dry-run list and the NUL-delimited `.context/derived-data-before.bin`
+inventory before deletion. Every simulator target must be a shutdown Hang Ten
+review device. Every DerivedData target must be an immediate child of the
+explicit DerivedData path.
 
 - [ ] **Step 2: Delete stale Hang Ten simulators**
 
@@ -304,7 +309,9 @@ If a device became booted after the dry run, stop and leave it untouched.
 
 Use the already-written inventory, validate every line against the exact root, and delete each child—not the root itself:
 
-~~~
+~~~zsh
+set -euo pipefail
+
 derived_data_root=/Users/asherlc/Library/Developer/Xcode/DerivedData
 while IFS= read -r -d '' child; do
   parent="${child:h}"

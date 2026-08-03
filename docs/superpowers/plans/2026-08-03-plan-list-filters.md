@@ -336,6 +336,8 @@ rtk git commit -m "Use inline plan filter menus"
 - [ ] Build with a workspace-specific derived-data directory:
 
 ```bash
+set -euo pipefail
+
 workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
@@ -355,8 +357,12 @@ trap cleanup EXIT
 trap 'signal_exit 130' INT
 trap 'signal_exit 143' TERM
 
-review_device_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
-printf '%s\n' "$review_device_uuid" >> "$workspace_path/.context/conductor-owned-simulators"
+simulator_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
+if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
+  xcrun simctl delete "$simulator_uuid" || true
+  exit 1
+fi
+review_device_uuid="$simulator_uuid"
 
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData build
 ```
