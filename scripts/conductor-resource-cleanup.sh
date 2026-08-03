@@ -40,7 +40,8 @@ device_record_for_uuid() {
 run_archive_cleanup() {
   local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
   local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
-  local manifest devices uuid record device_name device_state workspace_prefix
+  local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix
+  local manifests=()
   local result_status=0
 
   if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
@@ -48,40 +49,47 @@ run_archive_cleanup() {
     return 1
   fi
 
-  manifest="$workspace_path/.context/conductor-owned-simulators"
+  owned_manifest="$workspace_path/.context/conductor-owned-simulators"
+  pending_manifest="$workspace_path/.context/conductor-pending-simulators"
   workspace_prefix="Hang Ten Conductor ${workspace_name} "
-  [[ -f "$manifest" ]] || return 0
+
+  [[ -f "$owned_manifest" ]] && manifests+=("$owned_manifest")
+  [[ -f "$pending_manifest" ]] && manifests+=("$pending_manifest")
+  [[ "${#manifests[@]}" -gt 0 ]] || return 0
+
   devices=$(xcrun simctl list devices)
 
-  while IFS= read -r uuid || [[ -n "$uuid" ]]; do
-    if ! is_uuid "$uuid"; then
-      print -u2 -- "Skipping malformed simulator UUID: $uuid"
-      result_status=1
-      continue
-    fi
+  for manifest in "${manifests[@]}"; do
+    while IFS= read -r uuid || [[ -n "$uuid" ]]; do
+      if ! is_uuid "$uuid"; then
+        print -u2 -- "Skipping malformed simulator UUID: $uuid"
+        result_status=1
+        continue
+      fi
 
-    record=$(device_record_for_uuid "$devices" "$uuid")
-    [[ -n "$record" ]] || continue
-    device_name=${record%%$'\t'*}
-    device_state=${record#*$'\t'}
+      record=$(device_record_for_uuid "$devices" "$uuid")
+      [[ -n "$record" ]] || continue
+      device_name=${record%%$'\t'*}
+      device_state=${record#*$'\t'}
 
-    if [[ "$device_name" != "$workspace_prefix"* ]]; then
-      print -u2 -- "Skipping simulator not owned by workspace $workspace_name: $uuid"
-      result_status=1
-      continue
-    fi
+      if [[ "$device_name" != "$workspace_prefix"* ]]; then
+        print -u2 -- "Skipping simulator not owned by workspace $workspace_name: $uuid"
+        result_status=1
+        continue
+      fi
 
-    if [[ "$device_state" == Booted ]] && ! xcrun simctl shutdown "$uuid"; then
-      print -u2 -- "Failed to shut down simulator: $uuid"
-      result_status=1
-      continue
-    fi
+      if [[ "$device_state" == Booted ]] && ! xcrun simctl shutdown "$uuid"; then
+        print -u2 -- "Failed to shut down simulator: $uuid"
+        result_status=1
+        continue
+      fi
 
-    if ! xcrun simctl delete "$uuid"; then
-      print -u2 -- "Failed to delete simulator: $uuid"
-      result_status=1
-    fi
-  done < "$manifest"
+      if ! xcrun simctl delete "$uuid"; then
+        print -u2 -- "Failed to delete simulator: $uuid"
+        result_status=1
+      fi
+    done < "$manifest"
+  done
 
   return "$result_status"
 }
