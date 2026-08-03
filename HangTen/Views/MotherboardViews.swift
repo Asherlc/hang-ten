@@ -400,7 +400,7 @@ enum MotherboardUserVisibleFormatting {
                   locale: locale,
                   minimumFractionDigits: 1,
                   maximumFractionDigits: 1
-              ) else {
+              ), formattedValue.count <= 32 else {
             return nil
         }
         return "\(formattedValue) \(unit.label)"
@@ -414,12 +414,12 @@ enum MotherboardUserVisibleFormatting {
         let maximumPercentage = 9_999.0
         let displayedPercentage = min(percentage, maximumPercentage)
         guard let formattedPercentage = percent(
-            displayedPercentage,
+            percentage > maximumPercentage ? maximumPercentage + 1 : displayedPercentage,
             locale: locale
         ) else {
             return nil
         }
-        return percentage > maximumPercentage ? "\(formattedPercentage)+" : formattedPercentage
+        return percentage > maximumPercentage ? "≥\(formattedPercentage)" : formattedPercentage
     }
 
     static func duration(

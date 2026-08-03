@@ -184,6 +184,16 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         )
     }
 
+    func testForceFormattingRejectsValuesWithAnEnormousDisplayString() {
+        XCTAssertNil(
+            MotherboardUserVisibleFormatting.force(
+                Double.greatestFiniteMagnitude,
+                unit: .kgf,
+                locale: Locale(identifier: "en_US")
+            )
+        )
+    }
+
     func testPercentageFormattingUsesTheRequestedLocalePercentStyle() {
         XCTAssertEqual(
             MotherboardUserVisibleFormatting.percentage(
@@ -201,20 +211,20 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         )
     }
 
-    func testPercentageOverflowUsesLocalizedLimitWithPlusSuffix() {
+    func testPercentageOverflowUsesLocalizedLowerBound() {
         XCTAssertEqual(
             MotherboardUserVisibleFormatting.percentage(
                 12_000,
                 locale: Locale(identifier: "en_US")
             ),
-            "9,999%+"
+            "≥10,000%"
         )
         XCTAssertEqual(
             MotherboardUserVisibleFormatting.percentage(
                 12_000,
                 locale: Locale(identifier: "de_DE")
             ),
-            "9.999\u{00a0}%+"
+            "≥10.000\u{00a0}%"
         )
     }
 
