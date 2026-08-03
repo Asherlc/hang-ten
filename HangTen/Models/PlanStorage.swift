@@ -599,7 +599,14 @@ enum PlanLibraryValidator {
                     )
                 }
             case .stopwatch, .undefined:
-                if segment.duration != nil {
+                if segment.kind == .rest && segment.duration == nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Fixed and rest segments require a duration."
+                        )
+                    )
+                } else if segment.duration != nil {
                     issues.append(
                         PlanValidationIssue(
                             path: durationPath,
