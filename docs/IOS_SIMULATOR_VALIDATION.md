@@ -27,16 +27,35 @@ workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
 mkdir -p "$workspace_path/.context"
+manifest="$workspace_path/.context/conductor-owned-simulators"
+pending_manifest="$workspace_path/.context/conductor-pending-simulators"
 simulator_name="Hang Ten Conductor $workspace_name Review"
 device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
 runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
 uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
 pending_simulator_uuid=""
+pending_recorded_simulator_uuid=""
 
 cleanup() {
   CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_uuid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_uuid" '$0 != uuid { print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_uuid=""
 }
 cleanup_pending_simulator() {
   if [[ -z "$pending_simulator_uuid" ]]; then
@@ -56,11 +75,17 @@ cleanup_on_exit() {
   original_status=$?
   trap - EXIT INT TERM
   cleanup_status=0
-  cleanup_pending_simulator || cleanup_status=$?
   archive_cleanup_status=0
-  cleanup || archive_cleanup_status=$?
-  if (( cleanup_status == 0 && archive_cleanup_status != 0 )); then
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
     cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
   fi
   if (( original_status != 0 )); then
     exit "$original_status"
@@ -81,12 +106,14 @@ if [[ -z "$pending_simulator_uuid" || ! "$pending_simulator_uuid" =~ $uuid_regex
   exit 1
 fi
 simulator_uuid="$pending_simulator_uuid"
-if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  if ! xcrun simctl delete "$pending_simulator_uuid"; then
-    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_uuid" >&2
-    exit 1
-  fi
+if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
+  pending_recorded_simulator_uuid="$simulator_uuid"
   pending_simulator_uuid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
+  pending_simulator_uuid="$simulator_uuid"
+fi
+if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
   exit 1
 fi
@@ -97,7 +124,8 @@ Use `$simulator_uuid` as `<uuid>` in the following commands. Do not use
 `booted`, a common device name, a broad process kill, or another workspace's
 review device in later commands. The trap is idempotent: it runs on successful
 completion, failure, or interruption and archives only manifest UUIDs whose
-names carry this workspace's exact marker.
+names carry this workspace's exact marker. It keeps pending simulator records
+until archive cleanup succeeds.
 
 ## Boot and wait for real readiness
 
@@ -253,11 +281,16 @@ See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 ## Cleanup
 
 The creation trap calls `scripts/conductor-resource-cleanup.sh archive`; leave
-it installed for the whole validation. It verifies each manifest entry against
-the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME ` name prefix, shuts
-down the matching device if necessary, and runs `xcrun simctl delete` on that
-exact UUID. This is immediate workspace cleanup, while the Conductor archive
-hook is a failsafe for an abandoned workspace.
+it installed for the whole validation. The created UUID is written to the
+pending manifest before the owned manifest so the archive mode can retry cleanup
+after an interrupted setup. Archive cleanup verifies each pending or owned
+manifest entry against the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME `
+name prefix, shuts down the matching device if necessary, and runs
+`xcrun simctl delete` on that exact UUID. Pending state is removed only after
+archive cleanup succeeds; the direct delete fallback is limited to a validated
+UUID whose pending record could not be written. This is immediate workspace
+cleanup, while the Conductor archive hook is a failsafe for an abandoned
+workspace.
 
 Do not delete or shut down a shared/unknown simulator. The cleanup script must
 not receive an unrecorded UUID or a simulator without the exact workspace

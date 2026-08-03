@@ -148,11 +148,13 @@ workspace_path="$PWD"
 workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
 context_path="$workspace_path/.context"
 manifest="$context_path/conductor-owned-simulators"
+pending_manifest="$context_path/conductor-pending-simulators"
 logs_path="$context_path/ci-test-logs"
 derived_data_path="$context_path/ci-test-derived-data"
 result_bundle_path="$context_path/HangTenTests.xcresult"
 uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
 pending_simulator_udid=""
+pending_recorded_simulator_udid=""
 mkdir -p "$logs_path" "$derived_data_path"
 touch "$manifest"
 simulator_name="Hang Ten Conductor ${workspace_name} iPhone 17 Review"
@@ -161,6 +163,22 @@ cleanup() {
   CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_udid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_udid" '$0 != uuid { print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_udid=""
 }
 cleanup_pending_simulator() {
   if [[ -z "$pending_simulator_udid" ]]; then
@@ -180,13 +198,19 @@ cleanup_on_exit() {
   original_status=$?
   trap - EXIT INT TERM
   cleanup_status=0
-  cleanup_pending_simulator || cleanup_status=$?
   archive_cleanup_status=0
-  cleanup || archive_cleanup_status=$?
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
+    cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
   result_cleanup_status=0
   rm -rf "$result_bundle_path" || result_cleanup_status=$?
-  if (( cleanup_status == 0 && archive_cleanup_status != 0 )); then
-    cleanup_status=$archive_cleanup_status
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
   fi
   if (( cleanup_status == 0 && result_cleanup_status != 0 )); then
     cleanup_status=$result_cleanup_status
@@ -212,12 +236,14 @@ if [[ -z "$pending_simulator_udid" || ! "$pending_simulator_udid" =~ $uuid_regex
   exit 1
 fi
 simulator_udid="$pending_simulator_udid"
-if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
-  if ! xcrun simctl delete "$pending_simulator_udid"; then
-    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_udid" >&2
-    exit 1
-  fi
+if printf '%s\n' "$simulator_udid" >> "$pending_manifest"; then
+  pending_recorded_simulator_udid="$simulator_udid"
   pending_simulator_udid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_udid" >&2
+  pending_simulator_udid="$simulator_udid"
+fi
+if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_udid" >&2
   exit 1
 fi

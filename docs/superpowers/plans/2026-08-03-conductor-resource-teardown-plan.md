@@ -4,20 +4,20 @@
 
 **Goal:** Make Hang Ten Conductor workspaces delete their owned simulators and workspace artifacts when work finishes, with a Conductor archive failsafe, a stale-simulator purge, and one explicit operator purge of the current Xcode DerivedData cache.
 
-**Architecture:** A zsh cleanup CLI owns simulator discovery, ownership validation, archive cleanup, and explicit one-time prune behavior. A thin Conductor archive wrapper invokes its archive mode. Shared repository settings enable the wrapper, automatic archive after merge, branch deletion on archive, and a cleanup prompt. Agent instructions and the iOS validation guide use the same manifest-and-delete contract. The Xcode cache purge remains operator-only and is never placed in recurring hooks.
+**Architecture:** A zsh cleanup CLI owns simulator discovery, ownership validation, pending and owned manifest archive cleanup, and explicit one-time prune behavior. A thin Conductor archive wrapper invokes its archive mode. Shared repository settings enable the wrapper, automatic archive after merge, branch deletion on archive, and a cleanup prompt. Agent instructions and the iOS validation guide use the same pending-registration, manifest, and delete contract. The Xcode cache purge remains operator-only and is never placed in recurring hooks.
 
 **Tech Stack:** zsh, `xcrun simctl`, Conductor repository TOML settings, Markdown instructions, shell-based mocked tests, and Python 3.12 `tomllib` validation.
 
 ## Global Constraints
 
 - Never delete global Conductor, Codex, Claude, Cursor, or other provider history, databases, caches, indexes, credentials, or session records in recurring cleanup.
-- Archive cleanup may delete only UUIDs listed in the current workspace's `.context/conductor-owned-simulators` manifest.
+- Archive cleanup may delete only UUIDs listed in the current workspace's `.context/conductor-pending-simulators` or `.context/conductor-owned-simulators` manifests.
 - An archive UUID is deletable only when its simulator name contains both the Hang Ten marker and the exact `CONDUCTOR_WORKSPACE_NAME` value.
 - Simulator operations must use explicit UUIDs; no `booted`, broad process kill, runtime-wide delete, or name-only delete is allowed for archive cleanup.
 - The one-time simulator prune defaults to dry-run and may delete only shutdown devices whose names identify them as Hang Ten review devices; booted, standard, and unrelated devices remain untouched.
 - Missing resources are already-clean; malformed UUIDs, missing ownership context, and ownership mismatches are reported as errors and never guessed through.
 - Validation build products, logs, screenshots, and temporary review artifacts stay under `.context`; documented local builds must not use the shared default DerivedData location.
-- Every newly created validation simulator is named with `Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME}`, recorded immediately in `.context/conductor-owned-simulators`, and deleted from an exit trap.
+- Every newly created validation simulator is named with `Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME}`, recorded immediately in `.context/conductor-pending-simulators` before `.context/conductor-owned-simulators`, and deleted from an exit trap.
 - Shared Conductor settings use `scripts.archive = "./scripts/conductor-archive.sh"`, `git.archive_on_merge = true`, and `git.delete_branch_on_archive = true`.
 - The one-time Xcode purge may remove only immediate children of `/Users/asherlc/Library/Developer/Xcode/DerivedData` after inventory and process checks; it must not touch DeviceSupport, Archives, UserData, simulators, provider state, or histories.
 - No new runtime or package dependency is introduced.
@@ -39,7 +39,7 @@
 - Create: `scripts/tests/conductor-resource-cleanup-test.zsh`
 
 **Interfaces:**
-- `archive` consumes `CONDUCTOR_WORKSPACE_PATH`, `CONDUCTOR_WORKSPACE_NAME`, and the optional manifest at `$CONDUCTOR_WORKSPACE_PATH/.context/conductor-owned-simulators`; it returns 0 only when every listed resource is deleted or already absent.
+- `archive` consumes `CONDUCTOR_WORKSPACE_PATH`, `CONDUCTOR_WORKSPACE_NAME`, and the optional manifests at `$CONDUCTOR_WORKSPACE_PATH/.context/conductor-pending-simulators` and `$CONDUCTOR_WORKSPACE_PATH/.context/conductor-owned-simulators`; it returns 0 only when every listed resource is deleted or already absent.
 - `prune` prints only shutdown Hang Ten review devices and performs no deletion.
 - `prune --delete` deletes only those shutdown Hang Ten devices and returns nonzero if a deletion fails.
 - Tests put a fake `xcrun` first in `PATH`; no real simulator is modified.
@@ -217,13 +217,13 @@ git commit -m "build: enforce Conductor workspace teardown"
 - Modify: README.md
 
 **Interfaces:**
-- The skill and guide use Task 1's CLI and .context/conductor-owned-simulators manifest.
+- The skill and guide use Task 1's CLI and the .context/conductor-pending-simulators and .context/conductor-owned-simulators manifests.
 - Validation keeps explicit UUID targeting and workspace-specific DerivedData while adding immediate registration and deletion.
 - The README's copyable local build command writes DerivedData under .context/DerivedData.
 
 - [ ] **Step 1: Update the validation skill**
 
-Require a simulator name beginning with Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME, immediate append of the created UUID to .context/conductor-owned-simulators before boot/build, an exit trap running scripts/conductor-resource-cleanup.sh archive on success/failure/interruption, and deletion of the exact UUID after validation. Keep the DEBUG review-route, landscape, spoken countdown, and HealthKit requirements unchanged.
+Require a simulator name beginning with Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME, immediate append of the created UUID to .context/conductor-pending-simulators before .context/conductor-owned-simulators and before boot/build, an exit trap running scripts/conductor-resource-cleanup.sh archive on success/failure/interruption, and deletion of the exact UUID after validation. Keep the DEBUG review-route, landscape, spoken countdown, and HealthKit requirements unchanged.
 
 - [ ] **Step 2: Update the simulator guide**
 
@@ -236,16 +236,35 @@ workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
 mkdir -p "$workspace_path/.context"
+manifest="$workspace_path/.context/conductor-owned-simulators"
+pending_manifest="$workspace_path/.context/conductor-pending-simulators"
 simulator_name="Hang Ten Conductor $workspace_name Review"
 device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
 runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
 uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
 pending_simulator_uuid=""
+pending_recorded_simulator_uuid=""
 
 cleanup() {
   CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_uuid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_uuid" '$0 != uuid { print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_uuid=""
 }
 cleanup_pending_simulator() {
   if [[ -z "$pending_simulator_uuid" ]]; then
@@ -265,11 +284,17 @@ cleanup_on_exit() {
   original_status=$?
   trap - EXIT INT TERM
   cleanup_status=0
-  cleanup_pending_simulator || cleanup_status=$?
   archive_cleanup_status=0
-  cleanup || archive_cleanup_status=$?
-  if (( cleanup_status == 0 && archive_cleanup_status != 0 )); then
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
     cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
   fi
   if (( original_status != 0 )); then
     exit "$original_status"
@@ -290,12 +315,14 @@ if [[ -z "$pending_simulator_uuid" || ! "$pending_simulator_uuid" =~ $uuid_regex
   exit 1
 fi
 simulator_uuid="$pending_simulator_uuid"
-if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  if ! xcrun simctl delete "$pending_simulator_uuid"; then
-    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_uuid" >&2
-    exit 1
-  fi
+if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
+  pending_recorded_simulator_uuid="$simulator_uuid"
   pending_simulator_uuid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
+  pending_simulator_uuid="$simulator_uuid"
+fi
+if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
   exit 1
 fi
