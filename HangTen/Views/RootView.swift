@@ -300,27 +300,22 @@ struct PlansView: View {
     @EnvironmentObject private var store: AppStore
     @State private var filters = PlanFilters()
 
-    private var compatiblePlans: [TrainingPlan] {
-        store.plans
-    }
-
-    private var availableMetadata: [PlanMetadata] {
-        compatiblePlans.compactMap { PlanCatalog.metadata(for: $0.id) }
-    }
-
-    private var filterOptions: PlanFilterOptions {
-        PlanFilterOptions(metadata: availableMetadata)
-    }
-
-    private var filteredPlans: [TrainingPlan] {
-        guard !filters.isEmpty else { return compatiblePlans }
-        return compatiblePlans.filter { plan in
-            guard let metadata = PlanCatalog.metadata(for: plan.id) else { return false }
-            return filters.matches(metadata)
-        }
-    }
-
     var body: some View {
+        let compatiblePlans = store.plans
+        let metadataByPlanID = Dictionary(
+            compatiblePlans.compactMap { plan in
+                PlanCatalog.metadata(for: plan.id).map { (plan.id, $0) }
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let filterOptions = PlanFilterOptions(metadata: Array(metadataByPlanID.values))
+        let filteredPlans = filters.isEmpty
+            ? compatiblePlans
+            : compatiblePlans.filter { plan in
+                guard let metadata = metadataByPlanID[plan.id] else { return false }
+                return filters.matches(metadata)
+            }
+
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
@@ -334,7 +329,7 @@ struct PlansView: View {
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
 
-                        filterBar
+                        filterBar(options: filterOptions)
                     }
 
                     if compatiblePlans.isEmpty {
@@ -369,15 +364,15 @@ struct PlansView: View {
         }
     }
 
-    private var filterBar: some View {
+    private func filterBar(options: PlanFilterOptions) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                if !filterOptions.levels.isEmpty {
+                if !options.levels.isEmpty {
                     Menu {
                         filterAllButton(isSelected: filters.levels.isEmpty) {
                             filters.levels.removeAll()
                         }
-                        ForEach(filterOptions.levels, id: \.self) { value in
+                        ForEach(options.levels, id: \.self) { value in
                             filterValueButton(value, isSelected: filters.levels.contains(value)) {
                                 filters.toggle(level: value)
                             }
@@ -396,12 +391,12 @@ struct PlansView: View {
                     ))
                 }
 
-                if !filterOptions.provenances.isEmpty {
+                if !options.provenances.isEmpty {
                     Menu {
                         filterAllButton(isSelected: filters.provenances.isEmpty) {
                             filters.provenances.removeAll()
                         }
-                        ForEach(filterOptions.provenances, id: \.self) { value in
+                        ForEach(options.provenances, id: \.self) { value in
                             filterValueButton(value.label, isSelected: filters.provenances.contains(value)) {
                                 filters.toggle(provenance: value)
                             }
@@ -420,12 +415,12 @@ struct PlansView: View {
                     ))
                 }
 
-                if !filterOptions.categories.isEmpty {
+                if !options.categories.isEmpty {
                     Menu {
                         filterAllButton(isSelected: filters.categories.isEmpty) {
                             filters.categories.removeAll()
                         }
-                        ForEach(filterOptions.categories, id: \.self) { value in
+                        ForEach(options.categories, id: \.self) { value in
                             filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
                                 filters.toggle(category: value)
                             }
@@ -444,12 +439,12 @@ struct PlansView: View {
                     ))
                 }
 
-                if !filterOptions.tags.isEmpty {
+                if !options.tags.isEmpty {
                     Menu {
                         filterAllButton(isSelected: filters.tags.isEmpty) {
                             filters.tags.removeAll()
                         }
-                        ForEach(filterOptions.tags, id: \.self) { value in
+                        ForEach(options.tags, id: \.self) { value in
                             filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
                                 filters.toggle(tag: value)
                             }
@@ -468,12 +463,12 @@ struct PlansView: View {
                     ))
                 }
 
-                if !filterOptions.equipment.isEmpty {
+                if !options.equipment.isEmpty {
                     Menu {
                         filterAllButton(isSelected: filters.equipment.isEmpty) {
                             filters.equipment.removeAll()
                         }
-                        ForEach(filterOptions.equipment, id: \.self) { value in
+                        ForEach(options.equipment, id: \.self) { value in
                             filterValueButton(displayName(value), isSelected: filters.equipment.contains(value)) {
                                 filters.toggle(equipment: value)
                             }

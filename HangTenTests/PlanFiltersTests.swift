@@ -95,4 +95,15 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(metadata?.tags, ["built-in", "research"])
         XCTAssertEqual(metadata?.equipment, ["hangboard"])
     }
+
+    func testMetadataLookupMapPreservesFirstEntryForDuplicateIDs() {
+        let first = metadata(level: "Entry")
+        let second = metadata(level: "Advanced")
+        let lookup = PlanLibraryStore.metadataByPlanID([
+            PlanDefinition(id: "duplicate", metadata: first, boardID: nil, blocks: []),
+            PlanDefinition(id: "duplicate", metadata: second, boardID: nil, blocks: [])
+        ])
+
+        XCTAssertEqual(lookup["duplicate"], first)
+    }
 }

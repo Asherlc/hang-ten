@@ -872,6 +872,14 @@ struct PlanLibraryStore {
         plans.first { $0.id == id }
     }
 
+    static func metadataByPlanID(_ plans: [PlanDefinition]) -> [String: PlanMetadata] {
+        plans.reduce(into: [String: PlanMetadata]()) { metadataByID, plan in
+            if metadataByID[plan.id] == nil {
+                metadataByID[plan.id] = plan.metadata
+            }
+        }
+    }
+
     static let builtIn: PlanLibraryStore = loadBuiltIn()
 
     private static func loadBuiltIn() -> PlanLibraryStore {
@@ -1140,6 +1148,8 @@ enum PlanCatalog {
         return result
     }()
 
+    private static let metadataByID = PlanLibraryStore.metadataByPlanID(store.definition.plans)
+
     static let all: [TrainingPlan] = store.plans
 
     static let metoliusEntry = required("metolius.generic-ten-minute.entry")
@@ -1164,7 +1174,7 @@ enum PlanCatalog {
     }
 
     static func metadata(for id: String) -> PlanMetadata? {
-        store.definition.plans.first { $0.id == id }?.metadata
+        metadataByID[id]
     }
 
     static var definition: PlanLibraryDefinition {
