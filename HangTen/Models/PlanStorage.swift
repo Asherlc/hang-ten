@@ -1163,6 +1163,10 @@ enum PlanCatalog {
         store.plan(id: id)
     }
 
+    static func metadata(for id: String) -> PlanMetadata? {
+        store.definition.plans.first { $0.id == id }?.metadata
+    }
+
     static var definition: PlanLibraryDefinition {
         store.definition
     }
