@@ -954,14 +954,25 @@ struct PlanDefinitionResolver {
                 ]
             }
             if let activeDuration = step.activeDuration {
-                return [
-                    WorkoutSegment(
-                        kind: .work,
-                        target: targets.first,
-                        timing: .fixed,
-                        duration: activeDuration
+                let workSegment = WorkoutSegment(
+                    kind: .work,
+                    target: targets.first,
+                    timing: .fixed,
+                    duration: activeDuration
+                )
+                var segments = [workSegment]
+                let restDuration = step.duration - activeDuration
+                if restDuration > 0, restDuration.isFinite {
+                    segments.append(
+                        WorkoutSegment(
+                            kind: .rest,
+                            target: nil,
+                            timing: .fixed,
+                            duration: restDuration
+                        )
                     )
-                ]
+                }
+                return segments
             }
             if let target = targets.first {
                 return [

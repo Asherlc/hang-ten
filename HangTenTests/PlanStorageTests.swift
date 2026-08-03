@@ -148,7 +148,10 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             steps[1].segments,
-            [WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)]
+            [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 20)
+            ]
         )
         XCTAssertEqual(
             steps[2].segments,
