@@ -101,6 +101,53 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 }
 
+final class WorkoutClockTests: XCTestCase {
+    func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 0.4, accuracy: 0.000_1)
+
+        now += 1.3
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+    }
+
+    func testInitialCountdownShowsThreeTwoOneBeforeElapsedBegins() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 3)
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 0)
+    }
+
+    func testPauseAndResumePreserveElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1.7
+        clock.pause()
+        now += 20
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 2.1, accuracy: 0.000_1)
+    }
+}
+
 final class WorkoutSessionPolicyTests: XCTestCase {
     func testPausedSessionAtStepOneIsNotAFirstStartAndResumesImmediately() {
         let originalRoutineStart = Date(timeIntervalSinceReferenceDate: 1_000)

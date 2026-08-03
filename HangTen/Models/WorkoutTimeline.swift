@@ -1,5 +1,60 @@
 import Foundation
 
+struct WorkoutClock {
+    private let now: () -> TimeInterval
+    private var pausedElapsed: TimeInterval = 0
+    private var activeStart: TimeInterval?
+
+    init(now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }) {
+        self.now = now
+    }
+
+    var isRunning: Bool {
+        activeStart != nil
+    }
+
+    var elapsed: TimeInterval {
+        let activeElapsed = activeStart.map { max(0, now() - $0) } ?? 0
+        return pausedElapsed + activeElapsed
+    }
+
+    var countdownRemaining: Int {
+        guard pausedElapsed == 0, let activeStart else {
+            return 0
+        }
+
+        let remaining = activeStart - now()
+        guard remaining > 0 else {
+            return 0
+        }
+        return max(1, Int(ceil(remaining)))
+    }
+
+    mutating func start(initialCountdown: TimeInterval) {
+        guard activeStart == nil else {
+            return
+        }
+        activeStart = now() + max(0, initialCountdown) - pausedElapsed
+    }
+
+    mutating func pause() {
+        pausedElapsed = elapsed
+        activeStart = nil
+    }
+
+    mutating func reset() {
+        pausedElapsed = 0
+        activeStart = nil
+    }
+
+    mutating func seek(to elapsed: TimeInterval) {
+        pausedElapsed = max(0, elapsed)
+        if activeStart != nil {
+            activeStart = now() - pausedElapsed
+        }
+    }
+}
+
 struct WorkoutTimeline {
     private let steps: [WorkoutStep]
     private let startOffsets: [TimeInterval]
