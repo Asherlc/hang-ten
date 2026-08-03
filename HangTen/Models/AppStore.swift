@@ -10,7 +10,7 @@ final class AppStore: ObservableObject {
 	@Published private(set) var healthAuthorizationError: String?
 	@Published private(set) var hasRequestedHealthAuthorization: Bool
 
-	private let healthKitService: WorkoutHealthStore
+	private let healthKitService: ContextualWorkoutHealthStore
 	private let workoutHistoryService: WorkoutHistoryService
 	private let defaults: UserDefaults
 	private var preservesCompletionError = false
@@ -20,17 +20,29 @@ final class AppStore: ObservableObject {
 		workoutHistoryStore: any WorkoutHistoryPersistence = LocalWorkoutHistoryStore(),
 		defaults: UserDefaults = .standard
 	) {
-		self.healthKitService = healthKitService
+		let contextualHealthStore = ContextualWorkoutHealthStore(healthKitService)
+		self.healthKitService = contextualHealthStore
 		self.defaults = defaults
 		let hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 		workoutHistoryService = WorkoutHistoryService(
-			healthStore: healthKitService,
+			healthStore: contextualHealthStore,
 			persistence: workoutHistoryStore,
 			healthKitSyncEnabled: hasRequestedHealthAuthorization
 		)
-		healthAuthorizationState = healthKitService.authorizationState
+		healthAuthorizationState = contextualHealthStore.authorizationState
 		self.hasRequestedHealthAuthorization = hasRequestedHealthAuthorization
 		workoutHistory = workoutHistoryService.snapshot
+	}
+
+	convenience init(
+		healthKitService: any HealthWorkoutSaving,
+		defaults: UserDefaults = .standard
+	) {
+		self.init(
+			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+			workoutHistoryStore: LocalWorkoutHistoryStore(),
+			defaults: defaults
+		)
 	}
 
 	var sessionsCompleted: Int { workoutHistory.sessionCount }
@@ -65,7 +77,7 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
-        let ids = step.targets.flatMap { resolvedHoldIDs(for: $0, on: board) }
+        let ids = step.targets.flatMap { BoardTargetResolver.resolveHoldIDs(for: $0, on: board) }
         return Set(ids)
     }
 
@@ -74,7 +86,7 @@ final class AppStore: ObservableObject {
             guard let feature = target.feature,
                   !target.fallbackFeatures.isEmpty else { return false }
             let hasExactMatch = board.holds.contains { $0.features.contains(feature) }
-            return !hasExactMatch && !resolvedHoldIDs(for: target, on: board).isEmpty
+            return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
         }
     }
 
@@ -83,38 +95,40 @@ final class AppStore: ObservableObject {
 
         return plan.steps
             .flatMap(\.targets)
-            .allSatisfy { !resolvedHoldIDs(for: $0, on: board).isEmpty }
+            .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
     }
 
-    private func resolvedHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
-        if !target.holdIDs.isEmpty {
-            let availableIDs = Set(board.holds.map(\.id))
-            return target.holdIDs.filter(availableIDs.contains)
-        }
-        if let feature = target.feature {
-            let exactMatches = board.holds
-                .filter { $0.features.contains(feature) }
-                .map(\.id)
-            if !exactMatches.isEmpty {
-                return exactMatches
-            }
-            for fallback in target.fallbackFeatures {
-                let fallbackMatches = board.holds
-                    .filter { $0.features.contains(fallback) }
-                    .map(\.id)
-                if !fallbackMatches.isEmpty {
-                    return fallbackMatches
-                }
-            }
-            return []
-        }
-        guard let kind = target.kind else { return [] }
-        return board.holds.filter { $0.kind == kind }.map(\.id)
-    }
-
-	func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+    func markSessionComplete(
+        _ plan: TrainingPlan,
+        board: TrainingBoard,
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
+        startDate: Date,
+        endDate: Date
+    ) {
 		healthAuthorizationError = nil
 		preservesCompletionError = false
+
+		let recordingErrorMessage: String?
+        do {
+            let activitySegments = try WorkoutActivityRecorder().segments(
+                for: plan,
+                on: board,
+                stopwatchDurations: stopwatchDurations
+            )
+			healthKitService.recordActivityContext(
+				planTitle: plan.title,
+				startDate: startDate,
+				endDate: endDate,
+				boardID: board.id,
+				boardName: board.name,
+				activitySegments: activitySegments
+			)
+			recordingErrorMessage = nil
+        } catch {
+			recordingErrorMessage = "Session logged in Hang Ten, but \(error.localizedDescription)"
+			healthAuthorizationError = recordingErrorMessage
+        }
+
 		if hasRequestedHealthAuthorization {
 			workoutHistory = WorkoutHistorySnapshot(
 				entries: workoutHistory.entries,
@@ -126,8 +140,21 @@ final class AppStore: ObservableObject {
 			startDate: startDate,
 			endDate: endDate
 		) { [weak self] in
-			self?.publishWorkoutHistory(errorContext: .completion)
+			self?.publishWorkoutHistory(
+				errorContext: .completion,
+				recordingErrorMessage: recordingErrorMessage
+			)
 		}
+    }
+
+    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+        markSessionComplete(
+            plan,
+            board: selectedBoard,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate
+        )
     }
 
 	func refreshHealthAuthorization() {
@@ -146,7 +173,7 @@ final class AppStore: ObservableObject {
 			)
 		}
 		workoutHistoryService.refresh { [weak self] in
-			self?.publishWorkoutHistory(errorContext: .refresh)
+			self?.publishWorkoutHistory(errorContext: .refresh, recordingErrorMessage: nil)
 		}
 	}
 
@@ -166,11 +193,19 @@ final class AppStore: ObservableObject {
 		}
 	}
 
-	private func publishWorkoutHistory(errorContext: HistoryErrorContext) {
+	private func publishWorkoutHistory(
+		errorContext: HistoryErrorContext,
+		recordingErrorMessage: String?
+	) {
 		workoutHistory = workoutHistoryService.snapshot
 		guard workoutHistoryService.lastError != nil else {
-			healthAuthorizationError = nil
-			preservesCompletionError = false
+			healthAuthorizationError = recordingErrorMessage
+			preservesCompletionError = recordingErrorMessage != nil
+			return
+		}
+		guard recordingErrorMessage == nil else {
+			healthAuthorizationError = recordingErrorMessage
+			preservesCompletionError = true
 			return
 		}
 		switch errorContext {
@@ -189,5 +224,175 @@ final class AppStore: ObservableObject {
 	private enum HistoryErrorContext {
 		case completion
 		case refresh
+	}
+}
+
+private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
+	private struct ActivityContext {
+		let planTitle: String
+		let startDate: Date
+		let endDate: Date
+		let boardID: String
+		let boardName: String
+		let activitySegments: [RecordedActivitySegment]
+	}
+
+	private let base: any WorkoutHealthStore
+	private var activityContexts: [ActivityContext] = []
+
+	init(_ base: any WorkoutHealthStore) {
+		self.base = base
+	}
+
+	var isHealthDataAvailable: Bool {
+		base.isHealthDataAvailable
+	}
+
+	var authorizationState: HealthAuthorizationState {
+		base.authorizationState
+	}
+
+	func requestAuthorization(
+		completion: @escaping (HealthAuthorizationState, Error?) -> Void
+	) {
+		base.requestAuthorization(completion: completion)
+	}
+
+	func fetchHangTenWorkouts(
+		completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
+	) {
+		base.fetchHangTenWorkouts(completion: completion)
+	}
+
+	func recordActivityContext(
+		planTitle: String,
+		startDate: Date,
+		endDate: Date,
+		boardID: String,
+		boardName: String,
+		activitySegments: [RecordedActivitySegment]
+	) {
+		activityContexts.append(
+			ActivityContext(
+				planTitle: planTitle,
+				startDate: startDate,
+				endDate: endDate,
+				boardID: boardID,
+				boardName: boardName,
+				activitySegments: activitySegments
+			)
+		)
+	}
+
+	func saveCompletedWorkout(
+		id: UUID,
+		title: String,
+		startDate: Date,
+		endDate: Date,
+		completion: @escaping (Result<UUID, Error>) -> Void
+	) {
+		guard let contextIndex = activityContexts.firstIndex(where: {
+			$0.planTitle == title &&
+				$0.startDate == startDate &&
+				$0.endDate == endDate
+		}) else {
+			base.saveCompletedWorkout(
+				id: id,
+				title: title,
+				startDate: startDate,
+				endDate: endDate,
+				completion: completion
+			)
+			return
+		}
+
+		let context = activityContexts.remove(at: contextIndex)
+		base.saveCompletedWorkout(
+			id: id,
+			title: title,
+			startDate: startDate,
+			endDate: endDate,
+			boardID: context.boardID,
+			boardName: context.boardName,
+			activitySegments: context.activitySegments,
+			completion: completion
+		)
+	}
+}
+
+private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
+	private let savingService: any HealthWorkoutSaving
+
+	init(_ savingService: any HealthWorkoutSaving) {
+		self.savingService = savingService
+	}
+
+	var isHealthDataAvailable: Bool {
+		savingService.authorizationState != .unavailable
+	}
+
+	var authorizationState: HealthAuthorizationState {
+		savingService.authorizationState
+	}
+
+	func requestAuthorization(
+		completion: @escaping (HealthAuthorizationState, Error?) -> Void
+	) {
+		savingService.requestAuthorization(completion: completion)
+	}
+
+	func fetchHangTenWorkouts(
+		completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
+	) {
+		completion(.success([]))
+	}
+
+	func saveCompletedWorkout(
+		id: UUID,
+		title: String,
+		startDate: Date,
+		endDate: Date,
+		completion: @escaping (Result<UUID, Error>) -> Void
+	) {
+		savingService.saveCompletedWorkout(
+			title: title,
+			startDate: startDate,
+			endDate: endDate,
+			boardID: "",
+			boardName: "",
+			activitySegments: []
+		) { error in
+			if let error {
+				completion(.failure(error))
+			} else {
+				completion(.success(id))
+			}
+		}
+	}
+
+	func saveCompletedWorkout(
+		id: UUID,
+		title: String,
+		startDate: Date,
+		endDate: Date,
+		boardID: String,
+		boardName: String,
+		activitySegments: [RecordedActivitySegment],
+		completion: @escaping (Result<UUID, Error>) -> Void
+	) {
+		savingService.saveCompletedWorkout(
+			title: title,
+			startDate: startDate,
+			endDate: endDate,
+			boardID: boardID,
+			boardName: boardName,
+			activitySegments: activitySegments
+		) { error in
+			if let error {
+				completion(.failure(error))
+			} else {
+				completion(.success(id))
+			}
+		}
 	}
 }

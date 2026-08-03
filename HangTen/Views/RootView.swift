@@ -298,8 +298,24 @@ private struct StatCard: View {
 
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
+    @State private var filters = PlanFilters()
 
     var body: some View {
+        let compatiblePlans = store.plans
+        let metadataByPlanID = Dictionary(
+            compatiblePlans.compactMap { plan in
+                PlanCatalog.metadata(for: plan.id).map { (plan.id, $0) }
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let filterOptions = PlanFilterOptions(metadata: Array(metadataByPlanID.values))
+        let filteredPlans = filters.isEmpty
+            ? compatiblePlans
+            : compatiblePlans.filter { plan in
+                guard let metadata = metadataByPlanID[plan.id] else { return false }
+                return filters.matches(metadata)
+            }
+
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
@@ -312,9 +328,11 @@ struct PlansView: View {
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
+
+                        filterBar(options: filterOptions)
                     }
 
-                    if store.plans.isEmpty {
+                    if compatiblePlans.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             SectionLabel(title: "No compatible routines")
                             Text("No plan currently resolves every required hold on \(store.selectedBoard.name).")
@@ -322,8 +340,12 @@ struct PlansView: View {
                                 .foregroundStyle(Color.hangInk)
                         }
                         .hangCard()
+                    } else if filteredPlans.isEmpty {
+                        NoMatchingPlansCard {
+                            filters.clear()
+                        }
                     } else {
-                        ForEach(store.plans) { plan in
+                        ForEach(filteredPlans) { plan in
                             NavigationLink(destination: PlanDetailView(plan: plan)) {
                                 PlanCard(plan: plan, board: store.board(for: plan))
                             }
@@ -340,6 +362,197 @@ struct PlansView: View {
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
         }
+    }
+
+    private func filterBar(options: PlanFilterOptions) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if !options.levels.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.levels.isEmpty) {
+                            filters.levels.removeAll()
+                        }
+                        ForEach(options.levels, id: \.self) { value in
+                            filterValueButton(value, isSelected: filters.levels.contains(value)) {
+                                filters.toggle(level: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Difficulty",
+                            selectionCount: filters.levels.count,
+                            singleSelection: filters.levels.first
+                        )
+                    }
+                    .accessibilityLabel("Filter by difficulty")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.levels.count,
+                        singleSelection: filters.levels.first
+                    ))
+                }
+
+                if !options.provenances.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.provenances.isEmpty) {
+                            filters.provenances.removeAll()
+                        }
+                        ForEach(options.provenances, id: \.self) { value in
+                            filterValueButton(value.label, isSelected: filters.provenances.contains(value)) {
+                                filters.toggle(provenance: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Type",
+                            selectionCount: filters.provenances.count,
+                            singleSelection: filters.provenances.first?.label
+                        )
+                    }
+                    .accessibilityLabel("Filter by type")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.provenances.count,
+                        singleSelection: filters.provenances.first?.label
+                    ))
+                }
+
+                if !options.categories.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.categories.isEmpty) {
+                            filters.categories.removeAll()
+                        }
+                        ForEach(options.categories, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
+                                filters.toggle(category: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Category",
+                            selectionCount: filters.categories.count,
+                            singleSelection: filters.categories.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by category")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.categories.count,
+                        singleSelection: filters.categories.first.map(displayName)
+                    ))
+                }
+
+                if !options.tags.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.tags.isEmpty) {
+                            filters.tags.removeAll()
+                        }
+                        ForEach(options.tags, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
+                                filters.toggle(tag: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Tags",
+                            selectionCount: filters.tags.count,
+                            singleSelection: filters.tags.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by tags")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.tags.count,
+                        singleSelection: filters.tags.first.map(displayName)
+                    ))
+                }
+
+                if !options.equipment.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.equipment.isEmpty) {
+                            filters.equipment.removeAll()
+                        }
+                        ForEach(options.equipment, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.equipment.contains(value)) {
+                                filters.toggle(equipment: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Equipment",
+                            selectionCount: filters.equipment.count,
+                            singleSelection: filters.equipment.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by equipment")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.equipment.count,
+                        singleSelection: filters.equipment.first.map(displayName)
+                    ))
+                }
+
+                if !filters.isEmpty {
+                    Button("Clear") {
+                        filters.clear()
+                    }
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .accessibilityLabel("Clear plan filters")
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func filterAllButton(isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label("All", systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterValueButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterMenuLabel(title: String, selectionCount: Int, singleSelection: String?) -> some View {
+        let isActive = selectionCount > 0
+        let label = if selectionCount == 1 {
+            singleSelection ?? title
+        } else if selectionCount > 1 {
+            "\(selectionCount) selected"
+        } else {
+            title
+        }
+
+        return HStack(spacing: 5) {
+            Text(label)
+            Image(systemName: "chevron.down")
+                .font(.system(size: 10, weight: .bold))
+        }
+        .font(.system(size: 13, weight: .bold, design: .rounded))
+        .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
+        .padding(.horizontal, 11)
+        .padding(.vertical, 8)
+        .background(
+            isActive ? Color.hangGreen.opacity(0.25) : Color.hangCream,
+            in: Capsule()
+        )
+        .overlay {
+            Capsule()
+                .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+
+    private func filterMenuAccessibilityValue(selectionCount: Int, singleSelection: String?) -> String {
+        if selectionCount == 0 {
+            return "All"
+        } else if selectionCount == 1 {
+            return singleSelection ?? "1 selected"
+        } else {
+            return "\(selectionCount) selected"
+        }
+    }
+
+    private func displayName(_ rawValue: String) -> String {
+        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
     private var sourceCard: some View {
@@ -361,6 +574,23 @@ struct PlansView: View {
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangGreenDark)
             }
+        }
+        .hangCard()
+    }
+}
+
+private struct NoMatchingPlansCard: View {
+    let onClear: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionLabel(title: "No matching routines")
+            Text("No routines match these filters")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Button("Clear filters", action: onClear)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangGreenDark)
         }
         .hangCard()
     }
@@ -653,6 +883,28 @@ enum WorkoutSessionPolicy {
     }
 }
 
+enum WorkoutStopwatchLifecycle {
+    static func finalizeStopwatches(
+        for stepID: String,
+        at date: Date,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        for key in stopwatches.keys where key.stepID == stepID {
+            finalizeStopwatch(for: key, at: date, in: &stopwatches)
+        }
+    }
+
+    static func finalizeStopwatch(
+        for key: WorkoutActivitySegmentKey,
+        at date: Date,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+        stopwatch.stop(at: date)
+        stopwatches[key] = stopwatch
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -669,6 +921,7 @@ struct WorkoutView: View {
     @State private var showsStepPicker = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
+    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -705,6 +958,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
+							date: context.date,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -716,6 +970,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
+							date: context.date,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -729,6 +984,17 @@ struct WorkoutView: View {
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
+				}
+				.onChange(of: isComplete, initial: true) { _, complete in
+					guard complete else { return }
+					finalizeAllStopwatches(at: context.date)
+				}
+				.onChange(of: step.id) { previousStepID, _ in
+					finalizeStopwatches(for: previousStepID, at: context.date)
+				}
+				.onChange(of: isResting) { wasResting, resting in
+					guard resting, !wasResting else { return }
+					finalizeCurrentStopwatch(at: context.date)
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
@@ -782,16 +1048,18 @@ struct WorkoutView: View {
 			}
 
 			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
-			   startedAt == nil {
-				toggleRunning()
-			}
-			#endif
+				   startedAt == nil {
+					toggleRunning()
+				}
+				#endif
+			initializeStopwatches()
 		}
 		.onChange(of: scenePhase) { _, phase in
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
 		.onDisappear {
+			finalizeAllStopwatches(at: Date())
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
@@ -801,6 +1069,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
+		date: Date,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -817,7 +1086,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -841,6 +1110,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
+		date: Date,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -885,7 +1155,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
 					.frame(width: 224)
 			}
 		}
@@ -1086,9 +1356,13 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(step: WorkoutStep, isComplete: Bool, countdown: Int) -> some View {
+    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, date: Date) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
+
+            if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
+                stopwatchControl(for: key, at: date)
+            }
 
             Button {
                 skipCurrentStep()
@@ -1140,14 +1414,52 @@ struct WorkoutView: View {
         .buttonStyle(.plain)
     }
 
-    private func toggleRunning() {
-        if let startedAt {
-            if startedAt > Date() {
-                cancelCountdown()
-                return
+    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at date: Date) -> some View {
+        let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
+        let elapsed = stopwatch.elapsed(at: date) ?? 0
+        let label = stopwatch.isFinalized
+            ? "Stopwatch finalized"
+            : stopwatch.isRunning
+                ? "Stop stopwatch"
+                : stopwatch.hasStarted
+                    ? "Resume stopwatch"
+                    : "Start stopwatch"
+
+        return VStack(spacing: 6) {
+            Text(stopwatchTimeLabel(elapsed))
+                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+                .foregroundStyle(Color.hangInk)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                toggleStopwatch(for: key, at: Date())
+            } label: {
+                Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .padding(.vertical, 10)
+                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
             }
-            pausedElapsed += Date().timeIntervalSince(startedAt)
-            self.startedAt = nil
+            .buttonStyle(.plain)
+            .disabled(stopwatch.isFinalized)
+            .accessibilityLabel(label)
+            .accessibilityIdentifier("workout.stopwatch.toggle")
+        }
+        .padding(.vertical, 4)
+        .accessibilityIdentifier("workout.stopwatch")
+    }
+
+    private func toggleRunning() {
+		if let startedAt {
+			if startedAt > Date() {
+				cancelCountdown()
+				return
+			}
+			let now = Date()
+			pausedElapsed += now.timeIntervalSince(startedAt)
+			self.startedAt = nil
+			pauseStopwatches(at: now)
 			audioCoach.stop()
         } else {
             let now = Date()
@@ -1167,12 +1479,14 @@ struct WorkoutView: View {
     }
 
     private func endSession() {
+        finalizeAllStopwatches(at: Date())
         startedAt = nil
 		audioCoach.stop()
         dismiss()
     }
 
 	private func pauseForInterruption() {
+		pauseStopwatches(at: Date())
 		guard let startedAt else {
 			audioCoach.stop()
 			return
@@ -1194,6 +1508,7 @@ struct WorkoutView: View {
         }
         didComplete = true
 		let loggedAt = Date()
+		finalizeAllStopwatches(at: loggedAt)
         let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
 		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
@@ -1201,7 +1516,17 @@ struct WorkoutView: View {
 			loggedAt: loggedAt
 		)
 		audioCoach.stop()
-        store.markSessionComplete(plan, startDate: interval.start, endDate: interval.end)
+		let snapshot = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
+			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAt) else { return }
+			result[entry.key] = elapsed
+		}
+		store.markSessionComplete(
+			plan,
+			board: board,
+			stopwatchDurations: snapshot,
+			startDate: interval.start,
+			endDate: interval.end
+		)
         dismiss()
     }
 
@@ -1244,6 +1569,7 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed(at: Date())
         guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
+		finalizeCurrentStopwatch(at: Date())
         seek(to: target)
     }
 
@@ -1252,8 +1578,63 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed(at: Date())
         guard let target = timeline.skipTarget(from: elapsed) else { return }
+		finalizeCurrentStopwatch(at: Date())
         seek(to: target)
     }
+
+	private func initializeStopwatches() {
+		for step in plan.steps {
+			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
+				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+				if stopwatches[key] == nil { stopwatches[key] = WorkoutStopwatch() }
+			}
+		}
+	}
+
+	private func currentStopwatchKey(for step: WorkoutStep) -> WorkoutActivitySegmentKey? {
+		let keys = step.segments.enumerated().compactMap { index, segment -> WorkoutActivitySegmentKey? in
+			guard segment.kind == .work, segment.timing == .stopwatch else { return nil }
+			return WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+		}
+		return keys.first(where: { !(stopwatches[$0]?.isFinalized ?? false) }) ?? keys.last
+	}
+
+	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at date: Date) {
+		guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+		if stopwatch.isRunning {
+			stopwatch.pause(at: date)
+		} else {
+			stopwatch.start(at: date)
+		}
+		stopwatches[key] = stopwatch
+	}
+
+	private func pauseStopwatches(at date: Date) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], stopwatch.isRunning else { continue }
+			stopwatch.pause(at: date)
+			stopwatches[key] = stopwatch
+		}
+	}
+
+	private func finalizeCurrentStopwatch(at date: Date) {
+		let elapsed = currentElapsed(at: date)
+		let step = step(at: elapsed)
+		guard let key = currentStopwatchKey(for: step) else { return }
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: date, in: &stopwatches)
+	}
+
+	private func finalizeStopwatches(for stepID: String, at date: Date) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: date, in: &stopwatches)
+	}
+
+	private func finalizeAllStopwatches(at date: Date) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
+			stopwatch.stop(at: date)
+			stopwatches[key] = stopwatch
+		}
+	}
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
         step.hasRestInterval && stepElapsed >= step.activeDuration
@@ -1277,6 +1658,11 @@ struct WorkoutView: View {
         let seconds = max(0, Int(value.rounded(.up)))
         return String(format: "%02d:%02d", seconds / 60, seconds % 60)
     }
+
+	private func stopwatchTimeLabel(_ value: TimeInterval) -> String {
+		let seconds = max(0, Int(value.rounded(.down)))
+		return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+	}
 
 	private func audioMoment(
 		step: WorkoutStep,

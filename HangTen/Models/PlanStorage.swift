@@ -6,7 +6,7 @@ import Foundation
 /// inferred from the app version. That lets a future decoder migrate old
 /// training libraries without changing the runtime workout model.
 enum PlanDefinitionSchema {
-    static let currentVersion = 2
+    static let currentVersion = 3
 }
 
 struct PlanLibraryMetadata: Codable, Hashable {
@@ -188,6 +188,13 @@ enum WorkoutTargetDefinition: Codable, Hashable {
     }
 }
 
+struct WorkoutSegmentDefinition: Codable, Hashable {
+    let kind: WorkoutSegmentKind
+    let target: WorkoutTargetDefinition?
+    let timing: WorkoutSegmentTiming
+    let duration: TimeInterval?
+}
+
 struct WorkoutStepDefinition: Codable, Hashable {
     let id: String
     let title: String
@@ -196,6 +203,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let duration: TimeInterval
     let phase: WorkoutPhase
     let targets: [WorkoutTargetDefinition]
+    let segments: [WorkoutSegmentDefinition]
     let gripType: GripType?
     let activeDuration: TimeInterval?
 
@@ -207,6 +215,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [WorkoutTargetDefinition],
+        segments: [WorkoutSegmentDefinition] = [],
         gripType: GripType? = nil,
         activeDuration: TimeInterval? = nil
     ) {
@@ -217,8 +226,42 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.duration = duration
         self.phase = phase
         self.targets = targets
+        self.segments = segments
         self.gripType = gripType
         self.activeDuration = activeDuration
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case instruction
+        case accessory
+        case duration
+        case phase
+        case targets
+        case segments
+        case gripType
+        case activeDuration
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        instruction = try container.decode(String.self, forKey: .instruction)
+        accessory = try container.decode(String.self, forKey: .accessory)
+        duration = try container.decode(TimeInterval.self, forKey: .duration)
+        phase = try container.decode(WorkoutPhase.self, forKey: .phase)
+        targets = try container.decode([WorkoutTargetDefinition].self, forKey: .targets)
+        segments = try container.decodeIfPresent(
+            [WorkoutSegmentDefinition].self,
+            forKey: .segments
+        ) ?? []
+        gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
+        activeDuration = try container.decodeIfPresent(
+            TimeInterval.self,
+            forKey: .activeDuration
+        )
     }
 }
 
@@ -517,6 +560,80 @@ enum PlanLibraryValidator {
         if step.phase != .rest && step.targets.isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
+        for (index, segment) in step.segments.enumerated() {
+            let targetPath = "\(path).segments[\(index)].target"
+            let timingPath = "\(path).segments[\(index)].timing"
+            let durationPath = "\(path).segments[\(index)].duration"
+            if segment.kind == .work && segment.target == nil {
+                issues.append(
+                    PlanValidationIssue(
+                        path: targetPath,
+                        message: "Work segments require a target."
+                    )
+                )
+            }
+            if segment.kind == .rest && segment.target != nil {
+                issues.append(
+                    PlanValidationIssue(
+                        path: targetPath,
+                        message: "Rest segments must not define a target."
+                    )
+                )
+            }
+            if segment.kind == .rest && segment.timing != .fixed {
+                issues.append(
+                    PlanValidationIssue(
+                        path: timingPath,
+                        message: "Rest segments must use fixed timing."
+                    )
+                )
+            }
+            switch segment.timing {
+            case .fixed:
+                if segment.duration == nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Fixed segments require a duration."
+                        )
+                    )
+                }
+            case .stopwatch, .undefined:
+                if segment.kind == .rest && segment.duration == nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Fixed and rest segments require a duration."
+                        )
+                    )
+                } else if segment.duration != nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Stopwatch and undefined segments must not define a duration."
+                        )
+                    )
+                }
+            }
+            if let duration = segment.duration {
+                if !duration.isFinite || duration < 0 {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Segment duration must be finite and non-negative."
+                        )
+                    )
+                }
+                if duration > step.duration {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Segment duration cannot exceed total step duration."
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private static func validatePlan(
@@ -590,6 +707,18 @@ enum PlanLibraryValidator {
                         availableBoards: availableBoards,
                         issues: &issues
                     )
+                    for (segmentIndex, segment) in step.segments.enumerated() {
+                        guard let target = segment.target else { continue }
+                        validateTargets(
+                            [target],
+                            planBoardID: plan.boardID,
+                            stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
+                            mappingByBoardID: mappingByBoardID,
+                            boardByID: boardByID,
+                            availableBoards: availableBoards,
+                            issues: &issues
+                        )
+                    }
                 }
             }
         }
@@ -726,6 +855,12 @@ struct PlanDefinitionResolver {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
                     let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
                     let targets = try resolveTargets(stepDefinition.targets, mapping: mapping, board: board)
+                    let segments = try resolveSegments(
+                        stepDefinition,
+                        targets: targets,
+                        mapping: mapping,
+                        board: board
+                    )
                     steps.append(
                         WorkoutStep(
                             id: resolvedID,
@@ -736,6 +871,7 @@ struct PlanDefinitionResolver {
                             duration: stepDefinition.duration,
                             phase: stepDefinition.phase,
                             targets: targets,
+                            segments: segments,
                             gripType: stepDefinition.gripType,
                             timedWorkDuration: stepDefinition.activeDuration
                         )
@@ -799,6 +935,70 @@ struct PlanDefinitionResolver {
 
         return resolved
     }
+
+    private func resolveSegments(
+        _ step: WorkoutStepDefinition,
+        targets: [HoldTarget],
+        mapping: BoardMappingDefinition?,
+        board: TrainingBoard
+    ) throws -> [WorkoutSegment] {
+        if step.segments.isEmpty {
+            if step.phase == .rest {
+                return [
+                    WorkoutSegment(
+                        kind: .rest,
+                        target: nil,
+                        timing: .fixed,
+                        duration: step.duration
+                    )
+                ]
+            }
+            if let activeDuration = step.activeDuration {
+                let workSegment = WorkoutSegment(
+                    kind: .work,
+                    target: targets.first,
+                    timing: .fixed,
+                    duration: activeDuration
+                )
+                var segments = [workSegment]
+                let restDuration = step.duration - activeDuration
+                if restDuration > 0, restDuration.isFinite {
+                    segments.append(
+                        WorkoutSegment(
+                            kind: .rest,
+                            target: nil,
+                            timing: .fixed,
+                            duration: restDuration
+                        )
+                    )
+                }
+                return segments
+            }
+            if let target = targets.first {
+                return [
+                    WorkoutSegment(
+                        kind: .work,
+                        target: target,
+                        timing: .undefined,
+                        duration: nil
+                    )
+                ]
+            }
+            return []
+        }
+
+        return try step.segments.map { definition in
+            let target = try definition.target.map { targetDefinition in
+                try resolveTargets([targetDefinition], mapping: mapping, board: board).first
+            } ?? nil
+            return WorkoutSegment(
+                kind: definition.kind,
+                target: target,
+                timing: definition.timing,
+                duration: definition.duration
+            )
+        }
+    }
 }
 
 struct PlanLibraryStore {
@@ -810,14 +1010,26 @@ struct PlanLibraryStore {
         definition: PlanLibraryDefinition,
         availableBoards: [TrainingBoard] = BoardCatalog.all
     ) throws {
-        let issues = definition.validationIssues(availableBoards: availableBoards)
+        let normalizedDefinition = Self.normalizedDefinition(definition)
+        let issues = normalizedDefinition.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
             throw PlanLibraryStoreError.validationFailed(issues)
         }
-        let resolver = try PlanDefinitionResolver(library: definition, availableBoards: availableBoards)
-        self.definition = definition
+        let resolver = try PlanDefinitionResolver(library: normalizedDefinition, availableBoards: availableBoards)
+        self.definition = normalizedDefinition
         self.plans = try resolver.resolveAll()
         self.validationReport = PlanValidationReport(issues: issues)
+    }
+
+    private static func normalizedDefinition(_ definition: PlanLibraryDefinition) -> PlanLibraryDefinition {
+        guard definition.schemaVersion == 2 else { return definition }
+        return PlanLibraryDefinition(
+            schemaVersion: PlanDefinitionSchema.currentVersion,
+            metadata: definition.metadata,
+            boardMappings: definition.boardMappings,
+            blocks: definition.blocks,
+            plans: definition.plans
+        )
     }
 
     init(
@@ -870,6 +1082,14 @@ struct PlanLibraryStore {
 
     func plan(id: String) -> TrainingPlan? {
         plans.first { $0.id == id }
+    }
+
+    static func metadataByPlanID(_ plans: [PlanDefinition]) -> [String: PlanMetadata] {
+        plans.reduce(into: [String: PlanMetadata]()) { metadataByID, plan in
+            if metadataByID[plan.id] == nil {
+                metadataByID[plan.id] = plan.metadata
+            }
+        }
     }
 
     static let builtIn: PlanLibraryStore = loadBuiltIn()
@@ -981,7 +1201,7 @@ enum BuiltInPlanLibraryDefinition {
         return PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
                 id: "hang-ten.built-in",
-                version: "2.0.0",
+                version: "3.0.0",
                 title: "Hang Ten training plans",
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
@@ -1104,6 +1324,14 @@ enum BuiltInPlanLibraryDefinition {
             duration: step.duration,
             phase: step.phase,
             targets: step.targets.flatMap { targetDefinitions(from: $0) },
+            segments: step.segments.map { segment in
+                WorkoutSegmentDefinition(
+                    kind: segment.kind,
+                    target: segment.target.flatMap { targetDefinitions(from: $0).first },
+                    timing: segment.timing,
+                    duration: segment.duration
+                )
+            },
             gripType: step.gripType,
             activeDuration: step.timedWorkDuration
         )
@@ -1140,6 +1368,8 @@ enum PlanCatalog {
         return result
     }()
 
+    private static let metadataByID = PlanLibraryStore.metadataByPlanID(store.definition.plans)
+
     static let all: [TrainingPlan] = store.plans
 
     static let metoliusEntry = required("metolius.generic-ten-minute.entry")
@@ -1161,6 +1391,10 @@ enum PlanCatalog {
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)
+    }
+
+    static func metadata(for id: String) -> PlanMetadata? {
+        metadataByID[id]
     }
 
     static var definition: PlanLibraryDefinition {
