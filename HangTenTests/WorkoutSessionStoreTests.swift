@@ -46,20 +46,22 @@ final class WorkoutSessionStoreTests: XCTestCase {
         let defaults = UserDefaults(suiteName: suite)!
         let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
         let newer = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        let partialExtra = session(id: "00000000-0000-0000-0000-000000000003", recordedAt: 30)
         defaults.set(try JSONEncoder().encode([older, newer]), forKey: "workout.sessionHistory")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try JSONEncoder().encode(newer).write(
-            to: directory.appendingPathComponent("session-\(newer.id.uuidString).json")
+        try JSONEncoder().encode(partialExtra).write(
+            to: directory.appendingPathComponent("session-\(partialExtra.id.uuidString).json")
         )
 
         let store = WorkoutSessionStore(defaults: defaults, directory: directory)
         store.flush()
 
-        XCTAssertEqual(store.sessions, [newer, older])
+        XCTAssertEqual(store.sessions, [partialExtra, newer, older])
         XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
         XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), [
             "session-\(newer.id.uuidString).json",
-            "session-\(older.id.uuidString).json"
+            "session-\(older.id.uuidString).json",
+            "session-\(partialExtra.id.uuidString).json"
         ].sorted())
     }
 
@@ -136,12 +138,12 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
     func testAppendRecoveryRewritesAnEarlierFailedSession() throws {
         let defaults = UserDefaults(suiteName: suite)!
-        try Data("not a directory".utf8).write(to: directory)
-        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
         let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
         let second = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 20)
+        defaults.set(try JSONEncoder().encode([first]), forKey: "workout.sessionHistory")
+        try Data("not a directory".utf8).write(to: directory)
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
 
-        store.append(first)
         store.flush()
         XCTAssertNotNil(store.persistenceError)
 
@@ -151,6 +153,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         XCTAssertNil(store.persistenceError)
+        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
     }
 

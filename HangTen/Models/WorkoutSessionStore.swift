@@ -65,8 +65,9 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
 
         let legacySessions = Self.loadLegacy(from: defaults, decoder: decoder)
         if !fileManager.fileExists(atPath: migrationMarkerURL.path), let legacySessions {
-            sessions = legacySessions
-            migrateLegacyHistory(legacySessions)
+            let mergedSessions = Self.merge(loaded.sessions, with: legacySessions)
+            sessions = mergedSessions
+            migrateLegacyHistory(mergedSessions)
         }
     }
 
@@ -82,20 +83,26 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         if !retainedIDs.contains(session.id) {
             removedIDs.insert(session.id)
         }
+        let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
             sessions: sessions,
             retainedIDs: retainedIDs,
             removing: removedIDs,
+            markLegacyMigrationComplete: completesLegacyMigration,
+            removeLegacyHistoryOnSuccess: completesLegacyMigration,
             completion: completion
         )
     }
 
     func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
         sessions.removeAll { $0.id == session.id }
+        let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
             sessions: sessions,
             retainedIDs: Set(sessions.map(\.id)),
             removing: [session.id],
+            markLegacyMigrationComplete: completesLegacyMigration,
+            removeLegacyHistoryOnSuccess: completesLegacyMigration,
             completion: completion
         )
     }
@@ -169,6 +176,17 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         return lhs.id.uuidString < rhs.id.uuidString
     }
 
+    private static func merge(
+        _ granularSessions: [WorkoutSessionRecord],
+        with legacySessions: [WorkoutSessionRecord]
+    ) -> [WorkoutSessionRecord] {
+        var sessionsByID = Dictionary(uniqueKeysWithValues: legacySessions.map { ($0.id, $0) })
+        for session in granularSessions {
+            sessionsByID[session.id] = session
+        }
+        return Array(sessionsByID.values.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
+    }
+
     private func migrateLegacyHistory(_ sessions: [WorkoutSessionRecord]) {
         enqueueWrite(
             sessions: sessions,
@@ -233,6 +251,11 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
 
     private var migrationMarkerURL: URL {
         directory.appendingPathComponent(Key.legacyMigrationComplete)
+    }
+
+    private var hasPendingLegacyMigration: Bool {
+        !fileManager.fileExists(atPath: migrationMarkerURL.path) &&
+            Self.loadLegacy(from: defaults, decoder: decoder) != nil
     }
 
     private func setPersistenceError(_ error: String?) {
