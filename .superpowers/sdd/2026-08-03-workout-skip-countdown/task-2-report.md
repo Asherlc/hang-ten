@@ -90,7 +90,8 @@ rtk printenv HANG_TEN_TEST_DEVICE_UDID
 
 Outcome: exit 1 with no output.
 
-The focused suite was then started on the dedicated Task 2 simulator:
+The following file-style selector was then attempted on the dedicated Task 2
+simulator:
 
 ```sh
 rtk xcodebuild \
@@ -110,6 +111,10 @@ build or test result until interrupted at the user's direction (exit 130):
 2026-08-03 11:30:31.256 xcodebuild[30395:4818231]  DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
 2026-08-03 11:30:31.263 xcodebuild[30395:4818153] [MT] DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
 ```
+
+`-only-testing:HangTenTests/WorkoutTimelineTests` did not establish execution
+of the XCTest classes declared in `WorkoutTimelineTests.swift`; this attempt is
+not evidence that those classes ran.
 
 Static verification:
 
@@ -181,7 +186,7 @@ rtk git diff --check
 
 Outcome: exit 0, no output.
 
-Focused XCTest (45-second limit):
+File-style XCTest selector attempt (45-second limit):
 
 ```sh
 timeout 45s rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=FA5FF4C2-CC82-4A62-8FA2-19CB5E22C170' -derivedDataPath .context/DerivedData-skip-countdown test -only-testing:HangTenTests/WorkoutTimelineTests
@@ -210,3 +215,27 @@ result. The only output was:
 - The focused XCTest remains unverified because Xcode produced only the known
   DVT build-number warnings and did not reach a build or test result before the
   exact 45-second limit. Full XCTest execution was not retried.
+
+## Final-review fix wave
+
+The final-review verification used explicit XCTest class selectors rather than
+the Swift filename:
+
+```sh
+timeout 45s rtk xcodebuild \
+  -project HangTen.xcodeproj \
+  -scheme HangTen \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=FA5FF4C2-CC82-4A62-8FA2-19CB5E22C170' \
+  -derivedDataPath .context/DerivedData-skip-countdown \
+  test \
+  -only-testing:HangTenTests/WorkoutSessionPolicyTests \
+  -only-testing:HangTenTests/WorkoutSessionStateTests \
+  -only-testing:HangTenTests/WorkoutViewSessionStateTests
+```
+
+The explicit-selector attempt repeated the earlier blocked pattern: it timed
+out with exit 124 after 45 seconds, emitted only the two DVT build-number
+warnings, and produced no build or XCTest result. No XCTest success is claimed.
+The Swift parser and `git diff --check` both exited 0 after the final source
+and test edits.
