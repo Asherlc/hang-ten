@@ -798,19 +798,19 @@ enum LegacyPlanSeedCatalog {
         provenance: .adapted,
         boardID: nil,
         steps: expanded(planID: "entry", [
-            [.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
-            [.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper)],
-            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
-            [.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
-            [.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
+            [MetoliusCycleBuilder.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
+            [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [MetoliusCycleBuilder.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
+            [MetoliusCycleBuilder.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
             [
-                .fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper),
-                .repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
+                MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper),
+                MetoliusCycleBuilder.repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
             ],
-            [.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
-            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
-            [.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
-            [.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
+            [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
+            [MetoliusCycleBuilder.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
         ])
     )
 
@@ -825,36 +825,36 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: expanded(planID: "intermediate", [
             [
-                .fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeEdge)]),
-                .pullUps(count: 3, title: "Large-edge pull-ups", instruction: "Do 3 pull-ups on the large edge.", phase: .pull, targets: [.feature(.largeEdge)])
+                MetoliusCycleBuilder.fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeEdge)]),
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Large-edge pull-ups", instruction: "Do 3 pull-ups on the large edge.", phase: .pull, targets: [.feature(.largeEdge)])
             ],
             [
-                .pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper),
-                .fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.mediumEdge)])
+                MetoliusCycleBuilder.pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper),
+                MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.mediumEdge)])
             ],
             [
-                .fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
-                .fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
+                MetoliusCycleBuilder.fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
+                MetoliusCycleBuilder.fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
             ],
-            [.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)],
             [
-                .fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
-                .pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
-            ],
-            [
-                .pullUps(count: 3, title: "Offset pulls", instruction: "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]),
-                .pullUps(count: 3, title: "Offset pulls · other side", instruction: "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)])
+                MetoliusCycleBuilder.fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
+                MetoliusCycleBuilder.pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
             ],
             [
-                .repetitions(count: 15, title: "Jug knee raises", instruction: "Do 15 knee raises on the jugs.", phase: .pull, targets: [.feature(.jug)]),
-                .fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.mediumEdge)])
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls", instruction: "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]),
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls · other side", instruction: "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)])
             ],
-            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
             [
-                .fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper),
-                .pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
+                MetoliusCycleBuilder.repetitions(count: 15, title: "Jug knee raises", instruction: "Do 15 knee raises on the jugs.", phase: .pull, targets: [.feature(.jug)]),
+                MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.mediumEdge)])
             ],
-            [.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [
+                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper),
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
+            ],
+            [MetoliusCycleBuilder.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
         ])
     )
 
@@ -869,7 +869,7 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: expanded(planID: "advanced", [
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Large-slope hang",
                     instruction: "Hold a straight-arm hang on a large slope for 20 seconds.",
                     duration: 20,
@@ -877,7 +877,7 @@ enum LegacyPlanSeedCatalog {
                     targets: [.feature(.largeSlope)],
                     gripType: .sloper
                 ),
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 3,
                     title: "Four-finger flat-edge pull-ups",
                     instruction: "Do 3 pull-ups on a four-finger flat edge.",
@@ -886,7 +886,7 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Bent-arm large-slope hang",
                     instruction: "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
                     duration: 20,
@@ -894,7 +894,7 @@ enum LegacyPlanSeedCatalog {
                     targets: [.feature(.largeSlope)],
                     gripType: .sloper
                 ),
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "L-sit or hanging knee curls",
                     instruction: "Stay on for a 20-second L-sit or 20 hanging knee curls.",
                     duration: 20,
@@ -904,7 +904,7 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 5,
                     title: "Three-finger-pocket pull-ups",
                     instruction: "Do 5 pull-ups on a three-finger pocket.",
@@ -912,7 +912,7 @@ enum LegacyPlanSeedCatalog {
                     targets: [.feature(.threeFingerPocket)],
                     gripType: .threeFingerPocket
                 ),
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
                     instruction: "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
                     duration: 25,
@@ -922,7 +922,7 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Hold ladder",
                     instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
                     duration: 60,
@@ -931,14 +931,14 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Single-arm flat-edge hang",
                     instruction: "Hang one-armed from a four-finger flat edge for 20 seconds.",
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
                 ),
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Single-arm flat-edge hang · other hand",
                     instruction: "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
                     duration: 20,
@@ -947,14 +947,14 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 5,
                     title: "Offset pull-ups",
                     instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
                     phase: .pull,
                     targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
                 ),
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 5,
                     title: "Offset pull-ups · other side",
                     instruction: "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
@@ -963,14 +963,14 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Incut-edge bent-arm hang",
                     instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
                     duration: 30,
                     phase: .hang,
                     targets: [.feature(.fourFingerIncutEdge, fallback: .largeEdge)]
                 ),
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
                     instruction: "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
                     duration: 15,
@@ -980,14 +980,14 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 3,
                     title: "L-sit pull-ups",
                     instruction: "Do 3 L-sit pull-ups, bending your knees if needed.",
                     phase: .pull,
                     targets: [.feature(.largeSlope)]
                 ),
-                .choice(
+                MetoliusCycleBuilder.choice(
                     title: "Choose one: front lever or straight-arm hang",
                     instruction: "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
                     accessory: "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
@@ -998,7 +998,7 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Two-finger three-finger-pocket hang",
                     instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
                     duration: 20,
@@ -1006,7 +1006,7 @@ enum LegacyPlanSeedCatalog {
                     targets: [.feature(.threeFingerPocket)],
                     gripType: .twoFingerPocket
                 ),
-                .pullUps(
+                MetoliusCycleBuilder.pullUps(
                     count: 3,
                     title: "Power pull-ups",
                     instruction: "Then do 3 power pull-ups with weight or helper resistance.",
@@ -1015,7 +1015,7 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                .fixed(
+                MetoliusCycleBuilder.fixed(
                     title: "Maximum slope hangs",
                     instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
                     duration: 60,
