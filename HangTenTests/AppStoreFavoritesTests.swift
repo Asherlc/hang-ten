@@ -19,6 +19,9 @@ final class AppStoreFavoritesTests: XCTestCase {
 
         reloadedStore.toggleFavorite(plan)
         XCTAssertFalse(reloadedStore.isFavorite(plan))
+
+        let reloadedAfterRemovalStore = AppStore(userDefaults: defaults)
+        XCTAssertFalse(reloadedAfterRemovalStore.isFavorite(plan))
     }
 
     func testFavoritePlansUseCompatiblePlanOrderAndIgnoreUnknownIDs() {
