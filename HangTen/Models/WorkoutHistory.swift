@@ -110,12 +110,14 @@ enum WorkoutHistoryMatcher {
 
         let entries = (healthEntries + unmatchedLocalEntries).sorted(by: newestFirst)
         let source: WorkoutHistorySource
-        if healthQuerySucceeded && !acceptedHealthRecords.isEmpty {
-            source = .healthKit
+        if healthQuerySucceeded {
+            if acceptedHealthRecords.isEmpty && !unmatchedLocalEntries.isEmpty {
+                source = .localFallback
+            } else {
+                source = .healthKit
+            }
         } else if !unmatchedLocalEntries.isEmpty {
             source = .localFallback
-        } else if !healthDataAvailable {
-            source = .unavailable
         } else {
             source = .unavailable
         }
