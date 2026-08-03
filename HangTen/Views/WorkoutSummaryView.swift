@@ -9,6 +9,23 @@ enum WorkoutSummaryMode: Equatable {
     }
 }
 
+enum WorkoutSummaryFormatting {
+    static func bodyweightBaselineText(
+        for bodyweightKGF: Double?,
+        unit: MotherboardForceUnit
+    ) -> String? {
+        guard let bodyweightKGF,
+              bodyweightKGF.isFinite,
+              bodyweightKGF > 0 else {
+            return nil
+        }
+
+        let displayedValue = unit.value(fromKilogramsForce: bodyweightKGF)
+        guard displayedValue.isFinite, displayedValue >= 0 else { return nil }
+        return "Captured baseline: \(String(format: "%.1f %@", displayedValue, unit.label))"
+    }
+}
+
 struct WorkoutSummaryView: View {
     let session: WorkoutSessionRecord
     let unit: MotherboardForceUnit
@@ -123,6 +140,17 @@ private struct WorkoutSummaryContent: View {
             Section("Measured load") {
                 ForEach(session.steps, id: \.stepID) { step in
                     stepRow(step)
+                }
+            }
+
+            if let bodyweightBaselineText = WorkoutSummaryFormatting.bodyweightBaselineText(
+                for: session.bodyweightKGF,
+                unit: unit
+            ) {
+                Section("Bodyweight baseline") {
+                    Text(bodyweightBaselineText)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
                 }
             }
 

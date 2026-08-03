@@ -3,11 +3,29 @@ import XCTest
 @testable import HangTen
 
 final class SimulatedMotherboardTransportTests: XCTestCase {
-    func testDefaultFixtureCyclesLoadedAndUnloadedSamples() {
+    func testDefaultFixtureStartsWithTareAndRelaxedJugHangPhases() {
         let samples = SimulatedMotherboardTransport.defaultSamples
-        XCTAssertFalse(samples.isEmpty)
-        XCTAssertTrue(samples.contains { $0.aggregateLoadKGF >= 2.5 })
-        XCTAssertTrue(samples.contains { $0.aggregateLoadKGF < 2.0 })
+        let tareSamples = samples.prefix(15)
+        let bodyweightSamples = samples.dropFirst(15).prefix(18)
+
+        XCTAssertEqual(tareSamples.count, 15)
+        XCTAssertTrue(tareSamples.allSatisfy { $0.aggregateLoadKGF == 0.08 })
+        XCTAssertEqual(bodyweightSamples.count, 18)
+        XCTAssertTrue(bodyweightSamples.allSatisfy { $0.aggregateLoadKGF == 64 })
+        XCTAssertTrue(bodyweightSamples.allSatisfy {
+            $0.sensorLoadsKGF == [19.2, 12.8, 19.2, 12.8]
+        })
+    }
+
+    func testDefaultFixtureProvidesChangingNonEqualBalanceForActiveWorkout() {
+        let activeSamples = SimulatedMotherboardTransport.defaultSamples.dropFirst(33)
+
+        XCTAssertGreaterThanOrEqual(activeSamples.count, 4)
+        XCTAssertEqual(activeSamples.map(\.aggregateLoadKGF), [80, 72, 90, 76])
+        zip(activeSamples.map(\.leftShare), [0.6, 0.4, 0.6, 0.35]).forEach { actual, expected in
+            XCTAssertEqual(actual, expected, accuracy: 0.0001)
+        }
+        XCTAssertTrue(activeSamples.allSatisfy { $0.leftShare != 0.5 && $0.rightShare != 0.5 })
     }
 
     @MainActor

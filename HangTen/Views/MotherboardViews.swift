@@ -150,6 +150,18 @@ struct MotherboardSettingsView: View {
             }
 
             Section {
+                Stepper(value: bodyweightCaptureDuration, in: 3...10, step: 1) {
+                    Text("Relaxed jug hang: \(bodyweightCaptureDurationText)")
+                }
+                .accessibilityLabel("Relaxed jug hang capture duration")
+                .accessibilityValue(bodyweightCaptureDurationText)
+            } header: {
+                Text("Bodyweight baseline")
+            } footer: {
+                Text("Choose how long to measure your relaxed jug hang before a workout. The board averages this load as your bodyweight baseline.")
+            }
+
+            Section {
                 LabeledContent("Connection", value: service.state.label)
 
                 Button(action: service.tare) {
@@ -164,6 +176,17 @@ struct MotherboardSettingsView: View {
         }
         .navigationTitle("Sensor settings")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var bodyweightCaptureDuration: Binding<TimeInterval> {
+        Binding(
+            get: { min(max(settings.bodyweightCaptureDuration.rounded(), 3), 10) },
+            set: { settings.bodyweightCaptureDuration = min(max($0.rounded(), 3), 10) }
+        )
+    }
+
+    private var bodyweightCaptureDurationText: String {
+        "\(Int(bodyweightCaptureDuration.wrappedValue)) seconds"
     }
 }
 
@@ -212,6 +235,13 @@ struct MotherboardMeterView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
+            balanceContent
+
+            Text(bodyweightFeedbackText)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .accessibilityLabel(bodyweightFeedbackText)
+
             Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
                 .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
@@ -221,13 +251,85 @@ struct MotherboardMeterView: View {
     }
 
     private var currentForceText: String {
-        guard let measurement else { return "Not measured" }
-        return measurement.aggregateLoadKGF.forceString(in: unit)
+        guard let measurement,
+              let text = formattedForce(measurement.aggregateLoadKGF) else {
+            return "Not measured"
+        }
+        return text
     }
 
     private var peakForceText: String {
-        guard let peakLoadKGF else { return "Not measured" }
-        return peakLoadKGF.forceString(in: unit)
+        guard let peakLoadKGF,
+              let text = formattedForce(peakLoadKGF) else {
+            return "Not measured"
+        }
+        return text
+    }
+
+    @ViewBuilder
+    private var balanceContent: some View {
+        if let balance = balancePercentages {
+            HStack {
+                balanceValue(title: "LEFT", value: balance.left)
+                Spacer()
+                balanceValue(title: "RIGHT", value: balance.right)
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Balance: left \(balance.left), right \(balance.right)")
+        } else {
+            Text("Balance unavailable — waiting for a measured load.")
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+        }
+    }
+
+    private var balancePercentages: (left: String, right: String)? {
+        guard let measurement,
+              let left = formattedPercentage(measurement.leftShare * 100),
+              let right = formattedPercentage(measurement.rightShare * 100),
+              measurement.leftShare > 0 || measurement.rightShare > 0 else {
+            return nil
+        }
+        return (left, right)
+    }
+
+    private var bodyweightFeedbackText: String {
+        guard let bodyweightKGF,
+              bodyweightKGF.isFinite,
+              bodyweightKGF > 0 else {
+            return "Bodyweight baseline unavailable."
+        }
+        guard let measurement,
+              measurement.aggregateLoadKGF.isFinite,
+              measurement.aggregateLoadKGF >= 0,
+              let percentage = formattedPercentage(measurement.bodyweightPercentage(for: bodyweightKGF)) else {
+            return "Bodyweight percentage unavailable — waiting for a measurement."
+        }
+        return "\(percentage) bodyweight"
+    }
+
+    private func balanceValue(title: String, value: String) -> some View {
+        VStack(alignment: title == "LEFT" ? .leading : .trailing, spacing: 2) {
+            Text(title)
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+            Text(value)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+        }
+    }
+
+    private func formattedForce(_ kilogramsForce: Double) -> String? {
+        guard kilogramsForce.isFinite, kilogramsForce >= 0 else { return nil }
+        let displayedValue = unit.value(fromKilogramsForce: kilogramsForce)
+        guard displayedValue.isFinite, displayedValue >= 0 else { return nil }
+        return String(format: "%.1f %@", displayedValue, unit.label)
+    }
+
+    private func formattedPercentage(_ percentage: Double) -> String? {
+        guard percentage.isFinite, percentage >= 0 else { return nil }
+        guard percentage <= 9_999 else { return "9,999%+" }
+        return String(format: "%.0f%%", percentage)
     }
 }
 

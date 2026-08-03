@@ -24,4 +24,12 @@ final class WorkoutSummaryTests: XCTestCase {
             accuracy: 0.0001
         )
     }
+
+    func testBodyweightBaselineTextUsesSelectedUnitAndOmitsAbsentBaseline() {
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.bodyweightBaselineText(for: 60, unit: .lbf),
+            "Captured baseline: 132.3 lbf"
+        )
+        XCTAssertNil(WorkoutSummaryFormatting.bodyweightBaselineText(for: nil, unit: .kgf))
+    }
 }

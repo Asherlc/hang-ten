@@ -2,20 +2,35 @@
 import Foundation
 
 final class SimulatedMotherboardTransport: MotherboardTransport {
-    nonisolated static let defaultSamples: [MotherboardMeasurement] = [
-        sample(timestamp: 0.00, number: 1, load: 0.3),
-        sample(timestamp: 0.30, number: 2, load: 4.2),
-        sample(timestamp: 0.60, number: 3, load: 8.6),
-        sample(timestamp: 0.90, number: 4, load: 1.1),
-        sample(timestamp: 1.20, number: 5, load: 0.2),
-        sample(timestamp: 1.50, number: 6, load: 5.4),
-        sample(timestamp: 1.80, number: 7, load: 7.8),
-        sample(timestamp: 2.10, number: 8, load: 0.4)
+    nonisolated static let tareSamples: [MotherboardMeasurement] = (0..<15).map { index in
+        sample(
+            timestamp: Double(index) * 0.3,
+            number: UInt16(index + 1),
+            sensorLoadsKGF: [0.02, 0.02, 0.02, 0.02]
+        )
+    }
+
+    nonisolated static let bodyweightSamples: [MotherboardMeasurement] = (0..<18).map { index in
+        sample(
+            timestamp: Double(index + 15) * 0.3,
+            number: UInt16(index + 16),
+            sensorLoadsKGF: [19.2, 12.8, 19.2, 12.8]
+        )
+    }
+
+    nonisolated static let activeWorkoutSamples: [MotherboardMeasurement] = [
+        sample(timestamp: 9.9, number: 34, sensorLoadsKGF: [24, 16, 24, 16]),
+        sample(timestamp: 10.2, number: 35, sensorLoadsKGF: [14.4, 21.6, 14.4, 21.6]),
+        sample(timestamp: 10.5, number: 36, sensorLoadsKGF: [27, 18, 27, 18]),
+        sample(timestamp: 10.8, number: 37, sensorLoadsKGF: [13.3, 24.7, 13.3, 24.7])
     ]
+
+    nonisolated static let defaultSamples = tareSamples + bodyweightSamples + activeWorkoutSamples
 
     var eventHandler: ((MotherboardTransportEvent) -> Void)?
 
     private let samples: [MotherboardMeasurement]
+    private let repeatStartIndex: Int
     private let device = MotherboardDiscoveredDevice(
         id: UUID(uuidString: "0F0F0F0F-0000-4000-8000-000000000009")!,
         name: "Motherboard Simulator"
@@ -24,8 +39,14 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
     private var nextSampleIndex = 0
     private var isStreaming = false
 
-    init(samples: [MotherboardMeasurement] = SimulatedMotherboardTransport.defaultSamples) {
-        self.samples = samples
+    init(samples: [MotherboardMeasurement]? = nil) {
+        if let samples {
+            self.samples = samples
+            repeatStartIndex = 0
+        } else {
+            self.samples = Self.defaultSamples
+            repeatStartIndex = Self.tareSamples.count + Self.bodyweightSamples.count
+        }
     }
 
     func startScan() {
@@ -94,7 +115,10 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
     private func emitNextSample() {
         guard isStreaming, !samples.isEmpty else { return }
         let sample = samples[nextSampleIndex]
-        nextSampleIndex = (nextSampleIndex + 1) % samples.count
+        nextSampleIndex += 1
+        if nextSampleIndex >= samples.count {
+            nextSampleIndex = repeatStartIndex
+        }
         eventHandler?(.notification(Self.rawFrame(for: sample), Date()))
     }
 
@@ -129,13 +153,17 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
         return Data(line.utf8)
     }
 
-    nonisolated private static func sample(timestamp: TimeInterval, number: UInt16, load: Double) -> MotherboardMeasurement {
+    nonisolated private static func sample(
+        timestamp: TimeInterval,
+        number: UInt16,
+        sensorLoadsKGF: [Double]
+    ) -> MotherboardMeasurement {
         MotherboardMeasurement(
             timestamp: Date(timeIntervalSince1970: timestamp),
             sampleNumber: number,
             batteryValue: 88,
-            sensorLoadsKGF: Array(repeating: load / 4, count: 4),
-            aggregateLoadKGF: load
+            sensorLoadsKGF: sensorLoadsKGF,
+            aggregateLoadKGF: sensorLoadsKGF.reduce(0, +)
         )
     }
 }
