@@ -916,7 +916,8 @@ struct WorkoutView: View {
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: context.date)
 				let isComplete = elapsed >= plan.duration
-				let isResting = step.phase == .rest || isRestInterval(step: step, stepElapsed: stepElapsed)
+				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+				let isResting = step.phase == .rest || isTimedResting
 				let highlightedStep = timeline.holdPreviewStep(at: elapsed)
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
@@ -926,7 +927,7 @@ struct WorkoutView: View {
 					step: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isResting: isResting,
+					isResting: isTimedResting,
 					isComplete: isComplete
 				)
 
