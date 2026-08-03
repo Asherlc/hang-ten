@@ -78,28 +78,85 @@ orientation remains user/device controlled.
 
 ## Apple Health authorization
 
-The app writes completed routines as `HKWorkout` records with activity type
-`.functionalStrengthTraining`. It does not request read access.
+Hang Ten uses `HKObjectType.workoutType()` for both HealthKit sharing (write)
+and reading. Authorization is requested only by the visible Connect Apple
+Health action. Progress appearance and scene-activation refreshes read the
+current state and history without presenting an authorization sheet or
+prompting.
 
 Required configuration:
 
 - `HealthKit.framework` linked by the target;
 - `HangTen/HangTen.entitlements` with
   `com.apple.developer.healthkit = true`;
+- `NSHealthShareUsageDescription` in generated Info.plist settings with the
+  value `Hang Ten reads your Apple Health workout history to restore your
+  progress on a new device.`;
 - `NSHealthUpdateUsageDescription` in generated Info.plist settings;
 - a user-initiated Connect Apple Health button.
 
-`HealthKitService.requestAuthorization` requests sharing permission for the
-workout type. `HealthAuthorizationState` drives the Progress card:
+`HealthKitService.requestAuthorization` requests both read and write
+permission for the workout type. HealthKit query results are filtered before
+they become history. Hang Ten imports only records that have all of the
+following:
 
-- unavailable: Health data is not available;
-- not determined: show Connect Apple Health;
-- denied: explain the state and open app settings;
-- authorized: completed routines save automatically.
+- activity type `.functionalStrengthTraining`;
+- the exact `HKMetadataKeyWorkoutBrandName` value `Hang Ten`;
+- a non-empty `HangTen.PlanName` metadata value.
+
+New records include the plan title and a `HangTen.SessionID` metadata value
+equal to the UUID of the local pending record created for that session. This
+stable ID is the primary reconciliation key. Older Hang Ten records without
+`HangTen.SessionID` remain importable when their plan title, start date, and
+end date exactly match a local record. A HealthKit workout UUID is also kept
+for retry reconciliation. Matching records are deduplicated so a migrated
+local session and its HealthKit workout count as one session.
+
+HealthKit-derived history is authoritative whenever an accepted Hang Ten
+workout is readable. Local `UserDefaults` records under
+`HangTen.pendingWorkoutHistory.v1` are pending/fallback records, not a
+permanent mirror. Hang Ten writes the local record before attempting the
+HealthKit save. After Connect Apple Health grants authorization, pending
+records are uploaded and retained until a later HealthKit query confirms them;
+unmatched local records remain visible while they are pending. A successful
+upload that is still hidden by read privacy remains marked as attempted, so a
+later refresh does not save a duplicate. There is no network history sync.
+
+An empty HealthKit query result is ambiguous because Apple hides denied read
+access in the same way as a genuinely empty readable result. The app must not
+interpret an empty result as proof that no workouts exist or that access was
+denied. It retains local pending records and uses them as fallback until a
+readable HealthKit result can reconcile them.
+
+`HealthAuthorizationState` drives the authorization portion of the Progress
+card. Its current status copy is:
+
+| State | Label | Detail | Action |
+| --- | --- | --- | --- |
+| unavailable | `Unavailable` | `Apple Health is not available on this device.` | none |
+| not determined | `Not connected` | `Connect once to save completed routines as functional strength workouts.` | `Connect Apple Health` |
+| denied | `Access denied` | `Workout access is off. You can enable it for Hang Ten in Settings.` | `Open app settings` |
+| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | none, unless local fallback remains |
+
+The authorization state reflects the workout sharing/write state exposed by
+HealthKit; `Connected` does not prove that workout reads are visible. The
+history source copy is:
+
+- `.healthKit`: `History synced from Apple Health.`
+- `.localFallback`: `History stored on this device until Apple Health is connected.`
+- `.syncing`: `Syncing Hang Ten history with Apple Health…`
+- `.unavailable`: `Apple Health history is unavailable; completed sessions stay on this device.`
+
+If a completion cannot sync, the Progress card reports
+`Session was saved locally and will retry Apple Health sync.` If a refresh
+cannot sync, it reports `Apple Health history could not sync. Local history
+remains available.` A request error supplied by HealthKit is shown using its
+localized description. These errors do not discard the local record.
 
 `saveCompletedWorkout` uses `HKWorkoutBuilder`: begin collection, attach Hang
-Ten plan metadata, end collection, then finish the workout. It runs only when
-authorization is granted and the end date is later than the start date.
+Ten brand, plan, and session metadata, end collection, then finish the
+workout. It runs only when write authorization is granted and the end date is
+later than the start date.
 Every builder stage reports failure back to `AppStore`; the local session stays
 logged, while the Progress card explains that the Health write failed. The
 saved interval keeps the session's original start date and ends at the earlier
@@ -108,7 +165,9 @@ prevents an early completion from writing a future HealthKit end date.
 
 The denied-state button is labeled Open app settings because iOS does not
 provide a public deep link to the exact Health permission row. Authorization
-state refreshes whenever the Progress scene becomes active again.
+and history refresh whenever Progress appears or its scene becomes active
+again. Returning from Settings therefore refreshes status and history without
+prompting.
 
 Do not trigger Health authorization at launch. Apple permission sheets must
 follow a clear user action. Do not mark a routine complete or save a workout
@@ -133,7 +192,10 @@ records it.
   `com.apple.developer.healthkit = true`.
 
 - Exercise permission states and completion on a dedicated simulator, then
-  repeat HealthKit writes on a physical device before release.
+  repeat HealthKit writes on a physical device before release. A simulator can
+  validate the permission flow and entitlement, but cross-device HealthKit
+  restoration must be tested on physical devices using the same HealthKit
+  account; Hang Ten does not provide network synchronization.
 - Verify audio with the simulator unmuted and once while other audio is playing
   to confirm ducking behavior.
 - Rotate during countdown, running, and paused states.

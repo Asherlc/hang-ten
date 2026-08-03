@@ -114,7 +114,6 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 | `HANGTEN_REVIEW_STEP=<step number>` | Preview any plan step without waiting. |
 | `HANGTEN_REVIEW_GRIP=<GripType raw value>` | Override the plan-detail grip preview. |
 | `HANGTEN_REVIEW_HEALTH=1` | Select the Progress tab and Health card. |
-| `HANGTEN_REVIEW_REQUEST_HEALTH=1` | Request the Health permission sheet after opening Progress. DEBUG validation only. |
 | `HANGTEN_REVIEW_LANDSCAPE=1` | Request landscape-right scene geometry. |
 | `HANGTEN_REVIEW_PORTRAIT=1` | Request portrait scene geometry. |
 | `HANGTEN_REVIEW_AUTOSTART=1` | Start the three-second countdown on launch. |
@@ -167,14 +166,44 @@ routine change, preview every distinct hold target and finger cue.
   speech with audio enabled. Repeat with the speaker toggle disabled.
 - Rotate while paused and while running; timer state and selected holds must
   remain stable.
-- Launch with `HANGTEN_REVIEW_HEALTH=1`, tap Connect Apple Health, inspect the
-  system permission sheet, and complete a short debug session on a signed
-  build. Simulator behavior does not replace a physical-device HealthKit test
-  before release.
-- For non-interactive screenshot validation, combine
-  `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_REQUEST_HEALTH=1`. The latter
-  invokes the same authorization method as the visible button and exists only
-  in DEBUG; production permission requests remain user-initiated.
+- Launch with `HANGTEN_REVIEW_HEALTH=1` on a fresh or permission-reset
+  dedicated simulator. This route opens the Progress tab and Health card; it
+  does not request authorization. Confirm the visible Connect Apple Health
+  action is present, then tap that action to start the user-initiated flow.
+- Confirm the system permission sheet requests both read and write access to
+  workouts and shows the revised read usage text about restoring progress on a
+  new device. Record the displayed authorization/status copy, including
+  `Not connected`, `Access denied`, `Connected`, and `Open app settings` as
+  applicable.
+- Before granting HealthKit access, complete a short routine and tap Log
+  session. Confirm the session count increases once, the Health card shows
+  `History stored on this device until Apple Health is connected.`, and the
+  session remains after leaving and returning to Progress. Tap End session in
+  a separate check and confirm it does not create a history record.
+- Grant HealthKit access later by tapping Connect Apple Health when it is
+  available, or by enabling Hang Ten's workout access in Settings after a
+  denial. Return to the app and wait for the scene-activation refresh. Confirm
+  the pending local session syncs to HealthKit, the source copy changes to
+  `History synced from Apple Health.`, and the same session is still counted
+  exactly once. If read access remains hidden and the query is empty, verify
+  the local fallback remains visible rather than treating the empty result as
+  proof of no history or denied access.
+- Relaunch the app on the same explicit simulator UUID, open Progress, and
+  confirm the HealthKit-backed count and latest plan title persist. Refresh or
+  relaunch again and verify migration does not double-count the session.
+- Open app Settings from the denied/local-fallback state, change Hang Ten's
+  Health permissions, return to the app, and confirm authorization and history
+  refresh automatically without a new permission prompt on appearance.
+- Preserve the signed HealthKit entitlement check. Inspect the installed app
+  and, for simulator builds, the intermediate `HangTen.app-Simulated.xcent`
+  under the workspace-specific Derived Data path; verify
+  `com.apple.developer.healthkit = true` and the generated read/write usage
+  descriptions. Use the exact simulator UUID for every command and never use
+  `booted`.
+- Simulator validation covers the permission flow, local fallback, migration,
+  and deduplication. It does not prove cross-device HealthKit restoration;
+  repeat that scenario on two physical devices using the same HealthKit
+  account before release.
 
 See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 
