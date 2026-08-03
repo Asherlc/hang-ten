@@ -59,6 +59,14 @@ DEVICES
     ;;
   delete)
     print -r -- "$2 $3" >> "$XCRUN_CALL_LOG"
+    if [[ -n "${SECOND_DELETE_FAIL_UUID:-}" && "$3" == "$SECOND_DELETE_FAIL_UUID" ]]; then
+      count_file=${SECOND_DELETE_COUNT_FILE:?}
+      count=0
+      [[ ! -f "$count_file" ]] || count=$(<"$count_file")
+      count=$((count + 1))
+      print -r -- "$count" > "$count_file"
+      [[ "$count" -lt 2 ]] || exit 1
+    fi
     [[ "${DELETE_FAIL_UUID:-}" != "$3" ]] || exit 1
     ;;
   *)
@@ -186,6 +194,26 @@ if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 CONDUCTOR_WORKSPACE_PAT
 fi
 archive_delete_failure_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_delete_failure_calls"
+
+print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
+print -r -- '11111111-1111-1111-1111-111111111111' > "$pending_manifest"
+duplicate_delete_count_file="$temp_dir/duplicate-delete-count"
+: > "$call_log"
+: > "$all_call_log"
+CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha SECOND_DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 SECOND_DELETE_COUNT_FILE="$duplicate_delete_count_file" run_cleanup archive
+duplicate_archive_calls=$(<"$call_log")
+duplicate_archive_delete_count=$(grep -c '^delete 11111111-1111-1111-1111-111111111111$' "$call_log" || true)
+[[ "$duplicate_archive_delete_count" -eq 1 ]] || {
+  print -u2 -- "expected archive to delete duplicate manifest UUID once, got $duplicate_archive_delete_count"
+  print -u2 -- "actual: $duplicate_archive_calls"
+  exit 1
+}
+[[ "$(<"$duplicate_delete_count_file")" -eq 1 ]] || {
+  print -u2 -- "expected fake xcrun to observe one delete for duplicate UUID"
+  exit 1
+}
+assert_all_call_log_contains_list_devices
+: > "$pending_manifest"
 
 : > "$call_log"
 : > "$all_call_log"

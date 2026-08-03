@@ -43,6 +43,7 @@ run_archive_cleanup() {
   local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix
   local manifests=()
   local result_status=0
+  typeset -A seen
 
   if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
     print -u2 -- 'archive requires CONDUCTOR_WORKSPACE_PATH and CONDUCTOR_WORKSPACE_NAME'
@@ -66,6 +67,9 @@ run_archive_cleanup() {
         result_status=1
         continue
       fi
+
+      [[ -n "${seen[$uuid]:-}" ]] && continue
+      seen[$uuid]=1
 
       record=$(device_record_for_uuid "$devices" "$uuid")
       [[ -n "$record" ]] || continue
