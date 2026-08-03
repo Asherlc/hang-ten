@@ -116,15 +116,30 @@ final class HealthKitService: WorkoutHealthStore {
     }
 
     static func record(from workout: HKWorkout) -> HealthWorkoutRecord {
-        let metadata = workout.metadata ?? [:]
-        return HealthWorkoutRecord(
+        record(
             id: workout.uuid,
             activityTypeRawValue: workout.workoutActivityType.rawValue,
+            metadata: workout.metadata ?? [:],
+            startDate: workout.startDate,
+            endDate: workout.endDate
+        )
+    }
+
+    static func record(
+        id: UUID,
+        activityTypeRawValue: UInt,
+        metadata: [String: Any],
+        startDate: Date,
+        endDate: Date
+    ) -> HealthWorkoutRecord {
+        HealthWorkoutRecord(
+            id: id,
+            activityTypeRawValue: activityTypeRawValue,
             brandName: metadata[HKMetadataKeyWorkoutBrandName] as? String,
             planTitle: metadata[HangTenHealthMetadata.planNameKey] as? String,
             sessionID: (metadata[HangTenHealthMetadata.sessionIDKey] as? String).flatMap(UUID.init),
-            startDate: workout.startDate,
-            endDate: workout.endDate
+            startDate: startDate,
+            endDate: endDate
         )
     }
 
@@ -209,24 +224,4 @@ final class HealthKitService: WorkoutHealthStore {
         }
     }
 
-    func saveCompletedWorkout(
-        title: String,
-        startDate: Date,
-        endDate: Date,
-        completion: @escaping (Error?) -> Void
-    ) {
-        saveCompletedWorkout(
-            id: UUID(),
-            title: title,
-            startDate: startDate,
-            endDate: endDate
-        ) { result in
-            switch result {
-            case .success:
-                completion(nil)
-            case let .failure(error):
-                completion(error)
-            }
-        }
-    }
 }

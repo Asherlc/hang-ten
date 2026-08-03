@@ -3,12 +3,13 @@ import XCTest
 @testable import HangTen
 
 final class HealthKitServiceTests: XCTestCase {
+    private let workoutID = UUID(uuidString: "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB")!
     private let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
     private let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
-    func testHealthKitWorkoutMapsHangTenMetadataAndSessionID() {
+    func testMapperPreservesHangTenMetadataAndSessionID() {
         let sessionID = UUID(uuidString: "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")!
-        let workout = workout(
+        let record = record(
             metadata: [
                 HKMetadataKeyWorkoutBrandName: HangTenHealthMetadata.brandName,
                 HangTenHealthMetadata.planNameKey: "Metolius Sequence",
@@ -16,9 +17,7 @@ final class HealthKitServiceTests: XCTestCase {
             ]
         )
 
-        let record = HealthKitService.record(from: workout)
-
-        XCTAssertEqual(record.id, workout.uuid)
+        XCTAssertEqual(record.id, workoutID)
         XCTAssertEqual(record.startDate, startDate)
         XCTAssertEqual(record.endDate, endDate)
         XCTAssertEqual(record.brandName, HangTenHealthMetadata.brandName)
@@ -27,53 +26,51 @@ final class HealthKitServiceTests: XCTestCase {
         XCTAssertTrue(record.isHangTen)
     }
 
-    func testHealthKitWorkoutWithoutSessionIDRemainsLegacyHangTenRecord() {
-        let record = HealthKitService.record(from: workout(
+    func testMapperKeepsLegacyHangTenRecordWithoutSessionID() {
+        let record = record(
             metadata: [
                 HKMetadataKeyWorkoutBrandName: HangTenHealthMetadata.brandName,
                 HangTenHealthMetadata.planNameKey: "Legacy Sequence"
             ]
-        ))
+        )
 
         XCTAssertNil(record.sessionID)
         XCTAssertTrue(record.isHangTen)
     }
 
-    func testHealthKitWorkoutFromAnotherBrandIsNotHangTen() {
-        let record = HealthKitService.record(from: workout(
+    func testMapperRejectsWorkoutFromAnotherBrand() {
+        let record = record(
             metadata: [
                 HKMetadataKeyWorkoutBrandName: "Other App",
                 HangTenHealthMetadata.planNameKey: "Metolius Sequence"
             ]
-        ))
+        )
 
         XCTAssertFalse(record.isHangTen)
     }
 
-    func testNonFunctionalStrengthHealthKitWorkoutIsNotHangTen() {
-        let record = HealthKitService.record(from: workout(
+    func testMapperRejectsNonFunctionalStrengthWorkout() {
+        let record = record(
             activityType: .running,
             metadata: [
                 HKMetadataKeyWorkoutBrandName: HangTenHealthMetadata.brandName,
                 HangTenHealthMetadata.planNameKey: "Metolius Sequence"
             ]
-        ))
+        )
 
         XCTAssertFalse(record.isHangTen)
     }
 
-    private func workout(
+    private func record(
         activityType: HKWorkoutActivityType = .functionalStrengthTraining,
         metadata: [String: Any]
-    ) -> HKWorkout {
-        HKWorkout(
-            activityType: activityType,
-            start: startDate,
-            end: endDate,
-            duration: endDate.timeIntervalSince(startDate),
-            totalEnergyBurned: nil,
-            totalDistance: nil,
-            metadata: metadata
+    ) -> HealthWorkoutRecord {
+        HealthKitService.record(
+            id: workoutID,
+            activityTypeRawValue: activityType.rawValue,
+            metadata: metadata,
+            startDate: startDate,
+            endDate: endDate
         )
     }
 }
