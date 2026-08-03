@@ -21,24 +21,43 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(manager.scanCount, 1)
     }
 
-    func testCoreBluetoothTransportRejectsAnonymousAdvertisement() {
+    func testCoreBluetoothTransportDoesNotEmitOrStoreAnonymousAdvertisement() {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeDiscoveryPeripheral(name: nil)
+        let central = CBCentralManager(delegate: nil, queue: nil)
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
 
-        XCTAssertFalse(transport.isExpectedMotherboard(
-            peripheralName: nil,
-            advertisedLocalName: nil
-        ))
+        transport.centralManager(central, didDiscover: peripheral, advertisementData: [:], rssi: -60)
+
+        XCTAssertTrue(discoveredDevices.isEmpty)
+        XCTAssertFalse(transport.hasDiscoveredPeripheral(withID: peripheral.identifier))
     }
 
-    func testCoreBluetoothTransportAcceptsMotherboardLocalName() {
+    func testCoreBluetoothTransportEmitsAndStoresMotherboardLocalNameAdvertisement() {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeDiscoveryPeripheral(name: nil)
+        let central = CBCentralManager(delegate: nil, queue: nil)
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
 
-        XCTAssertTrue(transport.isExpectedMotherboard(
-            peripheralName: nil,
-            advertisedLocalName: "Motherboard"
-        ))
+        transport.centralManager(
+            central,
+            didDiscover: peripheral,
+            advertisementData: [CBAdvertisementDataLocalNameKey: "Motherboard"],
+            rssi: -60
+        )
+
+        XCTAssertEqual(discoveredDevices, [MotherboardDiscoveredDevice(id: peripheral.identifier, name: "Motherboard")])
+        XCTAssertTrue(transport.hasDiscoveredPeripheral(withID: peripheral.identifier))
     }
 
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
@@ -708,8 +727,15 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.lastError, "Motherboard scan timed out. Move the sensor closer and try again.")
     }
 
-    func testNonFiniteScanTimeoutsAreIgnored() async throws {
-        for delay in [TimeInterval.nan, .infinity] {
+    func testInvalidScanTimeoutsAreIgnored() async throws {
+        for delay in [
+            TimeInterval.nan,
+            -.infinity,
+            .infinity,
+            0,
+            -0.01,
+            .greatestFiniteMagnitude
+        ] {
             let transport = FakeMotherboardTransport()
             let service = MotherboardBluetoothService(
                 transport: transport,
@@ -974,6 +1000,15 @@ private final class FakeCentralManager: MotherboardCentralManaging {
     func stopScan() {}
     func connect(_ peripheral: CBPeripheral, options: [String: Any]?) {}
     func cancelPeripheralConnection(_ peripheral: CBPeripheral) {}
+}
+
+private final class FakeDiscoveryPeripheral: MotherboardDiscoveryPeripheral {
+    let identifier = UUID()
+    let name: String?
+
+    init(name: String?) {
+        self.name = name
+    }
 }
 
 private enum TestNotificationError: Error {

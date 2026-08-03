@@ -390,7 +390,8 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {
         cancelTimeout()
-        guard delay.isFinite, delay > 0 else { return }
+        let maximumDelay = TimeInterval(UInt64.max / 1_000_000_000)
+        guard delay.isFinite, delay > 0, delay <= maximumDelay else { return }
         let nanoseconds = UInt64(delay * 1_000_000_000)
         timeoutTask = Task { [weak self] in
             do {
@@ -426,13 +427,24 @@ protocol MotherboardCentralManaging: AnyObject {
 
 extension CBCentralManager: MotherboardCentralManaging {}
 
+protocol MotherboardDiscoveryPeripheral {
+    var identifier: UUID { get }
+    var name: String? { get }
+}
+
+extension CBPeripheral: MotherboardDiscoveryPeripheral {}
+
 @MainActor
 final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     var eventHandler: ((MotherboardTransportEvent) -> Void)?
 
+    private struct DiscoveredPeripheral {
+        let peripheral: CBPeripheral?
+    }
+
     private let centralManagerFactory: (CBCentralManagerDelegate) -> MotherboardCentralManaging
     private var centralManager: MotherboardCentralManaging?
-    private var discoveredPeripherals: [UUID: CBPeripheral] = [:]
+    private var discoveredPeripherals: [UUID: DiscoveredPeripheral] = [:]
     private var selectedPeripheral: CBPeripheral?
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
@@ -450,7 +462,11 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         super.init()
     }
 
-    func isExpectedMotherboard(peripheralName: String?, advertisedLocalName: String?) -> Bool {
+    func hasDiscoveredPeripheral(withID id: UUID) -> Bool {
+        discoveredPeripherals[id] != nil
+    }
+
+    private func isExpectedMotherboard(peripheralName: String?, advertisedLocalName: String?) -> Bool {
         (peripheralName ?? advertisedLocalName) == "Motherboard"
     }
 
@@ -469,7 +485,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     func connect(to device: MotherboardDiscoveredDevice) {
         stopScan()
-        guard let peripheral = discoveredPeripherals[device.id] else {
+        guard let peripheral = discoveredPeripherals[device.id]?.peripheral else {
             eventHandler?(.disconnected("Motherboard is no longer available."))
             return
         }
@@ -561,6 +577,22 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         advertisementData: [String: Any],
         rssi RSSI: NSNumber
     ) {
+        centralManager(
+            central,
+            didDiscover: peripheral,
+            advertisementData: advertisementData,
+            rssi: RSSI,
+            storedPeripheral: peripheral
+        )
+    }
+
+    func centralManager<Peripheral: MotherboardDiscoveryPeripheral>(
+        _ central: CBCentralManager,
+        didDiscover peripheral: Peripheral,
+        advertisementData: [String: Any],
+        rssi RSSI: NSNumber,
+        storedPeripheral: CBPeripheral? = nil
+    ) {
         let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
         guard isExpectedMotherboard(
             peripheralName: peripheral.name,
@@ -568,7 +600,7 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         ) else { return }
         let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
 
-        discoveredPeripherals[peripheral.identifier] = peripheral
+        discoveredPeripherals[peripheral.identifier] = DiscoveredPeripheral(peripheral: storedPeripheral)
         eventHandler?(.discovered(MotherboardDiscoveredDevice(
             id: peripheral.identifier,
             name: advertisedName
