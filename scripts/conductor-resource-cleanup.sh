@@ -11,7 +11,7 @@ is_uuid() {
 
 is_review_device_name() {
   [[ "$1" =~ '^(HangTen|Hang Ten)([[:space:]]|$)' ]] || return 1
-  [[ "$1" =~ '(^|[[:space:]])(Task[0-9]*|Validation|Scratch)($|[[:space:]])' ]] && return 1
+  [[ "$1" =~ '(^|[[:space:]])(Shared|Team|Task(-?[[:alnum:]]*)?|Validation[[:alnum:]]*|Scratch[[:alnum:]]*)($|[[:space:]])' ]] && return 1
   [[ "$1" =~ '(^|[[:space:]])Review[0-9]*($|[[:space:]])' ]]
 }
 
@@ -34,7 +34,7 @@ device_record_for_uuid() {
       actual_uuid = fields
       sub(/^.* \(/, "", actual_uuid)
       sub(/\)$/, "", actual_uuid)
-      if (actual_uuid != uuid) next
+      if (toupper(actual_uuid) != toupper(uuid)) next
 
       name = fields
       sub(/ \([^()]*\)$/, "", name)

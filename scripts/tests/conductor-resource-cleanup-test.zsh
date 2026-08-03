@@ -49,6 +49,7 @@ case "$2" in
 -- iOS 26.5 --
     Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111) (Shutdown)
     Hang Ten Conductor alpha Review Lowercase (ABABABAB-ABAB-ABAB-ABAB-ABABABABABAB) (Shutdown)
+    Hang Ten Conductor alpha Lowercase Device (cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd) (Shutdown)
     Hang Ten Conductor alpha Review Booted (74747474-7474-7474-7474-747474747474) (Booted)
     Hang Ten Conductor alpha Running (22222222-2222-2222-2222-222222222222) (Booted)
     Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333) (Shutdown)
@@ -68,6 +69,9 @@ case "$2" in
     HangTen bariloche Task Review (73737373-7373-7373-7373-737373737373) (Shutdown)
     Hang Ten Worcester Validation Review (71717171-7171-7171-7171-717171717171) (Shutdown)
     Hang Ten Worcester Scratch Review (72727272-7272-7272-7272-727272727272) (Shutdown)
+    Hang Ten Shared Review (73737370-7373-7373-7373-737373737370) (Shutdown)
+    Hang Ten Team Task-5 Review (73737371-7373-7373-7373-737373737371) (Shutdown)
+    Hang Ten Team Validation2 Review (73737372-7373-7373-7373-737373737372) (Shutdown)
     HangTennis Review (31313131-3131-3131-3131-313131313131) (Shutdown)
     Hang Tenacious Review (32323232-3232-3232-3232-323232323232) (Shutdown)
 DEVICES
@@ -152,6 +156,17 @@ assert_contains 'delete ABABABAB-ABAB-ABAB-ABAB-ABABABABABAB' "$lowercase_uuid_c
 assert_not_contains 'delete abababab-abab-abab-abab-abababababab' "$lowercase_uuid_calls"
 [[ ! -s "$manifest" ]] || {
   print -u2 -- 'lowercase manifest UUID was not consumed after successful delete'
+  exit 1
+}
+
+print -r -- 'CDCDCDCD-CDCD-CDCD-CDCD-CDCDCDCDCDCD' > "$manifest"
+: > "$call_log"
+: > "$all_call_log"
+CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive
+lowercase_device_record_calls=$(<"$call_log")
+assert_contains 'delete CDCDCDCD-CDCD-CDCD-CDCD-CDCDCDCDCDCD' "$lowercase_device_record_calls"
+[[ ! -s "$manifest" ]] || {
+  print -u2 -- 'uppercase manifest UUID did not match lowercase simctl device record'
   exit 1
 }
 
@@ -290,6 +305,9 @@ assert_not_contains '31313131-3131-3131-3131-313131313131' "$dry_run"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$dry_run"
 assert_not_contains '71717171-7171-7171-7171-717171717171' "$dry_run"
 assert_not_contains '72727272-7272-7272-7272-727272727272' "$dry_run"
+assert_not_contains '73737370-7373-7373-7373-737373737370' "$dry_run"
+assert_not_contains '73737371-7373-7373-7373-737373737371' "$dry_run"
+assert_not_contains '73737372-7373-7373-7373-737373737372' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
@@ -322,6 +340,9 @@ assert_not_contains '31313131-3131-3131-3131-313131313131' "$prune_calls"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$prune_calls"
 assert_not_contains '71717171-7171-7171-7171-717171717171' "$prune_calls"
 assert_not_contains '72727272-7272-7272-7272-727272727272' "$prune_calls"
+assert_not_contains 'delete 73737370-7373-7373-7373-737373737370' "$prune_calls"
+assert_not_contains 'delete 73737371-7373-7373-7373-737373737371' "$prune_calls"
+assert_not_contains 'delete 73737372-7373-7373-7373-737373737372' "$prune_calls"
 assert_all_call_log_contains_list_devices
 
 assert_rejects_malformed_args_without_xcrun() {
