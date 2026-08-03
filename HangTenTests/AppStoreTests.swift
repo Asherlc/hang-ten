@@ -129,6 +129,11 @@ final class AppStoreTests: XCTestCase {
 
         let healthStore = FakeHealthWorkoutSaving()
         let appStore = AppStore(healthKitService: healthStore, userDefaults: defaults)
+        let authorizationCompleted = expectation(description: "authorization completed")
+        healthStore.onAuthorizationRequest = { state in
+            XCTAssertEqual(state, .authorized)
+            authorizationCompleted.fulfill()
+        }
         let plan = PlanCatalog.all[0]
         let board = appStore.board(for: plan)
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
@@ -142,6 +147,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertFalse(expectedActivitySegments.isEmpty)
 
         appStore.requestHealthAuthorization()
+        wait(for: [authorizationCompleted], timeout: 1)
         appStore.markSessionComplete(
             plan,
             board: board,
@@ -448,11 +454,13 @@ private final class FakeHealthWorkoutSaving: HealthWorkoutSaving {
     }
 
     var authorizationState: HealthAuthorizationState = .authorized
+    var onAuthorizationRequest: ((HealthAuthorizationState) -> Void)?
     private(set) var savedWorkouts: [SavedWorkout] = []
 
     func requestAuthorization(
         completion: @escaping (HealthAuthorizationState, Error?) -> Void
     ) {
+        onAuthorizationRequest?(authorizationState)
         completion(authorizationState, nil)
     }
 
