@@ -50,6 +50,18 @@ final class AppStore: ObservableObject {
 
 	convenience init(
 		healthKitService: any HealthWorkoutSaving,
+		workoutHistoryStore: any WorkoutHistoryPersistence,
+		defaults: UserDefaults = .standard
+	) {
+		self.init(
+			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+			workoutHistoryStore: workoutHistoryStore,
+			defaults: defaults
+		)
+	}
+
+	convenience init(
+		healthKitService: any HealthWorkoutSaving,
 		userDefaults: UserDefaults
 	) {
 		self.init(

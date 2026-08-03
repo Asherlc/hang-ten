@@ -129,7 +129,11 @@ final class AppStoreTests: XCTestCase {
 
         let healthStore = FakeHealthWorkoutSaving()
         healthStore.authorizationState = .notDetermined
-        let appStore = AppStore(healthKitService: healthStore, userDefaults: defaults)
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
         let plan = PlanCatalog.all[0]
         let board = appStore.board(for: plan)
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
