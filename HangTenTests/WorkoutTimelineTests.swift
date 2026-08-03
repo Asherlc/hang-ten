@@ -193,28 +193,26 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    func testCompletionIntervalMapsMonotonicElapsedTimeOntoAbsoluteStartDate() {
+    func testCompletionIntervalMapsExplicitActiveElapsedTimeOntoAbsoluteStartDate() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
 
         let interval = WorkoutSessionPolicy.completedWorkoutInterval(
             sessionStartedAt: sessionStart,
-            sessionStartedMonotonicAt: 100,
             planDuration: 600,
-            loggedAtMonotonic: 124.5
+            elapsed: 24.5
         )
 
         XCTAssertEqual(interval.start, sessionStart)
         XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
     }
 
-    func testCompletionIntervalCapsMonotonicElapsedTimeAtPlanDuration() {
+    func testCompletionIntervalCapsExplicitActiveElapsedTimeAtPlanDuration() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
 
         let interval = WorkoutSessionPolicy.completedWorkoutInterval(
             sessionStartedAt: sessionStart,
-            sessionStartedMonotonicAt: 100,
             planDuration: 60,
-            loggedAtMonotonic: 180
+            elapsed: 80
         )
 
         XCTAssertEqual(interval.start, sessionStart)

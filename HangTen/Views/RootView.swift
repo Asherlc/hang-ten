@@ -873,14 +873,13 @@ enum WorkoutSessionPolicy {
 
     static func completedWorkoutInterval(
         sessionStartedAt: Date,
-        sessionStartedMonotonicAt: TimeInterval,
         planDuration: TimeInterval,
-        loggedAtMonotonic: TimeInterval
+        elapsed: TimeInterval
     ) -> DateInterval {
-        let elapsed = min(planDuration, max(0, loggedAtMonotonic - sessionStartedMonotonicAt))
+        let activeElapsed = min(planDuration, max(0, elapsed))
         return DateInterval(
             start: sessionStartedAt,
-            end: sessionStartedAt.addingTimeInterval(elapsed)
+            end: sessionStartedAt.addingTimeInterval(activeElapsed)
         )
     }
 }
@@ -918,7 +917,6 @@ struct WorkoutView: View {
 
     @State private var workoutClock = WorkoutClock()
     @State private var routineStartedAt: Date?
-    @State private var routineStartedMonotonicAt: TimeInterval?
     @State private var showEndConfirmation = false
     @State private var showsStepPicker = false
     @State private var didComplete = false
@@ -1465,12 +1463,10 @@ struct WorkoutView: View {
 			audioCoach.stop()
         } else {
             let now = Date()
-            let monotonicTime = WorkoutClock.monotonicTime
             let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
             let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
             if isFirstStart {
                 routineStartedAt = start
-                routineStartedMonotonicAt = monotonicTime + 3
             }
 			workoutClock.start(initialCountdown: isFirstStart ? 3 : 0)
         }
@@ -1479,7 +1475,6 @@ struct WorkoutView: View {
     private func cancelCountdown() {
         workoutClock.reset()
         routineStartedAt = nil
-		routineStartedMonotonicAt = nil
 		audioCoach.stop()
     }
 
@@ -1515,12 +1510,10 @@ struct WorkoutView: View {
 		let loggedAtMonotonic = WorkoutClock.monotonicTime
 		finalizeAllStopwatches(at: loggedAtMonotonic)
         let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
-		let startMonotonic = routineStartedMonotonicAt ?? loggedAtMonotonic - plan.duration
 		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
-			sessionStartedMonotonicAt: startMonotonic,
 			planDuration: plan.duration,
-			loggedAtMonotonic: loggedAtMonotonic
+			elapsed: currentElapsed
 		)
 		audioCoach.stop()
 		let snapshot = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
