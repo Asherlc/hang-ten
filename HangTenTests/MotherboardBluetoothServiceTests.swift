@@ -32,6 +32,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             discoveredDevices.append(device)
         }
 
+        transport.startScan()
+
         deliverDiscovery(
             peripheral.coreBluetoothPeripheral,
             to: transport,
@@ -55,6 +57,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             discoveredDevices.append(device)
         }
 
+        transport.startScan()
+
         deliverDiscovery(
             peripheral.coreBluetoothPeripheral,
             to: transport,
@@ -77,6 +81,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             guard case .discovered(let device) = event else { return }
             discoveredDevices.append(device)
         }
+
+        transport.startScan()
 
         deliverDiscovery(
             peripheral.coreBluetoothPeripheral,
