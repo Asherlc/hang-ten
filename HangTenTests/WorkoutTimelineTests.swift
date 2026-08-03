@@ -132,6 +132,26 @@ final class WorkoutClockTests: XCTestCase {
         XCTAssertEqual(clock.elapsed, 0)
     }
 
+    func testSeekedClockShowsANewInitialCountdownBeforeElapsedResumes() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.seek(to: 60)
+        clock.start(initialCountdown: 3)
+
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1.1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 60.1, accuracy: 0.000_1)
+    }
+
     func testPauseAndResumePreserveElapsedTime() {
         var now: TimeInterval = 100
         var clock = WorkoutClock(now: { now })
@@ -173,17 +193,31 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    func testCompletionIntervalPreservesSessionStartAndNeverEndsAfterLogTime() {
+    func testCompletionIntervalMapsMonotonicElapsedTimeOntoAbsoluteStartDate() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
-        let loggedAt = Date(timeIntervalSinceReferenceDate: 1_120)
 
         let interval = WorkoutSessionPolicy.completedWorkoutInterval(
             sessionStartedAt: sessionStart,
+            sessionStartedMonotonicAt: 100,
             planDuration: 600,
-            loggedAt: loggedAt
+            loggedAtMonotonic: 124.5
         )
 
         XCTAssertEqual(interval.start, sessionStart)
-        XCTAssertEqual(interval.end, loggedAt)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
+    }
+
+    func testCompletionIntervalCapsMonotonicElapsedTimeAtPlanDuration() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            sessionStartedMonotonicAt: 100,
+            planDuration: 60,
+            loggedAtMonotonic: 180
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_060))
     }
 }

@@ -13,6 +13,11 @@ elapsed time; resume starts from that value. A new routine starts three seconds
 in the future, which makes the initial 3-2-1 countdown part of the same clock
 instead of a second timer.
 
+Stopwatch start, pause, display, and finalization use that same monotonic uptime
+source. `Date` remains only the absolute start timestamp and is paired with the
+monotonic elapsed duration to derive the completed HealthKit interval, so wall
+clock adjustments cannot change observed activity durations.
+
 While a workout is visible, Hang Ten disables the idle timer. If the scene
 becomes inactive because the device locks or the athlete switches apps, the
 routine pauses and stops speech instead of letting the clock cross silent cue

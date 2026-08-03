@@ -873,12 +873,14 @@ enum WorkoutSessionPolicy {
 
     static func completedWorkoutInterval(
         sessionStartedAt: Date,
+        sessionStartedMonotonicAt: TimeInterval,
         planDuration: TimeInterval,
-        loggedAt: Date
+        loggedAtMonotonic: TimeInterval
     ) -> DateInterval {
-        DateInterval(
+        let elapsed = min(planDuration, max(0, loggedAtMonotonic - sessionStartedMonotonicAt))
+        return DateInterval(
             start: sessionStartedAt,
-            end: min(sessionStartedAt.addingTimeInterval(planDuration), loggedAt)
+            end: sessionStartedAt.addingTimeInterval(elapsed)
         )
     }
 }
@@ -886,21 +888,21 @@ enum WorkoutSessionPolicy {
 enum WorkoutStopwatchLifecycle {
     static func finalizeStopwatches(
         for stepID: String,
-        at date: Date,
+        at monotonicTime: TimeInterval,
         in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
     ) {
         for key in stopwatches.keys where key.stepID == stepID {
-            finalizeStopwatch(for: key, at: date, in: &stopwatches)
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
         }
     }
 
     static func finalizeStopwatch(
         for key: WorkoutActivitySegmentKey,
-        at date: Date,
+        at monotonicTime: TimeInterval,
         in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
     ) {
         guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
-        stopwatch.stop(at: date)
+        stopwatch.stop(at: monotonicTime)
         stopwatches[key] = stopwatch
     }
 }
@@ -916,6 +918,7 @@ struct WorkoutView: View {
 
     @State private var workoutClock = WorkoutClock()
     @State private var routineStartedAt: Date?
+    @State private var routineStartedMonotonicAt: TimeInterval?
     @State private var showEndConfirmation = false
     @State private var showsStepPicker = false
     @State private var didComplete = false
@@ -933,6 +936,7 @@ struct WorkoutView: View {
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed
 				let step = step(at: elapsed)
 				let stepElapsed = elapsedInStep(at: elapsed)
@@ -957,7 +961,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
-							date: context.date,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -969,7 +973,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
-							date: context.date,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -986,14 +990,14 @@ struct WorkoutView: View {
 				}
 				.onChange(of: isComplete, initial: true) { _, complete in
 					guard complete else { return }
-					finalizeAllStopwatches(at: context.date)
+					finalizeAllStopwatches(at: monotonicTime)
 				}
 				.onChange(of: step.id) { previousStepID, _ in
-					finalizeStopwatches(for: previousStepID, at: context.date)
+					finalizeStopwatches(for: previousStepID, at: monotonicTime)
 				}
 				.onChange(of: isResting) { wasResting, resting in
 					guard resting, !wasResting else { return }
-					finalizeCurrentStopwatch(at: context.date)
+					finalizeCurrentStopwatch(at: monotonicTime)
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
@@ -1058,7 +1062,7 @@ struct WorkoutView: View {
 			pauseForInterruption()
 		}
 		.onDisappear {
-			finalizeAllStopwatches(at: Date())
+			finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
@@ -1068,7 +1072,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
-		date: Date,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1085,7 +1089,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -1109,7 +1113,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
-		date: Date,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1154,7 +1158,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 					.frame(width: 224)
 			}
 		}
@@ -1355,12 +1359,12 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, date: Date) -> some View {
+    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, monotonicTime: TimeInterval) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
-                stopwatchControl(for: key, at: date)
+                stopwatchControl(for: key, at: monotonicTime)
             }
 
             Button {
@@ -1413,9 +1417,9 @@ struct WorkoutView: View {
         .buttonStyle(.plain)
     }
 
-    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at date: Date) -> some View {
+    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
         let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
-        let elapsed = stopwatch.elapsed(at: date) ?? 0
+        let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
         let label = stopwatch.isFinalized
             ? "Stopwatch finalized"
             : stopwatch.isRunning
@@ -1431,7 +1435,7 @@ struct WorkoutView: View {
                 .frame(maxWidth: .infinity)
 
             Button {
-                toggleStopwatch(for: key, at: Date())
+                toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
             } label: {
                 Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
                     .frame(maxWidth: .infinity)
@@ -1455,16 +1459,18 @@ struct WorkoutView: View {
 				cancelCountdown()
 				return
 			}
-			let now = Date()
-			pauseStopwatches(at: now)
+			let monotonicTime = WorkoutClock.monotonicTime
+			pauseStopwatches(at: monotonicTime)
 			workoutClock.pause()
 			audioCoach.stop()
         } else {
             let now = Date()
+            let monotonicTime = WorkoutClock.monotonicTime
             let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
             let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
             if isFirstStart {
                 routineStartedAt = start
+                routineStartedMonotonicAt = monotonicTime + 3
             }
 			workoutClock.start(initialCountdown: isFirstStart ? 3 : 0)
         }
@@ -1473,18 +1479,19 @@ struct WorkoutView: View {
     private func cancelCountdown() {
         workoutClock.reset()
         routineStartedAt = nil
+		routineStartedMonotonicAt = nil
 		audioCoach.stop()
     }
 
     private func endSession() {
-        finalizeAllStopwatches(at: Date())
+		finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 		workoutClock.reset()
 		audioCoach.stop()
         dismiss()
     }
 
 	private func pauseForInterruption() {
-		pauseStopwatches(at: Date())
+		pauseStopwatches(at: WorkoutClock.monotonicTime)
 		guard workoutClock.isRunning else {
 			audioCoach.stop()
 			return
@@ -1505,16 +1512,19 @@ struct WorkoutView: View {
         }
         didComplete = true
 		let loggedAt = Date()
-		finalizeAllStopwatches(at: loggedAt)
+		let loggedAtMonotonic = WorkoutClock.monotonicTime
+		finalizeAllStopwatches(at: loggedAtMonotonic)
         let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
+		let startMonotonic = routineStartedMonotonicAt ?? loggedAtMonotonic - plan.duration
 		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
+			sessionStartedMonotonicAt: startMonotonic,
 			planDuration: plan.duration,
-			loggedAt: loggedAt
+			loggedAtMonotonic: loggedAtMonotonic
 		)
 		audioCoach.stop()
 		let snapshot = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
-			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAt) else { return }
+			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAtMonotonic) else { return }
 			result[entry.key] = elapsed
 		}
 		store.markSessionComplete(
@@ -1560,7 +1570,7 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed
         guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
-		finalizeCurrentStopwatch(at: Date())
+		finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
         seek(to: target)
     }
 
@@ -1569,7 +1579,7 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed
         guard let target = timeline.skipTarget(from: elapsed) else { return }
-		finalizeCurrentStopwatch(at: Date())
+		finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
         seek(to: target)
     }
 
@@ -1590,39 +1600,39 @@ struct WorkoutView: View {
 		return keys.first(where: { !(stopwatches[$0]?.isFinalized ?? false) }) ?? keys.last
 	}
 
-	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at date: Date) {
+	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) {
 		guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
 		if stopwatch.isRunning {
-			stopwatch.pause(at: date)
+			stopwatch.pause(at: monotonicTime)
 		} else {
-			stopwatch.start(at: date)
+			stopwatch.start(at: monotonicTime)
 		}
 		stopwatches[key] = stopwatch
 	}
 
-	private func pauseStopwatches(at date: Date) {
+	private func pauseStopwatches(at monotonicTime: TimeInterval) {
 		for key in stopwatches.keys {
 			guard var stopwatch = stopwatches[key], stopwatch.isRunning else { continue }
-			stopwatch.pause(at: date)
+			stopwatch.pause(at: monotonicTime)
 			stopwatches[key] = stopwatch
 		}
 	}
 
-	private func finalizeCurrentStopwatch(at date: Date) {
+	private func finalizeCurrentStopwatch(at monotonicTime: TimeInterval) {
 		let elapsed = currentElapsed
 		let step = step(at: elapsed)
 		guard let key = currentStopwatchKey(for: step) else { return }
-		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: date, in: &stopwatches)
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
 	}
 
-	private func finalizeStopwatches(for stepID: String, at date: Date) {
-		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: date, in: &stopwatches)
+	private func finalizeStopwatches(for stepID: String, at monotonicTime: TimeInterval) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: monotonicTime, in: &stopwatches)
 	}
 
-	private func finalizeAllStopwatches(at date: Date) {
+	private func finalizeAllStopwatches(at monotonicTime: TimeInterval) {
 		for key in stopwatches.keys {
 			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
-			stopwatch.stop(at: date)
+			stopwatch.stop(at: monotonicTime)
 			stopwatches[key] = stopwatch
 		}
 	}

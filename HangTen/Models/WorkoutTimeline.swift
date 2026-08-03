@@ -1,11 +1,15 @@
 import Foundation
 
 struct WorkoutClock {
+    static var monotonicTime: TimeInterval {
+        ProcessInfo.processInfo.systemUptime
+    }
+
     private let now: () -> TimeInterval
     private var pausedElapsed: TimeInterval = 0
     private var activeStart: TimeInterval?
 
-    init(now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }) {
+    init(now: @escaping () -> TimeInterval = { WorkoutClock.monotonicTime }) {
         self.now = now
     }
 
@@ -19,7 +23,7 @@ struct WorkoutClock {
     }
 
     var countdownRemaining: Int {
-        guard pausedElapsed == 0, let activeStart else {
+        guard let activeStart else {
             return 0
         }
 
