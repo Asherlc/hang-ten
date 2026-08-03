@@ -150,14 +150,16 @@ final class AppStore: ObservableObject {
                 on: board,
                 stopwatchDurations: stopwatchDurations
             )
-			healthKitService.recordActivityContext(
-				planTitle: plan.title,
-				startDate: startDate,
-				endDate: endDate,
-				boardID: board.id,
-				boardName: board.name,
-				activitySegments: activitySegments
-			)
+			if hasRequestedHealthAuthorization {
+				healthKitService.recordActivityContext(
+					planTitle: plan.title,
+					startDate: startDate,
+					endDate: endDate,
+					boardID: board.id,
+					boardName: board.name,
+					activitySegments: activitySegments
+				)
+			}
 			recordingErrorMessage = nil
         } catch {
 			recordingErrorMessage = "Session logged in Hang Ten, but \(error.localizedDescription)"
@@ -273,6 +275,7 @@ private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
 	}
 
 	private let base: any WorkoutHealthStore
+	private let activityContextsLock = NSLock()
 	private var activityContexts: [ActivityContext] = []
 
 	init(_ base: any WorkoutHealthStore) {
@@ -307,6 +310,8 @@ private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
 		boardName: String,
 		activitySegments: [RecordedActivitySegment]
 	) {
+		activityContextsLock.lock()
+		defer { activityContextsLock.unlock() }
 		activityContexts.append(
 			ActivityContext(
 				planTitle: planTitle,
@@ -326,11 +331,12 @@ private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
 		endDate: Date,
 		completion: @escaping (Result<UUID, Error>) -> Void
 	) {
-		guard let contextIndex = activityContexts.firstIndex(where: {
-			$0.planTitle == title &&
-				$0.startDate == startDate &&
-				$0.endDate == endDate
-		}) else {
+		let context = takeActivityContext(
+			planTitle: title,
+			startDate: startDate,
+			endDate: endDate
+		)
+		guard let context else {
 			base.saveCompletedWorkout(
 				id: id,
 				title: title,
@@ -341,7 +347,6 @@ private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
 			return
 		}
 
-		let context = activityContexts.remove(at: contextIndex)
 		base.saveCompletedWorkout(
 			id: id,
 			title: title,
@@ -352,6 +357,23 @@ private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
 			activitySegments: context.activitySegments,
 			completion: completion
 		)
+	}
+
+	private func takeActivityContext(
+		planTitle: String,
+		startDate: Date,
+		endDate: Date
+	) -> ActivityContext? {
+		activityContextsLock.lock()
+		defer { activityContextsLock.unlock() }
+		guard let contextIndex = activityContexts.firstIndex(where: {
+			$0.planTitle == planTitle &&
+				$0.startDate == startDate &&
+				$0.endDate == endDate
+		}) else {
+			return nil
+		}
+		return activityContexts.remove(at: contextIndex)
 	}
 }
 

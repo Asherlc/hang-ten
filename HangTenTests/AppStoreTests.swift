@@ -90,6 +90,38 @@ final class AppStoreTests: XCTestCase {
         XCTAssertFalse(historyStore.load()[0].healthUploadAttempted)
     }
 
+    func testCompletionBeforeConnectDoesNotAttachActivityContextWhenMigratedAfterConnect() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = PlanCatalog.all[0]
+        let board = appStore.board(for: plan)
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
+
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate
+        )
+        waitForHistory(in: appStore)
+
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertEqual(healthStore.savedActivityContexts, [nil])
+    }
+
     func testConnectEnablesHealthKitRefreshAndPendingMigration() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -374,12 +406,19 @@ private enum FakeHealthError: Error {
 }
 
 private final class FakeWorkoutHealthStore: WorkoutHealthStore {
+    struct SavedActivityContext: Equatable {
+        let boardID: String
+        let boardName: String
+        let activitySegments: [RecordedActivitySegment]
+    }
+
     var isHealthDataAvailable = true
     var authorizationState: HealthAuthorizationState = .authorized
     var fetchResult: Result<[HealthWorkoutRecord], Error>
     var saveResult: Result<UUID, Error>
     var deferSave: Bool
     private(set) var savedIDs: [UUID] = []
+    private(set) var savedActivityContexts: [SavedActivityContext?] = []
     private(set) var requestCallCount = 0
     private(set) var fetchCallCount = 0
     private(set) var saveCallCount = 0
@@ -417,6 +456,33 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         savedIDs.append(id)
+        savedActivityContexts.append(nil)
+        saveCallCount += 1
+        if deferSave {
+            saveCompletions.append(completion)
+        } else {
+            completion(saveResult)
+        }
+    }
+
+    func saveCompletedWorkout(
+        id: UUID,
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment],
+        completion: @escaping (Result<UUID, Error>) -> Void
+    ) {
+        savedIDs.append(id)
+        savedActivityContexts.append(
+            SavedActivityContext(
+                boardID: boardID,
+                boardName: boardName,
+                activitySegments: activitySegments
+            )
+        )
         saveCallCount += 1
         if deferSave {
             saveCompletions.append(completion)
