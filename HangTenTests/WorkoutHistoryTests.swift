@@ -83,6 +83,25 @@ final class WorkoutHistoryTests: XCTestCase {
         )
     }
 
+    func testLegacyMatchingNormalizesLocalAndHealthPlanTitles() {
+        let local = PendingWorkoutRecord(
+            id: UUID(),
+            planTitle: "  Metolius Sequence  ",
+            startDate: startDate,
+            endDate: endDate,
+            healthUploadAttempted: true,
+            healthWorkoutUUID: nil
+        )
+
+        XCTAssertEqual(
+            WorkoutHistoryMatcher.matchingHealthWorkout(
+                for: local,
+                in: [healthRecord.with(planTitle: " Metolius Sequence ")]
+            )?.id,
+            healthRecord.id
+        )
+    }
+
     func testSnapshotSortsDeduplicatesAndAddsUnmatchedLocalRecords() {
         let newerID = UUID(uuidString: "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD")!
         let newer = healthRecord.with(
@@ -133,6 +152,24 @@ final class WorkoutHistoryTests: XCTestCase {
         )
 
         XCTAssertEqual(snapshot, WorkoutHistorySnapshot(entries: [], source: .healthKit))
+    }
+
+    func testSuccessfulFilteredHealthQueryWithLocalHistoryUsesLocalFallback() {
+        let local = PendingWorkoutRecord(
+            id: UUID(), planTitle: "Pending Plan", startDate: startDate, endDate: endDate,
+            healthUploadAttempted: true, healthWorkoutUUID: nil
+        )
+        let filteredRecord = healthRecord.with(brandName: "Other App")
+
+        let snapshot = WorkoutHistoryMatcher.snapshot(
+            healthRecords: [filteredRecord],
+            localRecords: [local],
+            healthQuerySucceeded: true,
+            healthDataAvailable: true
+        )
+
+        XCTAssertEqual(snapshot.source, .localFallback)
+        XCTAssertEqual(snapshot.entries.map(\.id), [local.id])
     }
 }
 

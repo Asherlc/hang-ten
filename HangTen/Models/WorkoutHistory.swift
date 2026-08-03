@@ -76,7 +76,8 @@ enum WorkoutHistoryMatcher {
             record.isHangTen && (
                 record.sessionID == localRecord.id ||
                 record.id == localRecord.healthWorkoutUUID ||
-                (record.planTitle?.trimmingCharacters(in: .whitespacesAndNewlines) == localRecord.planTitle &&
+                (record.planTitle?.trimmingCharacters(in: .whitespacesAndNewlines) ==
+                    localRecord.planTitle.trimmingCharacters(in: .whitespacesAndNewlines) &&
                     record.startDate == localRecord.startDate &&
                     record.endDate == localRecord.endDate)
             )
@@ -109,7 +110,7 @@ enum WorkoutHistoryMatcher {
 
         let entries = (healthEntries + unmatchedLocalEntries).sorted(by: newestFirst)
         let source: WorkoutHistorySource
-        if healthQuerySucceeded {
+        if healthQuerySucceeded && !acceptedHealthRecords.isEmpty {
             source = .healthKit
         } else if !unmatchedLocalEntries.isEmpty {
             source = .localFallback
