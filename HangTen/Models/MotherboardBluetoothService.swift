@@ -61,6 +61,10 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var connectedDeviceID: UUID?
     @Published private(set) var isTaring = false
     @Published private(set) var tareSamplesCollected = 0
+    @Published private(set) var bodyweightKGF: Double?
+    @Published private(set) var isMeasuringBodyweight = false
+    @Published private(set) var bodyweightMeasurementStartedAt: Date?
+    @Published private(set) var bodyweightSampleCount = 0
 
     let tareSampleTarget: Int
 
@@ -71,9 +75,11 @@ final class MotherboardBluetoothService: ObservableObject {
     private var calibration: MotherboardCalibration?
     private var tareKGF = Array(repeating: 0.0, count: 4)
     private var tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+    private var bodyweightSamplesKGF: [Double] = []
     private var wantsConnection = false
     private var reconnectAttempts = 0
     private var timeoutTask: Task<Void, Never>?
+    private var bodyweightMeasurementTask: Task<Void, Never>?
     private var lastPowerState: MotherboardBluetoothPowerState = .unknown
 
     init(
@@ -131,6 +137,27 @@ final class MotherboardBluetoothService: ObservableObject {
         tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
         tareSamplesCollected = 0
         isTaring = true
+    }
+
+    @discardableResult
+    func beginBodyweightMeasurement(duration: TimeInterval) -> Bool {
+        guard state == .streaming else { return false }
+
+        cancelBodyweightMeasurement()
+        let measurementDuration = duration.isFinite ? max(0, duration) : 0
+        let nanoseconds = UInt64(measurementDuration * 1_000_000_000)
+        isMeasuringBodyweight = true
+        bodyweightMeasurementStartedAt = Date()
+        bodyweightMeasurementTask = Task { [weak self] in
+            do {
+                try await Task.sleep(nanoseconds: nanoseconds)
+            } catch {
+                return
+            }
+            guard !Task.isCancelled else { return }
+            self?.completeBodyweightMeasurement()
+        }
+        return true
     }
 
     private func handle(_ event: MotherboardTransportEvent) {
@@ -224,6 +251,7 @@ final class MotherboardBluetoothService: ObservableObject {
                 latestMeasurement = measurement
                 batteryValue = measurement.batteryValue
                 collectTareSample(measurement)
+                collectBodyweightSample(measurement)
 
             case .streamStarted(let rate):
                 guard rate == 30, calibration != nil else { continue }
@@ -277,6 +305,8 @@ final class MotherboardBluetoothService: ObservableObject {
         calibration = nil
         tareKGF = Array(repeating: 0.0, count: 4)
         cancelTare()
+        cancelBodyweightMeasurement()
+        bodyweightKGF = nil
         latestMeasurement = nil
         batteryValue = nil
         connectedDeviceID = nil
@@ -298,6 +328,29 @@ final class MotherboardBluetoothService: ObservableObject {
         isTaring = false
         tareSamplesCollected = 0
         tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
+    }
+
+    private func collectBodyweightSample(_ measurement: MotherboardMeasurement) {
+        guard isMeasuringBodyweight, measurement.aggregateLoadKGF.isFinite else { return }
+        bodyweightSamplesKGF.append(measurement.aggregateLoadKGF)
+        bodyweightSampleCount = bodyweightSamplesKGF.count
+    }
+
+    private func completeBodyweightMeasurement() {
+        guard isMeasuringBodyweight else { return }
+        if !bodyweightSamplesKGF.isEmpty {
+            bodyweightKGF = bodyweightSamplesKGF.reduce(0, +) / Double(bodyweightSamplesKGF.count)
+        }
+        cancelBodyweightMeasurement()
+    }
+
+    private func cancelBodyweightMeasurement() {
+        bodyweightMeasurementTask?.cancel()
+        bodyweightMeasurementTask = nil
+        isMeasuringBodyweight = false
+        bodyweightMeasurementStartedAt = nil
+        bodyweightSampleCount = 0
+        bodyweightSamplesKGF = []
     }
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {

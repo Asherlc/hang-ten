@@ -232,6 +232,73 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertFalse(service.isTaring)
     }
 
+    func testBodyweightMeasurementAveragesFiniteAggregateLoadsAndClearsActiveState() async throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        XCTAssertTrue(service.isMeasuringBodyweight)
+        XCTAssertNotNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 250)
+        emitRawPacket(on: transport, sampleNumber: 3, adc: 300)
+        try await Task.sleep(for: .milliseconds(100))
+
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 10, accuracy: 0.0001)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+    }
+
+    func testBodyweightMeasurementRejectsDisconnectedService() {
+        let service = MotherboardBluetoothService(transport: FakeMotherboardTransport())
+
+        XCTAssertFalse(service.beginBodyweightMeasurement(duration: 0.05))
+        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+    }
+
+    func testDisconnectCancelsBodyweightMeasurement() async throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 250)
+        XCTAssertEqual(service.bodyweightSampleCount, 1)
+
+        service.disconnect()
+        try await Task.sleep(for: .milliseconds(100))
+
+        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+    }
+
+    func testSecondBodyweightMeasurementReplacesExistingBaseline() async throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
+        try await Task.sleep(for: .milliseconds(100))
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 8, accuracy: 0.0001)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 300)
+        try await Task.sleep(for: .milliseconds(100))
+
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 12, accuracy: 0.0001)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+    }
+
     func testStopStreamingCleansUpToIdleAndAllowsExplicitReconnect() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
