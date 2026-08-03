@@ -935,7 +935,9 @@ struct WorkoutAudioMoment: Hashable {
 }
 
 struct MotherboardWorkoutMeasurementCollector {
+    static let maximumMeasurementCount = 20_000
     private(set) var measurements: [MotherboardMeasurement] = []
+    private(set) var didTruncate = false
 
     mutating func capture(
         _ measurement: MotherboardMeasurement,
@@ -949,11 +951,17 @@ struct MotherboardWorkoutMeasurementCollector {
               countdownRemaining == 0,
               workoutElapsed < planDuration else { return }
 
+        if measurements.count >= Self.maximumMeasurementCount {
+            didTruncate = true
+            return
+        }
+
         measurements.append(measurement)
     }
 
     mutating func reset() {
         measurements = []
+        didTruncate = false
     }
 }
 
@@ -1236,11 +1244,8 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
-		.onChange(of: motherboardBluetoothService.latestMeasurement) { _, measurement in
-			guard let measurement else { return }
-			consume(measurement)
-		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+			consume(measurement)
 			capture(measurement)
 		}
 		.onChange(of: motherboardBluetoothService.state) { previousState, state in
