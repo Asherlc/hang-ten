@@ -107,7 +107,7 @@ cues, rest prompts, and completion audio are no longer selected by
 Commit created after review:
 
 ```text
-COMMIT_HASH_RECORDED_AFTER_COMMIT
+798634d
 ```
 
 ## Concerns
@@ -116,3 +116,62 @@ The focused and full simulator XCTest executions could not be conclusively
 run because the shared iPhone 17 Pro simulator repeatedly stalled or timed
 out while other workspace agents were using simulator/build resources. The
 production build and test-target `build-for-testing` both passed.
+
+## Final-review fix round (2026-08-03)
+
+### Report correction
+
+- Corrected the committed report's placeholder commit value to the actual
+  implementation commit: `798634d` (`fix: limit workout speech to countdown
+  cues`).
+- This fix round changes only this report; it does not alter
+  `HangTen/Views/RootView.swift`, `HangTenTests/WorkoutTimelineTests.swift`,
+  or `README.md`.
+
+### Bounded XCTest retry
+
+The dedicated workspace simulator was present and Booted as `Hang Ten trenton
+Voice Countdown Review 20260803`
+(`E0FDD040-9FA6-4D62-B521-381A5DECEA16`). I retried the focused policy suite
+with a hard 180-second process limit, explicit UUID, isolated Derived Data,
+and parallel testing disabled:
+
+```text
+rtk perl -e 'alarm 180; exec @ARGV' xcodebuild -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=E0FDD040-9FA6-4D62-B521-381A5DECEA16' -derivedDataPath .context/DerivedData-trenton-voice-countdown -parallel-testing-enabled NO -only-testing:HangTenTests/WorkoutAudioCuePolicyTests test
+```
+
+Observed output began with only the existing Xcode warnings:
+
+```text
+DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion.
+```
+
+The generated XCTest scheduling log then recorded, after 18 seconds:
+
+```text
+Failed to establish communication with the test runner
+Simulator indicated unix domain socket for testmanagerd at path .../com.apple.testmanagerd.unix-domain.socket, but no file was found at that path.
+Finished executing tests (cancelled: No)
+```
+
+The corresponding result bundle was incomplete/corrupt: this bounded
+inspection command exited with the following error:
+
+```text
+rtk perl -e 'alarm 30; exec @ARGV' xcrun xcresulttool get test-results summary --path .context/DerivedData-trenton-voice-countdown/Logs/Test/Test-HangTen-2026.08.03_11-10-03--0700.xcresult
+Error: Failed to create a new result bundle reader ... Info.plist ... does not exist
+```
+
+### Final verification status and remaining concerns
+
+- The report correction is self-reviewed: it identifies the actual
+  implementation commit and clearly distinguishes compile evidence from
+  incomplete XCTest/runtime evidence.
+- Focused and full simulator XCTest verification remains inconclusive. The
+  retry failed in the simulator's `testmanagerd` service before the test
+  runner could communicate, so it yielded no XCTest assertion result. This is
+  an environmental simulator/runtime-service failure, consistent with the
+  concurrent simulator/build contention noted above, not an observed product
+  failure.
+- The controller is performing independent runtime validation. No additional
+  runtime claim is made by this report fix round.
