@@ -231,3 +231,89 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         XCTAssertEqual(interval.end, loggedAt)
     }
 }
+
+final class WorkoutAudioCuePolicyTests: XCTestCase {
+    private let stepID = "f80-set-2-rep-3"
+
+    func testInitialCountdownReturnsOnlyNumericValues() {
+        for countdown in [3, 2, 1] {
+            let moment = WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: countdown,
+                intervalSecondsRemaining: 60,
+                isComplete: false
+            )
+
+            XCTAssertEqual(
+                moment,
+                WorkoutAudioMoment(
+                    key: "initial-\(countdown)",
+                    phrase: "\(countdown)"
+                )
+            )
+        }
+    }
+
+    func testIntervalCountdownReturnsNumericValuesWithStableSegmentKeys() {
+        for secondsRemaining in [3, 2, 1] {
+            let moment = WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 0,
+                intervalSecondsRemaining: secondsRemaining,
+                isComplete: false
+            )
+
+            XCTAssertEqual(
+                moment,
+                WorkoutAudioMoment(
+                    key: "\(stepID)-active-\(secondsRemaining)",
+                    phrase: "\(secondsRemaining)"
+                )
+            )
+        }
+    }
+
+    func testSegmentStartAndNormalIntervalReturnNoCue() {
+        XCTAssertNil(
+            WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "rest",
+                initialCountdown: 0,
+                intervalSecondsRemaining: 60,
+                isComplete: false
+            )
+        )
+    }
+
+    func testCompletionReturnsNoCueEvenDuringTheFinalThreeSeconds() {
+        XCTAssertNil(
+            WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 0,
+                intervalSecondsRemaining: 3,
+                isComplete: true
+            )
+        )
+    }
+
+    func testShortIntervalReturnsOnlyTheApplicableNumber() {
+        let moment = WorkoutAudioCuePolicy.moment(
+            stepID: stepID,
+            segmentName: "rest",
+            initialCountdown: 0,
+            intervalSecondsRemaining: 2,
+            isComplete: false
+        )
+
+        XCTAssertEqual(
+            moment,
+            WorkoutAudioMoment(
+                key: "\(stepID)-rest-2",
+                phrase: "2"
+            )
+        )
+    }
+}
