@@ -32,6 +32,18 @@ case "$2" in
       print -r -- "    Hang Ten Conductor alpha Review Transition ($PRUNE_TRANSITION_UUID) (Booted)"
       exit 0
     fi
+    if [[ -n "${4:-}" && -n "${PRUNE_RENAME_UUID:-}" && "$4" == "$PRUNE_RENAME_UUID" ]]; then
+      print -- '== Devices =='
+      print -- '-- iOS 26.5 --'
+      print -r -- "    iPhone 17 Pro ($PRUNE_RENAME_UUID) (Shutdown)"
+      exit 0
+    fi
+    if [[ -n "${4:-}" && -n "${PRUNE_NAME_UUID:-}" && "$4" == "$PRUNE_NAME_UUID" ]]; then
+      print -- '== Devices =='
+      print -- '-- iOS 26.5 --'
+      print -r -- "    Hang Ten Conductor alpha Review named $PRUNE_NAME_UUID (77777777-7777-7777-7777-777777777777) (Shutdown)"
+      exit 0
+    fi
     cat <<'DEVICES'
 == Devices ==
 -- iOS 26.5 --
@@ -318,9 +330,32 @@ assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_delete_fai
 
 : > "$call_log"
 : > "$all_call_log"
-transition_output=$(PRUNE_TRANSITION_UUID=12121212-1212-1212-1212-121212121212 run_cleanup prune --delete 2>&1)
+if transition_output=$(PRUNE_TRANSITION_UUID=12121212-1212-1212-1212-121212121212 run_cleanup prune --delete 2>&1); then
+  print -u2 -- 'prune accepted a simulator that changed from Shutdown to Booted'
+  exit 1
+fi
 transition_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$transition_calls"
 assert_contains 'Skipping simulator no longer Shutdown: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) is Booted' "$transition_output"
+
+: > "$call_log"
+: > "$all_call_log"
+if rename_output=$(PRUNE_RENAME_UUID=12121212-1212-1212-1212-121212121212 run_cleanup prune --delete 2>&1); then
+  print -u2 -- 'prune accepted a simulator renamed to a standard device'
+  exit 1
+fi
+rename_calls=$(<"$call_log")
+assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$rename_calls"
+assert_contains 'Skipping simulator no longer has a review name: iPhone 17 Pro (12121212-1212-1212-1212-121212121212)' "$rename_output"
+
+: > "$call_log"
+: > "$all_call_log"
+if name_output=$(PRUNE_NAME_UUID=12121212-1212-1212-1212-121212121212 run_cleanup prune --delete 2>&1); then
+  print -u2 -- 'prune matched a UUID appearing only in a device name'
+  exit 1
+fi
+name_calls=$(<"$call_log")
+assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$name_calls"
+assert_contains 'Skipping simulator no longer available: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$name_output"
 
 print -- 'conductor resource cleanup tests passed'

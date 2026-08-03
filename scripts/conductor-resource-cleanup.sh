@@ -23,14 +23,21 @@ device_record_for_uuid() {
       line = $0
       sub(/^[[:space:]]+/, "", line)
       sub(/[[:space:]]+$/, "", line)
-      marker = " (" uuid ") ("
-      if (index(line, marker) == 0) next
-
-      name = line
-      sub(/ \([^)]*\) \([^)]*\)$/, "", name)
       state = line
+      if (state !~ / \([^()]*\)$/) next
       sub(/^.* \(/, "", state)
       sub(/\)$/, "", state)
+
+      fields = line
+      sub(/ \([^()]*\)$/, "", fields)
+      if (fields !~ / \([^()]*\)$/) next
+      actual_uuid = fields
+      sub(/^.* \(/, "", actual_uuid)
+      sub(/\)$/, "", actual_uuid)
+      if (actual_uuid != uuid) next
+
+      name = fields
+      sub(/ \([^()]*\)$/, "", name)
       print name "\t" state
       exit
     }
@@ -100,7 +107,7 @@ run_archive_cleanup() {
 
 run_prune() {
   local option=${1:-}
-  local devices current_devices record device_name device_state uuid
+  local devices current_devices record device_name current_device_name device_state uuid
   local result_status=0
 
   if [[ -n "$option" && "$option" != --delete ]]; then
@@ -121,9 +128,16 @@ run_prune() {
         result_status=1
         continue
       fi
+      current_device_name=${record%%$'\t'*}
       device_state=${record#*$'\t'}
+      if ! is_review_device_name "$current_device_name"; then
+        print -u2 -- "Skipping simulator no longer has a review name: $current_device_name ($uuid)"
+        result_status=1
+        continue
+      fi
       if [[ "$device_state" != Shutdown ]]; then
         print -u2 -- "Skipping simulator no longer Shutdown: $device_name ($uuid) is $device_state"
+        result_status=1
         continue
       fi
       if ! xcrun simctl delete "$uuid"; then
