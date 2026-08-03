@@ -206,6 +206,27 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
     }
 
+    func testCompletionIntervalExcludesPausedGapFromClockElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        clock.start(initialCountdown: 0)
+        now += 12.5
+        clock.pause()
+        now += 3_600
+        clock.start(initialCountdown: 0)
+        now += 7.5
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 600,
+            elapsed: clock.elapsed
+        )
+
+        XCTAssertEqual(interval.duration, 20, accuracy: 0.000_1)
+    }
+
     func testCompletionIntervalCapsExplicitActiveElapsedTimeAtPlanDuration() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
 
