@@ -33,6 +33,12 @@ case "$2" in
     Hang Ten Conductor alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
     Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
     Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
+    HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010) (Shutdown)
+    Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020) (Shutdown)
+    Hang Ten Worcester Validation (30303030-3030-3030-3030-303030303030) (Shutdown)
+    Hang Ten Worcester Preview (40404040-4040-4040-4040-404040404040) (Shutdown)
+    Hang Ten Worcester Reviewing (50505050-5050-5050-5050-505050505050) (Shutdown)
+    HangTen bariloche Task5 (60606060-6060-6060-6060-606060606060) (Shutdown)
 DEVICES
     print -r -- '    Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
     ;;
@@ -144,7 +150,13 @@ assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333
 assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
+assert_contains 'Would delete HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010)' "$dry_run"
+assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
+assert_not_contains '30303030-3030-3030-3030-303030303030' "$dry_run"
+assert_not_contains '40404040-4040-4040-4040-404040404040' "$dry_run"
+assert_not_contains '50505050-5050-5050-5050-505050505050' "$dry_run"
+assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
@@ -158,9 +170,15 @@ assert_contains 'delete 33333333-3333-3333-3333-333333333333' "$prune_calls"
 assert_contains 'delete 77777777-7777-7777-7777-777777777777' "$prune_calls"
 assert_contains 'delete 88888888-8888-8888-8888-888888888888' "$prune_calls"
 assert_contains 'delete 99999999-9999-9999-9999-999999999999' "$prune_calls"
+assert_contains 'delete 10101010-1010-1010-1010-101010101010' "$prune_calls"
+assert_contains 'delete 20202020-2020-2020-2020-202020202020' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$prune_calls"
+assert_not_contains '30303030-3030-3030-3030-303030303030' "$prune_calls"
+assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
+assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
+assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
 
 : > "$call_log"
 if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 run_cleanup prune --delete; then
