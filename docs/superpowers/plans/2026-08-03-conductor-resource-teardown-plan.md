@@ -336,6 +336,13 @@ cleanup_on_exit() {
   if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
     cleanup_status=$fallback_cleanup_status
   fi
+  artifact_cleanup_status=0
+  rm -rf -- "$workspace_path/.context/DerivedData" || artifact_cleanup_status=$?
+  rm -f -- "$workspace_path/.context/workout-raw.png" || artifact_cleanup_status=$?
+  rm -f -- "$workspace_path/.context/workout-landscape.png" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
   if (( original_status != 0 )); then
     exit "$original_status"
   fi
