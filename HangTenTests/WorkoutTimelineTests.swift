@@ -128,3 +128,59 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         XCTAssertEqual(interval.end, loggedAt)
     }
 }
+
+final class MetoliusTaskExpansionTests: XCTestCase {
+    func testPullUpTasksUseFiveSecondsPerPullUp() throws {
+        let task = MetoliusCycleBuilder.pullUps(
+            count: 3,
+            title: "Three pull-ups",
+            instruction: "Do 3 pull-ups on the jugs.",
+            phase: .pull,
+            targets: [.feature(.jug)]
+        )
+
+        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 1, tasks: [task])
+
+        XCTAssertEqual(steps[0].duration, 15)
+        XCTAssertEqual(steps[1].phase, .rest)
+        XCTAssertEqual(steps[1].duration, 45)
+    }
+
+    func testExpansionKeepsTaskOrderAndAddsRemainingMinuteRest() throws {
+        let first = MetoliusCycleBuilder.fixed(
+            title: "First hang",
+            instruction: "Hang for 15 seconds.",
+            duration: 15,
+            phase: .hang,
+            targets: [.feature(.largeEdge)]
+        )
+        let second = MetoliusCycleBuilder.pullUps(
+            count: 2,
+            title: "Pull-ups",
+            instruction: "Do 2 pull-ups.",
+            phase: .pull,
+            targets: [.feature(.jug)]
+        )
+
+        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 2, tasks: [first, second])
+
+        XCTAssertEqual(steps.map(\.id), ["test.minute-2.task-1", "test.minute-2.task-2", "test.minute-2.rest"])
+        XCTAssertEqual(steps.map(\.duration), [15, 10, 35])
+        XCTAssertEqual(steps[0].targets, first.targets)
+        XCTAssertEqual(steps[1].targets, second.targets)
+    }
+
+    func testExpansionRejectsTasksThatExceedTheMinute() {
+        let overfull = MetoliusTaskDefinition(
+            title: "Overfull",
+            instruction: "Overfull",
+            accessory: "",
+            duration: 61,
+            phase: .hang,
+            targets: [.feature(.largeEdge)],
+            gripType: nil
+        )
+
+        XCTAssertThrowsError(try MetoliusCycleBuilder.expand(planID: "test", minute: 3, tasks: [overfull]))
+    }
+}

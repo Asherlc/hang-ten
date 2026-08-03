@@ -344,6 +344,34 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 }
 
+struct MetoliusTaskDefinition: Hashable {
+    let title: String
+    let instruction: String
+    let accessory: String
+    let duration: TimeInterval
+    let phase: WorkoutPhase
+    let targets: [HoldTarget]
+    let gripType: GripType?
+
+    init(
+        title: String,
+        instruction: String,
+        accessory: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) {
+        self.title = title
+        self.instruction = instruction
+        self.accessory = accessory
+        self.duration = duration
+        self.phase = phase
+        self.targets = targets
+        self.gripType = gripType
+    }
+}
+
 enum RoutineProvenance: String, Codable, Hashable {
     case official
     case adapted
@@ -582,6 +610,137 @@ enum BoardCatalog {
 
     static func board(for id: String?) -> TrainingBoard {
         all.first { $0.id == id } ?? compactII
+    }
+}
+
+enum MetoliusCycleBuilder {
+    static let cycleDuration: TimeInterval = 60
+    static let pullUpDuration: TimeInterval = 5
+    static let repetitionDuration: TimeInterval = 1
+
+    enum Error: Swift.Error, Equatable {
+        case overfullCycle(total: TimeInterval, cycleDuration: TimeInterval)
+    }
+
+    static func pullUps(
+        count: Int,
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        task(
+            title: title,
+            instruction: instruction,
+            accessory: "\(count) pull-ups",
+            duration: TimeInterval(count) * pullUpDuration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func repetitions(
+        count: Int,
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        task(
+            title: title,
+            instruction: instruction,
+            accessory: "\(count) reps",
+            duration: TimeInterval(count) * repetitionDuration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func fixed(
+        title: String,
+        instruction: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        task(
+            title: title,
+            instruction: instruction,
+            accessory: "\(Int(duration))s \(phase.label.lowercased())",
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
+    static func expand(
+        planID: String,
+        minute: Int,
+        tasks: [MetoliusTaskDefinition]
+    ) throws -> [WorkoutStep] {
+        let total = tasks.reduce(0) { $0 + $1.duration }
+        guard total <= cycleDuration else {
+            throw Error.overfullCycle(total: total, cycleDuration: cycleDuration)
+        }
+
+        var steps = tasks.enumerated().map { index, task in
+            WorkoutStep(
+                id: "\(planID).minute-\(minute).task-\(index + 1)",
+                number: index + 1,
+                title: task.title,
+                instruction: task.instruction,
+                accessory: task.accessory,
+                duration: task.duration,
+                phase: task.phase,
+                targets: task.targets,
+                gripType: task.gripType,
+                timedWorkDuration: task.duration
+            )
+        }
+
+        let remaining = cycleDuration - total
+        if remaining > 0 {
+            steps.append(
+                WorkoutStep(
+                    id: "\(planID).minute-\(minute).rest",
+                    number: tasks.count + 1,
+                    title: "Rest",
+                    instruction: "Step off the board, shake out, and breathe until the minute ends.",
+                    accessory: "\(Int(remaining))s rest",
+                    duration: remaining,
+                    phase: .rest,
+                    targets: []
+                )
+            )
+        }
+
+        return steps
+    }
+
+    private static func task(
+        title: String,
+        instruction: String,
+        accessory: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType?
+    ) -> MetoliusTaskDefinition {
+        MetoliusTaskDefinition(
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
     }
 }
 
