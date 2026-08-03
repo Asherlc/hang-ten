@@ -146,6 +146,18 @@ final class WorkoutClockTests: XCTestCase {
         now += 0.4
         XCTAssertEqual(clock.elapsed, 2.1, accuracy: 0.000_1)
     }
+
+    func testRunningSeekRebasesTheActiveAnchorWithoutDoubleCounting() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1
+        clock.seek(to: 10)
+        now += 0.4
+
+        XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
+    }
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {

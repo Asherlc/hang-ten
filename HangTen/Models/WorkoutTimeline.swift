@@ -34,7 +34,7 @@ struct WorkoutClock {
         guard activeStart == nil else {
             return
         }
-        activeStart = now() + max(0, initialCountdown) - pausedElapsed
+        activeStart = now() + max(0, initialCountdown)
     }
 
     mutating func pause() {
@@ -50,7 +50,7 @@ struct WorkoutClock {
     mutating func seek(to elapsed: TimeInterval) {
         pausedElapsed = max(0, elapsed)
         if activeStart != nil {
-            activeStart = now() - pausedElapsed
+            activeStart = now()
         }
     }
 }
