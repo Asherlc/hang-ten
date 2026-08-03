@@ -329,12 +329,28 @@ rtk git commit -m "Use inline plan filter menus"
 
 ## Final validation
 
-- [ ] Create a dedicated simulator named `Hang Ten Worcester Plans Filters Review` on the available iOS 26.5 runtime, assign its returned identifier to `review_device_uuid`, and use that exact UUID for every validation command.
+- [ ] Create a dedicated simulator owned by the current Conductor workspace on
+  the available iOS 26.5 runtime, assign its returned identifier to
+  `review_device_uuid`, record it before boot/build, and use that exact UUID for
+  every validation command.
 - [ ] Build with a workspace-specific derived-data directory:
 
 ```bash
-review_device_uuid="$(rtk xcrun simctl create 'Hang Ten Worcester Plans Filters Review' 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData-plans-filters build
+workspace_name="$CONDUCTOR_WORKSPACE_NAME"
+test -n "$workspace_name"
+mkdir -p .context
+simulator_name="Hang Ten Conductor $workspace_name Plans Filters Review"
+review_device_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
+printf '%s\n' "$review_device_uuid" >> .context/conductor-owned-simulators
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$PWD" \
+  CONDUCTOR_WORKSPACE_NAME="$CONDUCTOR_WORKSPACE_NAME" \
+  scripts/conductor-resource-cleanup.sh archive
+}
+trap cleanup EXIT INT TERM
+
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData build
 ```
 
 - [ ] Boot the dedicated device, wait for readiness, install the resulting app, and launch it through the Plans review route:
@@ -342,15 +358,18 @@ rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -
 ```bash
 rtk xcrun simctl boot "${review_device_uuid}"
 rtk xcrun simctl bootstatus "${review_device_uuid}" -b
-rtk xcrun simctl install "${review_device_uuid}" .context/DerivedData-plans-filters/Build/Products/Debug-iphonesimulator/HangTen.app
+rtk xcrun simctl install "${review_device_uuid}" .context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app
 SIMCTL_CHILD_HANGTEN_REVIEW_PLANS=1 rtk xcrun simctl launch "${review_device_uuid}" com.hangten.training
 ```
 
 - [ ] Confirm the inline quick-dropdown bar exposes every available facet, supports multiple selections across repeated menu opens, shows selected-value labels and checkmarks, clears either a single facet with `All` or every facet with `Clear`, and preserves plan-card navigation.
 - [ ] Confirm selecting an impossible combination shows `No routines match these filters`, and clearing filters restores the compatible plan cards.
 - [ ] Confirm a board with no compatible plans still shows the original compatibility empty state.
-- [ ] Shut down only the dedicated review-device UUID after validation:
+- [ ] Delete the dedicated review-device UUID after validation through the
+  ownership-aware archive cleanup command:
 
 ```bash
-rtk xcrun simctl shutdown "${review_device_uuid}"
+CONDUCTOR_WORKSPACE_PATH="$PWD" \
+CONDUCTOR_WORKSPACE_NAME="$CONDUCTOR_WORKSPACE_NAME" \
+scripts/conductor-resource-cleanup.sh archive
 ```
