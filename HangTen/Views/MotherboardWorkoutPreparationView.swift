@@ -98,22 +98,8 @@ struct MotherboardWorkoutPreparationView: View {
         }
     }
 
-    @ViewBuilder
     private var bodyweightContent: some View {
-        if preparation.isBodyweightCaptureInProgress {
-            TimelineView(.periodic(from: .now, by: 0.1)) { context in
-                bodyweightContent(at: context.date)
-            }
-        } else {
-            bodyweightContent(at: .now)
-        }
-    }
-
-    private func bodyweightContent(at date: Date) -> some View {
-        let progress = bodyweightProgress(at: date)
-        let remaining = max(0, bodyweightCaptureDuration * (1 - progress))
-
-        return VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             SectionLabel(title: "Step 2 of 2")
             Text(preparation.isBodyweightCaptureInProgress ? "Capture bodyweight" : "Ready to hang")
                 .font(.system(size: 30, weight: .bold, design: .rounded))
@@ -125,16 +111,9 @@ struct MotherboardWorkoutPreparationView: View {
                 .foregroundStyle(Color.hangMuted)
 
             if preparation.isBodyweightCaptureInProgress {
-                ProgressView(value: progress)
-                    .tint(Color.hangGreenDark)
-
-                HStack {
-                    Text("\(service.bodyweightSampleCount) samples")
-                    Spacer()
-                    Text("\(durationText(remaining)) remaining")
+                TimelineView(.periodic(from: .now, by: 0.1)) { context in
+                    bodyweightCaptureProgress(at: context.date)
                 }
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
             } else if preparation.isAwaitingBodyweightCapture {
                 Button("Start bodyweight measurement", action: startBodyweightCapture)
                     .buttonStyle(.borderedProminent)
@@ -156,6 +135,24 @@ struct MotherboardWorkoutPreparationView: View {
             Button("Skip bodyweight", action: skipPreparation)
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
+        }
+    }
+
+    private func bodyweightCaptureProgress(at date: Date) -> some View {
+        let progress = bodyweightProgress(at: date)
+        let remaining = max(0, bodyweightCaptureDuration * (1 - progress))
+
+        return VStack(alignment: .leading, spacing: 16) {
+            ProgressView(value: progress)
+                .tint(Color.hangGreenDark)
+
+            HStack {
+                Text("\(service.bodyweightSampleCount) samples")
+                Spacer()
+                Text("\(durationText(remaining)) remaining")
+            }
+            .font(.system(size: 14, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangInk)
         }
     }
 
