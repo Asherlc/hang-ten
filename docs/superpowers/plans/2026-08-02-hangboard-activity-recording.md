@@ -33,6 +33,7 @@
 - `HangTen/Resources/PlanLibrary.json`: generated version-3 plan data with explicit work/rest/stopwatch/undefined segments.
 - `HangTen/Models/WorkoutActivityRecording.swift`: pure board resolution, recorded segment values, HealthKit metadata envelope, and JSON encoding.
 - `HangTen/Models/WorkoutStopwatch.swift`: injectable-clock stopwatch state machine.
+- `HangTen.xcodeproj/project.pbxproj`: explicit app/test source registration for each new Swift file.
 - `HangTen/Models/AppStore.swift`: reuse the pure resolver and pass board/activity metadata into HealthKit.
 - `HangTen/Models/HealthKitService.swift`: attach board and activity metadata to the existing workout builder.
 - `HangTen/Views/RootView.swift`: stopwatch state, portrait/landscape stopwatch controls, lifecycle finalization, and completion payload handoff.
@@ -48,11 +49,12 @@
 
 **Files:**
 - Modify: `HangTen/Models/TrainingModels.swift`
+- Modify: `HangTen.xcodeproj/project.pbxproj`
 - Create: `HangTenTests/WorkoutSegmentTests.swift`
 
 **Interfaces:**
-- Produces `WorkoutSegmentKind` with `.work` and `.rest`.
-- Produces `WorkoutSegmentTiming` with `.fixed`, `.stopwatch`, and `.undefined`.
+- Produces `WorkoutSegmentKind: String, Codable, Hashable` with `.work` and `.rest`.
+- Produces `WorkoutSegmentTiming: String, Codable, Hashable` with `.fixed`, `.stopwatch`, and `.undefined`.
 - Produces `WorkoutSegment`:
 
   ```swift
@@ -152,6 +154,7 @@
 **Files:**
 - Modify: `HangTen/Models/PlanStorage.swift`
 - Modify: `HangTen/Resources/PlanLibrary.json`
+- Modify: `HangTen.xcodeproj/project.pbxproj`
 - Create: `HangTenTests/PlanStorageTests.swift`
 
 **Interfaces:**
@@ -235,6 +238,7 @@
 - Create: `HangTen/Models/WorkoutActivityRecording.swift`
 - Modify: `HangTen/Models/AppStore.swift`
 - Modify: `HangTen/Models/HealthKitService.swift`
+- Modify: `HangTen.xcodeproj/project.pbxproj`
 - Create: `HangTenTests/WorkoutActivityRecordingTests.swift`
 
 **Interfaces:**
@@ -300,6 +304,7 @@
 
 **Files:**
 - Create: `HangTen/Models/WorkoutStopwatch.swift`
+- Modify: `HangTen.xcodeproj/project.pbxproj`
 - Create: `HangTenTests/WorkoutStopwatchTests.swift`
 
 **Interfaces:**
@@ -466,4 +471,4 @@
 - Spec coverage: board identity, physical size/type resolution, ordered rest, fixed/stopwatch/undefined timing, stopwatch UI, lifecycle, HealthKit metadata, compatibility, tests, and simulator/physical-device validation are covered by Tasks 1–6.
 - Placeholder scan: no task relies on “TBD”, “TODO”, “implement later”, or unspecified test behavior; each task names files, interfaces, commands, and expected red/green results.
 - Type consistency: `WorkoutSegment` is produced by Task 1, persisted by Task 2, consumed by `WorkoutActivityRecorder` in Task 3, measured by `WorkoutStopwatch` in Task 4, and integrated by `WorkoutView` in Task 5.
-- Write ownership: Task 1 owns `TrainingModels.swift`; Task 2 owns `PlanStorage.swift` and generated JSON; Task 3 owns recorder/AppStore/HealthKit; Task 4 owns stopwatch files; Task 5 owns `RootView.swift`; Task 6 owns docs. Workers must not revert unrelated edits.
+- Write ownership: Task 1 owns `TrainingModels.swift` and the first project/test registrations; Task 2 owns `PlanStorage.swift`, generated JSON, and its project/test registration; Task 3 owns recorder/AppStore/HealthKit and its project/source/test registrations; Task 4 owns stopwatch files and its project/source/test registrations; Task 5 owns `RootView.swift`; Task 6 owns docs. These project-file edits are sequential append-only registrations; workers must not revert earlier registrations or unrelated edits.
