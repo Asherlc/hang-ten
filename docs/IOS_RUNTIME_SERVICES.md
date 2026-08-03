@@ -80,9 +80,19 @@ orientation remains user/device controlled.
 
 Hang Ten uses `HKObjectType.workoutType()` for both HealthKit sharing (write)
 and reading. Authorization is requested only by the visible Connect Apple
-Health action. Progress appearance and scene-activation refreshes read the
-current state and history without presenting an authorization sheet or
-prompting.
+Health action. Progress appearance and scene-activation refreshes may update
+the sharing status without presenting an authorization sheet or prompting;
+they query HealthKit history only after the persisted request flag is enabled.
+
+`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Until
+the user taps Connect Apple Health and that flag is persisted, initialization,
+Progress appearance, scene activation, and completion logging use only the
+local `UserDefaults` history fallback. No HealthKit workout-history query,
+workout save, or migration occurs on that path. The app may still read the
+HealthKit sharing status for the authorization pill. Connect enables HealthKit
+sync as it persists the flag, before requesting authorization. Once the flag is
+true, refresh and completion reconciliation may query HealthKit, upload pending
+records, and migrate matching history.
 
 Required configuration:
 
@@ -137,16 +147,20 @@ card. Its current status copy is:
 | unavailable | `Unavailable` | `Apple Health is not available on this device.` | none |
 | not determined | `Not connected` | `Connect once to save completed routines as functional strength workouts.` | `Connect Apple Health` |
 | denied | `Access denied` | `Workout access is off. You can enable it for Hang Ten in Settings.` | `Open app settings` |
-| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Connect Apple Health` when `hasRequestedHealthAuthorization == false`; otherwise none, or `Open app settings` while local fallback remains |
+| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Connect Apple Health` when `hasRequestedHealthAuthorization == false` or a successful refresh yields an empty `.healthKit` snapshot; `Open app settings` for `.localFallback`; none when accepted HealthKit history is visible |
 
 The authorization state reflects the workout sharing/write state exposed by
-HealthKit; `Connected` does not prove that workout reads are visible. The
-Progress action therefore depends on both this state and the persisted
-`hasRequestedHealthAuthorization` flag: write authorization alone can still
-leave the Connect Apple Health action visible before the combined request has
-been made. After that request, the action is absent when history is synced and
-is Open app settings while only local fallback history remains. The history
-source copy is:
+HealthKit; `Connected` does not prove that workout reads are visible, and
+HealthKit does not expose a separate readable-history authorization state. The
+Progress action combines this state with the persisted
+`hasRequestedHealthAuthorization` flag and the history source. Before the
+request flag is true it offers Connect Apple Health. After a request, local
+fallback maps to Open app settings, a successful empty `.healthKit` snapshot
+keeps Connect Apple Health available as a conservative recovery action, and
+visible accepted HealthKit history has no action. Denied and unavailable
+behavior remains as shown in the table.
+
+The history source copy is:
 
 - `.healthKit`: `History synced from Apple Health.`
 - `.localFallback`: `History stored on this device until Apple Health is connected.`
@@ -171,9 +185,10 @@ prevents an early completion from writing a future HealthKit end date.
 
 The denied-state button is labeled Open app settings because iOS does not
 provide a public deep link to the exact Health permission row. Authorization
-and history refresh whenever Progress appears or its scene becomes active
-again. Returning from Settings therefore refreshes status and history without
-prompting.
+status refreshes whenever Progress appears or its scene becomes active again.
+History refreshes at those lifecycle points only after the request flag is
+true; before then, the app reloads the local fallback. Returning from Settings
+therefore refreshes status and, when enabled, history without prompting.
 
 Do not trigger Health authorization at launch. Apple permission sheets must
 follow a clear user action. Do not mark a routine complete or save a workout

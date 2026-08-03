@@ -168,8 +168,12 @@ routine change, preview every distinct hold target and finger cue.
   remain stable.
 - Launch with `HANGTEN_REVIEW_HEALTH=1` on a fresh or permission-reset
   dedicated simulator. This route opens the Progress tab and Health card; it
-  does not request authorization. Confirm the visible Connect Apple Health
-  action is present, then tap that action to start the user-initiated flow.
+  does not request authorization. Leave the visible Connect Apple Health
+  action untouched while triggering a Progress/scene refresh and completing a
+  short routine. Confirm the session remains in local fallback history and no
+  HealthKit workout is saved, imported, or migrated before Connect is tapped.
+- Tap Connect Apple Health to start the user-initiated flow and persist the
+  HealthKit history-sync request flag.
 - Confirm the system permission sheet requests both read and write access to
   workouts and shows the revised read usage text about restoring progress on a
   new device. Record the displayed authorization/status copy, including
@@ -185,9 +189,13 @@ routine change, preview every distinct hold target and finger cue.
   denial. Return to the app and wait for the scene-activation refresh. Confirm
   the pending local session syncs to HealthKit, the source copy changes to
   `History synced from Apple Health.`, and the same session is still counted
-  exactly once. If read access remains hidden and the query is empty, verify
-  the local fallback remains visible rather than treating the empty result as
-  proof of no history or denied access.
+  exactly once. If a successful query has no accepted Hang Ten history, treat
+  the empty `.healthKit` result as ambiguous: preserve any local fallback,
+  keep Connect Apple Health available as a conservative recovery action, and
+  do not treat the empty result as proof of no history or denied access. When
+  accepted HealthKit history is visible, no action is shown; local fallback
+  maps to Open app settings, while denied and unavailable behavior remains
+  unchanged.
 - Relaunch the app on the same explicit simulator UUID, open Progress, and
   confirm the HealthKit-backed count and latest plan title persist. Refresh or
   relaunch again and verify migration does not double-count the session.
