@@ -12,16 +12,22 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
 
 1. Capture `workspace_path="$PWD"` and
    `workspace_name="$CONDUCTOR_WORKSPACE_NAME"`, require the workspace name, and
-   create the `.context` manifest directory. Define cleanup that runs
-   `scripts/conductor-resource-cleanup.sh archive` with the current workspace
-   path and name, then install `EXIT`, `INT`, and `TERM` traps before any
-   `simctl create`. Create a simulator named
-   `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME Review`, then immediately append
-   the exact returned UUID to `.context/conductor-owned-simulators` before any
-   boot or build. Use that UUID for every simulator operation; never target
-   `booted`.
-2. Wait for launch services, then build with a workspace-specific Derived Data
-   path and explicit destination.
+   create `.context`. Define `manifest="$workspace_path/.context/conductor-owned-simulators"`
+   and `pending_manifest="$workspace_path/.context/conductor-pending-simulators"`.
+   Install `EXIT`, `INT`, and `TERM` traps before any `simctl create`. The traps
+   must call `scripts/conductor-resource-cleanup.sh archive` with the current
+   workspace path and name. Create a simulator named
+   `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME Review`, validate the returned
+   UUID, and append that exact UUID to the pending manifest before any owned
+   manifest write, boot, or build. Only after the pending append succeeds append
+   the UUID to the owned manifest. Keep the pending record until archive cleanup
+   succeeds; archive must validate the exact workspace-name marker before
+   shutting down/deleting and then consume both pending and owned records.
+   If pending registration fails, retain the validated UUID in memory and permit
+   direct deletion only as the last-resort trap fallback. Use that UUID for every
+   simulator operation; never target `booted`.
+2. Wait for launch services, then build with the local workspace-specific
+   `.context/DerivedData` path and explicit destination.
 3. Keep signing enabled for HealthKit validation. Install the exact built app
    and confirm its app container when parallel builds share the bundle ID.
 4. Use `SIMCTL_CHILD_HANGTEN_REVIEW_*` routes to reach the plan, workout step,
@@ -30,9 +36,10 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    hand mirroring, text clipping, and timer continuity.
 6. Exercise spoken 3-2-1 and task cues, audio-off behavior, rotation while
    running/paused, the user-triggered Health permission sheet, and workout save.
-7. On success, failure, or interruption, the cleanup trap shuts down and deletes
-   the exact owned UUID recorded in the manifest after verifying its workspace
-   marker. Do not delete shared or unknown simulators.
+7. On success, failure, or interruption, the cleanup trap archives the exact
+   pending and owned UUIDs after verifying the exact workspace marker, consuming
+   the records only after successful cleanup. Do not delete shared or unknown
+   simulators.
 
 ## Validation standard
 
