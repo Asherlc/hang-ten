@@ -261,9 +261,9 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 
     func testMetoliusPlansRemainTenMinutesAndAreMarkedAdapted() {
         let plans = [
-            LegacyPlanSeedCatalog.metoliusEntry,
-            LegacyPlanSeedCatalog.metoliusIntermediate,
-            LegacyPlanSeedCatalog.metoliusAdvanced
+            PlanCatalog.metoliusEntry,
+            PlanCatalog.metoliusIntermediate,
+            PlanCatalog.metoliusAdvanced
         ]
 
         XCTAssertEqual(plans.map(\.steps.count), [20, 26, 26])
@@ -279,8 +279,8 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
     }
 
     func testExpandedCatalogPreservesCompoundTasksChoicesAndMaximumEfforts() {
-        let entry = LegacyPlanSeedCatalog.metoliusEntry.steps
-        let advanced = LegacyPlanSeedCatalog.metoliusAdvanced.steps
+        let entry = PlanCatalog.metoliusEntry.steps
+        let advanced = PlanCatalog.metoliusAdvanced.steps
 
         let pocketShrugs = entry.filter { $0.id.hasPrefix("entry.minute-4.") }
         XCTAssertEqual(pocketShrugs.map(\.duration), [15, 45])
