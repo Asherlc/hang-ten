@@ -913,6 +913,7 @@ struct WorkoutView: View {
     let plan: TrainingPlan
 
     @State private var startedAt: Date?
+    @State private var countdownKind: WorkoutCountdownKind?
     @State private var pausedElapsed: TimeInterval = 0
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
@@ -1398,22 +1399,35 @@ struct WorkoutView: View {
             }
             pausedElapsed += Date().timeIntervalSince(startedAt)
             self.startedAt = nil
+			countdownKind = nil
 			audioCoach.stop()
         } else {
             let now = Date()
             let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
-            let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
             if isFirstStart {
+				let start = WorkoutSessionPolicy.startDate(for: .initial, now: now)
                 routineStartedAt = start
+				startedAt = start
+				countdownKind = .initial
+			} else {
+				startedAt = now
+				countdownKind = nil
             }
-            startedAt = start
         }
     }
 
     private func cancelCountdown() {
-        startedAt = nil
-        routineStartedAt = nil
-		audioCoach.stop()
+        switch countdownKind {
+        case .skip:
+            startedAt = nil
+            countdownKind = nil
+			audioCoach.stop()
+        case .initial, nil:
+            startedAt = nil
+            routineStartedAt = nil
+            countdownKind = nil
+			audioCoach.stop()
+        }
     }
 
     private func endSession() {
@@ -1434,6 +1448,7 @@ struct WorkoutView: View {
 
 		pausedElapsed += Date().timeIntervalSince(startedAt)
 		self.startedAt = nil
+		countdownKind = nil
 		audioCoach.stop()
 	}
 
@@ -1461,8 +1476,8 @@ struct WorkoutView: View {
     }
 
     private func countdownRemaining(at date: Date) -> Int {
-        guard let startedAt, pausedElapsed == 0, startedAt > date else { return 0 }
-        return max(1, Int(ceil(startedAt.timeIntervalSince(date))))
+        guard countdownKind != nil else { return 0 }
+        return WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
@@ -1482,6 +1497,7 @@ struct WorkoutView: View {
 
     private func seek(to targetElapsed: TimeInterval) {
         let target = min(max(0, targetElapsed), plan.duration)
+        countdownKind = nil
         pausedElapsed = target
         if startedAt != nil {
             startedAt = Date()
@@ -1502,7 +1518,19 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed(at: Date())
         guard let target = timeline.skipTarget(from: elapsed) else { return }
-        seek(to: target)
+
+        if target >= plan.duration {
+            seek(to: target)
+        } else {
+            startSkipCountdown(to: target)
+        }
+    }
+
+    private func startSkipCountdown(to targetElapsed: TimeInterval) {
+        pausedElapsed = targetElapsed
+        startedAt = WorkoutSessionPolicy.startDate(for: .skip, now: Date())
+        countdownKind = .skip
+        audioCoach.stop()
     }
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
@@ -1539,7 +1567,7 @@ struct WorkoutView: View {
 
 		if countdown > 0 {
 			return WorkoutAudioMoment(
-				key: "initial-\(countdown)",
+				key: "countdown-\(countdown)",
 				phrase: "\(countdown)"
 			)
 		}
