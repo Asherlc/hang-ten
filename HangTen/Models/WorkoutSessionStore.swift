@@ -3,6 +3,7 @@ import Foundation
 protocol WorkoutSessionStoring: AnyObject {
     var sessions: [WorkoutSessionRecord] { get }
     var persistenceError: String? { get }
+    /// Completion handlers are delivered asynchronously on the main queue.
     func append(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
     func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
     func flush()
@@ -37,6 +38,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         label: "com.hangten.workout-session-store",
         qos: .utility
     )
+    private let persistenceQueueIdentity = DispatchSpecificKey<UInt8>()
     private let persistenceErrorLock = NSLock()
     private var persistenceErrorStorage: String?
 
@@ -58,6 +60,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         encoder = JSONEncoder()
         decoder = JSONDecoder()
         self.directory = directory ?? Self.defaultDirectory(using: fileManager)
+        persistenceQueue.setSpecific(key: persistenceQueueIdentity, value: 1)
 
         let loaded = Self.load(from: self.directory, decoder: decoder, fileManager: fileManager)
         sessions = loaded.sessions
@@ -109,14 +112,19 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
 
     func flush(completion: @escaping (Result<Void, Error>) -> Void) {
         flush()
+        let result: Result<Void, Error>
         if let persistenceError {
-            completion(.failure(PersistenceFailure(message: persistenceError)))
+            result = .failure(PersistenceFailure(message: persistenceError))
         } else {
-            completion(.success(()))
+            result = .success(())
+        }
+        DispatchQueue.main.async {
+            completion(result)
         }
     }
 
     func flush() {
+        guard DispatchQueue.getSpecific(key: persistenceQueueIdentity) == nil else { return }
         persistenceQueue.sync {}
     }
 
@@ -213,6 +221,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         persistenceQueue.async { [self] in
+            let result: Result<Void, Error>
             do {
                 try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
                 for session in sessionsToWrite {
@@ -232,10 +241,13 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                     defaults.removeObject(forKey: Key.sessionHistory)
                 }
                 setPersistenceError(nil)
-                completion(.success(()))
+                result = .success(())
             } catch {
                 setPersistenceError("Could not save workout sessions: \(error.localizedDescription)")
-                completion(.failure(error))
+                result = .failure(error)
+            }
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
     }

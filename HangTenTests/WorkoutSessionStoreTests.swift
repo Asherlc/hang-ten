@@ -105,6 +105,45 @@ final class WorkoutSessionStoreTests: XCTestCase {
         wait(for: [expectation], timeout: 2)
     }
 
+    func testAppendCompletionRunsOnMainQueueAndCanFlush() {
+        let completion = expectation(description: "append completion flushes")
+        let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+
+        store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
+            XCTAssertTrue(Thread.isMainThread)
+            store.flush()
+
+            switch result {
+            case .success:
+                completion.fulfill()
+            case .failure(let error):
+                XCTFail("Expected append to succeed, got \(error)")
+            }
+        }
+
+        wait(for: [completion], timeout: 2)
+    }
+
+    func testFlushCompletionRunsOnMainQueue() {
+        let completion = expectation(description: "flush completion")
+        let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+
+        DispatchQueue.global().async {
+            store.flush { result in
+                XCTAssertTrue(Thread.isMainThread)
+
+                switch result {
+                case .success:
+                    completion.fulfill()
+                case .failure(let error):
+                    XCTFail("Expected flush to succeed, got \(error)")
+                }
+            }
+        }
+
+        wait(for: [completion], timeout: 2)
+    }
+
     func testAppendUsesStableIDOrderingWhenRecordedDatesMatch() {
         let defaults = UserDefaults(suiteName: suite)!
         let laterID = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
