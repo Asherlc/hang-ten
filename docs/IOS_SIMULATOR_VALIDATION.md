@@ -20,7 +20,7 @@ name must begin with the exact workspace marker `Hang Ten Conductor
 $CONDUCTOR_WORKSPACE_NAME`, and its UUID must be recorded before any boot or
 build work:
 
-```sh
+```zsh
 set -euo pipefail
 
 workspace_path="$PWD"

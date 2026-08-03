@@ -359,7 +359,7 @@ trap 'signal_exit 143' TERM
 
 simulator_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
 if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  xcrun simctl delete "$simulator_uuid" || true
+  rtk xcrun simctl delete "$simulator_uuid" || true
   exit 1
 fi
 review_device_uuid="$simulator_uuid"
