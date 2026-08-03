@@ -17,11 +17,14 @@ In scope:
 - Agent instructions and validation guidance that make ownership and deletion
   explicit.
 - A one-time cleanup path for existing shutdown Hang Ten review simulators.
+- A one-time operator purge of the current Xcode DerivedData cache, including
+  project build and index artifacts across projects.
 
 Out of scope:
 
 - Global Conductor, Codex, Claude, or Cursor history, databases, caches, and
-  indexes.
+  indexes. They remain outside recurring cleanup and outside the one-time
+  Xcode cache purge.
 - Shared or standard Apple simulator devices.
 - Booted simulators during the one-time cleanup, because they may still belong
   to active work.
@@ -106,6 +109,20 @@ Conductor history/index store. The deletion run will be preceded by a
 read-only inventory and followed by a fresh simulator listing and disk-usage
 measurement.
 
+### One-time Xcode cache purge
+
+The current host's large project-data footprint is Xcode's
+`~/Library/Developer/Xcode/DerivedData` directory, which contains build output,
+module caches, and `Index.noindex` data. After checking that no Xcode or
+`xcodebuild` process is active, the operator may delete the immediate child
+project caches and indexes from that directory once. This purge is not part of
+the Conductor archive hook and must never be added to recurring agent cleanup.
+
+The purge leaves Xcode `iOS DeviceSupport`, Archives, UserData, simulator
+runtimes/devices, Conductor state, provider state, credentials, and agent
+session history intact. It must record the child-directory inventory before
+deletion and fresh disk-usage evidence afterward.
+
 ### Error handling and safety
 
 - Missing `CONDUCTOR_WORKSPACE_NAME` or workspace path is an error for archive
@@ -128,6 +145,8 @@ The implementation will be verified with:
   mismatched, booted, malformed, and already-missing devices.
 - A live dry run against the current host followed by deletion of only the
   approved shutdown Hang Ten devices.
+- A one-time, explicitly operator-run purge of Xcode DerivedData after a
+  read-only child inventory and active-process check.
 - Fresh simulator inventory and disk-usage measurements after cleanup.
 - A focused review of the final diff confirming no global store or unrelated
   simulator path is referenced.
