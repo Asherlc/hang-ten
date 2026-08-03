@@ -13,6 +13,7 @@
 - Keep `PlanDefinitionSchema.currentVersion` at `3`; old persisted segments using `target` must continue to decode.
 - A multi-target work segment must preserve every target and must not create multiple duration-bearing records for one simultaneous action.
 - Max-effort Metolius steps retain a 60-second cycle duration, emit `.work`/`.stopwatch` with `duration: nil`, and omit persisted `activeDuration`.
+- Choice tasks retain `.undefined` timing because their source alternatives have different possible durations; only ordinary fixed/pull/repetition helpers default to `.fixed`.
 - Advanced Metolius Minute 4 must contain 40 seconds of work and a 20-second generated rest step.
 - `PlanLibrary.json` must be regenerated with `scripts/export-plan-library.sh`; do not hand-edit generated JSON.
 - Replace `try!` in `LegacyPlanSeedCatalog.expanded` with a diagnostic failure containing the plan ID and minute number.
@@ -34,7 +35,7 @@
 **Interfaces:**
 - `WorkoutSegment` gains stored `targets: [HoldTarget]`, keeps a computed `target: HoldTarget?` compatibility accessor, and accepts both `target:` and `targets:` initializers.
 - `WorkoutSegmentDefinition` gains stored `targets: [WorkoutTargetDefinition]`, keeps a computed `target: WorkoutTargetDefinition?` compatibility accessor, decodes either `targets` or legacy `target`, and encodes one target as `target` but multiple targets as `targets`.
-- `MetoliusTaskDefinition` carries `WorkoutSegmentTiming`; existing task helpers default to `.fixed`, and a `maxEffort` helper creates a 60-second `.stopwatch` task.
+- `MetoliusTaskDefinition` carries `WorkoutSegmentTiming`; ordinary task helpers default to `.fixed`, the existing choice helper remains `.undefined`, and a `maxEffort` helper creates a 60-second `.stopwatch` task.
 - `WorkoutActivityRecorder.segments` resolves all targets on a multi-target segment and emits one duration-bearing record for the simultaneous action; single-target grouping behavior remains unchanged.
 
 - [ ] **Step 1: Write failing regression tests**
@@ -113,7 +114,7 @@ Update validation and resolution to require/resolve every work target. Update th
 
 - [ ] **Step 4: Implement Metolius timing, diagnostics, and corrected duration**
 
-Add a defaulted timing field to `MetoliusTaskDefinition`; make `expand` construct one segment with `targets: task.targets`, using `.fixed` and `task.duration` for ordinary tasks and `.stopwatch` with `duration: nil` for max-effort tasks. Set `timedWorkDuration` to `nil` for stopwatch tasks. Add `MetoliusCycleBuilder.maxEffort`, use it for the Entry, Intermediate, and Advanced max-effort tasks, and change Advanced Minute 4 Hold ladder duration from `60` to `40`.
+Add a defaulted timing field to `MetoliusTaskDefinition`; make `expand` construct one segment with `targets: task.targets`, using each task's timing, `.fixed` plus `task.duration` for ordinary tasks, `.undefined` for variable-duration choice tasks, and `.stopwatch` with `duration: nil` for max-effort tasks. Set `timedWorkDuration` to `nil` for undefined/stopwatch tasks. Add `MetoliusCycleBuilder.maxEffort`, use it for the Entry, Intermediate, and Advanced max-effort tasks, and change Advanced Minute 4 Hold ladder duration from `60` to `40`.
 
 Replace the force unwrap in `LegacyPlanSeedCatalog.expanded` with a `do/catch` around each minute that calls `preconditionFailure("Invalid Metolius plan \\(planID) minute \\(index + 1): \\(error)")`. Give `MetoliusCycleBuilder.Error` a useful description so future catalog mistakes identify the overfull total and cycle duration.
 
@@ -142,4 +143,3 @@ rtk git diff --check origin/main...HEAD
 ```
 
 Review the diff to confirm only the four review findings, their tests, and generated output changed, then commit with a concise message.
-
