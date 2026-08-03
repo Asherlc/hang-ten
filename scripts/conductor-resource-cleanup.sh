@@ -47,7 +47,7 @@ device_record_for_uuid() {
 run_archive_cleanup() {
   local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
   local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
-  local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix line temp_manifest
+  local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix line line_uuid temp_manifest
   local manifests=()
   local result_status=0
   typeset -A seen uuid_status
@@ -74,6 +74,7 @@ run_archive_cleanup() {
         result_status=1
         continue
       fi
+      uuid=${(U)uuid}
 
       [[ -n "${seen[$uuid]:-}" ]] && continue
       seen[$uuid]=1
@@ -116,8 +117,11 @@ run_archive_cleanup() {
       return 1
     }
     while IFS= read -r line || [[ -n "$line" ]]; do
-      if is_uuid "$line" && [[ "${uuid_status[$line]:-unresolved}" == resolved ]]; then
-        continue
+      if is_uuid "$line"; then
+        line_uuid=${(U)line}
+        if [[ "${uuid_status[$line_uuid]:-unresolved}" == resolved ]]; then
+          continue
+        fi
       fi
       print -r -- "$line" >> "$temp_manifest" || {
         rm -f "$temp_manifest"
