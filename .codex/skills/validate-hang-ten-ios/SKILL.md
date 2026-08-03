@@ -10,7 +10,9 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
 
 ## Workflow
 
-1. Create or resolve a simulator owned by this workspace. Use its explicit UUID
+1. Create a simulator named `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME Review`,
+   then immediately append its explicit UUID to
+   `.context/conductor-owned-simulators` before booting or building. Use that UUID
    for every operation; never target `booted`.
 2. Wait for launch services, then build with a workspace-specific Derived Data
    path and explicit destination.
@@ -22,7 +24,11 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    hand mirroring, text clipping, and timer continuity.
 6. Exercise spoken 3-2-1 and task cues, audio-off behavior, rotation while
    running/paused, the user-triggered Health permission sheet, and workout save.
-7. Shut down only the dedicated simulator UUID when review is complete.
+7. Before validation starts, install an exit trap that runs
+   `scripts/conductor-resource-cleanup.sh archive` with the current workspace
+   path and name. On success, failure, or interruption, it shuts down and deletes
+   the exact owned UUID recorded in the manifest after verifying its workspace
+   marker. Do not delete shared or unknown simulators.
 
 ## Validation standard
 

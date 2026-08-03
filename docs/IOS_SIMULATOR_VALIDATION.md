@@ -15,17 +15,32 @@ xcrun simctl list devicetypes
 xcrun simctl list runtimes
 ```
 
-Create a uniquely named device using identifiers copied from those lists:
+Create a uniquely named device using identifiers copied from those lists. The
+name must begin with the exact workspace marker `Hang Ten Conductor
+$CONDUCTOR_WORKSPACE_NAME`, and its UUID must be recorded before any boot or
+build work:
 
 ```sh
-xcrun simctl create \
-  "HangTen <workspace> Review" \
-  <device-type-id> \
-  <runtime-id>
+workspace_name="$CONDUCTOR_WORKSPACE_NAME"
+test -n "$workspace_name"
+mkdir -p .context
+simulator_name="Hang Ten Conductor $workspace_name Review"
+simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+printf '%s\n' "$simulator_uuid" >> .context/conductor-owned-simulators
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$PWD" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  scripts/conductor-resource-cleanup.sh archive
+}
+trap cleanup EXIT INT TERM
 ```
 
-Save the returned UUID. Do not use `booted`, a common device name, a broad
-process kill, or another workspace's review device in later commands.
+Use `$simulator_uuid` as `<uuid>` in the following commands. Do not use
+`booted`, a common device name, a broad process kill, or another workspace's
+review device in later commands. The trap is idempotent: it runs on successful
+completion, failure, or interruption and archives only manifest UUIDs whose
+names carry this workspace's exact marker.
 
 ## Boot and wait for real readiness
 
@@ -64,7 +79,7 @@ xcodebuild \
   -scheme HangTen \
   -configuration Debug \
   -destination 'platform=iOS Simulator,id=<uuid>' \
-  -derivedDataPath .context/DerivedData-lima \
+  -derivedDataPath .context/DerivedData \
   build
 ```
 
@@ -82,7 +97,7 @@ simulator app. Inspect the `*-Simulated.xcent` file for
 xcrun simctl terminate <uuid> com.hangten.training || true
 xcrun simctl install \
   <uuid> \
-  .context/DerivedData-lima/Build/Products/Debug-iphonesimulator/HangTen.app
+  .context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app
 xcrun simctl launch <uuid> com.hangten.training
 ```
 
@@ -180,11 +195,13 @@ See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 
 ## Cleanup
 
-Shut down only the dedicated UUID you created:
+The creation trap calls `scripts/conductor-resource-cleanup.sh archive`; leave
+it installed for the whole validation. It verifies each manifest entry against
+the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME ` name prefix, shuts
+down the matching device if necessary, and runs `xcrun simctl delete` on that
+exact UUID. This is immediate workspace cleanup, while the Conductor archive
+hook is a failsafe for an abandoned workspace.
 
-```sh
-xcrun simctl shutdown <uuid>
-```
-
-Do not delete or shut down a shared/unknown simulator. Delete the dedicated
-device only when its exact UUID and ownership are certain.
+Do not delete or shut down a shared/unknown simulator. The cleanup script must
+not receive an unrecorded UUID or a simulator without the exact workspace
+ownership marker.
