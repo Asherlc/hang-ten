@@ -275,6 +275,7 @@
 				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
 				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
 				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,7 +406,6 @@
 				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
 				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
-				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
