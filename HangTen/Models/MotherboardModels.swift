@@ -164,10 +164,11 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let steps: [WorkoutStepMeasurement]
     let bodyweightKGF: Double?
     let motherboardMeasurements: [MotherboardMeasurement]
+    let motherboardMeasurementsTruncated: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
-        case motherboardIdentifier, batteryValue, steps, bodyweightKGF, motherboardMeasurements
+        case motherboardIdentifier, batteryValue, steps, bodyweightKGF, motherboardMeasurements, motherboardMeasurementsTruncated
     }
 
     init(
@@ -181,7 +182,8 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         batteryValue: UInt16?,
         steps: [WorkoutStepMeasurement],
         bodyweightKGF: Double? = nil,
-        motherboardMeasurements: [MotherboardMeasurement] = []
+        motherboardMeasurements: [MotherboardMeasurement] = [],
+        motherboardMeasurementsTruncated: Bool = false
     ) {
         self.id = id
         self.planID = planID
@@ -194,6 +196,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.steps = steps
         self.bodyweightKGF = bodyweightKGF
         self.motherboardMeasurements = motherboardMeasurements
+        self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
     }
 
     init(from decoder: Decoder) throws {
@@ -209,6 +212,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
+        motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
     }
 }
 

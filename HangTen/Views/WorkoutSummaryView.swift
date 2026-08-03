@@ -10,10 +10,14 @@ enum WorkoutSummaryMode: Equatable {
 }
 
 enum WorkoutSummaryFormatting {
-    static func granularSampleCountText(for measurements: [MotherboardMeasurement]) -> String? {
+    static func granularSampleCountText(
+        for measurements: [MotherboardMeasurement],
+        wasTruncated: Bool = false
+    ) -> String? {
         guard !measurements.isEmpty else { return nil }
         let label = measurements.count == 1 ? "sample" : "samples"
-        return "\(measurements.count) granular Motherboard \(label)"
+        let cappedMessage = wasTruncated ? " (capture capped; some samples may be missing)" : ""
+        return "\(measurements.count) granular Motherboard \(label)\(cappedMessage)"
     }
 
     static func bodyweightBaselineText(
@@ -161,7 +165,8 @@ private struct WorkoutSummaryContent: View {
             }
 
             if let granularSampleCountText = WorkoutSummaryFormatting.granularSampleCountText(
-                for: session.motherboardMeasurements
+                for: session.motherboardMeasurements,
+                wasTruncated: session.motherboardMeasurementsTruncated
             ) {
                 Section("Granular sensor data") {
                     Text(granularSampleCountText)
