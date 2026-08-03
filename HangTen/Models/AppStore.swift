@@ -8,9 +8,9 @@ final class AppStore: ObservableObject {
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
-	private let healthKitService: HealthKitService
+	private let healthKitService: HealthWorkoutSaving
 
-	init(healthKitService: HealthKitService = HealthKitService()) {
+	init(healthKitService: HealthWorkoutSaving = HealthKitService()) {
 		self.healthKitService = healthKitService
 		healthAuthorizationState = healthKitService.authorizationState
 	}
@@ -36,7 +36,7 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
-        let ids = step.targets.flatMap { resolvedHoldIDs(for: $0, on: board) }
+        let ids = step.targets.flatMap { BoardTargetResolver.resolveHoldIDs(for: $0, on: board) }
         return Set(ids)
     }
 
@@ -45,7 +45,7 @@ final class AppStore: ObservableObject {
             guard let feature = target.feature,
                   !target.fallbackFeatures.isEmpty else { return false }
             let hasExactMatch = board.holds.contains { $0.features.contains(feature) }
-            return !hasExactMatch && !resolvedHoldIDs(for: target, on: board).isEmpty
+            return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
         }
     }
 
@@ -54,49 +54,57 @@ final class AppStore: ObservableObject {
 
         return plan.steps
             .flatMap(\.targets)
-            .allSatisfy { !resolvedHoldIDs(for: $0, on: board).isEmpty }
+            .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
     }
 
-    private func resolvedHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
-        if !target.holdIDs.isEmpty {
-            let availableIDs = Set(board.holds.map(\.id))
-            return target.holdIDs.filter(availableIDs.contains)
-        }
-        if let feature = target.feature {
-            let exactMatches = board.holds
-                .filter { $0.features.contains(feature) }
-                .map(\.id)
-            if !exactMatches.isEmpty {
-                return exactMatches
-            }
-            for fallback in target.fallbackFeatures {
-                let fallbackMatches = board.holds
-                    .filter { $0.features.contains(fallback) }
-                    .map(\.id)
-                if !fallbackMatches.isEmpty {
-                    return fallbackMatches
-                }
-            }
-            return []
-        }
-        guard let kind = target.kind else { return [] }
-        return board.holds.filter { $0.kind == kind }.map(\.id)
-    }
-
-    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+    func markSessionComplete(
+        _ plan: TrainingPlan,
+        board: TrainingBoard,
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
+        startDate: Date,
+        endDate: Date
+    ) {
         sessionsCompleted += 1
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil
+
+        let activitySegments: [RecordedActivitySegment]
+        do {
+            activitySegments = try WorkoutActivityRecorder().segments(
+                for: plan,
+                on: board,
+                stopwatchDurations: stopwatchDurations
+            )
+        } catch {
+            DispatchQueue.main.async { [weak self] in
+                self?.healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
+            }
+            return
+        }
+
         healthKitService.saveCompletedWorkout(
 			title: plan.title,
 			startDate: startDate,
-			endDate: endDate
+			endDate: endDate,
+			boardID: board.id,
+			boardName: board.name,
+			activitySegments: activitySegments
 		) { [weak self] error in
 			guard let error else { return }
 			DispatchQueue.main.async {
 				self?.healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
 			}
 		}
+    }
+
+    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+        markSessionComplete(
+            plan,
+            board: selectedBoard,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate
+        )
     }
 
 	func refreshHealthAuthorization() {

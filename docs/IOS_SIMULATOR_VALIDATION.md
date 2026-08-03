@@ -167,6 +167,34 @@ routine change, preview every distinct hold target and finger cue.
   speech with audio enabled. Repeat with the speaker toggle disabled.
 - Rotate while paused and while running; timer state and selected holds must
   remain stable.
+- Open a plan containing a stopwatch activity in portrait and landscape. Check
+  the `workout.stopwatch` accessibility element and
+  `workout.stopwatch.toggle`; confirm the visible value is `00:00` before
+  starting, the toggle is labeled “Start stopwatch,” changes to “Stop
+  stopwatch” while running, and shows the observed value after stopping.
+- Use the stopwatch's explicit Start/Stop control, then pause the workout and
+  resume it. Confirm normal pause preserves the accumulated active seconds and
+  does not advance the stopwatch while paused. Background or lock the app and
+  confirm the same pause behavior; returning requires the normal workout
+  resume.
+- Exercise a fixed work/rest step and verify the rest boundary: work is
+  recorded with its prescribed active duration, rest is a following ordered
+  segment with its duration, and rest has no hold metadata. Confirm the UI
+  finalizes an active stopwatch when entering rest, navigating to another
+  step, or skipping the current step.
+- Complete a session through the “Log session” control and confirm the
+  completion handoff uses the selected board, not a default board. Inspect
+  selected-board cues in the workout and verify resolved hold type and explicit
+  physical size where the board supplies one. Confirm a never-started
+  stopwatch and a genuinely untimed work segment have no duration value.
+- On a signed build, open Progress, tap Connect Apple Health, and inspect the
+  user-triggered HealthKit authorization sheet. After authorization, complete a
+  short session and verify the write path is exercised; the saved metadata
+  must include the board ID/name and versioned activity-segment JSON. The
+  simulator validates wiring and permission flow, but final metadata inspection
+  still requires a physical device.
+- Choose “End session” and confirm the session dismisses without the completion
+  handoff and without logging an Apple Health workout.
 - Launch with `HANGTEN_REVIEW_HEALTH=1`, tap Connect Apple Health, inspect the
   system permission sheet, and complete a short debug session on a signed
   build. Simulator behavior does not replace a physical-device HealthKit test
