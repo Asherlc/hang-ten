@@ -107,10 +107,11 @@ following:
 New records include the plan title and a `HangTen.SessionID` metadata value
 equal to the UUID of the local pending record created for that session. This
 stable ID is the primary reconciliation key. Older Hang Ten records without
-`HangTen.SessionID` remain importable when their plan title, start date, and
-end date exactly match a local record. A HealthKit workout UUID is also kept
-for retry reconciliation. Matching records are deduplicated so a migrated
-local session and its HealthKit workout count as one session.
+`HangTen.SessionID` remain importable when their normalized plan titles match
+(surrounding whitespace trimmed) and their start and end dates match exactly.
+A HealthKit workout UUID is also kept for retry reconciliation. Matching
+records are deduplicated so a migrated local session and its HealthKit workout
+count as one session.
 
 HealthKit-derived history is authoritative whenever an accepted Hang Ten
 workout is readable. Local `UserDefaults` records under
@@ -136,11 +137,16 @@ card. Its current status copy is:
 | unavailable | `Unavailable` | `Apple Health is not available on this device.` | none |
 | not determined | `Not connected` | `Connect once to save completed routines as functional strength workouts.` | `Connect Apple Health` |
 | denied | `Access denied` | `Workout access is off. You can enable it for Hang Ten in Settings.` | `Open app settings` |
-| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | none, unless local fallback remains |
+| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Connect Apple Health` when `hasRequestedHealthAuthorization == false`; otherwise none, or `Open app settings` while local fallback remains |
 
 The authorization state reflects the workout sharing/write state exposed by
 HealthKit; `Connected` does not prove that workout reads are visible. The
-history source copy is:
+Progress action therefore depends on both this state and the persisted
+`hasRequestedHealthAuthorization` flag: write authorization alone can still
+leave the Connect Apple Health action visible before the combined request has
+been made. After that request, the action is absent when history is synced and
+is Open app settings while only local fallback history remains. The history
+source copy is:
 
 - `.healthKit`: `History synced from Apple Health.`
 - `.localFallback`: `History stored on this device until Apple Health is connected.`
