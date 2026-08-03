@@ -29,6 +29,7 @@
 		AA0000000000000000000020 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* WorkoutHistory.swift */; };
 		AA0000000000000000000021 /* LocalWorkoutHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */; };
 		AA0000000000000000000022 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* LocalWorkoutHistoryStore.swift */; };
+		AA0000000000000000000023 /* HealthKitServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000026 /* HealthKitServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		BB0000000000000000000023 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000025 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
+		BB0000000000000000000026 /* HealthKitServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 				BB0000000000000000000019 /* WorkoutTimelineTests.swift */,
 				BB0000000000000000000022 /* WorkoutHistoryTests.swift */,
 				BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */,
+				BB0000000000000000000026 /* HealthKitServiceTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */,
 				AA0000000000000000000019 /* WorkoutHistoryTests.swift in Sources */,
 				AA0000000000000000000021 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
+				AA0000000000000000000023 /* HealthKitServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,7 +400,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -426,7 +430,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
