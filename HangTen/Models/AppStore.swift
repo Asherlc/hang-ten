@@ -2,23 +2,35 @@ import Foundation
 import Combine
 
 final class AppStore: ObservableObject {
+    private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
+
     @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
-    @Published var sessionsCompleted = 0
-    @Published var lastSessionTitle: String?
+	@Published private(set) var workoutHistory = WorkoutHistorySnapshot.empty
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
+	@Published private(set) var hasRequestedHealthAuthorization: Bool
 
 	private let healthKitService: WorkoutHealthStore
-	private let workoutHistoryStore: LocalWorkoutHistoryStore
+	private let workoutHistoryService: WorkoutHistoryService
+	private let defaults: UserDefaults
 
 	init(
-		healthKitService: WorkoutHealthStore = HealthKitService(),
-		workoutHistoryStore: LocalWorkoutHistoryStore = LocalWorkoutHistoryStore()
+		healthKitService: any WorkoutHealthStore = HealthKitService(),
+		workoutHistoryStore: any WorkoutHistoryPersistence = LocalWorkoutHistoryStore(),
+		defaults: UserDefaults = .standard
 	) {
 		self.healthKitService = healthKitService
-		self.workoutHistoryStore = workoutHistoryStore
+		workoutHistoryService = WorkoutHistoryService(
+			healthStore: healthKitService,
+			persistence: workoutHistoryStore
+		)
+		self.defaults = defaults
 		healthAuthorizationState = healthKitService.authorizationState
+		hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 	}
+
+	var sessionsCompleted: Int { workoutHistory.sessionCount }
+	var lastSessionTitle: String? { workoutHistory.latestSessionTitle }
 
     var plans: [TrainingPlan] {
         PlanCatalog.all.filter { plan in
@@ -89,44 +101,53 @@ final class AppStore: ObservableObject {
     }
 
     func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
-        sessionsCompleted += 1
-        lastSessionTitle = plan.title
 		healthAuthorizationError = nil
-		let id = UUID()
-		workoutHistoryStore.replace(workoutHistoryStore.load() + [
-			PendingWorkoutRecord(
-				id: id,
-				planTitle: plan.title,
-				startDate: startDate,
-				endDate: endDate,
-				healthUploadAttempted: false,
-				healthWorkoutUUID: nil
-			)
-		])
-        healthKitService.saveCompletedWorkout(
-			id: id,
-			title: plan.title,
+		workoutHistory = WorkoutHistorySnapshot(
+			entries: workoutHistory.entries,
+			source: .syncing
+		)
+		workoutHistoryService.recordCompletion(
+			planTitle: plan.title,
 			startDate: startDate,
 			endDate: endDate
-		) { [weak self] result in
-			guard case let .failure(error) = result else { return }
-			DispatchQueue.main.async {
-				self?.healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
-			}
+		) { [weak self] in
+			self?.publishWorkoutHistory(showingError: true)
 		}
     }
 
 	func refreshHealthAuthorization() {
 		healthAuthorizationState = healthKitService.authorizationState
+		refreshWorkoutHistory()
+	}
+
+	func refreshWorkoutHistory() {
+		workoutHistory = WorkoutHistorySnapshot(
+			entries: workoutHistory.entries,
+			source: .syncing
+		)
+		workoutHistoryService.refresh { [weak self] in
+			self?.publishWorkoutHistory(showingError: true)
+		}
 	}
 
 	func requestHealthAuthorization() {
 		healthAuthorizationError = nil
+		hasRequestedHealthAuthorization = true
+		defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
 		healthKitService.requestAuthorization { [weak self] state, error in
 			DispatchQueue.main.async {
-				self?.healthAuthorizationState = state
-				self?.healthAuthorizationError = error?.localizedDescription
+				guard let self else { return }
+				self.healthAuthorizationState = state
+				self.healthAuthorizationError = error?.localizedDescription
+				self.refreshWorkoutHistory()
 			}
+		}
+	}
+
+	private func publishWorkoutHistory(showingError: Bool) {
+		workoutHistory = workoutHistoryService.snapshot
+		if showingError, let error = workoutHistoryService.lastError {
+			healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
 		}
 	}
 }
