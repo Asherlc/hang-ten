@@ -95,6 +95,17 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertFalse(persistence.load()[0].healthUploadAttempted)
     }
 
+    func testSyncRetriesPersistedUploadAttemptWithoutHealthWorkoutUUID() {
+        let local = pendingRecord(title: "Interrupted Upload", uploadAttempted: true)
+        let persistence = FakeWorkoutHistoryPersistence(records: [local])
+        let healthStore = FakeWorkoutHealthStore()
+        let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
+
+        refresh(service)
+
+        XCTAssertEqual(healthStore.saveCallCount, 1)
+    }
+
     func testMigrationUploadsEachPendingRecordOnce() {
         let local = pendingRecord(title: "Migration Plan")
         let persistence = FakeWorkoutHistoryPersistence(records: [local])

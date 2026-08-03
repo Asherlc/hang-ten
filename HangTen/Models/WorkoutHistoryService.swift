@@ -116,7 +116,7 @@ final class WorkoutHistoryService {
         }
 
         guard let index = records.firstIndex(where: {
-            !$0.healthUploadAttempted && !attemptedRecordIDs.contains($0.id)
+            $0.healthWorkoutUUID == nil && !attemptedRecordIDs.contains($0.id)
         }) else {
             refetchAfterUploads()
             return
