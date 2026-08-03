@@ -257,11 +257,18 @@ Run:
 
 ```bash
 set +e
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
+xcodebuild_output="$workspace_path/.context/plan-filters-expected-red-xcodebuild.log"
+# Capture stdout and stderr together so the diagnostic check reads exactly what xcodebuild emitted.
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test >"$xcodebuild_output" 2>&1
 expected_red_status=$?
 set -e
 if (( expected_red_status == 0 )); then
   echo "Expected PlanFiltersTests to fail before the filter model exists." >&2
+  exit 1
+fi
+if ! grep -E "error: (cannot find '(PlanFilters|PlanFilterOptions)' in scope|type 'PlanCatalog' has no member 'metadata')" "$xcodebuild_output" >/dev/null; then
+  echo "Expected a compiler missing-model diagnostic for PlanFilters, PlanFilterOptions, or PlanCatalog.metadata(for:)." >&2
+  tail -n 80 "$xcodebuild_output" >&2
   exit 1
 fi
 ```
