@@ -994,7 +994,8 @@ enum BuiltInPlanLibraryDefinition {
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
                 notes: [
-                    "The three Metolius routines preserve the source-audited official prescriptions.",
+                    "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+                    "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
