@@ -26,11 +26,11 @@ The Plans tab currently shows every routine compatible with the selected board, 
 
 ## User experience
 
-The Plans header gains one `Filters` control. Tapping it opens a lightweight sheet containing selectable rows grouped into five sections: Difficulty, Type, Category, Tags, and Equipment.
+Directly below the Plans explanatory text, a compact horizontally scrolling bar presents native SwiftUI dropdown menus for Difficulty, Type, Category, Tags, and Equipment. A menu is omitted when no values are available for that facet among currently compatible plans.
 
-Each section supports multiple selections. A section is omitted when there are no values available for the currently compatible plans. The sheet includes a `Clear` action when any filter is active and a `Done` action to dismiss it. The Plans screen shows the number of active filter groups on the control; no filter count is shown when all groups are empty.
+Every menu starts with an `All` action that clears only that facet, then offers every available value. Choices toggle independently, so a user can reopen a menu to select multiple values. Selected values show checkmarks. A menu label shows its facet name when no value is selected, the selected display value when exactly one is selected, and `N selected` for multiple selections. Active menus use a distinct tinted, outlined pill treatment. A separate `Clear` action appears in the filter bar whenever any facet is active.
 
-The list updates from the selected filters when the sheet is dismissed. Filter state lives only in the Plans view for the current view lifetime; it is not persisted.
+Type labels use `RoutineProvenance.label`. Category, tags, and equipment labels replace hyphens with spaces and capitalize the result, while stored filter values remain raw. Filter state lives only in the Plans view for the current view lifetime; it is not persisted. The filtered list updates immediately after each dropdown action.
 
 There are two distinct empty states:
 
@@ -49,7 +49,7 @@ Filtering starts with `AppStore.plans`, which already applies board compatibilit
 - Tags and equipment match when a plan contains at least one selected value.
 - Values are compared by their stored raw values; display labels are formatting only.
 
-The available values in the sheet are derived from all currently compatible plans, not from the already-filtered result. This keeps options stable while the user is making a combination of selections.
+The available values in the quick dropdowns are derived from all currently compatible plans, not from the already-filtered result. This keeps options stable while the user is making a combination of selections.
 
 ## Data flow and implementation boundary
 
@@ -57,7 +57,7 @@ The runtime `TrainingPlan` already carries difficulty and provenance. The remain
 
 Add a pure `PlanFilters` value type that stores the selected values for each facet and exposes matching behavior against a `TrainingPlan` plus its `PlanMetadata`. Add a small options helper (or equivalent view-local derivation) that produces sorted, unique values from the compatible plans. The UI should depend on these interfaces rather than on JSON details.
 
-`PlansView` owns the transient filter state and derives `filteredPlans` from `store.plans`. A private sheet view renders the five sections and mutates the bound `PlanFilters`. Existing plan navigation and `PlanCard` rendering continue to receive the original `TrainingPlan` values.
+`PlansView` owns the transient filter state and derives `filteredPlans` from `store.plans`. Its inline filter bar renders the available native menus and mutates the bound `PlanFilters`. Existing plan navigation and `PlanCard` rendering continue to receive the original `TrainingPlan` values.
 
 If a metadata lookup unexpectedly fails, an unfiltered plan remains visible; a selected metadata facet simply cannot match that plan. The validated built-in library should make this path unreachable during normal operation.
 
@@ -71,13 +71,13 @@ Add unit tests for the pure filter model covering:
 - category, tag, and equipment values come from plan metadata;
 - a plan with no matching selected value is excluded.
 
-Run the existing plan-library export check to confirm the bundled JSON is unchanged. Build and test the Hang Ten target, then launch the Plans review route in an isolated iOS Simulator and verify the filter sheet, active count, clear action, navigation links, and both empty states in portrait orientation.
+Run the existing plan-library export check to confirm the bundled JSON is unchanged. Build and test the Hang Ten target, then launch the Plans review route in an isolated iOS Simulator and verify each inline dropdown, selected-value labels and checkmarks, the clear actions, navigation links, and both empty states in portrait orientation.
 
 ## Files likely to change
 
 - `HangTen/Models/PlanStorage.swift` — expose metadata lookup from the validated catalog.
 - `HangTen/Models/PlanFilters.swift` — pure filter state, matching, and option derivation.
-- `HangTen/Views/RootView.swift` — filter control, sheet, filtered list, and filter empty state.
+- `HangTen/Views/RootView.swift` — inline filter menus, filtered list, and filter empty state.
 - `HangTenTests/PlanFiltersTests.swift` — filter behavior tests.
 
 No changes are expected in `PlanLibrary.json` or the plan definitions.

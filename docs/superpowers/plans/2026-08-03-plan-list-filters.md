@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a lightweight multi-select filter sheet to the Plans tab for difficulty, source type, category, tags, and equipment while preserving board compatibility filtering.
+**Goal:** Add compact inline multi-select dropdown filters to the Plans tab for difficulty, source type, category, tags, and equipment while preserving board compatibility filtering.
 
-**Architecture:** Keep `AppStore.plans` as the first-stage board-compatible collection. Expose validated `PlanMetadata` by plan ID through `PlanCatalog`, then apply a pure `PlanFilters` value type to that metadata. `PlansView` owns transient filter state, presents a small sheet, and renders either the filtered cards or a filter-specific empty state.
+**Architecture:** Keep `AppStore.plans` as the first-stage board-compatible collection. Expose validated `PlanMetadata` by plan ID through `PlanCatalog`, then apply a pure `PlanFilters` value type to that metadata. `PlansView` owns transient filter state, renders a horizontal row of native menus, and renders either the filtered cards or a filter-specific empty state.
 
 **Tech Stack:** Swift 6-compatible SwiftUI, Foundation, XCTest, Xcode 16 project format, iOS deployment target 17.0.
 
@@ -25,7 +25,7 @@
 
 - `HangTen/Models/PlanStorage.swift` — add the catalog metadata lookup by plan ID; the validated library remains the metadata source of truth.
 - `HangTen/Models/PlanFilters.swift` — new pure filter state, matching semantics, and available-value derivation.
-- `HangTen/Views/RootView.swift` — add the Plans filter control, sheet, filtered collection, and filter-specific empty state.
+- `HangTen/Views/RootView.swift` — add inline Plans filter menus, the filtered collection, and filter-specific empty state.
 - `HangTenTests/PlanFiltersTests.swift` — new unit tests for matching, facet semantics, options, and clear behavior.
 - `HangTen.xcodeproj/project.pbxproj` — register the new model source and test source with the existing targets.
 
@@ -271,208 +271,32 @@ rtk git add HangTen/Models/PlanFilters.swift HangTen/Models/PlanStorage.swift Ha
 rtk git commit -m "Add plan metadata filters"
 ```
 
-## Task 2: Integrate the filter sheet into the Plans screen
+## Task 2: Integrate inline quick dropdowns into the Plans screen
 
 **Files:**
-- Modify: `HangTen/Views/RootView.swift:299-412` in `PlansView`, plus private filter-sheet views immediately after `PlansView`.
+- Modify: `HangTen/Views/RootView.swift` in `PlansView`; remove the private sheet-only view.
 
 **Interfaces:**
 - Consumes `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` from Task 1.
-- Produces a transient `@State` filter interaction with a single `Filters` control, a dismissible sheet, and the existing plan navigation unchanged.
+- Produces a transient `@State` filter interaction with inline native menus and existing plan navigation unchanged.
 
-- [ ] **Step 1: Add transient state and derived collections to `PlansView`.**
+- [ ] **Step 1: Retain transient state and derived collections in `PlansView`.**
 
-Add:
+Keep `filters`, `compatiblePlans`, `availableMetadata`, `filterOptions`, and `filteredPlans` as the existing data layer. Do not change the model or its tests.
 
-```swift
-@State private var filters = PlanFilters()
-@State private var showsFilters = false
+- [ ] **Step 2: Add the inline quick-dropdown bar.**
 
-private var compatiblePlans: [TrainingPlan] {
-    store.plans
-}
+Place a horizontally scrolling row of native SwiftUI `Menu` controls immediately below the Plans explanatory text. Render a menu only when its options are available. The five facets are Difficulty, Type, Category, Tags, and Equipment; every menu starts with `All`, which clears that facet, followed by every raw option. Selecting an option toggles it and selected options use a checkmark.
 
-private var availableMetadata: [PlanMetadata] {
-    compatiblePlans.compactMap { PlanCatalog.metadata(for: $0.id) }
-}
+Each menu has a meaningful accessibility label such as `Filter by difficulty`. Labels show the facet name with no selection, the single selected display label with one selection, and `N selected` with multiple selections. Use `RoutineProvenance.label` for Type and the existing hyphen-to-space, capitalized display convention for category, tags, and equipment. Tint and outline active menu pills, and render a `Clear` button whenever any facet is active. Keep the existing navigation stack, hidden navigation bar, background, padding, and source card styling intact.
 
-private var filterOptions: PlanFilterOptions {
-    PlanFilterOptions(metadata: availableMetadata)
-}
+- [ ] **Step 3: Preserve compatible, filtered, and empty states.**
 
-private var filteredPlans: [TrainingPlan] {
-    guard !filters.isEmpty else { return compatiblePlans }
-    return compatiblePlans.filter { plan in
-        guard let metadata = PlanCatalog.metadata(for: plan.id) else { return false }
-        return filters.matches(metadata)
-    }
-}
-```
+Keep the compatible-plans branch first, then `NoMatchingPlansCard` when selected filters produce no results, then the existing plan cards and navigation links. The filter empty state must display `No routines match these filters` and retain its `Clear filters` recovery. Keep `sourceCard` after this branch in all cases.
 
-- [ ] **Step 2: Add the header control and sheet presentation.**
+- [ ] **Step 4: Remove obsolete sheet-only UI.**
 
-Place a plain button immediately below the Plans explanatory text. Its label must read `Filters`, use `line.3.horizontal.decrease.circle` when no filters are active and the filled variant when active, and show `filters.activeFacetCount` as a small count when active. Give it the accessibility label `Filter plans`.
-
-Present the private filter sheet from `PlansView`:
-
-```swift
-.sheet(isPresented: $showsFilters) {
-    PlanFiltersSheet(filters: $filters, options: filterOptions)
-}
-```
-
-Keep the existing navigation stack, hidden navigation bar, background, padding, and source card styling intact.
-
-- [ ] **Step 3: Render compatible, filtered, and empty states in the correct order.**
-
-Replace the current `store.plans.isEmpty` condition with this ordering:
-
-```swift
-if compatiblePlans.isEmpty {
-    // Existing “No compatible routines” card.
-} else if filteredPlans.isEmpty {
-    NoMatchingPlansCard {
-        filters.clear()
-    }
-} else {
-    ForEach(filteredPlans) { plan in
-        NavigationLink(destination: PlanDetailView(plan: plan)) {
-            PlanCard(plan: plan, board: store.board(for: plan))
-        }
-        .buttonStyle(.plain)
-    }
-}
-```
-
-The filter empty state must display `No routines match these filters` and a `Clear filters` button. The existing compatibility copy remains unchanged. Keep `sourceCard` after this branch in all cases.
-
-- [ ] **Step 4: Add the simple multi-select sheet.**
-
-Create a private `PlanFiltersSheet` view in `RootView.swift` with `@Binding var filters: PlanFilters`, `let options: PlanFilterOptions`, and `@Environment(\.dismiss) private var dismiss`. Use a `NavigationStack` and `List` with sections named exactly `Difficulty`, `Type`, `Category`, `Tags`, and `Equipment`. Omit a section when its option array is empty.
-
-Each row is a `Button` that toggles one value and shows a checkmark when selected. Use `RoutineProvenance.label` for Type rows. Convert raw category, tag, and equipment values to readable labels by replacing hyphens with spaces and applying `.capitalized`; do not change the raw values stored in `PlanFilters`.
-
-Add toolbar actions:
-
-```swift
-ToolbarItem(placement: .cancellationAction) {
-    if !filters.isEmpty {
-        Button("Clear") { filters.clear() }
-    }
-}
-ToolbarItem(placement: .confirmationAction) {
-    Button("Done") { dismiss() }
-}
-```
-
-Use the navigation title `Filters`. Keep the sheet otherwise native and unadorned so it remains easy to scan.
-
-Implement the filter sheet body and the empty-state card with the existing design-system primitives:
-
-```swift
-private struct PlanFiltersSheet: View {
-    @Binding var filters: PlanFilters
-    let options: PlanFilterOptions
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List {
-                if !options.levels.isEmpty {
-                    Section("Difficulty") {
-                        ForEach(options.levels, id: \.self) { value in
-                            optionRow(value, isSelected: filters.levels.contains(value)) {
-                                filters.toggle(level: value)
-                            }
-                        }
-                    }
-                }
-                if !options.provenances.isEmpty {
-                    Section("Type") {
-                        ForEach(options.provenances, id: \.self) { value in
-                            optionRow(value.label, isSelected: filters.provenances.contains(value)) {
-                                filters.toggle(provenance: value)
-                            }
-                        }
-                    }
-                }
-                if !options.categories.isEmpty {
-                    Section("Category") {
-                        ForEach(options.categories, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.categories.contains(value)) {
-                                filters.toggle(category: value)
-                            }
-                        }
-                    }
-                }
-                if !options.tags.isEmpty {
-                    Section("Tags") {
-                        ForEach(options.tags, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.tags.contains(value)) {
-                                filters.toggle(tag: value)
-                            }
-                        }
-                    }
-                }
-                if !options.equipment.isEmpty {
-                    Section("Equipment") {
-                        ForEach(options.equipment, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.equipment.contains(value)) {
-                                filters.toggle(equipment: value)
-                            }
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if !filters.isEmpty {
-                        Button("Clear") { filters.clear() }
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
-    }
-
-    private func optionRow(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Text(title)
-                Spacer()
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-            }
-        }
-    }
-
-    private func displayName(_ rawValue: String) -> String {
-        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
-    }
-}
-
-private struct NoMatchingPlansCard: View {
-    let onClear: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            SectionLabel(title: "No matching routines")
-            Text("No routines match these filters")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-            Button("Clear filters", action: onClear)
-                .font(.system(size: 13, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangGreenDark)
-        }
-        .hangCard()
-    }
-}
-```
+Delete `showsFilters`, the `.sheet` presentation, and `PlanFiltersSheet`. The menus may dismiss after each choice; users reopen a menu to make another selection.
 
 - [ ] **Step 5: Build and run the full test target after the UI change.**
 
@@ -499,8 +323,8 @@ Expected: the check exits successfully and reports that `HangTen/Resources/PlanL
 Run:
 
 ```bash
-rtk git add HangTen/Views/RootView.swift
-rtk git commit -m "Add filters to plans list"
+rtk git add HangTen/Views/RootView.swift docs/superpowers/specs/2026-08-03-plan-list-filters-design.md docs/superpowers/plans/2026-08-03-plan-list-filters.md
+rtk git commit -m "Use inline plan filter menus"
 ```
 
 ## Final validation
@@ -522,7 +346,7 @@ rtk xcrun simctl install "${review_device_uuid}" .context/DerivedData-plans-filt
 SIMCTL_CHILD_HANGTEN_REVIEW_PLANS=1 rtk xcrun simctl launch "${review_device_uuid}" com.hangten.training
 ```
 
-- [ ] Confirm the filter sheet exposes Difficulty, Type, Category, Tags, and Equipment, supports multiple selections, updates the active count, clears selections, and preserves plan-card navigation.
+- [ ] Confirm the inline quick-dropdown bar exposes every available facet, supports multiple selections across repeated menu opens, shows selected-value labels and checkmarks, clears either a single facet with `All` or every facet with `Clear`, and preserves plan-card navigation.
 - [ ] Confirm selecting an impossible combination shows `No routines match these filters`, and clearing filters restores the compatible plan cards.
 - [ ] Confirm a board with no compatible plans still shows the original compatibility empty state.
 - [ ] Shut down only the dedicated review-device UUID after validation:

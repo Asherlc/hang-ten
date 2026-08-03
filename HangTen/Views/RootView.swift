@@ -299,7 +299,6 @@ private struct StatCard: View {
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
     @State private var filters = PlanFilters()
-    @State private var showsFilters = false
 
     private var compatiblePlans: [TrainingPlan] {
         store.plans
@@ -335,25 +334,7 @@ struct PlansView: View {
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
 
-                        Button {
-                            showsFilters = true
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: filters.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
-                                Text("Filters")
-                                if !filters.isEmpty {
-                                    Text("\(filters.activeFacetCount)")
-                                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(Color.hangGreen.opacity(0.25), in: Capsule())
-                                }
-                            }
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangGreenDark)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Filter plans")
+                        filterBar
                     }
 
                     if compatiblePlans.isEmpty {
@@ -385,10 +366,168 @@ struct PlansView: View {
             }
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $showsFilters) {
-                PlanFiltersSheet(filters: $filters, options: filterOptions)
-            }
         }
+    }
+
+    private var filterBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if !filterOptions.levels.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.levels.isEmpty) {
+                            filters.levels.removeAll()
+                        }
+                        ForEach(filterOptions.levels, id: \.self) { value in
+                            filterValueButton(value, isSelected: filters.levels.contains(value)) {
+                                filters.toggle(level: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Difficulty",
+                            selectionCount: filters.levels.count,
+                            singleSelection: filters.levels.first
+                        )
+                    }
+                    .accessibilityLabel("Filter by difficulty")
+                }
+
+                if !filterOptions.provenances.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.provenances.isEmpty) {
+                            filters.provenances.removeAll()
+                        }
+                        ForEach(filterOptions.provenances, id: \.self) { value in
+                            filterValueButton(value.label, isSelected: filters.provenances.contains(value)) {
+                                filters.toggle(provenance: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Type",
+                            selectionCount: filters.provenances.count,
+                            singleSelection: filters.provenances.first?.label
+                        )
+                    }
+                    .accessibilityLabel("Filter by type")
+                }
+
+                if !filterOptions.categories.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.categories.isEmpty) {
+                            filters.categories.removeAll()
+                        }
+                        ForEach(filterOptions.categories, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
+                                filters.toggle(category: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Category",
+                            selectionCount: filters.categories.count,
+                            singleSelection: filters.categories.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by category")
+                }
+
+                if !filterOptions.tags.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.tags.isEmpty) {
+                            filters.tags.removeAll()
+                        }
+                        ForEach(filterOptions.tags, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
+                                filters.toggle(tag: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Tags",
+                            selectionCount: filters.tags.count,
+                            singleSelection: filters.tags.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by tags")
+                }
+
+                if !filterOptions.equipment.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.equipment.isEmpty) {
+                            filters.equipment.removeAll()
+                        }
+                        ForEach(filterOptions.equipment, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.equipment.contains(value)) {
+                                filters.toggle(equipment: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Equipment",
+                            selectionCount: filters.equipment.count,
+                            singleSelection: filters.equipment.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by equipment")
+                }
+
+                if !filters.isEmpty {
+                    Button("Clear") {
+                        filters.clear()
+                    }
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .accessibilityLabel("Clear plan filters")
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func filterAllButton(isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label("All", systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterValueButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterMenuLabel(title: String, selectionCount: Int, singleSelection: String?) -> some View {
+        let isActive = selectionCount > 0
+        let label = if selectionCount == 1 {
+            singleSelection ?? title
+        } else if selectionCount > 1 {
+            "\(selectionCount) selected"
+        } else {
+            title
+        }
+
+        return HStack(spacing: 5) {
+            Text(label)
+            Image(systemName: "chevron.down")
+                .font(.system(size: 10, weight: .bold))
+        }
+        .font(.system(size: 13, weight: .bold, design: .rounded))
+        .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
+        .padding(.horizontal, 11)
+        .padding(.vertical, 8)
+        .background(
+            isActive ? Color.hangGreen.opacity(0.25) : Color.hangCream,
+            in: Capsule()
+        )
+        .overlay {
+            Capsule()
+                .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+
+    private func displayName(_ rawValue: String) -> String {
+        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
     private var sourceCard: some View {
@@ -412,92 +551,6 @@ struct PlansView: View {
             }
         }
         .hangCard()
-    }
-}
-
-private struct PlanFiltersSheet: View {
-    @Binding var filters: PlanFilters
-    let options: PlanFilterOptions
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List {
-                if !options.levels.isEmpty {
-                    Section("Difficulty") {
-                        ForEach(options.levels, id: \.self) { value in
-                            optionRow(value, isSelected: filters.levels.contains(value)) {
-                                filters.toggle(level: value)
-                            }
-                        }
-                    }
-                }
-                if !options.provenances.isEmpty {
-                    Section("Type") {
-                        ForEach(options.provenances, id: \.self) { value in
-                            optionRow(value.label, isSelected: filters.provenances.contains(value)) {
-                                filters.toggle(provenance: value)
-                            }
-                        }
-                    }
-                }
-                if !options.categories.isEmpty {
-                    Section("Category") {
-                        ForEach(options.categories, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.categories.contains(value)) {
-                                filters.toggle(category: value)
-                            }
-                        }
-                    }
-                }
-                if !options.tags.isEmpty {
-                    Section("Tags") {
-                        ForEach(options.tags, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.tags.contains(value)) {
-                                filters.toggle(tag: value)
-                            }
-                        }
-                    }
-                }
-                if !options.equipment.isEmpty {
-                    Section("Equipment") {
-                        ForEach(options.equipment, id: \.self) { value in
-                            optionRow(displayName(value), isSelected: filters.equipment.contains(value)) {
-                                filters.toggle(equipment: value)
-                            }
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if !filters.isEmpty {
-                        Button("Clear") { filters.clear() }
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
-        }
-    }
-
-    private func optionRow(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Text(title)
-                Spacer()
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-            }
-        }
-    }
-
-    private func displayName(_ rawValue: String) -> String {
-        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 }
 
