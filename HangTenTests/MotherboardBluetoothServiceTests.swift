@@ -24,8 +24,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     func testCoreBluetoothTransportDelegateDoesNotEmitOrStoreAnonymousPeripheral() {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
-        let peripheral = FakeCBPeripheral(name: nil)
-        let central = CBCentralManager(delegate: nil, queue: nil)
+        let peripheral = FakeMotherboardPeripheral(name: nil)
         var discoveredDevices: [MotherboardDiscoveredDevice] = []
         transport.eventHandler = { event in
             guard case .discovered(let device) = event else { return }
@@ -35,9 +34,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.startScan()
 
         deliverDiscovery(
-            peripheral.coreBluetoothPeripheral,
+            peripheral,
             to: transport,
-            from: central,
             advertisementData: [:]
         )
 
@@ -49,8 +47,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     func testCoreBluetoothTransportDelegateDoesNotEmitOrStoreNonMotherboardPeripheral() {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
-        let peripheral = FakeCBPeripheral(name: "Another peripheral")
-        let central = CBCentralManager(delegate: nil, queue: nil)
+        let peripheral = FakeMotherboardPeripheral(name: "Another peripheral")
         var discoveredDevices: [MotherboardDiscoveredDevice] = []
         transport.eventHandler = { event in
             guard case .discovered(let device) = event else { return }
@@ -60,9 +57,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.startScan()
 
         deliverDiscovery(
-            peripheral.coreBluetoothPeripheral,
+            peripheral,
             to: transport,
-            from: central,
             advertisementData: [:]
         )
 
@@ -74,8 +70,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     func testCoreBluetoothTransportDelegateEmitsLocalNameMotherboardAndRetainsPeripheralForConnection() throws {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
-        let peripheral = FakeCBPeripheral(name: nil)
-        let central = CBCentralManager(delegate: nil, queue: nil)
+        let peripheral = FakeMotherboardPeripheral(name: nil)
         var discoveredDevices: [MotherboardDiscoveredDevice] = []
         transport.eventHandler = { event in
             guard case .discovered(let device) = event else { return }
@@ -85,9 +80,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.startScan()
 
         deliverDiscovery(
-            peripheral.coreBluetoothPeripheral,
+            peripheral,
             to: transport,
-            from: central,
             advertisementData: [CBAdvertisementDataLocalNameKey: "Motherboard"]
         )
 
@@ -180,6 +174,53 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.notification(Data("Stream:15\r\n".utf8), Date()))
 
         XCTAssertEqual(service.state, .calibrating)
+    }
+
+    func testOneStreamingParserErrorPreservesStreamingAndTransportSession() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        transport.emit(.notification(Data("Error:transient\r\n".utf8), Date()))
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(transport.disconnectCount, 0)
+        XCTAssertTrue(transport.hasSelectedPeripheral)
+    }
+
+    func testThreeConsecutiveStreamingParserErrorsFailAndCleanUpTransport() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        transport.emit(.notification(Data("Error:first\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Error:second\r\n".utf8), Date()))
+        XCTAssertEqual(service.state, .streaming)
+
+        transport.emit(.notification(Data("Error:third\r\n".utf8), Date()))
+
+        XCTAssertEqual(service.state, .failed)
+        XCTAssertEqual(service.lastError, "Error:third")
+        XCTAssertEqual(transport.disconnectCount, 1)
+        XCTAssertFalse(transport.hasSelectedPeripheral)
+    }
+
+    func testValidRawPacketResetsConsecutiveStreamingParserErrors() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        transport.emit(.notification(Data("Error:first\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Error:second\r\n".utf8), Date()))
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 100)
+        transport.emit(.notification(Data("Error:after-reset-one\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Error:after-reset-two\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Error:after-stream-reset-one\r\n".utf8), Date()))
+        transport.emit(.notification(Data("Error:after-stream-reset-two\r\n".utf8), Date()))
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(transport.disconnectCount, 0)
     }
 
     func testFragmentedRawPacketPublishesMeasurementAndBatteryAfterCalibration() {
@@ -336,8 +377,8 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     }
 
     #if DEBUG
-    func testDefaultSimulatorMaximumDurationPreparationDoesNotConsumeActiveFrames() async throws {
-        let transport = SimulatedMotherboardTransport(streamInterval: .milliseconds(20))
+    func testMaximumDurationPreparationConsumesOnlyExplicitlyAdvancedSimulationFrames() async throws {
+        let transport = SimulatedMotherboardTransport(samples: [])
         let sleepGate = ManualSleepGate()
         let service = MotherboardBluetoothService(
             transport: transport,
@@ -348,34 +389,41 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         defer { service.disconnect() }
 
         service.connect()
-        try await waitForService("simulator stream") { service.state == .streaming }
+        XCTAssertEqual(service.state, .streaming)
 
-        // The app auto-connects this fixture; preparation may begin only after its
-        // initial tare/bodyweight/active timeline has already been consumed.
-        try await Task.sleep(for: .milliseconds(750))
-        service.resetSimulationForPreparation()
+        let frames = DeterministicSimulationFrames()
         service.tare()
 
-        try await waitForService("simulator tare") { service.tareCompletionCount == 1 }
-        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0.08, accuracy: 0.05)
+        frames.advance(frames.tare, on: service, count: frames.tareFrameCount)
+
+        XCTAssertEqual(service.tareCompletionCount, 1)
+        XCTAssertEqual(
+            try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF,
+            frames.tare.expectedAggregateLoadKGF,
+            accuracy: 0.0001
+        )
 
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: 10))
         await sleepGate.waitForSleepRequests(1)
-        try await waitForService("maximum-duration stable bodyweight samples") {
-            service.bodyweightSampleCount >= 40
-        }
+        frames.advance(frames.bodyweight, on: service, count: frames.bodyweightFrameCount)
+
+        XCTAssertEqual(service.bodyweightSampleCount, frames.bodyweightFrameCount)
+        XCTAssertEqual(
+            try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF,
+            frames.bodyweight.expectedAggregateLoadKGF,
+            accuracy: 0.0001
+        )
         await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
 
-        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 63.92, accuracy: 0.1)
+        XCTAssertEqual(
+            try XCTUnwrap(service.bodyweightKGF),
+            frames.bodyweight.expectedAggregateLoadKGF,
+            accuracy: 0.0001
+        )
 
-        try await waitForService("active fixture frame") {
-            guard let measurement = service.latestMeasurement else { return false }
-            return measurement.sampleNumber >= 34 && measurement.aggregateLoadKGF > 70
-        }
+        frames.advance(frames.active, on: service)
         let activeMeasurement = try XCTUnwrap(service.latestMeasurement)
-        XCTAssertNotEqual(activeMeasurement.leftShare, 0.5, accuracy: 0.0001)
-        XCTAssertNotEqual(activeMeasurement.rightShare, 0.5, accuracy: 0.0001)
-        XCTAssertGreaterThan(activeMeasurement.aggregateLoadKGF, 70)
+        XCTAssertEqual(activeMeasurement.leftShare, frames.active.expectedLeftShare, accuracy: 0.0001)
     }
     #endif
 
@@ -990,13 +1038,11 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     }
 
     private func deliverDiscovery(
-        _ peripheral: CBPeripheral,
+        _ peripheral: MotherboardPeripheralManaging,
         to transport: CoreBluetoothMotherboardTransport,
-        from central: CBCentralManager,
         advertisementData: [String: Any]
     ) {
-        let delegate: CBCentralManagerDelegate = transport
-        delegate.centralManager!(central, didDiscover: peripheral, advertisementData: advertisementData, rssi: -60)
+        transport.handleDiscovery(peripheral: peripheral, advertisementData: advertisementData)
     }
 }
 
@@ -1038,35 +1084,92 @@ private actor ManualSleepGate {
 private final class FakeCentralManager: MotherboardCentralManaging {
     var state: CBManagerState = .poweredOn
     var scanCount = 0
-    var connectedPeripherals: [CBPeripheral] = []
+    var connectedPeripherals: [MotherboardPeripheralManaging] = []
 
     func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
         scanCount += 1
     }
 
     func stopScan() {}
-    func connect(_ peripheral: CBPeripheral, options: [String: Any]?) {
+    func connect(_ peripheral: MotherboardPeripheralManaging, options: [String: Any]?) {
         connectedPeripherals.append(peripheral)
     }
-    func cancelPeripheralConnection(_ peripheral: CBPeripheral) {}
+    func cancelPeripheralConnection(_ peripheral: MotherboardPeripheralManaging) {}
 }
 
-private final class FakeCBPeripheral: NSObject {
+private final class FakeMotherboardPeripheral: NSObject, MotherboardPeripheralManaging {
     let deviceID = UUID()
-    private let fakeName: String?
-    @objc dynamic var identifier: NSUUID { deviceID as NSUUID }
-    @objc dynamic var name: String? { fakeName }
-    @objc dynamic weak var delegate: AnyObject?
+    let name: String?
+    var identifier: UUID { deviceID }
+    var delegate: CBPeripheralDelegate?
+    var services: [CBService]? { nil }
 
     init(name: String?) {
-        fakeName = name
+        self.name = name
         super.init()
     }
 
-    var coreBluetoothPeripheral: CBPeripheral {
-        unsafeBitCast(self, to: CBPeripheral.self)
-    }
+    func discoverServices(_ serviceUUIDs: [CBUUID]?) {}
+    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBService) {}
+    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristic) {}
+    func writeValue(_ data: Data, for characteristic: CBCharacteristic, type: CBCharacteristicWriteType) {}
+    func connect(using centralManager: CBCentralManager, options: [String: Any]?) {}
+    func cancelConnection(using centralManager: CBCentralManager) {}
 }
+
+#if DEBUG
+private struct DeterministicSimulationFrame {
+    let data: Data
+    let expectedAggregateLoadKGF: Double
+    let expectedLeftShare: Double
+}
+
+private struct DeterministicSimulationFrames {
+    let tareFrameCount = 15
+    let bodyweightFrameCount = 40
+    let tare = DeterministicSimulationFrame(
+        data: deterministicRawFrame(adcValues: [0, 0, 0, 0]),
+        expectedAggregateLoadKGF: 0,
+        expectedLeftShare: 0.5
+    )
+    let bodyweight = DeterministicSimulationFrame(
+        data: deterministicRawFrame(adcValues: [200, 200, 200, 200]),
+        expectedAggregateLoadKGF: 80,
+        expectedLeftShare: 0.5
+    )
+    let active = DeterministicSimulationFrame(
+        data: deterministicRawFrame(adcValues: [300, 200, 300, 200]),
+        expectedAggregateLoadKGF: 100,
+        expectedLeftShare: 0.6
+    )
+
+    @MainActor
+    func advance(
+        _ frame: DeterministicSimulationFrame,
+        on service: MotherboardBluetoothService,
+        count: Int = 1
+    ) {
+        for index in 0..<count {
+            service.injectSimulationFrameForTesting(
+                frame.data,
+                receivedAt: Date(timeIntervalSince1970: TimeInterval(index))
+            )
+        }
+    }
+
+}
+
+private func deterministicRawFrame(adcValues: [Int32]) -> Data {
+    var bytes = [UInt8(0), UInt8(0), UInt8(88), UInt8(0)]
+    for adc in adcValues {
+        bytes.append(UInt8(truncatingIfNeeded: adc))
+        bytes.append(UInt8(truncatingIfNeeded: adc >> 8))
+        bytes.append(UInt8(truncatingIfNeeded: adc >> 16))
+    }
+    let line = bytes.map { String(format: "%02X", $0) }.joined() + "\r\n"
+    return Data(line.utf8)
+}
+#endif
 
 private enum TestNotificationError: Error {
     case failed

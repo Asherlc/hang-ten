@@ -258,7 +258,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
     }
 
     func testFormattingRejectsNegativeAndNonFiniteValues() {
-        for value in [-1, .nan, .infinity, -.infinity] {
+        for value in [-1.0, Double.nan, Double.infinity, -Double.infinity] {
             XCTAssertNil(
                 MotherboardUserVisibleFormatting.force(value, unit: .kgf, locale: Locale(identifier: "en_US"))
             )

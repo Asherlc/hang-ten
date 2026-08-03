@@ -90,8 +90,10 @@ final class MotherboardBluetoothService: ObservableObject {
     private var timeoutTask: Task<Void, Never>?
     private var bodyweightMeasurementTask: Task<Void, Never>?
     private var lastPowerState: MotherboardBluetoothPowerState = .unknown
+    private var consecutiveStreamingParserErrors = 0
 
     private static let maximumBodyweightMeasurementDuration = TimeInterval(UInt64.max / 1_000_000_000)
+    private static let maximumConsecutiveStreamingParserErrors = 3
 
     init(
         transport: MotherboardTransport,
@@ -157,6 +159,11 @@ final class MotherboardBluetoothService: ObservableObject {
     #if DEBUG
     func resetSimulationForPreparation() {
         (transport as? MotherboardSimulationControlling)?.resetSimulationStream()
+    }
+
+    func injectSimulationFrameForTesting(_ data: Data, receivedAt: Date) {
+        guard state == .streaming else { return }
+        handleNotification(data, receivedAt: receivedAt)
     }
     #endif
 
@@ -270,7 +277,9 @@ final class MotherboardBluetoothService: ObservableObject {
                 startStreaming()
 
             case .rawPacket(let packet, let timestamp):
-                guard state == .streaming, let calibration else { continue }
+                guard state == .streaming else { continue }
+                consecutiveStreamingParserErrors = 0
+                guard let calibration else { continue }
                 let measurement = MotherboardProtocol.decode(
                     packet,
                     timestamp: timestamp,
@@ -285,12 +294,20 @@ final class MotherboardBluetoothService: ObservableObject {
             case .streamStarted(let rate):
                 guard rate == 30, calibration != nil else { continue }
                 cancelTimeout()
+                consecutiveStreamingParserErrors = 0
                 state = .streaming
                 reconnectAttempts = 0
                 lastError = nil
 
             case .error(let message):
-                fail(message)
+                guard state == .streaming else {
+                    fail(message)
+                    continue
+                }
+                consecutiveStreamingParserErrors += 1
+                if consecutiveStreamingParserErrors >= Self.maximumConsecutiveStreamingParserErrors {
+                    fail(message)
+                }
             }
         }
     }
@@ -339,6 +356,7 @@ final class MotherboardBluetoothService: ObservableObject {
         latestMeasurement = nil
         batteryValue = nil
         connectedDeviceID = nil
+        consecutiveStreamingParserErrors = 0
     }
 
     private func collectTareSample(_ measurement: MotherboardMeasurement) {
@@ -424,15 +442,93 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 }
 
+protocol MotherboardPeripheralManaging: AnyObject {
+    var identifier: UUID { get }
+    var name: String? { get }
+    var delegate: CBPeripheralDelegate? { get set }
+    var services: [CBService]? { get }
+
+    func discoverServices(_ serviceUUIDs: [CBUUID]?)
+    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBService)
+    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristic)
+    func writeValue(_ data: Data, for characteristic: CBCharacteristic, type: CBCharacteristicWriteType)
+    func connect(using centralManager: CBCentralManager, options: [String: Any]?)
+    func cancelConnection(using centralManager: CBCentralManager)
+}
+
+final class CoreBluetoothPeripheralAdapter: MotherboardPeripheralManaging {
+    private let peripheral: CBPeripheral
+
+    init(_ peripheral: CBPeripheral) {
+        self.peripheral = peripheral
+    }
+
+    var identifier: UUID { peripheral.identifier }
+    var name: String? { peripheral.name }
+    var delegate: CBPeripheralDelegate? {
+        get { peripheral.delegate }
+        set { peripheral.delegate = newValue }
+    }
+    var services: [CBService]? { peripheral.services }
+
+    func discoverServices(_ serviceUUIDs: [CBUUID]?) {
+        peripheral.discoverServices(serviceUUIDs)
+    }
+
+    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBService) {
+        peripheral.discoverCharacteristics(characteristicUUIDs, for: service)
+    }
+
+    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristic) {
+        peripheral.setNotifyValue(enabled, for: characteristic)
+    }
+
+    func writeValue(_ data: Data, for characteristic: CBCharacteristic, type: CBCharacteristicWriteType) {
+        peripheral.writeValue(data, for: characteristic, type: type)
+    }
+
+    func connect(using centralManager: CBCentralManager, options: [String: Any]?) {
+        centralManager.connect(peripheral, options: options)
+    }
+
+    func cancelConnection(using centralManager: CBCentralManager) {
+        centralManager.cancelPeripheralConnection(peripheral)
+    }
+}
+
 protocol MotherboardCentralManaging: AnyObject {
     var state: CBManagerState { get }
     func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?)
     func stopScan()
-    func connect(_ peripheral: CBPeripheral, options: [String: Any]?)
-    func cancelPeripheralConnection(_ peripheral: CBPeripheral)
+    func connect(_ peripheral: MotherboardPeripheralManaging, options: [String: Any]?)
+    func cancelPeripheralConnection(_ peripheral: MotherboardPeripheralManaging)
 }
 
-extension CBCentralManager: MotherboardCentralManaging {}
+final class CoreBluetoothCentralAdapter: MotherboardCentralManaging {
+    private let centralManager: CBCentralManager
+
+    init(delegate: CBCentralManagerDelegate, queue: DispatchQueue?) {
+        centralManager = CBCentralManager(delegate: delegate, queue: queue)
+    }
+
+    var state: CBManagerState { centralManager.state }
+
+    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
+        centralManager.scanForPeripherals(withServices: serviceUUIDs, options: options)
+    }
+
+    func stopScan() {
+        centralManager.stopScan()
+    }
+
+    func connect(_ peripheral: MotherboardPeripheralManaging, options: [String: Any]?) {
+        peripheral.connect(using: centralManager, options: options)
+    }
+
+    func cancelPeripheralConnection(_ peripheral: MotherboardPeripheralManaging) {
+        peripheral.cancelConnection(using: centralManager)
+    }
+}
 
 @MainActor
 final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
@@ -440,8 +536,8 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     private let centralManagerFactory: (CBCentralManagerDelegate) -> MotherboardCentralManaging
     private var centralManager: MotherboardCentralManaging?
-    private var discoveredPeripherals: [UUID: CBPeripheral] = [:]
-    private var selectedPeripheral: CBPeripheral?
+    private var discoveredPeripherals: [UUID: MotherboardPeripheralManaging] = [:]
+    private var selectedPeripheral: MotherboardPeripheralManaging?
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
     private var scanRequested = false
@@ -449,7 +545,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     override convenience init() {
         self.init { delegate in
-            CBCentralManager(delegate: delegate, queue: .main)
+            CoreBluetoothCentralAdapter(delegate: delegate, queue: .main)
         }
     }
 
@@ -539,6 +635,24 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         eventHandler?(.disconnected(error?.localizedDescription ?? fallback))
     }
 
+    func handleDiscovery(
+        peripheral: MotherboardPeripheralManaging,
+        advertisementData: [String: Any]
+    ) {
+        let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
+        guard isExpectedMotherboard(
+            peripheralName: peripheral.name,
+            advertisedLocalName: advertisedLocalName
+        ) else { return }
+        let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
+
+        discoveredPeripherals[peripheral.identifier] = peripheral
+        eventHandler?(.discovered(MotherboardDiscoveredDevice(
+            id: peripheral.identifier,
+            name: advertisedName
+        )))
+    }
+
     func handleNotificationStateUpdate(isNotifying: Bool, error: Error?) {
         if let error {
             guard txNotificationsRequested || isNotifying else { return }
@@ -578,40 +692,34 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         advertisementData: [String: Any],
         rssi RSSI: NSNumber
     ) {
-        let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        guard isExpectedMotherboard(
-            peripheralName: peripheral.name,
-            advertisedLocalName: advertisedLocalName
-        ) else { return }
-        let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
-
-        discoveredPeripherals[peripheral.identifier] = peripheral
-        eventHandler?(.discovered(MotherboardDiscoveredDevice(
-            id: peripheral.identifier,
-            name: advertisedName
-        )))
+        handleDiscovery(
+            peripheral: CoreBluetoothPeripheralAdapter(peripheral),
+            advertisementData: advertisementData
+        )
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        guard peripheral == selectedPeripheral else { return }
-        peripheral.delegate = self
-        peripheral.discoverServices([CBUUID(nsuuid: MotherboardProtocol.serviceUUID)])
+        guard selectedPeripheral?.identifier == peripheral.identifier,
+              let selectedPeripheral else { return }
+        selectedPeripheral.delegate = self
+        selectedPeripheral.discoverServices([CBUUID(nsuuid: MotherboardProtocol.serviceUUID)])
         eventHandler?(.connected)
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        guard peripheral == selectedPeripheral else { return }
+        guard selectedPeripheral?.identifier == peripheral.identifier else { return }
         reportFailure(error, fallback: "Could not connect to Motherboard.")
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        guard peripheral == selectedPeripheral else { return }
+        guard selectedPeripheral?.identifier == peripheral.identifier else { return }
         reportFailure(error, fallback: "Motherboard disconnected.")
     }
 }
 
 extension CoreBluetoothMotherboardTransport: @preconcurrency CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        let peripheral = CoreBluetoothPeripheralAdapter(peripheral)
         guard error == nil,
               let service = peripheral.services?.first(where: {
                   $0.uuid == CBUUID(nsuuid: MotherboardProtocol.serviceUUID)
