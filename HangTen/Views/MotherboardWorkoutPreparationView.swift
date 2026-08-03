@@ -1,0 +1,167 @@
+import Foundation
+import SwiftUI
+
+struct MotherboardWorkoutPreparationView: View {
+    @ObservedObject var service: MotherboardBluetoothService
+    let unit: MotherboardForceUnit
+    let bodyweightCaptureDuration: TimeInterval
+    let onComplete: (Double?) -> Void
+    let onSkip: () -> Void
+
+    @State private var preparation = MotherboardWorkoutPreparation()
+    @State private var didRequestTare = false
+    @State private var didStartBodyweightCapture = false
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 22) {
+                switch preparation.step {
+                case .tare:
+                    tareContent
+                case .bodyweight:
+                    bodyweightContent
+                case .ready:
+                    readyContent
+                }
+            }
+            .padding(24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .background(Color.hangBackground)
+            .navigationTitle("Prepare Motherboard")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .interactiveDismissDisabled()
+        .onAppear(perform: requestTareIfNeeded)
+        .onChange(of: service.isTaring) { _, isTaring in
+            guard didRequestTare, !isTaring, preparation.step == .tare else { return }
+            preparation.completeTare()
+            beginBodyweightCapture()
+        }
+        .onChange(of: service.isMeasuringBodyweight) { _, isMeasuring in
+            guard didStartBodyweightCapture, !isMeasuring, preparation.step == .bodyweight else { return }
+            preparation.completeBodyweight(with: service.bodyweightKGF)
+        }
+    }
+
+    private var tareContent: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            SectionLabel(title: "Step 1 of 2")
+            Text("Tare board")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text("Remove your hands and all weight from the board while it establishes zero load.")
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+
+            ProgressView(
+                value: Double(service.tareSamplesCollected),
+                total: Double(service.tareSampleTarget)
+            )
+            .tint(Color.hangGreenDark)
+
+            Text("\(service.tareSamplesCollected) of \(service.tareSampleTarget) tare samples")
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+        }
+    }
+
+    private var bodyweightContent: some View {
+        TimelineView(.periodic(from: .now, by: 0.1)) { context in
+            let progress = bodyweightProgress(at: context.date)
+            let remaining = max(0, bodyweightCaptureDuration * (1 - progress))
+
+            Group {
+                VStack(alignment: .leading, spacing: 16) {
+                    SectionLabel(title: "Step 2 of 2")
+                    Text("Capture bodyweight")
+                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    Text("Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load.")
+                        .font(.system(size: 16, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+
+                    ProgressView(value: progress)
+                        .tint(Color.hangGreenDark)
+
+                    HStack {
+                        Text("\(service.bodyweightSampleCount) samples")
+                        Spacer()
+                        Text("\(durationText(remaining)) remaining")
+                    }
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                }
+            }
+        }
+    }
+
+    private var readyContent: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            SectionLabel(title: "Preparation complete")
+            Text("Ready to train")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+
+            if let bodyweightKGF = preparation.bodyweightKGF {
+                Text("Captured baseline: \(forceText(bodyweightKGF))")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Use this relaxed jug hang as your bodyweight reference for this workout.")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            } else {
+                Text("No bodyweight baseline was captured.")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("You can try again or continue without a baseline.")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+            }
+
+            Button("Measure again") {
+                preparation.retryBodyweight()
+                beginBodyweightCapture()
+            }
+            .buttonStyle(.bordered)
+            .tint(Color.hangGreenDark)
+
+            Button("Continue") {
+                onComplete(preparation.bodyweightKGF)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.hangGreenDark)
+
+            Button("Skip bodyweight") {
+                preparation.skip()
+                onSkip()
+            }
+            .font(.system(size: 15, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.hangMuted)
+        }
+    }
+
+    private func requestTareIfNeeded() {
+        guard !didRequestTare else { return }
+        didRequestTare = true
+        service.tare()
+    }
+
+    private func beginBodyweightCapture() {
+        didStartBodyweightCapture = service.beginBodyweightMeasurement(duration: bodyweightCaptureDuration)
+        guard !didStartBodyweightCapture else { return }
+        preparation.completeBodyweight(with: nil)
+    }
+
+    private func bodyweightProgress(at date: Date) -> Double {
+        guard let startedAt = service.bodyweightMeasurementStartedAt, bodyweightCaptureDuration > 0 else { return 0 }
+        return min(max(date.timeIntervalSince(startedAt) / bodyweightCaptureDuration, 0), 1)
+    }
+
+    private func forceText(_ kilogramsForce: Double) -> String {
+        String(format: "%.1f %@", unit.value(fromKilogramsForce: kilogramsForce), unit.label)
+    }
+
+    private func durationText(_ duration: TimeInterval) -> String {
+        String(format: "%.1fs", duration)
+    }
+}

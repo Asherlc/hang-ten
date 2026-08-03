@@ -653,6 +653,9 @@ struct WorkoutView: View {
     @State private var summarySession: WorkoutSessionRecord?
     @State private var didSaveSession = false
     @State private var didInterruptRecorder = false
+    @State private var showsWorkoutPreparation = false
+    @State private var didCompleteWorkoutPreparation = false
+    @State private var bodyweightKGF: Double?
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -761,6 +764,25 @@ struct WorkoutView: View {
 				onDiscard: { discard(session) }
 			)
 		}
+		.sheet(isPresented: $showsWorkoutPreparation) {
+			MotherboardWorkoutPreparationView(
+				service: motherboardBluetoothService,
+				unit: motherboardSettingsStore.forceUnit,
+				bodyweightCaptureDuration: motherboardSettingsStore.bodyweightCaptureDuration,
+				onComplete: { baseline in
+					bodyweightKGF = baseline
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				},
+				onSkip: {
+					bodyweightKGF = nil
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				}
+			)
+		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
 			configureRecorder()
@@ -778,6 +800,7 @@ struct WorkoutView: View {
 
 			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
 			   startedAt == nil {
+				didCompleteWorkoutPreparation = true
 				toggleRunning()
 			}
 			#endif
@@ -1118,7 +1141,9 @@ struct WorkoutView: View {
             pausedElapsed += now.timeIntervalSince(startedAt)
             self.startedAt = nil
 			audioCoach.stop()
-        } else {
+		} else if needsWorkoutPreparation {
+			showsWorkoutPreparation = true
+		} else {
             let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
             if pausedElapsed == 0 {
                 routineStartedAt = start
@@ -1226,7 +1251,8 @@ struct WorkoutView: View {
 			endDate: endDate,
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
-			steps: steps
+			steps: steps,
+			bodyweightKGF: bodyweightKGF
 		)
 		completedSession = session
 		summarySession = session
@@ -1237,6 +1263,13 @@ struct WorkoutView: View {
 		recorder = MotherboardWorkoutRecorder(configuration: .init(
 			thresholdKGF: motherboardSettingsStore.thresholdKGF
 		))
+	}
+
+	private var needsWorkoutPreparation: Bool {
+		MotherboardWorkoutPreparation.requiresPreparation(
+			isInitialStart: startedAt == nil && pausedElapsed == 0 && !didCompleteWorkoutPreparation,
+			isStreaming: motherboardBluetoothService.state == .streaming
+		)
 	}
 
 	private func save(_ session: WorkoutSessionRecord) {
