@@ -80,6 +80,12 @@ assert_not_contains() {
   }
 }
 
+assert_all_call_log_contains_list_devices() {
+  local all_calls
+  all_calls=$(<"$all_call_log")
+  assert_contains 'simctl list devices' "$all_calls"
+}
+
 run_cleanup() {
   PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$cleanup_script" "$@"
 }
@@ -100,6 +106,7 @@ assert_contains 'shutdown 22222222-2222-2222-2222-222222222222' "$archive_calls"
 assert_contains 'delete 22222222-2222-2222-2222-222222222222' "$archive_calls"
 assert_not_contains '33333333-3333-3333-3333-333333333333' "$archive_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$archive_calls"
+assert_all_call_log_contains_list_devices
 
 print -r -- 'not-a-uuid' > "$manifest"
 : > "$call_log"
@@ -175,6 +182,7 @@ assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
 }
+assert_all_call_log_contains_list_devices
 
 : > "$call_log"
 : > "$all_call_log"
@@ -195,6 +203,7 @@ assert_not_contains '30303030-3030-3030-3030-303030303030' "$prune_calls"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
+assert_all_call_log_contains_list_devices
 
 assert_rejects_malformed_args_without_xcrun() {
   local description=$1
