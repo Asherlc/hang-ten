@@ -151,11 +151,13 @@ final class MotherboardModelsTests: XCTestCase {
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object.removeValue(forKey: "bodyweightKGF")
         object.removeValue(forKey: "motherboardMeasurements")
+        object.removeValue(forKey: "motherboardMeasurementsTruncated")
         let legacyData = try JSONSerialization.data(withJSONObject: object)
 
         let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: legacyData)
         XCTAssertNil(decoded.bodyweightKGF)
         XCTAssertEqual(decoded.motherboardMeasurements, [])
+        XCTAssertFalse(decoded.motherboardMeasurementsTruncated)
     }
 
     func testSettingsUseDefaultsAndRoundTripThroughUserDefaults() {
@@ -208,6 +210,7 @@ final class MotherboardModelsTests: XCTestCase {
                 sampleCount: 150,
                 status: .measured
             )],
+            motherboardMeasurementsTruncated: true,
             motherboardMeasurements: [
                 MotherboardMeasurement(
                     timestamp: Date(timeIntervalSince1970: 120),
@@ -229,6 +232,7 @@ final class MotherboardModelsTests: XCTestCase {
         )
         let data = try JSONEncoder().encode(record)
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data), record)
+        XCTAssertTrue(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data).motherboardMeasurementsTruncated)
     }
 
     func testGranularMeasurementCollectorExcludesSetupAndPausedSamples() {
@@ -297,6 +301,45 @@ final class MotherboardModelsTests: XCTestCase {
         )
 
         XCTAssertTrue(collector.measurements.isEmpty)
+    }
+
+    func testGranularMeasurementCollectorCapsEligibleSamplesAndReportsTruncation() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let startedAt = Date(timeIntervalSince1970: 100)
+
+        for sampleNumber in 0...20_000 {
+            collector.capture(
+                granularMeasurement(sampleNumber: UInt16(sampleNumber), at: 101, load: 1),
+                startedAt: startedAt,
+                countdownRemaining: 0,
+                workoutElapsed: 1,
+                planDuration: 10
+            )
+        }
+
+        XCTAssertEqual(collector.measurements.count, 20_000)
+        XCTAssertTrue(collector.didTruncate)
+        XCTAssertEqual(collector.measurements.last?.sampleNumber, 19_999)
+    }
+
+    func testGranularMeasurementCollectorResetClearsMeasurementsAndTruncation() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let startedAt = Date(timeIntervalSince1970: 100)
+
+        for sampleNumber in 0...20_000 {
+            collector.capture(
+                granularMeasurement(sampleNumber: UInt16(sampleNumber), at: 101, load: 1),
+                startedAt: startedAt,
+                countdownRemaining: 0,
+                workoutElapsed: 1,
+                planDuration: 10
+            )
+        }
+
+        collector.reset()
+
+        XCTAssertTrue(collector.measurements.isEmpty)
+        XCTAssertFalse(collector.didTruncate)
     }
 
     func testGranularMeasurementCollectorAppendsEveryEligiblePublicationWithoutLoadFiltering() {
