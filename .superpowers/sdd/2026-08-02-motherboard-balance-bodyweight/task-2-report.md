@@ -86,3 +86,29 @@ rtk proxy xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -des
 
 Result: PASS, exit 0. The focused suite completed with only the existing
 simulator build-number warnings.
+
+### Final review fixes
+
+- Replaced the fragile exact `Double`-to-`UInt64` conversion assertion in
+  `testBodyweightMeasurementRejectsInvalidDurationsAndCapsHugeFiniteDuration`
+  with a behavioral check that the injected sleeper receives one positive,
+  representable nanosecond duration.
+- Added `testExplicitDisconnectCancelsBodyweightMeasurementAndClearsBaseline`.
+  It seeds a baseline, starts another capture, calls the public
+  `service.disconnect()`, and verifies the active flag, start time, samples,
+  and baseline are cleared. The unexpected transport disconnect/reconnect test
+  remains in place.
+- Corrected the non-finite aggregate fixture to use finite maximum calibration
+  values for all sensors. The protocol parser intentionally rejects `nan`
+  calibration rows; the revised fixture reaches the service's non-finite sample
+  guard by producing an infinite aggregate from valid finite inputs.
+
+Command:
+
+```sh
+rtk proxy xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-2-review-final -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: PASS, exit 0. `MotherboardBluetoothServiceTests` executed 35 tests
+with 0 failures (0 unexpected) in 0.221 seconds. Xcode emitted only the
+existing simulator build-number warnings.

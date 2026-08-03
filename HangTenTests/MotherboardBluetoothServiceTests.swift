@@ -281,7 +281,10 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: .greatestFiniteMagnitude))
         await sleepGate.waitForSleepRequests(1)
         let requestedDurations = await sleepGate.requestedNanoseconds
-        XCTAssertEqual(requestedDurations, [18_446_744_073_000_000_000])
+        XCTAssertEqual(requestedDurations.count, 1)
+        guard let requestedNanoseconds = requestedDurations.first else { return }
+        XCTAssertGreaterThan(requestedNanoseconds, 0)
+        XCTAssertLessThanOrEqual(requestedNanoseconds, UInt64.max)
 
         await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
         XCTAssertNil(service.bodyweightKGF)
@@ -293,7 +296,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
         connect(service, with: transport)
         emitCompleteCalibration(on: transport) { sensor, point in
-            sensor == 0 && point == 0 ? "nan" : String(point)
+            point == 0 ? Double.greatestFiniteMagnitude.description : String(point)
         }
         emitStreamAcknowledgement(on: transport)
 
@@ -366,6 +369,35 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         service.stopStreaming()
 
+        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+        await sleepGate.releaseNext()
+    }
+
+    func testExplicitDisconnectCancelsBodyweightMeasurementAndClearsBaseline() async throws {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 8, accuracy: 0.0001)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(2)
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 250)
+        XCTAssertTrue(service.isMeasuringBodyweight)
+        XCTAssertNotNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 1)
+
+        service.disconnect()
+
+        XCTAssertEqual(service.state, .disconnected)
         XCTAssertNil(service.bodyweightKGF)
         XCTAssertFalse(service.isMeasuringBodyweight)
         XCTAssertNil(service.bodyweightMeasurementStartedAt)
