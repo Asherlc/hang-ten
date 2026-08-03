@@ -169,11 +169,21 @@ cleanup() {
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
+cleanup_on_exit() {
+  original_status=$?
+  trap - EXIT INT TERM
+  cleanup_status=0
+  cleanup || cleanup_status=$?
+  if (( original_status != 0 )); then
+    exit "$original_status"
+  fi
+  exit "$cleanup_status"
+}
 signal_exit() {
   trap - INT TERM
   exit "$1"
 }
-trap cleanup EXIT
+trap cleanup_on_exit EXIT
 trap 'signal_exit 130' INT
 trap 'signal_exit 143' TERM
 

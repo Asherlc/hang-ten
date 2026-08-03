@@ -139,19 +139,63 @@ The failure artifact step remains conditional on failure. Cleanup must run with 
 
 - [ ] **Step 3: Run the exact test command locally**
 
-Exercise the same discovery, creation, UUID-based test, diagnostics, and cleanup lifecycle locally with temporary paths:
+Exercise the same discovery, creation, UUID-based test, diagnostics, and cleanup lifecycle locally with workspace-owned paths:
 
 ```bash
-tmp_root="$(mktemp -d)"
-trap 'if [[ -n "${simulator_udid:-}" ]]; then xcrun simctl delete "$simulator_udid"; fi; rm -rf "$tmp_root"' EXIT
+set -euo pipefail
+
+workspace_path="$PWD"
+workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
+context_path="$workspace_path/.context"
+manifest="$context_path/conductor-owned-simulators"
+logs_path="$context_path/ci-test-logs"
+derived_data_path="$context_path/ci-test-derived-data"
+result_bundle_path="$context_path/HangTenTests.xcresult"
+mkdir -p "$logs_path" "$derived_data_path"
+touch "$manifest"
+simulator_name="Hang Ten Conductor ${workspace_name} iPhone 17 Review"
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+cleanup_on_exit() {
+  original_status=$?
+  trap - EXIT INT TERM
+  cleanup_status=0
+  cleanup || cleanup_status=$?
+  if (( original_status != 0 )); then
+    exit "$original_status"
+  fi
+  exit "$cleanup_status"
+}
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup_on_exit EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
 device_type_id="$(xcrun simctl list devicetypes | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' | head -n 1)"
 runtime_id="$(xcrun simctl list runtimes available | awk '/^[[:space:]]*iOS [0-9]/ { version = $2; runtime = $NF; if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) print version "|" runtime }' | awk -F'|' '{ split($1, version, /\./); printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2 }' | sort | tail -n 1 | cut -d'|' -f 2-)"
-simulator_udid="$(xcrun simctl create "Hang Ten local iPhone 17 $(uuidgen)" "$device_type_id" "$runtime_id")"
+simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$simulator_udid" ]]; then
+  echo "Failed to create the owned iPhone 17 simulator." >&2
+  exit 1
+fi
+if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
+  if ! xcrun simctl delete "$simulator_udid"; then
+    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_udid" >&2
+    exit 1
+  fi
+  printf 'failed to write simulator manifest for %s\n' "$simulator_udid" >&2
+  exit 1
+fi
 xcrun simctl boot "$simulator_udid"
 xcrun simctl bootstatus "$simulator_udid" -b
-mkdir -p "$tmp_root/test-logs" "$tmp_root/derived-data"
-set -o pipefail
-xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$tmp_root/derived-data" -resultBundlePath "$tmp_root/HangTenTests.xcresult" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$tmp_root/test-logs/test.log"
+xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$derived_data_path" -resultBundlePath "$result_bundle_path" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$logs_path/test.log"
 ```
 
 Local XCTest may be inconclusive on the shared host when the required device type or runtime is unavailable; the hosted `macos-26` CI run is authoritative. Record the observed local result rather than assuming a pass.
