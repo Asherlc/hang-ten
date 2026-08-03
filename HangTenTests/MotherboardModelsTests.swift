@@ -210,7 +210,6 @@ final class MotherboardModelsTests: XCTestCase {
                 sampleCount: 150,
                 status: .measured
             )],
-            motherboardMeasurementsTruncated: true,
             motherboardMeasurements: [
                 MotherboardMeasurement(
                     timestamp: Date(timeIntervalSince1970: 120),
@@ -228,7 +227,8 @@ final class MotherboardModelsTests: XCTestCase {
                     sensorLoadsKGF: [5.5, 6.5, 7.5, 8.5],
                     aggregateLoadKGF: 28
                 )
-            ]
+            ],
+            motherboardMeasurementsTruncated: true
         )
         let data = try JSONEncoder().encode(record)
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data), record)
