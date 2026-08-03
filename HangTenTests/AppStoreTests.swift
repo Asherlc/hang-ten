@@ -122,6 +122,41 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(healthStore.savedActivityContexts, [nil])
     }
 
+    func testCompletionAfterConnectPreservesActivityContextForHealthWorkoutSaving() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let healthStore = FakeHealthWorkoutSaving()
+        let appStore = AppStore(healthKitService: healthStore, userDefaults: defaults)
+        let plan = PlanCatalog.all[0]
+        let board = appStore.board(for: plan)
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
+        let expectedActivitySegments = try WorkoutActivityRecorder().segments(
+            for: plan,
+            on: board,
+            stopwatchDurations: [:]
+        )
+
+        XCTAssertFalse(expectedActivitySegments.isEmpty)
+
+        appStore.requestHealthAuthorization()
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate
+        )
+        waitUntil { healthStore.savedWorkouts.count == 1 }
+
+        let savedWorkout = try XCTUnwrap(healthStore.savedWorkouts.first)
+        XCTAssertEqual(savedWorkout.boardID, board.id)
+        XCTAssertEqual(savedWorkout.boardName, board.name)
+        XCTAssertEqual(savedWorkout.activitySegments, expectedActivitySegments)
+    }
+
     func testConnectEnablesHealthKitRefreshAndPendingMigration() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -403,6 +438,42 @@ final class AppStoreTests: XCTestCase {
 
 private enum FakeHealthError: Error {
     case failed
+}
+
+private final class FakeHealthWorkoutSaving: HealthWorkoutSaving {
+    struct SavedWorkout {
+        let boardID: String
+        let boardName: String
+        let activitySegments: [RecordedActivitySegment]
+    }
+
+    var authorizationState: HealthAuthorizationState = .authorized
+    private(set) var savedWorkouts: [SavedWorkout] = []
+
+    func requestAuthorization(
+        completion: @escaping (HealthAuthorizationState, Error?) -> Void
+    ) {
+        completion(authorizationState, nil)
+    }
+
+    func saveCompletedWorkout(
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment],
+        completion: @escaping (Error?) -> Void
+    ) {
+        savedWorkouts.append(
+            SavedWorkout(
+                boardID: boardID,
+                boardName: boardName,
+                activitySegments: activitySegments
+            )
+        )
+        completion(nil)
+    }
 }
 
 private final class FakeWorkoutHealthStore: WorkoutHealthStore {
