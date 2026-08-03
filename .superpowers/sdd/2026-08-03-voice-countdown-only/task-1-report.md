@@ -112,10 +112,13 @@ Commit created after review:
 
 ## Concerns
 
-The focused and full simulator XCTest executions could not be conclusively
-run because the shared iPhone 17 Pro simulator repeatedly stalled or timed
-out while other workspace agents were using simulator/build resources. The
-production build and test-target `build-for-testing` both passed.
+The initial focused and full simulator XCTest executions could not be
+conclusively run because the shared iPhone 17 Pro simulator repeatedly
+stalled or timed out while other workspace agents were using
+simulator/build resources. The production build and test-target
+`build-for-testing` both passed at that stage. The final controller
+verification below resolves that gap on a stable dedicated iOS 26.3
+simulator.
 
 ## Final-review fix round (2026-08-03)
 
@@ -167,11 +170,62 @@ Error: Failed to create a new result bundle reader ... Info.plist ... does not e
 - The report correction is self-reviewed: it identifies the actual
   implementation commit and clearly distinguishes compile evidence from
   incomplete XCTest/runtime evidence.
-- Focused and full simulator XCTest verification remains inconclusive. The
-  retry failed in the simulator's `testmanagerd` service before the test
-  runner could communicate, so it yielded no XCTest assertion result. This is
-  an environmental simulator/runtime-service failure, consistent with the
-  concurrent simulator/build contention noted above, not an observed product
-  failure.
-- The controller is performing independent runtime validation. No additional
-  runtime claim is made by this report fix round.
+- The bounded 26.5 retry above was inconclusive because that simulator's
+  `testmanagerd` service failed before the test runner could communicate.
+  This remains an environmental simulator/runtime-service failure, not an
+  observed product failure; the controller's stable 26.3 verification below
+  resolves the XCTest/runtime evidence gap.
+- The controller independently completed the runtime validation described in
+  the final verification update below.
+
+## Final verification update (2026-08-03)
+
+The controller completed the previously missing runtime and XCTest checks on
+dedicated iOS 26.3 simulator `6970E502-260B-48CF-A6F4-3398FF327EAD`. Hang Ten
+launched successfully. Runtime logging used the predicate
+`subsystem == "com.hangten.training" AND category == "WorkoutAudio"` and
+recorded only `Speaking cue: 3`, `Speaking cue: 2`, and `Speaking cue: 1`
+for the initial countdown, then only `Speaking cue: 3`, `Speaking cue: 2`,
+and `Speaking cue: 1` again for the interval's final countdown. No verbal
+task, segment, rest, or completion cue appeared.
+
+With `workoutAudioCuesEnabled` set to `false` through simulator defaults, the
+controller relaunched with `HANGTEN_REVIEW_WORKOUT=1` and
+`HANGTEN_REVIEW_AUTOSTART=1`; the same runtime predicate produced no
+`WorkoutAudio` log entries.
+
+The focused policy suite was run with signing disabled for the compile/test
+verification and completed all five tests with zero failures:
+
+```text
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=6970E502-260B-48CF-A6F4-3398FF327EAD' -derivedDataPath .context/DerivedData-voice-countdown-263-tests -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -resultBundlePath .context/VoiceCountdownFocused263.xcresult -only-testing:HangTenTests/WorkoutAudioCuePolicyTests CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test
+```
+
+```text
+5 tests, 0 failures
+```
+
+The signed full XCTest command completed all 23 tests with zero failures and
+reported `TEST SUCCEEDED`:
+
+```text
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=6970E502-260B-48CF-A6F4-3398FF327EAD' -derivedDataPath .context/DerivedData-voice-countdown-263-signed -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -resultBundlePath .context/VoiceCountdownFull263Signed.xcresult test
+```
+
+```text
+23 tests, 0 failures
+TEST SUCCEEDED
+```
+
+The standard simulator and AppIntents warnings emitted during these commands
+were treated as non-failing environment noise; both test commands completed
+successfully. The earlier iOS 26.5 simulator
+`E0FDD040-9FA6-4D62-B521-381A5DECEA16` remained broken at its
+`testmanagerd` socket, while the dedicated iOS 26.3 simulator was stable and
+provided the conclusive evidence.
+
+Final report self-review confirmed that this update documents the controller
+runtime evidence, the exact XCTest commands and outcomes, and the remaining
+26.5 environment concern. `rtk git diff --check` exited 0 with no whitespace
+errors. This final-review change is report-only; production files remain
+unchanged.
