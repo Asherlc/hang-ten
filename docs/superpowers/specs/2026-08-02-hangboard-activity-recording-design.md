@@ -90,7 +90,7 @@ Each recorded segment contains:
 struct RecordedActivitySegment: Codable, Hashable {
     let stepID: String
     let stepNumber: Int
-    let kind: ActivitySegmentKind
+    let kind: WorkoutSegmentKind
     let holdIDs: [String]
     let holdType: String?
     let sizeMillimeters: Int?
