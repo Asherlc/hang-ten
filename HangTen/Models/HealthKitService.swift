@@ -1,11 +1,30 @@
 import Foundation
 import HealthKit
 
-private enum HealthWorkoutWriteError: LocalizedError {
+protocol HealthWorkoutSaving {
+    var authorizationState: HealthAuthorizationState { get }
+
+    func requestAuthorization(
+        completion: @escaping (HealthAuthorizationState, Error?) -> Void
+    )
+
+    func saveCompletedWorkout(
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment],
+        completion: @escaping (Error?) -> Void
+    )
+}
+
+enum HealthWorkoutWriteError: LocalizedError, Equatable {
     case beginCollection
     case addMetadata
     case endCollection
     case finishWorkout
+    case encodeActivitySegments
 
     var errorDescription: String? {
         switch self {
@@ -17,6 +36,8 @@ private enum HealthWorkoutWriteError: LocalizedError {
             "Apple Health could not finish collecting this workout."
         case .finishWorkout:
             "Apple Health did not save this workout."
+        case .encodeActivitySegments:
+            "Hang Ten could not prepare the workout activity details for Apple Health."
         }
     }
 }
@@ -50,7 +71,7 @@ enum HealthAuthorizationState: String, Hashable {
     }
 }
 
-final class HealthKitService {
+final class HealthKitService: HealthWorkoutSaving {
     private let healthStore = HKHealthStore()
 
     var authorizationState: HealthAuthorizationState {
@@ -88,10 +109,26 @@ final class HealthKitService {
         title: String,
         startDate: Date,
         endDate: Date,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment],
         completion: @escaping (Error?) -> Void
     ) {
         guard authorizationState == .authorized, endDate > startDate else {
             completion(nil)
+            return
+        }
+
+        let metadata: [String: Any]
+        do {
+            metadata = try Self.workoutMetadata(
+                title: title,
+                boardID: boardID,
+                boardName: boardName,
+                activitySegments: activitySegments
+            )
+        } catch {
+            completion(error)
             return
         }
 
@@ -110,10 +147,7 @@ final class HealthKitService {
                 return
             }
 
-            builder.addMetadata([
-                HKMetadataKeyWorkoutBrandName: "Hang Ten",
-                "HangTen.PlanName": title
-            ]) { metadataSaved, error in
+            builder.addMetadata(metadata) { metadataSaved, error in
                 guard metadataSaved else {
                     completion(error ?? HealthWorkoutWriteError.addMetadata)
                     return
@@ -134,5 +168,29 @@ final class HealthKitService {
                 }
             }
         }
+    }
+
+    static func workoutMetadata(
+        title: String,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment]
+    ) throws -> [String: Any] {
+        let activityJSON: String
+        do {
+            activityJSON = try WorkoutActivityRecorder().json(
+                for: WorkoutActivityMetadata(version: 1, segments: activitySegments)
+            )
+        } catch {
+            throw HealthWorkoutWriteError.encodeActivitySegments
+        }
+
+        return [
+            HKMetadataKeyWorkoutBrandName: "Hang Ten",
+            "HangTen.PlanName": title,
+            "HangTen.BoardID": boardID,
+            "HangTen.BoardName": boardName,
+            "HangTen.ActivitySegments": activityJSON
+        ]
     }
 }
