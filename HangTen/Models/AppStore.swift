@@ -126,8 +126,8 @@ final class AppStore: ObservableObject {
 					self?.recordSessionPersistence(result)
 				}
 			}
-			 sessionHistory = workoutSessionStore.sessions
 		}
+		sessionHistory = workoutSessionStore.sessions
 
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil

@@ -239,6 +239,57 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         XCTAssertEqual(interval.start, sessionStart)
         XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_060))
     }
+
+    func testCompletionIntervalUsesActualCompletionDateAfterPausedGap() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+        let recordedAt = Date(timeIntervalSinceReferenceDate: 4_600)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            recordedAt: recordedAt
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, recordedAt)
+        XCTAssertEqual(interval.duration, 3_600)
+    }
+
+    func testCompletionIntervalClampsPreStartCompletionToStartDate() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+        let recordedAt = Date(timeIntervalSinceReferenceDate: 900)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            recordedAt: recordedAt
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, sessionStart)
+        XCTAssertEqual(interval.duration, 0)
+    }
+
+    func testWorkoutMeasurementEligibilityRejectsPreStartAndAcceptsBoundaryAndAfterStart() {
+        let startedAt = Date(timeIntervalSince1970: 100)
+
+        XCTAssertFalse(
+            WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: Date(timeIntervalSince1970: 99.999)
+            )
+        )
+        XCTAssertTrue(
+            WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: startedAt
+            )
+        )
+        XCTAssertTrue(
+            WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: Date(timeIntervalSince1970: 100.001)
+            )
+        )
+    }
 }
 
 final class WorkoutAudioCuePolicyTests: XCTestCase {

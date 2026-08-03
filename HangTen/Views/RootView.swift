@@ -947,7 +947,10 @@ struct MotherboardWorkoutMeasurementCollector {
         planDuration: TimeInterval
     ) {
         guard let startedAt,
-              startedAt <= measurement.timestamp,
+              WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: measurement.timestamp
+              ),
               countdownRemaining == 0,
               workoutElapsed < planDuration else { return }
 
@@ -1013,6 +1016,21 @@ enum WorkoutSessionPolicy {
             end: sessionStartedAt.addingTimeInterval(activeElapsed)
         )
     }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        recordedAt: Date
+    ) -> DateInterval {
+        DateInterval(start: sessionStartedAt, end: max(sessionStartedAt, recordedAt))
+    }
+
+    static func isMeasurementEligible(
+        routineStartedAt: Date?,
+        measurementTimestamp: Date
+    ) -> Bool {
+        guard let routineStartedAt else { return false }
+        return routineStartedAt <= measurementTimestamp
+    }
 }
 
 enum WorkoutStopwatchLifecycle {
@@ -1034,6 +1052,20 @@ enum WorkoutStopwatchLifecycle {
         guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
         stopwatch.stop(at: monotonicTime)
         stopwatches[key] = stopwatch
+    }
+
+    static func finalizeAndSnapshotStopwatches(
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) -> [WorkoutActivitySegmentKey: TimeInterval] {
+        for key in stopwatches.keys {
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+        }
+
+        return stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
+            guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: monotonicTime) else { return }
+            result[entry.key] = elapsed
+        }
     }
 }
 
@@ -1706,12 +1738,7 @@ struct WorkoutView: View {
 
 	private func completeSession() {
 		let loggedAtMonotonic = WorkoutClock.monotonicTime
-		finalizeAllStopwatches(at: loggedAtMonotonic)
-		completedStopwatchDurations = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
-			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAtMonotonic) else { return }
-			result[entry.key] = elapsed
-		}
-		finalizeRoutine()
+		finalizeRoutine(monotonicTime: loggedAtMonotonic)
 		if let completedSession {
 			summarySession = completedSession
 		}
@@ -1732,7 +1759,12 @@ struct WorkoutView: View {
 	}
 
 	private func consume(_ measurement: MotherboardMeasurement) {
-		guard workoutClock.isRunning, countdownRemaining == 0 else { return }
+		guard workoutClock.isRunning,
+              countdownRemaining == 0,
+              WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: routineStartedAt,
+                measurementTimestamp: measurement.timestamp
+              ) else { return }
 
 		let elapsed = currentElapsed
 		guard elapsed < plan.duration else { return }
@@ -1761,9 +1793,13 @@ struct WorkoutView: View {
 		)
 	}
 
-	private func finalizeRoutine() {
+	private func finalizeRoutine(monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
 		guard !didComplete else { return }
 		didComplete = true
+		completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
+			at: monotonicTime,
+			in: &stopwatches
+		)
 		recorder.pause(at: plan.duration)
 
 		let completedMeasurements = Dictionary(
@@ -1783,8 +1819,7 @@ struct WorkoutView: View {
 		let startDate = routineStartedAt ?? recordedAt.addingTimeInterval(-plan.duration)
 		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
-			planDuration: plan.duration,
-			elapsed: currentElapsed
+			recordedAt: recordedAt
 		).end
 		let session = WorkoutSessionRecord(
 			id: UUID(),
