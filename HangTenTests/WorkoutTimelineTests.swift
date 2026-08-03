@@ -257,8 +257,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
         XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])
+        XCTAssertEqual(advancedMinuteEight.count, 3)
+        XCTAssertTrue(advancedMinuteEight[1].title.lowercased().contains("choose one"))
+        XCTAssertTrue(advancedMinuteEight[1].instruction.lowercased().contains("choose one"))
         XCTAssertTrue(advancedMinuteEight[1].instruction.contains("5-second front lever"))
         XCTAssertTrue(advancedMinuteEight[1].instruction.contains("15-second straight-arm hang"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.lowercased().contains("choose one"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.contains("5 seconds"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.contains("15 seconds"))
 
         let advancedMinuteTen = advanced.filter { $0.id.hasPrefix("advanced.minute-10.") }
         XCTAssertEqual(advancedMinuteTen.map(\.duration), [60])

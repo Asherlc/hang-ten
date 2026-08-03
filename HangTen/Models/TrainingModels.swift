@@ -679,6 +679,26 @@ enum MetoliusCycleBuilder {
         )
     }
 
+    static func choice(
+        title: String,
+        instruction: String,
+        accessory: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        task(
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType
+        )
+    }
+
     static func expand(
         planID: String,
         minute: Int,
@@ -964,9 +984,10 @@ enum LegacyPlanSeedCatalog {
                     phase: .pull,
                     targets: [.feature(.largeSlope)]
                 ),
-                .fixed(
-                    title: "Front lever or straight-arm hang",
-                    instruction: "Then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
+                .choice(
+                    title: "Choose one: front lever or straight-arm hang",
+                    instruction: "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
+                    accessory: "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
                     duration: 15,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
