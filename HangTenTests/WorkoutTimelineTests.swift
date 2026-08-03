@@ -184,3 +184,85 @@ final class MetoliusTaskExpansionTests: XCTestCase {
         XCTAssertThrowsError(try MetoliusCycleBuilder.expand(planID: "test", minute: 3, tasks: [overfull]))
     }
 }
+
+final class MetoliusCatalogExpansionTests: XCTestCase {
+    private let sourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
+    )!
+
+    func testIntermediateMinuteTwoIsTwoTaskStepsThenRest() {
+        let steps = LegacyPlanSeedCatalog.metoliusIntermediate.steps.filter {
+            $0.id.hasPrefix("intermediate.minute-2.")
+        }
+
+        XCTAssertEqual(
+            steps.map(\.title),
+            ["Round sloper pull-ups", "Medium-edge hang", "Minute 2 rest"]
+        )
+        XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
+        XCTAssertEqual(steps[0].targets, [.feature(.roundSloper)])
+        XCTAssertEqual(steps[1].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(steps[2].phase, .rest)
+    }
+
+    func testIntermediateOffsetPullsTellTheHandSwitchAsSeparateSteps() {
+        let steps = LegacyPlanSeedCatalog.metoliusIntermediate.steps.filter {
+            $0.id.hasPrefix("intermediate.minute-6.")
+        }
+
+        XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
+        XCTAssertEqual(
+            steps.prefix(2).map(\.targets),
+            [
+                [.feature(.jug), .feature(.smallEdge)],
+                [.feature(.jug), .feature(.smallEdge)]
+            ]
+        )
+        XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
+        XCTAssertTrue(steps[1].instruction.lowercased().contains("repeat"))
+        XCTAssertEqual(steps[2].phase, .rest)
+    }
+
+    func testMetoliusPlansRemainTenMinutesAndAreMarkedAdapted() {
+        let plans = [
+            LegacyPlanSeedCatalog.metoliusEntry,
+            LegacyPlanSeedCatalog.metoliusIntermediate,
+            LegacyPlanSeedCatalog.metoliusAdvanced
+        ]
+
+        XCTAssertEqual(plans.map(\.steps.count), [20, 26, 26])
+        for plan in plans {
+            XCTAssertEqual(plan.duration, 600)
+            XCTAssertEqual(plan.provenance, .adapted)
+            XCTAssertEqual(plan.sourceURL, sourceURL)
+            XCTAssertTrue(plan.subtitle.contains("guided task timing"))
+            XCTAssertTrue(plan.subtitle.contains("5 seconds"))
+            XCTAssertEqual(plan.steps.map(\.number), Array(1...plan.steps.count))
+            XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
+        }
+    }
+
+    func testExpandedCatalogPreservesCompoundTasksChoicesAndMaximumEfforts() {
+        let entry = LegacyPlanSeedCatalog.metoliusEntry.steps
+        let advanced = LegacyPlanSeedCatalog.metoliusAdvanced.steps
+
+        let pocketShrugs = entry.filter { $0.id.hasPrefix("entry.minute-4.") }
+        XCTAssertEqual(pocketShrugs.map(\.duration), [15, 45])
+        XCTAssertTrue(pocketShrugs[0].instruction.contains("3 shrugs"))
+
+        let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
+        XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
+        XCTAssertEqual(entryMinuteSix[0].targets, [.feature(.roundSloper)])
+        XCTAssertEqual(entryMinuteSix[1].targets, [.feature(.pocket)])
+
+        let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
+        XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])
+        XCTAssertTrue(advancedMinuteEight[1].instruction.contains("5-second front lever"))
+        XCTAssertTrue(advancedMinuteEight[1].instruction.contains("15-second straight-arm hang"))
+
+        let advancedMinuteTen = advanced.filter { $0.id.hasPrefix("advanced.minute-10.") }
+        XCTAssertEqual(advancedMinuteTen.map(\.duration), [60])
+        XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("to failure"))
+        XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("no rest"))
+    }
+}

@@ -710,7 +710,7 @@ enum MetoliusCycleBuilder {
                 WorkoutStep(
                     id: "\(planID).minute-\(minute).rest",
                     number: tasks.count + 1,
-                    title: "Rest",
+                    title: "Minute \(minute) rest",
                     instruction: "Step off the board, shake out, and breathe until the minute ends.",
                     accessory: "\(Int(remaining))s rest",
                     duration: remaining,
@@ -751,271 +751,256 @@ enum LegacyPlanSeedCatalog {
 
     private static let sourceLabel = "Metolius 10 Minute Sequences — Hangboard Training Guide"
 
-    #if DEBUG
-    private static func officialAuditFingerprint(_ plans: [TrainingPlan]) -> UInt64 {
-        let source = plans.map { plan in
-            let steps = plan.steps.map { step in
-                let targets = step.targets.map { target in
-                    [
-                        target.holdIDs.joined(separator: ","),
-                        target.kind?.rawValue ?? "-",
-                        target.feature?.rawValue ?? "-",
-                        target.fallbackFeatures.map(\.rawValue).joined(separator: ",")
-                    ].joined(separator: ":")
-                }.joined(separator: ";")
+    private static let adaptationNote =
+        "Source sequence with guided task timing; pull-ups default to 5 seconds each and other counted repetitions to 1 second each."
 
-                return [
-                    step.id,
-                    String(step.number),
-                    step.title,
-                    step.instruction,
-                    step.accessory,
-                    String(step.duration),
-                    step.phase.rawValue,
-                    targets,
-                    step.gripType?.rawValue ?? "-",
-                    step.timedWorkDuration.map { String($0) } ?? "-"
-                ].joined(separator: "|")
-            }.joined(separator: "\n")
-
-            return [
-                plan.id,
-                plan.title,
-                plan.subtitle,
-                plan.level,
-                plan.sourceLabel,
-                plan.sourceURL.absoluteString,
-                plan.provenance.rawValue,
-                plan.boardID ?? "-",
-                steps
-            ].joined(separator: "|")
-        }.joined(separator: "\n---\n")
-
-        return source.utf8.reduce(UInt64(14_695_981_039_346_656_037)) { hash, byte in
-            (hash ^ UInt64(byte)) &* 1_099_511_628_211
-        }
-    }
-    #endif
-
-    private static func minute(
+    private static func expanded(
         planID: String,
-        number: Int,
-        title: String,
-        instruction: String,
-        phase: WorkoutPhase,
-        targets: [HoldTarget],
-        gripType: GripType? = nil
-    ) -> WorkoutStep {
-        WorkoutStep(
-            id: "\(planID).minute-\(number)",
-            number: number,
-            title: title,
-            instruction: instruction,
-            accessory: "Follow the prescribed task times, then rest for the remainder of the cycle.",
-            duration: 60,
-            phase: phase,
-            targets: targets,
-            gripType: gripType
-        )
+        _ minutes: [[MetoliusTaskDefinition]]
+    ) -> [WorkoutStep] {
+        minutes.enumerated().flatMap { index, tasks in
+            try! MetoliusCycleBuilder.expand(planID: planID, minute: index + 1, tasks: tasks)
+        }.enumerated().map { index, step in
+            step.withNumber(index + 1)
+        }
     }
 
     static let metoliusEntry = TrainingPlan(
         id: "metolius.generic-ten-minute.entry",
         title: "Metolius 10-minute · Entry",
-        subtitle: "The official board-flexible entry sequence, guided minute by minute.",
+        subtitle: adaptationNote,
         level: "Entry",
         sourceLabel: sourceLabel,
         sourceURL: sourceURL,
-        provenance: .official,
+        provenance: .adapted,
         boardID: nil,
-        steps: [
-            minute(
-                planID: "entry", number: 1, title: "Jug hang",
-                instruction: "Hang from the jugs for 15 seconds.",
-                phase: .hang, targets: [.feature(.jug)]
-            ),
-            minute(
-                planID: "entry", number: 2, title: "Sloper pull-up",
-                instruction: "Do 1 pull-up on a round sloper.",
-                phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper
-            ),
-            minute(
-                planID: "entry", number: 3, title: "Medium-edge hang",
-                instruction: "Hang from a medium edge for 10 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
-            ),
-            minute(
-                planID: "entry", number: 4, title: "Pocket hang + shrugs",
-                instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.",
-                phase: .hang, targets: [.feature(.pocket)]
-            ),
-            minute(
-                planID: "entry", number: 5, title: "Large edge + pull-ups",
-                instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.",
-                phase: .hang, targets: [.feature(.largeEdge)]
-            ),
-            minute(
-                planID: "entry", number: 6, title: "Sloper + knee raises",
-                instruction: "Hang from a round sloper for 10 seconds, then do 5 knee raises on a pocket.",
-                phase: .hang, targets: [.feature(.roundSloper), .feature(.pocket)], gripType: .sloper
-            ),
-            minute(
-                planID: "entry", number: 7, title: "Large-edge pull-ups",
-                instruction: "Do 4 pull-ups on a large edge.",
-                phase: .pull, targets: [.feature(.largeEdge)]
-            ),
-            minute(
-                planID: "entry", number: 8, title: "Medium-edge hang",
-                instruction: "Hang from a medium edge for 10 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
-            ),
-            minute(
-                planID: "entry", number: 9, title: "Jug pull-ups",
-                instruction: "Do 3 pull-ups on the jugs.",
-                phase: .pull, targets: [.feature(.jug)]
-            ),
-            minute(
-                planID: "entry", number: 10, title: "Maximum sloper hang",
-                instruction: "Hang from a round sloper for as long as you can.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
-            )
-        ]
+        steps: expanded(planID: "entry", [
+            [.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
+            [.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
+            [.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
+            [
+                .fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper),
+                .repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
+            ],
+            [.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
+            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
+            [.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+        ])
     )
 
     static let metoliusIntermediate = TrainingPlan(
         id: "metolius.generic-ten-minute.intermediate",
         title: "Metolius 10-minute · Intermediate",
-        subtitle: "The official board-flexible intermediate sequence, guided minute by minute.",
+        subtitle: adaptationNote,
         level: "Intermediate",
         sourceLabel: sourceLabel,
         sourceURL: sourceURL,
-        provenance: .official,
+        provenance: .adapted,
         boardID: nil,
-        steps: [
-            minute(
-                planID: "intermediate", number: 1, title: "Large edge",
-                instruction: "Hang from a large edge for 15 seconds, then do 3 pull-ups.",
-                phase: .hang, targets: [.feature(.largeEdge)]
-            ),
-            minute(
-                planID: "intermediate", number: 2, title: "Sloper + medium edge",
-                instruction: "Do 2 pull-ups on a round sloper, then hang from a medium edge for 20 seconds.",
-                phase: .hang, targets: [.feature(.roundSloper), .feature(.mediumEdge)]
-            ),
-            minute(
-                planID: "intermediate", number: 3, title: "Small edge + pocket",
-                instruction: "Hang from a small edge for 20 seconds, then hold a pocket at a 90° bent arm for 15 seconds.",
-                phase: .hang, targets: [.feature(.smallEdge), .feature(.pocket)]
-            ),
-            minute(
-                planID: "intermediate", number: 4, title: "Round sloper",
-                instruction: "Hang from a round sloper for 30 seconds.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
-            ),
-            minute(
-                planID: "intermediate", number: 5, title: "Large edge + pocket",
-                instruction: "Hang from a large edge for 20 seconds, then do 4 pull-ups on a pocket.",
-                phase: .hang, targets: [.feature(.largeEdge), .feature(.pocket)]
-            ),
-            minute(
-                planID: "intermediate", number: 6, title: "Offset pulls",
-                instruction: "Do 3 offset pulls per arm with the high hand on a jug and low hand on a small edge; change hands and repeat.",
-                phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]
-            ),
-            minute(
-                planID: "intermediate", number: 7, title: "Knee raises + edge hang",
-                instruction: "Do 15 knee raises on the jugs, then hang from a medium edge for 15 seconds.",
-                phase: .hang, targets: [.feature(.jug), .feature(.mediumEdge)]
-            ),
-            minute(
-                planID: "intermediate", number: 8, title: "Medium edge",
-                instruction: "Hang from a medium edge for 25 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
-            ),
-            minute(
-                planID: "intermediate", number: 9, title: "Slope + jugs",
-                instruction: "Hang from a slope for 15 seconds, then do 3 pull-ups on the jugs.",
-                phase: .hang, targets: [.feature(.largeSlope), .feature(.jug)]
-            ),
-            minute(
-                planID: "intermediate", number: 10, title: "Maximum sloper hang",
-                instruction: "Hang from a round sloper for as long as you can.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
-            )
-        ]
+        steps: expanded(planID: "intermediate", [
+            [
+                .fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeEdge)]),
+                .pullUps(count: 3, title: "Large-edge pull-ups", instruction: "Do 3 pull-ups on the large edge.", phase: .pull, targets: [.feature(.largeEdge)])
+            ],
+            [
+                .pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper),
+                .fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.mediumEdge)])
+            ],
+            [
+                .fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
+                .fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
+            ],
+            [.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [
+                .fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
+                .pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
+            ],
+            [
+                .pullUps(count: 3, title: "Offset pulls", instruction: "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]),
+                .pullUps(count: 3, title: "Offset pulls · other side", instruction: "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)])
+            ],
+            [
+                .repetitions(count: 15, title: "Jug knee raises", instruction: "Do 15 knee raises on the jugs.", phase: .pull, targets: [.feature(.jug)]),
+                .fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.mediumEdge)])
+            ],
+            [.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
+            [
+                .fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper),
+                .pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
+            ],
+            [.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+        ])
     )
 
     static let metoliusAdvanced = TrainingPlan(
         id: "metolius.generic-ten-minute.advanced",
         title: "Metolius 10-minute · Advanced",
-        subtitle: "The official board-flexible advanced sequence, guided minute by minute.",
+        subtitle: adaptationNote,
         level: "Advanced",
         sourceLabel: sourceLabel,
         sourceURL: sourceURL,
-        provenance: .official,
+        provenance: .adapted,
         boardID: nil,
-        steps: [
-            minute(
-                planID: "advanced", number: 1, title: "Large slope + flat edge",
-                instruction: "Hold a straight-arm hang on a large slope for 20 seconds, then do 3 pull-ups on a four-finger flat edge.",
-                phase: .hang,
-                targets: [
-                    .feature(.largeSlope),
-                    .feature(.fourFingerFlatEdge, fallback: .largeEdge)
-                ]
-            ),
-            minute(
-                planID: "advanced", number: 2, title: "Bent arm + core",
-                instruction: "Hold a slightly bent-arm hang on a large slope for 20 seconds; stay on for a 20-second L-sit or 20 hanging knee curls.",
-                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
-            ),
-            minute(
-                planID: "advanced", number: 3, title: "Pocket pull-ups + hang",
-                instruction: "Do 5 pull-ups on a three-finger pocket; stay on for a 25-second straight-arm hang.",
-                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .threeFingerPocket
-            ),
-            minute(
-                planID: "advanced", number: 4, title: "Hold ladder",
-                instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
-                phase: .hang,
-                targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)]
-            ),
-            minute(
-                planID: "advanced", number: 5, title: "Single-arm flat edge",
-                instruction: "Hang one-armed from a four-finger flat edge for 20 seconds; switch hands and repeat.",
-                phase: .hang,
-                targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
-            ),
-            minute(
-                planID: "advanced", number: 6, title: "Offset pull-ups",
-                instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket; change hands and repeat.",
-                phase: .pull, targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
-            ),
-            minute(
-                planID: "advanced", number: 7, title: "Incut edge + pocket",
-                instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds, then a straight-arm three-finger-pocket hang for 15 seconds.",
-                phase: .hang,
-                targets: [
-                    .feature(.fourFingerIncutEdge, fallback: .largeEdge),
-                    .feature(.threeFingerPocket)
-                ]
-            ),
-            minute(
-                planID: "advanced", number: 8, title: "L-sit + lever",
-                instruction: "Do 3 L-sit pull-ups, bending your knees if needed; then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
-                phase: .pull, targets: [.feature(.largeSlope)]
-            ),
-            minute(
-                planID: "advanced", number: 9, title: "Two fingers + power pulls",
-                instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets, then do 3 power pull-ups with weight or helper resistance.",
-                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .twoFingerPocket
-            ),
-            minute(
-                planID: "advanced", number: 10, title: "Maximum slope hangs",
-                instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
-                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
-            )
-        ]
+        steps: expanded(planID: "advanced", [
+            [
+                .fixed(
+                    title: "Large-slope hang",
+                    instruction: "Hold a straight-arm hang on a large slope for 20 seconds.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.largeSlope)],
+                    gripType: .sloper
+                ),
+                .pullUps(
+                    count: 3,
+                    title: "Four-finger flat-edge pull-ups",
+                    instruction: "Do 3 pull-ups on a four-finger flat edge.",
+                    phase: .pull,
+                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                )
+            ],
+            [
+                .fixed(
+                    title: "Bent-arm large-slope hang",
+                    instruction: "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.largeSlope)],
+                    gripType: .sloper
+                ),
+                .fixed(
+                    title: "L-sit or hanging knee curls",
+                    instruction: "Stay on for a 20-second L-sit or 20 hanging knee curls.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.largeSlope)],
+                    gripType: .sloper
+                )
+            ],
+            [
+                .pullUps(
+                    count: 5,
+                    title: "Three-finger-pocket pull-ups",
+                    instruction: "Do 5 pull-ups on a three-finger pocket.",
+                    phase: .pull,
+                    targets: [.feature(.threeFingerPocket)],
+                    gripType: .threeFingerPocket
+                ),
+                .fixed(
+                    title: "Straight-arm three-finger-pocket hang",
+                    instruction: "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
+                    duration: 25,
+                    phase: .hang,
+                    targets: [.feature(.threeFingerPocket)],
+                    gripType: .threeFingerPocket
+                )
+            ],
+            [
+                .fixed(
+                    title: "Hold ladder",
+                    instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
+                    duration: 60,
+                    phase: .hang,
+                    targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)]
+                )
+            ],
+            [
+                .fixed(
+                    title: "Single-arm flat-edge hang",
+                    instruction: "Hang one-armed from a four-finger flat edge for 20 seconds.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                ),
+                .fixed(
+                    title: "Single-arm flat-edge hang · other hand",
+                    instruction: "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                )
+            ],
+            [
+                .pullUps(
+                    count: 5,
+                    title: "Offset pull-ups",
+                    instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
+                    phase: .pull,
+                    targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+                ),
+                .pullUps(
+                    count: 5,
+                    title: "Offset pull-ups · other side",
+                    instruction: "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
+                    phase: .pull,
+                    targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+                )
+            ],
+            [
+                .fixed(
+                    title: "Incut-edge bent-arm hang",
+                    instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
+                    duration: 30,
+                    phase: .hang,
+                    targets: [.feature(.fourFingerIncutEdge, fallback: .largeEdge)]
+                ),
+                .fixed(
+                    title: "Straight-arm three-finger-pocket hang",
+                    instruction: "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
+                    duration: 15,
+                    phase: .hang,
+                    targets: [.feature(.threeFingerPocket)],
+                    gripType: .threeFingerPocket
+                )
+            ],
+            [
+                .pullUps(
+                    count: 3,
+                    title: "L-sit pull-ups",
+                    instruction: "Do 3 L-sit pull-ups, bending your knees if needed.",
+                    phase: .pull,
+                    targets: [.feature(.largeSlope)]
+                ),
+                .fixed(
+                    title: "Front lever or straight-arm hang",
+                    instruction: "Then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
+                    duration: 15,
+                    phase: .hang,
+                    targets: [.feature(.largeSlope)],
+                    gripType: .sloper
+                )
+            ],
+            [
+                .fixed(
+                    title: "Two-finger three-finger-pocket hang",
+                    instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.feature(.threeFingerPocket)],
+                    gripType: .twoFingerPocket
+                ),
+                .pullUps(
+                    count: 3,
+                    title: "Power pull-ups",
+                    instruction: "Then do 3 power pull-ups with weight or helper resistance.",
+                    phase: .pull,
+                    targets: [.feature(.threeFingerPocket)]
+                )
+            ],
+            [
+                .fixed(
+                    title: "Maximum slope hangs",
+                    instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
+                    duration: 60,
+                    phase: .hang,
+                    targets: [.feature(.largeSlope)],
+                    gripType: .sloper
+                )
+            ]
+        ])
     )
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
@@ -1555,7 +1540,7 @@ enum LegacyPlanSeedCatalog {
     static let metoliusTenMinute = metoliusEntry
 
     static let all: [TrainingPlan] = {
-        let officialPlans = [metoliusEntry, metoliusIntermediate, metoliusAdvanced]
+        let metoliusPlans = [metoliusEntry, metoliusIntermediate, metoliusAdvanced]
         let adaptedPlans = [
             maxHangs,
             forceF80,
@@ -1570,23 +1555,33 @@ enum LegacyPlanSeedCatalog {
         ]
 
         #if DEBUG
-        assert(officialPlans.count == 3, "The official Metolius guide has three routines")
-        assert(
-            officialAuditFingerprint(officialPlans) == 9_492_510_929_454_363_776,
-            "Official Metolius prescription drifted from the source-audited snapshot"
-        )
-        for plan in officialPlans {
-            assert(plan.provenance == .official)
+        assert(metoliusPlans.count == 3, "The Metolius guide has three routines")
+        for plan in metoliusPlans {
+            assert(plan.provenance == .adapted)
             assert(plan.sourceURL == sourceURL)
-            assert(plan.steps.count == 10)
+            assert(plan.subtitle.contains("guided task timing"))
             assert(plan.duration == 600)
-            assert(plan.steps.map(\.number) == Array(1...10))
-            assert(plan.steps.allSatisfy { $0.duration == 60 })
-            assert(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
+            assert(plan.steps.count > 10)
+            assert(plan.steps.map(\.number) == Array(1...plan.steps.count))
+            assert(Set(plan.steps.map(\.id)).count == plan.steps.count)
+            assert(
+                plan.steps.allSatisfy { step in
+                    if step.phase == .rest {
+                        return step.targets.isEmpty && step.timedWorkDuration == nil
+                    }
+                    return !step.targets.isEmpty && step.timedWorkDuration == step.duration
+                }
+            )
+            for minute in 1...10 {
+                let cycleSteps = plan.steps.filter { $0.id.contains(".minute-\(minute).") }
+                assert(!cycleSteps.isEmpty)
+                assert(cycleSteps.reduce(0) { $0 + $1.duration } <= MetoliusCycleBuilder.cycleDuration)
+                assert(cycleSteps.reduce(0) { $0 + $1.duration } == MetoliusCycleBuilder.cycleDuration)
+            }
         }
         assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
 
-        let plans = officialPlans + adaptedPlans
+        let plans = metoliusPlans + adaptedPlans
         func targetResolves(_ target: HoldTarget, on board: TrainingBoard) -> Bool {
             let boardHoldIDs = Set(board.holds.map(\.id))
             if !target.holdIDs.isEmpty {
@@ -1633,6 +1628,6 @@ enum LegacyPlanSeedCatalog {
         }
         #endif
 
-        return officialPlans + adaptedPlans
+        return metoliusPlans + adaptedPlans
     }()
 }
