@@ -41,13 +41,14 @@ has no protection when an agent crashes or stops early.
 
 ### Repository Conductor settings plus ownership-aware cleanup
 
-Add a shared `.conductor/settings.toml` archive hook, an ownership manifest for
-simulator UUIDs, and mandatory cleanup instructions. Validation creates devices
-with a workspace marker, records each UUID immediately, and deletes the exact
-UUID in an exit trap. The archive hook repeats that deletion as an idempotent
-last line of defense before Conductor archives the worktree. This is the
-recommended approach because it covers normal completion, interrupted work,
-and Conductor archive without touching global state.
+Add a shared `.conductor/settings.toml` archive hook, durable pending and owned
+manifests for simulator UUIDs, and mandatory cleanup instructions. Validation
+creates devices with a workspace marker, appends each exact UUID to the pending
+manifest before writing the owned manifest or doing any boot/build work, and
+deletes the exact UUID in an exit trap. The archive hook consumes both manifests
+as an idempotent last line of defense before Conductor archives the worktree.
+This is the recommended approach because it covers normal completion,
+interrupted work, and Conductor archive without touching global state.
 
 ### Machine-wide cache pruning
 
@@ -63,12 +64,16 @@ It is intentionally rejected for this change.
 Every validation-created simulator must:
 
 1. Include the exact `CONDUCTOR_WORKSPACE_NAME` in its name.
-2. Write its UUID to `.context/conductor-owned-simulators` immediately after
-   creation.
+2. Append its exact UUID to `.context/conductor-pending-simulators` immediately
+   after creation, before writing `.context/conductor-owned-simulators` and
+   before any boot or build operation.
 3. Use the UUID for every boot, install, launch, screenshot, and shutdown
    operation.
-4. Register an exit trap that shuts down and deletes the UUID, tolerating an
-   already-deleted device.
+4. Register an exit trap that archives the exact UUID and tolerates an
+   already-deleted device. Pending state remains durable for archive retry until
+   shutdown and deletion both succeed. If pending registration itself fails,
+   direct in-memory deletion of the validated UUID is the last-resort fallback;
+   it is not a normal cleanup path.
 
 Derived data, screenshots, logs, and temporary review artifacts remain under
 `.context`, which is workspace-local and is removed with the archived
@@ -82,12 +87,18 @@ archive script. The same shared settings will enable automatic archive after a
 merged pull request and delete the archived workspace branch. The archive
 script will:
 
-- Read only the UUID manifest in the current workspace.
-- Validate each UUID format and confirm the simulator name contains both the
-  Hang Ten marker and the current workspace name before deleting it.
+- Consume UUIDs from both `.context/conductor-pending-simulators` and
+  `.context/conductor-owned-simulators` in the current workspace, deduplicating
+  UUIDs before processing them.
+- Validate each UUID format and confirm the simulator name begins with the
+  exact ownership marker `Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME} ` before
+  deleting it.
 - Shut down a matching booted simulator, delete it, and treat a missing UUID as
   already clean.
 - Skip and report unknown or mismatched devices instead of guessing.
+- Preserve pending entries for any UUID whose shutdown or deletion does not
+  succeed, so a later archive invocation can retry; remove pending state only
+  after cleanup succeeds.
 - Leave global agent stores, unrelated simulators, and shared devices alone.
 
 The archive script will be idempotent and safe to run more than once. Cleanup
@@ -131,7 +142,10 @@ deletion and fresh disk-usage evidence afterward.
   with an error, not deleted.
 - `simctl` operations are scoped to explicit UUIDs only.
 - Cleanup commands are safe when resources were already removed by an agent's
-  exit trap.
+-  exit trap; duplicate UUIDs across either manifest are processed once.
+- Direct in-memory deletion is permitted only as a last resort when appending
+  the UUID to the pending manifest fails, and only after the same exact UUID and
+  ownership checks.
 - The one-time script defaults to reporting targets; destructive deletion
   requires an explicit flag.
 
