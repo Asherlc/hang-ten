@@ -23,6 +23,12 @@ struct MotherboardWorkoutPreparation: Equatable {
     private(set) var bodyweightKGF: Double?
     private(set) var result: MotherboardWorkoutPreparationResult = .inProgress
     private(set) var failure: MotherboardWorkoutPreparationFailure?
+    private(set) var isTareInProgress = false
+    private(set) var isBodyweightCaptureInProgress = false
+
+    var isAwaitingBodyweightCapture: Bool {
+        result == .inProgress && step == .bodyweight && !isBodyweightCaptureInProgress && failure == nil
+    }
 
     func canContinue(isStreaming: Bool) -> Bool {
         guard isStreaming,
@@ -38,8 +44,24 @@ struct MotherboardWorkoutPreparation: Equatable {
         isInitialStart && isStreaming
     }
 
+    @discardableResult
+    mutating func startTare() -> Bool {
+        guard result == .inProgress, step == .tare, !isTareInProgress else { return false }
+        failure = nil
+        isTareInProgress = true
+        return true
+    }
+
+    @discardableResult
+    mutating func startBodyweightCapture() -> Bool {
+        guard isAwaitingBodyweightCapture else { return false }
+        isBodyweightCaptureInProgress = true
+        return true
+    }
+
     mutating func completeTare(isStreaming: Bool) {
-        guard result == .inProgress, step == .tare else { return }
+        guard result == .inProgress, step == .tare, isTareInProgress else { return }
+        isTareInProgress = false
         guard isStreaming else {
             failure = .tareInterrupted
             return
@@ -49,7 +71,8 @@ struct MotherboardWorkoutPreparation: Equatable {
     }
 
     mutating func completeBodyweight(with bodyweightKGF: Double?, isStreaming: Bool) {
-        guard result == .inProgress, step == .bodyweight else { return }
+        guard result == .inProgress, step == .bodyweight, isBodyweightCaptureInProgress else { return }
+        isBodyweightCaptureInProgress = false
         guard isStreaming else {
             self.bodyweightKGF = nil
             failure = .bodyweightCaptureInterrupted
@@ -71,6 +94,7 @@ struct MotherboardWorkoutPreparation: Equatable {
     mutating func retryTare() {
         guard result == .inProgress, step == .tare else { return }
         failure = nil
+        isTareInProgress = false
     }
 
     mutating func retryBodyweight() {
@@ -79,10 +103,13 @@ struct MotherboardWorkoutPreparation: Equatable {
         failure = nil
         step = .bodyweight
         result = .inProgress
+        isBodyweightCaptureInProgress = false
     }
 
     mutating func invalidateForStreamingLoss() {
         guard result != .skipped else { return }
+        isTareInProgress = false
+        isBodyweightCaptureInProgress = false
 
         switch step {
         case .tare:
@@ -100,5 +127,7 @@ struct MotherboardWorkoutPreparation: Equatable {
         bodyweightKGF = nil
         failure = nil
         result = .skipped
+        isTareInProgress = false
+        isBodyweightCaptureInProgress = false
     }
 }

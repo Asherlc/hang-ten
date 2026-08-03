@@ -31,7 +31,10 @@ struct MotherboardWorkoutPreparationView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .interactiveDismissDisabled()
-        .onAppear(perform: requestTareIfNeeded)
+        .onAppear {
+            guard service.state != .streaming else { return }
+            handleStreamingLoss()
+        }
         .onChange(of: service.state) { _, state in
             guard state != .streaming else { return }
             handleStreamingLoss()
@@ -40,11 +43,9 @@ struct MotherboardWorkoutPreparationView: View {
             guard didRequestTare, preparation.step == .tare else { return }
             didRequestTare = false
             preparation.completeTare(isStreaming: service.state == .streaming)
-            guard preparation.step == .bodyweight else { return }
-            beginBodyweightCapture()
         }
         .onChange(of: service.isMeasuringBodyweight) { _, isMeasuring in
-            guard didStartBodyweightCapture, !isMeasuring, preparation.step == .bodyweight else { return }
+            guard didStartBodyweightCapture, !isMeasuring, preparation.isBodyweightCaptureInProgress else { return }
             didStartBodyweightCapture = false
             preparation.completeBodyweight(
                 with: service.bodyweightKGF,
@@ -63,15 +64,22 @@ struct MotherboardWorkoutPreparationView: View {
                 .font(.system(size: 16, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
 
-            ProgressView(
-                value: Double(service.tareSamplesCollected),
-                total: Double(service.tareSampleTarget)
-            )
-            .tint(Color.hangGreenDark)
+            if preparation.isTareInProgress {
+                ProgressView(
+                    value: Double(service.tareSamplesCollected),
+                    total: Double(service.tareSampleTarget)
+                )
+                .tint(Color.hangGreenDark)
 
-            Text("\(service.tareSamplesCollected) of \(service.tareSampleTarget) tare samples")
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
+                Text("\(service.tareSamplesCollected) of \(service.tareSampleTarget) tare samples")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            } else {
+                Button("Start tare", action: startTare)
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.hangGreenDark)
+                    .disabled(service.state != .streaming)
+            }
 
             if preparation.failure == .tareInterrupted {
                 Text("The sensor stopped streaming before tare completed. Reconnect it, then try again or skip preparation.")
@@ -98,23 +106,32 @@ struct MotherboardWorkoutPreparationView: View {
             Group {
                 VStack(alignment: .leading, spacing: 16) {
                     SectionLabel(title: "Step 2 of 2")
-                    Text("Capture bodyweight")
+                    Text(preparation.isBodyweightCaptureInProgress ? "Capture bodyweight" : "Ready to hang")
                         .font(.system(size: 30, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text("Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load.")
+                    Text(preparation.isBodyweightCaptureInProgress
+                         ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load."
+                         : "Get onto the relaxed jugs, then start the timed bodyweight measurement when you are settled.")
                         .font(.system(size: 16, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
 
-                    ProgressView(value: progress)
-                        .tint(Color.hangGreenDark)
+                    if preparation.isBodyweightCaptureInProgress {
+                        ProgressView(value: progress)
+                            .tint(Color.hangGreenDark)
 
-                    HStack {
-                        Text("\(service.bodyweightSampleCount) samples")
-                        Spacer()
-                        Text("\(durationText(remaining)) remaining")
+                        HStack {
+                            Text("\(service.bodyweightSampleCount) samples")
+                            Spacer()
+                            Text("\(durationText(remaining)) remaining")
+                        }
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                    } else if preparation.isAwaitingBodyweightCapture {
+                        Button("Start bodyweight measurement", action: startBodyweightCapture)
+                            .buttonStyle(.borderedProminent)
+                            .tint(Color.hangGreenDark)
+                            .disabled(service.state != .streaming)
                     }
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
 
                     if let failure = preparation.failure {
                         Text(bodyweightFailureText(for: failure))
@@ -172,12 +189,12 @@ struct MotherboardWorkoutPreparationView: View {
         }
     }
 
-    private func requestTareIfNeeded() {
+    private func startTare() {
         guard service.state == .streaming else {
             handleStreamingLoss()
             return
         }
-        guard !didRequestTare else { return }
+        guard preparation.startTare() else { return }
         didRequestTare = true
         #if DEBUG
         service.resetSimulationForPreparation()
@@ -185,11 +202,12 @@ struct MotherboardWorkoutPreparationView: View {
         service.tare()
     }
 
-    private func beginBodyweightCapture() {
+    private func startBodyweightCapture() {
         guard service.state == .streaming else {
-            preparation.completeBodyweight(with: nil, isStreaming: false)
+            handleStreamingLoss()
             return
         }
+        guard preparation.startBodyweightCapture() else { return }
         didStartBodyweightCapture = service.beginBodyweightMeasurement(duration: bodyweightCaptureDuration)
         guard !didStartBodyweightCapture else { return }
         preparation.completeBodyweight(with: nil, isStreaming: service.state == .streaming)
@@ -204,13 +222,13 @@ struct MotherboardWorkoutPreparationView: View {
     private func retryTare() {
         preparation.retryTare()
         didRequestTare = false
-        requestTareIfNeeded()
+        startTare()
     }
 
     private func retryBodyweightCapture() {
         preparation.retryBodyweight()
         didStartBodyweightCapture = false
-        beginBodyweightCapture()
+        startBodyweightCapture()
     }
 
     private func skipPreparation() {

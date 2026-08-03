@@ -9,15 +9,21 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertFalse(handoff.accept())
     }
 
-    func testPreparationAdvancesOnlyWhenTareAndBodyweightComplete() {
+    func testTareCompletionWaitsForExplicitBodyweightCaptureStart() {
         var preparation = MotherboardWorkoutPreparation()
 
         XCTAssertEqual(preparation.step, .tare)
+        XCTAssertTrue(preparation.startTare())
 
         preparation.completeTare(isStreaming: true)
 
         XCTAssertEqual(preparation.step, .bodyweight)
         XCTAssertNil(preparation.bodyweightKGF)
+        XCTAssertTrue(preparation.isAwaitingBodyweightCapture)
+        XCTAssertFalse(preparation.isBodyweightCaptureInProgress)
+
+        XCTAssertTrue(preparation.startBodyweightCapture())
+        XCTAssertTrue(preparation.isBodyweightCaptureInProgress)
 
         preparation.completeBodyweight(with: 63.5, isStreaming: true)
 
@@ -29,7 +35,9 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
 
     func testInvalidBodyweightCaptureRemainsOnBodyweightStep() {
         var preparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(preparation.startTare())
         preparation.completeTare(isStreaming: true)
+        XCTAssertTrue(preparation.startBodyweightCapture())
 
         for value in [nil, .nan, .infinity, -.infinity, 0, -1] as [Double?] {
             preparation.completeBodyweight(with: value, isStreaming: true)
@@ -41,11 +49,13 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
             XCTAssertFalse(preparation.canContinue(isStreaming: true))
 
             preparation.retryBodyweight()
+            XCTAssertTrue(preparation.startBodyweightCapture())
         }
     }
 
     func testTareCancellationDoesNotAdvanceUntilStreamingCompletion() {
         var preparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(preparation.startTare())
 
         preparation.completeTare(isStreaming: false)
 
@@ -54,6 +64,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertEqual(preparation.failure, .tareInterrupted)
 
         preparation.retryTare()
+        XCTAssertTrue(preparation.startTare())
         preparation.completeTare(isStreaming: true)
 
         XCTAssertEqual(preparation.step, .bodyweight)
@@ -62,7 +73,9 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
 
     func testBodyweightCancellationDoesNotCompletePreparation() {
         var preparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(preparation.startTare())
         preparation.completeTare(isStreaming: true)
+        XCTAssertTrue(preparation.startBodyweightCapture())
 
         preparation.completeBodyweight(with: 63.5, isStreaming: false)
 
@@ -73,6 +86,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertFalse(preparation.canContinue(isStreaming: true))
 
         preparation.retryBodyweight()
+        XCTAssertTrue(preparation.startBodyweightCapture())
         preparation.completeBodyweight(with: 63.5, isStreaming: true)
 
         XCTAssertEqual(preparation.step, .ready)
@@ -82,7 +96,9 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
 
     func testStreamingLossAfterReadyInvalidatesTheCapturedBaseline() {
         var preparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(preparation.startTare())
         preparation.completeTare(isStreaming: true)
+        XCTAssertTrue(preparation.startBodyweightCapture())
         preparation.completeBodyweight(with: 63.5, isStreaming: true)
 
         XCTAssertFalse(preparation.canContinue(isStreaming: false))
@@ -99,6 +115,7 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
     func testSkipIsTerminalAtEveryPreparationStage() {
         var tarePreparation = MotherboardWorkoutPreparation()
         tarePreparation.skip()
+        XCTAssertFalse(tarePreparation.startTare())
         tarePreparation.completeTare(isStreaming: true)
         tarePreparation.retryTare()
 
@@ -107,8 +124,10 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertEqual(tarePreparation.result, .skipped)
 
         var bodyweightPreparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(bodyweightPreparation.startTare())
         bodyweightPreparation.completeTare(isStreaming: true)
         bodyweightPreparation.skip()
+        XCTAssertFalse(bodyweightPreparation.startBodyweightCapture())
         bodyweightPreparation.completeBodyweight(with: 63.5, isStreaming: true)
         bodyweightPreparation.retryBodyweight()
 
@@ -117,7 +136,9 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
         XCTAssertEqual(bodyweightPreparation.result, .skipped)
 
         var readyPreparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(readyPreparation.startTare())
         readyPreparation.completeTare(isStreaming: true)
+        XCTAssertTrue(readyPreparation.startBodyweightCapture())
         readyPreparation.completeBodyweight(with: 63.5, isStreaming: true)
         readyPreparation.skip()
         readyPreparation.completeTare(isStreaming: true)

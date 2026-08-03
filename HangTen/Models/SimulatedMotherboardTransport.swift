@@ -10,7 +10,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         )
     }
 
-    nonisolated static let bodyweightSamples: [MotherboardMeasurement] = (0..<18).map { index in
+    nonisolated static let bodyweightSamples: [MotherboardMeasurement] = (0..<40).map { index in
         sample(
             timestamp: Double(index + 15) * 0.3,
             number: UInt16(index + 16),

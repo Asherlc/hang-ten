@@ -6,11 +6,11 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
     func testDefaultFixtureStartsWithTareAndRelaxedJugHangPhases() {
         let samples = SimulatedMotherboardTransport.defaultSamples
         let tareSamples = samples.prefix(15)
-        let bodyweightSamples = samples.dropFirst(15).prefix(18)
+        let bodyweightSamples = samples.dropFirst(15).prefix(40)
 
         XCTAssertEqual(tareSamples.count, 15)
         XCTAssertTrue(tareSamples.allSatisfy { $0.aggregateLoadKGF == 0.08 })
-        XCTAssertEqual(bodyweightSamples.count, 18)
+        XCTAssertGreaterThanOrEqual(bodyweightSamples.count, 40)
         XCTAssertTrue(bodyweightSamples.allSatisfy { $0.aggregateLoadKGF == 64 })
         XCTAssertTrue(bodyweightSamples.allSatisfy {
             $0.sensorLoadsKGF == [19.2, 12.8, 19.2, 12.8]
@@ -18,7 +18,7 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
     }
 
     func testDefaultFixtureProvidesChangingNonEqualBalanceForActiveWorkout() {
-        let activeSamples = SimulatedMotherboardTransport.defaultSamples.dropFirst(33)
+        let activeSamples = SimulatedMotherboardTransport.defaultSamples.dropFirst(55)
 
         XCTAssertGreaterThanOrEqual(activeSamples.count, 4)
         XCTAssertEqual(activeSamples.map(\.aggregateLoadKGF), [80, 72, 90, 76])
@@ -26,6 +26,16 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
             XCTAssertEqual(actual, expected, accuracy: 0.0001)
         }
         XCTAssertTrue(activeSamples.allSatisfy { $0.leftShare != 0.5 && $0.rightShare != 0.5 })
+    }
+
+    func testMaximumPreparationCaptureConsumesOnlyRelaxedJugHangSamples() {
+        let relaxedSamples = SimulatedMotherboardTransport.defaultSamples.dropFirst(15).prefix(40)
+        let firstActiveSample = SimulatedMotherboardTransport.defaultSamples[55]
+
+        XCTAssertEqual(relaxedSamples.count, 40)
+        XCTAssertTrue(relaxedSamples.allSatisfy { $0.aggregateLoadKGF == 64 })
+        XCTAssertEqual(firstActiveSample.aggregateLoadKGF, 80)
+        XCTAssertNotEqual(firstActiveSample.leftShare, 0.5, accuracy: 0.0001)
     }
 
     @MainActor

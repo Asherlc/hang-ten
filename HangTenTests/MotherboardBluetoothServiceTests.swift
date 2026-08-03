@@ -261,7 +261,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     }
 
     #if DEBUG
-    func testDefaultSimulatorResetSynchronizesTareBodyweightAndActiveFrames() async throws {
+    func testDefaultSimulatorMaximumDurationPreparationDoesNotConsumeActiveFrames() async throws {
         let transport = SimulatedMotherboardTransport(streamInterval: .milliseconds(20))
         let sleepGate = ManualSleepGate()
         let service = MotherboardBluetoothService(
@@ -284,9 +284,11 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         try await waitForService("simulator tare") { service.tareCompletionCount == 1 }
         XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0.08, accuracy: 0.05)
 
-        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 5))
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 10))
         await sleepGate.waitForSleepRequests(1)
-        try await waitForService("stable bodyweight samples") { service.bodyweightSampleCount >= 6 }
+        try await waitForService("maximum-duration stable bodyweight samples") {
+            service.bodyweightSampleCount >= 40
+        }
         await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
 
         XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 63.92, accuracy: 0.1)
@@ -336,7 +338,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertNil(service.bodyweightKGF)
     }
 
-    func testBodyweightMeasurementIgnoresNonFiniteAggregateSamples() async throws {
+    func testBodyweightMeasurementPublishesFiniteSamplesWhenFiniteCalibrationOverflows() async throws {
         let transport = FakeMotherboardTransport()
         let sleepGate = ManualSleepGate()
         let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
@@ -350,11 +352,14 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         await sleepGate.waitForSleepRequests(1)
         emitRawPacket(on: transport, sampleNumber: 1, adc: 0)
 
-        XCTAssertFalse(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF.isFinite)
-        XCTAssertEqual(service.bodyweightSampleCount, 0)
+        let measurement = try XCTUnwrap(service.latestMeasurement)
+        XCTAssertTrue(measurement.sensorLoadsKGF.allSatisfy(\.isFinite))
+        XCTAssertTrue(measurement.aggregateLoadKGF.isFinite)
+        XCTAssertNoThrow(try JSONEncoder().encode(measurement))
+        XCTAssertEqual(service.bodyweightSampleCount, 1)
 
         await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
-        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), .greatestFiniteMagnitude)
     }
 
     func testBodyweightMeasurementKeepsFiniteBaselineForExtremeFiniteSamples() async throws {
@@ -538,7 +543,9 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertFalse(service.isMeasuringBodyweight)
 
         var preparation = MotherboardWorkoutPreparation()
+        XCTAssertTrue(preparation.startTare())
         preparation.completeTare(isStreaming: true)
+        XCTAssertTrue(preparation.startBodyweightCapture())
         preparation.completeBodyweight(with: service.bodyweightKGF, isStreaming: true)
         XCTAssertEqual(preparation.step, .bodyweight)
         XCTAssertFalse(preparation.canContinue(isStreaming: true))

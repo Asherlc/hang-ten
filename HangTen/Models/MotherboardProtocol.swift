@@ -173,7 +173,11 @@ enum MotherboardProtocol {
         let sensorLoadsKGF = (0..<4).map { sensor in
             let adc = packet.adcValues.indices.contains(sensor) ? packet.adcValues[sensor] : 0
             let tare = tareKGF.indices.contains(sensor) ? tareKGF[sensor] : 0
-            return (calibration.massKGF(sensor: sensor, adc: adc) ?? 0) - tare
+            let calibratedLoad = finiteLoad(calibration.massKGF(sensor: sensor, adc: adc) ?? 0)
+            return finiteLoad(calibratedLoad - finiteLoad(tare))
+        }
+        let aggregateLoadKGF = sensorLoadsKGF.reduce(0) { total, load in
+            finiteLoad(total + load)
         }
 
         return MotherboardMeasurement(
@@ -182,8 +186,15 @@ enum MotherboardProtocol {
             batteryValue: packet.batteryValue,
             rawADCValues: packet.adcValues,
             sensorLoadsKGF: sensorLoadsKGF,
-            aggregateLoadKGF: max(0, sensorLoadsKGF.reduce(0, +))
+            aggregateLoadKGF: max(0, aggregateLoadKGF)
         )
+    }
+
+    private static func finiteLoad(_ value: Double) -> Double {
+        guard !value.isNaN else { return 0 }
+        if value == .infinity { return .greatestFiniteMagnitude }
+        if value == -.infinity { return -.greatestFiniteMagnitude }
+        return value
     }
 }
 

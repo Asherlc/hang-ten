@@ -100,6 +100,26 @@ final class MotherboardProtocolTests: XCTestCase {
         XCTAssertEqual(result.aggregateLoadKGF, 0, accuracy: 0.0001)
     }
 
+    func testDecodeSaturatesOverflowingFiniteCalibrationAndRemainsJSONEncodable() throws {
+        let calibration = MotherboardCalibration(rows: [
+            MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: .greatestFiniteMagnitude, adc: 0),
+            MotherboardCalibrationRow(sensor: 0, calibrationPoint: 1, massKGF: -.greatestFiniteMagnitude, adc: 2)
+        ])
+        let packet = MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [1, 0, 0, 0])
+
+        let result = MotherboardProtocol.decode(
+            packet,
+            timestamp: Date(timeIntervalSince1970: 1),
+            calibration: calibration,
+            tareKGF: []
+        )
+
+        XCTAssertEqual(result.rawADCValues, [1, 0, 0, 0])
+        XCTAssertTrue(result.sensorLoadsKGF.allSatisfy(\.isFinite))
+        XCTAssertTrue(result.aggregateLoadKGF.isFinite)
+        XCTAssertNoThrow(try JSONEncoder().encode(result))
+    }
+
     func testProtocolUsesNordicUartUUIDsAndBuildsClampedStreamCommands() {
         XCTAssertEqual(MotherboardProtocol.serviceUUID.uuidString, "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
         XCTAssertEqual(MotherboardProtocol.rxUUID.uuidString, "6E400002-B5A3-F393-E0A9-E50E24DCCA9E")
