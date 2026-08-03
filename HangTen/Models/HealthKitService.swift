@@ -196,12 +196,16 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         )
     }
 
+    static func hangTenWorkoutPredicate() -> NSPredicate {
+        HKQuery.predicateForWorkouts(with: .functionalStrengthTraining)
+    }
+
     func fetchHangTenWorkouts(
         completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
     ) {
         let query = HKSampleQuery(
             sampleType: HKObjectType.workoutType(),
-            predicate: nil,
+            predicate: Self.hangTenWorkoutPredicate(),
             limit: HKObjectQueryNoLimit,
             sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
         ) { _, samples, error in

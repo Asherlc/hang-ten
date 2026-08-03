@@ -61,6 +61,17 @@ final class HealthKitServiceTests: XCTestCase {
         XCTAssertFalse(record.isHangTen)
     }
 
+    func testHangTenWorkoutPredicateMatchesOnlyFunctionalStrengthTraining() {
+        let predicate = HealthKitService.hangTenWorkoutPredicate()
+
+        XCTAssertTrue(predicate.evaluate(with: [
+            "workoutActivityType": HKWorkoutActivityType.functionalStrengthTraining.rawValue
+        ]))
+        XCTAssertFalse(predicate.evaluate(with: [
+            "workoutActivityType": HKWorkoutActivityType.running.rawValue
+        ]))
+    }
+
     private func record(
         activityType: HKWorkoutActivityType = .functionalStrengthTraining,
         metadata: [String: Any]
