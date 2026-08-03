@@ -3,11 +3,15 @@ import Combine
 
 @MainActor
 final class AppStore: ObservableObject {
-    @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
-    @Published var sessionsCompleted = 0
-    @Published var lastSessionTitle: String?
+	private static let favoritePlanIDsKey = "favoritePlanIDs"
+	private let userDefaults: UserDefaults
+
+	@Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
+	@Published var sessionsCompleted = 0
+	@Published var lastSessionTitle: String?
 	@Published private(set) var sessionHistory: [WorkoutSessionRecord]
 	@Published private(set) var sessionPersistenceError: String?
+	@Published private(set) var favoritePlanIDs: Set<String>
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
@@ -20,9 +24,11 @@ final class AppStore: ObservableObject {
 		healthKitService: HealthWorkoutSaving = HealthKitService(),
 		motherboardBluetoothService: MotherboardBluetoothService? = nil,
 		motherboardSettingsStore: MotherboardSettingsStore = MotherboardSettingsStore(),
-		workoutSessionStore: WorkoutSessionStoring = WorkoutSessionStore()
+		workoutSessionStore: WorkoutSessionStoring = WorkoutSessionStore(),
+		userDefaults: UserDefaults = .standard
 	) {
 		self.healthKitService = healthKitService
+		self.userDefaults = userDefaults
 		self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
 			transport: CoreBluetoothMotherboardTransport()
 		)
@@ -33,6 +39,7 @@ final class AppStore: ObservableObject {
 		sessionsCompleted = loadedSessions.count
 		lastSessionTitle = loadedSessions.first?.planTitle
 		sessionPersistenceError = workoutSessionStore.persistenceError
+		favoritePlanIDs = Set(userDefaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
@@ -41,6 +48,23 @@ final class AppStore: ObservableObject {
             isCompatible(plan, with: selectedBoard)
         }
     }
+
+	var favoritePlans: [TrainingPlan] {
+		plans.filter { favoritePlanIDs.contains($0.id) }
+	}
+
+	func isFavorite(_ plan: TrainingPlan) -> Bool {
+		favoritePlanIDs.contains(plan.id)
+	}
+
+	func toggleFavorite(_ plan: TrainingPlan) {
+		if favoritePlanIDs.contains(plan.id) {
+			favoritePlanIDs.remove(plan.id)
+		} else {
+			favoritePlanIDs.insert(plan.id)
+		}
+		userDefaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
+	}
 
     var featuredPlan: TrainingPlan? {
         #if DEBUG
