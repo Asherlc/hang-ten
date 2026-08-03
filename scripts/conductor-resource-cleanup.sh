@@ -47,10 +47,10 @@ device_record_for_uuid() {
 run_archive_cleanup() {
   local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
   local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
-  local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix
+  local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix line temp_manifest
   local manifests=()
   local result_status=0
-  typeset -A seen
+  typeset -A seen uuid_status
 
   if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
     print -u2 -- 'archive requires CONDUCTOR_WORKSPACE_PATH and CONDUCTOR_WORKSPACE_NAME'
@@ -79,27 +79,57 @@ run_archive_cleanup() {
       seen[$uuid]=1
 
       record=$(device_record_for_uuid "$devices" "$uuid")
-      [[ -n "$record" ]] || continue
+      if [[ -z "$record" ]]; then
+        uuid_status[$uuid]=resolved
+        continue
+      fi
       device_name=${record%%$'\t'*}
       device_state=${record#*$'\t'}
 
       if [[ "$device_name" != "$workspace_prefix"* ]]; then
         print -u2 -- "Skipping simulator not owned by workspace $workspace_name: $uuid"
+        uuid_status[$uuid]=unresolved
         result_status=1
         continue
       fi
 
       if [[ "$device_state" == Booted ]] && ! xcrun simctl shutdown "$uuid"; then
         print -u2 -- "Failed to shut down simulator: $uuid"
+        uuid_status[$uuid]=unresolved
         result_status=1
         continue
       fi
 
       if ! xcrun simctl delete "$uuid"; then
         print -u2 -- "Failed to delete simulator: $uuid"
+        uuid_status[$uuid]=unresolved
         result_status=1
+      else
+        uuid_status[$uuid]=resolved
       fi
     done < "$manifest"
+  done
+
+  for manifest in "${manifests[@]}"; do
+    temp_manifest=$(mktemp "${manifest}.tmp.XXXXXX") || {
+      print -u2 -- "Failed to create temporary manifest: $manifest"
+      return 1
+    }
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      if is_uuid "$line" && [[ "${uuid_status[$line]:-unresolved}" == resolved ]]; then
+        continue
+      fi
+      print -r -- "$line" >> "$temp_manifest" || {
+        rm -f "$temp_manifest"
+        print -u2 -- "Failed to write rewritten manifest: $manifest"
+        return 1
+      }
+    done < "$manifest"
+    if ! mv -f "$temp_manifest" "$manifest"; then
+      rm -f "$temp_manifest"
+      print -u2 -- "Failed to replace rewritten manifest: $manifest"
+      return 1
+    fi
   done
 
   return "$result_status"

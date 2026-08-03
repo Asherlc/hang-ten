@@ -234,6 +234,25 @@ duplicate_archive_delete_count=$(grep -c '^delete 11111111-1111-1111-1111-111111
 assert_all_call_log_contains_list_devices
 : > "$pending_manifest"
 
+print -r -- '11111111-1111-1111-1111-111111111111
+11111111-1111-1111-1111-111111111111
+22222222-2222-2222-2222-222222222222
+not-a-uuid' > "$manifest"
+print -r -- '11111111-1111-1111-1111-111111111111
+33333333-3333-3333-3333-333333333333
+bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' > "$pending_manifest"
+: > "$call_log"
+: > "$all_call_log"
+if DELETE_FAIL_UUID=22222222-2222-2222-2222-222222222222 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+  print -u2 -- 'archive accepted a delete failure in mixed manifest test'
+  exit 1
+fi
+[[ "$(<"$manifest")" == *'22222222-2222-2222-2222-222222222222'* ]] || exit 1
+[[ "$(<"$manifest")" == *'not-a-uuid'* ]] || exit 1
+[[ "$(<"$pending_manifest")" == *'33333333-3333-3333-3333-333333333333'* ]] || exit 1
+assert_not_contains '11111111-1111-1111-1111-111111111111' "$(<"$manifest")$(<"$pending_manifest")"
+assert_not_contains 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' "$(<"$pending_manifest")"
+
 : > "$call_log"
 : > "$all_call_log"
 dry_run=$(run_cleanup prune)
