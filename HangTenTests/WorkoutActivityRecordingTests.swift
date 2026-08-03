@@ -2,6 +2,7 @@ import XCTest
 import HealthKit
 @testable import HangTen
 
+@MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
     private let board = TrainingBoard(
         id: "fixture.board",
