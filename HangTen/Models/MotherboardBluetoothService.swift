@@ -390,8 +390,7 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {
         cancelTimeout()
-        let maximumDelay = TimeInterval(UInt64.max / 1_000_000_000)
-        guard delay.isFinite, delay > 0, delay <= maximumDelay else { return }
+        guard delay.isFinite, delay > 0, delay <= Self.maximumBodyweightMeasurementDuration else { return }
         let nanoseconds = UInt64(delay * 1_000_000_000)
         timeoutTask = Task { [weak self] in
             do {
@@ -414,6 +413,14 @@ final class MotherboardBluetoothService: ObservableObject {
         cleanupTransportSession()
         lastError = message
         state = .failed
+    }
+
+    deinit {
+        timeoutTask?.cancel()
+        bodyweightMeasurementTask?.cancel()
+        Task { @MainActor [transport] in
+            transport.eventHandler = nil
+        }
     }
 }
 
@@ -449,6 +456,15 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     init(centralManagerFactory: @escaping (CBCentralManagerDelegate) -> MotherboardCentralManaging) {
         self.centralManagerFactory = centralManagerFactory
         super.init()
+    }
+
+    deinit {
+        eventHandler = nil
+        centralManager?.stopScan()
+        selectedPeripheral?.delegate = nil
+        if let selectedPeripheral {
+            centralManager?.cancelPeripheralConnection(selectedPeripheral)
+        }
     }
 
     private func isExpectedMotherboard(peripheralName: String?, advertisedLocalName: String?) -> Bool {

@@ -36,6 +36,11 @@ struct MotherboardProtocolParser {
             let lineData = buffer.subdata(in: buffer.startIndex..<delimiter.lowerBound)
             buffer.removeSubrange(buffer.startIndex..<delimiter.upperBound)
 
+            guard lineData.count <= maximumBufferSize else {
+                events.append(.error("Motherboard response exceeded the receive buffer limit."))
+                continue
+            }
+
             guard let line = String(data: lineData, encoding: .utf8),
                   let event = parse(line, receivedAt: receivedAt) else {
                 continue

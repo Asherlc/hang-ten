@@ -54,6 +54,12 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         }
     }
 
+    deinit {
+        streamTimer?.cancel()
+        streamTimer = nil
+        eventHandler = nil
+    }
+
     func startScan() {
         eventHandler?(.powerChanged(.poweredOn))
         eventHandler?(.discovered(device))

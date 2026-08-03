@@ -83,6 +83,18 @@ final class MotherboardProtocolTests: XCTestCase {
         ])
     }
 
+    func testParserRejectsOversizedTerminatedFrameAndPreservesFollowingFrame() {
+        var parser = MotherboardProtocolParser(maximumBufferSize: 8)
+        let date = Date(timeIntervalSince1970: 1)
+
+        let events = parser.append(Data("123456789\r\nStream:30\r\n".utf8), receivedAt: date)
+
+        XCTAssertEqual(events, [
+            .error("Motherboard response exceeded the receive buffer limit."),
+            .streamStarted(rate: 30)
+        ])
+    }
+
     func testDecodeKeepsNegativeSensorLoadsButClampsAggregateToZero() {
         let calibration = MotherboardCalibration(rows: [
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 0, adc: 0),
