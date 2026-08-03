@@ -179,6 +179,9 @@ struct MotherboardWorkoutPreparationView: View {
         }
         guard !didRequestTare else { return }
         didRequestTare = true
+        #if DEBUG
+        service.resetSimulationForPreparation()
+        #endif
         service.tare()
     }
 

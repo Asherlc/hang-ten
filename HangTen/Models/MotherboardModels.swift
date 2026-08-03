@@ -237,6 +237,6 @@ final class MotherboardSettingsStore: ObservableObject {
 
     private static func normalizedBodyweightCaptureDuration(_ value: TimeInterval) -> TimeInterval {
         guard value.isFinite else { return 5 }
-        return min(max(value, 3), 10)
+        return min(max(value.rounded(), 3), 10)
     }
 }

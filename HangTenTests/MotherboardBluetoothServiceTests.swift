@@ -260,6 +260,48 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.bodyweightSampleCount, 0)
     }
 
+    #if DEBUG
+    func testDefaultSimulatorResetSynchronizesTareBodyweightAndActiveFrames() async throws {
+        let transport = SimulatedMotherboardTransport(streamInterval: .milliseconds(20))
+        let sleepGate = ManualSleepGate()
+        let service = MotherboardBluetoothService(
+            transport: transport,
+            bodyweightMeasurementSleep: { nanoseconds in
+                try await sleepGate.sleep(nanoseconds: nanoseconds)
+            }
+        )
+        defer { service.disconnect() }
+
+        service.connect()
+        try await waitForService("simulator stream") { service.state == .streaming }
+
+        // The app auto-connects this fixture; preparation may begin only after its
+        // initial tare/bodyweight/active timeline has already been consumed.
+        try await Task.sleep(for: .milliseconds(750))
+        service.resetSimulationForPreparation()
+        service.tare()
+
+        try await waitForService("simulator tare") { service.tareCompletionCount == 1 }
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0.08, accuracy: 0.05)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 5))
+        await sleepGate.waitForSleepRequests(1)
+        try await waitForService("stable bodyweight samples") { service.bodyweightSampleCount >= 6 }
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 63.92, accuracy: 0.1)
+
+        try await waitForService("active fixture frame") {
+            guard let measurement = service.latestMeasurement else { return false }
+            return measurement.sampleNumber >= 34 && measurement.aggregateLoadKGF > 70
+        }
+        let activeMeasurement = try XCTUnwrap(service.latestMeasurement)
+        XCTAssertNotEqual(activeMeasurement.leftShare, 0.5, accuracy: 0.0001)
+        XCTAssertNotEqual(activeMeasurement.rightShare, 0.5, accuracy: 0.0001)
+        XCTAssertGreaterThan(activeMeasurement.aggregateLoadKGF, 70)
+    }
+    #endif
+
     func testBodyweightMeasurementRejectsDisconnectedService() {
         let service = MotherboardBluetoothService(transport: FakeMotherboardTransport())
 
@@ -828,6 +870,18 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         await sleepGate.releaseNext()
         await fulfillment(of: [completion], timeout: 1)
         withExtendedLifetime(cancellable) {}
+    }
+
+    private func waitForService(
+        _ description: String,
+        timeout: TimeInterval = 2,
+        condition: @escaping () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        XCTAssertTrue(condition(), "Timed out waiting for \(description).")
     }
 }
 

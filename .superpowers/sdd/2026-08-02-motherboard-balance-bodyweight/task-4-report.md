@@ -20,31 +20,44 @@ the Task 3 preparation/lifecycle plumbing.
   relaxed-jug-hang frames (enough for the default five-second capture at its
   300 ms stream cadence), then repeats four varying, non-50/50 active frames.
   Channels 0+2 are left and 1+3 are right. Explicit custom sample injection
-  keeps its previous whole-fixture repeat behavior.
+  keeps its previous whole-fixture repeat behavior. Because the review route
+  auto-connects on launch, preparation resets the DEBUG simulator immediately
+  before tare: it cancels the active timer, rewinds the fixture index, and
+  restarts the stream. This keeps tare and bodyweight capture aligned to the
+  fixture even after the launch-time stream has advanced. The reset control is
+  DEBUG-only; CoreBluetooth has no dependency on it.
+- `MotherboardSettingsStore.bodyweightCaptureDuration` defaults to 5 seconds
+  for absent or non-finite values, then rounds finite values to whole seconds
+  and clamps them to the inclusive 3...10 second UI range.
 
 ## TDD evidence
 
 ### RED
 
-Added the pure summary formatter test and deterministic simulator phase tests
-before implementation, then ran:
+Added the simulator reset/raw-packet integration test and fractional capture
+duration persistence assertions before implementation, then ran:
 
 ```sh
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=0F2FE770-996B-40A8-A546-3CD611D97EEF' -only-testing:HangTenTests/WorkoutSummaryTests -only-testing:HangTenTests/SimulatedMotherboardTransportTests test
+rtk proxy xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=0AF49AA7-BA1F-4317-BEB2-4DCA8AB31681' -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardModelsTests -only-testing:HangTenTests/SimulatedMotherboardTransportTests -only-testing:HangTenTests/MotherboardBluetoothServiceTests
 ```
 
-Result: intentional RED, exit 65. The test target could not find
-`WorkoutSummaryFormatting`, which was the new formatter contract being added.
+Result: intentional RED, exit 65. The test target could not compile because
+the simulator did not yet accept an injected stream interval; the preparation
+reset contract was likewise absent. The new fractional-duration assertions
+specified the rounding behavior before the store was changed.
 
 ### GREEN
 
 ```sh
-rtk proxy xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=0F2FE770-996B-40A8-A546-3CD611D97EEF' -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/WorkoutSummaryTests -only-testing:HangTenTests/SimulatedMotherboardTransportTests
+rtk proxy xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=0AF49AA7-BA1F-4317-BEB2-4DCA8AB31681' -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/WorkoutSummaryTests -only-testing:HangTenTests/SimulatedMotherboardTransportTests -only-testing:HangTenTests/MotherboardModelsTests -only-testing:HangTenTests/MotherboardBluetoothServiceTests
 ```
 
-Result: PASS, exit 0. The XCTest result bundle reports 6 passed, 0 failed, and
-0 skipped tests on iPhone 17 Pro (iOS 26.4). Xcode emitted only its existing
-simulator build-number warnings.
+Result: PASS, exit 0. The selected XCTest run reports 58 passed, 0 failed, and
+0 skipped tests on the explicit simulator destination. The new integration
+test delays launch-time streaming, resets immediately before tare, exercises
+the real calibration/parser/raw-frame path, captures the stable post-tare
+baseline at approximately 63.92 kgf, then observes an unequal active frame.
+Xcode emitted only its existing simulator build-number warnings.
 
 ## Debug simulator build
 
@@ -60,9 +73,9 @@ warning.
 - Launch with `HANGTEN_REVIEW_MOTHERBOARD=1` to use the simulator instead of
   CoreBluetooth; it auto-connects and opens the Progress tab’s sensor card.
 - Switch to Today and start a routine normally to exercise the intended setup
-  route: tare consumes the first 15 frames, the relaxed-jug-hang capture
-  consumes the stable next frames, and continuing reaches live force, balance,
-  and percentage feedback.
+  route: preparation resets the simulator, tare consumes the first 15 frames,
+  the relaxed-jug-hang capture consumes the stable next frames, and continuing
+  reaches live force, balance, and percentage feedback.
 - `HANGTEN_REVIEW_WORKOUT=1` still opens the existing workout surface; adding
   `HANGTEN_REVIEW_AUTOSTART=1` retains its Task 3 behavior of skipping setup.
   That autostart path intentionally has no captured baseline, so it exercises

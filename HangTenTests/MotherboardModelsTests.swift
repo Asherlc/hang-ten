@@ -81,10 +81,13 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
         defaults.set(Double.infinity, forKey: "motherboard.bodyweightCaptureDuration")
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
+        defaults.set(7.6, forKey: "motherboard.bodyweightCaptureDuration")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 8, accuracy: 0.0001)
 
         initial.bodyweightCaptureDuration = 1
         XCTAssertEqual(initial.bodyweightCaptureDuration, 3, accuracy: 0.0001)
-        initial.bodyweightCaptureDuration = 7
+        initial.bodyweightCaptureDuration = 7.4
+        XCTAssertEqual(initial.bodyweightCaptureDuration, 7, accuracy: 0.0001)
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 7, accuracy: 0.0001)
     }
 

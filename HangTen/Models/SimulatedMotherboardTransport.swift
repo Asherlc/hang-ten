@@ -1,7 +1,7 @@
 #if DEBUG
 import Foundation
 
-final class SimulatedMotherboardTransport: MotherboardTransport {
+final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimulationControlling {
     nonisolated static let tareSamples: [MotherboardMeasurement] = (0..<15).map { index in
         sample(
             timestamp: Double(index) * 0.3,
@@ -31,6 +31,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
 
     private let samples: [MotherboardMeasurement]
     private let repeatStartIndex: Int
+    private let streamInterval: DispatchTimeInterval
     private let device = MotherboardDiscoveredDevice(
         id: UUID(uuidString: "0F0F0F0F-0000-4000-8000-000000000009")!,
         name: "Motherboard Simulator"
@@ -39,7 +40,11 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
     private var nextSampleIndex = 0
     private var isStreaming = false
 
-    init(samples: [MotherboardMeasurement]? = nil) {
+    init(
+        samples: [MotherboardMeasurement]? = nil,
+        streamInterval: DispatchTimeInterval = .milliseconds(300)
+    ) {
+        self.streamInterval = streamInterval
         if let samples {
             self.samples = samples
             repeatStartIndex = 0
@@ -89,6 +94,13 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
         }
     }
 
+    func resetSimulationStream() {
+        let shouldResumeStreaming = isStreaming
+        cancelStream()
+        guard shouldResumeStreaming else { return }
+        scheduleStream()
+    }
+
     private func emitCalibration() {
         for sensor in 0..<4 {
             for point in 0..<4 {
@@ -107,7 +119,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport {
         timer.setEventHandler { [weak self] in
             self?.emitNextSample()
         }
-        timer.schedule(deadline: .now(), repeating: .milliseconds(300))
+        timer.schedule(deadline: .now(), repeating: streamInterval)
         streamTimer = timer
         timer.resume()
     }

@@ -36,7 +36,10 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
             measurement(timestamp: 0.10, sampleNumber: 3, load: 0.3)
         ]
         let service = MotherboardBluetoothService(
-            transport: SimulatedMotherboardTransport(samples: samples)
+            transport: SimulatedMotherboardTransport(
+                samples: samples,
+                streamInterval: .milliseconds(300)
+            )
         )
 
         let streamStartedAt = Date()

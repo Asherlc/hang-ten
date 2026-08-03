@@ -52,6 +52,13 @@ protocol MotherboardTransport: AnyObject {
     func write(_ data: Data)
 }
 
+#if DEBUG
+@MainActor
+protocol MotherboardSimulationControlling: AnyObject {
+    func resetSimulationStream()
+}
+#endif
+
 @MainActor
 final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var state: MotherboardConnectionState = .idle
@@ -146,6 +153,12 @@ final class MotherboardBluetoothService: ObservableObject {
         tareSamplesCollected = 0
         isTaring = true
     }
+
+    #if DEBUG
+    func resetSimulationForPreparation() {
+        (transport as? MotherboardSimulationControlling)?.resetSimulationStream()
+    }
+    #endif
 
     func cancelPreparationMeasurements() {
         cancelTare()
