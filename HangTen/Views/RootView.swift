@@ -733,6 +733,14 @@ struct WorkoutView: View {
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
 				}
+				.onChange(of: isComplete, initial: true) { _, complete in
+					guard complete else { return }
+					finalizeAllStopwatches(at: context.date)
+				}
+				.onChange(of: isResting) { wasResting, resting in
+					guard resting, !wasResting else { return }
+					finalizeCurrentStopwatch(at: context.date)
+				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
 						jump(to: selectedStep)
@@ -823,7 +831,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -892,7 +900,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown, date: date)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, date: date)
 					.frame(width: 224)
 			}
 		}
@@ -1093,11 +1101,11 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(step: WorkoutStep, isComplete: Bool, countdown: Int, date: Date) -> some View {
+    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, date: Date) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
 
-            if countdown == 0, !isComplete, let key = currentStopwatchKey(for: step) {
+            if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
                 stopwatchControl(for: key, at: date)
             }
 
