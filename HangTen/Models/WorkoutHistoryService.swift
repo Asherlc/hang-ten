@@ -84,24 +84,24 @@ final class WorkoutHistoryService {
                 WorkoutHistoryMatcher.matchingHealthWorkout(for: $0, in: healthRecords) == nil
             }
             persistence.replace(unresolvedRecords)
-            uploadUnattemptedRecords(unresolvedRecords, healthRecords: healthRecords)
+            uploadUnattemptedRecords(healthRecords: healthRecords)
         }
     }
 
     private func uploadUnattemptedRecords(
-        _ records: [PendingWorkoutRecord],
         healthRecords: [HealthWorkoutRecord],
         attemptedRecordIDs: Set<UUID> = []
     ) {
+        let records = persistence.load()
         guard healthStore.authorizationState == .authorized else {
-            refetchAfterUploads(records)
+            refetchAfterUploads()
             return
         }
 
         guard let index = records.firstIndex(where: {
             !$0.healthUploadAttempted && !attemptedRecordIDs.contains($0.id)
         }) else {
-            refetchAfterUploads(records)
+            refetchAfterUploads()
             return
         }
 
@@ -118,16 +118,17 @@ final class WorkoutHistoryService {
         ) { [weak self] result in
             self?.synchronizationQueue.async {
                 guard let self else { return }
-                var updatedRecords = uploadRecords
-                if case let .success(healthWorkoutUUID) = result {
-                    updatedRecords[index].healthWorkoutUUID = healthWorkoutUUID
-                } else if case let .failure(error) = result {
-                    updatedRecords[index].healthUploadAttempted = false
-                    self.lastError = error
+                var updatedRecords = self.persistence.load()
+                if let updatedIndex = updatedRecords.firstIndex(where: { $0.id == record.id }) {
+                    if case let .success(healthWorkoutUUID) = result {
+                        updatedRecords[updatedIndex].healthWorkoutUUID = healthWorkoutUUID
+                    } else if case let .failure(error) = result {
+                        updatedRecords[updatedIndex].healthUploadAttempted = false
+                        self.lastError = error
+                    }
+                    self.persistence.replace(updatedRecords)
                 }
-                self.persistence.replace(updatedRecords)
                 self.uploadUnattemptedRecords(
-                    updatedRecords,
                     healthRecords: healthRecords,
                     attemptedRecordIDs: attemptedRecordIDs.union([record.id])
                 )
@@ -135,12 +136,11 @@ final class WorkoutHistoryService {
         }
     }
 
-    private func refetchAfterUploads(
-        _ localRecords: [PendingWorkoutRecord]
-    ) {
+    private func refetchAfterUploads() {
         healthStore.fetchHangTenWorkouts { [weak self] result in
             self?.synchronizationQueue.async {
                 guard let self else { return }
+                let localRecords = self.persistence.load()
                 switch result {
                 case let .success(healthRecords):
                     let remainingRecords = localRecords.filter {

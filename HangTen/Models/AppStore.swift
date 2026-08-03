@@ -111,7 +111,7 @@ final class AppStore: ObservableObject {
 			startDate: startDate,
 			endDate: endDate
 		) { [weak self] in
-			self?.publishWorkoutHistory(showingError: true)
+			self?.publishWorkoutHistory(errorContext: .completion)
 		}
     }
 
@@ -126,7 +126,7 @@ final class AppStore: ObservableObject {
 			source: .syncing
 		)
 		workoutHistoryService.refresh { [weak self] in
-			self?.publishWorkoutHistory(showingError: true)
+			self?.publishWorkoutHistory(errorContext: .refresh)
 		}
 	}
 
@@ -144,10 +144,22 @@ final class AppStore: ObservableObject {
 		}
 	}
 
-	private func publishWorkoutHistory(showingError: Bool) {
+	private func publishWorkoutHistory(errorContext: HistoryErrorContext) {
 		workoutHistory = workoutHistoryService.snapshot
-		if showingError, let error = workoutHistoryService.lastError {
-			healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
+		guard workoutHistoryService.lastError != nil else {
+			healthAuthorizationError = nil
+			return
 		}
+		switch errorContext {
+		case .completion:
+			healthAuthorizationError = "Session was saved locally and will retry Apple Health sync."
+		case .refresh:
+			healthAuthorizationError = "Apple Health history could not sync. Local history remains available."
+		}
+	}
+
+	private enum HistoryErrorContext {
+		case completion
+		case refresh
 	}
 }
