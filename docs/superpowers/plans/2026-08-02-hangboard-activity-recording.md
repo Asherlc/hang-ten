@@ -218,7 +218,7 @@
 - [ ] **Step 5: Commit persisted routine segments.**
 
   ```sh
-  rtk git add HangTen/Models/PlanStorage.swift HangTen/Resources/PlanLibrary.json HangTenTests/PlanStorageTests.swift
+  rtk git add HangTen/Models/TrainingModels.swift HangTen/Models/PlanStorage.swift HangTen/Resources/PlanLibrary.json HangTen.xcodeproj/project.pbxproj HangTenTests/PlanStorageTests.swift
   rtk git commit -m "feat: persist timed workout activity segments"
   ```
 
