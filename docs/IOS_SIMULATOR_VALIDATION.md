@@ -87,6 +87,13 @@ cleanup_on_exit() {
   if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
     cleanup_status=$fallback_cleanup_status
   fi
+  artifact_cleanup_status=0
+  rm -rf "$workspace_path/.context/DerivedData" \
+    "$workspace_path/.context/workout-raw.png" \
+    "$workspace_path/.context/workout-landscape.png" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
   if (( original_status != 0 )); then
     exit "$original_status"
   fi
@@ -126,6 +133,12 @@ review device in later commands. The trap is idempotent: it runs on successful
 completion, failure, or interruption and archives only manifest UUIDs whose
 names carry this workspace's exact marker. It keeps pending simulator records
 until archive cleanup succeeds.
+
+The trap removes only the exact workspace-local artifacts created by this guide:
+`.context/DerivedData`, `.context/workout-raw.png`, and
+`.context/workout-landscape.png`. If archive cleanup fails, both simulator
+manifests remain in place for a retry, and the original command status is
+preserved.
 
 ## Boot and wait for real readiness
 

@@ -331,6 +331,10 @@ pending_simulator_uuid=""
 
 Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators.
 
+If archive cleanup fails, retain the pending and owned manifests for retry and
+preserve the original command status; propagate cleanup failure only when the
+command itself succeeded.
+
 - [ ] **Step 3: Update the README build command**
 
 Add this exact flag to the documented local xcodebuild command:
@@ -360,7 +364,10 @@ git add .codex/skills/validate-hang-ten-ios/SKILL.md docs/IOS_SIMULATOR_VALIDATI
 git commit -m "docs: require simulator deletion and local DerivedData"
 ~~~
 
-## Controller-only operation after implementation review: reclaim existing disk space
+## Human-operator-only operation after implementation review: reclaim existing disk space
+
+Agents must never run this one-time purge. It requires an explicit human
+operator on the host and is separate from ordinary workspace validation.
 
 This operation is authorized by the user's one-time cache request but is not recurring repository behavior. Run it only after Tasks 1–3 pass their task reviews and the final diff has been checked for scope.
 

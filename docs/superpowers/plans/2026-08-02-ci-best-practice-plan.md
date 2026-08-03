@@ -215,6 +215,11 @@ cleanup_on_exit() {
   if (( cleanup_status == 0 && result_cleanup_status != 0 )); then
     cleanup_status=$result_cleanup_status
   fi
+  artifact_cleanup_status=0
+  rm -rf "$logs_path" "$derived_data_path" "$result_bundle_path" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
   if (( original_status != 0 )); then
     exit "$original_status"
   fi
