@@ -987,12 +987,11 @@
               "timing" : "undefined"
             },
             {
-              "duration" : 5,
               "kind" : "work",
               "target" : {
                 "feature" : "largeSlope"
               },
-              "timing" : "fixed"
+              "timing" : "undefined"
             }
           ],
           "targets" : [

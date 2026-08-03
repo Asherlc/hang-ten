@@ -169,6 +169,32 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
+    func testWorkSegmentRequiresTarget() {
+        let segment = WorkoutSegmentDefinition(
+            kind: .work,
+            target: nil,
+            timing: .undefined,
+            duration: nil
+        )
+
+        XCTAssertTrue(validationIssues(for: segment).contains {
+            $0.path == "blocks[0].steps[0].segments[0].target"
+        })
+    }
+
+    func testRestSegmentCannotTargetAHold() {
+        let segment = WorkoutSegmentDefinition(
+            kind: .rest,
+            target: .kind(.edge),
+            timing: .fixed,
+            duration: 30
+        )
+
+        XCTAssertTrue(validationIssues(for: segment).contains {
+            $0.path == "blocks[0].steps[0].segments[0].target"
+        })
+    }
+
     func testRestSegmentRequiresDurationRegardlessOfTiming() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
@@ -192,6 +218,32 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertTrue(validationIssues(for: segment).contains {
             $0.path == "blocks[0].steps[0].segments[0].timing"
+        })
+    }
+
+    func testStopwatchSegmentCannotHaveDuration() {
+        let segment = WorkoutSegmentDefinition(
+            kind: .work,
+            target: .kind(.edge),
+            timing: .stopwatch,
+            duration: 10
+        )
+
+        XCTAssertTrue(validationIssues(for: segment).contains {
+            $0.path == "blocks[0].steps[0].segments[0].duration"
+        })
+    }
+
+    func testUndefinedSegmentCannotHaveDuration() {
+        let segment = WorkoutSegmentDefinition(
+            kind: .work,
+            target: .kind(.edge),
+            timing: .undefined,
+            duration: 10
+        )
+
+        XCTAssertTrue(validationIssues(for: segment).contains {
+            $0.path == "blocks[0].steps[0].segments[0].duration"
         })
     }
 
@@ -250,6 +302,28 @@ final class PlanStorageTests: XCTestCase {
                     kind: .work,
                     target: .feature(.roundSloper),
                     timing: .stopwatch,
+                    duration: nil
+                )
+            ]
+        )
+    }
+
+    func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() {
+        let minuteEight = LegacyPlanSeedCatalog.metoliusAdvanced.steps[7]
+
+        XCTAssertEqual(
+            minuteEight.segments,
+            [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .feature(.largeSlope),
+                    timing: .undefined,
+                    duration: nil
+                ),
+                WorkoutSegment(
+                    kind: .work,
+                    target: .feature(.largeSlope),
+                    timing: .undefined,
                     duration: nil
                 )
             ]

@@ -561,8 +561,25 @@ enum PlanLibraryValidator {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
         for (index, segment) in step.segments.enumerated() {
+            let targetPath = "\(path).segments[\(index)].target"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
+            if segment.kind == .work && segment.target == nil {
+                issues.append(
+                    PlanValidationIssue(
+                        path: targetPath,
+                        message: "Work segments require a target."
+                    )
+                )
+            }
+            if segment.kind == .rest && segment.target != nil {
+                issues.append(
+                    PlanValidationIssue(
+                        path: targetPath,
+                        message: "Rest segments must not define a target."
+                    )
+                )
+            }
             if segment.kind == .rest && segment.timing != .fixed {
                 issues.append(
                     PlanValidationIssue(
@@ -570,6 +587,26 @@ enum PlanLibraryValidator {
                         message: "Rest segments must use fixed timing."
                     )
                 )
+            }
+            switch segment.timing {
+            case .fixed:
+                if segment.duration == nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Fixed segments require a duration."
+                        )
+                    )
+                }
+            case .stopwatch, .undefined:
+                if segment.duration != nil {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: durationPath,
+                            message: "Stopwatch and undefined segments must not define a duration."
+                        )
+                    )
+                }
             }
             if let duration = segment.duration {
                 if !duration.isFinite || duration < 0 {
@@ -588,13 +625,6 @@ enum PlanLibraryValidator {
                         )
                     )
                 }
-            } else if segment.timing == .fixed || segment.kind == .rest {
-                issues.append(
-                    PlanValidationIssue(
-                        path: durationPath,
-                        message: "Fixed and rest segments require a duration."
-                    )
-                )
             }
         }
     }

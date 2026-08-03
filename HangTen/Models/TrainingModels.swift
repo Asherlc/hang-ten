@@ -958,7 +958,7 @@ enum LegacyPlanSeedCatalog {
                 planID: "advanced", number: 8, title: "L-sit + lever",
                 instruction: "Do 3 L-sit pull-ups, bending your knees if needed; then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
                 phase: .pull, targets: [.feature(.largeSlope)],
-                segments: [undefinedWork(.feature(.largeSlope)), fixedWork(.feature(.largeSlope), 5)]
+                segments: [undefinedWork(.feature(.largeSlope)), undefinedWork(.feature(.largeSlope))]
             ),
             minute(
                 planID: "advanced", number: 9, title: "Two fingers + power pulls",
@@ -1533,7 +1533,7 @@ enum LegacyPlanSeedCatalog {
         #if DEBUG
         assert(officialPlans.count == 3, "The official Metolius guide has three routines")
         assert(
-            officialAuditFingerprint(officialPlans) == 1_914_094_498_687_059_568,
+            officialAuditFingerprint(officialPlans) == 8_236_940_924_873_282_952,
             "Official Metolius prescription drifted from the source-audited snapshot"
         )
         for plan in officialPlans {
