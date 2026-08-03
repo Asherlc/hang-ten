@@ -261,3 +261,24 @@ rtk git diff --cached --exit-code origin/main -- .github/workflows/ci.yml .githu
 `build-for-testing` exited 0. Both diff checks were clean, and the workflow comparison exited 0. Runtime XCTest execution remains unavailable in this workspace; no further runtime attempt was made after the handoff request.
 
 Status: `DONE_WITH_CONCERNS` — implementation and test compilation are verified, but XCTest assertions could not be executed in the simulator environment.
+
+## Fix round 5 — final HealthKit privacy-state recovery
+
+### Authorized empty history keeps Connect available
+
+`AppStore.shouldShowConnectAppleHealth` now keeps Connect Apple Health visible when the write authorization state is `.authorized`, the request flag is already persisted, and the refreshed visible snapshot is `.healthKit` with zero entries. This is a conservative recovery affordance: it does not claim that HealthKit read access was denied, because Apple does not expose that state directly. The existing paths remain unchanged: local fallback after a requested sync maps to Settings, denied maps to Settings, unavailable has no action, and visible HealthKit history has no Connect action. RootView already routes this computed decision to the Connect control.
+
+New regression coverage:
+
+- `testAuthorizedEmptyHealthKitHistoryKeepsConnectActionAvailableAfterRefresh`
+
+The existing `testCancelledAuthorizationKeepsConnectActionAvailableAfterRequestWasPersisted` remains in place.
+
+### Verification commands and output
+
+```text
+rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -derivedDataPath .context/DerivedData-health-history-fix5-final
+rtk git diff --check
+```
+
+`build-for-testing` exited 0 with `** TEST BUILD SUCCEEDED **`; `git diff --check` produced no output. Per the fix-worker handoff, no runtime XCTest command was rerun after the simulator test invocation stalled and was stopped. Status: `DONE_WITH_CONCERNS` — the app and test target compile, while runtime assertions remain unavailable in this simulator environment.

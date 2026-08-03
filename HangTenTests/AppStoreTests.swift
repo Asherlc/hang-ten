@@ -147,6 +147,27 @@ final class AppStoreTests: XCTestCase {
         XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
     }
 
+    func testAuthorizedEmptyHealthKitHistoryKeepsConnectActionAvailableAfterRefresh() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+
+        let healthStore = FakeWorkoutHealthStore(fetchResult: .success([]))
+        healthStore.authorizationState = .authorized
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        appStore.refreshHealthAuthorization()
+        waitUntil { appStore.workoutHistory.source == .healthKit }
+
+        XCTAssertTrue(appStore.workoutHistory.entries.isEmpty)
+        XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
+    }
+
     func testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
