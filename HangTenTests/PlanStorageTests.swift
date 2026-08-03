@@ -311,6 +311,16 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testAbrahangsSecondGripUsesMatchedNineteenMillimeterHalfCrimpEdges() throws {
+        let step = try XCTUnwrap(
+            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
+        )
+
+        XCTAssertEqual(step.title, "Abrahang · 19 mm half crimp")
+        XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
+        XCTAssertEqual(step.gripType, .halfCrimp)
+    }
+
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() {
         let minuteEight = LegacyPlanSeedCatalog.metoliusAdvanced.steps[7]
 
