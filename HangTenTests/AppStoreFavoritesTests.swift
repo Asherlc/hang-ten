@@ -2,6 +2,7 @@ import Combine
 import XCTest
 @testable import HangTen
 
+@MainActor
 final class AppStoreFavoritesTests: XCTestCase {
     func testTogglePersistsAcrossStoreInstancesAndCanRemoveFavorite() {
         let defaults = UserDefaults(suiteName: "AppStoreFavoritesTests.toggle")!
