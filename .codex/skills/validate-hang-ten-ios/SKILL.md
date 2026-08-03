@@ -47,9 +47,15 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
 
 Every validation exit trap must also remove the exact workspace-local artifacts
 created by its recipe (`.context/DerivedData`, `.context/workout-raw.png`, and
-`.context/workout-landscape.png`). If archive cleanup fails, retain both pending
-and owned simulator manifests for a retry; preserve the original command status
-and propagate cleanup failure only when the command itself succeeded.
+`.context/workout-landscape.png`). The trap removes those exact workspace
+artifacts regardless of simulator cleanup status. If archive cleanup fails,
+retain both pending and owned simulator manifests for a retry; preserve the
+original command status and propagate cleanup failure only when the command
+itself succeeded.
+
+When practical, validate the pending-append failure path by forcing that append
+to fail and verifying immediate status-1 exit without an owned-manifest write;
+the EXIT trap must still use the validated in-memory UUID fallback.
 
 Never purge `/Users/asherlc/Library/Developer/Xcode/DerivedData` from an agent
 workflow. That one-time global purge is human-operator-only.

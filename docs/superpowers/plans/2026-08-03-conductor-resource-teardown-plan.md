@@ -361,6 +361,7 @@ if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
 else
   printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
   pending_simulator_uuid="$simulator_uuid"
+  exit 1
 fi
 if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
@@ -374,6 +375,13 @@ Keep every readiness, build, install, launch, screenshot, and runtime-service op
 If archive cleanup fails, retain the pending and owned manifests for retry and
 preserve the original command status; propagate cleanup failure only when the
 command itself succeeded.
+
+The exit trap always removes the exact workspace artifacts listed above. Only
+pending and owned simulator manifests are retained when simulator cleanup
+fails, so archive can retry.
+
+This supersedes any reading that workspace artifacts are retained on cleanup
+failure: only simulator manifests are retry state.
 
 - [ ] **Step 3: Update the README build command**
 

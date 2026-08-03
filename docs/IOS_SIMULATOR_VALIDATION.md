@@ -147,6 +147,7 @@ if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
 else
   printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
   pending_simulator_uuid="$simulator_uuid"
+  exit 1
 fi
 if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
@@ -164,9 +165,10 @@ until archive cleanup succeeds.
 
 The trap removes only the exact workspace-local artifacts created by this guide:
 `.context/DerivedData`, `.context/workout-raw.png`, and
-`.context/workout-landscape.png`. If archive cleanup fails, both simulator
-manifests remain in place for a retry, and the original command status is
-preserved.
+`.context/workout-landscape.png`. The trap removes those exact artifacts
+regardless of simulator cleanup status. If simulator archive cleanup fails,
+both simulator manifests remain in place for a retry, and the original command
+status is preserved.
 
 ## Boot and wait for real readiness
 

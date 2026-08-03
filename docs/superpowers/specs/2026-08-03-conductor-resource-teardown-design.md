@@ -79,9 +79,10 @@ Every validation-created simulator must:
    the pending and owned manifests remain for archive retry.
 
 Derived data, screenshots, logs, and temporary review artifacts remain under
-`.context`, which is workspace-local and is removed with the archived
-worktree. Agents must not use the shared default DerivedData location for
-workspace validation.
+`.context`. The exit trap always removes the exact artifacts created by the
+recipe; only pending and owned simulator manifests are retained when simulator
+cleanup fails, so archive can retry. Agents must not use the shared default
+DerivedData location for workspace validation.
 
 ### Conductor lifecycle
 

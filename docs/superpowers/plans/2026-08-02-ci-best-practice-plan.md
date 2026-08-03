@@ -275,6 +275,7 @@ if printf '%s\n' "$simulator_udid" >> "$pending_manifest"; then
 else
   printf 'failed to write pending simulator record for %s\n' "$simulator_udid" >&2
   pending_simulator_udid="$simulator_udid"
+  exit 1
 fi
 if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
   printf 'failed to write simulator manifest for %s\n' "$simulator_udid" >&2
