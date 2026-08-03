@@ -100,6 +100,8 @@ jobs:
             -scheme HangTen \
             -configuration Debug \
             -destination "platform=iOS Simulator,name=iPhone 17" \
+            -parallel-testing-enabled NO \
+            -maximum-parallel-testing-workers 1 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
             CODE_SIGNING_ALLOWED=NO \
