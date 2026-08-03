@@ -27,6 +27,8 @@
 		AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* WorkoutStepPickerView.swift */; };
 		AA0000000000000000000019 /* WorkoutSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* WorkoutSegmentTests.swift */; };
 		AA0000000000000000000020 /* PlanStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* PlanStorageTests.swift */; };
+		AA0000000000000000000021 /* WorkoutActivityRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* WorkoutActivityRecording.swift */; };
+		AA0000000000000000000022 /* WorkoutActivityRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		BB0000000000000000000021 /* WorkoutStepPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepPickerView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000022 /* WorkoutSegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000023 /* PlanStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorageTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000024 /* WorkoutActivityRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecording.swift; sourceTree = "<group>"; };
+		BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecordingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +127,7 @@
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000020 /* WorkoutTimeline.swift */,
+				BB0000000000000000000024 /* WorkoutActivityRecording.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -156,6 +161,7 @@
 				BB0000000000000000000019 /* WorkoutTimelineTests.swift */,
 				BB0000000000000000000022 /* WorkoutSegmentTests.swift */,
 				BB0000000000000000000023 /* PlanStorageTests.swift */,
+				BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -274,6 +280,7 @@
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
 				AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */,
 				AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */,
+				AA0000000000000000000021 /* WorkoutActivityRecording.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +291,7 @@
 				AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */,
 				AA0000000000000000000019 /* WorkoutSegmentTests.swift in Sources */,
 				AA0000000000000000000020 /* PlanStorageTests.swift in Sources */,
+				AA0000000000000000000022 /* WorkoutActivityRecordingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
