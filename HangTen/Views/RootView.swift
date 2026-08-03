@@ -860,14 +860,34 @@ private struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+enum WorkoutCountdownKind: Equatable {
+    case initial
+    case skip
+}
+
 enum WorkoutSessionPolicy {
+    static let initialCountdownDuration: TimeInterval = 3
+    static let skipCountdownDuration: TimeInterval = 5
+
     static func isFirstStart(routineStartedAt: Date?) -> Bool {
         routineStartedAt == nil
     }
 
+    static func startDate(for kind: WorkoutCountdownKind, now: Date) -> Date {
+        let duration = kind == .initial
+            ? initialCountdownDuration
+            : skipCountdownDuration
+        return now.addingTimeInterval(duration)
+    }
+
+    static func countdownRemaining(startedAt: Date?, now: Date) -> Int {
+        guard let startedAt, startedAt > now else { return 0 }
+        return max(1, Int(ceil(startedAt.timeIntervalSince(now))))
+    }
+
     static func runStartDate(routineStartedAt: Date?, now: Date) -> Date {
         isFirstStart(routineStartedAt: routineStartedAt)
-            ? now.addingTimeInterval(3)
+            ? startDate(for: .initial, now: now)
             : now
     }
 

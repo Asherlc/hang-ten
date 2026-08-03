@@ -102,6 +102,47 @@ final class WorkoutTimelineTests: XCTestCase {
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
+    func testCountdownDurationsKeepInitialStartAtThreeAndSkipStartAtFive() {
+        let now = Date(timeIntervalSinceReferenceDate: 2_000)
+
+        XCTAssertEqual(
+            WorkoutSessionPolicy.startDate(for: .initial, now: now),
+            now.addingTimeInterval(3)
+        )
+        XCTAssertEqual(
+            WorkoutSessionPolicy.startDate(for: .skip, now: now),
+            now.addingTimeInterval(5)
+        )
+    }
+
+    func testCountdownRemainingUsesCeilingAndReachesZeroAtStart() {
+        let now = Date(timeIntervalSinceReferenceDate: 2_000)
+        let start = now.addingTimeInterval(5)
+
+        XCTAssertEqual(
+            WorkoutSessionPolicy.countdownRemaining(startedAt: start, now: now),
+            5
+        )
+        XCTAssertEqual(
+            WorkoutSessionPolicy.countdownRemaining(
+                startedAt: start,
+                now: now.addingTimeInterval(1.1)
+            ),
+            4
+        )
+        XCTAssertEqual(
+            WorkoutSessionPolicy.countdownRemaining(
+                startedAt: start,
+                now: start
+            ),
+            0
+        )
+        XCTAssertEqual(
+            WorkoutSessionPolicy.countdownRemaining(startedAt: nil, now: now),
+            0
+        )
+    }
+
     func testPausedSessionAtStepOneIsNotAFirstStartAndResumesImmediately() {
         let originalRoutineStart = Date(timeIntervalSinceReferenceDate: 1_000)
         let resumedAt = Date(timeIntervalSinceReferenceDate: 1_120)
