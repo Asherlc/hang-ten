@@ -42,6 +42,27 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [newer, older])
     }
 
+    func testUnmarkedStoreRetriesMigrationFromValidLegacyHistory() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
+        let newer = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        defaults.set(try JSONEncoder().encode([older, newer]), forKey: "workout.sessionHistory")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try JSONEncoder().encode(newer).write(
+            to: directory.appendingPathComponent("session-\(newer.id.uuidString).json")
+        )
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [newer, older])
+        XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
+        XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), [
+            "session-\(newer.id.uuidString).json",
+            "session-\(older.id.uuidString).json"
+        ].sorted())
+    }
+
     func testAppendWritesOneRoundTrippableFilePerSession() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
@@ -54,6 +75,19 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(files.map(\.lastPathComponent), ["session-\(record.id.uuidString).json"])
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: Data(contentsOf: files[0])), record)
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [record])
+    }
+
+    func testAppendCompletesSuccessfullyAfterWriting() {
+        let expectation = expectation(description: "append completion")
+        let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+
+        store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
+            if case .success = result {
+                expectation.fulfill()
+            }
+        }
+
+        wait(for: [expectation], timeout: 2)
     }
 
     func testAppendUsesStableIDOrderingWhenRecordedDatesMatch() {
@@ -80,6 +114,24 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(store.sessions.last?.recordedAt, Date(timeIntervalSince1970: 1))
         store.flush()
         XCTAssertEqual(try sessionFiles().count, 20)
+    }
+
+    func testAppendDoesNotPersistARecordTrimmedFromRetainedHistory() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        for index in 1...20 {
+            store.append(session(id: String(format: "00000000-0000-0000-0000-%012d", index), recordedAt: TimeInterval(index)))
+        }
+        store.flush()
+
+        let oldRecord = session(id: "00000000-0000-0000-0000-000000000000", recordedAt: 0)
+        store.append(oldRecord)
+        store.flush()
+
+        XCTAssertFalse(try sessionFiles().contains {
+            $0.lastPathComponent == "session-\(oldRecord.id.uuidString).json"
+        })
+        XCTAssertFalse(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.contains(oldRecord))
     }
 
     func testRemoveDeletesSavedSessionAndPersistsTheChange() throws {

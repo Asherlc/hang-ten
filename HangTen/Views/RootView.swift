@@ -12,6 +12,7 @@ struct MotherboardWorkoutPreparationHandoff {
 }
 
 struct RootView: View {
+    @EnvironmentObject private var store: AppStore
     @State private var selectedTab: Int = {
         #if DEBUG
         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" ||
@@ -47,6 +48,12 @@ struct RootView: View {
                 .tag(2)
         }
         .tint(.hangGreenDark)
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+			store.flushSessionPersistence()
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+			store.flushSessionPersistence()
+		}
         .onAppear {
             #if DEBUG
             let environment = ProcessInfo.processInfo.environment
@@ -1610,35 +1617,44 @@ struct ProgressDashboardView: View {
     }
 
 	private var sessionHistoryCard: some View {
-		NavigationLink {
-			WorkoutSessionHistoryView(
-				sessions: store.sessionHistory,
-				unit: motherboardSettingsStore.forceUnit
-			)
-		} label: {
-			HStack(spacing: 14) {
-				Image(systemName: "clock.arrow.circlepath")
-					.font(.system(size: 18, weight: .bold))
-					.foregroundStyle(Color.hangGreenDark)
-					.frame(width: 36, height: 36)
-					.background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+		VStack(alignment: .leading, spacing: 10) {
+			NavigationLink {
+				WorkoutSessionHistoryView(
+					sessions: store.sessionHistory,
+					unit: motherboardSettingsStore.forceUnit
+				)
+			} label: {
+				HStack(spacing: 14) {
+					Image(systemName: "clock.arrow.circlepath")
+						.font(.system(size: 18, weight: .bold))
+						.foregroundStyle(Color.hangGreenDark)
+						.frame(width: 36, height: 36)
+						.background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
 
-				VStack(alignment: .leading, spacing: 3) {
-					Text("Session history")
-						.font(.system(size: 15, weight: .bold, design: .rounded))
-						.foregroundStyle(Color.hangInk)
-					Text(sessionHistoryDetail)
-						.font(.system(size: 12, weight: .medium, design: .rounded))
+					VStack(alignment: .leading, spacing: 3) {
+						Text("Session history")
+							.font(.system(size: 15, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+						Text(sessionHistoryDetail)
+							.font(.system(size: 12, weight: .medium, design: .rounded))
+							.foregroundStyle(Color.hangMuted)
+							.lineLimit(1)
+					}
+					Spacer()
+					Image(systemName: "chevron.right")
+						.font(.system(size: 12, weight: .bold))
 						.foregroundStyle(Color.hangMuted)
-						.lineLimit(1)
 				}
-				Spacer()
-				Image(systemName: "chevron.right")
-					.font(.system(size: 12, weight: .bold))
-					.foregroundStyle(Color.hangMuted)
+			}
+			.buttonStyle(.plain)
+
+			if let error = store.sessionPersistenceError {
+				Label(error, systemImage: "exclamationmark.triangle.fill")
+					.font(.system(size: 12, weight: .semibold, design: .rounded))
+					.foregroundStyle(Color.holdActive)
+					.fixedSize(horizontal: false, vertical: true)
 			}
 		}
-		.buttonStyle(.plain)
 		.hangCard()
 	}
 

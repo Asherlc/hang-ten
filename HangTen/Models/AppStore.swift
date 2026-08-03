@@ -7,6 +7,7 @@ final class AppStore: ObservableObject {
     @Published var sessionsCompleted = 0
     @Published var lastSessionTitle: String?
 	@Published private(set) var sessionHistory: [WorkoutSessionRecord]
+	@Published private(set) var sessionPersistenceError: String?
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
@@ -31,6 +32,7 @@ final class AppStore: ObservableObject {
 		sessionHistory = loadedSessions
 		sessionsCompleted = loadedSessions.count
 		lastSessionTitle = loadedSessions.first?.planTitle
+		sessionPersistenceError = workoutSessionStore.persistenceError
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
@@ -109,7 +111,11 @@ final class AppStore: ObservableObject {
 		session: WorkoutSessionRecord? = nil
 	) {
 		if let session {
-			workoutSessionStore.append(session)
+			workoutSessionStore.append(session) { [weak self] result in
+				Task { @MainActor [weak self] in
+					self?.recordSessionPersistence(result)
+				}
+			}
 			sessionHistory = workoutSessionStore.sessions
 		}
         sessionsCompleted += 1
@@ -131,6 +137,14 @@ final class AppStore: ObservableObject {
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
+	func flushSessionPersistence() {
+		workoutSessionStore.flush { [weak self] result in
+			Task { @MainActor [weak self] in
+				self?.recordSessionPersistence(result)
+			}
+		}
+	}
+
 	func requestHealthAuthorization() {
 		healthAuthorizationError = nil
 		healthKitService.requestAuthorization { [weak self] state, error in
@@ -138,6 +152,15 @@ final class AppStore: ObservableObject {
 				self?.healthAuthorizationState = state
 				self?.healthAuthorizationError = error?.localizedDescription
 			}
+		}
+	}
+
+	private func recordSessionPersistence(_ result: Result<Void, Error>) {
+		switch result {
+		case .success:
+			sessionPersistenceError = nil
+		case .failure(let error):
+			sessionPersistenceError = "Session history could not be saved: \(error.localizedDescription)"
 		}
 	}
 }

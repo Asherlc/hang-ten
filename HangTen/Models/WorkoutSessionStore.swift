@@ -2,13 +2,28 @@ import Foundation
 
 protocol WorkoutSessionStoring: AnyObject {
     var sessions: [WorkoutSessionRecord] { get }
-    func append(_ session: WorkoutSessionRecord)
-    func remove(_ session: WorkoutSessionRecord)
+    var persistenceError: String? { get }
+    func append(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
+    func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
+    func flush()
+    func flush(completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+extension WorkoutSessionStoring {
+    func append(_ session: WorkoutSessionRecord) {
+        append(session) { _ in }
+    }
+
+    func remove(_ session: WorkoutSessionRecord) {
+        remove(session) { _ in }
+    }
+
 }
 
 final class WorkoutSessionStore: WorkoutSessionStoring {
     private enum Key {
         static let sessionHistory = "workout.sessionHistory"
+        static let legacyMigrationComplete = "legacy-migration-complete"
     }
 
     private static let maximumSessionCount = 20
@@ -48,17 +63,14 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         sessions = loaded.sessions
         persistenceErrorStorage = loaded.errorDescription
 
-        guard !loaded.fileStoreExists else { return }
         let legacySessions = Self.loadLegacy(from: defaults, decoder: decoder)
-        sessions = legacySessions
-        if legacySessions.isEmpty {
-            defaults.removeObject(forKey: Key.sessionHistory)
-        } else {
+        if !fileManager.fileExists(atPath: migrationMarkerURL.path), let legacySessions {
+            sessions = legacySessions
             migrateLegacyHistory(legacySessions)
         }
     }
 
-    func append(_ session: WorkoutSessionRecord) {
+    func append(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
         let previousSessions = sessions
         sessions.removeAll { $0.id == session.id }
         sessions.append(session)
@@ -66,13 +78,35 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         sessions = Array(sessions.prefix(Self.maximumSessionCount))
 
         let retainedIDs = Set(sessions.map(\.id))
-        let removedIDs = Set(previousSessions.map(\.id)).subtracting(retainedIDs)
-        enqueueWrite(sessions: [session], removing: removedIDs)
+        var removedIDs = Set(previousSessions.map(\.id)).subtracting(retainedIDs)
+        if !retainedIDs.contains(session.id) {
+            removedIDs.insert(session.id)
+        }
+        enqueueWrite(
+            sessions: retainedIDs.contains(session.id) ? [session] : [],
+            retainedIDs: retainedIDs,
+            removing: removedIDs,
+            completion: completion
+        )
     }
 
-    func remove(_ session: WorkoutSessionRecord) {
+    func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
         sessions.removeAll { $0.id == session.id }
-        enqueueWrite(sessions: [], removing: [session.id])
+        enqueueWrite(
+            sessions: [],
+            retainedIDs: Set(sessions.map(\.id)),
+            removing: [session.id],
+            completion: completion
+        )
+    }
+
+    func flush(completion: @escaping (Result<Void, Error>) -> Void) {
+        flush()
+        if let persistenceError {
+            completion(.failure(PersistenceFailure(message: persistenceError)))
+        } else {
+            completion(.success(()))
+        }
     }
 
     func flush() {
@@ -113,10 +147,10 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         }
     }
 
-    private static func loadLegacy(from defaults: UserDefaults, decoder: JSONDecoder) -> [WorkoutSessionRecord] {
+    private static func loadLegacy(from defaults: UserDefaults, decoder: JSONDecoder) -> [WorkoutSessionRecord]? {
         guard let data = defaults.data(forKey: Key.sessionHistory),
               let storedSessions = try? decoder.decode([WorkoutSessionRecord].self, from: data) else {
-            return []
+            return nil
         }
         return Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
     }
@@ -129,13 +163,23 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     }
 
     private func migrateLegacyHistory(_ sessions: [WorkoutSessionRecord]) {
-        enqueueWrite(sessions: sessions, removing: [], removeLegacyHistoryOnSuccess: true)
+        enqueueWrite(
+            sessions: sessions,
+            retainedIDs: Set(sessions.map(\.id)),
+            removing: [],
+            markLegacyMigrationComplete: true,
+            removeLegacyHistoryOnSuccess: true,
+            completion: { _ in }
+        )
     }
 
     private func enqueueWrite(
         sessions sessionsToWrite: [WorkoutSessionRecord],
+        retainedIDs: Set<UUID>,
         removing idsToRemove: Set<UUID>,
-        removeLegacyHistoryOnSuccess: Bool = false
+        markLegacyMigrationComplete: Bool = false,
+        removeLegacyHistoryOnSuccess: Bool = false,
+        completion: @escaping (Result<Void, Error>) -> Void
     ) {
         persistenceQueue.async { [self] in
             do {
@@ -149,13 +193,30 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                     guard fileManager.fileExists(atPath: fileURL.path) else { continue }
                     try fileManager.removeItem(at: fileURL)
                 }
+                try removeUnretainedSessionFiles(except: retainedIDs)
+                if markLegacyMigrationComplete {
+                    try Data().write(to: migrationMarkerURL, options: .atomic)
+                }
                 if removeLegacyHistoryOnSuccess {
                     defaults.removeObject(forKey: Key.sessionHistory)
                 }
                 setPersistenceError(nil)
+                completion(.success(()))
             } catch {
                 setPersistenceError("Could not save workout sessions: \(error.localizedDescription)")
+                completion(.failure(error))
             }
+        }
+    }
+
+    private func removeUnretainedSessionFiles(except retainedIDs: Set<UUID>) throws {
+        let files = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        for file in files where file.pathExtension == "json" {
+            let filename = file.deletingPathExtension().lastPathComponent
+            guard filename.hasPrefix("session-"),
+                  let id = UUID(uuidString: String(filename.dropFirst("session-".count))),
+                  !retainedIDs.contains(id) else { continue }
+            try fileManager.removeItem(at: file)
         }
     }
 
@@ -163,9 +224,19 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         directory.appendingPathComponent("session-\(id.uuidString).json")
     }
 
+    private var migrationMarkerURL: URL {
+        directory.appendingPathComponent(Key.legacyMigrationComplete)
+    }
+
     private func setPersistenceError(_ error: String?) {
         persistenceErrorLock.lock()
         persistenceErrorStorage = error
         persistenceErrorLock.unlock()
+    }
+
+    private struct PersistenceFailure: LocalizedError {
+        let message: String
+
+        var errorDescription: String? { message }
     }
 }

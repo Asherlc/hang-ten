@@ -1,11 +1,25 @@
 import XCTest
+import Combine
 @testable import HangTen
 
 @MainActor
 final class AppStoreTests: XCTestCase {
+    private var directory: URL!
+
+    override func setUp() {
+        super.setUp()
+        directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("AppStoreTests-\(UUID().uuidString)", isDirectory: true)
+    }
+
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: directory)
+        super.tearDown()
+    }
+
     func testLaunchRestoresDashboardCountersFromNewestSavedHistory() {
         let defaults = makeDefaults()
-        let sessionStore = WorkoutSessionStore(defaults: defaults)
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         let older = workoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planTitle: "Older plan",
@@ -32,7 +46,7 @@ final class AppStoreTests: XCTestCase {
 
     func testCompletionPersistsSuppliedRecordAndExposesSessionHistory() {
         let defaults = makeDefaults()
-        let sessionStore = WorkoutSessionStore(defaults: defaults)
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         let record = workoutSessionRecord()
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
@@ -55,7 +69,7 @@ final class AppStoreTests: XCTestCase {
 
     func testCompletionWithoutRecordPreservesExistingHistory() {
         let defaults = makeDefaults()
-        let sessionStore = WorkoutSessionStore(defaults: defaults)
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         let existingRecord = workoutSessionRecord()
         sessionStore.append(existingRecord)
         let store = AppStore(
@@ -74,6 +88,31 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(sessionStore.sessions, [existingRecord])
         XCTAssertEqual(store.sessionsCompleted, 2)
         XCTAssertEqual(store.lastSessionTitle, PlanCatalog.metoliusTenMinute.title)
+    }
+
+    func testCompletionExposesSessionPersistenceFailure() async {
+        let sessionStore = FailingWorkoutSessionStore()
+        let store = AppStore(
+            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
+            workoutSessionStore: sessionStore
+        )
+        let errorUpdated = expectation(description: "persistence error updated")
+        let observation = store.$sessionPersistenceError.dropFirst().sink { error in
+            guard error == "Session history could not be saved: Storage is unavailable." else { return }
+            errorUpdated.fulfill()
+        }
+
+        let record = workoutSessionRecord()
+        store.markSessionComplete(
+            PlanCatalog.metoliusTenMinute,
+            startDate: record.startDate,
+            endDate: record.endDate,
+            session: record
+        )
+
+        await fulfillment(of: [errorUpdated], timeout: 2)
+        withExtendedLifetime(observation) {}
     }
 
     private func makeDefaults() -> UserDefaults {
@@ -100,6 +139,37 @@ final class AppStoreTests: XCTestCase {
             steps: []
         )
     }
+}
+
+private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
+    private struct Failure: LocalizedError {
+        var errorDescription: String? { "Storage is unavailable." }
+    }
+
+    private(set) var sessions: [WorkoutSessionRecord] = []
+    var persistenceError: String? { nil }
+
+    func append(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.append(session)
+        completion(.failure(Failure()))
+    }
+
+    func remove(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.removeAll { $0.id == session.id }
+        completion(.failure(Failure()))
+    }
+
+    func flush(completion: @escaping (Result<Void, Error>) -> Void) {
+        completion(.failure(Failure()))
+    }
+
+    func flush() {}
 }
 
 @MainActor
