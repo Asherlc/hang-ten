@@ -1573,7 +1573,7 @@ struct ProgressDashboardView: View {
 		if store.healthAuthorizationState == .denied {
 			return .settings
 		}
-		if !store.hasRequestedHealthAuthorization {
+		if store.shouldShowConnectAppleHealth {
 			return .connect
 		}
 		if store.workoutHistory.source == .localFallback {

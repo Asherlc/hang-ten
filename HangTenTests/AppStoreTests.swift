@@ -2,7 +2,68 @@ import XCTest
 @testable import HangTen
 
 final class AppStoreTests: XCTestCase {
-    func testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore() {
+    func testInitializationHydratesPersistedLocalHistoryWithoutHealthKitRead() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let local = PendingWorkoutRecord(
+            id: UUID(),
+            planTitle: "Persisted Plan",
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600),
+            healthUploadAttempted: false,
+            healthWorkoutUUID: nil
+        )
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        historyStore.replace([local])
+        let healthStore = FakeWorkoutHealthStore()
+
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        XCTAssertEqual(appStore.workoutHistory.source, .localFallback)
+        XCTAssertEqual(appStore.workoutHistory.entries.map(\.id), [local.id])
+        XCTAssertEqual(appStore.workoutHistory.latestSessionTitle, "Persisted Plan")
+        XCTAssertEqual(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+    }
+
+    func testRefreshBeforeConnectUsesLocalFallbackWithoutReadingOrMigrating() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let local = PendingWorkoutRecord(
+            id: UUID(),
+            planTitle: "Waiting Plan",
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600),
+            healthUploadAttempted: false,
+            healthWorkoutUUID: nil
+        )
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        historyStore.replace([local])
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        appStore.refreshHealthAuthorization()
+        waitUntil { appStore.workoutHistory.sessionCount == 1 }
+
+        XCTAssertEqual(appStore.workoutHistory.source, .localFallback)
+        XCTAssertEqual(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+        XCTAssertFalse(historyStore.load()[0].healthUploadAttempted)
+    }
+
+    func testCompletionBeforeConnectPersistsLocalFallbackWithoutHealthKitSave() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -11,7 +72,93 @@ final class AppStoreTests: XCTestCase {
         let healthStore = FakeWorkoutHealthStore()
         let appStore = AppStore(
             healthKitService: healthStore,
-            workoutHistoryStore: historyStore
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        appStore.markSessionComplete(
+            PlanCatalog.all[0],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+        )
+        waitUntil { appStore.workoutHistory.sessionCount == 1 }
+
+        XCTAssertEqual(appStore.workoutHistory.source, .localFallback)
+        XCTAssertEqual(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+        XCTAssertEqual(historyStore.load().count, 1)
+        XCTAssertFalse(historyStore.load()[0].healthUploadAttempted)
+    }
+
+    func testConnectEnablesHealthKitRefreshAndPendingMigration() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let local = PendingWorkoutRecord(
+            id: UUID(),
+            planTitle: "Migration Plan",
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600),
+            healthUploadAttempted: false,
+            healthWorkoutUUID: nil
+        )
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        historyStore.replace([local])
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        appStore.refreshHealthAuthorization()
+        waitUntil { appStore.workoutHistory.sessionCount == 1 }
+        XCTAssertEqual(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertEqual(healthStore.requestCallCount, 1)
+        XCTAssertGreaterThan(healthStore.fetchCallCount, 0)
+        XCTAssertTrue(defaults.bool(forKey: "HangTen.healthAuthorizationRequested.v1"))
+    }
+
+    func testCancelledAuthorizationKeepsConnectActionAvailableAfterRequestWasPersisted() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.requestCallCount == 1 }
+
+        XCTAssertEqual(appStore.healthAuthorizationState, .notDetermined)
+        XCTAssertTrue(appStore.hasRequestedHealthAuthorization)
+        XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
+    }
+
+    func testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
         )
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
         let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
@@ -38,6 +185,7 @@ final class AppStoreTests: XCTestCase {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         historyStore.replace([
             PendingWorkoutRecord(
@@ -76,6 +224,7 @@ final class AppStoreTests: XCTestCase {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         let healthStore = FakeWorkoutHealthStore(saveResult: .failure(FakeHealthError.failed))
         let appStore = AppStore(
@@ -101,6 +250,7 @@ final class AppStoreTests: XCTestCase {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         let healthStore = FakeWorkoutHealthStore(
             saveResult: .failure(FakeHealthError.failed),
@@ -147,6 +297,7 @@ final class AppStoreTests: XCTestCase {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         let healthStore = FakeWorkoutHealthStore(saveResult: .failure(FakeHealthError.failed))
         let appStore = AppStore(
@@ -208,6 +359,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     var saveResult: Result<UUID, Error>
     var deferSave: Bool
     private(set) var savedIDs: [UUID] = []
+    private(set) var requestCallCount = 0
+    private(set) var fetchCallCount = 0
     private(set) var saveCallCount = 0
     private var saveCompletions: [(Result<UUID, Error>) -> Void] = []
 
@@ -224,12 +377,14 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     func requestAuthorization(
         completion: @escaping (HealthAuthorizationState, Error?) -> Void
     ) {
+        requestCallCount += 1
         completion(authorizationState, nil)
     }
 
     func fetchHangTenWorkouts(
         completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
     ) {
+        fetchCallCount += 1
         completion(fetchResult)
     }
 

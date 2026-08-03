@@ -132,6 +132,36 @@ final class WorkoutHistoryTests: XCTestCase {
         XCTAssertEqual(snapshot.latestSessionTitle, "Pending Plan")
     }
 
+    func testSnapshotDeduplicatesHealthRecordsBySessionIDKeepingNewestRecord() {
+        let sessionID = UUID(uuidString: "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")!
+        let older = healthRecord
+            .with(
+                id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!,
+                startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+                endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+            )
+            .with(sessionID: sessionID)
+        let newer = healthRecord
+            .with(
+                id: UUID(uuidString: "22222222-2222-2222-2222-222222222222")!,
+                startDate: Date(timeIntervalSinceReferenceDate: 2_000),
+                endDate: Date(timeIntervalSinceReferenceDate: 2_600)
+            )
+            .with(sessionID: sessionID)
+            .with(planTitle: "Newest Plan")
+
+        let snapshot = WorkoutHistoryMatcher.snapshot(
+            healthRecords: [older, newer],
+            localRecords: [],
+            healthQuerySucceeded: true,
+            healthDataAvailable: true
+        )
+
+        XCTAssertEqual(snapshot.entries.count, 1)
+        XCTAssertEqual(snapshot.entries.first?.id, newer.id)
+        XCTAssertEqual(snapshot.latestSessionTitle, "Newest Plan")
+    }
+
     func testUnavailableHealthStoreKeepsLocalHistory() {
         let local = PendingWorkoutRecord(
             id: UUID(), planTitle: "Pending Plan", startDate: startDate, endDate: endDate,

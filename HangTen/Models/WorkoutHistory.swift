@@ -93,7 +93,14 @@ enum WorkoutHistoryMatcher {
         let acceptedHealthRecords = healthRecords.filter(\.isHangTen)
         let sortedHealthRecords = acceptedHealthRecords.sorted(by: newestFirst)
         var seenHealthIDs = Set<UUID>()
-        let uniqueHealthRecords = sortedHealthRecords.filter { seenHealthIDs.insert($0.id).inserted }
+        var seenSessionIDs = Set<UUID>()
+        let uniqueHealthRecords = sortedHealthRecords.filter { record in
+            guard seenHealthIDs.insert(record.id).inserted else { return false }
+            if let sessionID = record.sessionID {
+                guard seenSessionIDs.insert(sessionID).inserted else { return false }
+            }
+            return true
+        }
         let healthEntries = uniqueHealthRecords.map(entry(from:))
 
         let unmatchedLocalEntries = localRecords

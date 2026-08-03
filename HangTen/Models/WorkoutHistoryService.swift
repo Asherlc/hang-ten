@@ -1,22 +1,32 @@
 import Foundation
 
 final class WorkoutHistoryService {
-    private(set) var snapshot = WorkoutHistorySnapshot.empty
+    private(set) var snapshot: WorkoutHistorySnapshot
     private(set) var lastError: Error?
 
     private let healthStore: any WorkoutHealthStore
     private let persistence: any WorkoutHistoryPersistence
     private let synchronizationQueue = DispatchQueue(label: "com.hangten.workout-history")
 
+    private var healthKitSyncEnabled: Bool
     private var isSynchronizing = false
     private var completions: [() -> Void] = []
 
     init(
         healthStore: any WorkoutHealthStore,
-        persistence: any WorkoutHistoryPersistence
+        persistence: any WorkoutHistoryPersistence,
+        healthKitSyncEnabled: Bool = true
     ) {
         self.healthStore = healthStore
         self.persistence = persistence
+        self.healthKitSyncEnabled = healthKitSyncEnabled
+        snapshot = Self.localFallbackSnapshot(for: persistence.load())
+    }
+
+    func enableHealthKitSync() {
+        synchronizationQueue.sync {
+            healthKitSyncEnabled = true
+        }
     }
 
     func refresh(completion: @escaping () -> Void) {
@@ -55,13 +65,20 @@ final class WorkoutHistoryService {
 
         isSynchronizing = true
         lastError = nil
-        snapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
+        if healthKitSyncEnabled {
+            snapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
+        }
         synchronize()
     }
 
     private func synchronize() {
+        guard healthKitSyncEnabled else {
+            finish(with: Self.localFallbackSnapshot(for: persistence.load()))
+            return
+        }
+
         guard healthStore.isHealthDataAvailable else {
-            finish(with: fallbackSnapshot(for: persistence.load()))
+            finish(with: Self.localFallbackSnapshot(for: persistence.load()))
             return
         }
 
@@ -77,7 +94,7 @@ final class WorkoutHistoryService {
         switch result {
         case let .failure(error):
             lastError = error
-            finish(with: fallbackSnapshot(for: localRecords))
+            finish(with: Self.localFallbackSnapshot(for: localRecords))
 
         case let .success(healthRecords):
             let unresolvedRecords = localRecords.filter {
@@ -157,17 +174,20 @@ final class WorkoutHistoryService {
 
                 case let .failure(error):
                     self.lastError = error
-                    self.finish(with: self.fallbackSnapshot(for: localRecords))
+                    self.finish(with: Self.localFallbackSnapshot(for: localRecords))
                 }
             }
         }
     }
 
-    private func fallbackSnapshot(for records: [PendingWorkoutRecord]) -> WorkoutHistorySnapshot {
-        publishedSnapshot(
+    private static func localFallbackSnapshot(
+        for records: [PendingWorkoutRecord]
+    ) -> WorkoutHistorySnapshot {
+        WorkoutHistoryMatcher.snapshot(
             healthRecords: [],
             localRecords: records,
-            healthQuerySucceeded: false
+            healthQuerySucceeded: false,
+            healthDataAvailable: false
         )
     }
 

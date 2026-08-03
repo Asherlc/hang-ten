@@ -21,17 +21,26 @@ final class AppStore: ObservableObject {
 		defaults: UserDefaults = .standard
 	) {
 		self.healthKitService = healthKitService
+		self.defaults = defaults
+		let hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 		workoutHistoryService = WorkoutHistoryService(
 			healthStore: healthKitService,
-			persistence: workoutHistoryStore
+			persistence: workoutHistoryStore,
+			healthKitSyncEnabled: hasRequestedHealthAuthorization
 		)
-		self.defaults = defaults
 		healthAuthorizationState = healthKitService.authorizationState
-		hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
+		self.hasRequestedHealthAuthorization = hasRequestedHealthAuthorization
+		workoutHistory = workoutHistoryService.snapshot
 	}
 
 	var sessionsCompleted: Int { workoutHistory.sessionCount }
 	var lastSessionTitle: String? { workoutHistory.latestSessionTitle }
+
+	var shouldShowConnectAppleHealth: Bool {
+		guard healthAuthorizationState != .unavailable,
+			  healthAuthorizationState != .denied else { return false }
+		return healthAuthorizationState == .notDetermined || !hasRequestedHealthAuthorization
+	}
 
     var plans: [TrainingPlan] {
         PlanCatalog.all.filter { plan in
@@ -101,13 +110,15 @@ final class AppStore: ObservableObject {
         return board.holds.filter { $0.kind == kind }.map(\.id)
     }
 
-    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
+	func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
 		healthAuthorizationError = nil
 		preservesCompletionError = false
-		workoutHistory = WorkoutHistorySnapshot(
-			entries: workoutHistory.entries,
-			source: .syncing
-		)
+		if hasRequestedHealthAuthorization {
+			workoutHistory = WorkoutHistorySnapshot(
+				entries: workoutHistory.entries,
+				source: .syncing
+			)
+		}
 		workoutHistoryService.recordCompletion(
 			planTitle: plan.title,
 			startDate: startDate,
@@ -126,10 +137,12 @@ final class AppStore: ObservableObject {
 		if healthAuthorizationError == Self.completionSyncError {
 			preservesCompletionError = false
 		}
-		workoutHistory = WorkoutHistorySnapshot(
-			entries: workoutHistory.entries,
-			source: .syncing
-		)
+		if hasRequestedHealthAuthorization {
+			workoutHistory = WorkoutHistorySnapshot(
+				entries: workoutHistory.entries,
+				source: .syncing
+			)
+		}
 		workoutHistoryService.refresh { [weak self] in
 			self?.publishWorkoutHistory(errorContext: .refresh)
 		}
@@ -140,6 +153,7 @@ final class AppStore: ObservableObject {
 		preservesCompletionError = false
 		hasRequestedHealthAuthorization = true
 		defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+		workoutHistoryService.enableHealthKitSync()
 		healthKitService.requestAuthorization { [weak self] state, error in
 			DispatchQueue.main.async {
 				guard let self else { return }
