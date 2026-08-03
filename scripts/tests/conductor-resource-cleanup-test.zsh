@@ -31,7 +31,10 @@ case "$2" in
     iPhone 17 Pro (44444444-4444-4444-4444-444444444444) (Shutdown)
     Hang Ten Conductor alphabet Review (55555555-5555-5555-5555-555555555555) (Shutdown)
     Hang Ten Conductor alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
+    Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
+    Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
 DEVICES
+    print -r -- '    Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
     ;;
   shutdown)
     print -r -- "$2 $3" >> "$XCRUN_CALL_LOG"
@@ -138,6 +141,9 @@ assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_delete_f
 dry_run=$(run_cleanup prune)
 assert_contains 'Would delete Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333)' "$dry_run"
+assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
+assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
+assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
@@ -149,6 +155,9 @@ run_cleanup prune --delete
 prune_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_calls"
 assert_contains 'delete 33333333-3333-3333-3333-333333333333' "$prune_calls"
+assert_contains 'delete 77777777-7777-7777-7777-777777777777' "$prune_calls"
+assert_contains 'delete 88888888-8888-8888-8888-888888888888' "$prune_calls"
+assert_contains 'delete 99999999-9999-9999-9999-999999999999' "$prune_calls"
 assert_not_contains '22222222-2222-2222-2222-222222222222' "$prune_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$prune_calls"
 assert_not_contains '66666666-6666-6666-6666-666666666666' "$prune_calls"

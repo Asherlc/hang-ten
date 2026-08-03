@@ -9,6 +9,10 @@ is_uuid() {
   [[ "$1" =~ '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$' ]]
 }
 
+is_review_device_name() {
+  [[ "$1" =~ '^HangTen.* Review( [0-9]+)?$' || "$1" =~ '^Hang Ten.* Review( [0-9]+)?$' ]]
+}
+
 device_record_for_uuid() {
   local devices=$1 uuid=$2
 
@@ -16,6 +20,7 @@ device_record_for_uuid() {
     {
       line = $0
       sub(/^[[:space:]]+/, "", line)
+      sub(/[[:space:]]+$/, "", line)
       marker = " (" uuid ") ("
       if (index(line, marker) == 0) next
 
@@ -92,7 +97,7 @@ run_prune() {
   devices=$(xcrun simctl list devices)
   while IFS=$'\t' read -r device_name uuid device_state; do
     [[ "$device_state" == Shutdown ]] || continue
-    [[ "$device_name" == HangTen*' Review' || "$device_name" == 'Hang Ten'*' Review' ]] || continue
+    is_review_device_name "$device_name" || continue
 
     if [[ "$option" == --delete ]]; then
       if ! xcrun simctl delete "$uuid"; then
@@ -107,6 +112,7 @@ run_prune() {
       {
         line = $0
         sub(/^[[:space:]]+/, "", line)
+        sub(/[[:space:]]+$/, "", line)
         if (line !~ / \([^)]*\) \([^)]*\)$/) next
 
         name = line
