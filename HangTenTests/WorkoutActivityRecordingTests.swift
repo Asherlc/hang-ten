@@ -385,7 +385,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: endDate
         )
 
-        XCTAssertEqual(store.sessionsCompleted, 1)
+        XCTAssertEqual(store.sessionsCompleted, 0)
+        XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
         XCTAssertEqual(service.savedWorkouts.count, 1)
         XCTAssertEqual(service.savedWorkouts[0].title, "Plan")
@@ -453,7 +454,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
 
         wait(for: [errorSurfaced], timeout: 1)
-        XCTAssertEqual(store.sessionsCompleted, 1)
+        XCTAssertEqual(store.sessionsCompleted, 0)
+        XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
         XCTAssertTrue(service.savedWorkouts.isEmpty)
     }

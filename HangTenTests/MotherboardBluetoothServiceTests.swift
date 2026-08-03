@@ -1133,12 +1133,12 @@ private struct DeterministicSimulationFrames {
         expectedLeftShare: 0.5
     )
     let bodyweight = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [200, 200, 200, 200]),
+        data: deterministicRawFrame(adcValues: [20_000, 20_000, 20_000, 20_000]),
         expectedAggregateLoadKGF: 80,
         expectedLeftShare: 0.5
     )
     let active = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [300, 200, 300, 200]),
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 30_000, 20_000]),
         expectedAggregateLoadKGF: 100,
         expectedLeftShare: 0.6
     )

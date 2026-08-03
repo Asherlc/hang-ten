@@ -72,10 +72,10 @@ final class MotherboardProtocolTests: XCTestCase {
     }
 
     func testParserRejectsAndResetsAnOversizedUnterminatedFrame() {
-        var parser = MotherboardProtocolParser(maximumBufferSize: 8)
+        var parser = MotherboardProtocolParser(maximumBufferSize: 9)
         let date = Date(timeIntervalSince1970: 1)
 
-        XCTAssertEqual(parser.append(Data("123456789".utf8), receivedAt: date), [
+        XCTAssertEqual(parser.append(Data("1234567890".utf8), receivedAt: date), [
             .error("Motherboard response exceeded the receive buffer limit.")
         ])
         XCTAssertEqual(parser.append(Data("Stream:30\r\n".utf8), receivedAt: date), [

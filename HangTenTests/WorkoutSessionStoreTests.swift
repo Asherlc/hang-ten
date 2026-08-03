@@ -72,7 +72,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(store.sessions, [newer, older])
         XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
         XCTAssertEqual(try sessionFiles().count, 2)
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [newer, older])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [newer, older])
     }
 
     func testImmediateFlushWaitsForInitialLegacyMigration() throws {
@@ -123,7 +125,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.flush()
 
         XCTAssertEqual(store.sessions, [newerCopy])
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [newerCopy])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [newerCopy])
     }
 
     func testAppendWritesOneRoundTrippableFilePerSession() throws {
@@ -137,7 +141,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         let files = try sessionFiles()
         XCTAssertEqual(files.map(\.lastPathComponent), ["session-\(record.id.uuidString).json"])
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: Data(contentsOf: files[0])), record)
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [record])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [record])
     }
 
     func testAppendCompletesSuccessfullyAfterWriting() {
@@ -308,7 +314,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertFalse(try sessionFiles().contains {
             $0.lastPathComponent == "session-\(oldRecord.id.uuidString).json"
         })
-        XCTAssertFalse(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.contains(oldRecord))
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertFalse(reloadedStore.sessions.contains(oldRecord))
     }
 
     func testReappendedTrimmedIDIsNotRemovedByEarlierWrite() throws {
@@ -331,7 +339,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertTrue(try sessionFiles().contains {
             $0.lastPathComponent == "session-\(reappended.id.uuidString).json"
         })
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.first, reappended)
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions.first, reappended)
     }
 
     func testAppendRecoveryRewritesAnEarlierFailedSession() throws {
@@ -352,7 +362,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         XCTAssertNil(store.persistenceError)
         XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [second, first])
     }
 
     func testFailedLegacyMigrationKeepsCachedPendingStateForRetry() throws {
@@ -377,7 +389,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(
             atPath: directory.appendingPathComponent("legacy-migration-complete").path
         ))
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [second, first])
     }
 
     func testCorruptSessionFilePreservesReadableHistoryAndSurfacesLoadError() throws {
@@ -409,7 +423,9 @@ final class WorkoutSessionStoreTests: XCTestCase {
         store.remove(first)
         store.flush()
 
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second])
+        let reloadedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        reloadedStore.flush()
+        XCTAssertEqual(reloadedStore.sessions, [second])
         XCTAssertEqual(try sessionFiles().map(\.lastPathComponent), ["session-\(second.id.uuidString).json"])
     }
 
