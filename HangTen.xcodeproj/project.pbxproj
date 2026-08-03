@@ -30,6 +30,7 @@
 		AA0000000000000000000021 /* LocalWorkoutHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */; };
 		AA0000000000000000000022 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* LocalWorkoutHistoryStore.swift */; };
 		AA0000000000000000000023 /* HealthKitServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000026 /* HealthKitServiceTests.swift */; };
+		AA0000000000000000000024 /* AppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000027 /* AppStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000025 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000026 /* HealthKitServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitServiceTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000027 /* AppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +167,7 @@
 				BB0000000000000000000022 /* WorkoutHistoryTests.swift */,
 				BB0000000000000000000024 /* LocalWorkoutHistoryStoreTests.swift */,
 				BB0000000000000000000026 /* HealthKitServiceTests.swift */,
+				BB0000000000000000000027 /* AppStoreTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				AA0000000000000000000019 /* WorkoutHistoryTests.swift in Sources */,
 				AA0000000000000000000021 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
 				AA0000000000000000000023 /* HealthKitServiceTests.swift in Sources */,
+				AA0000000000000000000024 /* AppStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

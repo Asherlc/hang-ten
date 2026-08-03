@@ -8,10 +8,15 @@ final class AppStore: ObservableObject {
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
-	private let healthKitService: HealthKitService
+	private let healthKitService: WorkoutHealthStore
+	private let workoutHistoryStore: LocalWorkoutHistoryStore
 
-	init(healthKitService: HealthKitService = HealthKitService()) {
+	init(
+		healthKitService: WorkoutHealthStore = HealthKitService(),
+		workoutHistoryStore: LocalWorkoutHistoryStore = LocalWorkoutHistoryStore()
+	) {
 		self.healthKitService = healthKitService
+		self.workoutHistoryStore = workoutHistoryStore
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
@@ -87,12 +92,24 @@ final class AppStore: ObservableObject {
         sessionsCompleted += 1
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil
+		let id = UUID()
+		workoutHistoryStore.replace(workoutHistoryStore.load() + [
+			PendingWorkoutRecord(
+				id: id,
+				planTitle: plan.title,
+				startDate: startDate,
+				endDate: endDate,
+				healthUploadAttempted: false,
+				healthWorkoutUUID: nil
+			)
+		])
         healthKitService.saveCompletedWorkout(
+			id: id,
 			title: plan.title,
 			startDate: startDate,
 			endDate: endDate
-		) { [weak self] error in
-			guard let error else { return }
+		) { [weak self] result in
+			guard case let .failure(error) = result else { return }
 			DispatchQueue.main.async {
 				self?.healthAuthorizationError = "Session logged in Hang Ten, but \(error.localizedDescription)"
 			}
