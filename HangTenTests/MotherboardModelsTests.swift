@@ -231,6 +231,96 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data), record)
     }
 
+    func testGranularMeasurementCollectorExcludesSetupAndPausedSamples() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let measurement = granularMeasurement(sampleNumber: 1, at: 100, load: 8)
+
+        collector.capture(
+            measurement,
+            startedAt: nil,
+            countdownRemaining: 0,
+            workoutElapsed: 0,
+            planDuration: 10
+        )
+
+        XCTAssertTrue(collector.measurements.isEmpty)
+    }
+
+    func testGranularMeasurementCollectorExcludesPreCountdownSamples() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let startedAt = Date(timeIntervalSince1970: 100)
+
+        collector.capture(
+            granularMeasurement(sampleNumber: 1, at: 99, load: 8),
+            startedAt: startedAt,
+            countdownRemaining: 1,
+            workoutElapsed: 0,
+            planDuration: 10
+        )
+
+        XCTAssertTrue(collector.measurements.isEmpty)
+    }
+
+    func testGranularMeasurementCollectorIncludesActiveAndRestIntervalSamples() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let startedAt = Date(timeIntervalSince1970: 100)
+        let activeSample = granularMeasurement(sampleNumber: 1, at: 102, load: 8)
+        let restSample = granularMeasurement(sampleNumber: 2, at: 106, load: 0)
+
+        collector.capture(
+            activeSample,
+            startedAt: startedAt,
+            countdownRemaining: 0,
+            workoutElapsed: 2,
+            planDuration: 10
+        )
+        collector.capture(
+            restSample,
+            startedAt: startedAt,
+            countdownRemaining: 0,
+            workoutElapsed: 6,
+            planDuration: 10
+        )
+
+        XCTAssertEqual(collector.measurements, [activeSample, restSample])
+    }
+
+    func testGranularMeasurementCollectorExcludesSamplesAfterPlanDuration() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+
+        collector.capture(
+            granularMeasurement(sampleNumber: 1, at: 110, load: 8),
+            startedAt: Date(timeIntervalSince1970: 100),
+            countdownRemaining: 0,
+            workoutElapsed: 10,
+            planDuration: 10
+        )
+
+        XCTAssertTrue(collector.measurements.isEmpty)
+    }
+
+    func testGranularMeasurementCollectorAppendsEveryEligiblePublicationWithoutLoadFiltering() {
+        var collector = MotherboardWorkoutMeasurementCollector()
+        let startedAt = Date(timeIntervalSince1970: 100)
+        let samples = [
+            granularMeasurement(sampleNumber: 1, at: 101, load: 0),
+            granularMeasurement(sampleNumber: 2, at: 102, load: 0.1),
+            granularMeasurement(sampleNumber: 3, at: 103, load: 80)
+        ]
+
+        for (elapsed, sample) in zip([1.0, 2.0, 3.0], samples) {
+            collector.capture(
+                sample,
+                startedAt: startedAt,
+                countdownRemaining: 0,
+                workoutElapsed: elapsed,
+                planDuration: 10
+            )
+        }
+
+        XCTAssertEqual(collector.measurements, samples)
+    }
+
     func testRestStepsAreDistinctFromActiveStepsWhenTheirFullDurationIsRest() {
         let rest = WorkoutStep(
             id: "rest",
@@ -265,6 +355,21 @@ final class MotherboardModelsTests: XCTestCase {
             batteryValue: 100,
             sensorLoadsKGF: sensorLoads,
             aggregateLoadKGF: aggregate
+        )
+    }
+
+    private func granularMeasurement(
+        sampleNumber: UInt16,
+        at time: TimeInterval,
+        load: Double
+    ) -> MotherboardMeasurement {
+        MotherboardMeasurement(
+            timestamp: Date(timeIntervalSince1970: time),
+            sampleNumber: sampleNumber,
+            batteryValue: 80,
+            rawADCValues: [1, -2, 3, -4],
+            sensorLoadsKGF: [load, 0, 0, 0],
+            aggregateLoadKGF: load
         )
     }
 }

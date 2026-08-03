@@ -641,6 +641,29 @@ private struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+struct MotherboardWorkoutMeasurementCollector {
+    private(set) var measurements: [MotherboardMeasurement] = []
+
+    mutating func capture(
+        _ measurement: MotherboardMeasurement,
+        startedAt: Date?,
+        countdownRemaining: Int,
+        workoutElapsed: TimeInterval,
+        planDuration: TimeInterval
+    ) {
+        guard let startedAt,
+              startedAt <= measurement.timestamp,
+              countdownRemaining == 0,
+              workoutElapsed < planDuration else { return }
+
+        measurements.append(measurement)
+    }
+
+    mutating func reset() {
+        measurements = []
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
@@ -667,7 +690,7 @@ struct WorkoutView: View {
     @State private var didCompleteWorkoutPreparation = false
     @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
     @State private var bodyweightKGF: Double?
-    @State private var motherboardMeasurements: [MotherboardMeasurement] = []
+    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -823,9 +846,12 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
+		.onChange(of: motherboardBluetoothService.latestMeasurement) { _, measurement in
+			guard let measurement else { return }
+			consume(measurement)
+		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
 			capture(measurement)
-			consume(measurement)
 		}
 		.onChange(of: motherboardBluetoothService.state) { previousState, state in
 			guard previousState == .streaming, state != .streaming else { return }
@@ -1161,6 +1187,7 @@ struct WorkoutView: View {
             let start = pausedElapsed == 0 ? Date().addingTimeInterval(3) : Date()
             if pausedElapsed == 0 {
                 routineStartedAt = start
+                motherboardMeasurementCollector.reset()
             }
             startedAt = start
         }
@@ -1237,12 +1264,13 @@ struct WorkoutView: View {
 	}
 
 	private func capture(_ measurement: MotherboardMeasurement) {
-		guard let startedAt,
-			  startedAt <= measurement.timestamp,
-			  countdownRemaining(at: measurement.timestamp) == 0 else { return }
-
-		guard currentElapsed(at: measurement.timestamp) < plan.duration else { return }
-		motherboardMeasurements.append(measurement)
+		motherboardMeasurementCollector.capture(
+			measurement,
+			startedAt: startedAt,
+			countdownRemaining: countdownRemaining(at: measurement.timestamp),
+			workoutElapsed: currentElapsed(at: measurement.timestamp),
+			planDuration: plan.duration
+		)
 	}
 
 	private func finalizeRoutine() {
@@ -1277,7 +1305,7 @@ struct WorkoutView: View {
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
 			bodyweightKGF: bodyweightKGF,
-			motherboardMeasurements: motherboardMeasurements
+			motherboardMeasurements: motherboardMeasurementCollector.measurements
 		)
 		completedSession = session
 		summarySession = session
