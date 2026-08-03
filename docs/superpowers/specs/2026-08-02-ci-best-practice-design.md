@@ -38,13 +38,19 @@ Add one independent job:
 - Runner: `macos-26`, matching the existing workflow.
 - Configuration: `Debug`.
 - Scheme: `HangTen`.
-- Destination: an available iPhone 17 iOS Simulator selected by the Xcode
-  destination specification, without hard-coding a runner-specific UDID or
-  patch-level OS version.
+- Provisioning: discover the `iPhone 17` device type from the complete
+  `xcrun simctl list devicetypes` output, select the newest available iOS
+  runtime, and create a uniquely named simulator owned by this job.
+- Lifecycle: publish the created simulator's UUID before booting it, boot that
+  UUID, and wait for readiness with `xcrun simctl bootstatus <uuid> -b`.
+- Destination: run XCTest against the created UUID, with serial execution via
+  `-parallel-testing-enabled NO` and
+  `-maximum-parallel-testing-workers 1`.
 - Signing: disabled with `CODE_SIGNING_ALLOWED=NO` and
   `CODE_SIGNING_REQUIRED=NO`.
-- Diagnostics: use `set -o pipefail`, tee the test log, and write an
-  `.xcresult` bundle; upload the bundle and logs when the test step fails.
+- Diagnostics and cleanup: use `set -o pipefail`, tee the test log, and write
+  an `.xcresult` bundle; upload the bundle and logs when the test step fails.
+  An `always()` cleanup step deletes only the UUID created by this job.
 
 The job runs the full shared scheme test action rather than selecting an
 individual test class, so new tests added to the scheme are automatically
@@ -64,8 +70,11 @@ rules. The three required contexts will be:
 
 Before handoff:
 
-1. Run the exact simulator `xcodebuild test` command locally with temporary
-   derived data and result-bundle paths.
+1. Exercise the exact device-type/runtime discovery, uniquely named simulator
+   creation, UUID publication, boot/readiness, serial UUID-based
+   `xcodebuild test`, diagnostics, and UUID-only cleanup lifecycle locally
+   with temporary paths. Local XCTest may be inconclusive on the shared host;
+   the hosted `macos-26` run is authoritative.
 2. Validate the workflow diff and YAML/action syntax with available local
    tooling.
 3. Read back the GitHub ruleset and confirm all three required contexts.

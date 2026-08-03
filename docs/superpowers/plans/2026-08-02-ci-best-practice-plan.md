@@ -12,7 +12,7 @@
 
 - Keep the existing build matrix unchanged: `Build (Debug simulator)` and `Build (Release device)`.
 - Add one independent check named exactly `Test (iOS Simulator)`.
-- Use runner `macos-26`, configuration `Debug`, scheme `HangTen`, and an available iPhone 17 iOS Simulator without a runner-specific UDID or patch-level OS version.
+- Use runner `macos-26`, configuration `Debug`, scheme `HangTen`, and provision an owned iPhone 17 iOS Simulator by discovering its device type from the complete `simctl list devicetypes` output and selecting the newest available iOS runtime.
 - Disable signing with `CODE_SIGNING_ALLOWED=NO` and `CODE_SIGNING_REQUIRED=NO`.
 - Keep read-only contents permissions, cancellation for superseded CI runs, timeouts, full-SHA-pinned actions, and failure diagnostics.
 - Add the `merge_group` workflow trigger.
@@ -43,7 +43,14 @@ Add this event alongside the existing `pull_request` and `push` events:
 
 - [ ] **Step 2: Add the independent test job**
 
-Add this job to `.github/workflows/ci.yml` without altering the existing `build` matrix:
+Add this job to `.github/workflows/ci.yml` without altering the existing `build` matrix. Its simulator setup must:
+
+- discover the `iPhone 17` device type from the complete `xcrun simctl list devicetypes` output;
+- select the newest available iOS runtime from `xcrun simctl list runtimes available`;
+- create a uniquely named simulator and publish its UUID as the setup step output before booting;
+- boot that UUID and wait for readiness with `xcrun simctl bootstatus <uuid> -b`.
+
+The test step must use the created UUID and retain serial XCTest execution:
 
 ```yaml
   test:
@@ -65,6 +72,30 @@ Add this job to `.github/workflows/ci.yml` without altering the existing `build`
           xcodebuild -version
           xcodebuild -showsdks
 
+      - name: Create test simulator
+        id: create-simulator
+        run: |
+          set -euo pipefail
+          device_type_id="$(xcrun simctl list devicetypes | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' | head -n 1)"
+          if [[ -z "$device_type_id" ]]; then
+            echo "Required iPhone 17 simulator device type is unavailable." >&2
+            exit 1
+          fi
+          runtime_id="$(xcrun simctl list runtimes available | awk '/^[[:space:]]*iOS [0-9]/ { version = $2; runtime = $NF; if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) print version "|" runtime }' | awk -F'|' '{ split($1, version, /\./); printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2 }' | sort | tail -n 1 | cut -d'|' -f 2-)"
+          if [[ -z "$runtime_id" ]]; then
+            echo "No available iOS simulator runtime was found." >&2
+            exit 1
+          fi
+          simulator_name="Hang Ten CI iPhone 17 $(uuidgen)"
+          simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+          if [[ -z "$simulator_udid" ]]; then
+            echo "Failed to create the owned iPhone 17 simulator." >&2
+            exit 1
+          fi
+          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$simulator_udid"
+          xcrun simctl bootstatus "$simulator_udid" -b
+
       - name: Run XCTest suite
         run: |
           set -o pipefail
@@ -73,9 +104,11 @@ Add this job to `.github/workflows/ci.yml` without altering the existing `build`
             -project HangTen.xcodeproj \
             -scheme HangTen \
             -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 17" \
+            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
+            -parallel-testing-enabled NO \
+            -maximum-parallel-testing-workers 1 \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
@@ -90,30 +123,38 @@ Add this job to `.github/workflows/ci.yml` without altering the existing `build`
             ${{ runner.temp }}/HangTenTests.xcresult
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
+
+      - name: Delete test simulator
+        if: always()
+        env:
+          SIMULATOR_UDID: ${{ steps.create-simulator.outputs.udid }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$SIMULATOR_UDID" ]]; then
+            xcrun simctl delete "$SIMULATOR_UDID"
+          fi
 ```
 
-If the runner exposes multiple iPhone 17 OS versions, leave the OS component unspecified as shown so Xcode selects an available version. Do not hard-code a simulator UDID.
+The failure artifact step remains conditional on failure. Cleanup must run with `if: always()` and delete only the UUID published by the create step.
 
 - [ ] **Step 3: Run the exact test command locally**
 
-Run the same test action with temporary paths:
+Exercise the same discovery, creation, UUID-based test, diagnostics, and cleanup lifecycle locally with temporary paths:
 
 ```bash
 tmp_root="$(mktemp -d)"
-trap 'rm -rf "$tmp_root"' EXIT
-xcodebuild \
-  -project HangTen.xcodeproj \
-  -scheme HangTen \
-  -configuration Debug \
-  -destination "platform=iOS Simulator,name=iPhone 17" \
-  -derivedDataPath "$tmp_root/derived-data" \
-  -resultBundlePath "$tmp_root/HangTenTests.xcresult" \
-  CODE_SIGNING_ALLOWED=NO \
-  CODE_SIGNING_REQUIRED=NO \
-  test
+trap 'if [[ -n "${simulator_udid:-}" ]]; then xcrun simctl delete "$simulator_udid"; fi; rm -rf "$tmp_root"' EXIT
+device_type_id="$(xcrun simctl list devicetypes | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' | head -n 1)"
+runtime_id="$(xcrun simctl list runtimes available | awk '/^[[:space:]]*iOS [0-9]/ { version = $2; runtime = $NF; if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) print version "|" runtime }' | awk -F'|' '{ split($1, version, /\./); printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2 }' | sort | tail -n 1 | cut -d'|' -f 2-)"
+simulator_udid="$(xcrun simctl create "Hang Ten local iPhone 17 $(uuidgen)" "$device_type_id" "$runtime_id")"
+xcrun simctl boot "$simulator_udid"
+xcrun simctl bootstatus "$simulator_udid" -b
+mkdir -p "$tmp_root/test-logs" "$tmp_root/derived-data"
+set -o pipefail
+xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$tmp_root/derived-data" -resultBundlePath "$tmp_root/HangTenTests.xcresult" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$tmp_root/test-logs/test.log"
 ```
 
-Expected result: `xcodebuild` exits 0 and the existing `WorkoutTimelineTests` XCTest cases pass.
+Local XCTest may be inconclusive on the shared host when the required device type or runtime is unavailable; the hosted `macos-26` CI run is authoritative. Record the observed local result rather than assuming a pass.
 
 - [ ] **Step 4: Validate the workflow file**
 
@@ -189,7 +230,7 @@ Expected result: only the approved design/plan documentation and `.github/workfl
 
 ## Final verification checklist
 
-- [ ] Local `xcodebuild test` passes for the shared `HangTen` scheme on an iPhone 17 simulator.
+- [ ] The local simulator lifecycle is exercised when the shared host permits it; hosted CI remains the authoritative XCTest verification.
 - [ ] The workflow parses and retains the existing build matrix.
 - [ ] `Test (iOS Simulator)` is emitted by CI and has failure diagnostics.
 - [ ] The active `Main` ruleset requires all three exact CI contexts.
