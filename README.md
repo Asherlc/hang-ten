@@ -23,8 +23,8 @@ cannot drift away from the hold.
   F80/F100 force-board sessions, Eva IntHangs, 7/3 Repeaters, Abrahangs,
   7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and Zlagboard 60/60.
 - A runnable minute-by-minute session with pause/resume, direct step selection,
-  skipping the current timed step, a spoken 3-2-1 start countdown, task cues,
-  final three-second cues, and completion audio.
+  skipping the current timed step, a spoken 3-2-1 start countdown, and final
+  three-second countdown cues.
 - Mirrored Phosphor hand cues for grip pose and participating fingers.
 - Portrait and landscape workout layouts.
 - An explicit Apple Health permission card. Completed sessions save as
