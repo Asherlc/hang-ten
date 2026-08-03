@@ -10,7 +10,7 @@ is_uuid() {
 }
 
 is_review_device_name() {
-  [[ "$1" == HangTen* || "$1" == 'Hang Ten'* ]] || return 1
+  [[ "$1" =~ '^(HangTen|Hang Ten)([[:space:]]|$)' ]] || return 1
   [[ "$1" =~ '(^|[[:space:]])Review[0-9]*($|[[:space:]])' ]]
 }
 

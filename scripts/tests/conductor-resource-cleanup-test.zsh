@@ -44,6 +44,8 @@ case "$2" in
     Hang Ten Worcester Preview (40404040-4040-4040-4040-404040404040) (Shutdown)
     Hang Ten Worcester Reviewing (50505050-5050-5050-5050-505050505050) (Shutdown)
     HangTen bariloche Task5 (60606060-6060-6060-6060-606060606060) (Shutdown)
+    HangTennis Review (31313131-3131-3131-3131-313131313131) (Shutdown)
+    Hang Tenacious Review (32323232-3232-3232-3232-323232323232) (Shutdown)
 DEVICES
     print -r -- '    Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
     ;;
@@ -178,6 +180,8 @@ assert_not_contains '30303030-3030-3030-3030-303030303030' "$dry_run"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$dry_run"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$dry_run"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
+assert_not_contains '31313131-3131-3131-3131-313131313131' "$dry_run"
+assert_not_contains '32323232-3232-3232-3232-323232323232' "$dry_run"
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'prune dry run invoked xcrun delete or shutdown'
   exit 1
@@ -203,6 +207,8 @@ assert_not_contains '30303030-3030-3030-3030-303030303030' "$prune_calls"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
+assert_not_contains '31313131-3131-3131-3131-313131313131' "$prune_calls"
+assert_not_contains '32323232-3232-3232-3232-323232323232' "$prune_calls"
 assert_all_call_log_contains_list_devices
 
 assert_rejects_malformed_args_without_xcrun() {
