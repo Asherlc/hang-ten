@@ -91,6 +91,58 @@ jobs:
           xcodebuild -version
           xcodebuild -showsdks
 
+      - name: Create test simulator
+        id: create-simulator
+        run: |
+          set -euo pipefail
+
+          device_type_id="$(
+            xcrun simctl list devicetypes available \
+              | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' \
+              | head -n 1
+          )"
+          if [[ -z "$device_type_id" ]]; then
+            echo "Required iPhone 17 simulator device type is unavailable." >&2
+            exit 1
+          fi
+
+          runtime_id="$(
+            xcrun simctl list runtimes available \
+              | awk '
+                /^[[:space:]]*iOS [0-9]/ {
+                  version = $2
+                  runtime = $NF
+                  if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) {
+                    print version "|" runtime
+                  }
+                }
+              ' \
+              | awk -F'|' '
+                {
+                  split($1, version, /\./)
+                  printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2
+                }
+              ' \
+              | sort \
+              | tail -n 1 \
+              | cut -d'|' -f 2-
+          )"
+          if [[ -z "$runtime_id" ]]; then
+            echo "No available iOS simulator runtime was found." >&2
+            exit 1
+          fi
+
+          simulator_name="Hang Ten CI iPhone 17 $(uuidgen)"
+          simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+          if [[ -z "$simulator_udid" ]]; then
+            echo "Failed to create the owned iPhone 17 simulator." >&2
+            exit 1
+          fi
+
+          xcrun simctl boot "$simulator_udid"
+          xcrun simctl bootstatus "$simulator_udid" -b
+          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
+
       - name: Run XCTest suite
         run: |
           set -o pipefail
@@ -99,7 +151,7 @@ jobs:
             -project HangTen.xcodeproj \
             -scheme HangTen \
             -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 17" \
+            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
             -parallel-testing-enabled NO \
             -maximum-parallel-testing-workers 1 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
@@ -118,3 +170,13 @@ jobs:
             ${{ runner.temp }}/HangTenTests.xcresult
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
+
+      - name: Delete test simulator
+        if: always()
+        env:
+          SIMULATOR_UDID: ${{ steps.create-simulator.outputs.udid }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$SIMULATOR_UDID" ]]; then
+            xcrun simctl delete "$SIMULATOR_UDID"
+          fi
