@@ -217,19 +217,27 @@ Require a simulator name beginning with Hang Ten Conductor $CONDUCTOR_WORKSPACE_
 Replace the creation example with:
 
 ~~~
+workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
-mkdir -p .context
+mkdir -p "$workspace_path/.context"
 simulator_name="Hang Ten Conductor $workspace_name Review"
-simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
-printf '%s\n' "$simulator_uuid" >> .context/conductor-owned-simulators
 
 cleanup() {
-  CONDUCTOR_WORKSPACE_PATH="$PWD" \
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
-  scripts/conductor-resource-cleanup.sh archive
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
-trap cleanup EXIT INT TERM
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"
 ~~~
 
 Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators.
@@ -270,13 +278,15 @@ This operation is authorized by the user's one-time cache request but is not rec
 - [ ] **Step 1: Check active Xcode work and snapshot exact cache children**
 
 ~~~
+derived_data_root=/Users/asherlc/Library/Developer/Xcode/DerivedData
 if pgrep -x Xcode >/dev/null || pgrep -x xcodebuild >/dev/null; then
   echo "Xcode or xcodebuild is active; stop before purging DerivedData." >&2
   exit 1
 fi
 mkdir -p .context
-find /Users/asherlc/Library/Developer/Xcode/DerivedData -mindepth 1 -maxdepth 1 -print | sort > .context/derived-data-before.txt
-du -sh /Users/asherlc/Library/Developer/Xcode/DerivedData
+find "$derived_data_root" -mindepth 1 -maxdepth 1 -print0 | sort -z > .context/derived-data-before.bin
+tr '\0' '\n' < .context/derived-data-before.bin > .context/derived-data-before.txt
+du -sh "$derived_data_root"
 scripts/conductor-resource-cleanup.sh prune
 ~~~
 
@@ -295,12 +305,16 @@ If a device became booted after the dry run, stop and leave it untouched.
 Use the already-written inventory, validate every line against the exact root, and delete each child—not the root itself:
 
 ~~~
-while IFS= read -r child; do
-  case "$child" in
-    /Users/asherlc/Library/Developer/Xcode/DerivedData/*) rm -rf -- "$child" ;;
-    *) echo "Unexpected DerivedData target: $child" >&2; exit 1 ;;
-  esac
-done < .context/derived-data-before.txt
+derived_data_root=/Users/asherlc/Library/Developer/Xcode/DerivedData
+while IFS= read -r -d '' child; do
+  parent="${child:h}"
+  name="${child:t}"
+  if [[ "$parent" != "$derived_data_root" || -z "$name" || "$name" == "." || "$name" == ".." ]]; then
+    echo "Unexpected DerivedData target: $child" >&2
+    exit 1
+  fi
+  rm -rf -- "$child"
+done < .context/derived-data-before.bin
 ~~~
 
 Do not remove /Users/asherlc/Library/Developer/Xcode/iOS DeviceSupport, Xcode Archives/UserData, simulator runtimes/devices, Conductor state, provider state, credentials, or session history.

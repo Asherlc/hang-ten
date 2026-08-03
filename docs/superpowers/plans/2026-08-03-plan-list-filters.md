@@ -153,7 +153,7 @@ final class PlanFiltersTests: XCTestCase {
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -only-testing:HangTenTests/PlanFiltersTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
 ```
 
 Expected: compilation fails because `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` do not exist yet. Do not change the test assertions to make this failure disappear.
@@ -247,7 +247,7 @@ Register `PlanFilters.swift` in the app target using build-file ID `AA0000000000
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -only-testing:HangTenTests/PlanFiltersTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
 ```
 
 Expected: all seven `PlanFiltersTests` pass with zero failures.
@@ -257,7 +257,7 @@ Expected: all seven `PlanFiltersTests` pass with zero failures.
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the existing workout timeline tests and all plan filter tests pass.
@@ -303,7 +303,7 @@ Delete `showsFilters`, the `.sheet` presentation, and `PlanFiltersSheet`. The me
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the app target compiles and all unit tests pass with zero failures.
@@ -336,19 +336,27 @@ rtk git commit -m "Use inline plan filter menus"
 - [ ] Build with a workspace-specific derived-data directory:
 
 ```bash
+workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
-mkdir -p .context
+mkdir -p "$workspace_path/.context"
 simulator_name="Hang Ten Conductor $workspace_name Plans Filters Review"
-review_device_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
-printf '%s\n' "$review_device_uuid" >> .context/conductor-owned-simulators
 
 cleanup() {
-  CONDUCTOR_WORKSPACE_PATH="$PWD" \
-  CONDUCTOR_WORKSPACE_NAME="$CONDUCTOR_WORKSPACE_NAME" \
-  scripts/conductor-resource-cleanup.sh archive
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
-trap cleanup EXIT INT TERM
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+review_device_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
+printf '%s\n' "$review_device_uuid" >> "$workspace_path/.context/conductor-owned-simulators"
 
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData build
 ```

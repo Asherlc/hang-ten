@@ -21,19 +21,27 @@ $CONDUCTOR_WORKSPACE_NAME`, and its UUID must be recorded before any boot or
 build work:
 
 ```sh
+workspace_path="$PWD"
 workspace_name="$CONDUCTOR_WORKSPACE_NAME"
 test -n "$workspace_name"
-mkdir -p .context
+mkdir -p "$workspace_path/.context"
 simulator_name="Hang Ten Conductor $workspace_name Review"
-simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
-printf '%s\n' "$simulator_uuid" >> .context/conductor-owned-simulators
 
 cleanup() {
-  CONDUCTOR_WORKSPACE_PATH="$PWD" \
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
-  scripts/conductor-resource-cleanup.sh archive
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
-trap cleanup EXIT INT TERM
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"
 ```
 
 Use `$simulator_uuid` as `<uuid>` in the following commands. Do not use
