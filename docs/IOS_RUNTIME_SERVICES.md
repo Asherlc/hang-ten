@@ -85,6 +85,23 @@ For a three-second segment, speak the short start command and the complete
 3-2-1 as one utterance; do not let periodic view updates interrupt or skip a
 count in such a short interval.
 
+## Workout step navigation
+
+A new workout session starts at step 1. Step selection and Skip step are
+disabled until the initial three-second countdown has finished, and remain
+disabled while that countdown is running.
+
+The Routine sheet lets the athlete select any other step directly. A running
+seek rebases the elapsed clock at the selected step's start and stays running;
+a paused seek replaces the paused elapsed position and stays paused. Selecting
+the current step is a no-op. Skip step seeks to the end of the current
+`WorkoutStep`, including its timed rest interval, so it advances to the next
+step's start; skipping the final step reaches the existing completion state.
+
+Every seek stops the active audio utterance and re-anchors audio to the new
+elapsed position. The normal cue for the selected step can therefore play once
+without a stale cue continuing from the prior step.
+
 ## Portrait and landscape
 
 The target supports portrait, landscape-left, and landscape-right on iPhone,
@@ -126,8 +143,9 @@ Ten plan metadata, end collection, then finish the workout. It runs only when
 authorization is granted and the end date is later than the start date.
 Every builder stage reports failure back to `AppStore`; the local session stays
 logged, while the Progress card explains that the Health write failed. The
-saved interval is the plan's active duration from its actual start, excluding
-manual pause time and any delay before the athlete taps Log session.
+saved interval keeps the session's original start date and ends at the earlier
+of the planned active-duration end or the athlete's Log session time. This
+prevents an early completion from writing a future HealthKit end date.
 
 The denied-state button is labeled Open app settings because iOS does not
 provide a public deep link to the exact Health permission row. Authorization

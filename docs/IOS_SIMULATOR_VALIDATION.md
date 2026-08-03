@@ -149,6 +149,20 @@ routine change, preview every distinct hold target and finger cue.
 
 ## Validate runtime services
 
+- Launch a new workout and confirm it visibly begins at step 1. Before start,
+  and throughout the initial 3-2-1 countdown, confirm the Routine and Skip
+  step controls are disabled.
+- Open Routine and inspect its numbered, labeled step rows. While running,
+  select a later step and confirm that the workout keeps running from that
+  step's start. Pause, select an earlier step, and confirm it stays paused at
+  that step's start. Tap the current row and confirm it is a no-op.
+- Skip during timed work and confirm that it advances at the current step's
+  full boundary, including any following rest.
+- Skip during timed rest and confirm the next step starts after the full step
+  duration, including rest. Skip the final step and confirm the existing
+  completion state appears. Repeat the Routine and Skip step checks in both
+  portrait and landscape, inspecting the resulting timer, board highlights,
+  hand cues, and re-cued audio.
 - Start a routine and observe 3, 2, 1, task-start, final-three, and completion
   speech with audio enabled. Repeat with the speaker toggle disabled.
 - Rotate while paused and while running; timer state and selected holds must
