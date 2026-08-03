@@ -639,15 +639,39 @@ enum LegacyPlanSeedCatalog {
         let source = plans.map { plan in
             let steps = plan.steps.map { step in
                 let targets = step.targets.map { target in
-                    [
+                    let targetFields: [String] = [
                         target.holdIDs.joined(separator: ","),
                         target.kind?.rawValue ?? "-",
                         target.feature?.rawValue ?? "-",
                         target.fallbackFeatures.map(\.rawValue).joined(separator: ",")
-                    ].joined(separator: ":")
+                    ]
+
+                    return targetFields.joined(separator: ":")
                 }.joined(separator: ";")
 
-                return [
+                let segments = step.segments.map { segment -> String in
+                    let kind = segment.kind.rawValue
+                    let target: String
+
+                    if let segmentTarget = segment.target {
+                        let targetFields: [String] = [
+                            segmentTarget.holdIDs.joined(separator: ","),
+                            segmentTarget.kind?.rawValue ?? "-",
+                            segmentTarget.feature?.rawValue ?? "-",
+                            segmentTarget.fallbackFeatures.map(\.rawValue).joined(separator: ",")
+                        ]
+                        target = targetFields.joined(separator: ":")
+                    } else {
+                        target = "-"
+                    }
+
+                    let timing = segment.timing.rawValue
+                    let duration = segment.duration.map { String($0) } ?? "-"
+                    let segmentFields: [String] = [kind, target, timing, duration]
+                    return segmentFields.joined(separator: ":")
+                }.joined(separator: ";")
+
+                let stepFields: [String] = [
                     step.id,
                     String(step.number),
                     step.title,
@@ -656,9 +680,11 @@ enum LegacyPlanSeedCatalog {
                     String(step.duration),
                     step.phase.rawValue,
                     targets,
+                    segments,
                     step.gripType?.rawValue ?? "-",
                     step.timedWorkDuration.map { String($0) } ?? "-"
-                ].joined(separator: "|")
+                ]
+                return stepFields.joined(separator: "|")
             }.joined(separator: "\n")
 
             return [
@@ -680,6 +706,22 @@ enum LegacyPlanSeedCatalog {
     }
     #endif
 
+    private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
+    }
+
+    private static func stopwatchWork(_ target: HoldTarget) -> WorkoutSegment {
+        WorkoutSegment(kind: .work, target: target, timing: .stopwatch, duration: nil)
+    }
+
+    private static func undefinedWork(_ target: HoldTarget) -> WorkoutSegment {
+        WorkoutSegment(kind: .work, target: target, timing: .undefined, duration: nil)
+    }
+
+    private static func fixedRest(_ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: duration)
+    }
+
     private static func minute(
         planID: String,
         number: Int,
@@ -687,6 +729,7 @@ enum LegacyPlanSeedCatalog {
         instruction: String,
         phase: WorkoutPhase,
         targets: [HoldTarget],
+        segments: [WorkoutSegment],
         gripType: GripType? = nil
     ) -> WorkoutStep {
         WorkoutStep(
@@ -698,6 +741,7 @@ enum LegacyPlanSeedCatalog {
             duration: 60,
             phase: phase,
             targets: targets,
+            segments: segments,
             gripType: gripType
         )
     }
@@ -715,52 +759,62 @@ enum LegacyPlanSeedCatalog {
             minute(
                 planID: "entry", number: 1, title: "Jug hang",
                 instruction: "Hang from the jugs for 15 seconds.",
-                phase: .hang, targets: [.feature(.jug)]
+                phase: .hang, targets: [.feature(.jug)],
+                segments: [fixedWork(.feature(.jug), 15), fixedRest(45)]
             ),
             minute(
                 planID: "entry", number: 2, title: "Sloper pull-up",
                 instruction: "Do 1 pull-up on a round sloper.",
-                phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper
+                phase: .pull, targets: [.feature(.roundSloper)],
+                segments: [undefinedWork(.feature(.roundSloper))], gripType: .sloper
             ),
             minute(
                 planID: "entry", number: 3, title: "Medium-edge hang",
                 instruction: "Hang from a medium edge for 10 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
+                phase: .hang, targets: [.feature(.mediumEdge)],
+                segments: [fixedWork(.feature(.mediumEdge), 10), fixedRest(50)]
             ),
             minute(
                 planID: "entry", number: 4, title: "Pocket hang + shrugs",
                 instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.",
-                phase: .hang, targets: [.feature(.pocket)]
+                phase: .hang, targets: [.feature(.pocket)],
+                segments: [fixedWork(.feature(.pocket), 15), undefinedWork(.feature(.pocket))]
             ),
             minute(
                 planID: "entry", number: 5, title: "Large edge + pull-ups",
                 instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.",
-                phase: .hang, targets: [.feature(.largeEdge)]
+                phase: .hang, targets: [.feature(.largeEdge)],
+                segments: [fixedWork(.feature(.largeEdge), 20), undefinedWork(.feature(.largeEdge))]
             ),
             minute(
                 planID: "entry", number: 6, title: "Sloper + knee raises",
                 instruction: "Hang from a round sloper for 10 seconds, then do 5 knee raises on a pocket.",
-                phase: .hang, targets: [.feature(.roundSloper), .feature(.pocket)], gripType: .sloper
+                phase: .hang, targets: [.feature(.roundSloper), .feature(.pocket)],
+                segments: [fixedWork(.feature(.roundSloper), 10), undefinedWork(.feature(.pocket))], gripType: .sloper
             ),
             minute(
                 planID: "entry", number: 7, title: "Large-edge pull-ups",
                 instruction: "Do 4 pull-ups on a large edge.",
-                phase: .pull, targets: [.feature(.largeEdge)]
+                phase: .pull, targets: [.feature(.largeEdge)],
+                segments: [undefinedWork(.feature(.largeEdge))]
             ),
             minute(
                 planID: "entry", number: 8, title: "Medium-edge hang",
                 instruction: "Hang from a medium edge for 10 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
+                phase: .hang, targets: [.feature(.mediumEdge)],
+                segments: [fixedWork(.feature(.mediumEdge), 10), fixedRest(50)]
             ),
             minute(
                 planID: "entry", number: 9, title: "Jug pull-ups",
                 instruction: "Do 3 pull-ups on the jugs.",
-                phase: .pull, targets: [.feature(.jug)]
+                phase: .pull, targets: [.feature(.jug)],
+                segments: [undefinedWork(.feature(.jug))]
             ),
             minute(
                 planID: "entry", number: 10, title: "Maximum sloper hang",
                 instruction: "Hang from a round sloper for as long as you can.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
+                phase: .hang, targets: [.feature(.roundSloper)],
+                segments: [stopwatchWork(.feature(.roundSloper))], gripType: .sloper
             )
         ]
     )
@@ -778,52 +832,62 @@ enum LegacyPlanSeedCatalog {
             minute(
                 planID: "intermediate", number: 1, title: "Large edge",
                 instruction: "Hang from a large edge for 15 seconds, then do 3 pull-ups.",
-                phase: .hang, targets: [.feature(.largeEdge)]
+                phase: .hang, targets: [.feature(.largeEdge)],
+                segments: [fixedWork(.feature(.largeEdge), 15), undefinedWork(.feature(.largeEdge))]
             ),
             minute(
                 planID: "intermediate", number: 2, title: "Sloper + medium edge",
                 instruction: "Do 2 pull-ups on a round sloper, then hang from a medium edge for 20 seconds.",
-                phase: .hang, targets: [.feature(.roundSloper), .feature(.mediumEdge)]
+                phase: .hang, targets: [.feature(.roundSloper), .feature(.mediumEdge)],
+                segments: [undefinedWork(.feature(.roundSloper)), fixedWork(.feature(.mediumEdge), 20)]
             ),
             minute(
                 planID: "intermediate", number: 3, title: "Small edge + pocket",
                 instruction: "Hang from a small edge for 20 seconds, then hold a pocket at a 90° bent arm for 15 seconds.",
-                phase: .hang, targets: [.feature(.smallEdge), .feature(.pocket)]
+                phase: .hang, targets: [.feature(.smallEdge), .feature(.pocket)],
+                segments: [fixedWork(.feature(.smallEdge), 20), fixedWork(.feature(.pocket), 15), fixedRest(25)]
             ),
             minute(
                 planID: "intermediate", number: 4, title: "Round sloper",
                 instruction: "Hang from a round sloper for 30 seconds.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
+                phase: .hang, targets: [.feature(.roundSloper)],
+                segments: [fixedWork(.feature(.roundSloper), 30), fixedRest(30)], gripType: .sloper
             ),
             minute(
                 planID: "intermediate", number: 5, title: "Large edge + pocket",
                 instruction: "Hang from a large edge for 20 seconds, then do 4 pull-ups on a pocket.",
-                phase: .hang, targets: [.feature(.largeEdge), .feature(.pocket)]
+                phase: .hang, targets: [.feature(.largeEdge), .feature(.pocket)],
+                segments: [fixedWork(.feature(.largeEdge), 20), undefinedWork(.feature(.pocket))]
             ),
             minute(
                 planID: "intermediate", number: 6, title: "Offset pulls",
                 instruction: "Do 3 offset pulls per arm with the high hand on a jug and low hand on a small edge; change hands and repeat.",
-                phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]
+                phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)],
+                segments: [undefinedWork(.feature(.jug)), undefinedWork(.feature(.smallEdge))]
             ),
             minute(
                 planID: "intermediate", number: 7, title: "Knee raises + edge hang",
                 instruction: "Do 15 knee raises on the jugs, then hang from a medium edge for 15 seconds.",
-                phase: .hang, targets: [.feature(.jug), .feature(.mediumEdge)]
+                phase: .hang, targets: [.feature(.jug), .feature(.mediumEdge)],
+                segments: [undefinedWork(.feature(.jug)), fixedWork(.feature(.mediumEdge), 15)]
             ),
             minute(
                 planID: "intermediate", number: 8, title: "Medium edge",
                 instruction: "Hang from a medium edge for 25 seconds.",
-                phase: .hang, targets: [.feature(.mediumEdge)]
+                phase: .hang, targets: [.feature(.mediumEdge)],
+                segments: [fixedWork(.feature(.mediumEdge), 25), fixedRest(35)]
             ),
             minute(
                 planID: "intermediate", number: 9, title: "Slope + jugs",
                 instruction: "Hang from a slope for 15 seconds, then do 3 pull-ups on the jugs.",
-                phase: .hang, targets: [.feature(.largeSlope), .feature(.jug)]
+                phase: .hang, targets: [.feature(.largeSlope), .feature(.jug)],
+                segments: [fixedWork(.feature(.largeSlope), 15), undefinedWork(.feature(.jug))]
             ),
             minute(
                 planID: "intermediate", number: 10, title: "Maximum sloper hang",
                 instruction: "Hang from a round sloper for as long as you can.",
-                phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper
+                phase: .hang, targets: [.feature(.roundSloper)],
+                segments: [stopwatchWork(.feature(.roundSloper))], gripType: .sloper
             )
         ]
     )
@@ -845,34 +909,40 @@ enum LegacyPlanSeedCatalog {
                 targets: [
                     .feature(.largeSlope),
                     .feature(.fourFingerFlatEdge, fallback: .largeEdge)
-                ]
+                ],
+                segments: [fixedWork(.feature(.largeSlope), 20), undefinedWork(.feature(.fourFingerFlatEdge, fallback: .largeEdge))]
             ),
             minute(
                 planID: "advanced", number: 2, title: "Bent arm + core",
                 instruction: "Hold a slightly bent-arm hang on a large slope for 20 seconds; stay on for a 20-second L-sit or 20 hanging knee curls.",
-                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
+                phase: .hang, targets: [.feature(.largeSlope)],
+                segments: [fixedWork(.feature(.largeSlope), 20), fixedWork(.feature(.largeSlope), 20), fixedRest(20)], gripType: .sloper
             ),
             minute(
                 planID: "advanced", number: 3, title: "Pocket pull-ups + hang",
                 instruction: "Do 5 pull-ups on a three-finger pocket; stay on for a 25-second straight-arm hang.",
-                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .threeFingerPocket
+                phase: .hang, targets: [.feature(.threeFingerPocket)],
+                segments: [undefinedWork(.feature(.threeFingerPocket)), fixedWork(.feature(.threeFingerPocket), 25)], gripType: .threeFingerPocket
             ),
             minute(
                 planID: "advanced", number: 4, title: "Hold ladder",
                 instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
                 phase: .hang,
-                targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)]
+                targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)],
+                segments: [fixedWork(.kind(.pocket), 5), fixedWork(.kind(.edge), 5), fixedWork(.kind(.sloper), 5), fixedWork(.kind(.jug), 5), fixedWork(.kind(.sloper), 20), fixedRest(20)]
             ),
             minute(
                 planID: "advanced", number: 5, title: "Single-arm flat edge",
                 instruction: "Hang one-armed from a four-finger flat edge for 20 seconds; switch hands and repeat.",
                 phase: .hang,
-                targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)],
+                segments: [fixedWork(.feature(.fourFingerFlatEdge, fallback: .largeEdge), 20), fixedWork(.feature(.fourFingerFlatEdge, fallback: .largeEdge), 20), fixedRest(20)]
             ),
             minute(
                 planID: "advanced", number: 6, title: "Offset pull-ups",
                 instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket; change hands and repeat.",
-                phase: .pull, targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+                phase: .pull, targets: [.feature(.largeSlope), .feature(.threeFingerPocket)],
+                segments: [undefinedWork(.feature(.largeSlope)), undefinedWork(.feature(.threeFingerPocket))]
             ),
             minute(
                 planID: "advanced", number: 7, title: "Incut edge + pocket",
@@ -881,22 +951,26 @@ enum LegacyPlanSeedCatalog {
                 targets: [
                     .feature(.fourFingerIncutEdge, fallback: .largeEdge),
                     .feature(.threeFingerPocket)
-                ]
+                ],
+                segments: [fixedWork(.feature(.fourFingerIncutEdge, fallback: .largeEdge), 30), fixedWork(.feature(.threeFingerPocket), 15), fixedRest(15)]
             ),
             minute(
                 planID: "advanced", number: 8, title: "L-sit + lever",
                 instruction: "Do 3 L-sit pull-ups, bending your knees if needed; then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
-                phase: .pull, targets: [.feature(.largeSlope)]
+                phase: .pull, targets: [.feature(.largeSlope)],
+                segments: [undefinedWork(.feature(.largeSlope)), fixedWork(.feature(.largeSlope), 5)]
             ),
             minute(
                 planID: "advanced", number: 9, title: "Two fingers + power pulls",
                 instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets, then do 3 power pull-ups with weight or helper resistance.",
-                phase: .hang, targets: [.feature(.threeFingerPocket)], gripType: .twoFingerPocket
+                phase: .hang, targets: [.feature(.threeFingerPocket)],
+                segments: [fixedWork(.feature(.threeFingerPocket), 20), undefinedWork(.feature(.threeFingerPocket))], gripType: .twoFingerPocket
             ),
             minute(
                 planID: "advanced", number: 10, title: "Maximum slope hangs",
                 instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
-                phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper
+                phase: .hang, targets: [.feature(.largeSlope)],
+                segments: [stopwatchWork(.feature(.largeSlope)), stopwatchWork(.feature(.largeSlope))], gripType: .sloper
             )
         ]
     )
@@ -913,6 +987,7 @@ enum LegacyPlanSeedCatalog {
             duration: duration,
             phase: .warmUp,
             targets: [.ids("jug-left", "jug-right")],
+            segments: [fixedWork(.ids("jug-left", "jug-right"), duration)],
             gripType: .openHand
         )
     }
@@ -936,6 +1011,7 @@ enum LegacyPlanSeedCatalog {
             duration: active + rest,
             phase: .hang,
             targets: targets,
+            segments: [fixedWork(targets[0], active)] + (rest > 0 ? [fixedRest(rest)] : []),
             gripType: gripType,
             timedWorkDuration: active
         )
@@ -950,7 +1026,8 @@ enum LegacyPlanSeedCatalog {
             accessory: accessory,
             duration: duration,
             phase: .rest,
-            targets: []
+            targets: [],
+            segments: [fixedRest(duration)]
         )
     }
 
@@ -964,6 +1041,7 @@ enum LegacyPlanSeedCatalog {
             duration: 60,
             phase: .coolDown,
             targets: [.ids("jug-left", "jug-right")],
+            segments: [fixedWork(.ids("jug-left", "jug-right"), 60)],
             gripType: .openHand
         )
     }
@@ -1455,7 +1533,7 @@ enum LegacyPlanSeedCatalog {
         #if DEBUG
         assert(officialPlans.count == 3, "The official Metolius guide has three routines")
         assert(
-            officialAuditFingerprint(officialPlans) == 9_492_510_929_454_363_776,
+            officialAuditFingerprint(officialPlans) == 1_914_094_498_687_059_568,
             "Official Metolius prescription drifted from the source-audited snapshot"
         )
         for plan in officialPlans {
