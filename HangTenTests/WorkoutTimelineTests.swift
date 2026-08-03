@@ -306,6 +306,9 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(advancedMinuteTen.map(\.duration), [60])
         XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("to failure"))
         XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("no rest"))
+    }
+}
+
 final class WorkoutAudioCuePolicyTests: XCTestCase {
     private let stepID = "f80-set-2-rep-3"
 
