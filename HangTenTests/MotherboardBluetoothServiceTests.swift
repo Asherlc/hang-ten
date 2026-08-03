@@ -190,11 +190,12 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(transport.startScanCount, 1)
     }
 
-    func testTareAveragesTheNextMeasurementWindow() {
+    func testTareAveragesTheNextMeasurementWindowAndPublishesCompletionSignalAtTarget() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport, tareSampleCount: 3)
         connectAndStartStreaming(service, with: transport)
 
+        XCTAssertEqual(service.tareCompletionCount, 0)
         service.tare()
         XCTAssertTrue(service.isTaring)
         XCTAssertEqual(service.tareSamplesCollected, 0)
@@ -203,12 +204,15 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         emitRawPacket(on: transport, sampleNumber: 1, adc: 100)
         XCTAssertTrue(service.isTaring)
         XCTAssertEqual(service.tareSamplesCollected, 1)
+        XCTAssertEqual(service.tareCompletionCount, 0)
         emitRawPacket(on: transport, sampleNumber: 2, adc: 200)
         XCTAssertEqual(service.tareSamplesCollected, 2)
+        XCTAssertEqual(service.tareCompletionCount, 0)
         emitRawPacket(on: transport, sampleNumber: 3, adc: 300)
 
         XCTAssertFalse(service.isTaring)
         XCTAssertEqual(service.tareSamplesCollected, 0)
+        XCTAssertEqual(service.tareCompletionCount, 1)
 
         emitRawPacket(on: transport, sampleNumber: 4, adc: 200)
         XCTAssertEqual(service.latestMeasurement?.sensorLoadsKGF ?? [], [0, 0, 0, 0])
@@ -498,7 +502,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertFalse(preparation.canContinue(isStreaming: true))
     }
 
-    func testCancelPreparationMeasurementsStopsTareWithoutDisconnectingTheStream() {
+    func testCancelPreparationMeasurementsDoesNotPublishTareCompletionWhileStreaming() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport, tareSampleCount: 3)
         connectAndStartStreaming(service, with: transport)
@@ -510,6 +514,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.state, .streaming)
         XCTAssertFalse(service.isTaring)
         XCTAssertEqual(service.tareSamplesCollected, 0)
+        XCTAssertEqual(service.tareCompletionCount, 0)
     }
 
     func testCancelPreparationMeasurementsStopsBodyweightCaptureAndClearsTheBaseline() async throws {

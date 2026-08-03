@@ -2,6 +2,13 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardWorkoutPreparationTests: XCTestCase {
+    func testWorkoutPreparationHandoffAllowsOnlyTheFirstEvent() {
+        var handoff = MotherboardWorkoutPreparationHandoff()
+
+        XCTAssertTrue(handoff.accept())
+        XCTAssertFalse(handoff.accept())
+    }
+
     func testPreparationAdvancesOnlyWhenTareAndBodyweightComplete() {
         var preparation = MotherboardWorkoutPreparation()
 

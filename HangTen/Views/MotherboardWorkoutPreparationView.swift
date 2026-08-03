@@ -36,8 +36,8 @@ struct MotherboardWorkoutPreparationView: View {
             guard state != .streaming else { return }
             handleStreamingLoss()
         }
-        .onChange(of: service.isTaring) { _, isTaring in
-            guard didRequestTare, !isTaring, preparation.step == .tare else { return }
+        .onChange(of: service.tareCompletionCount) { _, _ in
+            guard didRequestTare, preparation.step == .tare else { return }
             didRequestTare = false
             preparation.completeTare(isStreaming: service.state == .streaming)
             guard preparation.step == .bodyweight else { return }
@@ -173,7 +173,11 @@ struct MotherboardWorkoutPreparationView: View {
     }
 
     private func requestTareIfNeeded() {
-        guard !didRequestTare, service.state == .streaming else { return }
+        guard service.state == .streaming else {
+            handleStreamingLoss()
+            return
+        }
+        guard !didRequestTare else { return }
         didRequestTare = true
         service.tare()
     }

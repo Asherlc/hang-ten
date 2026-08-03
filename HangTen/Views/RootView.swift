@@ -1,6 +1,16 @@
 import SwiftUI
 import UIKit
 
+struct MotherboardWorkoutPreparationHandoff {
+    private(set) var didAccept = false
+
+    mutating func accept() -> Bool {
+        guard !didAccept else { return false }
+        didAccept = true
+        return true
+    }
+}
+
 struct RootView: View {
     @State private var selectedTab: Int = {
         #if DEBUG
@@ -655,6 +665,7 @@ struct WorkoutView: View {
     @State private var didInterruptRecorder = false
     @State private var showsWorkoutPreparation = false
     @State private var didCompleteWorkoutPreparation = false
+    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
     @State private var bodyweightKGF: Double?
 
     private var board: TrainingBoard {
@@ -770,12 +781,14 @@ struct WorkoutView: View {
 				unit: motherboardSettingsStore.forceUnit,
 				bodyweightCaptureDuration: motherboardSettingsStore.bodyweightCaptureDuration,
 				onComplete: { baseline in
+					guard workoutPreparationHandoff.accept() else { return }
 					bodyweightKGF = baseline
 					didCompleteWorkoutPreparation = true
 					showsWorkoutPreparation = false
 					toggleRunning()
 				},
 				onSkip: {
+					guard workoutPreparationHandoff.accept() else { return }
 					bodyweightKGF = nil
 					didCompleteWorkoutPreparation = true
 					showsWorkoutPreparation = false

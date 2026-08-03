@@ -61,6 +61,7 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var connectedDeviceID: UUID?
     @Published private(set) var isTaring = false
     @Published private(set) var tareSamplesCollected = 0
+    @Published private(set) var tareCompletionCount = 0
     @Published private(set) var bodyweightKGF: Double?
     @Published private(set) var isMeasuringBodyweight = false
     @Published private(set) var bodyweightMeasurementStartedAt: Date?
@@ -337,6 +338,7 @@ final class MotherboardBluetoothService: ObservableObject {
         let average = tareAccumulatorKGF.map { $0 / divisor }
         tareKGF = zip(tareKGF, average).map(+)
         cancelTare()
+        tareCompletionCount += 1
     }
 
     private func cancelTare() {

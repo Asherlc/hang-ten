@@ -78,6 +78,64 @@ rtk proxy xcodebuild -quiet -project HangTen.xcodeproj -scheme HangTen -configur
 Result: PASS, exit 0. Xcode emitted only the existing simulator build-number
 warnings.
 
+## Latest Task 3 review follow-up
+
+### RED
+
+Added a service regression that distinguishes cancellation from a completed
+tare window, plus a pure one-shot workout-preparation handoff regression.
+
+Command:
+
+```sh
+rtk proxy xcodebuild build-for-testing -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=27B6F0AE-55BA-4B12-89DA-064CF39C802B' -derivedDataPath .context/DerivedData-task-3-review-red-build -parallel-testing-enabled NO -maximum-parallel-testing-workers 1
+```
+
+Result: intentional RED, exit 65. `MotherboardWorkoutPreparationTests` failed
+to compile because `MotherboardWorkoutPreparationHandoff` did not exist.
+
+### GREEN
+
+- `MotherboardBluetoothService` now publishes a monotonic
+  `tareCompletionCount`, incremented only after its tare sample target is
+  reached. Cancellation and session reset do not increment it.
+- The preparation sheet advances only from that signal while streaming;
+  `cancelPreparationMeasurements()` leaves the sheet on tare. A sheet shown
+  after streaming has already stopped now enters its recoverable interrupted
+  state with retry/skip instead of zero-progress tare.
+- `MotherboardWorkoutPreparationHandoff` makes RootView's complete/skip
+  closures one-shot, so only the first event can dismiss the sheet and start
+  the countdown.
+
+Compilation command:
+
+```sh
+rtk proxy xcodebuild build-for-testing -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-review-final-green -parallel-testing-enabled NO -maximum-parallel-testing-workers 1
+```
+
+Result: PASS, exit 0. Only the existing simulator build-number warnings were
+emitted.
+
+### Final verification
+
+Focused preparation, recorder, and Bluetooth-service suites:
+
+```sh
+rtk proxy xcodebuild test-without-building -quiet -xctestrun .context/DerivedData-task-3-review-final-green/Build/Products/HangTen_iphonesimulator26.5-arm64.xctestrun -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -resultBundlePath .context/task-3-review-final-verified-tests.xcresult -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardWorkoutPreparationTests -only-testing:HangTenTests/MotherboardWorkoutRecorderTests -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: PASS. The XCTest result bundle reports 56 passed, 0 failed, and 0
+skipped tests on `HangTen sucre-v1 Final Review` (iPhone 17 Pro, iOS 26.5).
+
+Debug simulator build:
+
+```sh
+rtk proxy xcodebuild -quiet -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-3-review-final-build-verified build
+```
+
+Result: PASS, exit 0. Only the existing simulator build-number warnings were
+emitted.
+
 ## Latest review-fix lifecycle evidence
 
 ### RED
