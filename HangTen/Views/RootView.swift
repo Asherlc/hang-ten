@@ -1799,7 +1799,8 @@ struct WorkoutView: View {
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
 			bodyweightKGF: bodyweightKGF,
-			motherboardMeasurements: motherboardMeasurementCollector.measurements
+			motherboardMeasurements: motherboardMeasurementCollector.measurements,
+			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
 		)
 		completedSession = session
 		summarySession = session
