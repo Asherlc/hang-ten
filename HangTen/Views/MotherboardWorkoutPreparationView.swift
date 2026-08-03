@@ -98,57 +98,64 @@ struct MotherboardWorkoutPreparationView: View {
         }
     }
 
+    @ViewBuilder
     private var bodyweightContent: some View {
-        TimelineView(.periodic(from: .now, by: 0.1)) { context in
-            let progress = bodyweightProgress(at: context.date)
-            let remaining = max(0, bodyweightCaptureDuration * (1 - progress))
-
-            Group {
-                VStack(alignment: .leading, spacing: 16) {
-                    SectionLabel(title: "Step 2 of 2")
-                    Text(preparation.isBodyweightCaptureInProgress ? "Capture bodyweight" : "Ready to hang")
-                        .font(.system(size: 30, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(preparation.isBodyweightCaptureInProgress
-                         ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load."
-                         : "Get onto the relaxed jugs, then start the timed bodyweight measurement when you are settled.")
-                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-
-                    if preparation.isBodyweightCaptureInProgress {
-                        ProgressView(value: progress)
-                            .tint(Color.hangGreenDark)
-
-                        HStack {
-                            Text("\(service.bodyweightSampleCount) samples")
-                            Spacer()
-                            Text("\(durationText(remaining)) remaining")
-                        }
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    } else if preparation.isAwaitingBodyweightCapture {
-                        Button("Start bodyweight measurement", action: startBodyweightCapture)
-                            .buttonStyle(.borderedProminent)
-                            .tint(Color.hangGreenDark)
-                            .disabled(service.state != .streaming)
-                    }
-
-                    if let failure = preparation.failure {
-                        Text(bodyweightFailureText(for: failure))
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
-
-                        Button("Retry capture", action: retryBodyweightCapture)
-                            .buttonStyle(.bordered)
-                            .tint(Color.hangGreenDark)
-                            .disabled(service.state != .streaming)
-                    }
-
-                    Button("Skip bodyweight", action: skipPreparation)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
+        if preparation.isBodyweightCaptureInProgress {
+            TimelineView(.periodic(from: .now, by: 0.1)) { context in
+                bodyweightContent(at: context.date)
             }
+        } else {
+            bodyweightContent(at: .now)
+        }
+    }
+
+    private func bodyweightContent(at date: Date) -> some View {
+        let progress = bodyweightProgress(at: date)
+        let remaining = max(0, bodyweightCaptureDuration * (1 - progress))
+
+        return VStack(alignment: .leading, spacing: 16) {
+            SectionLabel(title: "Step 2 of 2")
+            Text(preparation.isBodyweightCaptureInProgress ? "Capture bodyweight" : "Ready to hang")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text(preparation.isBodyweightCaptureInProgress
+                 ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load."
+                 : "Get onto the relaxed jugs, then start the timed bodyweight measurement when you are settled.")
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+
+            if preparation.isBodyweightCaptureInProgress {
+                ProgressView(value: progress)
+                    .tint(Color.hangGreenDark)
+
+                HStack {
+                    Text("\(service.bodyweightSampleCount) samples")
+                    Spacer()
+                    Text("\(durationText(remaining)) remaining")
+                }
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            } else if preparation.isAwaitingBodyweightCapture {
+                Button("Start bodyweight measurement", action: startBodyweightCapture)
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.hangGreenDark)
+                    .disabled(service.state != .streaming)
+            }
+
+            if let failure = preparation.failure {
+                Text(bodyweightFailureText(for: failure))
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+
+                Button("Retry capture", action: retryBodyweightCapture)
+                    .buttonStyle(.bordered)
+                    .tint(Color.hangGreenDark)
+                    .disabled(service.state != .streaming)
+            }
+
+            Button("Skip bodyweight", action: skipPreparation)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
         }
     }
 
@@ -256,10 +263,10 @@ struct MotherboardWorkoutPreparationView: View {
     }
 
     private func forceText(_ kilogramsForce: Double) -> String {
-        String(format: "%.1f %@", unit.value(fromKilogramsForce: kilogramsForce), unit.label)
+        MotherboardUserVisibleFormatting.force(kilogramsForce, unit: unit) ?? "—"
     }
 
     private func durationText(_ duration: TimeInterval) -> String {
-        String(format: "%.1fs", duration)
+        MotherboardUserVisibleFormatting.duration(duration) ?? "—"
     }
 }

@@ -164,4 +164,115 @@ final class MotherboardWorkoutPreparationTests: XCTestCase {
             isStreaming: false
         ))
     }
+
+    func testForceFormattingUsesTheRequestedLocale() {
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.force(
+                12.3,
+                unit: .kgf,
+                locale: Locale(identifier: "en_US")
+            ),
+            "12.3 kgf"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.force(
+                12.3,
+                unit: .kgf,
+                locale: Locale(identifier: "de_DE")
+            ),
+            "12,3 kgf"
+        )
+    }
+
+    func testPercentageFormattingUsesTheRequestedLocalePercentStyle() {
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.percentage(
+                12.4,
+                locale: Locale(identifier: "en_US")
+            ),
+            "12%"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.percentage(
+                12.4,
+                locale: Locale(identifier: "de_DE")
+            ),
+            "12\u{00a0}%"
+        )
+    }
+
+    func testPercentageOverflowUsesLocalizedLimitWithPlusSuffix() {
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.percentage(
+                12_000,
+                locale: Locale(identifier: "en_US")
+            ),
+            "9,999%+"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.percentage(
+                12_000,
+                locale: Locale(identifier: "de_DE")
+            ),
+            "9.999\u{00a0}%+"
+        )
+    }
+
+    func testDurationFormattingLocalizesAbbreviatedAndSettingsUnits() {
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.duration(
+                1.2,
+                locale: Locale(identifier: "en_US"),
+                unitStyle: .short,
+                fractionDigits: 1
+            ),
+            "1.2s"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.duration(
+                1.2,
+                locale: Locale(identifier: "de_DE"),
+                unitStyle: .short,
+                fractionDigits: 1
+            ),
+            "1,2s"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.duration(
+                5,
+                locale: Locale(identifier: "en_US"),
+                unitStyle: .long,
+                fractionDigits: 0
+            ),
+            "5 seconds"
+        )
+        XCTAssertEqual(
+            MotherboardUserVisibleFormatting.duration(
+                5,
+                locale: Locale(identifier: "de_DE"),
+                unitStyle: .long,
+                fractionDigits: 0
+            ),
+            "5 Sekunden"
+        )
+    }
+
+    func testFormattingRejectsNegativeAndNonFiniteValues() {
+        for value in [-1, .nan, .infinity, -.infinity] {
+            XCTAssertNil(
+                MotherboardUserVisibleFormatting.force(value, unit: .kgf, locale: Locale(identifier: "en_US"))
+            )
+            XCTAssertNil(
+                MotherboardUserVisibleFormatting.percentage(value, locale: Locale(identifier: "en_US"))
+            )
+            XCTAssertNil(
+                MotherboardUserVisibleFormatting.duration(
+                    value,
+                    locale: Locale(identifier: "en_US"),
+                    unitStyle: .short,
+                    fractionDigits: 1
+                )
+            )
+        }
+    }
 }

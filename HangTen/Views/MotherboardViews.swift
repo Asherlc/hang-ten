@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import UIKit
 
@@ -146,7 +147,7 @@ struct MotherboardSettingsView: View {
                 }
 
                 LabeledContent("Displayed threshold") {
-                    Text(settings.forceUnit.value(fromKilogramsForce: settings.thresholdKGF).forceString(unit: settings.forceUnit))
+                    Text(settings.thresholdKGF.forceString(in: settings.forceUnit))
                 }
             }
 
@@ -187,7 +188,11 @@ struct MotherboardSettingsView: View {
     }
 
     private var bodyweightCaptureDurationText: String {
-        "\(Int(bodyweightCaptureDuration.wrappedValue)) seconds"
+        MotherboardUserVisibleFormatting.duration(
+            bodyweightCaptureDuration.wrappedValue,
+            unitStyle: .long,
+            fractionDigits: 0
+        ) ?? "—"
     }
 }
 
@@ -238,8 +243,8 @@ struct MotherboardMeterView: View {
             }
 
             HStack {
-                Label(loadStatusText, systemImage: loadStatusIcon)
-                    .foregroundStyle(loadStatusTint)
+                Label(loadStatus.label, systemImage: loadStatus.icon)
+                    .foregroundStyle(loadStatus.tint)
                 Spacer()
                 if let threshold = formattedForce(thresholdKGF) {
                     Text("Threshold \(threshold)")
@@ -279,25 +284,13 @@ struct MotherboardMeterView: View {
         return text
     }
 
-    private var loadStatusText: String {
-        guard state == .streaming else { return "Sensor unavailable" }
+    private var loadStatus: MotherboardLoadStatus {
+        guard state == .streaming else { return .sensorUnavailable }
         guard let measurement,
               measurement.aggregateLoadKGF.isFinite else {
-            return "Waiting for load"
+            return .waitingForLoad
         }
-        return measurement.aggregateLoadKGF >= max(thresholdKGF, 0) ? "Loaded" : "Unloaded"
-    }
-
-    private var loadStatusIcon: String {
-        switch loadStatusText {
-        case "Loaded": "figure.climbing"
-        case "Unloaded": "hand.raised"
-        default: "questionmark.circle"
-        }
-    }
-
-    private var loadStatusTint: Color {
-        loadStatusText == "Loaded" ? Color.hangGreenDark : Color.hangMuted
+        return measurement.aggregateLoadKGF >= max(thresholdKGF, 0) ? .loaded : .unloaded
     }
 
     @ViewBuilder
@@ -354,16 +347,125 @@ struct MotherboardMeterView: View {
     }
 
     private func formattedForce(_ kilogramsForce: Double) -> String? {
-        guard kilogramsForce.isFinite, kilogramsForce >= 0 else { return nil }
-        let displayedValue = unit.value(fromKilogramsForce: kilogramsForce)
-        guard displayedValue.isFinite, displayedValue >= 0 else { return nil }
-        return String(format: "%.1f %@", displayedValue, unit.label)
+        MotherboardUserVisibleFormatting.force(
+            kilogramsForce,
+            unit: unit
+        )
     }
 
     private func formattedPercentage(_ percentage: Double) -> String? {
+        MotherboardUserVisibleFormatting.percentage(percentage)
+    }
+}
+
+enum MotherboardLoadStatus: Equatable {
+    case sensorUnavailable
+    case waitingForLoad
+    case loaded
+    case unloaded
+
+    var label: String {
+        switch self {
+        case .sensorUnavailable: "Sensor unavailable"
+        case .waitingForLoad: "Waiting for load"
+        case .loaded: "Loaded"
+        case .unloaded: "Unloaded"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .loaded: "figure.climbing"
+        case .unloaded: "hand.raised"
+        case .sensorUnavailable, .waitingForLoad: "questionmark.circle"
+        }
+    }
+
+    var tint: Color {
+        self == .loaded ? .hangGreenDark : .hangMuted
+    }
+}
+
+enum MotherboardUserVisibleFormatting {
+    static func force(
+        _ kilogramsForce: Double,
+        unit: MotherboardForceUnit,
+        locale: Locale = .current
+    ) -> String? {
+        guard kilogramsForce.isFinite, kilogramsForce >= 0 else { return nil }
+        let displayedValue = unit.value(fromKilogramsForce: kilogramsForce)
+        guard displayedValue.isFinite, displayedValue >= 0,
+              let formattedValue = number(
+                  displayedValue,
+                  locale: locale,
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1
+              ) else {
+            return nil
+        }
+        return "\(formattedValue) \(unit.label)"
+    }
+
+    static func percentage(
+        _ percentage: Double,
+        locale: Locale = .current
+    ) -> String? {
         guard percentage.isFinite, percentage >= 0 else { return nil }
-        guard percentage <= 9_999 else { return "9,999%+" }
-        return String(format: "%.0f%%", percentage)
+        let maximumPercentage = 9_999.0
+        let displayedPercentage = min(percentage, maximumPercentage)
+        guard let formattedPercentage = percent(
+            displayedPercentage,
+            locale: locale
+        ) else {
+            return nil
+        }
+        return percentage > maximumPercentage ? "\(formattedPercentage)+" : formattedPercentage
+    }
+
+    static func duration(
+        _ duration: TimeInterval,
+        locale: Locale = .current,
+        unitStyle: Formatter.UnitStyle = .short,
+        fractionDigits: Int = 1
+    ) -> String? {
+        guard duration.isFinite, duration >= 0, fractionDigits >= 0 else { return nil }
+
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = locale
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.minimumFractionDigits = fractionDigits
+        numberFormatter.maximumFractionDigits = fractionDigits
+
+        let measurementFormatter = MeasurementFormatter()
+        measurementFormatter.locale = locale
+        measurementFormatter.unitStyle = unitStyle
+        measurementFormatter.numberFormatter = numberFormatter
+        return measurementFormatter.string(
+            from: Measurement(value: duration, unit: UnitDuration.seconds)
+        )
+    }
+
+    private static func number(
+        _ value: Double,
+        locale: Locale,
+        minimumFractionDigits: Int,
+        maximumFractionDigits: Int
+    ) -> String? {
+        let formatter = NumberFormatter()
+        formatter.locale = locale
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = minimumFractionDigits
+        formatter.maximumFractionDigits = maximumFractionDigits
+        return formatter.string(from: NSNumber(value: value))
+    }
+
+    private static func percent(_ percentage: Double, locale: Locale) -> String? {
+        let formatter = NumberFormatter()
+        formatter.locale = locale
+        formatter.numberStyle = .percent
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: percentage / 100))
     }
 }
 
@@ -419,16 +521,12 @@ private extension MotherboardConnectionState {
 
 private extension Double {
     func forceString(in unit: MotherboardForceUnit) -> String {
-        unit.value(fromKilogramsForce: self).forceString(unit: unit)
-    }
-
-    func forceString(unit: MotherboardForceUnit) -> String {
-        String(format: "%.1f %@", self, unit.label)
+        MotherboardUserVisibleFormatting.force(self, unit: unit) ?? "—"
     }
 }
 
 private extension TimeInterval {
     var durationText: String {
-        String(format: "%.1fs", self)
+        MotherboardUserVisibleFormatting.duration(self) ?? "—"
     }
 }
