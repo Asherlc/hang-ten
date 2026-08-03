@@ -10,6 +10,12 @@ enum WorkoutSummaryMode: Equatable {
 }
 
 enum WorkoutSummaryFormatting {
+    static func granularSampleCountText(for measurements: [MotherboardMeasurement]) -> String? {
+        guard !measurements.isEmpty else { return nil }
+        let label = measurements.count == 1 ? "sample" : "samples"
+        return "\(measurements.count) granular Motherboard \(label)"
+    }
+
     static func bodyweightBaselineText(
         for bodyweightKGF: Double?,
         unit: MotherboardForceUnit
@@ -149,6 +155,16 @@ private struct WorkoutSummaryContent: View {
             ) {
                 Section("Bodyweight baseline") {
                     Text(bodyweightBaselineText)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+            }
+
+            if let granularSampleCountText = WorkoutSummaryFormatting.granularSampleCountText(
+                for: session.motherboardMeasurements
+            ) {
+                Section("Granular sensor data") {
+                    Text(granularSampleCountText)
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
                 }

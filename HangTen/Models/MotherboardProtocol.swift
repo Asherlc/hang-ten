@@ -180,6 +180,7 @@ enum MotherboardProtocol {
             timestamp: timestamp,
             sampleNumber: packet.sampleNumber,
             batteryValue: packet.batteryValue,
+            rawADCValues: packet.adcValues,
             sensorLoadsKGF: sensorLoadsKGF,
             aggregateLoadKGF: max(0, sensorLoadsKGF.reduce(0, +))
         )

@@ -667,6 +667,7 @@ struct WorkoutView: View {
     @State private var didCompleteWorkoutPreparation = false
     @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
     @State private var bodyweightKGF: Double?
+    @State private var motherboardMeasurements: [MotherboardMeasurement] = []
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -822,8 +823,8 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
-		.onChange(of: motherboardBluetoothService.latestMeasurement) { _, measurement in
-			guard let measurement else { return }
+		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+			capture(measurement)
 			consume(measurement)
 		}
 		.onChange(of: motherboardBluetoothService.state) { previousState, state in
@@ -1235,6 +1236,15 @@ struct WorkoutView: View {
 		)
 	}
 
+	private func capture(_ measurement: MotherboardMeasurement) {
+		guard let startedAt,
+			  startedAt <= measurement.timestamp,
+			  countdownRemaining(at: measurement.timestamp) == 0 else { return }
+
+		guard currentElapsed(at: measurement.timestamp) < plan.duration else { return }
+		motherboardMeasurements.append(measurement)
+	}
+
 	private func finalizeRoutine() {
 		guard !didComplete else { return }
 		didComplete = true
@@ -1266,7 +1276,8 @@ struct WorkoutView: View {
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
-			bodyweightKGF: bodyweightKGF
+			bodyweightKGF: bodyweightKGF,
+			motherboardMeasurements: motherboardMeasurements
 		)
 		completedSession = session
 		summarySession = session

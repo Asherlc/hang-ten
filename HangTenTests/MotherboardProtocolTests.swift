@@ -37,17 +37,28 @@ final class MotherboardProtocolTests: XCTestCase {
     func testCalibrationInterpolatesAndSubtractsPerSensorTare() {
         let calibration = MotherboardCalibration(rows: [
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 0, adc: 0),
-            MotherboardCalibrationRow(sensor: 0, calibrationPoint: 1, massKGF: 10, adc: 100)
+            MotherboardCalibrationRow(sensor: 0, calibrationPoint: 1, massKGF: 10, adc: 100),
+            MotherboardCalibrationRow(sensor: 1, calibrationPoint: 0, massKGF: 0, adc: 0),
+            MotherboardCalibrationRow(sensor: 1, calibrationPoint: 1, massKGF: 10, adc: 100),
+            MotherboardCalibrationRow(sensor: 2, calibrationPoint: 0, massKGF: 0, adc: 0),
+            MotherboardCalibrationRow(sensor: 2, calibrationPoint: 1, massKGF: 10, adc: 100),
+            MotherboardCalibrationRow(sensor: 3, calibrationPoint: 0, massKGF: 0, adc: 0),
+            MotherboardCalibrationRow(sensor: 3, calibrationPoint: 1, massKGF: 10, adc: 100)
         ])
-        let packet = MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [50, 0, 0, 0])
+        let timestamp = Date(timeIntervalSince1970: 1)
+        let packet = MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [50, -12, 100, 0])
         let result = MotherboardProtocol.decode(
             packet,
-            timestamp: Date(timeIntervalSince1970: 1),
+            timestamp: timestamp,
             calibration: calibration,
             tareKGF: [1, 0, 0, 0]
         )
-        XCTAssertEqual(result.sensorLoadsKGF[0], 4, accuracy: 0.0001)
-        XCTAssertEqual(result.aggregateLoadKGF, 4, accuracy: 0.0001)
+        XCTAssertEqual(result.timestamp, timestamp)
+        XCTAssertEqual(result.sampleNumber, packet.sampleNumber)
+        XCTAssertEqual(result.batteryValue, packet.batteryValue)
+        XCTAssertEqual(result.rawADCValues, packet.adcValues)
+        XCTAssertEqual(result.sensorLoadsKGF, [4, 0, 10, 0])
+        XCTAssertEqual(result.aggregateLoadKGF, 14, accuracy: 0.0001)
     }
 
     func testCalibrationSortsPointsAndClampsAtBothEndpoints() {

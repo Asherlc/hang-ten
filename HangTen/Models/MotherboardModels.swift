@@ -29,8 +29,39 @@ struct MotherboardMeasurement: Codable, Equatable {
     let timestamp: Date
     let sampleNumber: UInt16
     let batteryValue: UInt16
+    let rawADCValues: [Int32]
     let sensorLoadsKGF: [Double]
     let aggregateLoadKGF: Double
+
+    private enum CodingKeys: String, CodingKey {
+        case timestamp, sampleNumber, batteryValue, rawADCValues, sensorLoadsKGF, aggregateLoadKGF
+    }
+
+    init(
+        timestamp: Date,
+        sampleNumber: UInt16,
+        batteryValue: UInt16,
+        rawADCValues: [Int32] = [],
+        sensorLoadsKGF: [Double],
+        aggregateLoadKGF: Double
+    ) {
+        self.timestamp = timestamp
+        self.sampleNumber = sampleNumber
+        self.batteryValue = batteryValue
+        self.rawADCValues = rawADCValues
+        self.sensorLoadsKGF = sensorLoadsKGF
+        self.aggregateLoadKGF = aggregateLoadKGF
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        timestamp = try container.decode(Date.self, forKey: .timestamp)
+        sampleNumber = try container.decode(UInt16.self, forKey: .sampleNumber)
+        batteryValue = try container.decode(UInt16.self, forKey: .batteryValue)
+        rawADCValues = try container.decodeIfPresent([Int32].self, forKey: .rawADCValues) ?? []
+        sensorLoadsKGF = try container.decode([Double].self, forKey: .sensorLoadsKGF)
+        aggregateLoadKGF = try container.decode(Double.self, forKey: .aggregateLoadKGF)
+    }
 
     private enum Side {
         static let leftChannels = [0, 2]
@@ -132,10 +163,11 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let batteryValue: UInt16?
     let steps: [WorkoutStepMeasurement]
     let bodyweightKGF: Double?
+    let motherboardMeasurements: [MotherboardMeasurement]
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
-        case motherboardIdentifier, batteryValue, steps, bodyweightKGF
+        case motherboardIdentifier, batteryValue, steps, bodyweightKGF, motherboardMeasurements
     }
 
     init(
@@ -148,7 +180,8 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier: String?,
         batteryValue: UInt16?,
         steps: [WorkoutStepMeasurement],
-        bodyweightKGF: Double? = nil
+        bodyweightKGF: Double? = nil,
+        motherboardMeasurements: [MotherboardMeasurement] = []
     ) {
         self.id = id
         self.planID = planID
@@ -160,6 +193,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.batteryValue = batteryValue
         self.steps = steps
         self.bodyweightKGF = bodyweightKGF
+        self.motherboardMeasurements = motherboardMeasurements
     }
 
     init(from decoder: Decoder) throws {
@@ -174,6 +208,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
         steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
+        motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
     }
 }
 

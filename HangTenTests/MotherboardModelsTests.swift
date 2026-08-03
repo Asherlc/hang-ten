@@ -91,7 +91,51 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 7, accuracy: 0.0001)
     }
 
-    func testSessionRecordDecodesWithoutOptionalBodyweightField() throws {
+    func testMeasurementRoundTripsRawADCValuesThroughCodable() throws {
+        let measurement = MotherboardMeasurement(
+            timestamp: Date(timeIntervalSince1970: 123),
+            sampleNumber: 42,
+            batteryValue: 88,
+            rawADCValues: [0x000102, -2, 0x7FFFFF, -0x800000],
+            sensorLoadsKGF: [1.25, -0.5, 3.75, 0],
+            aggregateLoadKGF: 4.5
+        )
+
+        let decoded = try JSONDecoder().decode(
+            MotherboardMeasurement.self,
+            from: JSONEncoder().encode(measurement)
+        )
+
+        XCTAssertEqual(decoded, measurement)
+    }
+
+    func testMeasurementDecodesWithoutRawADCValues() throws {
+        let measurement = MotherboardMeasurement(
+            timestamp: Date(timeIntervalSince1970: 123),
+            sampleNumber: 42,
+            batteryValue: 88,
+            rawADCValues: [1, 2, 3, 4],
+            sensorLoadsKGF: [1.25, -0.5, 3.75, 0],
+            aggregateLoadKGF: 4.5
+        )
+        let data = try JSONEncoder().encode(measurement)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "rawADCValues")
+
+        let decoded = try JSONDecoder().decode(
+            MotherboardMeasurement.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.timestamp, measurement.timestamp)
+        XCTAssertEqual(decoded.sampleNumber, measurement.sampleNumber)
+        XCTAssertEqual(decoded.batteryValue, measurement.batteryValue)
+        XCTAssertEqual(decoded.rawADCValues, [])
+        XCTAssertEqual(decoded.sensorLoadsKGF, measurement.sensorLoadsKGF)
+        XCTAssertEqual(decoded.aggregateLoadKGF, measurement.aggregateLoadKGF)
+    }
+
+    func testSessionRecordDecodesWithoutOptionalBodyweightOrGranularSamples() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "plan",
@@ -106,10 +150,12 @@ final class MotherboardModelsTests: XCTestCase {
         let data = try JSONEncoder().encode(record)
         var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         object.removeValue(forKey: "bodyweightKGF")
+        object.removeValue(forKey: "motherboardMeasurements")
         let legacyData = try JSONSerialization.data(withJSONObject: object)
 
         let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: legacyData)
         XCTAssertNil(decoded.bodyweightKGF)
+        XCTAssertEqual(decoded.motherboardMeasurements, [])
     }
 
     func testSettingsUseDefaultsAndRoundTripThroughUserDefaults() {
@@ -144,7 +190,7 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(defaults.double(forKey: "motherboard.thresholdKGF"), 2.5, accuracy: 0.0001)
     }
 
-    func testSessionRecordRoundTripsThroughCodable() throws {
+    func testSessionRecordRoundTripsMultipleGranularMeasurementsThroughCodable() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planID: "plan",
@@ -161,7 +207,25 @@ final class MotherboardModelsTests: XCTestCase {
                 peakLoadKGF: 12,
                 sampleCount: 150,
                 status: .measured
-            )]
+            )],
+            motherboardMeasurements: [
+                MotherboardMeasurement(
+                    timestamp: Date(timeIntervalSince1970: 120),
+                    sampleNumber: 101,
+                    batteryValue: 79,
+                    rawADCValues: [120, -121, 122, -123],
+                    sensorLoadsKGF: [1.5, 2.5, 3.5, 4.5],
+                    aggregateLoadKGF: 12
+                ),
+                MotherboardMeasurement(
+                    timestamp: Date(timeIntervalSince1970: 121),
+                    sampleNumber: 102,
+                    batteryValue: 78,
+                    rawADCValues: [220, -221, 222, -223],
+                    sensorLoadsKGF: [5.5, 6.5, 7.5, 8.5],
+                    aggregateLoadKGF: 28
+                )
+            ]
         )
         let data = try JSONEncoder().encode(record)
         XCTAssertEqual(try JSONDecoder().decode(WorkoutSessionRecord.self, from: data), record)
