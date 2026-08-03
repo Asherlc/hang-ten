@@ -27,6 +27,8 @@ The channel grouping is isolated in the model so it can be corrected without cha
 
 The service owns the five-second capture lifecycle, publishes progress state, averages only finite streamed samples, cancels on disconnect/session reset, and keeps the completed bodyweight baseline available for the workout. A captured bodyweight value is included in saved session records for later review.
 
+For a started workout, Hang Ten also records every received Motherboard measurement rather than only samples that cross the loaded-force threshold. Each persisted sample retains its notification timestamp, sequence number, battery value, raw ADC channel values, calibrated per-sensor loads, and aggregate load; left/right loads and shares remain derivable from the calibrated channels. Samples cover active and rest intervals while the routine is running and preserve the actual notification times. The granular sample field is optional so older history without it still decodes.
+
 ## UI
 
 The live Motherboard meter gains:
@@ -45,8 +47,8 @@ The simulator must make the sensor-backed experience inspectable without a physi
 
 ## Persistence and compatibility
 
-`WorkoutSessionRecord.bodyweightKGF` is optional so existing persisted session history decodes unchanged. Derived left/right shares are calculated from the current measurement and are not duplicated in stored records.
+`WorkoutSessionRecord.bodyweightKGF` and its granular Motherboard sample field are backward-compatible: existing persisted session history without either field decodes unchanged. Derived left/right shares are calculated from the current measurement and are not duplicated in stored records.
 
 ## Testing
 
-Tests cover side grouping/shares, bodyweight averaging and cancellation, duration setting persistence/normalization, saved bodyweight compatibility, and the preflight state transitions. Existing Bluetooth, parser, recorder, history, and full-app tests must remain green.
+Tests cover side grouping/shares, raw ADC propagation, granular sample/session Codable round trips, bodyweight averaging and cancellation, duration setting persistence/normalization, saved bodyweight compatibility, and the preflight state transitions. Existing Bluetooth, parser, recorder, history, and full-app tests must remain green.

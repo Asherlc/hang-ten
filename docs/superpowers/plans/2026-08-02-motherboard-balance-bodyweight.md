@@ -174,7 +174,49 @@ rtk git add HangTen/Views/MotherboardViews.swift HangTen/Views/WorkoutSummaryVie
 rtk git commit -m "feat: show Motherboard balance and bodyweight"
 ```
 
-### Task 5: Full verification and PR update
+### Task 5: Granular Motherboard sample persistence
+
+**Files:**
+- Modify: `HangTen/Models/MotherboardModels.swift`
+- Modify: `HangTen/Models/MotherboardProtocol.swift`
+- Modify: `HangTen/Views/RootView.swift`
+- Modify: `HangTen/Views/WorkoutSummaryView.swift`
+- Modify: `HangTenTests/MotherboardModelsTests.swift`
+- Modify: `HangTenTests/MotherboardProtocolTests.swift`
+- Modify: `HangTenTests/AppStoreTests.swift` only if the persisted session fixture needs compatibility coverage
+
+**Interfaces:**
+- `MotherboardMeasurement` retains raw ADC channel values alongside calibrated sensor loads, with backward-compatible Codable defaults.
+- `WorkoutSessionRecord.motherboardMeasurements` stores every streamed measurement received during the running routine, including rest intervals, with missing-field decode fallback for existing records.
+
+- [ ] **Step 1: Write failing persistence and raw-packet tests**
+
+Add tests proving protocol decoding carries all raw ADC values into the calibrated measurement, measurement/session Codable round-trips retain timestamps, battery, raw channels, sensor loads, and aggregate values, and legacy session JSON without the new sample field still decodes.
+
+- [ ] **Step 2: Run focused tests and verify RED**
+
+Run the model/protocol/AppStore restrictions; expected failure is absent raw-channel/session sample fields.
+
+- [ ] **Step 3: Implement granular capture and persistence**
+
+Add raw ADC values to `MotherboardMeasurement` with decode defaults, pass packet ADCs through `MotherboardProtocol.decode`, append each streamed measurement from `WorkoutView` while its actual routine timer is running (including rest intervals), and persist the captured array in `WorkoutSessionRecord`. Keep threshold-based recorder behavior unchanged and use the existing notification timestamps as the source of truth.
+
+- [ ] **Step 4: Add a read-only summary data-count cue**
+
+Show the optional sample count in the session summary when granular data exists without making history mutable or exposing a misleading count for old records.
+
+- [ ] **Step 5: Run focused tests and verify GREEN**
+
+Rerun model/protocol/summary/AppStore restrictions and confirm all pass.
+
+- [ ] **Step 6: Commit**
+
+```sh
+rtk git add HangTen/Models/MotherboardModels.swift HangTen/Models/MotherboardProtocol.swift HangTen/Views/RootView.swift HangTen/Views/WorkoutSummaryView.swift HangTenTests/MotherboardModelsTests.swift HangTenTests/MotherboardProtocolTests.swift HangTenTests/AppStoreTests.swift
+rtk git commit -m "feat: persist granular Motherboard samples"
+```
+
+### Task 6: Full verification and PR update
 
 **Files:**
 - Modify: `README.md` or `docs/IOS_RUNTIME_SERVICES.md` only if the new setup/review route needs a user-facing note
