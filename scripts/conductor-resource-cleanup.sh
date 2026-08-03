@@ -100,7 +100,7 @@ run_archive_cleanup() {
 
 run_prune() {
   local option=${1:-}
-  local devices record device_name device_state uuid
+  local devices current_devices record device_name device_state uuid
   local result_status=0
 
   if [[ -n "$option" && "$option" != --delete ]]; then
@@ -114,6 +114,18 @@ run_prune() {
     is_review_device_name "$device_name" || continue
 
     if [[ "$option" == --delete ]]; then
+      current_devices=$(xcrun simctl list devices "$uuid")
+      record=$(device_record_for_uuid "$current_devices" "$uuid")
+      if [[ -z "$record" ]]; then
+        print -u2 -- "Skipping simulator no longer available: $device_name ($uuid)"
+        result_status=1
+        continue
+      fi
+      device_state=${record#*$'\t'}
+      if [[ "$device_state" != Shutdown ]]; then
+        print -u2 -- "Skipping simulator no longer Shutdown: $device_name ($uuid) is $device_state"
+        continue
+      fi
       if ! xcrun simctl delete "$uuid"; then
         print -u2 -- "Failed to delete simulator: $uuid"
         result_status=1

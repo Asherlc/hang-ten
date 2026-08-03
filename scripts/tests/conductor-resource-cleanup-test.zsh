@@ -26,6 +26,12 @@ print -r -- "$*" >> "$XCRUN_ALL_CALL_LOG"
 case "$2" in
   list)
     [[ "${3:-}" == devices ]] || exit 64
+    if [[ -n "${4:-}" && -n "${PRUNE_TRANSITION_UUID:-}" && "$4" == "$PRUNE_TRANSITION_UUID" ]]; then
+      print -- '== Devices =='
+      print -- '-- iOS 26.5 --'
+      print -r -- "    Hang Ten Conductor alpha Review Transition ($PRUNE_TRANSITION_UUID) (Booted)"
+      exit 0
+    fi
     cat <<'DEVICES'
 == Devices ==
 -- iOS 26.5 --
@@ -39,6 +45,7 @@ case "$2" in
     iPhone Review (abababab-abab-abab-abab-abababababab) (Shutdown)
     Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
     Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
+    Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) (Shutdown)
     HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010) (Shutdown)
     Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020) (Shutdown)
     Hang Ten Worcester Validation (30303030-3030-3030-3030-303030303030) (Shutdown)
@@ -223,6 +230,7 @@ assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333
 assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
+assert_contains 'Would delete Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$dry_run"
 assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
 assert_not_contains '74747474-7474-7474-7474-747474747474' "$dry_run"
 assert_not_contains '10101010-1010-1010-1010-101010101010' "$dry_run"
@@ -253,6 +261,7 @@ assert_contains 'delete 33333333-3333-3333-3333-333333333333' "$prune_calls"
 assert_contains 'delete 77777777-7777-7777-7777-777777777777' "$prune_calls"
 assert_contains 'delete 88888888-8888-8888-8888-888888888888' "$prune_calls"
 assert_contains 'delete 99999999-9999-9999-9999-999999999999' "$prune_calls"
+assert_contains 'delete 12121212-1212-1212-1212-121212121212' "$prune_calls"
 assert_contains 'delete 20202020-2020-2020-2020-202020202020' "$prune_calls"
 assert_not_contains 'delete 74747474-7474-7474-7474-747474747474' "$prune_calls"
 assert_not_contains 'delete 10101010-1010-1010-1010-101010101010' "$prune_calls"
@@ -306,5 +315,12 @@ if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 run_cleanup prune --del
 fi
 prune_delete_failure_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_delete_failure_calls"
+
+: > "$call_log"
+: > "$all_call_log"
+transition_output=$(PRUNE_TRANSITION_UUID=12121212-1212-1212-1212-121212121212 run_cleanup prune --delete 2>&1)
+transition_calls=$(<"$call_log")
+assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$transition_calls"
+assert_contains 'Skipping simulator no longer Shutdown: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) is Booted' "$transition_output"
 
 print -- 'conductor resource cleanup tests passed'
