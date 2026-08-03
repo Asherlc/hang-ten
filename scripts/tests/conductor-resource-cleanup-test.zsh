@@ -8,6 +8,7 @@ trap 'rm -rf "$temp_dir"' EXIT
 
 fake_bin="$temp_dir/bin"
 call_log="$temp_dir/xcrun-calls"
+all_call_log="$temp_dir/xcrun-all-calls"
 mkdir -p "$fake_bin"
 
 cat > "$fake_bin/xcrun" <<'EOF'
@@ -15,9 +16,12 @@ cat > "$fake_bin/xcrun" <<'EOF'
 set -euo pipefail
 
 if [[ "$1" != simctl ]]; then
+  print -r -- "$*" >> "$XCRUN_ALL_CALL_LOG"
   print -u2 -- "unexpected xcrun invocation: $*"
   exit 64
 fi
+
+print -r -- "$*" >> "$XCRUN_ALL_CALL_LOG"
 
 case "$2" in
   list)
@@ -77,7 +81,7 @@ assert_not_contains() {
 }
 
 run_cleanup() {
-  PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" "$cleanup_script" "$@"
+  PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$cleanup_script" "$@"
 }
 
 workspace="$temp_dir/workspace"
@@ -88,6 +92,7 @@ print -r -- '11111111-1111-1111-1111-111111111111
 22222222-2222-2222-2222-222222222222
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive
 archive_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_calls"
@@ -98,6 +103,7 @@ assert_not_contains '44444444-4444-4444-4444-444444444444' "$archive_calls"
 
 print -r -- 'not-a-uuid' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
   print -u2 -- 'archive accepted a malformed manifest entry'
   exit 1
@@ -109,6 +115,7 @@ fi
 
 print -r -- '33333333-3333-3333-3333-333333333333' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
   print -u2 -- 'archive accepted another workspace device'
   exit 1
@@ -118,6 +125,7 @@ assert_not_contains 'delete 33333333-3333-3333-3333-333333333333' "$mismatched_c
 
 print -r -- '55555555-5555-5555-5555-555555555555' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
   print -u2 -- 'archive accepted a workspace name with alpha as a substring'
   exit 1
@@ -127,6 +135,7 @@ assert_not_contains 'delete 55555555-5555-5555-5555-555555555555' "$alphabet_cal
 
 print -r -- '22222222-2222-2222-2222-222222222222' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 if SHUTDOWN_FAIL_UUID=22222222-2222-2222-2222-222222222222 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
   print -u2 -- 'archive returned success after a shutdown failure'
   exit 1
@@ -137,6 +146,7 @@ assert_not_contains 'delete 22222222-2222-2222-2222-222222222222' "$shutdown_fai
 
 print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
 : > "$call_log"
+: > "$all_call_log"
 if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
   print -u2 -- 'archive returned success after a delete failure'
   exit 1
@@ -145,6 +155,7 @@ archive_delete_failure_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_delete_failure_calls"
 
 : > "$call_log"
+: > "$all_call_log"
 dry_run=$(run_cleanup prune)
 assert_contains 'Would delete Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111)' "$dry_run"
 assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333)' "$dry_run"
@@ -166,6 +177,7 @@ assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
 }
 
 : > "$call_log"
+: > "$all_call_log"
 run_cleanup prune --delete
 prune_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$prune_calls"
@@ -184,15 +196,20 @@ assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
 
-assert_prune_rejects_malformed_args() {
+assert_rejects_malformed_args_without_xcrun() {
   local description=$1
   shift
   local exit_status=0
 
   : > "$call_log"
+  : > "$all_call_log"
   run_cleanup "$@" >/dev/null 2>&1 || exit_status=$?
   [[ "$exit_status" -ne 0 ]] || {
-    print -u2 -- "$description accepted malformed prune arguments"
+    print -u2 -- "$description accepted malformed arguments"
+    exit 1
+  }
+  [[ ! -s "$all_call_log" ]] || {
+    print -u2 -- "$description invoked xcrun"
     exit 1
   }
   [[ ! -s "$call_log" ]] || {
@@ -201,10 +218,12 @@ assert_prune_rejects_malformed_args() {
   }
 }
 
-assert_prune_rejects_malformed_args 'prune typo' prune typo
-assert_prune_rejects_malformed_args 'prune --delete typo' prune --delete typo
+assert_rejects_malformed_args_without_xcrun 'prune typo' prune typo
+assert_rejects_malformed_args_without_xcrun 'prune --delete typo' prune --delete typo
+assert_rejects_malformed_args_without_xcrun 'archive extra argument' archive extra
 
 : > "$call_log"
+: > "$all_call_log"
 if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 run_cleanup prune --delete; then
   print -u2 -- 'prune returned success after a delete failure'
   exit 1
