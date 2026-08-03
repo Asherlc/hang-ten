@@ -8,8 +8,8 @@ Make Motherboard workouts show the left/right load split and a live percentage o
 
 When a Motherboard is streaming and the user starts a routine, Hang Ten presents a setup sequence before starting the workout timer:
 
-1. **Tare the board.** The user removes their hands and starts the existing unloaded sample window. The current default remains 15 samples.
-2. **Capture bodyweight.** The user hangs relaxed on the jugs for the configured duration, defaulting to 5 seconds. Hang Ten averages the received aggregate loads over that window and displays the captured value.
+1. **Tare the board.** The user removes their hands, explicitly starts the unloaded sample window, and waits for the current default of 15 samples to complete.
+2. **Capture bodyweight.** After tare completes, the user explicitly starts the bodyweight step, hangs relaxed on the jugs for the configured duration (default 5 seconds), and waits while Hang Ten averages the received aggregate loads.
 3. **Start the routine.** The normal three-second workout countdown begins only after the user confirms the bodyweight reading.
 
 If the sensor is not streaming, the existing sensor-optional workout path remains available. The setup can also be skipped so the routine still works without a bodyweight baseline; force and left/right readings remain visible, while the bodyweight percentage is omitted.
@@ -47,7 +47,7 @@ The simulator must make the sensor-backed experience inspectable without a physi
 
 ## Persistence and compatibility
 
-`WorkoutSessionRecord.bodyweightKGF` and its granular Motherboard sample field are backward-compatible: existing persisted session history without either field decodes unchanged. Derived left/right shares are calculated from the current measurement and are not duplicated in stored records.
+`WorkoutSessionRecord.bodyweightKGF` and its granular Motherboard sample field are backward-compatible: existing persisted session history without either field decodes unchanged. Derived left/right shares are calculated from the current measurement and are not duplicated in stored records. Granular session files are stored individually rather than in one growing preferences blob; legacy UserDefaults history is migrated on first load.
 
 ## Testing
 

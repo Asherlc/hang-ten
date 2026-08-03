@@ -216,7 +216,50 @@ rtk git add HangTen/Models/MotherboardModels.swift HangTen/Models/MotherboardPro
 rtk git commit -m "feat: persist granular Motherboard samples"
 ```
 
-### Task 6: Full verification and PR update
+### Task 6: Final hardening for setup, simulation, and granular storage
+
+**Files:**
+- Modify: `HangTen/Views/MotherboardWorkoutPreparationView.swift`
+- Modify: `HangTen/Models/MotherboardProtocol.swift`
+- Modify: `HangTen/Models/MotherboardModels.swift` only if finite-validity helpers are needed
+- Modify: `HangTen/Models/WorkoutSessionStore.swift`
+- Modify: `HangTen/Models/SimulatedMotherboardTransport.swift`
+- Modify: `HangTenTests/MotherboardWorkoutPreparationTests.swift`
+- Modify: `HangTenTests/MotherboardProtocolTests.swift`
+- Modify: `HangTenTests/WorkoutSessionStoreTests.swift`
+- Modify: `HangTenTests/SimulatedMotherboardTransportTests.swift`
+- Modify: `HangTenTests/MotherboardBluetoothServiceTests.swift` only if invalid-sample behavior needs regression coverage
+
+**Interfaces:**
+- Preparation exposes explicit user actions for starting tare and starting the relaxed-jug-hang capture; service completion remains the only transition signal.
+- Decoded measurements are finite-safe before publication/persistence; invalid calibrated values cannot silently poison session Codable writes.
+- `WorkoutSessionStore` persists sessions as individually named files, migrates the legacy UserDefaults history once, keeps the 20-session limit, and exposes a test flush/error path for queued writes.
+- DEBUG simulation provides stable bodyweight samples for the full 10-second maximum capture and verifies that maximum-duration setup remains valid.
+
+- [ ] **Step 1: Write failing hardening tests**
+
+Add tests for explicit setup boundaries, non-finite decoded measurement handling, per-session storage/migration and persistence failure reporting, and a maximum-duration DEBUG bodyweight capture.
+
+- [ ] **Step 2: Run focused tests and verify RED**
+
+Run the preparation, protocol, session-store, and simulator restrictions; expected failures cover the missing explicit actions, storage backend, finite guard, and max-duration fixture.
+
+- [ ] **Step 3: Implement hardening**
+
+Require explicit tare and bodyweight start actions in the sheet, sanitize/reject non-finite calibrated measurements before they reach the recorder or granular collector, move session JSON to per-record files with a serialized background write queue and one-time UserDefaults migration, surface write failures to the caller, and extend the DEBUG stable phase beyond the maximum configured duration.
+
+- [ ] **Step 4: Run focused tests and verify GREEN**
+
+Rerun the focused restrictions plus recorder/model regressions and confirm all pass.
+
+- [ ] **Step 5: Commit**
+
+```sh
+rtk git add HangTen/Views/MotherboardWorkoutPreparationView.swift HangTen/Models/MotherboardProtocol.swift HangTen/Models/WorkoutSessionStore.swift HangTen/Models/SimulatedMotherboardTransport.swift HangTenTests/MotherboardWorkoutPreparationTests.swift HangTenTests/MotherboardProtocolTests.swift HangTenTests/WorkoutSessionStoreTests.swift HangTenTests/SimulatedMotherboardTransportTests.swift
+rtk git commit -m "fix: harden Motherboard setup and storage"
+```
+
+### Task 7: Full verification and PR update
 
 **Files:**
 - Modify: `README.md` or `docs/IOS_RUNTIME_SERVICES.md` only if the new setup/review route needs a user-facing note
