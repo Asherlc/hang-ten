@@ -97,7 +97,7 @@ jobs:
           set -euo pipefail
 
           device_type_id="$(
-            xcrun simctl list devicetypes available \
+            xcrun simctl list devicetypes \
               | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' \
               | head -n 1
           )"
@@ -139,9 +139,9 @@ jobs:
             exit 1
           fi
 
+          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$simulator_udid"
           xcrun simctl bootstatus "$simulator_udid" -b
-          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
 
       - name: Run XCTest suite
         run: |
