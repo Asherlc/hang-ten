@@ -33,6 +33,7 @@
 		AA0000000000000000000024 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000027 /* WorkoutStopwatchTests.swift */; };
 		AA0000000000000000000025 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000028 /* PlanFilters.swift */; };
 		AA0000000000000000000026 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000029 /* PlanFiltersTests.swift */; };
+		AA0000000000000000000027 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000030 /* AppStoreFavoritesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		BB0000000000000000000027 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000028 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
 		BB0000000000000000000029 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000030 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,7 @@
 				BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */,
 				BB0000000000000000000027 /* WorkoutStopwatchTests.swift */,
 				BB0000000000000000000029 /* PlanFiltersTests.swift */,
+				BB0000000000000000000030 /* AppStoreFavoritesTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				AA0000000000000000000022 /* WorkoutActivityRecordingTests.swift in Sources */,
 				AA0000000000000000000024 /* WorkoutStopwatchTests.swift in Sources */,
 				AA0000000000000000000026 /* PlanFiltersTests.swift in Sources */,
+				AA0000000000000000000027 /* AppStoreFavoritesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
