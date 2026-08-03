@@ -150,10 +150,43 @@ final class PlanFiltersTests: XCTestCase {
 
 - [ ] **Step 2: Run the focused test target and verify the failure is caused by the missing filter model.**
 
+Prerequisite, same shell session for every validation command:
+
+```bash
+set -euo pipefail
+
+workspace_path="$PWD"
+workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
+mkdir -p "$workspace_path/.context" "$workspace_path/.context/DerivedData"
+manifest="$workspace_path/.context/conductor-owned-simulators"
+touch "$manifest"
+simulator_name="Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME} review simulator"
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+simulator_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
+if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
+  rtk xcrun simctl delete "$simulator_uuid" || true
+  exit 1
+fi
+review_device_uuid="$simulator_uuid"
+```
+
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
 ```
 
 Expected: compilation fails because `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` do not exist yet. Do not change the test assertions to make this failure disappear.
@@ -247,7 +280,7 @@ Register `PlanFilters.swift` in the app target using build-file ID `AA0000000000
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
 ```
 
 Expected: all seven `PlanFiltersTests` pass with zero failures.
@@ -257,7 +290,7 @@ Expected: all seven `PlanFiltersTests` pass with zero failures.
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the existing workout timeline tests and all plan filter tests pass.
@@ -303,7 +336,7 @@ Delete `showsFilters`, the `.sheet` presentation, and `PlanFiltersSheet`. The me
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -derivedDataPath .context/DerivedData test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the app target compiles and all unit tests pass with zero failures.
@@ -329,41 +362,11 @@ rtk git commit -m "Use inline plan filter menus"
 
 ## Final validation
 
-- [ ] Create a dedicated simulator owned by the current Conductor workspace on
-  the available iOS 26.5 runtime, assign its returned identifier to
-  `review_device_uuid`, record it before boot/build, and use that exact UUID for
-  every validation command.
-- [ ] Build with a workspace-specific derived-data directory:
+- [ ] Reuse the prerequisite shell session's `review_device_uuid`, manifest, and
+  archive cleanup traps for every final validation command.
+- [ ] Build with the workspace-specific derived-data directory:
 
 ```bash
-set -euo pipefail
-
-workspace_path="$PWD"
-workspace_name="$CONDUCTOR_WORKSPACE_NAME"
-test -n "$workspace_name"
-mkdir -p "$workspace_path/.context"
-simulator_name="Hang Ten Conductor $workspace_name Plans Filters Review"
-
-cleanup() {
-  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
-  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
-  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
-}
-signal_exit() {
-  trap - INT TERM
-  exit "$1"
-}
-trap cleanup EXIT
-trap 'signal_exit 130' INT
-trap 'signal_exit 143' TERM
-
-simulator_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
-if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  rtk xcrun simctl delete "$simulator_uuid" || true
-  exit 1
-fi
-review_device_uuid="$simulator_uuid"
-
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData build
 ```
 

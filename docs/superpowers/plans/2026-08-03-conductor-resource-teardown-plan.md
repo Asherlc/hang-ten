@@ -69,9 +69,22 @@ Use `/bin/zsh` with `set -euo pipefail`, explicit mode parsing, and quoted paths
 
 ```zsh
 case "${1:-}" in
-  archive) run_archive_cleanup ;;
-  prune) run_prune "${2:-}" ;;
-  *) usage >&2; exit 2 ;;
+  archive)
+    (( $# == 1 )) || { usage >&2; exit 2; }
+    run_archive_cleanup
+    ;;
+  prune)
+    (( $# <= 2 )) || { usage >&2; exit 2; }
+    if (( $# == 2 )) && [[ "$2" != "--delete" ]]; then
+      usage >&2
+      exit 2
+    fi
+    run_prune "${2:-}"
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
 esac
 ```
 
