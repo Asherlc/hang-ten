@@ -160,7 +160,9 @@ workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
 mkdir -p "$workspace_path/.context" "$workspace_path/.context/DerivedData"
 manifest="$workspace_path/.context/conductor-owned-simulators"
 touch "$manifest"
-simulator_name="Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME} review simulator"
+simulator_name="Hang Ten Conductor ${workspace_name} Review"
+device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
+runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
 
 cleanup() {
   CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
@@ -175,9 +177,13 @@ trap cleanup EXIT
 trap 'signal_exit 130' INT
 trap 'signal_exit 143' TERM
 
-simulator_uuid="$(rtk xcrun simctl create "$simulator_name" 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
+simulator_uuid="$(rtk xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
 if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
-  rtk xcrun simctl delete "$simulator_uuid" || true
+  if ! rtk xcrun simctl delete "$simulator_uuid"; then
+    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_uuid" >&2
+    exit 1
+  fi
+  printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
   exit 1
 fi
 review_device_uuid="$simulator_uuid"
