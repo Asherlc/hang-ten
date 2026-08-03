@@ -73,7 +73,10 @@ Every validation-created simulator must:
    already-deleted device. Pending state remains durable for archive retry until
    shutdown and deletion both succeed. If pending registration itself fails,
    direct in-memory deletion of the validated UUID is the last-resort fallback;
-   it is not a normal cleanup path.
+   before deleting, re-query that exact UUID, parse its exact device-name field,
+   and require the exact `Hang Ten Conductor ${CONDUCTOR_WORKSPACE_NAME} ` marker.
+   If lookup or ownership verification fails, do not delete and return failure;
+   the pending and owned manifests remain for archive retry.
 
 Derived data, screenshots, logs, and temporary review artifacts remain under
 `.context`, which is workspace-local and is removed with the archived
@@ -144,8 +147,10 @@ deletion and fresh disk-usage evidence afterward.
 - Cleanup commands are safe when resources were already removed by an agent's
 -  exit trap; duplicate UUIDs across either manifest are processed once.
 - Direct in-memory deletion is permitted only as a last resort when appending
-  the UUID to the pending manifest fails, and only after the same exact UUID and
-  ownership checks.
+  the UUID to the pending manifest fails, and only after re-querying the exact
+  UUID and parsing/verifying the exact ownership marker; failed lookup or
+  verification must return failure without deletion. Preserve both manifests
+  for archive retry.
 - The one-time script defaults to reporting targets; destructive deletion
   requires an explicit flag.
 

@@ -24,8 +24,12 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    succeeds; archive must validate the exact workspace-name marker before
    shutting down/deleting and then consume both pending and owned records.
    If pending registration fails, retain the validated UUID in memory and permit
-   direct deletion only as the last-resort trap fallback. Use that UUID for every
-   simulator operation; never target `booted`.
+   direct deletion only as the last-resort trap fallback. Before that delete,
+   re-query the exact UUID with `xcrun simctl list devices`, parse the matching
+   record's name field, and require the exact prefix `Hang Ten Conductor
+   $CONDUCTOR_WORKSPACE_NAME `; if lookup or ownership verification fails, do not
+   delete and return failure. Use that UUID for every simulator operation; never
+   target `booted`.
 2. Wait for launch services, then build with the local workspace-specific
    `.context/DerivedData` path and explicit destination.
 3. Keep signing enabled for HealthKit validation. Install the exact built app

@@ -188,6 +188,13 @@ cleanup_pending_simulator() {
     printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_udid" >&2
     return 1
   fi
+  local simulator_record simulator_name
+  simulator_record="$(xcrun simctl list devices | awk -v uuid="$pending_simulator_udid" 'index($0, "(" uuid ")") { print; exit }')"
+  simulator_name="${simulator_record%% (*}"
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+    printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
   if ! xcrun simctl delete "$pending_simulator_udid"; then
     printf 'failed to delete pending simulator %s\n' "$pending_simulator_udid" >&2
     return 1

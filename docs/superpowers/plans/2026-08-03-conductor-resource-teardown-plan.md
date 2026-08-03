@@ -4,7 +4,7 @@
 
 **Goal:** Make Hang Ten Conductor workspaces delete their owned simulators and workspace artifacts when work finishes, with a Conductor archive failsafe, a stale-simulator purge, and one explicit operator purge of the current Xcode DerivedData cache.
 
-**Architecture:** A zsh cleanup CLI owns simulator discovery, ownership validation, pending and owned manifest archive cleanup, and explicit one-time prune behavior. A thin Conductor archive wrapper invokes its archive mode. Shared repository settings enable the wrapper, automatic archive after merge, branch deletion on archive, and a cleanup prompt. Agent instructions and the iOS validation guide use the same pending-registration, manifest, and delete contract. The Xcode cache purge remains operator-only and is never placed in recurring hooks.
+**Architecture:** A zsh cleanup CLI owns simulator discovery, ownership validation, pending and owned manifest archive cleanup, and explicit one-time prune behavior. A portable POSIX Conductor archive wrapper (with a Darwin and `/bin/zsh` guard) invokes its archive mode. Shared repository settings enable the wrapper, automatic archive after merge, branch deletion on archive, and a cleanup prompt. Agent instructions and the iOS validation guide use the same pending-registration, manifest, and delete contract. The Xcode cache purge remains operator-only and is never placed in recurring hooks.
 
 **Tech Stack:** zsh, `xcrun simctl`, Conductor repository TOML settings, Markdown instructions, shell-based mocked tests, and Python 3.12 `tomllib` validation.
 
@@ -124,17 +124,28 @@ git commit -m "build: add ownership-aware simulator cleanup"
 
 - [ ] **Step 1: Add the archive wrapper**
 
-Create an executable /bin/zsh wrapper:
+Create an executable POSIX `/bin/sh` wrapper. It must refuse non-Darwin hosts,
+verify `/bin/zsh` is available for the cleanup CLI, and preserve the CLI exit
+status:
 
 ~~~
-#!/bin/zsh
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-script_dir=${0:A:h}
-exec "$script_dir/conductor-resource-cleanup.sh" archive
+case "$(uname -s)" in
+  Darwin) ;;
+  *) echo "Conductor archive cleanup requires Darwin" >&2; exit 1 ;;
+esac
+if [ ! -x /bin/zsh ]; then
+  echo "Conductor archive cleanup requires /bin/zsh" >&2
+  exit 1
+fi
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec /bin/zsh "$script_dir/conductor-resource-cleanup.sh" archive
 ~~~
 
-Run chmod +x scripts/conductor-archive.sh and zsh -n scripts/conductor-archive.sh.
+Run chmod +x scripts/conductor-archive.sh, `sh -n scripts/conductor-archive.sh`,
+and `zsh -n scripts/conductor-resource-cleanup.sh`.
 
 - [ ] **Step 2: Add shared Conductor settings**
 
@@ -329,7 +340,7 @@ fi
 pending_simulator_uuid=""
 ~~~
 
-Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators.
+Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators. The recipe must append the exact created UUID to the pending manifest before the owned manifest and before boot/build, remove the exact pending record only after successful archive cleanup, and preserve both manifests plus the exact local artifacts `.context/DerivedData`, `.context/workout-raw.png`, and `.context/workout-landscape.png` when cleanup fails so archive can retry.
 
 If archive cleanup fails, retain the pending and owned manifests for retry and
 preserve the original command status; propagate cleanup failure only when the

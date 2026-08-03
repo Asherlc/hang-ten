@@ -65,6 +65,13 @@ cleanup_pending_simulator() {
     printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_uuid" >&2
     return 1
   fi
+  local simulator_record simulator_name
+  simulator_record="$(xcrun simctl list devices | awk -v uuid="$pending_simulator_uuid" 'index($0, "(" uuid ")") { print; exit }')"
+  simulator_name="${simulator_record%% (*}"
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+    printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
   if ! xcrun simctl delete "$pending_simulator_uuid"; then
     printf 'failed to delete pending simulator %s\n' "$pending_simulator_uuid" >&2
     return 1
@@ -301,9 +308,12 @@ manifest entry against the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME `
 name prefix, shuts down the matching device if necessary, and runs
 `xcrun simctl delete` on that exact UUID. Pending state is removed only after
 archive cleanup succeeds; the direct delete fallback is limited to a validated
-UUID whose pending record could not be written. This is immediate workspace
-cleanup, while the Conductor archive hook is a failsafe for an abandoned
-workspace.
+UUID whose pending record could not be written, and it must re-query that exact
+UUID, parse the exact device-name field, and require the exact
+`Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME ` marker before deleting. If the
+lookup or ownership check fails, it does not delete and returns failure. This is
+immediate workspace cleanup, while the Conductor archive hook is a failsafe for
+an abandoned workspace; both manifests remain available for archive retry.
 
 Do not delete or shut down a shared/unknown simulator. The cleanup script must
 not receive an unrecorded UUID or a simulator without the exact workspace
