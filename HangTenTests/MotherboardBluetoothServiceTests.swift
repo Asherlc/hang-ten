@@ -1,3 +1,4 @@
+import Combine
 import CoreBluetooth
 import XCTest
 @testable import HangTen
@@ -234,10 +235,12 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
     func testBodyweightMeasurementAveragesFiniteAggregateLoadsAndClearsActiveState() async throws {
         let transport = FakeMotherboardTransport()
-        let service = MotherboardBluetoothService(transport: transport)
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
         connectAndStartStreaming(service, with: transport)
 
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
         XCTAssertTrue(service.isMeasuringBodyweight)
         XCTAssertNotNil(service.bodyweightMeasurementStartedAt)
         XCTAssertEqual(service.bodyweightSampleCount, 0)
@@ -245,7 +248,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
         emitRawPacket(on: transport, sampleNumber: 2, adc: 250)
         emitRawPacket(on: transport, sampleNumber: 3, adc: 300)
-        try await Task.sleep(for: .milliseconds(100))
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
 
         XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 10, accuracy: 0.0001)
         XCTAssertFalse(service.isMeasuringBodyweight)
@@ -263,37 +266,174 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.bodyweightSampleCount, 0)
     }
 
-    func testDisconnectCancelsBodyweightMeasurement() async throws {
+    func testBodyweightMeasurementRejectsInvalidDurationsAndCapsHugeFiniteDuration() async {
         let transport = FakeMotherboardTransport()
-        let service = MotherboardBluetoothService(transport: transport)
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertFalse(service.beginBodyweightMeasurement(duration: 0))
+        XCTAssertFalse(service.beginBodyweightMeasurement(duration: -0.01))
+        XCTAssertFalse(service.beginBodyweightMeasurement(duration: .nan))
+        XCTAssertFalse(service.beginBodyweightMeasurement(duration: .infinity))
+        XCTAssertFalse(service.isMeasuringBodyweight)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: .greatestFiniteMagnitude))
+        await sleepGate.waitForSleepRequests(1)
+        let requestedDurations = await sleepGate.requestedNanoseconds
+        XCTAssertEqual(requestedDurations, [18_446_744_073_000_000_000])
+
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+        XCTAssertNil(service.bodyweightKGF)
+    }
+
+    func testBodyweightMeasurementIgnoresNonFiniteAggregateSamples() async throws {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connect(service, with: transport)
+        emitCompleteCalibration(on: transport) { sensor, point in
+            sensor == 0 && point == 0 ? "nan" : String(point)
+        }
+        emitStreamAcknowledgement(on: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 0)
+
+        XCTAssertFalse(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF.isFinite)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+        XCTAssertNil(service.bodyweightKGF)
+    }
+
+    func testBodyweightMeasurementKeepsFiniteBaselineForExtremeFiniteSamples() async throws {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connect(service, with: transport)
+        emitCompleteCalibration(on: transport) { sensor, point in
+            sensor == 0 && point == 0 ? Double.greatestFiniteMagnitude.description : String(point)
+        }
+        emitStreamAcknowledgement(on: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 0)
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 0)
+
+        XCTAssertTrue(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF.isFinite)
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), .greatestFiniteMagnitude)
+    }
+
+    func testTareAndBodyweightMeasurementCollectIndependently() async throws {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate, tareSampleCount: 3)
+        connectAndStartStreaming(service, with: transport)
+
+        service.tare()
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
+        XCTAssertTrue(service.isTaring)
+        XCTAssertEqual(service.tareSamplesCollected, 1)
+        XCTAssertEqual(service.bodyweightSampleCount, 1)
+
+        emitRawPacket(on: transport, sampleNumber: 2, adc: 250)
+        emitRawPacket(on: transport, sampleNumber: 3, adc: 300)
+        XCTAssertFalse(service.isTaring)
+        XCTAssertEqual(service.bodyweightSampleCount, 3)
+
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
+        XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 10, accuracy: 0.0001)
+    }
+
+    func testStopStreamingCancelsBodyweightMeasurement() async {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
         connectAndStartStreaming(service, with: transport)
 
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
         emitRawPacket(on: transport, sampleNumber: 1, adc: 250)
         XCTAssertEqual(service.bodyweightSampleCount, 1)
 
-        service.disconnect()
-        try await Task.sleep(for: .milliseconds(100))
+        service.stopStreaming()
 
         XCTAssertNil(service.bodyweightKGF)
         XCTAssertFalse(service.isMeasuringBodyweight)
         XCTAssertNil(service.bodyweightMeasurementStartedAt)
         XCTAssertEqual(service.bodyweightSampleCount, 0)
+        await sleepGate.releaseNext()
+    }
+
+    func testTransportDisconnectCancelsBodyweightMeasurementBeforeReconnect() async {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 250)
+
+        transport.emit(.disconnected("lost"))
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+
+        connectAfterScan(service, with: transport)
+        emitCompleteCalibration(on: transport)
+        emitStreamAcknowledgement(on: transport)
+        XCTAssertEqual(service.state, .streaming)
+        await sleepGate.releaseNext()
+    }
+
+    func testFreshConnectResetsActiveBodyweightMeasurement() async {
+        let transport = FakeMotherboardTransport()
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
+        connectAndStartStreaming(service, with: transport)
+
+        XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
+        emitRawPacket(on: transport, sampleNumber: 1, adc: 250)
+
+        service.connect()
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.bodyweightKGF)
+        XCTAssertFalse(service.isMeasuringBodyweight)
+        XCTAssertNil(service.bodyweightMeasurementStartedAt)
+        XCTAssertEqual(service.bodyweightSampleCount, 0)
+        await sleepGate.releaseNext()
     }
 
     func testSecondBodyweightMeasurementReplacesExistingBaseline() async throws {
         let transport = FakeMotherboardTransport()
-        let service = MotherboardBluetoothService(transport: transport)
+        let sleepGate = ManualSleepGate()
+        let service = makeBodyweightService(transport: transport, sleepGate: sleepGate)
         connectAndStartStreaming(service, with: transport)
 
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(1)
         emitRawPacket(on: transport, sampleNumber: 1, adc: 200)
-        try await Task.sleep(for: .milliseconds(100))
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
         XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 8, accuracy: 0.0001)
 
         XCTAssertTrue(service.beginBodyweightMeasurement(duration: 0.05))
+        await sleepGate.waitForSleepRequests(2)
         emitRawPacket(on: transport, sampleNumber: 2, adc: 300)
-        try await Task.sleep(for: .milliseconds(100))
+        await completeBodyweightMeasurement(on: service, byReleasing: sleepGate)
 
         XCTAssertEqual(try XCTUnwrap(service.bodyweightKGF), 12, accuracy: 0.0001)
         XCTAssertFalse(service.isMeasuringBodyweight)
@@ -510,11 +650,14 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.notificationsReady)
     }
 
-    private func emitCompleteCalibration(on transport: FakeMotherboardTransport) {
+    private func emitCompleteCalibration(
+        on transport: FakeMotherboardTransport,
+        massKGF: (Int, Int) -> String = { _, point in String(point) }
+    ) {
         for sensor in 0..<4 {
             for point in 0..<4 {
                 transport.emit(.notification(
-                    Data("\(sensor),\(point),\(point),\(point * 100)\r\n".utf8),
+                    Data("\(sensor),\(point),\(massKGF(sensor, point)),\(point * 100)\r\n".utf8),
                     Date(timeIntervalSince1970: Double(sensor * 4 + point))
                 ))
             }
@@ -553,6 +696,70 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         }
         let line = bytes.map { String(format: "%02X", $0) }.joined() + "\r\n"
         transport.emit(.notification(Data(line.utf8), Date()))
+    }
+
+    private func makeBodyweightService(
+        transport: FakeMotherboardTransport,
+        sleepGate: ManualSleepGate,
+        tareSampleCount: Int = 15
+    ) -> MotherboardBluetoothService {
+        MotherboardBluetoothService(
+            transport: transport,
+            tareSampleCount: tareSampleCount,
+            bodyweightMeasurementSleep: { nanoseconds in
+                try await sleepGate.sleep(nanoseconds: nanoseconds)
+            }
+        )
+    }
+
+    private func completeBodyweightMeasurement(
+        on service: MotherboardBluetoothService,
+        byReleasing sleepGate: ManualSleepGate
+    ) async {
+        let completion = expectation(description: "bodyweight measurement completes")
+        let cancellable = service.$isMeasuringBodyweight
+            .dropFirst()
+            .filter { !$0 }
+            .sink { _ in completion.fulfill() }
+
+        await sleepGate.releaseNext()
+        await fulfillment(of: [completion], timeout: 1)
+        withExtendedLifetime(cancellable) {}
+    }
+}
+
+private actor ManualSleepGate {
+    private var requestedNanosecondsStorage: [UInt64] = []
+    private var sleepers: [CheckedContinuation<Void, Error>] = []
+    private var requestWaiters: [(Int, CheckedContinuation<Void, Never>)] = []
+
+    var requestedNanoseconds: [UInt64] { requestedNanosecondsStorage }
+
+    func sleep(nanoseconds: UInt64) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            sleepers.append(continuation)
+            requestedNanosecondsStorage.append(nanoseconds)
+            resumeRequestWaiters()
+        }
+    }
+
+    func waitForSleepRequests(_ count: Int) async {
+        guard requestedNanosecondsStorage.count < count else { return }
+        await withCheckedContinuation { requestWaiters.append((count, $0)) }
+    }
+
+    func releaseNext() {
+        guard !sleepers.isEmpty else { return }
+        sleepers.removeFirst().resume()
+    }
+
+    private func resumeRequestWaiters() {
+        let readyWaiters = requestWaiters.enumerated().compactMap { index, waiter in
+            waiter.0 <= requestedNanosecondsStorage.count ? index : nil
+        }
+        for index in readyWaiters.reversed() {
+            requestWaiters.remove(at: index).1.resume()
+        }
     }
 }
 

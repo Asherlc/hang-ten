@@ -70,27 +70,34 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private let transport: MotherboardTransport
     private let timeouts: MotherboardServiceTimeouts
+    private let bodyweightMeasurementSleep: @Sendable (UInt64) async throws -> Void
     private var parser: MotherboardProtocolParser
     private var calibrationRows: [MotherboardCalibrationRow] = []
     private var calibration: MotherboardCalibration?
     private var tareKGF = Array(repeating: 0.0, count: 4)
     private var tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
-    private var bodyweightSamplesKGF: [Double] = []
+    private var bodyweightMeanKGF: Double?
     private var wantsConnection = false
     private var reconnectAttempts = 0
     private var timeoutTask: Task<Void, Never>?
     private var bodyweightMeasurementTask: Task<Void, Never>?
     private var lastPowerState: MotherboardBluetoothPowerState = .unknown
 
+    private static let maximumBodyweightMeasurementDuration = TimeInterval(UInt64.max / 1_000_000_000)
+
     init(
         transport: MotherboardTransport,
         parser: MotherboardProtocolParser = .init(),
         timeouts: MotherboardServiceTimeouts = .production,
-        tareSampleCount: Int = 15
+        tareSampleCount: Int = 15,
+        bodyweightMeasurementSleep: @escaping @Sendable (UInt64) async throws -> Void = { nanoseconds in
+            try await Task.sleep(nanoseconds: nanoseconds)
+        }
     ) {
         self.transport = transport
         self.parser = parser
         self.timeouts = timeouts
+        self.bodyweightMeasurementSleep = bodyweightMeasurementSleep
         tareSampleTarget = max(1, tareSampleCount)
         transport.eventHandler = { [weak self] event in
             self?.handle(event)
@@ -141,16 +148,17 @@ final class MotherboardBluetoothService: ObservableObject {
 
     @discardableResult
     func beginBodyweightMeasurement(duration: TimeInterval) -> Bool {
-        guard state == .streaming else { return false }
+        guard state == .streaming, duration.isFinite, duration > 0 else { return false }
 
         cancelBodyweightMeasurement()
-        let measurementDuration = duration.isFinite ? max(0, duration) : 0
+        let measurementDuration = min(duration, Self.maximumBodyweightMeasurementDuration)
         let nanoseconds = UInt64(measurementDuration * 1_000_000_000)
         isMeasuringBodyweight = true
         bodyweightMeasurementStartedAt = Date()
+        let sleep = bodyweightMeasurementSleep
         bodyweightMeasurementTask = Task { [weak self] in
             do {
-                try await Task.sleep(nanoseconds: nanoseconds)
+                try await sleep(nanoseconds)
             } catch {
                 return
             }
@@ -332,14 +340,21 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func collectBodyweightSample(_ measurement: MotherboardMeasurement) {
         guard isMeasuringBodyweight, measurement.aggregateLoadKGF.isFinite else { return }
-        bodyweightSamplesKGF.append(measurement.aggregateLoadKGF)
-        bodyweightSampleCount = bodyweightSamplesKGF.count
+        let previousCount = bodyweightSampleCount
+        let nextCount = previousCount + 1
+        let previousMean = bodyweightMeanKGF ?? measurement.aggregateLoadKGF
+        let divisor = Double(nextCount)
+        let mean = previousCount == 0
+            ? measurement.aggregateLoadKGF
+            : previousMean * (1 - 1 / divisor) + measurement.aggregateLoadKGF / divisor
+        bodyweightMeanKGF = mean.isFinite ? mean : previousMean
+        bodyweightSampleCount = nextCount
     }
 
     private func completeBodyweightMeasurement() {
         guard isMeasuringBodyweight else { return }
-        if !bodyweightSamplesKGF.isEmpty {
-            bodyweightKGF = bodyweightSamplesKGF.reduce(0, +) / Double(bodyweightSamplesKGF.count)
+        if let bodyweightMeanKGF {
+            bodyweightKGF = bodyweightMeanKGF
         }
         cancelBodyweightMeasurement()
     }
@@ -350,7 +365,7 @@ final class MotherboardBluetoothService: ObservableObject {
         isMeasuringBodyweight = false
         bodyweightMeasurementStartedAt = nil
         bodyweightSampleCount = 0
-        bodyweightSamplesKGF = []
+        bodyweightMeanKGF = nil
     }
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {

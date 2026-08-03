@@ -49,3 +49,40 @@ the existing simulator build-number warnings.
 - Session cleanup/reset cancels active capture, clears capture state, and
   clears the session baseline. A later successful capture replaces a prior
   baseline.
+
+## Review-fix evidence
+
+### RED
+
+Replaced the capture tests' fixed wall-clock sleeps with a manual async sleep
+gate and added focused coverage for invalid/huge durations, non-finite and
+extreme finite samples, concurrent tare/bodyweight capture, stop-streaming
+cleanup, disconnect/reconnect cleanup, fresh-connect reset, and baseline
+replacement.
+
+Command:
+
+```sh
+rtk proxy xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-2-review-red -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: intentional RED, exit 65. The new tests failed to compile with
+`extra argument 'bodyweightMeasurementSleep' in call`, proving the tests
+required an injectable capture sleeper that the service did not yet expose.
+
+### GREEN
+
+Added a narrowly scoped initializer injection with the existing `Task.sleep`
+behavior as its production default. The service now rejects non-positive and
+non-finite durations before conversion, caps finite duration before converting
+to nanoseconds, and uses a guarded weighted running mean so finite extreme
+samples cannot make the published baseline non-finite.
+
+Command:
+
+```sh
+rtk proxy xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=5BD0C30F-C006-43F1-9EFC-4B47B93EA488' -derivedDataPath .context/DerivedData-task-2-review-green -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -only-testing:HangTenTests/MotherboardBluetoothServiceTests
+```
+
+Result: PASS, exit 0. The focused suite completed with only the existing
+simulator build-number warnings.
