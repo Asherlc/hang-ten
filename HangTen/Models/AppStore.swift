@@ -39,8 +39,10 @@ final class AppStore: ObservableObject {
 	}
 
 	func toggleFavorite(_ plan: TrainingPlan) {
-		if !favoritePlanIDs.insert(plan.id).inserted {
+		if favoritePlanIDs.contains(plan.id) {
 			favoritePlanIDs.remove(plan.id)
+		} else {
+			favoritePlanIDs.insert(plan.id)
 		}
 		userDefaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
 	}
