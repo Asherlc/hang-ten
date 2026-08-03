@@ -11,6 +11,43 @@ struct MotherboardWorkoutPreparationHandoff {
     }
 }
 
+@MainActor
+protocol RootViewBackgroundTaskApplication: AnyObject {
+	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+	func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
+}
+
+extension UIApplication: RootViewBackgroundTaskApplication {}
+
+@MainActor
+final class RootViewSessionPersistenceCoordinator {
+	private let application: RootViewBackgroundTaskApplication
+	private var backgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
+
+	init(application: RootViewBackgroundTaskApplication) {
+		self.application = application
+	}
+
+	func flush(store: AppStore) {
+		backgroundTaskIdentifier = application.beginBackgroundTask(
+			withName: "Persist workout sessions",
+			expirationHandler: { [weak self] in
+				self?.finish()
+			}
+		)
+		store.flushSessionPersistence { [self] in
+			finish()
+		}
+	}
+
+	private func finish() {
+		guard backgroundTaskIdentifier != .invalid else { return }
+		let identifier = backgroundTaskIdentifier
+		backgroundTaskIdentifier = .invalid
+		application.endBackgroundTask(identifier)
+	}
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
     @State private var selectedTab: Int = {
@@ -46,13 +83,13 @@ struct RootView: View {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
                 .tag(2)
-        }
-        .tint(.hangGreenDark)
+		}
+		.tint(.hangGreenDark)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-			store.flushSessionPersistence()
+			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
 		}
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-			store.flushSessionPersistence()
+			store.flushSessionPersistenceSynchronously()
 		}
         .onAppear {
             #if DEBUG

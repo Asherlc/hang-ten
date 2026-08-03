@@ -27,6 +27,35 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [])
     }
 
+    func testInitializationReturnsBeforeHistoryReadCompletes() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let fileManager = BlockingHistoryFileManager()
+        let initializationReturned = DispatchSemaphore(value: 0)
+        let storeFinishedInitializing = DispatchSemaphore(value: 0)
+
+        DispatchQueue.global().async {
+            let store = WorkoutSessionStore(
+                defaults: defaults,
+                directory: self.directory,
+                fileManager: fileManager
+            )
+            initializationReturned.signal()
+            _ = store
+            storeFinishedInitializing.signal()
+        }
+
+        XCTAssertEqual(
+            initializationReturned.wait(timeout: .now() + 1),
+            .success,
+            "Store initialization should not wait for the full history read"
+        )
+        XCTAssertEqual(fileManager.historyReadStarted.wait(timeout: .now() + 1), .success)
+
+        fileManager.allowHistoryRead.signal()
+        XCTAssertEqual(storeFinishedInitializing.wait(timeout: .now() + 1), .success)
+    }
+
     func testMigratesLegacyHistoryToIndividualSessionFilesAndClearsTheBlob() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let older = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
@@ -165,6 +194,39 @@ final class WorkoutSessionStoreTests: XCTestCase {
         wait(for: [completion], timeout: 2)
     }
 
+    func testAsynchronousFlushDoesNotBlockCallerOnPendingWrite() {
+        let defaults = UserDefaults(suiteName: suite)!
+        let fileManager = BlockingWriteFileManager()
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: directory,
+            fileManager: fileManager
+        )
+        store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20))
+
+        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+
+        let flushReturned = DispatchSemaphore(value: 0)
+        let completion = expectation(description: "flush completion")
+        DispatchQueue.global().async {
+            store.flush { result in
+                if case .failure(let error) = result {
+                    XCTFail("Expected flush to succeed, got \(error)")
+                }
+                completion.fulfill()
+            }
+            flushReturned.signal()
+        }
+
+        XCTAssertEqual(
+            flushReturned.wait(timeout: .now() + 1),
+            .success,
+            "Asynchronous flush should return before pending persistence finishes"
+        )
+        fileManager.allowWrite.signal()
+        wait(for: [completion], timeout: 2)
+    }
+
     func testAppendUsesStableIDOrderingWhenRecordedDatesMatch() {
         let defaults = UserDefaults(suiteName: suite)!
         let laterID = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 10)
@@ -189,6 +251,27 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertEqual(store.sessions.last?.recordedAt, Date(timeIntervalSince1970: 1))
         store.flush()
         XCTAssertEqual(try sessionFiles().count, 20)
+    }
+
+    func testConcurrentAppendsExposeCoherentSnapshots() {
+        let defaults = UserDefaults(suiteName: suite)!
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+
+        DispatchQueue.concurrentPerform(iterations: 40) { index in
+            store.append(
+                session(
+                    id: String(format: "00000000-0000-0000-0000-%012d", index),
+                    recordedAt: TimeInterval(index)
+                )
+            )
+            _ = store.sessions
+        }
+        store.flush()
+
+        XCTAssertEqual(store.sessions.count, 20)
+        XCTAssertEqual(store.sessions.first?.recordedAt, Date(timeIntervalSince1970: 39))
+        XCTAssertEqual(store.sessions.last?.recordedAt, Date(timeIntervalSince1970: 20))
+        XCTAssertEqual(Set(store.sessions.map(\.id)).count, store.sessions.count)
     }
 
     func testAppendDoesNotPersistARecordTrimmedFromRetainedHistory() throws {
@@ -227,6 +310,31 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         XCTAssertNil(store.persistenceError)
         XCTAssertNil(defaults.data(forKey: "workout.sessionHistory"))
+        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
+    }
+
+    func testFailedLegacyMigrationKeepsCachedPendingStateForRetry() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        let second = session(id: "00000000-0000-0000-0000-000000000002", recordedAt: 20)
+        defaults.set(try JSONEncoder().encode([first]), forKey: "workout.sessionHistory")
+        try Data("not a directory".utf8).write(to: directory)
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+        XCTAssertNotNil(store.persistenceError)
+
+        try FileManager.default.removeItem(at: directory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defaults.set(Data("legacy payload changed after the first attempt".utf8), forKey: "workout.sessionHistory")
+
+        store.append(second)
+        store.flush()
+
+        XCTAssertNil(store.persistenceError)
+        XCTAssertTrue(FileManager.default.fileExists(
+            atPath: directory.appendingPathComponent("legacy-migration-complete").path
+        ))
         XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [second, first])
     }
 
@@ -294,6 +402,44 @@ final class WorkoutSessionStoreTests: XCTestCase {
             motherboardIdentifier: nil,
             batteryValue: nil,
             steps: []
+        )
+    }
+}
+
+private final class BlockingHistoryFileManager: FileManager {
+    let historyReadStarted = DispatchSemaphore(value: 0)
+    let allowHistoryRead = DispatchSemaphore(value: 0)
+
+    override func contentsOfDirectory(
+        at url: URL,
+        includingPropertiesForKeys keys: [URLResourceKey]?,
+        options mask: FileManager.DirectoryEnumerationOptions = []
+    ) throws -> [URL] {
+        historyReadStarted.signal()
+        allowHistoryRead.wait()
+        return try super.contentsOfDirectory(
+            at: url,
+            includingPropertiesForKeys: keys,
+            options: mask
+        )
+    }
+}
+
+private final class BlockingWriteFileManager: FileManager {
+    let writeStarted = DispatchSemaphore(value: 0)
+    let allowWrite = DispatchSemaphore(value: 0)
+
+    override func createDirectory(
+        at url: URL,
+        withIntermediateDirectories createIntermediates: Bool,
+        attributes: [FileAttributeKey: Any]? = nil
+    ) throws {
+        writeStarted.signal()
+        allowWrite.wait()
+        try super.createDirectory(
+            at: url,
+            withIntermediateDirectories: createIntermediates,
+            attributes: attributes
         )
     }
 }

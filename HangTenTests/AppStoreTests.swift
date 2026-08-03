@@ -1,5 +1,6 @@
 import XCTest
 import Combine
+import UIKit
 @testable import HangTen
 
 @MainActor
@@ -86,8 +87,41 @@ final class AppStoreTests: XCTestCase {
 
         XCTAssertEqual(store.sessionHistory, [existingRecord])
         XCTAssertEqual(sessionStore.sessions, [existingRecord])
-        XCTAssertEqual(store.sessionsCompleted, 2)
+        XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertEqual(store.lastSessionTitle, PlanCatalog.metoliusTenMinute.title)
+    }
+
+    func testReplacingSessionWithSameIDDoesNotIncreaseCompletedCount() {
+        let defaults = makeDefaults()
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        let store = AppStore(
+            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
+            workoutSessionStore: sessionStore
+        )
+        let first = workoutSessionRecord(planTitle: "First", recordedAt: 20)
+        let replacement = workoutSessionRecord(
+            id: first.id,
+            planTitle: "Replacement",
+            recordedAt: 30
+        )
+
+        store.markSessionComplete(
+            PlanCatalog.metoliusTenMinute,
+            startDate: first.startDate,
+            endDate: first.endDate,
+            session: first
+        )
+        store.markSessionComplete(
+            PlanCatalog.metoliusTenMinute,
+            startDate: replacement.startDate,
+            endDate: replacement.endDate,
+            session: replacement
+        )
+
+        XCTAssertEqual(store.sessionHistory, [replacement])
+        XCTAssertEqual(store.sessionsCompleted, store.sessionHistory.count)
+        XCTAssertEqual(store.sessionsCompleted, 1)
     }
 
     func testCompletionExposesSessionPersistenceFailure() async {
@@ -113,6 +147,43 @@ final class AppStoreTests: XCTestCase {
 
         await fulfillment(of: [errorUpdated], timeout: 2)
         withExtendedLifetime(observation) {}
+    }
+
+    func testBackgroundPersistenceKeepsBackgroundTaskUntilAsyncFlushCompletes() async {
+        let sessionStore = DeferredFlushWorkoutSessionStore()
+        let store = AppStore(
+            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
+            workoutSessionStore: sessionStore
+        )
+        let application = RecordingBackgroundTaskApplication()
+        let taskEnded = expectation(description: "background task ended")
+        application.onEnd = { taskEnded.fulfill() }
+
+        RootViewSessionPersistenceCoordinator(application: application).flush(store: store)
+
+        XCTAssertEqual(application.beginCount, 1)
+        XCTAssertTrue(application.endedIdentifiers.isEmpty)
+        XCTAssertNotNil(sessionStore.flushCompletion)
+
+        sessionStore.completeFlush(.success(()))
+
+        await fulfillment(of: [taskEnded], timeout: 2)
+        XCTAssertEqual(application.endedIdentifiers, [application.taskIdentifier])
+    }
+
+    func testSynchronousAppStoreFlushUsesTerminationPath() {
+        let sessionStore = DeferredFlushWorkoutSessionStore()
+        let store = AppStore(
+            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
+            workoutSessionStore: sessionStore
+        )
+
+        store.flushSessionPersistenceSynchronously()
+
+        XCTAssertEqual(sessionStore.synchronousFlushCount, 1)
+        XCTAssertEqual(sessionStore.asynchronousFlushCount, 0)
     }
 
     private func makeDefaults() -> UserDefaults {
@@ -176,6 +247,69 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
     }
 
     func flush() {}
+}
+
+@MainActor
+private final class DeferredFlushWorkoutSessionStore: WorkoutSessionStoring {
+    private(set) var sessions: [WorkoutSessionRecord] = []
+    var persistenceError: String?
+    var flushCompletion: ((Result<Void, Error>) -> Void)?
+    private(set) var synchronousFlushCount = 0
+    private(set) var asynchronousFlushCount = 0
+
+    func append(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.append(session)
+        completion(.success(()))
+    }
+
+    func remove(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.removeAll { $0.id == session.id }
+        completion(.success(()))
+    }
+
+    func flush(completion: @escaping (Result<Void, Error>) -> Void) {
+        asynchronousFlushCount += 1
+        flushCompletion = completion
+    }
+
+    func flush() {
+        synchronousFlushCount += 1
+    }
+
+    func completeFlush(_ result: Result<Void, Error>) {
+        let completion = flushCompletion
+        flushCompletion = nil
+        DispatchQueue.main.async {
+            completion?(result)
+        }
+    }
+}
+
+@MainActor
+private final class RecordingBackgroundTaskApplication: RootViewBackgroundTaskApplication {
+    let taskIdentifier = UIBackgroundTaskIdentifier(rawValue: 17)
+    private(set) var beginCount = 0
+    private(set) var endedIdentifiers: [UIBackgroundTaskIdentifier] = []
+    var onEnd: (() -> Void)?
+
+    func beginBackgroundTask(
+        withName taskName: String?,
+        expirationHandler handler: (() -> Void)?
+    ) -> UIBackgroundTaskIdentifier {
+        beginCount += 1
+        return taskIdentifier
+    }
+
+    func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
+        endedIdentifiers.append(identifier)
+        onEnd?()
+    }
 }
 
 @MainActor

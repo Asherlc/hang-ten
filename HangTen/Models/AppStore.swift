@@ -7,7 +7,7 @@ final class AppStore: ObservableObject {
 	private let userDefaults: UserDefaults
 
 	@Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
-	@Published var sessionsCompleted = 0
+	var sessionsCompleted: Int { sessionHistory.count }
 	@Published var lastSessionTitle: String?
 	@Published private(set) var sessionHistory: [WorkoutSessionRecord]
 	@Published private(set) var sessionPersistenceError: String?
@@ -36,11 +36,21 @@ final class AppStore: ObservableObject {
 		self.workoutSessionStore = workoutSessionStore
 		let loadedSessions = workoutSessionStore.sessions
 		sessionHistory = loadedSessions
-		sessionsCompleted = loadedSessions.count
 		lastSessionTitle = loadedSessions.first?.planTitle
 		sessionPersistenceError = workoutSessionStore.persistenceError
 		favoritePlanIDs = Set(userDefaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
 		healthAuthorizationState = healthKitService.authorizationState
+
+		workoutSessionStore.load { [weak self] result in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.sessionHistory = self.workoutSessionStore.sessions
+				if self.lastSessionTitle == nil {
+					self.lastSessionTitle = self.sessionHistory.first?.planTitle
+				}
+				self.recordSessionPersistence(result)
+			}
+		}
 	}
 
     var plans: [TrainingPlan] {
@@ -116,10 +126,9 @@ final class AppStore: ObservableObject {
 					self?.recordSessionPersistence(result)
 				}
 			}
-			sessionHistory = workoutSessionStore.sessions
+			 sessionHistory = workoutSessionStore.sessions
 		}
 
-        sessionsCompleted += 1
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil
 
@@ -172,12 +181,24 @@ final class AppStore: ObservableObject {
 		healthAuthorizationState = healthKitService.authorizationState
 	}
 
-	func flushSessionPersistence() {
+	func flushSessionPersistence(completion: (() -> Void)? = nil) {
 		workoutSessionStore.flush { [weak self] result in
 			Task { @MainActor [weak self] in
 				self?.recordSessionPersistence(result)
+				completion?()
 			}
 		}
+	}
+
+	func flushSessionPersistenceSynchronously() {
+		workoutSessionStore.flush()
+		let result: Result<Void, Error>
+		if let persistenceError = workoutSessionStore.persistenceError {
+			result = .failure(SessionPersistenceFailure(message: persistenceError))
+		} else {
+			result = .success(())
+		}
+		recordSessionPersistence(result)
 	}
 
 	func requestHealthAuthorization() {
@@ -197,5 +218,11 @@ final class AppStore: ObservableObject {
 		case .failure(let error):
 			sessionPersistenceError = "Session history could not be saved: \(error.localizedDescription)"
 		}
+	}
+
+	private struct SessionPersistenceFailure: LocalizedError {
+		let message: String
+
+		var errorDescription: String? { message }
 	}
 }

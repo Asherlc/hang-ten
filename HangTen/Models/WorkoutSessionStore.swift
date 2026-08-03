@@ -3,14 +3,26 @@ import Foundation
 protocol WorkoutSessionStoring: AnyObject {
     var sessions: [WorkoutSessionRecord] { get }
     var persistenceError: String? { get }
+    /// Loads the persisted snapshot without blocking the caller.
+    /// Completion handlers are delivered asynchronously on the main queue.
+    func load(completion: @escaping (Result<Void, Error>) -> Void)
     /// Completion handlers are delivered asynchronously on the main queue.
     func append(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
     func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void)
+    /// Waits for all queued persistence work to finish.
     func flush()
+    /// Queues a completion after all currently queued persistence work finishes.
+    /// This method never waits for the persistence queue on the caller's thread.
     func flush(completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 extension WorkoutSessionStoring {
+    func load(completion: @escaping (Result<Void, Error>) -> Void) {
+        DispatchQueue.main.async {
+            completion(.success(()))
+        }
+    }
+
     func append(_ session: WorkoutSessionRecord) {
         append(session) { _ in }
     }
@@ -39,10 +51,22 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         qos: .utility
     )
     private let persistenceQueueIdentity = DispatchSpecificKey<UInt8>()
+    private let sessionsLock = NSLock()
     private let persistenceErrorLock = NSLock()
+    private let migrationStateLock = NSLock()
     private var persistenceErrorStorage: String?
+    private var sessionsStorage: [WorkoutSessionRecord] = []
+    private var didFinishLoading = false
+    private var pendingMutations: [SessionMutation] = []
+    private var loadResult: Result<Void, Error>?
+    private var loadCompletions: [(Result<Void, Error>) -> Void] = []
+    private var migrationState: LegacyMigrationState = .unknown
 
-    private(set) var sessions: [WorkoutSessionRecord]
+    var sessions: [WorkoutSessionRecord] {
+        sessionsLock.lock()
+        defer { sessionsLock.unlock() }
+        return sessionsStorage
+    }
 
     var persistenceError: String? {
         persistenceErrorLock.lock()
@@ -62,34 +86,41 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         self.directory = directory ?? Self.defaultDirectory(using: fileManager)
         persistenceQueue.setSpecific(key: persistenceQueueIdentity, value: 1)
 
-        let loaded = Self.load(from: self.directory, decoder: decoder, fileManager: fileManager)
-        sessions = loaded.sessions
-        persistenceErrorStorage = loaded.errorDescription
+        persistenceQueue.async { [self] in
+            loadPersistedState()
+        }
+    }
 
-        let legacySessions = Self.loadLegacy(from: defaults, decoder: decoder)
-        if !fileManager.fileExists(atPath: migrationMarkerURL.path), let legacySessions {
-            let mergedSessions = Self.merge(loaded.sessions, with: legacySessions)
-            sessions = mergedSessions
-            migrateLegacyHistory(mergedSessions)
+    func load(completion: @escaping (Result<Void, Error>) -> Void) {
+        sessionsLock.lock()
+        if let loadResult {
+            sessionsLock.unlock()
+            deliverLoadResult(loadResult, to: completion)
+        } else {
+            loadCompletions.append(completion)
+            sessionsLock.unlock()
         }
     }
 
     func append(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
-        let previousSessions = sessions
-        sessions.removeAll { $0.id == session.id }
-        sessions.append(session)
-        sessions.sort(by: Self.isOrderedNewestFirst)
-        sessions = Array(sessions.prefix(Self.maximumSessionCount))
+        let previousSessions: [WorkoutSessionRecord]
+        let updatedSessions: [WorkoutSessionRecord]
+        sessionsLock.lock()
+        previousSessions = sessionsStorage
+        sessionsStorage = Self.appending(session, to: sessionsStorage)
+        updatedSessions = sessionsStorage
+        if !didFinishLoading {
+            pendingMutations.append(.append(session))
+        }
+        sessionsLock.unlock()
 
-        let retainedIDs = Set(sessions.map(\.id))
+        let retainedIDs = Set(updatedSessions.map(\.id))
         var removedIDs = Set(previousSessions.map(\.id)).subtracting(retainedIDs)
         if !retainedIDs.contains(session.id) {
             removedIDs.insert(session.id)
         }
         let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
-            sessions: sessions,
-            retainedIDs: retainedIDs,
             removing: removedIDs,
             markLegacyMigrationComplete: completesLegacyMigration,
             removeLegacyHistoryOnSuccess: completesLegacyMigration,
@@ -98,11 +129,15 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     }
 
     func remove(_ session: WorkoutSessionRecord, completion: @escaping (Result<Void, Error>) -> Void) {
-        sessions.removeAll { $0.id == session.id }
+        sessionsLock.lock()
+        sessionsStorage = Self.removing(session.id, from: sessionsStorage)
+        if !didFinishLoading {
+            pendingMutations.append(.remove(session.id))
+        }
+        sessionsLock.unlock()
+
         let completesLegacyMigration = hasPendingLegacyMigration
         enqueueWrite(
-            sessions: sessions,
-            retainedIDs: Set(sessions.map(\.id)),
             removing: [session.id],
             markLegacyMigrationComplete: completesLegacyMigration,
             removeLegacyHistoryOnSuccess: completesLegacyMigration,
@@ -111,15 +146,11 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     }
 
     func flush(completion: @escaping (Result<Void, Error>) -> Void) {
-        flush()
-        let result: Result<Void, Error>
-        if let persistenceError {
-            result = .failure(PersistenceFailure(message: persistenceError))
-        } else {
-            result = .success(())
-        }
-        DispatchQueue.main.async {
-            completion(result)
+        persistenceQueue.async { [self] in
+            let result = currentPersistenceResult()
+            DispatchQueue.main.async {
+                completion(result)
+            }
         }
     }
 
@@ -177,6 +208,24 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         return Array(storedSessions.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
     }
 
+    private static func appending(
+        _ session: WorkoutSessionRecord,
+        to sessions: [WorkoutSessionRecord]
+    ) -> [WorkoutSessionRecord] {
+        var updatedSessions = sessions
+        updatedSessions.removeAll { $0.id == session.id }
+        updatedSessions.append(session)
+        updatedSessions.sort(by: isOrderedNewestFirst)
+        return Array(updatedSessions.prefix(maximumSessionCount))
+    }
+
+    private static func removing(
+        _ id: UUID,
+        from sessions: [WorkoutSessionRecord]
+    ) -> [WorkoutSessionRecord] {
+        sessions.filter { $0.id != id }
+    }
+
     private static func isOrderedNewestFirst(_ lhs: WorkoutSessionRecord, _ rhs: WorkoutSessionRecord) -> Bool {
         if lhs.recordedAt != rhs.recordedAt {
             return lhs.recordedAt > rhs.recordedAt
@@ -201,20 +250,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         return Array(sessionsByID.values.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
     }
 
-    private func migrateLegacyHistory(_ sessions: [WorkoutSessionRecord]) {
-        enqueueWrite(
-            sessions: sessions,
-            retainedIDs: Set(sessions.map(\.id)),
-            removing: [],
-            markLegacyMigrationComplete: true,
-            removeLegacyHistoryOnSuccess: true,
-            completion: { _ in }
-        )
-    }
-
     private func enqueueWrite(
-        sessions sessionsToWrite: [WorkoutSessionRecord],
-        retainedIDs: Set<UUID>,
         removing idsToRemove: Set<UUID>,
         markLegacyMigrationComplete: Bool = false,
         removeLegacyHistoryOnSuccess: Bool = false,
@@ -223,6 +259,8 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         persistenceQueue.async { [self] in
             let result: Result<Void, Error>
             do {
+                let sessionsToWrite = sessions
+                let retainedIDs = Set(sessionsToWrite.map(\.id))
                 try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
                 for session in sessionsToWrite {
                     let data = try encoder.encode(session)
@@ -239,6 +277,9 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                 }
                 if removeLegacyHistoryOnSuccess {
                     defaults.removeObject(forKey: Key.sessionHistory)
+                }
+                if markLegacyMigrationComplete {
+                    setMigrationState(.notPending)
                 }
                 setPersistenceError(nil)
                 result = .success(())
@@ -272,8 +313,109 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
     }
 
     private var hasPendingLegacyMigration: Bool {
-        !fileManager.fileExists(atPath: migrationMarkerURL.path) &&
-            Self.loadLegacy(from: defaults, decoder: decoder) != nil
+        migrationStateLock.lock()
+        defer { migrationStateLock.unlock() }
+        if case .pending = migrationState {
+            return true
+        }
+        return false
+    }
+
+    private func loadPersistedState() {
+        let loaded = Self.load(from: directory, decoder: decoder, fileManager: fileManager)
+        setPersistenceError(loaded.errorDescription)
+
+        let legacySessions: [WorkoutSessionRecord]?
+        if fileManager.fileExists(atPath: migrationMarkerURL.path) {
+            legacySessions = nil
+            setMigrationState(.notPending)
+        } else if let decodedLegacySessions = Self.loadLegacy(from: defaults, decoder: decoder) {
+            legacySessions = decodedLegacySessions
+            setMigrationState(.pending(decodedLegacySessions))
+        } else {
+            legacySessions = nil
+            setMigrationState(.notPending)
+        }
+
+        var mergedSessions = loaded.sessions
+        if let legacySessions {
+            mergedSessions = Self.merge(mergedSessions, with: legacySessions)
+        }
+
+        sessionsLock.lock()
+        for mutation in pendingMutations {
+            switch mutation {
+            case .append(let session):
+                mergedSessions = Self.appending(session, to: mergedSessions)
+            case .remove(let id):
+                mergedSessions = Self.removing(id, from: mergedSessions)
+            }
+        }
+        pendingMutations.removeAll()
+        sessionsStorage = mergedSessions
+        didFinishLoading = true
+        sessionsLock.unlock()
+
+        let loadResult: Result<Void, Error> = loaded.errorDescription.map {
+            .failure(PersistenceFailure(message: $0))
+        } ?? .success(())
+
+        guard legacySessions != nil else {
+            finishLoading(loadResult)
+            return
+        }
+
+        enqueueWrite(
+            removing: [],
+            markLegacyMigrationComplete: true,
+            removeLegacyHistoryOnSuccess: true,
+            completion: { [weak self] migrationResult in
+                guard let self else { return }
+                switch migrationResult {
+                case .success:
+                    if case .failure(let error) = loadResult {
+                        self.setPersistenceError(error.localizedDescription)
+                    }
+                    self.finishLoading(loadResult)
+                case .failure:
+                    self.finishLoading(migrationResult)
+                }
+            }
+        )
+    }
+
+    private func finishLoading(_ result: Result<Void, Error>) {
+        sessionsLock.lock()
+        loadResult = result
+        let completions = loadCompletions
+        loadCompletions.removeAll()
+        sessionsLock.unlock()
+
+        for completion in completions {
+            deliverLoadResult(result, to: completion)
+        }
+    }
+
+    private func deliverLoadResult(
+        _ result: Result<Void, Error>,
+        to completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        DispatchQueue.main.async {
+            completion(result)
+        }
+    }
+
+    private func currentPersistenceResult() -> Result<Void, Error> {
+        if let persistenceError {
+            return .failure(PersistenceFailure(message: persistenceError))
+        }
+        return .success(())
+    }
+
+    private func setMigrationState(_ state: LegacyMigrationState) {
+        migrationStateLock.lock()
+        migrationState = state
+        migrationStateLock.unlock()
     }
 
     private func setPersistenceError(_ error: String?) {
@@ -286,5 +428,16 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         let message: String
 
         var errorDescription: String? { message }
+    }
+
+    private enum SessionMutation {
+        case append(WorkoutSessionRecord)
+        case remove(UUID)
+    }
+
+    private enum LegacyMigrationState {
+        case unknown
+        case pending([WorkoutSessionRecord])
+        case notPending
     }
 }
