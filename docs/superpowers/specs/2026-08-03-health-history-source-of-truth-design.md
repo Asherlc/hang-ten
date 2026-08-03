@@ -1,6 +1,6 @@
 # Hang Ten Health History Source of Truth Design
 
-**Date:** 2026-08-03  
+**Date:** 2026-08-03
 **Status:** Approved design; implementation plan pending written-spec review
 
 ## Goal
