@@ -1,0 +1,132 @@
+#!/bin/zsh
+set -euo pipefail
+
+usage() {
+  print -- "Usage: ${0:t} archive | prune [--delete]"
+}
+
+is_uuid() {
+  [[ "$1" =~ '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$' ]]
+}
+
+device_record_for_uuid() {
+  local devices=$1 uuid=$2
+
+  print -r -- "$devices" | awk -v uuid="$uuid" '
+    {
+      line = $0
+      sub(/^[[:space:]]+/, "", line)
+      marker = " (" uuid ") ("
+      if (index(line, marker) == 0) next
+
+      name = line
+      sub(/ \([^)]*\) \([^)]*\)$/, "", name)
+      state = line
+      sub(/^.* \(/, "", state)
+      sub(/\)$/, "", state)
+      print name "\t" state
+      exit
+    }
+  '
+}
+
+run_archive_cleanup() {
+  local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
+  local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
+  local manifest devices uuid record device_name device_state
+  local result_status=0
+
+  if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
+    print -u2 -- 'archive requires CONDUCTOR_WORKSPACE_PATH and CONDUCTOR_WORKSPACE_NAME'
+    return 1
+  fi
+
+  manifest="$workspace_path/.context/conductor-owned-simulators"
+  [[ -f "$manifest" ]] || return 0
+  devices=$(xcrun simctl list devices)
+
+  while IFS= read -r uuid || [[ -n "$uuid" ]]; do
+    if ! is_uuid "$uuid"; then
+      print -u2 -- "Skipping malformed simulator UUID: $uuid"
+      result_status=1
+      continue
+    fi
+
+    record=$(device_record_for_uuid "$devices" "$uuid")
+    [[ -n "$record" ]] || continue
+    device_name=${record%%$'\t'*}
+    device_state=${record#*$'\t'}
+
+    if [[ "$device_name" != *'Hang Ten Conductor '* || "$device_name" != *"$workspace_name"* ]]; then
+      print -u2 -- "Skipping simulator not owned by workspace $workspace_name: $uuid"
+      result_status=1
+      continue
+    fi
+
+    if [[ "$device_state" == Booted ]] && ! xcrun simctl shutdown "$uuid"; then
+      print -u2 -- "Failed to shut down simulator: $uuid"
+      result_status=1
+      continue
+    fi
+
+    if ! xcrun simctl delete "$uuid"; then
+      print -u2 -- "Failed to delete simulator: $uuid"
+      result_status=1
+    fi
+  done < "$manifest"
+
+  return "$result_status"
+}
+
+run_prune() {
+  local option=${1:-}
+  local devices record device_name device_state uuid
+  local result_status=0
+
+  if [[ -n "$option" && "$option" != --delete ]]; then
+    usage >&2
+    return 2
+  fi
+
+  devices=$(xcrun simctl list devices)
+  while IFS=$'\t' read -r device_name uuid device_state; do
+    [[ "$device_state" == Shutdown ]] || continue
+    [[ "$device_name" == HangTen* || "$device_name" == 'Hang Ten'* ]] || continue
+
+    if [[ "$option" == --delete ]]; then
+      if ! xcrun simctl delete "$uuid"; then
+        print -u2 -- "Failed to delete simulator: $uuid"
+        result_status=1
+      fi
+    else
+      print -- "Would delete $device_name ($uuid)"
+    fi
+  done < <(
+    print -r -- "$devices" | awk '
+      {
+        line = $0
+        sub(/^[[:space:]]+/, "", line)
+        if (line !~ / \([^)]*\) \([^)]*\)$/) next
+
+        name = line
+        sub(/ \([^)]*\) \([^)]*\)$/, "", name)
+        uuid = line
+        sub(/ \([^)]*\)$/, "", uuid)
+        sub(/^.* \(/, "", uuid)
+        sub(/\)$/, "", uuid)
+        state = line
+        sub(/^.* \(/, "", state)
+        sub(/\)$/, "", state)
+        print name "\t" uuid "\t" state
+      }
+    '
+  )
+
+  return "$result_status"
+}
+
+case "${1:-}" in
+  archive) run_archive_cleanup ;;
+  prune) run_prune "${2:-}" ;;
+  *) usage >&2; exit 2 ;;
+esac
