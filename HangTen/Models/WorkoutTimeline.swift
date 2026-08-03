@@ -69,7 +69,16 @@ struct WorkoutTimeline {
             return nil
         }
 
-        let stepElapsed = elapsedInStep(at: elapsed)
+        return holdPreviewStep(
+            currentStep: currentStep,
+            stepElapsed: elapsedInStep(at: elapsed)
+        )
+    }
+
+    func holdPreviewStep(
+        currentStep: WorkoutStep,
+        stepElapsed: TimeInterval
+    ) -> WorkoutStep? {
         let isResting = currentStep.phase == .rest
             || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
 

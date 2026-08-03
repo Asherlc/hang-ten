@@ -171,6 +171,32 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(timeline.holdPreviewStep(at: 35)?.id, "next-work")
     }
 
+    func testHoldPreviewWithCurrentStepAndElapsedUsesProvidedLocation() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[0],
+                stepElapsed: 15
+            )?.id,
+            "next-work"
+        )
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[0],
+                stepElapsed: 5
+            )?.id,
+            "work"
+        )
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[1],
+                stepElapsed: 2
+            )?.id,
+            "next-work"
+        )
+    }
+
     func testHoldPreviewHasNoHighlightSourceAfterTheFinalRestStep() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 

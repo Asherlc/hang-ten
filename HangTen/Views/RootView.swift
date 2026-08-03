@@ -953,14 +953,18 @@ struct WorkoutView: View {
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+				let timeline = WorkoutTimeline(steps: plan.steps)
 				let elapsed = currentElapsed(at: context.date)
-				let step = step(at: elapsed)
-				let stepElapsed = elapsedInStep(at: elapsed)
+				let step = timeline.step(at: elapsed) ?? plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+				let stepElapsed = timeline.elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: context.date)
 				let isComplete = elapsed >= plan.duration
 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
 				let isResting = step.phase == .rest || isTimedResting
-				let highlightedStep = timeline.holdPreviewStep(at: elapsed)
+				let highlightedStep = timeline.holdPreviewStep(
+					currentStep: step,
+					stepElapsed: stepElapsed
+				)
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
@@ -969,7 +973,7 @@ struct WorkoutView: View {
 					step: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isResting: isTimedResting,
+					isTimedResting: isTimedResting,
 					isComplete: isComplete
 				)
 
@@ -1689,7 +1693,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		countdown: Int,
-		isResting: Bool,
+		isTimedResting: Bool,
 		isComplete: Bool
 	) -> WorkoutAudioMoment? {
 		guard startedAt != nil else { return nil }
@@ -1708,18 +1712,18 @@ struct WorkoutView: View {
 			)
 		}
 
-		let segmentName = isResting ? "rest" : "active"
-		let segmentElapsed = isResting
+		let segmentName = isTimedResting ? "rest" : "active"
+		let segmentElapsed = isTimedResting
 			? max(0, stepElapsed - step.activeDuration)
 			: stepElapsed
-		let segmentDuration = isResting ? step.restDuration : step.activeDuration
+		let segmentDuration = isTimedResting ? step.restDuration : step.activeDuration
 
 		if segmentElapsed < 0.55 {
 			let phrase: String
 			if segmentDuration <= 3 {
-				phrase = isResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
+				phrase = isTimedResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
 			} else {
-				phrase = isResting ? "Rest" : spokenStartPhrase(for: step)
+				phrase = isTimedResting ? "Rest" : spokenStartPhrase(for: step)
 			}
 			return WorkoutAudioMoment(
 				key: "\(step.id)-\(segmentName)-start",
