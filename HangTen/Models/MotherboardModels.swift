@@ -31,6 +31,38 @@ struct MotherboardMeasurement: Codable, Equatable {
     let batteryValue: UInt16
     let sensorLoadsKGF: [Double]
     let aggregateLoadKGF: Double
+
+    private enum Side {
+        static let leftChannels = [0, 2]
+        static let rightChannels = [1, 3]
+    }
+
+    var leftLoadKGF: Double { load(for: Side.leftChannels) }
+
+    var rightLoadKGF: Double { load(for: Side.rightChannels) }
+
+    var leftShare: Double { share(for: leftLoadKGF) }
+
+    var rightShare: Double { share(for: rightLoadKGF) }
+
+    func bodyweightPercentage(for bodyweightKGF: Double) -> Double {
+        guard bodyweightKGF.isFinite, bodyweightKGF > 0,
+              aggregateLoadKGF.isFinite, aggregateLoadKGF > 0 else { return 0 }
+        return aggregateLoadKGF / bodyweightKGF * 100
+    }
+
+    private func load(for channels: [Int]) -> Double {
+        channels.reduce(0) { total, index in
+            guard sensorLoadsKGF.indices.contains(index), sensorLoadsKGF[index].isFinite else { return total }
+            return total + max(0, sensorLoadsKGF[index])
+        }
+    }
+
+    private func share(for load: Double) -> Double {
+        let total = leftLoadKGF + rightLoadKGF
+        guard total.isFinite, total > 0, load.isFinite else { return 0 }
+        return load / total
+    }
 }
 
 enum MotherboardConnectionState: Equatable {
@@ -88,12 +120,57 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let motherboardIdentifier: String?
     let batteryValue: UInt16?
     let steps: [WorkoutStepMeasurement]
+    let bodyweightKGF: Double?
+
+    private enum CodingKeys: String, CodingKey {
+        case id, planID, planTitle, recordedAt, startDate, endDate
+        case motherboardIdentifier, batteryValue, steps, bodyweightKGF
+    }
+
+    init(
+        id: UUID,
+        planID: String,
+        planTitle: String,
+        recordedAt: Date,
+        startDate: Date,
+        endDate: Date,
+        motherboardIdentifier: String?,
+        batteryValue: UInt16?,
+        steps: [WorkoutStepMeasurement],
+        bodyweightKGF: Double? = nil
+    ) {
+        self.id = id
+        self.planID = planID
+        self.planTitle = planTitle
+        self.recordedAt = recordedAt
+        self.startDate = startDate
+        self.endDate = endDate
+        self.motherboardIdentifier = motherboardIdentifier
+        self.batteryValue = batteryValue
+        self.steps = steps
+        self.bodyweightKGF = bodyweightKGF
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        planID = try container.decode(String.self, forKey: .planID)
+        planTitle = try container.decode(String.self, forKey: .planTitle)
+        recordedAt = try container.decode(Date.self, forKey: .recordedAt)
+        startDate = try container.decode(Date.self, forKey: .startDate)
+        endDate = try container.decode(Date.self, forKey: .endDate)
+        motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
+        batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
+        steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
+        bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
+    }
 }
 
 final class MotherboardSettingsStore: ObservableObject {
     private enum Key {
         static let forceUnit = "motherboard.forceUnit"
         static let thresholdKGF = "motherboard.thresholdKGF"
+        static let bodyweightCaptureDuration = "motherboard.bodyweightCaptureDuration"
     }
 
     private let defaults: UserDefaults
@@ -112,6 +189,16 @@ final class MotherboardSettingsStore: ObservableObject {
         }
     }
 
+    @Published var bodyweightCaptureDuration: TimeInterval {
+        didSet {
+            let normalized = Self.normalizedBodyweightCaptureDuration(bodyweightCaptureDuration)
+            if bodyweightCaptureDuration != normalized {
+                bodyweightCaptureDuration = normalized
+            }
+            defaults.set(normalized, forKey: Key.bodyweightCaptureDuration)
+        }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
@@ -122,13 +209,23 @@ final class MotherboardSettingsStore: ObservableObject {
             forceUnit = .kgf
         }
 
-        let storedThreshold = defaults.object(forKey: Key.thresholdKGF) as? Double
-        thresholdKGF = Self.normalizedThreshold(storedThreshold ?? 2.5)
-        defaults.set(thresholdKGF, forKey: Key.thresholdKGF)
+        let normalizedThreshold = Self.normalizedThreshold(defaults.object(forKey: Key.thresholdKGF) as? Double ?? 2.5)
+        let normalizedBodyweightDuration = Self.normalizedBodyweightCaptureDuration(
+            defaults.object(forKey: Key.bodyweightCaptureDuration) as? Double ?? 5
+        )
+        thresholdKGF = normalizedThreshold
+        bodyweightCaptureDuration = normalizedBodyweightDuration
+        defaults.set(normalizedThreshold, forKey: Key.thresholdKGF)
+        defaults.set(normalizedBodyweightDuration, forKey: Key.bodyweightCaptureDuration)
     }
 
     private static func normalizedThreshold(_ value: Double) -> Double {
         guard value.isFinite, value >= 0.1 else { return 2.5 }
         return min(value, 50)
+    }
+
+    private static func normalizedBodyweightCaptureDuration(_ value: TimeInterval) -> TimeInterval {
+        guard value.isFinite, value >= 3 else { return 5 }
+        return min(value, 10)
     }
 }

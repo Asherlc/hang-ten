@@ -8,6 +8,61 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardForceUnit.newtons.value(fromKilogramsForce: 2), 19.6133, accuracy: 0.0001)
     }
 
+    func testMeasurementDistributesCalibratedChannelsAcrossBoardSides() {
+        let balanced = measurement(sensorLoads: [2, 1, 3, 4], aggregate: 10)
+        XCTAssertEqual(balanced.leftLoadKGF, 5, accuracy: 0.0001)
+        XCTAssertEqual(balanced.rightLoadKGF, 5, accuracy: 0.0001)
+        XCTAssertEqual(balanced.leftShare, 0.5, accuracy: 0.0001)
+        XCTAssertEqual(balanced.rightShare, 0.5, accuracy: 0.0001)
+
+        let uneven = measurement(sensorLoads: [3, 1, 1, 5], aggregate: 10)
+        XCTAssertEqual(uneven.leftShare, 0.4, accuracy: 0.0001)
+        XCTAssertEqual(uneven.rightShare, 0.6, accuracy: 0.0001)
+    }
+
+    func testMeasurementBodyweightPercentageUsesAggregateLoad() {
+        let measurement = measurement(sensorLoads: [2.5, 2.5, 2.5, 2.5], aggregate: 10)
+        XCTAssertEqual(measurement.bodyweightPercentage(for: 20), 50, accuracy: 0.0001)
+    }
+
+    func testBodyweightCaptureDurationDefaultsClampsAndPersists() {
+        let suite = "MotherboardModelsBodyweightDurationTests"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+
+        let initial = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(initial.bodyweightCaptureDuration, 5, accuracy: 0.0001)
+
+        defaults.set(1, forKey: "motherboard.bodyweightCaptureDuration")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
+        defaults.set(20, forKey: "motherboard.bodyweightCaptureDuration")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 10, accuracy: 0.0001)
+
+        initial.bodyweightCaptureDuration = 7
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 7, accuracy: 0.0001)
+    }
+
+    func testSessionRecordDecodesWithoutOptionalBodyweightField() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "bodyweightKGF")
+        let legacyData = try JSONSerialization.data(withJSONObject: object)
+
+        let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: legacyData)
+        XCTAssertNil(decoded.bodyweightKGF)
+    }
+
     func testSettingsUseDefaultsAndRoundTripThroughUserDefaults() {
         let defaults = UserDefaults(suiteName: "MotherboardModelsTests")!
         defaults.removePersistentDomain(forName: "MotherboardModelsTests")
@@ -88,5 +143,15 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(rest.activeDuration, rest.duration)
         XCTAssertTrue(rest.isRestStep)
         XCTAssertFalse(hang.isRestStep)
+    }
+
+    private func measurement(sensorLoads: [Double], aggregate: Double) -> MotherboardMeasurement {
+        MotherboardMeasurement(
+            timestamp: Date(timeIntervalSince1970: 0),
+            sampleNumber: 1,
+            batteryValue: 100,
+            sensorLoadsKGF: sensorLoads,
+            aggregateLoadKGF: aggregate
+        )
     }
 }
