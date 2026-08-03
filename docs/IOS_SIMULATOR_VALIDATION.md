@@ -244,11 +244,6 @@ routine change, preview every distinct hold target and finger cue.
   system permission sheet, and complete a short debug session on a signed
   build. Simulator behavior does not replace a physical-device HealthKit test
   before release.
-- For non-interactive screenshot validation, combine
-  `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_REQUEST_HEALTH=1`. The latter
-  must not request authorization on appearance; Health authorization is
-  intentionally user-triggered only through the visible Connect Apple Health
-  action.
 
 See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 
