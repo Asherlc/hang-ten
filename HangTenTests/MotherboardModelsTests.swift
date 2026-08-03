@@ -25,6 +25,46 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(measurement.bodyweightPercentage(for: 20), 50, accuracy: 0.0001)
     }
 
+    func testMeasurementIgnoresNonFiniteAndNegativeSensorLoads() {
+        let measurement = measurement(sensorLoads: [.nan, -1, .infinity, 2], aggregate: 10)
+
+        XCTAssertEqual(measurement.leftLoadKGF, 0, accuracy: 0.0001)
+        XCTAssertEqual(measurement.rightLoadKGF, 2, accuracy: 0.0001)
+        XCTAssertEqual(measurement.leftShare, 0, accuracy: 0.0001)
+        XCTAssertEqual(measurement.rightShare, 1, accuracy: 0.0001)
+    }
+
+    func testMeasurementSideLoadsSaturateFiniteOverflow() {
+        let largestFinite = Double.greatestFiniteMagnitude
+        let measurement = measurement(
+            sensorLoads: [largestFinite, largestFinite, largestFinite, largestFinite],
+            aggregate: largestFinite
+        )
+
+        XCTAssertEqual(measurement.leftLoadKGF, largestFinite)
+        XCTAssertEqual(measurement.rightLoadKGF, largestFinite)
+        XCTAssertTrue(measurement.leftLoadKGF.isFinite)
+        XCTAssertTrue(measurement.rightLoadKGF.isFinite)
+        XCTAssertEqual(measurement.leftShare, 0.5, accuracy: 0.0001)
+        XCTAssertEqual(measurement.rightShare, 0.5, accuracy: 0.0001)
+    }
+
+    func testMeasurementBodyweightPercentageReturnsZeroForInvalidBaseline() {
+        let measurement = measurement(sensorLoads: [2.5, 2.5, 2.5, 2.5], aggregate: 10)
+
+        XCTAssertEqual(measurement.bodyweightPercentage(for: 0), 0, accuracy: 0.0001)
+        XCTAssertEqual(measurement.bodyweightPercentage(for: .nan), 0, accuracy: 0.0001)
+        XCTAssertEqual(measurement.bodyweightPercentage(for: .infinity), 0, accuracy: 0.0001)
+    }
+
+    func testMeasurementBodyweightPercentageSaturatesFiniteOverflow() {
+        let largestFinite = Double.greatestFiniteMagnitude
+        let measurement = measurement(sensorLoads: [], aggregate: largestFinite)
+
+        XCTAssertEqual(measurement.bodyweightPercentage(for: 1), largestFinite)
+        XCTAssertTrue(measurement.bodyweightPercentage(for: 1).isFinite)
+    }
+
     func testBodyweightCaptureDurationDefaultsClampsAndPersists() {
         let suite = "MotherboardModelsBodyweightDurationTests"
         let defaults = UserDefaults(suiteName: suite)!
@@ -34,10 +74,16 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(initial.bodyweightCaptureDuration, 5, accuracy: 0.0001)
 
         defaults.set(1, forKey: "motherboard.bodyweightCaptureDuration")
-        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 3, accuracy: 0.0001)
         defaults.set(20, forKey: "motherboard.bodyweightCaptureDuration")
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 10, accuracy: 0.0001)
+        defaults.set(Double.nan, forKey: "motherboard.bodyweightCaptureDuration")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
+        defaults.set(Double.infinity, forKey: "motherboard.bodyweightCaptureDuration")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 5, accuracy: 0.0001)
 
+        initial.bodyweightCaptureDuration = 1
+        XCTAssertEqual(initial.bodyweightCaptureDuration, 3, accuracy: 0.0001)
         initial.bodyweightCaptureDuration = 7
         XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).bodyweightCaptureDuration, 7, accuracy: 0.0001)
     }

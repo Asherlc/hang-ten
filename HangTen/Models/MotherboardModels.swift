@@ -48,20 +48,31 @@ struct MotherboardMeasurement: Codable, Equatable {
     func bodyweightPercentage(for bodyweightKGF: Double) -> Double {
         guard bodyweightKGF.isFinite, bodyweightKGF > 0,
               aggregateLoadKGF.isFinite, aggregateLoadKGF > 0 else { return 0 }
-        return aggregateLoadKGF / bodyweightKGF * 100
+        let ratio = aggregateLoadKGF / bodyweightKGF
+        guard ratio.isFinite else { return .greatestFiniteMagnitude }
+
+        let percentage = ratio * 100
+        return percentage.isFinite ? percentage : .greatestFiniteMagnitude
     }
 
     private func load(for channels: [Int]) -> Double {
         channels.reduce(0) { total, index in
             guard sensorLoadsKGF.indices.contains(index), sensorLoadsKGF[index].isFinite else { return total }
-            return total + max(0, sensorLoadsKGF[index])
+            let load = max(0, sensorLoadsKGF[index])
+            let sum = total + load
+            return sum.isFinite ? sum : .greatestFiniteMagnitude
         }
     }
 
     private func share(for load: Double) -> Double {
-        let total = leftLoadKGF + rightLoadKGF
-        guard total.isFinite, total > 0, load.isFinite else { return 0 }
-        return load / total
+        let left = leftLoadKGF
+        let right = rightLoadKGF
+        let scale = max(left, right)
+        guard scale.isFinite, scale > 0, load.isFinite else { return 0 }
+
+        let normalizedTotal = left / scale + right / scale
+        guard normalizedTotal.isFinite, normalizedTotal > 0 else { return 0 }
+        return min(max(0, load / scale / normalizedTotal), 1)
     }
 }
 
@@ -225,7 +236,7 @@ final class MotherboardSettingsStore: ObservableObject {
     }
 
     private static func normalizedBodyweightCaptureDuration(_ value: TimeInterval) -> TimeInterval {
-        guard value.isFinite, value >= 3 else { return 5 }
-        return min(value, 10)
+        guard value.isFinite else { return 5 }
+        return min(max(value, 3), 10)
     }
 }
