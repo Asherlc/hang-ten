@@ -99,6 +99,83 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertNil(timeline.selectionTarget(for: "missing", at: 0))
         XCTAssertNil(timeline.skipTarget(from: 0))
     }
+
+    private let restPreviewSteps: [WorkoutStep] = [
+        WorkoutStep(
+            id: "work",
+            number: 1,
+            title: "Work",
+            instruction: "Work instruction",
+            accessory: "Work accessory",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.jug)],
+            timedWorkDuration: 15
+        ),
+        WorkoutStep(
+            id: "rest-one",
+            number: 2,
+            title: "Rest one",
+            instruction: "Rest instruction",
+            accessory: "Rest accessory",
+            duration: 10,
+            phase: .rest,
+            targets: []
+        ),
+        WorkoutStep(
+            id: "rest-two",
+            number: 3,
+            title: "Rest two",
+            instruction: "Rest instruction",
+            accessory: "Rest accessory",
+            duration: 10,
+            phase: .rest,
+            targets: []
+        ),
+        WorkoutStep(
+            id: "next-work",
+            number: 4,
+            title: "Next work",
+            instruction: "Next work instruction",
+            accessory: "Next work accessory",
+            duration: 20,
+            phase: .pull,
+            targets: [.kind(.edge)]
+        ),
+        WorkoutStep(
+            id: "final-rest",
+            number: 5,
+            title: "Final rest",
+            instruction: "Final rest instruction",
+            accessory: "Final rest accessory",
+            duration: 5,
+            phase: .rest,
+            targets: []
+        )
+    ]
+
+    func testNextWorkStepSkipsConsecutiveRestSteps() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(timeline.nextWorkStep(after: "work")?.id, "next-work")
+        XCTAssertEqual(timeline.nextWorkStep(after: "rest-one")?.id, "next-work")
+        XCTAssertEqual(timeline.nextWorkStep(after: "rest-two")?.id, "next-work")
+        XCTAssertNil(timeline.nextWorkStep(after: "next-work"))
+    }
+
+    func testHoldPreviewUsesNextWorkStepDuringTimedAndExplicitRest() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(timeline.holdPreviewStep(at: 5)?.id, "work")
+        XCTAssertEqual(timeline.holdPreviewStep(at: 20)?.id, "next-work")
+        XCTAssertEqual(timeline.holdPreviewStep(at: 35)?.id, "next-work")
+    }
+
+    func testHoldPreviewHasNoHighlightSourceAfterTheFinalRestStep() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertNil(timeline.holdPreviewStep(at: 72))
+    }
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
