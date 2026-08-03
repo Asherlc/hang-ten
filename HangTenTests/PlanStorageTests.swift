@@ -71,6 +71,85 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testSegmentTargetFixturesRoundTripMultiTargetAndLegacyTarget() throws {
+        let data = Data(
+            #"""
+            {
+              "schemaVersion": 3,
+              "metadata": {
+                "id": "segment.fixture",
+                "version": "3.0.0",
+                "title": "Segment fixture",
+                "generatedAt": "2026-08-03",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [{
+                "id": "segment.block",
+                "title": "Segment fixture",
+                "steps": [{
+                  "id": "segment.step",
+                  "title": "Segment step",
+                  "instruction": "Use both holds.",
+                  "accessory": "10s",
+                  "duration": 10,
+                  "phase": "hang",
+                  "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
+                  "segments": [
+                    {
+                      "kind": "work",
+                      "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
+                      "timing": "fixed",
+                      "duration": 10
+                    },
+                    {
+                      "kind": "work",
+                      "target": { "feature": "mediumEdge" },
+                      "timing": "undefined"
+                    }
+                  ]
+                }]
+              }],
+              "plans": [{
+                "id": "segment.plan",
+                "metadata": {
+                  "title": "Segment plan",
+                  "subtitle": "Segment fixture",
+                  "level": "Test",
+                  "sourceLabel": "Test fixture",
+                  "sourceURL": "https://example.com/segment",
+                  "provenance": "adapted",
+                  "category": "test",
+                  "tags": [],
+                  "equipment": [],
+                  "notes": []
+                },
+                "blocks": [{ "blockID": "segment.block" }]
+              }]
+            }
+            """#.utf8
+        )
+
+        let store = try PlanLibraryStore(data: data)
+        let resolvedSegments = try XCTUnwrap(store.plan(id: "segment.plan")).steps[0].segments
+        let encoded = try store.encodedData()
+        let roundTripped = try JSONDecoder().decode(PlanLibraryDefinition.self, from: encoded)
+        let persistedSegments = roundTripped.blocks[0].steps[0].segments
+
+        XCTAssertEqual(
+            resolvedSegments[0].targets,
+            [.feature(.mediumEdge), .kind(.jug)]
+        )
+        XCTAssertEqual(resolvedSegments[0].target, .feature(.mediumEdge))
+        XCTAssertEqual(resolvedSegments[1].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(resolvedSegments[1].target, .feature(.mediumEdge))
+        XCTAssertEqual(
+            persistedSegments[0].targets,
+            [.feature(.mediumEdge, fallbacks: []), .kind(.jug)]
+        )
+        XCTAssertEqual(persistedSegments[1].target, .feature(.mediumEdge, fallbacks: []))
+    }
+
     func testSchemaTwoDefinitionsWithoutSegmentsMigrateWithCompatibilitySegments() throws {
         let data = Data(
             #"""

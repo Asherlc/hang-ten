@@ -239,9 +239,36 @@ enum WorkoutSegmentTiming: String, Codable, Hashable {
 
 struct WorkoutSegment: Hashable {
     let kind: WorkoutSegmentKind
-    let target: HoldTarget?
+    let targets: [HoldTarget]
+    var target: HoldTarget? { targets.first }
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
+
+    init(
+        kind: WorkoutSegmentKind,
+        target: HoldTarget?,
+        timing: WorkoutSegmentTiming,
+        duration: TimeInterval?
+    ) {
+        self.init(
+            kind: kind,
+            targets: target.map { [$0] } ?? [],
+            timing: timing,
+            duration: duration
+        )
+    }
+
+    init(
+        kind: WorkoutSegmentKind,
+        targets: [HoldTarget],
+        timing: WorkoutSegmentTiming,
+        duration: TimeInterval?
+    ) {
+        self.kind = kind
+        self.targets = targets
+        self.timing = timing
+        self.duration = duration
+    }
 }
 
 enum WorkoutPhase: String, Codable, Hashable {
@@ -380,6 +407,7 @@ struct MetoliusTaskDefinition: Hashable {
     let phase: WorkoutPhase
     let targets: [HoldTarget]
     let gripType: GripType?
+    let timing: WorkoutSegmentTiming
 
     init(
         title: String,
@@ -388,7 +416,8 @@ struct MetoliusTaskDefinition: Hashable {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        timing: WorkoutSegmentTiming = .fixed
     ) {
         self.title = title
         self.instruction = instruction
@@ -397,6 +426,7 @@ struct MetoliusTaskDefinition: Hashable {
         self.phase = phase
         self.targets = targets
         self.gripType = gripType
+        self.timing = timing
     }
 }
 
@@ -663,8 +693,15 @@ enum MetoliusCycleBuilder {
     static let pullUpDuration: TimeInterval = 5
     static let repetitionDuration: TimeInterval = 1
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift.Error, Equatable, LocalizedError {
         case overfullCycle(total: TimeInterval, cycleDuration: TimeInterval)
+
+        var errorDescription: String? {
+            switch self {
+            case let .overfullCycle(total, cycleDuration):
+                "Metolius minute totals \(Int(total)) seconds, exceeding its \(Int(cycleDuration))-second cycle."
+            }
+        }
     }
 
     private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
@@ -748,7 +785,27 @@ enum MetoliusCycleBuilder {
             duration: duration,
             phase: phase,
             targets: targets,
-            gripType: gripType
+            gripType: gripType,
+            timing: .undefined
+        )
+    }
+
+    static func maxEffort(
+        title: String,
+        instruction: String,
+        phase: WorkoutPhase,
+        targets: [HoldTarget],
+        gripType: GripType? = nil
+    ) -> MetoliusTaskDefinition {
+        task(
+            title: title,
+            instruction: instruction,
+            accessory: "Maximum effort · up to 60s",
+            duration: cycleDuration,
+            phase: phase,
+            targets: targets,
+            gripType: gripType,
+            timing: .stopwatch
         )
     }
 
@@ -772,9 +829,16 @@ enum MetoliusCycleBuilder {
                 duration: task.duration,
                 phase: task.phase,
                 targets: task.targets,
-                segments: task.targets.first.map { [fixedWork($0, task.duration)] } ?? [],
+                segments: task.targets.isEmpty ? [] : [
+                    WorkoutSegment(
+                        kind: .work,
+                        targets: task.targets,
+                        timing: task.timing,
+                        duration: task.timing == .fixed ? task.duration : nil
+                    )
+                ],
                 gripType: task.gripType,
-                timedWorkDuration: task.duration
+                timedWorkDuration: task.timing == .fixed ? task.duration : nil
             )
         }
 
@@ -805,7 +869,8 @@ enum MetoliusCycleBuilder {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType?
+        gripType: GripType?,
+        timing: WorkoutSegmentTiming = .fixed
     ) -> MetoliusTaskDefinition {
         MetoliusTaskDefinition(
             title: title,
@@ -814,7 +879,8 @@ enum MetoliusCycleBuilder {
             duration: duration,
             phase: phase,
             targets: targets,
-            gripType: gripType
+            gripType: gripType,
+            timing: timing
         )
     }
 }
@@ -833,9 +899,19 @@ enum LegacyPlanSeedCatalog {
         planID: String,
         _ minutes: [[MetoliusTaskDefinition]]
     ) -> [WorkoutStep] {
-        minutes.enumerated().flatMap { index, tasks in
-            try! MetoliusCycleBuilder.expand(planID: planID, minute: index + 1, tasks: tasks)
-        }.enumerated().map { index, step in
+        var steps: [WorkoutStep] = []
+        for (index, tasks) in minutes.enumerated() {
+            do {
+                steps += try MetoliusCycleBuilder.expand(
+                    planID: planID,
+                    minute: index + 1,
+                    tasks: tasks
+                )
+            } catch {
+                preconditionFailure("Invalid Metolius plan \(planID) minute \(index + 1): \(error)")
+            }
+        }
+        return steps.enumerated().map { index, step in
             step.withNumber(index + 1)
         }
     }
@@ -862,7 +938,7 @@ enum LegacyPlanSeedCatalog {
             [MetoliusCycleBuilder.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
             [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
-            [MetoliusCycleBuilder.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
         ])
     )
 
@@ -906,7 +982,7 @@ enum LegacyPlanSeedCatalog {
                 MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper),
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
             ],
-            [MetoliusCycleBuilder.fixed(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", duration: 60, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
         ])
     )
 
@@ -977,7 +1053,7 @@ enum LegacyPlanSeedCatalog {
                 MetoliusCycleBuilder.fixed(
                     title: "Hold ladder",
                     instruction: "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
-                    duration: 60,
+                    duration: 40,
                     phase: .hang,
                     targets: [.kind(.pocket), .kind(.edge), .kind(.sloper), .kind(.jug)]
                 )
@@ -1067,10 +1143,9 @@ enum LegacyPlanSeedCatalog {
                 )
             ],
             [
-                MetoliusCycleBuilder.fixed(
+                MetoliusCycleBuilder.maxEffort(
                     title: "Maximum slope hangs",
                     instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
-                    duration: 60,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
                     gripType: .sloper
@@ -1657,7 +1732,12 @@ enum LegacyPlanSeedCatalog {
                     if step.phase == .rest {
                         return step.targets.isEmpty && step.timedWorkDuration == nil
                     }
-                    return !step.targets.isEmpty && step.timedWorkDuration == step.duration
+                    let timing = step.segments.first?.timing ?? .fixed
+                    return !step.targets.isEmpty && (
+                        timing == .fixed
+                            ? step.timedWorkDuration == step.duration
+                            : step.timedWorkDuration == nil
+                    )
                 }
             )
             for minute in 1...10 {

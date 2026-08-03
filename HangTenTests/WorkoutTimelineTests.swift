@@ -259,6 +259,28 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
+    func testMaxEffortMetoliusStepsUseStopwatchTiming() {
+        let step = PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }!
+
+        XCTAssertEqual(step.duration, 60)
+        XCTAssertEqual(step.timedWorkDuration, nil)
+        XCTAssertEqual(step.segments, [
+            WorkoutSegment(
+                kind: .work,
+                target: .feature(.roundSloper),
+                timing: .stopwatch,
+                duration: nil
+            )
+        ])
+    }
+
+    func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
+        let steps = PlanCatalog.metoliusAdvanced.steps.filter { $0.id.hasPrefix("advanced.minute-4.") }
+
+        XCTAssertEqual(steps.map(\.duration), [40, 20])
+        XCTAssertEqual(steps.last?.phase, .rest)
+    }
+
     func testMetoliusPlansRemainTenMinutesAndAreMarkedAdapted() {
         let plans = [
             PlanCatalog.metoliusEntry,

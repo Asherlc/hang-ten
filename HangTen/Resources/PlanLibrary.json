@@ -474,8 +474,7 @@
           "title" : "Minute 9 rest"
         },
         {
-          "accessory" : "60s hang",
-          "activeDuration" : 60,
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
           "id" : "entry.minute-10.task-1",
@@ -483,12 +482,11 @@
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 60,
               "kind" : "work",
               "target" : {
                 "feature" : "roundSloper"
               },
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
           "targets" : [
@@ -829,9 +827,14 @@
             {
               "duration" : 15,
               "kind" : "work",
-              "target" : {
-                "feature" : "jug"
-              },
+              "targets" : [
+                {
+                  "feature" : "jug"
+                },
+                {
+                  "feature" : "smallEdge"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -856,9 +859,14 @@
             {
               "duration" : 15,
               "kind" : "work",
-              "target" : {
-                "feature" : "jug"
-              },
+              "targets" : [
+                {
+                  "feature" : "jug"
+                },
+                {
+                  "feature" : "smallEdge"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -1066,8 +1074,7 @@
           "title" : "Minute 9 rest"
         },
         {
-          "accessory" : "60s hang",
-          "activeDuration" : 60,
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
           "id" : "intermediate.minute-10.task-1",
@@ -1075,12 +1082,11 @@
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 60,
               "kind" : "work",
               "target" : {
                 "feature" : "roundSloper"
               },
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
           "targets" : [
@@ -1312,19 +1318,30 @@
           "title" : "Minute 3 rest"
         },
         {
-          "accessory" : "60s hang",
-          "activeDuration" : 60,
-          "duration" : 60,
+          "accessory" : "40s hang",
+          "activeDuration" : 40,
+          "duration" : 40,
           "id" : "advanced.minute-4.task-1",
           "instruction" : "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 60,
+              "duration" : 40,
               "kind" : "work",
-              "target" : {
-                "kind" : "pocket"
-              },
+              "targets" : [
+                {
+                  "kind" : "pocket"
+                },
+                {
+                  "kind" : "edge"
+                },
+                {
+                  "kind" : "sloper"
+                },
+                {
+                  "kind" : "jug"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -1343,6 +1360,24 @@
             }
           ],
           "title" : "Hold ladder"
+        },
+        {
+          "accessory" : "20s rest",
+          "duration" : 20,
+          "id" : "advanced.minute-4.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 4 rest"
         },
         {
           "accessory" : "20s hang",
@@ -1433,9 +1468,14 @@
             {
               "duration" : 25,
               "kind" : "work",
-              "target" : {
-                "feature" : "largeSlope"
-              },
+              "targets" : [
+                {
+                  "feature" : "largeSlope"
+                },
+                {
+                  "feature" : "threeFingerPocket"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -1460,9 +1500,14 @@
             {
               "duration" : 25,
               "kind" : "work",
-              "target" : {
-                "feature" : "largeSlope"
-              },
+              "targets" : [
+                {
+                  "feature" : "largeSlope"
+                },
+                {
+                  "feature" : "threeFingerPocket"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -1593,7 +1638,6 @@
         },
         {
           "accessory" : "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
-          "activeDuration" : 15,
           "duration" : 15,
           "gripType" : "sloper",
           "id" : "advanced.minute-8.task-2",
@@ -1601,12 +1645,11 @@
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 15,
               "kind" : "work",
               "target" : {
                 "feature" : "largeSlope"
               },
-              "timing" : "fixed"
+              "timing" : "undefined"
             }
           ],
           "targets" : [
@@ -1702,8 +1745,7 @@
           "title" : "Minute 9 rest"
         },
         {
-          "accessory" : "60s hang",
-          "activeDuration" : 60,
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
           "id" : "advanced.minute-10.task-1",
@@ -1711,12 +1753,11 @@
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 60,
               "kind" : "work",
               "target" : {
                 "feature" : "largeSlope"
               },
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
           "targets" : [

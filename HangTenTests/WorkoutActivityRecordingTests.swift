@@ -104,6 +104,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0].durationSeconds, 12)
     }
 
+    func testMultiTargetWorkRecordsAllHoldsWithOneDuration() throws {
+        let segment = WorkoutSegment(
+            kind: .work,
+            targets: [.ids("edge-left"), .ids("jug-center")],
+            timing: .fixed,
+            duration: 10
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: plan([segment]),
+            on: board
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].holdIDs, ["edge-left", "jug-center"])
+        XCTAssertEqual(records[0].durationSeconds, 10)
+    }
+
     func testFixedWorkFollowedByRestPreservesOrderAndDurations() throws {
         let workout = plan([
             WorkoutSegment(

@@ -190,9 +190,76 @@ enum WorkoutTargetDefinition: Codable, Hashable {
 
 struct WorkoutSegmentDefinition: Codable, Hashable {
     let kind: WorkoutSegmentKind
-    let target: WorkoutTargetDefinition?
+    let targets: [WorkoutTargetDefinition]
+    var target: WorkoutTargetDefinition? { targets.first }
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
+
+    init(
+        kind: WorkoutSegmentKind,
+        target: WorkoutTargetDefinition?,
+        timing: WorkoutSegmentTiming,
+        duration: TimeInterval?
+    ) {
+        self.init(
+            kind: kind,
+            targets: target.map { [$0] } ?? [],
+            timing: timing,
+            duration: duration
+        )
+    }
+
+    init(
+        kind: WorkoutSegmentKind,
+        targets: [WorkoutTargetDefinition],
+        timing: WorkoutSegmentTiming,
+        duration: TimeInterval?
+    ) {
+        self.kind = kind
+        self.targets = targets
+        self.timing = timing
+        self.duration = duration
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case kind
+        case target
+        case targets
+        case timing
+        case duration
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
+        if let decodedTargets = try container.decodeIfPresent(
+            [WorkoutTargetDefinition].self,
+            forKey: .targets
+        ) {
+            targets = decodedTargets
+        } else if let legacyTarget = try container.decodeIfPresent(
+            WorkoutTargetDefinition.self,
+            forKey: .target
+        ) {
+            targets = [legacyTarget]
+        } else {
+            targets = []
+        }
+        timing = try container.decode(WorkoutSegmentTiming.self, forKey: .timing)
+        duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(kind, forKey: .kind)
+        if targets.count == 1 {
+            try container.encode(targets[0], forKey: .target)
+        } else if !targets.isEmpty {
+            try container.encode(targets, forKey: .targets)
+        }
+        try container.encode(timing, forKey: .timing)
+        try container.encodeIfPresent(duration, forKey: .duration)
+    }
 }
 
 struct WorkoutStepDefinition: Codable, Hashable {
@@ -564,7 +631,7 @@ enum PlanLibraryValidator {
             let targetPath = "\(path).segments[\(index)].target"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
-            if segment.kind == .work && segment.target == nil {
+            if segment.kind == .work && segment.targets.isEmpty {
                 issues.append(
                     PlanValidationIssue(
                         path: targetPath,
@@ -572,7 +639,7 @@ enum PlanLibraryValidator {
                     )
                 )
             }
-            if segment.kind == .rest && segment.target != nil {
+            if segment.kind == .rest && !segment.targets.isEmpty {
                 issues.append(
                     PlanValidationIssue(
                         path: targetPath,
@@ -708,9 +775,9 @@ enum PlanLibraryValidator {
                         issues: &issues
                     )
                     for (segmentIndex, segment) in step.segments.enumerated() {
-                        guard let target = segment.target else { continue }
+                        guard !segment.targets.isEmpty else { continue }
                         validateTargets(
-                            [target],
+                            segment.targets,
                             planBoardID: plan.boardID,
                             stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
                             mappingByBoardID: mappingByBoardID,
@@ -956,7 +1023,7 @@ struct PlanDefinitionResolver {
             if let activeDuration = step.activeDuration {
                 let workSegment = WorkoutSegment(
                     kind: .work,
-                    target: targets.first,
+                    targets: targets,
                     timing: .fixed,
                     duration: activeDuration
                 )
@@ -974,11 +1041,11 @@ struct PlanDefinitionResolver {
                 }
                 return segments
             }
-            if let target = targets.first {
+            if !targets.isEmpty {
                 return [
                     WorkoutSegment(
                         kind: .work,
-                        target: target,
+                        targets: targets,
                         timing: .undefined,
                         duration: nil
                     )
@@ -988,12 +1055,14 @@ struct PlanDefinitionResolver {
         }
 
         return try step.segments.map { definition in
-            let target = try definition.target.map { targetDefinition in
-                try resolveTargets([targetDefinition], mapping: mapping, board: board).first
-            } ?? nil
+            let segmentTargets = try resolveTargets(
+                definition.targets,
+                mapping: mapping,
+                board: board
+            )
             return WorkoutSegment(
                 kind: definition.kind,
-                target: target,
+                targets: segmentTargets,
                 timing: definition.timing,
                 duration: definition.duration
             )
@@ -1338,7 +1407,7 @@ enum BuiltInPlanLibraryDefinition {
             segments: step.segments.map { segment in
                 WorkoutSegmentDefinition(
                     kind: segment.kind,
-                    target: segment.target.flatMap { targetDefinitions(from: $0).first },
+                    targets: segment.targets.flatMap { targetDefinitions(from: $0) },
                     timing: segment.timing,
                     duration: segment.duration
                 )

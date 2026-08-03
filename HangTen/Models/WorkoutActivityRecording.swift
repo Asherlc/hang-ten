@@ -120,9 +120,25 @@ struct WorkoutActivityRecorder {
                     result.append(RecordedActivitySegment(stepID: step.id, stepNumber: step.number, kind: .rest, holdIDs: [], holdType: nil, sizeMillimeters: nil, durationSeconds: duration))
                     continue
                 }
-                guard let target = segment.target else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
-                let holds = BoardTargetResolver.resolveHolds(for: target, on: board)
+                guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
+                let holds = segment.targets.flatMap {
+                    BoardTargetResolver.resolveHolds(for: $0, on: board)
+                }
                 guard !holds.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
+                if segment.targets.count > 1 {
+                    result.append(
+                        RecordedActivitySegment(
+                            stepID: step.id,
+                            stepNumber: step.number,
+                            kind: .work,
+                            holdIDs: holds.map(\.id),
+                            holdType: nil,
+                            sizeMillimeters: nil,
+                            durationSeconds: duration
+                        )
+                    )
+                    continue
+                }
                 var groups: [(HoldKind, Int?, [String])] = []
                 for hold in holds {
                     let descriptor = (hold.kind, hold.sizeMillimeters)
