@@ -44,6 +44,7 @@ case "$2" in
     Hang Ten Worcester Preview (40404040-4040-4040-4040-404040404040) (Shutdown)
     Hang Ten Worcester Reviewing (50505050-5050-5050-5050-505050505050) (Shutdown)
     HangTen bariloche Task5 (60606060-6060-6060-6060-606060606060) (Shutdown)
+    HangTen bariloche Task Review (73737373-7373-7373-7373-737373737373) (Shutdown)
     Hang Ten Worcester Validation Review (71717171-7171-7171-7171-717171717171) (Shutdown)
     Hang Ten Worcester Scratch Review (72727272-7272-7272-7272-727272727272) (Shutdown)
     HangTennis Review (31313131-3131-3131-3131-313131313131) (Shutdown)
@@ -182,6 +183,7 @@ assert_not_contains '30303030-3030-3030-3030-303030303030' "$dry_run"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$dry_run"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$dry_run"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$dry_run"
+assert_not_contains '73737373-7373-7373-7373-737373737373' "$dry_run"
 assert_not_contains '31313131-3131-3131-3131-313131313131' "$dry_run"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$dry_run"
 assert_not_contains '71717171-7171-7171-7171-717171717171' "$dry_run"
@@ -211,6 +213,7 @@ assert_not_contains '30303030-3030-3030-3030-303030303030' "$prune_calls"
 assert_not_contains '40404040-4040-4040-4040-404040404040' "$prune_calls"
 assert_not_contains '50505050-5050-5050-5050-505050505050' "$prune_calls"
 assert_not_contains '60606060-6060-6060-6060-606060606060' "$prune_calls"
+assert_not_contains '73737373-7373-7373-7373-737373737373' "$prune_calls"
 assert_not_contains '31313131-3131-3131-3131-313131313131' "$prune_calls"
 assert_not_contains '32323232-3232-3232-3232-323232323232' "$prune_calls"
 assert_not_contains '71717171-7171-7171-7171-717171717171' "$prune_calls"
