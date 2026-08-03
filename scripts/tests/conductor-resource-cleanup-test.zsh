@@ -98,6 +98,7 @@ run_cleanup() {
 
 workspace="$temp_dir/workspace"
 manifest="$workspace/.context/conductor-owned-simulators"
+pending_manifest="$workspace/.context/conductor-pending-simulators"
 mkdir -p "${manifest:h}"
 
 print -r -- '11111111-1111-1111-1111-111111111111
@@ -113,6 +114,25 @@ assert_contains 'delete 22222222-2222-2222-2222-222222222222' "$archive_calls"
 assert_not_contains '33333333-3333-3333-3333-333333333333' "$archive_calls"
 assert_not_contains '44444444-4444-4444-4444-444444444444' "$archive_calls"
 assert_all_call_log_contains_list_devices
+
+: > "$manifest"
+print -r -- '74747474-7474-7474-7474-747474747474
+33333333-3333-3333-3333-333333333333
+bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' > "$pending_manifest"
+: > "$call_log"
+: > "$all_call_log"
+if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+  print -u2 -- 'archive accepted a pending simulator owned by another workspace'
+  exit 1
+fi
+pending_archive_calls=$(<"$call_log")
+assert_contains 'shutdown 74747474-7474-7474-7474-747474747474' "$pending_archive_calls"
+assert_contains 'delete 74747474-7474-7474-7474-747474747474' "$pending_archive_calls"
+assert_not_contains 'shutdown 33333333-3333-3333-3333-333333333333' "$pending_archive_calls"
+assert_not_contains 'delete 33333333-3333-3333-3333-333333333333' "$pending_archive_calls"
+assert_not_contains 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' "$pending_archive_calls"
+assert_all_call_log_contains_list_devices
+: > "$pending_manifest"
 
 print -r -- 'not-a-uuid' > "$manifest"
 : > "$call_log"
