@@ -1,0 +1,63 @@
+name: CodeQL
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  merge_group:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (Swift)
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # github/codeql-action v4.37.5
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@d1ba80a13dd99fba24a470575428917156a28b43
+        with:
+          languages: swift
+          build-mode: manual
+
+      - name: Build with CodeQL tracing
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/codeql-logs" "$RUNNER_TEMP/codeql-derived-data"
+          xcodebuild \
+            -project HangTen.xcodeproj \
+            -scheme HangTen \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath "$RUNNER_TEMP/codeql-derived-data" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build 2>&1 | tee "$RUNNER_TEMP/codeql-logs/xcodebuild.log"
+
+      # github/codeql-action v4.37.5
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/analyze@d1ba80a13dd99fba24a470575428917156a28b43
+        with:
+          category: "/language:swift"
