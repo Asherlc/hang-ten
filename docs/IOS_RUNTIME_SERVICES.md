@@ -27,10 +27,14 @@ the routine pauses/exits, the audio session deactivates with
 Audio moments are derived from clock state:
 
 - initial 3, 2, 1;
+- skip countdown 5, 4, 3, 2, 1;
 - the current minute/task start;
 - the final 3, 2, 1 of a fixed segment;
 - an explicit rest transition for routines with a fixed rest segment;
 - session complete.
+
+Skip countdown keys are stable and speak each number once before the
+destination step's start cue.
 
 Metolius task-cycle steps intentionally have `timedWorkDuration == nil`.
 Speech says “Begin minute …” and the full minute remains visible because the
@@ -55,7 +59,14 @@ seek rebases the elapsed clock at the selected step's start and stays running;
 a paused seek replaces the paused elapsed position and stays paused. Selecting
 the current step is a no-op. Skip step seeks to the end of the current
 `WorkoutStep`, including its timed rest interval, so it advances to the next
-step's start; skipping the final step reaches the existing completion state.
+step's start. Skipping a non-final step seeks to the next step's start, then
+schedules a five-second 5-4-3-2-1 countdown before that step begins
+automatically. This happens from both running and paused sessions; the session
+is running after the countdown. During the countdown, Routine and Skip step
+are disabled and board/grip cues remain inactive. Cancelling or interrupting
+the countdown leaves the destination step paused and preserves the original
+session start. Skipping the final step still reaches completion immediately
+without a countdown.
 
 Every seek stops the active audio utterance and re-anchors audio to the new
 elapsed position. The normal cue for the selected step can therefore play once
