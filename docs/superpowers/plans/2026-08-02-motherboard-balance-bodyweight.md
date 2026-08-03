@@ -15,6 +15,7 @@
 - Use 15 unloaded samples for tare and a default five-second bodyweight capture; bodyweight duration is user-configurable from 3–10 seconds in one-second steps.
 - Existing persisted `WorkoutSessionRecord` values must decode when the new optional bodyweight field is absent.
 - DEBUG autostart review routes must bypass the preparation sheet so existing simulator review flows still reach the workout surface.
+- DEBUG simulation must model the full sensor-backed flow without hardware: unloaded tare samples, a stable five-second jug hang for bodyweight capture, and changing non-equal left/right loads during the workout.
 - Add tests before production changes and observe each new test fail for the intended missing behavior.
 
 ---
@@ -148,10 +149,11 @@ rtk git commit -m "feat: gate workouts on sensor calibration"
 - `MotherboardMeterView` accepts optional bodyweight and renders side shares plus a bodyweight percentage line without hiding current/peak force.
 - `MotherboardSettingsView` exposes bodyweight capture duration in seconds and preserves the existing threshold/force/tare controls.
 - Saved summaries show the optional captured bodyweight while read-only history remains non-mutating.
+- The DEBUG transport exposes deterministic phase-aware samples so the preparation flow and live workout meter visibly exercise tare, bodyweight, balance, and percentage feedback in the simulator.
 
 - [ ] **Step 1: Write failing UI-facing/model tests**
 
-Add tests for summary bodyweight text data and simulator samples that have non-equal left/right loads, so the live route exercises a non-50/50 split. Keep tests on pure model values where SwiftUI inspection is not already present.
+Add tests for summary bodyweight text data and simulator phase samples: unloaded tare frames, stable bodyweight-hang frames, and non-equal left/right workout frames. Keep tests on pure model values where SwiftUI inspection is not already present.
 
 - [ ] **Step 2: Run focused tests and verify RED**
 
@@ -159,7 +161,7 @@ Run the summary and simulator test restrictions; expected failure is absent body
 
 - [ ] **Step 3: Implement the meter/settings/summary changes**
 
-Render left/right percentages as a balanced split, show “% bodyweight” only when a valid baseline exists, add the duration picker/slider and copy, and include the captured baseline in read-only summary detail.
+Render left/right percentages as a balanced split, show “% bodyweight” only when a valid baseline exists, add the duration picker/slider and copy, include the captured baseline in read-only summary detail, and make the DEBUG stream cycle through unloaded, bodyweight-hang, and dynamic workout samples.
 
 - [ ] **Step 4: Run focused tests and verify GREEN**
 

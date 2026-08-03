@@ -39,6 +39,10 @@ Motherboard settings gain a bodyweight capture duration control (3–10 seconds,
 
 The workout setup is a focused sheet/view, not a new timer mode. DEBUG autostart review routes bypass the setup so automated screenshots continue to reach the workout surface.
 
+## DEBUG simulation
+
+The simulator must make the sensor-backed experience inspectable without a physical Motherboard. Its deterministic stream provides near-zero unloaded samples for tare, a stable aggregate load during the bodyweight hang, and a changing, intentionally uneven left/right profile once the workout is active. This lets development and automated review exercise the setup flow, balance display, and live bodyweight percentage line end to end.
+
 ## Persistence and compatibility
 
 `WorkoutSessionRecord.bodyweightKGF` is optional so existing persisted session history decodes unchanged. Derived left/right shares are calculated from the current measurement and are not duplicated in stored records.
