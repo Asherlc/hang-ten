@@ -652,7 +652,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(transport.startScanCount, 4)
         XCTAssertEqual(transport.disconnectCount, 4)
         XCTAssertFalse(transport.hasSelectedPeripheral)
-        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertEqual(service.state, .failed)
         XCTAssertEqual(service.lastError, "lost")
     }
 
@@ -671,7 +671,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             transport.emit(.disconnected("later loss"))
         }
         XCTAssertEqual(transport.startScanCount, 5)
-        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertEqual(service.state, .failed)
     }
 
     func testScanTimeoutFailsWithActionableError() async throws {

@@ -300,7 +300,7 @@ final class MotherboardBluetoothService: ObservableObject {
         lastError = message
 
         guard wantsConnection, reconnectAttempts < 3 else {
-            state = .disconnected
+            state = wantsConnection ? .failed : .disconnected
             return
         }
 
