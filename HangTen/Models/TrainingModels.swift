@@ -129,6 +129,7 @@ struct BoardHold: Identifiable, Hashable {
     let gripType: GripType
     let cueStyle: HoldCueStyle
     let frame: HoldFrame
+    let sizeMillimeters: Int?
     let features: Set<HoldFeature>
 
     init(
@@ -138,6 +139,7 @@ struct BoardHold: Identifiable, Hashable {
         detail: String,
         kind: HoldKind,
         frame: HoldFrame,
+        sizeMillimeters: Int? = nil,
         gripType: GripType = .openHand,
         cueStyle: HoldCueStyle? = nil,
         features: Set<HoldFeature>? = nil
@@ -150,6 +152,7 @@ struct BoardHold: Identifiable, Hashable {
         self.gripType = gripType
         self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : .slot))
         self.frame = frame
+        self.sizeMillimeters = sizeMillimeters
         self.features = features ?? Self.defaultFeatures(kind: kind, gripType: gripType)
     }
 
@@ -223,6 +226,24 @@ struct HoldTarget: Hashable {
     }
 }
 
+enum WorkoutSegmentKind: String, Codable, Hashable {
+    case work
+    case rest
+}
+
+enum WorkoutSegmentTiming: String, Codable, Hashable {
+    case fixed
+    case stopwatch
+    case undefined
+}
+
+struct WorkoutSegment: Hashable {
+    let kind: WorkoutSegmentKind
+    let target: HoldTarget?
+    let timing: WorkoutSegmentTiming
+    let duration: TimeInterval?
+}
+
 enum WorkoutPhase: String, Codable, Hashable {
     case warmUp
     case hang
@@ -272,6 +293,7 @@ struct WorkoutStep: Identifiable, Hashable {
     let duration: TimeInterval
     let phase: WorkoutPhase
     let targets: [HoldTarget]
+    let segments: [WorkoutSegment]
     let gripType: GripType?
     /// When set, the app splits the minute into timed work and timed rest.
     /// Manufacturer task cycles leave this nil because the athlete completes
@@ -287,6 +309,7 @@ struct WorkoutStep: Identifiable, Hashable {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
+        segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
         timedWorkDuration: TimeInterval? = nil
     ) {
@@ -298,6 +321,7 @@ struct WorkoutStep: Identifiable, Hashable {
         self.duration = duration
         self.phase = phase
         self.targets = targets
+        self.segments = segments
         self.gripType = gripType
         self.timedWorkDuration = timedWorkDuration
     }
@@ -341,6 +365,7 @@ struct WorkoutStep: Identifiable, Hashable {
             duration: duration,
             phase: phase,
             targets: targets,
+            segments: segments,
             gripType: gripType,
             timedWorkDuration: timedWorkDuration
         )
@@ -455,6 +480,7 @@ enum BoardCatalog {
                 detail: "Flat open-hand sloper",
                 kind: .sloper,
                 frame: HoldFrame(x: 0.158, y: 0.035, width: 0.190, height: 0.128),
+                sizeMillimeters: 56,
                 gripType: .sloper,
                 features: [.largeSlope]
             ),
@@ -465,6 +491,7 @@ enum BoardCatalog {
                 detail: "Flat open-hand sloper",
                 kind: .sloper,
                 frame: HoldFrame(x: 0.652, y: 0.035, width: 0.190, height: 0.128),
+                sizeMillimeters: 56,
                 gripType: .sloper,
                 features: [.largeSlope]
             ),
@@ -475,6 +502,7 @@ enum BoardCatalog {
                 detail: "Round open-hand sloper",
                 kind: .sloper,
                 frame: HoldFrame(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
+                sizeMillimeters: 56,
                 gripType: .sloper,
                 features: [.roundSloper]
             ),
@@ -485,6 +513,7 @@ enum BoardCatalog {
                 detail: "Large edge",
                 kind: .edge,
                 frame: HoldFrame(x: 0.021, y: 0.245, width: 0.165, height: 0.270),
+                sizeMillimeters: 29,
                 features: [.largeEdge]
             ),
             BoardHold(
@@ -494,6 +523,7 @@ enum BoardCatalog {
                 detail: "Large edge",
                 kind: .edge,
                 frame: HoldFrame(x: 0.814, y: 0.245, width: 0.165, height: 0.270),
+                sizeMillimeters: 29,
                 features: [.largeEdge]
             ),
             BoardHold(
@@ -503,6 +533,7 @@ enum BoardCatalog {
                 detail: "Three-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
+                sizeMillimeters: 29,
                 gripType: .threeFingerPocket
             ),
             BoardHold(
@@ -512,6 +543,7 @@ enum BoardCatalog {
                 detail: "Three-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.692, y: 0.365, width: 0.109, height: 0.148),
+                sizeMillimeters: 29,
                 gripType: .threeFingerPocket
             ),
             BoardHold(
@@ -521,6 +553,7 @@ enum BoardCatalog {
                 detail: "Two-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
+                sizeMillimeters: 29,
                 gripType: .twoFingerPocket
             ),
             BoardHold(
@@ -530,6 +563,7 @@ enum BoardCatalog {
                 detail: "Two-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.595, y: 0.370, width: 0.077, height: 0.147),
+                sizeMillimeters: 29,
                 gripType: .twoFingerPocket
             ),
             BoardHold(
@@ -539,6 +573,7 @@ enum BoardCatalog {
                 detail: "Four-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
+                sizeMillimeters: 29,
                 gripType: .fourFingerPocket
             ),
             BoardHold(
@@ -548,6 +583,7 @@ enum BoardCatalog {
                 detail: "Small edge",
                 kind: .edge,
                 frame: HoldFrame(x: 0.035, y: 0.620, width: 0.160, height: 0.245),
+                sizeMillimeters: 19,
                 features: [.mediumEdge, .smallEdge]
             ),
             BoardHold(
@@ -557,6 +593,7 @@ enum BoardCatalog {
                 detail: "Small edge",
                 kind: .edge,
                 frame: HoldFrame(x: 0.805, y: 0.620, width: 0.160, height: 0.245),
+                sizeMillimeters: 19,
                 features: [.mediumEdge, .smallEdge]
             ),
             BoardHold(
@@ -566,6 +603,7 @@ enum BoardCatalog {
                 detail: "Three-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
+                sizeMillimeters: 19,
                 gripType: .threeFingerPocket
             ),
             BoardHold(
@@ -575,6 +613,7 @@ enum BoardCatalog {
                 detail: "Three-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.680, y: 0.733, width: 0.104, height: 0.140),
+                sizeMillimeters: 19,
                 gripType: .threeFingerPocket
             ),
             BoardHold(
@@ -584,6 +623,7 @@ enum BoardCatalog {
                 detail: "Two-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
+                sizeMillimeters: 19,
                 gripType: .twoFingerPocket
             ),
             BoardHold(
@@ -593,6 +633,7 @@ enum BoardCatalog {
                 detail: "Two-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.591, y: 0.733, width: 0.073, height: 0.140),
+                sizeMillimeters: 19,
                 gripType: .twoFingerPocket
             ),
             BoardHold(
@@ -602,6 +643,7 @@ enum BoardCatalog {
                 detail: "Four-finger pocket",
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.733, width: 0.150, height: 0.140),
+                sizeMillimeters: 19,
                 gripType: .fourFingerPocket
             )
         ],
@@ -623,6 +665,14 @@ enum MetoliusCycleBuilder {
 
     enum Error: Swift.Error, Equatable {
         case overfullCycle(total: TimeInterval, cycleDuration: TimeInterval)
+    }
+
+    private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
+    }
+
+    private static func fixedRest(_ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: duration)
     }
 
     static func pullUps(
@@ -722,6 +772,7 @@ enum MetoliusCycleBuilder {
                 duration: task.duration,
                 phase: task.phase,
                 targets: task.targets,
+                segments: task.targets.first.map { [fixedWork($0, task.duration)] } ?? [],
                 gripType: task.gripType,
                 timedWorkDuration: task.duration
             )
@@ -738,7 +789,8 @@ enum MetoliusCycleBuilder {
                     accessory: "\(Int(remaining))s rest",
                     duration: remaining,
                     phase: .rest,
-                    targets: []
+                    targets: [],
+                    segments: [fixedRest(remaining)]
                 )
             )
         }
@@ -1027,6 +1079,14 @@ enum LegacyPlanSeedCatalog {
         ])
     )
 
+    private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
+    }
+
+    private static func fixedRest(_ duration: TimeInterval) -> WorkoutSegment {
+        WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: duration)
+    }
+
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
 
     private static func warmUpStep(id: String, duration: TimeInterval = 180) -> WorkoutStep {
@@ -1039,6 +1099,7 @@ enum LegacyPlanSeedCatalog {
             duration: duration,
             phase: .warmUp,
             targets: [.ids("jug-left", "jug-right")],
+            segments: [fixedWork(.ids("jug-left", "jug-right"), duration)],
             gripType: .openHand
         )
     }
@@ -1062,6 +1123,7 @@ enum LegacyPlanSeedCatalog {
             duration: active + rest,
             phase: .hang,
             targets: targets,
+            segments: [fixedWork(targets[0], active)] + (rest > 0 ? [fixedRest(rest)] : []),
             gripType: gripType,
             timedWorkDuration: active
         )
@@ -1076,7 +1138,8 @@ enum LegacyPlanSeedCatalog {
             accessory: accessory,
             duration: duration,
             phase: .rest,
-            targets: []
+            targets: [],
+            segments: [fixedRest(duration)]
         )
     }
 
@@ -1090,6 +1153,7 @@ enum LegacyPlanSeedCatalog {
             duration: 60,
             phase: .coolDown,
             targets: [.ids("jug-left", "jug-right")],
+            segments: [fixedWork(.ids("jug-left", "jug-right"), 60)],
             gripType: .openHand
         )
     }

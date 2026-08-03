@@ -10,6 +10,16 @@
           "id" : "warm-up",
           "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
           "phase" : "warmUp",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "outer-jugs"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "outer-jugs"
@@ -30,6 +40,16 @@
           "id" : "cool-down",
           "instruction" : "Stay on the easy jugs and let your breathing settle before you step away.",
           "phase" : "coolDown",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "outer-jugs"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "outer-jugs"
@@ -50,6 +70,16 @@
           "id" : "entry.minute-1.task-1",
           "instruction" : "Hang from the jugs for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -69,6 +99,13 @@
           "id" : "entry.minute-1.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -82,6 +119,16 @@
           "id" : "entry.minute-2.task-1",
           "instruction" : "Do 1 pull-up on a round sloper.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 5,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -95,6 +142,13 @@
           "id" : "entry.minute-2.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 55,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -107,6 +161,16 @@
           "id" : "entry.minute-3.task-1",
           "instruction" : "Hang from a medium edge for 10 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "feature" : "mediumEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "mediumEdge"
@@ -120,6 +184,13 @@
           "id" : "entry.minute-3.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -132,6 +203,16 @@
           "id" : "entry.minute-4.task-1",
           "instruction" : "Hang from a pocket for 15 seconds and include 3 shrugs.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "pocket"
@@ -145,6 +226,13 @@
           "id" : "entry.minute-4.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -157,6 +245,16 @@
           "id" : "entry.minute-5.task-1",
           "instruction" : "Hang from a large edge for 20 seconds and include 2 pull-ups.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeEdge"
@@ -170,6 +268,13 @@
           "id" : "entry.minute-5.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 40,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -183,6 +288,16 @@
           "id" : "entry.minute-6.task-1",
           "instruction" : "Hang from a round sloper for 10 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -197,6 +312,16 @@
           "id" : "entry.minute-6.task-2",
           "instruction" : "Do 5 knee raises on a pocket.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 5,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "pocket"
@@ -210,6 +335,13 @@
           "id" : "entry.minute-6.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -222,6 +354,16 @@
           "id" : "entry.minute-7.task-1",
           "instruction" : "Do 4 pull-ups on a large edge.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeEdge"
@@ -235,6 +377,13 @@
           "id" : "entry.minute-7.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 40,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -247,6 +396,16 @@
           "id" : "entry.minute-8.task-1",
           "instruction" : "Hang from a medium edge for 10 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "feature" : "mediumEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "mediumEdge"
@@ -260,6 +419,13 @@
           "id" : "entry.minute-8.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -272,6 +438,16 @@
           "id" : "entry.minute-9.task-1",
           "instruction" : "Do 3 pull-ups on the jugs.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -285,6 +461,13 @@
           "id" : "entry.minute-9.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -298,6 +481,16 @@
           "id" : "entry.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -318,6 +511,16 @@
           "id" : "intermediate.minute-1.task-1",
           "instruction" : "Hang from a large edge for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeEdge"
@@ -338,6 +541,16 @@
           "id" : "intermediate.minute-1.task-2",
           "instruction" : "Do 3 pull-ups on the large edge.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeEdge"
@@ -351,6 +564,13 @@
           "id" : "intermediate.minute-1.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -364,6 +584,16 @@
           "id" : "intermediate.minute-2.task-1",
           "instruction" : "Do 2 pull-ups on a round sloper.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -378,6 +608,16 @@
           "id" : "intermediate.minute-2.task-2",
           "instruction" : "Hang from a medium edge for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "mediumEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "mediumEdge"
@@ -391,6 +631,13 @@
           "id" : "intermediate.minute-2.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -403,6 +650,16 @@
           "id" : "intermediate.minute-3.task-1",
           "instruction" : "Hang from a small edge for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "smallEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "smallEdge"
@@ -417,6 +674,16 @@
           "id" : "intermediate.minute-3.task-2",
           "instruction" : "Hold a pocket at a 90° bent arm for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "pocket"
@@ -430,6 +697,13 @@
           "id" : "intermediate.minute-3.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -443,6 +717,16 @@
           "id" : "intermediate.minute-4.task-1",
           "instruction" : "Hang from a round sloper for 30 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -456,6 +740,13 @@
           "id" : "intermediate.minute-4.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -468,6 +759,16 @@
           "id" : "intermediate.minute-5.task-1",
           "instruction" : "Hang from a large edge for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeEdge"
@@ -482,6 +783,16 @@
           "id" : "intermediate.minute-5.task-2",
           "instruction" : "Do 4 pull-ups on a pocket.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "pocket"
@@ -495,6 +806,13 @@
           "id" : "intermediate.minute-5.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -507,6 +825,16 @@
           "id" : "intermediate.minute-6.task-1",
           "instruction" : "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -524,6 +852,16 @@
           "id" : "intermediate.minute-6.task-2",
           "instruction" : "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -540,6 +878,13 @@
           "id" : "intermediate.minute-6.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -552,6 +897,16 @@
           "id" : "intermediate.minute-7.task-1",
           "instruction" : "Do 15 knee raises on the jugs.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -566,6 +921,16 @@
           "id" : "intermediate.minute-7.task-2",
           "instruction" : "Hang from a medium edge for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "mediumEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "mediumEdge"
@@ -579,6 +944,13 @@
           "id" : "intermediate.minute-7.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -591,6 +963,16 @@
           "id" : "intermediate.minute-8.task-1",
           "instruction" : "Hang from a medium edge for 25 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "mediumEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "mediumEdge"
@@ -604,6 +986,13 @@
           "id" : "intermediate.minute-8.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 35,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -617,6 +1006,16 @@
           "id" : "intermediate.minute-9.task-1",
           "instruction" : "Hang from a slope for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -631,6 +1030,16 @@
           "id" : "intermediate.minute-9.task-2",
           "instruction" : "Do 3 pull-ups on the jugs.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "jug"
@@ -644,6 +1053,13 @@
           "id" : "intermediate.minute-9.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -657,6 +1073,16 @@
           "id" : "intermediate.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "feature" : "roundSloper"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "roundSloper"
@@ -678,6 +1104,16 @@
           "id" : "advanced.minute-1.task-1",
           "instruction" : "Hold a straight-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -698,6 +1134,19 @@
           "id" : "advanced.minute-1.task-2",
           "instruction" : "Do 3 pull-ups on a four-finger flat edge.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "fallbackFeatures" : [
+                  "largeEdge"
+                ],
+                "feature" : "fourFingerFlatEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "fallbackFeatures" : [
@@ -714,6 +1163,13 @@
           "id" : "advanced.minute-1.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -727,6 +1183,16 @@
           "id" : "advanced.minute-2.task-1",
           "instruction" : "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -742,6 +1208,16 @@
           "id" : "advanced.minute-2.task-2",
           "instruction" : "Stay on for a 20-second L-sit or 20 hanging knee curls.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -755,6 +1231,13 @@
           "id" : "advanced.minute-2.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -768,6 +1251,16 @@
           "id" : "advanced.minute-3.task-1",
           "instruction" : "Do 5 pull-ups on a three-finger pocket.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "threeFingerPocket"
@@ -783,6 +1276,16 @@
           "id" : "advanced.minute-3.task-2",
           "instruction" : "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "threeFingerPocket"
@@ -796,6 +1299,13 @@
           "id" : "advanced.minute-3.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -808,6 +1318,16 @@
           "id" : "advanced.minute-4.task-1",
           "instruction" : "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "kind" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "kind" : "pocket"
@@ -831,6 +1351,19 @@
           "id" : "advanced.minute-5.task-1",
           "instruction" : "Hang one-armed from a four-finger flat edge for 20 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "fallbackFeatures" : [
+                  "largeEdge"
+                ],
+                "feature" : "fourFingerFlatEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "fallbackFeatures" : [
@@ -848,6 +1381,19 @@
           "id" : "advanced.minute-5.task-2",
           "instruction" : "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "fallbackFeatures" : [
+                  "largeEdge"
+                ],
+                "feature" : "fourFingerFlatEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "fallbackFeatures" : [
@@ -864,6 +1410,13 @@
           "id" : "advanced.minute-5.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -876,6 +1429,16 @@
           "id" : "advanced.minute-6.task-1",
           "instruction" : "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -893,6 +1456,16 @@
           "id" : "advanced.minute-6.task-2",
           "instruction" : "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -909,6 +1482,13 @@
           "id" : "advanced.minute-6.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -921,6 +1501,19 @@
           "id" : "advanced.minute-7.task-1",
           "instruction" : "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "fallbackFeatures" : [
+                  "largeEdge"
+                ],
+                "feature" : "fourFingerIncutEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "fallbackFeatures" : [
@@ -939,6 +1532,16 @@
           "id" : "advanced.minute-7.task-2",
           "instruction" : "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "threeFingerPocket"
@@ -952,6 +1555,13 @@
           "id" : "advanced.minute-7.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -964,6 +1574,16 @@
           "id" : "advanced.minute-8.task-1",
           "instruction" : "Do 3 L-sit pull-ups, bending your knees if needed.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -979,6 +1599,16 @@
           "id" : "advanced.minute-8.task-2",
           "instruction" : "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -992,6 +1622,13 @@
           "id" : "advanced.minute-8.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -1005,6 +1642,16 @@
           "id" : "advanced.minute-9.task-1",
           "instruction" : "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "threeFingerPocket"
@@ -1019,6 +1666,16 @@
           "id" : "advanced.minute-9.task-2",
           "instruction" : "Then do 3 power pull-ups with weight or helper resistance.",
           "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "threeFingerPocket"
@@ -1032,6 +1689,13 @@
           "id" : "advanced.minute-9.rest",
           "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -1045,6 +1709,16 @@
           "id" : "advanced.minute-10.task-1",
           "instruction" : "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeSlope"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "largeSlope"
@@ -1066,6 +1740,21 @@
           "id" : "max-hangs-1",
           "instruction" : "Use added weight or assistance so seven seconds is near-max without losing shoulder position or grip shape.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1081,6 +1770,21 @@
           "id" : "max-hangs-2",
           "instruction" : "Repeat the same load or make a small adjustment. Stop before form breaks.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1096,6 +1800,21 @@
           "id" : "max-hangs-3",
           "instruction" : "Keep the effort high and the movement quiet. Do not turn this into a full-crimp test.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1111,6 +1830,21 @@
           "id" : "max-hangs-4",
           "instruction" : "Take the full recovery and reproduce your best controlled effort.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1126,6 +1860,16 @@
           "id" : "max-hangs-5",
           "instruction" : "Finish with one high-quality effort. Log the load or assistance used today.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1147,6 +1891,21 @@
           "id" : "f80-set-1-rep-1",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1162,6 +1921,21 @@
           "id" : "f80-set-1-rep-2",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1177,6 +1951,21 @@
           "id" : "f80-set-1-rep-3",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1192,6 +1981,21 @@
           "id" : "f80-set-1-rep-4",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1207,6 +2011,21 @@
           "id" : "f80-set-1-rep-5",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1222,6 +2041,21 @@
           "id" : "f80-set-1-rep-6",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1237,6 +2071,21 @@
           "id" : "f80-set-1-rep-7",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1252,6 +2101,21 @@
           "id" : "f80-set-1-rep-8",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1267,6 +2131,21 @@
           "id" : "f80-set-1-rep-9",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1282,6 +2161,21 @@
           "id" : "f80-set-1-rep-10",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1297,6 +2191,21 @@
           "id" : "f80-set-1-rep-11",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1312,6 +2221,21 @@
           "id" : "f80-set-1-rep-12",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1325,6 +2249,13 @@
           "id" : "f80-set-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 480,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -1338,6 +2269,21 @@
           "id" : "f80-set-2-rep-1",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1353,6 +2299,21 @@
           "id" : "f80-set-2-rep-2",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1368,6 +2329,21 @@
           "id" : "f80-set-2-rep-3",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1383,6 +2359,21 @@
           "id" : "f80-set-2-rep-4",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1398,6 +2389,21 @@
           "id" : "f80-set-2-rep-5",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1413,6 +2419,21 @@
           "id" : "f80-set-2-rep-6",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1428,6 +2449,21 @@
           "id" : "f80-set-2-rep-7",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1443,6 +2479,21 @@
           "id" : "f80-set-2-rep-8",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1458,6 +2509,21 @@
           "id" : "f80-set-2-rep-9",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1473,6 +2539,21 @@
           "id" : "f80-set-2-rep-10",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1488,6 +2569,21 @@
           "id" : "f80-set-2-rep-11",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1503,6 +2599,21 @@
           "id" : "f80-set-2-rep-12",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1516,6 +2627,13 @@
           "id" : "f80-set-2-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 480,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -1529,6 +2647,21 @@
           "id" : "f80-set-3-rep-1",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1544,6 +2677,21 @@
           "id" : "f80-set-3-rep-2",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1559,6 +2707,21 @@
           "id" : "f80-set-3-rep-3",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1574,6 +2737,21 @@
           "id" : "f80-set-3-rep-4",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1589,6 +2767,21 @@
           "id" : "f80-set-3-rep-5",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1604,6 +2797,21 @@
           "id" : "f80-set-3-rep-6",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1619,6 +2827,21 @@
           "id" : "f80-set-3-rep-7",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1634,6 +2857,21 @@
           "id" : "f80-set-3-rep-8",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1649,6 +2887,21 @@
           "id" : "f80-set-3-rep-9",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1664,6 +2917,21 @@
           "id" : "f80-set-3-rep-10",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1679,6 +2947,21 @@
           "id" : "f80-set-3-rep-11",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1694,6 +2977,21 @@
           "id" : "f80-set-3-rep-12",
           "instruction" : "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 6,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -1715,6 +3013,18 @@
           "id" : "f100-set-1-round-1-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1732,6 +3042,23 @@
           "id" : "f100-set-1-round-1-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1749,6 +3076,18 @@
           "id" : "f100-set-1-round-2-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1766,6 +3105,23 @@
           "id" : "f100-set-1-round-2-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1783,6 +3139,18 @@
           "id" : "f100-set-1-round-3-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1800,6 +3168,23 @@
           "id" : "f100-set-1-round-3-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1817,6 +3202,18 @@
           "id" : "f100-set-1-round-4-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1834,6 +3231,23 @@
           "id" : "f100-set-1-round-4-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1851,6 +3265,18 @@
           "id" : "f100-set-1-round-5-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1868,6 +3294,23 @@
           "id" : "f100-set-1-round-5-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1885,6 +3328,18 @@
           "id" : "f100-set-1-round-6-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1902,6 +3357,23 @@
           "id" : "f100-set-1-round-6-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 300,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1919,6 +3391,18 @@
           "id" : "f100-set-2-round-1-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1936,6 +3420,23 @@
           "id" : "f100-set-2-round-1-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1953,6 +3454,18 @@
           "id" : "f100-set-2-round-2-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1970,6 +3483,23 @@
           "id" : "f100-set-2-round-2-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -1987,6 +3517,18 @@
           "id" : "f100-set-2-round-3-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2004,6 +3546,23 @@
           "id" : "f100-set-2-round-3-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2021,6 +3580,18 @@
           "id" : "f100-set-2-round-4-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2038,6 +3609,23 @@
           "id" : "f100-set-2-round-4-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2055,6 +3643,18 @@
           "id" : "f100-set-2-round-5-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2072,6 +3672,23 @@
           "id" : "f100-set-2-round-5-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 168,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2089,6 +3706,18 @@
           "id" : "f100-set-2-round-6-left",
           "instruction" : "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-left"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2106,6 +3735,18 @@
           "id" : "f100-set-2-round-6-right",
           "instruction" : "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "holdIDs" : [
+                  "edge-19-right"
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "holdIDs" : [
@@ -2129,6 +3770,21 @@
           "id" : "int-hangs-set-1-rep-1",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2144,6 +3800,21 @@
           "id" : "int-hangs-set-1-rep-2",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2159,6 +3830,21 @@
           "id" : "int-hangs-set-1-rep-3",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2174,6 +3860,21 @@
           "id" : "int-hangs-set-1-rep-4",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2189,6 +3890,16 @@
           "id" : "int-hangs-set-1-rep-5",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2202,6 +3913,13 @@
           "id" : "int-hangs-set-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2215,6 +3933,21 @@
           "id" : "int-hangs-set-2-rep-1",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2230,6 +3963,21 @@
           "id" : "int-hangs-set-2-rep-2",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2245,6 +3993,21 @@
           "id" : "int-hangs-set-2-rep-3",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2260,6 +4023,21 @@
           "id" : "int-hangs-set-2-rep-4",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2275,6 +4053,16 @@
           "id" : "int-hangs-set-2-rep-5",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2288,6 +4076,13 @@
           "id" : "int-hangs-set-2-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2301,6 +4096,21 @@
           "id" : "int-hangs-set-3-rep-1",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2316,6 +4126,21 @@
           "id" : "int-hangs-set-3-rep-2",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2331,6 +4156,21 @@
           "id" : "int-hangs-set-3-rep-3",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2346,6 +4186,21 @@
           "id" : "int-hangs-set-3-rep-4",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 5,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2361,6 +4216,16 @@
           "id" : "int-hangs-set-3-rep-5",
           "instruction" : "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2382,6 +4247,21 @@
           "id" : "repeaters-grip-1-rep-1",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2397,6 +4277,21 @@
           "id" : "repeaters-grip-1-rep-2",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2412,6 +4307,21 @@
           "id" : "repeaters-grip-1-rep-3",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2427,6 +4337,21 @@
           "id" : "repeaters-grip-1-rep-4",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2442,6 +4367,21 @@
           "id" : "repeaters-grip-1-rep-5",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2457,6 +4397,16 @@
           "id" : "repeaters-grip-1-rep-6",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2470,6 +4420,13 @@
           "id" : "repeaters-grip-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 120,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2483,6 +4440,21 @@
           "id" : "repeaters-grip-2-rep-1",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2498,6 +4470,21 @@
           "id" : "repeaters-grip-2-rep-2",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2513,6 +4500,21 @@
           "id" : "repeaters-grip-2-rep-3",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2528,6 +4530,21 @@
           "id" : "repeaters-grip-2-rep-4",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2543,6 +4560,21 @@
           "id" : "repeaters-grip-2-rep-5",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2558,6 +4590,16 @@
           "id" : "repeaters-grip-2-rep-6",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2571,6 +4613,13 @@
           "id" : "repeaters-grip-2-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 120,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2584,6 +4633,21 @@
           "id" : "repeaters-grip-3-rep-1",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2599,6 +4663,21 @@
           "id" : "repeaters-grip-3-rep-2",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2614,6 +4693,21 @@
           "id" : "repeaters-grip-3-rep-3",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2629,6 +4723,21 @@
           "id" : "repeaters-grip-3-rep-4",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2644,6 +4753,21 @@
           "id" : "repeaters-grip-3-rep-5",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2659,6 +4783,16 @@
           "id" : "repeaters-grip-3-rep-6",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2679,6 +4813,16 @@
           "id" : "abrahangs-warm-up",
           "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
           "phase" : "warmUp",
+          "segments" : [
+            {
+              "duration" : 120,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "outer-jugs"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "outer-jugs"
@@ -2700,6 +4844,21 @@
           "id" : "abrahangs-grip-1",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2715,6 +4874,21 @@
           "id" : "abrahangs-grip-2",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2730,6 +4904,21 @@
           "id" : "abrahangs-grip-3",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "round-sloper"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "round-sloper"
@@ -2745,6 +4934,21 @@
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "pocket-19-three"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "pocket-19-three"
@@ -2760,6 +4964,21 @@
           "id" : "abrahangs-grip-5",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2775,6 +4994,21 @@
           "id" : "abrahangs-grip-6",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2796,6 +5030,21 @@
           "id" : "horst-753-grip-1-rep-1",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2811,6 +5060,21 @@
           "id" : "horst-753-grip-1-rep-2",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2826,6 +5090,16 @@
           "id" : "horst-753-grip-1-rep-3",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2839,6 +5113,13 @@
           "id" : "horst-753-grip-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2852,6 +5133,21 @@
           "id" : "horst-753-grip-2-rep-1",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2867,6 +5163,21 @@
           "id" : "horst-753-grip-2-rep-2",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2882,6 +5193,16 @@
           "id" : "horst-753-grip-2-rep-3",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-19"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-19"
@@ -2895,6 +5216,13 @@
           "id" : "horst-753-grip-2-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -2908,6 +5236,21 @@
           "id" : "horst-753-grip-3-rep-1",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2923,6 +5266,21 @@
           "id" : "horst-753-grip-3-rep-2",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 53,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2938,6 +5296,16 @@
           "id" : "horst-753-grip-3-rep-3",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -2959,6 +5327,21 @@
           "id" : "ladders-round-1-3",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 3,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2974,6 +5357,21 @@
           "id" : "ladders-round-1-6",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -2989,6 +5387,16 @@
           "id" : "ladders-round-1-9",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 9,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3002,6 +5410,13 @@
           "id" : "ladders-round-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -3015,6 +5430,21 @@
           "id" : "ladders-round-2-3",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 3,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3030,6 +5460,21 @@
           "id" : "ladders-round-2-6",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3045,6 +5490,16 @@
           "id" : "ladders-round-2-9",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 9,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3058,6 +5513,13 @@
           "id" : "ladders-round-2-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -3071,6 +5533,21 @@
           "id" : "ladders-round-3-3",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 3,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3086,6 +5563,21 @@
           "id" : "ladders-round-3-6",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 6,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3101,6 +5593,16 @@
           "id" : "ladders-round-3-9",
           "instruction" : "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 9,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3122,6 +5624,21 @@
           "id" : "density-hold-1-set-1-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3137,6 +5654,21 @@
           "id" : "density-hold-1-set-1-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3152,6 +5684,16 @@
           "id" : "density-hold-1-set-1-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3165,6 +5707,13 @@
           "id" : "density-hold-1-set-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -3178,6 +5727,21 @@
           "id" : "density-hold-1-set-2-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3193,6 +5757,21 @@
           "id" : "density-hold-1-set-2-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3208,6 +5787,16 @@
           "id" : "density-hold-1-set-2-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3221,6 +5810,13 @@
           "id" : "density-hold-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -3234,6 +5830,21 @@
           "id" : "density-hold-2-set-1-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3249,6 +5860,21 @@
           "id" : "density-hold-2-set-1-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3264,6 +5890,16 @@
           "id" : "density-hold-2-set-1-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3277,6 +5913,13 @@
           "id" : "density-hold-2-set-1-recovery",
           "instruction" : "Step off the board, shake out, and breathe before the next effort.",
           "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
 
           ],
@@ -3290,6 +5933,21 @@
           "id" : "density-hold-2-set-2-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3305,6 +5963,21 @@
           "id" : "density-hold-2-set-2-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3320,6 +5993,16 @@
           "id" : "density-hold-2-set-2-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "work",
+              "target" : {
+                "feature" : "fourFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "feature" : "fourFingerPocket"
@@ -3341,6 +6024,21 @@
           "id" : "zlagboard-interval-1",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3356,6 +6054,21 @@
           "id" : "zlagboard-interval-2",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3371,6 +6084,21 @@
           "id" : "zlagboard-interval-3",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3386,6 +6114,21 @@
           "id" : "zlagboard-interval-4",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3401,6 +6144,21 @@
           "id" : "zlagboard-interval-5",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3416,6 +6174,21 @@
           "id" : "zlagboard-interval-6",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3431,6 +6204,21 @@
           "id" : "zlagboard-interval-7",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3446,6 +6234,21 @@
           "id" : "zlagboard-interval-8",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3461,6 +6264,21 @@
           "id" : "zlagboard-interval-9",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 60,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3476,6 +6294,16 @@
           "id" : "zlagboard-interval-10",
           "instruction" : "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
           "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "edge-29"
+              },
+              "timing" : "fixed"
+            }
+          ],
           "targets" : [
             {
               "semantic" : "edge-29"
@@ -3568,7 +6396,7 @@
       "Board mappings keep plan targets semantic and board-specific IDs replaceable."
     ],
     "title" : "Hang Ten training plans",
-    "version" : "2.0.0"
+    "version" : "3.0.0"
   },
   "plans" : [
     {
@@ -4075,5 +6903,5 @@
       }
     }
   ],
-  "schemaVersion" : 2
+  "schemaVersion" : 3
 }
