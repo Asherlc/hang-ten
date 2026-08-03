@@ -316,8 +316,24 @@ private struct StatCard: View {
 
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
+    @State private var filters = PlanFilters()
 
     var body: some View {
+        let compatiblePlans = store.plans
+        let metadataByPlanID = Dictionary(
+            compatiblePlans.compactMap { plan in
+                PlanCatalog.metadata(for: plan.id).map { (plan.id, $0) }
+            },
+            uniquingKeysWith: { first, _ in first }
+        )
+        let filterOptions = PlanFilterOptions(metadata: Array(metadataByPlanID.values))
+        let filteredPlans = filters.isEmpty
+            ? compatiblePlans
+            : compatiblePlans.filter { plan in
+                guard let metadata = metadataByPlanID[plan.id] else { return false }
+                return filters.matches(metadata)
+            }
+
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
@@ -330,9 +346,11 @@ struct PlansView: View {
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
+
+                        filterBar(options: filterOptions)
                     }
 
-                    if store.plans.isEmpty {
+                    if compatiblePlans.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             SectionLabel(title: "No compatible routines")
                             Text("No plan currently resolves every required hold on \(store.selectedBoard.name).")
@@ -340,8 +358,12 @@ struct PlansView: View {
                                 .foregroundStyle(Color.hangInk)
                         }
                         .hangCard()
+                    } else if filteredPlans.isEmpty {
+                        NoMatchingPlansCard {
+                            filters.clear()
+                        }
                     } else {
-                        ForEach(store.plans) { plan in
+                        ForEach(filteredPlans) { plan in
                             NavigationLink(destination: PlanDetailView(plan: plan)) {
                                 PlanCard(plan: plan, board: store.board(for: plan))
                             }
@@ -358,6 +380,197 @@ struct PlansView: View {
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
         }
+    }
+
+    private func filterBar(options: PlanFilterOptions) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if !options.levels.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.levels.isEmpty) {
+                            filters.levels.removeAll()
+                        }
+                        ForEach(options.levels, id: \.self) { value in
+                            filterValueButton(value, isSelected: filters.levels.contains(value)) {
+                                filters.toggle(level: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Difficulty",
+                            selectionCount: filters.levels.count,
+                            singleSelection: filters.levels.first
+                        )
+                    }
+                    .accessibilityLabel("Filter by difficulty")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.levels.count,
+                        singleSelection: filters.levels.first
+                    ))
+                }
+
+                if !options.provenances.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.provenances.isEmpty) {
+                            filters.provenances.removeAll()
+                        }
+                        ForEach(options.provenances, id: \.self) { value in
+                            filterValueButton(value.label, isSelected: filters.provenances.contains(value)) {
+                                filters.toggle(provenance: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Type",
+                            selectionCount: filters.provenances.count,
+                            singleSelection: filters.provenances.first?.label
+                        )
+                    }
+                    .accessibilityLabel("Filter by type")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.provenances.count,
+                        singleSelection: filters.provenances.first?.label
+                    ))
+                }
+
+                if !options.categories.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.categories.isEmpty) {
+                            filters.categories.removeAll()
+                        }
+                        ForEach(options.categories, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
+                                filters.toggle(category: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Category",
+                            selectionCount: filters.categories.count,
+                            singleSelection: filters.categories.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by category")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.categories.count,
+                        singleSelection: filters.categories.first.map(displayName)
+                    ))
+                }
+
+                if !options.tags.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.tags.isEmpty) {
+                            filters.tags.removeAll()
+                        }
+                        ForEach(options.tags, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
+                                filters.toggle(tag: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Tags",
+                            selectionCount: filters.tags.count,
+                            singleSelection: filters.tags.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by tags")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.tags.count,
+                        singleSelection: filters.tags.first.map(displayName)
+                    ))
+                }
+
+                if !options.equipment.isEmpty {
+                    Menu {
+                        filterAllButton(isSelected: filters.equipment.isEmpty) {
+                            filters.equipment.removeAll()
+                        }
+                        ForEach(options.equipment, id: \.self) { value in
+                            filterValueButton(displayName(value), isSelected: filters.equipment.contains(value)) {
+                                filters.toggle(equipment: value)
+                            }
+                        }
+                    } label: {
+                        filterMenuLabel(
+                            title: "Equipment",
+                            selectionCount: filters.equipment.count,
+                            singleSelection: filters.equipment.first.map(displayName)
+                        )
+                    }
+                    .accessibilityLabel("Filter by equipment")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.equipment.count,
+                        singleSelection: filters.equipment.first.map(displayName)
+                    ))
+                }
+
+                if !filters.isEmpty {
+                    Button("Clear") {
+                        filters.clear()
+                    }
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .accessibilityLabel("Clear plan filters")
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func filterAllButton(isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label("All", systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterValueButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: isSelected ? "checkmark" : "rectangle")
+        }
+    }
+
+    private func filterMenuLabel(title: String, selectionCount: Int, singleSelection: String?) -> some View {
+        let isActive = selectionCount > 0
+        let label = if selectionCount == 1 {
+            singleSelection ?? title
+        } else if selectionCount > 1 {
+            "\(selectionCount) selected"
+        } else {
+            title
+        }
+
+        return HStack(spacing: 5) {
+            Text(label)
+            Image(systemName: "chevron.down")
+                .font(.system(size: 10, weight: .bold))
+        }
+        .font(.system(size: 13, weight: .bold, design: .rounded))
+        .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
+        .padding(.horizontal, 11)
+        .padding(.vertical, 8)
+        .background(
+            isActive ? Color.hangGreen.opacity(0.25) : Color.hangCream,
+            in: Capsule()
+        )
+        .overlay {
+            Capsule()
+                .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+
+    private func filterMenuAccessibilityValue(selectionCount: Int, singleSelection: String?) -> String {
+        if selectionCount == 0 {
+            return "All"
+        } else if selectionCount == 1 {
+            return singleSelection ?? "1 selected"
+        } else {
+            return "\(selectionCount) selected"
+        }
+    }
+
+    private func displayName(_ rawValue: String) -> String {
+        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
     private var sourceCard: some View {
@@ -379,6 +592,23 @@ struct PlansView: View {
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangGreenDark)
             }
+        }
+        .hangCard()
+    }
+}
+
+private struct NoMatchingPlansCard: View {
+    let onClear: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionLabel(title: "No matching routines")
+            Text("No routines match these filters")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Button("Clear filters", action: onClear)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangGreenDark)
         }
         .hangCard()
     }

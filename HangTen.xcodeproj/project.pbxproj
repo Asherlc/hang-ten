@@ -46,6 +46,8 @@
 		AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000040 /* WorkoutTimelineTests.swift */; };
 		AA0000000000000000000041 /* WorkoutTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000041 /* WorkoutTimeline.swift */; };
 		AA0000000000000000000042 /* WorkoutStepPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000042 /* WorkoutStepPickerView.swift */; };
+		AA0000000000000000000043 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000043 /* PlanFilters.swift */; };
+		AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000044 /* PlanFiltersTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +93,8 @@
 		BB0000000000000000000040 /* WorkoutTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimelineTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000041 /* WorkoutTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimeline.swift; sourceTree = "<group>"; };
 		BB0000000000000000000042 /* WorkoutStepPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepPickerView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000043 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
+		BB0000000000000000000044 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +163,7 @@
 				BB0000000000000000000036 /* SimulatedMotherboardTransport.swift */,
 				BB0000000000000000000038 /* MotherboardWorkoutPreparation.swift */,
 				BB0000000000000000000041 /* WorkoutTimeline.swift */,
+				BB0000000000000000000043 /* PlanFilters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -203,6 +208,7 @@
 				BB0000000000000000000035 /* SimulatedMotherboardTransportTests.swift */,
 				BB0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift */,
 				BB0000000000000000000040 /* WorkoutTimelineTests.swift */,
+				BB0000000000000000000044 /* PlanFiltersTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -243,6 +249,7 @@
 				AA0000000000000000000035 /* SimulatedMotherboardTransportTests.swift in Sources */,
 				AA0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift in Sources */,
 				AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */,
+				AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +377,7 @@
 				AA0000000000000000000039 /* MotherboardWorkoutPreparationView.swift in Sources */,
 				AA0000000000000000000041 /* WorkoutTimeline.swift in Sources */,
 				AA0000000000000000000042 /* WorkoutStepPickerView.swift in Sources */,
+				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
