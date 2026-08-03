@@ -127,12 +127,43 @@ final class AppStoreTests: XCTestCase {
             "Session was saved locally and will retry Apple Health sync."
         )
 
+        healthStore.saveResult = .success(UUID())
+        healthStore.deferSave = false
         appStore.refreshWorkoutHistory()
         waitUntil { appStore.healthAuthorizationError == nil }
         XCTAssertNil(appStore.healthAuthorizationError)
 
         healthStore.fetchResult = .failure(FakeHealthError.failed)
         appStore.refreshWorkoutHistory()
+        waitUntil { appStore.healthAuthorizationError != nil }
+
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Apple Health history could not sync. Local history remains available."
+        )
+    }
+
+    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore(saveResult: .failure(FakeHealthError.failed))
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        appStore.markSessionComplete(
+            PlanCatalog.all[0],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+        )
+        waitUntil { appStore.healthAuthorizationError != nil }
+        healthStore.fetchResult = .failure(FakeHealthError.failed)
+
+        appStore.requestHealthAuthorization()
         waitUntil { appStore.healthAuthorizationError != nil }
 
         XCTAssertEqual(

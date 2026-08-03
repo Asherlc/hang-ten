@@ -137,6 +137,7 @@ final class AppStore: ObservableObject {
 
 	func requestHealthAuthorization() {
 		healthAuthorizationError = nil
+		preservesCompletionError = false
 		hasRequestedHealthAuthorization = true
 		defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
 		healthKitService.requestAuthorization { [weak self] state, error in
