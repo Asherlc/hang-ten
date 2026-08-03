@@ -15,15 +15,24 @@ user action on physical devices rather than an automatic production launch.
 
 Notifications may be fragmented or contain more than one line. The service
 buffers them until CRLF-delimited calibration rows, stream acknowledgements,
-or 16-byte hex raw packets can be parsed. Calibration maps each sensor's ADC
+or 16-byte hex raw packets can be parsed, with a 4,096-byte receive-buffer cap;
+overflow clears the buffer and emits a parser error. Calibration maps each sensor's ADC
 values to kgf, and Tare subtracts the current per-sensor reading. The workout
 recorder uses the notification timestamp and the configured kgf threshold,
 release ratio, debounce, and merge gap to calculate loaded intervals; the
 workout clock remains the authority for planned time. Rest steps stay
-unmeasured. A disconnect or parser error clears the transient measurement and
-calibration state, records the unavailable/error state, and leaves the workout
-timer controls usable. Completed summaries can therefore include both measured
-and unmeasured steps.
+unmeasured. Setup parser errors are fatal. During an active stream, parser
+errors are tolerated through two consecutive errors; the third consecutive
+error clears the transient measurement and calibration state, records the
+unavailable/error state, and leaves the workout timer controls usable. A valid
+raw frame resets that streak. Completed summaries can therefore include both
+measured and unmeasured steps.
+
+Eligible raw ADC measurements are persisted with the completed session up to
+`MotherboardWorkoutMeasurementCollector.maximumMeasurementCount` (20,000).
+When additional measurements are received, they are dropped and
+`WorkoutSessionRecord` records that truncation occurred. History remains capped
+at the 20 newest session records.
 
 The UART-style service UUIDs, calibration-row format, stream commands, and raw
 packet layout are reverse-engineered from observed Motherboard behavior. They

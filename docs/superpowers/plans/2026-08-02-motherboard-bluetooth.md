@@ -16,9 +16,18 @@
 - Target the Griptonite Motherboard Nordic UART service 6E400001-B5A3-F393-E0A9-E50E24DCCA9E, RX 6E400002-B5A3-F393-E0A9-E50E24DCCA9E, and TX 6E400003-B5A3-F393-E0A9-E50E24DCCA9E.
 - Enable TX notifications before writing C, wait for calibration rows, then write S30.
 - Parse CRLF-framed ASCII with a persistent receive buffer and decode 32-character hexadecimal 16-byte stream reports, including signed 24-bit ADC values.
+- Cap the parser receive buffer at 4,096 bytes; clear it and emit a parser error
+  on overflow. During an active stream, tolerate two consecutive parser errors
+  and fail on the third; any valid raw frame resets the error streak. Setup
+  parser errors are fatal immediately.
 - Store calibrated measurements canonically as kgf; default display unit is kgf and default detection threshold is 2.5 kgf.
 - Keep the workout timer authoritative: Bluetooth never pauses, advances, or changes scheduled step transitions.
-- Record derived session results only; do not persist every raw 30 Hz sample.
+- Persist each eligible granular `MotherboardMeasurement` received while the
+  routine is running, including its raw ADC values. The current collector has
+  a per-session cap of `MotherboardWorkoutMeasurementCollector.maximumMeasurementCount`
+  (20,000). When the cap is reached, additional measurements are dropped and
+  `WorkoutSessionRecord` records that truncation occurred. The separate history
+  limit is 20 session records.
 - Preserve the existing Apple Health completion behavior and do not log an ended, incomplete session.
 - Use apply_patch for edits, prefix shell commands with rtk, and commit each completed task.
 - Follow test-first cycles: write one focused failing test, run it to confirm the expected failure, implement the smallest passing change, run the focused and full tests, then refactor only while green.
@@ -303,7 +312,7 @@ enum MotherboardProtocolEvent: Equatable {
 }
 
 struct MotherboardProtocolParser {
-    init()
+    init(maximumBufferSize: Int = 4_096)
     mutating func append(_ data: Data, receivedAt: Date) -> [MotherboardProtocolEvent]
 }
 
@@ -383,7 +392,7 @@ Expected: compilation failures because the parser and protocol types do not exis
 
 - [x] **Step 3: Implement framing, decoding, and calibration**
 
-Append incoming bytes to a Data buffer, split only on CRLF, and leave the final incomplete line in the buffer. Parse calibration rows with four fields and reject rows whose sensor is outside 0...3. Decode the hexadecimal frame only when it has exactly 32 hex characters. Implement signed 24-bit decoding by sign-extending bit 23 into an Int32. Sort calibration points by ADC before interpolating; use the first/last point for values outside the calibrated range. Return four sensor loads, subtract the supplied four-element tare vector, clamp aggregate load at zero, and keep the per-sensor values for distribution display.
+Append incoming bytes to a Data buffer, split only on CRLF, and leave the final incomplete line in the buffer. Ignore unknown or malformed lines that are not recognized as calibration, stream acknowledgement, device-error, or raw-packet lines. The default receive-buffer cap is 4,096 bytes: an oversized terminated line emits the receive-buffer error and discards that line, while an unterminated buffer that grows past the cap emits the same error and clears the buffer. Parse calibration rows with four fields and reject rows whose sensor is outside 0...3. Decode the hexadecimal frame only when it has exactly 32 hex characters. Implement signed 24-bit decoding by sign-extending bit 23 into an Int32. Sort calibration points by ADC before interpolating; use the first/last point for values outside the calibrated range. Return four sensor loads, subtract the supplied four-element tare vector, clamp aggregate load at zero, and keep the per-sensor values for distribution display.
 
 Build commands with UTF-8 bytes and clamp streamCommand(rate:) to a positive decimal rate; streamCommand(rate: 30) must equal Data("S30".utf8).
 
@@ -555,7 +564,7 @@ final class MotherboardBluetoothService: ObservableObject {
 }
 ~~~
 
-Implement CoreBluetoothMotherboardTransport with CBCentralManagerDelegate and CBPeripheralDelegate. Scan with the NUS service UUID, accept only a discovered name equal to Motherboard when a name is supplied, discover the NUS service, discover RX/TX characteristics, enable TX notifications, and map delegate callbacks to MotherboardTransportEvent. Use .withResponse when the RX characteristic supports it and .withoutResponse otherwise.
+Implement CoreBluetoothMotherboardTransport with CBCentralManagerDelegate and CBPeripheralDelegate. Scan with the NUS service UUID, accept only a discovered name equal to Motherboard when a name is supplied, discover the NUS service, discover RX/TX characteristics, enable TX notifications, and map delegate callbacks to MotherboardTransportEvent. Use .withResponse when the RX characteristic supports it and .withoutResponse otherwise. Parser error events during setup fail the service and clean up the transport. During an active stream, keep the service streaming until three consecutive parser errors; a valid raw frame resets that streak, while the third consecutive error fails and cleans up the transport.
 
 - [x] **Step 1: Write failing service/coordinator tests using a fake transport**
 

@@ -64,8 +64,10 @@ Motherboard protocol:
   from calibrated mass before it is exposed as load.
 
 The protocol parser must never crash on malformed input. It should retain
-partial input, ignore invalid frames, and surface device `Error` lines as a
-typed protocol error for the connection state.
+partial input up to a 4,096-byte receive-buffer cap. If the cap is exceeded,
+the parser clears its buffered bytes and emits a typed protocol error so the
+next notification starts cleanly. Invalid non-error lines are ignored, while
+device `Error` lines and overflow errors are surfaced as typed protocol errors.
 
 ## Architecture
 
@@ -132,9 +134,12 @@ contains the plan identity, date, routine start/end, Motherboard identifier
 when available, battery snapshot, and per-step recorder results. It persists
 derived results plus each eligible granular `MotherboardMeasurement` received
 after countdown completion and before the plan duration ends, including rest
-intervals and raw ADC values. Samples are not downsampled or truncated within
-a session, so there is no per-session sample-count or byte cap. The store
-retains only the 20 newest session records and removes older session files.
+intervals and raw ADC values. Samples are not downsampled before reaching the
+collector; a session is capped at
+`MotherboardWorkoutMeasurementCollector.maximumMeasurementCount`
+(20,000). Additional measurements are dropped and the `WorkoutSessionRecord`
+records that truncation occurred. The store retains only the 20 newest session
+records and removes older session files.
 It supports loading history and appending a completed summary without making
 Apple Health responsible for force data.
 
