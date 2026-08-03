@@ -427,24 +427,13 @@ protocol MotherboardCentralManaging: AnyObject {
 
 extension CBCentralManager: MotherboardCentralManaging {}
 
-protocol MotherboardDiscoveryPeripheral {
-    var identifier: UUID { get }
-    var name: String? { get }
-}
-
-extension CBPeripheral: MotherboardDiscoveryPeripheral {}
-
 @MainActor
 final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     var eventHandler: ((MotherboardTransportEvent) -> Void)?
 
-    private struct DiscoveredPeripheral {
-        let peripheral: CBPeripheral?
-    }
-
     private let centralManagerFactory: (CBCentralManagerDelegate) -> MotherboardCentralManaging
     private var centralManager: MotherboardCentralManaging?
-    private var discoveredPeripherals: [UUID: DiscoveredPeripheral] = [:]
+    private var discoveredPeripherals: [UUID: CBPeripheral] = [:]
     private var selectedPeripheral: CBPeripheral?
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
@@ -460,10 +449,6 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     init(centralManagerFactory: @escaping (CBCentralManagerDelegate) -> MotherboardCentralManaging) {
         self.centralManagerFactory = centralManagerFactory
         super.init()
-    }
-
-    func hasDiscoveredPeripheral(withID id: UUID) -> Bool {
-        discoveredPeripherals[id] != nil
     }
 
     private func isExpectedMotherboard(peripheralName: String?, advertisedLocalName: String?) -> Bool {
@@ -485,7 +470,7 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     func connect(to device: MotherboardDiscoveredDevice) {
         stopScan()
-        guard let peripheral = discoveredPeripherals[device.id]?.peripheral else {
+        guard let peripheral = discoveredPeripherals[device.id] else {
             eventHandler?(.disconnected("Motherboard is no longer available."))
             return
         }
@@ -577,22 +562,6 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         advertisementData: [String: Any],
         rssi RSSI: NSNumber
     ) {
-        centralManager(
-            central,
-            didDiscover: peripheral,
-            advertisementData: advertisementData,
-            rssi: RSSI,
-            storedPeripheral: peripheral
-        )
-    }
-
-    func centralManager<Peripheral: MotherboardDiscoveryPeripheral>(
-        _ central: CBCentralManager,
-        didDiscover peripheral: Peripheral,
-        advertisementData: [String: Any],
-        rssi RSSI: NSNumber,
-        storedPeripheral: CBPeripheral? = nil
-    ) {
         let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
         guard isExpectedMotherboard(
             peripheralName: peripheral.name,
@@ -600,7 +569,7 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         ) else { return }
         let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
 
-        discoveredPeripherals[peripheral.identifier] = DiscoveredPeripheral(peripheral: storedPeripheral)
+        discoveredPeripherals[peripheral.identifier] = peripheral
         eventHandler?(.discovered(MotherboardDiscoveredDevice(
             id: peripheral.identifier,
             name: advertisedName

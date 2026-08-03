@@ -21,10 +21,10 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(manager.scanCount, 1)
     }
 
-    func testCoreBluetoothTransportDoesNotEmitOrStoreAnonymousAdvertisement() {
+    func testCoreBluetoothTransportDelegateDoesNotEmitOrStoreAnonymousPeripheral() {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
-        let peripheral = FakeDiscoveryPeripheral(name: nil)
+        let peripheral = FakeCBPeripheral(name: nil)
         let central = CBCentralManager(delegate: nil, queue: nil)
         var discoveredDevices: [MotherboardDiscoveredDevice] = []
         transport.eventHandler = { event in
@@ -32,32 +32,62 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             discoveredDevices.append(device)
         }
 
-        transport.centralManager(central, didDiscover: peripheral, advertisementData: [:], rssi: -60)
-
-        XCTAssertTrue(discoveredDevices.isEmpty)
-        XCTAssertFalse(transport.hasDiscoveredPeripheral(withID: peripheral.identifier))
-    }
-
-    func testCoreBluetoothTransportEmitsAndStoresMotherboardLocalNameAdvertisement() {
-        let manager = FakeCentralManager()
-        let transport = CoreBluetoothMotherboardTransport { _ in manager }
-        let peripheral = FakeDiscoveryPeripheral(name: nil)
-        let central = CBCentralManager(delegate: nil, queue: nil)
-        var discoveredDevices: [MotherboardDiscoveredDevice] = []
-        transport.eventHandler = { event in
-            guard case .discovered(let device) = event else { return }
-            discoveredDevices.append(device)
-        }
-
-        transport.centralManager(
-            central,
-            didDiscover: peripheral,
-            advertisementData: [CBAdvertisementDataLocalNameKey: "Motherboard"],
-            rssi: -60
+        deliverDiscovery(
+            peripheral.coreBluetoothPeripheral,
+            to: transport,
+            from: central,
+            advertisementData: [:]
         )
 
-        XCTAssertEqual(discoveredDevices, [MotherboardDiscoveredDevice(id: peripheral.identifier, name: "Motherboard")])
-        XCTAssertTrue(transport.hasDiscoveredPeripheral(withID: peripheral.identifier))
+        XCTAssertTrue(discoveredDevices.isEmpty)
+        transport.connect(to: MotherboardDiscoveredDevice(id: peripheral.deviceID, name: "Motherboard"))
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testCoreBluetoothTransportDelegateDoesNotEmitOrStoreNonMotherboardPeripheral() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeCBPeripheral(name: "Another peripheral")
+        let central = CBCentralManager(delegate: nil, queue: nil)
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
+
+        deliverDiscovery(
+            peripheral.coreBluetoothPeripheral,
+            to: transport,
+            from: central,
+            advertisementData: [:]
+        )
+
+        XCTAssertTrue(discoveredDevices.isEmpty)
+        transport.connect(to: MotherboardDiscoveredDevice(id: peripheral.deviceID, name: "Motherboard"))
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testCoreBluetoothTransportDelegateEmitsLocalNameMotherboardAndRetainsPeripheralForConnection() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeCBPeripheral(name: nil)
+        let central = CBCentralManager(delegate: nil, queue: nil)
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
+
+        deliverDiscovery(
+            peripheral.coreBluetoothPeripheral,
+            to: transport,
+            from: central,
+            advertisementData: [CBAdvertisementDataLocalNameKey: "Motherboard"]
+        )
+
+        XCTAssertEqual(discoveredDevices, [MotherboardDiscoveredDevice(id: peripheral.deviceID, name: "Motherboard")])
+        transport.connect(to: try XCTUnwrap(discoveredDevices.first))
+        XCTAssertIdentical(manager.connectedPeripherals.first, peripheral)
     }
 
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
@@ -952,6 +982,16 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         }
         XCTAssertTrue(condition(), "Timed out waiting for \(description).")
     }
+
+    private func deliverDiscovery(
+        _ peripheral: CBPeripheral,
+        to transport: CoreBluetoothMotherboardTransport,
+        from central: CBCentralManager,
+        advertisementData: [String: Any]
+    ) {
+        let delegate: CBCentralManagerDelegate = transport
+        delegate.centralManager!(central, didDiscover: peripheral, advertisementData: advertisementData, rssi: -60)
+    }
 }
 
 private actor ManualSleepGate {
@@ -992,22 +1032,33 @@ private actor ManualSleepGate {
 private final class FakeCentralManager: MotherboardCentralManaging {
     var state: CBManagerState = .poweredOn
     var scanCount = 0
+    var connectedPeripherals: [CBPeripheral] = []
 
     func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
         scanCount += 1
     }
 
     func stopScan() {}
-    func connect(_ peripheral: CBPeripheral, options: [String: Any]?) {}
+    func connect(_ peripheral: CBPeripheral, options: [String: Any]?) {
+        connectedPeripherals.append(peripheral)
+    }
     func cancelPeripheralConnection(_ peripheral: CBPeripheral) {}
 }
 
-private final class FakeDiscoveryPeripheral: MotherboardDiscoveryPeripheral {
-    let identifier = UUID()
-    let name: String?
+private final class FakeCBPeripheral: NSObject {
+    let deviceID = UUID()
+    private let fakeName: String?
+    @objc dynamic var identifier: NSUUID { deviceID as NSUUID }
+    @objc dynamic var name: String? { fakeName }
+    @objc dynamic weak var delegate: AnyObject?
 
     init(name: String?) {
-        self.name = name
+        fakeName = name
+        super.init()
+    }
+
+    var coreBluetoothPeripheral: CBPeripheral {
+        unsafeBitCast(self, to: CBPeripheral.self)
     }
 }
 
