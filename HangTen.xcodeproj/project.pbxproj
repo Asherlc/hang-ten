@@ -25,7 +25,9 @@
 		AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000019 /* WorkoutTimelineTests.swift */; };
 		AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* WorkoutTimeline.swift */; };
 		AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* WorkoutStepPickerView.swift */; };
-		AA0000000000000000000019 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* AppStoreFavoritesTests.swift */; };
+		AA0000000000000000000019 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* PlanFilters.swift */; };
+		AA0000000000000000000020 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* PlanFiltersTests.swift */; };
+		AA0000000000000000000021 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* AppStoreFavoritesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +62,9 @@
 		BB0000000000000000000019 /* WorkoutTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimelineTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000020 /* WorkoutTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimeline.swift; sourceTree = "<group>"; };
 		BB0000000000000000000021 /* WorkoutStepPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepPickerView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000022 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000022 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
+		BB0000000000000000000023 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000024 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000020 /* WorkoutTimeline.swift */,
+				BB0000000000000000000022 /* PlanFilters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -152,7 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000019 /* WorkoutTimelineTests.swift */,
-				BB0000000000000000000022 /* AppStoreFavoritesTests.swift */,
+				BB0000000000000000000023 /* PlanFiltersTests.swift */,
+				BB0000000000000000000024 /* AppStoreFavoritesTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -271,6 +277,7 @@
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
 				AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */,
 				AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */,
+				AA0000000000000000000019 /* PlanFilters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +286,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */,
-				AA0000000000000000000019 /* AppStoreFavoritesTests.swift in Sources */,
+				AA0000000000000000000020 /* PlanFiltersTests.swift in Sources */,
+				AA0000000000000000000021 /* AppStoreFavoritesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
