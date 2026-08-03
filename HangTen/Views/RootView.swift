@@ -1486,7 +1486,7 @@ struct WorkoutView: View {
     }
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
-        step.hasRestInterval && stepElapsed >= step.activeDuration
+        step.phase == .rest || (step.hasRestInterval && stepElapsed >= step.activeDuration)
     }
 
     private func intervalRemaining(step: WorkoutStep, stepElapsed: TimeInterval) -> TimeInterval {
@@ -1499,6 +1499,16 @@ struct WorkoutView: View {
     private func intervalLabel(for step: WorkoutStep) -> String {
         if step.phase == .rest {
             return step.phase.label
+        }
+        if step.timedWorkDuration != nil {
+            switch step.phase {
+            case .hang:
+                return "Hang"
+            case .pull:
+                return "Pull"
+            default:
+                break
+            }
         }
         return step.hasRestInterval ? "Hang" : "Cycle"
     }

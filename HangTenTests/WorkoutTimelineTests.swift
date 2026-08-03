@@ -129,6 +129,42 @@ final class WorkoutSessionPolicyTests: XCTestCase {
     }
 }
 
+final class WorkoutStepDurationTests: XCTestCase {
+    func testRestPhaseHasFullDurationAsRest() {
+        let rest = WorkoutStep(
+            id: "rest",
+            number: 1,
+            title: "Rest",
+            instruction: "Rest.",
+            accessory: "",
+            duration: 30,
+            phase: .rest,
+            targets: []
+        )
+
+        XCTAssertEqual(rest.activeDuration, 0)
+        XCTAssertTrue(rest.hasRestInterval)
+        XCTAssertEqual(rest.restDuration, 30)
+    }
+
+    func testTimedPullTaskHasNoFollowingRest() {
+        let pull = WorkoutStep(
+            id: "pull",
+            number: 1,
+            title: "Pull",
+            instruction: "Do 2 pull-ups.",
+            accessory: "",
+            duration: 10,
+            phase: .pull,
+            targets: [.feature(.jug)],
+            timedWorkDuration: 10
+        )
+
+        XCTAssertEqual(pull.activeDuration, 10)
+        XCTAssertFalse(pull.hasRestInterval)
+    }
+}
+
 final class MetoliusTaskExpansionTests: XCTestCase {
     func testPullUpTasksUseFiveSecondsPerPullUp() throws {
         let task = MetoliusCycleBuilder.pullUps(

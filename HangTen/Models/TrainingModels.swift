@@ -303,7 +303,10 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 
     var activeDuration: TimeInterval {
-        min(timedWorkDuration ?? duration, duration)
+        if phase == .rest {
+            return 0
+        }
+        return min(timedWorkDuration ?? duration, duration)
     }
 
     var hasRestInterval: Bool {
