@@ -1100,7 +1100,7 @@ private final class FakeMotherboardTransport: MotherboardTransport {
     }
     func write(_ data: Data) {
         commands.append(data)
-        operations.append("write:\(String(data: data, encoding: .utf8) ?? \"\")")
+        operations.append("write:\(String(data: data, encoding: .utf8) ?? "")")
     }
     func emit(_ event: MotherboardTransportEvent) { eventHandler?(event) }
 }
