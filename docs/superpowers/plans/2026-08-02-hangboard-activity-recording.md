@@ -28,7 +28,7 @@
 
 ## File map
 
-- `HangTen/Models/TrainingModels.swift`: physical hold sizes, segment enums/value types, runtime `WorkoutStep` segments, and source-audited legacy routine segment data.
+- `HangTen/Models/TrainingModels.swift`: physical hold sizes, segment enums/value types, runtime `WorkoutStep` segments, and (in Task 2) source-audited legacy routine segment data.
 - `HangTen/Models/PlanStorage.swift`: Codable segment definitions, schema version 3, validation, and conversion from persisted definitions to runtime segments.
 - `HangTen/Resources/PlanLibrary.json`: generated version-3 plan data with explicit work/rest/stopwatch/undefined segments.
 - `HangTen/Models/WorkoutActivityRecording.swift`: pure board resolution, recorded segment values, HealthKit metadata envelope, and JSON encoding.
@@ -127,15 +127,6 @@
 
   Add the enums and `WorkoutSegment` beside the existing workout value types. Add `sizeMillimeters` to `BoardHold`; populate the current Compact II catalog with numeric sizes for 19 mm, 29 mm, and 56 mm holds, leaving jugs without a numeric size. Add `segments` to `WorkoutStep` while preserving all existing computed timing properties and initializer defaults.
 
-  Add source-seed segment helpers in `LegacyPlanSeedCatalog` so the source fixture and generated library can represent:
-
-  - fixed work plus fixed rest for routines with explicit work/rest seconds;
-  - stopwatch work for “as long as you can” max-effort steps;
-  - undefined work for repetition-only or otherwise genuinely untimed steps;
-  - fixed recovery/rest segments for explicit recovery periods.
-
-  For multi-activity minute steps, create one segment per source activity in source order. Use a fixed duration only when the source gives a numeric duration; do not assign the enclosing 60-second cycle to an untimed activity.
-
 - [ ] **Step 4: Run the focused tests and verify green.**
 
   Re-run the exact focused `xcodebuild test` command from Step 2. Expected result: `WorkoutSegmentTests` passes with zero failures and no warnings caused by the new model.
@@ -152,6 +143,7 @@
 ### Task 2: Persist and validate version-3 routine segments
 
 **Files:**
+- Modify: `HangTen/Models/TrainingModels.swift`
 - Modify: `HangTen/Models/PlanStorage.swift`
 - Modify: `HangTen/Resources/PlanLibrary.json`
 - Modify: `HangTen.xcodeproj/project.pbxproj`
@@ -209,7 +201,7 @@
 
   Add `WorkoutSegmentDefinition` and a custom `WorkoutStepDefinition.init(from:)` that defaults missing `segments` to `[]`. In the runtime conversion, use explicit segments when present. For older definitions without segments, derive a rest segment for rest-only steps, a fixed work segment when `activeDuration` is present, and an undefined work segment when the step has targets but no explicit work duration. Validate finite nonnegative durations; require fixed/rest durations and reject a duration greater than the enclosing step duration.
 
-  Update the source-to-document conversion and run the repository exporter so `PlanLibrary.json` becomes schema version 3 and contains explicit segment arrays for every bundled plan. Verify that the source-audited DEBUG fingerprint includes segment kind, timing, target, and duration so generated data cannot silently drift.
+  Add source-seed segment helpers in `LegacyPlanSeedCatalog` and populate every bundled routine with ordered segment data: fixed work plus fixed rest for explicit work/rest seconds, stopwatch work for “as long as you can” max-effort steps, undefined work for genuinely untimed activities, and fixed recovery/rest segments for explicit recovery periods. For multi-activity minute steps, create one segment per source activity in source order and do not assign the enclosing 60-second cycle to an untimed activity. Then update the source-to-document conversion and run the repository exporter so `PlanLibrary.json` becomes schema version 3 with matching explicit segment arrays. Verify that the source-audited DEBUG fingerprint includes segment kind, timing, target, and duration so generated data cannot silently drift.
 
 - [ ] **Step 4: Run storage tests and the generated-library check.**
 
@@ -471,4 +463,4 @@
 - Spec coverage: board identity, physical size/type resolution, ordered rest, fixed/stopwatch/undefined timing, stopwatch UI, lifecycle, HealthKit metadata, compatibility, tests, and simulator/physical-device validation are covered by Tasks 1–6.
 - Placeholder scan: no task relies on “TBD”, “TODO”, “implement later”, or unspecified test behavior; each task names files, interfaces, commands, and expected red/green results.
 - Type consistency: `WorkoutSegment` is produced by Task 1, persisted by Task 2, consumed by `WorkoutActivityRecorder` in Task 3, measured by `WorkoutStopwatch` in Task 4, and integrated by `WorkoutView` in Task 5.
-- Write ownership: Task 1 owns `TrainingModels.swift` and the first project/test registrations; Task 2 owns `PlanStorage.swift`, generated JSON, and its project/test registration; Task 3 owns recorder/AppStore/HealthKit and its project/source/test registrations; Task 4 owns stopwatch files and its project/source/test registrations; Task 5 owns `RootView.swift`; Task 6 owns docs. These project-file edits are sequential append-only registrations; workers must not revert earlier registrations or unrelated edits.
+- Write ownership: Task 1 owns the model/board portions of `TrainingModels.swift` and the first project/test registrations; Task 2 owns source-seed segment data in `TrainingModels.swift`, `PlanStorage.swift`, generated JSON, and its project/test registration; Task 3 owns recorder/AppStore/HealthKit and its project/source/test registrations; Task 4 owns stopwatch files and its project/source/test registrations; Task 5 owns `RootView.swift`; Task 6 owns docs. These project-file edits are sequential append-only registrations, and Task 2’s source-seed edits intentionally follow Task 1’s independently green model task; workers must not revert earlier registrations or unrelated edits.
