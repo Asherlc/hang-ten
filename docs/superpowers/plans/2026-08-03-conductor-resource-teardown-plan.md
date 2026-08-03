@@ -255,7 +255,11 @@ trap 'signal_exit 143' TERM
 
 simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
 if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  xcrun simctl delete "$simulator_uuid" || true
+  if ! xcrun simctl delete "$simulator_uuid"; then
+    printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_uuid" >&2
+    exit 1
+  fi
+  printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
   exit 1
 fi
 ~~~
@@ -333,6 +337,10 @@ Use the already-written inventory, validate every line against the exact root, a
 set -euo pipefail
 
 derived_data_root=/Users/asherlc/Library/Developer/Xcode/DerivedData
+if pgrep -x Xcode >/dev/null || pgrep -x xcodebuild >/dev/null; then
+  echo "Xcode or xcodebuild is active; stop before purging DerivedData." >&2
+  exit 1
+fi
 while IFS= read -r -d '' child; do
   parent="${child:h}"
   name="${child:t}"
