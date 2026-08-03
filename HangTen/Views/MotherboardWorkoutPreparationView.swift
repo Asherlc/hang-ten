@@ -32,14 +32,24 @@ struct MotherboardWorkoutPreparationView: View {
         }
         .interactiveDismissDisabled()
         .onAppear(perform: requestTareIfNeeded)
+        .onChange(of: service.state) { _, state in
+            guard state != .streaming else { return }
+            handleStreamingLoss()
+        }
         .onChange(of: service.isTaring) { _, isTaring in
             guard didRequestTare, !isTaring, preparation.step == .tare else { return }
-            preparation.completeTare()
+            didRequestTare = false
+            preparation.completeTare(isStreaming: service.state == .streaming)
+            guard preparation.step == .bodyweight else { return }
             beginBodyweightCapture()
         }
         .onChange(of: service.isMeasuringBodyweight) { _, isMeasuring in
             guard didStartBodyweightCapture, !isMeasuring, preparation.step == .bodyweight else { return }
-            preparation.completeBodyweight(with: service.bodyweightKGF)
+            didStartBodyweightCapture = false
+            preparation.completeBodyweight(
+                with: service.bodyweightKGF,
+                isStreaming: service.state == .streaming
+            )
         }
     }
 
@@ -62,6 +72,21 @@ struct MotherboardWorkoutPreparationView: View {
             Text("\(service.tareSamplesCollected) of \(service.tareSampleTarget) tare samples")
                 .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
+
+            if preparation.failure == .tareInterrupted {
+                Text("The sensor stopped streaming before tare completed. Reconnect it, then try again or skip preparation.")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+
+                Button("Try tare again", action: retryTare)
+                    .buttonStyle(.bordered)
+                    .tint(Color.hangGreenDark)
+                    .disabled(service.state != .streaming)
+            }
+
+            Button("Skip preparation", action: skipPreparation)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
         }
     }
 
@@ -90,6 +115,21 @@ struct MotherboardWorkoutPreparationView: View {
                     }
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
+
+                    if let failure = preparation.failure {
+                        Text(bodyweightFailureText(for: failure))
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+
+                        Button("Retry capture", action: retryBodyweightCapture)
+                            .buttonStyle(.bordered)
+                            .tint(Color.hangGreenDark)
+                            .disabled(service.state != .streaming)
+                    }
+
+                    Button("Skip bodyweight", action: skipPreparation)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
                 }
             }
         }
@@ -102,54 +142,86 @@ struct MotherboardWorkoutPreparationView: View {
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
 
-            if let bodyweightKGF = preparation.bodyweightKGF {
+            if let bodyweightKGF = preparation.bodyweightKGF, preparation.canContinue {
                 Text("Captured baseline: \(forceText(bodyweightKGF))")
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                 Text("Use this relaxed jug hang as your bodyweight reference for this workout.")
                     .font(.system(size: 15, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
-            } else {
-                Text("No bodyweight baseline was captured.")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("You can try again or continue without a baseline.")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
+
+                Button("Measure again", action: retryBodyweightCapture)
+                    .buttonStyle(.bordered)
+                    .tint(Color.hangGreenDark)
+                    .disabled(service.state != .streaming)
+
+                Button("Continue") {
+                    onComplete(bodyweightKGF)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color.hangGreenDark)
             }
 
-            Button("Measure again") {
-                preparation.retryBodyweight()
-                beginBodyweightCapture()
-            }
-            .buttonStyle(.bordered)
-            .tint(Color.hangGreenDark)
-
-            Button("Continue") {
-                onComplete(preparation.bodyweightKGF)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(Color.hangGreenDark)
-
-            Button("Skip bodyweight") {
-                preparation.skip()
-                onSkip()
-            }
+            Button("Skip bodyweight", action: skipPreparation)
             .font(.system(size: 15, weight: .bold, design: .rounded))
             .foregroundStyle(Color.hangMuted)
         }
     }
 
     private func requestTareIfNeeded() {
-        guard !didRequestTare else { return }
+        guard !didRequestTare, service.state == .streaming else { return }
         didRequestTare = true
         service.tare()
     }
 
     private func beginBodyweightCapture() {
+        guard service.state == .streaming else {
+            preparation.completeBodyweight(with: nil, isStreaming: false)
+            return
+        }
         didStartBodyweightCapture = service.beginBodyweightMeasurement(duration: bodyweightCaptureDuration)
         guard !didStartBodyweightCapture else { return }
-        preparation.completeBodyweight(with: nil)
+        preparation.completeBodyweight(with: nil, isStreaming: service.state == .streaming)
+    }
+
+    private func handleStreamingLoss() {
+        if didRequestTare, preparation.step == .tare {
+            didRequestTare = false
+            preparation.completeTare(isStreaming: false)
+        }
+
+        if didStartBodyweightCapture, preparation.step == .bodyweight {
+            didStartBodyweightCapture = false
+            preparation.completeBodyweight(with: nil, isStreaming: false)
+        }
+    }
+
+    private func retryTare() {
+        preparation.retryTare()
+        didRequestTare = false
+        requestTareIfNeeded()
+    }
+
+    private func retryBodyweightCapture() {
+        preparation.retryBodyweight()
+        didStartBodyweightCapture = false
+        beginBodyweightCapture()
+    }
+
+    private func skipPreparation() {
+        preparation.skip()
+        onSkip()
+    }
+
+    private func bodyweightFailureText(for failure: MotherboardWorkoutPreparationFailure) -> String {
+        switch failure {
+        case .bodyweightCaptureInterrupted:
+            "The sensor stopped streaming before the capture finished. Reconnect it, then retry or skip bodyweight."
+        case .invalidBodyweightCapture:
+            "No valid bodyweight baseline was captured. Hang relaxed on the jugs, then retry or skip bodyweight."
+        case .tareInterrupted:
+            ""
+        }
     }
 
     private func bodyweightProgress(at date: Date) -> Double {
