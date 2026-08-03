@@ -239,17 +239,38 @@ mkdir -p "$workspace_path/.context"
 simulator_name="Hang Ten Conductor $workspace_name Review"
 device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
 runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
+uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+pending_simulator_uuid=""
 
 cleanup() {
   CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
+cleanup_pending_simulator() {
+  if [[ -z "$pending_simulator_uuid" ]]; then
+    return 0
+  fi
+  if [[ ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+    printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  if ! xcrun simctl delete "$pending_simulator_uuid"; then
+    printf 'failed to delete pending simulator %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  pending_simulator_uuid=""
+}
 cleanup_on_exit() {
   original_status=$?
   trap - EXIT INT TERM
   cleanup_status=0
-  cleanup || cleanup_status=$?
+  cleanup_pending_simulator || cleanup_status=$?
+  archive_cleanup_status=0
+  cleanup || archive_cleanup_status=$?
+  if (( cleanup_status == 0 && archive_cleanup_status != 0 )); then
+    cleanup_status=$archive_cleanup_status
+  fi
   if (( original_status != 0 )); then
     exit "$original_status"
   fi
@@ -263,15 +284,22 @@ trap cleanup_on_exit EXIT
 trap 'signal_exit 130' INT
 trap 'signal_exit 143' TERM
 
-simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+pending_simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$pending_simulator_uuid" || ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+  printf 'simctl create returned invalid simulator UUID: %s\n' "$pending_simulator_uuid" >&2
+  exit 1
+fi
+simulator_uuid="$pending_simulator_uuid"
 if ! printf '%s\n' "$simulator_uuid" >> "$workspace_path/.context/conductor-owned-simulators"; then
-  if ! xcrun simctl delete "$simulator_uuid"; then
+  if ! xcrun simctl delete "$pending_simulator_uuid"; then
     printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_uuid" >&2
     exit 1
   fi
+  pending_simulator_uuid=""
   printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
   exit 1
 fi
+pending_simulator_uuid=""
 ~~~
 
 Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators.

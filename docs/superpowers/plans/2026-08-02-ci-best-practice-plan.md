@@ -151,6 +151,8 @@ manifest="$context_path/conductor-owned-simulators"
 logs_path="$context_path/ci-test-logs"
 derived_data_path="$context_path/ci-test-derived-data"
 result_bundle_path="$context_path/HangTenTests.xcresult"
+uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+pending_simulator_udid=""
 mkdir -p "$logs_path" "$derived_data_path"
 touch "$manifest"
 simulator_name="Hang Ten Conductor ${workspace_name} iPhone 17 Review"
@@ -160,11 +162,35 @@ cleanup() {
   CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
   "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 }
+cleanup_pending_simulator() {
+  if [[ -z "$pending_simulator_udid" ]]; then
+    return 0
+  fi
+  if [[ ! "$pending_simulator_udid" =~ $uuid_regex ]]; then
+    printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
+  if ! xcrun simctl delete "$pending_simulator_udid"; then
+    printf 'failed to delete pending simulator %s\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
+  pending_simulator_udid=""
+}
 cleanup_on_exit() {
   original_status=$?
   trap - EXIT INT TERM
   cleanup_status=0
-  cleanup || cleanup_status=$?
+  cleanup_pending_simulator || cleanup_status=$?
+  archive_cleanup_status=0
+  cleanup || archive_cleanup_status=$?
+  result_cleanup_status=0
+  rm -rf "$result_bundle_path" || result_cleanup_status=$?
+  if (( cleanup_status == 0 && archive_cleanup_status != 0 )); then
+    cleanup_status=$archive_cleanup_status
+  fi
+  if (( cleanup_status == 0 && result_cleanup_status != 0 )); then
+    cleanup_status=$result_cleanup_status
+  fi
   if (( original_status != 0 )); then
     exit "$original_status"
   fi
@@ -180,21 +206,25 @@ trap 'signal_exit 143' TERM
 
 device_type_id="$(xcrun simctl list devicetypes | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' | head -n 1)"
 runtime_id="$(xcrun simctl list runtimes available | awk '/^[[:space:]]*iOS [0-9]/ { version = $2; runtime = $NF; if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) print version "|" runtime }' | awk -F'|' '{ split($1, version, /\./); printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2 }' | sort | tail -n 1 | cut -d'|' -f 2-)"
-simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
-if [[ -z "$simulator_udid" ]]; then
-  echo "Failed to create the owned iPhone 17 simulator." >&2
+pending_simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$pending_simulator_udid" || ! "$pending_simulator_udid" =~ $uuid_regex ]]; then
+  printf 'simctl create returned invalid simulator UUID: %s\n' "$pending_simulator_udid" >&2
   exit 1
 fi
+simulator_udid="$pending_simulator_udid"
 if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
-  if ! xcrun simctl delete "$simulator_udid"; then
+  if ! xcrun simctl delete "$pending_simulator_udid"; then
     printf 'failed to write simulator manifest and failed to delete simulator %s\n' "$simulator_udid" >&2
     exit 1
   fi
+  pending_simulator_udid=""
   printf 'failed to write simulator manifest for %s\n' "$simulator_udid" >&2
   exit 1
 fi
+pending_simulator_udid=""
 xcrun simctl boot "$simulator_udid"
 xcrun simctl bootstatus "$simulator_udid" -b
+rm -rf "$result_bundle_path"
 xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$derived_data_path" -resultBundlePath "$result_bundle_path" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$logs_path/test.log"
 ```
 
