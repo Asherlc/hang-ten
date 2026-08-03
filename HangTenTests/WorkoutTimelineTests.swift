@@ -302,3 +302,16 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, now: now))
     }
 }
+
+final class WorkoutViewSessionStateTests: XCTestCase {
+    func testWorkoutViewStoresTheTestedSessionStateAsItsSourceOfTruth() {
+        let view = WorkoutView(plan: PlanCatalog.metoliusTenMinute)
+        let storedStateNames = Set(Mirror(reflecting: view).children.compactMap(\.label))
+
+        XCTAssertTrue(storedStateNames.contains("_sessionState"))
+        XCTAssertFalse(storedStateNames.contains("_startedAt"))
+        XCTAssertFalse(storedStateNames.contains("_countdownKind"))
+        XCTAssertFalse(storedStateNames.contains("_pausedElapsed"))
+        XCTAssertFalse(storedStateNames.contains("_routineStartedAt"))
+    }
+}
