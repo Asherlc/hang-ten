@@ -169,7 +169,7 @@ remove_pending_record() {
     return 0
   fi
   local tmp="$pending_manifest.tmp.$$"
-  if ! awk -v uuid="$pending_recorded_simulator_udid" '$0 != uuid { print }' "$pending_manifest" > "$tmp"; then
+  if ! awk -v uuid="$pending_recorded_simulator_udid" '{ actual_uuid = $0; if (toupper(actual_uuid) != toupper(uuid)) print }' "$pending_manifest" > "$tmp"; then
     rm -f "$tmp"
     return 1
   fi
@@ -204,7 +204,7 @@ cleanup_pending_simulator() {
       actual_uuid = fields
       sub(/^.* \(/, "", actual_uuid)
       sub(/\)$/, "", actual_uuid)
-      if (actual_uuid != uuid) next
+      if (toupper(actual_uuid) != toupper(uuid)) next
       name = fields
       sub(/ \([^()]*\)$/, "", name)
       print name "\t" state
