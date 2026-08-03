@@ -390,6 +390,10 @@ struct PlansView: View {
                         )
                     }
                     .accessibilityLabel("Filter by difficulty")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.levels.count,
+                        singleSelection: filters.levels.first
+                    ))
                 }
 
                 if !filterOptions.provenances.isEmpty {
@@ -410,6 +414,10 @@ struct PlansView: View {
                         )
                     }
                     .accessibilityLabel("Filter by type")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.provenances.count,
+                        singleSelection: filters.provenances.first?.label
+                    ))
                 }
 
                 if !filterOptions.categories.isEmpty {
@@ -430,6 +438,10 @@ struct PlansView: View {
                         )
                     }
                     .accessibilityLabel("Filter by category")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.categories.count,
+                        singleSelection: filters.categories.first.map(displayName)
+                    ))
                 }
 
                 if !filterOptions.tags.isEmpty {
@@ -450,6 +462,10 @@ struct PlansView: View {
                         )
                     }
                     .accessibilityLabel("Filter by tags")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.tags.count,
+                        singleSelection: filters.tags.first.map(displayName)
+                    ))
                 }
 
                 if !filterOptions.equipment.isEmpty {
@@ -470,6 +486,10 @@ struct PlansView: View {
                         )
                     }
                     .accessibilityLabel("Filter by equipment")
+                    .accessibilityValue(filterMenuAccessibilityValue(
+                        selectionCount: filters.equipment.count,
+                        singleSelection: filters.equipment.first.map(displayName)
+                    ))
                 }
 
                 if !filters.isEmpty {
@@ -523,6 +543,16 @@ struct PlansView: View {
         .overlay {
             Capsule()
                 .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
+        }
+    }
+
+    private func filterMenuAccessibilityValue(selectionCount: Int, singleSelection: String?) -> String {
+        if selectionCount == 0 {
+            return "All"
+        } else if selectionCount == 1 {
+            return singleSelection ?? "1 selected"
+        } else {
+            return "\(selectionCount) selected"
         }
     }
 

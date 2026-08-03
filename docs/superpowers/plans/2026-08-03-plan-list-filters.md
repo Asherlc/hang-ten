@@ -43,7 +43,7 @@
 - Produces `PlanFilterOptions(metadata: [PlanMetadata])` with sorted unique `levels`, `provenances`, `categories`, `tags`, and `equipment` arrays.
 - `PlanFilters.matches(_ metadata:)` returns true when every active facet matches. A facet with no selections matches all metadata; a facet with multiple selections matches when at least one selected value is present.
 
-- [ ] **Step 1: Register the new test file in the Xcode project and write the failing tests.**
+- [x] **Step 1: Register the new test file in the Xcode project and write the failing tests.**
 
 Add `PlanFiltersTests.swift` to the HangTenTests group and test source phase using build-file ID `AA0000000000000000000020` and file-reference ID `BB0000000000000000000023`. Add these behavior tests before adding `PlanFilters.swift` to the app target:
 
@@ -158,7 +158,7 @@ rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform
 
 Expected: compilation fails because `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` do not exist yet. Do not change the test assertions to make this failure disappear.
 
-- [ ] **Step 3: Add the minimal production implementation.**
+- [x] **Step 3: Add the minimal production implementation.**
 
 Create `PlanFilters.swift` with this shape:
 
@@ -280,21 +280,21 @@ rtk git commit -m "Add plan metadata filters"
 - Consumes `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` from Task 1.
 - Produces a transient `@State` filter interaction with inline native menus and existing plan navigation unchanged.
 
-- [ ] **Step 1: Retain transient state and derived collections in `PlansView`.**
+- [x] **Step 1: Retain transient state and derived collections in `PlansView`.**
 
 Keep `filters`, `compatiblePlans`, `availableMetadata`, `filterOptions`, and `filteredPlans` as the existing data layer. Do not change the model or its tests.
 
-- [ ] **Step 2: Add the inline quick-dropdown bar.**
+- [x] **Step 2: Add the inline quick-dropdown bar.**
 
 Place a horizontally scrolling row of native SwiftUI `Menu` controls immediately below the Plans explanatory text. Render a menu only when its options are available. The five facets are Difficulty, Type, Category, Tags, and Equipment; every menu starts with `All`, which clears that facet, followed by every raw option. Selecting an option toggles it and selected options use a checkmark.
 
 Each menu has a meaningful accessibility label such as `Filter by difficulty`. Labels show the facet name with no selection, the single selected display label with one selection, and `N selected` with multiple selections. Use `RoutineProvenance.label` for Type and the existing hyphen-to-space, capitalized display convention for category, tags, and equipment. Tint and outline active menu pills, and render a `Clear` button whenever any facet is active. Keep the existing navigation stack, hidden navigation bar, background, padding, and source card styling intact.
 
-- [ ] **Step 3: Preserve compatible, filtered, and empty states.**
+- [x] **Step 3: Preserve compatible, filtered, and empty states.**
 
 Keep the compatible-plans branch first, then `NoMatchingPlansCard` when selected filters produce no results, then the existing plan cards and navigation links. The filter empty state must display `No routines match these filters` and retain its `Clear filters` recovery. Keep `sourceCard` after this branch in all cases.
 
-- [ ] **Step 4: Remove obsolete sheet-only UI.**
+- [x] **Step 4: Remove obsolete sheet-only UI.**
 
 Delete `showsFilters`, the `.sheet` presentation, and `PlanFiltersSheet`. The menus may dismiss after each choice; users reopen a menu to make another selection.
 
@@ -308,7 +308,7 @@ rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform
 
 Expected: the app target compiles and all unit tests pass with zero failures.
 
-- [ ] **Step 6: Run the plan-library export check.**
+- [x] **Step 6: Run the plan-library export check.**
 
 Run:
 
