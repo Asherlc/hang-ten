@@ -653,6 +653,28 @@ enum WorkoutSessionPolicy {
     }
 }
 
+enum WorkoutStopwatchLifecycle {
+    static func finalizeStopwatches(
+        for stepID: String,
+        at date: Date,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        for key in stopwatches.keys where key.stepID == stepID {
+            finalizeStopwatch(for: key, at: date, in: &stopwatches)
+        }
+    }
+
+    static func finalizeStopwatch(
+        for key: WorkoutActivitySegmentKey,
+        at date: Date,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+        stopwatch.stop(at: date)
+        stopwatches[key] = stopwatch
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -736,6 +758,9 @@ struct WorkoutView: View {
 				.onChange(of: isComplete, initial: true) { _, complete in
 					guard complete else { return }
 					finalizeAllStopwatches(at: context.date)
+				}
+				.onChange(of: step.id) { previousStepID, _ in
+					finalizeStopwatches(for: previousStepID, at: context.date)
 				}
 				.onChange(of: isResting) { wasResting, resting in
 					guard resting, !wasResting else { return }
@@ -1365,9 +1390,12 @@ struct WorkoutView: View {
 	private func finalizeCurrentStopwatch(at date: Date) {
 		let elapsed = currentElapsed(at: date)
 		let step = step(at: elapsed)
-		guard let key = currentStopwatchKey(for: step), var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
-		stopwatch.stop(at: date)
-		stopwatches[key] = stopwatch
+		guard let key = currentStopwatchKey(for: step) else { return }
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: date, in: &stopwatches)
+	}
+
+	private func finalizeStopwatches(for stepID: String, at date: Date) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: date, in: &stopwatches)
 	}
 
 	private func finalizeAllStopwatches(at date: Date) {

@@ -118,6 +118,71 @@ final class WorkoutStopwatchTests: XCTestCase {
         XCTAssertTrue(stopwatch.isFinalized)
     }
 
+    func testAutomaticStepBoundaryFinalizesAllPreviousStepStopwatchesAtBoundary() throws {
+        let steps = [
+            WorkoutStep(
+                id: "first",
+                number: 1,
+                title: "First",
+                instruction: "First instruction",
+                accessory: "",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.jug)],
+                segments: [
+                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil),
+                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil)
+                ]
+            ),
+            WorkoutStep(
+                id: "second",
+                number: 2,
+                title: "Second",
+                instruction: "Second instruction",
+                accessory: "",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.jug)],
+                segments: [
+                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil)
+                ]
+            )
+        ]
+        let timeline = WorkoutTimeline(steps: steps)
+        let transitionElapsed = try XCTUnwrap(timeline.startOffset(for: "second"))
+        let previousStep = try XCTUnwrap(timeline.step(at: transitionElapsed - 0.001))
+        let nextStep = try XCTUnwrap(timeline.step(at: transitionElapsed))
+        let transitionDate = date(100 + transitionElapsed)
+        let laterDate = date(200)
+
+        XCTAssertEqual(previousStep.id, "first")
+        XCTAssertEqual(nextStep.id, "second")
+
+        let firstKey = WorkoutActivitySegmentKey(stepID: previousStep.id, segmentIndex: 0)
+        let secondKey = WorkoutActivitySegmentKey(stepID: previousStep.id, segmentIndex: 1)
+        let laterKey = WorkoutActivitySegmentKey(stepID: nextStep.id, segmentIndex: 0)
+        var firstStopwatch = WorkoutStopwatch()
+        firstStopwatch.start(at: date(103))
+        var secondStopwatch = WorkoutStopwatch()
+        secondStopwatch.start(at: date(105))
+        var laterStopwatch = WorkoutStopwatch()
+        laterStopwatch.start(at: transitionDate)
+        var stopwatches = [
+            firstKey: firstStopwatch,
+            secondKey: secondStopwatch,
+            laterKey: laterStopwatch
+        ]
+
+        WorkoutStopwatchLifecycle.finalizeStopwatches(for: previousStep.id, at: transitionDate, in: &stopwatches)
+
+        XCTAssertEqual(stopwatches[firstKey]?.elapsed(at: laterDate), 7)
+        XCTAssertEqual(stopwatches[secondKey]?.elapsed(at: laterDate), 5)
+        XCTAssertTrue(stopwatches[firstKey]?.isFinalized == true)
+        XCTAssertTrue(stopwatches[secondKey]?.isFinalized == true)
+        XCTAssertTrue(stopwatches[laterKey]?.isRunning == true)
+        XCTAssertFalse(stopwatches[laterKey]?.isFinalized == true)
+    }
+
     private func date(_ seconds: TimeInterval) -> Date {
         Date(timeIntervalSinceReferenceDate: seconds)
     }
