@@ -390,7 +390,8 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func scheduleTimeout(after delay: TimeInterval, message: String) {
         cancelTimeout()
-        let nanoseconds = UInt64(max(0, delay) * 1_000_000_000)
+        guard delay.isFinite, delay > 0 else { return }
+        let nanoseconds = UInt64(delay * 1_000_000_000)
         timeoutTask = Task { [weak self] in
             do {
                 try await Task.sleep(nanoseconds: nanoseconds)
@@ -447,6 +448,10 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     init(centralManagerFactory: @escaping (CBCentralManagerDelegate) -> MotherboardCentralManaging) {
         self.centralManagerFactory = centralManagerFactory
         super.init()
+    }
+
+    func isExpectedMotherboard(peripheralName: String?, advertisedLocalName: String?) -> Bool {
+        (peripheralName ?? advertisedLocalName) == "Motherboard"
     }
 
     func startScan() {
@@ -556,13 +561,17 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         advertisementData: [String: Any],
         rssi RSSI: NSNumber
     ) {
-        let advertisedName = peripheral.name ?? advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        guard advertisedName == nil || advertisedName == "Motherboard" else { return }
+        let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
+        guard isExpectedMotherboard(
+            peripheralName: peripheral.name,
+            advertisedLocalName: advertisedLocalName
+        ) else { return }
+        let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
 
         discoveredPeripherals[peripheral.identifier] = peripheral
         eventHandler?(.discovered(MotherboardDiscoveredDevice(
             id: peripheral.identifier,
-            name: advertisedName ?? "Motherboard"
+            name: advertisedName
         )))
     }
 

@@ -21,6 +21,26 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(manager.scanCount, 1)
     }
 
+    func testCoreBluetoothTransportRejectsAnonymousAdvertisement() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+
+        XCTAssertFalse(transport.isExpectedMotherboard(
+            peripheralName: nil,
+            advertisedLocalName: nil
+        ))
+    }
+
+    func testCoreBluetoothTransportAcceptsMotherboardLocalName() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+
+        XCTAssertTrue(transport.isExpectedMotherboard(
+            peripheralName: nil,
+            advertisedLocalName: "Motherboard"
+        ))
+    }
+
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
@@ -686,6 +706,22 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         XCTAssertEqual(service.state, .failed)
         XCTAssertEqual(service.lastError, "Motherboard scan timed out. Move the sensor closer and try again.")
+    }
+
+    func testNonFiniteScanTimeoutsAreIgnored() async throws {
+        for delay in [TimeInterval.nan, .infinity] {
+            let transport = FakeMotherboardTransport()
+            let service = MotherboardBluetoothService(
+                transport: transport,
+                timeouts: .init(scan: delay, connect: 1, calibration: 1, streamAcknowledgement: 1)
+            )
+
+            service.connect()
+            try await Task.sleep(for: .milliseconds(10))
+
+            XCTAssertEqual(service.state, .scanning)
+            XCTAssertEqual(transport.startScanCount, 1)
+        }
     }
 
     func testConnectTimeoutFailsWithActionableError() async throws {
