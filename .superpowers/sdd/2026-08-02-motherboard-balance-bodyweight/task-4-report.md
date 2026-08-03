@@ -2,8 +2,9 @@
 
 ## Scope
 
-Implemented the Task 4 UI, summary, and DEBUG simulator work without changing
-the Task 3 preparation/lifecycle plumbing.
+Implemented the Task 4 UI, summary, and DEBUG simulator work while preserving
+the Task 3 preparation/lifecycle behavior. Added a narrowly scoped DEBUG-only
+simulation reset at preparation start so the fixture phases remain aligned.
 
 - `MotherboardMeterView` retains current force, peak force, and active loaded
   time. It now renders accessible left/right shares and a finite-safe current
