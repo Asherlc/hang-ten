@@ -65,6 +65,19 @@ final class WorkoutSessionStoreTests: XCTestCase {
         ].sorted())
     }
 
+    func testLegacyMigrationDeduplicatesRepeatedSessionIDs() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let olderCopy = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
+        let newerCopy = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
+        defaults.set(try JSONEncoder().encode([olderCopy, newerCopy]), forKey: "workout.sessionHistory")
+
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
+
+        XCTAssertEqual(store.sessions, [newerCopy])
+        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [newerCopy])
+    }
+
     func testAppendWritesOneRoundTrippableFilePerSession() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)

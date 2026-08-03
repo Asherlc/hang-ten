@@ -180,9 +180,15 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
         _ granularSessions: [WorkoutSessionRecord],
         with legacySessions: [WorkoutSessionRecord]
     ) -> [WorkoutSessionRecord] {
-        var sessionsByID = Dictionary(uniqueKeysWithValues: legacySessions.map { ($0.id, $0) })
-        for session in granularSessions {
-            sessionsByID[session.id] = session
+        var sessionsByID: [UUID: WorkoutSessionRecord] = [:]
+        for session in legacySessions + granularSessions {
+            guard let existing = sessionsByID[session.id] else {
+                sessionsByID[session.id] = session
+                continue
+            }
+            if session.recordedAt >= existing.recordedAt {
+                sessionsByID[session.id] = session
+            }
         }
         return Array(sessionsByID.values.sorted(by: isOrderedNewestFirst).prefix(maximumSessionCount))
     }

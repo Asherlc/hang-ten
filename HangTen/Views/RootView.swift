@@ -1245,7 +1245,8 @@ struct WorkoutView: View {
 			plannedActiveDuration: step.activeDuration,
 			bodyweightKGF: bodyweightKGF,
 			unit: motherboardSettingsStore.forceUnit,
-			state: motherboardBluetoothService.state
+			state: motherboardBluetoothService.state,
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
 		)
 	}
 

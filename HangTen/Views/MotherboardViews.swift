@@ -39,7 +39,8 @@ struct MotherboardCard: View {
                 plannedActiveDuration: 0,
                 bodyweightKGF: service.bodyweightKGF,
                 unit: settings.forceUnit,
-                state: service.state
+                state: service.state,
+                thresholdKGF: settings.thresholdKGF
             )
 
             HStack {
@@ -198,6 +199,7 @@ struct MotherboardMeterView: View {
     let bodyweightKGF: Double?
     let unit: MotherboardForceUnit
     let state: MotherboardConnectionState
+    let thresholdKGF: Double
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -235,6 +237,17 @@ struct MotherboardMeterView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
+            HStack {
+                Label(loadStatusText, systemImage: loadStatusIcon)
+                    .foregroundStyle(loadStatusTint)
+                Spacer()
+                if let threshold = formattedForce(thresholdKGF) {
+                    Text("Threshold \(threshold)")
+                        .foregroundStyle(Color.hangMuted)
+                }
+            }
+            .font(.system(size: 11, weight: .bold, design: .rounded))
+
             balanceContent
 
             Text(bodyweightFeedbackText)
@@ -264,6 +277,27 @@ struct MotherboardMeterView: View {
             return "Not measured"
         }
         return text
+    }
+
+    private var loadStatusText: String {
+        guard state == .streaming else { return "Sensor unavailable" }
+        guard let measurement,
+              measurement.aggregateLoadKGF.isFinite else {
+            return "Waiting for load"
+        }
+        return measurement.aggregateLoadKGF >= max(thresholdKGF, 0) ? "Loaded" : "Unloaded"
+    }
+
+    private var loadStatusIcon: String {
+        switch loadStatusText {
+        case "Loaded": "figure.climbing"
+        case "Unloaded": "hand.raised"
+        default: "questionmark.circle"
+        }
+    }
+
+    private var loadStatusTint: Color {
+        loadStatusText == "Loaded" ? Color.hangGreenDark : Color.hangMuted
     }
 
     @ViewBuilder
@@ -365,7 +399,7 @@ private extension MotherboardConnectionState {
         case .streaming:
             "Live force readings are ready."
         case .failed:
-            "Try connecting again, or check that your Motherboard is nearby."
+            "Try connecting again. If the Motherboard is connected to another app, release it there first, then retry."
         }
     }
 
