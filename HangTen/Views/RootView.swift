@@ -903,6 +903,129 @@ enum WorkoutSessionPolicy {
     }
 }
 
+struct WorkoutSessionState: Equatable {
+    var startedAt: Date?
+    var countdownKind: WorkoutCountdownKind?
+    var pausedElapsed: TimeInterval
+    var routineStartedAt: Date?
+
+    init(
+        startedAt: Date? = nil,
+        countdownKind: WorkoutCountdownKind? = nil,
+        pausedElapsed: TimeInterval = 0,
+        routineStartedAt: Date? = nil
+    ) {
+        self.startedAt = startedAt
+        self.countdownKind = countdownKind
+        self.pausedElapsed = pausedElapsed
+        self.routineStartedAt = routineStartedAt
+    }
+
+    func currentElapsed(planDuration: TimeInterval, at date: Date) -> TimeInterval {
+        let activeElapsed = startedAt.map { max(0, date.timeIntervalSince($0)) } ?? 0
+        return min(planDuration, pausedElapsed + max(0, activeElapsed))
+    }
+
+    mutating func countdownRemaining(at date: Date) -> Int {
+        guard countdownKind != nil else { return 0 }
+
+        let remaining = WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
+        if remaining == 0 {
+            countdownKind = nil
+        }
+        return remaining
+    }
+
+    func visibleCountdownRemaining(at date: Date) -> Int {
+        guard countdownKind != nil else { return 0 }
+        return WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
+    }
+
+    func canNavigate(planDuration: TimeInterval, now: Date) -> Bool {
+        routineStartedAt != nil
+            && visibleCountdownRemaining(at: now) == 0
+            && currentElapsed(planDuration: planDuration, at: now) < planDuration
+    }
+
+    mutating func toggleRunning(now: Date) {
+        if let startedAt {
+            if startedAt > now {
+                cancelCountdown()
+                return
+            }
+            pausedElapsed += now.timeIntervalSince(startedAt)
+            self.startedAt = nil
+            countdownKind = nil
+        } else {
+            let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
+            if isFirstStart {
+                let start = WorkoutSessionPolicy.startDate(for: .initial, now: now)
+                routineStartedAt = start
+                startedAt = start
+                countdownKind = .initial
+            } else {
+                startedAt = now
+                countdownKind = nil
+            }
+        }
+    }
+
+    mutating func cancelCountdown() {
+        switch countdownKind {
+        case .skip:
+            startedAt = nil
+            countdownKind = nil
+        case .initial, nil:
+            startedAt = nil
+            routineStartedAt = nil
+            countdownKind = nil
+        }
+    }
+
+    mutating func pauseForInterruption(now: Date) {
+        guard let startedAt else {
+            return
+        }
+        if startedAt > now {
+            cancelCountdown()
+            return
+        }
+
+        pausedElapsed += now.timeIntervalSince(startedAt)
+        self.startedAt = nil
+        countdownKind = nil
+    }
+
+    mutating func seek(to targetElapsed: TimeInterval, planDuration: TimeInterval, now: Date) {
+        let target = min(max(0, targetElapsed), planDuration)
+        countdownKind = nil
+        pausedElapsed = target
+        if startedAt != nil {
+            startedAt = now
+        }
+    }
+
+    mutating func skipCurrentStep(timeline: WorkoutTimeline, planDuration: TimeInterval, now: Date) -> Bool {
+        guard canNavigate(planDuration: planDuration, now: now) else { return false }
+
+        let elapsed = currentElapsed(planDuration: planDuration, at: now)
+        guard let target = timeline.skipTarget(from: elapsed) else { return false }
+
+        if target >= planDuration {
+            seek(to: target, planDuration: planDuration, now: now)
+        } else {
+            startSkipCountdown(to: target, now: now)
+        }
+        return true
+    }
+
+    mutating func startSkipCountdown(to targetElapsed: TimeInterval, now: Date) {
+        pausedElapsed = targetElapsed
+        startedAt = WorkoutSessionPolicy.startDate(for: .skip, now: now)
+        countdownKind = .skip
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -1477,7 +1600,12 @@ struct WorkoutView: View {
 
     private func countdownRemaining(at date: Date) -> Int {
         guard countdownKind != nil else { return 0 }
-        return WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
+
+        let remaining = WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
+        if remaining == 0 {
+            countdownKind = nil
+        }
+        return remaining
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
