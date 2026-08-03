@@ -370,7 +370,7 @@ fi
 pending_simulator_uuid=""
 ~~~
 
-Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators. The recipe must append the exact created UUID to the pending manifest before the owned manifest and before boot/build, remove the exact pending record only after successful archive cleanup, and preserve both manifests plus the exact local artifacts `.context/DerivedData`, `.context/workout-raw.png`, and `.context/workout-landscape.png` when cleanup fails so archive can retry.
+Keep every readiness, build, install, launch, screenshot, and runtime-service operation UUID-based. Replace shutdown-only cleanup with scripts/conductor-resource-cleanup.sh archive, explain that the trap is idempotent, and retain the warning against deleting unknown/shared simulators. The recipe must append the exact created UUID to the pending manifest before the owned manifest and before boot/build, remove the exact pending record only after successful archive cleanup, and retain the pending and owned simulator manifests when simulator cleanup fails so archive can retry.
 
 If archive cleanup fails, retain the pending and owned manifests for retry and
 preserve the original command status; propagate cleanup failure only when the
