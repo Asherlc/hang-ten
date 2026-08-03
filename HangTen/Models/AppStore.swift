@@ -13,6 +13,7 @@ final class AppStore: ObservableObject {
 	private let healthKitService: WorkoutHealthStore
 	private let workoutHistoryService: WorkoutHistoryService
 	private let defaults: UserDefaults
+	private var preservesCompletionError = false
 
 	init(
 		healthKitService: any WorkoutHealthStore = HealthKitService(),
@@ -102,6 +103,7 @@ final class AppStore: ObservableObject {
 
     func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
 		healthAuthorizationError = nil
+		preservesCompletionError = false
 		workoutHistory = WorkoutHistorySnapshot(
 			entries: workoutHistory.entries,
 			source: .syncing
@@ -121,6 +123,9 @@ final class AppStore: ObservableObject {
 	}
 
 	func refreshWorkoutHistory() {
+		if healthAuthorizationError == Self.completionSyncError {
+			preservesCompletionError = false
+		}
 		workoutHistory = WorkoutHistorySnapshot(
 			entries: workoutHistory.entries,
 			source: .syncing
@@ -148,15 +153,21 @@ final class AppStore: ObservableObject {
 		workoutHistory = workoutHistoryService.snapshot
 		guard workoutHistoryService.lastError != nil else {
 			healthAuthorizationError = nil
+			preservesCompletionError = false
 			return
 		}
 		switch errorContext {
 		case .completion:
-			healthAuthorizationError = "Session was saved locally and will retry Apple Health sync."
+			healthAuthorizationError = Self.completionSyncError
+			preservesCompletionError = true
 		case .refresh:
-			healthAuthorizationError = "Apple Health history could not sync. Local history remains available."
+			guard !preservesCompletionError else { return }
+			healthAuthorizationError = Self.historySyncError
 		}
 	}
+
+	private static let completionSyncError = "Session was saved locally and will retry Apple Health sync."
+	private static let historySyncError = "Apple Health history could not sync. Local history remains available."
 
 	private enum HistoryErrorContext {
 		case completion

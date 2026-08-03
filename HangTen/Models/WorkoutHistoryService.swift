@@ -150,7 +150,8 @@ final class WorkoutHistoryService {
                     self.finish(
                         with: self.publishedSnapshot(
                             healthRecords: healthRecords,
-                            localRecords: remainingRecords
+                            localRecords: remainingRecords,
+                            healthQuerySucceeded: true
                         )
                     )
 
@@ -163,17 +164,22 @@ final class WorkoutHistoryService {
     }
 
     private func fallbackSnapshot(for records: [PendingWorkoutRecord]) -> WorkoutHistorySnapshot {
-        publishedSnapshot(healthRecords: [], localRecords: records)
+        publishedSnapshot(
+            healthRecords: [],
+            localRecords: records,
+            healthQuerySucceeded: false
+        )
     }
 
     private func publishedSnapshot(
         healthRecords: [HealthWorkoutRecord],
-        localRecords: [PendingWorkoutRecord]
+        localRecords: [PendingWorkoutRecord],
+        healthQuerySucceeded: Bool
     ) -> WorkoutHistorySnapshot {
         let matcherSnapshot = WorkoutHistoryMatcher.snapshot(
             healthRecords: healthRecords,
             localRecords: localRecords,
-            healthQuerySucceeded: !healthRecords.isEmpty || healthStore.isHealthDataAvailable,
+            healthQuerySucceeded: healthQuerySucceeded,
             healthDataAvailable: healthStore.isHealthDataAvailable
         )
         let hasVisibleHealthRecord = healthRecords.contains { $0.isHangTen }
@@ -182,6 +188,8 @@ final class WorkoutHistoryService {
             source = .healthKit
         } else if !matcherSnapshot.entries.isEmpty {
             source = .localFallback
+        } else if healthQuerySucceeded {
+            source = .healthKit
         } else {
             source = .unavailable
         }

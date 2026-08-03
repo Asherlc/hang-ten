@@ -40,7 +40,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertEqual(persistence.load(), [])
     }
 
-    func testEmptyHealthKitWithoutLocalRecordsIsUnavailable() {
+    func testEmptySuccessfulHealthKitQueryWithoutLocalRecordsIsHealthKit() {
         let persistence = FakeWorkoutHistoryPersistence()
         let service = WorkoutHistoryService(
             healthStore: FakeWorkoutHealthStore(),
@@ -49,7 +49,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
 
         refresh(service)
 
-        XCTAssertEqual(service.snapshot.source, .unavailable)
+        XCTAssertEqual(service.snapshot.source, .healthKit)
         XCTAssertEqual(service.snapshot.entries, [])
         XCTAssertEqual(service.snapshot.sessionCount, 0)
         XCTAssertNil(service.snapshot.latestSessionTitle)

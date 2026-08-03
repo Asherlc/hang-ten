@@ -97,6 +97,50 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
+    func testCoalescedRefreshPreservesCompletionErrorUntilIndependentRefresh() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore(
+            saveResult: .failure(FakeHealthError.failed),
+            deferSave: true
+        )
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+
+        appStore.markSessionComplete(
+            PlanCatalog.all[0],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+        appStore.refreshWorkoutHistory()
+        healthStore.completeNextSave()
+        waitUntil { appStore.healthAuthorizationError != nil }
+
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session was saved locally and will retry Apple Health sync."
+        )
+
+        appStore.refreshWorkoutHistory()
+        waitUntil { appStore.healthAuthorizationError == nil }
+        XCTAssertNil(appStore.healthAuthorizationError)
+
+        healthStore.fetchResult = .failure(FakeHealthError.failed)
+        appStore.refreshWorkoutHistory()
+        waitUntil { appStore.healthAuthorizationError != nil }
+
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Apple Health history could not sync. Local history remains available."
+        )
+    }
+
     private func waitForHistory(
         in appStore: AppStore,
         file: StaticString = #filePath,
@@ -131,14 +175,19 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     var authorizationState: HealthAuthorizationState = .authorized
     var fetchResult: Result<[HealthWorkoutRecord], Error>
     var saveResult: Result<UUID, Error>
+    var deferSave: Bool
     private(set) var savedIDs: [UUID] = []
+    private(set) var saveCallCount = 0
+    private var saveCompletions: [(Result<UUID, Error>) -> Void] = []
 
     init(
         fetchResult: Result<[HealthWorkoutRecord], Error> = .success([]),
-        saveResult: Result<UUID, Error> = .success(UUID())
+        saveResult: Result<UUID, Error> = .success(UUID()),
+        deferSave: Bool = false
     ) {
         self.fetchResult = fetchResult
         self.saveResult = saveResult
+        self.deferSave = deferSave
     }
 
     func requestAuthorization(
@@ -161,6 +210,15 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         savedIDs.append(id)
-        completion(saveResult)
+        saveCallCount += 1
+        if deferSave {
+            saveCompletions.append(completion)
+        } else {
+            completion(saveResult)
+        }
+    }
+
+    func completeNextSave() {
+        saveCompletions.removeFirst()(saveResult)
     }
 }
