@@ -205,11 +205,11 @@ final class WorkoutSessionStateTests: XCTestCase {
         )
     ]
 
-    func testSkipCountdownClearsPendingKindWhenItStartsRunning() {
+    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
         let now = Date(timeIntervalSinceReferenceDate: 3_000)
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: now.addingTimeInterval(-10),
+            startedAt: nil,
             pausedElapsed: 10,
             routineStartedAt: now.addingTimeInterval(-20)
         )
@@ -222,9 +222,88 @@ final class WorkoutSessionStateTests: XCTestCase {
 
         let countdownStart = now.addingTimeInterval(5)
         XCTAssertEqual(state.countdownRemaining(at: countdownStart), 0)
+        XCTAssertEqual(state.countdownKind, .skip)
+        state.transitionExpiredCountdown(at: countdownStart)
         XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.startedAt, countdownStart)
         XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 60)
         XCTAssertTrue(state.canNavigate(planDuration: timeline.duration, now: countdownStart))
+    }
+
+    func testPausedDirectSeekPreservesPausedState() {
+        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            startedAt: nil,
+            pausedElapsed: 10,
+            routineStartedAt: now.addingTimeInterval(-20)
+        )
+
+        state.seek(to: 80, planDuration: timeline.duration, now: now)
+
+        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.pausedElapsed, 80)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now.addingTimeInterval(4)), 80)
+    }
+
+    func testInitialStartCancelAndRestartLifecycle() {
+        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        var state = WorkoutSessionState()
+
+        state.toggleRunning(now: now)
+
+        let firstStart = now.addingTimeInterval(3)
+        XCTAssertEqual(state.startedAt, firstStart)
+        XCTAssertEqual(state.routineStartedAt, firstStart)
+        XCTAssertEqual(state.countdownKind, .initial)
+        XCTAssertEqual(state.countdownRemaining(at: now), 3)
+
+        state.cancelCountdown()
+
+        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.routineStartedAt)
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.pausedElapsed, 0)
+
+        let restart = now.addingTimeInterval(10)
+        state.toggleRunning(now: restart)
+
+        XCTAssertEqual(state.startedAt, restart.addingTimeInterval(3))
+        XCTAssertEqual(state.routineStartedAt, restart.addingTimeInterval(3))
+        XCTAssertEqual(state.countdownKind, .initial)
+    }
+
+    func testCountdownExpiryReadIsPureUntilExplicitTransitionClearsKind() {
+        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let expiry = now.addingTimeInterval(5)
+        let immutableState = WorkoutSessionState(
+            startedAt: expiry,
+            countdownKind: .skip,
+            pausedElapsed: 60,
+            routineStartedAt: now.addingTimeInterval(-20)
+        )
+        var state = WorkoutSessionState(
+            startedAt: expiry,
+            countdownKind: .skip,
+            pausedElapsed: 60,
+            routineStartedAt: now.addingTimeInterval(-20)
+        )
+
+        XCTAssertEqual(immutableState.countdownRemaining(at: expiry), 0)
+        XCTAssertEqual(state.countdownRemaining(at: expiry), 0)
+        XCTAssertEqual(state.countdownKind, .skip)
+        XCTAssertEqual(state.startedAt, expiry)
+
+        state.transitionExpiredCountdown(at: expiry.addingTimeInterval(-0.1))
+
+        XCTAssertEqual(state.countdownKind, .skip)
+        XCTAssertEqual(state.startedAt, expiry)
+
+        state.transitionExpiredCountdown(at: expiry)
+
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.startedAt, expiry)
     }
 
     func testCancelSkipCountdownKeepsDestinationPaused() {

@@ -926,19 +926,18 @@ struct WorkoutSessionState: Equatable {
         return min(planDuration, pausedElapsed + max(0, activeElapsed))
     }
 
-    mutating func countdownRemaining(at date: Date) -> Int {
-        guard countdownKind != nil else { return 0 }
-
-        let remaining = WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
-        if remaining == 0 {
-            countdownKind = nil
-        }
-        return remaining
+    func countdownRemaining(at date: Date) -> Int {
+        pendingCountdownRemaining(at: date)
     }
 
     private func pendingCountdownRemaining(at date: Date) -> Int {
         guard countdownKind != nil else { return 0 }
         return WorkoutSessionPolicy.countdownRemaining(startedAt: startedAt, now: date)
+    }
+
+    mutating func transitionExpiredCountdown(at date: Date) {
+        guard countdownKind != nil, pendingCountdownRemaining(at: date) == 0 else { return }
+        countdownKind = nil
     }
 
     func canNavigate(planDuration: TimeInterval, now: Date) -> Bool {
@@ -1100,6 +1099,10 @@ struct WorkoutView: View {
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
+				}
+				.onChange(of: countdown, initial: true) { _, countdown in
+					guard countdown == 0 else { return }
+					sessionState.transitionExpiredCountdown(at: context.date)
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
