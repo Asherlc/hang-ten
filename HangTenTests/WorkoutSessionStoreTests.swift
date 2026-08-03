@@ -21,10 +21,14 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
     func testAbsentOrMalformedHistoryLoadsAsEmpty() {
         let defaults = UserDefaults(suiteName: suite)!
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [])
+        let emptyStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        emptyStore.flush()
+        XCTAssertEqual(emptyStore.sessions, [])
 
         defaults.set(Data("not JSON".utf8), forKey: "workout.sessionHistory")
-        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions, [])
+        let malformedStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        malformedStore.flush()
+        XCTAssertEqual(malformedStore.sessions, [])
     }
 
     func testInitializationReturnsBeforeHistoryReadCompletes() throws {
@@ -292,6 +296,29 @@ final class WorkoutSessionStoreTests: XCTestCase {
         XCTAssertFalse(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.contains(oldRecord))
     }
 
+    func testReappendedTrimmedIDIsNotRemovedByEarlierWrite() throws {
+        let defaults = UserDefaults(suiteName: suite)!
+        let reused = session(id: "00000000-0000-0000-0000-000000000000", recordedAt: 0)
+        let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.append(reused)
+        store.flush()
+
+        for index in 1...20 {
+            store.append(session(
+                id: String(format: "00000000-0000-0000-0000-%012d", index),
+                recordedAt: TimeInterval(index)
+            ))
+        }
+        let reappended = session(id: reused.id.uuidString, recordedAt: 21)
+        store.append(reappended)
+        store.flush()
+
+        XCTAssertTrue(try sessionFiles().contains {
+            $0.lastPathComponent == "session-\(reappended.id.uuidString).json"
+        })
+        XCTAssertEqual(WorkoutSessionStore(defaults: defaults, directory: directory).sessions.first, reappended)
+    }
+
     func testAppendRecoveryRewritesAnEarlierFailedSession() throws {
         let defaults = UserDefaults(suiteName: suite)!
         let first = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 10)
@@ -350,6 +377,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
         )
 
         let store = WorkoutSessionStore(defaults: defaults, directory: directory)
+        store.flush()
 
         XCTAssertEqual(store.sessions, [valid])
         XCTAssertNotNil(store.persistenceError)

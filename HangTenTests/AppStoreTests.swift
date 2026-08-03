@@ -39,6 +39,7 @@ final class AppStoreTests: XCTestCase {
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore
         )
+        store.flushSessionPersistenceSynchronously()
 
         XCTAssertEqual(store.sessionHistory, [newer, older])
         XCTAssertEqual(store.sessionsCompleted, 2)
@@ -54,6 +55,7 @@ final class AppStoreTests: XCTestCase {
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore
         )
+        store.flushSessionPersistenceSynchronously()
 
         store.markSessionComplete(
             PlanCatalog.metoliusTenMinute,
@@ -78,6 +80,7 @@ final class AppStoreTests: XCTestCase {
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore
         )
+        store.flushSessionPersistenceSynchronously()
 
         store.markSessionComplete(
             PlanCatalog.metoliusTenMinute,
@@ -99,6 +102,7 @@ final class AppStoreTests: XCTestCase {
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore
         )
+        store.flushSessionPersistenceSynchronously()
         let first = workoutSessionRecord(planTitle: "First", recordedAt: 20)
         let replacement = workoutSessionRecord(
             id: first.id,
@@ -249,7 +253,6 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
     func flush() {}
 }
 
-@MainActor
 private final class DeferredFlushWorkoutSessionStore: WorkoutSessionStoring {
     private(set) var sessions: [WorkoutSessionRecord] = []
     var persistenceError: String?

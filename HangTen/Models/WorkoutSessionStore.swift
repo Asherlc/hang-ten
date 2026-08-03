@@ -266,7 +266,7 @@ final class WorkoutSessionStore: WorkoutSessionStoring {
                     let data = try encoder.encode(session)
                     try data.write(to: fileURL(for: session.id), options: .atomic)
                 }
-                for id in idsToRemove {
+                for id in idsToRemove.subtracting(retainedIDs) {
                     let fileURL = fileURL(for: id)
                     guard fileManager.fileExists(atPath: fileURL.path) else { continue }
                     try fileManager.removeItem(at: fileURL)
