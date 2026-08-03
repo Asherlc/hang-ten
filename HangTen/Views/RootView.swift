@@ -916,10 +916,11 @@ struct WorkoutView: View {
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: context.date)
 				let isComplete = elapsed >= plan.duration
-				let isResting = isRestInterval(step: step, stepElapsed: stepElapsed)
-				let highlightedIDs = store.holdIDs(for: step, on: board)
-				let activeHoldIDs = countdown > 0 || isComplete || isResting ? [] : highlightedIDs
-				let activeHold = board.holds.first { activeHoldIDs.contains($0.id) }
+				let isResting = step.phase == .rest || isRestInterval(step: step, stepElapsed: stepElapsed)
+				let highlightedStep = timeline.holdPreviewStep(at: elapsed)
+				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
+				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
+				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -938,7 +939,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					} else {
@@ -949,7 +950,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					}
@@ -1034,7 +1035,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -1048,7 +1049,7 @@ struct WorkoutView: View {
 					isComplete: isComplete
 				)
 				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
 					GripDiagramView(hold: activeHold, gripType: step.gripType)
@@ -1074,7 +1075,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		VStack(spacing: 9) {
@@ -1096,7 +1097,7 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.frame(maxWidth: .infinity)
 					.frame(maxHeight: 130)
 
