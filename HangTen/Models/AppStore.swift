@@ -3,9 +3,11 @@ import Combine
 
 final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
+    private static let favoritePlanIDsKey = "favoritePlanIDs"
 
     @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
 	@Published private(set) var workoutHistory = WorkoutHistorySnapshot.empty
+	@Published private(set) var favoritePlanIDs: Set<String>
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 	@Published private(set) var hasRequestedHealthAuthorization: Bool
@@ -23,6 +25,7 @@ final class AppStore: ObservableObject {
 		let contextualHealthStore = ContextualWorkoutHealthStore(healthKitService)
 		self.healthKitService = contextualHealthStore
 		self.defaults = defaults
+		favoritePlanIDs = Set(defaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
 		let hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 		workoutHistoryService = WorkoutHistoryService(
 			healthStore: contextualHealthStore,
@@ -45,6 +48,21 @@ final class AppStore: ObservableObject {
 		)
 	}
 
+	convenience init(
+		healthKitService: any HealthWorkoutSaving,
+		userDefaults: UserDefaults
+	) {
+		self.init(
+			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+			workoutHistoryStore: LocalWorkoutHistoryStore(),
+			defaults: userDefaults
+		)
+	}
+
+	convenience init(userDefaults: UserDefaults) {
+		self.init(defaults: userDefaults)
+	}
+
 	var sessionsCompleted: Int { workoutHistory.sessionCount }
 	var lastSessionTitle: String? { workoutHistory.latestSessionTitle }
 
@@ -61,6 +79,23 @@ final class AppStore: ObservableObject {
             isCompatible(plan, with: selectedBoard)
         }
     }
+
+	var favoritePlans: [TrainingPlan] {
+		plans.filter { favoritePlanIDs.contains($0.id) }
+	}
+
+	func isFavorite(_ plan: TrainingPlan) -> Bool {
+		favoritePlanIDs.contains(plan.id)
+	}
+
+	func toggleFavorite(_ plan: TrainingPlan) {
+		if favoritePlanIDs.contains(plan.id) {
+			favoritePlanIDs.remove(plan.id)
+		} else {
+			favoritePlanIDs.insert(plan.id)
+		}
+		defaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
+	}
 
     var featuredPlan: TrainingPlan? {
         #if DEBUG
