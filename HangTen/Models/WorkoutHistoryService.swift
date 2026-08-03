@@ -10,6 +10,7 @@ final class WorkoutHistoryService {
 
     private var healthKitSyncEnabled: Bool
     private var isSynchronizing = false
+    private var needsResync = false
     private var completions: [() -> Void] = []
 
     init(
@@ -39,6 +40,8 @@ final class WorkoutHistoryService {
         planTitle: String,
         startDate: Date,
         endDate: Date,
+        activityContext: PendingWorkoutActivityContext? = nil,
+        shouldUploadToHealthKit: Bool = true,
         completion: @escaping () -> Void
     ) {
         synchronizationQueue.async { [weak self] in
@@ -51,10 +54,15 @@ final class WorkoutHistoryService {
                     startDate: startDate,
                     endDate: endDate,
                     healthUploadAttempted: false,
-                    healthWorkoutUUID: nil
+                    healthWorkoutUUID: nil,
+                    activityContext: activityContext,
+                    shouldUploadToHealthKit: shouldUploadToHealthKit
                 )
             )
             persistence.replace(records)
+            if isSynchronizing {
+                needsResync = true
+            }
             enqueueRefresh(completion: completion)
         }
     }
@@ -116,7 +124,9 @@ final class WorkoutHistoryService {
         }
 
         guard let index = records.firstIndex(where: {
-            $0.healthWorkoutUUID == nil && !attemptedRecordIDs.contains($0.id)
+            $0.shouldUploadToHealthKit &&
+                $0.healthWorkoutUUID == nil &&
+                !attemptedRecordIDs.contains($0.id)
         }) else {
             refetchAfterUploads()
             return
@@ -127,12 +137,7 @@ final class WorkoutHistoryService {
         persistence.replace(uploadRecords)
         let record = uploadRecords[index]
 
-        healthStore.saveCompletedWorkout(
-            id: record.id,
-            title: record.planTitle,
-            startDate: record.startDate,
-            endDate: record.endDate
-        ) { [weak self] result in
+        let uploadCompletion: (Result<UUID, Error>) -> Void = { [weak self] result in
             self?.synchronizationQueue.async {
                 guard let self else { return }
                 var updatedRecords = self.persistence.load()
@@ -150,6 +155,26 @@ final class WorkoutHistoryService {
                     attemptedRecordIDs: attemptedRecordIDs.union([record.id])
                 )
             }
+        }
+        if let activityContext = record.activityContext {
+            healthStore.saveCompletedWorkout(
+                id: record.id,
+                title: record.planTitle,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                boardID: activityContext.boardID,
+                boardName: activityContext.boardName,
+                activitySegments: activityContext.activitySegments,
+                completion: uploadCompletion
+            )
+        } else {
+            healthStore.saveCompletedWorkout(
+                id: record.id,
+                title: record.planTitle,
+                startDate: record.startDate,
+                endDate: record.endDate,
+                completion: uploadCompletion
+            )
         }
     }
 
@@ -218,6 +243,15 @@ final class WorkoutHistoryService {
 
     private func finish(with snapshot: WorkoutHistorySnapshot) {
         self.snapshot = snapshot
+        guard !needsResync else {
+            needsResync = false
+            lastError = nil
+            if healthKitSyncEnabled {
+                self.snapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
+            }
+            synchronize()
+            return
+        }
         isSynchronizing = false
         let completions = self.completions
         self.completions.removeAll()

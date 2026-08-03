@@ -102,6 +102,26 @@ final class WorkoutHistoryTests: XCTestCase {
         )
     }
 
+    func testLegacyPendingWorkoutRecordPayloadDecodesWithoutActivityContext() throws {
+        let data = Data("""
+        [{
+          "id": "00000000-0000-0000-0000-000000000123",
+          "planTitle": "Legacy Plan",
+          "startDate": 700000000,
+          "endDate": 700000600,
+          "healthUploadAttempted": false,
+          "healthWorkoutUUID": null
+        }]
+        """.utf8)
+
+        let records = try JSONDecoder().decode([PendingWorkoutRecord].self, from: data)
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].planTitle, "Legacy Plan")
+        XCTAssertNil(records[0].activityContext)
+        XCTAssertTrue(records[0].shouldUploadToHealthKit)
+    }
+
     func testSnapshotSortsDeduplicatesAndAddsUnmatchedLocalRecords() {
         let newerID = UUID(uuidString: "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD")!
         let newer = healthRecord.with(

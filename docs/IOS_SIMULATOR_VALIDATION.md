@@ -246,8 +246,9 @@ routine change, preview every distinct hold target and finger cue.
   before release.
 - For non-interactive screenshot validation, combine
   `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_REQUEST_HEALTH=1`. The latter
-  invokes the same authorization method as the visible button and exists only
-  in DEBUG; production permission requests remain user-initiated.
+  must not request authorization on appearance; Health authorization is
+  intentionally user-triggered only through the visible Connect Apple Health
+  action.
 
 See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 

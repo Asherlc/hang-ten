@@ -12,7 +12,7 @@ final class AppStore: ObservableObject {
 	@Published private(set) var healthAuthorizationError: String?
 	@Published private(set) var hasRequestedHealthAuthorization: Bool
 
-	private let healthKitService: ContextualWorkoutHealthStore
+	private let healthKitService: any WorkoutHealthStore
 	private let workoutHistoryService: WorkoutHistoryService
 	private let defaults: UserDefaults
 	private var preservesCompletionError = false
@@ -22,17 +22,16 @@ final class AppStore: ObservableObject {
 		workoutHistoryStore: any WorkoutHistoryPersistence = LocalWorkoutHistoryStore(),
 		defaults: UserDefaults = .standard
 	) {
-		let contextualHealthStore = ContextualWorkoutHealthStore(healthKitService)
-		self.healthKitService = contextualHealthStore
+		self.healthKitService = healthKitService
 		self.defaults = defaults
 		favoritePlanIDs = Set(defaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
 		let hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 		workoutHistoryService = WorkoutHistoryService(
-			healthStore: contextualHealthStore,
+			healthStore: healthKitService,
 			persistence: workoutHistoryStore,
 			healthKitSyncEnabled: hasRequestedHealthAuthorization
 		)
-		healthAuthorizationState = contextualHealthStore.authorizationState
+		healthAuthorizationState = healthKitService.authorizationState
 		self.hasRequestedHealthAuthorization = hasRequestedHealthAuthorization
 		workoutHistory = workoutHistoryService.snapshot
 	}
@@ -156,6 +155,7 @@ final class AppStore: ObservableObject {
 		preservesCompletionError = false
 
 		let recordingErrorMessage: String?
+		let activityContext: PendingWorkoutActivityContext?
         do {
             let activitySegments = try WorkoutActivityRecorder().segments(
                 for: plan,
@@ -163,17 +163,17 @@ final class AppStore: ObservableObject {
                 stopwatchDurations: stopwatchDurations
             )
 			if hasRequestedHealthAuthorization {
-				healthKitService.recordActivityContext(
-					planTitle: plan.title,
-					startDate: startDate,
-					endDate: endDate,
+				activityContext = PendingWorkoutActivityContext(
 					boardID: board.id,
 					boardName: board.name,
 					activitySegments: activitySegments
 				)
+			} else {
+				activityContext = nil
 			}
 			recordingErrorMessage = nil
         } catch {
+			activityContext = nil
 			recordingErrorMessage = "Session logged in Hang Ten, but \(error.localizedDescription)"
 			healthAuthorizationError = recordingErrorMessage
         }
@@ -187,7 +187,9 @@ final class AppStore: ObservableObject {
 		workoutHistoryService.recordCompletion(
 			planTitle: plan.title,
 			startDate: startDate,
-			endDate: endDate
+			endDate: endDate,
+			activityContext: activityContext,
+			shouldUploadToHealthKit: recordingErrorMessage == nil
 		) { [weak self] in
 			self?.publishWorkoutHistory(
 				errorContext: .completion,
@@ -273,119 +275,6 @@ final class AppStore: ObservableObject {
 	private enum HistoryErrorContext {
 		case completion
 		case refresh
-	}
-}
-
-private final class ContextualWorkoutHealthStore: WorkoutHealthStore {
-	private struct ActivityContext {
-		let planTitle: String
-		let startDate: Date
-		let endDate: Date
-		let boardID: String
-		let boardName: String
-		let activitySegments: [RecordedActivitySegment]
-	}
-
-	private let base: any WorkoutHealthStore
-	private let activityContextsLock = NSLock()
-	private var activityContexts: [ActivityContext] = []
-
-	init(_ base: any WorkoutHealthStore) {
-		self.base = base
-	}
-
-	var isHealthDataAvailable: Bool {
-		base.isHealthDataAvailable
-	}
-
-	var authorizationState: HealthAuthorizationState {
-		base.authorizationState
-	}
-
-	func requestAuthorization(
-		completion: @escaping (HealthAuthorizationState, Error?) -> Void
-	) {
-		base.requestAuthorization(completion: completion)
-	}
-
-	func fetchHangTenWorkouts(
-		completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
-	) {
-		base.fetchHangTenWorkouts(completion: completion)
-	}
-
-	func recordActivityContext(
-		planTitle: String,
-		startDate: Date,
-		endDate: Date,
-		boardID: String,
-		boardName: String,
-		activitySegments: [RecordedActivitySegment]
-	) {
-		activityContextsLock.lock()
-		defer { activityContextsLock.unlock() }
-		activityContexts.append(
-			ActivityContext(
-				planTitle: planTitle,
-				startDate: startDate,
-				endDate: endDate,
-				boardID: boardID,
-				boardName: boardName,
-				activitySegments: activitySegments
-			)
-		)
-	}
-
-	func saveCompletedWorkout(
-		id: UUID,
-		title: String,
-		startDate: Date,
-		endDate: Date,
-		completion: @escaping (Result<UUID, Error>) -> Void
-	) {
-		let context = takeActivityContext(
-			planTitle: title,
-			startDate: startDate,
-			endDate: endDate
-		)
-		guard let context else {
-			base.saveCompletedWorkout(
-				id: id,
-				title: title,
-				startDate: startDate,
-				endDate: endDate,
-				completion: completion
-			)
-			return
-		}
-
-		base.saveCompletedWorkout(
-			id: id,
-			title: title,
-			startDate: startDate,
-			endDate: endDate,
-			boardID: context.boardID,
-			boardName: context.boardName,
-			activitySegments: context.activitySegments,
-			completion: completion
-		)
-	}
-
-	private func takeActivityContext(
-		planTitle: String,
-		startDate: Date,
-		endDate: Date
-	) -> ActivityContext? {
-		activityContextsLock.lock()
-		defer { activityContextsLock.unlock() }
-		guard let contextIndex = activityContexts.firstIndex(where: {
-			$0.planTitle == planTitle &&
-				$0.startDate == startDate &&
-				$0.endDate == endDate
-		}) else {
-			return nil
-		}
-		return activityContexts.remove(at: contextIndex)
 	}
 }
 

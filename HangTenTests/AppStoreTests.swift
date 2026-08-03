@@ -341,6 +341,50 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
+    func testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = PlanCatalog.all.first { plan in
+            plan.steps.contains { step in
+                step.segments.contains { $0.timing == .stopwatch }
+            }
+        }!
+        let stopwatchStep = plan.steps.first { step in
+            step.segments.contains { $0.timing == .stopwatch }
+        }!
+        let stopwatchIndex = stopwatchStep.segments.firstIndex { $0.timing == .stopwatch }!
+        let invalidDuration = WorkoutActivitySegmentKey(
+            stepID: stopwatchStep.id,
+            segmentIndex: stopwatchIndex
+        )
+
+        appStore.markSessionComplete(
+            plan,
+            board: appStore.board(for: plan),
+            stopwatchDurations: [invalidDuration: -.infinity],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+        )
+        waitForHistory(in: appStore)
+
+        XCTAssertEqual(appStore.workoutHistory.sessionCount, 1)
+        XCTAssertEqual(historyStore.load().count, 1)
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session logged in Hang Ten, but Hang Ten could not use the recorded workout duration."
+        )
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+    }
+
     func testCoalescedRefreshPreservesCompletionErrorUntilIndependentRefresh() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

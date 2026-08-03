@@ -14,6 +14,63 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
     let endDate: Date
     var healthUploadAttempted: Bool
     var healthWorkoutUUID: UUID?
+    var activityContext: PendingWorkoutActivityContext?
+    var shouldUploadToHealthKit: Bool
+
+    init(
+        id: UUID,
+        planTitle: String,
+        startDate: Date,
+        endDate: Date,
+        healthUploadAttempted: Bool,
+        healthWorkoutUUID: UUID?,
+        activityContext: PendingWorkoutActivityContext? = nil,
+        shouldUploadToHealthKit: Bool = true
+    ) {
+        self.id = id
+        self.planTitle = planTitle
+        self.startDate = startDate
+        self.endDate = endDate
+        self.healthUploadAttempted = healthUploadAttempted
+        self.healthWorkoutUUID = healthWorkoutUUID
+        self.activityContext = activityContext
+        self.shouldUploadToHealthKit = shouldUploadToHealthKit
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case planTitle
+        case startDate
+        case endDate
+        case healthUploadAttempted
+        case healthWorkoutUUID
+        case activityContext
+        case shouldUploadToHealthKit
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        planTitle = try container.decode(String.self, forKey: .planTitle)
+        startDate = try container.decode(Date.self, forKey: .startDate)
+        endDate = try container.decode(Date.self, forKey: .endDate)
+        healthUploadAttempted = try container.decode(Bool.self, forKey: .healthUploadAttempted)
+        healthWorkoutUUID = try container.decodeIfPresent(UUID.self, forKey: .healthWorkoutUUID)
+        activityContext = try container.decodeIfPresent(
+            PendingWorkoutActivityContext.self,
+            forKey: .activityContext
+        )
+        shouldUploadToHealthKit = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .shouldUploadToHealthKit
+        ) ?? true
+    }
+}
+
+struct PendingWorkoutActivityContext: Codable, Equatable {
+    let boardID: String
+    let boardName: String
+    let activitySegments: [RecordedActivitySegment]
 }
 
 struct HealthWorkoutRecord: Equatable, Identifiable {

@@ -95,6 +95,63 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertFalse(persistence.load()[0].healthUploadAttempted)
     }
 
+    func testContextualCompletionPersistsContextAndRetriesItAfterFailedSaveAndRelaunch() {
+        let persistence = FakeWorkoutHistoryPersistence()
+        let healthStore = FakeWorkoutHealthStore(saveResult: .failure(TestError.failed))
+        let activityContext = workoutActivityContext()
+        let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
+
+        let completion = expectation(description: "record completion")
+        service.recordCompletion(
+            planTitle: "Context Plan",
+            startDate: startDate,
+            endDate: endDate,
+            activityContext: activityContext
+        ) {
+            completion.fulfill()
+        }
+        wait(for: [completion], timeout: 1)
+
+        XCTAssertEqual(healthStore.savedActivityContexts, [activityContext])
+        XCTAssertEqual(persistence.load().count, 1)
+        XCTAssertEqual(persistence.load()[0].activityContext, activityContext)
+        XCTAssertFalse(persistence.load()[0].healthUploadAttempted)
+
+        healthStore.saveResult = .success(UUID())
+        let relaunchedStore = FakeWorkoutHealthStore()
+        let relaunchedService = WorkoutHistoryService(
+            healthStore: relaunchedStore,
+            persistence: persistence
+        )
+
+        refresh(relaunchedService)
+
+        XCTAssertEqual(relaunchedStore.savedActivityContexts, [activityContext])
+    }
+
+    func testFailedContextualSaveRetainsPendingContextUntilHealthKitReconciliation() {
+        let healthWorkoutUUID = UUID()
+        let activityContext = workoutActivityContext()
+        let local = pendingRecord(title: "Reconcile Plan", activityContext: activityContext)
+        let persistence = FakeWorkoutHistoryPersistence(records: [local])
+        let healthStore = FakeWorkoutHealthStore(saveResult: .failure(TestError.failed))
+        let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
+
+        refresh(service)
+
+        XCTAssertEqual(persistence.load().count, 1)
+        XCTAssertEqual(persistence.load()[0].activityContext, activityContext)
+
+        healthStore.saveResult = .success(healthWorkoutUUID)
+        healthStore.fetchResult = .success([
+            workoutRecord(title: "Reconcile Plan", id: healthWorkoutUUID, sessionID: local.id)
+        ])
+
+        refresh(service)
+
+        XCTAssertEqual(persistence.load(), [])
+    }
+
     func testSyncRetriesPersistedUploadAttemptWithoutHealthWorkoutUUID() {
         let local = pendingRecord(title: "Interrupted Upload", uploadAttempted: true)
         let persistence = FakeWorkoutHistoryPersistence(records: [local])
@@ -189,6 +246,48 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertEqual(persistence.load().map(\.planTitle), ["Initial Plan", "Queued Plan"])
     }
 
+    func testCompletionQueuedDuringFinalRefetchTriggersSecondSyncBeforeCompletionCallbacks() {
+        let persistence = FakeWorkoutHistoryPersistence()
+        let healthStore = FakeWorkoutHealthStore(deferFetch: true)
+        let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
+        var fetchCountAtQueuedCompletion: Int?
+        let refreshCompletion = expectation(description: "refresh completion")
+        let recordCompletion = expectation(description: "record completion")
+
+        service.refresh {
+            refreshCompletion.fulfill()
+        }
+        waitUntil({ healthStore.pendingFetchCount == 1 })
+        healthStore.completeNextFetch()
+        waitUntil({ healthStore.pendingFetchCount == 1 && healthStore.fetchCallCount == 2 })
+
+        service.recordCompletion(
+            planTitle: "Final Refetch Plan",
+            startDate: startDate,
+            endDate: endDate
+        ) {
+            fetchCountAtQueuedCompletion = healthStore.fetchCallCount
+            recordCompletion.fulfill()
+        }
+        waitForPersistence(persistence, count: 1)
+
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+        healthStore.completeNextFetch()
+        waitUntil({ healthStore.pendingFetchCount == 1 && healthStore.fetchCallCount == 3 })
+        XCTAssertNil(fetchCountAtQueuedCompletion)
+
+        healthStore.completeNextFetch()
+        waitUntil({ healthStore.pendingFetchCount == 1 && healthStore.saveCallCount == 1 })
+        XCTAssertNil(fetchCountAtQueuedCompletion)
+
+        healthStore.completeNextFetch()
+        wait(for: [refreshCompletion, recordCompletion], timeout: 1)
+
+        XCTAssertEqual(fetchCountAtQueuedCompletion, 4)
+        XCTAssertEqual(healthStore.saveCallCount, 1)
+        XCTAssertEqual(service.snapshot.entries.map(\.planTitle), ["Final Refetch Plan"])
+    }
+
     func testLegacyHealthWorkoutReconcilesLocalRecordByExactDatesAndTitle() {
         let local = pendingRecord(title: "Legacy Plan", uploadAttempted: true)
         let healthRecord = workoutRecord(title: "Legacy Plan", sessionID: nil)
@@ -278,9 +377,22 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertEqual(persistence.load().count, count, file: file, line: line)
     }
 
+    private func waitUntil(
+        _ condition: @escaping () -> Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let deadline = Date().addingTimeInterval(1)
+        while !condition(), Date() < deadline {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertTrue(condition(), file: file, line: line)
+    }
+
     private func pendingRecord(
         title: String,
-        uploadAttempted: Bool = false
+        uploadAttempted: Bool = false,
+        activityContext: PendingWorkoutActivityContext? = nil
     ) -> PendingWorkoutRecord {
         PendingWorkoutRecord(
             id: UUID(),
@@ -288,22 +400,42 @@ final class WorkoutHistoryServiceTests: XCTestCase {
             startDate: startDate,
             endDate: endDate,
             healthUploadAttempted: uploadAttempted,
-            healthWorkoutUUID: nil
+            healthWorkoutUUID: nil,
+            activityContext: activityContext
         )
     }
 
     private func workoutRecord(
         title: String,
+        id: UUID = UUID(),
         sessionID: UUID? = UUID()
     ) -> HealthWorkoutRecord {
         HealthWorkoutRecord(
-            id: UUID(),
+            id: id,
             activityTypeRawValue: HKWorkoutActivityType.functionalStrengthTraining.rawValue,
             brandName: HangTenHealthMetadata.brandName,
             planTitle: title,
             sessionID: sessionID,
             startDate: startDate,
             endDate: endDate
+        )
+    }
+
+    private func workoutActivityContext() -> PendingWorkoutActivityContext {
+        PendingWorkoutActivityContext(
+            boardID: "board-a",
+            boardName: "Board A",
+            activitySegments: [
+                RecordedActivitySegment(
+                    stepID: "step-a",
+                    stepNumber: 1,
+                    kind: .work,
+                    holdIDs: ["a1", "a2"],
+                    holdType: "edge",
+                    sizeMillimeters: 20,
+                    durationSeconds: 7
+                )
+            ]
         )
     }
 }
@@ -338,8 +470,11 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     var deferFetch: Bool
     var deferSave: Bool
     private(set) var saveCallCount = 0
+    private(set) var fetchCallCount = 0
+    var pendingFetchCount: Int { fetchCompletions.count }
     private var fetchCompletions: [(Result<[HealthWorkoutRecord], Error>) -> Void] = []
     private var saveCompletions: [(Result<UUID, Error>) -> Void] = []
+    private(set) var savedActivityContexts: [PendingWorkoutActivityContext?] = []
 
     init(
         fetchResult: Result<[HealthWorkoutRecord], Error> = .success([]),
@@ -362,6 +497,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     func fetchHangTenWorkouts(
         completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
     ) {
+        fetchCallCount += 1
         onFetch?()
         if deferFetch {
             fetchCompletions.append(completion)
@@ -387,6 +523,33 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     ) {
         saveCallCount += 1
         onSave?(id, title, startDate, endDate)
+        savedActivityContexts.append(nil)
+        if deferSave {
+            saveCompletions.append(completion)
+        } else {
+            completion(saveResult)
+        }
+    }
+
+    func saveCompletedWorkout(
+        id: UUID,
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        boardID: String,
+        boardName: String,
+        activitySegments: [RecordedActivitySegment],
+        completion: @escaping (Result<UUID, Error>) -> Void
+    ) {
+        saveCallCount += 1
+        onSave?(id, title, startDate, endDate)
+        savedActivityContexts.append(
+            PendingWorkoutActivityContext(
+                boardID: boardID,
+                boardName: boardName,
+                activitySegments: activitySegments
+            )
+        )
         if deferSave {
             saveCompletions.append(completion)
         } else {
