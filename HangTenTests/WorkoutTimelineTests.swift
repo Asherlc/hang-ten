@@ -101,6 +101,85 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 }
 
+final class WorkoutClockTests: XCTestCase {
+    func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 0.4, accuracy: 0.000_1)
+
+        now += 1.3
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+    }
+
+    func testInitialCountdownShowsThreeTwoOneBeforeElapsedBegins() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 3)
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 0)
+    }
+
+    func testSeekedClockShowsANewInitialCountdownBeforeElapsedResumes() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.seek(to: 60)
+        clock.start(initialCountdown: 3)
+
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1.1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 60.1, accuracy: 0.000_1)
+    }
+
+    func testPauseAndResumePreserveElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1.7
+        clock.pause()
+        now += 20
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 2.1, accuracy: 0.000_1)
+    }
+
+    func testRunningSeekRebasesTheActiveAnchorWithoutDoubleCounting() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1
+        clock.seek(to: 10)
+        now += 0.4
+
+        XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
+    }
+}
+
 final class WorkoutSessionPolicyTests: XCTestCase {
     func testCountdownDurationsKeepInitialStartAtThreeAndSkipStartAtFive() {
         let now = Date(timeIntervalSinceReferenceDate: 2_000)
@@ -155,18 +234,137 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    func testCompletionIntervalPreservesSessionStartAndNeverEndsAfterLogTime() {
+    func testCompletionIntervalMapsExplicitActiveElapsedTimeOntoAbsoluteStartDate() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
-        let loggedAt = Date(timeIntervalSinceReferenceDate: 1_120)
 
         let interval = WorkoutSessionPolicy.completedWorkoutInterval(
             sessionStartedAt: sessionStart,
             planDuration: 600,
-            loggedAt: loggedAt
+            elapsed: 24.5
         )
 
         XCTAssertEqual(interval.start, sessionStart)
-        XCTAssertEqual(interval.end, loggedAt)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
+    }
+
+    func testCompletionIntervalExcludesPausedGapFromClockElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        clock.start(initialCountdown: 0)
+        now += 12.5
+        clock.pause()
+        now += 3_600
+        clock.start(initialCountdown: 0)
+        now += 7.5
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 600,
+            elapsed: clock.elapsed
+        )
+
+        XCTAssertEqual(interval.duration, 20, accuracy: 0.000_1)
+    }
+
+    func testCompletionIntervalCapsExplicitActiveElapsedTimeAtPlanDuration() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 60,
+            elapsed: 80
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_060))
+    }
+}
+
+final class WorkoutAudioCuePolicyTests: XCTestCase {
+    private let stepID = "f80-set-2-rep-3"
+
+    func testInitialCountdownReturnsOnlyNumericValues() {
+        for countdown in [3, 2, 1] {
+            let moment = WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: countdown,
+                intervalSecondsRemaining: 60,
+                isComplete: false
+            )
+
+            XCTAssertEqual(
+                moment,
+                WorkoutAudioMoment(
+                    key: "initial-\(countdown)",
+                    phrase: "\(countdown)"
+                )
+            )
+        }
+    }
+
+    func testIntervalCountdownReturnsNumericValuesWithStableSegmentKeys() {
+        for secondsRemaining in [3, 2, 1] {
+            let moment = WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 0,
+                intervalSecondsRemaining: secondsRemaining,
+                isComplete: false
+            )
+
+            XCTAssertEqual(
+                moment,
+                WorkoutAudioMoment(
+                    key: "\(stepID)-active-\(secondsRemaining)",
+                    phrase: "\(secondsRemaining)"
+                )
+            )
+        }
+    }
+
+    func testSegmentStartAndNormalIntervalReturnNoCue() {
+        XCTAssertNil(
+            WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "rest",
+                initialCountdown: 0,
+                intervalSecondsRemaining: 60,
+                isComplete: false
+            )
+        )
+    }
+
+    func testCompletionReturnsNoCueEvenDuringTheFinalThreeSeconds() {
+        XCTAssertNil(
+            WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 0,
+                intervalSecondsRemaining: 3,
+                isComplete: true
+            )
+        )
+    }
+
+    func testShortIntervalReturnsOnlyTheApplicableNumber() {
+        let moment = WorkoutAudioCuePolicy.moment(
+            stepID: stepID,
+            segmentName: "rest",
+            initialCountdown: 0,
+            intervalSecondsRemaining: 2,
+            isComplete: false
+        )
+
+        XCTAssertEqual(
+            moment,
+            WorkoutAudioMoment(
+                key: "\(stepID)-rest-2",
+                phrase: "2"
+            )
+        )
     }
 }
 

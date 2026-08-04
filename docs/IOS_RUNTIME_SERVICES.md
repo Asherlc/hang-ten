@@ -6,11 +6,17 @@ changing any of those systems.
 
 ## Workout clock and spoken cues
 
-`WorkoutView` uses one elapsed session clock. `TimelineView` samples it four
-times per second, while each `WorkoutStep.duration` determines the active step.
-Pause stores elapsed time; resume starts from that value. A new routine starts
-three seconds in the future, which makes the initial 3-2-1 countdown part of
-the same clock instead of a second timer.
+`WorkoutView` uses one elapsed session clock backed by monotonic system uptime.
+`TimelineView` samples it four times per second but is not the time source,
+while each `WorkoutStep.duration` determines the active step. Pause stores
+elapsed time; resume starts from that value. A new routine starts three seconds
+in the future, which makes the initial 3-2-1 countdown part of the same clock
+instead of a second timer.
+
+Stopwatch start, pause, display, and finalization use that same monotonic uptime
+source. `Date` remains only the absolute start timestamp and is paired with the
+monotonic elapsed duration to derive the completed HealthKit interval, so wall
+clock adjustments cannot change observed activity durations.
 
 While a workout is visible, Hang Ten disables the idle timer. If the scene
 becomes inactive because the device locks or the athlete switches apps, the
@@ -71,6 +77,50 @@ without a countdown.
 Every seek stops the active audio utterance and re-anchors audio to the new
 elapsed position. The normal cue for the selected step can therefore play once
 without a stale cue continuing from the prior step.
+
+## Completed activity recording
+
+The completion handoff records the exact `TrainingBoard` selected for the
+session. `WorkoutView` passes that board together with the plan and finalized
+stopwatch values to `AppStore`; the recorder does not substitute a default
+board or infer one from the plan. Each work target is resolved against that
+board through the same semantic, ID, and fallback mapping used by the board
+highlights. Recorded work therefore carries the resolved physical hold IDs,
+the hold kind (`edge`, `pocket`, `sloper`, or `jug`), and the board's explicit
+`sizeMillimeters` value when present. Physical size is never parsed from a
+display name. Matching left/right holds are grouped only within their source
+segment; separate repetitions remain separate records.
+
+The recorder preserves the routine's ordered `RecordedActivitySegment` values.
+Work and rest are separate segments: rest carries its step identity and
+duration but no hold metadata. A fixed work duration is the prescribed active
+duration and excludes rest. A stopwatch work duration is the athlete's
+observed active seconds, including any start/stop and pause/resume accumulation.
+If a stopwatch was never started, its duration is omitted. Genuinely untimed
+work also omits duration; the app never invents one from the surrounding cycle.
+
+Stopwatch activities expose a count-up control in both portrait and landscape.
+The control shows `00:00` before start, has explicit Start, Stop, and Resume
+states, and does not alter the enclosing workout clock. A normal workout pause
+or scene/background interruption pauses a running stopwatch without finalizing
+it. The current stopwatch is finalized when the athlete crosses into rest,
+navigates to another step, skips a step, completes/logs the session, or
+dismisses the workout. A stopped value remains stable when revisiting the step.
+
+The completed `HKWorkout` keeps the existing title, functional-strength
+activity type, and session date interval. Its custom metadata includes
+`HangTen.PlanName`, `HangTen.BoardID`, `HangTen.BoardName`, and
+`HangTen.ActivitySegments`. The last value is versioned JSON with
+`{"version":1,"segments":[...]}`; optional fields are omitted rather than
+encoded as fabricated values. The metadata is attached during the existing
+`HKWorkoutBuilder` sequence. There is no local activity database: the
+completed HealthKit workout metadata is the activity source of record. A
+metadata or HealthKit write failure keeps the local completion and surfaces the
+existing Health error state.
+
+The completed “Log session” path records the activity. The destructive “End
+session” path still dismisses without marking the routine complete and without
+writing an Apple Health workout.
 
 ## Portrait and landscape
 
@@ -150,3 +200,7 @@ records it.
 - Rotate during countdown, running, and paused states.
 - Lock the simulator or background the app during a session; verify that it
   pauses and does not skip an audio transition.
+- For a stopwatch step, verify the `workout.stopwatch` value is `00:00` before
+  start, `workout.stopwatch.toggle` is labeled “Start stopwatch,” the control
+  changes to “Stop stopwatch” while running, and the stopped observed value is
+  retained.

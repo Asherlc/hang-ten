@@ -83,7 +83,7 @@ struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     homeHeader
-                    featuredPlan
+                    favoritesSection
                     boardCard
                     quickStats
                 }
@@ -94,20 +94,24 @@ struct HomeView: View {
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = store.featuredPlan {
+                if let plan = reviewPlan {
                     PlanDetailView(plan: plan)
                 } else {
                     noCompatiblePlan
                 }
             }
 			.navigationDestination(isPresented: $showsWorkoutReview) {
-				if let plan = store.featuredPlan {
+				if let plan = reviewPlan {
 					WorkoutView(plan: plan)
 				} else {
 					noCompatiblePlan
 				}
 			}
         }
+    }
+
+    private var reviewPlan: TrainingPlan? {
+        store.featuredPlan
     }
 
     private var homeHeader: some View {
@@ -136,56 +140,31 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    private var featuredPlan: some View {
-        if let plan = store.featuredPlan {
-            NavigationLink(destination: PlanDetailView(plan: plan)) {
+    private var favoritesSection: some View {
+        if store.favoritePlans.isEmpty {
             VStack(alignment: .leading, spacing: 17) {
-                HStack {
-                    Pill(title: "NEXT UP", tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.28))
-                    Pill(
-                        title: plan.provenance.label.uppercased(),
-                        tint: Color.hangGreenDark,
-                        fill: Color.hangGreen.opacity(0.18)
-                    )
-                    Spacer()
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(plan.title)
-                        .font(.system(size: 23, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(plan.subtitle)
-                        .font(.system(size: 14, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                HStack(spacing: 8) {
-                    Label(plan.durationLabel, systemImage: "timer")
-                    Text("·")
-                    Label(plan.level, systemImage: "chart.bar")
-                }
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangInk.opacity(0.72))
-
-                HStack {
-                    Text("View session")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                    Spacer()
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 14, weight: .bold))
-                }
-                .foregroundStyle(Color.hangInk)
-                .padding(.top, 2)
+                SectionLabel(title: "Favorites")
+                Text("Favorite routines from Plans to keep them handy here.")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("Your favorites will appear here when they are compatible with your selected board.")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
             }
             .hangCard()
-            }
-            .buttonStyle(.plain)
         } else {
-            noCompatiblePlan
+            VStack(alignment: .leading, spacing: 12) {
+                SectionLabel(title: "Favorites")
+                ForEach(store.favoritePlans) { plan in
+                    FavoritePlanCard(
+                        plan: plan,
+                        board: store.board(for: plan),
+                        isFavorite: store.isFavorite(plan)
+                    ) {
+                        store.toggleFavorite(plan)
+                    }
+                }
+            }
         }
     }
 
@@ -346,10 +325,13 @@ struct PlansView: View {
                         }
                     } else {
                         ForEach(filteredPlans) { plan in
-                            NavigationLink(destination: PlanDetailView(plan: plan)) {
-                                PlanCard(plan: plan, board: store.board(for: plan))
+                            FavoritePlanCard(
+                                plan: plan,
+                                board: store.board(for: plan),
+                                isFavorite: store.isFavorite(plan)
+                            ) {
+                                store.toggleFavorite(plan)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
 
@@ -638,6 +620,43 @@ private struct PlanCard: View {
     }
 }
 
+private struct FavoritePlanCard: View {
+    let plan: TrainingPlan
+    let board: TrainingBoard
+    let isFavorite: Bool
+    let onToggle: () -> Void
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            NavigationLink(destination: PlanDetailView(plan: plan)) {
+                PlanCard(plan: plan, board: board)
+            }
+            .buttonStyle(.plain)
+
+            Button(action: onToggle) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        isFavorite ? Color.hangGreen.opacity(0.28) : Color.hangCream,
+                        in: Circle()
+                    )
+                    .overlay {
+                        Circle()
+                            .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+                    }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isFavorite
+                    ? "Remove \(plan.title) from favorites"
+                    : "Add \(plan.title) to favorites"
+            )
+        }
+    }
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     let plan: TrainingPlan
@@ -855,7 +874,7 @@ private struct StepRow: View {
     }
 }
 
-private struct WorkoutAudioMoment: Hashable {
+struct WorkoutAudioMoment: Hashable {
 	let key: String
 	let phrase: String
 }
@@ -863,6 +882,32 @@ private struct WorkoutAudioMoment: Hashable {
 enum WorkoutCountdownKind: Equatable {
     case initial
     case skip
+}
+
+enum WorkoutAudioCuePolicy {
+	static func moment(
+		stepID: String,
+		segmentName: String,
+		initialCountdown: Int,
+		intervalSecondsRemaining: Int,
+		isComplete: Bool
+	) -> WorkoutAudioMoment? {
+		if (1...3).contains(initialCountdown) {
+			return WorkoutAudioMoment(
+				key: "initial-\(initialCountdown)",
+				phrase: "\(initialCountdown)"
+			)
+		}
+
+		guard !isComplete, (1...3).contains(intervalSecondsRemaining) else {
+			return nil
+		}
+
+		return WorkoutAudioMoment(
+			key: "\(stepID)-\(segmentName)-\(intervalSecondsRemaining)",
+			phrase: "\(intervalSecondsRemaining)"
+		)
+	}
 }
 
 enum WorkoutSessionPolicy {
@@ -894,11 +939,12 @@ enum WorkoutSessionPolicy {
     static func completedWorkoutInterval(
         sessionStartedAt: Date,
         planDuration: TimeInterval,
-        loggedAt: Date
+        elapsed: TimeInterval
     ) -> DateInterval {
-        DateInterval(
+        let activeElapsed = min(planDuration, max(0, elapsed))
+        return DateInterval(
             start: sessionStartedAt,
-            end: min(sessionStartedAt.addingTimeInterval(planDuration), loggedAt)
+            end: sessionStartedAt.addingTimeInterval(activeElapsed)
         )
     }
 }
@@ -1025,6 +1071,28 @@ struct WorkoutSessionState: Equatable {
     }
 }
 
+enum WorkoutStopwatchLifecycle {
+    static func finalizeStopwatches(
+        for stepID: String,
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        for key in stopwatches.keys where key.stepID == stepID {
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+        }
+    }
+
+    static func finalizeStopwatch(
+        for key: WorkoutActivitySegmentKey,
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) {
+        guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+        stopwatch.stop(at: monotonicTime)
+        stopwatches[key] = stopwatch
+    }
+}
+
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -1039,6 +1107,7 @@ struct WorkoutView: View {
     @State private var showsStepPicker = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
+    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -1051,6 +1120,7 @@ struct WorkoutView: View {
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: context.date)
 				let step = step(at: elapsed)
 				let stepElapsed = elapsedInStep(at: elapsed)
@@ -1075,6 +1145,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -1086,6 +1157,7 @@ struct WorkoutView: View {
 							step: step,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
+							monotonicTime: monotonicTime,
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
@@ -1103,6 +1175,17 @@ struct WorkoutView: View {
 				.onChange(of: countdown, initial: true) { _, countdown in
 					guard countdown == 0 else { return }
 					sessionState.transitionExpiredCountdown(at: context.date)
+				}
+				.onChange(of: isComplete, initial: true) { _, complete in
+					guard complete else { return }
+					finalizeAllStopwatches(at: monotonicTime)
+				}
+				.onChange(of: step.id) { previousStepID, _ in
+					finalizeStopwatches(for: previousStepID, at: monotonicTime)
+				}
+				.onChange(of: isResting) { wasResting, resting in
+					guard resting, !wasResting else { return }
+					finalizeCurrentStopwatch(at: monotonicTime)
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
@@ -1149,9 +1232,9 @@ struct WorkoutView: View {
 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
 				   let requestedStep = Int(rawStep),
 				   requestedStep > 1 {
-					sessionState.pausedElapsed = plan.steps
-						.prefix(min(requestedStep - 1, plan.steps.count))
-						.reduce(0) { $0 + $1.duration }
+						sessionState.pausedElapsed = plan.steps
+							.prefix(min(requestedStep - 1, plan.steps.count))
+							.reduce(0) { $0 + $1.duration }
 				}
 			}
 
@@ -1160,12 +1243,14 @@ struct WorkoutView: View {
 				toggleRunning()
 			}
 			#endif
+			initializeStopwatches()
 		}
 		.onChange(of: scenePhase) { _, phase in
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
 		.onDisappear {
+			finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
 		}
@@ -1175,6 +1260,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1191,7 +1277,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
@@ -1215,6 +1301,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		elapsed: TimeInterval,
+		monotonicTime: TimeInterval,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -1259,7 +1346,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
-				controlGroup(step: step, isComplete: isComplete, countdown: countdown)
+				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 					.frame(width: 224)
 			}
 		}
@@ -1460,9 +1547,13 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(step: WorkoutStep, isComplete: Bool, countdown: Int) -> some View {
+    private func controlGroup(step: WorkoutStep, isResting: Bool, isComplete: Bool, countdown: Int, monotonicTime: TimeInterval) -> some View {
         VStack(spacing: 10) {
             controlButton(isComplete: isComplete, countdown: countdown)
+
+            if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
+                stopwatchControl(for: key, at: monotonicTime)
+            }
 
             Button {
                 skipCurrentStep()
@@ -1491,14 +1582,14 @@ struct WorkoutView: View {
                 toggleRunning()
             }
         } label: {
-            HStack {
-                Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (sessionState.startedAt == nil ? "play.fill" : "pause.fill"))
+			HStack {
+				Image(systemName: isComplete ? "checkmark" : countdown > 0 ? "xmark" : (sessionState.startedAt == nil ? "play.fill" : "pause.fill"))
                 Text(
                     isComplete
-                        ? "Log session"
-                        : countdown > 0
-                            ? "Cancel countdown"
-                            : (sessionState.startedAt == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start routine" : (sessionState.startedAt == nil ? "Resume" : "Pause"))
+						? "Log session"
+						: countdown > 0
+							? "Cancel countdown"
+							: (sessionState.startedAt == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start routine" : (sessionState.startedAt == nil ? "Resume" : "Pause"))
                 )
                 if isComplete {
                     Image(systemName: "arrow.right")
@@ -1514,12 +1605,49 @@ struct WorkoutView: View {
         .buttonStyle(.plain)
     }
 
-    private func toggleRunning() {
-        let wasActive = sessionState.startedAt != nil
-        sessionState.toggleRunning(now: Date())
-        if wasActive {
-            audioCoach.stop()
+    private func stopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
+        let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
+        let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
+        let label = stopwatch.isFinalized
+            ? "Stopwatch finalized"
+            : stopwatch.isRunning
+                ? "Stop stopwatch"
+                : stopwatch.hasStarted
+                    ? "Resume stopwatch"
+                    : "Start stopwatch"
+
+        return VStack(spacing: 6) {
+            Text(stopwatchTimeLabel(elapsed))
+                .font(.system(size: 34, weight: .heavy, design: .rounded).monospacedDigit())
+                .foregroundStyle(Color.hangInk)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                toggleStopwatch(for: key, at: WorkoutClock.monotonicTime)
+            } label: {
+                Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
+                    .frame(maxWidth: .infinity)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .padding(.vertical, 10)
+                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(stopwatch.isFinalized)
+            .accessibilityLabel(label)
+            .accessibilityIdentifier("workout.stopwatch.toggle")
         }
+        .padding(.vertical, 4)
+        .accessibilityIdentifier("workout.stopwatch")
+    }
+
+    private func toggleRunning() {
+		let wasActive = sessionState.startedAt != nil
+		sessionState.toggleRunning(now: Date())
+		if wasActive {
+			pauseStopwatches(at: WorkoutClock.monotonicTime)
+			audioCoach.stop()
+		}
     }
 
     private func cancelCountdown() {
@@ -1528,12 +1656,14 @@ struct WorkoutView: View {
     }
 
     private func endSession() {
+        finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
         sessionState.startedAt = nil
 		audioCoach.stop()
         dismiss()
     }
 
 	private func pauseForInterruption() {
+		pauseStopwatches(at: WorkoutClock.monotonicTime)
 		guard sessionState.startedAt != nil else {
 			audioCoach.stop()
 			return
@@ -1546,17 +1676,29 @@ struct WorkoutView: View {
         guard !didComplete else {
             dismiss()
             return
-		}
+        }
         didComplete = true
 		let loggedAt = Date()
+		let loggedAtMonotonic = WorkoutClock.monotonicTime
+		finalizeAllStopwatches(at: loggedAtMonotonic)
         let startDate = sessionState.routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
 		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
 			planDuration: plan.duration,
-			loggedAt: loggedAt
+			elapsed: currentElapsed(at: loggedAt)
 		)
 		audioCoach.stop()
-        store.markSessionComplete(plan, startDate: interval.start, endDate: interval.end)
+		let snapshot = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
+			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAtMonotonic) else { return }
+			result[entry.key] = elapsed
+		}
+		store.markSessionComplete(
+			plan,
+			board: board,
+			stopwatchDurations: snapshot,
+			startDate: interval.start,
+			endDate: interval.end
+		)
         dismiss()
     }
 
@@ -1591,14 +1733,72 @@ struct WorkoutView: View {
 
         let elapsed = currentElapsed(at: Date())
         guard let target = timeline.selectionTarget(for: step.id, at: elapsed) else { return }
+		finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
         seek(to: target)
     }
 
     private func skipCurrentStep() {
-        if sessionState.skipCurrentStep(timeline: timeline, planDuration: plan.duration, now: Date()) {
+        let now = Date()
+        guard sessionState.canNavigate(planDuration: plan.duration, now: now) else { return }
+        finalizeCurrentStopwatch(at: WorkoutClock.monotonicTime)
+        if sessionState.skipCurrentStep(timeline: timeline, planDuration: plan.duration, now: now) {
             audioCoach.stop()
         }
     }
+
+	private func initializeStopwatches() {
+		for step in plan.steps {
+			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
+				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+				if stopwatches[key] == nil { stopwatches[key] = WorkoutStopwatch() }
+			}
+		}
+	}
+
+	private func currentStopwatchKey(for step: WorkoutStep) -> WorkoutActivitySegmentKey? {
+		let keys = step.segments.enumerated().compactMap { index, segment -> WorkoutActivitySegmentKey? in
+			guard segment.kind == .work, segment.timing == .stopwatch else { return nil }
+			return WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+		}
+		return keys.first(where: { !(stopwatches[$0]?.isFinalized ?? false) }) ?? keys.last
+	}
+
+	private func toggleStopwatch(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) {
+		guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { return }
+		if stopwatch.isRunning {
+			stopwatch.pause(at: monotonicTime)
+		} else {
+			stopwatch.start(at: monotonicTime)
+		}
+		stopwatches[key] = stopwatch
+	}
+
+	private func pauseStopwatches(at monotonicTime: TimeInterval) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], stopwatch.isRunning else { continue }
+			stopwatch.pause(at: monotonicTime)
+			stopwatches[key] = stopwatch
+		}
+	}
+
+	private func finalizeCurrentStopwatch(at monotonicTime: TimeInterval) {
+		let elapsed = currentElapsed(at: Date())
+		let step = step(at: elapsed)
+		guard let key = currentStopwatchKey(for: step) else { return }
+		WorkoutStopwatchLifecycle.finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+	}
+
+	private func finalizeStopwatches(for stepID: String, at monotonicTime: TimeInterval) {
+		WorkoutStopwatchLifecycle.finalizeStopwatches(for: stepID, at: monotonicTime, in: &stopwatches)
+	}
+
+	private func finalizeAllStopwatches(at monotonicTime: TimeInterval) {
+		for key in stopwatches.keys {
+			guard var stopwatch = stopwatches[key], !stopwatch.isFinalized else { continue }
+			stopwatch.stop(at: monotonicTime)
+			stopwatches[key] = stopwatch
+		}
+	}
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
         step.hasRestInterval && stepElapsed >= step.activeDuration
@@ -1623,6 +1823,11 @@ struct WorkoutView: View {
         return String(format: "%02d:%02d", seconds / 60, seconds % 60)
     }
 
+	private func stopwatchTimeLabel(_ value: TimeInterval) -> String {
+		let seconds = max(0, Int(value.rounded(.down)))
+		return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+	}
+
 	private func audioMoment(
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
@@ -1631,28 +1836,31 @@ struct WorkoutView: View {
 		isComplete: Bool
 	) -> WorkoutAudioMoment? {
 		guard sessionState.startedAt != nil else { return nil }
+		let segmentName = isResting ? "rest" : "active"
 
 		if countdown > 0 {
-			return WorkoutAudioMoment(
-				key: "countdown-\(countdown)",
-				phrase: "\(countdown)"
+			if sessionState.countdownKind == .skip {
+				return WorkoutAudioMoment(
+					key: "countdown-\(countdown)",
+					phrase: "\(countdown)"
+				)
+			}
+
+			return WorkoutAudioCuePolicy.moment(
+				stepID: step.id,
+				segmentName: segmentName,
+				initialCountdown: countdown,
+				intervalSecondsRemaining: 0,
+				isComplete: isComplete
 			)
 		}
 
-		if isComplete {
-			return WorkoutAudioMoment(
-				key: "session-complete",
-				phrase: "Session complete"
-			)
-		}
-
-		let segmentName = isResting ? "rest" : "active"
 		let segmentElapsed = isResting
 			? max(0, stepElapsed - step.activeDuration)
 			: stepElapsed
 		let segmentDuration = isResting ? step.restDuration : step.activeDuration
 
-		if segmentElapsed < 0.55 {
+		if !isComplete, segmentElapsed < 0.55 {
 			let phrase: String
 			if segmentDuration <= 3 {
 				phrase = isResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
@@ -1664,18 +1872,17 @@ struct WorkoutView: View {
 				phrase: phrase
 			)
 		}
-
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)
-		if segmentDuration > 3, (1...3).contains(secondsRemaining) {
-			return WorkoutAudioMoment(
-				key: "\(step.id)-\(segmentName)-\(secondsRemaining)",
-				phrase: "\(secondsRemaining)"
-			)
-		}
 
-		return nil
+		return WorkoutAudioCuePolicy.moment(
+			stepID: step.id,
+			segmentName: segmentName,
+			initialCountdown: countdown,
+			intervalSecondsRemaining: secondsRemaining,
+			isComplete: isComplete
+		)
 	}
 
 	private func spokenStartPhrase(for step: WorkoutStep) -> String {
