@@ -1294,13 +1294,17 @@ struct WorkoutView: View {
 				let canNavigate = canNavigate(at: monotonicTime)
 				let isComplete = elapsed >= plan.duration
 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
-				let isResting = step.phase == .rest || isTimedResting
-				let highlightedStep = timeline.holdPreviewStep(
-					currentStep: step,
-					stepElapsed: stepElapsed
+				let boardCue = timeline.boardCue(
+					at: elapsed,
+					countdown: countdown,
+					isComplete: isComplete
 				)
+				let isResting = boardCue.isResting
+				let highlightedStep = boardCue.step
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
-				let highlightedHoldIDs = countdown > 0 || isResting || isComplete ? [] : previewHoldIDs
+				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
+				let highlightMode = boardCue.mode
+				let showsHoldPreview = isResting && !highlightedHoldIDs.isEmpty
 				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
@@ -1324,6 +1328,8 @@ struct WorkoutView: View {
 							isResting: isResting,
 							isComplete: isComplete,
 							highlightedHoldIDs: highlightedHoldIDs,
+							highlightMode: highlightMode,
+							showsHoldPreview: showsHoldPreview,
 							showsGenericHoldCue: showsGenericHoldCue,
 							activeHold: activeHold
 						)
@@ -1338,6 +1344,8 @@ struct WorkoutView: View {
 							isResting: isResting,
 							isComplete: isComplete,
 							highlightedHoldIDs: highlightedHoldIDs,
+							highlightMode: highlightMode,
+							showsHoldPreview: showsHoldPreview,
 							showsGenericHoldCue: showsGenericHoldCue,
 							activeHold: activeHold
 						)
@@ -1505,6 +1513,8 @@ struct WorkoutView: View {
 		isResting: Bool,
 		isComplete: Bool,
 		highlightedHoldIDs: Set<String>,
+		highlightMode: BoardHighlightMode,
+		showsHoldPreview: Bool,
 		showsGenericHoldCue: Bool,
 		activeHold: BoardHold?
 	) -> some View {
@@ -1520,7 +1530,14 @@ struct WorkoutView: View {
 					isComplete: isComplete
 				)
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
-				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
+				if showsHoldPreview {
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+				}
+				BoardMapView(
+					board: board,
+					highlightedHoldIDs: highlightedHoldIDs,
+					highlightMode: highlightMode
+				)
 					.padding(.horizontal, 2)
 				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
 					GripDiagramView(hold: activeHold, gripType: step.gripType)
@@ -1530,7 +1547,8 @@ struct WorkoutView: View {
 					stepElapsed: stepElapsed,
 					countdown: countdown,
 					isResting: isResting,
-					isComplete: isComplete
+					isComplete: isComplete,
+					showsHoldPreview: showsHoldPreview
 				)
 				meter(step: step)
 			}
@@ -1550,6 +1568,8 @@ struct WorkoutView: View {
 		isResting: Bool,
 		isComplete: Bool,
 		highlightedHoldIDs: Set<String>,
+		highlightMode: BoardHighlightMode,
+		showsHoldPreview: Bool,
 		showsGenericHoldCue: Bool,
 		activeHold: BoardHold?
 	) -> some View {
@@ -1573,9 +1593,19 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 
-				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
-					.frame(maxWidth: .infinity)
-					.frame(maxHeight: 130)
+				VStack(alignment: .leading, spacing: 4) {
+					if showsHoldPreview {
+						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+					}
+					BoardMapView(
+						board: board,
+						highlightedHoldIDs: highlightedHoldIDs,
+						highlightMode: highlightMode
+					)
+						.frame(maxWidth: .infinity)
+						.frame(maxHeight: 130)
+				}
+				.frame(maxWidth: .infinity)
 
 				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
 					let gripType = step.gripType ?? activeHold.gripType
@@ -1583,14 +1613,15 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 			}
-			.frame(maxHeight: 132)
+			.frame(maxHeight: showsHoldPreview ? 152 : 132)
 
 			HStack(alignment: .center, spacing: 12) {
 				landscapeCueCard(
 					step: step,
 					countdown: countdown,
 					isResting: isResting,
-					isComplete: isComplete
+					isComplete: isComplete,
+					showsHoldPreview: showsHoldPreview
 				)
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
 					.frame(width: 224)
@@ -1659,7 +1690,8 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		countdown: Int,
 		isResting: Bool,
-		isComplete: Bool
+		isComplete: Bool,
+		showsHoldPreview: Bool
 	) -> some View {
 		VStack(alignment: .leading, spacing: 5) {
 			SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
@@ -1669,7 +1701,9 @@ struct WorkoutView: View {
 					: countdown > 0
 						? "Get into position for \(step.title.lowercased())."
 						: isResting
-							? "Step off, shake out, and breathe."
+							? showsHoldPreview
+								? "Step off the board, shake out, and breathe. The blue board preview shows what’s next; wait for the timer before loading it."
+								: "Step off, shake out, and breathe."
 							: step.instruction
 			)
 			.font(.system(size: 14, weight: .semibold, design: .rounded))
@@ -1758,10 +1792,11 @@ struct WorkoutView: View {
 
     private func cueCard(
         step: WorkoutStep,
-        stepElapsed: TimeInterval,
-        countdown: Int,
-        isResting: Bool,
-        isComplete: Bool
+		stepElapsed: TimeInterval,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool,
+		showsHoldPreview: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: 11) {
             HStack {
@@ -1777,18 +1812,26 @@ struct WorkoutView: View {
             Text(
                 isComplete
                     ? "Take a few easy minutes to cool down, then log how your fingers feel."
-                    : countdown > 0
-                        ? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
-                        : isResting
-                            ? "Step off the board, shake out, and breathe. Your next hold cue will appear when the rest interval ends."
+					: countdown > 0
+						? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
+						: isResting
+							? showsHoldPreview
+								? "Step off the board, shake out, and breathe. The blue board preview shows what’s next; wait for the timer before loading it."
+								: "Step off, shake out, and breathe."
                             : step.instruction
             )
                 .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
                 .fixedSize(horizontal: false, vertical: true)
 
-            if !isComplete, countdown == 0 {
-                Text(isResting ? "Rest interval · next cue follows automatically" : step.accessory)
+			if !isComplete, countdown == 0 {
+				Text(
+					isResting
+						? showsHoldPreview
+							? "Blue preview · wait for the timer"
+							: "Rest interval · recover before the timer ends"
+						: step.accessory
+				)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
             }

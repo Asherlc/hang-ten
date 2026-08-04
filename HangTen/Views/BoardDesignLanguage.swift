@@ -34,7 +34,8 @@ struct BoardDesign {
     func draw(
         in context: inout GraphicsContext,
         size: CGSize,
-        highlightedHoldIDs: Set<String>
+        highlightedHoldIDs: Set<String>,
+        highlightMode: BoardHighlightMode
     ) {
         let rect = boardRect(in: size)
         let bodyPath = silhouette.path(in: rect)
@@ -74,6 +75,7 @@ struct BoardDesign {
             draw(
                 hold,
                 highlighted: highlightedHoldIDs.contains(hold.holdID),
+                highlightMode: highlightMode,
                 in: &context,
                 boardRect: rect
             )
@@ -83,6 +85,7 @@ struct BoardDesign {
     private func draw(
         _ hold: BoardHoldPiece,
         highlighted: Bool,
+        highlightMode: BoardHighlightMode,
         in context: inout GraphicsContext,
         boardRect: CGRect
     ) {
@@ -94,7 +97,7 @@ struct BoardDesign {
             context.fill(
                 outerPath,
                 with: highlighted
-                    ? activeShading(in: rect)
+                    ? highlightShading(mode: highlightMode, in: rect)
                     : shading(for: .topPlane, pathRect: rect)
             )
 
@@ -123,7 +126,7 @@ struct BoardDesign {
             shelfContext.fill(
                 contactPath,
                 with: highlighted
-                    ? activeShading(in: contactRect)
+                    ? highlightShading(mode: highlightMode, in: contactRect)
                     : shading(for: .shelf, pathRect: contactRect)
             )
 
@@ -160,7 +163,7 @@ struct BoardDesign {
             wellContext.fill(
                 contactPath,
                 with: highlighted
-                    ? activeShading(in: contactRect)
+                    ? highlightShading(mode: highlightMode, in: contactRect)
                     : .linearGradient(
                         Gradient(colors: recessColors),
                         startPoint: CGPoint(x: contactRect.midX, y: contactRect.minY),
@@ -200,6 +203,22 @@ struct BoardDesign {
             startPoint: CGPoint(x: rect.midX, y: rect.minY),
             endPoint: CGPoint(x: rect.midX, y: rect.maxY)
         )
+    }
+
+    private func highlightShading(
+        mode: BoardHighlightMode,
+        in rect: CGRect
+    ) -> GraphicsContext.Shading {
+        switch mode {
+        case .active:
+            return activeShading(in: rect)
+        case .preview:
+            return .linearGradient(
+                Gradient(colors: [Color.restBlue, Color.restBlue.opacity(0.72)]),
+                startPoint: CGPoint(x: rect.midX, y: rect.minY),
+                endPoint: CGPoint(x: rect.midX, y: rect.maxY)
+            )
+        }
     }
 
     private func scaled(_ normalized: CGRect, in rect: CGRect) -> CGRect {

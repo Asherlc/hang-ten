@@ -59,6 +59,18 @@ struct WorkoutClock {
     }
 }
 
+enum BoardHighlightMode: Hashable {
+    case active
+    case preview
+}
+
+struct WorkoutBoardCue: Equatable {
+    let step: WorkoutStep?
+    let mode: BoardHighlightMode
+    let isResting: Bool
+    let isSuppressed: Bool
+}
+
 struct WorkoutTimeline {
     private let steps: [WorkoutStep]
     private let startOffsets: [TimeInterval]
@@ -131,6 +143,37 @@ struct WorkoutTimeline {
         return holdPreviewStep(
             currentStep: currentStep,
             stepElapsed: elapsedInStep(at: elapsed)
+        )
+    }
+
+    func boardCue(
+        at elapsed: TimeInterval,
+        countdown: Int,
+        isComplete: Bool
+    ) -> WorkoutBoardCue {
+        guard countdown == 0,
+              !isComplete,
+              let currentStep = step(at: elapsed) else {
+            return WorkoutBoardCue(
+                step: nil,
+                mode: .active,
+                isResting: false,
+                isSuppressed: true
+            )
+        }
+
+        let stepElapsed = elapsedInStep(at: elapsed)
+        let isResting = currentStep.phase == .rest
+            || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
+
+        return WorkoutBoardCue(
+            step: holdPreviewStep(
+                currentStep: currentStep,
+                stepElapsed: stepElapsed
+            ),
+            mode: isResting ? .preview : .active,
+            isResting: isResting,
+            isSuppressed: false
         )
     }
 
