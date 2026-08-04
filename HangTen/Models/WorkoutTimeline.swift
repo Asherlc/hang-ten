@@ -115,6 +115,37 @@ struct WorkoutTimeline {
         return min(stepEnd, duration)
     }
 
+    func nextWorkStep(after stepID: String) -> WorkoutStep? {
+        guard let index = steps.firstIndex(where: { $0.id == stepID }) else {
+            return nil
+        }
+
+        return steps.dropFirst(index + 1).first { $0.phase != .rest }
+    }
+
+    func holdPreviewStep(at elapsed: TimeInterval) -> WorkoutStep? {
+        guard let currentStep = step(at: elapsed) else {
+            return nil
+        }
+
+        return holdPreviewStep(
+            currentStep: currentStep,
+            stepElapsed: elapsedInStep(at: elapsed)
+        )
+    }
+
+    func holdPreviewStep(
+        currentStep: WorkoutStep,
+        stepElapsed: TimeInterval
+    ) -> WorkoutStep? {
+        let isResting = currentStep.phase == .rest
+            || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
+
+        return isResting
+            ? nextWorkStep(after: currentStep.id)
+            : currentStep
+    }
+
     private func clampedElapsed(_ elapsed: TimeInterval) -> TimeInterval {
         min(max(0, elapsed), duration)
     }

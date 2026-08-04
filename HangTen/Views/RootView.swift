@@ -1126,16 +1126,21 @@ struct WorkoutView: View {
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: context.date)
 				let isComplete = elapsed >= plan.duration
-				let isResting = isRestInterval(step: step, stepElapsed: stepElapsed)
-				let highlightedIDs = store.holdIDs(for: step, on: board)
-				let activeHoldIDs = countdown > 0 || isComplete || isResting ? [] : highlightedIDs
-				let activeHold = board.holds.first { activeHoldIDs.contains($0.id) }
+				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+				let isResting = step.phase == .rest || isTimedResting
+				let highlightedStep = timeline.holdPreviewStep(
+					currentStep: step,
+					stepElapsed: stepElapsed
+				)
+				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
+				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
+				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isResting: isResting,
+					isTimedResting: isTimedResting,
 					isComplete: isComplete
 				)
 
@@ -1149,7 +1154,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					} else {
@@ -1161,7 +1166,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					}
@@ -1264,7 +1269,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -1278,7 +1283,7 @@ struct WorkoutView: View {
 					isComplete: isComplete
 				)
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
 					GripDiagramView(hold: activeHold, gripType: step.gripType)
@@ -1305,7 +1310,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		VStack(spacing: 9) {
@@ -1327,7 +1332,7 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.frame(maxWidth: .infinity)
 					.frame(maxHeight: 130)
 
@@ -1832,11 +1837,11 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		countdown: Int,
-		isResting: Bool,
+		isTimedResting: Bool,
 		isComplete: Bool
 	) -> WorkoutAudioMoment? {
 		guard sessionState.startedAt != nil else { return nil }
-		let segmentName = isResting ? "rest" : "active"
+		let segmentName = isTimedResting ? "rest" : "active"
 
 		if countdown > 0 {
 			if sessionState.countdownKind == .skip {
@@ -1855,17 +1860,17 @@ struct WorkoutView: View {
 			)
 		}
 
-		let segmentElapsed = isResting
+		let segmentElapsed = isTimedResting
 			? max(0, stepElapsed - step.activeDuration)
 			: stepElapsed
-		let segmentDuration = isResting ? step.restDuration : step.activeDuration
+		let segmentDuration = isTimedResting ? step.restDuration : step.activeDuration
 
 		if !isComplete, segmentElapsed < 0.55 {
 			let phrase: String
 			if segmentDuration <= 3 {
-				phrase = isResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
+				phrase = isTimedResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
 			} else {
-				phrase = isResting ? "Rest" : spokenStartPhrase(for: step)
+				phrase = isTimedResting ? "Rest" : spokenStartPhrase(for: step)
 			}
 			return WorkoutAudioMoment(
 				key: "\(step.id)-\(segmentName)-start",
