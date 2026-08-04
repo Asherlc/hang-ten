@@ -288,7 +288,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             PlanCatalog.metoliusAdvanced
         ]
 
-        XCTAssertEqual(plans.map(\.steps.count), [20, 26, 26])
+        XCTAssertEqual(plans.map(\.steps.count), [20, 26, 27])
         for plan in plans {
             XCTAssertEqual(plan.duration, 600)
             XCTAssertEqual(plan.provenance, .adapted)

@@ -357,28 +357,42 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testBundledSourceSeedsClassifyTimedUntimedAndStopwatchActivities() {
+    func testBundledSourceSeedsClassifyTimedUntimedAndStopwatchActivities() throws {
         let entrySteps = LegacyPlanSeedCatalog.metoliusEntry.steps
+        let entryMinuteSixTaskOne = try XCTUnwrap(
+            entrySteps.first { $0.id == "entry.minute-6.task-1" }
+        )
+        let entryMinuteSixTaskTwo = try XCTUnwrap(
+            entrySteps.first { $0.id == "entry.minute-6.task-2" }
+        )
+        let entryMinuteTenTaskOne = try XCTUnwrap(
+            entrySteps.first { $0.id == "entry.minute-10.task-1" }
+        )
 
         XCTAssertEqual(
-            entrySteps[5].segments,
+            entryMinuteSixTaskOne.segments,
             [
                 WorkoutSegment(
                     kind: .work,
                     target: .feature(.roundSloper),
                     timing: .fixed,
                     duration: 10
-                ),
-                WorkoutSegment(
-                    kind: .work,
-                    target: .feature(.pocket),
-                    timing: .undefined,
-                    duration: nil
                 )
             ]
         )
         XCTAssertEqual(
-            entrySteps[9].segments,
+            entryMinuteSixTaskTwo.segments,
+            [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .feature(.pocket),
+                    timing: .fixed,
+                    duration: 5
+                )
+            ]
+        )
+        XCTAssertEqual(
+            entryMinuteTenTaskOne.segments,
             [
                 WorkoutSegment(
                     kind: .work,
@@ -390,18 +404,32 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() {
-        let minuteEight = LegacyPlanSeedCatalog.metoliusAdvanced.steps[7]
+    func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
+        let minuteEightTaskOne = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusAdvanced.steps.first {
+                $0.id == "advanced.minute-8.task-1"
+            }
+        )
+        let minuteEightTaskTwo = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusAdvanced.steps.first {
+                $0.id == "advanced.minute-8.task-2"
+            }
+        )
 
         XCTAssertEqual(
-            minuteEight.segments,
+            minuteEightTaskOne.segments,
             [
                 WorkoutSegment(
                     kind: .work,
                     target: .feature(.largeSlope),
-                    timing: .undefined,
-                    duration: nil
-                ),
+                    timing: .fixed,
+                    duration: 15
+                )
+            ]
+        )
+        XCTAssertEqual(
+            minuteEightTaskTwo.segments,
+            [
                 WorkoutSegment(
                     kind: .work,
                     target: .feature(.largeSlope),
