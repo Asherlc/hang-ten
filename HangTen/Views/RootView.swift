@@ -1295,7 +1295,8 @@ struct WorkoutView: View {
 				let isComplete = elapsed >= plan.duration
 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
 				let boardCue = timeline.boardCue(
-					at: elapsed,
+					currentStep: step,
+					stepElapsed: stepElapsed,
 					countdown: countdown,
 					isComplete: isComplete
 				)

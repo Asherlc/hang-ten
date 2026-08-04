@@ -151,9 +151,23 @@ struct WorkoutTimeline {
         countdown: Int,
         isComplete: Bool
     ) -> WorkoutBoardCue {
+        boardCue(
+            currentStep: step(at: elapsed),
+            stepElapsed: elapsedInStep(at: elapsed),
+            countdown: countdown,
+            isComplete: isComplete
+        )
+    }
+
+    func boardCue(
+        currentStep: WorkoutStep?,
+        stepElapsed: TimeInterval,
+        countdown: Int,
+        isComplete: Bool
+    ) -> WorkoutBoardCue {
         guard countdown == 0,
               !isComplete,
-              let currentStep = step(at: elapsed) else {
+              let currentStep else {
             return WorkoutBoardCue(
                 step: nil,
                 mode: .active,
@@ -162,7 +176,6 @@ struct WorkoutTimeline {
             )
         }
 
-        let stepElapsed = elapsedInStep(at: elapsed)
         let isResting = currentStep.phase == .rest
             || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
 

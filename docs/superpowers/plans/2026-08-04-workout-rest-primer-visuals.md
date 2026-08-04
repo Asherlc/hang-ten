@@ -1,6 +1,6 @@
 # Workout Rest Preview and Board Primer Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** The controller must assign every implementation or configuration task, including plan-library regeneration, to a fresh subagent and must not make implementation changes itself. Use subagent-driven development with implementation and review checkpoints for each task. A dispatched worker implements only its assigned task directly and does not delegate further. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make rest visually distinct while showing the next work holds during recovery, and replace the shared three-minute warm-up with a 60-second, actionable board primer.
 
@@ -20,6 +20,7 @@
 - The bundled `HangTen/Resources/PlanLibrary.json` must be regenerated from the source seed and pass `scripts/export-plan-library.sh --check`.
 - No new dependencies, plan-library schema changes, persistence, audio, HealthKit, or workout-recording changes are in scope.
 - Use `rtk` for repository shell commands and run a failing test before each production behavior implementation.
+- Every implementation or configuration task, including plan-library regeneration, is performed by a fresh subagent; the controller session makes no implementation changes. Use subagent-driven implementation and review checkpoints for every task.
 - Keep derived data, logs, screenshots, simulator manifests, and review notes under `.context`.
 - Any validation simulator must be named with `CONDUCTOR_WORKSPACE_NAME`, recorded as workspace-owned before use, addressed by its explicit UUID for every operation, and shut down and deleted before completion.
 

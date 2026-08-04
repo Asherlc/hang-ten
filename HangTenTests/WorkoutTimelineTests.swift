@@ -216,6 +216,23 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
+    func testBoardCueUsesProvidedTimedRestLocationWithoutRecomputingIt() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let elapsedCue = timeline.boardCue(at: 20, countdown: 0, isComplete: false)
+        let suppliedCue = timeline.boardCue(
+            currentStep: restPreviewSteps[0],
+            stepElapsed: 20,
+            countdown: 0,
+            isComplete: false
+        )
+
+        XCTAssertEqual(elapsedCue.step?.id, "next-work")
+        XCTAssertEqual(elapsedCue.mode, .preview)
+        XCTAssertTrue(elapsedCue.isResting)
+        XCTAssertEqual(suppliedCue, elapsedCue)
+    }
+
     func testBoardCueUsesActiveModeDuringWork() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
