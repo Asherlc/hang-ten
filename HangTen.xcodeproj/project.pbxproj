@@ -22,33 +22,43 @@
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
-		AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000019 /* WorkoutTimelineTests.swift */; };
-		AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* WorkoutTimeline.swift */; };
-		AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* WorkoutStepPickerView.swift */; };
-		AA0000000000000000000019 /* WorkoutSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* WorkoutSegmentTests.swift */; };
-		AA0000000000000000000020 /* PlanStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* PlanStorageTests.swift */; };
-		AA0000000000000000000021 /* WorkoutActivityRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* WorkoutActivityRecording.swift */; };
-		AA0000000000000000000022 /* WorkoutActivityRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */; };
-		AA0000000000000000000023 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000026 /* WorkoutStopwatch.swift */; };
-		AA0000000000000000000024 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000027 /* WorkoutStopwatchTests.swift */; };
-		AA0000000000000000000025 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000028 /* PlanFilters.swift */; };
-		AA0000000000000000000026 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000029 /* PlanFiltersTests.swift */; };
-		AA0000000000000000000027 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000030 /* AppStoreFavoritesTests.swift */; };
+		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
+		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
+		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
+		AA0000000000000000000019 /* MotherboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* MotherboardModels.swift */; };
+		AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* MotherboardProtocolTests.swift */; };
+		AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* MotherboardProtocol.swift */; };
+		AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */; };
+		AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */; };
+		AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */; };
+		AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000028 /* WorkoutSessionStore.swift */; };
+		AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */; };
+		AA0000000000000000000027 /* MotherboardBluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000030 /* MotherboardBluetoothService.swift */; };
+		AA0000000000000000000028 /* AppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000031 /* AppStoreTests.swift */; };
+		AA0000000000000000000032 /* MotherboardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000032 /* MotherboardViews.swift */; };
+		AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000033 /* WorkoutSummaryTests.swift */; };
+		AA0000000000000000000034 /* WorkoutSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000034 /* WorkoutSummaryView.swift */; };
+		AA0000000000000000000035 /* SimulatedMotherboardTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000035 /* SimulatedMotherboardTransportTests.swift */; };
+		AA0000000000000000000036 /* SimulatedMotherboardTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000036 /* SimulatedMotherboardTransport.swift */; };
+		AA0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift */; };
+		AA0000000000000000000038 /* MotherboardWorkoutPreparation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000038 /* MotherboardWorkoutPreparation.swift */; };
+		AA0000000000000000000039 /* MotherboardWorkoutPreparationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000039 /* MotherboardWorkoutPreparationView.swift */; };
+		AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000040 /* WorkoutTimelineTests.swift */; };
+		AA0000000000000000000041 /* WorkoutTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000041 /* WorkoutTimeline.swift */; };
+		AA0000000000000000000042 /* WorkoutStepPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000042 /* WorkoutStepPickerView.swift */; };
+		AA0000000000000000000043 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000043 /* PlanFilters.swift */; };
+		AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000044 /* PlanFiltersTests.swift */; };
+		AA0000000000000000000045 /* WorkoutSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000045 /* WorkoutSegmentTests.swift */; };
+		AA0000000000000000000046 /* PlanStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000046 /* PlanStorageTests.swift */; };
+		AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000047 /* WorkoutActivityRecording.swift */; };
+		AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */; };
+		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
+		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
+		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		990000000000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE0000000000000000000010 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EE0000000000000000000001;
-			remoteInfo = HangTen;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB0000000000000000000018 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
@@ -65,18 +75,40 @@
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
-		BB0000000000000000000019 /* WorkoutTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimelineTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000020 /* WorkoutTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimeline.swift; sourceTree = "<group>"; };
-		BB0000000000000000000021 /* WorkoutStepPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepPickerView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000022 /* WorkoutSegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000023 /* PlanStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorageTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000024 /* WorkoutActivityRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecording.swift; sourceTree = "<group>"; };
-		BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecordingTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000026 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
-		BB0000000000000000000027 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000028 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
-		BB0000000000000000000029 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000030 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000022 /* MotherboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModels.swift; sourceTree = "<group>"; };
+		BB0000000000000000000023 /* MotherboardProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000024 /* MotherboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutRecorderTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutRecorder.swift; sourceTree = "<group>"; };
+		BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000028 /* WorkoutSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionStore.swift; sourceTree = "<group>"; };
+		BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardBluetoothServiceTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000030 /* MotherboardBluetoothService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardBluetoothService.swift; sourceTree = "<group>"; };
+		BB0000000000000000000031 /* AppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000032 /* MotherboardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardViews.swift; sourceTree = "<group>"; };
+		BB0000000000000000000033 /* WorkoutSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000034 /* WorkoutSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSummaryView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000035 /* SimulatedMotherboardTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedMotherboardTransportTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000036 /* SimulatedMotherboardTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedMotherboardTransport.swift; sourceTree = "<group>"; };
+		BB0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutPreparationTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000038 /* MotherboardWorkoutPreparation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutPreparation.swift; sourceTree = "<group>"; };
+		BB0000000000000000000039 /* MotherboardWorkoutPreparationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardWorkoutPreparationView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000040 /* WorkoutTimelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimelineTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000041 /* WorkoutTimeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimeline.swift; sourceTree = "<group>"; };
+		BB0000000000000000000042 /* WorkoutStepPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepPickerView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000043 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
+		BB0000000000000000000044 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000045 /* WorkoutSegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000046 /* PlanStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorageTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000047 /* WorkoutActivityRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecording.swift; sourceTree = "<group>"; };
+		BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecordingTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
+		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +120,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CC0000000000000000000004 /* Frameworks */ = {
+		CC0000000000000000000004 /* HangTenTests Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0000000000000000000017 /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000010 /* HangTen.app */,
-				BB0000000000000000000018 /* HangTenTests.xctest */,
+				BB0000000000000000000019 /* HangTenTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,10 +169,17 @@
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
-				BB0000000000000000000020 /* WorkoutTimeline.swift */,
-				BB0000000000000000000024 /* WorkoutActivityRecording.swift */,
-				BB0000000000000000000026 /* WorkoutStopwatch.swift */,
-				BB0000000000000000000028 /* PlanFilters.swift */,
+				BB0000000000000000000022 /* MotherboardModels.swift */,
+				BB0000000000000000000024 /* MotherboardProtocol.swift */,
+				BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */,
+				BB0000000000000000000028 /* WorkoutSessionStore.swift */,
+				BB0000000000000000000030 /* MotherboardBluetoothService.swift */,
+				BB0000000000000000000036 /* SimulatedMotherboardTransport.swift */,
+				BB0000000000000000000038 /* MotherboardWorkoutPreparation.swift */,
+				BB0000000000000000000041 /* WorkoutTimeline.swift */,
+				BB0000000000000000000043 /* PlanFilters.swift */,
+				BB0000000000000000000047 /* WorkoutActivityRecording.swift */,
+				BB0000000000000000000049 /* WorkoutStopwatch.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -152,7 +192,10 @@
 				BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
-				BB0000000000000000000021 /* WorkoutStepPickerView.swift */,
+				BB0000000000000000000032 /* MotherboardViews.swift */,
+				BB0000000000000000000034 /* WorkoutSummaryView.swift */,
+				BB0000000000000000000039 /* MotherboardWorkoutPreparationView.swift */,
+				BB0000000000000000000042 /* WorkoutStepPickerView.swift */,
 				BB0000000000000000000008 /* GripDiagramView.swift */,
 			);
 			path = Views;
@@ -170,18 +213,73 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
-				BB0000000000000000000019 /* WorkoutTimelineTests.swift */,
-				BB0000000000000000000022 /* WorkoutSegmentTests.swift */,
-				BB0000000000000000000023 /* PlanStorageTests.swift */,
-				BB0000000000000000000025 /* WorkoutActivityRecordingTests.swift */,
-				BB0000000000000000000027 /* WorkoutStopwatchTests.swift */,
-				BB0000000000000000000029 /* PlanFiltersTests.swift */,
-				BB0000000000000000000030 /* AppStoreFavoritesTests.swift */,
+				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
+				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
+				BB0000000000000000000023 /* MotherboardProtocolTests.swift */,
+				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
+				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
+				BB0000000000000000000029 /* MotherboardBluetoothServiceTests.swift */,
+				BB0000000000000000000031 /* AppStoreTests.swift */,
+				BB0000000000000000000033 /* WorkoutSummaryTests.swift */,
+				BB0000000000000000000035 /* SimulatedMotherboardTransportTests.swift */,
+				BB0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift */,
+				BB0000000000000000000040 /* WorkoutTimelineTests.swift */,
+				BB0000000000000000000044 /* PlanFiltersTests.swift */,
+				BB0000000000000000000045 /* WorkoutSegmentTests.swift */,
+				BB0000000000000000000046 /* PlanStorageTests.swift */,
+				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
+				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
+				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		990000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE0000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE0000000000000000000001;
+			remoteInfo = HangTen;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		990000000000000000000002 /* HangTen target dependency */ = {
+			isa = PBXTargetDependency;
+			target = EE0000000000000000000001 /* HangTen */;
+			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC0000000000000000000005 /* HangTenTests Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
+				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
+				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
+				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
+				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
+				AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */,
+				AA0000000000000000000028 /* AppStoreTests.swift in Sources */,
+				AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */,
+				AA0000000000000000000035 /* SimulatedMotherboardTransportTests.swift in Sources */,
+				AA0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift in Sources */,
+				AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */,
+				AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */,
+				AA0000000000000000000045 /* WorkoutSegmentTests.swift in Sources */,
+				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
+				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
+				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		EE0000000000000000000001 /* HangTen */ = {
@@ -205,18 +303,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */;
 			buildPhases = (
-				CC0000000000000000000005 /* Sources */,
-				CC0000000000000000000004 /* Frameworks */,
+				CC0000000000000000000005 /* HangTenTests Sources */,
+				CC0000000000000000000004 /* HangTenTests Frameworks */,
 				CC0000000000000000000006 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				990000000000000000000002 /* PBXTargetDependency */,
+				990000000000000000000002 /* HangTen target dependency */,
 			);
 			name = HangTenTests;
 			productName = HangTenTests;
-			productReference = BB0000000000000000000018 /* HangTenTests.xctest */;
+			productReference = BB0000000000000000000019 /* HangTenTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -293,37 +391,25 @@
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
-				AA0000000000000000000017 /* WorkoutTimeline.swift in Sources */,
-				AA0000000000000000000018 /* WorkoutStepPickerView.swift in Sources */,
-				AA0000000000000000000021 /* WorkoutActivityRecording.swift in Sources */,
-				AA0000000000000000000023 /* WorkoutStopwatch.swift in Sources */,
-				AA0000000000000000000025 /* PlanFilters.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CC0000000000000000000005 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA0000000000000000000016 /* WorkoutTimelineTests.swift in Sources */,
-				AA0000000000000000000019 /* WorkoutSegmentTests.swift in Sources */,
-				AA0000000000000000000020 /* PlanStorageTests.swift in Sources */,
-				AA0000000000000000000022 /* WorkoutActivityRecordingTests.swift in Sources */,
-				AA0000000000000000000024 /* WorkoutStopwatchTests.swift in Sources */,
-				AA0000000000000000000026 /* PlanFiltersTests.swift in Sources */,
-				AA0000000000000000000027 /* AppStoreFavoritesTests.swift in Sources */,
+				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
+				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
+				AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */,
+				AA0000000000000000000025 /* WorkoutSessionStore.swift in Sources */,
+				AA0000000000000000000027 /* MotherboardBluetoothService.swift in Sources */,
+				AA0000000000000000000032 /* MotherboardViews.swift in Sources */,
+				AA0000000000000000000034 /* WorkoutSummaryView.swift in Sources */,
+				AA0000000000000000000036 /* SimulatedMotherboardTransport.swift in Sources */,
+				AA0000000000000000000038 /* MotherboardWorkoutPreparation.swift in Sources */,
+				AA0000000000000000000039 /* MotherboardWorkoutPreparationView.swift in Sources */,
+				AA0000000000000000000041 /* WorkoutTimeline.swift in Sources */,
+				AA0000000000000000000042 /* WorkoutStepPickerView.swift in Sources */,
+				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
+				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
+				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		990000000000000000000002 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = EE0000000000000000000001 /* HangTen */;
-			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FF0000000000000000000011 /* Debug */ = {
@@ -418,6 +504,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -448,6 +535,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -465,7 +553,7 @@
 			};
 			name = Release;
 		};
-		FF0000000000000000000031 /* Debug */ = {
+		FF0000000000000000000023 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -489,7 +577,7 @@
 			};
 			name = Debug;
 		};
-		FF0000000000000000000032 /* Release */ = {
+		FF0000000000000000000024 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -537,8 +625,8 @@
 		FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FF0000000000000000000031 /* Debug */,
-				FF0000000000000000000032 /* Release */,
+				FF0000000000000000000023 /* Debug */,
+				FF0000000000000000000024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

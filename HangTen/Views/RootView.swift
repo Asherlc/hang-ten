@@ -1,10 +1,59 @@
 import SwiftUI
 import UIKit
 
+struct MotherboardWorkoutPreparationHandoff {
+    private(set) var didAccept = false
+
+    mutating func accept() -> Bool {
+        guard !didAccept else { return false }
+        didAccept = true
+        return true
+    }
+}
+
+@MainActor
+protocol RootViewBackgroundTaskApplication: AnyObject {
+	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)?) -> UIBackgroundTaskIdentifier
+	func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
+}
+
+extension UIApplication: RootViewBackgroundTaskApplication {}
+
+@MainActor
+final class RootViewSessionPersistenceCoordinator {
+	private let application: RootViewBackgroundTaskApplication
+	private var backgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
+
+	init(application: RootViewBackgroundTaskApplication) {
+		self.application = application
+	}
+
+	func flush(store: AppStore) {
+		backgroundTaskIdentifier = application.beginBackgroundTask(
+			withName: "Persist workout sessions",
+			expirationHandler: { [weak self] in
+				self?.finish()
+			}
+		)
+		store.flushSessionPersistence { [self] in
+			finish()
+		}
+	}
+
+	private func finish() {
+		guard backgroundTaskIdentifier != .invalid else { return }
+		let identifier = backgroundTaskIdentifier
+		backgroundTaskIdentifier = .invalid
+		application.endBackgroundTask(identifier)
+	}
+}
+
 struct RootView: View {
+    @EnvironmentObject private var store: AppStore
     @State private var selectedTab: Int = {
         #if DEBUG
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" {
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" ||
+            ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
             return 2
         }
         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLANS"] == "1" {
@@ -34,8 +83,14 @@ struct RootView: View {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
                 .tag(2)
-        }
-        .tint(.hangGreenDark)
+		}
+		.tint(.hangGreenDark)
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
+		}
+		.onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
+			store.flushSessionPersistenceSynchronously()
+		}
         .onAppear {
             #if DEBUG
             let environment = ProcessInfo.processInfo.environment
@@ -879,6 +934,40 @@ struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+struct MotherboardWorkoutMeasurementCollector {
+    static let maximumMeasurementCount = 20_000
+    private(set) var measurements: [MotherboardMeasurement] = []
+    private(set) var didTruncate = false
+
+    mutating func capture(
+        _ measurement: MotherboardMeasurement,
+        startedAt: Date?,
+        countdownRemaining: Int,
+        workoutElapsed: TimeInterval,
+        planDuration: TimeInterval
+    ) {
+        guard let startedAt,
+              WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: startedAt,
+                measurementTimestamp: measurement.timestamp
+              ),
+              countdownRemaining == 0,
+              workoutElapsed < planDuration else { return }
+
+        if measurements.count >= Self.maximumMeasurementCount {
+            didTruncate = true
+            return
+        }
+
+        measurements.append(measurement)
+    }
+
+    mutating func reset() {
+        measurements = []
+        didTruncate = false
+    }
+}
+
 enum WorkoutAudioCuePolicy {
 	static func moment(
 		stepID: String,
@@ -939,6 +1028,21 @@ enum WorkoutSessionPolicy {
             end: sessionStartedAt.addingTimeInterval(activeElapsed)
         )
     }
+
+    static func completedWorkoutInterval(
+        sessionStartedAt: Date,
+        recordedAt: Date
+    ) -> DateInterval {
+        DateInterval(start: sessionStartedAt, end: max(sessionStartedAt, recordedAt))
+    }
+
+    static func isMeasurementEligible(
+        routineStartedAt: Date?,
+        measurementTimestamp: Date
+    ) -> Bool {
+        guard let routineStartedAt else { return false }
+        return routineStartedAt <= measurementTimestamp
+    }
 }
 
 enum WorkoutStopwatchLifecycle {
@@ -961,10 +1065,26 @@ enum WorkoutStopwatchLifecycle {
         stopwatch.stop(at: monotonicTime)
         stopwatches[key] = stopwatch
     }
+
+    static func finalizeAndSnapshotStopwatches(
+        at monotonicTime: TimeInterval,
+        in stopwatches: inout [WorkoutActivitySegmentKey: WorkoutStopwatch]
+    ) -> [WorkoutActivitySegmentKey: TimeInterval] {
+        for key in stopwatches.keys {
+            finalizeStopwatch(for: key, at: monotonicTime, in: &stopwatches)
+        }
+
+        return stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
+            guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: monotonicTime) else { return }
+            result[entry.key] = elapsed
+        }
+    }
 }
 
 struct WorkoutView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.dismiss) private var dismiss
 	@Environment(\.scenePhase) private var scenePhase
 	@StateObject private var audioCoach = WorkoutAudioCoach()
@@ -985,7 +1105,18 @@ struct WorkoutView: View {
     @State private var showsStepPicker = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
-    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
+	    @State private var recorder = MotherboardWorkoutRecorder()
+	    @State private var completedSession: WorkoutSessionRecord?
+	    @State private var summarySession: WorkoutSessionRecord?
+    @State private var didSaveSession = false
+    @State private var didInterruptRecorder = false
+    @State private var showsWorkoutPreparation = false
+    @State private var didCompleteWorkoutPreparation = false
+	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
+	    @State private var bodyweightKGF: Double?
+	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
+	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
+	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -1052,6 +1183,17 @@ struct WorkoutView: View {
 				}
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.background(Color.hangBackground)
+				.onChange(of: isComplete) { _, routineComplete in
+					guard routineComplete else { return }
+					finalizeRoutine()
+				}
+				.onChange(of: step.id) { _, _ in
+					recorder.pause(at: elapsed)
+				}
+				.onChange(of: isResting) { _, resting in
+					guard resting else { return }
+					recorder.pause(at: elapsed)
+				}
 				.onChange(of: audioMoment, initial: true) { _, moment in
 					guard audioCuesEnabled, let moment else { return }
 					audioCoach.speak(moment.phrase)
@@ -1104,8 +1246,38 @@ struct WorkoutView: View {
         } message: {
             Text("This will stop the timer without logging a workout to Apple Health.")
         }
+		.sheet(item: $summarySession) { session in
+			WorkoutSummaryView(
+				session: session,
+				unit: motherboardSettingsStore.forceUnit,
+				onSave: { save(session) },
+				onDiscard: { discard(session) }
+			)
+		}
+		.sheet(isPresented: $showsWorkoutPreparation) {
+			MotherboardWorkoutPreparationView(
+				service: motherboardBluetoothService,
+				unit: motherboardSettingsStore.forceUnit,
+				bodyweightCaptureDuration: motherboardSettingsStore.bodyweightCaptureDuration,
+				onComplete: { baseline in
+					guard workoutPreparationHandoff.accept() else { return }
+					bodyweightKGF = baseline
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				},
+				onSkip: {
+					guard workoutPreparationHandoff.accept() else { return }
+					bodyweightKGF = nil
+					didCompleteWorkoutPreparation = true
+					showsWorkoutPreparation = false
+					toggleRunning()
+				}
+			)
+		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
+			configureRecorder()
 			#if DEBUG
 			if !didApplyReviewStep {
 				didApplyReviewStep = true
@@ -1120,6 +1292,7 @@ struct WorkoutView: View {
 
 			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_AUTOSTART"] == "1",
 			   !workoutClock.isRunning {
+				didCompleteWorkoutPreparation = true
 				toggleRunning()
 			}
 			#endif
@@ -1138,7 +1311,17 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
+		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
+			guard workoutClock.isRunning else { return }
+			consume(measurement)
+			capture(measurement)
+		}
+		.onChange(of: motherboardBluetoothService.state) { previousState, state in
+			guard previousState == .streaming, state != .streaming else { return }
+			interruptRecorderForSensorLoss()
+		}
 		.onDisappear {
+			interruptRecorderIfNeeded()
 			finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 			UIApplication.shared.isIdleTimerDisabled = false
 			audioCoach.stop()
@@ -1179,6 +1362,7 @@ struct WorkoutView: View {
 					isResting: isResting,
 					isComplete: isComplete
 				)
+				meter(step: step)
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, 16)
@@ -1238,6 +1422,7 @@ struct WorkoutView: View {
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 					.frame(width: 224)
 			}
+			meter(step: step)
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
@@ -1521,9 +1706,9 @@ struct WorkoutView: View {
                     .padding(.vertical, 10)
                     .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
             }
-            .buttonStyle(.plain)
-            .disabled(stopwatch.isFinalized)
-            .accessibilityLabel(label)
+	            .buttonStyle(.plain)
+	            .disabled(stopwatch.isFinalized)
+	            .accessibilityLabel(label)
             .accessibilityIdentifier("workout.stopwatch.toggle")
         }
         .padding(.vertical, 4)
@@ -1537,15 +1722,19 @@ struct WorkoutView: View {
 				return
 			}
 			let monotonicTime = WorkoutClock.monotonicTime
+			recorder.pause(at: currentElapsed)
 			pauseStopwatches(at: monotonicTime)
 			workoutClock.pause()
 			audioCoach.stop()
-        } else {
+		} else if needsWorkoutPreparation {
+			showsWorkoutPreparation = true
+		} else {
             let now = Date()
             let isFirstStart = WorkoutSessionPolicy.isFirstStart(routineStartedAt: routineStartedAt)
             let start = WorkoutSessionPolicy.runStartDate(routineStartedAt: routineStartedAt, now: now)
             if isFirstStart {
                 routineStartedAt = start
+                motherboardMeasurementCollector.reset()
             }
 			workoutClock.start(initialCountdown: isFirstStart ? 3 : 0)
         }
@@ -1557,7 +1746,8 @@ struct WorkoutView: View {
 		audioCoach.stop()
     }
 
-    private func endSession() {
+	private func endSession() {
+		interruptRecorderIfNeeded()
 		finalizeAllStopwatches(at: WorkoutClock.monotonicTime)
 		workoutClock.reset()
 		audioCoach.stop()
@@ -1575,39 +1765,176 @@ struct WorkoutView: View {
 			return
 		}
 
+		recorder.pause(at: currentElapsed)
 		workoutClock.pause()
 		audioCoach.stop()
 	}
 
-    private func completeSession() {
-        guard !didComplete else {
-            dismiss()
-            return
-        }
-        didComplete = true
-		let loggedAt = Date()
+	private func completeSession() {
 		let loggedAtMonotonic = WorkoutClock.monotonicTime
-		finalizeAllStopwatches(at: loggedAtMonotonic)
-        let startDate = routineStartedAt ?? loggedAt.addingTimeInterval(-plan.duration)
-		let interval = WorkoutSessionPolicy.completedWorkoutInterval(
-			sessionStartedAt: startDate,
-			planDuration: plan.duration,
-			elapsed: currentElapsed
-		)
-		audioCoach.stop()
-		let snapshot = stopwatches.reduce(into: [WorkoutActivitySegmentKey: TimeInterval]()) { result, entry in
-			guard entry.value.hasStarted, let elapsed = entry.value.elapsed(at: loggedAtMonotonic) else { return }
-			result[entry.key] = elapsed
+		finalizeRoutine(monotonicTime: loggedAtMonotonic)
+		if let completedSession {
+			summarySession = completedSession
 		}
+		audioCoach.stop()
+	}
+
+	private func meter(step: WorkoutStep) -> some View {
+		MotherboardMeterView(
+			measurement: motherboardBluetoothService.latestMeasurement,
+			peakLoadKGF: recorder.currentStepID == step.id ? recorder.currentPeakLoadKGF : nil,
+			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
+			plannedActiveDuration: step.activeDuration,
+			bodyweightKGF: bodyweightKGF,
+			unit: motherboardSettingsStore.forceUnit,
+			state: motherboardBluetoothService.state,
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
+		)
+	}
+
+	private func consume(_ measurement: MotherboardMeasurement) {
+		guard workoutClock.isRunning,
+              countdownRemaining == 0,
+              WorkoutSessionPolicy.isMeasurementEligible(
+                routineStartedAt: routineStartedAt,
+                measurementTimestamp: measurement.timestamp
+              ) else { return }
+
+		let elapsed = currentElapsed
+		guard elapsed < plan.duration else { return }
+		let currentStep = step(at: elapsed)
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.consume(
+			measurement,
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			workoutElapsed: elapsed,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
+			isActive: true
+		)
+	}
+
+	private func capture(_ measurement: MotherboardMeasurement) {
+		guard workoutClock.isRunning else { return }
+		motherboardMeasurementCollector.capture(
+			measurement,
+			startedAt: routineStartedAt,
+			countdownRemaining: countdownRemaining,
+			workoutElapsed: currentElapsed,
+			planDuration: plan.duration
+		)
+	}
+
+	private func finalizeRoutine(monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
+		guard !didComplete else { return }
+		didComplete = true
+		completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
+			at: monotonicTime,
+			in: &stopwatches
+		)
+		recorder.pause(at: plan.duration)
+
+		let completedMeasurements = Dictionary(
+			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
+		)
+		let steps = plan.steps.map { step in
+			completedMeasurements[step.id] ?? WorkoutStepMeasurement(
+				stepID: step.id,
+				plannedActiveDuration: step.activeDuration,
+				intervals: [],
+				peakLoadKGF: nil,
+				sampleCount: 0,
+				status: .unmeasured
+			)
+		}
+		let recordedAt = Date()
+		let startDate = routineStartedAt ?? recordedAt.addingTimeInterval(-plan.duration)
+		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
+			sessionStartedAt: startDate,
+			recordedAt: recordedAt
+		).end
+		let session = WorkoutSessionRecord(
+			id: UUID(),
+			planID: plan.id,
+			planTitle: plan.title,
+			recordedAt: recordedAt,
+			startDate: startDate,
+			endDate: endDate,
+			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
+			batteryValue: motherboardBluetoothService.batteryValue,
+			steps: steps,
+			bodyweightKGF: bodyweightKGF,
+			motherboardMeasurements: motherboardMeasurementCollector.measurements,
+			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
+		)
+		completedSession = session
+		summarySession = session
+	}
+
+	private func configureRecorder() {
+		guard !workoutClock.isRunning, workoutClock.elapsed == 0, !didComplete else { return }
+		recorder = MotherboardWorkoutRecorder(configuration: .init(
+			thresholdKGF: motherboardSettingsStore.thresholdKGF
+		))
+	}
+
+	private var needsWorkoutPreparation: Bool {
+		MotherboardWorkoutPreparation.requiresPreparation(
+			isInitialStart: !workoutClock.isRunning && workoutClock.elapsed == 0 && !didCompleteWorkoutPreparation,
+			isStreaming: motherboardBluetoothService.state == .streaming
+		)
+	}
+
+	private func save(_ session: WorkoutSessionRecord) {
+		guard !didSaveSession, completedSession?.id == session.id else { return }
+		didSaveSession = true
 		store.markSessionComplete(
 			plan,
 			board: board,
-			stopwatchDurations: snapshot,
-			startDate: interval.start,
-			endDate: interval.end
+			stopwatchDurations: completedStopwatchDurations,
+			startDate: session.startDate,
+			endDate: session.endDate,
+			session: session
 		)
-        dismiss()
-    }
+		summarySession = nil
+		dismiss()
+	}
+
+	private func discard(_ session: WorkoutSessionRecord) {
+		guard completedSession?.id == session.id else { return }
+		summarySession = nil
+		completedSession = nil
+		workoutClock.reset()
+		routineStartedAt = nil
+		audioCoach.stop()
+		dismiss()
+	}
+
+	private func interruptRecorderForSensorLoss() {
+		guard workoutClock.isRunning, countdownRemaining == 0, !didComplete else { return }
+
+		let elapsed = currentElapsed
+		let currentStep = step(at: elapsed)
+		guard !currentStep.isRestStep,
+			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
+
+		recorder.interrupt(
+			stepID: currentStep.id,
+			plannedActiveDuration: currentStep.activeDuration,
+			stepStartElapsed: stepStartElapsed(at: elapsed),
+			at: elapsed
+		)
+	}
+
+	private func interruptRecorderIfNeeded() {
+		let hasStartedActiveWork = workoutClock.isRunning && countdownRemaining == 0
+		let hasElapsedWork = workoutClock.elapsed > 0
+		guard !didComplete, !didInterruptRecorder, hasStartedActiveWork || hasElapsedWork else { return }
+		recorder.interrupt(at: currentElapsed)
+		didInterruptRecorder = true
+	}
 
     private var currentElapsed: TimeInterval {
         min(plan.duration, workoutClock.elapsed)
@@ -1655,6 +1982,16 @@ struct WorkoutView: View {
         seek(to: target)
     }
 
+	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
+		var cursor: TimeInterval = 0
+        for step in plan.steps {
+            if elapsed < cursor + step.duration {
+                return cursor
+            }
+            cursor += step.duration
+		}
+		return max(0, cursor - (plan.steps.last?.duration ?? 0))
+	}
 	private func initializeStopwatches() {
 		for step in plan.steps {
 			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
@@ -1762,6 +2099,8 @@ struct WorkoutView: View {
 
 struct ProgressDashboardView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.openURL) private var openURL
 	@Environment(\.scenePhase) private var scenePhase
 	@State private var didRequestHealthReview = false
@@ -1781,7 +2120,12 @@ struct ProgressDashboardView: View {
                     }
 
                     streakCard
+					sessionHistoryCard
                     boardInfo
+                    MotherboardCard(
+                        service: motherboardBluetoothService,
+                        settings: motherboardSettingsStore
+                    )
                     healthCard
                     recoveryCard
                 }
@@ -1790,7 +2134,19 @@ struct ProgressDashboardView: View {
                 .padding(.bottom, 30)
             }
             .background(Color.hangBackground)
-            .toolbar(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        MotherboardSettingsView(
+                            service: motherboardBluetoothService,
+                            settings: motherboardSettingsStore
+                        )
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel("Motherboard settings")
+                }
+            }
         }
 		.onAppear {
 			store.refreshHealthAuthorization()
@@ -1839,6 +2195,55 @@ struct ProgressDashboardView: View {
         }
         .hangCard()
     }
+
+	private var sessionHistoryCard: some View {
+		VStack(alignment: .leading, spacing: 10) {
+			NavigationLink {
+				WorkoutSessionHistoryView(
+					sessions: store.sessionHistory,
+					unit: motherboardSettingsStore.forceUnit
+				)
+			} label: {
+				HStack(spacing: 14) {
+					Image(systemName: "clock.arrow.circlepath")
+						.font(.system(size: 18, weight: .bold))
+						.foregroundStyle(Color.hangGreenDark)
+						.frame(width: 36, height: 36)
+						.background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+
+					VStack(alignment: .leading, spacing: 3) {
+						Text("Session history")
+							.font(.system(size: 15, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+						Text(sessionHistoryDetail)
+							.font(.system(size: 12, weight: .medium, design: .rounded))
+							.foregroundStyle(Color.hangMuted)
+							.lineLimit(1)
+					}
+					Spacer()
+					Image(systemName: "chevron.right")
+						.font(.system(size: 12, weight: .bold))
+						.foregroundStyle(Color.hangMuted)
+				}
+			}
+			.buttonStyle(.plain)
+
+			if let error = store.sessionPersistenceError {
+				Label(error, systemImage: "exclamationmark.triangle.fill")
+					.font(.system(size: 12, weight: .semibold, design: .rounded))
+					.foregroundStyle(Color.holdActive)
+					.fixedSize(horizontal: false, vertical: true)
+			}
+		}
+		.hangCard()
+	}
+
+	private var sessionHistoryDetail: String {
+		guard let latest = store.sessionHistory.first else {
+			return "Saved sessions will appear here."
+		}
+		return "\(store.sessionHistory.count) saved · Latest \(latest.recordedAt.formatted(date: .abbreviated, time: .omitted))"
+	}
 
     private var boardInfo: some View {
         VStack(alignment: .leading, spacing: 14) {
