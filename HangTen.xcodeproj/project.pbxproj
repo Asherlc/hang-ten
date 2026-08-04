@@ -55,6 +55,13 @@
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
+		AA0000000000000000000052 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000052 /* WorkoutHistory.swift */; };
+		AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */; };
+		AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000054 /* WorkoutHistoryService.swift */; };
+		AA0000000000000000000055 /* WorkoutHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000055 /* WorkoutHistoryTests.swift */; };
+		AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */; };
+		AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000057 /* HealthKitServiceTests.swift */; };
+		AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +116,13 @@
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000052 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
+		BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
+		BB0000000000000000000054 /* WorkoutHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryService.swift; sourceTree = "<group>"; };
+		BB0000000000000000000055 /* WorkoutHistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000057 /* HealthKitServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitServiceTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +194,9 @@
 				BB0000000000000000000043 /* PlanFilters.swift */,
 				BB0000000000000000000047 /* WorkoutActivityRecording.swift */,
 				BB0000000000000000000049 /* WorkoutStopwatch.swift */,
+				BB0000000000000000000052 /* WorkoutHistory.swift */,
+				BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */,
+				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -230,6 +247,10 @@
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
 				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
+				BB0000000000000000000055 /* WorkoutHistoryTests.swift */,
+				BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */,
+				BB0000000000000000000057 /* HealthKitServiceTests.swift */,
+				BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -406,6 +427,37 @@
 				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
 				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
+				AA0000000000000000000052 /* WorkoutHistory.swift in Sources */,
+				AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */,
+				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC0000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
+				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
+				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
+				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
+				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
+				AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */,
+				AA0000000000000000000028 /* AppStoreTests.swift in Sources */,
+				AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */,
+				AA0000000000000000000035 /* SimulatedMotherboardTransportTests.swift in Sources */,
+				AA0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift in Sources */,
+				AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */,
+				AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */,
+				AA0000000000000000000045 /* WorkoutSegmentTests.swift in Sources */,
+				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
+				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
+				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
+				AA0000000000000000000055 /* WorkoutHistoryTests.swift in Sources */,
+				AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
+				AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */,
+				AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +554,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -533,7 +585,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten uses Apple Health to save completed hangboard sessions.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;

@@ -2346,12 +2346,11 @@ struct WorkoutView: View {
 }
 
 struct ProgressDashboardView: View {
-    @EnvironmentObject private var store: AppStore
-    @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
-    @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
-    @Environment(\.openURL) private var openURL
+	@EnvironmentObject private var store: AppStore
+	@EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
+	@EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
+	@Environment(\.openURL) private var openURL
 	@Environment(\.scenePhase) private var scenePhase
-	@State private var didRequestHealthReview = false
 
     var body: some View {
         NavigationStack {
@@ -2398,15 +2397,6 @@ struct ProgressDashboardView: View {
         }
 		.onAppear {
 			store.refreshHealthAuthorization()
-			#if DEBUG
-			if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_REQUEST_HEALTH"] == "1",
-			   !didRequestHealthReview {
-				didRequestHealthReview = true
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-					store.requestHealthAuthorization()
-				}
-			}
-			#endif
 		}
 		.onChange(of: scenePhase) { _, phase in
 			if phase == .active {
@@ -2421,21 +2411,22 @@ struct ProgressDashboardView: View {
                 Circle()
                     .stroke(Color.hangGreen.opacity(0.25), lineWidth: 10)
                 Circle()
-                    .trim(from: 0, to: store.sessionsCompleted == 0 ? 0.05 : 0.68)
+                    .trim(from: 0, to: store.workoutHistory.sessionCount == 0 ? 0.05 : 0.68)
                     .stroke(Color.hangGreenDark, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                     .rotationEffect(.degrees(-90))
-                Text("\(store.sessionsCompleted)")
+                Text("\(store.workoutHistory.sessionCount)")
                     .font(.system(size: 25, weight: .heavy, design: .rounded))
                     .foregroundStyle(Color.hangInk)
+                    .accessibilityIdentifier("progress.sessionsCount")
             }
             .frame(width: 88, height: 88)
 
             VStack(alignment: .leading, spacing: 6) {
                 SectionLabel(title: "Sessions logged")
-                Text(store.sessionsCompleted == 0 ? "Your first one is waiting." : "You’re building momentum.")
+                Text(store.workoutHistory.sessionCount == 0 ? "Your first one is waiting." : "You’re building momentum.")
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
-                Text(store.lastSessionTitle ?? "Start with the Metolius sequence.")
+                Text(store.workoutHistory.latestSessionTitle ?? "Start with the Metolius sequence.")
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
                     .lineLimit(2)
@@ -2575,22 +2566,33 @@ struct ProgressDashboardView: View {
 					.foregroundStyle(Color.holdActiveDeep)
 			}
 
-			if store.healthAuthorizationState == .notDetermined ||
-				store.healthAuthorizationState == .denied {
-				Button(action: handleHealthAuthorization) {
-					HStack {
-						Image(systemName: store.healthAuthorizationState == .denied ? "gear" : "heart.fill")
-						Text(store.healthAuthorizationState == .denied ? "Open app settings" : "Connect Apple Health")
-						Spacer()
-						Image(systemName: "arrow.right")
+				Text(historySourceMessage)
+					.font(.system(size: 13, weight: .medium, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+					.fixedSize(horizontal: false, vertical: true)
+				.accessibilityIdentifier("health.historySource")
+
+			if let healthAction {
+				Button(
+					action: { handleHealthAuthorization(healthAction) },
+					label: {
+						HStack {
+							Image(systemName: healthAction == .settings ? "gear" : "heart.fill")
+							Text(healthAction == .settings ? "Open app settings" : "Connect Apple Health")
+							Spacer()
+							Image(systemName: "arrow.right")
+						}
+						.font(.system(size: 14, weight: .bold, design: .rounded))
+						.foregroundStyle(Color.hangInk)
+						.padding(.horizontal, 14)
+						.padding(.vertical, 12)
+						.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
 					}
-					.font(.system(size: 14, weight: .bold, design: .rounded))
-					.foregroundStyle(Color.hangInk)
-					.padding(.horizontal, 14)
-					.padding(.vertical, 12)
-					.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-				}
+				)
 				.buttonStyle(.plain)
+				.accessibilityIdentifier(
+					healthAction == .connect ? "health.connect" : "health.settings"
+				)
 			}
 		}
 		.padding(16)
@@ -2608,12 +2610,44 @@ struct ProgressDashboardView: View {
 		}
 	}
 
-	private func handleHealthAuthorization() {
-		if store.healthAuthorizationState == .denied,
+	private func handleHealthAuthorization(_ healthAction: HealthAction) {
+		if healthAction == .settings,
 		   let settingsURL = URL(string: UIApplication.openSettingsURLString) {
 			openURL(settingsURL)
 		} else {
 			store.requestHealthAuthorization()
 		}
+	}
+
+	private var historySourceMessage: String {
+		switch store.workoutHistory.source {
+		case .healthKit:
+			"History synced from Apple Health."
+		case .localFallback:
+			"History stored on this device until Apple Health is connected."
+		case .syncing:
+			"Syncing Hang Ten history with Apple Health…"
+		case .unavailable:
+			"Apple Health history is unavailable; completed sessions stay on this device."
+		}
+	}
+
+	private var healthAction: HealthAction? {
+		guard store.healthAuthorizationState != .unavailable else { return nil }
+		if store.healthAuthorizationState == .denied {
+			return .settings
+		}
+		if store.shouldShowConnectAppleHealth {
+			return .connect
+		}
+		if store.workoutHistory.source == .localFallback {
+			return .settings
+		}
+		return nil
+	}
+
+	private enum HealthAction {
+		case connect
+		case settings
 	}
 }

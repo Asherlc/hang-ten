@@ -156,8 +156,9 @@ jobs:
             -maximum-parallel-testing-workers 1 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGN_IDENTITY="-" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
 
       # actions/upload-artifact v4.6.2
@@ -170,6 +171,35 @@ jobs:
             ${{ runner.temp }}/HangTenTests.xcresult
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
+
+      - name: Verify simulator HealthKit entitlement
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ ! -d "$RUNNER_TEMP/hang-ten-test-derived-data" ]]; then
+            echo "Simulator test derived data was not generated." >&2
+            exit 1
+          fi
+          entitlements_path="$(
+            find "$RUNNER_TEMP/hang-ten-test-derived-data" \
+              -type f \
+              -name 'HangTen.app-Simulated.xcent' \
+              -print \
+              -quit
+          )"
+          if [[ -z "$entitlements_path" ]]; then
+            echo "Simulator HealthKit entitlements were not generated." >&2
+            exit 1
+          fi
+          healthkit_enabled="$(
+            /usr/libexec/PlistBuddy \
+              -c 'Print :com.apple.developer.healthkit' \
+              "$entitlements_path"
+          )"
+          if [[ "$healthkit_enabled" != "true" ]]; then
+            echo "Simulator HealthKit entitlement must be true; found: $healthkit_enabled" >&2
+            exit 1
+          fi
 
       - name: Delete test simulator
         if: always()
