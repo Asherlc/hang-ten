@@ -1,27 +1,56 @@
 import Foundation
 import Combine
 
+@MainActor
 final class AppStore: ObservableObject {
 	private static let favoritePlanIDsKey = "favoritePlanIDs"
 	private let userDefaults: UserDefaults
 
-    @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
-    @Published var sessionsCompleted = 0
-    @Published var lastSessionTitle: String?
+	@Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
+	var sessionsCompleted: Int { sessionHistory.count }
+	@Published var lastSessionTitle: String?
+	@Published private(set) var sessionHistory: [WorkoutSessionRecord]
+	@Published private(set) var sessionPersistenceError: String?
 	@Published private(set) var favoritePlanIDs: Set<String>
 	@Published private(set) var healthAuthorizationState: HealthAuthorizationState
 	@Published private(set) var healthAuthorizationError: String?
 
+	private let motherboardBluetoothService: MotherboardBluetoothService
+	private let motherboardSettingsStore: MotherboardSettingsStore
+	private let workoutSessionStore: WorkoutSessionStoring
 	private let healthKitService: HealthWorkoutSaving
 
 	init(
 		healthKitService: HealthWorkoutSaving = HealthKitService(),
+		motherboardBluetoothService: MotherboardBluetoothService? = nil,
+		motherboardSettingsStore: MotherboardSettingsStore = MotherboardSettingsStore(),
+		workoutSessionStore: WorkoutSessionStoring = WorkoutSessionStore(),
 		userDefaults: UserDefaults = .standard
 	) {
 		self.healthKitService = healthKitService
 		self.userDefaults = userDefaults
+		self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
+			transport: CoreBluetoothMotherboardTransport()
+		)
+		self.motherboardSettingsStore = motherboardSettingsStore
+		self.workoutSessionStore = workoutSessionStore
+		let loadedSessions = workoutSessionStore.sessions
+		sessionHistory = loadedSessions
+		lastSessionTitle = loadedSessions.first?.planTitle
+		sessionPersistenceError = workoutSessionStore.persistenceError
 		favoritePlanIDs = Set(userDefaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
 		healthAuthorizationState = healthKitService.authorizationState
+
+		workoutSessionStore.load { [weak self] result in
+			Task { @MainActor [weak self] in
+				guard let self else { return }
+				self.sessionHistory = self.workoutSessionStore.sessions
+				if self.lastSessionTitle == nil {
+					self.lastSessionTitle = self.sessionHistory.first?.planTitle
+				}
+				self.recordSessionPersistence(result)
+			}
+		}
 	}
 
     var plans: [TrainingPlan] {
@@ -83,14 +112,23 @@ final class AppStore: ObservableObject {
             .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
     }
 
-    func markSessionComplete(
-        _ plan: TrainingPlan,
-        board: TrainingBoard,
-        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
-        startDate: Date,
-        endDate: Date
-    ) {
-        sessionsCompleted += 1
+	func markSessionComplete(
+		_ plan: TrainingPlan,
+		board: TrainingBoard,
+		stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
+		startDate: Date,
+		endDate: Date,
+		session: WorkoutSessionRecord? = nil
+	) {
+		if let session {
+			workoutSessionStore.append(session) { [weak self] result in
+				Task { @MainActor [weak self] in
+					self?.recordSessionPersistence(result)
+				}
+			}
+		}
+		sessionHistory = workoutSessionStore.sessions
+
         lastSessionTitle = plan.title
 		healthAuthorizationError = nil
 
@@ -123,18 +161,44 @@ final class AppStore: ObservableObject {
 		}
     }
 
-    func markSessionComplete(_ plan: TrainingPlan, startDate: Date, endDate: Date) {
-        markSessionComplete(
-            plan,
-            board: selectedBoard,
-            stopwatchDurations: [:],
-            startDate: startDate,
-            endDate: endDate
-        )
-    }
+	func markSessionComplete(
+		_ plan: TrainingPlan,
+		startDate: Date,
+		endDate: Date,
+		session: WorkoutSessionRecord? = nil
+	) {
+		markSessionComplete(
+			plan,
+			board: selectedBoard,
+			stopwatchDurations: [:],
+			startDate: startDate,
+			endDate: endDate,
+			session: session
+		)
+	}
 
 	func refreshHealthAuthorization() {
 		healthAuthorizationState = healthKitService.authorizationState
+	}
+
+	func flushSessionPersistence(completion: (() -> Void)? = nil) {
+		workoutSessionStore.flush { [weak self] result in
+			Task { @MainActor [weak self] in
+				self?.recordSessionPersistence(result)
+				completion?()
+			}
+		}
+	}
+
+	func flushSessionPersistenceSynchronously() {
+		workoutSessionStore.flush()
+		let result: Result<Void, Error>
+		if let persistenceError = workoutSessionStore.persistenceError {
+			result = .failure(SessionPersistenceFailure(message: persistenceError))
+		} else {
+			result = .success(())
+		}
+		recordSessionPersistence(result)
 	}
 
 	func requestHealthAuthorization() {
@@ -145,5 +209,20 @@ final class AppStore: ObservableObject {
 				self?.healthAuthorizationError = error?.localizedDescription
 			}
 		}
+	}
+
+	private func recordSessionPersistence(_ result: Result<Void, Error>) {
+		switch result {
+		case .success:
+			sessionPersistenceError = nil
+		case .failure(let error):
+			sessionPersistenceError = "Session history could not be saved: \(error.localizedDescription)"
+		}
+	}
+
+	private struct SessionPersistenceFailure: LocalizedError {
+		let message: String
+
+		var errorDescription: String? { message }
 	}
 }

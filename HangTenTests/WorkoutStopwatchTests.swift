@@ -196,4 +196,32 @@ final class WorkoutStopwatchTests: XCTestCase {
         stopwatch.stop(at: 132.6)
         XCTAssertEqual(try XCTUnwrap(stopwatch.elapsed(at: 200)), 4.3, accuracy: 0.000_1)
     }
+
+    func testFinalizeAndSnapshotAllStopwatchesRecordsObservedDurations() throws {
+        let firstKey = WorkoutActivitySegmentKey(stepID: "first", segmentIndex: 0)
+        let secondKey = WorkoutActivitySegmentKey(stepID: "second", segmentIndex: 0)
+        let neverStartedKey = WorkoutActivitySegmentKey(stepID: "second", segmentIndex: 1)
+        var firstStopwatch = WorkoutStopwatch()
+        firstStopwatch.start(at: 100)
+        firstStopwatch.pause(at: 106)
+        var secondStopwatch = WorkoutStopwatch()
+        secondStopwatch.start(at: 110)
+        var stopwatches = [
+            firstKey: firstStopwatch,
+            secondKey: secondStopwatch,
+            neverStartedKey: WorkoutStopwatch()
+        ]
+
+        let durations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
+            at: 120,
+            in: &stopwatches
+        )
+
+        XCTAssertEqual(durations[firstKey], 6)
+        XCTAssertEqual(durations[secondKey], 10)
+        XCTAssertNil(durations[neverStartedKey])
+        XCTAssertTrue(stopwatches[firstKey]?.isFinalized == true)
+        XCTAssertTrue(stopwatches[secondKey]?.isFinalized == true)
+        XCTAssertTrue(stopwatches[neverStartedKey]?.isFinalized == true)
+    }
 }

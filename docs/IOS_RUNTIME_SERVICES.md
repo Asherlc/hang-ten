@@ -4,6 +4,56 @@ This document records the runtime behavior that spans the workout UI, audio,
 orientation, and Apple Health. Use it with the isolated simulator guide when
 changing any of those systems.
 
+## Motherboard Bluetooth sensor
+
+The optional Motherboard sensor is a live force input, not a workout timer.
+The user explicitly taps Connect sensor in Progress; the app then scans for
+the Bluetooth service, connects, enables TX notifications, requests the
+device's calibration rows, and starts its 30 Hz stream only after complete
+four-sensor calibration. iOS Bluetooth permission therefore follows a clear
+user action on physical devices rather than an automatic production launch.
+
+Notifications may be fragmented or contain more than one line. The service
+buffers them until CRLF-delimited calibration rows, stream acknowledgements,
+or 16-byte hex raw packets can be parsed, with a 4,096-byte receive-buffer cap;
+overflow clears the buffer and emits a parser error. Calibration maps each sensor's ADC
+values to kgf, and Tare subtracts the current per-sensor reading. The workout
+recorder uses the notification timestamp and the configured kgf threshold,
+release ratio, debounce, and merge gap to calculate loaded intervals; the
+workout clock remains the authority for planned time. Rest steps stay
+unmeasured. Setup parser errors are fatal. During an active stream, parser
+errors are tolerated through two consecutive errors; the third consecutive
+error clears the transient measurement and calibration state, records the
+unavailable/error state, and leaves the workout timer controls usable. A valid
+raw frame resets that streak. Completed summaries can therefore include both
+measured and unmeasured steps.
+
+Eligible raw ADC measurements are persisted with the completed session up to
+`MotherboardWorkoutMeasurementCollector.maximumMeasurementCount` (20,000).
+When additional measurements are received, they are dropped and
+`WorkoutSessionRecord` records that truncation occurred. History remains capped
+at the 20 newest session records.
+
+The UART-style service UUIDs, calibration-row format, stream commands, and raw
+packet layout are reverse-engineered from observed Motherboard behavior. They
+are not an official manufacturer SDK or protocol guarantee. Do not treat the
+displayed load as a certified measurement, and revalidate against the physical
+device after firmware changes.
+
+`HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
+selects Progress and replaces the CoreBluetooth transport with a deterministic
+fixture that sends real calibration and raw notification frames through
+`MotherboardBluetoothService`. Its deterministic unloaded, loaded, peak, and
+released pattern repeats while streaming, but every raw notification is stamped
+when it is delivered so a routine started after launch can be recorded. The
+same service, meter, settings, threshold, and recorder paths are exercised
+without system Bluetooth. Release builds always construct
+`CoreBluetoothMotherboardTransport` regardless of that environment variable.
+The fixture does not validate radio
+permissions, discovery, GATT behavior, device calibration accuracy, firmware
+compatibility, disconnect timing, or force accuracy; all of those require a
+physical Motherboard before release.
+
 ## Workout clock and spoken cues
 
 `WorkoutView` uses one elapsed session clock backed by monotonic system uptime.
