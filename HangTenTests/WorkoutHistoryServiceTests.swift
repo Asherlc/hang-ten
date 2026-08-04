@@ -334,6 +334,30 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertNotNil(service.lastError)
     }
 
+    func testReadNotSupportedUploadsPendingRecordThenFallsBackWithoutRefetch() {
+        let local = pendingRecord(title: "Write-only Plan")
+        let persistence = FakeWorkoutHistoryPersistence(records: [local])
+        let savedWorkoutID = UUID()
+        let healthStore = FakeWorkoutHealthStore(
+            fetchResult: .failure(HealthWorkoutReadError.readNotSupported),
+            saveResult: .success(savedWorkoutID)
+        )
+        let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
+
+        refresh(service)
+
+        XCTAssertEqual(healthStore.fetchCallCount, 1)
+        XCTAssertEqual(healthStore.saveCallCount, 1)
+        XCTAssertEqual(service.snapshot.source, .localFallback)
+        XCTAssertEqual(service.snapshot.entries.map(\.id), [local.id])
+        XCTAssertEqual(service.snapshot.sessionCount, 1)
+        XCTAssertEqual(service.snapshot.latestSessionTitle, "Write-only Plan")
+        XCTAssertEqual(service.lastError as? HealthWorkoutReadError, .readNotSupported)
+        XCTAssertEqual(persistence.load().count, 1)
+        XCTAssertTrue(persistence.load()[0].healthUploadAttempted)
+        XCTAssertEqual(persistence.load()[0].healthWorkoutUUID, savedWorkoutID)
+    }
+
     func testQueryFailureWithoutLocalRecordsIsUnavailable() {
         let persistence = FakeWorkoutHistoryPersistence()
         let service = WorkoutHistoryService(

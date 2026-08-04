@@ -113,6 +113,13 @@ final class WorkoutHistoryService {
         switch result {
         case let .failure(error):
             storedLastError = error
+            if let readError = error as? HealthWorkoutReadError, readError == .readNotSupported {
+                uploadUnattemptedRecords(
+                    healthRecords: [],
+                    shouldRefetchAfterUploads: false
+                )
+                return
+            }
             finish(with: Self.localFallbackSnapshot(for: localRecords))
 
         case let .success(healthRecords):
@@ -126,10 +133,11 @@ final class WorkoutHistoryService {
 
     private func uploadUnattemptedRecords(
         healthRecords: [HealthWorkoutRecord],
-        attemptedRecordIDs: Set<UUID> = []
+        attemptedRecordIDs: Set<UUID> = [],
+        shouldRefetchAfterUploads: Bool = true
     ) {
         guard healthStore.authorizationState == .authorized else {
-            refetchAfterUploads()
+            finishAfterUploads(shouldRefetchAfterUploads: shouldRefetchAfterUploads)
             return
         }
 
@@ -140,7 +148,7 @@ final class WorkoutHistoryService {
                 $0.healthWorkoutUUID == nil &&
                 !attemptedRecordIDs.contains($0.id)
         }) else {
-            refetchAfterUploads()
+            finishAfterUploads(shouldRefetchAfterUploads: shouldRefetchAfterUploads)
             return
         }
 
@@ -164,7 +172,8 @@ final class WorkoutHistoryService {
                 }
                 self.uploadUnattemptedRecords(
                     healthRecords: healthRecords,
-                    attemptedRecordIDs: attemptedRecordIDs.union([record.id])
+                    attemptedRecordIDs: attemptedRecordIDs.union([record.id]),
+                    shouldRefetchAfterUploads: shouldRefetchAfterUploads
                 )
             }
         }
@@ -187,6 +196,14 @@ final class WorkoutHistoryService {
                 endDate: record.endDate,
                 completion: uploadCompletion
             )
+        }
+    }
+
+    private func finishAfterUploads(shouldRefetchAfterUploads: Bool) {
+        if shouldRefetchAfterUploads {
+            refetchAfterUploads()
+        } else {
+            finish(with: Self.localFallbackSnapshot(for: persistence.load()))
         }
     }
 

@@ -790,7 +790,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
-            workoutSessionStore: sessionStore
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         store.flushSessionPersistenceSynchronously()
 
@@ -806,7 +807,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
-            workoutSessionStore: sessionStore
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         store.flushSessionPersistenceSynchronously()
 
@@ -831,7 +833,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
-            workoutSessionStore: sessionStore
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         store.flushSessionPersistenceSynchronously()
 
@@ -853,7 +856,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
             motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
-            workoutSessionStore: sessionStore
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         store.flushSessionPersistenceSynchronously()
         let first = workoutSessionRecord(planTitle: "First", recordedAt: 20)
@@ -882,11 +886,13 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     }
 
     func testCompletionExposesSessionPersistenceFailure() async {
+        let defaults = makeDefaults()
         let sessionStore = FailingWorkoutSessionStore()
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
-            workoutSessionStore: sessionStore
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         let errorUpdated = expectation(description: "persistence error updated")
         let observation = store.$sessionPersistenceError.dropFirst().sink { error in
@@ -907,11 +913,13 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     }
 
     func testBackgroundPersistenceKeepsBackgroundTaskUntilAsyncFlushCompletes() async {
+        let defaults = makeDefaults()
         let sessionStore = DeferredFlushWorkoutSessionStore()
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
-            workoutSessionStore: sessionStore
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
         let application = RecordingBackgroundTaskApplication()
         let taskEnded = expectation(description: "background task ended")
@@ -930,11 +938,13 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     }
 
     func testSynchronousAppStoreFlushUsesTerminationPath() {
+        let defaults = makeDefaults()
         let sessionStore = DeferredFlushWorkoutSessionStore()
         let store = AppStore(
             motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: makeDefaults()),
-            workoutSessionStore: sessionStore
+            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
+            workoutSessionStore: sessionStore,
+            defaults: defaults
         )
 
         store.flushSessionPersistenceSynchronously()
