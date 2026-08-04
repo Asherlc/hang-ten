@@ -627,17 +627,18 @@ private struct FavoritePlanCard: View {
     let onToggle: () -> Void
 
     var body: some View {
-        HStack(alignment: .center, spacing: 10) {
+        ZStack(alignment: .topTrailing) {
             NavigationLink(destination: PlanDetailView(plan: plan)) {
                 PlanCard(plan: plan, board: board)
             }
             .buttonStyle(.plain)
+            .frame(maxWidth: .infinity)
 
             Button(action: onToggle) {
                 Image(systemName: isFavorite ? "star.fill" : "star")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 34, height: 34)
                     .background(
                         isFavorite ? Color.hangGreen.opacity(0.28) : Color.hangCream,
                         in: Circle()
@@ -646,6 +647,8 @@ private struct FavoritePlanCard: View {
                         Circle()
                             .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
                     }
+                    .frame(width: 44, height: 44)
+                    .contentShape(Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(
@@ -653,6 +656,8 @@ private struct FavoritePlanCard: View {
                     ? "Remove \(plan.title) from favorites"
                     : "Add \(plan.title) to favorites"
             )
+            .padding(.top, 8)
+            .padding(.trailing, 8)
         }
     }
 }
