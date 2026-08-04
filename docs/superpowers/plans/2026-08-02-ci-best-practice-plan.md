@@ -139,19 +139,153 @@ The failure artifact step remains conditional on failure. Cleanup must run with 
 
 - [ ] **Step 3: Run the exact test command locally**
 
-Exercise the same discovery, creation, UUID-based test, diagnostics, and cleanup lifecycle locally with temporary paths:
+Exercise the same discovery, creation, UUID-based test, diagnostics, and cleanup lifecycle locally with workspace-owned paths:
 
 ```bash
-tmp_root="$(mktemp -d)"
-trap 'if [[ -n "${simulator_udid:-}" ]]; then xcrun simctl delete "$simulator_udid"; fi; rm -rf "$tmp_root"' EXIT
+set -euo pipefail
+
+workspace_path="$PWD"
+workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
+context_path="$workspace_path/.context"
+manifest="$context_path/conductor-owned-simulators"
+pending_manifest="$context_path/conductor-pending-simulators"
+logs_path="$context_path/ci-test-logs"
+derived_data_path="$context_path/ci-test-derived-data"
+result_bundle_path="$context_path/HangTenTests.xcresult"
+uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+pending_simulator_udid=""
+pending_recorded_simulator_udid=""
+mkdir -p "$logs_path" "$derived_data_path"
+touch "$manifest"
+simulator_name="Hang Ten Conductor ${workspace_name} iPhone 17 Review"
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_udid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_udid" '{ actual_uuid = $0; if (toupper(actual_uuid) != toupper(uuid)) print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_udid=""
+}
+cleanup_pending_simulator() {
+  if [[ -z "$pending_simulator_udid" ]]; then
+    return 0
+  fi
+  if [[ ! "$pending_simulator_udid" =~ $uuid_regex ]]; then
+    printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
+  local simulator_record simulator_name simulator_state
+  simulator_record="$(xcrun simctl list devices | awk -v uuid="$pending_simulator_udid" '
+    {
+      line = $0
+      sub(/^[[:space:]]+/, "", line)
+      sub(/[[:space:]]+$/, "", line)
+      state = line
+      if (state !~ / \([^()]*\)$/) next
+      sub(/^.* \(/, "", state)
+      sub(/\)$/, "", state)
+      fields = line
+      sub(/ \([^()]*\)$/, "", fields)
+      if (fields !~ / \([^()]*\)$/) next
+      actual_uuid = fields
+      sub(/^.* \(/, "", actual_uuid)
+      sub(/\)$/, "", actual_uuid)
+      if (toupper(actual_uuid) != toupper(uuid)) next
+      name = fields
+      sub(/ \([^()]*\)$/, "", name)
+      print name "\t" state
+      exit
+    }
+  ')"
+  IFS=$'\t' read -r simulator_name simulator_state <<< "$simulator_record"
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+    printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
+  if ! xcrun simctl delete "$pending_simulator_udid"; then
+    printf 'failed to delete pending simulator %s\n' "$pending_simulator_udid" >&2
+    return 1
+  fi
+  pending_simulator_udid=""
+}
+cleanup_on_exit() {
+  original_status=$?
+  trap - EXIT INT TERM
+  cleanup_status=0
+  archive_cleanup_status=0
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
+    cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
+  result_cleanup_status=0
+  rm -rf "$result_bundle_path" || result_cleanup_status=$?
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
+  fi
+  if (( cleanup_status == 0 && result_cleanup_status != 0 )); then
+    cleanup_status=$result_cleanup_status
+  fi
+  artifact_cleanup_status=0
+  rm -rf "$logs_path" "$derived_data_path" "$result_bundle_path" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
+  if (( original_status != 0 )); then
+    exit "$original_status"
+  fi
+  exit "$cleanup_status"
+}
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup_on_exit EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
 device_type_id="$(xcrun simctl list devicetypes | sed -nE 's/^[[:space:]]*iPhone 17 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' | head -n 1)"
 runtime_id="$(xcrun simctl list runtimes available | awk '/^[[:space:]]*iOS [0-9]/ { version = $2; runtime = $NF; if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) print version "|" runtime }' | awk -F'|' '{ split($1, version, /\./); printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2 }' | sort | tail -n 1 | cut -d'|' -f 2-)"
-simulator_udid="$(xcrun simctl create "Hang Ten local iPhone 17 $(uuidgen)" "$device_type_id" "$runtime_id")"
+pending_simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$pending_simulator_udid" || ! "$pending_simulator_udid" =~ $uuid_regex ]]; then
+  printf 'simctl create returned invalid simulator UUID: %s\n' "$pending_simulator_udid" >&2
+  exit 1
+fi
+simulator_udid="$pending_simulator_udid"
+if printf '%s\n' "$simulator_udid" >> "$pending_manifest"; then
+  pending_recorded_simulator_udid="$simulator_udid"
+  pending_simulator_udid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_udid" >&2
+  pending_simulator_udid="$simulator_udid"
+  exit 1
+fi
+if ! printf '%s\n' "$simulator_udid" >> "$manifest"; then
+  printf 'failed to write simulator manifest for %s\n' "$simulator_udid" >&2
+  exit 1
+fi
+pending_simulator_udid=""
 xcrun simctl boot "$simulator_udid"
 xcrun simctl bootstatus "$simulator_udid" -b
-mkdir -p "$tmp_root/test-logs" "$tmp_root/derived-data"
-set -o pipefail
-xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$tmp_root/derived-data" -resultBundlePath "$tmp_root/HangTenTests.xcresult" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$tmp_root/test-logs/test.log"
+rm -rf "$result_bundle_path"
+xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$simulator_udid" -parallel-testing-enabled NO -maximum-parallel-testing-workers 1 -derivedDataPath "$derived_data_path" -resultBundlePath "$result_bundle_path" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test 2>&1 | tee "$logs_path/test.log"
 ```
 
 Local XCTest may be inconclusive on the shared host when the required device type or runtime is unavailable; the hosted `macos-26` CI run is authoritative. Record the observed local result rather than assuming a pass.

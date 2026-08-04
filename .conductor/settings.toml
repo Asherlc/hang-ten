@@ -1,0 +1,13 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+archive = "./scripts/conductor-archive.sh"
+
+[prompts]
+general = """
+Resource lifecycle is part of every task. Keep derived data, logs, screenshots, and temporary review files under .context. Give every external resource an exact workspace owner, record that ownership immediately, and install an exit cleanup trap. Before reporting completion, shut down and delete every resource owned by this workspace. Never delete shared or unknown resources; if cleanup fails, report the failure and keep working until it is resolved or explicitly blocked.
+"""
+
+[git]
+archive_on_merge = true
+delete_branch_on_archive = true

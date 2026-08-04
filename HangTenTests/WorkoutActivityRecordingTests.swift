@@ -2,6 +2,7 @@ import XCTest
 import HealthKit
 @testable import HangTen
 
+@MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
     private let board = TrainingBoard(
         id: "fixture.board",
@@ -405,6 +406,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             return
         }
         XCTAssertEqual(store.sessionsCompleted, 1)
+        XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
         XCTAssertNotNil(defaults.data(forKey: LocalWorkoutHistoryStore.defaultKey))
         XCTAssertEqual(service.savedWorkouts.count, 1)
@@ -493,12 +495,18 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_012)
         )
-        waitUntil { store.sessionsCompleted == 1 }
+        guard waitUntil({
+            store.sessionsCompleted == 1 &&
+                store.healthAuthorizationError == "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+        }) else {
+            return
+        }
         XCTAssertEqual(
             store.healthAuthorizationError,
             "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
         )
         XCTAssertEqual(store.sessionsCompleted, 1)
+        XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
         XCTAssertTrue(service.savedWorkouts.isEmpty)
     }

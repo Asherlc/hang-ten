@@ -150,10 +150,162 @@ final class PlanFiltersTests: XCTestCase {
 
 - [ ] **Step 2: Run the focused test target and verify the failure is caused by the missing filter model.**
 
+Prerequisite, same shell session for every validation command:
+
+```bash
+set -euo pipefail
+
+workspace_path="$PWD"
+workspace_name="${CONDUCTOR_WORKSPACE_NAME:?Set CONDUCTOR_WORKSPACE_NAME}"
+mkdir -p "$workspace_path/.context" "$workspace_path/.context/DerivedData"
+manifest="$workspace_path/.context/conductor-owned-simulators"
+pending_manifest="$workspace_path/.context/conductor-pending-simulators"
+touch "$manifest"
+simulator_name="Hang Ten Conductor ${workspace_name} Review"
+device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
+runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
+uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+pending_simulator_uuid=""
+pending_recorded_simulator_uuid=""
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_uuid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_uuid" '{ actual_uuid = $0; if (toupper(actual_uuid) != toupper(uuid)) print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_uuid=""
+}
+cleanup_pending_simulator() {
+  if [[ -z "$pending_simulator_uuid" ]]; then
+    return 0
+  fi
+  if [[ ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+    printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  local simulator_record simulator_name simulator_state
+  simulator_record="$(rtk xcrun simctl list devices | awk -v uuid="$pending_simulator_uuid" '
+    {
+      line = $0
+      sub(/^[[:space:]]+/, "", line)
+      sub(/[[:space:]]+$/, "", line)
+      state = line
+      if (state !~ / \([^()]*\)$/) next
+      sub(/^.* \(/, "", state)
+      sub(/\)$/, "", state)
+      fields = line
+      sub(/ \([^()]*\)$/, "", fields)
+      if (fields !~ / \([^()]*\)$/) next
+      actual_uuid = fields
+      sub(/^.* \(/, "", actual_uuid)
+      sub(/\)$/, "", actual_uuid)
+      if (toupper(actual_uuid) != toupper(uuid)) next
+      name = fields
+      sub(/ \([^()]*\)$/, "", name)
+      print name "\t" state
+      exit
+    }
+  ')"
+  IFS=$'\t' read -r simulator_name simulator_state <<< "$simulator_record"
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+    printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  if ! rtk xcrun simctl delete "$pending_simulator_uuid"; then
+    printf 'failed to delete pending simulator %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  pending_simulator_uuid=""
+}
+cleanup_on_exit() {
+  original_status=$?
+  trap - EXIT INT TERM
+  cleanup_status=0
+  archive_cleanup_status=0
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
+    cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
+  fi
+  artifact_cleanup_status=0
+  rm -rf "$workspace_path/.context/DerivedData" \
+    "$workspace_path/.context/plan-filters-expected-red-xcodebuild.log" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
+  if (( original_status != 0 )); then
+    exit "$original_status"
+  fi
+  exit "$cleanup_status"
+}
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup_on_exit EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+pending_simulator_uuid="$(rtk xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$pending_simulator_uuid" || ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+  printf 'simctl create returned invalid simulator UUID: %s\n' "$pending_simulator_uuid" >&2
+  exit 1
+fi
+simulator_uuid="$pending_simulator_uuid"
+if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
+  pending_recorded_simulator_uuid="$simulator_uuid"
+  pending_simulator_uuid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
+  pending_simulator_uuid="$simulator_uuid"
+  exit 1
+fi
+if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
+  printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
+  exit 1
+fi
+pending_simulator_uuid=""
+review_device_uuid="$simulator_uuid"
+```
+
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -only-testing:HangTenTests/PlanFiltersTests test
+set +e
+xcodebuild_output="$workspace_path/.context/plan-filters-expected-red-xcodebuild.log"
+# Capture stdout and stderr together so the diagnostic check reads exactly what xcodebuild emitted.
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test >"$xcodebuild_output" 2>&1
+expected_red_status=$?
+set -e
+if (( expected_red_status == 0 )); then
+  echo "Expected PlanFiltersTests to fail before the filter model exists." >&2
+  exit 1
+fi
+if ! grep -E "error: (cannot find '(PlanFilters|PlanFilterOptions)' in scope|type 'PlanCatalog' has no member 'metadata')" "$xcodebuild_output" >/dev/null; then
+  echo "Expected a compiler missing-model diagnostic for PlanFilters, PlanFilterOptions, or PlanCatalog.metadata(for:)." >&2
+  tail -n 80 "$xcodebuild_output" >&2
+  exit 1
+fi
 ```
 
 Expected: compilation fails because `PlanFilters`, `PlanFilterOptions`, and `PlanCatalog.metadata(for:)` do not exist yet. Do not change the test assertions to make this failure disappear.
@@ -247,7 +399,7 @@ Register `PlanFilters.swift` in the app target using build-file ID `AA0000000000
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' -only-testing:HangTenTests/PlanFiltersTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData -only-testing:HangTenTests/PlanFiltersTests test
 ```
 
 Expected: all seven `PlanFiltersTests` pass with zero failures.
@@ -257,7 +409,7 @@ Expected: all seven `PlanFiltersTests` pass with zero failures.
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the existing workout timeline tests and all plan filter tests pass.
@@ -303,7 +455,7 @@ Delete `showsFilters`, the `.sheet` presentation, and `PlanFiltersSheet`. The me
 Run:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,OS=26.5,name=iPhone 17 Pro' test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData test
 ```
 
 Expected: the app target compiles and all unit tests pass with zero failures.
@@ -329,12 +481,12 @@ rtk git commit -m "Use inline plan filter menus"
 
 ## Final validation
 
-- [ ] Create a dedicated simulator named `Hang Ten Worcester Plans Filters Review` on the available iOS 26.5 runtime, assign its returned identifier to `review_device_uuid`, and use that exact UUID for every validation command.
-- [ ] Build with a workspace-specific derived-data directory:
+- [ ] Reuse the prerequisite shell session's `review_device_uuid`, manifest, and
+  archive cleanup traps for every final validation command.
+- [ ] Build with the workspace-specific derived-data directory:
 
 ```bash
-review_device_uuid="$(rtk xcrun simctl create 'Hang Ten Worcester Plans Filters Review' 'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro' 'com.apple.CoreSimulator.SimRuntime.iOS-26-5')"
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData-plans-filters build
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=${review_device_uuid}" -derivedDataPath .context/DerivedData build
 ```
 
 - [ ] Boot the dedicated device, wait for readiness, install the resulting app, and launch it through the Plans review route:
@@ -342,15 +494,18 @@ rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -
 ```bash
 rtk xcrun simctl boot "${review_device_uuid}"
 rtk xcrun simctl bootstatus "${review_device_uuid}" -b
-rtk xcrun simctl install "${review_device_uuid}" .context/DerivedData-plans-filters/Build/Products/Debug-iphonesimulator/HangTen.app
+rtk xcrun simctl install "${review_device_uuid}" .context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app
 SIMCTL_CHILD_HANGTEN_REVIEW_PLANS=1 rtk xcrun simctl launch "${review_device_uuid}" com.hangten.training
 ```
 
 - [ ] Confirm the inline quick-dropdown bar exposes every available facet, supports multiple selections across repeated menu opens, shows selected-value labels and checkmarks, clears either a single facet with `All` or every facet with `Clear`, and preserves plan-card navigation.
 - [ ] Confirm selecting an impossible combination shows `No routines match these filters`, and clearing filters restores the compatible plan cards.
 - [ ] Confirm a board with no compatible plans still shows the original compatibility empty state.
-- [ ] Shut down only the dedicated review-device UUID after validation:
+- [ ] Delete the dedicated review-device UUID after validation through the
+  ownership-aware archive cleanup command:
 
 ```bash
-rtk xcrun simctl shutdown "${review_device_uuid}"
+CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+"$workspace_path/scripts/conductor-resource-cleanup.sh" archive
 ```

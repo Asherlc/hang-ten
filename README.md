@@ -22,12 +22,16 @@ cannot drift away from the hold.
   F80/F100 force-board sessions, Eva IntHangs, 7/3 Repeaters, Abrahangs,
   7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and Zlagboard 60/60.
 - A runnable minute-by-minute session with pause/resume, direct step selection,
-  skipping the current timed step, a spoken 3-2-1 start countdown, task cues,
-  final three-second cues, and completion audio.
+  skipping the current timed step, a spoken 3-2-1 start countdown, and final
+  three-second countdown cues.
 - Mirrored Phosphor hand cues for grip pose and participating fingers.
 - Portrait and landscape workout layouts.
 - An explicit Apple Health permission card. Completed sessions save as
   functional-strength workouts after authorization.
+- A Motherboard Bluetooth sensor card for live force, calibration, tare, and
+  threshold-based loaded-time recording. Its protocol is reverse-engineered;
+  see [runtime-service notes](docs/IOS_RUNTIME_SERVICES.md) for its limits and
+  physical-device validation requirements.
 - A source-linked plan library and lightweight local session progress.
 
 Runtime routine definitions are stored in
@@ -45,8 +49,12 @@ xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
   -configuration Debug \
+  -derivedDataPath .context/DerivedData \
   build
 ```
+
+All Conductor/local-agent builds must use a workspace-local DerivedData path so
+indexes and build output disappear with the workspace.
 
 ## Continuous integration and delivery
 
