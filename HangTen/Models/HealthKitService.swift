@@ -217,9 +217,23 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         )
     }
 
+    static func readError(from error: Error) -> Error {
+        let nsError = error as NSError
+        guard nsError.domain == HKErrorDomain,
+              nsError.code == HKError.errorHealthDataUnavailable.rawValue else {
+            return error
+        }
+        return HealthWorkoutReadError.readNotSupported
+    }
+
     func fetchHangTenWorkouts(
         completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
     ) {
+        guard isHealthDataAvailable else {
+            completion(.failure(HealthWorkoutReadError.readNotSupported))
+            return
+        }
+
         let query = HKSampleQuery(
             sampleType: HKObjectType.workoutType(),
             predicate: Self.hangTenWorkoutPredicate(),
@@ -227,7 +241,7 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
             sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)]
         ) { _, samples, error in
             if let error {
-                completion(.failure(error))
+                completion(.failure(Self.readError(from: error)))
                 return
             }
 

@@ -72,6 +72,29 @@ final class HealthKitServiceTests: XCTestCase {
         )
     }
 
+    func testReadErrorMapsHealthDataUnavailableToReadNotSupported() {
+        let error = NSError(
+            domain: HKErrorDomain,
+            code: HKError.errorHealthDataUnavailable.rawValue
+        )
+
+        let mappedError = HealthKitService.readError(from: error)
+
+        XCTAssertEqual(mappedError as? HealthWorkoutReadError, .readNotSupported)
+    }
+
+    func testReadErrorPreservesOtherHealthKitErrors() {
+        let error = NSError(
+            domain: HKErrorDomain,
+            code: HKError.errorAuthorizationDenied.rawValue
+        )
+
+        let mappedError = HealthKitService.readError(from: error) as NSError
+
+        XCTAssertEqual(mappedError.domain, error.domain)
+        XCTAssertEqual(mappedError.code, error.code)
+    }
+
     private func record(
         activityType: HKWorkoutActivityType = .functionalStrengthTraining,
         metadata: [String: Any]

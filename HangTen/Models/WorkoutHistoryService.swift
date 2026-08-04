@@ -1,6 +1,11 @@
 import Foundation
 
 final class WorkoutHistoryService {
+    struct State {
+        let snapshot: WorkoutHistorySnapshot
+        let lastError: Error?
+    }
+
     private let healthStore: any WorkoutHealthStore
     private let persistence: any WorkoutHistoryPersistence
     private let synchronizationQueue = DispatchQueue(label: "com.hangten.workout-history")
@@ -33,6 +38,12 @@ final class WorkoutHistoryService {
 
     var lastError: Error? {
         synchronizationQueue.sync { storedLastError }
+    }
+
+    var state: State {
+        synchronizationQueue.sync {
+            State(snapshot: storedSnapshot, lastError: storedLastError)
+        }
     }
 
     func enableHealthKitSync() {

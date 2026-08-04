@@ -331,11 +331,12 @@ final class AppStore: ObservableObject {
         errorContext: HistoryErrorContext,
         recordingErrorMessage: String?
     ) {
-        workoutHistory = workoutHistoryService.snapshot
+        let state = workoutHistoryService.state
+        workoutHistory = state.snapshot
         if workoutHistory.source == .healthKit || workoutHistory.latestSessionTitle != nil {
             lastSessionTitle = workoutHistory.latestSessionTitle
         }
-        guard workoutHistoryService.lastError != nil else {
+        guard state.lastError != nil else {
             setHealthAuthorizationError(
                 recordingErrorMessage,
                 kind: recordingErrorMessage == nil ? nil : .recording

@@ -375,6 +375,21 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertNotNil(service.lastError)
     }
 
+    func testStateReturnsSnapshotAndLastErrorFromOneSynchronizedRead() {
+        let persistence = FakeWorkoutHistoryPersistence()
+        let service = WorkoutHistoryService(
+            healthStore: FakeWorkoutHealthStore(fetchResult: .failure(TestError.failed)),
+            persistence: persistence
+        )
+
+        refresh(service)
+
+        let state = service.state
+        XCTAssertEqual(state.snapshot.source, .unavailable)
+        XCTAssertEqual(state.snapshot.entries, [])
+        XCTAssertNotNil(state.lastError)
+    }
+
     private func refresh(_ service: WorkoutHistoryService, file: StaticString = #filePath, line: UInt = #line) {
         let completion = expectation(description: "refresh completion")
         service.refresh {

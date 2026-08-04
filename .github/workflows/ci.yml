@@ -183,7 +183,7 @@ jobs:
           entitlements_path="$(
             find "$RUNNER_TEMP/hang-ten-test-derived-data" \
               -type f \
-              -name Entitlements-Simulated.plist \
+              -name 'HangTen.app-Simulated.xcent' \
               -print \
               -quit
           )"
