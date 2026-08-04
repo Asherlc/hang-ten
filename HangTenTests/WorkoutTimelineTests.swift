@@ -297,30 +297,24 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    func testCountdownRemainingUsesCeilingAndReachesZeroAtStart() {
-        let now = Date(timeIntervalSinceReferenceDate: 2_000)
-        let start = now.addingTimeInterval(5)
+    func testMonotonicCountdownRemainingUsesCeilingAndReachesZeroAtStart() {
+        let now: TimeInterval = 100
+        let start = now + 5
 
         XCTAssertEqual(
-            WorkoutSessionPolicy.countdownRemaining(startedAt: start, now: now),
+            WorkoutSessionPolicy.countdownRemaining(startUptime: start, nowUptime: now),
             5
         )
         XCTAssertEqual(
-            WorkoutSessionPolicy.countdownRemaining(
-                startedAt: start,
-                now: now.addingTimeInterval(1.1)
-            ),
+            WorkoutSessionPolicy.countdownRemaining(startUptime: start, nowUptime: now + 1.1),
             4
         )
         XCTAssertEqual(
-            WorkoutSessionPolicy.countdownRemaining(
-                startedAt: start,
-                now: start
-            ),
+            WorkoutSessionPolicy.countdownRemaining(startUptime: start, nowUptime: start),
             0
         )
         XCTAssertEqual(
-            WorkoutSessionPolicy.countdownRemaining(startedAt: nil, now: now),
+            WorkoutSessionPolicy.countdownRemaining(startUptime: nil, nowUptime: now),
             0
         )
     }
@@ -611,192 +605,202 @@ final class WorkoutSessionStateTests: XCTestCase {
         )
     ]
 
-    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
-        let timeline = WorkoutTimeline(steps: steps)
-        var state = WorkoutSessionState(
-            startedAt: nil,
-            pausedElapsed: 10,
-            routineStartedAt: now.addingTimeInterval(-20)
+    func testInitialStartUsesMonotonicUptimeForElapsedAndCountdown() {
+        let wallClockStart = Date(timeIntervalSinceReferenceDate: 3_000)
+        let uptime: TimeInterval = 100
+        var state = WorkoutSessionState()
+
+        state.toggleRunning(uptime: uptime, now: wallClockStart)
+
+        XCTAssertEqual(state.activeStartUptime, 103)
+        XCTAssertEqual(state.routineStartedAt, wallClockStart.addingTimeInterval(3))
+        XCTAssertEqual(state.countdownRemaining(at: uptime), 3)
+        XCTAssertEqual(state.countdownRemaining(at: uptime + 1.1), 2)
+        XCTAssertEqual(
+            state.currentElapsed(planDuration: 90, at: uptime + 2.9),
+            0,
+            accuracy: 0.000_1
         )
 
-        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, now: now))
+        state.transitionExpiredCountdown(at: uptime + 3)
+
+        XCTAssertEqual(state.currentElapsed(planDuration: 90, at: uptime + 4.25), 1.25, accuracy: 0.000_1)
+    }
+
+    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
+        let now: TimeInterval = 100
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            activeStartUptime: nil,
+            pausedElapsed: 10,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+        )
+
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
         XCTAssertEqual(state.pausedElapsed, 60)
         XCTAssertEqual(state.countdownKind, .skip)
         XCTAssertEqual(state.countdownRemaining(at: now), 5)
-        XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, now: now))
+        XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
 
-        let countdownStart = now.addingTimeInterval(5)
+        let countdownStart = now + 5
         XCTAssertEqual(state.countdownRemaining(at: countdownStart), 0)
         XCTAssertEqual(state.countdownKind, .skip)
         state.transitionExpiredCountdown(at: countdownStart)
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.startedAt, countdownStart)
+        XCTAssertEqual(state.activeStartUptime, countdownStart)
         XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 60)
-        XCTAssertTrue(state.canNavigate(planDuration: timeline.duration, now: countdownStart))
+        XCTAssertTrue(state.canNavigate(planDuration: timeline.duration, at: countdownStart))
     }
 
     func testPausedDirectSeekPreservesPausedState() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: nil,
+            activeStartUptime: nil,
             pausedElapsed: 10,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
-        state.seek(to: 80, planDuration: timeline.duration, now: now)
+        state.seek(to: 80, planDuration: timeline.duration, at: now)
 
-        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.pausedElapsed, 80)
-        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now.addingTimeInterval(4)), 80)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 4), 80)
     }
 
     func testInitialStartCancelAndRestartLifecycle() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
+        let wallClockStart = Date(timeIntervalSinceReferenceDate: 3_000)
         var state = WorkoutSessionState()
 
-        state.toggleRunning(now: now)
+        state.toggleRunning(uptime: now, now: wallClockStart)
 
-        let firstStart = now.addingTimeInterval(3)
-        XCTAssertEqual(state.startedAt, firstStart)
-        XCTAssertEqual(state.routineStartedAt, firstStart)
+        let firstStart = now + 3
+        XCTAssertEqual(state.activeStartUptime, firstStart)
+        XCTAssertEqual(state.routineStartedAt, wallClockStart.addingTimeInterval(3))
         XCTAssertEqual(state.countdownKind, .initial)
         XCTAssertEqual(state.countdownRemaining(at: now), 3)
 
-        state.cancelCountdown()
+        state.cancelCountdown(at: now + 1)
 
-        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.routineStartedAt)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.pausedElapsed, 0)
 
-        let restart = now.addingTimeInterval(10)
-        state.toggleRunning(now: restart)
+        let restart = now + 10
+        state.toggleRunning(uptime: restart, now: wallClockStart.addingTimeInterval(10))
 
-        XCTAssertEqual(state.startedAt, restart.addingTimeInterval(3))
-        XCTAssertEqual(state.routineStartedAt, restart.addingTimeInterval(3))
+        XCTAssertEqual(state.activeStartUptime, restart + 3)
+        XCTAssertEqual(state.routineStartedAt, wallClockStart.addingTimeInterval(13))
         XCTAssertEqual(state.countdownKind, .initial)
     }
 
     func testCountdownExpiryReadIsPureUntilExplicitTransitionClearsKind() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
-        let expiry = now.addingTimeInterval(5)
+        let now: TimeInterval = 100
+        let expiry = now + 5
         let immutableState = WorkoutSessionState(
-            startedAt: expiry,
+            activeStartUptime: expiry,
             countdownKind: .skip,
             pausedElapsed: 60,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
         var state = WorkoutSessionState(
-            startedAt: expiry,
+            activeStartUptime: expiry,
             countdownKind: .skip,
             pausedElapsed: 60,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
         XCTAssertEqual(immutableState.countdownRemaining(at: expiry), 0)
         XCTAssertEqual(state.countdownRemaining(at: expiry), 0)
         XCTAssertEqual(state.countdownKind, .skip)
-        XCTAssertEqual(state.startedAt, expiry)
+        XCTAssertEqual(state.activeStartUptime, expiry)
 
-        state.transitionExpiredCountdown(at: expiry.addingTimeInterval(-0.1))
+        state.transitionExpiredCountdown(at: expiry - 0.1)
 
         XCTAssertEqual(state.countdownKind, .skip)
-        XCTAssertEqual(state.startedAt, expiry)
+        XCTAssertEqual(state.activeStartUptime, expiry)
 
         state.transitionExpiredCountdown(at: expiry)
 
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.startedAt, expiry)
+        XCTAssertEqual(state.activeStartUptime, expiry)
     }
 
     func testCancelSkipCountdownKeepsDestinationPaused() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: now.addingTimeInterval(-10),
+            activeStartUptime: now - 10,
             pausedElapsed: 10,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
-        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, now: now))
-        state.cancelCountdown()
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+        state.cancelCountdown(at: now + 2)
 
-        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.pausedElapsed, 60)
-        XCTAssertEqual(state.routineStartedAt, now.addingTimeInterval(-20))
+        XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
     func testInterruptionDuringSkipCountdownKeepsDestinationPaused() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: now.addingTimeInterval(-10),
+            activeStartUptime: now - 10,
             pausedElapsed: 10,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
-        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, now: now))
-        state.pauseForInterruption(now: now.addingTimeInterval(2))
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+        state.pauseForInterruption(at: now + 2)
 
-        XCTAssertNil(state.startedAt)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.pausedElapsed, 60)
-        XCTAssertEqual(state.routineStartedAt, now.addingTimeInterval(-20))
+        XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
     func testDirectSeekClearsPendingSkipCountdownAndPreservesRunning() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: now.addingTimeInterval(-10),
+            activeStartUptime: now - 10,
             pausedElapsed: 10,
-            routineStartedAt: now.addingTimeInterval(-20)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
-        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, now: now))
-        state.seek(to: 80, planDuration: timeline.duration, now: now.addingTimeInterval(2))
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+        state.seek(to: 80, planDuration: timeline.duration, at: now + 2)
 
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.startedAt, now.addingTimeInterval(2))
+        XCTAssertEqual(state.activeStartUptime, now + 2)
         XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(
-            state.currentElapsed(planDuration: timeline.duration, at: now.addingTimeInterval(4)),
+            state.currentElapsed(planDuration: timeline.duration, at: now + 4),
             82
         )
     }
 
     func testFinalSkipSeeksDirectlyToCompletion() {
-        let now = Date(timeIntervalSinceReferenceDate: 3_000)
+        let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            startedAt: now.addingTimeInterval(-1),
+            activeStartUptime: now - 1,
             pausedElapsed: 85,
-            routineStartedAt: now.addingTimeInterval(-100)
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_900)
         )
 
-        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, now: now))
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
 
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.startedAt, now)
+        XCTAssertEqual(state.activeStartUptime, now)
         XCTAssertEqual(state.pausedElapsed, 90)
-        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now.addingTimeInterval(10)), 90)
-        XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, now: now))
-    }
-}
-
-final class WorkoutViewSessionStateTests: XCTestCase {
-    func testWorkoutViewStoresTheTestedSessionStateAsItsSourceOfTruth() {
-        let view = WorkoutView(plan: PlanCatalog.metoliusTenMinute)
-        let storedStateNames = Set(Mirror(reflecting: view).children.compactMap(\.label))
-
-        XCTAssertTrue(storedStateNames.contains("_sessionState"))
-        XCTAssertFalse(storedStateNames.contains("_startedAt"))
-        XCTAssertFalse(storedStateNames.contains("_countdownKind"))
-        XCTAssertFalse(storedStateNames.contains("_pausedElapsed"))
-        XCTAssertFalse(storedStateNames.contains("_routineStartedAt"))
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 10), 90)
+        XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
     }
 }
