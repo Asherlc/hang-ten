@@ -299,13 +299,18 @@ routine change, preview every distinct hold target and finger cue.
   select a later step and confirm that the workout keeps running from that
   step's start. Pause, select an earlier step, and confirm it stays paused at
   that step's start. Tap the current row and confirm it is a no-op.
-- Skip during timed work and confirm that it advances at the current step's
-  full boundary, including any following rest.
-- Skip during timed rest and confirm the next step starts after the full step
-  duration, including rest. Skip the final step and confirm the existing
-  completion state appears. Repeat the Routine and Skip step checks in both
-  portrait and landscape, inspecting the resulting timer, board highlights,
-  hand cues, and re-cued audio.
+- Skip during timed work and confirm the next step appears immediately with
+  inactive holds, then observe and hear 5-4-3-2-1 before the next cue starts.
+  Confirm the same behavior after pausing first; the session must be running
+  once the countdown completes.
+- During a skip countdown, confirm Routine and Skip step are disabled. Cancel
+  it and verify the destination remains paused and resumable. Background the
+  app during the countdown and verify it returns paused at that destination.
+- Skip during timed rest and confirm the target still uses the full current
+  step duration, including rest. Skip the final step and confirm completion
+  appears immediately without a five-second countdown.
+- Repeat these checks in portrait and landscape, including board highlights,
+  grip cues, spoken audio, rotation, and the existing completion/logging path.
 - Start a routine and observe 3, 2, 1, task-start, final-three, and completion
   speech with audio enabled. Repeat with the speaker toggle disabled.
 - Rotate while paused and while running; timer state and selected holds must
