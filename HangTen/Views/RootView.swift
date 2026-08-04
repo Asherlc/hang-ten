@@ -980,21 +980,27 @@ struct WorkoutView: View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
 				let monotonicTime = WorkoutClock.monotonicTime
+				let timeline = WorkoutTimeline(steps: plan.steps)
 				let elapsed = currentElapsed
-				let step = step(at: elapsed)
-				let stepElapsed = elapsedInStep(at: elapsed)
+				let step = timeline.step(at: elapsed) ?? plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+				let stepElapsed = timeline.elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining
 				let isComplete = elapsed >= plan.duration
-				let isResting = isRestInterval(step: step, stepElapsed: stepElapsed)
-				let highlightedIDs = store.holdIDs(for: step, on: board)
-				let activeHoldIDs = countdown > 0 || isComplete || isResting ? [] : highlightedIDs
-				let activeHold = board.holds.first { activeHoldIDs.contains($0.id) }
+				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
+				let isResting = step.phase == .rest || isTimedResting
+				let highlightedStep = timeline.holdPreviewStep(
+					currentStep: step,
+					stepElapsed: stepElapsed
+				)
+				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
+				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
+				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isResting: isResting,
+					isTimedResting: isTimedResting,
 					isComplete: isComplete
 				)
 
@@ -1008,7 +1014,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					} else {
@@ -1020,7 +1026,7 @@ struct WorkoutView: View {
 							countdown: countdown,
 							isResting: isResting,
 							isComplete: isComplete,
-							activeHoldIDs: activeHoldIDs,
+							highlightedHoldIDs: highlightedHoldIDs,
 							activeHold: activeHold
 						)
 					}
@@ -1119,7 +1125,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -1133,7 +1139,7 @@ struct WorkoutView: View {
 					isComplete: isComplete
 				)
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.padding(.horizontal, 2)
 				if countdown == 0, !isComplete, !isResting, let activeHold {
 					GripDiagramView(hold: activeHold, gripType: step.gripType)
@@ -1160,7 +1166,7 @@ struct WorkoutView: View {
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
-		activeHoldIDs: Set<String>,
+		highlightedHoldIDs: Set<String>,
 		activeHold: BoardHold?
 	) -> some View {
 		VStack(spacing: 9) {
@@ -1182,7 +1188,7 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 
-				BoardMapView(board: board, highlightedHoldIDs: activeHoldIDs)
+				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.frame(maxWidth: .infinity)
 					.frame(maxHeight: 130)
 
@@ -1707,7 +1713,7 @@ struct WorkoutView: View {
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
 		countdown: Int,
-		isResting: Bool,
+		isTimedResting: Bool,
 		isComplete: Bool
 	) -> WorkoutAudioMoment? {
 		guard workoutClock.isRunning else { return nil }
@@ -1718,7 +1724,7 @@ struct WorkoutView: View {
 
 		return WorkoutAudioCuePolicy.moment(
 			stepID: step.id,
-			segmentName: isResting ? "rest" : "active",
+			segmentName: isTimedResting ? "rest" : "active",
 			initialCountdown: countdown,
 			intervalSecondsRemaining: secondsRemaining,
 			isComplete: isComplete
