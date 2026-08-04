@@ -172,6 +172,35 @@ jobs:
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
 
+      - name: Verify simulator HealthKit entitlement
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ ! -d "$RUNNER_TEMP/hang-ten-test-derived-data" ]]; then
+            echo "Simulator test derived data was not generated." >&2
+            exit 1
+          fi
+          entitlements_path="$(
+            find "$RUNNER_TEMP/hang-ten-test-derived-data" \
+              -type f \
+              -name Entitlements-Simulated.plist \
+              -print \
+              -quit
+          )"
+          if [[ -z "$entitlements_path" ]]; then
+            echo "Simulator HealthKit entitlements were not generated." >&2
+            exit 1
+          fi
+          healthkit_enabled="$(
+            /usr/libexec/PlistBuddy \
+              -c 'Print :com.apple.developer.healthkit' \
+              "$entitlements_path"
+          )"
+          if [[ "$healthkit_enabled" != "true" ]]; then
+            echo "Simulator HealthKit entitlement must be true; found: $healthkit_enabled" >&2
+            exit 1
+          fi
+
       - name: Delete test simulator
         if: always()
         env:

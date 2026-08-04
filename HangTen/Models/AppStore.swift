@@ -19,7 +19,7 @@ final class AppStore: ObservableObject {
 
 	init(
 		healthKitService: any WorkoutHealthStore = HealthKitService(),
-		workoutHistoryStore: any WorkoutHistoryPersistence = LocalWorkoutHistoryStore(),
+		workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
 		defaults: UserDefaults = .standard
 	) {
 		self.healthKitService = healthKitService
@@ -28,7 +28,7 @@ final class AppStore: ObservableObject {
 		let hasRequestedHealthAuthorization = defaults.bool(forKey: Self.healthAuthorizationRequestedKey)
 		workoutHistoryService = WorkoutHistoryService(
 			healthStore: healthKitService,
-			persistence: workoutHistoryStore,
+			persistence: workoutHistoryStore ?? LocalWorkoutHistoryStore(defaults: defaults),
 			healthKitSyncEnabled: hasRequestedHealthAuthorization
 		)
 		healthAuthorizationState = healthKitService.authorizationState
@@ -42,7 +42,6 @@ final class AppStore: ObservableObject {
 	) {
 		self.init(
 			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
-			workoutHistoryStore: LocalWorkoutHistoryStore(),
 			defaults: defaults
 		)
 	}
@@ -65,7 +64,6 @@ final class AppStore: ObservableObject {
 	) {
 		self.init(
 			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
-			workoutHistoryStore: LocalWorkoutHistoryStore(defaults: userDefaults),
 			defaults: userDefaults
 		)
 	}

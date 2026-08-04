@@ -374,7 +374,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeDefaults()
-        let store = AppStore(healthKitService: service, userDefaults: defaults)
+        let store = AppStore(healthKitService: service, defaults: defaults)
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -410,6 +410,33 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             service.savedWorkouts[0].activitySegments[0].durationSeconds,
             8.75
         )
+    }
+
+    func testPrimaryAppStoreInitializerStoresHistoryInSuppliedDefaults() {
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: WorkoutHealthStoreSpy(),
+            defaults: defaults
+        )
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 8
+            )
+        ])
+
+        store.markSessionComplete(
+            workout,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_008)
+        )
+
+        waitUntil { store.sessionsCompleted == 1 }
+        XCTAssertNotNil(defaults.data(forKey: LocalWorkoutHistoryStore.defaultKey))
     }
 
     func testLegacyCompletionUsesSelectedBoardAndNoStopwatchDurations() {
@@ -618,5 +645,32 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
             )
         )
         completion(nil)
+    }
+}
+
+private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
+    var isHealthDataAvailable = true
+    var authorizationState: HealthAuthorizationState = .authorized
+
+    func requestAuthorization(
+        completion: @escaping (HealthAuthorizationState, Error?) -> Void
+    ) {
+        completion(authorizationState, nil)
+    }
+
+    func fetchHangTenWorkouts(
+        completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
+    ) {
+        completion(.success([]))
+    }
+
+    func saveCompletedWorkout(
+        id: UUID,
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        completion: @escaping (Result<UUID, Error>) -> Void
+    ) {
+        completion(.success(UUID()))
     }
 }
