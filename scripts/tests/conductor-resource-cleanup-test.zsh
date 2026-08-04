@@ -26,19 +26,27 @@ print -r -- "$*" >> "$XCRUN_ALL_CALL_LOG"
 case "$2" in
   list)
     [[ "${3:-}" == devices ]] || exit 64
-    if [[ -n "${4:-}" && -n "${PRUNE_TRANSITION_UUID:-}" && "$4" == "$PRUNE_TRANSITION_UUID" ]]; then
+    list_count=$(grep -c '^simctl list devices$' "$XCRUN_ALL_CALL_LOG" || true)
+    prune_requery_uuid=${PRUNE_TRANSITION_UUID:-${PRUNE_RENAME_UUID:-${PRUNE_NAME_UUID:-}}}
+    if [[ -n "$prune_requery_uuid" && "$list_count" -eq 1 ]]; then
+      print -- '== Devices =='
+      print -- '-- iOS 26.5 --'
+      print -r -- "    Hang Ten Conductor alpha Review Transition ($prune_requery_uuid) (Shutdown)"
+      exit 0
+    fi
+    if [[ "$list_count" -eq 2 && -n "${PRUNE_TRANSITION_UUID:-}" ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
       print -r -- "    Hang Ten Conductor alpha Review Transition ($PRUNE_TRANSITION_UUID) (Booted)"
       exit 0
     fi
-    if [[ -n "${4:-}" && -n "${PRUNE_RENAME_UUID:-}" && "$4" == "$PRUNE_RENAME_UUID" ]]; then
+    if [[ "$list_count" -eq 2 && -n "${PRUNE_RENAME_UUID:-}" ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
       print -r -- "    iPhone 17 Pro ($PRUNE_RENAME_UUID) (Shutdown)"
       exit 0
     fi
-    if [[ -n "${4:-}" && -n "${PRUNE_NAME_UUID:-}" && "$4" == "$PRUNE_NAME_UUID" ]]; then
+    if [[ "$list_count" -eq 2 && -n "${PRUNE_NAME_UUID:-}" ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
       print -r -- "    Hang Ten Conductor alpha Review named $PRUNE_NAME_UUID (77777777-7777-7777-7777-777777777777) (Shutdown)"
@@ -76,6 +84,9 @@ case "$2" in
     Hang Tenacious Review (32323232-3232-3232-3232-323232323232) (Shutdown)
 DEVICES
     print -r -- '    Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
+    if [[ -n "${ARCHIVE_MALFORMED_UUID:-}" ]]; then
+      print -r -- "    Hang Ten Conductor alpha Review ($ARCHIVE_MALFORMED_UUID) [malformed-state]"
+    fi
     ;;
   shutdown)
     print -r -- "$2 $3" >> "$XCRUN_CALL_LOG"
@@ -122,6 +133,13 @@ assert_all_call_log_contains_list_devices() {
   local all_calls
   all_calls=$(<"$all_call_log")
   assert_contains 'simctl list devices' "$all_calls"
+}
+
+assert_no_filtered_list_devices() {
+  if grep -Eq '^simctl list devices [0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$' "$all_call_log"; then
+    print -u2 -- 'prune used a UUID-filtered simctl list devices query'
+    exit 1
+  fi
 }
 
 run_cleanup() {
@@ -198,6 +216,24 @@ if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_clea
 fi
 [[ ! -s "$call_log" ]] || {
   print -u2 -- 'archive invoked simctl for a malformed manifest entry'
+  exit 1
+}
+
+malformed_uuid=DEDEDEDE-DEDE-DEDE-DEDE-DEDEDEDEDEDE
+print -r -- "$malformed_uuid" > "$manifest"
+: > "$call_log"
+: > "$all_call_log"
+if malformed_output=$(ARCHIVE_MALFORMED_UUID="$malformed_uuid" CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive 2>&1); then
+  print -u2 -- 'archive accepted a present but malformed simulator record'
+  exit 1
+fi
+assert_contains "Skipping simulator with an unparseable device record: $malformed_uuid" "$malformed_output"
+[[ ! -s "$call_log" ]] || {
+  print -u2 -- 'archive invoked shutdown or delete for an unparseable simulator record'
+  exit 1
+}
+[[ "$(<"$manifest")" == "$malformed_uuid" ]] || {
+  print -u2 -- 'archive removed a manifest entry for an unparseable simulator record'
   exit 1
 }
 
@@ -344,6 +380,7 @@ assert_not_contains 'delete 73737370-7373-7373-7373-737373737370' "$prune_calls"
 assert_not_contains 'delete 73737371-7373-7373-7373-737373737371' "$prune_calls"
 assert_not_contains 'delete 73737372-7373-7373-7373-737373737372' "$prune_calls"
 assert_all_call_log_contains_list_devices
+assert_no_filtered_list_devices
 
 assert_rejects_malformed_args_without_xcrun() {
   local description=$1
@@ -390,6 +427,7 @@ fi
 transition_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$transition_calls"
 assert_contains 'Skipping simulator no longer Shutdown: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) is Booted' "$transition_output"
+assert_no_filtered_list_devices
 
 : > "$call_log"
 : > "$all_call_log"
@@ -400,6 +438,7 @@ fi
 rename_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$rename_calls"
 assert_contains 'Skipping simulator no longer has a review name: iPhone 17 Pro (12121212-1212-1212-1212-121212121212)' "$rename_output"
+assert_no_filtered_list_devices
 
 : > "$call_log"
 : > "$all_call_log"
@@ -410,5 +449,6 @@ fi
 name_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$name_calls"
 assert_contains 'Skipping simulator no longer available: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$name_output"
+assert_no_filtered_list_devices
 
 print -- 'conductor resource cleanup tests passed'

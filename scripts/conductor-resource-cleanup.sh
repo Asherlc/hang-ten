@@ -44,6 +44,25 @@ device_record_for_uuid() {
   '
 }
 
+device_uuid_present_in_output() {
+  local devices=$1 uuid=$2
+
+  print -r -- "$devices" | awk -v uuid="$uuid" '
+    {
+      line = $0
+      while (match(line, /\([^()]*\)/)) {
+        actual_uuid = substr(line, RSTART + 1, RLENGTH - 2)
+        if (toupper(actual_uuid) == toupper(uuid)) {
+          found = 1
+          exit
+        }
+        line = substr(line, RSTART + RLENGTH)
+      }
+    }
+    END { exit(found ? 0 : 1) }
+  '
+}
+
 run_archive_cleanup() {
   local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
   local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
@@ -81,7 +100,13 @@ run_archive_cleanup() {
 
       record=$(device_record_for_uuid "$devices" "$uuid")
       if [[ -z "$record" ]]; then
-        uuid_status[$uuid]=resolved
+        if device_uuid_present_in_output "$devices" "$uuid"; then
+          print -u2 -- "Skipping simulator with an unparseable device record: $uuid"
+          uuid_status[$uuid]=unresolved
+          result_status=1
+        else
+          uuid_status[$uuid]=resolved
+        fi
         continue
       fi
       device_name=${record%%$'\t'*}
@@ -155,7 +180,7 @@ run_prune() {
     is_review_device_name "$device_name" || continue
 
     if [[ "$option" == --delete ]]; then
-      current_devices=$(xcrun simctl list devices "$uuid")
+      current_devices=$(xcrun simctl list devices)
       record=$(device_record_for_uuid "$current_devices" "$uuid")
       if [[ -z "$record" ]]; then
         print -u2 -- "Skipping simulator no longer available: $device_name ($uuid)"
