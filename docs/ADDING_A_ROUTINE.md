@@ -93,6 +93,9 @@ Metolius expansion:
 - retain ten source cycles of 60 seconds each and preserve task order;
 - give each listed task its own guided step and add an explicit rest step for
   the unused portion of that source minute;
+- keep generated task steps step-local: they may set `timedWorkDuration` to the
+  fixed task's own duration even when no rest follows, while unused minute time
+  is represented by a separate `.rest` step;
 - use five seconds per pull-up and one second per other counted repetition
   only when Metolius gives no duration, and state that these are app defaults;
 - keep explicit source hang durations unchanged and preserve stay-on,
@@ -101,9 +104,6 @@ Metolius expansion:
 Do not set `timedWorkDuration` to the first hang duration. A minute can contain
 multiple hangs, pull-ups, a hand switch, or a “stay on” transition, and the
 manufacturer—not the app—defines when the task is complete.
-
-Use `timedWorkDuration` only when the source explicitly defines one continuous
-timed work segment followed by a fixed timed rest segment.
 
 ## 5. Resolve holds semantically
 
@@ -150,10 +150,9 @@ steps for Entry, 26 for Intermediate, and 27 for Advanced; these generated
 counts differ from the ten source cycles. The source explicitly says to
 complete the task or tasks within each minute and use the remaining time to
 rest.
-DEBUG builds also compare the complete official-plan metadata, instructions,
-targets, grip cues, and timing against a stable audit fingerprint. Update that
-fingerprint only after repeating the line-by-line primary-source audit; never
-change it merely to silence an assertion.
+DEBUG builds validate the current adapted Metolius audit with assertions for
+step order, target mapping, timing, generated numbering, and the 60-second
+cycle structure.
 
 Other research and coach protocols in the plan library are deliberately marked
 `adapted`: their app versions add guidance, warm-up/cooldown steps, or Compact

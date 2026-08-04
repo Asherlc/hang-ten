@@ -993,7 +993,8 @@ struct WorkoutView: View {
 					stepElapsed: stepElapsed
 				)
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
-				let highlightedHoldIDs = countdown > 0 || isComplete ? [] : previewHoldIDs
+				let highlightedHoldIDs = countdown > 0 || isResting || isComplete ? [] : previewHoldIDs
+				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
@@ -1015,6 +1016,7 @@ struct WorkoutView: View {
 							isResting: isResting,
 							isComplete: isComplete,
 							highlightedHoldIDs: highlightedHoldIDs,
+							showsGenericHoldCue: showsGenericHoldCue,
 							activeHold: activeHold
 						)
 					} else {
@@ -1027,6 +1029,7 @@ struct WorkoutView: View {
 							isResting: isResting,
 							isComplete: isComplete,
 							highlightedHoldIDs: highlightedHoldIDs,
+							showsGenericHoldCue: showsGenericHoldCue,
 							activeHold: activeHold
 						)
 					}
@@ -1126,6 +1129,7 @@ struct WorkoutView: View {
 		isResting: Bool,
 		isComplete: Bool,
 		highlightedHoldIDs: Set<String>,
+		showsGenericHoldCue: Bool,
 		activeHold: BoardHold?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -1141,7 +1145,7 @@ struct WorkoutView: View {
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime)
 				BoardMapView(board: board, highlightedHoldIDs: highlightedHoldIDs)
 					.padding(.horizontal, 2)
-				if countdown == 0, !isComplete, !isResting, let activeHold {
+				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
 					GripDiagramView(hold: activeHold, gripType: step.gripType)
 				}
 				cueCard(
@@ -1167,6 +1171,7 @@ struct WorkoutView: View {
 		isResting: Bool,
 		isComplete: Bool,
 		highlightedHoldIDs: Set<String>,
+		showsGenericHoldCue: Bool,
 		activeHold: BoardHold?
 	) -> some View {
 		VStack(spacing: 9) {
@@ -1182,7 +1187,7 @@ struct WorkoutView: View {
 				.tint(Color.hangGreenDark)
 
 			HStack(spacing: 12) {
-				if countdown == 0, !isComplete, !isResting, let activeHold {
+				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
 					let gripType = step.gripType ?? activeHold.gripType
 					GripHandCueCard(hold: activeHold, gripType: gripType, side: .left)
 						.frame(width: 142)
@@ -1192,7 +1197,7 @@ struct WorkoutView: View {
 					.frame(maxWidth: .infinity)
 					.frame(maxHeight: 130)
 
-				if countdown == 0, !isComplete, !isResting, let activeHold {
+				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
 					let gripType = step.gripType ?? activeHold.gripType
 					GripHandCueCard(hold: activeHold, gripType: gripType, side: .right)
 						.frame(width: 142)

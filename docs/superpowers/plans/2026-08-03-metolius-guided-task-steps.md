@@ -380,16 +380,20 @@ Use the returned UUID for every subsequent command, and boot it only after confi
 metolius_review_uuid=$(rtk sed -n '1p' .context/metolius-task-steps-review.uuid)
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$metolius_review_uuid" -derivedDataPath .context/DerivedData-metolius-task-steps build
 rtk xcrun simctl install "$metolius_review_uuid" .context/DerivedData-metolius-task-steps/Build/Products/Debug-iphonesimulator/HangTen.app
-SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=2 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 ```
 
 Capture the five states with these exact artifact names:
 
 ```sh
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=4 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 rtk xcrun simctl io "$metolius_review_uuid" screenshot .context/metolius-task-step-minute-2-pullups.png
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=5 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 rtk xcrun simctl io "$metolius_review_uuid" screenshot .context/metolius-task-step-minute-2-medium-edge.png
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=6 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 rtk xcrun simctl io "$metolius_review_uuid" screenshot .context/metolius-task-step-minute-2-rest.png
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=16 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 rtk xcrun simctl io "$metolius_review_uuid" screenshot .context/metolius-task-step-minute-6-offset-switch.png
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=24 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 rtk xcrun simctl io "$metolius_review_uuid" screenshot .context/metolius-task-step-minute-9-jug-pulls.png
 ```
 

@@ -205,6 +205,8 @@ final class WorkoutTimelineTests: XCTestCase {
 }
 
 final class WorkoutClockTests: XCTestCase {
+    deinit {}
+
     func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
         var now: TimeInterval = 100
         var clock = WorkoutClock(now: { now })
