@@ -13,7 +13,7 @@ struct MotherboardWorkoutPreparationHandoff {
 
 @MainActor
 protocol RootViewBackgroundTaskApplication: AnyObject {
-	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier
+	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)?) -> UIBackgroundTaskIdentifier
 	func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier)
 }
 

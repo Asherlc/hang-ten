@@ -303,7 +303,7 @@ private final class RecordingBackgroundTaskApplication: RootViewBackgroundTaskAp
 
     func beginBackgroundTask(
         withName taskName: String?,
-        expirationHandler handler: (() -> Void)?
+        expirationHandler handler: (@MainActor @Sendable () -> Void)?
     ) -> UIBackgroundTaskIdentifier {
         beginCount += 1
         return taskIdentifier
