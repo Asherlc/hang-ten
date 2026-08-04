@@ -724,7 +724,7 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(destination: WorkoutView(plan: plan)) {
+            NavigationLink(destination: WorkoutView(plan: plan, startsImmediately: true)) {
                 HStack {
                     Image(systemName: "play.fill")
                     Text("Start routine")
@@ -906,6 +906,18 @@ enum WorkoutAudioCuePolicy {
 }
 
 enum WorkoutSessionPolicy {
+    static func shouldAutoStart(
+        startsImmediately: Bool,
+        didAutoStart: Bool,
+        isRunning: Bool,
+        routineStartedAt: Date?
+    ) -> Bool {
+        startsImmediately
+            && !didAutoStart
+            && !isRunning
+            && isFirstStart(routineStartedAt: routineStartedAt)
+    }
+
     static func isFirstStart(routineStartedAt: Date?) -> Bool {
         routineStartedAt == nil
     }
@@ -959,8 +971,15 @@ struct WorkoutView: View {
 	@AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
 
     let plan: TrainingPlan
+    let startsImmediately: Bool
+
+    init(plan: TrainingPlan, startsImmediately: Bool = false) {
+        self.plan = plan
+        self.startsImmediately = startsImmediately
+    }
 
     @State private var workoutClock = WorkoutClock()
+    @State private var didAutoStart = false
     @State private var routineStartedAt: Date?
     @State private var showEndConfirmation = false
     @State private var showsStepPicker = false
@@ -1104,6 +1123,15 @@ struct WorkoutView: View {
 				toggleRunning()
 			}
 			#endif
+			if WorkoutSessionPolicy.shouldAutoStart(
+				startsImmediately: startsImmediately,
+				didAutoStart: didAutoStart,
+				isRunning: workoutClock.isRunning,
+				routineStartedAt: routineStartedAt
+			) {
+				didAutoStart = true
+				toggleRunning()
+			}
 			initializeStopwatches()
 		}
 		.onChange(of: scenePhase) { _, phase in

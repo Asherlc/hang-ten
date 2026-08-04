@@ -284,6 +284,60 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
+    func testImmediateStartIsAllowedOnlyForAnUnstartedFirstAppearance() {
+        XCTAssertTrue(
+            WorkoutSessionPolicy.shouldAutoStart(
+                startsImmediately: true,
+                didAutoStart: false,
+                isRunning: false,
+                routineStartedAt: nil
+            )
+        )
+    }
+
+    func testImmediateStartIsDisabledAfterTheOneShotHasRun() {
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldAutoStart(
+                startsImmediately: true,
+                didAutoStart: true,
+                isRunning: false,
+                routineStartedAt: nil
+            )
+        )
+    }
+
+    func testImmediateStartDoesNotRestartAStartedOrPausedSession() {
+        let routineStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldAutoStart(
+                startsImmediately: true,
+                didAutoStart: false,
+                isRunning: true,
+                routineStartedAt: routineStart
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldAutoStart(
+                startsImmediately: true,
+                didAutoStart: false,
+                isRunning: false,
+                routineStartedAt: routineStart
+            )
+        )
+    }
+
+    func testManualWorkoutRouteDoesNotAutoStart() {
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldAutoStart(
+                startsImmediately: false,
+                didAutoStart: false,
+                isRunning: false,
+                routineStartedAt: nil
+            )
+        )
+    }
+
     func testPausedSessionAtStepOneIsNotAFirstStartAndResumesImmediately() {
         let originalRoutineStart = Date(timeIntervalSinceReferenceDate: 1_000)
         let resumedAt = Date(timeIntervalSinceReferenceDate: 1_120)
