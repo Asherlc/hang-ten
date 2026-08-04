@@ -1160,14 +1160,18 @@ enum LegacyPlanSeedCatalog {
     }
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
+    static let sharedWarmUpDuration: TimeInterval = 60
 
-    private static func warmUpStep(id: String, duration: TimeInterval = 180) -> WorkoutStep {
+    private static func warmUpStep(
+        id: String,
+        duration: TimeInterval = sharedWarmUpDuration
+    ) -> WorkoutStep {
         WorkoutStep(
             id: id,
             number: 0,
             title: "Progressive warm-up",
-            instruction: "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
-            accessory: "Easy movement · do not fatigue",
+            instruction: "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training.",
+            accessory: "Board primer · warm up generally first",
             duration: duration,
             phase: .warmUp,
             targets: [.ids("jug-left", "jug-right")],

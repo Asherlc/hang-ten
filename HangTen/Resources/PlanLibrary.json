@@ -4,15 +4,15 @@
       "id" : "shared.progressive-warm-up",
       "steps" : [
         {
-          "accessory" : "Easy movement · do not fatigue",
-          "duration" : 180,
+          "accessory" : "Board primer · warm up generally first",
+          "duration" : 60,
           "gripType" : "openHand",
           "id" : "warm-up",
-          "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
+          "instruction" : "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training.",
           "phase" : "warmUp",
           "segments" : [
             {
-              "duration" : 180,
+              "duration" : 60,
               "kind" : "work",
               "target" : {
                 "semantic" : "outer-jugs"
@@ -4848,11 +4848,11 @@
       "id" : "research.abrahangs.warm-up",
       "steps" : [
         {
-          "accessory" : "Easy movement · do not fatigue",
+          "accessory" : "Board primer · warm up generally first",
           "duration" : 120,
           "gripType" : "openHand",
           "id" : "abrahangs-warm-up",
-          "instruction" : "Move gently on the outer jugs, then add a few easy edge contacts. Keep your grip open and your shoulders engaged.",
+          "instruction" : "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training.",
           "phase" : "warmUp",
           "segments" : [
             {

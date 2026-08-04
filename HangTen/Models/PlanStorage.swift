@@ -1226,13 +1226,16 @@ enum BuiltInPlanLibraryDefinition {
         var blockIDs = Set<String>()
         var definitions: [PlanDefinition] = []
 
-        let sharedWarmUp = legacyPlans.first {
-            $0.steps.first?.phase == .warmUp && $0.steps.first?.duration == 180
-        }?.steps.first.map {
-            WorkoutBlockDefinition(
+        let sharedWarmUp: WorkoutBlockDefinition? = LegacyPlanSeedCatalog.maxHangs.steps.first.flatMap { step in
+            guard step.phase == .warmUp,
+                  step.duration == LegacyPlanSeedCatalog.sharedWarmUpDuration else {
+                return nil
+            }
+
+            return WorkoutBlockDefinition(
                 id: "shared.progressive-warm-up",
                 title: "Progressive warm-up",
-                steps: [stepDefinition(from: $0, id: "warm-up")]
+                steps: [stepDefinition(from: step, id: "warm-up")]
             )
         }
         let sharedCoolDown = legacyPlans.first {
@@ -1336,7 +1339,7 @@ enum BuiltInPlanLibraryDefinition {
         if let first = plan.steps.first,
            let sharedWarmUp,
            first.phase == .warmUp,
-           first.duration == 180,
+           first.duration == LegacyPlanSeedCatalog.sharedWarmUpDuration,
            first.title == sharedWarmUp.title,
            first.instruction == sharedWarmUp.steps[0].instruction {
             references.append(WorkoutBlockReference(blockID: sharedWarmUp.id, stepIDs: [first.id]))

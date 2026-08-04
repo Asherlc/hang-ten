@@ -21,6 +21,7 @@ extension Color {
     static let holdActiveDeep = Color(red: 0.665, green: 0.105, blue: 0.055)
     static let warmUp = Color(red: 0.900, green: 0.590, blue: 0.230)
     static let restBlue = Color(red: 0.305, green: 0.545, blue: 0.740)
+    static let restBlueDeep = Color(red: 0.155, green: 0.355, blue: 0.545)
     static let pullOrange = Color(red: 0.850, green: 0.370, blue: 0.200)
     static let coolDownPurple = Color(red: 0.550, green: 0.400, blue: 0.700)
 }

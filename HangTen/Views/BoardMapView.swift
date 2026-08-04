@@ -3,6 +3,7 @@ import SwiftUI
 struct BoardMapView: View {
     let board: TrainingBoard
     var highlightedHoldIDs: Set<String> = []
+    var highlightMode: BoardHighlightMode = .active
     var showsLabels = true
     var onHoldTap: ((BoardHold) -> Void)?
 
@@ -13,12 +14,14 @@ struct BoardMapView: View {
                     board: board,
                     design: design,
                     highlightedHoldIDs: highlightedHoldIDs,
+                    highlightMode: highlightMode,
                     onHoldTap: onHoldTap
                 )
             } else {
                 GenericVectorBoardMap(
                     board: board,
                     highlightedHoldIDs: highlightedHoldIDs,
+                    highlightMode: highlightMode,
                     showsLabels: showsLabels,
                     onHoldTap: onHoldTap
                 )
@@ -34,6 +37,7 @@ private struct DesignedBoardMap: View {
     let board: TrainingBoard
     let design: BoardDesign
     let highlightedHoldIDs: Set<String>
+    let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
@@ -45,7 +49,8 @@ private struct DesignedBoardMap: View {
                     design.draw(
                         in: &context,
                         size: size,
-                        highlightedHoldIDs: highlightedHoldIDs
+                        highlightedHoldIDs: highlightedHoldIDs,
+                        highlightMode: highlightMode
                     )
                 }
 
@@ -79,6 +84,7 @@ private struct DesignedBoardMap: View {
 private struct GenericVectorBoardMap: View {
     let board: TrainingBoard
     let highlightedHoldIDs: Set<String>
+    let highlightMode: BoardHighlightMode
     let showsLabels: Bool
     let onHoldTap: ((BoardHold) -> Void)?
 
@@ -101,6 +107,7 @@ private struct GenericVectorBoardMap: View {
                     GenericHoldVisual(
                         hold: hold,
                         isHighlighted: isHighlighted,
+                        highlightMode: highlightMode,
                         showsLabel: showsLabels
                     )
                     .frame(
@@ -124,16 +131,17 @@ private struct GenericVectorBoardMap: View {
 private struct GenericHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
+    let highlightMode: BoardHighlightMode
     let showsLabel: Bool
 
     var body: some View {
         ZStack {
             holdShape
-                .fill(isHighlighted ? Color.holdActive : Color.hangWoodDeep)
+                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
                 .overlay {
                     holdShape
                         .stroke(
-                            isHighlighted ? Color.holdActiveDeep : Color.hangWoodShadow,
+                            isHighlighted ? highlightStroke : Color.hangWoodShadow,
                             lineWidth: 1
                         )
                 }
@@ -144,6 +152,24 @@ private struct GenericHoldVisual: View {
                     .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
                     .minimumScaleFactor(0.6)
             }
+        }
+    }
+
+    private var highlightFill: Color {
+        switch highlightMode {
+        case .active:
+            return .holdActive
+        case .preview:
+            return .restBlue
+        }
+    }
+
+    private var highlightStroke: Color {
+        switch highlightMode {
+        case .active:
+            return .holdActiveDeep
+        case .preview:
+            return .restBlueDeep
         }
     }
 

@@ -1,4 +1,6 @@
 import XCTest
+import SwiftUI
+import UIKit
 @testable import HangTen
 
 final class WorkoutTimelineTests: XCTestCase {
@@ -201,6 +203,88 @@ final class WorkoutTimelineTests: XCTestCase {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
         XCTAssertNil(timeline.holdPreviewStep(at: 72))
+    }
+
+    func testBoardCueUsesNextWorkStepAndPreviewModeDuringRest() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let cue = timeline.boardCue(at: 35, countdown: 0, isComplete: false)
+
+        XCTAssertEqual(cue.step?.id, "next-work")
+        XCTAssertEqual(cue.mode, .preview)
+        XCTAssertTrue(cue.isResting)
+        XCTAssertFalse(cue.isSuppressed)
+    }
+
+    func testBoardCueUsesProvidedTimedRestLocationWithoutRecomputingIt() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let elapsedCue = timeline.boardCue(at: 20, countdown: 0, isComplete: false)
+        let suppliedCue = timeline.boardCue(
+            currentStep: restPreviewSteps[0],
+            stepElapsed: 20,
+            countdown: 0,
+            isComplete: false
+        )
+
+        XCTAssertEqual(elapsedCue.step?.id, "next-work")
+        XCTAssertEqual(elapsedCue.mode, .preview)
+        XCTAssertTrue(elapsedCue.isResting)
+        XCTAssertEqual(suppliedCue, elapsedCue)
+    }
+
+    func testBoardCueUsesActiveModeDuringWork() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let cue = timeline.boardCue(at: 5, countdown: 0, isComplete: false)
+
+        XCTAssertEqual(cue.step?.id, "work")
+        XCTAssertEqual(cue.mode, .active)
+        XCTAssertFalse(cue.isResting)
+        XCTAssertFalse(cue.isSuppressed)
+    }
+
+    func testBoardCueSuppressesCountdownAndCompletion() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let countdownCue = timeline.boardCue(at: 5, countdown: 3, isComplete: false)
+        XCTAssertNil(countdownCue.step)
+        XCTAssertTrue(countdownCue.isSuppressed)
+
+        let completionCue = timeline.boardCue(at: 72, countdown: 0, isComplete: true)
+        XCTAssertNil(completionCue.step)
+        XCTAssertTrue(completionCue.isSuppressed)
+    }
+
+    func testBoardCueKeepsFinalRestAsRecoveryWithoutPreviewStep() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let cue = timeline.boardCue(at: 72, countdown: 0, isComplete: false)
+
+        XCTAssertNil(cue.step)
+        XCTAssertEqual(cue.mode, .preview)
+        XCTAssertTrue(cue.isResting)
+        XCTAssertFalse(cue.isSuppressed)
+    }
+
+    func testRestPreviewStrokeCompanionIsOpaqueAndDarkerThanRestBlue() {
+        let fill = UIColor(Color.restBlue)
+        let stroke = UIColor(Color.restBlueDeep)
+        var fillRed: CGFloat = 0
+        var fillGreen: CGFloat = 0
+        var fillBlue: CGFloat = 0
+        var fillAlpha: CGFloat = 0
+        var strokeRed: CGFloat = 0
+        var strokeGreen: CGFloat = 0
+        var strokeBlue: CGFloat = 0
+        var strokeAlpha: CGFloat = 0
+
+        XCTAssertTrue(fill.getRed(&fillRed, green: &fillGreen, blue: &fillBlue, alpha: &fillAlpha))
+        XCTAssertTrue(stroke.getRed(&strokeRed, green: &strokeGreen, blue: &strokeBlue, alpha: &strokeAlpha))
+        XCTAssertEqual(strokeAlpha, 1, accuracy: 0.001)
+        XCTAssertLessThan(strokeRed, fillRed)
+        XCTAssertLessThan(strokeGreen, fillGreen)
+        XCTAssertLessThan(strokeBlue, fillBlue)
     }
 }
 
