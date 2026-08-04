@@ -222,11 +222,12 @@ xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
   -configuration Debug \
-  -derivedDataPath /tmp/hang-ten-app-icon-derived-data \
+  -derivedDataPath .context/DerivedData \
   build
 ```
 
-Expected: `** BUILD SUCCEEDED **` and no asset-catalog error or missing
+Expected: `** BUILD SUCCEEDED **`, with build products under the
+workspace-local `.context/DerivedData` and no asset-catalog error or missing
 `AppIcon` warning.
 
 - [ ] **Step 3: Inspect the final icon at thumbnail scale**

@@ -49,8 +49,12 @@ xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
   -configuration Debug \
+  -derivedDataPath .context/DerivedData \
   build
 ```
+
+All Conductor/local-agent builds must use a workspace-local DerivedData path so
+indexes and build output disappear with the workspace.
 
 ## Continuous integration and delivery
 

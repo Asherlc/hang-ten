@@ -15,17 +15,160 @@ xcrun simctl list devicetypes
 xcrun simctl list runtimes
 ```
 
-Create a uniquely named device using identifiers copied from those lists:
+Create a uniquely named device using identifiers copied from those lists. The
+name must begin with the exact workspace marker `Hang Ten Conductor
+$CONDUCTOR_WORKSPACE_NAME`, and its UUID must be recorded before any boot or
+build work:
 
-```sh
-xcrun simctl create \
-  "HangTen <workspace> Review" \
-  <device-type-id> \
-  <runtime-id>
+```zsh
+set -euo pipefail
+
+workspace_path="$PWD"
+workspace_name="$CONDUCTOR_WORKSPACE_NAME"
+test -n "$workspace_name"
+mkdir -p "$workspace_path/.context"
+manifest="$workspace_path/.context/conductor-owned-simulators"
+pending_manifest="$workspace_path/.context/conductor-pending-simulators"
+simulator_name="Hang Ten Conductor $workspace_name Review"
+device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
+runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
+uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+pending_simulator_uuid=""
+pending_recorded_simulator_uuid=""
+
+cleanup() {
+  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
+  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
+  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+}
+remove_pending_record() {
+  if [[ -z "$pending_recorded_simulator_uuid" || ! -f "$pending_manifest" ]]; then
+    return 0
+  fi
+  local tmp="$pending_manifest.tmp.$$"
+  if ! awk -v uuid="$pending_recorded_simulator_uuid" '{ actual_uuid = $0; if (toupper(actual_uuid) != toupper(uuid)) print }' "$pending_manifest" > "$tmp"; then
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -s "$tmp" ]]; then
+    mv "$tmp" "$pending_manifest"
+  else
+    rm -f "$tmp" "$pending_manifest"
+  fi
+  pending_recorded_simulator_uuid=""
+}
+cleanup_pending_simulator() {
+  if [[ -z "$pending_simulator_uuid" ]]; then
+    return 0
+  fi
+  if [[ ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+    printf 'pending simulator create output is not a valid UUID: %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  local simulator_record simulator_name simulator_state
+  simulator_record="$(xcrun simctl list devices | awk -v uuid="$pending_simulator_uuid" '
+    {
+      line = $0
+      sub(/^[[:space:]]+/, "", line)
+      sub(/[[:space:]]+$/, "", line)
+      state = line
+      if (state !~ / \([^()]*\)$/) next
+      sub(/^.* \(/, "", state)
+      sub(/\)$/, "", state)
+      fields = line
+      sub(/ \([^()]*\)$/, "", fields)
+      if (fields !~ / \([^()]*\)$/) next
+      actual_uuid = fields
+      sub(/^.* \(/, "", actual_uuid)
+      sub(/\)$/, "", actual_uuid)
+      if (toupper(actual_uuid) != toupper(uuid)) next
+      name = fields
+      sub(/ \([^()]*\)$/, "", name)
+      print name "\t" state
+      exit
+    }
+  ')"
+  IFS=$'\t' read -r simulator_name simulator_state <<< "$simulator_record"
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+    printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  if ! xcrun simctl delete "$pending_simulator_uuid"; then
+    printf 'failed to delete pending simulator %s\n' "$pending_simulator_uuid" >&2
+    return 1
+  fi
+  pending_simulator_uuid=""
+}
+cleanup_on_exit() {
+  original_status=$?
+  trap - EXIT INT TERM
+  cleanup_status=0
+  archive_cleanup_status=0
+  if cleanup; then
+    remove_pending_record || cleanup_status=$?
+  else
+    archive_cleanup_status=$?
+    cleanup_status=$archive_cleanup_status
+  fi
+  fallback_cleanup_status=0
+  cleanup_pending_simulator || fallback_cleanup_status=$?
+  if (( cleanup_status == 0 && fallback_cleanup_status != 0 )); then
+    cleanup_status=$fallback_cleanup_status
+  fi
+  artifact_cleanup_status=0
+  rm -rf "$workspace_path/.context/DerivedData" \
+    "$workspace_path/.context/workout-raw.png" \
+    "$workspace_path/.context/workout-landscape.png" || artifact_cleanup_status=$?
+  if (( cleanup_status == 0 && artifact_cleanup_status != 0 )); then
+    cleanup_status=$artifact_cleanup_status
+  fi
+  if (( original_status != 0 )); then
+    exit "$original_status"
+  fi
+  exit "$cleanup_status"
+}
+signal_exit() {
+  trap - INT TERM
+  exit "$1"
+}
+trap cleanup_on_exit EXIT
+trap 'signal_exit 130' INT
+trap 'signal_exit 143' TERM
+
+pending_simulator_uuid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
+if [[ -z "$pending_simulator_uuid" || ! "$pending_simulator_uuid" =~ $uuid_regex ]]; then
+  printf 'simctl create returned invalid simulator UUID: %s\n' "$pending_simulator_uuid" >&2
+  exit 1
+fi
+simulator_uuid="$pending_simulator_uuid"
+if printf '%s\n' "$simulator_uuid" >> "$pending_manifest"; then
+  pending_recorded_simulator_uuid="$simulator_uuid"
+  pending_simulator_uuid=""
+else
+  printf 'failed to write pending simulator record for %s\n' "$simulator_uuid" >&2
+  pending_simulator_uuid="$simulator_uuid"
+  exit 1
+fi
+if ! printf '%s\n' "$simulator_uuid" >> "$manifest"; then
+  printf 'failed to write simulator manifest for %s\n' "$simulator_uuid" >&2
+  exit 1
+fi
+pending_simulator_uuid=""
 ```
 
-Save the returned UUID. Do not use `booted`, a common device name, a broad
-process kill, or another workspace's review device in later commands.
+Use `$simulator_uuid` as `<uuid>` in the following commands. Do not use
+`booted`, a common device name, a broad process kill, or another workspace's
+review device in later commands. The trap is idempotent: it runs on successful
+completion, failure, or interruption and archives only manifest UUIDs whose
+names carry this workspace's exact marker. It keeps pending simulator records
+until archive cleanup succeeds.
+
+The trap removes only the exact workspace-local artifacts created by this guide:
+`.context/DerivedData`, `.context/workout-raw.png`, and
+`.context/workout-landscape.png`. The trap removes those exact artifacts
+regardless of simulator cleanup status. If simulator archive cleanup fails,
+both simulator manifests remain in place for a retry, and the original command
+status is preserved.
 
 ## Boot and wait for real readiness
 
@@ -64,7 +207,7 @@ xcodebuild \
   -scheme HangTen \
   -configuration Debug \
   -destination 'platform=iOS Simulator,id=<uuid>' \
-  -derivedDataPath .context/DerivedData-lima \
+  -derivedDataPath .context/DerivedData \
   build
 ```
 
@@ -82,7 +225,7 @@ simulator app. Inspect the `*-Simulated.xcent` file for
 xcrun simctl terminate <uuid> com.hangten.training || true
 xcrun simctl install \
   <uuid> \
-  .context/DerivedData-lima/Build/Products/Debug-iphonesimulator/HangTen.app
+  .context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app
 xcrun simctl launch <uuid> com.hangten.training
 ```
 
@@ -208,11 +351,21 @@ See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 
 ## Cleanup
 
-Shut down only the dedicated UUID you created:
+The creation trap calls `scripts/conductor-resource-cleanup.sh archive`; leave
+it installed for the whole validation. The created UUID is written to the
+pending manifest before the owned manifest so the archive mode can retry cleanup
+after an interrupted setup. Archive cleanup verifies each pending or owned
+manifest entry against the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME `
+name prefix, shuts down the matching device if necessary, and runs
+`xcrun simctl delete` on that exact UUID. Pending state is removed only after
+archive cleanup succeeds; the direct delete fallback is limited to a validated
+UUID whose pending record could not be written, and it must re-query that exact
+UUID, parse the exact device-name field, and require the exact
+`Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME ` marker before deleting. If the
+lookup or ownership check fails, it does not delete and returns failure. This is
+immediate workspace cleanup, while the Conductor archive hook is a failsafe for
+an abandoned workspace; both manifests remain available for archive retry.
 
-```sh
-xcrun simctl shutdown <uuid>
-```
-
-Do not delete or shut down a shared/unknown simulator. Delete the dedicated
-device only when its exact UUID and ownership are certain.
+Do not delete or shut down a shared/unknown simulator. The cleanup script must
+not receive an unrecorded UUID or a simulator without the exact workspace
+ownership marker.
