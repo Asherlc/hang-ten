@@ -7,7 +7,11 @@ final class WorkoutHistoryServiceTests: XCTestCase {
     private let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
     func testEmptyHealthKitFallsBackToLocalRecords() {
-        let local = pendingRecord(title: "Local Plan", uploadAttempted: true)
+        let local = pendingRecord(
+            title: "Local Plan",
+            uploadAttempted: true,
+            shouldUploadToHealthKit: false
+        )
         let persistence = FakeWorkoutHistoryPersistence(records: [local])
         let service = WorkoutHistoryService(
             healthStore: FakeWorkoutHealthStore(),
@@ -186,7 +190,12 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         let healthStore = FakeWorkoutHealthStore(deferFetch: true)
         let service = WorkoutHistoryService(healthStore: healthStore, persistence: persistence)
         let firstFetch = expectation(description: "initial fetch")
-        healthStore.onFetch = { firstFetch.fulfill() }
+        var observedInitialFetch = false
+        healthStore.onFetch = {
+            guard !observedInitialFetch else { return }
+            observedInitialFetch = true
+            firstFetch.fulfill()
+        }
         let completions = expectation(description: "both refresh completions")
         completions.expectedFulfillmentCount = 2
 
@@ -392,7 +401,8 @@ final class WorkoutHistoryServiceTests: XCTestCase {
     private func pendingRecord(
         title: String,
         uploadAttempted: Bool = false,
-        activityContext: PendingWorkoutActivityContext? = nil
+        activityContext: PendingWorkoutActivityContext? = nil,
+        shouldUploadToHealthKit: Bool = true
     ) -> PendingWorkoutRecord {
         PendingWorkoutRecord(
             id: UUID(),
@@ -401,7 +411,8 @@ final class WorkoutHistoryServiceTests: XCTestCase {
             endDate: endDate,
             healthUploadAttempted: uploadAttempted,
             healthWorkoutUUID: nil,
-            activityContext: activityContext
+            activityContext: activityContext,
+            shouldUploadToHealthKit: shouldUploadToHealthKit
         )
     }
 

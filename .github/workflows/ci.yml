@@ -156,8 +156,9 @@ jobs:
             -maximum-parallel-testing-workers 1 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGN_IDENTITY="-" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
 
       # actions/upload-artifact v4.6.2

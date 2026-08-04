@@ -54,6 +54,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         photoAssetName: nil
     )
 
+    private func makeDefaults() -> UserDefaults {
+        let suiteName = "WorkoutActivityRecordingTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        return defaults
+    }
+
     private func plan(
         instruction: String = "Use the named board feature",
         _ segments: [WorkoutSegment]
@@ -363,7 +370,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service)
+        let defaults = makeDefaults()
+        let store = AppStore(healthKitService: service, userDefaults: defaults)
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -384,8 +392,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: endDate
         )
 
+        waitUntil { store.sessionsCompleted == 1 && service.savedWorkouts.count == 1 }
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
+        XCTAssertNotNil(defaults.data(forKey: LocalWorkoutHistoryStore.defaultKey))
         XCTAssertEqual(service.savedWorkouts.count, 1)
         XCTAssertEqual(service.savedWorkouts[0].title, "Plan")
         XCTAssertEqual(service.savedWorkouts[0].startDate, startDate)
@@ -401,7 +411,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testLegacyCompletionUsesSelectedBoardAndNoStopwatchDurations() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service)
+        let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
         store.selectedBoard = board
         let workout = plan([
             WorkoutSegment(
@@ -418,6 +428,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: Date(timeIntervalSinceReferenceDate: 1_012)
         )
 
+        waitUntil { service.savedWorkouts.count == 1 }
         XCTAssertEqual(service.savedWorkouts.count, 1)
         XCTAssertEqual(service.savedWorkouts[0].boardID, board.id)
         XCTAssertNil(service.savedWorkouts[0].activitySegments[0].durationSeconds)
@@ -425,7 +436,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service)
+        let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -434,8 +445,6 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 duration: 10
             )
         ])
-        let errorSurfaced = expectation(description: "Recorder error surfaced")
-
         store.markSessionComplete(
             workout,
             board: board,
@@ -443,15 +452,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_012)
         )
-        DispatchQueue.main.async {
-            XCTAssertEqual(
-                store.healthAuthorizationError,
-                "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
-            )
-            errorSurfaced.fulfill()
-        }
-
-        wait(for: [errorSurfaced], timeout: 1)
+        waitUntil { store.sessionsCompleted == 1 }
+        XCTAssertEqual(
+            store.healthAuthorizationError,
+            "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+        )
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
         XCTAssertTrue(service.savedWorkouts.isEmpty)
@@ -487,6 +492,18 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             from: Data(json.utf8)
         )
         XCTAssertEqual(decoded, WorkoutActivityMetadata(version: 1, segments: activitySegments))
+    }
+
+    private func waitUntil(
+        _ condition: @escaping () -> Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let deadline = Date().addingTimeInterval(1)
+        while !condition(), Date() < deadline {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
+        XCTAssertTrue(condition(), file: file, line: line)
     }
 
     func testHealthKitMetadataEncodingFailureUsesLocalizedWriteError() {

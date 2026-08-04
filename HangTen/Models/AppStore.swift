@@ -65,7 +65,7 @@ final class AppStore: ObservableObject {
 	) {
 		self.init(
 			healthKitService: HealthWorkoutStoreAdapter(healthKitService),
-			workoutHistoryStore: LocalWorkoutHistoryStore(),
+			workoutHistoryStore: LocalWorkoutHistoryStore(defaults: userDefaults),
 			defaults: userDefaults
 		)
 	}
