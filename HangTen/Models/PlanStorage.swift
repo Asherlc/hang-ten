@@ -1227,7 +1227,7 @@ enum BuiltInPlanLibraryDefinition {
         var definitions: [PlanDefinition] = []
 
         let sharedWarmUp = legacyPlans.first {
-            $0.steps.first?.phase == .warmUp && $0.steps.first?.duration == 180
+            $0.steps.first?.phase == .warmUp && $0.steps.first?.duration == 60
         }?.steps.first.map {
             WorkoutBlockDefinition(
                 id: "shared.progressive-warm-up",
@@ -1336,7 +1336,7 @@ enum BuiltInPlanLibraryDefinition {
         if let first = plan.steps.first,
            let sharedWarmUp,
            first.phase == .warmUp,
-           first.duration == 180,
+           first.duration == 60,
            first.title == sharedWarmUp.title,
            first.instruction == sharedWarmUp.steps[0].instruction {
             references.append(WorkoutBlockReference(blockID: sharedWarmUp.id, stepIDs: [first.id]))

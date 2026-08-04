@@ -412,6 +412,48 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testSharedWarmUpIsSixtySecondBoardPrimer() throws {
+        let seedPlan = LegacyPlanSeedCatalog.maxHangs
+        let seedStep = try XCTUnwrap(seedPlan.steps.first)
+
+        XCTAssertEqual(seedStep.title, "Progressive warm-up")
+        XCTAssertEqual(seedStep.duration, 60)
+        XCTAssertEqual(
+            seedStep.instruction,
+            "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training."
+        )
+        XCTAssertEqual(seedStep.accessory, "Board primer · warm up generally first")
+        XCTAssertEqual(seedStep.gripType, .openHand)
+        XCTAssertEqual(seedStep.targets, [.ids("jug-left", "jug-right")])
+
+        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+        let resolvedStep = try XCTUnwrap(
+            store.plan(id: seedPlan.id)?.steps.first
+        )
+        XCTAssertEqual(resolvedStep.duration, 60)
+        XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
+    }
+
+    func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
+        let abrahangsWarmUp = try XCTUnwrap(
+            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
+        )
+        XCTAssertEqual(abrahangsWarmUp.duration, 120)
+
+        let recoveryIDs = [
+            "horst-753-grip-1-recovery",
+            "ladders-round-1-recovery",
+            "density-hold-1-set-1-recovery",
+            "density-hold-1-recovery"
+        ]
+        let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
+            recoveryIDs.contains($0.id)
+        }
+
+        XCTAssertEqual(recoverySteps.map(\.id), recoveryIDs)
+        XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
+    }
+
     func testAbrahangsSecondGripUsesMatchedNineteenMillimeterHalfCrimpEdges() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
