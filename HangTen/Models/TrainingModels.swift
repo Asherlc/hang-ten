@@ -354,9 +354,6 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 
     var activeDuration: TimeInterval {
-        if phase == .rest {
-            return 0
-        }
         return min(timedWorkDuration ?? duration, duration)
     }
 

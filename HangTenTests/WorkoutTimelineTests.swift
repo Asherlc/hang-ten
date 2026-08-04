@@ -359,9 +359,9 @@ final class WorkoutStepDurationTests: XCTestCase {
             targets: []
         )
 
-        XCTAssertEqual(rest.activeDuration, 0)
-        XCTAssertTrue(rest.hasRestInterval)
-        XCTAssertEqual(rest.restDuration, 30)
+        XCTAssertEqual(rest.activeDuration, 30)
+        XCTAssertFalse(rest.hasRestInterval)
+        XCTAssertEqual(rest.restDuration, 0)
     }
 
     func testTimedPullTaskHasNoFollowingRest() {
