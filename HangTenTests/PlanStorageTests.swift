@@ -133,9 +133,17 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(data: data)
         let resolvedSegments = try XCTUnwrap(store.plan(id: "segment.plan")).steps[0].segments
         let encoded = try store.encodedData()
+        let encodedObject = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let encodedBlocks = try XCTUnwrap(encodedObject["blocks"] as? [[String: Any]])
+        let encodedSteps = try XCTUnwrap(encodedBlocks[0]["steps"] as? [[String: Any]])
+        let encodedSegments = try XCTUnwrap(encodedSteps[0]["segments"] as? [[String: Any]])
         let roundTripped = try JSONDecoder().decode(PlanLibraryDefinition.self, from: encoded)
         let persistedSegments = roundTripped.blocks[0].steps[0].segments
 
+        XCTAssertNotNil(encodedSegments[0]["targets"])
+        XCTAssertNil(encodedSegments[0]["target"])
+        XCTAssertNotNil(encodedSegments[1]["target"])
+        XCTAssertNil(encodedSegments[1]["targets"])
         XCTAssertEqual(
             resolvedSegments[0].targets,
             [.feature(.mediumEdge), .kind(.jug)]

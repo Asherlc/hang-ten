@@ -16,7 +16,7 @@
 - Pull-up-only tasks use an app default of 5 seconds per pull-up.
 - Other count-only tasks use an app default of 1 second per repetition.
 - Compound tasks whose source wording binds repetitions to a timed hang remain one task and use the source hang duration.
-- A rest step fills `60 - task duration` seconds when the task sequence finishes early; no negative rest step may be emitted.
+- A rest step fills `60 seconds - total duration of all tasks in the minute` when the task sequence finishes early; no negative rest step may be emitted.
 - Maximum-effort tasks with no source duration occupy the remainder of their source minute and receive no invented rest segment.
 - Keep the three Metolius plan IDs and levels unchanged, and keep each plan at 600 seconds total.
 - Because default timing and task splitting change the app interval model, all three Metolius plans use `provenance: .adapted` and retain the source URL plus an adaptation note.
@@ -369,7 +369,7 @@ rtk git commit -m "docs: mark guided Metolius timing as adapted"
 
 ```sh
 metolius_review_uuid=$(rtk xcrun simctl create "Hang Ten paramaribo Metolius Task Steps Review" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)
-rtk sh -c 'printf "%s\n" "$metolius_review_uuid" > .context/metolius-task-steps-review.uuid'
+rtk printf "%s\n" "$metolius_review_uuid" > .context/metolius-task-steps-review.uuid
 ```
 
 Use the returned UUID for every subsequent command, and boot it only after confirming it is not shared by another workspace.
@@ -380,7 +380,7 @@ Use the returned UUID for every subsequent command, and boot it only after confi
 metolius_review_uuid=$(rtk sed -n '1p' .context/metolius-task-steps-review.uuid)
 rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination "platform=iOS Simulator,id=$metolius_review_uuid" -derivedDataPath .context/DerivedData-metolius-task-steps build
 rtk xcrun simctl install "$metolius_review_uuid" .context/DerivedData-metolius-task-steps/Build/Products/Debug-iphonesimulator/HangTen.app
-rtk sh -c 'SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=2 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training'
+SIMCTL_CHILD_HANGTEN_REVIEW_PLAN_ID=metolius.generic-ten-minute.intermediate SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=2 rtk xcrun simctl launch "$metolius_review_uuid" com.hangten.training
 ```
 
 Capture the five states with these exact artifact names:

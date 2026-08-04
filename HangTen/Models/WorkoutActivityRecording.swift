@@ -121,9 +121,11 @@ struct WorkoutActivityRecorder {
                     continue
                 }
                 guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
-                let holds = segment.targets.flatMap {
+                let holdsByTarget = segment.targets.map {
                     BoardTargetResolver.resolveHolds(for: $0, on: board)
                 }
+                guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
+                let holds = holdsByTarget.flatMap { $0 }
                 guard !holds.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 if segment.targets.count > 1 {
                     result.append(

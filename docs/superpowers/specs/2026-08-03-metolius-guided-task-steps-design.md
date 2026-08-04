@@ -31,9 +31,9 @@ remain visible.
   duration.
 - Compound tasks whose source wording binds the repetitions to a timed hang
   keep that task together and use the source hang duration.
-- A rest step fills `60 - task duration` seconds when the task sequence finishes
-  early. The helper must never create a negative rest step; source tasks must
-  fit within their minute.
+- Rest duration is `60 seconds - the total duration of all tasks in the minute`.
+  Emit it only when positive; the helper must never create a negative rest step,
+  so source tasks must fit within their minute.
 - Maximum-effort tasks with no source duration occupy the remainder of their
   source minute and do not receive an invented rest segment.
 

@@ -704,10 +704,6 @@ enum MetoliusCycleBuilder {
         }
     }
 
-    private static func fixedWork(_ target: HoldTarget, _ duration: TimeInterval) -> WorkoutSegment {
-        WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
-    }
-
     private static func fixedRest(_ duration: TimeInterval) -> WorkoutSegment {
         WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: duration)
     }
@@ -723,7 +719,7 @@ enum MetoliusCycleBuilder {
         task(
             title: title,
             instruction: instruction,
-            accessory: "\(count) pull-ups",
+            accessory: count == 1 ? "1 pull-up" : "\(count) pull-ups",
             duration: TimeInterval(count) * pullUpDuration,
             phase: phase,
             targets: targets,
@@ -742,7 +738,7 @@ enum MetoliusCycleBuilder {
         task(
             title: title,
             instruction: instruction,
-            accessory: "\(count) reps",
+            accessory: count == 1 ? "1 rep" : "\(count) reps",
             duration: TimeInterval(count) * repetitionDuration,
             phase: phase,
             targets: targets,

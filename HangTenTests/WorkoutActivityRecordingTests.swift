@@ -119,6 +119,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(records.count, 1)
         XCTAssertEqual(records[0].holdIDs, ["edge-left", "jug-center"])
+        XCTAssertNil(records[0].holdType)
+        XCTAssertNil(records[0].sizeMillimeters)
         XCTAssertEqual(records[0].durationSeconds, 10)
     }
 
@@ -286,6 +288,26 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 target: .ids("missing"),
                 timing: .fixed,
                 duration: 1
+            )
+        ])
+
+        XCTAssertThrowsError(
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+        ) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
+            )
+        }
+    }
+
+    func testPartiallyUnresolvedMultiTargetThrowsItsSegmentKey() {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                targets: [.ids("edge-left"), .ids("missing")],
+                timing: .fixed,
+                duration: 10
             )
         ])
 

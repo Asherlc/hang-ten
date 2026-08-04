@@ -144,9 +144,12 @@ step, verify:
 5. switch-hand, stay-on, maximum, failure, or no-rest qualifiers;
 6. resolved hold IDs on every compatible board.
 
-The current Metolius catalog should remain three plans, ten 60-second steps per
-plan, and 600 seconds total per plan. The source explicitly says to complete
-the task or tasks within each minute and use the remaining time to rest.
+The current Metolius catalog should remain three plans with ten 60-second source
+cycles per plan and 600 seconds total per plan. Guided expansion generates 20
+steps for Entry, 26 for Intermediate, and 27 for Advanced; these generated
+counts differ from the ten source cycles. The source explicitly says to
+complete the task or tasks within each minute and use the remaining time to
+rest.
 DEBUG builds also compare the complete official-plan metadata, instructions,
 targets, grip cues, and timing against a stable audit fingerprint. Update that
 fingerprint only after repeating the line-by-line primary-source audit; never

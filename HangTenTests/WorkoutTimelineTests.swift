@@ -345,6 +345,8 @@ final class WorkoutSessionPolicyTests: XCTestCase {
 }
 
 final class WorkoutStepDurationTests: XCTestCase {
+    deinit {}
+
     func testRestPhaseHasFullDurationAsRest() {
         let rest = WorkoutStep(
             id: "rest",
@@ -381,6 +383,8 @@ final class WorkoutStepDurationTests: XCTestCase {
 }
 
 final class MetoliusTaskExpansionTests: XCTestCase {
+    deinit {}
+
     func testPullUpTasksUseFiveSecondsPerPullUp() throws {
         let task = MetoliusCycleBuilder.pullUps(
             count: 3,
@@ -437,12 +441,14 @@ final class MetoliusTaskExpansionTests: XCTestCase {
 }
 
 final class MetoliusCatalogExpansionTests: XCTestCase {
+    deinit {}
+
     private let sourceURL = URL(
         string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
     )!
 
     func testIntermediateMinuteTwoIsTwoTaskStepsThenRest() {
-        let steps = LegacyPlanSeedCatalog.metoliusIntermediate.steps.filter {
+        let steps = PlanCatalog.metoliusIntermediate.steps.filter {
             $0.id.hasPrefix("intermediate.minute-2.")
         }
 
@@ -457,7 +463,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
     }
 
     func testIntermediateOffsetPullsTellTheHandSwitchAsSeparateSteps() {
-        let steps = LegacyPlanSeedCatalog.metoliusIntermediate.steps.filter {
+        let steps = PlanCatalog.metoliusIntermediate.steps.filter {
             $0.id.hasPrefix("intermediate.minute-6.")
         }
 
