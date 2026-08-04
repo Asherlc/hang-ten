@@ -64,9 +64,10 @@
       "id" : "metolius.generic-ten-minute.entry.warm-up",
       "steps" : [
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-1",
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "entry.minute-1.task-1",
           "instruction" : "Hang from the jugs for 15 seconds.",
           "phase" : "hang",
           "segments" : [
@@ -76,11 +77,6 @@
               "target" : {
                 "feature" : "jug"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 45,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -98,19 +94,39 @@
       "id" : "metolius.generic-ten-minute.entry.main",
       "steps" : [
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
+          "accessory" : "45s rest",
+          "duration" : 45,
+          "id" : "entry.minute-1.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 1 rest"
+        },
+        {
+          "accessory" : "1 pull-up",
+          "activeDuration" : 5,
+          "duration" : 5,
           "gripType" : "sloper",
-          "id" : "entry.minute-2",
+          "id" : "entry.minute-2.task-1",
           "instruction" : "Do 1 pull-up on a round sloper.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 5,
               "kind" : "work",
               "target" : {
                 "feature" : "roundSloper"
               },
-              "timing" : "undefined"
+              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -118,12 +134,31 @@
               "feature" : "roundSloper"
             }
           ],
-          "title" : "Sloper pull-up"
+          "title" : "Round sloper pull-up"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-3",
+          "accessory" : "55s rest",
+          "duration" : 55,
+          "id" : "entry.minute-2.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 55,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 2 rest"
+        },
+        {
+          "accessory" : "10s hang",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "id" : "entry.minute-3.task-1",
           "instruction" : "Hang from a medium edge for 10 seconds.",
           "phase" : "hang",
           "segments" : [
@@ -133,11 +168,6 @@
               "target" : {
                 "feature" : "mediumEdge"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 50,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -149,9 +179,28 @@
           "title" : "Medium-edge hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-4",
+          "accessory" : "50s rest",
+          "duration" : 50,
+          "id" : "entry.minute-3.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 3 rest"
+        },
+        {
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "entry.minute-4.task-1",
           "instruction" : "Hang from a pocket for 15 seconds and include 3 shrugs.",
           "phase" : "hang",
           "segments" : [
@@ -162,13 +211,6 @@
                 "feature" : "pocket"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "pocket"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
@@ -179,9 +221,28 @@
           "title" : "Pocket hang + shrugs"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-5",
+          "accessory" : "45s rest",
+          "duration" : 45,
+          "id" : "entry.minute-4.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 4 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "entry.minute-5.task-1",
           "instruction" : "Hang from a large edge for 20 seconds and include 2 pull-ups.",
           "phase" : "hang",
           "segments" : [
@@ -192,13 +253,6 @@
                 "feature" : "largeEdge"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "largeEdge"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
@@ -209,11 +263,30 @@
           "title" : "Large edge + pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
+          "accessory" : "40s rest",
+          "duration" : 40,
+          "id" : "entry.minute-5.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 40,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 5 rest"
+        },
+        {
+          "accessory" : "10s hang",
+          "activeDuration" : 10,
+          "duration" : 10,
           "gripType" : "sloper",
-          "id" : "entry.minute-6",
-          "instruction" : "Hang from a round sloper for 10 seconds, then do 5 knee raises on a pocket.",
+          "id" : "entry.minute-6.task-1",
+          "instruction" : "Hang from a round sloper for 10 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -223,38 +296,72 @@
                 "feature" : "roundSloper"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "pocket"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
             {
               "feature" : "roundSloper"
-            },
+            }
+          ],
+          "title" : "Round-sloper hang"
+        },
+        {
+          "accessory" : "5 reps",
+          "activeDuration" : 5,
+          "duration" : 5,
+          "id" : "entry.minute-6.task-2",
+          "instruction" : "Do 5 knee raises on a pocket.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 5,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
             {
               "feature" : "pocket"
             }
           ],
-          "title" : "Sloper + knee raises"
+          "title" : "Pocket knee raises"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-7",
+          "accessory" : "45s rest",
+          "duration" : 45,
+          "id" : "entry.minute-6.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 6 rest"
+        },
+        {
+          "accessory" : "4 pull-ups",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "entry.minute-7.task-1",
           "instruction" : "Do 4 pull-ups on a large edge.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 20,
               "kind" : "work",
               "target" : {
                 "feature" : "largeEdge"
               },
-              "timing" : "undefined"
+              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -265,9 +372,28 @@
           "title" : "Large-edge pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-8",
+          "accessory" : "40s rest",
+          "duration" : 40,
+          "id" : "entry.minute-7.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 40,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 7 rest"
+        },
+        {
+          "accessory" : "10s hang",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "id" : "entry.minute-8.task-1",
           "instruction" : "Hang from a medium edge for 10 seconds.",
           "phase" : "hang",
           "segments" : [
@@ -277,11 +403,6 @@
               "target" : {
                 "feature" : "mediumEdge"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 50,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -293,18 +414,38 @@
           "title" : "Medium-edge hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "entry.minute-9",
+          "accessory" : "50s rest",
+          "duration" : 50,
+          "id" : "entry.minute-8.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 8 rest"
+        },
+        {
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "entry.minute-9.task-1",
           "instruction" : "Do 3 pull-ups on the jugs.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 15,
               "kind" : "work",
               "target" : {
                 "feature" : "jug"
               },
-              "timing" : "undefined"
+              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -315,10 +456,28 @@
           "title" : "Jug pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
+          "accessory" : "45s rest",
+          "duration" : 45,
+          "id" : "entry.minute-9.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 45,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 9 rest"
+        },
+        {
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
-          "id" : "entry.minute-10",
+          "id" : "entry.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
           "segments" : [
@@ -344,10 +503,11 @@
       "id" : "metolius.generic-ten-minute.intermediate.warm-up",
       "steps" : [
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-1",
-          "instruction" : "Hang from a large edge for 15 seconds, then do 3 pull-ups.",
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-1.task-1",
+          "instruction" : "Hang from a large edge for 15 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -357,13 +517,6 @@
                 "feature" : "largeEdge"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "largeEdge"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
@@ -371,28 +524,89 @@
               "feature" : "largeEdge"
             }
           ],
-          "title" : "Large edge"
+          "title" : "Large-edge hang"
         }
       ],
-      "title" : "Large edge"
+      "title" : "Large-edge hang"
     },
     {
       "id" : "metolius.generic-ten-minute.intermediate.main",
       "steps" : [
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-2",
-          "instruction" : "Do 2 pull-ups on a round sloper, then hang from a medium edge for 20 seconds.",
-          "phase" : "hang",
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-1.task-2",
+          "instruction" : "Do 3 pull-ups on the large edge.",
+          "phase" : "pull",
           "segments" : [
             {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "largeEdge"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "largeEdge"
+            }
+          ],
+          "title" : "Large-edge pull-ups"
+        },
+        {
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-1.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 1 rest"
+        },
+        {
+          "accessory" : "2 pull-ups",
+          "activeDuration" : 10,
+          "duration" : 10,
+          "gripType" : "sloper",
+          "id" : "intermediate.minute-2.task-1",
+          "instruction" : "Do 2 pull-ups on a round sloper.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "feature" : "roundSloper"
               },
-              "timing" : "undefined"
-            },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "roundSloper"
+            }
+          ],
+          "title" : "Round sloper pull-ups"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "intermediate.minute-2.task-2",
+          "instruction" : "Hang from a medium edge for 20 seconds.",
+          "phase" : "hang",
+          "segments" : [
             {
               "duration" : 20,
               "kind" : "work",
@@ -404,19 +618,35 @@
           ],
           "targets" : [
             {
-              "feature" : "roundSloper"
-            },
-            {
               "feature" : "mediumEdge"
             }
           ],
-          "title" : "Sloper + medium edge"
+          "title" : "Medium-edge hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-3",
-          "instruction" : "Hang from a small edge for 20 seconds, then hold a pocket at a 90° bent arm for 15 seconds.",
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-2.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 2 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "intermediate.minute-3.task-1",
+          "instruction" : "Hang from a small edge for 20 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -426,7 +656,23 @@
                 "feature" : "smallEdge"
               },
               "timing" : "fixed"
-            },
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "smallEdge"
+            }
+          ],
+          "title" : "Small-edge hang"
+        },
+        {
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-3.task-2",
+          "instruction" : "Hold a pocket at a 90° bent arm for 15 seconds.",
+          "phase" : "hang",
+          "segments" : [
             {
               "duration" : 15,
               "kind" : "work",
@@ -434,7 +680,22 @@
                 "feature" : "pocket"
               },
               "timing" : "fixed"
-            },
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "pocket"
+            }
+          ],
+          "title" : "Bent-arm pocket hang"
+        },
+        {
+          "accessory" : "25s rest",
+          "duration" : 25,
+          "id" : "intermediate.minute-3.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
             {
               "duration" : 25,
               "kind" : "rest",
@@ -442,20 +703,16 @@
             }
           ],
           "targets" : [
-            {
-              "feature" : "smallEdge"
-            },
-            {
-              "feature" : "pocket"
-            }
+
           ],
-          "title" : "Small edge + pocket"
+          "title" : "Minute 3 rest"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
+          "accessory" : "30s hang",
+          "activeDuration" : 30,
+          "duration" : 30,
           "gripType" : "sloper",
-          "id" : "intermediate.minute-4",
+          "id" : "intermediate.minute-4.task-1",
           "instruction" : "Hang from a round sloper for 30 seconds.",
           "phase" : "hang",
           "segments" : [
@@ -466,11 +723,6 @@
                 "feature" : "roundSloper"
               },
               "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -478,13 +730,32 @@
               "feature" : "roundSloper"
             }
           ],
-          "title" : "Round sloper"
+          "title" : "Round-sloper hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-5",
-          "instruction" : "Hang from a large edge for 20 seconds, then do 4 pull-ups on a pocket.",
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-4.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 4 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "intermediate.minute-5.task-1",
+          "instruction" : "Hang from a large edge for 20 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -494,45 +765,77 @@
                 "feature" : "largeEdge"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "pocket"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
             {
               "feature" : "largeEdge"
-            },
+            }
+          ],
+          "title" : "Large-edge hang"
+        },
+        {
+          "accessory" : "4 pull-ups",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "intermediate.minute-5.task-2",
+          "instruction" : "Do 4 pull-ups on a pocket.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "work",
+              "target" : {
+                "feature" : "pocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
             {
               "feature" : "pocket"
             }
           ],
-          "title" : "Large edge + pocket"
+          "title" : "Pocket pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-6",
-          "instruction" : "Do 3 offset pulls per arm with the high hand on a jug and low hand on a small edge; change hands and repeat.",
+          "accessory" : "20s rest",
+          "duration" : 20,
+          "id" : "intermediate.minute-5.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 5 rest"
+        },
+        {
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-6.task-1",
+          "instruction" : "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 15,
               "kind" : "work",
-              "target" : {
-                "feature" : "jug"
-              },
-              "timing" : "undefined"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "smallEdge"
-              },
-              "timing" : "undefined"
+              "targets" : [
+                {
+                  "feature" : "jug"
+                },
+                {
+                  "feature" : "smallEdge"
+                }
+              ],
+              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -546,19 +849,87 @@
           "title" : "Offset pulls"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-7",
-          "instruction" : "Do 15 knee raises on the jugs, then hang from a medium edge for 15 seconds.",
-          "phase" : "hang",
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-6.task-2",
+          "instruction" : "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.",
+          "phase" : "pull",
           "segments" : [
             {
+              "duration" : 15,
+              "kind" : "work",
+              "targets" : [
+                {
+                  "feature" : "jug"
+                },
+                {
+                  "feature" : "smallEdge"
+                }
+              ],
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "jug"
+            },
+            {
+              "feature" : "smallEdge"
+            }
+          ],
+          "title" : "Offset pulls · other side"
+        },
+        {
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-6.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 6 rest"
+        },
+        {
+          "accessory" : "15 reps",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-7.task-1",
+          "instruction" : "Do 15 knee raises on the jugs.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
               "kind" : "work",
               "target" : {
                 "feature" : "jug"
               },
-              "timing" : "undefined"
-            },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "jug"
+            }
+          ],
+          "title" : "Jug knee raises"
+        },
+        {
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-7.task-2",
+          "instruction" : "Hang from a medium edge for 15 seconds.",
+          "phase" : "hang",
+          "segments" : [
             {
               "duration" : 15,
               "kind" : "work",
@@ -570,18 +941,34 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
-            },
-            {
               "feature" : "mediumEdge"
             }
           ],
-          "title" : "Knee raises + edge hang"
+          "title" : "Medium-edge hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-8",
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-7.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 7 rest"
+        },
+        {
+          "accessory" : "25s hang",
+          "activeDuration" : 25,
+          "duration" : 25,
+          "id" : "intermediate.minute-8.task-1",
           "instruction" : "Hang from a medium edge for 25 seconds.",
           "phase" : "hang",
           "segments" : [
@@ -592,11 +979,6 @@
                 "feature" : "mediumEdge"
               },
               "timing" : "fixed"
-            },
-            {
-              "duration" : 35,
-              "kind" : "rest",
-              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -604,13 +986,33 @@
               "feature" : "mediumEdge"
             }
           ],
-          "title" : "Medium edge"
+          "title" : "Medium-edge hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "intermediate.minute-9",
-          "instruction" : "Hang from a slope for 15 seconds, then do 3 pull-ups on the jugs.",
+          "accessory" : "35s rest",
+          "duration" : 35,
+          "id" : "intermediate.minute-8.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 35,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 8 rest"
+        },
+        {
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "gripType" : "sloper",
+          "id" : "intermediate.minute-9.task-1",
+          "instruction" : "Hang from a slope for 15 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -620,30 +1022,62 @@
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "jug"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
             {
               "feature" : "largeSlope"
-            },
+            }
+          ],
+          "title" : "Slope hang"
+        },
+        {
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "intermediate.minute-9.task-2",
+          "instruction" : "Do 3 pull-ups on the jugs.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "jug"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
             {
               "feature" : "jug"
             }
           ],
-          "title" : "Slope + jugs"
+          "title" : "Jug pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "intermediate.minute-9.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 9 rest"
+        },
+        {
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
-          "id" : "intermediate.minute-10",
+          "id" : "intermediate.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
           "segments" : [
@@ -669,10 +1103,12 @@
       "id" : "metolius.generic-ten-minute.advanced.warm-up",
       "steps" : [
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-1",
-          "instruction" : "Hold a straight-arm hang on a large slope for 20 seconds, then do 3 pull-ups on a four-finger flat edge.",
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "gripType" : "sloper",
+          "id" : "advanced.minute-1.task-1",
+          "instruction" : "Hold a straight-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -682,8 +1118,31 @@
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
-            },
+            }
+          ],
+          "targets" : [
             {
+              "feature" : "largeSlope"
+            }
+          ],
+          "title" : "Large-slope hang"
+        }
+      ],
+      "title" : "Large-slope hang"
+    },
+    {
+      "id" : "metolius.generic-ten-minute.advanced.main",
+      "steps" : [
+        {
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "advanced.minute-1.task-2",
+          "instruction" : "Do 3 pull-ups on a four-finger flat edge.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
               "kind" : "work",
               "target" : {
                 "fallbackFeatures" : [
@@ -691,13 +1150,10 @@
                 ],
                 "feature" : "fourFingerFlatEdge"
               },
-              "timing" : "undefined"
+              "timing" : "fixed"
             }
           ],
           "targets" : [
-            {
-              "feature" : "largeSlope"
-            },
             {
               "fallbackFeatures" : [
                 "largeEdge"
@@ -705,20 +1161,33 @@
               "feature" : "fourFingerFlatEdge"
             }
           ],
-          "title" : "Large slope + flat edge"
-        }
-      ],
-      "title" : "Large slope + flat edge"
-    },
-    {
-      "id" : "metolius.generic-ten-minute.advanced.main",
-      "steps" : [
+          "title" : "Four-finger flat-edge pull-ups"
+        },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
+          "accessory" : "25s rest",
+          "duration" : 25,
+          "id" : "advanced.minute-1.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 1 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
           "gripType" : "sloper",
-          "id" : "advanced.minute-2",
-          "instruction" : "Hold a slightly bent-arm hang on a large slope for 20 seconds; stay on for a 20-second L-sit or 20 hanging knee curls.",
+          "id" : "advanced.minute-2.task-1",
+          "instruction" : "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -727,19 +1196,6 @@
               "target" : {
                 "feature" : "largeSlope"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 20,
-              "kind" : "work",
-              "target" : {
-                "feature" : "largeSlope"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 20,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -748,23 +1204,60 @@
               "feature" : "largeSlope"
             }
           ],
-          "title" : "Bent arm + core"
+          "title" : "Bent-arm large-slope hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "gripType" : "threeFingerPocket",
-          "id" : "advanced.minute-3",
-          "instruction" : "Do 5 pull-ups on a three-finger pocket; stay on for a 25-second straight-arm hang.",
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "gripType" : "sloper",
+          "id" : "advanced.minute-2.task-2",
+          "instruction" : "Stay on for a 20-second L-sit or 20 hanging knee curls.",
           "phase" : "hang",
           "segments" : [
             {
+              "duration" : 20,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "largeSlope"
               },
-              "timing" : "undefined"
-            },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "largeSlope"
+            }
+          ],
+          "title" : "L-sit or hanging knee curls"
+        },
+        {
+          "accessory" : "20s rest",
+          "duration" : 20,
+          "id" : "advanced.minute-2.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 2 rest"
+        },
+        {
+          "accessory" : "5 pull-ups",
+          "activeDuration" : 25,
+          "duration" : 25,
+          "gripType" : "threeFingerPocket",
+          "id" : "advanced.minute-3.task-1",
+          "instruction" : "Do 5 pull-ups on a three-finger pocket.",
+          "phase" : "pull",
+          "segments" : [
             {
               "duration" : 25,
               "kind" : "work",
@@ -779,58 +1272,76 @@
               "feature" : "threeFingerPocket"
             }
           ],
-          "title" : "Pocket pull-ups + hang"
+          "title" : "Three-finger-pocket pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-4",
+          "accessory" : "25s hang",
+          "activeDuration" : 25,
+          "duration" : 25,
+          "gripType" : "threeFingerPocket",
+          "id" : "advanced.minute-3.task-2",
+          "instruction" : "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "threeFingerPocket"
+            }
+          ],
+          "title" : "Straight-arm three-finger-pocket hang"
+        },
+        {
+          "accessory" : "10s rest",
+          "duration" : 10,
+          "id" : "advanced.minute-3.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 3 rest"
+        },
+        {
+          "accessory" : "40s hang",
+          "activeDuration" : 40,
+          "duration" : 40,
+          "id" : "advanced.minute-4.task-1",
           "instruction" : "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 5,
+              "duration" : 40,
               "kind" : "work",
-              "target" : {
-                "kind" : "pocket"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 5,
-              "kind" : "work",
-              "target" : {
-                "kind" : "edge"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 5,
-              "kind" : "work",
-              "target" : {
-                "kind" : "sloper"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 5,
-              "kind" : "work",
-              "target" : {
-                "kind" : "jug"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 20,
-              "kind" : "work",
-              "target" : {
-                "kind" : "sloper"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 20,
-              "kind" : "rest",
+              "targets" : [
+                {
+                  "kind" : "pocket"
+                },
+                {
+                  "kind" : "edge"
+                },
+                {
+                  "kind" : "sloper"
+                },
+                {
+                  "kind" : "jug"
+                }
+              ],
               "timing" : "fixed"
             }
           ],
@@ -851,10 +1362,29 @@
           "title" : "Hold ladder"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-5",
-          "instruction" : "Hang one-armed from a four-finger flat edge for 20 seconds; switch hands and repeat.",
+          "accessory" : "20s rest",
+          "duration" : 20,
+          "id" : "advanced.minute-4.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 4 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "advanced.minute-5.task-1",
+          "instruction" : "Hang one-armed from a four-finger flat edge for 20 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -867,7 +1397,26 @@
                 "feature" : "fourFingerFlatEdge"
               },
               "timing" : "fixed"
-            },
+            }
+          ],
+          "targets" : [
+            {
+              "fallbackFeatures" : [
+                "largeEdge"
+              ],
+              "feature" : "fourFingerFlatEdge"
+            }
+          ],
+          "title" : "Single-arm flat-edge hang"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
+          "id" : "advanced.minute-5.task-2",
+          "instruction" : "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
+          "phase" : "hang",
+          "segments" : [
             {
               "duration" : 20,
               "kind" : "work",
@@ -877,11 +1426,6 @@
                 ],
                 "feature" : "fourFingerFlatEdge"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 20,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -893,28 +1437,46 @@
               "feature" : "fourFingerFlatEdge"
             }
           ],
-          "title" : "Single-arm flat edge"
+          "title" : "Single-arm flat-edge hang · other hand"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-6",
-          "instruction" : "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket; change hands and repeat.",
+          "accessory" : "20s rest",
+          "duration" : 20,
+          "id" : "advanced.minute-5.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 20,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 5 rest"
+        },
+        {
+          "accessory" : "5 pull-ups",
+          "activeDuration" : 25,
+          "duration" : 25,
+          "id" : "advanced.minute-6.task-1",
+          "instruction" : "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 25,
               "kind" : "work",
-              "target" : {
-                "feature" : "largeSlope"
-              },
-              "timing" : "undefined"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "threeFingerPocket"
-              },
-              "timing" : "undefined"
+              "targets" : [
+                {
+                  "feature" : "largeSlope"
+                },
+                {
+                  "feature" : "threeFingerPocket"
+                }
+              ],
+              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -928,10 +1490,61 @@
           "title" : "Offset pull-ups"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-7",
-          "instruction" : "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds, then a straight-arm three-finger-pocket hang for 15 seconds.",
+          "accessory" : "5 pull-ups",
+          "activeDuration" : 25,
+          "duration" : 25,
+          "id" : "advanced.minute-6.task-2",
+          "instruction" : "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "work",
+              "targets" : [
+                {
+                  "feature" : "largeSlope"
+                },
+                {
+                  "feature" : "threeFingerPocket"
+                }
+              ],
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "largeSlope"
+            },
+            {
+              "feature" : "threeFingerPocket"
+            }
+          ],
+          "title" : "Offset pull-ups · other side"
+        },
+        {
+          "accessory" : "10s rest",
+          "duration" : 10,
+          "id" : "advanced.minute-6.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 6 rest"
+        },
+        {
+          "accessory" : "30s hang",
+          "activeDuration" : 30,
+          "duration" : 30,
+          "id" : "advanced.minute-7.task-1",
+          "instruction" : "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -944,19 +1557,6 @@
                 "feature" : "fourFingerIncutEdge"
               },
               "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "work",
-              "target" : {
-                "feature" : "threeFingerPocket"
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
             }
           ],
           "targets" : [
@@ -965,27 +1565,85 @@
                 "largeEdge"
               ],
               "feature" : "fourFingerIncutEdge"
-            },
+            }
+          ],
+          "title" : "Incut-edge bent-arm hang"
+        },
+        {
+          "accessory" : "15s hang",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "gripType" : "threeFingerPocket",
+          "id" : "advanced.minute-7.task-2",
+          "instruction" : "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
             {
               "feature" : "threeFingerPocket"
             }
           ],
-          "title" : "Incut edge + pocket"
+          "title" : "Straight-arm three-finger-pocket hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
-          "id" : "advanced.minute-8",
-          "instruction" : "Do 3 L-sit pull-ups, bending your knees if needed; then hold a 5-second front lever or 15-second straight-arm hang on a large slope.",
+          "accessory" : "15s rest",
+          "duration" : 15,
+          "id" : "advanced.minute-7.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 7 rest"
+        },
+        {
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "advanced.minute-8.task-1",
+          "instruction" : "Do 3 L-sit pull-ups, bending your knees if needed.",
           "phase" : "pull",
           "segments" : [
             {
+              "duration" : 15,
               "kind" : "work",
               "target" : {
                 "feature" : "largeSlope"
               },
-              "timing" : "undefined"
-            },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "largeSlope"
+            }
+          ],
+          "title" : "L-sit pull-ups"
+        },
+        {
+          "accessory" : "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
+          "duration" : 15,
+          "gripType" : "sloper",
+          "id" : "advanced.minute-8.task-2",
+          "instruction" : "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
+          "phase" : "hang",
+          "segments" : [
             {
               "kind" : "work",
               "target" : {
@@ -999,14 +1657,33 @@
               "feature" : "largeSlope"
             }
           ],
-          "title" : "L-sit + lever"
+          "title" : "Choose one: front lever or straight-arm hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
-          "duration" : 60,
+          "accessory" : "30s rest",
+          "duration" : 30,
+          "id" : "advanced.minute-8.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 30,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 8 rest"
+        },
+        {
+          "accessory" : "20s hang",
+          "activeDuration" : 20,
+          "duration" : 20,
           "gripType" : "twoFingerPocket",
-          "id" : "advanced.minute-9",
-          "instruction" : "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets, then do 3 power pull-ups with weight or helper resistance.",
+          "id" : "advanced.minute-9.task-1",
+          "instruction" : "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
           "phase" : "hang",
           "segments" : [
             {
@@ -1016,13 +1693,6 @@
                 "feature" : "threeFingerPocket"
               },
               "timing" : "fixed"
-            },
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "threeFingerPocket"
-              },
-              "timing" : "undefined"
             }
           ],
           "targets" : [
@@ -1030,23 +1700,58 @@
               "feature" : "threeFingerPocket"
             }
           ],
-          "title" : "Two fingers + power pulls"
+          "title" : "Two-finger three-finger-pocket hang"
         },
         {
-          "accessory" : "Follow the prescribed task times, then rest for the remainder of the cycle.",
+          "accessory" : "3 pull-ups",
+          "activeDuration" : 15,
+          "duration" : 15,
+          "id" : "advanced.minute-9.task-2",
+          "instruction" : "Then do 3 power pull-ups with weight or helper resistance.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "work",
+              "target" : {
+                "feature" : "threeFingerPocket"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "feature" : "threeFingerPocket"
+            }
+          ],
+          "title" : "Power pull-ups"
+        },
+        {
+          "accessory" : "25s rest",
+          "duration" : 25,
+          "id" : "advanced.minute-9.rest",
+          "instruction" : "Step off the board, shake out, and breathe until the minute ends.",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 25,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+
+          ],
+          "title" : "Minute 9 rest"
+        },
+        {
+          "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
           "gripType" : "sloper",
-          "id" : "advanced.minute-10",
+          "id" : "advanced.minute-10.task-1",
           "instruction" : "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
           "phase" : "hang",
           "segments" : [
-            {
-              "kind" : "work",
-              "target" : {
-                "feature" : "largeSlope"
-              },
-              "timing" : "stopwatch"
-            },
             {
               "kind" : "work",
               "target" : {
@@ -5726,7 +6431,8 @@
     "generatedAt" : "2026-08-01",
     "id" : "hang-ten.built-in",
     "notes" : [
-      "The three Metolius routines preserve the source-audited official prescriptions.",
+      "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+      "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
       "All research and coach routines are explicitly marked as adapted.",
       "Board mappings keep plan targets semantic and board-specific IDs replaceable."
     ],
@@ -5752,12 +6458,13 @@
         ],
         "level" : "Entry",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
+          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
         ],
-        "provenance" : "official",
+        "provenance" : "adapted",
         "sourceLabel" : "Metolius 10 Minute Sequences — Hangboard Training Guide",
         "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/10-minute-sequences-hangboard-training-guide",
-        "subtitle" : "The official board-flexible entry sequence, guided minute by minute.",
+        "subtitle" : "Source sequence with guided task timing; pull-ups default to 5 seconds each and other counted repetitions to 1 second each.",
         "tags" : [
           "built-in",
           "manufacturer"
@@ -5783,12 +6490,13 @@
         ],
         "level" : "Intermediate",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
+          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
         ],
-        "provenance" : "official",
+        "provenance" : "adapted",
         "sourceLabel" : "Metolius 10 Minute Sequences — Hangboard Training Guide",
         "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/10-minute-sequences-hangboard-training-guide",
-        "subtitle" : "The official board-flexible intermediate sequence, guided minute by minute.",
+        "subtitle" : "Source sequence with guided task timing; pull-ups default to 5 seconds each and other counted repetitions to 1 second each.",
         "tags" : [
           "built-in",
           "manufacturer"
@@ -5814,12 +6522,13 @@
         ],
         "level" : "Advanced",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
+          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
         ],
-        "provenance" : "official",
+        "provenance" : "adapted",
         "sourceLabel" : "Metolius 10 Minute Sequences — Hangboard Training Guide",
         "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/10-minute-sequences-hangboard-training-guide",
-        "subtitle" : "The official board-flexible advanced sequence, guided minute by minute.",
+        "subtitle" : "Source sequence with guided task timing; pull-ups default to 5 seconds each and other counted repetitions to 1 second each.",
         "tags" : [
           "built-in",
           "manufacturer"

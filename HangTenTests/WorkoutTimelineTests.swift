@@ -205,6 +205,8 @@ final class WorkoutTimelineTests: XCTestCase {
 }
 
 final class WorkoutClockTests: XCTestCase {
+    deinit {}
+
     func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
         var now: TimeInterval = 100
         var clock = WorkoutClock(now: { now })
@@ -481,6 +483,214 @@ final class WorkoutSessionPolicyTests: XCTestCase {
                 measurementTimestamp: Date(timeIntervalSince1970: 100.001)
             )
         )
+    }
+}
+
+final class WorkoutStepDurationTests: XCTestCase {
+    deinit {}
+
+    func testRestPhaseHasFullDurationAsRest() {
+        let rest = WorkoutStep(
+            id: "rest",
+            number: 1,
+            title: "Rest",
+            instruction: "Rest.",
+            accessory: "",
+            duration: 30,
+            phase: .rest,
+            targets: []
+        )
+
+        XCTAssertEqual(rest.activeDuration, 30)
+        XCTAssertFalse(rest.hasRestInterval)
+        XCTAssertEqual(rest.restDuration, 0)
+    }
+
+    func testTimedPullTaskHasNoFollowingRest() {
+        let pull = WorkoutStep(
+            id: "pull",
+            number: 1,
+            title: "Pull",
+            instruction: "Do 2 pull-ups.",
+            accessory: "",
+            duration: 10,
+            phase: .pull,
+            targets: [.feature(.jug)],
+            timedWorkDuration: 10
+        )
+
+        XCTAssertEqual(pull.activeDuration, 10)
+        XCTAssertFalse(pull.hasRestInterval)
+    }
+}
+
+final class MetoliusTaskExpansionTests: XCTestCase {
+    deinit {}
+
+    func testPullUpTasksUseFiveSecondsPerPullUp() throws {
+        let task = MetoliusCycleBuilder.pullUps(
+            count: 3,
+            title: "Three pull-ups",
+            instruction: "Do 3 pull-ups on the jugs.",
+            phase: .pull,
+            targets: [.feature(.jug)]
+        )
+
+        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 1, tasks: [task])
+
+        XCTAssertEqual(steps[0].duration, 15)
+        XCTAssertEqual(steps[1].phase, .rest)
+        XCTAssertEqual(steps[1].duration, 45)
+    }
+
+    func testExpansionKeepsTaskOrderAndAddsRemainingMinuteRest() throws {
+        let first = MetoliusCycleBuilder.fixed(
+            title: "First hang",
+            instruction: "Hang for 15 seconds.",
+            duration: 15,
+            phase: .hang,
+            targets: [.feature(.largeEdge)]
+        )
+        let second = MetoliusCycleBuilder.pullUps(
+            count: 2,
+            title: "Pull-ups",
+            instruction: "Do 2 pull-ups.",
+            phase: .pull,
+            targets: [.feature(.jug)]
+        )
+
+        let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 2, tasks: [first, second])
+
+        XCTAssertEqual(steps.map(\.id), ["test.minute-2.task-1", "test.minute-2.task-2", "test.minute-2.rest"])
+        XCTAssertEqual(steps.map(\.duration), [15, 10, 35])
+        XCTAssertEqual(steps[0].targets, first.targets)
+        XCTAssertEqual(steps[1].targets, second.targets)
+    }
+
+    func testExpansionRejectsTasksThatExceedTheMinute() {
+        let overfull = MetoliusTaskDefinition(
+            title: "Overfull",
+            instruction: "Overfull",
+            accessory: "",
+            duration: 61,
+            phase: .hang,
+            targets: [.feature(.largeEdge)],
+            gripType: nil
+        )
+
+        XCTAssertThrowsError(try MetoliusCycleBuilder.expand(planID: "test", minute: 3, tasks: [overfull]))
+    }
+}
+
+final class MetoliusCatalogExpansionTests: XCTestCase {
+    deinit {}
+
+    private let sourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
+    )!
+
+    func testIntermediateMinuteTwoIsTwoTaskStepsThenRest() {
+        let steps = PlanCatalog.metoliusIntermediate.steps.filter {
+            $0.id.hasPrefix("intermediate.minute-2.")
+        }
+
+        XCTAssertEqual(
+            steps.map(\.title),
+            ["Round sloper pull-ups", "Medium-edge hang", "Minute 2 rest"]
+        )
+        XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
+        XCTAssertEqual(steps[0].targets, [.feature(.roundSloper)])
+        XCTAssertEqual(steps[1].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(steps[2].phase, .rest)
+    }
+
+    func testIntermediateOffsetPullsTellTheHandSwitchAsSeparateSteps() {
+        let steps = PlanCatalog.metoliusIntermediate.steps.filter {
+            $0.id.hasPrefix("intermediate.minute-6.")
+        }
+
+        XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
+        XCTAssertEqual(
+            steps.prefix(2).map(\.targets),
+            [
+                [.feature(.jug), .feature(.smallEdge)],
+                [.feature(.jug), .feature(.smallEdge)]
+            ]
+        )
+        XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
+        XCTAssertTrue(steps[1].instruction.lowercased().contains("repeat"))
+        XCTAssertEqual(steps[2].phase, .rest)
+    }
+
+    func testMaxEffortMetoliusStepsUseStopwatchTiming() {
+        let step = PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }!
+
+        XCTAssertEqual(step.duration, 60)
+        XCTAssertEqual(step.timedWorkDuration, nil)
+        XCTAssertEqual(step.segments, [
+            WorkoutSegment(
+                kind: .work,
+                target: .feature(.roundSloper),
+                timing: .stopwatch,
+                duration: nil
+            )
+        ])
+    }
+
+    func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
+        let steps = PlanCatalog.metoliusAdvanced.steps.filter { $0.id.hasPrefix("advanced.minute-4.") }
+
+        XCTAssertEqual(steps.map(\.duration), [40, 20])
+        XCTAssertEqual(steps.last?.phase, .rest)
+    }
+
+    func testMetoliusPlansRemainTenMinutesAndAreMarkedAdapted() {
+        let plans = [
+            PlanCatalog.metoliusEntry,
+            PlanCatalog.metoliusIntermediate,
+            PlanCatalog.metoliusAdvanced
+        ]
+
+        XCTAssertEqual(plans.map(\.steps.count), [20, 26, 27])
+        for plan in plans {
+            XCTAssertEqual(plan.duration, 600)
+            XCTAssertEqual(plan.provenance, .adapted)
+            XCTAssertEqual(plan.sourceURL, sourceURL)
+            XCTAssertTrue(plan.subtitle.contains("guided task timing"))
+            XCTAssertTrue(plan.subtitle.contains("5 seconds"))
+            XCTAssertEqual(plan.steps.map(\.number), Array(1...plan.steps.count))
+            XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
+        }
+    }
+
+    func testExpandedCatalogPreservesCompoundTasksChoicesAndMaximumEfforts() {
+        let entry = PlanCatalog.metoliusEntry.steps
+        let advanced = PlanCatalog.metoliusAdvanced.steps
+
+        let pocketShrugs = entry.filter { $0.id.hasPrefix("entry.minute-4.") }
+        XCTAssertEqual(pocketShrugs.map(\.duration), [15, 45])
+        XCTAssertTrue(pocketShrugs[0].instruction.contains("3 shrugs"))
+
+        let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
+        XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
+        XCTAssertEqual(entryMinuteSix[0].targets, [.feature(.roundSloper)])
+        XCTAssertEqual(entryMinuteSix[1].targets, [.feature(.pocket)])
+
+        let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
+        XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])
+        XCTAssertEqual(advancedMinuteEight.count, 3)
+        XCTAssertTrue(advancedMinuteEight[1].title.lowercased().contains("choose one"))
+        XCTAssertTrue(advancedMinuteEight[1].instruction.lowercased().contains("choose one"))
+        XCTAssertTrue(advancedMinuteEight[1].instruction.contains("5-second front lever"))
+        XCTAssertTrue(advancedMinuteEight[1].instruction.contains("15-second straight-arm hang"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.lowercased().contains("choose one"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.contains("5 seconds"))
+        XCTAssertTrue(advancedMinuteEight[1].accessory.contains("15 seconds"))
+
+        let advancedMinuteTen = advanced.filter { $0.id.hasPrefix("advanced.minute-10.") }
+        XCTAssertEqual(advancedMinuteTen.map(\.duration), [60])
+        XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("to failure"))
+        XCTAssertTrue(advancedMinuteTen[0].instruction.lowercased().contains("no rest"))
     }
 }
 
