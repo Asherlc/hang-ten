@@ -99,6 +99,188 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertNil(timeline.selectionTarget(for: "missing", at: 0))
         XCTAssertNil(timeline.skipTarget(from: 0))
     }
+
+    private let restPreviewSteps: [WorkoutStep] = [
+        WorkoutStep(
+            id: "work",
+            number: 1,
+            title: "Work",
+            instruction: "Work instruction",
+            accessory: "Work accessory",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.jug)],
+            timedWorkDuration: 15
+        ),
+        WorkoutStep(
+            id: "rest-one",
+            number: 2,
+            title: "Rest one",
+            instruction: "Rest instruction",
+            accessory: "Rest accessory",
+            duration: 10,
+            phase: .rest,
+            targets: []
+        ),
+        WorkoutStep(
+            id: "rest-two",
+            number: 3,
+            title: "Rest two",
+            instruction: "Rest instruction",
+            accessory: "Rest accessory",
+            duration: 10,
+            phase: .rest,
+            targets: []
+        ),
+        WorkoutStep(
+            id: "next-work",
+            number: 4,
+            title: "Next work",
+            instruction: "Next work instruction",
+            accessory: "Next work accessory",
+            duration: 20,
+            phase: .pull,
+            targets: [.kind(.edge)]
+        ),
+        WorkoutStep(
+            id: "final-rest",
+            number: 5,
+            title: "Final rest",
+            instruction: "Final rest instruction",
+            accessory: "Final rest accessory",
+            duration: 5,
+            phase: .rest,
+            targets: []
+        )
+    ]
+
+    func testNextWorkStepSkipsConsecutiveRestSteps() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(timeline.nextWorkStep(after: "work")?.id, "next-work")
+        XCTAssertEqual(timeline.nextWorkStep(after: "rest-one")?.id, "next-work")
+        XCTAssertEqual(timeline.nextWorkStep(after: "rest-two")?.id, "next-work")
+        XCTAssertNil(timeline.nextWorkStep(after: "next-work"))
+    }
+
+    func testHoldPreviewUsesNextWorkStepDuringTimedAndExplicitRest() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(timeline.holdPreviewStep(at: 5)?.id, "work")
+        XCTAssertEqual(timeline.holdPreviewStep(at: 20)?.id, "next-work")
+        XCTAssertEqual(timeline.holdPreviewStep(at: 35)?.id, "next-work")
+    }
+
+    func testHoldPreviewWithCurrentStepAndElapsedUsesProvidedLocation() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[0],
+                stepElapsed: 15
+            )?.id,
+            "next-work"
+        )
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[0],
+                stepElapsed: 5
+            )?.id,
+            "work"
+        )
+        XCTAssertEqual(
+            timeline.holdPreviewStep(
+                currentStep: restPreviewSteps[1],
+                stepElapsed: 2
+            )?.id,
+            "next-work"
+        )
+    }
+
+    func testHoldPreviewHasNoHighlightSourceAfterTheFinalRestStep() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        XCTAssertNil(timeline.holdPreviewStep(at: 72))
+    }
+}
+
+final class WorkoutClockTests: XCTestCase {
+    func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 0.4, accuracy: 0.000_1)
+
+        now += 1.3
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+    }
+
+    func testInitialCountdownShowsThreeTwoOneBeforeElapsedBegins() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 3)
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 0)
+    }
+
+    func testSeekedClockShowsANewInitialCountdownBeforeElapsedResumes() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.seek(to: 60)
+        clock.start(initialCountdown: 3)
+
+        XCTAssertEqual(clock.countdownRemaining, 3)
+
+        now += 1.1
+        XCTAssertEqual(clock.countdownRemaining, 2)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 1)
+
+        now += 1
+        XCTAssertEqual(clock.countdownRemaining, 0)
+        XCTAssertEqual(clock.elapsed, 60.1, accuracy: 0.000_1)
+    }
+
+    func testPauseAndResumePreserveElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1.7
+        clock.pause()
+        now += 20
+        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
+
+        clock.start(initialCountdown: 0)
+        now += 0.4
+        XCTAssertEqual(clock.elapsed, 2.1, accuracy: 0.000_1)
+    }
+
+    func testRunningSeekRebasesTheActiveAnchorWithoutDoubleCounting() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+
+        clock.start(initialCountdown: 0)
+        now += 1
+        clock.seek(to: 10)
+        now += 0.4
+
+        XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
+    }
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
@@ -114,18 +296,51 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    func testCompletionIntervalPreservesSessionStartAndNeverEndsAfterLogTime() {
+    func testCompletionIntervalMapsExplicitActiveElapsedTimeOntoAbsoluteStartDate() {
         let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
-        let loggedAt = Date(timeIntervalSinceReferenceDate: 1_120)
 
         let interval = WorkoutSessionPolicy.completedWorkoutInterval(
             sessionStartedAt: sessionStart,
             planDuration: 600,
-            loggedAt: loggedAt
+            elapsed: 24.5
         )
 
         XCTAssertEqual(interval.start, sessionStart)
-        XCTAssertEqual(interval.end, loggedAt)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
+    }
+
+    func testCompletionIntervalExcludesPausedGapFromClockElapsedTime() {
+        var now: TimeInterval = 100
+        var clock = WorkoutClock(now: { now })
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        clock.start(initialCountdown: 0)
+        now += 12.5
+        clock.pause()
+        now += 3_600
+        clock.start(initialCountdown: 0)
+        now += 7.5
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 600,
+            elapsed: clock.elapsed
+        )
+
+        XCTAssertEqual(interval.duration, 20, accuracy: 0.000_1)
+    }
+
+    func testCompletionIntervalCapsExplicitActiveElapsedTimeAtPlanDuration() {
+        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
+
+        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
+            sessionStartedAt: sessionStart,
+            planDuration: 60,
+            elapsed: 80
+        )
+
+        XCTAssertEqual(interval.start, sessionStart)
+        XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_060))
     }
 }
 

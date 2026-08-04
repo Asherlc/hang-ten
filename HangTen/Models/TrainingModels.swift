@@ -1493,7 +1493,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "abrahangs-warm-up", duration: 120)]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket),
+                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
                 ("Center sloper", [.ids("sloper-round-center")], .sloper),
                 ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .threeFingerPocket),
                 ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),

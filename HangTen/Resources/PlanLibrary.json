@@ -4911,7 +4911,7 @@
           "accessory" : "10s hang · 50s rest · feet supported",
           "activeDuration" : 10,
           "duration" : 60,
-          "gripType" : "fourFingerPocket",
+          "gripType" : "halfCrimp",
           "id" : "abrahangs-grip-2",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
@@ -4920,7 +4920,7 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "edge-19"
               },
               "timing" : "fixed"
             },
@@ -4932,10 +4932,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "edge-19"
             }
           ],
-          "title" : "Abrahang · Four-finger pocket"
+          "title" : "Abrahang · 19 mm half crimp"
         },
         {
           "accessory" : "10s hang · 50s rest · feet supported",
