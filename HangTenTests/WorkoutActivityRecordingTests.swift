@@ -316,7 +316,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testAppStoreResolutionPreservesDirectFeatureFallbackAndKindBehavior() {
-        let store = AppStore(healthKitService: HealthWorkoutSavingSpy())
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            userDefaults: makeDefaults()
+        )
         let exactFeatureTarget = HoldTarget.feature(
             .mediumEdge,
             fallbacks: [.largeEdge]

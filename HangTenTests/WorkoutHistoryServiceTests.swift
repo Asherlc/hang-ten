@@ -9,7 +9,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
     func testEmptyHealthKitFallsBackToLocalRecords() {
         let local = pendingRecord(
             title: "Local Plan",
-            uploadAttempted: true,
+            uploadAttempted: false,
             shouldUploadToHealthKit: false
         )
         let persistence = FakeWorkoutHistoryPersistence(records: [local])

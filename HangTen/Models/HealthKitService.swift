@@ -197,10 +197,10 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
     }
 
     static func hangTenWorkoutPredicate() -> NSPredicate {
-        HKQuery.predicateForWorkouts(
-            activityPredicate: HKQuery.predicateForWorkoutActivities(
-                workoutActivityType: .functionalStrengthTraining
-            )
+        NSPredicate(
+            format: "%K == %d",
+            HKPredicateKeyPathWorkoutType,
+            HKWorkoutActivityType.functionalStrengthTraining.rawValue
         )
     }
 
