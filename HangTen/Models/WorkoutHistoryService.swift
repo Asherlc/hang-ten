@@ -1,12 +1,12 @@
 import Foundation
 
 final class WorkoutHistoryService {
-    private(set) var snapshot: WorkoutHistorySnapshot
-    private(set) var lastError: Error?
-
     private let healthStore: any WorkoutHealthStore
     private let persistence: any WorkoutHistoryPersistence
     private let synchronizationQueue = DispatchQueue(label: "com.hangten.workout-history")
+
+    private var storedSnapshot: WorkoutHistorySnapshot
+    private var storedLastError: Error?
 
     private var healthKitSyncEnabled: Bool
     private var isSynchronizing = false
@@ -21,7 +21,18 @@ final class WorkoutHistoryService {
         self.healthStore = healthStore
         self.persistence = persistence
         self.healthKitSyncEnabled = healthKitSyncEnabled
-        snapshot = Self.localFallbackSnapshot(for: persistence.load())
+        storedSnapshot = Self.localFallbackSnapshot(for: persistence.load())
+        storedLastError = nil
+    }
+
+    deinit {}
+
+    var snapshot: WorkoutHistorySnapshot {
+        synchronizationQueue.sync { storedSnapshot }
+    }
+
+    var lastError: Error? {
+        synchronizationQueue.sync { storedLastError }
     }
 
     func enableHealthKitSync() {
@@ -72,9 +83,9 @@ final class WorkoutHistoryService {
         guard !isSynchronizing else { return }
 
         isSynchronizing = true
-        lastError = nil
+        storedLastError = nil
         if healthKitSyncEnabled {
-            snapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
+            storedSnapshot = WorkoutHistorySnapshot(entries: storedSnapshot.entries, source: .syncing)
         }
         synchronize()
     }
@@ -101,7 +112,7 @@ final class WorkoutHistoryService {
         let localRecords = persistence.load()
         switch result {
         case let .failure(error):
-            lastError = error
+            storedLastError = error
             finish(with: Self.localFallbackSnapshot(for: localRecords))
 
         case let .success(healthRecords):
@@ -117,11 +128,12 @@ final class WorkoutHistoryService {
         healthRecords: [HealthWorkoutRecord],
         attemptedRecordIDs: Set<UUID> = []
     ) {
-        let records = persistence.load()
         guard healthStore.authorizationState == .authorized else {
             refetchAfterUploads()
             return
         }
+
+        let records = persistence.load()
 
         guard let index = records.firstIndex(where: {
             $0.shouldUploadToHealthKit &&
@@ -146,7 +158,7 @@ final class WorkoutHistoryService {
                         updatedRecords[updatedIndex].healthWorkoutUUID = healthWorkoutUUID
                     } else if case let .failure(error) = result {
                         updatedRecords[updatedIndex].healthUploadAttempted = false
-                        self.lastError = error
+                        self.storedLastError = error
                     }
                     self.persistence.replace(updatedRecords)
                 }
@@ -198,7 +210,7 @@ final class WorkoutHistoryService {
                     )
 
                 case let .failure(error):
-                    self.lastError = error
+                    self.storedLastError = error
                     self.finish(with: Self.localFallbackSnapshot(for: localRecords))
                 }
             }
@@ -211,8 +223,7 @@ final class WorkoutHistoryService {
         WorkoutHistoryMatcher.snapshot(
             healthRecords: [],
             localRecords: records,
-            healthQuerySucceeded: false,
-            healthDataAvailable: false
+            healthQuerySucceeded: false
         )
     }
 
@@ -221,33 +232,20 @@ final class WorkoutHistoryService {
         localRecords: [PendingWorkoutRecord],
         healthQuerySucceeded: Bool
     ) -> WorkoutHistorySnapshot {
-        let matcherSnapshot = WorkoutHistoryMatcher.snapshot(
+        return WorkoutHistoryMatcher.snapshot(
             healthRecords: healthRecords,
             localRecords: localRecords,
-            healthQuerySucceeded: healthQuerySucceeded,
-            healthDataAvailable: healthStore.isHealthDataAvailable
+            healthQuerySucceeded: healthQuerySucceeded
         )
-        let hasVisibleHealthRecord = healthRecords.contains { $0.isHangTen }
-        let source: WorkoutHistorySource
-        if hasVisibleHealthRecord {
-            source = .healthKit
-        } else if !matcherSnapshot.entries.isEmpty {
-            source = .localFallback
-        } else if healthQuerySucceeded {
-            source = .healthKit
-        } else {
-            source = .unavailable
-        }
-        return WorkoutHistorySnapshot(entries: matcherSnapshot.entries, source: source)
     }
 
     private func finish(with snapshot: WorkoutHistorySnapshot) {
-        self.snapshot = snapshot
+        storedSnapshot = snapshot
         guard !needsResync else {
             needsResync = false
-            lastError = nil
+            storedLastError = nil
             if healthKitSyncEnabled {
-                self.snapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
+                storedSnapshot = WorkoutHistorySnapshot(entries: snapshot.entries, source: .syncing)
             }
             synchronize()
             return

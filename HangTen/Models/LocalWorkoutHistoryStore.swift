@@ -19,6 +19,8 @@ final class LocalWorkoutHistoryStore: WorkoutHistoryPersistence {
         self.key = key
     }
 
+    deinit {}
+
     func load() -> [PendingWorkoutRecord] {
         guard let data = defaults.data(forKey: key) else { return [] }
         return (try? JSONDecoder().decode([PendingWorkoutRecord].self, from: data)) ?? []

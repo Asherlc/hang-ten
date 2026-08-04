@@ -1911,25 +1911,29 @@ struct ProgressDashboardView: View {
 					.foregroundStyle(Color.holdActiveDeep)
 			}
 
-			Text(historySourceMessage)
-				.font(.system(size: 13, weight: .medium, design: .rounded))
-				.foregroundStyle(Color.hangMuted)
-				.fixedSize(horizontal: false, vertical: true)
+				Text(historySourceMessage)
+					.font(.system(size: 13, weight: .medium, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+					.fixedSize(horizontal: false, vertical: true)
+				.accessibilityIdentifier("health.historySource")
 
 			if let healthAction {
-				Button(action: handleHealthAuthorization) {
-					HStack {
-						Image(systemName: healthAction == .settings ? "gear" : "heart.fill")
-						Text(healthAction == .settings ? "Open app settings" : "Connect Apple Health")
-						Spacer()
-						Image(systemName: "arrow.right")
+				Button(
+					action: { handleHealthAuthorization(healthAction) },
+					label: {
+						HStack {
+							Image(systemName: healthAction == .settings ? "gear" : "heart.fill")
+							Text(healthAction == .settings ? "Open app settings" : "Connect Apple Health")
+							Spacer()
+							Image(systemName: "arrow.right")
+						}
+						.font(.system(size: 14, weight: .bold, design: .rounded))
+						.foregroundStyle(Color.hangInk)
+						.padding(.horizontal, 14)
+						.padding(.vertical, 12)
+						.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
 					}
-					.font(.system(size: 14, weight: .bold, design: .rounded))
-					.foregroundStyle(Color.hangInk)
-					.padding(.horizontal, 14)
-					.padding(.vertical, 12)
-					.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-				}
+				)
 				.buttonStyle(.plain)
 				.accessibilityIdentifier(
 					healthAction == .connect ? "health.connect" : "health.settings"
@@ -1951,7 +1955,7 @@ struct ProgressDashboardView: View {
 		}
 	}
 
-	private func handleHealthAuthorization() {
+	private func handleHealthAuthorization(_ healthAction: HealthAction) {
 		if healthAction == .settings,
 		   let settingsURL = URL(string: UIApplication.openSettingsURLString) {
 			openURL(settingsURL)

@@ -48,6 +48,17 @@ enum HealthWorkoutWriteError: LocalizedError, Equatable {
     }
 }
 
+enum HealthWorkoutReadError: LocalizedError, Equatable {
+    case readNotSupported
+
+    var errorDescription: String? {
+        switch self {
+        case .readNotSupported:
+            "Apple Health history reading is not supported by this connection."
+        }
+    }
+}
+
 enum HealthAuthorizationState: String, Hashable {
     case unavailable
     case notDetermined
@@ -132,6 +143,8 @@ extension WorkoutHealthStore {
 
 final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
     private let healthStore = HKHealthStore()
+
+    deinit {}
 
     var isHealthDataAvailable: Bool {
         HKHealthStore.isHealthDataAvailable()

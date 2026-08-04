@@ -4,6 +4,8 @@ import XCTest
 final class LocalWorkoutHistoryStoreTests: XCTestCase {
     private var suiteNames: [String] = []
 
+    deinit {}
+
     override func tearDown() {
         for suiteName in suiteNames {
             UserDefaults().removePersistentDomain(forName: suiteName)

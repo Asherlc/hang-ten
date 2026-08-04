@@ -16,6 +16,7 @@ final class AppStore: ObservableObject {
 	private let workoutHistoryService: WorkoutHistoryService
 	private let defaults: UserDefaults
 	private var preservesCompletionError = false
+	private var healthAuthorizationErrorKind: HealthErrorKind?
 
 	init(
 		healthKitService: any WorkoutHealthStore = HealthKitService(),
@@ -35,6 +36,8 @@ final class AppStore: ObservableObject {
 		self.hasRequestedHealthAuthorization = hasRequestedHealthAuthorization
 		workoutHistory = workoutHistoryService.snapshot
 	}
+
+	deinit {}
 
 	convenience init(
 		healthKitService: any HealthWorkoutSaving,
@@ -142,14 +145,14 @@ final class AppStore: ObservableObject {
             .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
     }
 
-    func markSessionComplete(
+	func markSessionComplete(
         _ plan: TrainingPlan,
         board: TrainingBoard,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
         startDate: Date,
         endDate: Date
-    ) {
-		healthAuthorizationError = nil
+	) {
+		setHealthAuthorizationError(nil, kind: nil)
 		preservesCompletionError = false
 
 		let recordingErrorMessage: String?
@@ -170,11 +173,11 @@ final class AppStore: ObservableObject {
 				activityContext = nil
 			}
 			recordingErrorMessage = nil
-        } catch {
+		} catch {
 			activityContext = nil
 			recordingErrorMessage = "Session logged in Hang Ten, but \(error.localizedDescription)"
-			healthAuthorizationError = recordingErrorMessage
-        }
+			setHealthAuthorizationError(recordingErrorMessage, kind: .recording)
+		}
 
 		if hasRequestedHealthAuthorization {
 			workoutHistory = WorkoutHistorySnapshot(
@@ -212,7 +215,7 @@ final class AppStore: ObservableObject {
 	}
 
 	func refreshWorkoutHistory() {
-		if healthAuthorizationError == Self.completionSyncError {
+		if healthAuthorizationErrorKind == .completionSync {
 			preservesCompletionError = false
 		}
 		if hasRequestedHealthAuthorization {
@@ -227,7 +230,7 @@ final class AppStore: ObservableObject {
 	}
 
 	func requestHealthAuthorization() {
-		healthAuthorizationError = nil
+		setHealthAuthorizationError(nil, kind: nil)
 		preservesCompletionError = false
 		hasRequestedHealthAuthorization = true
 		defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
@@ -236,7 +239,10 @@ final class AppStore: ObservableObject {
 			DispatchQueue.main.async {
 				guard let self else { return }
 				self.healthAuthorizationState = state
-				self.healthAuthorizationError = error?.localizedDescription
+				self.setHealthAuthorizationError(
+					error?.localizedDescription,
+					kind: error == nil ? nil : .authorization
+				)
 				self.refreshWorkoutHistory()
 			}
 		}
@@ -248,23 +254,31 @@ final class AppStore: ObservableObject {
 	) {
 		workoutHistory = workoutHistoryService.snapshot
 		guard workoutHistoryService.lastError != nil else {
-			healthAuthorizationError = recordingErrorMessage
+			setHealthAuthorizationError(
+				recordingErrorMessage,
+				kind: recordingErrorMessage == nil ? nil : .recording
+			)
 			preservesCompletionError = recordingErrorMessage != nil
 			return
 		}
 		guard recordingErrorMessage == nil else {
-			healthAuthorizationError = recordingErrorMessage
+			setHealthAuthorizationError(recordingErrorMessage, kind: .recording)
 			preservesCompletionError = true
 			return
 		}
 		switch errorContext {
 		case .completion:
-			healthAuthorizationError = Self.completionSyncError
+			setHealthAuthorizationError(Self.completionSyncError, kind: .completionSync)
 			preservesCompletionError = true
 		case .refresh:
 			guard !preservesCompletionError else { return }
-			healthAuthorizationError = Self.historySyncError
+			setHealthAuthorizationError(Self.historySyncError, kind: .historySync)
 		}
+	}
+
+	private func setHealthAuthorizationError(_ message: String?, kind: HealthErrorKind?) {
+		healthAuthorizationError = message
+		healthAuthorizationErrorKind = kind
 	}
 
 	private static let completionSyncError = "Session was saved locally and will retry Apple Health sync."
@@ -274,6 +288,13 @@ final class AppStore: ObservableObject {
 		case completion
 		case refresh
 	}
+
+	private enum HealthErrorKind {
+		case recording
+		case completionSync
+		case historySync
+		case authorization
+	}
 }
 
 private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
@@ -282,6 +303,8 @@ private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
 	init(_ savingService: any HealthWorkoutSaving) {
 		self.savingService = savingService
 	}
+
+	deinit {}
 
 	var isHealthDataAvailable: Bool {
 		savingService.authorizationState != .unavailable
@@ -300,7 +323,7 @@ private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
 	func fetchHangTenWorkouts(
 		completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
 	) {
-		completion(.success([]))
+		completion(.failure(HealthWorkoutReadError.readNotSupported))
 	}
 
 	func saveCompletedWorkout(

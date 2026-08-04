@@ -204,6 +204,11 @@ keeps Connect Apple Health available as a conservative recovery action, and
 visible accepted HealthKit history has no action. Denied and unavailable
 behavior remains as shown in the table.
 
+The `.unavailable` history source does not create an action by itself. In
+`RootView.healthAction`, any Connect or Settings action shown alongside that
+source comes from the current authorization state or persisted request state;
+an unavailable history source alone has no action.
+
 The history source copy is:
 
 - `.healthKit`: `History synced from Apple Health.`

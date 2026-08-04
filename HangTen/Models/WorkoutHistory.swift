@@ -144,8 +144,7 @@ enum WorkoutHistoryMatcher {
     static func snapshot(
         healthRecords: [HealthWorkoutRecord],
         localRecords: [PendingWorkoutRecord],
-        healthQuerySucceeded: Bool,
-        healthDataAvailable: Bool
+        healthQuerySucceeded: Bool
     ) -> WorkoutHistorySnapshot {
         let acceptedHealthRecords = healthRecords.filter(\.isHangTen)
         let sortedHealthRecords = acceptedHealthRecords.sorted(by: newestFirst)

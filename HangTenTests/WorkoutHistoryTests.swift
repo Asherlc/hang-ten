@@ -6,6 +6,8 @@ final class WorkoutHistoryTests: XCTestCase {
     private let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
     private let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
+    deinit {}
+
     private var healthRecord: HealthWorkoutRecord {
         HealthWorkoutRecord(
             id: UUID(uuidString: "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")!,
@@ -141,8 +143,7 @@ final class WorkoutHistoryTests: XCTestCase {
         let snapshot = WorkoutHistoryMatcher.snapshot(
             healthRecords: [healthRecord, healthRecord, newer],
             localRecords: [local],
-            healthQuerySucceeded: true,
-            healthDataAvailable: true
+            healthQuerySucceeded: true
         )
 
         XCTAssertEqual(snapshot.source, .healthKit)
@@ -173,8 +174,7 @@ final class WorkoutHistoryTests: XCTestCase {
         let snapshot = WorkoutHistoryMatcher.snapshot(
             healthRecords: [older, newer],
             localRecords: [],
-            healthQuerySucceeded: true,
-            healthDataAvailable: true
+            healthQuerySucceeded: true
         )
 
         XCTAssertEqual(snapshot.entries.count, 1)
@@ -189,7 +189,7 @@ final class WorkoutHistoryTests: XCTestCase {
         )
 
         let snapshot = WorkoutHistoryMatcher.snapshot(
-            healthRecords: [], localRecords: [local], healthQuerySucceeded: false, healthDataAvailable: false
+            healthRecords: [], localRecords: [local], healthQuerySucceeded: false
         )
 
         XCTAssertEqual(snapshot.source, .localFallback)
@@ -198,7 +198,7 @@ final class WorkoutHistoryTests: XCTestCase {
 
     func testEmptySuccessfulHealthQueryWithoutLocalHistoryIsEmptyHealthKitSnapshot() {
         let snapshot = WorkoutHistoryMatcher.snapshot(
-            healthRecords: [], localRecords: [], healthQuerySucceeded: true, healthDataAvailable: true
+            healthRecords: [], localRecords: [], healthQuerySucceeded: true
         )
 
         XCTAssertEqual(snapshot, WorkoutHistorySnapshot(entries: [], source: .healthKit))
@@ -214,8 +214,7 @@ final class WorkoutHistoryTests: XCTestCase {
         let snapshot = WorkoutHistoryMatcher.snapshot(
             healthRecords: [filteredRecord],
             localRecords: [local],
-            healthQuerySucceeded: true,
-            healthDataAvailable: true
+            healthQuerySucceeded: true
         )
 
         XCTAssertEqual(snapshot.source, .localFallback)

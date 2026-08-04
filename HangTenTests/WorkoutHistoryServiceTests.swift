@@ -6,6 +6,8 @@ final class WorkoutHistoryServiceTests: XCTestCase {
     private let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
     private let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
+    deinit {}
+
     func testEmptyHealthKitFallsBackToLocalRecords() {
         let local = pendingRecord(
             title: "Local Plan",
@@ -121,7 +123,6 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         XCTAssertEqual(persistence.load()[0].activityContext, activityContext)
         XCTAssertFalse(persistence.load()[0].healthUploadAttempted)
 
-        healthStore.saveResult = .success(UUID())
         let relaunchedStore = FakeWorkoutHealthStore()
         let relaunchedService = WorkoutHistoryService(
             healthStore: relaunchedStore,
@@ -456,36 +457,101 @@ private enum TestError: Error {
 }
 
 private final class FakeWorkoutHistoryPersistence: WorkoutHistoryPersistence {
-    private var records: [PendingWorkoutRecord]
+    private let lock = NSLock()
+    private var recordsValue: [PendingWorkoutRecord]
 
     init(records: [PendingWorkoutRecord] = []) {
-        self.records = records
+        recordsValue = records
     }
 
+    deinit {}
+
     func load() -> [PendingWorkoutRecord] {
-        records
+        withLock { recordsValue }
     }
 
     func replace(_ records: [PendingWorkoutRecord]) {
-        self.records = records
+        withLock { recordsValue = records }
+    }
+
+    private func withLock<T>(_ body: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return body()
     }
 }
 
 private final class FakeWorkoutHealthStore: WorkoutHealthStore {
-    var isHealthDataAvailable = true
-    var authorizationState: HealthAuthorizationState = .authorized
-    var fetchResult: Result<[HealthWorkoutRecord], Error>
-    var saveResult: Result<UUID, Error>
-    var onSave: ((UUID, String, Date, Date) -> Void)?
-    var onFetch: (() -> Void)?
-    var deferFetch: Bool
-    var deferSave: Bool
-    private(set) var saveCallCount = 0
-    private(set) var fetchCallCount = 0
-    var pendingFetchCount: Int { fetchCompletions.count }
+    private let lock = NSLock()
+    private var isHealthDataAvailableValue = true
+    private var authorizationStateValue: HealthAuthorizationState = .authorized
+    private var fetchResultValue: Result<[HealthWorkoutRecord], Error>
+    private var saveResultValue: Result<UUID, Error>
+    private var onSaveValue: ((UUID, String, Date, Date) -> Void)?
+    private var onFetchValue: (() -> Void)?
+    private var deferFetchValue: Bool
+    private var deferSaveValue: Bool
+    private var saveCallCountValue = 0
+    private var fetchCallCountValue = 0
     private var fetchCompletions: [(Result<[HealthWorkoutRecord], Error>) -> Void] = []
     private var saveCompletions: [(Result<UUID, Error>) -> Void] = []
-    private(set) var savedActivityContexts: [PendingWorkoutActivityContext?] = []
+    private var savedActivityContextsValue: [PendingWorkoutActivityContext?] = []
+
+    var isHealthDataAvailable: Bool {
+        get { withLock { isHealthDataAvailableValue } }
+        set { withLock { isHealthDataAvailableValue = newValue } }
+    }
+
+    var authorizationState: HealthAuthorizationState {
+        get { withLock { authorizationStateValue } }
+        set { withLock { authorizationStateValue = newValue } }
+    }
+
+    var fetchResult: Result<[HealthWorkoutRecord], Error> {
+        get { withLock { fetchResultValue } }
+        set { withLock { fetchResultValue = newValue } }
+    }
+
+    var saveResult: Result<UUID, Error> {
+        get { withLock { saveResultValue } }
+        set { withLock { saveResultValue = newValue } }
+    }
+
+    var onSave: ((UUID, String, Date, Date) -> Void)? {
+        get { withLock { onSaveValue } }
+        set { withLock { onSaveValue = newValue } }
+    }
+
+    var onFetch: (() -> Void)? {
+        get { withLock { onFetchValue } }
+        set { withLock { onFetchValue = newValue } }
+    }
+
+    var deferFetch: Bool {
+        get { withLock { deferFetchValue } }
+        set { withLock { deferFetchValue = newValue } }
+    }
+
+    var deferSave: Bool {
+        get { withLock { deferSaveValue } }
+        set { withLock { deferSaveValue = newValue } }
+    }
+
+    var saveCallCount: Int {
+        withLock { saveCallCountValue }
+    }
+
+    var fetchCallCount: Int {
+        withLock { fetchCallCountValue }
+    }
+
+    var pendingFetchCount: Int {
+        withLock { fetchCompletions.count }
+    }
+
+    var savedActivityContexts: [PendingWorkoutActivityContext?] {
+        withLock { savedActivityContextsValue }
+    }
 
     init(
         fetchResult: Result<[HealthWorkoutRecord], Error> = .success([]),
@@ -493,36 +559,59 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         deferFetch: Bool = false,
         deferSave: Bool = false
     ) {
-        self.fetchResult = fetchResult
-        self.saveResult = saveResult
-        self.deferFetch = deferFetch
-        self.deferSave = deferSave
+        fetchResultValue = fetchResult
+        saveResultValue = saveResult
+        deferFetchValue = deferFetch
+        deferSaveValue = deferSave
     }
+
+    deinit {}
 
     func requestAuthorization(
         completion: @escaping (HealthAuthorizationState, Error?) -> Void
     ) {
-        completion(authorizationState, nil)
+        let state = withLock { authorizationStateValue }
+        completion(state, nil)
     }
 
     func fetchHangTenWorkouts(
         completion: @escaping (Result<[HealthWorkoutRecord], Error>) -> Void
     ) {
-        fetchCallCount += 1
+        let (shouldDefer, onFetch) = withLock {
+            fetchCallCountValue += 1
+            let shouldDefer = deferFetchValue
+            if shouldDefer {
+                fetchCompletions.append(completion)
+            }
+            return (shouldDefer, onFetchValue)
+        }
         onFetch?()
-        if deferFetch {
-            fetchCompletions.append(completion)
-        } else {
-            completion(fetchResult)
+        if !shouldDefer {
+            let result = withLock { fetchResultValue }
+            completion(result)
         }
     }
 
     func completeNextFetch() {
-        fetchCompletions.removeFirst()(fetchResult)
+        let (completion, result) = withLock {
+            precondition(
+                !fetchCompletions.isEmpty,
+                "Expected a deferred HealthKit fetch completion before completing the next fetch."
+            )
+            return (fetchCompletions.removeFirst(), fetchResultValue)
+        }
+        completion(result)
     }
 
     func completeNextSave() {
-        saveCompletions.removeFirst()(saveResult)
+        let (completion, result) = withLock {
+            precondition(
+                !saveCompletions.isEmpty,
+                "Expected a deferred HealthKit save completion before completing the next save."
+            )
+            return (saveCompletions.removeFirst(), saveResultValue)
+        }
+        completion(result)
     }
 
     func saveCompletedWorkout(
@@ -532,13 +621,19 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         endDate: Date,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
-        saveCallCount += 1
+        let (shouldDefer, onSave) = withLock {
+            saveCallCountValue += 1
+            savedActivityContextsValue.append(nil)
+            let shouldDefer = deferSaveValue
+            if shouldDefer {
+                saveCompletions.append(completion)
+            }
+            return (shouldDefer, onSaveValue)
+        }
         onSave?(id, title, startDate, endDate)
-        savedActivityContexts.append(nil)
-        if deferSave {
-            saveCompletions.append(completion)
-        } else {
-            completion(saveResult)
+        if !shouldDefer {
+            let result = withLock { saveResultValue }
+            completion(result)
         }
     }
 
@@ -552,19 +647,31 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         activitySegments: [RecordedActivitySegment],
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
-        saveCallCount += 1
-        onSave?(id, title, startDate, endDate)
-        savedActivityContexts.append(
-            PendingWorkoutActivityContext(
-                boardID: boardID,
-                boardName: boardName,
-                activitySegments: activitySegments
+        let (shouldDefer, onSave) = withLock {
+            saveCallCountValue += 1
+            savedActivityContextsValue.append(
+                PendingWorkoutActivityContext(
+                    boardID: boardID,
+                    boardName: boardName,
+                    activitySegments: activitySegments
+                )
             )
-        )
-        if deferSave {
-            saveCompletions.append(completion)
-        } else {
-            completion(saveResult)
+            let shouldDefer = deferSaveValue
+            if shouldDefer {
+                saveCompletions.append(completion)
+            }
+            return (shouldDefer, onSaveValue)
         }
+        onSave?(id, title, startDate, endDate)
+        if !shouldDefer {
+            let result = withLock { saveResultValue }
+            completion(result)
+        }
+    }
+
+    private func withLock<T>(_ body: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return body()
     }
 }

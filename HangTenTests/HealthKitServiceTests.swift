@@ -7,6 +7,8 @@ final class HealthKitServiceTests: XCTestCase {
     private let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
     private let endDate = Date(timeIntervalSinceReferenceDate: 1_600)
 
+    deinit {}
+
     func testMapperPreservesHangTenMetadataAndSessionID() {
         let sessionID = UUID(uuidString: "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")!
         let record = record(

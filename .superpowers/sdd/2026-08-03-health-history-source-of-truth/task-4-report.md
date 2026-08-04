@@ -2,7 +2,13 @@
 
 ## Status
 
-Implementation is complete and uncommitted. Compilation verification succeeded. Simulator test execution is blocked by the command runner terminating Xcode during app installation before XCTest returns a result bundle.
+The initial implementation was handed off as an uncommitted change after
+compilation verification succeeded; simulator test execution was blocked by
+the command runner terminating Xcode during app installation before XCTest
+returned a result bundle. That initial handoff was later committed, and the
+subsequent fix rounds were committed as they addressed review findings. The
+build and simulator evidence below remains the evidence from the initial
+handoff and later fix rounds.
 
 ## Changed files
 

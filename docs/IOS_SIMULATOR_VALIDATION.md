@@ -227,7 +227,16 @@ routine change, preview every distinct hold target and finger cue.
   under the workspace-specific Derived Data path; verify
   `com.apple.developer.healthkit = true` and the generated read/write usage
   descriptions. Use the exact simulator UUID for every command and never use
-  `booted`.
+  `booted`. After installing, inspect the embedded app `Info.plist` using the
+  container path established above:
+
+  ```sh
+  app_path="$(xcrun simctl get_app_container <uuid> com.hangten.training app)"
+  /usr/libexec/PlistBuddy -c 'Print :NSHealthShareUsageDescription' "$app_path/Info.plist"
+  /usr/libexec/PlistBuddy -c 'Print :NSHealthUpdateUsageDescription' "$app_path/Info.plist"
+  ```
+
+  Both commands must print the non-empty read and write usage descriptions.
 - Simulator validation covers the permission flow, local fallback, migration,
   and deduplication. It does not prove cross-device HealthKit restoration;
   repeat that scenario on two physical devices using the same HealthKit
