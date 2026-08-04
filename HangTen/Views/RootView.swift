@@ -596,6 +596,7 @@ private struct PlanCard: View {
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
+            .padding(.trailing, 52)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(plan.title)
@@ -648,7 +649,7 @@ private struct FavoritePlanCard: View {
                             .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
                     }
                     .frame(width: 44, height: 44)
-                    .contentShape(Circle())
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(
