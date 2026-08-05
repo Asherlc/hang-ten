@@ -940,6 +940,11 @@ struct WorkoutAudioMoment: Hashable {
 	let phrase: String
 }
 
+enum WorkoutAudioCueAction: Equatable {
+	case speak(WorkoutAudioMoment)
+	case stop
+}
+
 enum WorkoutCountdownKind: Equatable {
     case initial
     case skip
@@ -985,16 +990,19 @@ enum WorkoutAudioCuePolicy {
 		segmentName: String,
 		initialCountdown: Int,
 		intervalSecondsRemaining: Int,
-		isComplete: Bool
+		isComplete: Bool,
+		countdownKind: WorkoutCountdownKind? = nil
 	) -> WorkoutAudioMoment? {
+		guard !isComplete else { return nil }
+
 		if (1...3).contains(initialCountdown) {
 			return WorkoutAudioMoment(
-				key: "initial-\(initialCountdown)",
+				key: "\(countdownKind == .skip ? "skip" : "initial")-\(initialCountdown)",
 				phrase: "\(initialCountdown)"
 			)
 		}
 
-		guard !isComplete, (1...3).contains(intervalSecondsRemaining) else {
+		guard (1...3).contains(intervalSecondsRemaining) else {
 			return nil
 		}
 
@@ -1003,11 +1011,16 @@ enum WorkoutAudioCuePolicy {
 			phrase: "\(intervalSecondsRemaining)"
 		)
 	}
+
+	static func action(for moment: WorkoutAudioMoment?) -> WorkoutAudioCueAction {
+		guard let moment else { return .stop }
+		return .speak(moment)
+	}
 }
 
 enum WorkoutSessionPolicy {
     static let initialCountdownDuration: TimeInterval = 3
-    static let skipCountdownDuration: TimeInterval = 5
+    static let skipCountdownDuration: TimeInterval = 3
 
     static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {
         kind == .initial ? initialCountdownDuration : skipCountdownDuration
@@ -1298,14 +1311,15 @@ struct WorkoutView: View {
 					currentStep: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isComplete: isComplete
+					isComplete: isComplete,
+					isSkipCountdown: sessionState.countdownKind == .skip
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
-				let showsHoldPreview = isResting && !highlightedHoldIDs.isEmpty
+				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
@@ -1366,8 +1380,17 @@ struct WorkoutView: View {
 					recorder.pause(at: elapsed)
 				}
 				.onChange(of: audioMoment, initial: true) { _, moment in
-					guard audioCuesEnabled, let moment else { return }
-					audioCoach.speak(moment.phrase)
+					guard audioCuesEnabled else {
+						audioCoach.stop()
+						return
+					}
+
+					switch WorkoutAudioCuePolicy.action(for: moment) {
+					case .speak(let moment):
+						audioCoach.speak(moment.phrase)
+					case .stop:
+						audioCoach.stop()
+					}
 				}
 				.onChange(of: countdown, initial: true) { _, countdown in
 					guard countdown == 0 else { return }
@@ -1551,7 +1574,9 @@ struct WorkoutView: View {
 					isComplete: isComplete,
 					showsHoldPreview: showsHoldPreview
 				)
-				meter(step: step)
+				if motherboardBluetoothService.state.showsWorkoutMeter {
+					meter(step: step)
+				}
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, 16)
@@ -1628,7 +1653,9 @@ struct WorkoutView: View {
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
 					.frame(width: 224)
 			}
-			meter(step: step)
+			if motherboardBluetoothService.state.showsWorkoutMeter {
+				meter(step: step)
+			}
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
@@ -2324,37 +2351,13 @@ struct WorkoutView: View {
 		let segmentName = isTimedResting ? "rest" : "active"
 
 		if countdown > 0 {
-			if sessionState.countdownKind == .skip {
-				return WorkoutAudioMoment(
-					key: "countdown-\(countdown)",
-					phrase: "\(countdown)"
-				)
-			}
-
 			return WorkoutAudioCuePolicy.moment(
 				stepID: step.id,
 				segmentName: segmentName,
 				initialCountdown: countdown,
 				intervalSecondsRemaining: 0,
-				isComplete: isComplete
-			)
-		}
-
-		let segmentElapsed = isTimedResting
-			? max(0, stepElapsed - step.activeDuration)
-			: stepElapsed
-		let segmentDuration = isTimedResting ? step.restDuration : step.activeDuration
-
-		if !isComplete, segmentElapsed < 0.55 {
-			let phrase: String
-			if segmentDuration <= 3 {
-				phrase = isTimedResting ? "Rest. 3, 2, 1" : "Hang. 3, 2, 1"
-			} else {
-				phrase = isTimedResting ? "Rest" : spokenStartPhrase(for: step)
-			}
-			return WorkoutAudioMoment(
-				key: "\(step.id)-\(segmentName)-start",
-				phrase: phrase
+				isComplete: isComplete,
+				countdownKind: sessionState.countdownKind
 			)
 		}
 		let secondsRemaining = Int(
@@ -2368,25 +2371,6 @@ struct WorkoutView: View {
 			intervalSecondsRemaining: secondsRemaining,
 			isComplete: isComplete
 		)
-	}
-
-	private func spokenStartPhrase(for step: WorkoutStep) -> String {
-		if step.timedWorkDuration == nil, step.phase != .rest {
-			return "Begin minute \(step.number). \(step.title)"
-		}
-
-		switch step.phase {
-		case .hang:
-			return "Hang. \(step.title)"
-		case .warmUp:
-			return "Begin warm up. \(step.title)"
-		case .pull:
-			return "Begin. \(step.title)"
-		case .coolDown:
-			return "Begin cool down. \(step.title)"
-		case .rest:
-			return "Rest"
-		}
 	}
 }
 

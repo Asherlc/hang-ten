@@ -117,6 +117,10 @@ enum MotherboardConnectionState: Equatable {
     case streaming
     case disconnected
     case failed
+
+    var showsWorkoutMeter: Bool {
+        self == .streaming
+    }
 }
 
 struct MotherboardDetectionConfiguration: Codable, Equatable {

@@ -149,13 +149,15 @@ struct WorkoutTimeline {
     func boardCue(
         at elapsed: TimeInterval,
         countdown: Int,
-        isComplete: Bool
+        isComplete: Bool,
+        isSkipCountdown: Bool = false
     ) -> WorkoutBoardCue {
         boardCue(
             currentStep: step(at: elapsed),
             stepElapsed: elapsedInStep(at: elapsed),
             countdown: countdown,
-            isComplete: isComplete
+            isComplete: isComplete,
+            isSkipCountdown: isSkipCountdown
         )
     }
 
@@ -163,10 +165,11 @@ struct WorkoutTimeline {
         currentStep: WorkoutStep?,
         stepElapsed: TimeInterval,
         countdown: Int,
-        isComplete: Bool
+        isComplete: Bool,
+        isSkipCountdown: Bool = false
     ) -> WorkoutBoardCue {
-        guard countdown == 0,
-              !isComplete,
+        guard !isComplete,
+              (countdown == 0 || (countdown > 0 && isSkipCountdown)),
               let currentStep else {
             return WorkoutBoardCue(
                 step: nil,
@@ -176,14 +179,25 @@ struct WorkoutTimeline {
             )
         }
 
+        let resolvedStep = holdPreviewStep(
+            currentStep: currentStep,
+            stepElapsed: stepElapsed
+        )
+
+        if countdown > 0 {
+            return WorkoutBoardCue(
+                step: resolvedStep,
+                mode: .preview,
+                isResting: resolvedStep?.phase == .rest,
+                isSuppressed: false
+            )
+        }
+
         let isResting = currentStep.phase == .rest
             || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
 
         return WorkoutBoardCue(
-            step: holdPreviewStep(
-                currentStep: currentStep,
-                stepElapsed: stepElapsed
-            ),
+            step: resolvedStep,
             mode: isResting ? .preview : .active,
             isResting: isResting,
             isSuppressed: false
