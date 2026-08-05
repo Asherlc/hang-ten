@@ -60,7 +60,7 @@ for configuration in Debug Release; do
     -project "$project_path" \
     -scheme HangTen \
     -configuration "$configuration" \
-    -showBuildSettings 2>/dev/null)"
+    -showBuildSettings)"
 
   require_setting "$settings" "ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon"
   require_setting "$settings" "INFOPLIST_KEY_CFBundleIconName = AppIcon"
