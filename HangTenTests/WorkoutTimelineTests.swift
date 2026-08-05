@@ -798,6 +798,34 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 final class WorkoutAudioCuePolicyTests: XCTestCase {
     private let stepID = "f80-set-2-rep-3"
 
+    func testMissingAudioMomentRequestsImmediateStop() {
+        XCTAssertEqual(WorkoutAudioCuePolicy.action(for: nil), .stop)
+    }
+
+    func testNumericAudioMomentRequestsSpeechWithoutAStageLabel() {
+        let moment = WorkoutAudioMoment(key: "skip-3", phrase: "3")
+
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(for: moment),
+            .speak(moment)
+        )
+        XCTAssertTrue(moment.phrase.allSatisfy { $0.isNumber })
+    }
+
+    func testSkipCountdownCueUsesOnlyTheCountdownNumber() {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 3,
+                intervalSecondsRemaining: 60,
+                isComplete: false,
+                countdownKind: .skip
+            ),
+            WorkoutAudioMoment(key: "skip-3", phrase: "3")
+        )
+    }
+
     func testInitialCountdownReturnsOnlyNumericValues() {
         for countdown in [3, 2, 1] {
             let moment = WorkoutAudioCuePolicy.moment(

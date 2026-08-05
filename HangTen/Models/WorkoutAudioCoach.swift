@@ -19,9 +19,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         guard !phrase.isEmpty else { return }
         configureAudioSessionIfNeeded()
 
-        if synthesizer.isSpeaking {
-            synthesizer.stopSpeaking(at: .immediate)
-        }
+        synthesizer.stopSpeaking(at: .immediate)
 
         let utterance = AVSpeechUtterance(string: phrase)
         utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
