@@ -2,6 +2,23 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardModelsTests: XCTestCase {
+    func testConnectionStateShowsWorkoutMeterOnlyWhileStreaming() {
+        XCTAssertTrue(MotherboardConnectionState.streaming.showsWorkoutMeter)
+
+        let hiddenStates: [MotherboardConnectionState] = [
+            .bluetoothUnavailable,
+            .unauthorized,
+            .idle,
+            .scanning,
+            .connecting,
+            .calibrating,
+            .disconnected,
+            .failed
+        ]
+
+        XCTAssertTrue(hiddenStates.allSatisfy { !$0.showsWorkoutMeter })
+    }
+
     func testForceUnitConversionUsesKilogramsForceAsCanonicalValue() {
         XCTAssertEqual(MotherboardForceUnit.kgf.value(fromKilogramsForce: 2), 2, accuracy: 0.0001)
         XCTAssertEqual(MotherboardForceUnit.lbf.value(fromKilogramsForce: 2), 4.40925, accuracy: 0.0001)

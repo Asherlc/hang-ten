@@ -1572,7 +1572,9 @@ struct WorkoutView: View {
 					isComplete: isComplete,
 					showsHoldPreview: showsHoldPreview
 				)
-				meter(step: step)
+				if motherboardBluetoothService.state.showsWorkoutMeter {
+					meter(step: step)
+				}
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, 16)
@@ -1649,7 +1651,9 @@ struct WorkoutView: View {
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
 					.frame(width: 224)
 			}
-			meter(step: step)
+			if motherboardBluetoothService.state.showsWorkoutMeter {
+				meter(step: step)
+			}
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
