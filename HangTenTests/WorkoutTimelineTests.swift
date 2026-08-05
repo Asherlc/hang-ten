@@ -890,6 +890,33 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
         )
     }
 
+    func testCompletionDuringInitialCountdownRequestsStop() {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 3,
+                intervalSecondsRemaining: 60,
+                isComplete: true
+            )),
+            .stop
+        )
+    }
+
+    func testCompletionDuringSkipCountdownRequestsStop() {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 2,
+                intervalSecondsRemaining: 60,
+                isComplete: true,
+                countdownKind: .skip
+            )),
+            .stop
+        )
+    }
+
     func testShortIntervalReturnsOnlyTheApplicableNumber() {
         let moment = WorkoutAudioCuePolicy.moment(
             stepID: stepID,

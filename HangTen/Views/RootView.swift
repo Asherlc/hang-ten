@@ -993,6 +993,8 @@ enum WorkoutAudioCuePolicy {
 		isComplete: Bool,
 		countdownKind: WorkoutCountdownKind? = nil
 	) -> WorkoutAudioMoment? {
+		guard !isComplete else { return nil }
+
 		if (1...3).contains(initialCountdown) {
 			return WorkoutAudioMoment(
 				key: "\(countdownKind == .skip ? "skip" : "initial")-\(initialCountdown)",
@@ -1000,7 +1002,7 @@ enum WorkoutAudioCuePolicy {
 			)
 		}
 
-		guard !isComplete, (1...3).contains(intervalSecondsRemaining) else {
+		guard (1...3).contains(intervalSecondsRemaining) else {
 			return nil
 		}
 
