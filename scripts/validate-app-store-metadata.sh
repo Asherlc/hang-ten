@@ -64,7 +64,7 @@ for configuration in Debug Release; do
 
   require_setting "$settings" "ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon"
   require_setting "$settings" "INFOPLIST_KEY_CFBundleIconName = AppIcon"
-  require_setting "$settings" "INFOPLIST_KEY_NSHealthShareUsageDescription = Hang Ten uses Apple Health to save completed hangboard sessions."
+  require_setting "$settings" "INFOPLIST_KEY_NSHealthShareUsageDescription = Hang Ten reads your Apple Health workout history to restore your progress on a new device."
   require_setting "$settings" "INFOPLIST_KEY_NSHealthUpdateUsageDescription = Hang Ten saves completed hangboard sessions to Apple Health."
   require_setting "$settings" "INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
 done
