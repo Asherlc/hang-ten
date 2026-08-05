@@ -216,6 +216,23 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertFalse(cue.isSuppressed)
     }
 
+    func testBoardCuePreviewsDestinationWorkStepDuringSkipCountdown() {
+        let timeline = WorkoutTimeline(steps: restPreviewSteps)
+
+        let cue = timeline.boardCue(
+            currentStep: restPreviewSteps[3],
+            stepElapsed: 0,
+            countdown: 3,
+            isComplete: false,
+            isSkipCountdown: true
+        )
+
+        XCTAssertEqual(cue.step?.id, "next-work")
+        XCTAssertEqual(cue.mode, .preview)
+        XCTAssertFalse(cue.isResting)
+        XCTAssertFalse(cue.isSuppressed)
+    }
+
     func testBoardCueUsesProvidedTimedRestLocationWithoutRecomputingIt() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 
@@ -370,7 +387,7 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
-    func testCountdownDurationsKeepInitialStartAtThreeAndSkipStartAtFive() {
+    func testCountdownDurationsKeepInitialAndSkipStartAtThree() {
         let now = Date(timeIntervalSinceReferenceDate: 2_000)
 
         XCTAssertEqual(
@@ -379,7 +396,7 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
         XCTAssertEqual(
             WorkoutSessionPolicy.startDate(for: .skip, now: now),
-            now.addingTimeInterval(5)
+            now.addingTimeInterval(3)
         )
     }
 
@@ -933,10 +950,10 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
         XCTAssertEqual(state.pausedElapsed, 60)
         XCTAssertEqual(state.countdownKind, .skip)
-        XCTAssertEqual(state.countdownRemaining(at: now), 5)
+        XCTAssertEqual(state.countdownRemaining(at: now), 3)
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
 
-        let countdownStart = now + 5
+        let countdownStart = now + 3
         XCTAssertEqual(state.countdownRemaining(at: countdownStart), 0)
         XCTAssertEqual(state.countdownKind, .skip)
         state.transitionExpiredCountdown(at: countdownStart)

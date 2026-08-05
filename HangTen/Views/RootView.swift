@@ -1007,7 +1007,7 @@ enum WorkoutAudioCuePolicy {
 
 enum WorkoutSessionPolicy {
     static let initialCountdownDuration: TimeInterval = 3
-    static let skipCountdownDuration: TimeInterval = 5
+    static let skipCountdownDuration: TimeInterval = 3
 
     static func countdownDuration(for kind: WorkoutCountdownKind) -> TimeInterval {
         kind == .initial ? initialCountdownDuration : skipCountdownDuration
@@ -1298,14 +1298,15 @@ struct WorkoutView: View {
 					currentStep: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isComplete: isComplete
+					isComplete: isComplete,
+					isSkipCountdown: sessionState.countdownKind == .skip
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
 				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
-				let showsHoldPreview = isResting && !highlightedHoldIDs.isEmpty
+				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
 				let isLandscape = geometry.size.width > geometry.size.height
