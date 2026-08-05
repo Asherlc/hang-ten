@@ -1,6 +1,6 @@
 # Workout timer voice, skip preview, and motherboard meter Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation or configuration task. Each task uses a fresh subagent and retains the required per-task review checkpoint. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make skipped-step preparation a three-second hold preview, restrict workout speech to numeric countdowns without stage spillover, and hide the workout motherboard meter unless live Bluetooth data is streaming.
 
@@ -66,7 +66,7 @@ Tasks that touch `RootView.swift` are intentionally sequential. Each worker must
     -only-testing:HangTenTests/WorkoutTimelineTests test
   ```
 
-  Expected: the new skip-preview test fails because countdown board cues are currently suppressed, and the updated skip-duration assertions fail because the implementation still uses five seconds. If the target device is unavailable, select an installed iOS Simulator with `rtk xcrun simctl list devices available` and record that choice in `.context/workout-timer-voice-skip-meter-test.log`.
+  Expected: if the API-first test compiles, the new skip-preview test fails because countdown board cues are currently suppressed, and the updated skip-duration assertions fail because the implementation still uses five seconds. If the API-first test cannot compile because `isSkipCountdown` is absent, record that compile failure as the accepted RED checkpoint described in the task brief/report. If the target device is unavailable, select an installed iOS Simulator with `rtk xcrun simctl list devices available` and record that choice in `.context/workout-timer-voice-skip-meter-test.log`.
 
 - [ ] **Step 3: Implement the minimal timeline/session change.**
 
