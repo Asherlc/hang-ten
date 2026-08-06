@@ -49,8 +49,8 @@ enum WorkoutStepNormalizer {
             )
         }
 
-        return try step.segments.enumerated().map { index, segment in
-            let duration = try segmentDuration(segment, stepID: step.id, segmentIndex: index)
+        return step.segments.enumerated().map { index, segment in
+            let duration = segmentDuration(segment)
             let id = "\(step.id).segment-\(index + 1)"
 
             switch segment.kind {
@@ -84,16 +84,9 @@ enum WorkoutStepNormalizer {
         }
     }
 
-    private static func segmentDuration(
-        _ segment: WorkoutSegment,
-        stepID: String,
-        segmentIndex: Int
-    ) throws -> TimeInterval {
+    private static func segmentDuration(_ segment: WorkoutSegment) -> TimeInterval {
         guard let duration = segment.duration else {
-            throw WorkoutStepNormalizationError.unsupportedCompoundTiming(
-                stepID: stepID,
-                segmentIndex: segmentIndex
-            )
+            preconditionFailure("Validated compound segments must have a duration")
         }
         return duration
     }

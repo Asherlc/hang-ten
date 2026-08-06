@@ -1531,6 +1531,7 @@ enum BuiltInPlanLibraryDefinition {
 
 // MARK: - Compatibility facade
 
+#if DEBUG
 /// Builds the DEBUG drift-guard baseline at the same literal-step boundary
 /// used by the runtime resolver.
 private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
@@ -1562,6 +1563,7 @@ private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
         )
     }
 }
+#endif
 
 /// Runtime callers keep the small `PlanCatalog` API they already use, while
 /// the data behind it now comes from one validated, versioned store.
