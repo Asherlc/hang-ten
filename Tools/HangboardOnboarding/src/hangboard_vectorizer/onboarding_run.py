@@ -26,6 +26,7 @@ from .generic_stage2 import GenericStage2Runner
 from .generic_stage3 import GenericStage3Runner
 from .generic_stage4 import GenericStage4Runner
 from .source_cache import CachedSource, cache_source
+from .workspace_paths import default_workspace_root, resolve_workspace_path
 
 
 _SCHEMA_VERSION = 1
@@ -77,9 +78,11 @@ def start_run(
     output: Path,
     *,
     runners: Mapping[int, StageRunner] | None = None,
+    workspace_root: Path | None = None,
 ) -> Mapping[str, object]:
     """Create and publish a new run through its first review checkpoint."""
-    output = Path(output)
+    owned_root = default_workspace_root() if workspace_root is None else Path(workspace_root)
+    output = resolve_workspace_path(Path(output), owned_root)
     lock = _start_lock_path(output)
     with _exclusive_lock(lock):
         if _lexists(output):

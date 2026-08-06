@@ -8,9 +8,12 @@ from io import BytesIO
 import ipaddress
 import json
 from pathlib import Path
+from queue import Empty, Queue
 import shutil
 import socket
 import tempfile
+from threading import Thread
+from time import monotonic
 from typing import Literal
 from urllib.parse import urljoin, urlparse, urlunparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -143,27 +146,44 @@ def _read_local(source_path: Path, maximum_bytes: int) -> bytes:
 
 
 def _read_network(locator: str, limits: SourceLimits) -> tuple[bytes, str]:
-    _validate_network_url(locator, allow_private=limits.allow_private_networks)
+    deadline = monotonic() + limits.timeout_seconds
+    _validate_network_url(
+        locator,
+        allow_private=limits.allow_private_networks,
+        timeout_seconds=_remaining_timeout(deadline),
+    )
     request = Request(locator, headers={"User-Agent": _USER_AGENT})
-    opener = build_opener(_ValidatedRedirectHandler(limits.allow_private_networks))
-    with opener.open(request, timeout=limits.timeout_seconds) as response:  # noqa: S310
+    opener = build_opener(
+        _ValidatedRedirectHandler(limits.allow_private_networks, deadline)
+    )
+    with opener.open(request, timeout=_remaining_timeout(deadline)) as response:  # noqa: S310
         raw = response.read(limits.maximum_bytes + 1)
         final_url = response.geturl()
     return _validate_raw(raw, limits.maximum_bytes), final_url
 
 
 class _ValidatedRedirectHandler(HTTPRedirectHandler):
-    def __init__(self, allow_private: bool) -> None:
+    def __init__(self, allow_private: bool, deadline: float) -> None:
         super().__init__()
         self._allow_private = allow_private
+        self._deadline = deadline
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         target = urljoin(req.full_url, newurl)
-        _validate_network_url(target, allow_private=self._allow_private)
+        _validate_network_url(
+            target,
+            allow_private=self._allow_private,
+            timeout_seconds=_remaining_timeout(self._deadline),
+        )
         return super().redirect_request(req, fp, code, msg, headers, target)
 
 
-def _validate_network_url(locator: str, *, allow_private: bool) -> None:
+def _validate_network_url(
+    locator: str,
+    *,
+    allow_private: bool,
+    timeout_seconds: float,
+) -> None:
     parsed = urlparse(locator)
     if parsed.scheme.lower() not in {"http", "https"}:
         raise ValueError("network source locator must use HTTP(S)")
@@ -173,20 +193,43 @@ def _validate_network_url(locator: str, *, allow_private: bool) -> None:
         or parsed.password is not None
     ):
         raise ValueError("network source locator must not contain credentials")
-    try:
-        addresses = {
-            ipaddress.ip_address(result[4][0])
-            for result in socket.getaddrinfo(
+    results: Queue[tuple[bool, object]] = Queue(maxsize=1)
+
+    def resolve() -> None:
+        try:
+            resolved = socket.getaddrinfo(
                 parsed.hostname,
                 parsed.port or (443 if parsed.scheme.lower() == "https" else 80),
             )
-        }
-    except (OSError, ValueError) as error:
-        raise ValueError("network source hostname could not be resolved") from error
+        except (OSError, ValueError) as error:
+            results.put((False, error))
+        else:
+            results.put((True, resolved))
+
+    Thread(target=resolve, name="hangboard-source-dns", daemon=True).start()
+    try:
+        succeeded, result = results.get(timeout=timeout_seconds)
+    except Empty as error:
+        raise ValueError("network source DNS resolution timed out") from error
+    if not succeeded:
+        if not isinstance(result, (OSError, ValueError)):
+            raise ValueError("network source hostname could not be resolved")
+        raise ValueError("network source hostname could not be resolved") from result
+    addresses = {
+        ipaddress.ip_address(address[4][0])
+        for address in result
+    }
     if not addresses or (
         not allow_private and any(not address.is_global for address in addresses)
     ):
         raise ValueError("network source locator must resolve only to public addresses")
+
+
+def _remaining_timeout(deadline: float) -> float:
+    remaining = deadline - monotonic()
+    if remaining <= 0:
+        raise ValueError("network source timed out")
+    return remaining
 
 
 def _validate_raw(raw: bytes, maximum_bytes: int) -> bytes:

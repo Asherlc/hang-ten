@@ -90,6 +90,17 @@ def test_file_provider_keeps_the_existing_candidate_artifacts_and_proposal_bindi
     assert not (root / "stage-2-semantic-evidence.json").exists()
 
 
+def test_stage2_creates_missing_artifact_parent(tmp_path: Path) -> None:
+    context, proposal = _context_and_proposal(tmp_path)
+    proposal_path = context.root / "inputs/stage-2-semantic-proposal.json"
+    proposal_path.write_bytes(_canonical_bytes(proposal))
+    output = tmp_path / "new-parent" / "stage-2"
+
+    run_generic_stage2(context, output, provider=FileSemanticProposalProvider())
+
+    assert (output / "stage-2-regions.json").is_file()
+
+
 def test_capture_telemetry_is_excluded_from_deterministic_candidate_identity(tmp_path: Path) -> None:
     context, proposal = _context_and_proposal(tmp_path)
     raw_bytes = b'{"h":[]}'

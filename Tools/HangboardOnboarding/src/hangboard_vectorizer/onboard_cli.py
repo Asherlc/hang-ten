@@ -17,6 +17,7 @@ from .onboarding_run import (
     resume_run,
     start_run,
 )
+from .workspace_paths import default_workspace_root, resolve_workspace_path
 
 
 class _CliError(ValueError):
@@ -49,6 +50,15 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--product-name", help="caller-asserted commercial product name")
     parser.add_argument("--source", help="local image path or HTTP(S) image URL")
     parser.add_argument("--output", type=Path, required=True, help="onboarding run directory")
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=default_workspace_root(),
+        help=(
+            "owned root for generated artifacts "
+            "(default: $HANGBOARD_WORKSPACE_ROOT or .context/hangboard-onboarding)"
+        ),
+    )
     actions = parser.add_mutually_exclusive_group()
     actions.add_argument("--approve", choices=("stage-0", "stage-1", "stage-2", "stage-3", "stage-4"), help="approve a reviewed stage")
     actions.add_argument("--resume", action="store_true", help="run the next installed stage")
@@ -64,6 +74,11 @@ def _validate(arguments: argparse.Namespace) -> None:
             raise _CliError("--product-name and --source are required when starting a run")
     elif has_start_values:
         raise _CliError("--product-name and --source are valid only when starting a run")
+    arguments.workspace_root = arguments.workspace_root.resolve(strict=False)
+    try:
+        arguments.output = resolve_workspace_path(arguments.output, arguments.workspace_root)
+    except ValueError as error:
+        raise _CliError(str(error)) from error
 
 
 def _run(arguments: argparse.Namespace):
@@ -73,7 +88,12 @@ def _run(arguments: argparse.Namespace):
         return resume_run(arguments.output)
     if arguments.status:
         return read_status(arguments.output)
-    return start_run(arguments.product_name, arguments.source, arguments.output)
+    return start_run(
+        arguments.product_name,
+        arguments.source,
+        arguments.output,
+        workspace_root=arguments.workspace_root,
+    )
 
 
 def _first_line(error: BaseException) -> str:

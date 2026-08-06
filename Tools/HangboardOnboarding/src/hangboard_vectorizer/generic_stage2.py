@@ -263,6 +263,7 @@ def run_generic_stage2(
 
     temporary_root: Path | None = None
     try:
+        artifact_root.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(
             tempfile.mkdtemp(prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent)
         )

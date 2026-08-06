@@ -123,6 +123,39 @@ def test_main_rejects_output_outside_workspace_root(
     assert not outside.exists()
 
 
+@pytest.mark.parametrize("destination_option", ["--output", "--manifest", "--preview"])
+def test_main_rejects_existing_directory_as_file_destination(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    destination_option: str,
+) -> None:
+    source = _write_rgb(tmp_path / "board.png", make_hangboard())
+    directory = tmp_path / "destination"
+    directory.mkdir()
+    destinations = {
+        "--output": tmp_path / "board.svg",
+        "--manifest": tmp_path / "board.json",
+        "--preview": tmp_path / "preview.png",
+    }
+    destinations[destination_option] = directory
+
+    result = main(
+        [
+            str(source),
+            "--experimental-recess-detection",
+            "--output",
+            str(destinations["--output"]),
+            "--manifest",
+            str(destinations["--manifest"]),
+            "--preview",
+            str(destinations["--preview"]),
+        ]
+    )
+
+    assert result == 2
+    assert f"{destination_option} must be a file path" in capsys.readouterr().err
+
+
 def test_main_requires_exactly_one_conversion_mode(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ):

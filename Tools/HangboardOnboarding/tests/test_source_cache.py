@@ -4,12 +4,13 @@ from hashlib import sha256
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
-from threading import Thread
+from threading import Event, Thread
 
 import pytest
 from PIL import Image
 
 from hangboard_vectorizer.source_cache import SourceLimits, cache_source
+import hangboard_vectorizer.source_cache as source_cache_module
 
 
 def _png_bytes(size: tuple[int, int] = (700, 512)) -> bytes:
@@ -91,6 +92,27 @@ def test_source_json_strips_url_credentials_query_and_fragment(
 def test_private_network_sources_are_rejected_before_fetch(tmp_path: Path):
     with pytest.raises(ValueError, match="public addresses"):
         cache_source("http://127.0.0.1/image.png", tmp_path / "cache")
+    assert not (tmp_path / "cache").exists()
+
+
+def test_dns_resolution_obeys_network_timeout(tmp_path: Path, monkeypatch) -> None:
+    release = Event()
+
+    def stalled_resolution(*_args, **_kwargs):
+        release.wait(timeout=1)
+        return []
+
+    monkeypatch.setattr(source_cache_module.socket, "getaddrinfo", stalled_resolution)
+    try:
+        with pytest.raises(ValueError, match="DNS resolution timed out"):
+            cache_source(
+                "https://example.test/board.png",
+                tmp_path / "cache",
+                limits=SourceLimits(timeout_seconds=0.01),
+            )
+    finally:
+        release.set()
+
     assert not (tmp_path / "cache").exists()
 
 

@@ -124,11 +124,13 @@ def _validate_arguments(arguments: argparse.Namespace) -> None:
     for name in ("output", "manifest", "preview"):
         destination = getattr(arguments, name)
         if destination is not None:
-            setattr(
-                arguments,
-                name,
-                resolve_workspace_path(destination, arguments.workspace_root),
-            )
+            resolved = resolve_workspace_path(destination, arguments.workspace_root)
+            option = f"--{name}"
+            if resolved.exists() and resolved.is_dir():
+                raise _CliError(f"{option} must be a file path, not a directory")
+            if resolved.parent.exists() and not resolved.parent.is_dir():
+                raise _CliError(f"{option} parent must be a directory")
+            setattr(arguments, name, resolved)
 
     destinations = [arguments.output, arguments.manifest]
     if arguments.preview is not None:
