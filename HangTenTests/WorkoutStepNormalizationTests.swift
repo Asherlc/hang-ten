@@ -138,4 +138,71 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             )
         }
     }
+
+    func testCompoundStepWithNegativeFixedSegmentDurationIsRejected() {
+        let source = WorkoutStep(
+            id: "negative-segment",
+            number: 1,
+            title: "Negative segment",
+            instruction: "Invalid",
+            accessory: "",
+            duration: 0,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: -10),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source))
+    }
+
+    func testCompoundStepWithNonFiniteFixedSegmentDurationIsRejected() {
+        let source = WorkoutStep(
+            id: "non-finite-segment",
+            number: 1,
+            title: "Non-finite segment",
+            instruction: "Invalid",
+            accessory: "",
+            duration: .infinity,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: .infinity),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 1)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source))
+    }
+
+    func testCompoundStepWithNonFiniteEnclosingDurationIsRejected() {
+        let source = WorkoutStep(
+            id: "non-finite-step",
+            number: 1,
+            title: "Non-finite step",
+            instruction: "Invalid",
+            accessory: "",
+            duration: .infinity,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .kind(.edge),
+                    timing: .fixed,
+                    duration: .greatestFiniteMagnitude
+                ),
+                WorkoutSegment(
+                    kind: .work,
+                    target: .kind(.edge),
+                    timing: .fixed,
+                    duration: .greatestFiniteMagnitude
+                )
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source))
+    }
 }

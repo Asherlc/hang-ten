@@ -53,6 +53,13 @@ One existing PlanStorage JSON fixture changed its enclosing duration from 10 to 
 - Full XCTest suite: 380 tests, 0 failures.
 - `git diff --check`: clean.
 
+## Review follow-up: compound literal-duration guard
+
+- `WorkoutStepNormalizer.expand` now rejects compound steps when either the enclosing duration or any fixed segment duration is negative or non-finite. The new `invalidCompoundDuration` error identifies the offending segment when applicable, or the enclosing step when no segment is at fault.
+- Existing `unsupportedCompoundTiming` and `mismatchedCompoundDuration` behavior remains unchanged and is covered by the same focused suite.
+- Added focused tests for a negative fixed segment whose durations still sum to the enclosing step, a non-finite fixed segment, and a non-finite enclosing duration produced by overflow from two finite segments.
+- TDD result: the three new assertions failed before the guards; after the minimal guard addition, `WorkoutStepNormalizationTests` executed 8 tests with 0 failures.
+
 ## Concerns
 
 No implementation concerns. Xcode emitted pre-existing simulator/runtime diagnostics (DVT build-number, IOSurface, and duplicate accessibility-loader class warnings); the complete test suite still succeeded.
