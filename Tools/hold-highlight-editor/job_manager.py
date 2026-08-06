@@ -47,6 +47,7 @@ class BoardJobManager:
         *,
         max_workers: int = 4,
         result_serializer: Callable[[object], object] | None = None,
+        public_error_types: tuple[type[Exception], ...] = (),
     ) -> None:
         self.__executor = ThreadPoolExecutor(
             max_workers=max_workers, thread_name_prefix="workbench"
@@ -56,6 +57,7 @@ class BoardJobManager:
         self.__active_jobs: dict[str, str] = {}
         self.__futures: dict[str, Future[None]] = {}
         self.__result_serializer = result_serializer or (lambda result: result)
+        self.__public_error_types = public_error_types
 
     def submit(self, board_id: str, operation: Callable[[], object]) -> JobRecord:
         if not isinstance(board_id, str) or not board_id:
@@ -104,7 +106,7 @@ class BoardJobManager:
         try:
             summary = self.__serializable_summary(operation())
             final = replace(current, state="succeeded", result=summary)
-        except ValueError as error:
+        except self.__public_error_types as error:
             final = replace(current, state="failed", error=str(error))
         except Exception:
             final = replace(current, state="failed", error="job failed")

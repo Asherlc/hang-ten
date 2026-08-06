@@ -67,6 +67,10 @@ class FakeWorkbenchView:
     stale_from_stage: int | None
 
 
+class FakeWorkbenchError(ValueError):
+    """Explicitly safe public error contract for deterministic API tests."""
+
+
 class FakeWorkbenchService:
     def __init__(self, root: Path):
         self._root = root
@@ -79,12 +83,12 @@ class FakeWorkbenchService:
 
     def create_from_url(self, product_name: str, source_url: str) -> FakeWorkbenchView:
         if not source_url.startswith(("http://", "https://")):
-            raise ValueError("source URL must use HTTP(S)")
+            raise FakeWorkbenchError("source URL must use HTTP(S)")
         return self._create(product_name, source_url.encode())
 
     def create_from_upload(self, product_name: str, content: bytes) -> FakeWorkbenchView:
         if not content:
-            raise ValueError("upload content must not be empty")
+            raise FakeWorkbenchError("upload content must not be empty")
         return self._create(product_name, content)
 
     def import_run(self, run_root: Path) -> FakeWorkbenchView:
@@ -101,9 +105,9 @@ class FakeWorkbenchService:
             try:
                 view = self._boards[board_id]
             except KeyError as error:
-                raise ValueError(f"unknown board: {board_id}") from error
+                raise FakeWorkbenchError(f"unknown board: {board_id}") from error
         if revision_id is not None and revision_id != view.revision_id:
-            raise ValueError(f"unknown revision: {revision_id}")
+            raise FakeWorkbenchError(f"unknown revision: {revision_id}")
         return view
 
     def save_draft(
@@ -142,7 +146,7 @@ class FakeWorkbenchService:
     ) -> FakeWorkbenchView:
         view = self.get_board(board_id)
         if expected_revision_id != view.revision_id:
-            raise ValueError("expected revision does not match")
+            raise FakeWorkbenchError("expected revision does not match")
         return self._update(
             view,
             revision_id=f"{view.revision_id}-revised",
@@ -165,7 +169,7 @@ class FakeWorkbenchService:
     ) -> FakeWorkbenchView:
         view = self.get_board(board_id)
         if expected_revision_id != view.revision_id:
-            raise ValueError("expected revision does not match")
+            raise FakeWorkbenchError("expected revision does not match")
         return self._update(view, saved=True)
 
     def _create(self, product_name: str, content: bytes) -> FakeWorkbenchView:
@@ -198,9 +202,9 @@ class FakeWorkbenchService:
     ) -> FakeWorkbenchView:
         view = self.get_board(board_id)
         if revision_id != view.revision_id:
-            raise ValueError("expected revision does not match")
+            raise FakeWorkbenchError("expected revision does not match")
         if stage != view.stage:
-            raise ValueError("expected stage does not match")
+            raise FakeWorkbenchError("expected stage does not match")
         return view
 
     def _update(self, view: FakeWorkbenchView, **changes) -> FakeWorkbenchView:
@@ -208,6 +212,64 @@ class FakeWorkbenchService:
         with self._lock:
             self._boards[view.board_id] = updated
         return updated
+
+
+class RaceRevealingCreationService(FakeWorkbenchService):
+    """Detect concurrent allocation without preventing it in the fake itself."""
+
+    def __init__(self, root: Path):
+        super().__init__(root)
+        self.creation_started = Event()
+        self.creation_release = Event()
+        self.overlapped = False
+        self._active_creations = 0
+        self._creation_observer = Lock()
+
+    def create_from_url(self, product_name: str, source_url: str) -> FakeWorkbenchView:
+        self._begin_creation()
+        try:
+            self.creation_release.wait(1)
+            return super().create_from_url(product_name, source_url)
+        finally:
+            self._end_creation()
+
+    def create_from_upload(self, product_name: str, content: bytes) -> FakeWorkbenchView:
+        self._begin_creation()
+        try:
+            self.creation_release.wait(1)
+            return super().create_from_upload(product_name, content)
+        finally:
+            self._end_creation()
+
+    def import_run(self, run_root: Path) -> FakeWorkbenchView:
+        self._begin_creation()
+        try:
+            self.creation_release.wait(1)
+            return super().import_run(run_root)
+        finally:
+            self._end_creation()
+
+    def _begin_creation(self) -> None:
+        with self._creation_observer:
+            self._active_creations += 1
+            if self._active_creations > 1:
+                self.overlapped = True
+        self.creation_started.set()
+
+    def _end_creation(self) -> None:
+        with self._creation_observer:
+            self._active_creations -= 1
+
+
+class PathLeakingWorkbenchService(FakeWorkbenchService):
+    def approve_and_advance(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        raise ValueError(f"could not open {self._root.resolve() / 'private.txt'}")
 
 
 def make_run(root: Path):
@@ -362,6 +424,9 @@ def running_server(session, workbench_service=None):
         "127.0.0.1",
         0,
         workbench_service=workbench_service,
+        public_job_error_types=(FakeWorkbenchError,)
+        if workbench_service is not None
+        else (),
     )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -626,6 +691,45 @@ def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):
     assert json.load(conflict.value)["ok"] is False
 
 
+def test_pre_board_jobs_share_one_allocation_lock(tmp_path):
+    service = RaceRevealingCreationService(tmp_path / "workbench")
+    imported_run = tmp_path / "imported-run"
+    imported_run.mkdir()
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, first = _post_json(
+            base + "/api/boards",
+            {
+                "productName": "First Board",
+                "source": "https://example.test/first.png",
+            },
+        )
+        assert status == 202
+        assert service.creation_started.wait(1)
+        upload = Request(
+            base
+            + "/api/boards/upload?"
+            + urlencode({"productName": "Second Board"}),
+            data=b"second-image",
+            method="POST",
+            headers={"Content-Type": "image/png"},
+        )
+        try:
+            with pytest.raises(HTTPError) as upload_conflict:
+                urlopen(upload)
+            with pytest.raises(HTTPError) as import_conflict:
+                _post_json(
+                    base + "/api/boards/import",
+                    {"runRoot": str(imported_run)},
+                )
+        finally:
+            service.creation_release.set()
+        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+
+    assert upload_conflict.value.code == 409
+    assert import_conflict.value.code == 409
+    assert service.overlapped is False
+
+
 def test_failed_job_poll_exposes_safe_error_without_traceback(
     running_workbench_server,
 ):
@@ -645,6 +749,26 @@ def test_failed_job_poll_exposes_safe_error_without_traceback(
     assert final["state"] == "failed"
     assert final["error"] == "expected revision does not match"
     assert "Traceback" not in json.dumps(final)
+
+
+def test_job_poll_redacts_path_from_untrusted_value_error(tmp_path):
+    service = PathLeakingWorkbenchService(tmp_path / "workbench-private")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        status, submitted = _post_json(
+            base + "/api/approve",
+            {
+                "boardId": view["boardId"],
+                "expectedRevisionId": view["revisionId"],
+                "expectedStage": view["stage"],
+            },
+        )
+        final = _poll_job(base, submitted["jobId"])
+
+    assert status == 202
+    assert final["state"] == "failed"
+    assert final["error"] == "job failed"
+    assert str(tmp_path) not in json.dumps(final)
 
 
 def test_workbench_request_limits_are_enforced(running_workbench_server):

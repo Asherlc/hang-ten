@@ -17,7 +17,6 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import parse_qs, unquote, urlencode, urlsplit
-from uuid import uuid4
 
 from job_manager import (
     BoardJobManager,
@@ -28,6 +27,7 @@ from job_manager import (
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
+_BOARD_ALLOCATION_JOB_KEY = "workbench-board-allocation"
 
 
 class EditorError(ValueError):
@@ -258,6 +258,7 @@ def create_server(
     *,
     workbench_service: object | None = None,
     max_workers: int = 4,
+    public_job_error_types: tuple[type[Exception], ...] = (),
 ) -> ThreadingHTTPServer:
     catalog = (
         source
@@ -269,6 +270,7 @@ def create_server(
     jobs = BoardJobManager(
         max_workers=max_workers,
         result_serializer=_workbench_view_payload,
+        public_error_types=public_job_error_types,
     )
 
     class SessionHandler(EditorRequestHandler):
@@ -395,14 +397,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 product_name = self._required_string(payload, "productName")
                 source = self._required_string(payload, "source")
                 self._submit_job(
-                    f"create-{uuid4().hex}",
+                    _BOARD_ALLOCATION_JOB_KEY,
                     lambda: service.create_from_url(product_name, source),
                 )
                 return
             if request.path == "/api/boards/import":
                 run_root = Path(self._required_string(payload, "runRoot"))
                 self._submit_job(
-                    f"import-{uuid4().hex}",
+                    _BOARD_ALLOCATION_JOB_KEY,
                     lambda: service.import_run(run_root),
                 )
                 return
@@ -555,7 +557,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not content:
             raise RequestError(HTTPStatus.BAD_REQUEST, "upload must not be empty")
         self._submit_job(
-            f"upload-{uuid4().hex}",
+            _BOARD_ALLOCATION_JOB_KEY,
             lambda: service.create_from_upload(product_name, content),
         )
 
@@ -783,15 +785,20 @@ def _argument_parser() -> ArgumentParser:
     return parser
 
 
-def _create_workbench_service(workspace_root: Path) -> object:
+def _create_workbench_service(
+    workspace_root: Path,
+) -> tuple[object, tuple[type[Exception], ...]]:
     onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
     source_value = str(onboarding_source)
     if source_value not in sys.path:
         sys.path.insert(0, source_value)
-    from hangboard_vectorizer.workbench import WorkbenchService
+    from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
     from hangboard_vectorizer.workbench_store import WorkbenchStore
 
-    return WorkbenchService(WorkbenchStore(workspace_root))
+    return (
+        WorkbenchService(WorkbenchStore(workspace_root)),
+        (WorkbenchServiceError,),
+    )
 
 
 def _server_from_cli(
@@ -807,11 +814,13 @@ def _server_from_cli(
             if parsed.run_dir or parsed.catalog is not None
             else None
         )
-        service = (
-            _create_workbench_service(parsed.workspace_root)
-            if parsed.workspace_root is not None
-            else None
-        )
+        if parsed.workspace_root is not None:
+            service, public_job_error_types = _create_workbench_service(
+                parsed.workspace_root
+            )
+        else:
+            service = None
+            public_job_error_types = ()
     except (EditorError, OSError, ValueError) as error:
         parser.error(str(error))
     server = create_server(
@@ -819,6 +828,7 @@ def _server_from_cli(
         parsed.host,
         parsed.port,
         workbench_service=service,
+        public_job_error_types=public_job_error_types,
     )
     return server, catalog
 
