@@ -888,6 +888,15 @@ enum PlanLibraryValidator {
         resolvedID: String
     ) -> [String] {
         if step.segments.count > 1 {
+            let durations = step.segments.compactMap(\.duration)
+            guard step.segments.allSatisfy({ $0.timing == .fixed }),
+                  durations.count == step.segments.count,
+                  durations.allSatisfy({ $0.isFinite && $0 > 0 }),
+                  step.duration.isFinite,
+                  step.duration > 0,
+                  durations.reduce(0, +) == step.duration else {
+                return []
+            }
             return step.segments.indices.map { "\(resolvedID).segment-\($0 + 1)" }
         }
         if step.segments.isEmpty,
