@@ -384,8 +384,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 timing: .fixed,
                 duration: 10
             )],
-            gripType: sourceStep.gripType,
-            activeDuration: sourceStep.activeDuration
+            gripType: sourceStep.gripType
         )
         XCTAssertEqual(duplicate.definition().steps, [expectedStep])
     }

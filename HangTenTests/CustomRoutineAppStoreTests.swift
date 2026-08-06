@@ -169,8 +169,20 @@ final class CustomRoutineAppStoreTests: XCTestCase {
     func testSaveAndDeleteRefreshCustomPlansAndDefinitionLookup() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
-        let store = AppStore(defaults: defaults)
+        let builtIn = try XCTUnwrap(PlanCatalog.all.first)
+        defaults.set(
+            try JSONEncoder().encode(CustomRoutineLibrary(routines: [
+                makeRoutine(id: builtIn.id),
+                makeRoutine(id: "foreign.invalid")
+            ])),
+            forKey: CustomRoutineStore.defaultKey
+        )
+        let customStore = CustomRoutineStore(defaults: defaults)
+        XCTAssertNotNil(customStore.persistenceError)
+        let store = AppStore(customRoutineStore: customStore, defaults: defaults)
         let definition = makeRoutine()
+
+        XCTAssertNotNil(store.customRoutinePersistenceError)
 
         try store.saveCustomRoutine(definition)
 
