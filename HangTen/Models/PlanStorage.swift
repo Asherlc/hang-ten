@@ -42,7 +42,7 @@ struct PlanMetadata: Codable, Hashable {
     let subtitle: String
     let level: String
     let sourceLabel: String
-    let sourceURL: URL
+    let sourceURL: URL?
     let provenance: RoutineProvenance
     let category: String
     let tags: [String]
@@ -55,7 +55,7 @@ struct PlanMetadata: Codable, Hashable {
         subtitle: String,
         level: String,
         sourceLabel: String,
-        sourceURL: URL,
+        sourceURL: URL?,
         provenance: RoutineProvenance,
         category: String = "general",
         tags: [String] = [],
@@ -328,6 +328,59 @@ struct WorkoutStepDefinition: Codable, Hashable {
         activeDuration = try container.decodeIfPresent(
             TimeInterval.self,
             forKey: .activeDuration
+        )
+    }
+}
+
+extension WorkoutTargetDefinition {
+    /// Converts a resolved runtime target back into a portable definition.
+    /// A caller may supply a semantic ID lookup when it owns reusable board
+    /// mappings; local custom routines intentionally persist direct targets.
+    static func from(
+        _ target: HoldTarget,
+        semanticHoldID: (([String]) -> String?)? = nil
+    ) -> WorkoutTargetDefinition {
+        if let kind = target.kind {
+            return .kind(kind)
+        }
+        if let feature = target.feature {
+            return .feature(feature, fallbacks: target.fallbackFeatures)
+        }
+        if let semanticID = semanticHoldID?(target.holdIDs) {
+            return .semantic(semanticID)
+        }
+        return .holdIDs(target.holdIDs)
+    }
+}
+
+extension WorkoutStepDefinition {
+    /// Keeps persistence and duplication on the same conversion boundary,
+    /// including explicit segment timing and one-segment rest rows.
+    static func from(
+        _ step: WorkoutStep,
+        id: String? = nil,
+        semanticHoldID: (([String]) -> String?)? = nil
+    ) -> WorkoutStepDefinition {
+        WorkoutStepDefinition(
+            id: id ?? step.id,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets.map { WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID) },
+            segments: step.segments.map { segment in
+                WorkoutSegmentDefinition(
+                    kind: segment.kind,
+                    targets: segment.targets.map {
+                        WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID)
+                    },
+                    timing: segment.timing,
+                    duration: segment.duration
+                )
+            },
+            gripType: step.gripType,
+            activeDuration: step.timedWorkDuration
         )
     }
 }
@@ -728,8 +781,10 @@ enum PlanLibraryValidator {
         if plan.metadata.sourceLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).sourceLabel", message: "Source label cannot be empty."))
         }
-        let sourceScheme = plan.metadata.sourceURL.scheme?.lowercased()
-        if sourceScheme != "http" && sourceScheme != "https" {
+        let sourceScheme = plan.metadata.sourceURL?.scheme?.lowercased()
+        if plan.metadata.provenance != .custom && sourceScheme != "http" && sourceScheme != "https" {
+            issues.append(PlanValidationIssue(path: "\(metadataPath).sourceURL", message: "Source URL must use HTTP or HTTPS."))
+        } else if let sourceScheme, sourceScheme != "http" && sourceScheme != "https" {
             issues.append(PlanValidationIssue(path: "\(metadataPath).sourceURL", message: "Source URL must use HTTP or HTTPS."))
         }
         if let boardID = plan.boardID, boardByID[boardID] == nil {
@@ -1236,7 +1291,7 @@ enum BuiltInPlanLibraryDefinition {
             return WorkoutBlockDefinition(
                 id: "shared.progressive-warm-up",
                 title: "Progressive warm-up",
-                steps: [stepDefinition(from: step, id: "warm-up")]
+                steps: [WorkoutStepDefinition.from(step, id: "warm-up", semanticHoldID: semanticID(for:))]
             )
         }
         let sharedCoolDown = legacyPlans.first {
@@ -1245,7 +1300,7 @@ enum BuiltInPlanLibraryDefinition {
             WorkoutBlockDefinition(
                 id: "shared.cool-down",
                 title: "Cool down",
-                steps: [stepDefinition(from: $0, id: "cool-down")]
+                steps: [WorkoutStepDefinition.from($0, id: "cool-down", semanticHoldID: semanticID(for:))]
             )
         }
 
@@ -1349,7 +1404,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [stepDefinition(from: first)]
+                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticID(for:))]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1369,7 +1424,9 @@ enum BuiltInPlanLibraryDefinition {
             let middleBlock = WorkoutBlockDefinition(
                 id: "\(plan.id).main",
                 title: plan.title,
-                steps: plan.steps[firstIndex..<lastIndex].map { stepDefinition(from: $0) }
+                steps: plan.steps[firstIndex..<lastIndex].map {
+                    WorkoutStepDefinition.from($0, semanticHoldID: semanticID(for:))
+                }
             )
             blocks.append(middleBlock)
             references.append(WorkoutBlockReference(blockID: middleBlock.id))
@@ -1399,40 +1456,12 @@ enum BuiltInPlanLibraryDefinition {
         )
     }
 
-    private static func stepDefinition(from step: WorkoutStep, id: String? = nil) -> WorkoutStepDefinition {
-        WorkoutStepDefinition(
-            id: id ?? step.id,
-            title: step.title,
-            instruction: step.instruction,
-            accessory: step.accessory,
-            duration: step.duration,
-            phase: step.phase,
-            targets: step.targets.flatMap { targetDefinitions(from: $0) },
-            segments: step.segments.map { segment in
-                WorkoutSegmentDefinition(
-                    kind: segment.kind,
-                    targets: segment.targets.flatMap { targetDefinitions(from: $0) },
-                    timing: segment.timing,
-                    duration: segment.duration
-                )
-            },
-            gripType: step.gripType,
-            activeDuration: step.timedWorkDuration
-        )
-    }
-
-    private static func targetDefinitions(from target: HoldTarget) -> [WorkoutTargetDefinition] {
-        if let kind = target.kind {
-            return [.kind(kind)]
-        }
-        if let feature = target.feature {
-            return [.feature(feature, fallbacks: target.fallbackFeatures)]
-        }
-        let targetIDs = Set(target.holdIDs)
+    private static func semanticID(for holdIDs: [String]) -> String? {
+        let targetIDs = Set(holdIDs)
         if let semanticID = semanticHoldIDs.first(where: { Set($0.value) == targetIDs })?.key {
-            return [.semantic(semanticID)]
+            return semanticID
         }
-        return [.holdIDs(target.holdIDs)]
+        return nil
     }
 }
 

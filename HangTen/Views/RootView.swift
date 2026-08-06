@@ -864,9 +864,20 @@ struct PlanDetailView: View {
         .background(Color.warmUp.opacity(0.13), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
+    @ViewBuilder
     private var sourceCard: some View {
-        Link(destination: plan.sourceURL) {
-            HStack(alignment: .top, spacing: 12) {
+        if let sourceURL = plan.sourceURL {
+            Link(destination: sourceURL) {
+                sourceCardContent(showsExternalLink: true)
+            }
+            .buttonStyle(.plain)
+        } else {
+            sourceCardContent(showsExternalLink: false)
+        }
+    }
+
+    private func sourceCardContent(showsExternalLink: Bool) -> some View {
+        HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "book.pages.fill")
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
@@ -880,13 +891,13 @@ struct PlanDetailView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "arrow.up.right")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
+                if showsExternalLink {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
             }
             .hangCard(padding: 16)
-        }
-        .buttonStyle(.plain)
     }
 }
 
