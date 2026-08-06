@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const { buildEditedDocument, buildCorrectionsDocument } = globalThis.HoldEditorModel;
+
   const TYPE_COLORS = {
     jug: "#ff754f",
     sloper: "#32bbc1",
@@ -33,6 +35,12 @@
     editPoints: false,
     history: [],
     historyIndex: -1,
+    serverSession: null,
+    dirty: false,
+    saving: false,
+    savedSnapshot: "[]",
+    saveError: "",
+    hasSaved: false,
   };
 
   const el = Object.fromEntries([
@@ -43,7 +51,7 @@
     "inspector-empty", "inspector-form", "region-key-input",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
-    "load-image-button", "load-regions-button", "undo-button", "redo-button",
+    "load-image-button", "load-regions-button", "undo-button", "redo-button", "save-button", "save-state",
     "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
@@ -143,6 +151,34 @@
     renderInspector();
     renderTransform();
     renderHistoryControls();
+    renderSaveState();
+  }
+
+  function renderSaveState() {
+    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving);
+    el["save-button"].disabled = !canSave;
+    el["save-state"].className = "save-state";
+    if (!state.serverSession) {
+      el["save-state"].textContent = "Static mode";
+      el["save-button"].title = "Start server.py with --run-dir to save into an onboarding run";
+    } else if (state.saveError) {
+      el["save-state"].textContent = "Save failed";
+      el["save-state"].classList.add("error");
+      el["save-button"].title = state.saveError;
+    } else if (state.saving) {
+      el["save-state"].textContent = "Saving…";
+    } else if (state.dirty) {
+      el["save-state"].textContent = "Unsaved changes";
+      el["save-state"].classList.add("dirty");
+      el["save-button"].title = `Save into ${state.serverSession.runName}`;
+    } else if (state.hasSaved) {
+      el["save-state"].textContent = "Saved";
+      el["save-state"].classList.add("saved");
+      el["save-button"].title = `Saved in ${state.serverSession.runName}`;
+    } else {
+      el["save-state"].textContent = "Ready";
+      el["save-button"].title = `Editing ${state.serverSession.runName}`;
+    }
   }
 
   function renderOverlay() {
@@ -539,12 +575,19 @@
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push({ snapshot, label });
     state.historyIndex = state.history.length - 1;
+    state.dirty = snapshot !== state.savedSnapshot;
+    state.saveError = "";
     renderHistoryControls();
+    renderSaveState();
   }
 
   function resetHistory() {
     state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions" }];
     state.historyIndex = 0;
+    state.savedSnapshot = state.history[0].snapshot;
+    state.dirty = false;
+    state.saveError = "";
+    state.hasSaved = false;
   }
 
   function undo() {
@@ -552,6 +595,8 @@
     state.historyIndex -= 1;
     state.regions = JSON.parse(state.history[state.historyIndex].snapshot);
     state.selectedId = state.regions.some((region) => region.id === state.selectedId) ? state.selectedId : null;
+    state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
+    state.saveError = "";
     setStatus(`Undo: ${state.history[state.historyIndex + 1].label}`);
     render();
   }
@@ -560,6 +605,8 @@
     if (state.historyIndex >= state.history.length - 1) return;
     state.historyIndex += 1;
     state.regions = JSON.parse(state.history[state.historyIndex].snapshot);
+    state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
+    state.saveError = "";
     setStatus(`Redo: ${state.history[state.historyIndex].label}`);
     render();
   }
@@ -660,6 +707,33 @@
     }
   }
 
+  async function loadServerSession() {
+    try {
+      const sessionResponse = await fetch("/api/session", { cache: "no-store" });
+      if (!sessionResponse.ok || !sessionResponse.headers.get("content-type")?.includes("application/json")) return false;
+      const session = await sessionResponse.json();
+      if (!session.ok) return false;
+      const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
+      if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
+      const regions = await regionsResponse.json();
+      state.serverSession = session;
+      await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
+      setRegions(regions, session.regionsPath || "stage-2-regions.json");
+      setStatus(`Editing ${session.runName}. Changes can be saved into this run.`);
+      return true;
+    } catch (error) {
+      console.warn(error);
+      state.serverSession = null;
+      renderSaveState();
+      return false;
+    }
+  }
+
+  async function loadInitialSession() {
+    if (await loadServerSession()) return;
+    await loadDemo();
+  }
+
   async function setImageHref(href, name) {
     await new Promise((resolve, reject) => {
       const image = new Image();
@@ -698,6 +772,8 @@
   }
 
   function loadImageFile(file) {
+    state.serverSession = null;
+    renderSaveState();
     const reader = new FileReader();
     reader.onload = async () => {
       await setImageHref(reader.result, file.name);
@@ -709,6 +785,8 @@
   }
 
   function loadRegionsFile(file) {
+    state.serverSession = null;
+    renderSaveState();
     const reader = new FileReader();
     reader.onload = () => {
       try {
@@ -722,69 +800,60 @@
     reader.readAsText(file);
   }
 
-  function regionForExport(region) {
-    const contour = region.contour.map(([x, y]) => [round(x), round(y)]);
-    return {
-      ...clone(region),
-      anchor: centroid(contour).map((value) => round(value)),
-      areaPixels: Math.round(polygonArea(contour)),
-      bounds: bounds(contour),
-      contour,
-      metadata: {
-        ...clone(region.metadata || {}),
-        editedBy: "hold-highlight-editor",
-      },
-    };
+  function editedDocument() {
+    return buildEditedDocument({
+      canvas: state.canvas,
+      regions: state.regions,
+      imageName: state.imageName,
+      regionsName: state.regionsName,
+    });
+  }
+
+  function correctionsDocument() {
+    return buildCorrectionsDocument({
+      baselineRegions: state.baselineRegions,
+      regions: state.regions,
+      imageName: state.imageName,
+      regionsName: state.regionsName,
+    });
   }
 
   function exportEditedRegions() {
-    const payload = {
-      schemaVersion: 1,
-      canvas: clone(state.canvas),
-      labelEncoding: "uint16-region-id",
-      source: { image: state.imageName, regions: state.regionsName },
-      editor: { name: "hold-highlight-editor", exportedAt: new Date().toISOString() },
-      regions: state.regions.sort((a, b) => a.id - b.id).map(regionForExport),
-    };
+    const payload = editedDocument();
     downloadJson(payload, "stage-2-regions.edited.json");
     setStatus(`Exported ${payload.regions.length} edited regions.`);
   }
 
   function exportCorrections() {
-    const baselineById = new Map(state.baselineRegions.map((region) => [region.id, region]));
-    const currentById = new Map(state.regions.map((region) => [region.id, region]));
-    const added = state.regions.filter((region) => !baselineById.has(region.id)).map(regionForExport);
-    const deleted = state.baselineRegions.filter((region) => !currentById.has(region.id)).map((region) => ({ id: region.id, key: region.key }));
-    const modified = state.regions
-      .filter((region) => baselineById.has(region.id) && comparisonKey(region) !== comparisonKey(baselineById.get(region.id)))
-      .map((region) => ({ before: regionForExport(baselineById.get(region.id)), after: regionForExport(region) }));
-    const payload = {
-      schemaVersion: 1,
-      kind: "human-region-corrections",
-      source: { image: state.imageName, regions: state.regionsName },
-      exportedAt: new Date().toISOString(),
-      summary: { added: added.length, modified: modified.length, deleted: deleted.length },
-      added,
-      modified,
-      deleted,
-    };
+    const payload = correctionsDocument();
     downloadJson(payload, "stage-2-human-corrections.json");
-    setStatus(`Exported corrections: ${added.length} added, ${modified.length} modified, ${deleted.length} deleted.`);
+    setStatus(`Exported corrections: ${payload.summary.added} added, ${payload.summary.modified} modified, ${payload.summary.deleted} deleted.`);
   }
 
-  function comparisonKey(region) {
-    return JSON.stringify({
-      key: region.key,
-      type: region.type,
-      contour: region.contour.map(([x, y]) => [round(x), round(y)]),
-      mode: region.metadata?.mode,
-      shapeKind: region.metadata?.shapeKind || "freeform",
-      pathStyle: region.metadata?.pathStyle || "straight",
-      curveTension: round(region.metadata?.curveTension ?? 0.8),
-      rotation: round(region.metadata?.rotation ?? 0),
-      bend: round(region.metadata?.bend ?? 0),
-      notes: region.metadata?.humanNotes || "",
-    });
+  async function saveToRun() {
+    if (!state.serverSession || !state.dirty || state.saving) return;
+    state.saving = true;
+    state.saveError = "";
+    renderSaveState();
+    try {
+      const response = await fetch("/api/save", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ regions: editedDocument(), corrections: correctionsDocument() }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || `Save failed (${response.status})`);
+      state.savedSnapshot = JSON.stringify(state.regions);
+      state.dirty = false;
+      state.hasSaved = true;
+      setStatus(`Saved ${result.regionsPath} and ${result.correctionsPath}.`);
+    } catch (error) {
+      state.saveError = error.message || "Save failed";
+      setStatus(state.saveError);
+    } finally {
+      state.saving = false;
+      renderSaveState();
+    }
   }
 
   function downloadJson(payload, filename) {
@@ -930,6 +999,7 @@
   });
   el["export-button"].addEventListener("click", exportEditedRegions);
   el["corrections-button"].addEventListener("click", exportCorrections);
+  el["save-button"].addEventListener("click", saveToRun);
   el["fit-button"].addEventListener("click", fitCanvas);
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
@@ -1001,9 +1071,14 @@
     }
   });
   window.addEventListener("keyup", (event) => { if (event.code === "Space") state.spacePressed = false; });
+  window.addEventListener("beforeunload", (event) => {
+    if (!state.dirty) return;
+    event.preventDefault();
+    event.returnValue = "";
+  });
 
   configureSvg();
   resetHistory();
   render();
-  loadDemo();
+  loadInitialSession();
 })();

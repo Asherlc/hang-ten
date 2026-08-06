@@ -59,6 +59,10 @@ button { color: inherit; }
 
 .toolbar, .canvas-actions { display: flex; align-items: center; gap: 7px; }
 .toolbar-separator { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+.save-state { min-width: 72px; color: var(--muted); font-size: 10px; }
+.save-state.dirty { color: #ffd174; }
+.save-state.saved { color: #79d7a3; }
+.save-state.error { color: #ff8b92; }
 
 .tool-button, .icon-button, .segmented-control button {
   border: 1px solid var(--line);

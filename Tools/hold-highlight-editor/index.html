@@ -24,7 +24,9 @@
           <span class="toolbar-separator"></span>
           <button class="icon-button" id="undo-button" title="Undo (⌘Z)" aria-label="Undo">↶</button>
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
-          <button class="tool-button accent" id="export-button">Export edited regions</button>
+          <button class="tool-button accent" id="save-button" disabled>Save</button>
+          <span class="save-state" id="save-state">Static mode</span>
+          <button class="tool-button" id="export-button">Export edited regions</button>
           <button class="tool-button" id="corrections-button">Export corrections</button>
         </div>
       </header>
@@ -200,6 +202,7 @@
     <input id="image-file-input" type="file" accept="image/*" hidden />
     <input id="regions-file-input" type="file" accept="application/json,.json" hidden />
 
+    <script src="editor-model.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
