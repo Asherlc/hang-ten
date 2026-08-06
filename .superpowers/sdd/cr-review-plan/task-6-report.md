@@ -1,33 +1,23 @@
 # Task 6 Report
 
-## Implementation Summary
+## Implementation
 
-- `WorkoutStepNormalizer` now rejects zero compound fixed segment durations and zero enclosing compound durations with the existing `invalidCompoundDuration` error.
-- `PlanLibraryValidator` now requires present `activeDuration` values to be finite and strictly positive.
-- Compound fixed segment duration validation now reports the strict-positive segment duration message while preserving the legacy non-negative message for non-compound or non-fixed segment durations.
-- Expanded step duplicate validation now checks literal row IDs emitted by normalization, including `.segment-N` compound segment IDs and activeDuration-generated work/rest row IDs, while keeping the existing repeated-expanded-ID diagnostic at the plan block path.
+- Compound fixed segment and enclosing compound durations now must be finite and strictly positive in `WorkoutStepNormalizer`.
+- `PlanLibraryValidator` requires present `activeDuration` values to be finite and strictly positive, and reports strict-positive compound fixed segment failures at their duration paths.
+- Expanded-ID validation now models the literal rows the normalizer emits: compound `.segment-N` rows and `activeDuration` work/rest pairs. Repeated IDs retain the existing plan-block diagnostic.
+- Duplicate-draft target-mode and error-banner behavior were not changed.
 
-## TDD Fixtures
+## Focused coverage
 
-- `WorkoutStepNormalizationTests.testCompoundStepWithZeroFixedSegmentDurationIsRejected`
-- `WorkoutStepNormalizationTests.testCompoundStepWithZeroEnclosingDurationIsRejectedBeforeMismatch`
-- `PlanStorageTests.testActiveDurationMustBeFiniteAndGreaterThanZero`
-- `PlanStorageTests.testCompoundSegmentDurationMustBeGreaterThanZero`
-- `PlanStorageTests.testCompoundEnclosingDurationMustBeGreaterThanZero`
-- `PlanStorageTests.testPlanValidationDetectsGeneratedSegmentIDCollisionWithFlatStep`
-- `PlanStorageTests.testPlanDuplicateValidationUsesActiveDurationGeneratedSegmentIDs`
-- `PlanStorageTests.testPlanDuplicateValidationKeepsActiveDurationCollisionDiagnosticAtPlanBlockPath`
+- Added zero compound segment and zero enclosing-duration normalizer cases.
+- Added zero/non-finite `activeDuration`, zero compound segment/enclosing-duration, compound `foo` plus flat `foo.segment-1`, and active-duration row-ID collision cases.
 
-## RED Result
+## Results
 
-- Focused RED XCTest command reached build/validation but XCTest never executed because the simulator runner aborted.
-- xcresult: `.context/DerivedData-task-6-red/Logs/Test/Test-HangTen-2026.08.06_08-16-39--0700.xcresult`
+- RED fixtures were added before the production change.
+- Focused `xcodebuild test` could not execute XCTest: it reached build/validation then the simulator runner aborted, producing `.context/DerivedData-task-6-red/Logs/Test/Test-HangTen-2026.08.06_08-16-39--0700.xcresult`.
+- Static verification: `git diff --check ae690a8ad2c2304baa7f4cc0e3ee8c1f5a0f4caa..HEAD` completed clean. `xcodebuild build-for-testing` completed, with DVT build-number warnings.
 
-## GREEN Verification
+## Concern
 
-- `xcodebuild build-for-testing` completed.
-- Output included DVT build-number warnings.
-
-## Concerns
-
-- Focused XCTest remains blocked by the simulator runner abort, so GREEN verification is build-for-testing only.
+- No focused XCTest green result is available because the simulator test runner is unavailable; all simulator test attempts were stopped on request.
