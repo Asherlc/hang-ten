@@ -928,21 +928,22 @@ struct PlanDefinitionResolver {
                         mapping: mapping,
                         board: board
                     )
-                    steps.append(
-                        WorkoutStep(
-                            id: resolvedID,
-                            number: steps.count + 1,
-                            title: stepDefinition.title,
-                            instruction: stepDefinition.instruction,
-                            accessory: stepDefinition.accessory,
-                            duration: stepDefinition.duration,
-                            phase: stepDefinition.phase,
-                            targets: targets,
-                            segments: segments,
-                            gripType: stepDefinition.gripType,
-                            timedWorkDuration: stepDefinition.activeDuration
-                        )
+                    let resolvedStep = WorkoutStep(
+                        id: resolvedID,
+                        number: steps.count + 1,
+                        title: stepDefinition.title,
+                        instruction: stepDefinition.instruction,
+                        accessory: stepDefinition.accessory,
+                        duration: stepDefinition.duration,
+                        phase: stepDefinition.phase,
+                        targets: targets,
+                        segments: segments,
+                        gripType: stepDefinition.gripType,
+                        timedWorkDuration: stepDefinition.activeDuration
                     )
+                    for normalizedStep in try WorkoutStepNormalizer.expand(resolvedStep) {
+                        steps.append(normalizedStep.withNumber(steps.count + 1))
+                    }
                 }
             }
         }

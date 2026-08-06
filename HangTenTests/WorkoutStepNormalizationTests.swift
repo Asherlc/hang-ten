@@ -1,0 +1,82 @@
+import XCTest
+@testable import HangTen
+
+final class WorkoutStepNormalizationTests: XCTestCase {
+    func testFixedWorkAndRestSegmentsBecomeLiteralStepsInOrder() throws {
+        let source = WorkoutStep(
+            id: "repeaters",
+            number: 4,
+            title: "Repeaters",
+            instruction: "Hang, then recover.",
+            accessory: "20s work · 10s rest",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
+            ],
+            gripType: .halfCrimp,
+            timedWorkDuration: 20
+        )
+
+        let result = try WorkoutStepNormalizer.expand(source)
+
+        XCTAssertEqual(result.map(\.id), ["repeaters.segment-1", "repeaters.segment-2"])
+        XCTAssertEqual(result.map(\.duration), [20, 10])
+        XCTAssertEqual(result.map(\.phase), [.hang, .rest])
+        XCTAssertEqual(result.map { $0.segments.count }, [1, 1])
+        XCTAssertEqual(result[0].targets, [.kind(.edge)])
+        XCTAssertTrue(result[1].targets.isEmpty)
+    }
+
+    func testSingleStopwatchStepRemainsOneStepWithItsCap() throws {
+        let source = WorkoutStep(
+            id: "max",
+            number: 1,
+            title: "Maximum hang",
+            instruction: "Hang as long as possible.",
+            accessory: "Up to 60s",
+            duration: 60,
+            phase: .hang,
+            targets: [.feature(.roundSloper)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .feature(.roundSloper),
+                timing: .stopwatch,
+                duration: nil
+            )],
+            gripType: .sloper
+        )
+
+        let result = try WorkoutStepNormalizer.expand(source)
+
+        XCTAssertEqual(result, [source])
+        XCTAssertEqual(result[0].segments[0].timing, .stopwatch)
+        XCTAssertEqual(result[0].duration, 60)
+    }
+
+    func testCompoundNonFixedTimingIsRejected() {
+        let source = WorkoutStep(
+            id: "invalid",
+            number: 1,
+            title: "Invalid compound",
+            instruction: "Invalid",
+            accessory: "",
+            duration: 60,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source)) { error in
+            XCTAssertEqual(
+                error as? WorkoutStepNormalizationError,
+                .unsupportedCompoundTiming(stepID: "invalid", segmentIndex: 0)
+            )
+        }
+    }
+}

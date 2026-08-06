@@ -62,6 +62,8 @@
 		AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */; };
 		AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000057 /* HealthKitServiceTests.swift */; };
 		AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */; };
+		AA0000000000000000000059 /* WorkoutStepNormalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000059 /* WorkoutStepNormalization.swift */; };
+		AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +125,8 @@
 		BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000057 /* HealthKitServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitServiceTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistoryServiceTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000059 /* WorkoutStepNormalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepNormalization.swift; sourceTree = "<group>"; };
+		BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepNormalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,7 @@
 				BB0000000000000000000052 /* WorkoutHistory.swift */,
 				BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */,
 				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
+				BB0000000000000000000059 /* WorkoutStepNormalization.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -251,6 +256,7 @@
 				BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */,
 				BB0000000000000000000057 /* HealthKitServiceTests.swift */,
 				BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */,
+				BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -430,6 +436,7 @@
 				AA0000000000000000000052 /* WorkoutHistory.swift in Sources */,
 				AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */,
 				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
+				AA0000000000000000000059 /* WorkoutStepNormalization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +465,7 @@
 				AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
 				AA0000000000000000000057 /* HealthKitServiceTests.swift in Sources */,
 				AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */,
+				AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
