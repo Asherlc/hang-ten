@@ -67,6 +67,8 @@
 		AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000061 /* CustomRoutineStoreTests.swift */; };
 		AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000062 /* CustomRoutineStore.swift */; };
 		AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */; };
+		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
+		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -133,6 +135,8 @@
 		BB0000000000000000000061 /* CustomRoutineStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000062 /* CustomRoutineStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineAppStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000064 /* CustomRoutineDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraft.swift; sourceTree = "<group>"; };
+		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +213,7 @@
 				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
 				BB0000000000000000000059 /* WorkoutStepNormalization.swift */,
 				BB0000000000000000000062 /* CustomRoutineStore.swift */,
+				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -266,6 +271,7 @@
 				BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */,
 				BB0000000000000000000061 /* CustomRoutineStoreTests.swift */,
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
+				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -448,6 +454,7 @@
 				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
 				AA0000000000000000000059 /* WorkoutStepNormalization.swift in Sources */,
 				AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */,
+				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +486,7 @@
 				AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */,
 				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
+				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

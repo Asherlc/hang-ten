@@ -1,0 +1,189 @@
+import Foundation
+
+struct CustomRoutineStepDraft: Equatable, Identifiable {
+    let id: String
+    var title: String
+    var instruction: String
+    var accessory: String
+    var duration: TimeInterval
+    var phase: WorkoutPhase
+    var targets: [WorkoutTargetDefinition]
+    var timing: WorkoutSegmentTiming
+    var gripType: GripType?
+
+    init(
+        id: String,
+        title: String,
+        instruction: String,
+        accessory: String,
+        duration: TimeInterval,
+        phase: WorkoutPhase,
+        targets: [WorkoutTargetDefinition],
+        timing: WorkoutSegmentTiming,
+        gripType: GripType?
+    ) {
+        self.id = id
+        self.title = title
+        self.instruction = instruction
+        self.accessory = accessory
+        self.duration = duration
+        self.phase = phase
+        self.targets = targets
+        self.timing = timing
+        self.gripType = gripType
+    }
+
+    var isRest: Bool {
+        phase == .rest
+    }
+
+    var isStopwatch: Bool {
+        timing == .stopwatch
+    }
+}
+
+struct CustomRoutineDraft: Equatable {
+    let id: String?
+    let targetMode: CustomRoutineTargetMode
+    var title: String
+    var subtitle: String
+    var difficulty: String?
+    var category: String?
+    var tagsText: String
+    var steps: [CustomRoutineStepDraft]
+
+    init(createWith targetMode: CustomRoutineTargetMode) {
+        id = nil
+        self.targetMode = targetMode
+        title = ""
+        subtitle = ""
+        difficulty = nil
+        category = nil
+        tagsText = ""
+        steps = []
+    }
+
+    init(duplicate definition: CustomRoutineDefinition) {
+        id = definition.id
+        targetMode = definition.targetMode
+        title = definition.title
+        subtitle = definition.subtitle
+        difficulty = definition.difficulty
+        category = definition.category
+        tagsText = definition.tags.joined(separator: ", ")
+        steps = definition.steps.map(Self.stepDraft(from:))
+    }
+
+    mutating func addStep() {
+        steps.append(
+            CustomRoutineStepDraft(
+                id: UUID().uuidString,
+                title: "New step",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .hang,
+                targets: [],
+                timing: .fixed,
+                gripType: nil
+            )
+        )
+    }
+
+    mutating func updateStep(_ step: CustomRoutineStepDraft) {
+        guard let index = steps.firstIndex(where: { $0.id == step.id }) else {
+            return
+        }
+        steps[index] = step
+    }
+
+    mutating func removeSteps(at offsets: IndexSet) {
+        for index in offsets.sorted(by: >) where steps.indices.contains(index) {
+            steps.remove(at: index)
+        }
+    }
+
+    mutating func moveSteps(from offsets: IndexSet, to destination: Int) {
+        let sourceOffsets = offsets.filter { steps.indices.contains($0) }.sorted()
+        guard !sourceOffsets.isEmpty else {
+            return
+        }
+
+        let movingSteps = sourceOffsets.map { steps[$0] }
+        for index in sourceOffsets.reversed() {
+            steps.remove(at: index)
+        }
+
+        let boundedDestination = min(max(destination, 0), steps.count + sourceOffsets.count)
+        let removedBeforeDestination = sourceOffsets.filter { $0 < boundedDestination }.count
+        let insertionIndex = min(
+            max(boundedDestination - removedBeforeDestination, 0),
+            steps.count
+        )
+        steps.insert(contentsOf: movingSteps, at: insertionIndex)
+    }
+
+    func definition() -> CustomRoutineDefinition {
+        CustomRoutineDefinition(
+            id: id ?? "custom.\(UUID().uuidString)",
+            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+            subtitle: subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            difficulty: normalizedOptional(difficulty),
+            category: normalizedOptional(category),
+            tags: normalizedTags(from: tagsText),
+            targetMode: targetMode,
+            steps: steps.map(Self.stepDefinition(from:))
+        )
+    }
+
+    private static func stepDraft(from definition: WorkoutStepDefinition) -> CustomRoutineStepDraft {
+        CustomRoutineStepDraft(
+            id: definition.id,
+            title: definition.title,
+            instruction: definition.instruction,
+            accessory: definition.accessory,
+            duration: definition.duration,
+            phase: definition.phase,
+            targets: definition.targets,
+            timing: definition.segments.first?.timing ?? .fixed,
+            gripType: definition.gripType
+        )
+    }
+
+    private static func stepDefinition(from step: CustomRoutineStepDraft) -> WorkoutStepDefinition {
+        let segmentDuration: TimeInterval? = step.timing == .fixed ? step.duration : nil
+        let segment = WorkoutSegmentDefinition(
+            kind: step.isRest ? .rest : .work,
+            targets: step.targets,
+            timing: step.timing,
+            duration: segmentDuration
+        )
+        return WorkoutStepDefinition(
+            id: step.id,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets,
+            segments: [segment],
+            gripType: step.gripType
+        )
+    }
+
+    private func normalizedOptional(_ value: String?) -> String? {
+        guard let value else {
+            return nil
+        }
+        let normalized = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return normalized.isEmpty ? nil : normalized
+    }
+
+    private func normalizedTags(from text: String) -> [String] {
+        var seen = Set<String>()
+        return text
+            .split(separator: ",", omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+    }
+}
