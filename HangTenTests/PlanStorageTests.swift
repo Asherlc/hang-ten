@@ -526,6 +526,32 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testPlanCatalogMatchesLiteralizedLegacyPlanSeeds() throws {
+        let expectedPlans = try LegacyPlanSeedCatalog.all.map { seedPlan in
+            let literalSteps = try seedPlan.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .enumerated()
+                .map { index, step in
+                    step.withNumber(index + 1)
+                }
+
+            return TrainingPlan(
+                id: seedPlan.id,
+                title: seedPlan.title,
+                subtitle: seedPlan.subtitle,
+                level: seedPlan.level,
+                sourceLabel: seedPlan.sourceLabel,
+                sourceURL: seedPlan.sourceURL,
+                provenance: seedPlan.provenance,
+                boardID: seedPlan.boardID,
+                steps: literalSteps
+            )
+        }
+
+        XCTAssertEqual(PlanLibraryStore.builtIn.plans, expectedPlans)
+        XCTAssertEqual(PlanCatalog.all, expectedPlans)
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30
