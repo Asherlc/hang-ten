@@ -43,6 +43,11 @@ class WorkbenchStoreError(ValueError):
     """Raised when a board store operation or persisted record is invalid."""
 
 
+@dataclass(slots=True)
+class _PublicationState:
+    published: bool = False
+
+
 class WorkbenchStore:
     """Own board manifests above CLI-compatible onboarding run directories."""
 
@@ -70,10 +75,12 @@ class WorkbenchStore:
             saved_revision_id=None,
             revisions=(),
         )
+        publication = _PublicationState()
         try:
-            self._write_board(board)
+            self._write_board(board, publication=publication)
         except Exception:
-            board_root.rmdir()
+            if not publication.published:
+                board_root.rmdir()
             raise
         return board
 
@@ -116,10 +123,12 @@ class WorkbenchStore:
             active_revision_id=revision.id,
             revisions=(*board.revisions, revision),
         )
+        publication = _PublicationState()
         try:
-            self._write_board(updated)
+            self._write_board(updated, publication=publication)
         except Exception:
-            revision_root.rmdir()
+            if not publication.published:
+                revision_root.rmdir()
             raise
         return revision
 
@@ -311,7 +320,12 @@ class WorkbenchStore:
             stale_from_stage=stale_from_stage,
         )
 
-    def _write_board(self, board: BoardRecord) -> None:
+    def _write_board(
+        self,
+        board: BoardRecord,
+        *,
+        publication: _PublicationState | None = None,
+    ) -> None:
         manifest_path = self._manifest_path(board.id)
         board_root = manifest_path.parent
         value = {
@@ -333,9 +347,15 @@ class WorkbenchStore:
             "savedRevisionId": board.saved_revision_id,
             "schemaVersion": _SCHEMA_VERSION,
         }
-        self._write_replaced_json(manifest_path, value)
+        self._write_replaced_json(manifest_path, value, publication=publication)
 
-    def _write_replaced_json(self, path: Path, value: object) -> None:
+    def _write_replaced_json(
+        self,
+        path: Path,
+        value: object,
+        *,
+        publication: _PublicationState | None = None,
+    ) -> None:
         path = self._confined(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
@@ -350,6 +370,8 @@ class WorkbenchStore:
                 stream.flush()
                 os.fsync(stream.fileno())
             os.replace(temporary_path, path)
+            if publication is not None:
+                publication.published = True
             self._fsync_directory(path.parent)
         finally:
             if descriptor >= 0:

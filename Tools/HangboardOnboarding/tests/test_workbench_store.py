@@ -110,6 +110,44 @@ def test_failed_manifest_replace_keeps_previous_saved_revision(
     assert store.read_board(board.id).saved_revision_id == first.id
 
 
+def test_create_board_keeps_published_directory_when_directory_fsync_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+
+    def fail_directory_fsync(_directory: Path) -> None:
+        raise OSError("directory fsync failed")
+
+    monkeypatch.setattr(store, "_fsync_directory", fail_directory_fsync)
+
+    with pytest.raises(OSError, match="directory fsync failed"):
+        store.create_board("Example Board")
+
+    board = WorkbenchStore(tmp_path).read_board("board-0001")
+    assert board.product_name == "Example Board"
+    assert (tmp_path / "boards" / board.id).is_dir()
+
+
+def test_create_revision_keeps_published_directory_when_directory_fsync_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+
+    def fail_directory_fsync(_directory: Path) -> None:
+        raise OSError("directory fsync failed")
+
+    monkeypatch.setattr(store, "_fsync_directory", fail_directory_fsync)
+
+    with pytest.raises(OSError, match="directory fsync failed"):
+        store.create_revision(board.id)
+
+    reopened = WorkbenchStore(tmp_path)
+    revision = reopened.read_revision(board.id, "revision-0001")
+    assert reopened.read_board(board.id).active_revision_id == revision.id
+    assert revision.run_root.parent.is_dir()
+
+
 @pytest.mark.parametrize("board_id", ["../outside", "/tmp/outside", "board/child"])
 def test_store_rejects_board_id_traversal(tmp_path: Path, board_id: str) -> None:
     store = WorkbenchStore(tmp_path)
