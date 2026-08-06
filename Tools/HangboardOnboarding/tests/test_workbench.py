@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from hashlib import sha256
 from io import BytesIO
 import json
@@ -13,6 +14,7 @@ from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.onboard_cli import main as onboard_main
 from hangboard_vectorizer.onboarding_run import (
     RunContext,
+    approve_stage,
     cached_source_path,
     read_status,
     start_run,
@@ -78,6 +80,95 @@ def test_revising_approved_stage_forks_revision_and_marks_old_descendants_stale(
     assert read_status(revised.run_root)["stage"] == 2
 
 
+def test_revision_fork_replays_accepted_stage2_and_stage3_reviewed_edits(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit",
+        lambda context, document, artifact_root: _materialize_reviewed_stub(
+            2, context, document, artifact_root
+        ),
+    )
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage3_edit",
+        lambda context, document, artifact_root: _materialize_reviewed_stub(
+            3, context, document, artifact_root
+        ),
+    )
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+    stage2_document = _stage2_edit_document()
+    assert isinstance(stage2_document, dict)
+    stage2_document["replayMarker"] = "accepted-stage-2-edit"
+    service.save_draft(
+        current.board_id, stage2_document, expected_stage=2
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=2)
+    stage3_document = _stage3_edit_document()
+    assert isinstance(stage3_document, dict)
+    stage3_document["replayMarker"] = "accepted-stage-3-edit"
+    service.save_draft(
+        current.board_id, stage3_document, expected_stage=3
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=3)
+    complete = service.approve_and_advance(current.board_id, expected_stage=4)
+
+    revised = service.revise_stage(complete.board_id, stage=4)
+    manifest = json.loads(
+        (revised.run_root / "run.json").read_text(encoding="utf-8")
+    )
+    stage2 = manifest["stages"][2]
+    stage3 = manifest["stages"][3]
+    replayed_stage2 = json.loads(
+        (
+            revised.run_root
+            / stage2["artifactRoot"]
+            / "stage-2-regions.json"
+        ).read_text(encoding="utf-8")
+    )
+    replayed_stage3 = json.loads(
+        (
+            revised.run_root
+            / stage3["artifactRoot"]
+            / "stage-3-vector-regions.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert stage2["attempt"] == 2
+    assert stage3["attempt"] == 2
+    assert replayed_stage2["replayMarker"] == "accepted-stage-2-edit"
+    assert replayed_stage3["replayMarker"] == "accepted-stage-3-edit"
+
+
+def test_revision_replay_failure_does_not_mark_parent_lineage_stale(
+    service: WorkbenchService,
+    complete_board: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_replay(
+        _context: RunContext,
+        _document: Mapping[str, object],
+        _artifact_root: Path,
+    ) -> StageCheckpoint:
+        raise RuntimeError("replay interrupted")
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit", fail_replay
+    )
+
+    with pytest.raises(RuntimeError, match="replay interrupted"):
+        service.revise_stage(complete_board.board_id, stage=3)
+
+    parent = service.store.read_revision(
+        complete_board.board_id, complete_board.revision_id
+    )
+    assert parent.stale_from_stage is None
+
+
 def test_ui_created_run_is_inspectable_by_cli_status(
     service: WorkbenchService,
     capsys: pytest.CaptureFixture[str],
@@ -109,6 +200,36 @@ def test_create_from_upload_caches_source_before_removing_temporary_file(
 
     assert cached_source_path(created.run_root).read_bytes() == content
     assert list(created.run_root.parent.glob(".upload-*")) == []
+
+
+@pytest.mark.parametrize("source_kind", ("upload", "url"))
+def test_failed_creation_rolls_back_metadata_without_removing_upload_before_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    source_kind: str,
+) -> None:
+    runner = _FailAfterCacheRunner()
+    service = WorkbenchService(WorkbenchStore(tmp_path), runners={0: runner})
+    content = _fixture_image_bytes()
+    if source_kind == "url":
+        monkeypatch.setattr(
+            source_cache,
+            "_read_network",
+            lambda locator, _limits: (content, locator),
+        )
+
+    with pytest.raises(RuntimeError, match="stage failure"):
+        if source_kind == "upload":
+            service.create_from_upload("Failed Upload", content)
+        else:
+            service.create_from_url(
+                "Failed URL", "https://example.test/failed.png"
+            )
+
+    assert runner.saw_cached_source is True
+    assert runner.saw_upload is (source_kind == "upload")
+    assert list(tmp_path.rglob(".upload-*")) == []
+    assert service.list_boards() == ()
 
 
 def test_create_from_url_uses_shared_source_cache_without_network_in_tests(
@@ -221,6 +342,48 @@ def test_save_draft_is_immutable_and_published_before_approval(
     assert advanced.stage == 3
 
 
+def test_approval_selects_latest_draft_by_numeric_identifier(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(
+        current.board_id, expected_stage=1
+    )
+    older = _stage2_edit_document()
+    newer = _stage2_edit_document()
+    assert isinstance(older, dict)
+    assert isinstance(newer, dict)
+    older["draftSelection"] = "older"
+    newer["draftSelection"] = "newer"
+    drafts_root = current.run_root.parent / "drafts/stage-2"
+    drafts_root.mkdir(parents=True)
+    _write_json(drafts_root / "draft-9999.json", older)
+    _write_json(drafts_root / "draft-10000.json", newer)
+
+    def materialize_latest(
+        context: RunContext, document: Mapping[str, object], artifact_root: Path
+    ) -> StageCheckpoint:
+        assert document["draftSelection"] == "newer"
+        return _StubStageRunner(2).run(context, artifact_root)
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit",
+        materialize_latest,
+    )
+
+    advanced = service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+
+    assert advanced.stage == 3
+
+
 def test_retry_publishes_a_new_attempt_without_advancing(
     service: WorkbenchService, board_with_stage0: WorkbenchView
 ) -> None:
@@ -238,6 +401,56 @@ def test_retry_publishes_a_new_attempt_without_advancing(
         board_with_stage0.run_root
         / "stages/00/attempt-0001/stage-0-review.png"
     ).is_file()
+
+
+def test_retry_resumes_an_imported_failed_run_without_changing_prior_evidence(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "failed-source.png"
+    source.write_bytes(_fixture_image_bytes())
+    cli_run = tmp_path / "failed-cli-run"
+    start_run(
+        "Failed CLI Board",
+        str(source),
+        cli_run,
+        runners=_stub_runners(),
+        workspace_root=tmp_path,
+    )
+    approve_stage(cli_run, 0)
+    manifest = json.loads((cli_run / "run.json").read_text(encoding="utf-8"))
+    manifest["pipeline"] = {
+        "currentStage": 0,
+        "nextAction": "retry-stage-1",
+        "nextStage": 1,
+        "status": "failed",
+    }
+    _write_json(cli_run / "run.json", manifest)
+    prior_evidence = {
+        path.relative_to(cli_run).as_posix(): path.read_bytes()
+        for path in sorted((cli_run / "stages/00").rglob("*"))
+        if path.is_file()
+    }
+    service = WorkbenchService(
+        WorkbenchStore(tmp_path), runners=_stub_runners()
+    )
+    imported = service.import_run(cli_run)
+
+    retried = service.retry(
+        imported.board_id,
+        expected_revision_id=imported.revision_id,
+        expected_stage=0,
+    )
+
+    assert retried.run_root == cli_run
+    assert retried.stage == 1
+    assert retried.state == "awaiting_review"
+    assert retried.review_path is not None
+    assert "stages/01/attempt-0001" in retried.review_path.as_posix()
+    assert {
+        path.relative_to(cli_run).as_posix(): path.read_bytes()
+        for path in sorted((cli_run / "stages/00").rglob("*"))
+        if path.is_file()
+    } == prior_evidence
 
 
 def test_import_run_preserves_a_cli_root_and_lists_it(
@@ -337,6 +550,50 @@ def _stage2_edit_document() -> object:
     )
 
 
+def _stage3_edit_document() -> object:
+    return json.loads(
+        (
+            Path(__file__).parent
+            / "data"
+            / "stage-3-vector-regions-edited.json"
+        ).read_text(encoding="utf-8")
+    )
+
+
+def _materialize_reviewed_stub(
+    stage: int,
+    context: RunContext,
+    document: Mapping[str, object],
+    artifact_root: Path,
+) -> StageCheckpoint:
+    checkpoint = _StubStageRunner(stage).run(context, artifact_root)
+    document_name = (
+        "stage-2-regions.json"
+        if stage == 2
+        else "stage-3-vector-regions.json"
+    )
+    document_path = artifact_root / document_name
+    _write_json(document_path, document)
+    candidate_path = artifact_root / f"stage-{stage}-candidate.json"
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    field = "regions" if stage == 2 else "vectorRegions"
+    candidate[field]["fileSha256"] = _hash_file(document_path)
+    _write_json(candidate_path, candidate)
+    hashes = {
+        path.name: _hash_file(path)
+        for path in sorted(artifact_root.iterdir())
+        if path.is_file() and path.name != "candidate-hashes.json"
+    }
+    _write_json(artifact_root / "candidate-hashes.json", hashes)
+    return StageCheckpoint(
+        stage=stage,
+        artifact_root=artifact_root,
+        candidate_hashes=hashes,
+        review_path=checkpoint.review_path,
+        machine_passed=True,
+    )
+
+
 class _StubStageRunner:
     def __init__(self, stage: int) -> None:
         self.stage = stage
@@ -423,6 +680,23 @@ class _StubStageRunner:
                     _write_json(path, {})
                 candidate[field] = {"fileSha256": _hash_file(path)}
         return candidate
+
+
+class _FailAfterCacheRunner:
+    stage = 0
+
+    def __init__(self) -> None:
+        self.saw_cached_source = False
+        self.saw_upload = False
+
+    def run(self, context: RunContext, _artifact_root: Path) -> StageCheckpoint:
+        source = context.manifest["source"]
+        assert isinstance(source, Mapping)
+        cached_path = source["cachedPath"]
+        assert isinstance(cached_path, str)
+        self.saw_cached_source = (context.root / cached_path).is_file()
+        self.saw_upload = any(context.root.parent.glob(".upload-*"))
+        raise RuntimeError("stage failure")
 
 
 def _write_json(path: Path, value: object) -> None:

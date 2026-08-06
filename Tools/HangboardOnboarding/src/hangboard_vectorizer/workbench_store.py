@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import tempfile
 
 
@@ -180,6 +181,27 @@ class WorkbenchStore:
                 revision_root.rmdir()
             raise
         return updated, revision
+
+    def _discard_unstarted_board(
+        self, board_id: str, revision_id: str
+    ) -> None:
+        """Remove one reserved board only when no onboarding run was published."""
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        expected_root = self._revision_root(board.id, revision.id) / "run"
+        if (
+            board.active_revision_id != revision.id
+            or board.saved_revision_id is not None
+            or board.revisions != (revision,)
+            or revision.parent_revision_id is not None
+            or revision.run_root != self._confined(expected_root)
+            or revision.run_root.exists()
+        ):
+            raise WorkbenchStoreError(
+                f"board {board.id} is not an unstarted reservation"
+            )
+        shutil.rmtree(self._board_root(board.id))
+        self._fsync_directory(self._boards_root)
 
     def read_board(self, board_id: str) -> BoardRecord:
         """Read and validate one board manifest from the confined workspace."""

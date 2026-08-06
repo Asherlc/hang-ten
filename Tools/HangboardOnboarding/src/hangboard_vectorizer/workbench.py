@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import tempfile
 from types import MappingProxyType
@@ -32,6 +33,7 @@ from .workbench_store import BoardRecord, RevisionRecord, WorkbenchStore
 
 
 _FINAL_STAGE = 4
+_DRAFT_FILE = re.compile(r"draft-(\d+)\.json\Z")
 _STATE_NAMES = {
     "awaiting_approval": "awaiting_review",
     "complete": "complete",
@@ -83,7 +85,11 @@ class WorkbenchService:
             raise WorkbenchServiceError("source URL must use HTTP(S)")
         board = self.store.create_board(product_name)
         revision = self.store.create_revision(board.id)
-        self.__start(board, revision, source_url)
+        try:
+            self.__start(board, revision, source_url)
+        except Exception:
+            self.store._discard_unstarted_board(board.id, revision.id)
+            raise
         return self.__view(board.id, revision.id)
 
     def create_from_upload(
@@ -108,6 +114,9 @@ class WorkbenchService:
             self.__start(board, revision, str(upload))
             cached_source_path(revision.run_root)
             cached = True
+        except Exception:
+            self.store._discard_unstarted_board(board.id, revision.id)
+            raise
         finally:
             if descriptor >= 0:
                 os.close(descriptor)
@@ -256,7 +265,7 @@ class WorkbenchService:
             expected_revision_id=expected_revision_id,
             expected_stage=expected_stage,
         )
-        if status["status"] == "ready_for_next_stage":
+        if status["status"] in {"ready_for_next_stage", "failed"}:
             resume_run(revision.run_root, runners=self.__runners)
             return self.__view(board_id, revision.id)
         if status["status"] != "awaiting_approval":
@@ -426,10 +435,15 @@ class WorkbenchService:
             raise WorkbenchServiceError("draft path escapes its revision") from error
         if not drafts_root.is_dir():
             return None
-        drafts = sorted(drafts_root.glob("draft-*.json"))
+        drafts = [
+            (int(match.group(1)), path)
+            for path in drafts_root.iterdir()
+            if path.is_file()
+            and (match := _DRAFT_FILE.fullmatch(path.name)) is not None
+        ]
         if not drafts:
             return None
-        latest = drafts[-1].resolve(strict=True)
+        latest = max(drafts, key=lambda item: item[0])[1].resolve(strict=True)
         try:
             latest.relative_to(revision_root)
         except ValueError as error:

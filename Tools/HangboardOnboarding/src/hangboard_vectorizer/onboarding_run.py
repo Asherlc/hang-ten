@@ -200,12 +200,12 @@ def resume_run(
     *,
     runners: Mapping[int, StageRunner] | None = None,
 ) -> Mapping[str, object]:
-    """Run exactly the next registered stage after all preceding approvals."""
+    """Run or retry exactly the next stage after all preceding approvals."""
     output = Path(output)
     with _exclusive_lock(_run_lock_path(output)):
         manifest = _load_and_validate(output)
         pipeline = _mapping(manifest["pipeline"], "pipeline")
-        if pipeline["status"] != "ready_for_next_stage":
+        if pipeline["status"] not in {"ready_for_next_stage", "failed"}:
             raise OnboardingStateError("run is not ready to resume")
         next_stage = _integer(pipeline["nextStage"], "pipeline.nextStage")
         _require_prior_approvals(manifest, next_stage)
