@@ -667,8 +667,8 @@ enum PlanLibraryValidator {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
         if let activeDuration = step.activeDuration {
-            if !activeDuration.isFinite || activeDuration < 0 {
-                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration must be finite and non-negative."))
+            if !activeDuration.isFinite || activeDuration <= 0 {
+                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration must be finite and greater than zero."))
             }
             if activeDuration > step.duration {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration cannot exceed total duration."))
@@ -680,6 +680,7 @@ enum PlanLibraryValidator {
         if step.phase != .rest && step.targets.isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
+        let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
             let targetPath = "\(path).segments[\(index)].target"
             let timingPath = "\(path).segments[\(index)].timing"
@@ -736,7 +737,16 @@ enum PlanLibraryValidator {
                 }
             }
             if let duration = segment.duration {
-                if !duration.isFinite || duration < 0 {
+                if isCompoundStep && segment.timing == .fixed {
+                    if !duration.isFinite || duration <= 0 {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: durationPath,
+                                message: "Segment duration must be finite and greater than zero."
+                            )
+                        )
+                    }
+                } else if !duration.isFinite || duration < 0 {
                     issues.append(
                         PlanValidationIssue(
                             path: durationPath,
@@ -839,8 +849,13 @@ enum PlanLibraryValidator {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
                     let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
                     let resolvedID = sourceID + suffix
-                    if !expandedStepIDs.insert(resolvedID).inserted {
-                        issues.append(PlanValidationIssue(path: referencePath, message: "Expanded step ID \"\(resolvedID)\" is repeated in the plan."))
+                    for expandedID in expandedIDsEmittedByNormalizer(
+                        for: step,
+                        resolvedID: resolvedID
+                    ) {
+                        if !expandedStepIDs.insert(expandedID).inserted {
+                            issues.append(PlanValidationIssue(path: referencePath, message: "Expanded step ID \"\(expandedID)\" is repeated in the plan."))
+                        }
                     }
                     validateTargets(
                         step.targets,
@@ -866,6 +881,24 @@ enum PlanLibraryValidator {
                 }
             }
         }
+    }
+
+    private static func expandedIDsEmittedByNormalizer(
+        for step: WorkoutStepDefinition,
+        resolvedID: String
+    ) -> [String] {
+        if step.segments.count > 1 {
+            return step.segments.indices.map { "\(resolvedID).segment-\($0 + 1)" }
+        }
+        if step.segments.isEmpty,
+           let activeDuration = step.activeDuration,
+           activeDuration.isFinite,
+           step.duration.isFinite,
+           activeDuration > 0,
+           activeDuration < step.duration {
+            return ["\(resolvedID).segment-1", "\(resolvedID).segment-2"]
+        }
+        return [resolvedID]
     }
 
     private static func validateTargets(

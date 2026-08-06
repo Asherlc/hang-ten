@@ -364,6 +364,26 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testActiveDurationMustBeFiniteAndGreaterThanZero() {
+        for invalidDuration in [0.0, -1.0, .infinity] {
+            let step = WorkoutStepDefinition(
+                id: "active",
+                title: "Active",
+                instruction: "Hang.",
+                accessory: "Test fixture",
+                duration: 30,
+                phase: .hang,
+                targets: [.kind(.edge)],
+                activeDuration: invalidDuration
+            )
+
+            XCTAssertTrue(makeLibrary(steps: [step]).validationIssues(availableBoards: BoardCatalog.all).contains {
+                $0.path == "blocks[0].steps[0].activeDuration" &&
+                    $0.message == "Active duration must be finite and greater than zero."
+            })
+        }
+    }
+
     func testSegmentDurationCannotExceedEnclosingStep() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
@@ -398,6 +418,77 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
+    func testCompoundSegmentDurationMustBeGreaterThanZero() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].duration" &&
+                $0.message == "Segment duration must be finite and greater than zero."
+        })
+    }
+
+    func testCompoundEnclosingDurationMustBeGreaterThanZero() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 0,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].duration" &&
+                $0.message == "Duration must be finite and greater than zero."
+        })
+    }
+
+    func testPlanValidationDetectsGeneratedSegmentIDCollisionWithFlatStep() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "foo",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 10)
+                    ]
+                ),
+                makeStep(
+                    id: "foo.segment-1",
+                    duration: 10,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+            $0.message == "Expanded step ID \"foo.segment-1\" is repeated in the plan."
+        })
+    }
+
     func testCompoundSegmentWithNonFixedTimingReportsTheTimingPath() {
         let issues = makeLibrary(
             steps: [
@@ -416,6 +507,62 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(issues.contains {
             $0.path == "blocks[0].steps[0].segments[0].timing" &&
                 $0.message == "Compound segments must use fixed timing."
+        })
+    }
+
+    func testPlanDuplicateValidationUsesActiveDurationGeneratedSegmentIDs() {
+        let timed = WorkoutStepDefinition(
+            id: "timed",
+            title: "Timed",
+            instruction: "Hang.",
+            accessory: "Test fixture",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 10
+        )
+        let flat = makeStep(
+            id: "timed.segment-2",
+            duration: 30,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [timed, flat]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+                $0.message == "Expanded step ID \"timed.segment-2\" is repeated in the plan."
+        })
+    }
+
+    func testPlanDuplicateValidationKeepsActiveDurationCollisionDiagnosticAtPlanBlockPath() {
+        let timed = WorkoutStepDefinition(
+            id: "active-collision",
+            title: "Timed",
+            instruction: "Hang.",
+            accessory: "Test fixture",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 10
+        )
+        let flat = makeStep(
+            id: "active-collision.segment-1",
+            duration: 30,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [timed, flat]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+                $0.message == "Expanded step ID \"active-collision.segment-1\" is repeated in the plan."
         })
     }
 

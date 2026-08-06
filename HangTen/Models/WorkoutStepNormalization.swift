@@ -25,7 +25,7 @@ enum WorkoutStepNormalizer {
             }
             guard let duration = segment.duration,
                   duration.isFinite,
-                  duration >= 0 else {
+                  duration > 0 else {
                 throw WorkoutStepNormalizationError.invalidCompoundDuration(
                     stepID: step.id,
                     segmentIndex: index
@@ -33,7 +33,7 @@ enum WorkoutStepNormalizer {
             }
         }
 
-        guard step.duration.isFinite, step.duration >= 0 else {
+        guard step.duration.isFinite, step.duration > 0 else {
             throw WorkoutStepNormalizationError.invalidCompoundDuration(
                 stepID: step.id,
                 segmentIndex: nil

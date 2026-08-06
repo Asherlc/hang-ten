@@ -139,6 +139,54 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         }
     }
 
+    func testCompoundStepWithZeroFixedSegmentDurationIsRejected() {
+        let source = WorkoutStep(
+            id: "zero-segment",
+            number: 1,
+            title: "Zero segment",
+            instruction: "Invalid",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source)) { error in
+            XCTAssertEqual(
+                error as? WorkoutStepNormalizationError,
+                .invalidCompoundDuration(stepID: "zero-segment", segmentIndex: 0)
+            )
+        }
+    }
+
+    func testCompoundStepWithZeroEnclosingDurationIsRejectedBeforeMismatch() {
+        let source = WorkoutStep(
+            id: "zero-step",
+            number: 1,
+            title: "Zero step",
+            instruction: "Invalid",
+            accessory: "",
+            duration: 0,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source)) { error in
+            XCTAssertEqual(
+                error as? WorkoutStepNormalizationError,
+                .invalidCompoundDuration(stepID: "zero-step", segmentIndex: nil)
+            )
+        }
+    }
+
     func testCompoundStepWithNegativeFixedSegmentDurationIsRejected() {
         let source = WorkoutStep(
             id: "negative-segment",
@@ -205,4 +253,5 @@ final class WorkoutStepNormalizationTests: XCTestCase {
 
         XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source))
     }
+
 }
