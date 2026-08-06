@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+tool_root="$repository_root/Tools/HangboardOnboarding"
+environment_root="$repository_root/.context/hangboard-onboarding-venv"
+python_command="${HANGBOARD_PYTHON:-python3}"
+
+usage() {
+    cat <<'EOF'
+Usage: scripts/hangboard-tools.sh <command> [arguments]
+
+Commands:
+  onboard     Start, inspect, approve, or resume a staged onboarding run
+  benchmark   Replay the accepted Metolius run without a live model call
+  convert     Convert a registered product photo to SVG and JSON
+EOF
+}
+
+if [[ $# -lt 1 ]]; then
+    usage >&2
+    exit 64
+fi
+
+command_name="$1"
+shift
+
+if ! command -v "$python_command" >/dev/null 2>&1; then
+    echo "Python executable not found: $python_command" >&2
+    exit 69
+fi
+
+if ! "$python_command" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)'; then
+    echo "Hangboard onboarding requires Python 3.11 or newer." >&2
+    exit 69
+fi
+
+if [[ ! -x "$environment_root/bin/hangboard-onboard" || \
+      "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-onboard" ]]; then
+    "$python_command" -m venv "$environment_root"
+    "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
+fi
+
+case "$command_name" in
+    onboard)
+        exec "$environment_root/bin/hangboard-onboard" "$@"
+        ;;
+    benchmark)
+        accepted_run="$tool_root/reference/metolius-compact-ii/accepted-run"
+        if [[ $# -eq 0 ]]; then
+            set -- --output "$repository_root/.context/hangboard-onboarding/metolius-parity/report.json"
+        fi
+        exec "$environment_root/bin/hangboard-semantic-benchmark" \
+            --accepted-run "$accepted_run" "$@"
+        ;;
+    convert)
+        exec "$environment_root/bin/hangboard-to-svg" "$@"
+        ;;
+    -h|--help|help)
+        usage
+        ;;
+    *)
+        echo "Unknown command: $command_name" >&2
+        usage >&2
+        exit 64
+        ;;
+esac

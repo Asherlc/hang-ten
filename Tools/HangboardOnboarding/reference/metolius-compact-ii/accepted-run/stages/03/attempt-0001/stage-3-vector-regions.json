@@ -1,0 +1,519 @@
+{
+  "canvas": {
+    "height": 261,
+    "width": 1000
+  },
+  "inputAcceptance": {
+    "path": "stages/02/attempt-0001/stage-2-acceptance.json",
+    "sha256": "8f2da4d39228ababb4ffb3abc84bc0f9836e8e56cb0c78a79ccfe9df48b52331"
+  },
+  "pieceCount": 1,
+  "profile": {
+    "canvas_width": 1000,
+    "feature_epsilon_fraction": 0.0035,
+    "pocket_corner_radius_fraction": 0.42,
+    "profile_id": "generic-contour-vector-v1",
+    "silhouette_corner_radius": 3.0,
+    "silhouette_epsilon_fraction": 0.0015
+  },
+  "regions": [
+    {
+      "anchor": [
+        96,
+        29
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 178 49 L 157 30 L 157 4 L 145 0 L 61 2 L 39 5 L 11 14 L 4 20 L 0 28 L 1 36 L 15 49 Z",
+      "id": 1,
+      "key": "jug-left",
+      "metadata": {
+        "side": "left"
+      },
+      "outputMaskSha256": "9ed562d1a2cecc9e921b57558b0f0f3e4ad99dc5552de93b8bf830fa517f2bbf",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "f76ff100330a23cca6177fd04e5eefb9d6bbd942e6700e88ee45fee5b7631eda",
+      "symmetry": null,
+      "type": "jug"
+    },
+    {
+      "anchor": [
+        240,
+        27
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 158 11 L 158 30 L 176 46 L 320 43 L 320 13 L 300 15 L 172 14 L 167 11 Z",
+      "id": 2,
+      "key": "sloper-flat-left",
+      "metadata": {
+        "depthMm": 56,
+        "profile": "flat",
+        "side": "left"
+      },
+      "outputMaskSha256": "bdfeb087cdac2f9efba066dcbfad7fbdaba3a1a6bf164af3b70994e52d5d0554",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "a1f528919182cc512d627d2acca8a8e7dffebd95792b5668e7bcb09cf2bc92f2",
+      "symmetry": null,
+      "type": "sloper"
+    },
+    {
+      "anchor": [
+        500,
+        25
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 321 13 L 321 43 L 680 44 L 680 12 L 328 10 Z",
+      "id": 3,
+      "key": "sloper-round-center",
+      "metadata": {
+        "depthMm": 56,
+        "profile": "round",
+        "side": "center"
+      },
+      "outputMaskSha256": "638b173a315a1d9d6aad8e2a45962e52b14d056209e85e58b7569d1b2aa55693",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "d42b470d47cbff56a3b4846e41a1f8dc188938dd2750829e3e713bd32a34168e",
+      "symmetry": null,
+      "type": "sloper"
+    },
+    {
+      "anchor": [
+        760,
+        27
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 846 10 L 820 13 L 681 12 L 681 44 L 828 46 L 846 30 Z",
+      "id": 4,
+      "key": "sloper-flat-right",
+      "metadata": {
+        "depthMm": 56,
+        "profile": "flat",
+        "side": "right"
+      },
+      "outputMaskSha256": "b8aa2299bab2854d17a1a9fcd4160e95ba6679371fbaf0d3cb73accb2e192a21",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "1b9af05430c9048495e6eb91f9767e78c268cbc04eabe02c1ce25fa2c7cd8493",
+      "symmetry": null,
+      "type": "sloper"
+    },
+    {
+      "anchor": [
+        920,
+        29
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 999 22 L 993 15 L 987 12 L 954 4 L 847 10 L 847 30 L 829 46 L 986 49 L 999 36 Z",
+      "id": 5,
+      "key": "jug-right",
+      "metadata": {
+        "side": "right"
+      },
+      "outputMaskSha256": "50c84571daeb45b30a461e453cb97310eeaf4b5179cc1354e08ee0961cdf133a",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "f16dbc28dd62b34fccd0fa1feb13d8c82f241b20d0f50c553061db43c20e7324",
+      "symmetry": null,
+      "type": "jug"
+    },
+    {
+      "anchor": [
+        95,
+        91
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 15 50 L 18 73 L 25 96 L 29 133 L 167 130 L 174 123 L 172 65 L 169 50 Z",
+      "id": 6,
+      "key": "edge-29-left",
+      "metadata": {
+        "depthMm": 29,
+        "side": "left"
+      },
+      "outputMaskSha256": "645fb241ff74897451a38b4b6c4dda6f0b4a1bf0e12f795ca820a976ab8df8aa",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "58327614b8f1fee164fa6f22054db18965fb40abb10d581a1eb843540108fb7f",
+      "symmetry": {
+        "axisX": 500.0,
+        "canonicalRegionId": 6,
+        "pair": "mirror-x-500-6-12",
+        "role": "canonical"
+      },
+      "type": "edge"
+    },
+    {
+      "anchor": [
+        253,
+        113
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 212.54 94 L 288.46 94 C 297.043 94 304 100.957 304 109.54 L 304 115.46 C 304 124.043 297.043 131 288.46 131 L 212.54 131 C 203.957 131 197 124.043 197 115.46 L 197 109.54 C 197 100.957 203.957 94 212.54 94 Z",
+      "id": 7,
+      "key": "pocket-29-3-left",
+      "metadata": {
+        "depthMm": 29,
+        "fingerCount": 3,
+        "side": "left"
+      },
+      "outputMaskSha256": "1bbe41202a3cd59e8c0668b18d68e02bcb805fed1a2ab5705d9a3aecd9355ae8",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "c37e8d6863313300e0588ec4ef817dd142144a3b13ebf6ac731f5dfb8b6d43c6",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        369,
+        113
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 341.54 94 L 385.46 94 C 394.043 94 401 100.957 401 109.54 L 401 115.46 C 401 124.043 394.043 131 385.46 131 L 341.54 131 C 332.957 131 326 124.043 326 115.46 L 326 109.54 C 326 100.957 332.957 94 341.54 94 Z",
+      "id": 8,
+      "key": "pocket-29-2-left",
+      "metadata": {
+        "depthMm": 29,
+        "fingerCount": 2,
+        "side": "left"
+      },
+      "outputMaskSha256": "28c464eef2ceeb5c60663056258bdad24896b1d7892e51e65480d35a0e261d58",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "8f708c3068573342cfd7dd9af3ce38abe95ecd15b06149f870d8c2182f338296",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        503,
+        113
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 442.54 94 L 566.46 94 C 575.043 94 582 100.957 582 109.54 L 582 115.46 C 582 124.043 575.043 131 566.46 131 L 442.54 131 C 433.957 131 427 124.043 427 115.46 L 427 109.54 C 427 100.957 433.957 94 442.54 94 Z",
+      "id": 9,
+      "key": "pocket-29-4-center",
+      "metadata": {
+        "depthMm": 29,
+        "fingerCount": 4,
+        "side": "center"
+      },
+      "outputMaskSha256": "e39023add96cfd1f14c58d00f47aacc24fd1c109147acdd524ea72eabff82e8a",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "7b693afa31bf300abd7c5959906e1300f5714d52a5f05236b15970e746e624a7",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        643,
+        113
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 620.54 94 L 661.46 94 C 670.043 94 677 100.957 677 109.54 L 677 115.46 C 677 124.043 670.043 131 661.46 131 L 620.54 131 C 611.957 131 605 124.043 605 115.46 L 605 109.54 C 605 100.957 611.957 94 620.54 94 Z",
+      "id": 10,
+      "key": "pocket-29-2-right",
+      "metadata": {
+        "depthMm": 29,
+        "fingerCount": 2,
+        "side": "right"
+      },
+      "outputMaskSha256": "b4fcf96aecc966fa20ce21b6e8d9e07b9f43b5135623152aa134b63651ac1d1c",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "fe292033234236b02f1dcca6a8d4cb34bba03d3c30acf969eb7f6978cee06e7c",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        749,
+        113
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 717.54 94 L 790.46 94 C 799.043 94 806 100.957 806 109.54 L 806 115.46 C 806 124.043 799.043 131 790.46 131 L 717.54 131 C 708.957 131 702 124.043 702 115.46 L 702 109.54 C 702 100.957 708.957 94 717.54 94 Z",
+      "id": 11,
+      "key": "pocket-29-3-right",
+      "metadata": {
+        "depthMm": 29,
+        "fingerCount": 3,
+        "side": "right"
+      },
+      "outputMaskSha256": "2c4f38b510a3ec278aa8d0a381107f21bbffaba2948d3180dfa080238e467c6b",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "a99a7b3a74584fda7fe6cf5dcfb9b5c7f6294942dfdb4af565c44fbda6655229",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        905,
+        91
+      ],
+      "cornerMetadata": {
+        "policy": "feature-preserving",
+        "roundedOnlyWhereRouted": true
+      },
+      "displayPath": "M 985 50 L 982 73 L 975 96 L 971 133 L 833 130 L 826 123 L 828 65 L 831 50 Z",
+      "id": 12,
+      "key": "edge-29-right",
+      "metadata": {
+        "depthMm": 29,
+        "side": "right"
+      },
+      "outputMaskSha256": "03acbb0868015acf3da0ebce4c12342d785e553fec9d312ff55756a42c03f682",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "4c935f88cfc53f55b567f48556fb24cabe03a59ff048d8798c5b44eb484eb4ec",
+      "symmetry": {
+        "axisX": 500.0,
+        "canonicalRegionId": 6,
+        "pair": "mirror-x-500-6-12",
+        "role": "mirrored"
+      },
+      "type": "edge"
+    },
+    {
+      "anchor": [
+        112,
+        191
+      ],
+      "cornerMetadata": {
+        "lockedSegments": [
+          "top",
+          "bottom",
+          "inner-edge"
+        ],
+        "policy": "persistent-straights-with-routed-transitions",
+        "roundedTransitions": [
+          "inner-top",
+          "inner-bottom",
+          "alpha-clipped-exterior"
+        ]
+      },
+      "displayPath": "M 42 160 L 174 160 C 177.36 164.2 180.08 167.6 182 170 L 183 216 C 179.6 219.06 174.8 223.38 173 225 L 48 229 C 45.75 228.1 43 227 43 227 C 40.8 209.95 39 196 39 196 C 39.55 178.4 40 164 40 164 C 40.96 162.08 42 160 42 160 Z",
+      "id": 13,
+      "key": "edge-19-left",
+      "metadata": {
+        "depthMm": 19,
+        "side": "left"
+      },
+      "outputMaskSha256": "790c390b48bf8d789f992792880012c109a4ef6b48f8dcbc37d664b3551369dc",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "c0165016639f8c3d7fb367cdcee5ecf76392dbc0e993dbf5c558f2113a8a7c3f",
+      "symmetry": {
+        "axisX": 500.0,
+        "canonicalRegionId": 13,
+        "pair": "mirror-x-500-13-19",
+        "role": "canonical"
+      },
+      "type": "edge"
+    },
+    {
+      "anchor": [
+        266,
+        206
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 227.96 189 L 303.04 189 C 311.854 189 319 196.146 319 204.96 L 319 211.04 C 319 219.854 311.854 227 303.04 227 L 227.96 227 C 219.146 227 212 219.854 212 211.04 L 212 204.96 C 212 196.146 219.146 189 227.96 189 Z",
+      "id": 14,
+      "key": "pocket-19-3-left",
+      "metadata": {
+        "depthMm": 19,
+        "fingerCount": 3,
+        "side": "left"
+      },
+      "outputMaskSha256": "2c3a08af41c7ab5aaea9cc01e087548fed927fad8555725b5ffb2b097cdab4bc",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "198d0a7494e47950dc1bd3a2950bed6764318766b4feab87ece112697bd221dc",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        376,
+        206
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 351.96 189 L 393.04 189 C 401.854 189 409 196.146 409 204.96 L 409 211.04 C 409 219.854 401.854 227 393.04 227 L 351.96 227 C 343.146 227 336 219.854 336 211.04 L 336 204.96 C 336 196.146 343.146 189 351.96 189 Z",
+      "id": 15,
+      "key": "pocket-19-2-left",
+      "metadata": {
+        "depthMm": 19,
+        "fingerCount": 2,
+        "side": "left"
+      },
+      "outputMaskSha256": "9fde939544e7149dbb97739bc9f99aff1a86a4a2212f5d6b0d7ae0fad2086e64",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "5179f92cd968273c1b22025f55f56290398eea55edca09871c6c3526caadb19b",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        504,
+        206
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 441.96 189 L 565.04 189 C 573.854 189 581 196.146 581 204.96 L 581 211.04 C 581 219.854 573.854 227 565.04 227 L 441.96 227 C 433.146 227 426 219.854 426 211.04 L 426 204.96 C 426 196.146 433.146 189 441.96 189 Z",
+      "id": 16,
+      "key": "pocket-19-4-center",
+      "metadata": {
+        "depthMm": 19,
+        "fingerCount": 4,
+        "side": "center"
+      },
+      "outputMaskSha256": "4d45125acb5de977d8d56d2ee32559d28e2542c6e24cbfb47a2748117f7a8433",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "471bf420edf156d53c3192c9cce842f061521b1f874cad38c8f6e80fdbb34072",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        635,
+        206
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 611.96 189 L 653.04 189 C 661.854 189 669 196.146 669 204.96 L 669 211.04 C 669 219.854 661.854 227 653.04 227 L 611.96 227 C 603.146 227 596 219.854 596 211.04 L 596 204.96 C 596 196.146 603.146 189 611.96 189 Z",
+      "id": 17,
+      "key": "pocket-19-2-right",
+      "metadata": {
+        "depthMm": 19,
+        "fingerCount": 2,
+        "side": "right"
+      },
+      "outputMaskSha256": "24429283bfe79d5e7445d31b1e6b17ee31b55bbc0f61a0bc90cb8f0c3efaef85",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "0f233e741d3906ed92b08df4a02c02d231a9b359303018d09c797a99d7f5341c",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        742,
+        206
+      ],
+      "cornerMetadata": {
+        "policy": "rounded-mouth",
+        "roundedOnlyWhereRouted": false
+      },
+      "displayPath": "M 699.96 189 L 772.04 189 C 780.854 189 788 196.146 788 204.96 L 788 211.04 C 788 219.854 780.854 227 772.04 227 L 699.96 227 C 691.146 227 684 219.854 684 211.04 L 684 204.96 C 684 196.146 691.146 189 699.96 189 Z",
+      "id": 18,
+      "key": "pocket-19-3-right",
+      "metadata": {
+        "depthMm": 19,
+        "fingerCount": 3,
+        "side": "right"
+      },
+      "outputMaskSha256": "cff990555399a8cb019ceb81b23486e18ec22a44584605666aca247d879a8fd6",
+      "pieceIndex": 0,
+      "primitive": "rounded-mouth",
+      "sourceMaskSha256": "8f06281ff58f2be6411ce3f829c80cb9855107cc2220c8eeedb2bbde0b90040f",
+      "symmetry": null,
+      "type": "pocket"
+    },
+    {
+      "anchor": [
+        888,
+        191
+      ],
+      "cornerMetadata": {
+        "lockedSegments": [
+          "top",
+          "bottom",
+          "inner-edge"
+        ],
+        "policy": "persistent-straights-with-routed-transitions",
+        "roundedTransitions": [
+          "inner-top",
+          "inner-bottom",
+          "alpha-clipped-exterior"
+        ]
+      },
+      "displayPath": "M 958 160 L 826 160 C 822.64 164.2 819.92 167.6 818 170 L 817 216 C 820.4 219.06 825.2 223.38 827 225 L 952 229 C 954.25 228.1 957 227 957 227 C 959.2 209.95 961 196 961 196 C 960.45 178.4 960 164 960 164 C 959.04 162.08 958 160 958 160 Z",
+      "id": 19,
+      "key": "edge-19-right",
+      "metadata": {
+        "depthMm": 19,
+        "side": "right"
+      },
+      "outputMaskSha256": "d5fe9ac4f293a76d88cf4a9d415a609ab4cbf1556d752a999b43ee9bd8c83ae4",
+      "pieceIndex": 0,
+      "primitive": "feature-contour",
+      "sourceMaskSha256": "54b728d3375d3b003df2308cb9b7b0a4d40b3f9efdea24c27132c33cb680f593",
+      "symmetry": {
+        "axisX": 500.0,
+        "canonicalRegionId": 13,
+        "pair": "mirror-x-500-13-19",
+        "role": "mirrored"
+      },
+      "type": "edge"
+    }
+  ],
+  "schemaVersion": 1,
+  "silhouettePaths": [
+    {
+      "displayPath": "M 1.664 25.504 Q 0 28 1.035 30.816 L 23.965 93.184 Q 25 96 25.322 98.983 L 28.678 130.017 Q 29 133 27.886 135.785 L 24.114 145.215 Q 23 148 23.92 150.856 L 41.08 204.144 Q 42 207 41.912 209.999 L 41.088 238.001 Q 41 241 43.027 243.211 L 49.973 250.789 Q 52 253 54.832 253.991 L 69.168 259.009 Q 72 260 75 259.979 L 940 254.021 Q 943 254 945.515 252.365 L 960.485 242.635 Q 963 241 963 238 L 963 202 Q 963 199 963.931 196.148 L 978.069 152.852 Q 979 150 978.211 147.106 L 973.789 130.894 Q 973 128 973.388 125.025 L 975.612 107.975 Q 976 105 976.949 102.154 L 998.051 38.846 Q 999 36 998.813 33.006 L 998.187 22.994 Q 998 20 995.404 18.497 L 981.596 10.503 Q 979 9 976.007 8.79 L 867.993 1.21 Q 865 1 862.101 1.773 L 822.899 12.227 Q 820 13 817 12.982 L 331 10.018 Q 328 10 325.047 10.527 L 302.953 14.473 Q 300 15 297 14.977 L 175 14.023 Q 172 14 169.485 12.365 L 154.515 2.635 Q 152 1 149 1 L 96 1 Q 93 1 90.014 1.284 L 32.986 6.716 Q 30 7 27.223 8.136 L 10.777 14.864 Q 8 16 6.336 18.496 L 1.664 25.504 Z",
+      "id": "piece-01-silhouette",
+      "outputMaskSha256": "66783cd7a830288285c652c53e71bc2d95365498956cf53d56c48f36ee9164b6",
+      "pieceIndex": 0,
+      "primitive": "minimally-smoothed-alpha-contour",
+      "sourceMaskSha256": "2d80b7d87a19d30d2750d54671099f15566b4ec2d6e72dc2ab53f7802d959b7c"
+    }
+  ],
+  "stage": 3
+}

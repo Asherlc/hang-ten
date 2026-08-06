@@ -27,7 +27,59 @@ The Compact II audit used these official sources (checked August 1, 2026):
 - [Hold-depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428)
 - [Training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
 
-## 2. Keep metadata and artwork separate
+## 2. Run the staged onboarding pipeline
+
+Hang Ten vendors the reviewed onboarding tool under
+`Tools/HangboardOnboarding`. Its model-facing contract is deliberately small:
+one batched semantic response supplies generic grip hints, while deterministic
+local processing owns masks, boundaries, normalized paths, previews, and hash
+validation. Exact semantic responses are cached by source pixels, prompt,
+schema, provider, model, and request kind.
+
+First prove that the accepted Compact II evidence still replays exactly with
+zero model calls:
+
+```sh
+scripts/hangboard-tools.sh benchmark
+```
+
+Start a new identifiable commercial product in ignored workspace storage:
+
+```sh
+scripts/hangboard-tools.sh onboard \
+  --product-name "Manufacturer Model" \
+  --source /absolute/path/to/front-photo.jpg \
+  --output .context/hangboard-onboarding/manufacturer-model
+```
+
+At every stop, review only the generated stage image before approving and
+resuming:
+
+```sh
+scripts/hangboard-tools.sh onboard \
+  --output .context/hangboard-onboarding/manufacturer-model \
+  --approve stage-0
+scripts/hangboard-tools.sh onboard \
+  --output .context/hangboard-onboarding/manufacturer-model \
+  --resume
+```
+
+Repeat approval and resume through Stage 4. The visual checkpoints are:
+
+1. Stage 0: source registration, complete silhouette, and crop.
+2. Stage 1: clean transparent product illustration.
+3. Stage 2: every usable logical grip labeled once with the correct type.
+4. Stage 3: smooth normalized hold boundaries and stable region IDs.
+5. Stage 4: normal product, all-highlight, per-type, mixed, and symmetric-pair
+   interaction previews.
+
+Use `--status` at any time for read-only hash and state validation. If a local
+geometry gate cannot resolve one region, escalate only that crop; do not lower
+a gate, request model-generated contours, or infer an unobserved grip from
+symmetry. The accepted Compact II replay fixture is versioned at
+`Tools/HangboardOnboarding/reference/metolius-compact-ii/accepted-run`.
+
+## 3. Keep metadata and artwork separate
 
 `TrainingBoard` and `BoardHold` in `HangTen/Models/TrainingModels.swift`
 describe what the board is:
@@ -58,24 +110,24 @@ Add the board's semantic mapping to the versioned plan document through
 `PlanLibrary.json` with `scripts/export-plan-library.sh`. A plan is shown only
 when every target resolves on the selected board.
 
-## 3. Use raster references as calibration, not interaction geometry
+## 4. Use generated artifacts as calibration, not interaction geometry
 
-A generated raster concept can be useful when the first vector draft is too
-crude. Treat it as a temporary visual target:
+The staged pipeline's accepted raster and SVG are useful when the first Swift
+vector draft is too crude. Treat them as calibration evidence:
 
-1. Normalize an official front image to the intended board aspect ratio.
-2. Create a clean, textureless raster study that preserves the observed
-   silhouette, hold count, spacing, slopers, jugs, and dimensional planes.
-3. Freeze that study in `.context/` or another review-only location.
-4. Rebuild it with normalized vector data and compare simulator screenshots at
-   the same size.
-5. Keep iterating on the vector until the silhouette and hold centers align.
+1. Use the accepted Stage 1 RGBA image for silhouette and dimensional planes.
+2. Use Stage 2 for the authoritative logical grip inventory and stable IDs.
+3. Translate Stage 3 normalized paths into `BoardShape` commands, using mirrored
+   Swift geometry only where the physical source supports symmetry.
+4. Compare the Swift normal and highlighted simulator screenshots with the
+   accepted Stage 4 previews at the same aspect ratio.
+5. Keep iterating until the silhouette, hold boundaries, and highlights align.
 
 Do not use color-thresholding or a separately positioned overlay for active
 holds. A raster image may guide the eye, but it cannot be the source for hit
 testing or highlights. Runtime geometry must remain deterministic and scalable.
 
-## 4. Build normalized, mirrorable geometry
+## 5. Build normalized, mirrorable geometry
 
 All design coordinates are normalized from `0...1` inside the board rectangle.
 This makes one design scale consistently in cards, portrait workouts,
@@ -97,7 +149,7 @@ The shared visual policy is smooth and sculpted: no wood texture, mounting
 bolts, or manufacturer branding unless a future product requirement explicitly
 changes that policy. Those details do not help an athlete select a hold.
 
-## 5. Preserve the highlight invariant
+## 6. Preserve the highlight invariant
 
 Choose the treatment that matches the physical contact:
 
@@ -114,7 +166,7 @@ contact path before applying either normal shading or the active gradient.
 Never add a second highlight frame in a view. If a highlight looks misaligned,
 fix the declared hold path or treatment.
 
-## 6. Add semantic hold features
+## 7. Add semantic hold features
 
 Routines should not know a board's private IDs when the manufacturer names a
 hold by function. Add the most specific truthful features to each hold:
@@ -135,7 +187,7 @@ flat slopers; one 56 mm round sloper; 29 and 19 mm side edges; paired 29 and
 pockets. That source corrected an early visual-only model that had mislabeled
 the lower center pocket as a sloper.
 
-## 7. Validate the completed board
+## 8. Validate the completed board
 
 Follow `docs/IOS_SIMULATOR_VALIDATION.md` on a dedicated simulator.
 
