@@ -153,7 +153,15 @@ def validate_stage_edit(stage: int, document: object) -> Mapping[str, object]:
         keys.add(key)
         if raw.get("type") not in _REGION_TYPES:
             _region_error(stage, region_id, "type is invalid")
-        _validate_point(raw.get("anchor"), width, height, stage, region_id, "anchor")
+        _validate_point(
+            raw.get("anchor"),
+            width,
+            height,
+            stage,
+            region_id,
+            "anchor",
+            require_rounded_pixel=stage == 2,
+        )
         if stage == 2:
             _validate_bounds(raw.get("bounds"), width, height, stage, region_id)
             contour = raw.get("contour")
@@ -182,6 +190,8 @@ def validate_stage_edit(stage: int, document: object) -> Mapping[str, object]:
                 raise ConversionError(f"Stage 3 region {region_id}: malformed displayPath") from error
             if _self_intersects(contour):
                 _region_error(stage, region_id, "displayPath has a prohibited self-intersection")
+            if _display_contour_is_degenerate(contour, width, height):
+                _region_error(stage, region_id, "displayPath is degenerate or empty")
     if stage == 2 and document.get("labelEncoding") != "uint16-region-id":
         raise ConversionError("Stage 2 edit label encoding is invalid")
     if stage == 3:
@@ -439,6 +449,10 @@ def _validate_silhouettes(document: Mapping[str, object], width: int, height: in
             raise ConversionError(
                 f"Stage 3 silhouette {identifier} has a prohibited self-intersection"
             )
+        if _display_contour_is_degenerate(contour, width, height):
+            raise ConversionError(
+                f"Stage 3 silhouette {identifier} has a degenerate or empty displayPath"
+            )
 
 
 def _validate_point(
@@ -448,6 +462,8 @@ def _validate_point(
     stage: int,
     region_id: object,
     field: str,
+    *,
+    require_rounded_pixel: bool = False,
 ) -> None:
     if not isinstance(value, list) or len(value) != 2:
         _region_error(stage, region_id, f"{field} coordinate is invalid")
@@ -463,6 +479,10 @@ def _validate_point(
         or not 0 <= float(y) < height
     ):
         _region_error(stage, region_id, f"{field} coordinate is non-finite or out of bounds")
+    if require_rounded_pixel and not (
+        0 <= round(float(x)) < width and 0 <= round(float(y)) < height
+    ):
+        _region_error(stage, region_id, f"{field} coordinate rounds out of bounds")
 
 
 def _validate_bounds(
@@ -512,6 +532,18 @@ def _self_intersects(contour: np.ndarray) -> bool:
             if _segments_intersect(first_start, first_end, second_start, second_end):
                 return True
     return False
+
+
+def _display_contour_is_degenerate(
+    contour: np.ndarray, width: int, height: int
+) -> bool:
+    points = np.asarray(contour, dtype=np.float64)
+    if abs(float(cv2.contourArea(points.astype(np.float32)))) <= 1e-6:
+        return True
+    raster_points = np.rint(points).astype(np.int64)
+    raster_points[:, 0] = np.clip(raster_points[:, 0], 0, width - 1)
+    raster_points[:, 1] = np.clip(raster_points[:, 1], 0, height - 1)
+    return abs(float(cv2.contourArea(raster_points.astype(np.float32)))) < 0.5
 
 
 def _segments_intersect(

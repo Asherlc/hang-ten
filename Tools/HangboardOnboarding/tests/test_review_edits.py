@@ -237,6 +237,14 @@ def test_validation_rejects_nonfinite_or_out_of_bounds_stage2_bounds() -> None:
         validate_stage_edit(2, edited)
 
 
+def test_validation_rejects_a_fractional_anchor_that_rounds_outside_the_raster() -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0]["anchor"] = [999.6, 50]
+
+    with pytest.raises(ConversionError, match=r"Stage 2 region 1"):
+        validate_stage_edit(2, edited)
+
+
 def test_validation_rejects_a_self_intersecting_stage2_contour() -> None:
     edited = _load_fixture("stage-2-regions-edited.json")
     edited["regions"][0]["contour"] = [
@@ -268,10 +276,28 @@ def test_validation_rejects_a_self_intersecting_display_path() -> None:
         validate_stage_edit(3, edited)
 
 
+def test_validation_rejects_a_zero_area_region_display_path() -> None:
+    edited = _load_fixture("stage-3-vector-regions-edited.json")
+    edited["regions"][0]["displayPath"] = "M 100 100 L 200 100 L 300 100 Z"
+
+    with pytest.raises(ConversionError, match=r"Stage 3 region 1"):
+        validate_stage_edit(3, edited)
+
+
 def test_validation_rejects_a_self_intersecting_silhouette_path() -> None:
     edited = _load_fixture("stage-3-vector-regions-edited.json")
     edited["silhouettePaths"][0]["displayPath"] = (
         "M 100 20 L 200 80 L 100 80 L 200 20 Z"
+    )
+
+    with pytest.raises(ConversionError, match=r"piece-01-silhouette"):
+        validate_stage_edit(3, edited)
+
+
+def test_validation_rejects_a_zero_area_silhouette_display_path() -> None:
+    edited = _load_fixture("stage-3-vector-regions-edited.json")
+    edited["silhouettePaths"][0]["displayPath"] = (
+        "M 100 100 L 200 100 L 300 100 Z"
     )
 
     with pytest.raises(ConversionError, match=r"piece-01-silhouette"):
