@@ -14,8 +14,8 @@ from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
-from urllib.parse import urlsplit
+from typing import Any, Iterable
+from urllib.parse import parse_qs, urlencode, urlsplit
 
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
@@ -31,6 +31,38 @@ class EditorSession:
     run_dir: Path
     image_path: Path
     regions_path: Path
+
+
+@dataclass(frozen=True)
+class CatalogSession:
+    id: str
+    label: str
+    session: EditorSession
+
+
+@dataclass(frozen=True)
+class EditorCatalog:
+    sessions: tuple[CatalogSession, ...]
+
+    @classmethod
+    def from_sessions(cls, sessions: Iterable[tuple[str, EditorSession]]) -> EditorCatalog:
+        entries: list[CatalogSession] = []
+        for index, (label, session) in enumerate(sessions, start=1):
+            clean_label = str(label).strip()
+            if not clean_label:
+                raise EditorError("run label must not be empty")
+            entries.append(CatalogSession(id=f"run-{index}", label=clean_label, session=session))
+        if not entries:
+            raise EditorError("catalog must contain at least one run")
+        return cls(tuple(entries))
+
+    def get(self, run_id: str | None) -> CatalogSession:
+        if run_id is None:
+            return self.sessions[0]
+        for entry in self.sessions:
+            if entry.id == run_id:
+                return entry
+        raise EditorError(f"unknown run: {run_id}")
 
 
 def discover_session(run_dir: Path) -> EditorSession:
@@ -55,6 +87,56 @@ def discover_session(run_dir: Path) -> EditorSession:
     regions_path = _confined_file(root, region_candidates[0])
     image_path = _confined_file(root, image_candidates[0])
     return EditorSession(run_dir=root, image_path=image_path, regions_path=regions_path)
+
+
+def load_catalog(catalog_path: Path) -> EditorCatalog:
+    path = Path(catalog_path).expanduser().resolve()
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise EditorError(f"could not read catalog: {error}") from error
+    if not isinstance(document, dict) or not isinstance(document.get("runs"), list):
+        raise EditorError("catalog must be an object containing a runs array")
+
+    sessions: list[tuple[str, EditorSession]] = []
+    for index, entry in enumerate(document["runs"]):
+        if not isinstance(entry, dict):
+            raise EditorError(f"catalog runs[{index}] must be an object")
+        label = entry.get("label")
+        run_dir_value = entry.get("runDir")
+        if not isinstance(label, str) or not label.strip():
+            raise EditorError(f"catalog runs[{index}].label must be a non-empty string")
+        if not isinstance(run_dir_value, str) or not run_dir_value.strip():
+            raise EditorError(f"catalog runs[{index}].runDir must be a non-empty string")
+        run_dir = Path(run_dir_value).expanduser()
+        if not run_dir.is_absolute():
+            run_dir = path.parent / run_dir
+        root = run_dir.resolve()
+        if not root.is_dir():
+            raise EditorError(f"run directory does not exist: {root}")
+
+        image_value = entry.get("image")
+        regions_value = entry.get("regions")
+        if image_value is None and regions_value is None:
+            session = discover_session(root)
+        elif isinstance(image_value, str) and isinstance(regions_value, str):
+            image_path = _catalog_artifact(root, image_value, f"catalog runs[{index}].image")
+            regions_path = _catalog_artifact(root, regions_value, f"catalog runs[{index}].regions")
+            session = EditorSession(run_dir=root, image_path=image_path, regions_path=regions_path)
+        else:
+            raise EditorError(f"catalog runs[{index}] must provide both image and regions")
+        sessions.append((label, session))
+    return EditorCatalog.from_sessions(sessions)
+
+
+def catalog_from_inputs(run_dirs: Iterable[Path], catalog_path: Path | None) -> EditorCatalog:
+    sessions: list[tuple[str, EditorSession]] = []
+    if catalog_path is not None:
+        sessions.extend((entry.label, entry.session) for entry in load_catalog(catalog_path).sessions)
+    for run_dir in run_dirs:
+        session = discover_session(run_dir)
+        sessions.append((session.run_dir.name, session))
+    return EditorCatalog.from_sessions(sessions)
 
 
 def validate_regions_document(value: object) -> dict[str, Any]:
@@ -121,39 +203,64 @@ def save_review(
 
 
 def create_server(
-    session: EditorSession,
+    source: EditorSession | EditorCatalog,
     host: str = "127.0.0.1",
     port: int = 4173,
 ) -> ThreadingHTTPServer:
+    catalog = source if isinstance(source, EditorCatalog) else EditorCatalog.from_sessions([(source.run_dir.name, source)])
+
     class SessionHandler(EditorRequestHandler):
-        editor_session = session
+        editor_catalog = catalog
 
     return ThreadingHTTPServer((host, port), SessionHandler)
 
 
 class EditorRequestHandler(BaseHTTPRequestHandler):
-    editor_session: EditorSession
+    editor_catalog: EditorCatalog
 
     def do_GET(self) -> None:  # noqa: N802
-        path = urlsplit(self.path).path
-        if path == "/api/session":
+        request = urlsplit(self.path)
+        path = request.path
+        if path == "/api/sessions":
             self._send_json(
                 HTTPStatus.OK,
                 {
                     "ok": True,
-                    "runName": self.editor_session.run_dir.name,
-                    "imageUrl": "/api/artifact/image",
-                    "regionsUrl": "/api/artifact/regions",
-                    "imagePath": str(self.editor_session.image_path.relative_to(self.editor_session.run_dir)),
-                    "regionsPath": str(self.editor_session.regions_path.relative_to(self.editor_session.run_dir)),
+                    "sessions": [
+                        {"id": entry.id, "label": entry.label, "runName": entry.session.run_dir.name}
+                        for entry in self.editor_catalog.sessions
+                    ],
+                },
+            )
+            return
+        try:
+            entry = self._selected_entry(request.query)
+        except EditorError as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+            return
+        session = entry.session
+        if path == "/api/session":
+            include_run = len(self.editor_catalog.sessions) > 1 or bool(parse_qs(request.query).get("run"))
+            self._send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "id": entry.id,
+                    "label": entry.label,
+                    "runName": session.run_dir.name,
+                    "imageUrl": self._run_url("/api/artifact/image", entry.id, include_run),
+                    "regionsUrl": self._run_url("/api/artifact/regions", entry.id, include_run),
+                    "saveUrl": self._run_url("/api/save", entry.id, include_run),
+                    "imagePath": str(session.image_path.relative_to(session.run_dir)),
+                    "regionsPath": str(session.regions_path.relative_to(session.run_dir)),
                 },
             )
             return
         if path == "/api/artifact/image":
-            self._send_file(self.editor_session.image_path)
+            self._send_file(session.image_path)
             return
         if path == "/api/artifact/regions":
-            self._send_file(self.editor_session.regions_path)
+            self._send_file(session.regions_path)
             return
         static_files = {
             "/": "index.html",
@@ -169,8 +276,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
 
     def do_PUT(self) -> None:  # noqa: N802
-        if urlsplit(self.path).path != "/api/save":
+        request = urlsplit(self.path)
+        if request.path != "/api/save":
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+            return
+        try:
+            session = self._selected_entry(request.query).session
+        except EditorError as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             return
         if self.headers.get_content_type() != "application/json":
             self._send_json(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, {"ok": False, "error": "Content-Type must be application/json"})
@@ -189,11 +302,19 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length))
             if not isinstance(payload, dict):
                 raise EditorError("save payload must be a JSON object")
-            result = save_review(self.editor_session, payload.get("regions"), payload.get("corrections"))
+            result = save_review(session, payload.get("regions"), payload.get("corrections"))
         except (EditorError, json.JSONDecodeError, UnicodeDecodeError) as error:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
         self._send_json(HTTPStatus.OK, {"ok": True, **result})
+
+    def _selected_entry(self, query: str) -> CatalogSession:
+        values = parse_qs(query).get("run", [])
+        return self.editor_catalog.get(values[0] if values else None)
+
+    @staticmethod
+    def _run_url(path: str, run_id: str, include_run: bool) -> str:
+        return f"{path}?{urlencode({'run': run_id})}" if include_run else path
 
     def _send_json(self, status: HTTPStatus, value: object) -> None:
         body = json.dumps(value, separators=(",", ":"), allow_nan=False).encode("utf-8")
@@ -220,6 +341,13 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
 def _finite_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _catalog_artifact(root: Path, value: str, field: str) -> Path:
+    relative_path = Path(value).expanduser()
+    if relative_path.is_absolute():
+        raise EditorError(f"{field} must be relative to runDir")
+    return _confined_file(root, root / relative_path)
 
 
 def _confined_file(root: Path, candidate: Path) -> Path:
@@ -260,18 +388,26 @@ def _atomic_write_json(path: Path, value: object) -> None:
 
 
 def main() -> None:
-    parser = ArgumentParser(description="Serve the hold-region editor for one onboarding run")
-    parser.add_argument("--run-dir", required=True, type=Path, help="Onboarding run containing one Stage 1 image and Stage 2 regions file")
+    parser = ArgumentParser(description="Serve the hold-region editor for pipeline-generated onboarding runs")
+    parser.add_argument(
+        "--run-dir",
+        action="append",
+        default=[],
+        type=Path,
+        help="Onboarding run containing one Stage 1 image and Stage 2 regions file; repeat to add boards",
+    )
+    parser.add_argument("--catalog", type=Path, help="JSON catalog for named runs or explicit historical artifact paths")
     parser.add_argument("--host", default="127.0.0.1", help="Listen address (default: 127.0.0.1)")
     parser.add_argument("--port", default=4173, type=int, help="Listen port (default: 4173)")
     arguments = parser.parse_args()
     try:
-        session = discover_session(arguments.run_dir)
+        catalog = catalog_from_inputs(arguments.run_dir, arguments.catalog)
     except EditorError as error:
         parser.error(str(error))
-    server = create_server(session, arguments.host, arguments.port)
+    server = create_server(catalog, arguments.host, arguments.port)
     print(f"Hold Region Editor: http://{arguments.host}:{server.server_port}")
-    print(f"Run: {session.run_dir}")
+    for entry in catalog.sessions:
+        print(f"Run [{entry.id}] {entry.label}: {entry.session.run_dir}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

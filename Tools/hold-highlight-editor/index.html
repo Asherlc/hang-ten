@@ -19,6 +19,11 @@
         </div>
 
         <div class="toolbar" aria-label="Editor actions">
+          <label class="board-picker hidden" id="board-picker">
+            <span>Board</span>
+            <select id="board-select" aria-label="Board to edit"></select>
+          </label>
+          <span class="toolbar-separator board-picker-separator hidden" id="board-picker-separator"></span>
           <button class="tool-button" id="load-image-button">Load image</button>
           <button class="tool-button" id="load-regions-button">Load regions</button>
           <button class="tool-button" id="snap-button" disabled>Snap edges</button>

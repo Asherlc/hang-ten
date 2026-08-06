@@ -18,6 +18,37 @@ The generated `stage-2-regions.json` is never overwritten.
 
 The server binds to `127.0.0.1` by default and serves files only from the supplied run. Stop it with `Ctrl-C`.
 
+## Choose among generated runs
+
+Repeat `--run-dir` to put standard pipeline runs in the board selector:
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py \
+  --run-dir /absolute/path/to/first-onboarding-run \
+  --run-dir /absolute/path/to/second-onboarding-run
+```
+
+Use a catalog when runs need friendly labels or when historical Stage 1 and Stage 2 artifacts live in different subdirectories:
+
+```json
+{
+  "runs": [
+    {
+      "label": "Board label",
+      "runDir": "/absolute/path/to/pipeline-run",
+      "image": "stage-one/stage-1-auto-rgba.png",
+      "regions": "stage-two/stage-2-auto-regions.json"
+    }
+  ]
+}
+```
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py --catalog /absolute/path/to/catalog.json
+```
+
+`image` and `regions` are optional for standard run layouts and must be relative to `runDir`. Catalog and repeated `--run-dir` inputs can be combined. The selector changes only the active browser document; every load and save request names its run explicitly, so separate tabs cannot redirect each other's saves.
+
 ## Static mode
 
 To use the editor without filesystem Save support:

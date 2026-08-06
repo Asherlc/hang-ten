@@ -59,6 +59,9 @@ button { color: inherit; }
 
 .toolbar, .canvas-actions { display: flex; align-items: center; gap: 7px; }
 .toolbar-separator { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+.board-picker { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; }
+.board-picker select { width: 168px; height: 34px; padding: 0 28px 0 9px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: var(--panel-raised); color: var(--text); }
+.board-picker select:focus { border-color: #7a4b3a; box-shadow: 0 0 0 2px #ff6b4a17; }
 .save-state { min-width: 72px; color: var(--muted); font-size: 10px; }
 .save-state.dirty { color: #ffd174; }
 .save-state.saved { color: #79d7a3; }
@@ -194,4 +197,6 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
   .inspector-panel { display: none; }
   .shortcut-hints { display: none; }
   .brand-block p { display: none; }
+  .board-picker span { display: none; }
+  .board-picker select { width: 132px; }
 }

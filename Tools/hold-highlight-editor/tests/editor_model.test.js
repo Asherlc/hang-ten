@@ -9,6 +9,7 @@ const {
   mirrorContour,
   findStrongestEdge,
   resolveHistorySelection,
+  normalizePipelineDocument,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -138,4 +139,23 @@ test("resolveHistorySelection restores the selection stored with an undo snapsho
   assert.equal(resolveHistorySelection({ selectedId: 1 }, regions, 20), 1);
   assert.equal(resolveHistorySelection({}, regions, 2), 2);
   assert.equal(resolveHistorySelection({ selectedId: 9 }, regions, 20), null);
+});
+
+test("normalizePipelineDocument adapts historical generated region artifacts", () => {
+  const result = normalizePipelineDocument({
+    width: 1000,
+    height: 259,
+    regions: [{
+      id: "piece-01-hold-01",
+      type: "sloper",
+      visualMode: "surface",
+      contour: [[1, 2], [3, 4], [5, 6]],
+    }],
+  }, { width: 10, height: 10 });
+
+  assert.deepEqual(result.canvas, { width: 1000, height: 259 });
+  assert.equal(result.regions[0].id, 1);
+  assert.equal(result.regions[0].key, "piece-01-hold-01");
+  assert.equal(result.regions[0].metadata.mode, "surface");
+  assert.equal(result.regions[0].metadata.sourceRegionId, "piece-01-hold-01");
 });

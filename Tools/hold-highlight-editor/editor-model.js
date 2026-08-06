@@ -62,6 +62,36 @@
     });
   }
 
+  function normalizePipelineDocument(document, fallbackCanvas) {
+    const canvas = {
+      width: Number(document.canvas?.width || document.width || fallbackCanvas.width),
+      height: Number(document.canvas?.height || document.height || fallbackCanvas.height),
+    };
+    const regions = (document.regions || []).map((region, index) => {
+      const fallbackId = index + 1;
+      const sourceId = region.id ?? fallbackId;
+      const numericId = Number(sourceId);
+      const id = Number.isInteger(numericId) && numericId > 0 ? numericId : fallbackId;
+      return {
+        ...clone(region),
+        id,
+        key: region.key || (typeof sourceId === "string" ? sourceId : `grip-${String(id).padStart(3, "0")}`),
+        type: region.type || "edge",
+        contour: (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]),
+        metadata: {
+          mode: region.metadata?.mode || region.mode || region.visualMode || (region.type === "pocket" ? "aperture" : "surface"),
+          shapeKind: region.metadata?.shapeKind || "freeform",
+          pathStyle: region.metadata?.pathStyle || "straight",
+          curveTension: Number(region.metadata?.curveTension ?? 0.8),
+          humanNotes: region.metadata?.humanNotes || "",
+          ...clone(region.metadata || {}),
+          ...(typeof sourceId === "string" && !/^\d+$/.test(sourceId) ? { sourceRegionId: sourceId } : {}),
+        },
+      };
+    });
+    return { canvas, regions };
+  }
+
   function buildEditedDocument({ canvas, regions, imageName, regionsName }) {
     return {
       schemaVersion: 1,
@@ -236,5 +266,6 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
+    normalizePipelineDocument,
   };
 }));

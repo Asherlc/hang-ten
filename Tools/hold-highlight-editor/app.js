@@ -9,6 +9,7 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
+    normalizePipelineDocument,
   } = globalThis.HoldEditorModel;
 
   const TYPE_COLORS = {
@@ -44,6 +45,9 @@
     history: [],
     historyIndex: -1,
     serverSession: null,
+    serverSessions: [],
+    selectedRunId: null,
+    loadingSession: false,
     dirty: false,
     saving: false,
     savedSnapshot: "[]",
@@ -67,6 +71,7 @@
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
+    "board-picker", "board-picker-separator", "board-select",
   ].map((id) => [id, document.getElementById(id)]));
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -131,26 +136,6 @@
     return state.regions.find((region) => region.id === state.selectedId) || null;
   }
 
-  function normalizeRegion(region, fallbackId) {
-    const id = Number(region.id ?? fallbackId);
-    const contour = (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]);
-    return {
-      ...clone(region),
-      id,
-      key: region.key || `grip-${String(id).padStart(3, "0")}`,
-      type: region.type || "edge",
-      contour,
-      metadata: {
-        mode: region.metadata?.mode || region.mode || (region.type === "pocket" ? "aperture" : "surface"),
-        shapeKind: region.metadata?.shapeKind || "freeform",
-        pathStyle: region.metadata?.pathStyle || "straight",
-        curveTension: Number(region.metadata?.curveTension ?? 0.8),
-        humanNotes: region.metadata?.humanNotes || "",
-        ...clone(region.metadata || {}),
-      },
-    };
-  }
-
   function makeSvg(tag, attributes = {}) {
     const node = document.createElementNS(svgNS, tag);
     Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, String(value)));
@@ -175,8 +160,9 @@
   }
 
   function renderSaveState() {
-    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving);
+    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving && !state.loadingSession);
     el["save-button"].disabled = !canSave;
+    el["board-select"].disabled = state.loadingSession || state.saving;
     el["save-state"].className = "save-state";
     if (!state.serverSession) {
       el["save-state"].textContent = "Static mode";
@@ -880,30 +866,85 @@
     }
   }
 
-  async function loadServerSession() {
+  function showBoardPicker(visible) {
+    el["board-picker"].classList.toggle("hidden", !visible);
+    el["board-picker-separator"].classList.toggle("hidden", !visible);
+  }
+
+  function populateBoardPicker(sessions) {
+    el["board-select"].replaceChildren();
+    sessions.forEach((session) => {
+      const option = document.createElement("option");
+      option.value = session.id;
+      option.textContent = session.label;
+      el["board-select"].appendChild(option);
+    });
+    showBoardPicker(sessions.length > 0);
+  }
+
+  async function loadServerSession(runId) {
+    const previousRunId = state.selectedRunId;
+    state.loadingSession = true;
+    renderSaveState();
     try {
-      const sessionResponse = await fetch("/api/session", { cache: "no-store" });
+      const sessionUrl = `/api/session?run=${encodeURIComponent(runId)}`;
+      const sessionResponse = await fetch(sessionUrl, { cache: "no-store" });
       if (!sessionResponse.ok || !sessionResponse.headers.get("content-type")?.includes("application/json")) return false;
       const session = await sessionResponse.json();
       if (!session.ok) return false;
       const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
       if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
       const regions = await regionsResponse.json();
-      state.serverSession = session;
       await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
+      state.serverSession = session;
+      state.selectedRunId = session.id;
+      state.drawing = false;
+      state.draft = [];
+      state.primitiveSession = null;
+      state.editPoints = false;
+      state.mirrorOntoSourceId = null;
       setRegions(regions, session.regionsPath || "stage-2-regions.json");
-      setStatus(`Editing ${session.runName}. Changes can be saved into this run.`);
+      el["board-select"].value = session.id;
+      setStatus(`Editing ${session.label}. Changes can be saved into this generated run.`);
       return true;
     } catch (error) {
       console.warn(error);
-      state.serverSession = null;
+      if (previousRunId) el["board-select"].value = previousRunId;
+      setStatus(`Could not switch boards: ${error.message || error}`);
+      return false;
+    } finally {
+      state.loadingSession = false;
       renderSaveState();
+    }
+  }
+
+  async function switchServerSession(runId) {
+    if (!runId || runId === state.selectedRunId || state.loadingSession) return;
+    if (state.dirty && !window.confirm("Discard unsaved changes and switch boards?")) {
+      el["board-select"].value = state.selectedRunId;
+      return;
+    }
+    await loadServerSession(runId);
+  }
+
+  async function loadServerCatalog() {
+    try {
+      const response = await fetch("/api/sessions", { cache: "no-store" });
+      if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) return false;
+      const catalog = await response.json();
+      if (!catalog.ok || !catalog.sessions?.length) return false;
+      state.serverSessions = catalog.sessions;
+      populateBoardPicker(catalog.sessions);
+      return await loadServerSession(catalog.sessions[0].id);
+    } catch (error) {
+      console.warn(error);
       return false;
     }
   }
 
   async function loadInitialSession() {
-    if (await loadServerSession()) return;
+    if (await loadServerCatalog()) return;
+    showBoardPicker(false);
     await loadDemo();
   }
 
@@ -972,8 +1013,9 @@
   }
 
   function setRegions(data, name = "regions.json") {
-    state.canvas = { width: Number(data.canvas?.width || state.canvas.width), height: Number(data.canvas?.height || state.canvas.height) };
-    state.regions = (data.regions || []).map((region, index) => normalizeRegion(region, index + 1));
+    const normalized = normalizePipelineDocument(data, state.canvas);
+    state.canvas = normalized.canvas;
+    state.regions = normalized.regions;
     state.baselineRegions = clone(state.regions);
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;
@@ -993,6 +1035,8 @@
 
   function loadImageFile(file) {
     state.serverSession = null;
+    state.selectedRunId = null;
+    showBoardPicker(false);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = async () => {
@@ -1006,6 +1050,8 @@
 
   function loadRegionsFile(file) {
     state.serverSession = null;
+    state.selectedRunId = null;
+    showBoardPicker(false);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = () => {
@@ -1056,7 +1102,7 @@
     state.saveError = "";
     renderSaveState();
     try {
-      const response = await fetch("/api/save", {
+      const response = await fetch(state.serverSession.saveUrl || "/api/save", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ regions: editedDocument(), corrections: correctionsDocument() }),
@@ -1203,6 +1249,7 @@
   }
 
   el["load-image-button"].addEventListener("click", () => el["image-file-input"].click());
+  el["board-select"].addEventListener("change", (event) => switchServerSession(event.target.value));
   el["load-regions-button"].addEventListener("click", () => el["regions-file-input"].click());
   el["image-file-input"].addEventListener("change", (event) => event.target.files[0] && loadImageFile(event.target.files[0]));
   el["regions-file-input"].addEventListener("change", (event) => event.target.files[0] && loadRegionsFile(event.target.files[0]));
