@@ -131,6 +131,18 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(saved.tags, ["Edges", "Custom"])
     }
 
+    func testSaveSplitsCommaSeparatedTagsInOrder() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = genericDefinition(tags: [" edges, custom "])
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(definition)
+
+        XCTAssertEqual(store.routines.first?.tags, ["edges", "custom"])
+    }
+
     func testValidationRejectsUnknownBoardAndHoldIDsForBoardSpecificRoutine() {
         let definition = CustomRoutineDefinition(
             id: "custom.unknown-board",

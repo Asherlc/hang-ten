@@ -491,7 +491,9 @@ final class CustomRoutineStore: CustomRoutineStoring {
 
     private static func normalizedTags(_ tags: [String]) -> [String] {
         var seen = Set<String>()
-        return tags.compactMap { tag in
+        return tags
+            .flatMap { $0.split(separator: ",", omittingEmptySubsequences: false).map(String.init) }
+            .compactMap { tag in
             let normalized = tag.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !normalized.isEmpty, seen.insert(normalized.lowercased()).inserted else { return nil }
             return normalized
