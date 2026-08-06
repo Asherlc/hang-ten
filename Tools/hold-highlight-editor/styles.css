@@ -78,6 +78,7 @@ button { color: inherit; }
 .tool-button:active, .icon-button:active { transform: translateY(1px); }
 .tool-button.accent { background: var(--accent); border-color: var(--accent); color: #21130f; font-weight: 750; }
 .tool-button.accent:hover { background: var(--accent-strong); }
+.tool-button.active { color: #fff; border-color: var(--accent); background: #ff6b4a20; }
 .tool-button.danger { color: #ff8b92; }
 button:disabled { opacity: .35; cursor: default; }
 
@@ -155,6 +156,12 @@ button:disabled { opacity: .35; cursor: default; }
 .transform-stem { stroke: #fff9e9cc; stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .transform-handle { fill: #fff9e9; stroke: #1b1c19; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: grab; }
 .transform-handle:hover { fill: var(--accent); }
+.resize-handle { fill: #fff9e9; stroke: #1b1c19; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.resize-handle:hover { fill: var(--accent); }
+.resize-handle[data-resize-handle="n"], .resize-handle[data-resize-handle="s"] { cursor: ns-resize; }
+.resize-handle[data-resize-handle="e"], .resize-handle[data-resize-handle="w"] { cursor: ew-resize; }
+.resize-handle[data-resize-handle="nw"], .resize-handle[data-resize-handle="se"] { cursor: nwse-resize; }
+.resize-handle[data-resize-handle="ne"], .resize-handle[data-resize-handle="sw"] { cursor: nesw-resize; }
 .bend-handle { fill: #32bbc1; cursor: ns-resize; }
 .edit-points-active { color: #fff; border-color: var(--accent) !important; background: #ff6b4a20 !important; }
 .draft-line { fill: #ff6b4a2e; stroke: var(--accent); stroke-width: 2px; vector-effect: non-scaling-stroke; }

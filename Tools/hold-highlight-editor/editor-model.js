@@ -93,5 +93,148 @@
     };
   }
 
-  return { buildEditedDocument, buildCorrectionsDocument };
+  function resizeContour({ points, rotation = 0, handle, pointer, preserveAspect = false }) {
+    const center = centroid(points);
+    const cosine = Math.cos(rotation);
+    const sine = Math.sin(rotation);
+    const toLocal = ([x, y]) => {
+      const dx = x - center[0];
+      const dy = y - center[1];
+      return [dx * cosine + dy * sine, -dx * sine + dy * cosine];
+    };
+    const toWorld = ([x, y]) => [
+      center[0] + x * cosine - y * sine,
+      center[1] + x * sine + y * cosine,
+    ];
+    const local = points.map(toLocal);
+    const [minX, minY, maxX, maxY] = bounds(local);
+    const localPointer = toLocal(pointer);
+    const scalesX = handle.includes("e") || handle.includes("w");
+    const scalesY = handle.includes("n") || handle.includes("s");
+    const anchorX = handle.includes("w") ? maxX : minX;
+    const anchorY = handle.includes("n") ? maxY : minY;
+    const movingX = handle.includes("w") ? minX : maxX;
+    const movingY = handle.includes("n") ? minY : maxY;
+    let scaleX = scalesX ? (localPointer[0] - anchorX) / Math.max(Math.abs(movingX - anchorX), 1e-6) : 1;
+    let scaleY = scalesY ? (localPointer[1] - anchorY) / Math.max(Math.abs(movingY - anchorY), 1e-6) : 1;
+    scaleX = Math.max(0.05, scaleX);
+    scaleY = Math.max(0.05, scaleY);
+    if (preserveAspect && scalesX && scalesY) {
+      const dominant = Math.abs(scaleX - 1) >= Math.abs(scaleY - 1) ? scaleX : scaleY;
+      scaleX = dominant;
+      scaleY = dominant;
+    }
+    return local.map(([x, y]) => toWorld([
+      scalesX ? anchorX + (x - anchorX) * scaleX : x,
+      scalesY ? anchorY + (y - anchorY) * scaleY : y,
+    ])).map(([x, y]) => [round(x), round(y)]);
+  }
+
+  function mirrorContour(points, canvasWidth) {
+    return points.map(([x, y]) => [round(canvasWidth - x), round(y)]).reverse();
+  }
+
+  function simplifyClosedContour(points, tolerance) {
+    const ring = points.length > 1 && points[0][0] === points.at(-1)[0] && points[0][1] === points.at(-1)[1]
+      ? points.slice(0, -1)
+      : points.slice();
+    if (ring.length <= 4) return clone(ring);
+    let first = 0;
+    let second = 1;
+    let greatestDistance = -1;
+    for (let left = 0; left < ring.length; left += 1) {
+      for (let right = left + 1; right < ring.length; right += 1) {
+        const distance = (ring[left][0] - ring[right][0]) ** 2 + (ring[left][1] - ring[right][1]) ** 2;
+        if (distance > greatestDistance) {
+          greatestDistance = distance;
+          first = left;
+          second = right;
+        }
+      }
+    }
+    const chain = (start, end) => {
+      const result = [];
+      for (let index = start; ; index = (index + 1) % ring.length) {
+        result.push(ring[index]);
+        if (index === end) break;
+      }
+      return result;
+    };
+    const forward = simplifyOpenContour(chain(first, second), tolerance);
+    const backward = simplifyOpenContour(chain(second, first), tolerance);
+    const simplified = [...forward, ...backward.slice(1, -1)];
+    return simplified.length >= 4 ? clone(simplified) : clone(ring);
+  }
+
+  function simplifyOpenContour(points, tolerance) {
+    if (points.length <= 2) return points.slice();
+    let greatestDistance = -1;
+    let splitIndex = -1;
+    for (let index = 1; index < points.length - 1; index += 1) {
+      const distance = distanceToSegment(points[index], points[0], points.at(-1));
+      if (distance > greatestDistance) {
+        greatestDistance = distance;
+        splitIndex = index;
+      }
+    }
+    if (greatestDistance <= tolerance) return [points[0], points.at(-1)];
+    return [
+      ...simplifyOpenContour(points.slice(0, splitIndex + 1), tolerance).slice(0, -1),
+      ...simplifyOpenContour(points.slice(splitIndex), tolerance),
+    ];
+  }
+
+  function distanceToSegment([px, py], [x1, y1], [x2, y2]) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    if (dx === 0 && dy === 0) return Math.hypot(px - x1, py - y1);
+    const progress = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(px - (x1 + progress * dx), py - (y1 + progress * dy));
+  }
+
+  function findStrongestEdge({ rgba, width, height, point, radius, threshold }) {
+    if (!rgba || width < 3 || height < 3) return null;
+    const [centerX, centerY] = point;
+    const luminance = (x, y) => {
+      const offset = (y * width + x) * 4;
+      return rgba[offset] * 0.2126 + rgba[offset + 1] * 0.7152 + rgba[offset + 2] * 0.0722;
+    };
+    let bestPoint = null;
+    let bestScore = threshold;
+    let bestDistance = Infinity;
+    const minX = Math.max(1, Math.floor(centerX - radius));
+    const maxX = Math.min(width - 2, Math.ceil(centerX + radius));
+    const minY = Math.max(1, Math.floor(centerY - radius));
+    const maxY = Math.min(height - 2, Math.ceil(centerY + radius));
+    for (let y = minY; y <= maxY; y += 1) {
+      for (let x = minX; x <= maxX; x += 1) {
+        const distance = Math.hypot(x - centerX, y - centerY);
+        if (distance > radius) continue;
+        const gradientX = luminance(x + 1, y) - luminance(x - 1, y);
+        const gradientY = luminance(x, y + 1) - luminance(x, y - 1);
+        const score = Math.hypot(gradientX, gradientY);
+        if (score > bestScore || (score === bestScore && distance < bestDistance)) {
+          bestScore = score;
+          bestDistance = distance;
+          bestPoint = [x, y];
+        }
+      }
+    }
+    return bestPoint;
+  }
+
+  function resolveHistorySelection(entry, regions, fallbackSelectedId) {
+    const candidate = Number.isInteger(entry?.selectedId) ? entry.selectedId : fallbackSelectedId;
+    return regions.some((region) => region.id === candidate) ? candidate : null;
+  }
+
+  return {
+    buildEditedDocument,
+    buildCorrectionsDocument,
+    resizeContour,
+    simplifyClosedContour,
+    mirrorContour,
+    findStrongestEdge,
+    resolveHistorySelection,
+  };
 }));

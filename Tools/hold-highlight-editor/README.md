@@ -32,4 +32,23 @@ Regions can be drawn as freeform polygons, smooth freeform curves, rectangles, r
 
 Selected regions expose object-level rotate and bend handles. Individual contour points remain available behind the **Edit points** toggle for fine correction.
 
+## Fast tracing workflow
+
+1. Draw one side of a repeated or symmetric hold layout.
+2. Use the eight frame handles to resize, the circular handle to rotate, and the diamond handle to bend. Hold Shift while resizing a corner to preserve aspect ratio.
+3. Use **Simplify curve** when a smooth outline has too many controls; undo immediately if the reduction is too aggressive.
+4. Use **Mirror copy** to create a new symmetric region, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
+5. Enable **Snap edges** when direct point or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
+6. Save the reviewed run.
+
+Shortcuts outside text fields:
+
+- `[` / `]`: previous or next region
+- `M`: mirror copy
+- `E`: toggle detailed point editing
+- `S`: toggle edge snapping
+- `Space`: pan
+
+Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
+
 Both export buttons remain available in server and static modes as recovery paths. Unsaved browser edits are lost when the page closes.

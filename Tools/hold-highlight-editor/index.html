@@ -21,6 +21,7 @@
         <div class="toolbar" aria-label="Editor actions">
           <button class="tool-button" id="load-image-button">Load image</button>
           <button class="tool-button" id="load-regions-button">Load regions</button>
+          <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
           <button class="icon-button" id="undo-button" title="Undo (⌘Z)" aria-label="Undo">↶</button>
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
@@ -105,7 +106,7 @@
             <span id="status-text">Loading Simulator demo…</span>
             <span class="shortcut-hints">
               <kbd>Click</kbd> select · <kbd>Drag</kbd> move · <kbd>Double-click</kbd> add point ·
-              <kbd>⌫</kbd> delete · <kbd>Space</kbd> pan
+              <kbd>[ ]</kbd> navigate · <kbd>M</kbd> mirror · <kbd>S</kbd> snap · <kbd>Space</kbd> pan
             </span>
           </footer>
         </section>
@@ -182,8 +183,13 @@
             </div>
 
             <div class="inspector-actions">
+              <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
+              <button type="button" class="tool-button" id="next-region-button">Next →</button>
               <button type="button" class="tool-button" id="edit-points-button">Edit points</button>
+              <button type="button" class="tool-button" id="simplify-curve-button">Simplify curve</button>
               <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
+              <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
+              <button type="button" class="tool-button" id="mirror-onto-button">Mirror onto…</button>
               <button type="button" class="tool-button danger" id="delete-button">Delete region</button>
             </div>
           </form>

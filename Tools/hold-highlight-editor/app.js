@@ -1,7 +1,15 @@
 (() => {
   "use strict";
 
-  const { buildEditedDocument, buildCorrectionsDocument } = globalThis.HoldEditorModel;
+  const {
+    buildEditedDocument,
+    buildCorrectionsDocument,
+    resizeContour,
+    simplifyClosedContour,
+    mirrorContour,
+    findStrongestEdge,
+    resolveHistorySelection,
+  } = globalThis.HoldEditorModel;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -41,6 +49,9 @@
     savedSnapshot: "[]",
     saveError: "",
     hasSaved: false,
+    mirrorOntoSourceId: null,
+    snapEnabled: false,
+    imagePixels: null,
   };
 
   const el = Object.fromEntries([
@@ -51,8 +62,9 @@
     "inspector-empty", "inspector-form", "region-key-input",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
-    "load-image-button", "load-regions-button", "undo-button", "redo-button", "save-button", "save-state",
-    "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button",
+    "load-image-button", "load-regions-button", "snap-button", "undo-button", "redo-button", "save-button", "save-state",
+    "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button", "simplify-curve-button",
+    "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
   ].map((id) => [id, document.getElementById(id)]));
@@ -152,6 +164,14 @@
     renderTransform();
     renderHistoryControls();
     renderSaveState();
+    renderToolState();
+  }
+
+  function renderToolState() {
+    el["snap-button"].disabled = !state.imagePixels;
+    el["snap-button"].classList.toggle("active", state.snapEnabled);
+    el["snap-button"].textContent = state.snapEnabled ? "Snap edges: on" : "Snap edges";
+    el["mirror-onto-button"].classList.toggle("active", state.mirrorOntoSourceId != null);
   }
 
   function renderSaveState() {
@@ -240,6 +260,7 @@
         const item = document.createElement("button");
         item.type = "button";
         item.className = `region-item${region.id === state.selectedId ? " selected" : ""}`;
+        item.dataset.regionId = region.id;
         item.setAttribute("role", "option");
         item.setAttribute("aria-selected", region.id === state.selectedId ? "true" : "false");
         item.innerHTML = `<i class="dot ${escapeHTML(region.type)}"></i><span class="region-id">${region.id}</span><span class="region-key">${escapeHTML(region.key)}</span><span class="region-type">${escapeHTML(region.type)}</span>`;
@@ -269,12 +290,45 @@
     el["area-value"].textContent = `${Math.round(polygonArea(region.contour)).toLocaleString()} px²`;
     el["edit-points-button"].classList.toggle("edit-points-active", state.editPoints);
     el["edit-points-button"].textContent = state.editPoints ? "Finish points" : "Edit points";
+    el["simplify-curve-button"].disabled = region.contour.length < 6;
+    el["previous-region-button"].disabled = state.regions.length < 2;
+    el["next-region-button"].disabled = state.regions.length < 2;
   }
 
   function renderObjectControls(group, region) {
     const frame = orientedFrame(region);
     const pointText = frame.corners.map(([x, y]) => `${round(x)},${round(y)}`).join(" ");
     group.appendChild(makeSvg("polygon", { points: pointText, class: "transform-frame" }));
+    const resizePositions = {
+      nw: [frame.minX, frame.minY],
+      n: [frame.centerLocalX, frame.minY],
+      ne: [frame.maxX, frame.minY],
+      e: [frame.maxX, frame.centerLocalY],
+      se: [frame.maxX, frame.maxY],
+      s: [frame.centerLocalX, frame.maxY],
+      sw: [frame.minX, frame.maxY],
+      w: [frame.minX, frame.centerLocalY],
+    };
+    Object.entries(resizePositions).forEach(([handleName, localPoint]) => {
+      const [x, y] = localToWorld(localPoint, frame.center, frame.rotation);
+      const corner = handleName.length === 2;
+      const horizontalSide = handleName === "n" || handleName === "s";
+      const width = (corner ? 9 : horizontalSide ? 14 : 6) / Math.max(state.zoom, 0.3);
+      const height = (corner ? 9 : horizontalSide ? 6 : 14) / Math.max(state.zoom, 0.3);
+      const handle = makeSvg("rect", {
+        x: x - width / 2,
+        y: y - height / 2,
+        width,
+        height,
+        rx: 1.5,
+        class: "resize-handle",
+        "data-resize-handle": handleName,
+        transform: `rotate(${round(frame.rotation * 180 / Math.PI)} ${x} ${y})`,
+        "aria-label": `Resize ${handleName}`,
+      });
+      handle.addEventListener("pointerdown", (event) => startResizeDrag(event, region.id, handleName));
+      group.appendChild(handle);
+    });
     const handleOffset = 28 / Math.max(state.zoom, 0.3);
     const top = localToWorld([frame.centerLocalX, frame.minY], frame.center, frame.rotation);
     const rotatePoint = localToWorld([frame.centerLocalX, frame.minY - handleOffset], frame.center, frame.rotation);
@@ -303,6 +357,7 @@
       maxX,
       maxY,
       centerLocalX: (minX + maxX) / 2,
+      centerLocalY: (minY + maxY) / 2,
       corners: [[minX, minY], [maxX, minY], [maxX, maxY], [minX, maxY]].map((point) => localToWorld(point, center, rotation)),
     };
   }
@@ -332,11 +387,16 @@
   }
 
   function selectRegion(id) {
+    if (id != null && state.mirrorOntoSourceId != null && id !== state.mirrorOntoSourceId) {
+      completeMirrorOnto(id);
+      return;
+    }
     if (id !== state.selectedId) state.editPoints = false;
     state.selectedId = id;
     render();
     const region = selectedRegion();
     if (region) setStatus(`Selected ${region.key}. Drag the shape or its control points.`);
+    requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
   }
 
   function clientToSvg(clientX, clientY) {
@@ -388,12 +448,38 @@
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
+  function startResizeDrag(event, id, handle) {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    selectRegion(id);
+    const region = selectedRegion();
+    state.transformSession = {
+      pointerId: event.pointerId,
+      kind: "resize",
+      resizeHandle: handle,
+      original: clone(region.contour),
+      rotation: Number(region.metadata.rotation || 0),
+      changed: false,
+    };
+    el["editor-svg"].setPointerCapture(event.pointerId);
+  }
+
   function onSvgPointerMove(event) {
     if (state.transformSession?.pointerId === event.pointerId) {
       const session = state.transformSession;
       const current = clientToSvg(event.clientX, event.clientY);
       const region = selectedRegion();
-      if (session.kind === "rotate") {
+      if (session.kind === "resize") {
+        const pointer = snapPoint(current, event.altKey);
+        region.contour = resizeContour({
+          points: session.original,
+          rotation: session.rotation,
+          handle: session.resizeHandle,
+          pointer,
+          preserveAspect: event.shiftKey,
+        });
+      } else if (session.kind === "rotate") {
         const startAngle = Math.atan2(session.start[1] - session.center[1], session.start[0] - session.center[0]);
         const currentAngle = Math.atan2(current[1] - session.center[1], current[0] - session.center[0]);
         const delta = currentAngle - startAngle;
@@ -432,7 +518,8 @@
     }
     if (state.handleSession?.pointerId === event.pointerId) {
       const region = selectedRegion();
-      region.contour[state.handleSession.index] = clientToSvg(event.clientX, event.clientY);
+      const pointer = clientToSvg(event.clientX, event.clientY);
+      region.contour[state.handleSession.index] = snapPoint(pointer, event.altKey);
       state.handleSession.changed = true;
       renderOverlay();
       renderInspector();
@@ -441,7 +528,10 @@
 
   function onSvgPointerUp(event) {
     if (state.transformSession?.pointerId === event.pointerId) {
-      if (state.transformSession.changed) commitHistory(state.transformSession.kind === "rotate" ? "Rotated region" : "Bent region");
+      if (state.transformSession.changed) {
+        const labels = { rotate: "Rotated region", bend: "Bent region", resize: "Resized region" };
+        commitHistory(labels[state.transformSession.kind]);
+      }
       state.transformSession = null;
       render();
     }
@@ -569,11 +659,91 @@
     render();
   }
 
+  function simplifySelectedCurve() {
+    const region = selectedRegion();
+    if (!region || region.contour.length < 6) return;
+    const before = region.contour.length;
+    const tolerance = Math.max(1.5, Math.hypot(state.canvas.width, state.canvas.height) * 0.0025);
+    const simplified = simplifyClosedContour(region.contour, tolerance);
+    if (simplified.length >= before) {
+      setStatus(`${region.key} already has a sparse contour.`);
+      return;
+    }
+    region.contour = simplified;
+    region.metadata.shapeKind = "freeform";
+    region.metadata.pathStyle = "smooth";
+    commitHistory("Simplified curve");
+    setStatus(`Simplified ${region.key} from ${before} to ${simplified.length} controls.`);
+    render();
+  }
+
+  function mirrorSelectedCopy() {
+    const source = selectedRegion();
+    if (!source) return;
+    const nextId = state.regions.reduce((maximum, region) => Math.max(maximum, region.id), 0) + 1;
+    const copy = clone(source);
+    copy.id = nextId;
+    copy.key = `grip-${String(nextId).padStart(3, "0")}`;
+    copy.contour = mirrorContour(source.contour, state.canvas.width);
+    copy.metadata.rotation = -Number(source.metadata.rotation || 0);
+    copy.metadata.humanNotes = `Mirrored from ${source.key}`;
+    state.regions.push(copy);
+    state.selectedId = nextId;
+    commitHistory("Mirrored region copy");
+    setStatus(`Created mirrored copy ${copy.key}.`);
+    render();
+  }
+
+  function beginMirrorOnto() {
+    const source = selectedRegion();
+    if (!source) return;
+    if (state.mirrorOntoSourceId === source.id) {
+      state.mirrorOntoSourceId = null;
+      setStatus("Mirror replacement cancelled.");
+    } else {
+      state.mirrorOntoSourceId = source.id;
+      setStatus(`Mirror ${source.key} onto which target? Select another region.`);
+    }
+    renderToolState();
+  }
+
+  function completeMirrorOnto(targetId) {
+    const source = state.regions.find((region) => region.id === state.mirrorOntoSourceId);
+    const target = state.regions.find((region) => region.id === targetId);
+    if (!source || !target) {
+      state.mirrorOntoSourceId = null;
+      return;
+    }
+    const geometryKeys = ["shapeKind", "pathStyle", "curveTension", "bend"];
+    geometryKeys.forEach((key) => { target.metadata[key] = source.metadata[key]; });
+    target.metadata.rotation = -Number(source.metadata.rotation || 0);
+    target.contour = mirrorContour(source.contour, state.canvas.width);
+    state.mirrorOntoSourceId = null;
+    state.selectedId = targetId;
+    commitHistory("Mirrored geometry onto region");
+    setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
+    render();
+  }
+
+  function navigateRegion(direction) {
+    if (!state.regions.length) return;
+    const ordered = [...state.regions].sort((left, right) => left.id - right.id);
+    const currentIndex = ordered.findIndex((region) => region.id === state.selectedId);
+    const nextIndex = currentIndex < 0 ? 0 : (currentIndex + direction + ordered.length) % ordered.length;
+    selectRegion(ordered[nextIndex].id);
+  }
+
+  function togglePointEditing() {
+    state.editPoints = !state.editPoints;
+    setStatus(state.editPoints ? "Point editing enabled." : "Object controls enabled.");
+    render();
+  }
+
   function commitHistory(label) {
     const snapshot = JSON.stringify(state.regions);
     if (state.history[state.historyIndex]?.snapshot === snapshot) return;
     state.history = state.history.slice(0, state.historyIndex + 1);
-    state.history.push({ snapshot, label });
+    state.history.push({ snapshot, label, selectedId: state.selectedId });
     state.historyIndex = state.history.length - 1;
     state.dirty = snapshot !== state.savedSnapshot;
     state.saveError = "";
@@ -582,7 +752,7 @@
   }
 
   function resetHistory() {
-    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions" }];
+    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions", selectedId: state.selectedId }];
     state.historyIndex = 0;
     state.savedSnapshot = state.history[0].snapshot;
     state.dirty = false;
@@ -593,8 +763,9 @@
   function undo() {
     if (state.historyIndex <= 0) return;
     state.historyIndex -= 1;
-    state.regions = JSON.parse(state.history[state.historyIndex].snapshot);
-    state.selectedId = state.regions.some((region) => region.id === state.selectedId) ? state.selectedId : null;
+    const entry = state.history[state.historyIndex];
+    state.regions = JSON.parse(entry.snapshot);
+    state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
     setStatus(`Undo: ${state.history[state.historyIndex + 1].label}`);
@@ -604,7 +775,9 @@
   function redo() {
     if (state.historyIndex >= state.history.length - 1) return;
     state.historyIndex += 1;
-    state.regions = JSON.parse(state.history[state.historyIndex].snapshot);
+    const entry = state.history[state.historyIndex];
+    state.regions = JSON.parse(entry.snapshot);
+    state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
     setStatus(`Redo: ${state.history[state.historyIndex].label}`);
@@ -741,6 +914,7 @@
         state.imageHref = href;
         state.imageName = name;
         el["board-image"].setAttribute("href", href);
+        captureImagePixels(image);
         if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
         resolve();
       };
@@ -749,6 +923,52 @@
     });
     configureSvg();
     el["empty-state"].classList.add("hidden");
+  }
+
+  function captureImagePixels(image) {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+      state.imagePixels = {
+        rgba: context.getImageData(0, 0, canvas.width, canvas.height).data,
+        width: canvas.width,
+        height: canvas.height,
+      };
+    } catch (error) {
+      state.imagePixels = null;
+      state.snapEnabled = false;
+      console.warn("Edge snapping unavailable for this image", error);
+    }
+    renderToolState();
+  }
+
+  function snapPoint(point, bypass = false) {
+    if (!state.snapEnabled || bypass || !state.imagePixels) return point;
+    const scaleX = state.imagePixels.width / state.canvas.width;
+    const scaleY = state.imagePixels.height / state.canvas.height;
+    const imagePoint = [point[0] * scaleX, point[1] * scaleY];
+    const canvasRadius = Math.max(4, Math.round(Math.hypot(state.canvas.width, state.canvas.height) * 0.008));
+    const imageRadius = canvasRadius * Math.max(scaleX, scaleY);
+    const snapped = findStrongestEdge({
+      ...state.imagePixels,
+      point: imagePoint,
+      radius: imageRadius,
+      threshold: 24,
+    });
+    return snapped ? [snapped[0] / scaleX, snapped[1] / scaleY] : point;
+  }
+
+  function toggleEdgeSnapping() {
+    if (!state.imagePixels) {
+      setStatus("Edge snapping is unavailable for this image.");
+      return;
+    }
+    state.snapEnabled = !state.snapEnabled;
+    setStatus(state.snapEnabled ? "Edge snapping enabled. Hold Alt to bypass it." : "Edge snapping disabled.");
+    renderToolState();
   }
 
   function setRegions(data, name = "regions.json") {
@@ -992,11 +1212,13 @@
   el["redo-button"].addEventListener("click", redo);
   el["delete-button"].addEventListener("click", deleteSelected);
   el["duplicate-button"].addEventListener("click", duplicateSelected);
-  el["edit-points-button"].addEventListener("click", () => {
-    state.editPoints = !state.editPoints;
-    setStatus(state.editPoints ? "Point editing enabled." : "Object controls enabled.");
-    render();
-  });
+  el["edit-points-button"].addEventListener("click", togglePointEditing);
+  el["simplify-curve-button"].addEventListener("click", simplifySelectedCurve);
+  el["mirror-copy-button"].addEventListener("click", mirrorSelectedCopy);
+  el["mirror-onto-button"].addEventListener("click", beginMirrorOnto);
+  el["previous-region-button"].addEventListener("click", () => navigateRegion(-1));
+  el["next-region-button"].addEventListener("click", () => navigateRegion(1));
+  el["snap-button"].addEventListener("click", toggleEdgeSnapping);
   el["export-button"].addEventListener("click", exportEditedRegions);
   el["corrections-button"].addEventListener("click", exportCorrections);
   el["save-button"].addEventListener("click", saveToRun);
@@ -1068,6 +1290,20 @@
       finishDraw();
     } else if (event.key === "Escape" && state.drawing) {
       cancelDraw();
+    } else if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
+      state.mirrorOntoSourceId = null;
+      setStatus("Mirror replacement cancelled.");
+      renderToolState();
+    } else if (event.key === "[") {
+      navigateRegion(-1);
+    } else if (event.key === "]") {
+      navigateRegion(1);
+    } else if (event.key.toLowerCase() === "m") {
+      mirrorSelectedCopy();
+    } else if (event.key.toLowerCase() === "e") {
+      togglePointEditing();
+    } else if (event.key.toLowerCase() === "s") {
+      toggleEdgeSnapping();
     }
   });
   window.addEventListener("keyup", (event) => { if (event.code === "Space") state.spacePressed = false; });
