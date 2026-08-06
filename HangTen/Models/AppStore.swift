@@ -262,19 +262,25 @@ final class AppStore: ObservableObject {
     private func reloadCustomRoutines() {
         let definitions = customRoutineStore.routines
         var plans: [TrainingPlan] = []
+        var resolvedDefinitions: [CustomRoutineDefinition] = []
         var resolutionError: String?
 
         for definition in definitions {
+            guard CustomRoutineValidator.idIssues(for: definition.id).isEmpty else {
+                resolutionError = "Some custom routines could not be loaded."
+                continue
+            }
             do {
                 plans.append(try CustomRoutineStore(defaults: defaults).plan(for: definition))
+                resolvedDefinitions.append(definition)
             } catch {
                 resolutionError = error.localizedDescription
             }
         }
 
-        customDefinitions = definitions
+        customDefinitions = resolvedDefinitions
         customPlans = plans
-        customRoutinePersistenceError = resolutionError ?? customRoutineStore.persistenceError
+        customRoutinePersistenceError = customRoutineStore.persistenceError ?? resolutionError
     }
 
     private func customMetadata(for definition: CustomRoutineDefinition) -> PlanMetadata {

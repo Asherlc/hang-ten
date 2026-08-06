@@ -4,6 +4,7 @@ struct CustomRoutineEditorView: View {
     @Environment(\.dismiss) private var dismiss
 
     private let onSave: (CustomRoutineDefinition) throws -> Void
+    private let metadataOptions = CustomRoutineMetadataOptions()
     @State private var draft: CustomRoutineDraft
     @State private var selectedMode: EditorTargetMode
     @State private var selectedBoardID: String
@@ -102,9 +103,19 @@ struct CustomRoutineEditorView: View {
                 .accessibilityIdentifier("customRoutine.name")
             TextField("Description", text: $draft.subtitle, axis: .vertical)
                 .accessibilityIdentifier("customRoutine.description")
-            TextField("Difficulty", text: optionalTextBinding(\.difficulty))
+            Picker("Difficulty", selection: $draft.difficulty) {
+                Text("None").tag(String?.none)
+                ForEach(metadataOptions.difficulties, id: \.self) { difficulty in
+                    Text(difficulty).tag(Optional(difficulty))
+                }
+            }
                 .accessibilityIdentifier("customRoutine.difficulty")
-            TextField("Category", text: optionalTextBinding(\.category))
+            Picker("Category", selection: $draft.category) {
+                Text("None").tag(String?.none)
+                ForEach(metadataOptions.categories, id: \.self) { category in
+                    Text(category).tag(Optional(category))
+                }
+            }
                 .accessibilityIdentifier("customRoutine.category")
             TextField("Tags (comma separated)", text: $draft.tagsText)
                 .accessibilityIdentifier("customRoutine.tags")
@@ -168,15 +179,6 @@ struct CustomRoutineEditorView: View {
         )
     }
 
-    private func optionalTextBinding(
-        _ keyPath: WritableKeyPath<CustomRoutineDraft, String?>
-    ) -> Binding<String> {
-        Binding(
-            get: { draft[keyPath: keyPath] ?? "" },
-            set: { draft[keyPath: keyPath] = $0.isEmpty ? nil : $0 }
-        )
-    }
-
     private func replaceDraftTargetMode(mode: EditorTargetMode, boardID: String) {
         guard !isExistingRoutine else {
             return
@@ -192,13 +194,7 @@ struct CustomRoutineEditorView: View {
             return
         }
 
-        var replacement = CustomRoutineDraft(createWith: targetMode)
-        replacement.title = draft.title
-        replacement.subtitle = draft.subtitle
-        replacement.difficulty = draft.difficulty
-        replacement.category = draft.category
-        replacement.tagsText = draft.tagsText
-        draft = replacement
+        draft = draft.retargeted(to: targetMode)
     }
 
     private func save() {

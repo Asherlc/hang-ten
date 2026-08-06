@@ -33,7 +33,7 @@ enum WorkoutStepNormalizer {
                     accessory: step.accessory,
                     duration: duration,
                     phase: step.phase,
-                    targets: step.targets,
+                    targets: segment.targets,
                     segments: [segment],
                     gripType: step.gripType
                 )

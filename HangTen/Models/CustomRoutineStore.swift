@@ -115,6 +115,8 @@ protocol CustomRoutineStoring: AnyObject {
 }
 
 enum CustomRoutineValidationIssue: Error, Equatable {
+    case invalidID(id: String)
+    case builtInIDCollision(id: String)
     case emptyTitle
     case missingSteps
     case duplicateStepID(stepIndex: Int)
@@ -132,6 +134,7 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case invalidSegmentDuration(stepIndex: Int, segmentIndex: Int)
     case unexpectedSegmentDuration(stepIndex: Int, segmentIndex: Int)
     case unresolvableSegmentTargets(stepIndex: Int, segmentIndex: Int)
+    case targetModeMismatch(stepIndex: Int, segmentIndex: Int?)
     case noCompatibleBoard
 }
 
@@ -140,7 +143,7 @@ enum CustomRoutineValidator {
         for definition: CustomRoutineDefinition,
         availableBoards: [TrainingBoard]
     ) -> [CustomRoutineValidationIssue] {
-        var issues: [CustomRoutineValidationIssue] = []
+        var issues = idIssues(for: definition.id)
         if definition.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(.emptyTitle)
         }
@@ -180,13 +183,14 @@ enum CustomRoutineValidator {
                 }
             } else if step.targets.isEmpty {
                 issues.append(.missingTargets(stepIndex: stepIndex))
-            } else {
+            }
+            if !step.targets.isEmpty {
                 validate(
                     targets: step.targets,
                     stepIndex: stepIndex,
                     segmentIndex: nil,
                     boards: boards,
-                    isBoardSpecific: definition.targetMode.isBoardSpecific,
+                    targetMode: definition.targetMode,
                     issues: &issues
                 )
             }
@@ -196,13 +200,14 @@ enum CustomRoutineValidator {
                     issues.append(.missingWorkSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 } else if segment.kind == .rest && !segment.targets.isEmpty {
                     issues.append(.restSegmentHasTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
-                } else if !segment.targets.isEmpty {
+                }
+                if !segment.targets.isEmpty {
                     validate(
                         targets: segment.targets,
                         stepIndex: stepIndex,
                         segmentIndex: segmentIndex,
                         boards: boards,
-                        isBoardSpecific: definition.targetMode.isBoardSpecific,
+                        targetMode: definition.targetMode,
                         issues: &issues
                     )
                 }
@@ -235,6 +240,18 @@ enum CustomRoutineValidator {
         return issues
     }
 
+    static func idIssues(for id: String) -> [CustomRoutineValidationIssue] {
+        var issues: [CustomRoutineValidationIssue] = []
+        if id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            !id.hasPrefix("custom.") || id == "custom." {
+            issues.append(.invalidID(id: id))
+        }
+        if PlanCatalog.all.contains(where: { $0.id == id }) {
+            issues.append(.builtInIDCollision(id: id))
+        }
+        return issues
+    }
+
     static func compatibleBoards(
         for definition: CustomRoutineDefinition,
         availableBoards: [TrainingBoard]
@@ -253,10 +270,15 @@ enum CustomRoutineValidator {
         stepIndex: Int,
         segmentIndex: Int?,
         boards: [TrainingBoard],
-        isBoardSpecific: Bool,
+        targetMode: CustomRoutineTargetMode,
         issues: inout [CustomRoutineValidationIssue]
     ) {
-        if isBoardSpecific {
+        guard targets.allSatisfy({ targetMatchesMode($0, targetMode: targetMode) }) else {
+            issues.append(.targetModeMismatch(stepIndex: stepIndex, segmentIndex: segmentIndex))
+            return
+        }
+
+        if targetMode.isBoardSpecific {
             let knownHoldIDs = Set(boards.flatMap(\.holds).map(\.id))
             for target in targets {
                 guard case let .holdIDs(holdIDs) = target else { continue }
@@ -273,6 +295,18 @@ enum CustomRoutineValidator {
                 issues.append(.unresolvableTargets(stepIndex: stepIndex))
             }
             return
+        }
+    }
+
+    private static func targetMatchesMode(
+        _ target: WorkoutTargetDefinition,
+        targetMode: CustomRoutineTargetMode
+    ) -> Bool {
+        switch (targetMode, target) {
+        case (.boardSpecific, .holdIDs), (.generic, .kind), (.generic, .feature):
+            true
+        default:
+            false
         }
     }
 
@@ -343,11 +377,15 @@ final class CustomRoutineStore: CustomRoutineStoring {
     }
 
     func save(_ routine: CustomRoutineDefinition) throws {
-        let routine = Self.normalize(routine)
-        let issues = CustomRoutineValidator.issues(for: routine, availableBoards: availableBoards)
+        let normalizedRoutine = Self.normalize(routine)
+        let issues = CustomRoutineValidator.issues(
+            for: normalizedRoutine,
+            availableBoards: availableBoards
+        )
         guard issues.isEmpty else {
             throw CustomRoutineStoreError.validationFailed(issues)
         }
+        let routine = try flattenedDefinition(from: normalizedRoutine)
 
         var updatedRoutines = routines
         if let index = updatedRoutines.firstIndex(where: { $0.id == routine.id }) {
@@ -457,7 +495,13 @@ final class CustomRoutineStore: CustomRoutineStoring {
             guard library.schemaVersion == CustomRoutineLibrary.currentSchemaVersion else {
                 throw CustomRoutineStoreError.unsupportedSchema(library.schemaVersion)
             }
-            routines = library.routines
+            let validRoutines = library.routines.filter {
+                CustomRoutineValidator.idIssues(for: $0.id).isEmpty
+            }
+            routines = validRoutines
+            if validRoutines.count != library.routines.count {
+                persistenceError = "Some custom routines could not be loaded."
+            }
         } catch {
             routines = []
             persistenceError = error.localizedDescription
@@ -468,6 +512,32 @@ final class CustomRoutineStore: CustomRoutineStoring {
         let library = CustomRoutineLibrary(routines: routines)
         let data = try JSONEncoder().encode(library)
         defaults.set(data, forKey: key)
+    }
+
+    private func flattenedDefinition(
+        from definition: CustomRoutineDefinition
+    ) throws -> CustomRoutineDefinition {
+        let plan = try plan(for: definition)
+        let flattened = Self.normalize(
+            CustomRoutineDefinition(
+                id: definition.id,
+                title: definition.title,
+                subtitle: definition.subtitle,
+                difficulty: definition.difficulty,
+                category: definition.category,
+                tags: definition.tags,
+                targetMode: definition.targetMode,
+                steps: plan.steps.map { WorkoutStepDefinition.from($0) }
+            )
+        )
+        let issues = CustomRoutineValidator.issues(
+            for: flattened,
+            availableBoards: availableBoards
+        )
+        guard issues.isEmpty else {
+            throw CustomRoutineStoreError.validationFailed(issues)
+        }
+        return flattened
     }
 
     private static func normalize(_ definition: CustomRoutineDefinition) -> CustomRoutineDefinition {

@@ -388,6 +388,27 @@ struct PlansView: View {
                         }
                         .buttonStyle(.plain)
 
+                        if let persistenceError = store.customRoutinePersistenceError {
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.orange)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Some custom routines are unavailable")
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.hangInk)
+                                    Text(persistenceError)
+                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .foregroundStyle(Color.hangMuted)
+                                }
+                            }
+                            .padding(12)
+                            .background(
+                                Color.orange.opacity(0.12),
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
+                            .accessibilityIdentifier("customRoutine.persistenceError")
+                        }
+
                         filterBar(options: filterOptions)
                     }
 

@@ -169,6 +169,164 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
     }
 
+    func testValidationRejectsTargetStorageThatDoesNotMatchRoutineMode() {
+        let boardSpecific = CustomRoutineDefinition(
+            id: "custom.board-mode-mismatch",
+            title: "Board mismatch",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            steps: [validStep(
+                targets: [.kind(.jug)],
+                segments: [
+                    WorkoutSegmentDefinition(
+                        kind: .work,
+                        targets: [.feature(.mediumEdge, fallbacks: [])],
+                        timing: .fixed,
+                        duration: 10
+                    )
+                ]
+            )]
+        )
+        let generic = genericDefinition(
+            targets: [.holdIDs(["edge-19-left"])],
+            segments: [
+                WorkoutSegmentDefinition(
+                    kind: .work,
+                    targets: [.holdIDs(["edge-19-right"])],
+                    timing: .fixed,
+                    duration: 10
+                )
+            ]
+        )
+
+        let boardIssues = CustomRoutineValidator.issues(
+            for: boardSpecific,
+            availableBoards: BoardCatalog.all
+        )
+        let genericIssues = CustomRoutineValidator.issues(
+            for: generic,
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertTrue(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertTrue(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+    }
+
+    func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let source = CustomRoutineDefinition(
+            id: "custom.compound",
+            title: "Compound source",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            steps: [
+                WorkoutStepDefinition(
+                    id: "repeat",
+                    title: "Repeat",
+                    instruction: "Work then rest.",
+                    accessory: "8s · 4s",
+                    duration: 12,
+                    phase: .hang,
+                    targets: [.holdIDs(["edge-19-left"])],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.holdIDs(["edge-19-right"])],
+                            timing: .fixed,
+                            duration: 8
+                        ),
+                        WorkoutSegmentDefinition(
+                            kind: .rest,
+                            targets: [],
+                            timing: .fixed,
+                            duration: 4
+                        )
+                    ],
+                    gripType: .halfCrimp
+                ),
+                WorkoutStepDefinition(
+                    id: "implicit",
+                    title: "Open hang",
+                    instruction: "Hang with open timing.",
+                    accessory: "Up to 20s",
+                    duration: 20,
+                    phase: .hang,
+                    targets: [.holdIDs(["edge-19-left"])]
+                ),
+                WorkoutStepDefinition(
+                    id: "stopwatch",
+                    title: "Maximum hang",
+                    instruction: "Stop when you release.",
+                    accessory: "Up to 30s",
+                    duration: 30,
+                    phase: .hang,
+                    targets: [.holdIDs(["edge-19-right"])],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.holdIDs(["edge-19-right"])],
+                            timing: .stopwatch,
+                            duration: nil
+                        )
+                    ],
+                    gripType: .openHand
+                )
+            ]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(source)
+
+        let stored = try XCTUnwrap(store.routines.first)
+        XCTAssertEqual(stored.steps.map(\.id), [
+            "repeat.segment-1", "repeat.segment-2", "implicit", "stopwatch"
+        ])
+        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest, .hang, .hang])
+        XCTAssertEqual(stored.steps.map(\.targets), [
+            [.holdIDs(["edge-19-right"])],
+            [],
+            [.holdIDs(["edge-19-left"])],
+            [.holdIDs(["edge-19-right"])]
+        ])
+        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1, 1])
+        XCTAssertEqual(stored.steps[2].segments[0].timing, .undefined)
+        XCTAssertEqual(stored.steps[3].segments[0].timing, .stopwatch)
+        XCTAssertEqual(CustomRoutineDraft(duplicate: stored).definition(), stored)
+
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        XCTAssertEqual(reloaded.routines, [stored])
+    }
+
+    func testValidationRejectsInvalidNamespaceAndBuiltInCollisionIDs() throws {
+        let blank = genericDefinition(id: "   ")
+        let foreign = genericDefinition(id: "routine.foreign")
+        let builtInID = try XCTUnwrap(PlanCatalog.all.first?.id)
+        let collision = genericDefinition(id: builtInID)
+
+        XCTAssertTrue(
+            CustomRoutineValidator.issues(for: blank, availableBoards: BoardCatalog.all)
+                .contains(.invalidID(id: "   "))
+        )
+        XCTAssertTrue(
+            CustomRoutineValidator.issues(for: foreign, availableBoards: BoardCatalog.all)
+                .contains(.invalidID(id: "routine.foreign"))
+        )
+        XCTAssertTrue(
+            CustomRoutineValidator.issues(for: collision, availableBoards: BoardCatalog.all)
+                .contains(.builtInIDCollision(id: builtInID))
+        )
+    }
+
     func testValidationRejectsRestStepTargets() {
         let definition = CustomRoutineDefinition(
             id: "custom.rest-targets",
@@ -234,6 +392,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     private func genericDefinition(
+        id: String = "custom.generic",
         subtitle: String = "",
         difficulty: String? = nil,
         category: String? = nil,
@@ -242,7 +401,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         segments: [WorkoutSegmentDefinition] = []
     ) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
-            id: "custom.generic",
+            id: id,
             title: "Generic routine",
             subtitle: subtitle,
             difficulty: difficulty,

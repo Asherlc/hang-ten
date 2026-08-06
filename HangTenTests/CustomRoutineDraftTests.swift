@@ -110,6 +110,107 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.targetMode, .generic)
     }
 
+    func testNewDraftDefinitionUsesCustomUUIDNamespace() throws {
+        let definition = CustomRoutineDraft(createWith: .generic).definition()
+        let uuidText = try XCTUnwrap(definition.id.split(separator: ".").last.map(String.init))
+
+        XCTAssertTrue(definition.id.hasPrefix("custom."))
+        XCTAssertNotNil(UUID(uuidString: uuidText))
+    }
+
+    func testRetargetingNewDraftPreservesRowsAndMetadataWhileClearingOnlyIncompatibleTargets() {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        draft.title = "Retarget me"
+        draft.subtitle = "Keep this description"
+        draft.difficulty = "Advanced"
+        draft.category = "manufacturer"
+        draft.tagsText = "power, edges"
+        draft.steps = [
+            .init(
+                id: "hang",
+                title: "Exact hang",
+                instruction: "Keep the row.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.holdIDs(["edge-19-left"])],
+                timing: .stopwatch,
+                gripType: .halfCrimp
+            ),
+            .init(
+                id: "rest",
+                title: "Rest",
+                instruction: "Recover.",
+                accessory: "5s",
+                duration: 5,
+                phase: .rest,
+                targets: [],
+                timing: .fixed,
+                gripType: nil
+            )
+        ]
+
+        let retargeted = draft.retargeted(to: .generic)
+
+        XCTAssertEqual(retargeted.targetMode, .generic)
+        XCTAssertEqual(retargeted.title, draft.title)
+        XCTAssertEqual(retargeted.subtitle, draft.subtitle)
+        XCTAssertEqual(retargeted.difficulty, draft.difficulty)
+        XCTAssertEqual(retargeted.category, draft.category)
+        XCTAssertEqual(retargeted.tagsText, draft.tagsText)
+        XCTAssertEqual(retargeted.steps.map(\.id), ["hang", "rest"])
+        XCTAssertEqual(retargeted.steps.map(\.title), ["Exact hang", "Rest"])
+        XCTAssertEqual(retargeted.steps.map(\.timing), [.stopwatch, .fixed])
+        XCTAssertEqual(retargeted.steps.map(\.targets), [[], []])
+        XCTAssertEqual(retargeted.steps[0].gripType, .halfCrimp)
+    }
+
+    func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
+        let retainedHold = try XCTUnwrap(BoardCatalog.compactII.holds.first)
+        let replacementBoard = TrainingBoard(
+            id: "replacement-board",
+            manufacturer: "Test",
+            name: "Replacement",
+            subtitle: "Test board",
+            dimensions: "1 × 1",
+            aspectRatio: 1,
+            holds: [retainedHold],
+            productURL: try XCTUnwrap(URL(string: "https://example.com/board")),
+            photoAssetName: nil
+        )
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        draft.steps = [
+            .init(
+                id: "hang",
+                title: "Hang",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .hang,
+                targets: [.holdIDs([retainedHold.id, "not-on-new-board"])],
+                timing: .fixed,
+                gripType: nil
+            )
+        ]
+
+        let retargeted = draft.retargeted(
+            to: .boardSpecific(boardID: replacementBoard.id),
+            availableBoards: [replacementBoard]
+        )
+
+        XCTAssertEqual(retargeted.steps[0].targets, [.holdIDs([retainedHold.id])])
+    }
+
+    func testEditorMetadataOptionsUseBuiltInVocabulariesAndCustomDefaults() {
+        let builtInMetadata = PlanCatalog.all.compactMap { PlanCatalog.metadata(for: $0.id) }
+        let options = CustomRoutineMetadataOptions()
+
+        XCTAssertTrue(Set(builtInMetadata.map(\.level)).isSubset(of: Set(options.difficulties)))
+        XCTAssertTrue(Set(builtInMetadata.map(\.category)).isSubset(of: Set(options.categories)))
+        XCTAssertTrue(options.difficulties.contains("Custom"))
+        XCTAssertTrue(options.categories.contains("custom"))
+    }
+
     func testDefinitionEmitsOneSegmentWithFixedTimingAndCurrentOrder() {
         var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "board"))
         draft.steps = [makeStep(id: "one", title: "One")]

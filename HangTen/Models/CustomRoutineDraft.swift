@@ -123,6 +123,32 @@ struct CustomRoutineDraft: Equatable {
         steps.insert(contentsOf: movingSteps, at: insertionIndex)
     }
 
+    func retargeted(
+        to targetMode: CustomRoutineTargetMode,
+        availableBoards: [TrainingBoard] = BoardCatalog.all
+    ) -> CustomRoutineDraft {
+        guard id == nil, targetMode != self.targetMode else {
+            return self
+        }
+
+        var retargeted = CustomRoutineDraft(createWith: targetMode)
+        retargeted.title = title
+        retargeted.subtitle = subtitle
+        retargeted.difficulty = difficulty
+        retargeted.category = category
+        retargeted.tagsText = tagsText
+        retargeted.steps = steps.map { step in
+            var step = step
+            step.targets = Self.compatibleTargets(
+                step.targets,
+                for: targetMode,
+                availableBoards: availableBoards
+            )
+            return step
+        }
+        return retargeted
+    }
+
     func definition() -> CustomRoutineDefinition {
         CustomRoutineDefinition(
             id: id ?? "custom.\(UUID().uuidString)",
@@ -171,6 +197,34 @@ struct CustomRoutineDraft: Equatable {
         )
     }
 
+    private static func compatibleTargets(
+        _ targets: [WorkoutTargetDefinition],
+        for targetMode: CustomRoutineTargetMode,
+        availableBoards: [TrainingBoard]
+    ) -> [WorkoutTargetDefinition] {
+        switch targetMode {
+        case let .boardSpecific(boardID):
+            guard let board = availableBoards.first(where: { $0.id == boardID }) else {
+                return []
+            }
+            let knownHoldIDs = Set(board.holds.map(\.id))
+            return targets.compactMap { target in
+                guard case let .holdIDs(holdIDs) = target else { return nil }
+                let compatibleIDs = holdIDs.filter(knownHoldIDs.contains)
+                return compatibleIDs.isEmpty ? nil : .holdIDs(compatibleIDs)
+            }
+        case .generic:
+            return targets.filter { target in
+                switch target {
+                case .kind, .feature:
+                    true
+                default:
+                    false
+                }
+            }
+        }
+    }
+
     private func normalizedOptional(_ value: String?) -> String? {
         guard let value else {
             return nil
@@ -185,5 +239,21 @@ struct CustomRoutineDraft: Equatable {
             .split(separator: ",", omittingEmptySubsequences: false)
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+    }
+}
+
+struct CustomRoutineMetadataOptions: Equatable {
+    let difficulties: [String]
+    let categories: [String]
+
+    init(metadata: [PlanMetadata] = PlanCatalog.all.compactMap { PlanCatalog.metadata(for: $0.id) }) {
+        difficulties = Self.sortedUnique(metadata.map(\.level) + ["Custom"])
+        categories = Self.sortedUnique(metadata.map(\.category) + ["custom"])
+    }
+
+    private static func sortedUnique(_ values: [String]) -> [String] {
+        Array(Set(values)).sorted {
+            $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+        }
     }
 }

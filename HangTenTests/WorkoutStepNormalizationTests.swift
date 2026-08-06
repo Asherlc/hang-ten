@@ -30,6 +30,37 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         XCTAssertTrue(result[1].targets.isEmpty)
     }
 
+    func testExpandedWorkRowUsesRetainedSegmentTargetAndGripSemantics() throws {
+        let source = WorkoutStep(
+            id: "different-targets",
+            number: 2,
+            title: "Targeted repeat",
+            instruction: "Use the segment prescription.",
+            accessory: "8s work · 4s rest",
+            duration: 12,
+            phase: .hang,
+            targets: [.kind(.jug)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .feature(.mediumEdge),
+                    timing: .fixed,
+                    duration: 8
+                ),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ],
+            gripType: .halfCrimp
+        )
+
+        let result = try WorkoutStepNormalizer.expand(source)
+
+        XCTAssertEqual(result[0].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(result[0].segments, [source.segments[0]])
+        XCTAssertEqual(result[0].phase, .hang)
+        XCTAssertEqual(result[0].gripType, .halfCrimp)
+        XCTAssertEqual(result[0].duration, 8)
+    }
+
     func testSingleStopwatchStepRemainsOneStepWithItsCap() throws {
         let source = WorkoutStep(
             id: "max",
