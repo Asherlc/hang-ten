@@ -258,7 +258,7 @@ enum CustomRoutineValidator {
     ) -> [TrainingBoard] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
-                targetsResolve(step.targets, on: board) && step.segments.allSatisfy { segment in
+                (step.phase == .rest || targetsResolve(step.targets, on: board)) && step.segments.allSatisfy { segment in
                     segment.kind == .rest || targetsResolve(segment.targets, on: board)
                 }
             }

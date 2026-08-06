@@ -307,6 +307,57 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(reloaded.routines, [stored])
     }
 
+    func testSavePersistsGenericCompoundWorkAndTargetlessRestRows() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = CustomRoutineDefinition(
+            id: "custom.generic-compound",
+            title: "Generic repeaters",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [
+                WorkoutStepDefinition(
+                    id: "repeat",
+                    title: "Repeat",
+                    instruction: "Work, then rest.",
+                    accessory: "8s · 4s",
+                    duration: 12,
+                    phase: .hang,
+                    targets: [.kind(.jug)],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.kind(.jug)],
+                            timing: .fixed,
+                            duration: 8
+                        ),
+                        WorkoutSegmentDefinition(
+                            kind: .rest,
+                            targets: [],
+                            timing: .fixed,
+                            duration: 4
+                        )
+                    ]
+                )
+            ]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(definition)
+
+        let stored = try XCTUnwrap(store.routines.first)
+        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest])
+        XCTAssertEqual(stored.steps.map(\.targets), [[.kind(.jug)], []])
+        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1])
+
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        XCTAssertEqual(reloaded.routines, [stored])
+    }
+
     func testValidationRejectsInvalidNamespaceAndBuiltInCollisionIDs() throws {
         let blank = genericDefinition(id: "   ")
         let foreign = genericDefinition(id: "routine.foreign")
