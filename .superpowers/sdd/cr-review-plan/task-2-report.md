@@ -39,3 +39,13 @@ Green phase:
 
 - Xcode emitted `DVTDeviceOperation: Encountered a build number "" that is incompatible with DVTBuildVersion` during test invocations. Tests still completed with exit status 0; no task code changes were made for this environment diagnostic.
 - No persistence model files beyond `CustomRoutineDraft` and no project-file or `CustomRoutineAppStoreTests` changes were made.
+
+## Follow-up: duplicate current plan
+
+- `PlanDetailView.duplicateRoutine()` now routes through `duplicateDefinition(for:in:)`, which resolves the current plan from `AppStore.plans` by ID before it calls `AppStore.duplicateRoutine`.
+- Added `CustomRoutineAppStoreTests.testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit`, which saves a routine, captures its stale plan, saves edited metadata and an additional step, and verifies the duplicate contains the edited values.
+
+Follow-up test evidence:
+
+- Red: the new focused test failed because `PlanDetailView.duplicateDefinition(for:in:)` did not exist.
+- Green: the focused regression test and the full `CustomRoutineAppStoreTests` class passed (both exit status 0).

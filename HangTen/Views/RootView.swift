@@ -798,6 +798,15 @@ struct PlanDetailView: View {
         store.plans.first(where: { $0.id == plan.id }) ?? plan
     }
 
+    @MainActor
+    static func duplicateDefinition(
+        for plan: TrainingPlan,
+        in store: AppStore
+    ) throws -> CustomRoutineDefinition {
+        let currentPlan = store.plans.first(where: { $0.id == plan.id }) ?? plan
+        return try store.duplicateRoutine(currentPlan)
+    }
+
     private var board: TrainingBoard {
         store.board(for: currentPlan)
     }
@@ -1047,7 +1056,9 @@ struct PlanDetailView: View {
 
     private func duplicateRoutine() {
         do {
-            editorDraft = CustomRoutineDraft(duplicate: try store.duplicateRoutine(plan))
+            editorDraft = CustomRoutineDraft(
+                duplicate: try Self.duplicateDefinition(for: plan, in: store)
+            )
             isShowingEditor = true
         } catch {
             lifecycleError = error.localizedDescription

@@ -104,6 +104,45 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
+    func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let initialDefinition = makeRoutine()
+        try store.saveCustomRoutine(initialDefinition)
+        let stalePlan = try XCTUnwrap(store.plans.first { $0.id == initialDefinition.id })
+        let updatedDefinition = CustomRoutineDefinition(
+            id: initialDefinition.id,
+            title: "Updated edge routine",
+            subtitle: "Updated local routine",
+            difficulty: "Advanced",
+            category: "strength",
+            tags: ["updated"],
+            targetMode: initialDefinition.targetMode,
+            steps: initialDefinition.steps + [WorkoutStepDefinition(
+                id: "step-2",
+                title: "Updated repeat",
+                instruction: "Repeat the hang.",
+                accessory: "8s",
+                duration: 8,
+                phase: .hang,
+                targets: [.holdIDs(["edge-19-left"])],
+                gripType: .halfCrimp,
+                activeDuration: 8
+            )]
+        )
+        try store.saveCustomRoutine(updatedDefinition)
+
+        let duplicate = try PlanDetailView.duplicateDefinition(for: stalePlan, in: store)
+
+        XCTAssertEqual(duplicate.title, "Updated edge routine")
+        XCTAssertEqual(duplicate.subtitle, "Updated local routine")
+        XCTAssertEqual(duplicate.difficulty, "Advanced")
+        XCTAssertEqual(duplicate.category, "strength")
+        XCTAssertEqual(duplicate.tags, ["updated"])
+        XCTAssertEqual(duplicate.steps.map(\.id), ["step-1", "step-2"])
+    }
+
     func testCorruptCustomIDsAreOmittedWithoutShadowingBuiltInsAndWarningIsRetained() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
