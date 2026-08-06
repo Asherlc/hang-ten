@@ -199,7 +199,7 @@ struct CustomRoutineEditorView: View {
 
     private func save() {
         let definition = draft.definition()
-        let issues = localValidationIssues(for: definition)
+        let issues = Self.localValidationIssues(for: definition)
         guard issues.isEmpty else {
             validationErrors = issues
             return
@@ -214,13 +214,16 @@ struct CustomRoutineEditorView: View {
         }
     }
 
-    private func localValidationIssues(for definition: CustomRoutineDefinition) -> [String] {
+    static func localValidationIssues(for definition: CustomRoutineDefinition) -> [String] {
         var issues: [String] = []
         if definition.title.isEmpty {
             issues.append("A routine name is required.")
         }
         if definition.steps.isEmpty {
             issues.append("Add at least one step.")
+        }
+        for (index, step) in definition.steps.enumerated() where !step.duration.isFinite || step.duration <= 0 {
+            issues.append("Step \(index + 1) needs a positive duration.")
         }
         for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.targets.isEmpty {
             issues.append("Step \(index + 1) needs a hold target.")
@@ -281,6 +284,7 @@ private struct CustomRoutineStepEditor: View {
                 if phase == .rest {
                     step.targets = []
                     step.gripType = nil
+                    step.timing = .fixed
                 }
             }
 
@@ -288,12 +292,19 @@ private struct CustomRoutineStepEditor: View {
                 .keyboardType(.decimalPad)
                 .accessibilityIdentifier("customRoutine.stepDuration")
 
-            Picker("Timing", selection: $step.timing) {
-                ForEach(WorkoutSegmentTiming.allCases) { timing in
-                    Text(timing.label).tag(timing)
+            if step.isRest {
+                LabeledContent("Timing") {
+                    Text(WorkoutSegmentTiming.fixed.label)
                 }
+                .accessibilityIdentifier("customRoutine.stepTiming")
+            } else {
+                Picker("Timing", selection: $step.timing) {
+                    ForEach(WorkoutSegmentTiming.allCases) { timing in
+                        Text(timing.label).tag(timing)
+                    }
+                }
+                .accessibilityIdentifier("customRoutine.stepTiming")
             }
-            .accessibilityIdentifier("customRoutine.stepTiming")
 
             if !step.isRest {
                 targetEditor
@@ -336,6 +347,7 @@ private struct CustomRoutineStepEditor: View {
                     }
                 }
             }
+            .accessibilityIdentifier("customRoutine.stepTarget")
         }
     }
 

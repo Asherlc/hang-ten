@@ -309,7 +309,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge, fallbacks: [])]])
     }
 
-    func testDuplicateDraftRoundTripsNormalizedOneSegmentDefinition() {
+    func testEditingDraftRoundTripsNormalizedOneSegmentDefinition() {
         let source = CustomRoutineDefinition(
             id: "custom.fixed",
             title: "Fixed",
@@ -336,7 +336,86 @@ final class CustomRoutineDraftTests: XCTestCase {
             )]
         )
 
-        XCTAssertEqual(CustomRoutineDraft(duplicate: source).definition(), source)
+        XCTAssertEqual(CustomRoutineDraft(editing: source).definition(), source)
+    }
+
+    func testDuplicateDraftCreatesOneStableFreshCustomDefinition() {
+        let source = CustomRoutineDefinition(
+            id: "custom.source",
+            title: "Source",
+            subtitle: "Description",
+            difficulty: "Hard",
+            category: "Strength",
+            tags: ["edge", "power"],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "source-step",
+                title: "Source step",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.jug)],
+                gripType: .openHand,
+                activeDuration: 10
+            )]
+        )
+
+        let duplicate = CustomRoutineDraft(duplicate: source)
+
+        XCTAssertNil(duplicate.id)
+        XCTAssertNotEqual(duplicate.definition().id, source.id)
+        XCTAssertTrue(duplicate.definition().id.hasPrefix("custom."))
+        XCTAssertEqual(duplicate.definition(), duplicate.definition())
+        XCTAssertEqual(duplicate.definition().title, source.title)
+        XCTAssertEqual(duplicate.definition().steps, source.steps)
+    }
+
+    func testEditingDraftRetainsPersistedIdentityAndCannotBeRetargeted() {
+        let source = CustomRoutineDefinition(
+            id: "custom.saved",
+            title: "Saved",
+            subtitle: "Description",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            steps: [WorkoutStepDefinition(
+                id: "saved-step",
+                title: "Saved step",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.holdIDs(["edge-19-left"])],
+                gripType: .openHand,
+                activeDuration: 10
+            )]
+        )
+
+        let editing = CustomRoutineDraft(editing: source)
+
+        XCTAssertEqual(editing.id, source.id)
+        XCTAssertEqual(editing.definition().id, source.id)
+        XCTAssertEqual(editing.retargeted(to: .generic), editing)
+    }
+
+    func testEditorLocalValidationRejectsNonFiniteAndNonPositiveStepDurations() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = [
+            makeStep(id: "zero", title: "Zero", duration: 0),
+            makeStep(id: "negative", title: "Negative", duration: -1),
+            makeStep(id: "infinite", title: "Infinite", duration: .infinity)
+        ]
+
+        XCTAssertEqual(
+            CustomRoutineEditorView.localValidationIssues(for: draft.definition()),
+            [
+                "Step 1 needs a positive duration.",
+                "Step 2 needs a positive duration.",
+                "Step 3 needs a positive duration."
+            ]
+        )
     }
 
     func testDuplicateDraftPreservesStopwatchAsOneSimpleStep() throws {
@@ -400,16 +479,20 @@ final class CustomRoutineDraftTests: XCTestCase {
             )]
         )
 
-        XCTAssertEqual(CustomRoutineDraft(duplicate: source).definition(), source)
+        XCTAssertEqual(CustomRoutineDraft(editing: source).definition(), source)
     }
 
-    private func makeStep(id: String, title: String) -> CustomRoutineStepDraft {
+    private func makeStep(
+        id: String,
+        title: String,
+        duration: TimeInterval = 10
+    ) -> CustomRoutineStepDraft {
         CustomRoutineStepDraft(
             id: id,
             title: title,
             instruction: "Instruction",
             accessory: "Accessory",
-            duration: 10,
+            duration: duration,
             phase: .hang,
             targets: [.kind(.jug)],
             timing: .fixed,

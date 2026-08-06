@@ -73,8 +73,28 @@ struct CustomRoutineDraft: Equatable {
     }
 
     init(duplicate definition: CustomRoutineDefinition) {
-        id = definition.id
-        generatedID = definition.id
+        self.init(
+            definition: definition,
+            id: nil,
+            generatedID: "custom.\(UUID().uuidString)"
+        )
+    }
+
+    init(editing definition: CustomRoutineDefinition) {
+        self.init(
+            definition: definition,
+            id: definition.id,
+            generatedID: definition.id
+        )
+    }
+
+    private init(
+        definition: CustomRoutineDefinition,
+        id: String?,
+        generatedID: String
+    ) {
+        self.id = id
+        self.generatedID = generatedID
         targetMode = definition.targetMode
         title = definition.title
         subtitle = definition.subtitle

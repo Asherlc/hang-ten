@@ -350,14 +350,8 @@ struct PlansView: View {
                 guard let metadata = metadataByPlanID[plan.id] else { return false }
                 return filters.matches(metadata)
             }
-        let compatiblePlanIDs = Set(compatiblePlans.map(\.id))
         let customPlanIDs = Set(store.customPlans.map(\.id))
-        let myRoutines = store.customPlans.filter { plan in
-            guard compatiblePlanIDs.contains(plan.id) else { return false }
-            guard !filters.isEmpty else { return true }
-            guard let metadata = metadataByPlanID[plan.id] else { return false }
-            return filters.matches(metadata)
-        }
+        let myRoutines = filteredPlans.filter { customPlanIDs.contains($0.id) }
         let libraryPlans = filteredPlans.filter { !customPlanIDs.contains($0.id) }
 
         NavigationStack {
@@ -387,6 +381,7 @@ struct PlansView: View {
                                 )
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("customRoutine.create")
 
                         if let persistenceError = store.customRoutinePersistenceError {
                             HStack(alignment: .top, spacing: 10) {
@@ -799,12 +794,16 @@ struct PlanDetailView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var lifecycleError: String?
 
+    private var currentPlan: TrainingPlan {
+        store.plans.first(where: { $0.id == plan.id }) ?? plan
+    }
+
     private var board: TrainingBoard {
-        store.board(for: plan)
+        store.board(for: currentPlan)
     }
 
     private var firstStepHoldIDs: Set<String> {
-        guard let firstStep = plan.steps.first else { return [] }
+        guard let firstStep = currentPlan.steps.first else { return [] }
         return store.holdIDs(for: firstStep, on: board)
     }
 
@@ -819,7 +818,7 @@ struct PlanDetailView: View {
             return reviewGrip
         }
         #endif
-        return plan.steps.first?.gripType
+        return currentPlan.steps.first?.gripType
     }
 
     var body: some View {
@@ -851,6 +850,7 @@ struct PlanDetailView: View {
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityIdentifier("customRoutine.actions")
             }
         }
         .sheet(isPresented: $isShowingEditor) {
@@ -859,7 +859,7 @@ struct PlanDetailView: View {
             }
         }
         .confirmationDialog(
-            "Delete \(plan.title)?",
+            "Delete \(currentPlan.title)?",
             isPresented: $isShowingDeleteConfirmation,
             titleVisibility: .visible
         ) {
@@ -881,31 +881,31 @@ struct PlanDetailView: View {
     private var titleBlock: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
                 Pill(
-                    title: plan.provenance.label,
+                    title: currentPlan.provenance.label,
                     tint: Color.hangGreenDark,
                     fill: Color.hangGreen.opacity(0.16)
                 )
                 Spacer()
-                Label(plan.durationLabel, systemImage: "timer")
+                Label(currentPlan.durationLabel, systemImage: "timer")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
-            Text(plan.title)
+            Text(currentPlan.title)
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-            Text(plan.subtitle)
+            Text(currentPlan.subtitle)
                 .font(.system(size: 15, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(destination: WorkoutView(plan: plan, startsImmediately: true)) {
+            NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
                 HStack {
                     Image(systemName: "play.fill")
                     Text("Start routine")
                     Spacer()
-                    Text(plan.durationLabel)
+                    Text(currentPlan.durationLabel)
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                 }
                 .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -931,7 +931,7 @@ struct PlanDetailView: View {
             if let firstStepHold {
                 GripDiagramView(hold: firstStepHold, gripType: firstStepGripType)
             }
-			if store.usesFallbackMapping(plan, on: board) {
+			if store.usesFallbackMapping(currentPlan, on: board) {
 				Text("Board mapping note: a source-specific hold variant uses the closest manufacturer-documented feature available on this board. The prescribed task text remains unchanged.")
 					.font(.system(size: 12, weight: .medium, design: .rounded))
 					.foregroundStyle(Color.hangMuted)
@@ -946,14 +946,14 @@ struct PlanDetailView: View {
             HStack {
                 SectionLabel(title: "Session flow")
                 Spacer()
-                Text("\(plan.steps.count) cues")
+                Text("\(currentPlan.steps.count) cues")
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
             .padding(.bottom, 14)
 
-            ForEach(Array(plan.steps.enumerated()), id: \.element.id) { index, step in
-                StepRow(step: step, isLast: index == plan.steps.count - 1)
+            ForEach(Array(currentPlan.steps.enumerated()), id: \.element.id) { index, step in
+                StepRow(step: step, isLast: index == currentPlan.steps.count - 1)
             }
 
         }
@@ -981,7 +981,7 @@ struct PlanDetailView: View {
 
     @ViewBuilder
     private var sourceCard: some View {
-        if let sourceURL = plan.sourceURL {
+        if let sourceURL = currentPlan.sourceURL {
             Link(destination: sourceURL) {
                 sourceCardContent(showsExternalLink: true)
             }
@@ -1016,10 +1016,10 @@ struct PlanDetailView: View {
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Source: \(plan.sourceLabel)")
+                    Text("Source: \(currentPlan.sourceLabel)")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text(plan.provenance.detail)
+                    Text(currentPlan.provenance.detail)
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1059,7 +1059,7 @@ struct PlanDetailView: View {
             lifecycleError = "The custom routine could not be found."
             return
         }
-        editorDraft = CustomRoutineDraft(duplicate: definition)
+        editorDraft = CustomRoutineDraft(editing: definition)
         isShowingEditor = true
     }
 

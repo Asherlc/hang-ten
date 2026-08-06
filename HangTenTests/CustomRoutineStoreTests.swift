@@ -354,7 +354,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1, 1])
         XCTAssertEqual(stored.steps[2].segments[0].timing, .undefined)
         XCTAssertEqual(stored.steps[3].segments[0].timing, .stopwatch)
-        XCTAssertEqual(CustomRoutineDraft(duplicate: stored).definition(), stored)
+        XCTAssertEqual(CustomRoutineDraft(editing: stored).definition(), stored)
 
         let reloaded = CustomRoutineStore(defaults: defaults)
         XCTAssertEqual(reloaded.routines, [stored])
