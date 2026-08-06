@@ -132,6 +132,55 @@ class WorkbenchStore:
             raise
         return revision
 
+    def register_run(
+        self, product_name: str, run_root: Path
+    ) -> tuple[BoardRecord, RevisionRecord]:
+        """Register one existing CLI run without copying or relocating it."""
+        resolved_run = self._confined(Path(run_root))
+        if not resolved_run.is_dir():
+            raise WorkbenchStoreError(
+                f"imported run root is not a directory: {resolved_run}"
+            )
+        if any(
+            revision.run_root == resolved_run
+            for board in self.list_boards()
+            for revision in board.revisions
+        ):
+            raise WorkbenchStoreError(
+                f"run root is already registered: {resolved_run}"
+            )
+
+        board = self.create_board(product_name)
+        revisions_root = self._confined(self._board_root(board.id) / "revisions")
+        revisions_root.mkdir(exist_ok=True)
+        revision_id = self._next_numbered_id(
+            revisions_root, _REVISION_ID, "revision"
+        )
+        revision_root = self._confined(revisions_root / revision_id)
+        revision_root.mkdir()
+        revision = RevisionRecord(
+            id=revision_id,
+            run_root=resolved_run,
+            parent_revision_id=None,
+            fork_stage=None,
+            current_stage=0,
+            state="active",
+            stale_from_stage=None,
+        )
+        updated = replace(
+            board,
+            active_revision_id=revision.id,
+            revisions=(revision,),
+        )
+        publication = _PublicationState()
+        try:
+            self._write_board(updated, publication=publication)
+        except Exception:
+            if not publication.published:
+                revision_root.rmdir()
+            raise
+        return updated, revision
+
     def read_board(self, board_id: str) -> BoardRecord:
         """Read and validate one board manifest from the confined workspace."""
         manifest_path = self._manifest_path(board_id)
@@ -289,8 +338,13 @@ class WorkbenchStore:
         expected_run_root = self._revision_root(board_id, revision_id) / "run"
         run_root_value = self._string(record.get("runRoot"), "revision run root")
         run_root = self._confined(self._board_root(board_id) / run_root_value)
-        if run_root != self._confined(expected_run_root):
+        imported = record.get("imported", False)
+        if type(imported) is not bool:
+            raise WorkbenchStoreError("revision imported marker must be a boolean")
+        if not imported and run_root != self._confined(expected_run_root):
             raise WorkbenchStoreError("revision run root is inconsistent")
+        if imported and not run_root.is_dir():
+            raise WorkbenchStoreError("imported revision run root is missing")
 
         parent_revision_id = record.get("parentRevisionId")
         if parent_revision_id is not None:
@@ -337,8 +391,14 @@ class WorkbenchStore:
                     "currentStage": revision.current_stage,
                     "forkStage": revision.fork_stage,
                     "id": revision.id,
+                    "imported": revision.run_root
+                    != self._confined(
+                        board_root / "revisions" / revision.id / "run"
+                    ),
                     "parentRevisionId": revision.parent_revision_id,
-                    "runRoot": revision.run_root.relative_to(board_root).as_posix(),
+                    "runRoot": Path(
+                        os.path.relpath(revision.run_root, board_root)
+                    ).as_posix(),
                     "staleFromStage": revision.stale_from_stage,
                     "state": revision.state,
                 }

@@ -61,6 +61,33 @@ def test_write_draft_publishes_new_immutable_documents(tmp_path: Path) -> None:
     assert json.loads(second.read_text(encoding="utf-8")) == {"regions": ["second"]}
 
 
+def test_register_run_preserves_a_confined_existing_cli_root(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    cli_run = tmp_path / "cli-run"
+    cli_run.mkdir()
+
+    board, revision = store.register_run("Example Board", cli_run)
+    reopened = WorkbenchStore(tmp_path).read_revision(board.id, revision.id)
+
+    assert revision.run_root == cli_run
+    assert reopened.run_root == cli_run
+    assert store.read_board(board.id).active_revision_id == revision.id
+
+    with pytest.raises(WorkbenchStoreError, match="already registered"):
+        store.register_run("Duplicate", cli_run)
+
+
+def test_register_run_rejects_a_root_outside_the_workspace(tmp_path: Path) -> None:
+    store = WorkbenchStore(tmp_path / "workspace")
+    outside = tmp_path / "outside-run"
+    outside.mkdir()
+
+    with pytest.raises(WorkbenchStoreError, match="workspace"):
+        store.register_run("Example Board", outside)
+
+
 def test_write_draft_reports_serialization_errors_without_publishing(
     tmp_path: Path,
 ) -> None:
