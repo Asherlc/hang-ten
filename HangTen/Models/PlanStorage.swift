@@ -1467,6 +1467,38 @@ enum BuiltInPlanLibraryDefinition {
 
 // MARK: - Compatibility facade
 
+/// Builds the DEBUG drift-guard baseline at the same literal-step boundary
+/// used by the runtime resolver.
+private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
+    LegacyPlanSeedCatalog.all.map { seedPlan in
+        let literalSteps: [WorkoutStep]
+        do {
+            literalSteps = try seedPlan.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .enumerated()
+                .map { index, step in
+                    step.withNumber(index + 1)
+                }
+        } catch {
+            preconditionFailure(
+                "Legacy plan \(seedPlan.id) could not be literalized: \(error)"
+            )
+        }
+
+        return TrainingPlan(
+            id: seedPlan.id,
+            title: seedPlan.title,
+            subtitle: seedPlan.subtitle,
+            level: seedPlan.level,
+            sourceLabel: seedPlan.sourceLabel,
+            sourceURL: seedPlan.sourceURL,
+            provenance: seedPlan.provenance,
+            boardID: seedPlan.boardID,
+            steps: literalSteps
+        )
+    }
+}
+
 /// Runtime callers keep the small `PlanCatalog` API they already use, while
 /// the data behind it now comes from one validated, versioned store.
 enum PlanCatalog {
@@ -1474,7 +1506,7 @@ enum PlanCatalog {
         let result = PlanLibraryStore.builtIn
         #if DEBUG
         assert(
-            result.plans == LegacyPlanSeedCatalog.all,
+            result.plans == literalizedLegacyPlanCatalog(),
             "Bundled plan definitions drifted from the source-audited seed catalog"
         )
         #endif
