@@ -45,6 +45,11 @@ BEASTMAKER_1000_IDS = (
 )
 
 
+@pytest.fixture(autouse=True)
+def _owned_workspace_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HANGBOARD_WORKSPACE_ROOT", str(tmp_path))
+
+
 def test_main_converts_photo_to_svg_manifest_and_preview(tmp_path: Path):
     source = _write_rgb(tmp_path / "board.png", make_hangboard())
     output = tmp_path / "board.svg"
@@ -92,6 +97,30 @@ def test_list_products_succeeds_without_conversion_paths(
     captured = capsys.readouterr()
     assert captured.out == "beastmaker-1000\tBeastmaker 1000\n"
     assert captured.err == ""
+
+
+def test_main_rejects_output_outside_workspace_root(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    source = _write_rgb(tmp_path / "board.png", make_hangboard())
+    outside = tmp_path.parent / "escaped.svg"
+
+    result = main(
+        [
+            str(source),
+            "--experimental-recess-detection",
+            "--workspace-root",
+            str(tmp_path),
+            "--output",
+            str(outside),
+            "--manifest",
+            str(tmp_path / "board.json"),
+        ]
+    )
+
+    assert result == 2
+    assert "must stay inside workspace root" in capsys.readouterr().err
+    assert not outside.exists()
 
 
 def test_main_requires_exactly_one_conversion_mode(

@@ -59,7 +59,8 @@ def test_local_and_http_sources_cache_exact_bytes_and_pixel_hashes(tmp_path: Pat
     assert http_cached.cached_path.read_bytes() == local.read_bytes()
     assert local_cached.raw_sha256 == http_cached.raw_sha256 == sha256(local.read_bytes()).hexdigest()
     assert local_cached.decoded_rgb_sha256 == http_cached.decoded_rgb_sha256
-    assert http_cached.kind == "https"
+    assert http_cached.kind == "http"
+    assert json.loads(http_cached.evidence_path.read_text())["kind"] == "http"
 
 
 def test_source_json_strips_url_credentials_query_and_fragment(tmp_path: Path, image_server: str):

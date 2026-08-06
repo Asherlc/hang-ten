@@ -27,7 +27,7 @@ class SourceLimits:
 class CachedSource:
     cached_path: Path
     evidence_path: Path
-    kind: Literal["local", "https"]
+    kind: Literal["local", "http", "https"]
     image_format: str
     width: int
     height: int
@@ -61,7 +61,7 @@ def cache_source(
             if not source_path.is_file():
                 raise ValueError("local source locator must name a regular file")
             raw = _read_local(source_path, limits.maximum_bytes)
-            kind: Literal["local", "https"] = "local"
+            kind: Literal["local", "http", "https"] = "local"
             sanitized_locator = source_path.name
         else:
             raw, final_url = _read_network(locator, limits)
@@ -73,7 +73,7 @@ def cache_source(
                 or final.password is not None
             ):
                 raise ValueError("redirected source locator must remain HTTP(S)")
-            kind = "https"
+            kind = "http" if final.scheme.lower() == "http" else "https"
             sanitized_locator = _sanitize_url(final)
 
         image_format, rgb = _decode_rgb(raw)

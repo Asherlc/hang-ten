@@ -24,6 +24,7 @@ from .templates import (
     layout_from_template,
     list_product_templates,
 )
+from .workspace_paths import default_workspace_root, resolve_workspace_path
 
 
 class _CliError(ValueError):
@@ -67,6 +68,15 @@ def _parser() -> argparse.ArgumentParser:
         "--manifest", type=Path, help="output JSON manifest path"
     )
     parser.add_argument("--preview", type=Path, help="optional diagnostic PNG path")
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=default_workspace_root(),
+        help=(
+            "owned root for generated artifacts "
+            "(default: $HANGBOARD_WORKSPACE_ROOT or .context/hangboard-onboarding)"
+        ),
+    )
     parser.add_argument("--overrides", type=Path, help="optional override JSON path")
     parser.add_argument(
         "--width", type=float, default=1_000, help="normalized SVG width"
@@ -107,6 +117,16 @@ def _validate_arguments(arguments: argparse.Namespace) -> None:
         )
     if arguments.allow_low_confidence and arguments.product is None:
         raise _CliError("--allow-low-confidence requires --product")
+
+    arguments.workspace_root = arguments.workspace_root.resolve(strict=False)
+    for name in ("output", "manifest", "preview"):
+        destination = getattr(arguments, name)
+        if destination is not None:
+            setattr(
+                arguments,
+                name,
+                resolve_workspace_path(destination, arguments.workspace_root),
+            )
 
     destinations = [arguments.output, arguments.manifest]
     if arguments.preview is not None:
@@ -200,6 +220,11 @@ def _convert(arguments: argparse.Namespace) -> None:
         product=product,
         alignment=alignment,
     )
+    destinations = [arguments.output, arguments.manifest]
+    if arguments.preview is not None:
+        destinations.append(arguments.preview)
+    for parent in {destination.parent for destination in destinations}:
+        parent.mkdir(parents=True, exist_ok=True)
     staged: list[tuple[Path, Path]] = []
     try:
         staged.append((_stage_text(arguments.output, svg), arguments.output))

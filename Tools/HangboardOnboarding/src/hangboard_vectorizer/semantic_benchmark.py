@@ -35,6 +35,7 @@ from .semantic_vision import (
     SemanticVisionRequest,
     canonical_json_bytes,
 )
+from .workspace_paths import default_workspace_root, resolve_workspace_path
 
 
 ACCEPTED_RUN_ID = "30c65a90865de3c7de6e8e27a061056c4ef59e2d7a700e1406e3ae272e83e0b6"
@@ -69,14 +70,18 @@ def build_metolius_benchmark_report(
     accepted_run: Path,
     output_path: Path,
     *,
+    workspace_root: Path,
     cache_root: Path | None = None,
 ) -> dict[str, object]:
     """Seed accepted compact evidence, replay offline, and write a sorted report."""
     accepted = Path(accepted_run).resolve()
-    output = Path(output_path).resolve()
+    owned_root = Path(workspace_root).resolve(strict=False)
+    output = resolve_workspace_path(Path(output_path), owned_root)
     output.parent.mkdir(parents=True, exist_ok=True)
     cache = SemanticCache(
-        Path(cache_root).resolve() if cache_root is not None else output.parent / "semantic-cache"
+        resolve_workspace_path(Path(cache_root), owned_root)
+        if cache_root is not None
+        else output.parent / "semantic-cache"
     )
 
     run_document = _json(accepted / "run.json")
@@ -146,7 +151,9 @@ def build_metolius_benchmark_report(
         cache_only=True,
     )
     started = perf_counter()
-    with tempfile.TemporaryDirectory(prefix="hangboard-semantic-replay-") as temporary:
+    with tempfile.TemporaryDirectory(
+        prefix="hangboard-semantic-replay-", dir=output.parent
+    ) as temporary:
         replay_root = Path(temporary) / "stage-2"
         context = SimpleNamespace(root=accepted, manifest=run_document)
         run_generic_stage2(context, replay_root, provider=provider)
@@ -378,10 +385,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--accepted-run", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cache-dir", type=Path)
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        default=default_workspace_root(),
+        help=(
+            "owned root for generated artifacts "
+            "(default: $HANGBOARD_WORKSPACE_ROOT or .context/hangboard-onboarding)"
+        ),
+    )
     arguments = parser.parse_args(argv)
     report = build_metolius_benchmark_report(
         arguments.accepted_run,
         arguments.output,
+        workspace_root=arguments.workspace_root,
         cache_root=arguments.cache_dir,
     )
     if not report["parity"]["exact"]:

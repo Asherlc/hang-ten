@@ -20,6 +20,7 @@ def test_cache_only_benchmark_refuses_unmeasured_token_reduction_and_proves_pari
     report = build_metolius_benchmark_report(
         accepted,
         report_path,
+        workspace_root=tmp_path,
         cache_root=tmp_path / "cache",
     )
 
@@ -53,6 +54,7 @@ def test_benchmark_cli_writes_canonical_sorted_report(tmp_path: Path) -> None:
         "--accepted-run", str(accepted),
         "--output", str(report_path),
         "--cache-dir", str(tmp_path / "cli-cache"),
+        "--workspace-root", str(tmp_path),
     ]) == 0
 
     document = json.loads(report_path.read_text())
@@ -61,6 +63,21 @@ def test_benchmark_cli_writes_canonical_sorted_report(tmp_path: Path) -> None:
     assert report_path.read_bytes() == (
         json.dumps(document, indent=2, sort_keys=True) + "\n"
     ).encode()
+
+
+def test_benchmark_cli_rejects_outputs_outside_workspace_root(
+    tmp_path: Path,
+) -> None:
+    outside = tmp_path.parent / "escaped-report.json"
+
+    with pytest.raises(ValueError, match="must stay inside workspace root"):
+        main([
+            "--accepted-run", str(_accepted_run()),
+            "--output", str(outside),
+            "--workspace-root", str(tmp_path),
+        ])
+
+    assert not outside.exists()
 
 
 def _accepted_run() -> Path:

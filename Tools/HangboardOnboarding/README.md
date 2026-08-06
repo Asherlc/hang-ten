@@ -36,6 +36,10 @@ hangboard-to-svg photo.jpg \
   --preview diagnostic.png
 ```
 
+Generated paths are resolved beneath `.context/hangboard-onboarding` by
+default. Set `--workspace-root` (or `HANGBOARD_WORKSPACE_ROOT`) to another
+explicitly owned root; absolute paths and `..` components may not escape it.
+
 `--product` is a caller assertion that the photo is the exact named model and
 revision; the converter does not recognize commercial products automatically.
 Alignment confidence measures how well the isolated board geometry aligns to
@@ -120,7 +124,7 @@ report with zero live model calls:
 ```bash
 hangboard-semantic-benchmark \
   --accepted-run work/real-metolius-compact-ii/onboarding-visual-test-v3 \
-  --output work/real-metolius-compact-ii/token-optimization-v1/report.json
+  --output token-optimization-v1/report.json
 ```
 
 The command reports model activity separately from deterministic local work.

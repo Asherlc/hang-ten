@@ -33,6 +33,7 @@ from hangboard_vectorizer.beastmaker_replay import (
     _validate_full_suite_verification,
     _load_registered_source,
     _repository_state,
+    _run_full_suite,
     _stage_three_parity,
     _validate_and_record_topology,
     _template_with_path_overrides,
@@ -60,6 +61,15 @@ def _fake_full_suite_runner(repository_root: Path, result_path: Path) -> FullSui
         passed_count=1,
         revision=_current_revision(repository_root),
     )
+
+
+def test_full_suite_reports_missing_rtk(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(beastmaker_replay.shutil, "which", lambda _name: None)
+
+    with pytest.raises(RuntimeError, match="requires the 'rtk' executable"):
+        _run_full_suite(tmp_path, tmp_path / "suite.xml")
 
 
 def _golden_snapshot_paths() -> tuple[Path, ...]:

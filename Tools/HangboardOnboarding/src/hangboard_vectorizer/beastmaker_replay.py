@@ -309,6 +309,8 @@ def run_replay_final(
             str(svg_path),
             "--manifest",
             str(manifest_path),
+            "--workspace-root",
+            str(artifact_root),
         )
     )
     if exit_code != 0:
@@ -565,6 +567,11 @@ def run_replay_v5_topology_refinement(
 
 def _run_full_suite(repository_root: Path, result_path: Path) -> FullSuiteVerification:
     """Execute the real suite and retain its JUnit output inside this replay."""
+    if shutil.which("rtk") is None:
+        raise RuntimeError(
+            "full pytest suite requires the 'rtk' executable on PATH; "
+            "install rtk or provide full_suite_runner"
+        )
     command = (
         "rtk",
         "python",
