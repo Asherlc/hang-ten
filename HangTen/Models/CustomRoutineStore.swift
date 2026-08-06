@@ -112,6 +112,7 @@ protocol CustomRoutineStoring: AnyObject {
     var persistenceError: String? { get }
     func save(_ routine: CustomRoutineDefinition) throws
     func delete(id: String) throws
+    func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan
 }
 
 enum CustomRoutineValidationIssue: Error, Equatable {
@@ -133,6 +134,8 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case missingFixedSegmentDuration(stepIndex: Int, segmentIndex: Int)
     case invalidSegmentDuration(stepIndex: Int, segmentIndex: Int)
     case unexpectedSegmentDuration(stepIndex: Int, segmentIndex: Int)
+    case invalidCompoundSegmentTiming(stepIndex: Int, segmentIndex: Int)
+    case compoundDurationMismatch(stepIndex: Int)
     case unresolvableSegmentTargets(stepIndex: Int, segmentIndex: Int)
     case targetModeMismatch(stepIndex: Int, segmentIndex: Int?)
     case noCompatibleBoard
@@ -219,7 +222,7 @@ enum CustomRoutineValidator {
                 case .fixed:
                     guard let duration = segment.duration else {
                         issues.append(.missingFixedSegmentDuration(stepIndex: stepIndex, segmentIndex: segmentIndex))
-                        continue
+                        break
                     }
                     if !duration.isFinite || duration <= 0 {
                         issues.append(.invalidSegmentDuration(stepIndex: stepIndex, segmentIndex: segmentIndex))
@@ -228,6 +231,23 @@ enum CustomRoutineValidator {
                     if segment.duration != nil {
                         issues.append(.unexpectedSegmentDuration(stepIndex: stepIndex, segmentIndex: segmentIndex))
                     }
+                }
+            }
+
+            if step.segments.count > 1 {
+                for (segmentIndex, segment) in step.segments.enumerated()
+                where segment.timing != .fixed {
+                    issues.append(
+                        .invalidCompoundSegmentTiming(
+                            stepIndex: stepIndex,
+                            segmentIndex: segmentIndex
+                        )
+                    )
+                }
+                let durations = step.segments.compactMap(\.duration)
+                if durations.count == step.segments.count,
+                   durations.reduce(0, +) != step.duration {
+                    issues.append(.compoundDurationMismatch(stepIndex: stepIndex))
                 }
             }
         }
@@ -377,21 +397,13 @@ final class CustomRoutineStore: CustomRoutineStoring {
     }
 
     func save(_ routine: CustomRoutineDefinition) throws {
-        let normalizedRoutine = Self.normalize(routine)
-        let issues = CustomRoutineValidator.issues(
-            for: normalizedRoutine,
-            availableBoards: availableBoards
-        )
-        guard issues.isEmpty else {
-            throw CustomRoutineStoreError.validationFailed(issues)
-        }
-        let routine = try flattenedDefinition(from: normalizedRoutine)
+        let flattenedRoutineDefinition = try flattenedDefinition(from: routine)
 
         var updatedRoutines = routines
-        if let index = updatedRoutines.firstIndex(where: { $0.id == routine.id }) {
-            updatedRoutines[index] = routine
+        if let index = updatedRoutines.firstIndex(where: { $0.id == flattenedRoutineDefinition.id }) {
+            updatedRoutines[index] = flattenedRoutineDefinition
         } else {
-            updatedRoutines.append(routine)
+            updatedRoutines.append(flattenedRoutineDefinition)
         }
         try persist(updatedRoutines)
         routines = updatedRoutines
@@ -400,9 +412,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
 
     func delete(id: String) throws {
         var updatedRoutines = routines
-        if let index = updatedRoutines.firstIndex(where: { $0.id == id }) {
-            updatedRoutines.remove(at: index)
-        }
+        guard let index = updatedRoutines.firstIndex(where: { $0.id == id }) else { return }
+        updatedRoutines.remove(at: index)
         try persist(updatedRoutines)
         routines = updatedRoutines
         persistenceError = nil
@@ -428,16 +439,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 availableBoards: availableBoards
             )
         }
-        let metadata = PlanMetadata(
-            title: definition.title,
-            subtitle: definition.subtitle,
-            level: definition.difficulty ?? "Custom",
-            sourceLabel: "Created in Hang Ten",
-            sourceURL: nil,
-            provenance: .custom,
-            category: definition.category ?? "custom",
-            tags: definition.tags
-        )
+        let metadata = Self.metadata(for: definition)
         let block = WorkoutBlockDefinition(
             id: "\(definition.id).custom-block",
             title: definition.title,
@@ -488,6 +490,19 @@ final class CustomRoutineStore: CustomRoutineStoring {
         return definition
     }
 
+    static func metadata(for definition: CustomRoutineDefinition) -> PlanMetadata {
+        PlanMetadata(
+            title: definition.title,
+            subtitle: definition.subtitle,
+            level: definition.difficulty ?? "Custom",
+            sourceLabel: "Created in Hang Ten",
+            sourceURL: nil,
+            provenance: .custom,
+            category: definition.category ?? "custom",
+            tags: definition.tags
+        )
+    }
+
     private func load() {
         guard let data = defaults.data(forKey: key) else { return }
         do {
@@ -495,8 +510,10 @@ final class CustomRoutineStore: CustomRoutineStoring {
             guard library.schemaVersion == CustomRoutineLibrary.currentSchemaVersion else {
                 throw CustomRoutineStoreError.unsupportedSchema(library.schemaVersion)
             }
-            let validRoutines = library.routines.filter {
-                CustomRoutineValidator.idIssues(for: $0.id).isEmpty
+            var loadedRoutineIDs = Set<String>()
+            let validRoutines = library.routines.filter { routine in
+                CustomRoutineValidator.idIssues(for: routine.id).isEmpty &&
+                    loadedRoutineIDs.insert(routine.id).inserted
             }
             routines = validRoutines
             if validRoutines.count != library.routines.count {
@@ -518,7 +535,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         from definition: CustomRoutineDefinition
     ) throws -> CustomRoutineDefinition {
         let plan = try plan(for: definition)
-        let flattened = Self.normalize(
+        let flattenedRoutineDefinition = Self.normalize(
             CustomRoutineDefinition(
                 id: definition.id,
                 title: definition.title,
@@ -531,13 +548,13 @@ final class CustomRoutineStore: CustomRoutineStoring {
             )
         )
         let issues = CustomRoutineValidator.issues(
-            for: flattened,
+            for: flattenedRoutineDefinition,
             availableBoards: availableBoards
         )
         guard issues.isEmpty else {
             throw CustomRoutineStoreError.validationFailed(issues)
         }
-        return flattened
+        return flattenedRoutineDefinition
     }
 
     private static func normalize(_ definition: CustomRoutineDefinition) -> CustomRoutineDefinition {
@@ -560,14 +577,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
     }
 
     private static func normalizedTags(_ tags: [String]) -> [String] {
-        var seen = Set<String>()
-        return tags
-            .flatMap { $0.split(separator: ",", omittingEmptySubsequences: false).map(String.init) }
-            .compactMap { tag in
-            let normalized = tag.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !normalized.isEmpty, seen.insert(normalized.lowercased()).inserted else { return nil }
-            return normalized
-        }
+        CustomRoutineTagNormalizer.normalizedTags(from: tags)
     }
 }
 

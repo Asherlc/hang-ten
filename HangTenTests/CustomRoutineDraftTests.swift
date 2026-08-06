@@ -118,6 +118,18 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNotNil(UUID(uuidString: uuidText))
     }
 
+    func testNewDraftKeepsItsGeneratedDefinitionIDAcrossRepeatedConversions() {
+        let draft = CustomRoutineDraft(createWith: .generic)
+
+        XCTAssertEqual(draft.definition().id, draft.definition().id)
+    }
+
+    func testRetargetedNewDraftKeepsItsGeneratedDefinitionID() {
+        let draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+
+        XCTAssertEqual(draft.retargeted(to: .generic).definition().id, draft.definition().id)
+    }
+
     func testRetargetingNewDraftPreservesRowsAndMetadataWhileClearingOnlyIncompatibleTargets() {
         var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
         draft.title = "Retarget me"
@@ -223,6 +235,43 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].segments[0].kind, .work)
         XCTAssertEqual(definition.steps[0].segments[0].timing, .fixed)
         XCTAssertEqual(definition.steps[0].segments[0].duration, 10)
+    }
+
+    func testRestDraftCanonicalizesTargetsGripAndTiming() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = [
+            .init(
+                id: "rest",
+                title: "Rest",
+                instruction: "Recover.",
+                accessory: "15s",
+                duration: 15,
+                phase: .rest,
+                targets: [.kind(.jug)],
+                timing: .stopwatch,
+                gripType: .halfCrimp
+            )
+        ]
+
+        let step = draft.definition().steps[0]
+
+        XCTAssertEqual(step.targets, [])
+        XCTAssertNil(step.gripType)
+        XCTAssertEqual(step.segments, [
+            WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 15)
+        ])
+    }
+
+    func testMetadataOptionsUseAStableSecondaryOrderingForCaseVariants() {
+        let metadata = [
+            metadata(level: "alpha", category: "beta"),
+            metadata(level: "Alpha", category: "Beta")
+        ]
+
+        let options = CustomRoutineMetadataOptions(metadata: metadata)
+
+        XCTAssertEqual(options.difficulties, ["Alpha", "alpha", "Custom"])
+        XCTAssertEqual(options.categories, ["Beta", "beta", "custom"])
     }
 
     func testBoardSpecificDraftStoresExactSelectedHoldIDs() {
@@ -365,6 +414,18 @@ final class CustomRoutineDraftTests: XCTestCase {
             targets: [.kind(.jug)],
             timing: .fixed,
             gripType: .openHand
+        )
+    }
+
+    private func metadata(level: String, category: String) -> PlanMetadata {
+        PlanMetadata(
+            title: "Test",
+            subtitle: "",
+            level: level,
+            sourceLabel: "Test",
+            sourceURL: nil,
+            provenance: .custom,
+            category: category
         )
     }
 }

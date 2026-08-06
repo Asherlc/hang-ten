@@ -97,7 +97,7 @@ final class PlanStorageTests: XCTestCase {
                   "title": "Segment step",
                   "instruction": "Use both holds.",
                   "accessory": "10s",
-                  "duration": 10,
+                  "duration": 20,
                   "phase": "hang",
                   "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
                   "segments": [
@@ -374,6 +374,48 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertTrue(validationIssues(for: segment, stepDuration: 30).contains {
             $0.path == "blocks[0].steps[0].segments[0].duration"
+        })
+    }
+
+    func testCompoundSegmentsMustSumToTheEnclosingStepDuration() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].duration" &&
+                $0.message == "Compound segment durations must equal the total step duration."
+        })
+    }
+
+    func testCompoundSegmentWithNonFixedTimingReportsTheTimingPath() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].timing" &&
+                $0.message == "Compound segments must use fixed timing."
         })
     }
 

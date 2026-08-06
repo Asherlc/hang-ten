@@ -44,6 +44,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 
 struct CustomRoutineDraft: Equatable {
     let id: String?
+    private let generatedID: String
     let targetMode: CustomRoutineTargetMode
     var title: String
     var subtitle: String
@@ -53,7 +54,15 @@ struct CustomRoutineDraft: Equatable {
     var steps: [CustomRoutineStepDraft]
 
     init(createWith targetMode: CustomRoutineTargetMode) {
+        self.init(
+            createWith: targetMode,
+            generatedID: "custom.\(UUID().uuidString)"
+        )
+    }
+
+    private init(createWith targetMode: CustomRoutineTargetMode, generatedID: String) {
         id = nil
+        self.generatedID = generatedID
         self.targetMode = targetMode
         title = ""
         subtitle = ""
@@ -65,6 +74,7 @@ struct CustomRoutineDraft: Equatable {
 
     init(duplicate definition: CustomRoutineDefinition) {
         id = definition.id
+        generatedID = definition.id
         targetMode = definition.targetMode
         title = definition.title
         subtitle = definition.subtitle
@@ -131,7 +141,10 @@ struct CustomRoutineDraft: Equatable {
             return self
         }
 
-        var retargeted = CustomRoutineDraft(createWith: targetMode)
+        var retargeted = CustomRoutineDraft(
+            createWith: targetMode,
+            generatedID: generatedID
+        )
         retargeted.title = title
         retargeted.subtitle = subtitle
         retargeted.difficulty = difficulty
@@ -151,12 +164,12 @@ struct CustomRoutineDraft: Equatable {
 
     func definition() -> CustomRoutineDefinition {
         CustomRoutineDefinition(
-            id: id ?? "custom.\(UUID().uuidString)",
+            id: id ?? generatedID,
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
             subtitle: subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
             difficulty: normalizedOptional(difficulty),
             category: normalizedOptional(category),
-            tags: normalizedTags(from: tagsText),
+            tags: CustomRoutineTagNormalizer.normalizedTags(from: tagsText),
             targetMode: targetMode,
             steps: steps.map(Self.stepDefinition(from:))
         )
@@ -177,11 +190,13 @@ struct CustomRoutineDraft: Equatable {
     }
 
     private static func stepDefinition(from step: CustomRoutineStepDraft) -> WorkoutStepDefinition {
-        let segmentDuration: TimeInterval? = step.timing == .fixed ? step.duration : nil
+        let timing: WorkoutSegmentTiming = step.isRest ? .fixed : step.timing
+        let targets = step.isRest ? [] : step.targets
+        let segmentDuration: TimeInterval? = timing == .fixed ? step.duration : nil
         let segment = WorkoutSegmentDefinition(
             kind: step.isRest ? .rest : .work,
-            targets: step.targets,
-            timing: step.timing,
+            targets: targets,
+            timing: timing,
             duration: segmentDuration
         )
         return WorkoutStepDefinition(
@@ -191,9 +206,9 @@ struct CustomRoutineDraft: Equatable {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: step.targets,
+            targets: targets,
             segments: [segment],
-            gripType: step.gripType
+            gripType: step.isRest ? nil : step.gripType
         )
     }
 
@@ -233,27 +248,45 @@ struct CustomRoutineDraft: Equatable {
         return normalized.isEmpty ? nil : normalized
     }
 
-    private func normalizedTags(from text: String) -> [String] {
+}
+
+enum CustomRoutineTagNormalizer {
+    static func normalizedTags(from text: String) -> [String] {
+        normalizedTags(from: [text])
+    }
+
+    static func normalizedTags(from tags: [String]) -> [String] {
         var seen = Set<String>()
-        return text
-            .split(separator: ",", omittingEmptySubsequences: false)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+        return tags
+            .flatMap { $0.split(separator: ",", omittingEmptySubsequences: false).map(String.init) }
+            .compactMap { tag in
+                let normalized = tag.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !normalized.isEmpty, seen.insert(normalized.lowercased()).inserted else {
+                    return nil
+                }
+                return normalized
+            }
     }
 }
 
 struct CustomRoutineMetadataOptions: Equatable {
+    static let defaultMetadata = PlanCatalog.all.compactMap { PlanCatalog.metadata(for: $0.id) }
+
     let difficulties: [String]
     let categories: [String]
 
-    init(metadata: [PlanMetadata] = PlanCatalog.all.compactMap { PlanCatalog.metadata(for: $0.id) }) {
+    init(metadata: [PlanMetadata] = CustomRoutineMetadataOptions.defaultMetadata) {
         difficulties = Self.sortedUnique(metadata.map(\.level) + ["Custom"])
         categories = Self.sortedUnique(metadata.map(\.category) + ["custom"])
     }
 
     private static func sortedUnique(_ values: [String]) -> [String] {
-        Array(Set(values)).sorted {
-            $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+        Array(Set(values)).sorted { lhs, rhs in
+            let comparison = lhs.localizedCaseInsensitiveCompare(rhs)
+            if comparison == .orderedSame {
+                return lhs < rhs
+            }
+            return comparison == .orderedAscending
         }
     }
 }

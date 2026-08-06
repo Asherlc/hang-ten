@@ -271,7 +271,7 @@ final class AppStore: ObservableObject {
                 continue
             }
             do {
-                plans.append(try CustomRoutineStore(defaults: defaults).plan(for: definition))
+                plans.append(try customRoutineStore.plan(for: definition))
                 resolvedDefinitions.append(definition)
             } catch {
                 resolutionError = error.localizedDescription
@@ -284,16 +284,7 @@ final class AppStore: ObservableObject {
     }
 
     private func customMetadata(for definition: CustomRoutineDefinition) -> PlanMetadata {
-        PlanMetadata(
-            title: definition.title,
-            subtitle: definition.subtitle,
-            level: definition.difficulty ?? "Custom",
-            sourceLabel: "Created in Hang Ten",
-            sourceURL: nil,
-            provenance: .custom,
-            category: definition.category ?? "custom",
-            tags: definition.tags
-        )
+        CustomRoutineStore.metadata(for: definition)
     }
 
     func markSessionComplete(

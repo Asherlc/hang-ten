@@ -754,6 +754,27 @@ enum PlanLibraryValidator {
                 }
             }
         }
+
+        if step.segments.count > 1 {
+            for (index, segment) in step.segments.enumerated() where segment.timing != .fixed {
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(path).segments[\(index)].timing",
+                        message: "Compound segments must use fixed timing."
+                    )
+                )
+            }
+            let durations = step.segments.compactMap(\.duration)
+            if durations.count == step.segments.count,
+               durations.reduce(0, +) != step.duration {
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(path).duration",
+                        message: "Compound segment durations must equal the total step duration."
+                    )
+                )
+            }
+        }
     }
 
     private static func validatePlan(

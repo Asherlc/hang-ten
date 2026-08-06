@@ -2,6 +2,11 @@ import Foundation
 
 enum WorkoutStepNormalizationError: Error, Equatable {
     case unsupportedCompoundTiming(stepID: String, segmentIndex: Int)
+    case mismatchedCompoundDuration(
+        stepID: String,
+        expectedDuration: TimeInterval,
+        actualDuration: TimeInterval
+    )
 }
 
 enum WorkoutStepNormalizer {
@@ -17,6 +22,15 @@ enum WorkoutStepNormalizer {
                     segmentIndex: index
                 )
             }
+        }
+
+        let actualDuration = step.segments.compactMap(\.duration).reduce(0, +)
+        guard actualDuration == step.duration else {
+            throw WorkoutStepNormalizationError.mismatchedCompoundDuration(
+                stepID: step.id,
+                expectedDuration: step.duration,
+                actualDuration: actualDuration
+            )
         }
 
         return try step.segments.enumerated().map { index, segment in

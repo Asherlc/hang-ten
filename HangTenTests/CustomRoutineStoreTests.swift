@@ -131,6 +131,38 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertNotNil(store.persistenceError)
     }
 
+    func testLoadKeepsTheFirstPersistedRoutineForEachDuplicateIDAndWarns() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let first = genericDefinition(id: "custom.duplicate", subtitle: "First")
+        let duplicate = genericDefinition(id: "custom.duplicate", subtitle: "Second")
+        defaults.set(
+            try JSONEncoder().encode(CustomRoutineLibrary(routines: [first, duplicate])),
+            forKey: CustomRoutineStore.defaultKey
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+
+        XCTAssertEqual(store.routines, [first])
+        XCTAssertEqual(store.persistenceError, "Some custom routines could not be loaded.")
+    }
+
+    func testDeletingAnUnknownRoutineLeavesPersistedDataUntouched() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let persistedData = try JSONEncoder().encode(
+            CustomRoutineLibrary(routines: [genericDefinition(id: "custom.persisted")])
+        )
+        defaults.set(persistedData, forKey: CustomRoutineStore.defaultKey)
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.delete(id: "custom.unknown")
+
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), persistedData)
+    }
+
     func testSaveNormalizesOptionalMetadataAndDuplicateTags() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -439,6 +471,21 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertTrue(issues.contains(.missingFixedSegmentDuration(stepIndex: 0, segmentIndex: 0)))
         XCTAssertTrue(issues.contains(.unexpectedSegmentDuration(stepIndex: 0, segmentIndex: 1)))
+        XCTAssertTrue(issues.contains(.invalidCompoundSegmentTiming(stepIndex: 0, segmentIndex: 1)))
+    }
+
+    func testValidationRejectsCompoundSegmentDurationsThatDoNotMatchTheStepDuration() {
+        let definition = genericDefinition(
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.jug)], timing: .fixed, duration: 7),
+                WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 4)
+            ]
+        )
+
+        XCTAssertTrue(
+            CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
+                .contains(.compoundDurationMismatch(stepIndex: 0))
+        )
     }
 
     func testCustomProvenanceIsOnlyPlanMetadataAllowedToOmitSourceURL() {

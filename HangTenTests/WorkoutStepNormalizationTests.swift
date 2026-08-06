@@ -110,4 +110,32 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             )
         }
     }
+
+    func testCompoundSegmentsWithMismatchedDurationAreRejected() {
+        let source = WorkoutStep(
+            id: "mismatched",
+            number: 1,
+            title: "Mismatched compound",
+            instruction: "Invalid",
+            accessory: "",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
+            ]
+        )
+
+        XCTAssertThrowsError(try WorkoutStepNormalizer.expand(source)) { error in
+            XCTAssertEqual(
+                error as? WorkoutStepNormalizationError,
+                .mismatchedCompoundDuration(
+                    stepID: "mismatched",
+                    expectedDuration: 30,
+                    actualDuration: 25
+                )
+            )
+        }
+    }
 }

@@ -70,6 +70,19 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(metadata.tags, ["custom"])
     }
 
+    func testReloadUsesTheInjectedStorePlannerAndSharedCustomMetadata() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let definition = makeRoutine()
+        let injectedStore = InjectedRoutineStore(definition: definition)
+
+        let store = AppStore(customRoutineStore: injectedStore, defaults: defaults)
+        let plan = try XCTUnwrap(store.plans.first { $0.id == definition.id })
+
+        XCTAssertEqual(plan.title, "Planned by injected store")
+        XCTAssertEqual(store.metadata(for: plan), CustomRoutineStore.metadata(for: definition))
+    }
+
     func testDuplicateCreatesUnsavedLiteralCustomDefinitionWithNewID() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -130,5 +143,34 @@ final class CustomRoutineAppStoreTests: XCTestCase {
 
         XCTAssertFalse(store.plans.contains { $0.id == definition.id })
         XCTAssertNil(store.customDefinition(for: definition.id))
+    }
+
+    private final class InjectedRoutineStore: CustomRoutineStoring {
+        let routines: [CustomRoutineDefinition]
+        let persistenceError: String? = nil
+        private let resolvedPlan: TrainingPlan
+
+        init(definition: CustomRoutineDefinition) {
+            routines = [definition]
+            resolvedPlan = TrainingPlan(
+                id: definition.id,
+                title: "Planned by injected store",
+                subtitle: "Resolved by test double",
+                level: "Custom",
+                sourceLabel: "Test",
+                sourceURL: nil,
+                provenance: .custom,
+                boardID: BoardCatalog.compactII.id,
+                steps: []
+            )
+        }
+
+        func save(_ routine: CustomRoutineDefinition) throws {}
+
+        func delete(id: String) throws {}
+
+        func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan {
+            resolvedPlan
+        }
     }
 }
