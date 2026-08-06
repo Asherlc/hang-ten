@@ -1,0 +1,36 @@
+{
+  "inputAcceptance": {
+    "path": "stages/02/attempt-0001/stage-2-acceptance.json",
+    "sha256": "8f2da4d39228ababb4ffb3abc84bc0f9836e8e56cb0c78a79ccfe9df48b52331"
+  },
+  "inputLabels": {
+    "path": "stages/02/attempt-0001/stage-2-labels.png",
+    "sha256": "70827d133a56dcc5fab1f990c880d59cb2edbbb796bf9f750c1496d2e9b3293a"
+  },
+  "inputRegions": {
+    "path": "stages/02/attempt-0001/stage-2-regions.json",
+    "sha256": "ed34ff7a360f22e84e60c767b44f3451100ea2547a4fdf80900fffc80168ed49"
+  },
+  "inputRgba": {
+    "path": "stages/01/attempt-0001/stage-1-auto-rgba.png",
+    "sha256": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1"
+  },
+  "profile": {
+    "canvas_width": 1000,
+    "feature_epsilon_fraction": 0.0035,
+    "pocket_corner_radius_fraction": 0.42,
+    "profile_id": "generic-contour-vector-v1",
+    "silhouette_corner_radius": 3.0,
+    "silhouette_epsilon_fraction": 0.0015
+  },
+  "regionCount": 19,
+  "stage": 3,
+  "vectorRegions": {
+    "fileSha256": "8e4bb7db411494e6a1459c03fe7c6fa1d3c614a00132b2f53547265b882debb6",
+    "path": "stage-3-vector-regions.json"
+  },
+  "vectorSvg": {
+    "fileSha256": "8f6d92bc8615915283194e28c81028ccc4bc619cf47e2d746bd9f2a4dc08fb4c",
+    "path": "stage-3-vector.svg"
+  }
+}

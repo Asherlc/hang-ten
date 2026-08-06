@@ -1,0 +1,35 @@
+{
+  "inputAcceptance": {
+    "path": "stages/00/attempt-0001/stage-0-acceptance.json",
+    "sha256": "1d925bfbda1020f259478e72a1ee490a97fe709b2ab59ab21f3756f437505d9e"
+  },
+  "inputRegistered": {
+    "alphaSha256": "c4382ff3cff29609488f3aff7f697b03482bcc6f2dae139c71a78a7e34207fc0",
+    "fileSha256": "c45989d52cc66b685897dccb31348b77ab80b2278b861847eb5a302037f808cc",
+    "height": 261,
+    "path": "stages/00/attempt-0001/stage-0-registered-rgba.png",
+    "pixelSha256": "67754f290b22e1f218fab2883e83c0fd6634cc633b7e11409ca2ab793425e002",
+    "width": 1000
+  },
+  "profile": {
+    "detail_mix": 0.65,
+    "profile_id": "generic-photo-cleanup-v1",
+    "tone_cap_lab": 5.0
+  },
+  "registered": {
+    "alphaSha256": "c4382ff3cff29609488f3aff7f697b03482bcc6f2dae139c71a78a7e34207fc0",
+    "fileSha256": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1",
+    "height": 261,
+    "pixelSha256": "15aa858cd35d8e6d0496ba46ef6dc3f99866ddaa831755f91294e504ca763e2a",
+    "width": 1000
+  },
+  "stage": 1,
+  "transform": {
+    "bilateralDiameter": 7,
+    "bilateralSigmaColor": 9,
+    "bilateralSigmaSpace": 4,
+    "detailMix": 0.65,
+    "smoothMix": 0.35,
+    "toneCorrectionApplied": false
+  }
+}

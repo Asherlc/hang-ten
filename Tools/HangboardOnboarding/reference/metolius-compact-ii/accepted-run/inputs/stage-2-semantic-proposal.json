@@ -1,0 +1,175 @@
+{
+  "canvas": {
+    "height": 261,
+    "width": 1000
+  },
+  "evidence": {
+    "inventory": {
+      "edgeCount": 4,
+      "jugCount": 2,
+      "pocketCount": 10,
+      "regionCount": 19,
+      "sloperCount": 3
+    },
+    "officialDepthGuide": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428"
+  },
+  "inputAcceptanceSha256": "596a091535e5355a777f5d7fb502c511bbcdf7f5e84193dbbb9c9109536247ae",
+  "inputRasterSha256": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1",
+  "productKey": "metolius-wood-grips-compact-ii",
+  "provider": "file-capture",
+  "regions": [
+    {
+      "anchor": [96, 29],
+      "geometry": {"mode": "surface", "polygon": [[0, 0], [157, 0], [157, 30], [178, 49], [15, 49], [0, 35]]},
+      "id": 1,
+      "key": "jug-left",
+      "metadata": {"side": "left"},
+      "type": "jug"
+    },
+    {
+      "anchor": [240, 27],
+      "geometry": {"mode": "surface", "polygon": [[157, 11], [320, 8], [320, 43], [174, 46], [157, 30]]},
+      "id": 2,
+      "key": "sloper-flat-left",
+      "metadata": {"depthMm": 56, "profile": "flat", "side": "left"},
+      "type": "sloper"
+    },
+    {
+      "anchor": [500, 25],
+      "geometry": {"mode": "surface", "polygon": [[320, 7], [680, 7], [680, 44], [320, 43]]},
+      "id": 3,
+      "key": "sloper-round-center",
+      "metadata": {"depthMm": 56, "profile": "round", "side": "center"},
+      "type": "sloper"
+    },
+    {
+      "anchor": [760, 27],
+      "geometry": {"mode": "surface", "polygon": [[680, 7], [846, 10], [846, 30], [828, 46], [680, 44]]},
+      "id": 4,
+      "key": "sloper-flat-right",
+      "metadata": {"depthMm": 56, "profile": "flat", "side": "right"},
+      "type": "sloper"
+    },
+    {
+      "anchor": [920, 29],
+      "geometry": {"mode": "surface", "polygon": [[846, 10], [1000, 0], [1000, 35], [986, 49], [828, 46], [846, 30]]},
+      "id": 5,
+      "key": "jug-right",
+      "metadata": {"side": "right"},
+      "type": "jug"
+    },
+    {
+      "anchor": [95, 91],
+      "geometry": {"mode": "surface", "polygon": [[15, 49], [164, 46], [169, 48], [172, 53], [175, 122], [173, 127], [168, 130], [27, 133]]},
+      "id": 6,
+      "key": "edge-29-left",
+      "metadata": {"depthMm": 29, "side": "left"},
+      "type": "edge"
+    },
+    {
+      "anchor": [253, 113],
+      "geometry": {"anchor": [253, 113], "bbox": [194, 94, 312, 133], "mode": "aperture"},
+      "id": 7,
+      "key": "pocket-29-3-left",
+      "metadata": {"depthMm": 29, "fingerCount": 3, "side": "left"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [369, 113],
+      "geometry": {"anchor": [369, 113], "bbox": [326, 95, 412, 133], "mode": "aperture"},
+      "id": 8,
+      "key": "pocket-29-2-left",
+      "metadata": {"depthMm": 29, "fingerCount": 2, "side": "left"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [503, 113],
+      "geometry": {"anchor": [503, 113], "bbox": [422, 91, 584, 134], "mode": "aperture"},
+      "id": 9,
+      "key": "pocket-29-4-center",
+      "metadata": {"depthMm": 29, "fingerCount": 4, "side": "center"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [643, 113],
+      "geometry": {"anchor": [643, 113], "bbox": [598, 95, 689, 133], "mode": "aperture"},
+      "id": 10,
+      "key": "pocket-29-2-right",
+      "metadata": {"depthMm": 29, "fingerCount": 2, "side": "right"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [749, 113],
+      "geometry": {"anchor": [749, 113], "bbox": [692, 94, 805, 133], "mode": "aperture"},
+      "id": 11,
+      "key": "pocket-29-3-right",
+      "metadata": {"depthMm": 29, "fingerCount": 3, "side": "right"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [905, 91],
+      "geometry": {"mode": "surface", "polygon": [[836, 46], [985, 49], [973, 133], [832, 130], [827, 127], [825, 122], [828, 53], [831, 48]]},
+      "id": 12,
+      "key": "edge-29-right",
+      "metadata": {"depthMm": 29, "side": "right"},
+      "type": "edge"
+    },
+    {
+      "anchor": [112, 191],
+      "geometry": {"mode": "surface", "polygon": [[42, 160], [166, 159], [174, 160], [179, 164], [182, 170], [183, 216], [179, 221], [173, 225], [49, 229], [44, 227], [40, 223], [39, 215], [39, 172], [40, 165]]},
+      "id": 13,
+      "key": "edge-19-left",
+      "metadata": {"depthMm": 19, "side": "left"},
+      "type": "edge"
+    },
+    {
+      "anchor": [266, 206],
+      "geometry": {"anchor": [266, 206], "bbox": [207, 185, 326, 228], "mode": "aperture"},
+      "id": 14,
+      "key": "pocket-19-3-left",
+      "metadata": {"depthMm": 19, "fingerCount": 3, "side": "left"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [376, 206],
+      "geometry": {"anchor": [376, 206], "bbox": [333, 185, 420, 228], "mode": "aperture"},
+      "id": 15,
+      "key": "pocket-19-2-left",
+      "metadata": {"depthMm": 19, "fingerCount": 2, "side": "left"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [504, 206],
+      "geometry": {"anchor": [504, 206], "bbox": [423, 182, 586, 230], "mode": "aperture"},
+      "id": 16,
+      "key": "pocket-19-4-center",
+      "metadata": {"depthMm": 19, "fingerCount": 4, "side": "center"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [635, 206],
+      "geometry": {"anchor": [635, 206], "bbox": [589, 184, 680, 228], "mode": "aperture"},
+      "id": 17,
+      "key": "pocket-19-2-right",
+      "metadata": {"depthMm": 19, "fingerCount": 2, "side": "right"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [742, 206],
+      "geometry": {"anchor": [742, 206], "bbox": [679, 181, 805, 230], "mode": "aperture"},
+      "id": 18,
+      "key": "pocket-19-3-right",
+      "metadata": {"depthMm": 19, "fingerCount": 3, "side": "right"},
+      "type": "pocket"
+    },
+    {
+      "anchor": [888, 191],
+      "geometry": {"mode": "surface", "polygon": [[834, 159], [958, 160], [960, 165], [961, 172], [961, 215], [960, 223], [956, 227], [951, 229], [827, 225], [821, 221], [817, 216], [818, 170], [821, 164], [826, 160]]},
+      "id": 19,
+      "key": "edge-19-right",
+      "metadata": {"depthMm": 19, "side": "right"},
+      "type": "edge"
+    }
+  ],
+  "schemaVersion": 1
+}
