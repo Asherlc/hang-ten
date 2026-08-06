@@ -15,7 +15,7 @@
 ## Results
 
 - RED fixtures were added before the production change.
-- Focused `xcodebuild test` could not execute XCTest: it reached build/validation then the simulator runner aborted, producing `.context/DerivedData-task-6-red/Logs/Test/Test-HangTen-2026.08.06_08-16-39--0700.xcresult`.
+- Focused `xcodebuild test` could not execute XCTest: it reached build/validation then the simulator runner aborted. Its Task 6 result bundle was removed during workspace resource teardown.
 - Static verification: `git diff --check ae690a8ad2c2304baa7f4cc0e3ee8c1f5a0f4caa..HEAD` completed clean. `xcodebuild build-for-testing` completed, with DVT build-number warnings.
 
 ## Concern
