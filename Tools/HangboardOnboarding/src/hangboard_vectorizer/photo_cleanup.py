@@ -16,6 +16,7 @@ _AUTHORITATIVE_SOURCE_RGB_SHA256 = (
     "e1429eefc16670169b032545fe1093272ca0fb9b5fdb67d7a85b1289b9f19dd3"
 )
 _CANONICAL_SIZE = (1000, 259)
+_CANONICAL_WIDTH, _CANONICAL_HEIGHT = _CANONICAL_SIZE
 _REVIEW_PADDING = 100
 _REVIEW_BACKGROUND = np.array([248, 247, 244], dtype=np.uint8)
 _SCREW_CENTERS = (
@@ -57,24 +58,23 @@ def clean_beastmaker_photo(source_rgb: np.ndarray) -> PhotoCleanup:
     repaired = _repair_artifacts(canonical)
     finished = _normalize_wood(repaired, alpha, repair_mask)
 
-    rgba = np.empty((259, 1000, 4), dtype=np.uint8)
+    rgba = np.empty((_CANONICAL_HEIGHT, _CANONICAL_WIDTH, 4), dtype=np.uint8)
     rgba[..., :3] = finished
     rgba[..., 3] = alpha
     rgba[alpha == 0, :3] = 0
 
-    review_height = 259 + 2 * _REVIEW_PADDING
-    review_width = 1000 + 2 * _REVIEW_PADDING
+    review_height = _CANONICAL_HEIGHT + 2 * _REVIEW_PADDING
+    review_width = _CANONICAL_WIDTH + 2 * _REVIEW_PADDING
     review = np.empty((review_height, review_width, 3), dtype=np.uint8)
     review[...] = _REVIEW_BACKGROUND
     target = review[
-        _REVIEW_PADDING : _REVIEW_PADDING + 259,
-        _REVIEW_PADDING : _REVIEW_PADDING + 1000,
+        _REVIEW_PADDING : _REVIEW_PADDING + _CANONICAL_HEIGHT,
+        _REVIEW_PADDING : _REVIEW_PADDING + _CANONICAL_WIDTH,
     ]
     coverage = alpha.astype(np.float32)[..., None] / 255.0
-    composited = (
-        finished.astype(np.float32) * coverage
-        + _REVIEW_BACKGROUND.astype(np.float32) * (1.0 - coverage)
-    )
+    composited = finished.astype(np.float32) * coverage + _REVIEW_BACKGROUND.astype(
+        np.float32
+    ) * (1.0 - coverage)
     target[...] = np.rint(np.clip(composited, 0.0, 255.0)).astype(np.uint8)
 
     rgba.setflags(write=False)
@@ -128,7 +128,7 @@ def _extract_board_alpha(rgb: np.ndarray) -> np.ndarray:
 
 
 def _template_repair_mask() -> np.ndarray:
-    mask = np.zeros((259, 1000), dtype=np.uint8)
+    mask = np.zeros((_CANONICAL_HEIGHT, _CANONICAL_WIDTH), dtype=np.uint8)
     for x1, y1, x2, y2 in _BRANDING_RECTS:
         cv2.rectangle(mask, (x1, y1), (x2 - 1, y2 - 1), 255, -1)
     for center in _SCREW_CENTERS:
@@ -216,9 +216,7 @@ def _normalize_wood(
 def _smooth_surface_field(values: np.ndarray, valid: np.ndarray) -> np.ndarray:
     weights = valid.astype(np.float32)
     weighted_values = values * weights
-    numerator = cv2.GaussianBlur(
-        weighted_values, (0, 0), sigmaX=72.0, sigmaY=30.0
-    )
+    numerator = cv2.GaussianBlur(weighted_values, (0, 0), sigmaX=72.0, sigmaY=30.0)
     denominator = cv2.GaussianBlur(weights, (0, 0), sigmaX=72.0, sigmaY=30.0)
     return numerator / np.maximum(denominator, 1e-4)
 
@@ -234,10 +232,10 @@ def _smooth_column_median(
 
     known = np.flatnonzero(np.isfinite(profile))
     if known.size < 2:
-        raise ValueError("source photograph lacks enough clean surface for normalization")
+        raise ValueError(
+            "source photograph lacks enough clean surface for normalization"
+        )
     missing = np.flatnonzero(~np.isfinite(profile))
     profile[missing] = np.interp(missing, known, profile[known])
-    smoothed = cv2.GaussianBlur(
-        profile[None, :], (0, 0), sigmaX=sigma, sigmaY=0.0
-    )
+    smoothed = cv2.GaussianBlur(profile[None, :], (0, 0), sigmaX=sigma, sigmaY=0.0)
     return smoothed[0].astype(np.float32)

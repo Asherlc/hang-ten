@@ -16,11 +16,21 @@ from PIL import Image, ImageDraw, ImageFont
 from .display_paths import DisplayPath, parse_display_path
 from .stage2_evaluation import _oracle_masks, _oracle_overlay, _region_metrics, _summary
 from .vector_smoothing import (
-    OpenPath, Stage2MaskRegion, VectorizationProfile, _piece_masks,
-    _mask_boundary_edges, _mask_edge_polygon, _ordered_seam,
-    _orient_seam_for_mask, _persistent_corners, _remove_collinear,
-    display_path_contains_open_path, parse_open_path_data,
-    rasterize_display_path, rasterize_paths_half_open, rasterize_paths_independent,
+    OpenPath,
+    Stage2MaskRegion,
+    VectorizationProfile,
+    _piece_masks,
+    _mask_boundary_edges,
+    _mask_edge_polygon,
+    _ordered_seam,
+    _orient_seam_for_mask,
+    _persistent_corners,
+    _remove_collinear,
+    display_path_contains_open_path,
+    parse_open_path_data,
+    rasterize_display_path,
+    rasterize_paths_half_open,
+    rasterize_paths_independent,
     validate_display_path,
 )
 
@@ -54,15 +64,20 @@ def evaluate_stage3_candidate(
     document = _load_candidate_document(candidate_root / "stage-3-vector-regions.json")
     height, width = source_rgba.shape[:2]
     if document["stage2AcceptanceRawSha256"] != stage2_acceptance_raw_sha256:
-        raise ValueError("serialized Stage 3 provenance does not match Stage 2 acceptance")
+        raise ValueError(
+            "serialized Stage 3 provenance does not match Stage 2 acceptance"
+        )
     profile = _candidate_profile(document["profile"])
-    piece_paths = _candidate_piece_paths(document, source_rgba, profile)
-    piece_masks = _piece_masks(source_rgba[..., 3], len(piece_paths))
+    piece_values = document.get("pieces")
+    if not isinstance(piece_values, list):
+        raise ValueError("serialized Stage 3 pieces are invalid")
+    piece_masks = _piece_masks(source_rgba[..., 3], len(piece_values))
+    piece_paths = _candidate_piece_paths(document, source_rgba, piece_masks, profile)
     expected_seams = _expected_canonical_seams(raw_regions, piece_masks)
     seams = _candidate_seams(document, width, height, expected_seams)
     paths = _candidate_paths(document, width, height, raw_regions, profile, seams)
     _validate_seam_membership(document, paths, piece_paths, seams)
-    _validate_svg(candidate_root / "stage-3-vector.svg", document, paths, piece_paths)
+    _validate_svg(candidate_root / "stage-3-vector.svg", paths, piece_paths)
     ordered_masks = rasterize_paths_half_open(tuple(paths.values()), width, height)
     candidate_masks = dict(zip(paths, ordered_masks, strict=True))
     for item in document["regions"]:
@@ -78,6 +93,7 @@ def evaluate_stage3_candidate(
             for value in document["canonicalSeams"]
             if value["kind"] == "region"
         },
+        piece_masks=piece_masks,
     )
     raw_accepted = _passes(raw_metrics, _RAW_THRESHOLDS)
 
@@ -88,12 +104,20 @@ def evaluate_stage3_candidate(
 
         oracle_paths = ACCEPTED_V14_PATHS
     oracle = _oracle_masks(oracle_paths, width, height)
-    pairing = _validated_pairing(stage2_acceptance, candidate_masks, raw_regions, oracle)
+    pairing = _validated_pairing(
+        stage2_acceptance, candidate_masks, raw_regions, oracle
+    )
     typed_candidates = {
-        region.id: (region.grip_type, candidate_masks[region.id]) for region in raw_regions
+        region.id: (region.grip_type, candidate_masks[region.id])
+        for region in raw_regions
     }
     oracle_regions = [
-        _region_metrics(candidate_id, oracle_id, typed_candidates[candidate_id][1], oracle[oracle_id][1])
+        _region_metrics(
+            candidate_id,
+            oracle_id,
+            typed_candidates[candidate_id][1],
+            oracle[oracle_id][1],
+        )
         for candidate_id, oracle_id in pairing
     ]
     oracle_metrics = _summary(oracle_regions)
@@ -103,12 +127,19 @@ def evaluate_stage3_candidate(
         and regression["medianRegionIouLoss"] <= 0.01
         and regression["maximumRegionIouLoss"] <= 0.03
     )
-    accepted = raw_accepted and oracle_accepted and len(paths) == 22
+    accepted = raw_accepted and oracle_accepted and len(paths) == len(raw_regions)
 
     overlay = _oracle_overlay(source_rgba, pairing, typed_candidates, oracle)
-    candidate_image = np.asarray(Image.open(candidate_root / "stage-3-vector-overlay.png").convert("RGB"))
+    candidate_image = np.asarray(
+        Image.open(candidate_root / "stage-3-vector-overlay.png").convert("RGB")
+    )
     review = _review_image(candidate_image, overlay)
-    Image.fromarray(review).save(candidate_root / "stage-3-review.png", format="PNG", optimize=False, compress_level=9)
+    Image.fromarray(review).save(
+        candidate_root / "stage-3-review.png",
+        format="PNG",
+        optimize=False,
+        compress_level=9,
+    )
     acceptance = {
         "accepted": accepted,
         "artifacts": {
@@ -122,7 +153,9 @@ def evaluate_stage3_candidate(
         "oracleMetrics": oracle_metrics,
         "oracleRegression": regression,
         "oracleRegions": oracle_regions,
-        "pairing": [{"candidateId": first, "oracleId": second} for first, second in pairing],
+        "pairing": [
+            {"candidateId": first, "oracleId": second} for first, second in pairing
+        ],
         "rawMetrics": raw_metrics,
         "rawRegions": raw_region_metrics,
         "rawThresholds": {
@@ -148,14 +181,22 @@ def _verify_candidate_hashes(root: Path) -> dict[str, str]:
         document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
         raise ValueError("invalid Stage 3 candidate hash manifest") from error
-    if not isinstance(document, dict) or set(document) != {"files", "schemaVersion"} or document.get("schemaVersion") != 1:
+    if (
+        not isinstance(document, dict)
+        or set(document) != {"files", "schemaVersion"}
+        or document.get("schemaVersion") != 1
+    ):
         raise ValueError("invalid Stage 3 candidate hash manifest")
     files = document.get("files")
     if not isinstance(files, dict) or set(files) != _CANDIDATE_NAMES:
         raise ValueError("invalid Stage 3 candidate hash manifest")
     for name, expected in files.items():
         candidate = root / name
-        if not isinstance(expected, str) or len(expected) != 64 or not candidate.is_file():
+        if (
+            not isinstance(expected, str)
+            or len(expected) != 64
+            or not candidate.is_file()
+        ):
             raise ValueError("invalid Stage 3 candidate hash manifest")
         if sha256(candidate.read_bytes()).hexdigest() != expected:
             raise ValueError(f"serialized Stage 3 candidate was changed: {name}")
@@ -168,8 +209,15 @@ def _load_candidate_document(path: Path) -> dict[str, object]:
     except (OSError, json.JSONDecodeError) as error:
         raise ValueError("invalid serialized Stage 3 regions") from error
     expected = {
-        "canonicalSeams", "height", "pieces", "profile", "regions", "schemaVersion", "stage",
-        "stage2AcceptanceRawSha256", "width",
+        "canonicalSeams",
+        "height",
+        "pieces",
+        "profile",
+        "regions",
+        "schemaVersion",
+        "stage",
+        "stage2AcceptanceRawSha256",
+        "width",
     }
     if (
         not isinstance(value, dict)
@@ -196,15 +244,21 @@ def _candidate_profile(value: object) -> VectorizationProfile:
 
 
 def _candidate_piece_paths(
-    document: Mapping[str, object], source_rgba: np.ndarray, profile: VectorizationProfile
+    document: Mapping[str, object],
+    source_rgba: np.ndarray,
+    piece_masks: tuple[np.ndarray, ...],
+    profile: VectorizationProfile,
 ) -> dict[str, DisplayPath]:
     height, width = source_rgba.shape[:2]
     values = document["pieces"]
     assert isinstance(values, list)
-    piece_masks = _piece_masks(source_rgba[..., 3], len(values))
     expected_fields = {
-        "displayPath", "id", "outputMaskSha256", "pieceIndex",
-        "rawMaskSha256", "sharedSeamIds",
+        "displayPath",
+        "id",
+        "outputMaskSha256",
+        "pieceIndex",
+        "rawMaskSha256",
+        "sharedSeamIds",
     }
     result: dict[str, DisplayPath] = {}
     for index, (value, raw) in enumerate(zip(values, piece_masks, strict=True)):
@@ -218,13 +272,26 @@ def _candidate_piece_paths(
             or not _string_list(value.get("sharedSeamIds"))
         ):
             raise ValueError("serialized Stage 3 piece provenance is invalid")
-        path = parse_display_path(value.get("displayPath"), identifier, width, height, allow_linear_segments=True)
+        path = parse_display_path(
+            value.get("displayPath"),
+            identifier,
+            width,
+            height,
+            allow_linear_segments=True,
+        )
         if path is None:
             raise ValueError("serialized Stage 3 piece path is missing")
-        validate_display_path(path, scale_basis=float(min(_bbox_size(raw))), profile=profile)
+        validate_display_path(
+            path, scale_basis=float(min(_bbox_size(raw))), profile=profile
+        )
         output = rasterize_display_path(path, width, height)
-        if value.get("outputMaskSha256") != sha256(output.tobytes()).hexdigest() or _iou(raw, output) < 0.98:
-            raise ValueError("serialized Stage 3 piece path does not match alpha silhouette")
+        if (
+            value.get("outputMaskSha256") != sha256(output.tobytes()).hexdigest()
+            or _iou(raw, output) < 0.98
+        ):
+            raise ValueError(
+                "serialized Stage 3 piece path does not match alpha silhouette"
+            )
         result[identifier] = path
     return result
 
@@ -241,10 +308,18 @@ def _candidate_seams(
     if not values and expected:
         raise ValueError("serialized Stage 3 canonical seams are invalid")
     expected_fields = {
-        "firstId", "id", "kind", "path", "rawCoordinates", "reversePath", "secondId",
+        "firstId",
+        "id",
+        "kind",
+        "path",
+        "rawCoordinates",
+        "reversePath",
+        "secondId",
     }
     result: dict[str, OpenPath] = {}
-    for index, (value, required) in enumerate(zip(values, expected, strict=True), start=1):
+    for index, (value, required) in enumerate(
+        zip(values, expected, strict=True), start=1
+    ):
         required_kind, required_first, required_second, required_raw = required
         if (
             not isinstance(value, dict)
@@ -257,15 +332,20 @@ def _candidate_seams(
             raise ValueError("canonical seam evidence does not match raw geometry")
         path = parse_open_path_data(value.get("path"), width, height)
         if value.get("reversePath") != path.reversed().data:
-            raise ValueError("serialized Stage 3 canonical seam reverse path is invalid")
+            raise ValueError(
+                "serialized Stage 3 canonical seam reverse path is invalid"
+            )
         raw = value.get("rawCoordinates")
         if (
-            not isinstance(raw, list) or len(raw) < 2
+            not isinstance(raw, list)
+            or len(raw) < 2
             or any(not isinstance(point, list) or len(point) != 2 for point in raw)
             or tuple(float(item) for item in raw[0]) != path.start
             or tuple(float(item) for item in raw[-1]) != path.end
         ):
-            raise ValueError("serialized Stage 3 canonical seam coordinates are invalid")
+            raise ValueError(
+                "serialized Stage 3 canonical seam coordinates are invalid"
+            )
         raw_points = tuple((float(point[0]), float(point[1])) for point in raw)
         if raw_points != required_raw:
             raise ValueError("canonical seam evidence does not match raw geometry")
@@ -288,15 +368,16 @@ def _expected_canonical_seams(
         for second in surfaces[index + 1 :]:
             if first.piece_index != second.piece_index:
                 continue
-            shared = _mask_boundary_edges(first.mask) & _mask_boundary_edges(second.mask)
+            shared = _mask_boundary_edges(first.mask) & _mask_boundary_edges(
+                second.mask
+            )
             if not shared:
                 continue
             raw = _orient_seam_for_mask(_ordered_seam(shared), first.mask)
             expected.append(("region", first.id, second.id, raw))
     for region in surfaces:
-        shared = (
-            _mask_boundary_edges(region.mask)
-            & _mask_boundary_edges(piece_masks[region.piece_index])
+        shared = _mask_boundary_edges(region.mask) & _mask_boundary_edges(
+            piece_masks[region.piece_index]
         )
         if not shared:
             continue
@@ -327,8 +408,15 @@ def _candidate_paths(
     if len(values) != len(raw_regions):
         raise ValueError("serialized Stage 3 topology mismatch")
     expected_fields = {
-        "displayPath", "id", "lockedCorners", "outputMaskSha256", "pieceIndex",
-        "primitive", "rawMaskSha256", "sharedSeamIds", "type",
+        "displayPath",
+        "id",
+        "lockedCorners",
+        "outputMaskSha256",
+        "pieceIndex",
+        "primitive",
+        "rawMaskSha256",
+        "sharedSeamIds",
+        "type",
     }
     paths: dict[str, DisplayPath] = {}
     for value, raw in zip(values, raw_regions, strict=True):
@@ -363,7 +451,9 @@ def _candidate_paths(
             (float(point[0]), float(point[1])) for point in value["lockedCorners"]
         )
         if serialized_locked != expected_locked:
-            raise ValueError("serialized Stage 3 locked corners do not match raw geometry")
+            raise ValueError(
+                "serialized Stage 3 locked corners do not match raw geometry"
+            )
         validate_display_path(
             parsed, scale_basis=float(min(_bbox_size(raw.mask))), profile=profile
         )
@@ -401,12 +491,13 @@ def _validate_seam_membership(
         for value in collection:
             assert isinstance(value, dict)
             if set(value["sharedSeamIds"]) != expected[value["id"]]:
-                raise ValueError("serialized shared seam IDs do not match path geometry")
+                raise ValueError(
+                    "serialized shared seam IDs do not match path geometry"
+                )
 
 
 def _validate_svg(
     path: Path,
-    document: Mapping[str, object],
     regions: Mapping[str, DisplayPath],
     pieces: Mapping[str, DisplayPath],
 ) -> None:
@@ -417,7 +508,9 @@ def _validate_svg(
     namespace = "{http://www.w3.org/2000/svg}"
     elements = {value.get("id"): value for value in root.findall(f"{namespace}path")}
     expected = {**pieces, **regions}
-    if set(elements) != set(expected) or any(elements[key].get("d") != value.data for key, value in expected.items()):
+    if set(elements) != set(expected) or any(
+        elements[key].get("d") != value.data for key, value in expected.items()
+    ):
         raise ValueError("serialized Stage 3 SVG paths do not match candidate JSON")
     if len(root.findall(f"{namespace}image")) != 1:
         raise ValueError("serialized Stage 3 SVG source raster is invalid")
@@ -425,9 +518,11 @@ def _validate_svg(
 
 def _points(value: object, width: int, height: int) -> bool:
     return isinstance(value, list) and all(
-        isinstance(point, list) and len(point) == 2
+        isinstance(point, list)
+        and len(point) == 2
         and all(type(item) in {int, float} and np.isfinite(item) for item in point)
-        and 0 <= point[0] <= width and 0 <= point[1] <= height
+        and 0 <= point[0] <= width
+        and 0 <= point[1] <= height
         for point in value
     )
 
@@ -456,10 +551,15 @@ def _raw_preservation(
     raw_regions: tuple[Stage2MaskRegion, ...],
     paths: Mapping[str, DisplayPath],
     shared_region_seams: Mapping[frozenset[str], OpenPath],
+    *,
+    piece_masks: tuple[np.ndarray, ...] | None = None,
 ) -> tuple[dict[str, float], list[dict[str, object]]]:
     height, width = rgba.shape[:2]
     scale = 4
-    piece_masks = _piece_masks(rgba[..., 3], max(region.piece_index for region in raw_regions) + 1)
+    if piece_masks is None:
+        piece_masks = _piece_masks(
+            rgba[..., 3], max(region.piece_index for region in raw_regions) + 1
+        )
     ordered_candidates = rasterize_paths_half_open(
         tuple(paths[region.id] for region in raw_regions), width, height, scale=scale
     )
@@ -479,8 +579,16 @@ def _raw_preservation(
     for position, (region, candidate, independent) in enumerate(
         zip(raw_regions, ordered_candidates, independent_candidates, strict=True)
     ):
-        raw = cv2.resize(region.mask, (width * scale, height * scale), interpolation=cv2.INTER_NEAREST)
-        piece = cv2.resize(piece_masks[region.piece_index], (width * scale, height * scale), interpolation=cv2.INTER_NEAREST)
+        raw = cv2.resize(
+            region.mask,
+            (width * scale, height * scale),
+            interpolation=cv2.INTER_NEAREST,
+        )
+        piece = cv2.resize(
+            piece_masks[region.piece_index],
+            (width * scale, height * scale),
+            interpolation=cv2.INTER_NEAREST,
+        )
         intersection = int(np.count_nonzero(candidate.astype(bool) & raw.astype(bool)))
         union = int(np.count_nonzero(candidate.astype(bool) | raw.astype(bool)))
         iou = intersection / union if union else 1.0
@@ -506,7 +614,9 @@ def _raw_preservation(
                 pair_overlap &= ~seam_ownership
             true_overlap |= pair_overlap
         new_overlap = int(np.count_nonzero(true_overlap))
-        outside_pixels = int(np.count_nonzero(independent_selected & ~piece.astype(bool)))
+        outside_pixels = int(
+            np.count_nonzero(independent_selected & ~piece.astype(bool))
+        )
         overlap += new_overlap
         outside += outside_pixels
         total_intersection += intersection
@@ -524,7 +634,9 @@ def _raw_preservation(
             }
         )
     ious = np.asarray([value["iou"] for value in region_metrics], dtype=float)
-    centroids = np.asarray([value["centroidDisplacementPx"] for value in region_metrics], dtype=float)
+    centroids = np.asarray(
+        [value["centroidDisplacementPx"] for value in region_metrics], dtype=float
+    )
     hd95s = np.asarray([value["hd95Px"] for value in region_metrics], dtype=float)
     metrics = {
         "maximumCentroidDisplacementPx": float(centroids.max()),
@@ -551,7 +663,8 @@ def _rasterize_open_path_boundary(
         if segment.command == "L":
             points.append(end)
         else:
-            assert segment.control_1 is not None and segment.control_2 is not None
+            if segment.control_1 is None or segment.control_2 is None:
+                raise ValueError("cubic open-path segment requires two controls")
             control_1 = np.asarray(segment.control_1, dtype=np.float64)
             control_2 = np.asarray(segment.control_2, dtype=np.float64)
             for step in range(1, 65):
@@ -612,20 +725,29 @@ def _oracle_regression(
         for value in baseline_regions
         if isinstance(value, dict) and "candidateId" in value and "iou" in value
     }
+    missing = [
+        value["candidateId"]
+        for value in vector_regions
+        if value["candidateId"] not in baseline_by_id
+    ]
+    if missing:
+        raise ValueError("Stage 2 per-region baseline metrics are incomplete")
     losses = [
         baseline_by_id[value["candidateId"]] - float(value["iou"])
         for value in vector_regions
     ]
-    if len(losses) != len(vector_regions):
-        raise ValueError("Stage 2 per-region baseline metrics are incomplete")
     return {
         "maximumRegionIouLoss": max(losses),
-        "medianRegionIouLoss": float(baseline_summary["medianRegionIou"]) - float(vector_summary["medianRegionIou"]),
-        "microIouLoss": float(baseline_summary["microIou"]) - float(vector_summary["microIou"]),
+        "medianRegionIouLoss": float(baseline_summary["medianRegionIou"])
+        - float(vector_summary["medianRegionIou"]),
+        "microIouLoss": float(baseline_summary["microIou"])
+        - float(vector_summary["microIou"]),
     }
 
 
-def _passes(metrics: Mapping[str, float], thresholds: Mapping[str, tuple[str, float]]) -> bool:
+def _passes(
+    metrics: Mapping[str, float], thresholds: Mapping[str, tuple[str, float]]
+) -> bool:
     return all(
         metrics[name] >= value if operator == ">=" else metrics[name] <= value
         for name, (operator, value) in thresholds.items()
@@ -636,38 +758,71 @@ def _centroid_shift(first: np.ndarray, second: np.ndarray) -> float:
     def center(mask: np.ndarray) -> tuple[float, float]:
         moments = cv2.moments(mask.astype(np.uint8), binaryImage=True)
         return moments["m10"] / moments["m00"], moments["m01"] / moments["m00"]
+
     first_center, second_center = center(first), center(second)
-    return float(np.hypot(first_center[0] - second_center[0], first_center[1] - second_center[1]))
+    return float(
+        np.hypot(first_center[0] - second_center[0], first_center[1] - second_center[1])
+    )
 
 
 def _hd95(first: np.ndarray, second: np.ndarray) -> float:
     first_boundary = _boundary(first)
     second_boundary = _boundary(second)
-    distance_second = cv2.distanceTransform((~second_boundary).astype(np.uint8), cv2.DIST_L2, 5)
-    distance_first = cv2.distanceTransform((~first_boundary).astype(np.uint8), cv2.DIST_L2, 5)
-    distances = np.concatenate((distance_second[first_boundary], distance_first[second_boundary]))
+    distance_second = cv2.distanceTransform(
+        (~second_boundary).astype(np.uint8), cv2.DIST_L2, 5
+    )
+    distance_first = cv2.distanceTransform(
+        (~first_boundary).astype(np.uint8), cv2.DIST_L2, 5
+    )
+    distances = np.concatenate(
+        (distance_second[first_boundary], distance_first[second_boundary])
+    )
     return float(np.percentile(distances, 95)) if distances.size else 0.0
 
 
 def _boundary(mask: np.ndarray) -> np.ndarray:
     selected = mask.astype(bool)
-    eroded = cv2.erode(selected.astype(np.uint8), np.ones((3, 3), np.uint8), borderType=cv2.BORDER_CONSTANT, borderValue=0)
+    eroded = cv2.erode(
+        selected.astype(np.uint8),
+        np.ones((3, 3), np.uint8),
+        borderType=cv2.BORDER_CONSTANT,
+        borderValue=0,
+    )
     return selected & ~(eroded > 0)
 
 
 def _review_image(candidate: np.ndarray, overlay: np.ndarray) -> np.ndarray:
     gap, top, bottom = 24, 38, 18
     height, width = candidate.shape[:2]
-    canvas = Image.new("RGB", (width * 2 + gap * 3, height + top + bottom), (248, 247, 244))
+    canvas = Image.new(
+        "RGB", (width * 2 + gap * 3, height + top + bottom), (248, 247, 244)
+    )
     canvas.paste(Image.fromarray(candidate), (gap, top))
     canvas.paste(Image.fromarray(overlay), (width + gap * 2, top))
     draw = ImageDraw.Draw(canvas)
     font = ImageFont.load_default()
-    draw.text((gap, 14), "AUTOMATIC MIXED-CORNER VECTORS - 22 REGIONS", fill=(25, 25, 25), font=font)
-    draw.text((width + gap * 2, 8), "V14 COMPARISON - green overlap / magenta over / yellow missed", fill=(25, 25, 25), font=font)
-    draw.text((width + gap * 2, 22), "cyan automatic boundary / white oracle boundary", fill=(25, 25, 25), font=font)
+    draw.text(
+        (gap, 14),
+        "AUTOMATIC MIXED-CORNER VECTORS - 22 REGIONS",
+        fill=(25, 25, 25),
+        font=font,
+    )
+    draw.text(
+        (width + gap * 2, 8),
+        "V14 COMPARISON - green overlap / magenta over / yellow missed",
+        fill=(25, 25, 25),
+        font=font,
+    )
+    draw.text(
+        (width + gap * 2, 22),
+        "cyan automatic boundary / white oracle boundary",
+        fill=(25, 25, 25),
+        font=font,
+    )
     return np.asarray(canvas)
 
 
 def _write_json(path: Path, document: Mapping[str, object]) -> None:
-    path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )

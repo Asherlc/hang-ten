@@ -24,7 +24,6 @@ from .models import ConversionError
 class GenericStage1Profile:
     profile_id: str = "generic-photo-cleanup-v1"
     detail_mix: float = 0.65
-    tone_cap_lab: float = 5.0
 
 
 class Stage1RunContext(Protocol):
@@ -57,7 +56,7 @@ def clean_registered_rgba(
         raise ValueError("registered image must be RGBA")
     if registered_rgba.dtype != np.uint8:
         raise ValueError("registered image must use uint8 pixels")
-    if not 0.0 <= profile.detail_mix <= 1.0 or profile.tone_cap_lab < 0:
+    if not 0.0 <= profile.detail_mix <= 1.0:
         raise ValueError("generic Stage 1 profile has invalid limits")
 
     alpha = registered_rgba[..., 3]
@@ -77,10 +76,14 @@ def clean_registered_rgba(
         sigmaSpace=4,
         borderType=cv2.BORDER_REPLICATE,
     )
-    mixed_lab = np.rint(
-        profile.detail_mix * lab.astype(np.float32)
-        + (1.0 - profile.detail_mix) * smooth_lab.astype(np.float32)
-    ).clip(0, 255).astype(np.uint8)
+    mixed_lab = (
+        np.rint(
+            profile.detail_mix * lab.astype(np.float32)
+            + (1.0 - profile.detail_mix) * smooth_lab.astype(np.float32)
+        )
+        .clip(0, 255)
+        .astype(np.uint8)
+    )
 
     cleaned = np.empty_like(registered_rgba)
     cleaned[..., :3] = cv2.cvtColor(mixed_lab, cv2.COLOR_LAB2RGB)
@@ -103,13 +106,18 @@ def run_generic_stage1(
     second = clean_registered_rgba(input_rgba, profile=profile)
     if first.tobytes() != second.tobytes():
         raise ConversionError("generic Stage 1 cleanup is not deterministic")
-    if first.shape != input_rgba.shape or not np.array_equal(first[..., 3], input_rgba[..., 3]):
+    if first.shape != input_rgba.shape or not np.array_equal(
+        first[..., 3], input_rgba[..., 3]
+    ):
         raise ConversionError("generic Stage 1 cleanup changed registered geometry")
 
     temporary_root: Path | None = None
     try:
+        artifact_root.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(
-            tempfile.mkdtemp(prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent)
+            tempfile.mkdtemp(
+                prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent
+            )
         )
         auto_path = temporary_root / "stage-1-auto-rgba.png"
         _write_png(auto_path, first)
@@ -169,10 +177,9 @@ def _approved_stage0_rgba(
     if _hash_file(acceptance_path) != record.get("acceptanceSha256"):
         raise ConversionError("Stage 0 acceptance does not match its recorded hash")
     acceptance = _read_json(acceptance_path)
-    if (
-        acceptance.get("stage") != 0
-        or acceptance.get("runIdentitySha256") != context.manifest.get("runIdentitySha256")
-    ):
+    if acceptance.get("stage") != 0 or acceptance.get(
+        "runIdentitySha256"
+    ) != context.manifest.get("runIdentitySha256"):
         raise ConversionError("Stage 0 acceptance is inconsistent with the run")
 
     artifact_root = _inside_root(context.root, record.get("artifactRoot"))
@@ -182,10 +189,9 @@ def _approved_stage0_rgba(
     if not isinstance(registered, Mapping) or not isinstance(candidate_hashes, Mapping):
         raise ConversionError("Stage 0 acceptance is missing registered evidence")
     actual_file_hash = _hash_file(registered_path)
-    if (
-        actual_file_hash != registered.get("fileSha256")
-        or actual_file_hash != candidate_hashes.get(registered_path.name)
-    ):
+    if actual_file_hash != registered.get(
+        "fileSha256"
+    ) or actual_file_hash != candidate_hashes.get(registered_path.name):
         raise ConversionError("Stage 0 registered image does not match its acceptance")
 
     with Image.open(registered_path) as image:
@@ -243,8 +249,18 @@ def _review_image(approved: np.ndarray, candidate: np.ndarray) -> np.ndarray:
     top_y = margin + label_height
     bottom_label_y = top_y + height + gap
     bottom_y = bottom_label_y + label_height
-    draw.text((margin, margin + 14), "Approved Stage 0 — registered photo", fill=(32, 32, 32), font=font)
-    draw.text((margin, bottom_label_y + 14), "Stage 1 — mild photo cleanup candidate", fill=(32, 32, 32), font=font)
+    draw.text(
+        (margin, margin + 14),
+        "Approved Stage 0 — registered photo",
+        fill=(32, 32, 32),
+        font=font,
+    )
+    draw.text(
+        (margin, bottom_label_y + 14),
+        "Stage 1 — mild photo cleanup candidate",
+        fill=(32, 32, 32),
+        font=font,
+    )
     _paste_rgba(canvas, approved, (margin, top_y))
     _paste_rgba(canvas, candidate, (margin, bottom_y))
     return np.asarray(canvas, dtype=np.uint8)
@@ -269,7 +285,9 @@ def _read_json(path: Path) -> dict[str, object]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
-        raise ConversionError(f"could not read Stage 0 evidence: {path.name}") from error
+        raise ConversionError(
+            f"could not read Stage 0 evidence: {path.name}"
+        ) from error
     if not isinstance(value, dict):
         raise ConversionError(f"Stage 0 evidence is not an object: {path.name}")
     return value
@@ -280,11 +298,15 @@ def _write_png(path: Path, pixels: np.ndarray) -> None:
 
 
 def _write_json(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def _hash_file(path: Path) -> str:
     try:
         return sha256(path.read_bytes()).hexdigest()
     except OSError as error:
-        raise ConversionError(f"could not read Stage 0 evidence: {path.name}") from error
+        raise ConversionError(
+            f"could not read Stage 0 evidence: {path.name}"
+        ) from error

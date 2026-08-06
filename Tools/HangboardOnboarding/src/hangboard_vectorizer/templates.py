@@ -8,7 +8,7 @@ from importlib import resources
 import json
 import math
 import re
-from typing import Literal, TypeAlias
+from typing import Literal, NoReturn, TypeAlias
 
 import cv2
 import numpy as np
@@ -107,11 +107,7 @@ def load_template_document(document: object) -> ProductTemplate:
         if "renderProfile" in root
         else None
     )
-    render_asset = (
-        _render_asset(root["renderAsset"])
-        if "renderAsset" in root
-        else None
-    )
+    render_asset = _render_asset(root["renderAsset"]) if "renderAsset" in root else None
     raw_regions = _sequence(root.get("regions"), "regions")
     region_ids: set[str] = set()
     regions: list[TemplateRegion] = []
@@ -145,17 +141,22 @@ def get_product_template(product_id: str) -> ProductTemplate:
         if template.product_id == product_id:
             return template
     supported = ", ".join(template.product_id for template in registry) or "(none)"
-    raise ConversionError(f"unknown product template {product_id!r}; supported IDs: {supported}")
+    raise ConversionError(
+        f"unknown product template {product_id!r}; supported IDs: {supported}"
+    )
 
 
 def list_product_templates() -> tuple[tuple[str, str], ...]:
     """List built-in templates as deterministically ordered ID/name pairs."""
     return tuple(
-        (template.product_id, template.display_name) for template in _product_templates()
+        (template.product_id, template.display_name)
+        for template in _product_templates()
     )
 
 
-def layout_from_template(template: ProductTemplate, board: RectifiedBoard) -> RegionLayout:
+def layout_from_template(
+    template: ProductTemplate, board: RectifiedBoard
+) -> RegionLayout:
     """Convert normalized template polygons into canonical board-pixel regions."""
     if (board.width, board.height) != (
         template.canonical_width,
@@ -169,7 +170,8 @@ def layout_from_template(template: ProductTemplate, board: RectifiedBoard) -> Re
         if any(not np.isfinite(contour).all() for contour in contours):
             raise ConversionError("template region contains non-finite coordinates")
         areas = tuple(
-            abs(float(cv2.contourArea(contour.astype(np.float32)))) for contour in contours
+            abs(float(cv2.contourArea(contour.astype(np.float32))))
+            for contour in contours
         )
         primary_index = max(range(len(contours)), key=areas.__getitem__)
         center, bbox = _combined_geometry(contours, board.width, board.height)
@@ -198,7 +200,9 @@ def _product_templates() -> tuple[ProductTemplate, ...]:
     if _TEMPLATE_REGISTRY is not None:
         return _TEMPLATE_REGISTRY
 
-    discovered = tuple(load_template_document(document) for document in _iter_template_documents())
+    discovered = tuple(
+        load_template_document(document) for document in _iter_template_documents()
+    )
     by_id: dict[str, ProductTemplate] = {}
     for template in discovered:
         if template.product_id in by_id:
@@ -221,7 +225,10 @@ def _combined_geometry(
     x, y, width, height = cv2.boundingRect(points)
     moments = cv2.moments(raster, binaryImage=True)
     return (
-        (float(moments["m10"] / moments["m00"]), float(moments["m01"] / moments["m00"])),
+        (
+            float(moments["m10"] / moments["m00"]),
+            float(moments["m01"] / moments["m00"]),
+        ),
         (x, y, width, height),
     )
 
@@ -293,7 +300,9 @@ def _parse_render_profile(value: object) -> ProductRenderProfile:
     normalized_components = tuple(
         component / maximum_component for component in light_direction
     )
-    normalized_length = math.sqrt(sum(component * component for component in normalized_components))
+    normalized_length = math.sqrt(
+        sum(component * component for component in normalized_components)
+    )
     normalized_light_direction = tuple(
         component / normalized_length for component in normalized_components
     )
@@ -327,7 +336,7 @@ def _parse_render_profile(value: object) -> ProductRenderProfile:
 
 def _render_asset(value: object) -> str:
     asset = _nonempty_string(value, "renderAsset")
-    if _SAFE_RENDER_ASSET.fullmatch(asset) is None:
+    if not is_safe_render_asset(asset):
         _invalid("renderAsset must be a safe PNG filename")
     return asset
 
@@ -336,6 +345,11 @@ def _view_box(value: object) -> tuple[int, int]:
     values = _sequence(value, "canonicalViewBox")
     if len(values) != 4:
         _invalid("canonicalViewBox must contain four values")
+    if (
+        _integer(values[0], "canonicalViewBox") != 0
+        or _integer(values[1], "canonicalViewBox") != 0
+    ):
+        _invalid("canonicalViewBox origin must be 0 0")
     width = _integer(values[2], "canonicalViewBox")
     height = _integer(values[3], "canonicalViewBox")
     if width <= 0 or height <= 0:
@@ -345,7 +359,9 @@ def _view_box(value: object) -> tuple[int, int]:
 
 def _polygons(value: object, field: str) -> tuple[np.ndarray, ...]:
     values = _sequence(value, field)
-    polygons = tuple(_polygon(polygon, f"{field}[{index}]") for index, polygon in enumerate(values))
+    polygons = tuple(
+        _polygon(polygon, f"{field}[{index}]") for index, polygon in enumerate(values)
+    )
     return polygons
 
 
@@ -456,5 +472,10 @@ def _nonnegative_number(value: object, field: str) -> float:
     return number
 
 
-def _invalid(message: str) -> None:
+def _invalid(message: str) -> NoReturn:
     raise ConversionError(f"invalid product template: {message}")
+
+
+def is_safe_render_asset(name: str) -> bool:
+    """Return whether *name* is a safe packaged PNG filename."""
+    return _SAFE_RENDER_ASSET.fullmatch(name) is not None

@@ -64,9 +64,7 @@ def _parser() -> argparse.ArgumentParser:
         "source", nargs="?", help="local image path or HTTP(S) image URL"
     )
     parser.add_argument("--output", type=Path, help="output SVG path")
-    parser.add_argument(
-        "--manifest", type=Path, help="output JSON manifest path"
-    )
+    parser.add_argument("--manifest", type=Path, help="output JSON manifest path")
     parser.add_argument("--preview", type=Path, help="optional diagnostic PNG path")
     parser.add_argument(
         "--workspace-root",
@@ -109,7 +107,11 @@ def _parser() -> argparse.ArgumentParser:
 def _validate_arguments(arguments: argparse.Namespace) -> None:
     if arguments.list_products:
         return
-    if arguments.source is None or arguments.output is None or arguments.manifest is None:
+    if (
+        arguments.source is None
+        or arguments.output is None
+        or arguments.manifest is None
+    ):
         raise _CliError("source, --output, and --manifest are required for conversion")
     if (arguments.product is not None) == arguments.experimental_recess_detection:
         raise _CliError(
@@ -249,16 +251,23 @@ def _convert(arguments: argparse.Namespace) -> None:
 
 
 def _stage_text(target: Path, content: str) -> Path:
-    with tempfile.NamedTemporaryFile(
-        "w",
-        encoding="utf-8",
-        dir=target.parent,
-        prefix=f".{target.name}.",
-        suffix=".tmp",
-        delete=False,
-    ) as handle:
-        handle.write(content)
-        return Path(handle.name)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=target.parent,
+            prefix=f".{target.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            temporary = Path(handle.name)
+            handle.write(content)
+        return temporary
+    except Exception:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+        raise
 
 
 def _stage_preview(target: Path, rgb: np.ndarray) -> Path:
@@ -328,9 +337,7 @@ def _reserve_backup(target: Path) -> Path:
         return Path(handle.name)
 
 
-def _rollback_publication(
-    targets: tuple[Path, ...], backups: dict[Path, Path]
-) -> None:
+def _rollback_publication(targets: tuple[Path, ...], backups: dict[Path, Path]) -> None:
     errors: list[OSError] = []
     for target in targets:
         try:

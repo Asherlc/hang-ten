@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import base64
-from collections import Counter
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from hashlib import sha256
@@ -75,7 +74,9 @@ def run_generic_stage3(
         raise FileExistsError(f"Stage 3 artifact root already exists: {artifact_root}")
     rgba, labels, source_regions, evidence = _approved_inputs(context)
     if rgba.shape[1] != profile.canvas_width:
-        raise ConversionError("generic Stage 3 requires the canonical 1000-pixel canvas")
+        raise ConversionError(
+            "generic Stage 3 requires the canonical 1000-pixel canvas"
+        )
 
     first = _vector_document(rgba, labels, source_regions, evidence, profile)
     second = _vector_document(rgba, labels, source_regions, evidence, profile)
@@ -89,8 +90,11 @@ def run_generic_stage3(
     review = _review_image(rgba, labels, first)
     temporary_root: Path | None = None
     try:
+        artifact_root.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(
-            tempfile.mkdtemp(prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent)
+            tempfile.mkdtemp(
+                prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent
+            )
         )
         regions_path = temporary_root / "stage-3-vector-regions.json"
         svg_path = temporary_root / "stage-3-vector.svg"
@@ -150,24 +154,42 @@ def _vector_document(
             {
                 "displayPath": path.data,
                 "id": f"piece-{index + 1:02d}-silhouette",
-                "outputMaskSha256": _hash_bytes(_rasterize(path, width, height).tobytes()),
+                "outputMaskSha256": _hash_bytes(
+                    _rasterize(path, width, height).tobytes()
+                ),
                 "pieceIndex": index,
                 "primitive": "minimally-smoothed-alpha-contour",
                 "sourceMaskSha256": _hash_bytes(mask.astype(np.uint8).tobytes()),
             }
         )
 
-    source_masks = {int(region["id"]): labels == int(region["id"]) for region in source_regions}
+    source_masks = {
+        int(region["id"]): labels == int(region["id"]) for region in source_regions
+    }
     vector_masks: dict[int, np.ndarray] = {}
     paths: dict[int, DisplayPath] = {}
     symmetry: dict[int, dict[str, object]] = {}
 
-    for left_id, right_id in ((6, 12), (13, 19)):
+    symmetry_pairs = _edge_symmetry_pairs(source_regions, width)
+    locked_pair = (
+        max(
+            symmetry_pairs,
+            key=lambda pair: sum(
+                float(_region_by_id(source_regions, region_id)["anchor"][1])
+                for region_id in pair
+            ),
+        )
+        if symmetry_pairs
+        else None
+    )
+    for left_id, right_id in symmetry_pairs:
         if left_id not in source_masks or right_id not in source_masks:
             continue
         canonical = source_masks[left_id] & np.fliplr(source_masks[right_id])
         if int(canonical.sum()) < 100:
-            raise ConversionError(f"Stage 3 symmetry pair {left_id}/{right_id} has no stable overlap")
+            raise ConversionError(
+                f"Stage 3 symmetry pair {left_id}/{right_id} has no stable overlap"
+            )
         # The lower edge pair contains three intentional, persistent straights:
         # its top, bottom, and inner wall.  A consensus/intersection raster can
         # move those by a pixel before contour fitting, visibly changing their
@@ -175,7 +197,7 @@ def _vector_document(
         # the routed transitions and alpha-clipped exterior.
         left_path = (
             _locked_lower_edge_path(source_masks[left_id], profile)
-            if (left_id, right_id) == (13, 19)
+            if (left_id, right_id) == locked_pair
             else _feature_path(canonical, profile)
         )
         right_path = _mirror_path(left_path, width, height)
@@ -223,11 +245,15 @@ def _vector_document(
             "policy": "rounded-mouth" if kind == "pocket" else "feature-preserving",
             "roundedOnlyWhereRouted": kind != "pocket",
         }
-        if region_id in (13, 19):
+        if locked_pair is not None and region_id in locked_pair:
             corner_metadata = {
                 "lockedSegments": ["top", "bottom", "inner-edge"],
                 "policy": "persistent-straights-with-routed-transitions",
-                "roundedTransitions": ["inner-top", "inner-bottom", "alpha-clipped-exterior"],
+                "roundedTransitions": [
+                    "inner-top",
+                    "inner-bottom",
+                    "alpha-clipped-exterior",
+                ],
             }
         regions.append(
             {
@@ -279,10 +305,13 @@ def _approved_inputs(
         raise ConversionError("Stage 2 acceptance hash changed")
     stage1_acceptance = _read_json(stage1_acceptance_path)
     stage2_acceptance = _read_json(stage2_acceptance_path)
-    if stage2_acceptance.get("runIdentitySha256") != context.manifest.get("runIdentitySha256"):
+    if stage2_acceptance.get("runIdentitySha256") != context.manifest.get(
+        "runIdentitySha256"
+    ):
         raise ConversionError("Stage 2 acceptance belongs to another run")
-    if stage2_acceptance.get("regionCount") != 19:
-        raise ConversionError("approved Stage 2 must contain exactly 19 regions")
+    expected_region_count = stage2_acceptance.get("regionCount")
+    if type(expected_region_count) is not int or expected_region_count < 1:
+        raise ConversionError("approved Stage 2 region count is invalid")
 
     rgba_path = _inside_root(context.root, stage1_acceptance["registered"]["path"])
     labels_path = _inside_root(context.root, stage2_acceptance["registered"]["path"])
@@ -305,7 +334,7 @@ def _approved_inputs(
         raise ConversionError("Stage 2 labels do not match Stage 1 RGBA")
     document = _read_json(regions_path)
     regions = document.get("regions")
-    if not isinstance(regions, list) or len(regions) != 19:
+    if not isinstance(regions, list) or len(regions) != expected_region_count:
         raise ConversionError("Stage 2 regions are invalid")
     reconstructed = np.zeros(labels.shape, np.uint16)
     seen_keys: set[str] = set()
@@ -321,22 +350,94 @@ def _approved_inputs(
         reconstructed[labels == expected_id] = expected_id
     if not np.array_equal(reconstructed, labels):
         raise ConversionError("Stage 2 label raster contains unknown IDs")
-    if Counter(str(region["type"]) for region in regions) != Counter(
-        {"pocket": 10, "edge": 4, "sloper": 3, "jug": 2}
-    ):
-        raise ConversionError("Stage 2 Metolius topology changed")
     evidence = {
-        "stage1Rgba": {"path": stage1_acceptance["registered"]["path"], "sha256": _hash_file(rgba_path)},
-        "stage2Acceptance": {"path": stage2["acceptancePath"], "sha256": stage2["acceptanceSha256"]},
-        "stage2Labels": {"path": stage2_acceptance["registered"]["path"], "sha256": _hash_file(labels_path)},
-        "stage2Regions": {"path": stage2_acceptance["regions"]["path"], "sha256": _hash_file(regions_path)},
+        "stage1Rgba": {
+            "path": stage1_acceptance["registered"]["path"],
+            "sha256": _hash_file(rgba_path),
+        },
+        "stage2Acceptance": {
+            "path": stage2["acceptancePath"],
+            "sha256": stage2["acceptanceSha256"],
+        },
+        "stage2Labels": {
+            "path": stage2_acceptance["registered"]["path"],
+            "sha256": _hash_file(labels_path),
+        },
+        "stage2Regions": {
+            "path": stage2_acceptance["regions"]["path"],
+            "sha256": _hash_file(regions_path),
+        },
     }
     return rgba, labels, regions, evidence
 
 
+def _edge_symmetry_pairs(
+    regions: list[dict[str, object]], width: int
+) -> tuple[tuple[int, int], ...]:
+    """Pair mirrored edge semantics using metadata and geometry, not product IDs."""
+    left = [
+        region
+        for region in regions
+        if region.get("type") == "edge"
+        and isinstance(region.get("metadata"), dict)
+        and region["metadata"].get("side") == "left"
+    ]
+    right = [
+        region
+        for region in regions
+        if region.get("type") == "edge"
+        and isinstance(region.get("metadata"), dict)
+        and region["metadata"].get("side") == "right"
+    ]
+    available = {int(region["id"]): region for region in right}
+    pairs: list[tuple[int, int]] = []
+    for left_region in sorted(left, key=lambda value: int(value["id"])):
+        left_metadata = {
+            key: value
+            for key, value in left_region["metadata"].items()
+            if key != "side"
+        }
+        left_anchor = left_region.get("anchor")
+        if not isinstance(left_anchor, list) or len(left_anchor) != 2:
+            continue
+        candidates = []
+        for identifier, right_region in available.items():
+            right_metadata = {
+                key: value
+                for key, value in right_region["metadata"].items()
+                if key != "side"
+            }
+            right_anchor = right_region.get("anchor")
+            if (
+                right_metadata == left_metadata
+                and isinstance(right_anchor, list)
+                and len(right_anchor) == 2
+            ):
+                error = abs(float(left_anchor[0]) + float(right_anchor[0]) - width)
+                error += abs(float(left_anchor[1]) - float(right_anchor[1]))
+                candidates.append((error, identifier))
+        if not candidates:
+            continue
+        error, right_id = min(candidates)
+        if error <= max(6.0, width * 0.03):
+            pairs.append((int(left_region["id"]), right_id))
+            del available[right_id]
+    return tuple(pairs)
+
+
+def _region_by_id(
+    regions: list[dict[str, object]], region_id: int
+) -> dict[str, object]:
+    return next(region for region in regions if int(region["id"]) == region_id)
+
+
 def _piece_masks(alpha: np.ndarray) -> tuple[np.ndarray, list[np.ndarray]]:
-    count, labels, stats, _ = cv2.connectedComponentsWithStats(alpha.astype(np.uint8), 8)
-    components = [index for index in range(1, count) if int(stats[index, cv2.CC_STAT_AREA]) >= 50]
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(
+        alpha.astype(np.uint8), 8
+    )
+    components = [
+        index for index in range(1, count) if int(stats[index, cv2.CC_STAT_AREA]) >= 50
+    ]
     components.sort(key=lambda index: int(stats[index, cv2.CC_STAT_LEFT]))
     relabeled = np.zeros(labels.shape, np.int16)
     masks: list[np.ndarray] = []
@@ -351,15 +452,23 @@ def _piece_masks(alpha: np.ndarray) -> tuple[np.ndarray, list[np.ndarray]]:
 
 def _piece_owner(mask: np.ndarray, piece_labels: np.ndarray) -> int:
     values, counts = np.unique(piece_labels[mask], return_counts=True)
-    candidates = [(int(count), int(value) - 1) for value, count in zip(values, counts, strict=True) if value > 0]
+    candidates = [
+        (int(count), int(value) - 1)
+        for value, count in zip(values, counts, strict=True)
+        if value > 0
+    ]
     if not candidates:
         raise ConversionError("Stage 2 region has no Stage 1 piece owner")
     return max(candidates)[1]
 
 
-def _pocket_row_bounds(regions: list[dict[str, object]]) -> dict[int, tuple[int, int, tuple[int, ...]]]:
+def _pocket_row_bounds(
+    regions: list[dict[str, object]],
+) -> dict[int, tuple[int, int, tuple[int, ...]]]:
     pockets = [region for region in regions if region["type"] == "pocket"]
-    centers = sorted((int(region["bounds"][1]) + int(region["bounds"][3])) / 2 for region in pockets)
+    centers = sorted(
+        (int(region["bounds"][1]) + int(region["bounds"][3])) / 2 for region in pockets
+    )
     split = (centers[len(centers) // 2 - 1] + centers[len(centers) // 2]) / 2
     groups: dict[int, list[dict[str, object]]] = {0: [], 1: []}
     for region in pockets:
@@ -368,12 +477,16 @@ def _pocket_row_bounds(regions: list[dict[str, object]]) -> dict[int, tuple[int,
     result = {}
     for row, values in groups.items():
         top = int(round(float(np.median([region["bounds"][1] for region in values]))))
-        bottom = int(round(float(np.median([region["bounds"][3] for region in values]))))
+        bottom = int(
+            round(float(np.median([region["bounds"][3] for region in values])))
+        )
         result[row] = (top, bottom, tuple(int(region["id"]) for region in values))
     return result
 
 
-def _row_for_region(region_id: int, rows: Mapping[int, tuple[int, int, tuple[int, ...]]]) -> int:
+def _row_for_region(
+    region_id: int, rows: Mapping[int, tuple[int, int, tuple[int, ...]]]
+) -> int:
     for row, (_top, _bottom, ids) in rows.items():
         if region_id in ids:
             return row
@@ -383,7 +496,9 @@ def _row_for_region(region_id: int, rows: Mapping[int, tuple[int, int, tuple[int
 def _silhouette_path(mask: np.ndarray, profile: GenericStage3Profile) -> DisplayPath:
     points = _simplified_contour(mask, profile.silhouette_epsilon_fraction)
     data = _rounded_polygon_data(points, profile.silhouette_corner_radius)
-    path = parse_display_path(data, "silhouette", mask.shape[1], mask.shape[0], allow_linear_segments=True)
+    path = parse_display_path(
+        data, "silhouette", mask.shape[1], mask.shape[0], allow_linear_segments=True
+    )
     if path is None:
         raise ConversionError("silhouette vectorization failed")
     return path
@@ -392,7 +507,9 @@ def _silhouette_path(mask: np.ndarray, profile: GenericStage3Profile) -> Display
 def _feature_path(mask: np.ndarray, profile: GenericStage3Profile) -> DisplayPath:
     points = _simplified_contour(mask, profile.feature_epsilon_fraction)
     data = "M " + " L ".join(f"{_number(x)} {_number(y)}" for x, y in points) + " Z"
-    path = parse_display_path(data, "feature", mask.shape[1], mask.shape[0], allow_linear_segments=True)
+    path = parse_display_path(
+        data, "feature", mask.shape[1], mask.shape[0], allow_linear_segments=True
+    )
     if path is None:
         raise ConversionError("feature vectorization failed")
     return path
@@ -416,15 +533,24 @@ def _locked_lower_edge_path(
         raise ConversionError("lower edge has no persistent top/bottom segments")
     horizontal.sort(key=lambda pair: float((pair[0][1] + pair[1][1]) / 2))
     top_pair, bottom_pair = horizontal
-    top_outer, top_inner = sorted((top_pair[0], top_pair[1]), key=lambda point: point[0])
+    top_outer, top_inner = sorted(
+        (top_pair[0], top_pair[1]), key=lambda point: point[0]
+    )
     bottom_outer, bottom_inner = sorted(
         (bottom_pair[0], bottom_pair[1]), key=lambda point: point[0]
     )
+    inner_candidates = [
+        pair for pair in segments if min(pair[0][0], pair[1][0]) > top_inner[0] - 4
+    ]
+    if not inner_candidates:
+        raise ConversionError("lower edge has no persistent inner wall segment")
     vertical = max(
-        (pair for pair in segments if min(pair[0][0], pair[1][0]) > top_inner[0] - 4),
+        inner_candidates,
         key=lambda pair: abs(float(pair[1][1] - pair[0][1])),
     )
-    inner_top, inner_bottom = sorted((vertical[0], vertical[1]), key=lambda point: point[1])
+    inner_top, inner_bottom = sorted(
+        (vertical[0], vertical[1]), key=lambda point: point[1]
+    )
 
     outer_points = points[points[:, 0] < top_outer[0] + 7]
     if len(outer_points):
@@ -434,7 +560,10 @@ def _locked_lower_edge_path(
         outer_x = float(top_outer[0])
         outer_mid_y = float((top_outer[1] + bottom_outer[1]) / 2)
     upper_outer = np.asarray(
-        (outer_x + 1.0, float(top_outer[1]) + min(4.0, (inner_top[1] - top_outer[1]) / 2)),
+        (
+            outer_x + 1.0,
+            float(top_outer[1]) + min(4.0, (inner_top[1] - top_outer[1]) / 2),
+        ),
         dtype=np.float64,
     )
     lower_outer = np.asarray(
@@ -457,7 +586,11 @@ def _locked_lower_edge_path(
         )
     )
     path = parse_display_path(
-        data, "locked lower edge", mask.shape[1], mask.shape[0], allow_linear_segments=True
+        data,
+        "locked lower edge",
+        mask.shape[1],
+        mask.shape[0],
+        allow_linear_segments=True,
     )
     if path is None:
         raise ConversionError("lower edge vectorization failed")
@@ -465,7 +598,9 @@ def _locked_lower_edge_path(
 
 
 def _simplified_contour(mask: np.ndarray, epsilon_fraction: float) -> np.ndarray:
-    contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours, _ = cv2.findContours(
+        mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
+    )
     if not contours:
         raise ConversionError("cannot vectorize an empty mask")
     contour = max(contours, key=cv2.contourArea)
@@ -513,7 +648,9 @@ def _rounded_box_path(bounds: list[object], radius_fraction: float) -> DisplayPa
         f"L {_number(x0)} {_number(y0 + radius)} "
         f"C {_number(x0)} {_number(y0 + radius - kappa * radius)} {_number(x0 + radius - kappa * radius)} {_number(y0)} {_number(x0 + radius)} {_number(y0)} Z"
     )
-    path = parse_display_path(data, "pocket", int(x1 + 1), int(y1 + 1), allow_linear_segments=True)
+    path = parse_display_path(
+        data, "pocket", int(x1 + 1), int(y1 + 1), allow_linear_segments=True
+    )
     if path is None:
         raise ConversionError("pocket vectorization failed")
     return path
@@ -530,9 +667,13 @@ def _mirror_path(path: DisplayPath, width: int, height: int) -> DisplayPath:
         index += 1
         for coordinate_index in range(arity[command]):
             value = float(tokens[index])
-            output.append(_number(width - value if coordinate_index % 2 == 0 else value))
+            output.append(
+                _number(width - value if coordinate_index % 2 == 0 else value)
+            )
             index += 1
-    mirrored = parse_display_path(" ".join(output), "mirrored", width, height, allow_linear_segments=True)
+    mirrored = parse_display_path(
+        " ".join(output), "mirrored", width, height, allow_linear_segments=True
+    )
     if mirrored is None:
         raise ConversionError("symmetric vectorization failed")
     return mirrored
@@ -548,7 +689,9 @@ def _rasterize(path: DisplayPath, width: int, height: int) -> np.ndarray:
 def _svg(document: Mapping[str, object], rgba: np.ndarray) -> str:
     height, width = rgba.shape[:2]
     source = BytesIO()
-    Image.fromarray(rgba, "RGBA").save(source, format="PNG", optimize=False, compress_level=9)
+    Image.fromarray(rgba, "RGBA").save(
+        source, format="PNG", optimize=False, compress_level=9
+    )
     encoded = base64.b64encode(source.getvalue()).decode("ascii")
     pieces = "\n".join(
         f'  <path id="{piece["id"]}" data-piece-index="{piece["pieceIndex"]}" data-type="piece-silhouette" d="{piece["displayPath"]}" fill="none" stroke="#735b42" stroke-width="1" />'
@@ -565,7 +708,9 @@ def _svg(document: Mapping[str, object], rgba: np.ndarray) -> str:
     )
 
 
-def _review_image(rgba: np.ndarray, labels: np.ndarray, document: Mapping[str, object]) -> np.ndarray:
+def _review_image(
+    rgba: np.ndarray, labels: np.ndarray, document: Mapping[str, object]
+) -> np.ndarray:
     height, width = labels.shape
     panel1 = rgba[..., :3].copy()
     panel1[rgba[..., 3] == 0] = 250
@@ -576,7 +721,9 @@ def _review_image(rgba: np.ndarray, labels: np.ndarray, document: Mapping[str, o
     vector_masks: dict[int, np.ndarray] = {}
     for region in document["regions"]:
         region_id = int(region["id"])
-        path = parse_display_path(region["displayPath"], "review", width, height, allow_linear_segments=True)
+        path = parse_display_path(
+            region["displayPath"], "review", width, height, allow_linear_segments=True
+        )
         if path is None:
             raise ConversionError("review vector path is invalid")
         mask = _rasterize(path, width, height).astype(bool)
@@ -612,24 +759,48 @@ def _review_image(rgba: np.ndarray, labels: np.ndarray, document: Mapping[str, o
     title = _font(18, bold=True)
     small = _font(13)
     badge = _font(12, bold=True)
-    draw.text((18, 13), "Vector geometry over approved photo", font=title, fill=(32, 32, 32))
-    draw.text((width + 18, 13), "Fidelity: green overlap · magenta vector-only · yellow Stage 2-only", font=title, fill=(32, 32, 32))
+    draw.text(
+        (18, 13), "Vector geometry over approved photo", font=title, fill=(32, 32, 32)
+    )
+    draw.text(
+        (width + 18, 13),
+        "Fidelity: green overlap · magenta vector-only · yellow Stage 2-only",
+        font=title,
+        fill=(32, 32, 32),
+    )
     draw.line((width, 0, width, header + height), fill=(190, 188, 181), width=2)
     for region in document["regions"]:
         x, y = (int(value) for value in region["anchor"])
         radius = 9
-        draw.ellipse((x - radius, header + y - radius, x + radius, header + y + radius), fill=(25, 25, 25), outline=(255, 255, 255), width=1)
+        draw.ellipse(
+            (x - radius, header + y - radius, x + radius, header + y + radius),
+            fill=(25, 25, 25),
+            outline=(255, 255, 255),
+            width=1,
+        )
         text = str(region["id"])
         bbox = draw.textbbox((0, 0), text, font=badge)
-        draw.text((x - (bbox[2] - bbox[0]) / 2, header + y - (bbox[3] - bbox[1]) / 2 - 1), text, font=badge, fill=(255, 255, 255))
+        draw.text(
+            (x - (bbox[2] - bbox[0]) / 2, header + y - (bbox[3] - bbox[1]) / 2 - 1),
+            text,
+            font=badge,
+            fill=(255, 255, 255),
+        )
     legend_y = header + height
     draw.line((0, legend_y, width * 2, legend_y), fill=(205, 202, 195), width=1)
     x = 18
     for kind in ("jug", "sloper", "edge", "pocket"):
-        draw.rounded_rectangle((x, legend_y + 14, x + 15, legend_y + 29), radius=4, fill=_TYPE_COLORS[kind])
+        draw.rounded_rectangle(
+            (x, legend_y + 14, x + 15, legend_y + 29), radius=4, fill=_TYPE_COLORS[kind]
+        )
         draw.text((x + 22, legend_y + 13), kind, font=small, fill=(55, 55, 55))
         x += 116
-    draw.text((width + 18, legend_y + 13), "cyan = vector boundary · white = approved Stage 2 boundary · dark = Stage 1 silhouette", font=small, fill=(55, 55, 55))
+    draw.text(
+        (width + 18, legend_y + 13),
+        "cyan = vector boundary · white = approved Stage 2 boundary · dark = Stage 1 silhouette",
+        font=small,
+        fill=(55, 55, 55),
+    )
     return np.asarray(canvas)
 
 
@@ -638,8 +809,14 @@ def _boundary(mask: np.ndarray) -> np.ndarray:
     return mask & ~eroded
 
 
-def _font(size: int, *, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
-    names = ["DejaVuSans-Bold.ttf", "Arial Bold.ttf"] if bold else ["DejaVuSans.ttf", "Arial.ttf"]
+def _font(
+    size: int, *, bold: bool = False
+) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    names = (
+        ["DejaVuSans-Bold.ttf", "Arial Bold.ttf"]
+        if bold
+        else ["DejaVuSans.ttf", "Arial.ttf"]
+    )
     for name in names:
         try:
             return ImageFont.truetype(name, size)

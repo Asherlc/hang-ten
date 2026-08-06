@@ -35,9 +35,7 @@ BEASTMAKER_1000_REGION_IDS = (
     "pocket-bottom-outer-right",
 )
 
-_BEASTMAKER_1000_TYPE_COUNTS = Counter(
-    {"pocket": 17, "sloper": 3, "jug": 2}
-)
+_BEASTMAKER_1000_TYPE_COUNTS = Counter({"pocket": 17, "sloper": 3, "jug": 2})
 _BEASTMAKER_1000_TYPES = {
     region_id: (
         "jug"
@@ -48,13 +46,18 @@ _BEASTMAKER_1000_TYPES = {
     )
     for region_id in BEASTMAKER_1000_REGION_IDS
 }
-_FORBIDDEN_SPLIT_CENTER_IDS = frozenset(
+BEASTMAKER_1000_FORBIDDEN_SPLIT_CENTER_IDS = frozenset(
     {
         "sloper-20-left",
         "sloper-20-right",
         "sloper-center-left",
         "sloper-center-right",
     }
+)
+BEASTMAKER_1000_SLOPER_IDS = (
+    "sloper-35-left",
+    "sloper-35-right",
+    "sloper-center",
 )
 
 
@@ -80,7 +83,7 @@ def _validate_beastmaker_1000_output(
     enabled: Sequence[GripRegion],
 ) -> None:
     all_ids = {region.id for region in regions}
-    if all_ids.intersection(_FORBIDDEN_SPLIT_CENTER_IDS):
+    if all_ids.intersection(BEASTMAKER_1000_FORBIDDEN_SPLIT_CENTER_IDS):
         raise ConversionError(
             "beastmaker-1000 output requires canonical unsplit center topology"
         )
@@ -113,8 +116,7 @@ def _validate_beastmaker_1000_output(
     )
     if len(center_regions) != 1:
         raise ConversionError(
-            "beastmaker-1000 output requires one canonical uninterrupted "
-            "sloper-center"
+            "beastmaker-1000 output requires one canonical uninterrupted sloper-center"
         )
 
 

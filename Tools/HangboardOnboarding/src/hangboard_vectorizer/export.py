@@ -104,15 +104,12 @@ def render_svg(
         and (
             product.display_outline_path is not None
             or any(
-                not region.disabled
-                and region.display_path is not None
+                not region.disabled and region.display_path is not None
                 for region in regions
             )
         )
     )
-    uses_product_render_asset = (
-        product is not None and product.render_asset is not None
-    )
+    uses_product_render_asset = product is not None and product.render_asset is not None
     style = ET.SubElement(root, _svg_tag("style"))
     if uses_product_render_asset:
         style.text = (
@@ -403,7 +400,7 @@ def _region_colors(count: int) -> tuple[tuple[int, int, int], ...]:
     colors: list[tuple[int, int, int]] = []
     for index in range(count):
         hue = round(179 * index / max(1, count))
-        hsv = np.uint8([[[hue, 220, 255]]])
+        hsv = np.array([[[hue, 220, 255]]], dtype=np.uint8)
         rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)[0, 0]
         colors.append(tuple(int(channel) for channel in rgb))
     return tuple(colors)
@@ -472,9 +469,7 @@ def _region_contours(region: GripRegion) -> tuple[np.ndarray, ...]:
     return region.contours or (region.contour,)
 
 
-def _normalized_point(
-    point: tuple[float, float], board: RectifiedBoard
-) -> list[float]:
+def _normalized_point(point: tuple[float, float], board: RectifiedBoard) -> list[float]:
     return [
         _normalized_number(point[0], board.width),
         _normalized_number(point[1], board.height),

@@ -15,11 +15,15 @@ from PIL import Image
 
 from .display_paths import DisplayPath, flatten_display_path
 from .models import ConversionError
+from .product_validation import (
+    BEASTMAKER_1000_FORBIDDEN_SPLIT_CENTER_IDS,
+    BEASTMAKER_1000_SLOPER_IDS,
+)
 from .templates import (
-    _SAFE_RENDER_ASSET,
     ProductRenderProfile,
     ProductTemplate,
     TemplateRegion,
+    is_safe_render_asset,
 )
 
 
@@ -153,10 +157,7 @@ def load_render_asset(template: ProductTemplate) -> bytes:
 
 def _validate_render_asset_name(render_asset: object) -> None:
     """Reject unsafe resource names at the resource-loading boundary."""
-    if (
-        not isinstance(render_asset, str)
-        or _SAFE_RENDER_ASSET.fullmatch(render_asset) is None
-    ):
+    if not isinstance(render_asset, str) or not is_safe_render_asset(render_asset):
         raise ConversionError("renderAsset must be a safe PNG filename")
 
 
@@ -167,18 +168,18 @@ def encode_png_bytes_data_url(png_bytes: bytes) -> str:
 
 
 def _validate_center_topology(template: ProductTemplate) -> None:
-    legacy_ids = {"sloper-20-left", "sloper-20-right"}
-    if any(region.id in legacy_ids for region in template.regions):
+    if any(
+        region.id in BEASTMAKER_1000_FORBIDDEN_SPLIT_CENTER_IDS
+        for region in template.regions
+    ):
         raise ConversionError("legacy split-center sloper masks are not supported")
 
     slopers = tuple(region for region in template.regions if region.type == "sloper")
-    if template.product_id == "beastmaker-1000":
-        if tuple(region.id for region in slopers) != (
-            "sloper-35-left",
-            "sloper-35-right",
-            "sloper-center",
-        ):
-            raise ConversionError("beastmaker-1000 requires three canonical sloper masks")
+    if (
+        template.product_id == "beastmaker-1000"
+        and tuple(region.id for region in slopers) != BEASTMAKER_1000_SLOPER_IDS
+    ):
+        raise ConversionError("beastmaker-1000 requires three canonical sloper masks")
 
 
 def _path_mask(
@@ -219,9 +220,7 @@ def _compose_height(
     body_bevel = np.clip(inside / bevel, 0.0, 1.0)
     height = 12.0 * _smoothstep(body_bevel)
 
-    front_distance = cv2.distanceTransform(
-        front_mask.astype(np.uint8), cv2.DIST_L2, 5
-    )
+    front_distance = cv2.distanceTransform(front_mask.astype(np.uint8), cv2.DIST_L2, 5)
     front_weight = _smoothstep(np.clip(front_distance / bevel, 0.0, 1.0))
     height -= profile.front_drop * front_weight
 
@@ -283,9 +282,7 @@ def _shade_height(
     return color.astype(np.float32)
 
 
-def _wood_grain(
-    shape: tuple[int, int], profile: ProductRenderProfile
-) -> np.ndarray:
+def _wood_grain(shape: tuple[int, int], profile: ProductRenderProfile) -> np.ndarray:
     rng = np.random.default_rng(profile.seed)
     first = rng.standard_normal(shape, dtype=np.float32)
     second = rng.standard_normal(shape, dtype=np.float32)

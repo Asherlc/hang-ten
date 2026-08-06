@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 import re
+from typing import NoReturn
 
 import numpy as np
 
@@ -40,7 +41,11 @@ def flatten_display_path(
     """Flatten one absolute closed display path into a scaled float64 contour."""
     if not math.isfinite(scale) or scale <= 0:
         raise ValueError("display-path scale must be positive and finite")
-    if isinstance(curve_steps, bool) or not isinstance(curve_steps, int) or curve_steps < 2:
+    if (
+        isinstance(curve_steps, bool)
+        or not isinstance(curve_steps, int)
+        or curve_steps < 2
+    ):
         raise ValueError("display-path curve_steps must be an integer of at least 2")
 
     tokens = path.data.split()
@@ -56,7 +61,9 @@ def flatten_display_path(
         if index + 2 > len(tokens):
             raise ValueError("display path has incomplete coordinates")
         try:
-            point = np.asarray((float(tokens[index]), float(tokens[index + 1])), dtype=np.float64)
+            point = np.asarray(
+                (float(tokens[index]), float(tokens[index + 1])), dtype=np.float64
+            )
         except ValueError as error:
             raise ValueError("display path has invalid coordinates") from error
         index += 2
@@ -126,12 +133,19 @@ def flatten_display_path(
     if not np.array_equal(contour[0], contour[-1]):
         raise ValueError("display path contour must be closed")
     if np.unique(contour[:-1], axis=0).shape[0] < 3:
-        raise ValueError("display path contour must contain at least three unique points")
+        raise ValueError(
+            "display path contour must contain at least three unique points"
+        )
     return contour * scale
 
 
 def parse_display_path(
-    value: object, field: str, width: int, height: int, *, allow_linear_segments: bool = False
+    value: object,
+    field: str,
+    width: int,
+    height: int,
+    *,
+    allow_linear_segments: bool = False,
 ) -> DisplayPath | None:
     if value is None:
         return None
@@ -143,7 +157,7 @@ def parse_display_path(
     cursor = 0
     tokens: list[str] = []
     for match in matches:
-        if raw[cursor:match.start()].strip(" ,"):
+        if raw[cursor : match.start()].strip(" ,"):
             _invalid(field, "contains an unsupported command or token")
         tokens.append(match.group())
         cursor = match.end()
@@ -169,7 +183,7 @@ def parse_display_path(
         if index + arity > len(tokens):
             _invalid(field, f"has incomplete {command} coordinates")
         values: list[float] = []
-        for token in tokens[index:index + arity]:
+        for token in tokens[index : index + arity]:
             if token in _ARITY:
                 _invalid(field, f"has incomplete {command} coordinates")
             number = float(token)
@@ -185,10 +199,12 @@ def parse_display_path(
 
     if commands.count("M") != 1 or commands.count("Z") != 1 or commands[-1] != "Z":
         _invalid(field, "must contain one closed subpath")
-    if not allow_linear_segments and not any(command in ("Q", "C") for command in commands):
+    if not allow_linear_segments and not any(
+        command in ("Q", "C") for command in commands
+    ):
         _invalid(field, "must contain a curved segment")
     return DisplayPath(" ".join(normalized), tuple(commands), tuple(coordinates))
 
 
-def _invalid(field: str, message: str) -> None:
+def _invalid(field: str, message: str) -> NoReturn:
     raise ConversionError(f"invalid product template: {field} {message}")

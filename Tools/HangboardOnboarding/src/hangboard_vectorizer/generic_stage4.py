@@ -123,8 +123,11 @@ def run_generic_stage4(
 
     temporary_root: Path | None = None
     try:
+        artifact_root.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(
-            tempfile.mkdtemp(prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent)
+            tempfile.mkdtemp(
+                prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent
+            )
         )
         normal_path = temporary_root / "stage-4-normal.png"
         _write_png(normal_path, normal)
@@ -166,7 +169,9 @@ def run_generic_stage4(
             },
             "regionCount": len(regions),
             "stage": 4,
-            "typeCounts": dict(sorted(Counter(region.grip_type for region in regions).items())),
+            "typeCounts": dict(
+                sorted(Counter(region.grip_type for region in regions).items())
+            ),
         }
         _write_json(temporary_root / "stage-4-candidate.json", candidate)
         hashes = {name: _hash_file(temporary_root / name) for name in _CANDIDATE_FILES}
@@ -190,7 +195,9 @@ def _approved_inputs(
 ) -> tuple[np.ndarray, dict[str, object], dict[str, object], str]:
     stages = context.manifest.get("stages")
     if not isinstance(stages, list) or len(stages) < 4:
-        raise ConversionError("Stage 4 requires approved Stage 1 and Stage 3 checkpoints")
+        raise ConversionError(
+            "Stage 4 requires approved Stage 1 and Stage 3 checkpoints"
+        )
     stage1, stage3 = stages[1], stages[3]
     if not isinstance(stage1, Mapping) or not isinstance(stage3, Mapping):
         raise ConversionError("Stage 4 input records are invalid")
@@ -237,7 +244,10 @@ def _approved_inputs(
             "path": stage3["acceptancePath"],
             "sha256": stage3["acceptanceSha256"],
         },
-        "stage3Regions": {"path": vector_record["path"], "sha256": _hash_file(vector_path)},
+        "stage3Regions": {
+            "path": vector_record["path"],
+            "sha256": _hash_file(vector_path),
+        },
     }
     return rgba, document, evidence, pixel_sha
 
@@ -256,7 +266,10 @@ def _geometry(
         if not isinstance(value, Mapping) or value.get("pieceIndex") != expected_index:
             raise ConversionError("Stage 3 silhouette order is invalid")
         path = parse_display_path(
-            value.get("displayPath"), "Stage 3 silhouette", width, height,
+            value.get("displayPath"),
+            "Stage 3 silhouette",
+            width,
+            height,
             allow_linear_segments=True,
         )
         if path is None:
@@ -268,7 +281,11 @@ def _geometry(
     for ordinal, value in enumerate(region_values, start=1):
         if not isinstance(value, Mapping) or value.get("id") != ordinal:
             raise ConversionError("Stage 3 region order is invalid")
-        key, kind, piece_index = value.get("key"), value.get("type"), value.get("pieceIndex")
+        key, kind, piece_index = (
+            value.get("key"),
+            value.get("type"),
+            value.get("pieceIndex"),
+        )
         if (
             not isinstance(key, str)
             or not key
@@ -279,7 +296,10 @@ def _geometry(
         ):
             raise ConversionError("Stage 3 region identity is invalid")
         path = parse_display_path(
-            value.get("displayPath"), f"Stage 3 region {ordinal}", width, height,
+            value.get("displayPath"),
+            f"Stage 3 region {ordinal}",
+            width,
+            height,
             allow_linear_segments=True,
         )
         if path is None or not isinstance(value.get("displayPath"), str):
@@ -291,7 +311,9 @@ def _geometry(
         seen_keys.add(key)
         # Preserve the accepted string rather than serializing parsed tokens.
         immutable = DisplayPath(value["displayPath"], path.commands, path.coordinates)
-        regions.append(_Region(ordinal, key, kind, piece_index, immutable, symmetry_pair))
+        regions.append(
+            _Region(ordinal, key, kind, piece_index, immutable, symmetry_pair)
+        )
     return tuple(silhouettes), tuple(regions)
 
 
@@ -346,13 +368,23 @@ def _render(
         source_rgba, body_bool, high_masks, profile.grain_strength_cap, ss
     )
     high_rgb = _shade(
-        height_field, body_bool, body_weight, cavity_weight, edge_weight,
-        surface_weight, base_color, grain_strength, pixel_sha, profile,
+        height_field,
+        body_bool,
+        body_weight,
+        cavity_weight,
+        edge_weight,
+        surface_weight,
+        base_color,
+        grain_strength,
+        pixel_sha,
+        profile,
     )
     normal = _downsample_rgba(high_rgb, body_bool, width, height)
     coverages = {
         identifier: np.clip(
-            cv2.resize(mask.astype(np.float32), (width, height), interpolation=cv2.INTER_AREA),
+            cv2.resize(
+                mask.astype(np.float32), (width, height), interpolation=cv2.INTER_AREA
+            ),
             0.0,
             1.0,
         )
@@ -361,7 +393,9 @@ def _render(
     return normal, coverages
 
 
-def _surface_taper(mask: np.ndarray, region: _Region, width: int, ss: int) -> np.ndarray:
+def _surface_taper(
+    mask: np.ndarray, region: _Region, width: int, ss: int
+) -> np.ndarray:
     ys, xs = np.nonzero(mask)
     if len(xs) == 0:
         return np.zeros(mask.shape, np.float32)
@@ -389,13 +423,26 @@ def _source_cues(
     high_body: np.ndarray,
     high_masks: Mapping[int, np.ndarray],
     grain_cap: float,
-    ss: int,
+    _ss: int,
 ) -> tuple[np.ndarray, float]:
-    body = cv2.resize(high_body.astype(np.uint8), (rgba.shape[1], rgba.shape[0]), interpolation=cv2.INTER_AREA) > 0
+    body = (
+        cv2.resize(
+            high_body.astype(np.uint8),
+            (rgba.shape[1], rgba.shape[0]),
+            interpolation=cv2.INTER_AREA,
+        )
+        > 0
+    )
     grips = np.zeros(body.shape, np.uint8)
     for mask in high_masks.values():
-        grips |= cv2.resize(mask.astype(np.uint8), (rgba.shape[1], rgba.shape[0]), interpolation=cv2.INTER_AREA)
-    grips = cv2.dilate(grips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (19, 19))) > 0
+        grips |= cv2.resize(
+            mask.astype(np.uint8),
+            (rgba.shape[1], rgba.shape[0]),
+            interpolation=cv2.INTER_AREA,
+        )
+    grips = (
+        cv2.dilate(grips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (19, 19))) > 0
+    )
     interior = cv2.distanceTransform(body.astype(np.uint8), cv2.DIST_L2, 5) > 10
     safe = body & interior & ~grips & (rgba[..., 3] > 0)
     if int(safe.sum()) < 100:
@@ -434,19 +481,40 @@ def _shade(
     light = np.asarray(profile.light_direction, np.float32)
     light /= float(np.linalg.norm(light))
     diffuse = np.clip(nx * light[0] + ny * light[1] + nz * light[2], 0.0, 1.0)
-    blurred = cv2.GaussianBlur(height_field, (0, 0), sigmaX=7.0 * profile.supersample, sigmaY=5.0 * profile.supersample)
-    concavity = np.clip((blurred - height_field) / max(profile.pocket_depth, 1.0), 0.0, 1.0)
-    lighting = np.clip(0.62 + 0.43 * diffuse - 0.20 * concavity + 0.035 * surface, 0.38, 1.08)
+    blurred = cv2.GaussianBlur(
+        height_field,
+        (0, 0),
+        sigmaX=7.0 * profile.supersample,
+        sigmaY=5.0 * profile.supersample,
+    )
+    concavity = np.clip(
+        (blurred - height_field) / max(profile.pocket_depth, 1.0), 0.0, 1.0
+    )
+    lighting = np.clip(
+        0.62 + 0.43 * diffuse - 0.20 * concavity + 0.035 * surface, 0.38, 1.08
+    )
 
     routed = np.clip(body_weight, 0.0, 1.0)[..., None]
     edge_tone = np.clip(base_color * np.asarray((0.84, 0.80, 0.74), np.float32), 0, 255)
-    surface_color = edge_tone[None, None, :] * (1.0 - routed) + base_color[None, None, :] * routed
-    pocket_color = np.clip(base_color * np.asarray((0.43, 0.36, 0.28), np.float32), 0, 255)
-    edge_color = np.clip(base_color * np.asarray((0.73, 0.66, 0.55), np.float32), 0, 255)
-    color = surface_color * (1.0 - 0.82 * cavity[..., None]) + pocket_color[None, None, :] * (0.82 * cavity[..., None])
-    color = color * (1.0 - 0.34 * edge[..., None]) + edge_color[None, None, :] * (0.34 * edge[..., None])
+    surface_color = (
+        edge_tone[None, None, :] * (1.0 - routed) + base_color[None, None, :] * routed
+    )
+    pocket_color = np.clip(
+        base_color * np.asarray((0.43, 0.36, 0.28), np.float32), 0, 255
+    )
+    edge_color = np.clip(
+        base_color * np.asarray((0.73, 0.66, 0.55), np.float32), 0, 255
+    )
+    color = surface_color * (1.0 - 0.82 * cavity[..., None]) + pocket_color[
+        None, None, :
+    ] * (0.82 * cavity[..., None])
+    color = color * (1.0 - 0.34 * edge[..., None]) + edge_color[None, None, :] * (
+        0.34 * edge[..., None]
+    )
 
-    grain = _wood_grain(height_field.shape, int(pixel_sha[:16], 16), profile.supersample)
+    grain = _wood_grain(
+        height_field.shape, int(pixel_sha[:16], 16), profile.supersample
+    )
     color *= 1.0 + grain_strength * grain[..., None]
     color *= lighting[..., None]
     color = np.clip(color, 0.0, 255.0)
@@ -459,7 +527,9 @@ def _wood_grain(shape: tuple[int, int], seed: int, ss: int) -> np.ndarray:
     fields = []
     for sigma_x, sigma_y in ((42.0, 1.9), (17.0, 0.85), (7.0, 0.45)):
         noise = rng.standard_normal(shape, dtype=np.float32)
-        fields.append(cv2.GaussianBlur(noise, (0, 0), sigmaX=sigma_x * ss, sigmaY=sigma_y * ss))
+        fields.append(
+            cv2.GaussianBlur(noise, (0, 0), sigmaX=sigma_x * ss, sigmaY=sigma_y * ss)
+        )
     fields = [_standardize(field) for field in fields]
     grain = 0.58 * fields[0] + 0.29 * fields[1] + 0.13 * fields[2]
     grain = cv2.GaussianBlur(grain, (0, 0), sigmaX=0.35 * ss, sigmaY=0.18 * ss)
@@ -474,7 +544,9 @@ def _standardize(values: np.ndarray) -> np.ndarray:
     deviation = float(np.std(values, dtype=np.float64))
     if deviation == 0:
         return np.zeros_like(values)
-    return ((values - float(np.mean(values, dtype=np.float64))) / deviation).astype(np.float32)
+    return ((values - float(np.mean(values, dtype=np.float64))) / deviation).astype(
+        np.float32
+    )
 
 
 def _downsample_rgba(
@@ -482,7 +554,9 @@ def _downsample_rgba(
 ) -> np.ndarray:
     rgb = cv2.resize(high_rgb, (width, height), interpolation=cv2.INTER_LANCZOS4)
     alpha = np.clip(
-        cv2.resize(body.astype(np.float32), (width, height), interpolation=cv2.INTER_LANCZOS4),
+        cv2.resize(
+            body.astype(np.float32), (width, height), interpolation=cv2.INTER_LANCZOS4
+        ),
         0.0,
         1.0,
     )
@@ -534,7 +608,9 @@ def _highlight(
     amount = 0.48 * coverage[..., None]
     result = normal.copy()
     rgb = normal[..., :3].astype(np.float32)
-    result[..., :3] = np.rint(np.clip(rgb * (1.0 - amount) + _HIGHLIGHT * amount, 0, 255)).astype(np.uint8)
+    result[..., :3] = np.rint(
+        np.clip(rgb * (1.0 - amount) + _HIGHLIGHT * amount, 0, 255)
+    ).astype(np.uint8)
     result[result[..., 3] == 0, :3] = 0
     return result
 
@@ -599,12 +675,10 @@ def _selectable_svg(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">\n'
         "  <style>\n"
         "    .interaction path { fill: #ff5b24; fill-opacity: 0; cursor: pointer; pointer-events: all; transition: fill-opacity 120ms ease; }\n"
-        "    .interaction path:hover, .interaction path.active, .interaction path[data-active=\"true\"] { fill-opacity: .48; }\n"
+        '    .interaction path:hover, .interaction path.active, .interaction path[data-active="true"] { fill-opacity: .48; }\n'
         "  </style>\n"
         f'  <image width="{width}" height="{height}" href="data:image/png;base64,{encoded}" />\n'
-        '  <g class="interaction">\n'
-        + "\n".join(paths)
-        + "\n  </g>\n</svg>\n"
+        '  <g class="interaction">\n' + "\n".join(paths) + "\n  </g>\n</svg>\n"
     )
 
 
@@ -613,20 +687,30 @@ def _review(normal: np.ndarray, highlighted: Mapping[str, np.ndarray]) -> np.nda
         ("Clean normal", normal, "All holds", highlighted["all"]),
         ("Jugs", highlighted["jugs"], "Slopers", highlighted["slopers"]),
         ("Edges", highlighted["edges"], "Pockets", highlighted["pockets"]),
-        ("Symmetric pair", highlighted["symmetric-pair"], "Mixed selection", highlighted["mixed"]),
+        (
+            "Symmetric pair",
+            highlighted["symmetric-pair"],
+            "Mixed selection",
+            highlighted["mixed"],
+        ),
     )
     height, width = normal.shape[:2]
     gutter, outer, title_height = 18, 18, 36
     canvas = Image.new(
         "RGB",
-        (width * 2 + gutter + outer * 2, (height + title_height) * 4 + gutter * 3 + outer * 2),
+        (
+            width * 2 + gutter + outer * 2,
+            (height + title_height) * 4 + gutter * 3 + outer * 2,
+        ),
         _WARM_WHITE,
     )
     draw = ImageDraw.Draw(canvas)
     font = _font(16, bold=True)
     for row, (left_title, left, right_title, right) in enumerate(pairs):
         y = outer + row * (height + title_height + gutter)
-        for column, (title, rgba) in enumerate(((left_title, left), (right_title, right))):
+        for column, (title, rgba) in enumerate(
+            ((left_title, left), (right_title, right))
+        ):
             x = outer + column * (width + gutter)
             draw.text((x + 4, y + 6), title, font=font, fill=(48, 45, 41))
             product = Image.fromarray(rgba, "RGBA")
@@ -671,7 +755,9 @@ def _read_json(path: Path) -> dict[str, object]:
 
 
 def _write_json(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def _encode_png(array: np.ndarray) -> bytes:
@@ -692,8 +778,12 @@ def _hash_file(path: Path) -> str:
 
 def _font(size: int, *, bold: bool = False) -> ImageFont.ImageFont:
     names = (
-        "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold else "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+        if bold
+        else "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        if bold
+        else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     )
     for name in names:
         try:

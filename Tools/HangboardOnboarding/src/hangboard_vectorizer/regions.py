@@ -8,11 +8,10 @@ import numpy as np
 
 from .display_paths import DisplayPath
 from .geometry import Opening
+from .models import ConversionError
 
 
-RegionType = Literal[
-    "pocket", "edge", "rail", "jug", "sloper", "slot", "unknown"
-]
+RegionType = Literal["pocket", "edge", "rail", "jug", "sloper", "slot", "unknown"]
 RegionSide = Literal["left", "right"] | None
 RegionSource = Literal["automatic", "override", "template"]
 RegionMetadataValue = str | int | float | bool
@@ -113,7 +112,9 @@ def _identify_openings(
         for hole_number, opening in enumerate(
             sorted(row, key=lambda item: item.center[0]), start=1
         ):
-            identified.append(replace(opening, id=f"r{row_number:02d}-h{hole_number:02d}"))
+            identified.append(
+                replace(opening, id=f"r{row_number:02d}-h{hole_number:02d}")
+            )
     return tuple(identified)
 
 
@@ -136,7 +137,9 @@ def _classify(
     return "slot"
 
 
-def _split_rail(opening: Opening) -> tuple[tuple[Literal["left", "right"], np.ndarray], ...]:
+def _split_rail(
+    opening: Opening,
+) -> tuple[tuple[Literal["left", "right"], np.ndarray], ...]:
     x, y, width, height = opening.bbox
     mask = np.zeros((height, width), dtype=np.uint8)
     local_contour = np.rint(opening.contour - np.array([x, y])).astype(np.int32)
@@ -146,13 +149,17 @@ def _split_rail(opening: Opening) -> tuple[tuple[Literal["left", "right"], np.nd
     pieces: list[tuple[Literal["left", "right"], np.ndarray]] = []
     for side, half, offset in halves:
         contours, _ = cv2.findContours(half, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not contours:
+            raise ConversionError(f"rail opening {opening.id} has no {side} component")
         contour = max(contours, key=cv2.contourArea).reshape(-1, 2).astype(float)
         contour += np.array([x + offset, y])
         pieces.append((side, contour))
     return tuple(pieces)
 
 
-def _contour_geometry(contour: np.ndarray) -> tuple[tuple[float, float], tuple[int, int, int, int]]:
+def _contour_geometry(
+    contour: np.ndarray,
+) -> tuple[tuple[float, float], tuple[int, int, int, int]]:
     integer_contour = np.rint(contour).astype(np.int32)
     x, y, width, height = cv2.boundingRect(integer_contour)
     moments = cv2.moments(integer_contour)
