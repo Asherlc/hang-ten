@@ -69,6 +69,24 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
     }
 
+    func testSaveAndResolveAllowsEmptyOptionalSubtitle() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = genericDefinition(id: "custom.empty-subtitle")
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(definition)
+
+        let persisted = try XCTUnwrap(store.routines.first)
+        let plan = try store.plan(for: persisted)
+
+        XCTAssertEqual(plan.id, definition.id)
+        XCTAssertEqual(plan.title, definition.title)
+        XCTAssertEqual(plan.subtitle, "")
+        XCTAssertEqual(plan.provenance, .custom)
+    }
+
     func testValidationRejectsBlankNameMissingTargetsAndInvalidDuration() {
         let definition = CustomRoutineDefinition(
             id: "custom.invalid",
