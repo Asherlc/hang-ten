@@ -120,8 +120,11 @@ final class CustomRoutineAppStoreTests: XCTestCase {
 
         try store.saveCustomRoutine(definition)
 
+        let persisted = try XCTUnwrap(store.customDefinition(for: definition.id))
         XCTAssertTrue(store.isCustom(try XCTUnwrap(store.plans.first { $0.id == definition.id })))
-        XCTAssertEqual(store.customDefinition(for: definition.id), definition)
+        XCTAssertEqual(persisted.steps.map(\.id), ["step-1"])
+        XCTAssertEqual(persisted.steps.map { $0.segments.count }, [1])
+        XCTAssertEqual(store.customDefinition(for: definition.id), persisted)
 
         try store.deleteCustomRoutine(id: definition.id)
 

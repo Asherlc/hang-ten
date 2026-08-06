@@ -772,7 +772,8 @@ enum PlanLibraryValidator {
         if plan.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).title", message: "Plan title cannot be empty."))
         }
-        if plan.metadata.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if plan.metadata.provenance != .custom,
+           plan.metadata.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).subtitle", message: "Plan subtitle cannot be empty."))
         }
         if plan.metadata.level.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

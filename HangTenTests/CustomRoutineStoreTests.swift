@@ -33,9 +33,12 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         try store.save(definition)
 
+        let persisted = try XCTUnwrap(store.routines.first)
         let reloaded = CustomRoutineStore(defaults: defaults)
-        XCTAssertEqual(reloaded.routines, [definition])
-        let plan = try reloaded.plan(for: definition)
+        XCTAssertEqual(reloaded.routines, [persisted])
+        XCTAssertEqual(persisted.steps.map(\.id), ["step-1"])
+        XCTAssertEqual(persisted.steps.map { $0.segments.count }, [1])
+        let plan = try reloaded.plan(for: persisted)
         XCTAssertEqual(plan.id, definition.id)
         XCTAssertEqual(plan.title, definition.title)
         XCTAssertEqual(plan.steps[0].targets, [.ids("edge-19-left", "edge-19-right")])

@@ -54,19 +54,24 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(definition: makeLibrary(steps: steps))
         let resolvedSteps = try XCTUnwrap(store.plan(id: "test.plan")).steps
 
+        XCTAssertEqual(resolvedSteps.map(\.id), [
+            "fixed.segment-1", "fixed.segment-2", "stopwatch", "undefined"
+        ])
+        XCTAssertEqual(resolvedSteps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
             resolvedSteps[0].segments,
-            [
-                WorkoutSegment(kind: .work, target: .feature(.mediumEdge), timing: .fixed, duration: 20),
-                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 40)
-            ]
+            [WorkoutSegment(kind: .work, target: .feature(.mediumEdge), timing: .fixed, duration: 20)]
         )
         XCTAssertEqual(
             resolvedSteps[1].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.roundSloper), timing: .stopwatch, duration: nil)]
+            [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 40)]
         )
         XCTAssertEqual(
             resolvedSteps[2].segments,
+            [WorkoutSegment(kind: .work, target: .feature(.roundSloper), timing: .stopwatch, duration: nil)]
+        )
+        XCTAssertEqual(
+            resolvedSteps[3].segments,
             [WorkoutSegment(kind: .work, target: .feature(.jug), timing: .undefined, duration: nil)]
         )
     }
@@ -105,7 +110,8 @@ final class PlanStorageTests: XCTestCase {
                     {
                       "kind": "work",
                       "target": { "feature": "mediumEdge" },
-                      "timing": "undefined"
+                      "timing": "fixed",
+                      "duration": 10
                     }
                   ]
                 }]
@@ -131,7 +137,10 @@ final class PlanStorageTests: XCTestCase {
         )
 
         let store = try PlanLibraryStore(data: data)
-        let resolvedSegments = try XCTUnwrap(store.plan(id: "segment.plan")).steps[0].segments
+        let resolvedSteps = try XCTUnwrap(store.plan(id: "segment.plan")).steps
+        let resolvedSegments = resolvedSteps.flatMap(\.segments)
+        XCTAssertEqual(resolvedSteps.map(\.id), ["segment.step.segment-1", "segment.step.segment-2"])
+        XCTAssertEqual(resolvedSteps.map(\.number), [1, 2])
         let encoded = try store.encodedData()
         let encodedObject = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
         let encodedBlocks = try XCTUnwrap(encodedObject["blocks"] as? [[String: Any]])
@@ -229,19 +238,22 @@ final class PlanStorageTests: XCTestCase {
         let steps = try XCTUnwrap(store.plan(id: "legacy.plan")).steps
 
         XCTAssertEqual(store.definition.schemaVersion, PlanDefinitionSchema.currentVersion)
+        XCTAssertEqual(steps.map(\.id), ["rest", "timed.segment-1", "timed.segment-2", "untimed"])
+        XCTAssertEqual(steps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
             steps[0].segments,
             [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 30)]
         )
         XCTAssertEqual(
             steps[1].segments,
-            [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10),
-                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 20)
-            ]
+            [WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)]
         )
         XCTAssertEqual(
             steps[2].segments,
+            [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 20)]
+        )
+        XCTAssertEqual(
+            steps[3].segments,
             [WorkoutSegment(kind: .work, target: .kind(.jug), timing: .undefined, duration: nil)]
         )
     }
