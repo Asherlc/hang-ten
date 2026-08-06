@@ -45,6 +45,16 @@ def test_cached_source_path_returns_the_validated_cached_input(tmp_path: Path) -
     assert cached_source_path(run) == run / "inputs/source.png"
 
 
+def test_cached_source_path_rejects_a_symlink_escape(tmp_path: Path) -> None:
+    run = _started_run(tmp_path)
+    cached = run / "inputs/source.png"
+    cached.unlink()
+    cached.symlink_to(tmp_path / "source.png")
+
+    with pytest.raises(OnboardingStateError, match="escapes the run"):
+        cached_source_path(run)
+
+
 def _started_run(tmp_path: Path) -> Path:
     source = tmp_path / "source.png"
     Image.new("RGB", (512, 512), (45, 65, 85)).save(source)

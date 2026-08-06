@@ -379,7 +379,14 @@ def cached_source_path(output: Path) -> Path:
     output = Path(output)
     manifest = _load_and_validate(output)
     source = _mapping(manifest["source"], "source")
-    return _absolute_relative(output, source["cachedPath"])
+    cached_path = _absolute_relative(output, source["cachedPath"])
+    try:
+        resolved_root = output.resolve(strict=True)
+        resolved_path = cached_path.resolve(strict=True)
+        resolved_path.relative_to(resolved_root)
+    except (OSError, ValueError) as error:
+        raise OnboardingStateError("cached source escapes the run") from error
+    return resolved_path
 
 
 def _initial_manifest(identity: CommercialIdentityAssertion, source: CachedSource) -> dict[str, object]:
