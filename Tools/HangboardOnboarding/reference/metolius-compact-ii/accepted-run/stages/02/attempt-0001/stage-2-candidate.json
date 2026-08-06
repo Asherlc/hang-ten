@@ -1,0 +1,33 @@
+{
+  "inputAcceptance": {
+    "path": "stages/01/attempt-0001/stage-1-acceptance.json",
+    "sha256": "596a091535e5355a777f5d7fb502c511bbcdf7f5e84193dbbb9c9109536247ae"
+  },
+  "inputRegistered": {
+    "alphaSha256": "c4382ff3cff29609488f3aff7f697b03482bcc6f2dae139c71a78a7e34207fc0",
+    "fileSha256": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1",
+    "height": 261,
+    "path": "stages/01/attempt-0001/stage-1-auto-rgba.png",
+    "pixelSha256": "15aa858cd35d8e6d0496ba46ef6dc3f99866ddaa831755f91294e504ca763e2a",
+    "width": 1000
+  },
+  "profile": {
+    "aperture_padding": 8,
+    "minimum_region_pixels": 120,
+    "profile_id": "generic-semantic-capture-v1"
+  },
+  "proposalSha256": "546e99f6d74ce9fc8a7ffc364290679b03eaae607b3e1525805d2358dbf3414c",
+  "regionCount": 19,
+  "regions": {
+    "fileSha256": "ed34ff7a360f22e84e60c767b44f3451100ea2547a4fdf80900fffc80168ed49",
+    "path": "stage-2-regions.json"
+  },
+  "registered": {
+    "fileSha256": "70827d133a56dcc5fab1f990c880d59cb2edbbb796bf9f750c1496d2e9b3293a",
+    "height": 261,
+    "labelSha256": "9ec737eb0340f03cf7680b272ecfa89fde3551df558e6ebdd515104240123d12",
+    "path": "stage-2-labels.png",
+    "width": 1000
+  },
+  "stage": 2
+}
