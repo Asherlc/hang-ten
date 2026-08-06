@@ -368,7 +368,26 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(duplicate.definition().id.hasPrefix("custom."))
         XCTAssertEqual(duplicate.definition(), duplicate.definition())
         XCTAssertEqual(duplicate.definition().title, source.title)
-        XCTAssertEqual(duplicate.definition().steps, source.steps)
+
+        let sourceStep = source.steps[0]
+        let expectedStep = WorkoutStepDefinition(
+            id: sourceStep.id,
+            title: sourceStep.title,
+            instruction: sourceStep.instruction,
+            accessory: sourceStep.accessory,
+            duration: sourceStep.duration,
+            phase: sourceStep.phase,
+            targets: sourceStep.targets,
+            segments: [WorkoutSegmentDefinition(
+                kind: .work,
+                target: .kind(.jug),
+                timing: .fixed,
+                duration: 10
+            )],
+            gripType: sourceStep.gripType,
+            activeDuration: sourceStep.activeDuration
+        )
+        XCTAssertEqual(duplicate.definition().steps, [expectedStep])
     }
 
     func testEditingDraftRetainsPersistedIdentityAndCannotBeRetargeted() {
@@ -402,6 +421,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
     func testEditorLocalValidationRejectsNonFiniteAndNonPositiveStepDurations() {
         var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Duration validation"
         draft.steps = [
             makeStep(id: "zero", title: "Zero", duration: 0),
             makeStep(id: "negative", title: "Negative", duration: -1),
