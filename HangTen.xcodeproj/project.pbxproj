@@ -66,6 +66,7 @@
 		AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */; };
 		AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000061 /* CustomRoutineStoreTests.swift */; };
 		AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000062 /* CustomRoutineStore.swift */; };
+		AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,6 +132,7 @@
 		BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStepNormalizationTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000061 /* CustomRoutineStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000062 /* CustomRoutineStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineStore.swift; sourceTree = "<group>"; };
+		BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineAppStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 				BB0000000000000000000058 /* WorkoutHistoryServiceTests.swift */,
 				BB0000000000000000000060 /* WorkoutStepNormalizationTests.swift */,
 				BB0000000000000000000061 /* CustomRoutineStoreTests.swift */,
+				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 				AA0000000000000000000058 /* WorkoutHistoryServiceTests.swift in Sources */,
 				AA0000000000000000000060 /* WorkoutStepNormalizationTests.swift in Sources */,
 				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
+				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

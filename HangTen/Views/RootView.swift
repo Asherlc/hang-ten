@@ -337,8 +337,8 @@ struct PlansView: View {
     var body: some View {
         let compatiblePlans = store.plans
         let metadataByPlanID = Dictionary(
-            compatiblePlans.compactMap { plan in
-                PlanCatalog.metadata(for: plan.id).map { (plan.id, $0) }
+            compatiblePlans.map { plan in
+                (plan.id, store.metadata(for: plan))
             },
             uniquingKeysWith: { first, _ in first }
         )
