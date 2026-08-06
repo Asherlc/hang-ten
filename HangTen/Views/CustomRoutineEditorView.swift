@@ -56,6 +56,10 @@ struct CustomRoutineEditorView: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    EditButton()
+                        .accessibilityIdentifier("customRoutine.reorder")
+                }
             }
             .alert("Couldn’t save routine", isPresented: persistenceAlertBinding) {
                 Button("OK", role: .cancel) {
