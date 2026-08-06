@@ -299,34 +299,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXSourcesBuildPhase section */
-		CC0000000000000000000005 /* HangTenTests Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
-				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
-				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
-				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
-				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
-				AA0000000000000000000026 /* MotherboardBluetoothServiceTests.swift in Sources */,
-				AA0000000000000000000028 /* AppStoreTests.swift in Sources */,
-				AA0000000000000000000033 /* WorkoutSummaryTests.swift in Sources */,
-				AA0000000000000000000035 /* SimulatedMotherboardTransportTests.swift in Sources */,
-				AA0000000000000000000037 /* MotherboardWorkoutPreparationTests.swift in Sources */,
-				AA0000000000000000000040 /* WorkoutTimelineTests.swift in Sources */,
-				AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */,
-				AA0000000000000000000045 /* WorkoutSegmentTests.swift in Sources */,
-				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
-				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
-				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
-				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
-				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		EE0000000000000000000001 /* HangTen */ = {
 			isa = PBXNativeTarget;

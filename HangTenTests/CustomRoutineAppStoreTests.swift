@@ -3,6 +3,8 @@ import XCTest
 
 @MainActor
 final class CustomRoutineAppStoreTests: XCTestCase {
+    deinit {}
+
     private func makeDefaults() -> (suiteName: String, defaults: UserDefaults) {
         let suiteName = "CustomRoutineAppStoreTests.\(UUID().uuidString)"
         return (suiteName, UserDefaults(suiteName: suiteName)!)
@@ -172,6 +174,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
 
         try store.saveCustomRoutine(definition)
 
+        XCTAssertNil(store.customRoutinePersistenceError)
         let persisted = try XCTUnwrap(store.customDefinition(for: definition.id))
         XCTAssertTrue(store.isCustom(try XCTUnwrap(store.plans.first { $0.id == definition.id })))
         XCTAssertEqual(persisted.steps.map(\.id), ["step-1"])
