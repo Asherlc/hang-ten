@@ -5,8 +5,11 @@ import math
 import sys
 import threading
 from contextlib import contextmanager
+from dataclasses import dataclass, replace
 from pathlib import Path
+from threading import Event, Lock
 from urllib.error import HTTPError
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 import pytest
@@ -14,6 +17,7 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
 
+import server as server_module  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
     EditorError,
@@ -46,6 +50,164 @@ CORRECTIONS = {
     "modified": REGIONS["regions"],
     "deleted": [],
 }
+
+
+@dataclass(frozen=True)
+class FakeWorkbenchView:
+    board_id: str
+    revision_id: str
+    parent_revision_id: str | None
+    run_root: Path
+    product_name: str
+    stage: int
+    state: str
+    review_path: Path | None
+    editor_mode: str | None
+    saved: bool
+    stale_from_stage: int | None
+
+
+class FakeWorkbenchService:
+    def __init__(self, root: Path):
+        self._root = root
+        self._boards: dict[str, FakeWorkbenchView] = {}
+        self._drafts: dict[str, object] = {}
+        self._counter = 0
+        self._lock = Lock()
+        self.approve_started = Event()
+        self.approve_gate: Event | None = None
+
+    def create_from_url(self, product_name: str, source_url: str) -> FakeWorkbenchView:
+        if not source_url.startswith(("http://", "https://")):
+            raise ValueError("source URL must use HTTP(S)")
+        return self._create(product_name, source_url.encode())
+
+    def create_from_upload(self, product_name: str, content: bytes) -> FakeWorkbenchView:
+        if not content:
+            raise ValueError("upload content must not be empty")
+        return self._create(product_name, content)
+
+    def import_run(self, run_root: Path) -> FakeWorkbenchView:
+        return self._create(run_root.name, b"imported")
+
+    def list_boards(self) -> tuple[FakeWorkbenchView, ...]:
+        with self._lock:
+            return tuple(self._boards.values())
+
+    def get_board(
+        self, board_id: str, *, revision_id: str | None = None
+    ) -> FakeWorkbenchView:
+        with self._lock:
+            try:
+                view = self._boards[board_id]
+            except KeyError as error:
+                raise ValueError(f"unknown board: {board_id}") from error
+        if revision_id is not None and revision_id != view.revision_id:
+            raise ValueError(f"unknown revision: {revision_id}")
+        return view
+
+    def save_draft(
+        self,
+        board_id: str,
+        document: object,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        view = self._expected(board_id, expected_revision_id, expected_stage)
+        self._drafts[board_id] = document
+        return view
+
+    def approve_and_advance(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        view = self._expected(board_id, expected_revision_id, expected_stage)
+        self.approve_started.set()
+        if self.approve_gate is not None:
+            self.approve_gate.wait(1)
+        next_stage = min(4, view.stage + 1)
+        state = "complete" if view.stage == 4 else "awaiting_review"
+        return self._update(view, stage=next_stage, state=state)
+
+    def revise_stage(
+        self,
+        board_id: str,
+        *,
+        stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise ValueError("expected revision does not match")
+        return self._update(
+            view,
+            revision_id=f"{view.revision_id}-revised",
+            parent_revision_id=view.revision_id,
+            stage=stage,
+            saved=False,
+        )
+
+    def retry(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        return self._expected(board_id, expected_revision_id, expected_stage)
+
+    def save(
+        self, board_id: str, *, expected_revision_id: str | None = None
+    ) -> FakeWorkbenchView:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise ValueError("expected revision does not match")
+        return self._update(view, saved=True)
+
+    def _create(self, product_name: str, content: bytes) -> FakeWorkbenchView:
+        with self._lock:
+            self._counter += 1
+            board_id = f"board-{self._counter}"
+            revision_id = "revision-1"
+            run_root = self._root / board_id / revision_id / "run"
+            review_path = run_root / "stages/00/stage-0-review.png"
+            review_path.parent.mkdir(parents=True)
+            review_path.write_bytes(content)
+            view = FakeWorkbenchView(
+                board_id=board_id,
+                revision_id=revision_id,
+                parent_revision_id=None,
+                run_root=run_root,
+                product_name=product_name,
+                stage=0,
+                state="awaiting_review",
+                review_path=review_path,
+                editor_mode=None,
+                saved=False,
+                stale_from_stage=None,
+            )
+            self._boards[board_id] = view
+            return view
+
+    def _expected(
+        self, board_id: str, revision_id: str | None, stage: int
+    ) -> FakeWorkbenchView:
+        view = self.get_board(board_id)
+        if revision_id != view.revision_id:
+            raise ValueError("expected revision does not match")
+        if stage != view.stage:
+            raise ValueError("expected stage does not match")
+        return view
+
+    def _update(self, view: FakeWorkbenchView, **changes) -> FakeWorkbenchView:
+        updated = replace(view, **changes)
+        with self._lock:
+            self._boards[view.board_id] = updated
+        return updated
 
 
 def make_run(root: Path):
@@ -194,8 +356,13 @@ def test_save_review_preserves_proposal_and_writes_review_artifacts(tmp_path):
 
 
 @contextmanager
-def running_server(session):
-    server = create_server(session, "127.0.0.1", 0)
+def running_server(session, workbench_service=None):
+    server = create_server(
+        session,
+        "127.0.0.1",
+        0,
+        workbench_service=workbench_service,
+    )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
@@ -209,6 +376,374 @@ def running_server(session):
 def read_json(url: str):
     with urlopen(url) as response:
         return response.status, json.load(response)
+
+
+def _post_json(url: str, payload: object):
+    request = Request(
+        url,
+        data=json.dumps(payload).encode(),
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    with urlopen(request) as response:
+        return response.status, json.load(response)
+
+
+def _poll_job(base: str, job_id: str):
+    for _ in range(100):
+        _status, payload = read_json(base + f"/api/jobs/{job_id}")
+        job = payload["job"]
+        if job["state"] in {"succeeded", "failed"}:
+            return job
+    pytest.fail("fake deterministic job did not finish within bounded polls")
+
+
+def _create_board(base: str):
+    status, created = _post_json(
+        base + "/api/boards",
+        {
+            "productName": "Example Board",
+            "source": "https://example.test/board.png",
+        },
+    )
+    assert status == 202
+    final = _poll_job(base, created["jobId"])
+    assert final["state"] == "succeeded"
+    return final["result"]
+
+
+def _post_mutation(base: str, route: str, view: dict, **extra):
+    status, submitted = _post_json(
+        base + route,
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "expectedStage": view["stage"],
+            **extra,
+        },
+    )
+    assert status == 202
+    final = _poll_job(base, submitted["jobId"])
+    assert final["state"] == "succeeded"
+    return final["result"]
+
+
+@pytest.fixture
+def running_workbench_server(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        yield base
+
+
+def test_create_url_run_returns_job_and_can_be_polled(running_workbench_server):
+    status, created = _post_json(
+        running_workbench_server + "/api/boards",
+        {
+            "productName": "Example Board",
+            "source": "https://example.test/board.png",
+        },
+    )
+
+    assert status == 202
+    first_status, first_poll = read_json(
+        running_workbench_server + f"/api/jobs/{created['jobId']}"
+    )
+    final = _poll_job(running_workbench_server, created["jobId"])
+
+    assert first_status == 200
+    assert first_poll["job"]["id"] == created["jobId"]
+    assert final["state"] == "succeeded"
+    assert final["result"]["productName"] == "Example Board"
+    assert "runRoot" not in final["result"]
+
+
+def test_create_upload_accepts_only_bounded_images(running_workbench_server):
+    query = urlencode({"productName": "Uploaded Board"})
+    request = Request(
+        running_workbench_server + f"/api/boards/upload?{query}",
+        data=b"uploaded-image",
+        method="POST",
+        headers={"Content-Type": "image/png"},
+    )
+
+    with urlopen(request) as response:
+        status = response.status
+        submitted = json.load(response)
+    final = _poll_job(running_workbench_server, submitted["jobId"])
+
+    assert status == 202
+    assert final["result"]["productName"] == "Uploaded Board"
+
+    invalid = Request(
+        running_workbench_server + f"/api/boards/upload?{query}",
+        data=b"not-an-image",
+        method="POST",
+        headers={"Content-Type": "application/octet-stream"},
+    )
+    with pytest.raises(HTTPError) as error:
+        urlopen(invalid)
+    assert error.value.code == 415
+    assert json.load(error.value) == {
+        "ok": False,
+        "error": "Content-Type must be image/*",
+    }
+
+
+def test_import_run_returns_a_pollable_job(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    imported_run = tmp_path / "CLI Imported Board"
+    imported_run.mkdir()
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, submitted = _post_json(
+            base + "/api/boards/import",
+            {"runRoot": str(imported_run)},
+        )
+        final = _poll_job(base, submitted["jobId"])
+
+    assert status == 202
+    assert final["state"] == "succeeded"
+    assert final["result"]["productName"] == "CLI Imported Board"
+
+
+def test_list_and_get_workbench_boards_return_safe_views(running_workbench_server):
+    created = _create_board(running_workbench_server)
+
+    list_status, listed = read_json(running_workbench_server + "/api/boards")
+    get_status, selected = read_json(
+        running_workbench_server + f"/api/boards/{created['boardId']}"
+    )
+
+    assert list_status == get_status == 200
+    assert listed["boards"] == [created]
+    assert selected["board"] == created
+    assert str(Path.home()) not in json.dumps(listed)
+
+
+def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    view = _post_mutation(running_workbench_server, "/api/approve", view)
+    view = _post_mutation(running_workbench_server, "/api/approve", view)
+    drafted = _post_mutation(
+        running_workbench_server,
+        "/api/drafts",
+        view,
+        document={"regions": []},
+    )
+    retried = _post_mutation(running_workbench_server, "/api/retry", drafted)
+    revised = _post_mutation(running_workbench_server, "/api/revise", retried)
+
+    assert drafted["stage"] == 2
+    assert retried["revisionId"] == drafted["revisionId"]
+    assert revised["parentRevisionId"] == retried["revisionId"]
+    assert revised["revisionId"].endswith("-revised")
+
+
+def test_final_save_returns_saved_revision(running_workbench_server):
+    view = _create_board(running_workbench_server)
+    for _ in range(5):
+        view = _post_mutation(running_workbench_server, "/api/approve", view)
+
+    saved = _post_mutation(
+        running_workbench_server, "/api/final-save", view
+    )
+
+    assert view["state"] == "complete"
+    assert saved["saved"] is True
+
+
+@pytest.mark.parametrize(
+    "route, extra",
+    [
+        ("/api/drafts", {"document": {}}),
+        ("/api/approve", {}),
+        ("/api/revise", {}),
+        ("/api/retry", {}),
+    ],
+)
+def test_workbench_mutations_require_optimistic_fields(
+    running_workbench_server, route, extra
+):
+    for omitted in ("expectedRevisionId", "expectedStage"):
+        payload = {
+            "boardId": "board-1",
+            "expectedRevisionId": "revision-1",
+            "expectedStage": 0,
+            **extra,
+        }
+        payload.pop(omitted)
+
+        with pytest.raises(HTTPError) as error:
+            _post_json(running_workbench_server + route, payload)
+
+        assert error.value.code == 400
+        body = json.load(error.value)
+        assert body["ok"] is False
+        assert omitted in body["error"]
+
+
+def test_final_save_requires_expected_revision(running_workbench_server):
+    with pytest.raises(HTTPError) as error:
+        _post_json(
+            running_workbench_server + "/api/final-save",
+            {"boardId": "board-1", "expectedStage": 4},
+        )
+
+    assert error.value.code == 400
+    assert "expectedRevisionId" in json.load(error.value)["error"]
+
+
+def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    service.approve_gate = Event()
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        status, first = _post_json(
+            base + "/api/approve",
+            {
+                "boardId": view["boardId"],
+                "expectedRevisionId": view["revisionId"],
+                "expectedStage": view["stage"],
+            },
+        )
+        assert status == 202
+        assert service.approve_started.wait(1)
+
+        with pytest.raises(HTTPError) as conflict:
+            _post_json(
+                base + "/api/retry",
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "expectedStage": view["stage"],
+                },
+            )
+        service.approve_gate.set()
+        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+
+    assert conflict.value.code == 409
+    assert json.load(conflict.value)["ok"] is False
+
+
+def test_failed_job_poll_exposes_safe_error_without_traceback(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    status, submitted = _post_json(
+        running_workbench_server + "/api/approve",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": "revision-stale",
+            "expectedStage": view["stage"],
+        },
+    )
+
+    final = _poll_job(running_workbench_server, submitted["jobId"])
+
+    assert status == 202
+    assert final["state"] == "failed"
+    assert final["error"] == "expected revision does not match"
+    assert "Traceback" not in json.dumps(final)
+
+
+def test_workbench_request_limits_are_enforced(running_workbench_server):
+    oversized = Request(
+        running_workbench_server + "/api/boards",
+        data=b"{}",
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "Content-Length": str(10 * 1024 * 1024 + 1),
+        },
+    )
+    with pytest.raises(HTTPError) as too_large:
+        urlopen(oversized)
+
+    oversized_upload = Request(
+        running_workbench_server
+        + "/api/boards/upload?"
+        + urlencode({"productName": "Too Large"}),
+        data=b"x",
+        method="POST",
+        headers={
+            "Content-Type": "image/png",
+            "Content-Length": str(10 * 1024 * 1024 + 1),
+        },
+    )
+    with pytest.raises(HTTPError) as upload_too_large:
+        urlopen(oversized_upload)
+
+    wrong_type = Request(
+        running_workbench_server + "/api/boards",
+        data=b"{}",
+        method="POST",
+        headers={"Content-Type": "text/plain"},
+    )
+    with pytest.raises(HTTPError) as unsupported:
+        urlopen(wrong_type)
+
+    assert too_large.value.code == 413
+    assert upload_too_large.value.code == 413
+    assert unsupported.value.code == 415
+    assert json.load(too_large.value)["ok"] is False
+    assert json.load(upload_too_large.value)["ok"] is False
+    assert json.load(unsupported.value)["ok"] is False
+
+
+def test_artifact_endpoint_serves_only_selected_revision(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+
+    with urlopen(running_workbench_server + view["reviewUrl"]) as response:
+        content = response.read()
+
+    assert content == b"https://example.test/board.png"
+
+
+def test_artifact_endpoint_rejects_paths_outside_revision(
+    running_workbench_server,
+):
+    with pytest.raises(HTTPError) as error:
+        urlopen(running_workbench_server + "/api/artifact?path=../../secret")
+
+    assert error.value.code == 400
+    assert json.load(error.value)["ok"] is False
+
+
+def test_unknown_job_returns_consistent_json_error(running_workbench_server):
+    with pytest.raises(HTTPError) as error:
+        urlopen(running_workbench_server + "/api/jobs/missing")
+
+    assert error.value.code == 404
+    assert json.load(error.value) == {"ok": False, "error": "unknown job: missing"}
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
+    workspace = tmp_path / "workspace"
+    server, catalog = server_module._server_from_cli(
+        ["--workspace-root", str(workspace), "--port", "0"]
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, payload = read_json(
+            f"http://127.0.0.1:{server.server_port}/api/boards"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert catalog is None
+    assert server.server_address[0] == "127.0.0.1"
+    assert status == 200
+    assert payload == {"ok": True, "boards": []}
+    assert (workspace / "boards").is_dir()
 
 
 def test_http_session_loads_only_explicit_artifacts(tmp_path):

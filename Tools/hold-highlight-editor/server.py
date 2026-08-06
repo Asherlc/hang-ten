@@ -7,6 +7,7 @@ import json
 import math
 import mimetypes
 import os
+import sys
 import tempfile
 from argparse import ArgumentParser
 from dataclasses import dataclass
@@ -15,7 +16,14 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Iterable
-from urllib.parse import parse_qs, urlencode, urlsplit
+from urllib.parse import parse_qs, unquote, urlencode, urlsplit
+from uuid import uuid4
+
+from job_manager import (
+    BoardJobManager,
+    JobConflictError,
+    JobNotFoundError,
+)
 
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
@@ -24,6 +32,14 @@ EDITOR_ROOT = Path(__file__).resolve().parent
 
 class EditorError(ValueError):
     """A safe, user-facing editor session or payload error."""
+
+
+class RequestError(EditorError):
+    """A safe HTTP request error with an explicit response status."""
+
+    def __init__(self, status: HTTPStatus, message: str) -> None:
+        super().__init__(message)
+        self.status = status
 
 
 @dataclass(frozen=True)
@@ -202,25 +218,121 @@ def save_review(
     }
 
 
+def _workbench_view_payload(view: object) -> dict[str, Any]:
+    run_root = Path(view.run_root).resolve()
+    review_path = view.review_path
+    review_url = None
+    if review_path is not None:
+        resolved_review = Path(review_path).resolve()
+        try:
+            relative_review = resolved_review.relative_to(run_root)
+        except ValueError as error:
+            raise EditorError(
+                "review artifact resolves outside the selected revision"
+            ) from error
+        review_url = "/api/artifact?" + urlencode(
+            {
+                "boardId": view.board_id,
+                "revisionId": view.revision_id,
+                "path": relative_review.as_posix(),
+            }
+        )
+    return {
+        "boardId": view.board_id,
+        "revisionId": view.revision_id,
+        "parentRevisionId": view.parent_revision_id,
+        "productName": view.product_name,
+        "stage": view.stage,
+        "state": view.state,
+        "reviewUrl": review_url,
+        "editorMode": view.editor_mode,
+        "saved": view.saved,
+        "staleFromStage": view.stale_from_stage,
+    }
+
+
 def create_server(
-    source: EditorSession | EditorCatalog,
+    source: EditorSession | EditorCatalog | None,
     host: str = "127.0.0.1",
     port: int = 4173,
+    *,
+    workbench_service: object | None = None,
+    max_workers: int = 4,
 ) -> ThreadingHTTPServer:
-    catalog = source if isinstance(source, EditorCatalog) else EditorCatalog.from_sessions([(source.run_dir.name, source)])
+    catalog = (
+        source
+        if isinstance(source, EditorCatalog)
+        else EditorCatalog.from_sessions([(source.run_dir.name, source)])
+        if source is not None
+        else None
+    )
+    jobs = BoardJobManager(
+        max_workers=max_workers,
+        result_serializer=_workbench_view_payload,
+    )
 
     class SessionHandler(EditorRequestHandler):
         editor_catalog = catalog
 
-    return ThreadingHTTPServer((host, port), SessionHandler)
+    return WorkbenchHTTPServer(
+        (host, port),
+        SessionHandler,
+        workbench_service=workbench_service,
+        job_manager=jobs,
+    )
+
+
+class WorkbenchHTTPServer(ThreadingHTTPServer):
+    """HTTP server owning the lifecycle of its bounded job executor."""
+
+    def __init__(
+        self,
+        server_address: tuple[str, int],
+        request_handler: type[BaseHTTPRequestHandler],
+        *,
+        workbench_service: object | None,
+        job_manager: BoardJobManager,
+    ) -> None:
+        self.workbench_service = workbench_service
+        self.job_manager = job_manager
+        super().__init__(server_address, request_handler)
+
+    def server_close(self) -> None:
+        try:
+            super().server_close()
+        finally:
+            self.job_manager.shutdown()
 
 
 class EditorRequestHandler(BaseHTTPRequestHandler):
-    editor_catalog: EditorCatalog
+    editor_catalog: EditorCatalog | None
 
     def do_GET(self) -> None:  # noqa: N802
         request = urlsplit(self.path)
         path = request.path
+        if path == "/api/boards":
+            self._get_boards()
+            return
+        if path.startswith("/api/boards/"):
+            self._get_board(unquote(path.removeprefix("/api/boards/")), request.query)
+            return
+        if path.startswith("/api/jobs/"):
+            self._get_job(unquote(path.removeprefix("/api/jobs/")))
+            return
+        if path == "/api/artifact":
+            self._get_workbench_artifact(request.query)
+            return
+        static_files = {
+            "/": "index.html",
+            "/index.html": "index.html",
+            "/styles.css": "styles.css",
+            "/editor-model.js": "editor-model.js",
+            "/app.js": "app.js",
+        }
+        filename = static_files.get(path)
+        if filename is not None:
+            self._send_file(EDITOR_ROOT / filename)
+            return
         if path == "/api/sessions":
             self._send_json(
                 HTTPStatus.OK,
@@ -228,10 +340,17 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     "ok": True,
                     "sessions": [
                         {"id": entry.id, "label": entry.label, "runName": entry.session.run_dir.name}
-                        for entry in self.editor_catalog.sessions
+                        for entry in (
+                            self.editor_catalog.sessions
+                            if self.editor_catalog is not None
+                            else ()
+                        )
                     ],
                 },
             )
+            return
+        if path not in {"/api/session", "/api/artifact/image", "/api/artifact/regions"}:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         try:
             entry = self._selected_entry(request.query)
@@ -262,18 +381,52 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/artifact/regions":
             self._send_file(session.regions_path)
             return
-        static_files = {
-            "/": "index.html",
-            "/index.html": "index.html",
-            "/styles.css": "styles.css",
-            "/editor-model.js": "editor-model.js",
-            "/app.js": "app.js",
-        }
-        filename = static_files.get(path)
-        if filename is not None:
-            self._send_file(EDITOR_ROOT / filename)
-            return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+
+    def do_POST(self) -> None:  # noqa: N802
+        request = urlsplit(self.path)
+        try:
+            service = self._workbench_service()
+            if request.path == "/api/boards/upload":
+                self._post_upload(service, request.query)
+                return
+            payload = self._read_json_object()
+            if request.path == "/api/boards":
+                product_name = self._required_string(payload, "productName")
+                source = self._required_string(payload, "source")
+                self._submit_job(
+                    f"create-{uuid4().hex}",
+                    lambda: service.create_from_url(product_name, source),
+                )
+                return
+            if request.path == "/api/boards/import":
+                run_root = Path(self._required_string(payload, "runRoot"))
+                self._submit_job(
+                    f"import-{uuid4().hex}",
+                    lambda: service.import_run(run_root),
+                )
+                return
+            if request.path in {
+                "/api/drafts",
+                "/api/approve",
+                "/api/revise",
+                "/api/retry",
+                "/api/final-save",
+            }:
+                self._post_mutation(service, request.path, payload)
+                return
+            raise RequestError(HTTPStatus.NOT_FOUND, "not found")
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+        except JobConflictError as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+        except ValueError as error:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
 
     def do_PUT(self) -> None:  # noqa: N802
         request = urlsplit(self.path)
@@ -308,7 +461,230 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(HTTPStatus.OK, {"ok": True, **result})
 
+    def _get_boards(self) -> None:
+        try:
+            service = self._workbench_service()
+            boards = [_workbench_view_payload(view) for view in service.list_boards()]
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except ValueError as error:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+            return
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
+            return
+        self._send_json(HTTPStatus.OK, {"ok": True, "boards": boards})
+
+    def _get_board(self, board_id: str, query: str) -> None:
+        try:
+            if not board_id:
+                raise RequestError(HTTPStatus.NOT_FOUND, "not found")
+            service = self._workbench_service()
+            revision_values = parse_qs(query).get("revisionId", [])
+            revision_id = revision_values[0] if revision_values else None
+            board = _workbench_view_payload(
+                service.get_board(board_id, revision_id=revision_id)
+            )
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except ValueError as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+            return
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
+            return
+        self._send_json(HTTPStatus.OK, {"ok": True, "board": board})
+
+    def _get_job(self, job_id: str) -> None:
+        try:
+            job = self._job_manager().get(job_id)
+        except JobNotFoundError as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+            return
+        self._send_json(HTTPStatus.OK, {"ok": True, "job": job.as_dict()})
+
+    def _get_workbench_artifact(self, query: str) -> None:
+        try:
+            values = parse_qs(query)
+            relative_value = self._required_query_string(values, "path")
+            relative = Path(relative_value)
+            if relative.is_absolute() or ".." in relative.parts:
+                raise RequestError(
+                    HTTPStatus.BAD_REQUEST,
+                    "artifact path must stay within the selected revision",
+                )
+            board_id = self._required_query_string(values, "boardId")
+            revision_id = self._required_query_string(values, "revisionId")
+            view = self._workbench_service().get_board(
+                board_id, revision_id=revision_id
+            )
+            root = Path(view.run_root).resolve(strict=True)
+            artifact = (root / relative).resolve(strict=True)
+            artifact.relative_to(root)
+            if not artifact.is_file():
+                raise FileNotFoundError
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except (FileNotFoundError, ValueError):
+            self._send_json(
+                HTTPStatus.NOT_FOUND,
+                {"ok": False, "error": "artifact not found"},
+            )
+            return
+        self._send_file(artifact)
+
+    def _post_upload(self, service: object, query: str) -> None:
+        if not self.headers.get_content_type().startswith("image/"):
+            raise RequestError(
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                "Content-Type must be image/*",
+            )
+        product_name = self._required_query_string(
+            parse_qs(query), "productName"
+        )
+        content = self._read_body()
+        if not content:
+            raise RequestError(HTTPStatus.BAD_REQUEST, "upload must not be empty")
+        self._submit_job(
+            f"upload-{uuid4().hex}",
+            lambda: service.create_from_upload(product_name, content),
+        )
+
+    def _post_mutation(
+        self, service: object, path: str, payload: dict[str, Any]
+    ) -> None:
+        board_id = self._required_string(payload, "boardId")
+        revision_id = self._required_string(payload, "expectedRevisionId")
+        if path == "/api/final-save":
+            operation = lambda: service.save(
+                board_id, expected_revision_id=revision_id
+            )
+        else:
+            stage = self._required_stage(payload, "expectedStage")
+            if path == "/api/drafts":
+                if "document" not in payload:
+                    raise RequestError(
+                        HTTPStatus.BAD_REQUEST, "document is required"
+                    )
+                document = payload["document"]
+                operation = lambda: service.save_draft(
+                    board_id,
+                    document,
+                    expected_stage=stage,
+                    expected_revision_id=revision_id,
+                )
+            elif path == "/api/approve":
+                operation = lambda: service.approve_and_advance(
+                    board_id,
+                    expected_stage=stage,
+                    expected_revision_id=revision_id,
+                )
+            elif path == "/api/revise":
+                operation = lambda: service.revise_stage(
+                    board_id,
+                    stage=stage,
+                    expected_revision_id=revision_id,
+                )
+            else:
+                operation = lambda: service.retry(
+                    board_id,
+                    expected_stage=stage,
+                    expected_revision_id=revision_id,
+                )
+        self._submit_job(board_id, operation)
+
+    def _submit_job(self, board_id: str, operation: object) -> None:
+        job = self._job_manager().submit(board_id, operation)
+        self._send_json(
+            HTTPStatus.ACCEPTED,
+            {"ok": True, "jobId": job.id},
+        )
+
+    def _read_json_object(self) -> dict[str, Any]:
+        if self.headers.get_content_type() != "application/json":
+            raise RequestError(
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                "Content-Type must be application/json",
+            )
+        try:
+            payload = json.loads(self._read_body())
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
+            raise RequestError(
+                HTTPStatus.BAD_REQUEST, "request body must be valid JSON"
+            ) from error
+        if not isinstance(payload, dict):
+            raise RequestError(
+                HTTPStatus.BAD_REQUEST, "request body must be a JSON object"
+            )
+        return payload
+
+    def _read_body(self) -> bytes:
+        try:
+            length = int(self.headers.get("Content-Length", ""))
+        except ValueError:
+            length = -1
+        if length < 0:
+            raise RequestError(
+                HTTPStatus.LENGTH_REQUIRED, "Content-Length is required"
+            )
+        if length > MAX_REQUEST_BYTES:
+            raise RequestError(
+                HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                "request exceeds 10 MiB",
+            )
+        return self.rfile.read(length)
+
+    @staticmethod
+    def _required_string(payload: dict[str, Any], field: str) -> str:
+        value = payload.get(field)
+        if not isinstance(value, str) or not value.strip():
+            raise RequestError(
+                HTTPStatus.BAD_REQUEST, f"{field} must be a non-empty string"
+            )
+        return value.strip()
+
+    @staticmethod
+    def _required_stage(payload: dict[str, Any], field: str) -> int:
+        value = payload.get(field)
+        if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= 4:
+            raise RequestError(
+                HTTPStatus.BAD_REQUEST,
+                f"{field} must be an integer between 0 and 4",
+            )
+        return value
+
+    @staticmethod
+    def _required_query_string(values: dict[str, list[str]], field: str) -> str:
+        selected = values.get(field, [])
+        if len(selected) != 1 or not selected[0].strip():
+            raise RequestError(
+                HTTPStatus.BAD_REQUEST, f"{field} must be provided exactly once"
+            )
+        return selected[0].strip()
+
+    def _workbench_service(self) -> Any:
+        service = getattr(self.server, "workbench_service", None)
+        if service is None:
+            raise RequestError(
+                HTTPStatus.NOT_FOUND, "workbench service is unavailable"
+            )
+        return service
+
+    def _job_manager(self) -> BoardJobManager:
+        return self.server.job_manager
+
     def _selected_entry(self, query: str) -> CatalogSession:
+        if self.editor_catalog is None:
+            raise EditorError("no editor sessions are configured")
         values = parse_qs(query).get("run", [])
         return self.editor_catalog.get(values[0] if values else None)
 
@@ -387,7 +763,7 @@ def _atomic_write_json(path: Path, value: object) -> None:
         raise
 
 
-def main() -> None:
+def _argument_parser() -> ArgumentParser:
     parser = ArgumentParser(description="Serve the hold-region editor for pipeline-generated onboarding runs")
     parser.add_argument(
         "--run-dir",
@@ -397,17 +773,62 @@ def main() -> None:
         help="Onboarding run containing one Stage 1 image and Stage 2 regions file; repeat to add boards",
     )
     parser.add_argument("--catalog", type=Path, help="JSON catalog for named runs or explicit historical artifact paths")
+    parser.add_argument(
+        "--workspace-root",
+        type=Path,
+        help="Persistent workbench workspace; may be combined with legacy run inputs",
+    )
     parser.add_argument("--host", default="127.0.0.1", help="Listen address (default: 127.0.0.1)")
     parser.add_argument("--port", default=4173, type=int, help="Listen port (default: 4173)")
-    arguments = parser.parse_args()
+    return parser
+
+
+def _create_workbench_service(workspace_root: Path) -> object:
+    onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
+    source_value = str(onboarding_source)
+    if source_value not in sys.path:
+        sys.path.insert(0, source_value)
+    from hangboard_vectorizer.workbench import WorkbenchService
+    from hangboard_vectorizer.workbench_store import WorkbenchStore
+
+    return WorkbenchService(WorkbenchStore(workspace_root))
+
+
+def _server_from_cli(
+    arguments: list[str] | None = None,
+) -> tuple[WorkbenchHTTPServer, EditorCatalog | None]:
+    parser = _argument_parser()
+    parsed = parser.parse_args(arguments)
+    if not parsed.run_dir and parsed.catalog is None and parsed.workspace_root is None:
+        parser.error("provide --workspace-root, --run-dir, or --catalog")
     try:
-        catalog = catalog_from_inputs(arguments.run_dir, arguments.catalog)
-    except EditorError as error:
+        catalog = (
+            catalog_from_inputs(parsed.run_dir, parsed.catalog)
+            if parsed.run_dir or parsed.catalog is not None
+            else None
+        )
+        service = (
+            _create_workbench_service(parsed.workspace_root)
+            if parsed.workspace_root is not None
+            else None
+        )
+    except (EditorError, OSError, ValueError) as error:
         parser.error(str(error))
-    server = create_server(catalog, arguments.host, arguments.port)
-    print(f"Hold Region Editor: http://{arguments.host}:{server.server_port}")
-    for entry in catalog.sessions:
-        print(f"Run [{entry.id}] {entry.label}: {entry.session.run_dir}")
+    server = create_server(
+        catalog,
+        parsed.host,
+        parsed.port,
+        workbench_service=service,
+    )
+    return server, catalog
+
+
+def main() -> None:
+    server, catalog = _server_from_cli()
+    print(f"Hold Region Editor: http://{server.server_address[0]}:{server.server_port}")
+    if catalog is not None:
+        for entry in catalog.sessions:
+            print(f"Run [{entry.id}] {entry.label}: {entry.session.run_dir}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
