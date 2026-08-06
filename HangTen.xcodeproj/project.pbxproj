@@ -69,6 +69,7 @@
 		AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */; };
 		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
 		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
+		AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000066 /* CustomRoutineEditorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -137,6 +138,7 @@
 		BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineAppStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000064 /* CustomRoutineDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraft.swift; sourceTree = "<group>"; };
 		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000066 /* CustomRoutineEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineEditorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +228,7 @@
 				BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
+				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
 				BB0000000000000000000034 /* WorkoutSummaryView.swift */,
 				BB0000000000000000000039 /* MotherboardWorkoutPreparationView.swift */,
@@ -455,6 +458,7 @@
 				AA0000000000000000000059 /* WorkoutStepNormalization.swift in Sources */,
 				AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */,
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
+				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

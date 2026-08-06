@@ -333,6 +333,7 @@ private struct StatCard: View {
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
     @State private var filters = PlanFilters()
+    @State private var isCreatingRoutine = false
 
     var body: some View {
         let compatiblePlans = store.plans
@@ -349,6 +350,15 @@ struct PlansView: View {
                 guard let metadata = metadataByPlanID[plan.id] else { return false }
                 return filters.matches(metadata)
             }
+        let compatiblePlanIDs = Set(compatiblePlans.map(\.id))
+        let customPlanIDs = Set(store.customPlans.map(\.id))
+        let myRoutines = store.customPlans.filter { plan in
+            guard compatiblePlanIDs.contains(plan.id) else { return false }
+            guard !filters.isEmpty else { return true }
+            guard let metadata = metadataByPlanID[plan.id] else { return false }
+            return filters.matches(metadata)
+        }
+        let libraryPlans = filteredPlans.filter { !customPlanIDs.contains($0.id) }
 
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -363,7 +373,37 @@ struct PlansView: View {
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
 
+                        Button {
+                            isCreatingRoutine = true
+                        } label: {
+                            Label("Create routine", systemImage: "plus")
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .background(
+                                    Color.hangGreen,
+                                    in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                )
+                        }
+                        .buttonStyle(.plain)
+
                         filterBar(options: filterOptions)
+                    }
+
+                    if !myRoutines.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "My routines")
+                            ForEach(myRoutines) { plan in
+                                FavoritePlanCard(
+                                    plan: plan,
+                                    board: store.board(for: plan),
+                                    isFavorite: store.isFavorite(plan)
+                                ) {
+                                    store.toggleFavorite(plan)
+                                }
+                            }
+                        }
                     }
 
                     if compatiblePlans.isEmpty {
@@ -378,8 +418,10 @@ struct PlansView: View {
                         NoMatchingPlansCard {
                             filters.clear()
                         }
-                    } else {
-                        ForEach(filteredPlans) { plan in
+                    } else if !libraryPlans.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "Training library")
+                            ForEach(libraryPlans) { plan in
                             FavoritePlanCard(
                                 plan: plan,
                                 board: store.board(for: plan),
@@ -387,6 +429,7 @@ struct PlansView: View {
                             ) {
                                 store.toggleFavorite(plan)
                             }
+                        }
                         }
                     }
 
@@ -398,6 +441,14 @@ struct PlansView: View {
             }
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $isCreatingRoutine) {
+                CustomRoutineEditorView(
+                    draft: CustomRoutineDraft(
+                        createWith: .boardSpecific(boardID: store.selectedBoard.id)
+                    ),
+                    onSave: store.saveCustomRoutine
+                )
+            }
         }
     }
 
@@ -720,7 +771,12 @@ private struct FavoritePlanCard: View {
 
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dismiss) private var dismiss
     let plan: TrainingPlan
+    @State private var editorDraft: CustomRoutineDraft?
+    @State private var isShowingEditor = false
+    @State private var isShowingDeleteConfirmation = false
+    @State private var lifecycleError: String?
 
     private var board: TrainingBoard {
         store.board(for: plan)
@@ -761,6 +817,44 @@ struct PlanDetailView: View {
         .background(Color.hangBackground)
         .navigationTitle("Plan")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button("Duplicate", action: duplicateRoutine)
+                    if store.isCustom(plan) {
+                        Button("Edit", action: editRoutine)
+                        Button("Delete", role: .destructive) {
+                            isShowingDeleteConfirmation = true
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+            }
+        }
+        .sheet(isPresented: $isShowingEditor) {
+            if let editorDraft {
+                CustomRoutineEditorView(draft: editorDraft, onSave: store.saveCustomRoutine)
+            }
+        }
+        .confirmationDialog(
+            "Delete \(plan.title)?",
+            isPresented: $isShowingDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive, action: deleteRoutine)
+                .accessibilityIdentifier("customRoutine.deleteConfirm")
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This custom routine will be removed from your library.")
+        }
+        .alert("Routine action failed", isPresented: lifecycleErrorAlertBinding) {
+            Button("OK", role: .cancel) {
+                lifecycleError = nil
+            }
+        } message: {
+            Text(lifecycleError ?? "An unknown error occurred.")
+        }
     }
 
     private var titleBlock: some View {
@@ -872,8 +966,27 @@ struct PlanDetailView: View {
             }
             .buttonStyle(.plain)
         } else {
-            sourceCardContent(showsExternalLink: false)
+            customSourceCard
         }
+    }
+
+    private var customSourceCard: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Created in Hang Ten")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("This is a custom routine stored on this device.")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .hangCard(padding: 16)
     }
 
     private func sourceCardContent(showsExternalLink: Bool) -> some View {
@@ -898,6 +1011,44 @@ struct PlanDetailView: View {
                 }
             }
             .hangCard(padding: 16)
+    }
+
+    private var lifecycleErrorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { lifecycleError != nil },
+            set: { isPresented in
+                if !isPresented {
+                    lifecycleError = nil
+                }
+            }
+        )
+    }
+
+    private func duplicateRoutine() {
+        do {
+            editorDraft = CustomRoutineDraft(duplicate: try store.duplicateRoutine(plan))
+            isShowingEditor = true
+        } catch {
+            lifecycleError = error.localizedDescription
+        }
+    }
+
+    private func editRoutine() {
+        guard let definition = store.customDefinition(for: plan.id) else {
+            lifecycleError = "The custom routine could not be found."
+            return
+        }
+        editorDraft = CustomRoutineDraft(duplicate: definition)
+        isShowingEditor = true
+    }
+
+    private func deleteRoutine() {
+        do {
+            try store.deleteCustomRoutine(id: plan.id)
+            dismiss()
+        } catch {
+            lifecycleError = error.localizedDescription
+        }
     }
 }
 

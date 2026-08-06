@@ -124,6 +124,41 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].segments[0].duration, 10)
     }
 
+    func testBoardSpecificDraftStoresExactSelectedHoldIDs() {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        draft.steps = [
+            .init(
+                id: "hang",
+                title: "Edge hang",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.holdIDs(["edge-19-left", "edge-19-right"])],
+                timing: .fixed,
+                gripType: .halfCrimp
+            )
+        ]
+
+        let definition = draft.definition()
+
+        XCTAssertEqual(
+            definition.targetMode,
+            .boardSpecific(boardID: BoardCatalog.compactII.id)
+        )
+        XCTAssertEqual(definition.steps[0].targets, [.holdIDs(["edge-19-left", "edge-19-right"])])
+    }
+
+    func testGenericDraftCanStoreKindAndFeatureTargets() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = [
+            .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed, gripType: .openHand),
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge, fallbacks: [])], timing: .fixed, gripType: nil)
+        ]
+
+        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge, fallbacks: [])]])
+    }
+
     func testDuplicateDraftRoundTripsNormalizedOneSegmentDefinition() {
         let source = CustomRoutineDefinition(
             id: "custom.fixed",
