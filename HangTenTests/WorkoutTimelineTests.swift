@@ -622,13 +622,16 @@ final class WorkoutAudioCoachTests: XCTestCase {
             synthesizer: synthesizer,
             audioSession: audioSession
         )
+        let deactivation = expectation(description: "retries deactivation after a transient failure")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivation.fulfill()
+        }
 
         coach.speak("3")
 
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
-        await Task.yield()
-        await Task.yield()
+        await fulfillment(of: [deactivation], timeout: 1)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
         XCTAssertEqual(audioSession.deactivationCount, 1)
@@ -671,6 +674,7 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
     private(set) var deactivationAttemptCount = 0
     private(set) var deactivationCount = 0
     private(set) var didDeactivateWithNotification = false
+    var onSuccessfulNotificationAwareDeactivation: (() -> Void)?
     private var failedDeactivationAttempts: Int
 
     init(failedDeactivationAttempts: Int = 0) {
@@ -694,6 +698,7 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
 
         deactivationCount += 1
         didDeactivateWithNotification = true
+        onSuccessfulNotificationAwareDeactivation?()
     }
 }
 
