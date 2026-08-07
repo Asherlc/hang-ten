@@ -211,8 +211,6 @@ def _stage2_labels(
         mask = np.zeros(shape, dtype=np.uint8)
         cv2.fillPoly(mask, [contour], 1, lineType=cv2.LINE_8)
         occupied = mask.astype(bool)
-        if np.any(occupied & (labels != 0)):
-            _region_error(2, region_id, "contour overlaps another region")
         area = int(occupied.sum())
         if area == 0:
             _region_error(2, region_id, "contour produces an empty label")

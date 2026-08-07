@@ -159,6 +159,39 @@ def test_stage2_edit_rebuilds_labels_review_and_candidate_hashes(
     assert _artifact_hashes(baseline) == before
 
 
+def test_stage2_edit_allows_distinct_valid_regions_to_overlap(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0].update(
+        {
+            "anchor": [175, 50],
+            "bounds": [100, 30, 251, 71],
+            "contour": [[100, 30], [250, 30], [250, 70], [100, 70]],
+        }
+    )
+    edited["regions"][1].update(
+        {
+            "anchor": [300, 70],
+            "bounds": [200, 50, 351, 91],
+            "contour": [[200, 50], [350, 50], [350, 90], [200, 90]],
+        }
+    )
+
+    checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), edited, tmp_path / "attempt"
+    )
+    labels = np.asarray(
+        Image.open(checkpoint.artifact_root / "stage-2-labels.png"),
+        dtype=np.uint16,
+    )
+
+    assert labels[40, 150] == 1
+    assert labels[60, 225] == 2
+    assert labels[80, 300] == 2
+    assert _candidate_hashes_match(checkpoint.artifact_root)
+
+
 def test_stage3_edit_preserves_exact_display_paths(
     accepted_stage2_run: Path, tmp_path: Path
 ) -> None:
