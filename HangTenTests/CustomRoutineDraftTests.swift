@@ -40,6 +40,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertTrue(rest.isRest)
         XCTAssertFalse(rest.isStopwatch)
+        XCTAssertNil(rest.activeDuration)
         XCTAssertFalse(stopwatch.isRest)
         XCTAssertTrue(stopwatch.isStopwatch)
     }
@@ -384,7 +385,8 @@ final class CustomRoutineDraftTests: XCTestCase {
                 timing: .fixed,
                 duration: 10
             )],
-            gripType: sourceStep.gripType
+            gripType: sourceStep.gripType,
+            activeDuration: 10
         )
         XCTAssertEqual(duplicate.definition().steps, [expectedStep])
     }
