@@ -21,6 +21,8 @@ _IDENTIFIER = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 _BOARD_ID = re.compile(r"board-(\d+)\Z")
 _REVISION_ID = re.compile(r"revision-(\d+)\Z")
 _DRAFT_ID = re.compile(r"draft-(\d+)\.json\Z")
+_REPOSITORY_BOARD_ID = re.compile(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
+_REPOSITORY_VERSION_ID = re.compile(r"revision-(\d+)\Z")
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,6 +43,8 @@ class BoardRecord:
     active_revision_id: str
     saved_revision_id: str | None
     revisions: tuple[RevisionRecord, ...]
+    repository_board_id: str | None = None
+    repository_version_id: str | None = None
 
 
 class WorkbenchStoreError(ValueError):
@@ -443,6 +447,27 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
+    def link_repository_version(
+        self,
+        board_id: str,
+        *,
+        repository_board_id: str,
+        repository_version_id: str,
+    ) -> BoardRecord:
+        """Atomically record the repository version represented by this board."""
+        board = self.read_board(board_id)
+        self._validate_repository_link(
+            repository_board_id, repository_version_id
+        )
+        updated = replace(
+            board,
+            repository_board_id=repository_board_id,
+            repository_version_id=repository_version_id,
+        )
+        self._write_board(updated)
+        return updated
+
+    @_synchronized
     def resolve_import_run(self, run_root: Path) -> Path:
         """Resolve and confine an import root before callers read any run data."""
         resolved_run = self._confined(Path(run_root))
@@ -526,6 +551,11 @@ class WorkbenchStore:
             saved_revision_id = self._string(
                 saved_revision_id, "saved revision id"
             )
+        repository_board_id = manifest.get("repositoryBoardId")
+        repository_version_id = manifest.get("repositoryVersionId")
+        self._validate_repository_link(
+            repository_board_id, repository_version_id
+        )
 
         raw_revisions = manifest.get("revisions")
         if not isinstance(raw_revisions, list):
@@ -557,6 +587,8 @@ class WorkbenchStore:
             active_revision_id=active_revision_id,
             saved_revision_id=saved_revision_id,
             revisions=revisions,
+            repository_board_id=repository_board_id,
+            repository_version_id=repository_version_id,
         )
 
     def _revision_from_json(
@@ -616,6 +648,8 @@ class WorkbenchStore:
             "activeRevisionId": board.active_revision_id,
             "id": board.id,
             "productName": board.product_name,
+            "repositoryBoardId": board.repository_board_id,
+            "repositoryVersionId": board.repository_version_id,
             "revisions": [
                 {
                     "currentStage": revision.current_stage,
@@ -638,6 +672,27 @@ class WorkbenchStore:
             "schemaVersion": _SCHEMA_VERSION,
         }
         self._write_replaced_json(manifest_path, value, publication=publication)
+
+    @staticmethod
+    def _validate_repository_link(
+        repository_board_id: object, repository_version_id: object
+    ) -> None:
+        if (repository_board_id is None) != (repository_version_id is None):
+            raise WorkbenchStoreError(
+                "repository board and version identifiers must be provided together"
+            )
+        if repository_board_id is None:
+            return
+        if (
+            not isinstance(repository_board_id, str)
+            or not _REPOSITORY_BOARD_ID.fullmatch(repository_board_id)
+        ):
+            raise WorkbenchStoreError("repository board identifier is invalid")
+        if (
+            not isinstance(repository_version_id, str)
+            or not _REPOSITORY_VERSION_ID.fullmatch(repository_version_id)
+        ):
+            raise WorkbenchStoreError("repository version identifier is invalid")
 
     def _write_replaced_json(
         self,

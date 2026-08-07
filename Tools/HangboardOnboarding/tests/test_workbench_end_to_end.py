@@ -12,10 +12,11 @@ import numpy as np
 import pytest
 
 import hangboard_vectorizer.workbench as workbench_module
+from hangboard_vectorizer.board_library import LibraryBoard, RepositoryBoardLibrary
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.onboard_cli import main
 from hangboard_vectorizer.onboarding_run import RunContext, start_run
-from hangboard_vectorizer.workbench import WorkbenchService
+from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchView
 from hangboard_vectorizer.workbench_store import WorkbenchStore
 
 
@@ -163,6 +164,82 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     )
     assert saved.saved is True
     assert board_manifest["savedRevisionId"] == revision_id
+
+
+def test_open_library_board_copies_current_version_and_is_idempotent(
+    tmp_path: Path,
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+
+    first = service.open_library_board(entry.board_id)
+    second = service.open_library_board(entry.board_id)
+
+    assert second.board_id == first.board_id
+    assert second.revision_id == first.revision_id
+    assert second.repository_board_id == entry.board_id
+    assert second.repository_version_id == entry.current_version_id
+
+
+def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> None:
+    library = _empty_repository_library(tmp_path / "repository")
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    complete = _complete_runtime_board(service, "Example Board")
+
+    saved = service.save(
+        complete.board_id, expected_revision_id=complete.revision_id
+    )
+
+    entries = library.list_boards()
+    assert [(entry.board_id, entry.display_name) for entry in entries] == [
+        (saved.repository_board_id, complete.product_name)
+    ]
+    assert saved.repository_version_id == "revision-0001"
+    assert saved.saved is True
+
+
+def test_save_existing_board_uses_expected_repository_version(tmp_path: Path) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    opened = service.open_library_board(entry.board_id)
+    revised = service.revise_stage(
+        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+    )
+    complete = _approve_to_completion(service, revised)
+
+    saved = service.save(
+        complete.board_id, expected_revision_id=complete.revision_id
+    )
+
+    assert saved.repository_version_id == "revision-0002"
+
+
+@pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)
+def test_repository_open_edit_save_replay_is_product_neutral(
+    tmp_path: Path,
+    product_name: str,
+    color: tuple[int, int, int],
+    region_keys: tuple[str, ...],
+) -> None:
+    library, entry = _repository_library(
+        tmp_path, product_name=product_name, color=color, region_keys=region_keys
+    )
+    service = _fixture_service(
+        tmp_path / "workspace", region_keys=region_keys, library=library
+    )
+
+    opened = service.open_library_board(entry.board_id)
+    revised = service.revise_stage(
+        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+    )
+    complete = _approve_to_completion(service, revised)
+    saved = service.save(
+        complete.board_id, expected_revision_id=complete.revision_id
+    )
+    reopened = service.open_library_board(entry.board_id)
+
+    assert saved.repository_version_id == "revision-0002"
+    assert reopened.repository_version_id == "revision-0002"
 
 
 def test_stage2_inventory_mutation_propagates_unchanged_through_stage4(
@@ -317,12 +394,66 @@ def _fixture_service(
     *,
     region_keys: tuple[str, ...] = ("grip-001",),
     stage3_identity_mutation: str | None = None,
+    library: RepositoryBoardLibrary | None = None,
 ) -> WorkbenchService:
     return WorkbenchService(
         WorkbenchStore(root),
         runners=_stub_runners(
             region_keys, stage3_identity_mutation=stage3_identity_mutation
         ),
+        library=library,
+    )
+
+
+def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
+    library_root = root / "Tools" / "HangboardOnboarding" / "board-library"
+    library_root.mkdir(parents=True)
+    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
+    return RepositoryBoardLibrary(root)
+
+
+def _repository_library(
+    root: Path,
+    *,
+    product_name: str = "Example Board",
+    color: tuple[int, int, int] = (45, 65, 85),
+    region_keys: tuple[str, ...] = ("grip-001",),
+) -> tuple[RepositoryBoardLibrary, LibraryBoard]:
+    library = _empty_repository_library(root / "repository")
+    seed = _fixture_service(root / "seed", region_keys=region_keys)
+    complete = _complete_runtime_board(seed, product_name, color=color)
+    published = library.publish(
+        display_name=product_name,
+        run_root=complete.run_root,
+        board_id=None,
+        expected_current_version_id=None,
+    )
+    return library, published.board
+
+
+def _complete_runtime_board(
+    service: WorkbenchService,
+    product_name: str,
+    *,
+    color: tuple[int, int, int] = (45, 65, 85),
+) -> WorkbenchView:
+    current = service.create_from_upload(product_name, _fixture_image_bytes(color))
+    return _approve_to_completion(service, current)
+
+
+def _approve_to_completion(
+    service: WorkbenchService, current: WorkbenchView
+) -> WorkbenchView:
+    while current.stage < 4:
+        current = service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=current.stage,
+        )
+    return service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=current.stage,
     )
 
 

@@ -217,6 +217,57 @@ def test_board_manifest_is_schema_versioned_and_survives_reopening(tmp_path: Pat
     assert reopened.revisions == (revision,)
 
 
+def test_store_persists_repository_link_without_changing_runtime_id(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board, _revision = store.reserve_initial_revision("Example Board")
+
+    linked = store.link_repository_version(
+        board.id,
+        repository_board_id="example-board",
+        repository_version_id="revision-0001",
+    )
+
+    assert linked.id == board.id
+    assert linked.repository_board_id == "example-board"
+    assert linked.repository_version_id == "revision-0001"
+    assert store.read_board(board.id) == linked
+
+
+def test_store_loads_old_manifest_without_repository_link(tmp_path: Path) -> None:
+    store, board, _revision = _populated_store(tmp_path)
+    manifest_path = tmp_path / "boards" / board.id / "board.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.pop("repositoryBoardId")
+    manifest.pop("repositoryVersionId")
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    reopened = WorkbenchStore(tmp_path).read_board(board.id)
+
+    assert reopened.repository_board_id is None
+    assert reopened.repository_version_id is None
+
+
+@pytest.mark.parametrize(
+    ("repository_board_id", "repository_version_id"),
+    (("example-board", None), (None, "revision-0001")),
+)
+def test_store_rejects_incomplete_repository_links(
+    tmp_path: Path,
+    repository_board_id: str | None,
+    repository_version_id: str | None,
+) -> None:
+    store, board, _revision = _populated_store(tmp_path)
+
+    with pytest.raises(WorkbenchStoreError, match="provided together"):
+        store.link_repository_version(
+            board.id,
+            repository_board_id=repository_board_id,  # type: ignore[arg-type]
+            repository_version_id=repository_version_id,  # type: ignore[arg-type]
+        )
+
+
 def test_write_draft_publishes_new_immutable_documents(tmp_path: Path) -> None:
     store, board, revision = _populated_store(tmp_path)
 
