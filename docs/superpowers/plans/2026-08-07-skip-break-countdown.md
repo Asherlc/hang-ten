@@ -1,6 +1,6 @@
 # Skip-to-break Countdown Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for every task. Use a fresh subagent for every implementation task or configuration change. Complete implementation and review checkpoints before moving to the next task. Do not make implementation changes directly in the controller session. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Skip directly into a rest step without the three-second preparation countdown while preserving the session's running or paused state.
 
@@ -124,7 +124,7 @@ shuts down and deletes the exact owned simulator in its exit trap:
 rtk zsh .context/run-owned-xcode-tests.zsh test
 ```
 
-Expected result: both commands exit `0`; the focused suite covers immediate running and paused rest transitions, work-destination countdown behavior, cancellation/interruption, direct seek, and final completion, and the full target has zero failures.
+Expected result: the focused command exits `0` and covers immediate running and paused rest transitions, work-destination countdown behavior, cancellation/interruption, direct seek, and final completion. The full `HangTenTests` target may retain exactly the three known, unchanged simulator/HealthKit failures in `WorkoutActivityRecordingTests`; any additional failure is a regression. This preserves the no-new-regressions requirement while keeping the focused suite fully passing.
 
 - [ ] **Step 7: Review the diff and commit the task**
 
