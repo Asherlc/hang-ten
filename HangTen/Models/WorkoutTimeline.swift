@@ -71,6 +71,24 @@ struct WorkoutBoardCue: Equatable {
     let isSuppressed: Bool
 }
 
+struct WorkoutHoldCue: Equatable {
+    let hold: BoardHold
+    let gripType: GripType
+}
+
+enum WorkoutHoldCuePolicy {
+    static func resolve(step: WorkoutStep?, hold: BoardHold?) -> WorkoutHoldCue? {
+        guard let step, step.targets.count == 1, let hold else {
+            return nil
+        }
+
+        return WorkoutHoldCue(
+            hold: hold,
+            gripType: step.gripType ?? hold.gripType
+        )
+    }
+}
+
 struct WorkoutTimeline {
     private let steps: [WorkoutStep]
     private let startOffsets: [TimeInterval]
