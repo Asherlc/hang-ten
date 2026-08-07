@@ -98,6 +98,10 @@
     return (await request("/api/boards")).boards;
   }
 
+  async function listLibraryBoards() {
+    return (await request("/api/library")).boards;
+  }
+
   async function createFromUrl(productName, source, options = {}) {
     return postJob("/api/boards", { productName, source }, options);
   }
@@ -114,6 +118,10 @@
 
   async function importRun(runRoot, options = {}) {
     return postJob("/api/boards/import", { runRoot }, options);
+  }
+
+  async function openLibraryBoard(boardId, options = {}) {
+    return postJob(`/api/library/${encodeURIComponent(boardId)}/open`, {}, options);
   }
 
   async function getBoard(boardId, revisionId = null) {
@@ -159,9 +167,11 @@
 
   return {
     listBoards,
+    listLibraryBoards,
     createFromUrl,
     createFromUpload,
     importRun,
+    openLibraryBoard,
     getBoard,
     getJob,
     pollJob,

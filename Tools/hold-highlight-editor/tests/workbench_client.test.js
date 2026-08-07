@@ -247,3 +247,47 @@ test("importRun submits an explicit CLI run root to the import endpoint", async 
   assert.equal(calls[0][0], "/api/boards/import");
   assert.deepEqual(JSON.parse(calls[0][1].body), { runRoot: "/workspace/cli-run" });
 });
+
+test("listLibraryBoards returns the repository catalog", async () => {
+  const calls = [];
+  global.fetch = async (path) => {
+    calls.push(path);
+    return response({ ok: true, boards: [{ boardId: "example-board" }] });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(
+    await client.listLibraryBoards(),
+    [{ boardId: "example-board" }],
+  );
+  assert.deepEqual(calls, ["/api/library"]);
+});
+
+test("openLibraryBoard posts to the encoded repository route", async () => {
+  const calls = [];
+  global.fetch = async (path) => {
+    calls.push(path);
+    if (path === "/api/library/example%20board/open") {
+      return response({ ok: true, jobId: "job-library" });
+    }
+    return response({
+      ok: true,
+      job: {
+        id: "job-library",
+        boardId: "workbench-board-reservation-1",
+        state: "succeeded",
+        result: { boardId: "board-0001" },
+        error: null,
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(await client.openLibraryBoard("example board"), { boardId: "board-0001" });
+  assert.deepEqual(calls, [
+    "/api/library/example%20board/open",
+    "/api/jobs/job-library",
+  ]);
+});

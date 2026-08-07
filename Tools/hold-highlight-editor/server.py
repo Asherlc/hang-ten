@@ -262,6 +262,8 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         "editorMode": view.editor_mode,
         "saved": view.saved,
         "staleFromStage": view.stale_from_stage,
+        "repositoryBoardId": view.repository_board_id,
+        "repositoryVersionId": view.repository_version_id,
     }
 
 
@@ -333,6 +335,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         request = urlsplit(self.path)
         path = request.path
+        if path == "/api/library":
+            self._get_library()
+            return
         if path == "/api/boards":
             self._get_boards()
             return
@@ -435,6 +440,12 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     lambda: service.import_run(run_root),
                 )
                 return
+            if request.path.startswith("/api/library/") and request.path.endswith("/open"):
+                board_id = unquote(
+                    request.path.removeprefix("/api/library/").removesuffix("/open")
+                )
+                self._post_library_open(service, board_id)
+                return
             if request.path in {
                 "/api/drafts",
                 "/api/approve",
@@ -501,6 +512,31 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             service = self._workbench_service()
             boards = [_workbench_view_payload(view) for view in service.list_boards()]
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except self._public_error_types() as error:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+            return
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
+            return
+        self._send_json(HTTPStatus.OK, {"ok": True, "boards": boards})
+
+    def _get_library(self) -> None:
+        try:
+            service = self._workbench_service()
+            boards = [
+                {
+                    "boardId": board.board_id,
+                    "displayName": board.display_name,
+                    "currentVersionId": board.current_version_id,
+                }
+                for board in service.list_library_boards()
+            ]
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
             return
@@ -594,6 +630,20 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._submit_job(
             _new_board_reservation_key(),
             lambda: service.create_from_upload(product_name, content),
+        )
+
+    def _post_library_open(self, service: object, board_id: str) -> None:
+        if not board_id:
+            raise RequestError(HTTPStatus.NOT_FOUND, "not found")
+        if not any(
+            board.board_id == board_id for board in service.list_library_boards()
+        ):
+            raise RequestError(
+                HTTPStatus.NOT_FOUND, f"board does not exist: {board_id}"
+            )
+        self._submit_job(
+            _new_board_reservation_key(),
+            lambda: service.open_library_board(board_id),
         )
 
     def _post_mutation(
@@ -903,6 +953,11 @@ def _argument_parser() -> ArgumentParser:
         type=Path,
         help="Persistent workbench workspace; may be combined with legacy run inputs",
     )
+    parser.add_argument(
+        "--repository-root",
+        type=Path,
+        help="Checkout containing the repository board library",
+    )
     parser.add_argument("--host", default="127.0.0.1", help="Listen address (default: 127.0.0.1)")
     parser.add_argument("--port", default=4173, type=int, help="Listen port (default: 4173)")
     return parser
@@ -910,18 +965,42 @@ def _argument_parser() -> ArgumentParser:
 
 def _create_workbench_service(
     workspace_root: Path,
+    repository_root: Path,
 ) -> tuple[object, tuple[type[Exception], ...]]:
     onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
     source_value = str(onboarding_source)
     if source_value not in sys.path:
         sys.path.insert(0, source_value)
+    from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
     from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
     from hangboard_vectorizer.workbench_store import WorkbenchStore
 
     return (
-        WorkbenchService(WorkbenchStore(workspace_root)),
-        (WorkbenchServiceError,),
+        WorkbenchService(
+            WorkbenchStore(workspace_root),
+            library=RepositoryBoardLibrary(repository_root),
+        ),
+        (WorkbenchServiceError, BoardLibraryError),
     )
+
+
+def _discover_repository_root(start: Path) -> Path:
+    candidate = Path(start).expanduser().resolve(strict=False)
+    while True:
+        if (candidate / ".git").exists():
+            return candidate
+        if candidate.parent == candidate:
+            raise EditorError("could not find a repository root from the current directory")
+        candidate = candidate.parent
+
+
+def _configured_repository_root(value: Path | None) -> Path:
+    if value is None:
+        return _discover_repository_root(Path.cwd())
+    root = Path(value).expanduser().resolve(strict=False)
+    if not root.is_dir() or not (root / ".git").exists():
+        raise EditorError("repository root must be a checkout containing .git")
+    return root
 
 
 def _server_from_cli(
@@ -929,17 +1008,28 @@ def _server_from_cli(
 ) -> tuple[WorkbenchHTTPServer, EditorCatalog | None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
-    if not parsed.run_dir and parsed.catalog is None and parsed.workspace_root is None:
-        parser.error("provide --workspace-root, --run-dir, or --catalog")
     try:
         catalog = (
             catalog_from_inputs(parsed.run_dir, parsed.catalog)
             if parsed.run_dir or parsed.catalog is not None
             else None
         )
-        if parsed.workspace_root is not None:
+        use_workbench = (
+            parsed.workspace_root is not None
+            or parsed.repository_root is not None
+            or catalog is None
+        )
+        workspace_root: Path | None = None
+        if use_workbench:
+            repository_root = _configured_repository_root(parsed.repository_root)
+            workspace_root = (
+                parsed.workspace_root.expanduser().resolve(strict=False)
+                if parsed.workspace_root is not None
+                else repository_root / ".context" / "hangboard-workbench"
+            )
             service, public_job_error_types = _create_workbench_service(
-                parsed.workspace_root
+                workspace_root,
+                repository_root,
             )
         else:
             service = None
@@ -953,9 +1043,8 @@ def _server_from_cli(
         workbench_service=service,
         public_job_error_types=public_job_error_types,
         job_outcome_root=(
-            parsed.workspace_root.resolve(strict=False)
-            / ".workbench-job-outcomes"
-            if parsed.workspace_root is not None
+            workspace_root / ".workbench-job-outcomes"
+            if workspace_root is not None
             else None
         ),
     )

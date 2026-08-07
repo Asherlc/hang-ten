@@ -68,6 +68,15 @@ class FakeWorkbenchView:
     saved: bool
     stale_from_stage: int | None
     checkpoint_token: str | None
+    repository_board_id: str | None = None
+    repository_version_id: str | None = None
+
+
+@dataclass(frozen=True)
+class FakeLibraryBoard:
+    board_id: str
+    display_name: str
+    current_version_id: str
 
 
 class FakeWorkbenchError(ValueError):
@@ -83,6 +92,14 @@ class FakeWorkbenchService:
         self._lock = Lock()
         self.approve_started = Event()
         self.approve_gate: Event | None = None
+        self.library_boards: tuple[FakeLibraryBoard, ...] = (
+            FakeLibraryBoard(
+                board_id="example-board",
+                display_name="Example Board",
+                current_version_id="revision-0001",
+            ),
+        )
+        self.library_error: FakeWorkbenchError | None = None
 
     def create_from_url(self, product_name: str, source_url: str) -> FakeWorkbenchView:
         if not source_url.startswith(("http://", "https://")):
@@ -100,6 +117,26 @@ class FakeWorkbenchService:
     def list_boards(self) -> tuple[FakeWorkbenchView, ...]:
         with self._lock:
             return tuple(self._boards.values())
+
+    def list_library_boards(self) -> tuple[FakeLibraryBoard, ...]:
+        if self.library_error is not None:
+            raise self.library_error
+        return self.library_boards
+
+    def open_library_board(self, board_id: str) -> FakeWorkbenchView:
+        if self.library_error is not None:
+            raise self.library_error
+        board = next(
+            (entry for entry in self.library_boards if entry.board_id == board_id),
+            None,
+        )
+        if board is None:
+            raise FakeWorkbenchError(f"board does not exist: {board_id}")
+        return self._update(
+            self._create(board.display_name, b"repository-board"),
+            repository_board_id=board.board_id,
+            repository_version_id=board.current_version_id,
+        )
 
     def get_board(
         self, board_id: str, *, revision_id: str | None = None
@@ -760,6 +797,89 @@ def test_import_run_returns_a_pollable_job(tmp_path):
     assert final["result"]["productName"] == "CLI Imported Board"
 
 
+def test_get_library_lists_validated_repository_boards(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(base, "GET", "/api/library")
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "boards": [
+            {
+                "boardId": "example-board",
+                "displayName": "Example Board",
+                "currentVersionId": "revision-0001",
+            }
+        ],
+    }
+
+
+def test_post_library_open_is_a_tracked_board_job(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, accepted = _raw_request(
+            base,
+            "POST",
+            "/api/library/example-board/open",
+            body=b"{}",
+            headers={"Content-Type": "application/json"},
+        )
+        terminal = _poll_job(base, accepted["jobId"])
+
+    assert status == 202
+    assert terminal["state"] == "succeeded"
+    assert terminal["result"]["repositoryBoardId"] == "example-board"
+    assert terminal["result"]["repositoryVersionId"] == "revision-0001"
+
+
+def test_library_unknown_board_returns_not_found(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(
+            base,
+            "POST",
+            "/api/library/missing-board/open",
+            body=b"{}",
+            headers={"Content-Type": "application/json"},
+        )
+
+    assert status == 404
+    assert payload == {"ok": False, "error": "board does not exist: missing-board"}
+
+
+def test_library_rejects_invalid_catalog_data(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    service.library_error = FakeWorkbenchError("catalog board is malformed")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(base, "GET", "/api/library")
+
+    assert status == 400
+    assert payload == {"ok": False, "error": "catalog board is malformed"}
+
+
+def test_library_open_retains_loopback_origin_protection(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        for headers in (
+            {
+                "Content-Type": "application/json",
+                "Origin": "https://attacker.example",
+            },
+            {"Content-Type": "application/json", "Host": "attacker.example"},
+        ):
+            status, payload = _raw_request(
+                base,
+                "POST",
+                "/api/library/example-board/open",
+                body=b"{}",
+                headers=headers,
+            )
+
+            assert status == 403
+            assert payload == {"ok": False, "error": "request origin is not allowed"}
+
+
 def test_list_and_get_workbench_boards_return_safe_views(running_workbench_server):
     created = _create_board(running_workbench_server)
 
@@ -1149,6 +1269,117 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
     assert payload == {"ok": True, "boards": []}
     assert (workspace / "boards").is_dir()
     assert (workspace / ".workbench-job-outcomes").is_dir()
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_repository_root_constructs_library_backed_workbench(tmp_path):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
+    library.mkdir(parents=True)
+    (library / "catalog.json").write_text('{"schemaVersion":1,"boards":[]}')
+    workspace = tmp_path / "workspace"
+
+    server, catalog = server_module._server_from_cli(
+        [
+            "--repository-root",
+            str(repository),
+            "--workspace-root",
+            str(workspace),
+            "--port",
+            "0",
+        ]
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, payload = read_json(
+            f"http://127.0.0.1:{server.server_port}/api/library"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert catalog is None
+    assert status == 200
+    assert payload == {"ok": True, "boards": []}
+    assert (workspace / "boards").is_dir()
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_repository_catalog_validation_errors_are_safe_bad_requests(tmp_path):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
+    library.mkdir(parents=True)
+    (library / "catalog.json").write_text('{"schemaVersion":99,"boards":[]}')
+
+    server, _catalog = server_module._server_from_cli(
+        ["--repository-root", str(repository), "--workspace-root", str(tmp_path / "workspace"), "--port", "0"]
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, payload = _raw_request(
+            f"http://127.0.0.1:{server.server_port}", "GET", "/api/library"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert status == 400
+    assert payload == {"ok": False, "error": "unsupported catalog schema version"}
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
+    tmp_path, monkeypatch
+):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
+    library.mkdir(parents=True)
+    (library / "catalog.json").write_text('{"schemaVersion":1,"boards":[]}')
+    launch_directory = repository / "nested" / "checkout"
+    launch_directory.mkdir(parents=True)
+    monkeypatch.chdir(launch_directory)
+
+    server, catalog = server_module._server_from_cli(["--port", "0"])
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, payload = read_json(
+            f"http://127.0.0.1:{server.server_port}/api/library"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert catalog is None
+    assert status == 200
+    assert payload == {"ok": True, "boards": []}
+    assert (repository / ".context" / "hangboard-workbench" / "boards").is_dir()
+
+
+def test_default_launch_fails_clearly_without_a_repository(tmp_path, monkeypatch, capsys):
+    launch_directory = tmp_path / "not-a-checkout"
+    launch_directory.mkdir()
+    monkeypatch.chdir(launch_directory)
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(["--port", "0"])
+
+    assert error.value.code == 2
+    assert "could not find a repository root" in capsys.readouterr().err
 
 
 def test_http_session_loads_only_explicit_artifacts(tmp_path):
