@@ -18,6 +18,8 @@ const {
   createOpeningBoardController,
   openingScreenState,
   renderOpeningFormVisibility,
+  handleOpeningSelectionFailure,
+  openingActionsDisabled,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -136,6 +138,43 @@ test("opening screen keeps the Create board form visible for empty and repositor
     errors: { library: "Repository unavailable" },
   }));
   assert.equal(classes.has("hidden"), false);
+});
+
+test("recoverable repository-open polling failure preserves the frozen workbench", () => {
+  const calls = [];
+  const error = Object.assign(new Error("connection reset"), {
+    jobId: "job-open-1",
+    terminal: false,
+  });
+
+  const preserved = handleOpeningSelectionFailure({
+    error,
+    editingFrozen: true,
+    setLibraryError(message) { calls.push(["error", message]); },
+    showSetup() { calls.push(["setup"]); },
+  });
+
+  assert.equal(preserved, true);
+  assert.deepEqual(calls, []);
+  assert.equal(openingActionsDisabled({ busy: true, editingFrozen: true }), true);
+});
+
+test("terminal repository-open failure returns to setup with an actionable error", () => {
+  const calls = [];
+
+  const preserved = handleOpeningSelectionFailure({
+    error: new Error("catalog entry is invalid"),
+    editingFrozen: false,
+    setLibraryError(message) { calls.push(["error", message]); },
+    showSetup() { calls.push(["setup"]); },
+  });
+
+  assert.equal(preserved, false);
+  assert.deepEqual(calls, [
+    ["error", "catalog entry is invalid"],
+    ["setup"],
+  ]);
+  assert.equal(openingActionsDisabled({ busy: false, editingFrozen: false }), false);
 });
 
 test("only the latest interleaved checkpoint load may commit identity, geometry, and autosave state", async () => {

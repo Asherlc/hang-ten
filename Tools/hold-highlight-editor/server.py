@@ -642,7 +642,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.NOT_FOUND, f"board does not exist: {board_id}"
             )
         self._submit_job(
-            _new_board_reservation_key(),
+            service.library_open_reservation_key(board_id),
             lambda: service.open_library_board(board_id),
         )
 

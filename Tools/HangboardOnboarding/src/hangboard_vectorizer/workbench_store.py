@@ -428,20 +428,36 @@ class WorkbenchStore:
     def save_revision(self, board_id: str, revision_id: str) -> BoardRecord:
         """Atomically select a complete, current revision as the local saved version."""
         board = self.read_board(board_id)
-        revision = self._revision(board, revision_id)
-        if revision.stale_from_stage is not None:
-            raise WorkbenchStoreError(
-                f"revision {revision.id} has a stale lineage from stage "
-                f"{revision.stale_from_stage}"
-            )
-        if revision.state != "complete" or revision.current_stage != _FINAL_STAGE:
-            raise WorkbenchStoreError(
-                f"revision {revision.id} does not have a complete lineage"
-            )
+        revision = self._savable_revision(board, revision_id)
         updated = replace(
             board,
             active_revision_id=revision.id,
             saved_revision_id=revision.id,
+        )
+        self._write_board(updated)
+        return updated
+
+    @_synchronized
+    def publish_repository_revision(
+        self,
+        board_id: str,
+        revision_id: str,
+        *,
+        repository_board_id: str,
+        repository_version_id: str,
+    ) -> BoardRecord:
+        """Atomically save a revision and record the repository version it published."""
+        board = self.read_board(board_id)
+        revision = self._savable_revision(board, revision_id)
+        self._validate_repository_link(
+            repository_board_id, repository_version_id
+        )
+        updated = replace(
+            board,
+            active_revision_id=revision.id,
+            saved_revision_id=revision.id,
+            repository_board_id=repository_board_id,
+            repository_version_id=repository_version_id,
         )
         self._write_board(updated)
         return updated
@@ -797,6 +813,22 @@ class WorkbenchStore:
             if revision.id == revision_id:
                 return revision
         raise WorkbenchStoreError(f"revision does not exist: {revision_id}")
+
+    @classmethod
+    def _savable_revision(
+        cls, board: BoardRecord, revision_id: str
+    ) -> RevisionRecord:
+        revision = cls._revision(board, revision_id)
+        if revision.stale_from_stage is not None:
+            raise WorkbenchStoreError(
+                f"revision {revision.id} has a stale lineage from stage "
+                f"{revision.stale_from_stage}"
+            )
+        if revision.state != "complete" or revision.current_stage != _FINAL_STAGE:
+            raise WorkbenchStoreError(
+                f"revision {revision.id} does not have a complete lineage"
+            )
+        return revision
 
     @staticmethod
     def _replace_revision(

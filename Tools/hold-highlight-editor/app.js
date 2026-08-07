@@ -33,6 +33,8 @@
     createOpeningBoardController,
     openingScreenState,
     renderOpeningFormVisibility,
+    openingActionsDisabled,
+    handleOpeningSelectionFailure,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
@@ -1658,6 +1660,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
+      button.disabled = openingActionsDisabled(state);
       button.innerHTML = `<span>${escapeHTML(board.productName)}</span><small>Stage ${String(board.stage)}</small>`;
       button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
       el["recent-runs"].appendChild(button);
@@ -1684,6 +1687,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = "opening-board-row";
+      button.disabled = openingActionsDisabled(state);
       button.innerHTML = `<span>${escapeHTML(label(board))}</span><small>${escapeHTML(detail(board))}</small>`;
       button.addEventListener("click", () => void onSelect(board.boardId));
       container.appendChild(button);
@@ -1698,6 +1702,7 @@
       errors: state.openingErrors,
     });
     renderOpeningFormVisibility(el["create-board-form"], screen);
+    el["setup-submit-button"].disabled = openingActionsDisabled(state);
     renderOpeningList(el["repository-board-list"], screen.repository, {
       label: (board) => board.displayName || board.boardId,
       detail: (board) => `Version ${board.currentVersionId || "unavailable"}`,
@@ -1732,6 +1737,7 @@
   }
 
   async function selectLibraryBoard(boardId) {
+    if (openingActionsDisabled(state)) return false;
     const load = loadCoordinator.begin();
     state.busy = true;
     showWorkbench();
@@ -1745,12 +1751,16 @@
       return loaded;
     } catch (error) {
       if (!load.isCurrent()) return false;
-      state.openingErrors.library = error.message || "Could not open repository board.";
-      showSetup();
+      handleOpeningSelectionFailure({
+        error,
+        editingFrozen: state.editingFrozen,
+        setLibraryError(message) { state.openingErrors.library = message; },
+        showSetup,
+      });
       return false;
     } finally {
       if (load.isCurrent()) {
-        state.busy = false;
+        if (!state.editingFrozen) state.busy = false;
         renderGuidedShell();
         render();
       }
@@ -1758,6 +1768,7 @@
   }
 
   async function selectGuidedBoard(boardId) {
+    if (openingActionsDisabled(state)) return false;
     const load = loadCoordinator.begin();
     state.busy = true;
     showWorkbench();

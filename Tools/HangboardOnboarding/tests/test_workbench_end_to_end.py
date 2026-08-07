@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from hashlib import sha256
 from io import BytesIO
 import json
 from pathlib import Path
+from threading import Event, Lock
 
 from PIL import Image
 import numpy as np
@@ -224,6 +226,70 @@ def test_open_newer_library_version_preserves_divergent_runtime_revision(
     assert revisions[divergent.revision_id].run_root.is_dir()
 
 
+def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    opened = service.open_library_board(entry.board_id)
+    divergent = service.revise_stage(
+        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+    )
+    library.publish(
+        display_name=entry.display_name,
+        run_root=opened.run_root,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+    )
+
+    def fail_link(*_args: object, **_kwargs: object) -> None:
+        raise OSError("repository link interrupted")
+
+    monkeypatch.setattr(service.store, "link_repository_version", fail_link)
+    with pytest.raises(OSError, match="repository link interrupted"):
+        service.open_library_board(entry.board_id)
+
+    board = service.store.read_board(opened.board_id)
+    failed = board.revisions[-1]
+    assert board.active_revision_id == divergent.revision_id
+    assert failed.state == "failed"
+
+
+def test_parallel_library_opens_share_one_runtime_board(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    actual_copy = library.copy_current_run
+    copy_guard = Lock()
+    first_copy = Event()
+    release_first = Event()
+    copy_count = 0
+
+    def coordinate_copy(board_id: str, destination: Path) -> LibraryBoard:
+        nonlocal copy_count
+        with copy_guard:
+            copy_count += 1
+            position = copy_count
+        if position == 1:
+            first_copy.set()
+            release_first.wait(0.5)
+        else:
+            release_first.set()
+        return actual_copy(board_id, destination)
+
+    monkeypatch.setattr(library, "copy_current_run", coordinate_copy)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(service.open_library_board, entry.board_id)
+        assert first_copy.wait(2)
+        second = executor.submit(service.open_library_board, entry.board_id)
+        opened = (first.result(timeout=5), second.result(timeout=5))
+
+    assert opened[0].board_id == opened[1].board_id
+    assert opened[0].revision_id == opened[1].revision_id
+    assert len(service.store.list_boards()) == 1
+
+
 def test_save_repository_conflict_leaves_runtime_revision_unsaved(
     tmp_path: Path,
 ) -> None:
@@ -278,6 +344,68 @@ def test_save_existing_board_uses_expected_repository_version(tmp_path: Path) ->
     )
 
     assert saved.repository_version_id == "revision-0002"
+
+
+@pytest.mark.parametrize("existing_board", (False, True))
+def test_save_retry_reconciles_publication_after_atomic_runtime_update_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    existing_board: bool,
+) -> None:
+    if existing_board:
+        library, entry = _repository_library(tmp_path)
+        service = _fixture_service(tmp_path / "workspace", library=library)
+        complete = service.open_library_board(entry.board_id)
+    else:
+        library = _empty_repository_library(tmp_path / "repository")
+        service = _fixture_service(tmp_path / "workspace", library=library)
+        complete = _complete_runtime_board(service, "Example Board")
+    actual_publish = service.store.publish_repository_revision
+    attempts = 0
+
+    def fail_once(*args: object, **kwargs: object):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise OSError("runtime publication update interrupted")
+        return actual_publish(*args, **kwargs)
+
+    monkeypatch.setattr(service.store, "publish_repository_revision", fail_once)
+    with pytest.raises(OSError, match="runtime publication update interrupted"):
+        service.save(complete.board_id, expected_revision_id=complete.revision_id)
+
+    saved = service.save(
+        complete.board_id, expected_revision_id=complete.revision_id
+    )
+    repository_board = library.get_board(saved.repository_board_id)
+    repository_document = json.loads(
+        (repository_board.package_path / "board.json").read_text(encoding="utf-8")
+    )
+
+    assert saved.saved is True
+    assert len(library.list_boards()) == 1
+    assert len(repository_document["versions"]) == (2 if existing_board else 1)
+
+
+def test_repository_save_uses_one_combined_runtime_metadata_update(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _empty_repository_library(tmp_path / "repository")
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    complete = _complete_runtime_board(service, "Example Board")
+
+    def reject_legacy_update(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("split repository metadata update was used")
+
+    monkeypatch.setattr(service.store, "link_repository_version", reject_legacy_update)
+    monkeypatch.setattr(service.store, "save_revision", reject_legacy_update)
+
+    saved = service.save(
+        complete.board_id, expected_revision_id=complete.revision_id
+    )
+
+    assert saved.saved is True
+    assert saved.repository_board_id == "example-board"
 
 
 @pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)

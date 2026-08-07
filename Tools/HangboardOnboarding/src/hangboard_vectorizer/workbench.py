@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import tempfile
+from threading import RLock
 from types import MappingProxyType
 from urllib.parse import urlparse
 
@@ -83,6 +84,8 @@ class WorkbenchService:
     ) -> None:
         self.store = store
         self.__library = library
+        self.__library_open_locks_guard = RLock()
+        self.__library_open_locks: dict[str, RLock] = {}
         self.__runners = MappingProxyType(
             dict(DEFAULT_STAGE_RUNNERS if runners is None else runners)
         )
@@ -177,6 +180,29 @@ class WorkbenchService:
 
     def open_library_board(self, board_id: str) -> WorkbenchView:
         """Copy the current repository package into an active runtime revision."""
+        with self.__library_open_lock(board_id):
+            return self.__open_library_board(board_id)
+
+    def library_open_reservation_key(self, board_id: str) -> str:
+        """Return the stable job key shared by a repository open and linked edits."""
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        library_board = self.__library.get_board(board_id)
+        matching = next(
+            (
+                board
+                for board in self.store.list_boards()
+                if board.repository_board_id == library_board.board_id
+            ),
+            None,
+        )
+        return (
+            matching.id
+            if matching is not None
+            else f"repository-board:{library_board.board_id}"
+        )
+
+    def __open_library_board(self, board_id: str) -> WorkbenchView:
         if self.__library is None:
             raise WorkbenchServiceError("repository board library is not configured")
         library_board = self.__library.get_board(board_id)
@@ -199,8 +225,10 @@ class WorkbenchService:
             board, revision = self.store.reserve_initial_revision(
                 library_board.display_name
             )
+            previous_active_revision_id = ""
         else:
             board = matching_board
+            previous_active_revision_id = matching_board.active_revision_id
             revision = self.store.create_revision(board.id)
         try:
             self.__library.copy_current_run(library_board.board_id, revision.run_root)
@@ -218,7 +246,7 @@ class WorkbenchService:
                 self.store.mark_revision_failed(
                     board.id,
                     revision.id,
-                    restore_active_revision_id=None,
+                    restore_active_revision_id=previous_active_revision_id,
                 )
             raise
         return self.__view(board.id, revision.id)
@@ -443,14 +471,38 @@ class WorkbenchService:
                 run_root=revision.run_root,
                 board_id=board.repository_board_id,
                 expected_current_version_id=board.repository_version_id,
+                publication_token=self.__publication_token(board, revision),
             )
-            self.store.link_repository_version(
+            self.store.publish_repository_revision(
                 board.id,
+                revision.id,
                 repository_board_id=published.board.board_id,
                 repository_version_id=published.version_id,
             )
-        self.store.save_revision(board.id, revision.id)
+        else:
+            self.store.save_revision(board.id, revision.id)
         return self.__view(board.id, revision.id)
+
+    def __library_open_lock(self, board_id: str) -> RLock:
+        with self.__library_open_locks_guard:
+            return self.__library_open_locks.setdefault(board_id, RLock())
+
+    def __publication_token(
+        self, board: BoardRecord, revision: RevisionRecord
+    ) -> str:
+        identity = self.__manifest(revision.run_root).get("runIdentitySha256")
+        if not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{64}", identity):
+            raise WorkbenchServiceError("onboarding run identity is invalid")
+        value = json.dumps(
+            {
+                "runtimeBoardId": board.id,
+                "runtimeRevisionId": revision.id,
+                "runIdentitySha256": identity,
+            },
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return sha256(value).hexdigest()
 
     def __start(
         self, board: BoardRecord, revision: RevisionRecord, source: str

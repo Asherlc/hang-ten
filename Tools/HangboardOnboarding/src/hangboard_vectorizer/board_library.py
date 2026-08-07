@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import fcntl
 from hashlib import sha256
 import json
 import os
@@ -51,11 +53,12 @@ class BoardLibraryError(ValueError):
 class RepositoryBoardLibrary:
     """Read and atomically publish complete onboarding runs in one repository."""
 
+    __repository_locks_guard = RLock()
+    __repository_locks: dict[Path, RLock] = {}
+
     def __init__(self, repository_root: Path) -> None:
-        self._repository_root = Path(repository_root).resolve(strict=False)
+        self._repository_root = Path(repository_root).absolute()
         self._library_root = self._repository_root / "Tools" / "HangboardOnboarding" / "board-library"
-        self._locks_guard = RLock()
-        self._board_locks: dict[str, RLock] = {}
 
     def list_boards(self) -> tuple[LibraryBoard, ...]:
         catalog = self._read_catalog()
@@ -63,21 +66,28 @@ class RepositoryBoardLibrary:
         board_ids: set[str] = set()
         package_paths: set[Path] = set()
         boards: list[LibraryBoard] = []
-        for entry_value in entries:
-            entry = self._mapping(entry_value, "catalog board")
-            self._exact_keys(entry, {"boardId", "displayName", "packagePath"}, "catalog board")
-            board_id = self._board_id(entry["boardId"], "catalog boardId")
-            display_name = self._display_name(entry["displayName"], "catalog displayName")
-            package_path = self._member_path(
-                self._library_root, entry["packagePath"], "catalog packagePath", require_directory=True
-            )
-            if board_id in board_ids:
-                raise BoardLibraryError("duplicate boardId in catalog")
-            if package_path in package_paths:
-                raise BoardLibraryError("duplicate packagePath in catalog")
-            board_ids.add(board_id)
-            package_paths.add(package_path)
-            boards.append(self._read_board_package(board_id, display_name, package_path))
+        for index, entry_value in enumerate(entries):
+            board_id: str | None = None
+            try:
+                entry = self._mapping(entry_value, "catalog board")
+                self._exact_keys(entry, {"boardId", "displayName", "packagePath"}, "catalog board")
+                board_id = self._board_id(entry["boardId"], "catalog boardId")
+                display_name = self._display_name(entry["displayName"], "catalog displayName")
+                package_path = self._member_path(
+                    self._library_root, entry["packagePath"], "catalog packagePath", require_directory=True
+                )
+                if board_id in board_ids:
+                    raise BoardLibraryError("duplicate boardId in catalog")
+                if package_path in package_paths:
+                    raise BoardLibraryError("duplicate packagePath in catalog")
+                board_ids.add(board_id)
+                package_paths.add(package_path)
+                boards.append(self._read_board_package(board_id, display_name, package_path))
+            except BoardLibraryError as error:
+                context = f"catalog.boards[{index}]"
+                if board_id is not None:
+                    context += f" boardId {board_id}"
+                raise BoardLibraryError(f"{context}: {error}") from error
         return tuple(sorted(boards, key=lambda board: (board.display_name.casefold(), board.board_id)))
 
     def get_board(self, board_id: str) -> LibraryBoard:
@@ -118,74 +128,111 @@ class RepositoryBoardLibrary:
         run_root: Path,
         board_id: str | None,
         expected_current_version_id: str | None,
+        publication_token: str | None = None,
     ) -> PublishedBoard:
         display_name = self._display_name(display_name, "displayName")
         run_root = Path(run_root)
         published = self._published_document_for_run(run_root)
-        existing = self._catalog_index()
+        if publication_token is not None:
+            publication_token = self._sha(publication_token, "publication token")
         if board_id is None:
-            identifier = self._allocate_board_id(display_name, set(existing))
-        else:
-            identifier = self._board_id(board_id, "board")
-        lock = self._lock_for(identifier)
-        with lock:
-            existing = self._catalog_index()
-            current = existing.get(identifier)
-            if current is None:
-                if expected_current_version_id is not None:
-                    raise BoardLibraryError("new board must not have an expected current version")
-                return self._publish_new(identifier, display_name, run_root, published, existing)
-            if expected_current_version_id != current.current_version_id:
-                raise BoardLibraryError(
-                    f"expected {expected_current_version_id}, current {current.current_version_id}"
-                )
-            return self._publish_existing(current, run_root, published)
+            if expected_current_version_id is not None:
+                raise BoardLibraryError("new board must not have an expected current version")
+            return self._publish_new(
+                display_name, run_root, published, publication_token
+            )
+        identifier = self._board_id(board_id, "board")
+        current = self._catalog_index().get(identifier)
+        if current is None:
+            raise BoardLibraryError(f"board does not exist: {identifier}")
+        if expected_current_version_id != current.current_version_id:
+            reconciled = self._reconciled_publication(
+                (current,),
+                display_name,
+                published["runIdentitySha256"],
+                publication_token,
+            )
+            if reconciled is not None:
+                return reconciled
+            raise BoardLibraryError(
+                f"expected {expected_current_version_id}, current {current.current_version_id}"
+            )
+        return self._publish_existing(
+            current,
+            run_root,
+            published,
+            expected_current_version_id=expected_current_version_id,
+            publication_token=publication_token,
+        )
 
     def _publish_existing(
-        self, board: LibraryBoard, run_root: Path, published: dict[str, object]
+        self,
+        board: LibraryBoard,
+        run_root: Path,
+        published: dict[str, object],
+        *,
+        expected_current_version_id: str,
+        publication_token: str | None,
     ) -> PublishedBoard:
         package = board.package_path
-        board_document = self._read_board_document(package / "board.json", package)
-        versions = self._list(board_document["versions"], "board.versions")
-        version_id = self._next_version_id(package / "versions")
         versions_root = self._safe_existing_directory(package / "versions", package, "versions")
-        stage = Path(tempfile.mkdtemp(prefix=f".{version_id}.tmp-", dir=versions_root))
+        stage = Path(tempfile.mkdtemp(prefix=".publication.tmp-", dir=versions_root))
         try:
             stage_run = stage / "run"
             self._copy_tree(run_root, stage_run)
             self._validate_complete_run(stage_run)
             self._validate_published_run(published, stage_run)
             self._write_new_json(stage / "published.json", published)
+            self._write_publication_token(
+                stage,
+                publication_token,
+                published["runIdentitySha256"],
+            )
             self._fsync_tree(stage)
-            final_version = versions_root / version_id
-            self._reject_write_target(final_version)
-            os.replace(stage, final_version)
-            self._fsync_directory(versions_root)
-            updated = dict(board_document)
-            updated["currentVersionId"] = version_id
-            updated["versions"] = [
-                *versions,
-                self._version_record(version_id, board.current_version_id),
-            ]
-            self._replace_json(package / "board.json", updated, package)
-        except Exception:
+            with self._publication_lock():
+                current = self._catalog_index().get(board.board_id)
+                if current is None:
+                    raise BoardLibraryError(f"board does not exist: {board.board_id}")
+                if current.current_version_id != expected_current_version_id:
+                    reconciled = self._reconciled_publication(
+                        (current,),
+                        board.display_name,
+                        published["runIdentitySha256"],
+                        publication_token,
+                    )
+                    if reconciled is not None:
+                        return reconciled
+                    raise BoardLibraryError(
+                        f"expected {expected_current_version_id}, current {current.current_version_id}"
+                    )
+                board_document = self._read_board_document(package / "board.json", package)
+                versions = self._list(board_document["versions"], "board.versions")
+                version_id = self._next_version_id(versions_root)
+                final_version = versions_root / version_id
+                self._reject_write_target(final_version)
+                os.replace(stage, final_version)
+                self._fsync_directory(versions_root)
+                updated = dict(board_document)
+                updated["currentVersionId"] = version_id
+                updated["versions"] = [
+                    *versions,
+                    self._version_record(version_id, current.current_version_id),
+                ]
+                self._replace_json(package / "board.json", updated, package)
+        finally:
             shutil.rmtree(stage, ignore_errors=True)
-            raise
         return PublishedBoard(self.get_board(board.board_id), version_id)
 
     def _publish_new(
         self,
-        board_id: str,
         display_name: str,
         run_root: Path,
         published: dict[str, object],
-        existing: Mapping[str, LibraryBoard],
+        publication_token: str | None,
     ) -> PublishedBoard:
         self._prepare_write_parent(self._library_root / "boards")
         boards_root = self._library_root / "boards"
-        package = boards_root / board_id
-        self._reject_write_target(package)
-        stage = Path(tempfile.mkdtemp(prefix=f".{board_id}.tmp-", dir=boards_root))
+        stage = Path(tempfile.mkdtemp(prefix=".publication.tmp-", dir=boards_root))
         version_id = "revision-0001"
         try:
             version = stage / "versions" / version_id
@@ -193,36 +240,68 @@ class RepositoryBoardLibrary:
             self._validate_complete_run(version / "run")
             self._validate_published_run(published, version / "run")
             self._write_new_json(version / "published.json", published)
-            self._write_new_json(
-                stage / "board.json",
-                {
-                    "schemaVersion": _SCHEMA_VERSION,
-                    "boardId": board_id,
-                    "displayName": display_name,
-                    "currentVersionId": version_id,
-                    "versions": [self._version_record(version_id, None)],
-                },
+            self._write_publication_token(
+                version,
+                publication_token,
+                published["runIdentitySha256"],
             )
             self._fsync_tree(stage)
-            os.replace(stage, package)
-            self._fsync_directory(boards_root)
-            catalog = self._read_catalog()
-            entries = self._list(catalog["boards"], "catalog.boards")
-            updated_catalog = {
-                "schemaVersion": _SCHEMA_VERSION,
-                "boards": [
+            with self._publication_lock():
+                existing = self._catalog_index()
+                reconciled = self._reconciled_publication(
+                    existing.values(),
+                    display_name,
+                    published["runIdentitySha256"],
+                    publication_token,
+                )
+                if reconciled is not None:
+                    return reconciled
+                reserved_ids = set(existing) | self._package_ids(boards_root)
+                board_id = self._allocate_board_id(display_name, reserved_ids)
+                package = boards_root / board_id
+                self._reject_write_target(package)
+                self._write_new_json(
+                    stage / "board.json",
+                    {
+                        "schemaVersion": _SCHEMA_VERSION,
+                        "boardId": board_id,
+                        "displayName": display_name,
+                        "currentVersionId": version_id,
+                        "versions": [self._version_record(version_id, None)],
+                    },
+                )
+                self._fsync_tree(stage)
+                os.replace(stage, package)
+                self._fsync_directory(boards_root)
+                catalog = self._read_catalog()
+                entries = self._list(catalog["boards"], "catalog.boards")
+                merged = [
                     *entries,
                     {
                         "boardId": board_id,
                         "displayName": display_name,
                         "packagePath": f"boards/{board_id}",
                     },
-                ],
-            }
-            self._replace_json(self._library_root / "catalog.json", updated_catalog, self._library_root)
-        except Exception:
+                ]
+                merged.sort(
+                    key=lambda entry: (
+                        self._display_name(
+                            self._mapping(entry, "catalog board")["displayName"],
+                            "catalog displayName",
+                        ).casefold(),
+                        self._board_id(
+                            self._mapping(entry, "catalog board")["boardId"],
+                            "catalog boardId",
+                        ),
+                    )
+                )
+                self._replace_json(
+                    self._library_root / "catalog.json",
+                    {"schemaVersion": _SCHEMA_VERSION, "boards": merged},
+                    self._library_root,
+                )
+        finally:
             shutil.rmtree(stage, ignore_errors=True)
-            raise
         board = self.get_board(board_id)
         return PublishedBoard(board, version_id)
 
@@ -240,31 +319,45 @@ class RepositoryBoardLibrary:
             raise BoardLibraryError("boardId does not match catalog")
         if document["displayName"] != display_name:
             raise BoardLibraryError("displayName does not match catalog")
-        current_id = self._board_id(document["currentVersionId"], "currentVersionId")
+        current_id = self._version_id(document["currentVersionId"])
         versions = self._list(document["versions"], "board.versions")
         found_run: Path | None = None
         seen: set[str] = set()
-        for value in versions:
-            version = self._mapping(value, "board version")
-            self._exact_keys(version, {"versionId", "parentVersionId", "publishedAt", "publishedPath"}, "board version")
-            version_id = self._version_id(version["versionId"])
-            if version_id in seen:
-                raise BoardLibraryError("duplicate versionId")
-            seen.add(version_id)
-            parent = version["parentVersionId"]
-            if parent is not None:
-                self._version_id(parent)
-            self._string(version["publishedAt"], "publishedAt")
-            version_path = self._member_path(package, version["publishedPath"], "publishedPath", require_directory=True)
-            expected = package / "versions" / version_id
-            if version_path != expected:
-                raise BoardLibraryError("publishedPath does not match versionId")
-            run = self._safe_existing_directory(version_path / "run", version_path, "run")
-            published = self._read_published(version_path / "published.json", version_path)
-            self._validate_complete_run(run)
-            self._validate_published_run(published, run)
-            if version_id == current_id:
-                found_run = run
+        for index, value in enumerate(versions):
+            version_id: str | None = None
+            try:
+                version = self._mapping(value, "board version")
+                self._exact_keys(version, {"versionId", "parentVersionId", "publishedAt", "publishedPath"}, "board version")
+                version_id = self._version_id(version["versionId"])
+                if version_id in seen:
+                    raise BoardLibraryError("duplicate versionId")
+                parent = version["parentVersionId"]
+                if parent is not None:
+                    parent = self._version_id(parent)
+                    if parent not in seen:
+                        raise BoardLibraryError(
+                            "parentVersionId must reference an earlier existing version"
+                        )
+                self._published_at(version["publishedAt"])
+                version_path = self._member_path(package, version["publishedPath"], "publishedPath", require_directory=True)
+                expected = package / "versions" / version_id
+                if version_path != expected:
+                    raise BoardLibraryError("publishedPath does not match versionId")
+                run = self._safe_existing_directory(version_path / "run", version_path, "run")
+                published = self._read_published(version_path / "published.json", version_path)
+                self._read_publication_token(
+                    version_path, published["runIdentitySha256"]
+                )
+                self._validate_complete_run(run)
+                self._validate_published_run(published, run)
+                seen.add(version_id)
+                if version_id == current_id:
+                    found_run = run
+            except BoardLibraryError as error:
+                context = f"board {board_id} versions[{index}]"
+                if version_id is not None:
+                    context += f" versionId {version_id}"
+                raise BoardLibraryError(f"{context}: {error}") from error
         if found_run is None:
             raise BoardLibraryError("currentVersionId is missing from versions")
         return LibraryBoard(board_id, display_name, package, current_id, found_run)
@@ -276,7 +369,7 @@ class RepositoryBoardLibrary:
             raise BoardLibraryError("unsupported board schema version")
         self._board_id(document["boardId"], "boardId")
         self._display_name(document["displayName"], "displayName")
-        self._board_id(document["currentVersionId"], "currentVersionId")
+        self._version_id(document["currentVersionId"])
         self._list(document["versions"], "board.versions")
         return document
 
@@ -365,9 +458,117 @@ class RepositoryBoardLibrary:
             "publishedPath": f"versions/{version_id}",
         }
 
-    def _lock_for(self, board_id: str) -> RLock:
-        with self._locks_guard:
-            return self._board_locks.setdefault(board_id, RLock())
+    def _reconciled_publication(
+        self,
+        boards: object,
+        display_name: str,
+        run_identity: object,
+        publication_token: str | None,
+    ) -> PublishedBoard | None:
+        if publication_token is None:
+            return None
+        identity = self._sha(run_identity, "runIdentitySha256")
+        matches = [
+            board
+            for board in boards
+            if isinstance(board, LibraryBoard)
+            and board.display_name == display_name
+            and self._current_run_identity(board) == identity
+            and self._current_publication_token(board) == publication_token
+        ]
+        if len(matches) > 1:
+            raise BoardLibraryError(
+                "published run identity matches more than one repository board"
+            )
+        if not matches:
+            return None
+        board = matches[0]
+        return PublishedBoard(board, board.current_version_id)
+
+    def _current_publication_token(self, board: LibraryBoard) -> str | None:
+        version_root = board.current_run_path.parent
+        return self._read_publication_token(
+            version_root,
+            self._current_run_identity(board),
+        )
+
+    def _read_publication_token(
+        self, version_root: Path, run_identity: object
+    ) -> str | None:
+        path = version_root / "publication.json"
+        self._reject_symlinks(version_root, path)
+        if not path.exists():
+            return None
+        document = self._read_json(path, version_root, "publication token")
+        self._exact_keys(
+            document,
+            {"schemaVersion", "token", "runIdentitySha256"},
+            "publication token",
+        )
+        if document["schemaVersion"] != _SCHEMA_VERSION:
+            raise BoardLibraryError("unsupported publication token schema version")
+        identity = self._sha(
+            document["runIdentitySha256"], "publication token runIdentitySha256"
+        )
+        if identity != self._sha(run_identity, "published runIdentitySha256"):
+            raise BoardLibraryError("publication token does not match published run")
+        return self._sha(document["token"], "publication token")
+
+    def _write_publication_token(
+        self,
+        version_root: Path,
+        publication_token: str | None,
+        run_identity: object,
+    ) -> None:
+        if publication_token is None:
+            return
+        self._write_new_json(
+            version_root / "publication.json",
+            {
+                "schemaVersion": _SCHEMA_VERSION,
+                "token": publication_token,
+                "runIdentitySha256": self._sha(
+                    run_identity, "published runIdentitySha256"
+                ),
+            },
+        )
+
+    def _current_run_identity(self, board: LibraryBoard) -> str:
+        version_root = board.current_run_path.parent
+        published = self._read_published(version_root / "published.json", version_root)
+        return self._sha(
+            published["runIdentitySha256"], "published runIdentitySha256"
+        )
+
+    def _package_ids(self, boards_root: Path) -> set[str]:
+        identifiers: set[str] = set()
+        for entry in boards_root.iterdir():
+            if entry.is_symlink():
+                raise BoardLibraryError("boards contains a symlink")
+            if entry.is_dir() and _BOARD_ID.fullmatch(entry.name):
+                identifiers.add(entry.name)
+        return identifiers
+
+    @contextmanager
+    def _publication_lock(self):
+        self._reject_symlinks(self._repository_root, self._library_root)
+        key = self._library_root.resolve(strict=False)
+        with self.__repository_locks_guard:
+            thread_lock = self.__repository_locks.setdefault(key, RLock())
+        with thread_lock:
+            flags = os.O_RDONLY
+            flags |= getattr(os, "O_DIRECTORY", 0)
+            flags |= getattr(os, "O_NOFOLLOW", 0)
+            try:
+                descriptor = os.open(self._library_root, flags)
+            except OSError as error:
+                raise BoardLibraryError("library root is not safely accessible") from error
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX)
+                yield
+            finally:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+                os.close(descriptor)
 
     def _read_json(self, path: Path, root: Path, label: str) -> dict[str, object]:
         path = self._safe_existing_file(path, root, label)
@@ -418,6 +619,15 @@ class RepositoryBoardLibrary:
     def _reject_symlinks(self, root: Path, path: Path) -> None:
         root = Path(root).absolute()
         path = Path(path).absolute()
+        self._reject_symlink_components(root, path)
+        try:
+            path.relative_to(self._library_root)
+        except ValueError:
+            return
+        self._reject_symlink_components(self._repository_root, path)
+
+    @staticmethod
+    def _reject_symlink_components(root: Path, path: Path) -> None:
         try:
             relative = path.relative_to(root)
         except ValueError as error:
@@ -560,6 +770,17 @@ class RepositoryBoardLibrary:
         result = cls._string(value, label)
         if not re.fullmatch(r"[0-9a-f]{64}", result):
             raise BoardLibraryError(f"{label} is invalid")
+        return result
+
+    @classmethod
+    def _published_at(cls, value: object) -> str:
+        result = cls._string(value, "publishedAt")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", result):
+            raise BoardLibraryError("publishedAt must be a UTC timestamp")
+        try:
+            datetime.strptime(result, "%Y-%m-%dT%H:%M:%SZ")
+        except ValueError as error:
+            raise BoardLibraryError("publishedAt must be a UTC timestamp") from error
         return result
 
     @staticmethod

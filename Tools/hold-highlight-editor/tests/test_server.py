@@ -132,11 +132,35 @@ class FakeWorkbenchService:
         )
         if board is None:
             raise FakeWorkbenchError(f"board does not exist: {board_id}")
+        with self._lock:
+            existing = next(
+                (
+                    view
+                    for view in self._boards.values()
+                    if view.repository_board_id == board.board_id
+                    and view.repository_version_id == board.current_version_id
+                ),
+                None,
+            )
+        if existing is not None:
+            return existing
         return self._update(
             self._create(board.display_name, b"repository-board"),
             repository_board_id=board.board_id,
             repository_version_id=board.current_version_id,
         )
+
+    def library_open_reservation_key(self, board_id: str) -> str:
+        with self._lock:
+            existing = next(
+                (
+                    view
+                    for view in self._boards.values()
+                    if view.repository_board_id == board_id
+                ),
+                None,
+            )
+        return existing.board_id if existing is not None else f"repository-board:{board_id}"
 
     def get_board(
         self, board_id: str, *, revision_id: str | None = None
@@ -337,6 +361,18 @@ class RaceRevealingCreationService(FakeWorkbenchService):
     def _end_creation(self) -> None:
         with self._creation_observer:
             self._active_creations -= 1
+
+
+class BlockingLibraryOpenService(FakeWorkbenchService):
+    def __init__(self, root: Path):
+        super().__init__(root)
+        self.open_started = Event()
+        self.open_gate = Event()
+
+    def open_library_board(self, board_id: str) -> FakeWorkbenchView:
+        self.open_started.set()
+        self.open_gate.wait(1)
+        return super().open_library_board(board_id)
 
 
 class PathLeakingWorkbenchService(FakeWorkbenchService):
@@ -831,6 +867,51 @@ def test_post_library_open_is_a_tracked_board_job(tmp_path):
     assert terminal["state"] == "succeeded"
     assert terminal["result"]["repositoryBoardId"] == "example-board"
     assert terminal["result"]["repositoryVersionId"] == "revision-0001"
+
+
+def test_parallel_opens_of_one_repository_board_conflict_on_a_stable_key(tmp_path):
+    service = BlockingLibraryOpenService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        first_status, first = _post_json(
+            base + "/api/library/example-board/open", {}
+        )
+        assert first_status == 202
+        assert service.open_started.wait(1)
+
+        with pytest.raises(HTTPError) as conflict:
+            _post_json(base + "/api/library/example-board/open", {})
+        service.open_gate.set()
+        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+
+    assert conflict.value.code == 409
+
+
+def test_repository_open_conflicts_with_mutation_of_linked_runtime_board(tmp_path):
+    service = BlockingLibraryOpenService(tmp_path / "workbench")
+    service.open_gate.set()
+    existing = service.open_library_board("example-board")
+    service.open_started.clear()
+    service.open_gate.clear()
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        first_status, first = _post_json(
+            base + "/api/library/example-board/open", {}
+        )
+        assert first_status == 202
+        assert service.open_started.wait(1)
+
+        with pytest.raises(HTTPError) as conflict:
+            _post_json(
+                base + "/api/retry",
+                {
+                    "boardId": existing.board_id,
+                    "expectedRevisionId": existing.revision_id,
+                    "expectedStage": existing.stage,
+                },
+            )
+        service.open_gate.set()
+        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+
+    assert conflict.value.code == 409
 
 
 def test_library_unknown_board_returns_not_found(tmp_path):

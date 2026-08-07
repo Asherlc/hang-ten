@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 import json
 from pathlib import Path
+from threading import Event, Lock
 
 from PIL import Image
 import pytest
@@ -73,6 +75,17 @@ def test_list_boards_rejects_symlinked_packages_and_bad_published_hashes(
     _write_json(package / "versions" / "revision-0001" / "published.json", published)
     with pytest.raises(BoardLibraryError, match="published"):
         library.list_boards()
+
+
+def test_list_boards_rejects_a_symlinked_repository_ancestor(tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    _library_with_packages(outside, ("Example Board",))
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    (repository / "Tools").symlink_to(outside / "Tools", target_is_directory=True)
+
+    with pytest.raises(BoardLibraryError, match="symlink"):
+        RepositoryBoardLibrary(repository).list_boards()
 
 
 def test_copy_current_run_stages_then_atomically_renames(tmp_path: Path) -> None:
@@ -148,6 +161,165 @@ def test_publish_conflict_leaves_current_pointer_unchanged(tmp_path: Path) -> No
         )
 
     assert library.get_board(original.board_id).current_version_id == "revision-0001"
+
+
+def test_publish_reconciles_a_retried_new_board_by_run_identity(
+    tmp_path: Path,
+) -> None:
+    library_root = _library_root(tmp_path)
+    library_root.mkdir(parents=True)
+    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
+    library = RepositoryBoardLibrary(tmp_path)
+    run = _complete_fixture_run(tmp_path / "run")
+
+    first = library.publish(
+        display_name="Example Board",
+        run_root=run,
+        board_id=None,
+        expected_current_version_id=None,
+        publication_token="a" * 64,
+    )
+    retried = library.publish(
+        display_name="Example Board",
+        run_root=run,
+        board_id=None,
+        expected_current_version_id=None,
+        publication_token="a" * 64,
+    )
+
+    assert retried == first
+    assert [board.board_id for board in library.list_boards()] == ["example-board"]
+
+
+def test_publish_reconciles_a_retried_existing_version_by_run_identity(
+    tmp_path: Path,
+) -> None:
+    library, original = _complete_library(tmp_path)
+    run = _complete_fixture_run(tmp_path / "new-run")
+    first = library.publish(
+        display_name=original.display_name,
+        run_root=run,
+        board_id=original.board_id,
+        expected_current_version_id=original.current_version_id,
+        publication_token="b" * 64,
+    )
+
+    retried = library.publish(
+        display_name=original.display_name,
+        run_root=run,
+        board_id=original.board_id,
+        expected_current_version_id=original.current_version_id,
+        publication_token="b" * 64,
+    )
+
+    assert retried == first
+    board_document = _read_json(original.package_path / "board.json")
+    assert [version["versionId"] for version in board_document["versions"]] == [
+        "revision-0001",
+        "revision-0002",
+    ]
+
+
+def test_concurrent_new_board_publications_merge_and_sort_the_latest_catalog(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library_root = _library_root(tmp_path)
+    library_root.mkdir(parents=True)
+    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
+    first_library = RepositoryBoardLibrary(tmp_path)
+    second_library = RepositoryBoardLibrary(tmp_path)
+    first_run = _complete_fixture_run(tmp_path / "first-run")
+    second_run = _complete_fixture_run(tmp_path / "second-run")
+    actual_replace = RepositoryBoardLibrary._replace_json
+    replace_guard = Lock()
+    first_replace = Event()
+    release_first = Event()
+    catalog_replaces = 0
+
+    def coordinate_catalog_replace(
+        self: RepositoryBoardLibrary,
+        path: Path,
+        value: object,
+        root: Path,
+    ) -> None:
+        nonlocal catalog_replaces
+        if path.name == "catalog.json":
+            with replace_guard:
+                catalog_replaces += 1
+                position = catalog_replaces
+            if position == 1:
+                first_replace.set()
+                release_first.wait(0.5)
+            else:
+                release_first.set()
+        actual_replace(self, path, value, root)
+
+    monkeypatch.setattr(RepositoryBoardLibrary, "_replace_json", coordinate_catalog_replace)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(
+            first_library.publish,
+            display_name="Zulu Board",
+            run_root=first_run,
+            board_id=None,
+            expected_current_version_id=None,
+        )
+        assert first_replace.wait(2)
+        second = executor.submit(
+            second_library.publish,
+            display_name="alpha Board",
+            run_root=second_run,
+            board_id=None,
+            expected_current_version_id=None,
+        )
+        results = (first.result(timeout=5), second.result(timeout=5))
+
+    assert {result.board.board_id for result in results} == {
+        "alpha-board",
+        "zulu-board",
+    }
+    catalog = _read_json(library_root / "catalog.json")
+    assert [entry["boardId"] for entry in catalog["boards"]] == [
+        "alpha-board",
+        "zulu-board",
+    ]
+
+
+def test_library_validation_errors_name_catalog_board_and_version(
+    tmp_path: Path,
+) -> None:
+    library, board = _complete_library(tmp_path)
+    published_path = (
+        board.package_path / "versions" / "revision-0001" / "published.json"
+    )
+    published = _read_json(published_path)
+    published["definition"]["sha256"] = "0" * 64
+    _write_json(published_path, published)
+
+    with pytest.raises(
+        BoardLibraryError,
+        match=r"catalog\.boards\[0\].*example-board.*revision-0001.*published",
+    ):
+        library.list_boards()
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    (
+        ("parentVersionId", "revision-9999", "parentVersionId"),
+        ("publishedAt", "tomorrow", "publishedAt"),
+    ),
+)
+def test_board_versions_require_earlier_parents_and_utc_timestamps(
+    tmp_path: Path, field: str, value: str, message: str
+) -> None:
+    library, board = _complete_library(tmp_path)
+    board_path = board.package_path / "board.json"
+    document = _read_json(board_path)
+    document["versions"][0][field] = value
+    _write_json(board_path, document)
+
+    with pytest.raises(BoardLibraryError, match=message):
+        library.list_boards()
 
 
 @pytest.mark.parametrize("failure", ("version", "board", "catalog"))

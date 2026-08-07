@@ -235,6 +235,50 @@ def test_store_persists_repository_link_without_changing_runtime_id(
     assert store.read_board(board.id) == linked
 
 
+def test_publish_repository_revision_updates_link_and_saved_revision_atomically(
+    tmp_path: Path,
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+    store.activate_revision(board.id, revision.id)
+    store.mark_revision_complete(board.id, revision.id)
+
+    published = store.publish_repository_revision(
+        board.id,
+        revision.id,
+        repository_board_id="example-board",
+        repository_version_id="revision-0001",
+    )
+
+    assert published.active_revision_id == revision.id
+    assert published.saved_revision_id == revision.id
+    assert published.repository_board_id == "example-board"
+    assert published.repository_version_id == "revision-0001"
+    assert WorkbenchStore(tmp_path).read_board(board.id) == published
+
+
+def test_publish_repository_revision_failure_preserves_all_previous_metadata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+    store.activate_revision(board.id, revision.id)
+    store.mark_revision_complete(board.id, revision.id)
+    before = store.read_board(board.id)
+
+    def fail_replace(_source: object, _destination: object) -> None:
+        raise OSError("repository metadata replacement interrupted")
+
+    monkeypatch.setattr("hangboard_vectorizer.workbench_store.os.replace", fail_replace)
+    with pytest.raises(OSError, match="repository metadata replacement interrupted"):
+        store.publish_repository_revision(
+            board.id,
+            revision.id,
+            repository_board_id="example-board",
+            repository_version_id="revision-0001",
+        )
+
+    assert WorkbenchStore(tmp_path).read_board(board.id) == before
+
+
 def test_store_loads_old_manifest_without_repository_link(tmp_path: Path) -> None:
     store, board, _revision = _populated_store(tmp_path)
     manifest_path = tmp_path / "boards" / board.id / "board.json"

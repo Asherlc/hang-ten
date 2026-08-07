@@ -89,6 +89,25 @@
     form.classList.toggle("hidden", !screen?.createFormVisible);
   }
 
+  function openingActionsDisabled({ busy = false, editingFrozen = false } = {}) {
+    return Boolean(busy || editingFrozen);
+  }
+
+  function handleOpeningSelectionFailure({
+    error,
+    editingFrozen,
+    setLibraryError,
+    showSetup,
+  }) {
+    if (editingFrozen) return true;
+    if (typeof setLibraryError !== "function" || typeof showSetup !== "function") {
+      throw new TypeError("opening failure handlers are required");
+    }
+    setLibraryError(error?.message || "Could not open repository board.");
+    showSetup();
+    return false;
+  }
+
   function createAutosaveCoordinator({ save, onStart = () => {}, onSuccess = () => {}, onError = () => {} }) {
     if (typeof save !== "function") throw new TypeError("save must be a function");
     let generation = 0;
@@ -393,6 +412,8 @@
     createOpeningBoardController,
     openingScreenState,
     renderOpeningFormVisibility,
+    openingActionsDisabled,
+    handleOpeningSelectionFailure,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
