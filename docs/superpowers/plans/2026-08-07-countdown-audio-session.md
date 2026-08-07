@@ -118,7 +118,7 @@
 
   ```text
   Failing tests:
-  	WorkoutActivityRecordingTests.testRecorderFailureSurfacesErrorWithoutCallingHealthKit()
+	WorkoutActivityRecordingTests.testRecorderFailureSurfacesErrorWithoutCallingHealthKit()
 
   ** TEST FAILED **
   ```
