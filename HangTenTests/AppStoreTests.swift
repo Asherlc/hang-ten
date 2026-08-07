@@ -263,7 +263,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
     }
 
-    func testAuthorizedEmptyHealthKitHistoryKeepsConnectActionAvailableAfterRefresh() {
+    func testAuthorizedEmptyHealthKitHistoryHidesConnectActionAfterRefresh() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -281,7 +281,24 @@ final class AppStoreTests: XCTestCase {
         waitUntil { appStore.workoutHistory.source == .healthKit }
 
         XCTAssertTrue(appStore.workoutHistory.entries.isEmpty)
-        XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
+        XCTAssertFalse(appStore.shouldShowConnectAppleHealth)
+    }
+
+    func testAuthorizedHealthKitHidesConnectActionWithoutPersistedRequestFlag() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let healthStore = FakeWorkoutHealthStore(fetchResult: .success([]))
+        healthStore.authorizationState = .authorized
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertFalse(appStore.hasRequestedHealthAuthorization)
+        XCTAssertFalse(appStore.shouldShowConnectAppleHealth)
     }
 
     func testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore() {

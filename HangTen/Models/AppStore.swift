@@ -134,11 +134,7 @@ final class AppStore: ObservableObject {
     }
 
     var shouldShowConnectAppleHealth: Bool {
-        guard healthAuthorizationState != .unavailable,
-              healthAuthorizationState != .denied else { return false }
-        return healthAuthorizationState == .notDetermined ||
-            !hasRequestedHealthAuthorization ||
-            (workoutHistory.source == .healthKit && workoutHistory.entries.isEmpty)
+        healthAuthorizationState == .notDetermined
     }
 
     var plans: [TrainingPlan] {
