@@ -2,14 +2,72 @@
 
 A dependency-free local browser editor for hangboard grip-region artifacts.
 
-## Edit and save an onboarding run
+## Run the guided local workbench
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py \
+  --workspace-root /absolute/path/to/workbench-workspace
+```
+
+Open `http://localhost:4173`. Enter the exact commercial product name, choose
+an HTTP(S) image URL or local image upload, and select **Create board**. The
+image bytes, run manifests, approvals, drafts, and revisions stay under the
+explicit workspace root. Existing boards appear in **Recent runs** after a
+refresh or server restart.
+
+Creation publishes Stage 0 and stops for review. **Approve & continue** binds
+the displayed checkpoint to its hashes, runs the next installed stage, and
+stops at the next review automatically. **Retry** publishes a new immutable
+attempt for the current stage without overwriting its earlier evidence.
+
+Stage 2 edits the pixel-aligned contour inventory that produces the label map.
+Stage 3 edits the vector display paths that become the final interactive grip
+geometry. Both editors autosave validated drafts to the active revision;
+approval materializes the newest draft as a new checkpoint attempt. Undo/redo
+history is browser-local, and an unsaved same-browser recovery draft can be
+restored after refresh. Published attempts and approvals remain immutable on
+disk.
+
+**Revise upstream** creates a new revision at the preceding approved stage and
+marks superseded downstream lineage stale. A typical local layout is:
+
+```text
+workbench-workspace/
+  boards/
+    board-0001/
+      board.json
+      revisions/
+        revision-0001/
+          run/
+          drafts/stage-2/draft-0001.json
+          drafts/stage-3/draft-0001.json
+```
+
+Each revision `run/` is a CLI-compatible onboarding run. Check one without
+changing it by using the same confinement root:
+
+```bash
+rtk hangboard-onboard \
+  --workspace-root /absolute/path/to/workbench-workspace \
+  --output /absolute/path/to/workbench-workspace/boards/board-0001/revisions/revision-0001/run \
+  --status
+```
+
+At Stage 4, **Save locally** only selects the complete, current, non-stale
+revision in `board.json`. It does not copy artifacts into the Hang Ten app,
+modify the app's product catalog, or synchronize anything remotely. Hang Ten
+synchronization is a separate future command and is outside this workbench.
+
+## Edit and save one existing Stage 2 run
 
 ```bash
 rtk python3 Tools/hold-highlight-editor/server.py \
   --run-dir /absolute/path/to/onboarding-run
 ```
 
-Then open `http://localhost:4173`. The server loads the run's unique `stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes these review artifacts beside the Stage 2 proposal:
+Then open `http://localhost:4173`. The server loads the run's unique
+`stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes
+these review artifacts beside the Stage 2 proposal:
 
 - `stage-2-regions.edited.json`: complete edited region artifact.
 - `stage-2-human-corrections.json`: added, modified, and deleted regions relative to the automatic proposal.

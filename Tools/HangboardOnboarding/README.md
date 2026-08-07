@@ -99,7 +99,54 @@ the template are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
-Start a persisted onboarding run from one local image or HTTP(S) source:
+For the complete guided local workflow, start one workbench server against an
+explicitly owned workspace:
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py \
+  --workspace-root /absolute/path/to/workbench-workspace
+```
+
+Open `http://localhost:4173`, enter the caller-asserted commercial product
+name, and create a board from either an HTTP(S) image URL or an image upload.
+The workbench runs Stage 0 immediately, then stops at every checkpoint for
+review. **Approve & continue** records the approval and advances to the next
+checkpoint; **Retry** regenerates the current checkpoint as a new attempt while
+preserving prior files.
+
+Stage 2 is the contour and pixel-label review: add, delete, or correct the
+stable region inventory against the registered raster. Stage 3 is the vector
+review: refine each retained region's final display path. Valid Stage 2 and
+Stage 3 edits autosave as immutable drafts and are materialized only when that
+checkpoint is approved.
+
+The workspace store persists `boards/board-NNNN/board.json`, immutable
+`revisions/revision-NNNN/run/` directories, and per-revision
+`drafts/stage-N/draft-NNNN.json` files. **Revise upstream** forks a new
+revision and marks replaced downstream lineage stale; stale or incomplete
+lineage cannot be selected by the final Save. Refreshing or restarting the
+server reloads the store, while the browser can also recover its newest
+same-revision local draft.
+
+Every workbench revision is CLI-compatible. Inspect a UI-created run by using
+the same explicit confinement root:
+
+```bash
+rtk hangboard-onboard \
+  --workspace-root /absolute/path/to/workbench-workspace \
+  --output /absolute/path/to/workbench-workspace/boards/board-0001/revisions/revision-0001/run \
+  --status
+```
+
+An imported CLI run remains at its exact confined run path; the workspace
+board manifest registers that path instead of copying or rewriting the run.
+The UI's final **Save locally** atomically records which complete, current
+revision is selected in `board.json`. It does not publish to Hang Ten, update
+the app catalog, or perform remote synchronization. A separate future command
+must implement the Hang Ten synchronization boundary.
+
+The lower-level CLI remains useful for scripted operation. Start a persisted
+run from one local image or HTTP(S) source:
 
 ```bash
 hangboard-onboard --product-name "Metolius Wood Grips Compact II" --source photo.jpg --output work/metolius-onboarding
@@ -131,9 +178,10 @@ The command reports model activity separately from deterministic local work.
 See [docs/token-efficient-onboarding.md](docs/token-efficient-onboarding.md)
 for the cache identity, escalation rules, and measurement limits.
 
-The current runner stops after generic Stage 0 approval: Stage 1 is not
-installed yet. Stage 0 records a caller-asserted product name, preserves the
-exact cached source bytes, and emits one hash-bound review image for approval.
+The shared runner records the caller-asserted product name, preserves the exact
+cached source bytes, and publishes every generated checkpoint as hash-bound,
+immutable review evidence. CLI and UI operations use the same manifests,
+approval state machine, stage runners, and revision directories.
 
 Known products are intentionally curated rather than automatically recognized.
 To add one, use an authoritative, clean product photo to create and review a
