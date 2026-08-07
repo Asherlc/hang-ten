@@ -23,6 +23,24 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: emptyPayload))
     }
 
+    func testFingerConfigurationRejectsDuplicateEngagedFingersInDecodedPayload() throws {
+        let duplicatePayload = Data(#"{ "engagedFingers": ["index", "index"] }"#.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: duplicatePayload)) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected duplicate fingers to produce a data-corrupted decoding error, got: \(error)")
+            }
+
+            XCTAssertEqual(context.codingPath.last?.stringValue, "engagedFingers")
+            XCTAssertEqual(context.debugDescription, "Finger configuration cannot include duplicate fingers.")
+        }
+    }
+
+    func testFingerCueCapacityAccessibilityLabelUsesSingularForOneFinger() {
+        XCTAssertEqual(FingerCue.capacity(1).accessibilityLabel, "Up to 1 finger")
+        XCTAssertEqual(FingerCue.capacity(2).accessibilityLabel, "Up to 2 fingers")
+    }
+
     func testFingerConfigurationRoundTripsExactFingerSetsInSlotOrder() throws {
         let configurations = [
             try XCTUnwrap(FingerConfiguration(engagedFingers: [.pinky])),

@@ -170,7 +170,7 @@ enum FingerCue {
 
     var accessibilityLabel: String {
         switch self {
-        case let .capacity(count): "Up to \(count) fingers"
+        case let .capacity(count): "Up to \(count) \(count == 1 ? "finger" : "fingers")"
         case let .exact(configuration): "Exact fingers: \(configuration.orderedFingers.namedList)"
         }
     }

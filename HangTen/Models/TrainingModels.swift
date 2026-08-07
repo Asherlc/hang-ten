@@ -128,6 +128,13 @@ struct FingerConfiguration: Codable, Hashable {
                 debugDescription: "Finger configuration must include at least one finger."
             )
         }
+        guard Set(decodedFingers).count == decodedFingers.count else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .engagedFingers,
+                in: container,
+                debugDescription: "Finger configuration cannot include duplicate fingers."
+            )
+        }
         guard let configuration = Self(engagedFingers: Set(decodedFingers)) else {
             throw DecodingError.dataCorruptedError(
                 forKey: .engagedFingers,
