@@ -66,6 +66,22 @@ def test_approve_and_advance_stops_at_next_review(
     assert result.review_path.name == "stage-1-review.png"
 
 
+def test_editable_stages_expose_a_clean_canvas_aligned_image_separate_from_review(
+    service: WorkbenchService, board_with_stage0: WorkbenchView
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+
+    assert current.stage == 2
+    assert current.editor_image_path is not None
+    assert current.editor_image_path.name == "stage-1-auto-rgba.png"
+    assert current.editor_image_path != current.review_path
+    with Image.open(current.editor_image_path) as editor_image:
+        assert editor_image.size == (4, 4)
+
+
 def test_revising_approved_stage_forks_revision_and_marks_old_descendants_stale(
     service: WorkbenchService, complete_board: WorkbenchView
 ) -> None:

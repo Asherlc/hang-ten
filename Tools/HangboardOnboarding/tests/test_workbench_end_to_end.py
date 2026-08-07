@@ -165,6 +165,63 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     assert board_manifest["savedRevisionId"] == revision_id
 
 
+def test_stage2_inventory_mutation_propagates_unchanged_through_stage4(
+    tmp_path: Path,
+) -> None:
+    service = _fixture_service(
+        tmp_path, region_keys=("grip-001", "grip-002", "grip-003")
+    )
+    current = service.create_from_upload("Generic Fixture Board", _fixture_image_bytes())
+    for stage in (0, 1):
+        current = service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=stage,
+        )
+
+    stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
+    retained = deepcopy(stage2["regions"][1])
+    retained["type"] = "edge"
+    added = deepcopy(stage2["regions"][2])
+    added.update(
+        {
+            "id": 4,
+            "key": "grip-004",
+            "anchor": [90, 40],
+            "bounds": [85, 35, 96, 46],
+            "contour": [[85, 35], [95, 35], [95, 45], [85, 45]],
+        }
+    )
+    stage2["regions"] = [retained, added]
+    service.save_draft(
+        current.board_id,
+        stage2,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+    current = service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+    accepted_stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
+    stage3 = _stage_document(current.run_root, 3, "stage-3-vector-regions.json")
+    current = service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=3,
+    )
+    stage4 = _stage_document(current.run_root, 4, "stage-4-manifest.json")
+
+    expected = ([2, 4], ["grip-002", "grip-004"])
+    assert _region_identity(accepted_stage2) == expected
+    assert [region["type"] for region in accepted_stage2["regions"]] == ["edge", "pocket"]
+    assert _region_identity(stage3) == expected
+    assert _region_identity(stage4) == expected
+    assert [region["type"] for region in stage3["regions"]] == ["edge", "pocket"]
+    assert [region["type"] for region in stage4["regions"]] == ["edge", "pocket"]
+
+
 @pytest.mark.parametrize("mutation", ("mutate", "drop", "reorder"))
 def test_identity_propagation_assertion_rejects_a_changed_upstream_inventory(
     tmp_path: Path, mutation: str
@@ -491,7 +548,11 @@ class _StubStageRunner:
         return {
             "canvas": {"height": 64, "width": 128},
             "regions": [
-                {"id": region["id"], "key": region["key"]}
+                {
+                    "id": region["id"],
+                    "key": region["key"],
+                    "type": region["type"],
+                }
                 for region in source_regions
             ],
             "schemaVersion": 1,

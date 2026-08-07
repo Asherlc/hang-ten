@@ -153,5 +153,10 @@
     return Object.freeze({ keyFor: draftKey, writeDirty, markSaved, read, discardMismatched });
   }
 
-  return { createLatestLoadCoordinator, createAutosaveCoordinator, createDraftStore };
+  function checkpointImageUrl(view) {
+    if (!view) return null;
+    return view.editorImageUrl || view.reviewUrl || null;
+  }
+
+  return { createLatestLoadCoordinator, createAutosaveCoordinator, createDraftStore, checkpointImageUrl };
 }));

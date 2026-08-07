@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
@@ -53,6 +54,7 @@ class WorkbenchView:
     stage: int
     state: str
     review_path: Path | None
+    editor_image_path: Path | None
     editor_mode: str | None
     saved: bool
     stale_from_stage: int | None
@@ -386,6 +388,7 @@ class WorkbenchService:
             else None
         )
         editor_mode = "contour" if stage == 2 else "vector" if stage == 3 else None
+        editor_image_path = self.__editor_image_path(revision, stage)
         return WorkbenchView(
             board_id=board.id,
             revision_id=revision.id,
@@ -395,10 +398,67 @@ class WorkbenchService:
             stage=stage,
             state=_STATE_NAMES[raw_state],
             review_path=review_path,
+            editor_image_path=editor_image_path,
             editor_mode=editor_mode,
             saved=board.saved_revision_id == revision.id,
             stale_from_stage=revision.stale_from_stage,
         )
+
+    def __editor_image_path(
+        self, revision: RevisionRecord, stage: int
+    ) -> Path | None:
+        if stage not in (2, 3):
+            return None
+        manifest = self.__manifest(revision.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= 1:
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        stage1 = stages[1]
+        if not isinstance(stage1, Mapping) or stage1.get("status") != "approved":
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        acceptance_path = self.__confined_run_path(
+            revision.run_root, stage1.get("acceptancePath")
+        )
+        acceptance = self.__read_object(
+            acceptance_path, "Stage 1 acceptance evidence"
+        )
+        registered = acceptance.get("registered")
+        if not isinstance(registered, Mapping):
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        image_path = self.__confined_run_path(
+            revision.run_root, registered.get("path")
+        )
+        expected_hash = registered.get("fileSha256")
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(image_path.read_bytes()).hexdigest() != expected_hash
+        ):
+            raise WorkbenchServiceError("clean editor image evidence changed")
+        return image_path
+
+    @staticmethod
+    def __confined_run_path(run_root: Path, relative: object) -> Path:
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+            raise WorkbenchServiceError("onboarding artifact path is invalid")
+        try:
+            root = run_root.resolve(strict=True)
+            path = (root / relative).resolve(strict=True)
+            path.relative_to(root)
+        except (OSError, RuntimeError, ValueError) as error:
+            raise WorkbenchServiceError("onboarding artifact path is invalid") from error
+        if not path.is_file():
+            raise WorkbenchServiceError("onboarding artifact is missing")
+        return path
+
+    @staticmethod
+    def __read_object(path: Path, label: str) -> dict[str, object]:
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+        if not isinstance(value, dict):
+            raise WorkbenchServiceError(f"{label} is invalid")
+        return value
 
     def __publish_latest_draft(
         self, board_id: str, revision: RevisionRecord, stage: int

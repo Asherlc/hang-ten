@@ -92,6 +92,15 @@
     return { canvas, regions, editorMode };
   }
 
+  function nextStage2RegionId({ baselineRegions = [], regions = [], nextRegionId = 1 }) {
+    const identifiers = [...baselineRegions, ...regions]
+      .map((region) => Number(region?.id))
+      .filter((identifier) => Number.isInteger(identifier) && identifier > 0);
+    const floor = Math.max(0, ...identifiers) + 1;
+    const requested = Number(nextRegionId);
+    return Number.isInteger(requested) && requested > floor ? requested : floor;
+  }
+
   function buildEditedDocument({ canvas, regions, imageName, regionsName }) {
     return {
       schemaVersion: 1,
@@ -267,5 +276,6 @@
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
+    nextStage2RegionId,
   };
 }));

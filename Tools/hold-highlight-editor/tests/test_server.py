@@ -62,6 +62,7 @@ class FakeWorkbenchView:
     stage: int
     state: str
     review_path: Path | None
+    editor_image_path: Path | None
     editor_mode: str | None
     saved: bool
     stale_from_stage: int | None
@@ -190,6 +191,7 @@ class FakeWorkbenchService:
                 stage=0,
                 state="awaiting_review",
                 review_path=review_path,
+                editor_image_path=None,
                 editor_mode=None,
                 saved=False,
                 stale_from_stage=None,
@@ -208,6 +210,13 @@ class FakeWorkbenchService:
         return view
 
     def _update(self, view: FakeWorkbenchView, **changes) -> FakeWorkbenchView:
+        stage = changes.get("stage", view.stage)
+        if stage in (2, 3) and "editor_image_path" not in changes:
+            editor_image = view.run_root / "stages/01/stage-1-auto-rgba.png"
+            editor_image.parent.mkdir(parents=True, exist_ok=True)
+            editor_image.write_bytes(b"clean-canvas-image")
+            changes["editor_image_path"] = editor_image
+            changes.setdefault("editor_mode", "contour" if stage == 2 else "vector")
         updated = replace(view, **changes)
         with self._lock:
             self._boards[view.board_id] = updated
@@ -593,6 +602,19 @@ def test_list_and_get_workbench_boards_return_safe_views(running_workbench_serve
     assert listed["boards"] == [created]
     assert selected["board"] == created
     assert str(Path.home()) not in json.dumps(listed)
+
+
+def test_editable_board_api_exposes_clean_and_annotated_artifacts_separately(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    view = _post_mutation(running_workbench_server, "/api/approve", view)
+    view = _post_mutation(running_workbench_server, "/api/approve", view)
+
+    assert view["stage"] == 2
+    assert view["editorImageUrl"] != view["reviewUrl"]
+    with urlopen(running_workbench_server + view["editorImageUrl"]) as response:
+        assert response.read() == b"clean-canvas-image"
 
 
 def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(

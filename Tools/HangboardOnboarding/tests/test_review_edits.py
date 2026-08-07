@@ -423,13 +423,44 @@ def test_stage3_materialization_reports_the_first_missing_region_id(
         )
 
 
-def test_stage2_materialization_reports_the_first_missing_stable_id(
+def test_stage2_materialization_allows_delete_add_and_reclassify_without_renumbering(
     accepted_stage1_run: Path, tmp_path: Path
 ) -> None:
     edited = _load_fixture("stage-2-regions-edited.json")
-    edited["regions"].pop()
+    retained = edited["regions"][1]
+    retained["type"] = "sloper"
+    added = {
+        **edited["regions"][0],
+        "id": 3,
+        "key": "grip-003",
+        "anchor": [500, 120],
+        "bounds": [450, 90, 551, 151],
+        "contour": [[450, 90], [550, 90], [550, 150], [450, 150]],
+    }
+    edited["regions"] = [retained, added]
 
-    with pytest.raises(ConversionError, match=r"Stage 2 region 2"):
+    checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), edited, tmp_path / "attempt"
+    )
+    actual = json.loads(
+        (checkpoint.artifact_root / "stage-2-regions.json").read_text()
+    )
+
+    assert [(region["id"], region["key"], region["type"]) for region in actual["regions"]] == [
+        (2, retained["key"], "sloper"),
+        (3, "grip-003", added["type"]),
+    ]
+    assert _candidate_hashes_match(checkpoint.artifact_root)
+
+
+def test_stage2_materialization_rejects_renumbering_a_retained_region(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0]["id"] = 3
+    edited["regions"] = edited["regions"][:1]
+
+    with pytest.raises(ConversionError, match=r"Stage 2 region 3: .*stable"):
         materialize_stage2_edit(
             _context(accepted_stage1_run), edited, tmp_path / "attempt"
         )

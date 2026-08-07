@@ -10,6 +10,7 @@
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
+    nextStage2RegionId,
   } = globalThis.HoldEditorModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { timelineFor, canApprove } = globalThis.HoldWorkbenchModel;
@@ -24,6 +25,7 @@
     createLatestLoadCoordinator,
     createAutosaveCoordinator,
     createDraftStore,
+    checkpointImageUrl,
   } = globalThis.HoldWorkbenchController;
 
   const STAGE_LABELS = [
@@ -101,6 +103,7 @@
     busy: false,
     autosaveTimer: null,
     draftStatus: "clean",
+    nextRegionId: 1,
   };
 
   const el = Object.fromEntries([
@@ -229,7 +232,7 @@
   }
 
   function renderToolState() {
-    const editable = !state.guided || EDITOR_STAGES.has(state.board?.stage);
+    const editable = !state.busy && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
     el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
     el["snap-button"].classList.toggle("active", state.snapEnabled);
     el["snap-button"].textContent = state.snapEnabled ? "Snap edges: on" : "Snap edges";
@@ -242,6 +245,8 @@
     el["region-shape-select"].disabled = !editable || isVectorMode();
     el["region-path-style-select"].disabled = !editable || isVectorMode();
     el["curve-tension-slider"].disabled = !editable || isVectorMode();
+    el["region-type-select"].disabled = !editable || isVectorMode();
+    el["region-key-input"].disabled = !editable || state.guided;
     el["compare-button"].classList.toggle("active", state.compareEnabled);
     el["compare-button"].setAttribute("aria-pressed", state.compareEnabled ? "true" : "false");
     el["canvas-viewport"].classList.toggle("static-checkpoint", !editable);
@@ -577,7 +582,17 @@
   function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 
   function canEditGeometry() {
-    return !state.guided || EDITOR_STAGES.has(state.board?.stage);
+    return !state.busy && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
+  }
+
+  function allocateRegionId() {
+    const identifier = nextStage2RegionId({
+      baselineRegions: state.baselineRegions,
+      regions: state.regions,
+      nextRegionId: state.nextRegionId,
+    });
+    state.nextRegionId = identifier + 1;
+    return identifier;
   }
 
   function startRegionDrag(event, id) {
@@ -846,7 +861,7 @@
 
   function finishDraw() {
     if (!state.drawing || state.draft.length < 3) return;
-    const nextId = state.regions.reduce((max, region) => Math.max(max, region.id), 0) + 1;
+    const nextId = allocateRegionId();
     const isCurved = state.drawShape === "curved-freeform";
     const region = normalizeRegion({
       id: nextId,
@@ -894,7 +909,7 @@
   function duplicateSelected() {
     const source = selectedRegion();
     if (!source || isVectorMode()) return;
-    const nextId = state.regions.reduce((max, region) => Math.max(max, region.id), 0) + 1;
+    const nextId = allocateRegionId();
     const copy = clone(source);
     copy.id = nextId;
     copy.key = `grip-${String(nextId).padStart(3, "0")}`;
@@ -927,7 +942,7 @@
   function mirrorSelectedCopy() {
     const source = selectedRegion();
     if (!source || isVectorMode()) return;
-    const nextId = state.regions.reduce((maximum, region) => Math.max(maximum, region.id), 0) + 1;
+    const nextId = allocateRegionId();
     const copy = clone(source);
     copy.id = nextId;
     copy.key = `grip-${String(nextId).padStart(3, "0")}`;
@@ -1156,6 +1171,7 @@
         stage: 2,
         canvas: clone(state.canvas),
         labelEncoding: state.checkpointDocument.labelEncoding || "uint16-region-id",
+        inventory: { nextRegionId: state.nextRegionId },
         regions: edited.regions,
       };
     }
@@ -1246,15 +1262,26 @@
     if (!state.board || !EDITOR_STAGES.has(state.board.stage)) return [];
     const errors = [];
     const baseline = state.baselineRegions;
+    const baselineById = new Map(baseline.map((region) => [region.id, region]));
+    const baselineIdByKey = new Map(baseline.map((region) => [region.key, region.id]));
+    const maximumBaselineId = Math.max(0, ...baseline.map((region) => region.id));
+    const seenIds = new Set();
+    let previousId = 0;
     state.regions.forEach((region, index) => {
-      if (region.id !== index + 1) errors.push({ regionId: region.id, message: `Region ${String(region.id)} has an invalid stable ID or order.` });
+      if (!Number.isInteger(region.id) || region.id <= 0 || region.id > 65535 || seenIds.has(region.id) || region.id <= previousId) {
+        errors.push({ regionId: region.id, message: `Region ${String(region.id)} has an invalid stable ID or order.` });
+      }
+      seenIds.add(region.id);
+      previousId = region.id;
       if (!region.key || state.regions.some((candidate, candidateIndex) => candidateIndex !== index && candidate.key === region.key)) {
         errors.push({ regionId: region.id, message: `Region ${String(region.id)} has a missing or duplicate key.` });
       }
       if (state.board.stage === 2) {
-        const expected = baseline[index];
-        if (!expected || expected.id !== region.id || expected.key !== region.key || expected.type !== region.type) {
-          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed required Stage 2 identity.` });
+        const expected = baselineById.get(region.id);
+        if (expected && expected.key !== region.key) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed its retained stable key.` });
+        } else if (!expected && (region.id <= maximumBaselineId || baselineIdByKey.has(region.key))) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} does not follow the monotonic new-ID policy.` });
         }
         if (!Array.isArray(region.contour) || region.contour.length < 3) {
           errors.push({ regionId: region.id, message: `Region ${String(region.id)} needs at least three contour vertices.` });
@@ -1279,7 +1306,7 @@
         }
       }
     });
-    if (state.regions.length !== baseline.length) {
+    if (state.board.stage === 3 && state.regions.length !== baseline.length) {
       errors.unshift({ regionId: state.regions[0]?.id ?? null, message: `Stage ${String(state.board.stage)} region inventory no longer matches the generated checkpoint.` });
     }
     return errors;
@@ -1378,8 +1405,9 @@
     }
     try {
       if (!load.isCurrent()) return false;
-      const imageAsset = view.reviewUrl
-        ? await loadImageAsset(view.reviewUrl, `Stage ${String(view.stage)} review`)
+      const imageUrl = checkpointImageUrl(view);
+      const imageAsset = imageUrl
+        ? await loadImageAsset(imageUrl, `Stage ${String(view.stage)} editor image`)
         : null;
       if (!load.isCurrent()) return false;
       let baselineDocument = providedDocument;
@@ -1836,6 +1864,11 @@
     state.canvas = normalized.canvas;
     state.regions = normalized.regions;
     state.baselineRegions = clone(baseline.regions);
+    state.nextRegionId = nextStage2RegionId({
+      baselineRegions: state.baselineRegions,
+      regions: state.regions,
+      nextRegionId: data.inventory?.nextRegionId,
+    });
     state.editorMode = normalized.editorMode;
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;

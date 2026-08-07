@@ -139,14 +139,23 @@ def validate_stage_edit(stage: int, document: object) -> Mapping[str, object]:
         raise ConversionError(f"Stage {stage} edit has no regions")
 
     keys: set[str] = set()
-    for expected_id, raw in enumerate(raw_regions, start=1):
+    identifiers: set[int] = set()
+    previous_id = 0
+    for position, raw in enumerate(raw_regions, start=1):
         if not isinstance(raw, Mapping):
-            _region_error(stage, expected_id, "must be an object")
+            _region_error(stage, position, "must be an object")
         if "id" not in raw:
-            _region_error(stage, expected_id, "stable ID is missing, duplicated, or out of order")
+            _region_error(stage, position, "stable ID is missing, duplicated, or out of order")
         region_id = raw.get("id")
-        if type(region_id) is not int or region_id != expected_id:
+        if (
+            type(region_id) is not int
+            or not 1 <= region_id <= np.iinfo(np.uint16).max
+            or region_id in identifiers
+            or (stage == 2 and region_id <= previous_id)
+        ):
             _region_error(stage, region_id, "stable ID is missing, duplicated, or out of order")
+        identifiers.add(region_id)
+        previous_id = region_id
         key = raw.get("key")
         if not isinstance(key, str) or not key or key in keys:
             _region_error(stage, region_id, "stable key is missing or duplicated")
@@ -327,26 +336,35 @@ def _require_stage2_identity(
     original_regions = original.get("regions")
     if not isinstance(original_regions, list):
         raise ConversionError("Stage 2 baseline regions are invalid")
-    edited_identity = [
-        (region["id"], region["key"], region["type"])
-        for region in edited["regions"]
-    ]
-    original_identity = [
-        (region.get("id"), region.get("key"), region.get("type"))
+    original_by_id = {
+        region.get("id"): region
         for region in original_regions
         if isinstance(region, Mapping)
-    ]
-    if edited_identity == original_identity:
-        return
-    mismatch: object = "missing"
-    for index in range(max(len(edited_identity), len(original_identity))):
-        if index >= len(edited_identity):
-            mismatch = original_identity[index][0]
-            break
-        if index >= len(original_identity) or edited_identity[index] != original_identity[index]:
-            mismatch = edited_identity[index][0]
-            break
-    _region_error(2, mismatch, "stable identity is missing or changed")
+    }
+    original_id_by_key = {
+        region.get("key"): region.get("id")
+        for region in original_regions
+        if isinstance(region, Mapping)
+    }
+    if not original_by_id or any(type(region_id) is not int for region_id in original_by_id):
+        raise ConversionError("Stage 2 baseline regions are invalid")
+    highest_original_id = max(original_by_id)
+    for region in edited["regions"]:
+        region_id = region["id"]
+        key = region["key"]
+        original_region = original_by_id.get(region_id)
+        if original_region is not None:
+            if original_region.get("key") != key:
+                _region_error(2, region_id, "retained stable key changed")
+            continue
+        if key in original_id_by_key:
+            _region_error(2, region_id, "retained stable ID changed")
+        if region_id <= highest_original_id:
+            _region_error(
+                2,
+                region_id,
+                "new IDs must be monotonic above the baseline inventory",
+            )
 
 
 def _pending_candidate(

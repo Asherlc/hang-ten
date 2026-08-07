@@ -5,6 +5,7 @@ const {
   createLatestLoadCoordinator,
   createAutosaveCoordinator,
   createDraftStore,
+  checkpointImageUrl,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -169,4 +170,16 @@ test("an older save completion cannot clear a newer local draft and mismatched p
   assert.equal(store.read(firstView), null);
   assert.deepEqual(store.read(currentView), { ...currentEntry, dirty: true });
   assert.deepEqual(store.read(otherView), { ...otherEntry, dirty: true });
+});
+
+test("editable checkpoints use the clean editor image while preserving annotated review access", () => {
+  const view = {
+    stage: 3,
+    editorImageUrl: "/api/artifact?path=clean.png",
+    reviewUrl: "/api/artifact?path=annotated.png",
+  };
+
+  assert.equal(checkpointImageUrl(view), view.editorImageUrl);
+  assert.equal(view.reviewUrl, "/api/artifact?path=annotated.png");
+  assert.equal(checkpointImageUrl({ stage: 1, reviewUrl: view.reviewUrl }), view.reviewUrl);
 });

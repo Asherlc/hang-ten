@@ -10,6 +10,7 @@ const {
   findStrongestEdge,
   resolveHistorySelection,
   normalizePipelineDocument,
+  nextStage2RegionId,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -165,4 +166,12 @@ test("normalizePipelineDocument keeps Stage 3 display paths exact", () => {
   const result = normalizePipelineDocument(source, { width: 10, height: 10 }, "vector");
   assert.equal(result.regions[0].displayPath, source.regions[0].displayPath);
   assert.equal(result.editorMode, "vector");
+});
+
+test("nextStage2RegionId never reuses deleted generated or allocated IDs", () => {
+  const baselineRegions = [{ id: 1 }, { id: 2 }, { id: 7 }];
+  const regions = [{ id: 2 }, { id: 8 }];
+
+  assert.equal(nextStage2RegionId({ baselineRegions, regions, nextRegionId: 9 }), 9);
+  assert.equal(nextStage2RegionId({ baselineRegions, regions, nextRegionId: 6 }), 9);
 });

@@ -220,23 +220,28 @@ def save_review(
 
 def _workbench_view_payload(view: object) -> dict[str, Any]:
     run_root = Path(view.run_root).resolve()
-    review_path = view.review_path
-    review_url = None
-    if review_path is not None:
-        resolved_review = Path(review_path).resolve()
+    def artifact_url(path: Path | None, label: str) -> str | None:
+        if path is None:
+            return None
+        resolved_artifact = Path(path).resolve()
         try:
-            relative_review = resolved_review.relative_to(run_root)
+            relative_artifact = resolved_artifact.relative_to(run_root)
         except ValueError as error:
             raise EditorError(
-                "review artifact resolves outside the selected revision"
+                f"{label} artifact resolves outside the selected revision"
             ) from error
-        review_url = "/api/artifact?" + urlencode(
+        return "/api/artifact?" + urlencode(
             {
                 "boardId": view.board_id,
                 "revisionId": view.revision_id,
-                "path": relative_review.as_posix(),
+                "path": relative_artifact.as_posix(),
             }
         )
+
+    review_url = artifact_url(view.review_path, "review")
+    editor_image_url = artifact_url(
+        getattr(view, "editor_image_path", None), "editor image"
+    )
     return {
         "boardId": view.board_id,
         "revisionId": view.revision_id,
@@ -245,6 +250,7 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         "stage": view.stage,
         "state": view.state,
         "reviewUrl": review_url,
+        "editorImageUrl": editor_image_url,
         "editorMode": view.editor_mode,
         "saved": view.saved,
         "staleFromStage": view.stale_from_stage,
