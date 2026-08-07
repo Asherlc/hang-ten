@@ -484,11 +484,13 @@ class WorkbenchService:
         return "active"
 
     def __editor_image_path(
-        self, revision: RevisionRecord, stage: int
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        manifest: Mapping[str, object],
     ) -> Path | None:
         if stage not in (2, 3):
             return None
-        manifest = self.__manifest(revision.run_root)
         stages = manifest.get("stages")
         if not isinstance(stages, list) or len(stages) <= 1:
             raise WorkbenchServiceError("clean editor image evidence is missing")
@@ -522,13 +524,29 @@ class WorkbenchService:
         review_value: object,
     ) -> tuple[Path, Path]:
         try:
-            editor_path = self.__editor_image_path(revision, stage)
+            manifest = self.__manifest(revision.run_root)
+            stages = manifest.get("stages")
+            if not isinstance(stages, list) or len(stages) <= stage:
+                raise ValueError("editable stage evidence is missing")
+            record = stages[stage]
+            # Validated status paths contain the immutable attempt root. A changed
+            # review path means replacement selected another checkpoint snapshot.
+            if (
+                not isinstance(record, Mapping)
+                or record.get("stage") != stage
+                or record.get("status") != "review_pending"
+                or record.get("reviewPath") != review_value
+            ):
+                raise ValueError("editable checkpoint identity changed")
+            editor_path = self.__editor_image_path(
+                revision, stage, manifest
+            )
             if editor_path is None:
                 raise ValueError("editor image is missing")
             review_path = self.__confined_run_path(
-                revision.run_root, review_value
+                revision.run_root, record.get("reviewPath")
             )
-            document = self.__editable_document(revision, stage)
+            document = self.__editable_document(revision, stage, record)
             canvas = document.get("canvas")
             if not isinstance(canvas, Mapping):
                 raise ValueError("geometry canvas is missing")
@@ -555,21 +573,24 @@ class WorkbenchService:
             ):
                 raise ValueError("editable artifacts do not align")
             return review_path, editor_path
-        except (OSError, RuntimeError, SyntaxError, TypeError, ValueError) as error:
+        except (
+            Image.DecompressionBombError,
+            OSError,
+            RuntimeError,
+            SyntaxError,
+            TypeError,
+            ValueError,
+        ) as error:
             raise WorkbenchServiceError(
                 "inconsistent editable evidence"
             ) from error
 
     def __editable_document(
-        self, revision: RevisionRecord, stage: int
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        record: Mapping[str, object],
     ) -> dict[str, object]:
-        manifest = self.__manifest(revision.run_root)
-        stages = manifest.get("stages")
-        if not isinstance(stages, list) or len(stages) <= stage:
-            raise ValueError("editable stage evidence is missing")
-        record = stages[stage]
-        if not isinstance(record, Mapping):
-            raise ValueError("editable stage evidence is invalid")
         filename = (
             "stage-2-regions.json"
             if stage == 2

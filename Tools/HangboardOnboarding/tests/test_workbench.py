@@ -18,6 +18,7 @@ from hangboard_vectorizer.onboarding_run import (
     approve_stage,
     cached_source_path,
     read_status,
+    replace_pending_checkpoint,
     start_run,
 )
 from hangboard_vectorizer.workbench import (
@@ -95,7 +96,9 @@ def test_get_board_rejects_editable_artifact_canvas_mismatched_to_clean_image(
     current = service.approve_and_advance(current.board_id, expected_stage=1)
     assert service.get_board(current.board_id).stage == 2
 
-    manifest = json.loads((current.run_root / "run.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (current.run_root / "run.json").read_text(encoding="utf-8")
+    )
     record = manifest["stages"][2]
     artifact_root = current.run_root / record["artifactRoot"]
     regions_path = artifact_root / "stage-2-regions.json"
@@ -130,6 +133,76 @@ def test_get_board_rejects_editable_artifact_review_with_same_hash_as_clean_imag
     current.review_path.write_bytes(current.editor_image_path.read_bytes())
     record["reviewSha256"] = _hash_file(current.review_path)
     _rehash_pending_checkpoint(current.run_root, manifest, record)
+
+    with pytest.raises(
+        WorkbenchServiceError, match="inconsistent editable evidence"
+    ):
+        service.get_board(current.board_id)
+
+
+def test_get_board_rejects_editable_artifact_replaced_between_status_and_evidence(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+    manifest = json.loads((current.run_root / "run.json").read_text(encoding="utf-8"))
+    replacement = _StubStageRunner(2).run(
+        RunContext(current.run_root, manifest),
+        tmp_path / "replacement-stage-2",
+    )
+    original_manifest = getattr(
+        WorkbenchService, "_WorkbenchService__manifest"
+    )
+    replaced = False
+
+    def replace_before_manifest_read(run_root: Path) -> dict[str, object]:
+        nonlocal replaced
+        if not replaced:
+            replace_pending_checkpoint(run_root, replacement)
+            replaced = True
+        return original_manifest(run_root)
+
+    monkeypatch.setattr(
+        WorkbenchService,
+        "_WorkbenchService__manifest",
+        staticmethod(replace_before_manifest_read),
+    )
+
+    with pytest.raises(
+        WorkbenchServiceError, match="inconsistent editable evidence"
+    ):
+        service.get_board(current.board_id)
+
+    assert "attempt-0002" in str(read_status(current.run_root)["review"])
+
+
+def test_get_board_converts_editor_image_decompression_bomb_to_safe_error(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+
+    class BombingImageDecoder:
+        DecompressionBombError = Image.DecompressionBombError
+
+        @staticmethod
+        def open(_path: Path) -> None:
+            raise Image.DecompressionBombError(
+                "decoded image exceeds safety limit"
+            )
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.Image", BombingImageDecoder
+    )
 
     with pytest.raises(
         WorkbenchServiceError, match="inconsistent editable evidence"
