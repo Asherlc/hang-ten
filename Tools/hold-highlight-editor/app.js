@@ -30,6 +30,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    isRecoverableJobError,
     regionIdFromError,
     runFrozenApproval,
   } = globalThis.HoldWorkbenchController;
@@ -1268,6 +1269,7 @@
     if (draftStorageKey(state.board) !== entry.key) return;
     state.dirty = true;
     state.draftStatus = "dirty";
+    if (holdForActiveJobRecovery(error)) return;
     state.saveError = error.message || "Draft save failed";
     focusGeometryError(state.saveError);
     setStatus(state.saveError);
@@ -1394,9 +1396,24 @@
       if (acceptedJobId) activeJobStore.clear(acceptedJobId);
       return result;
     } catch (error) {
-      if (acceptedJobId && error?.terminal) activeJobStore.clear(acceptedJobId);
+      if (acceptedJobId && error?.terminal === true && error.jobId === acceptedJobId) {
+        activeJobStore.clear(error.jobId);
+      }
+      holdForActiveJobRecovery(error);
       throw error;
     }
+  }
+
+  function holdForActiveJobRecovery(error) {
+    const activeJob = activeJobStore.read();
+    if (!isRecoverableJobError(error) || activeJob?.jobId !== error.jobId) return false;
+    state.busy = true;
+    state.editingFrozen = true;
+    state.saveError = "";
+    setStatus("Reconnecting to the active workbench job…");
+    renderGuidedShell();
+    render();
+    return true;
   }
 
   function focusRegion(regionId) {
@@ -1653,10 +1670,12 @@
       await loadCheckpoint(view, null, load);
     } catch (error) {
       if (!load.isCurrent()) return;
-      el["setup-error"].textContent = error.message || "Could not create the board.";
-      el["setup-error"].classList.remove("hidden");
+      if (!holdForActiveJobRecovery(error)) {
+        el["setup-error"].textContent = error.message || "Could not create the board.";
+        el["setup-error"].classList.remove("hidden");
+      }
     } finally {
-      el["setup-submit-button"].disabled = false;
+      el["setup-submit-button"].disabled = Boolean(activeJobStore.read());
       renderSetupSourceKind(new FormData(el["setup-form"]).get("sourceKind"));
     }
   }
@@ -1700,12 +1719,14 @@
       if (loaded) setStatus(`Stage ${String(updated.stage)} is ready for review.`);
     } catch (error) {
       if (!load.isCurrent()) return;
-      state.saveError = error.message || "Approval failed";
-      focusGeometryError(state.saveError);
-      setStatus(state.saveError);
+      if (!holdForActiveJobRecovery(error)) {
+        state.saveError = error.message || "Approval failed";
+        focusGeometryError(state.saveError);
+        setStatus(state.saveError);
+      }
     } finally {
       if (load.isCurrent()) {
-        state.busy = false;
+        if (!activeJobStore.read()) state.busy = false;
         renderGuidedShell();
         render();
       }
@@ -1767,12 +1788,14 @@
       if (loaded) setStatus(successMessage);
     } catch (error) {
       if (!load.isCurrent()) return;
-      state.saveError = error.message || "Workbench action failed";
-      focusGeometryError(state.saveError);
-      setStatus(state.saveError);
+      if (!holdForActiveJobRecovery(error)) {
+        state.saveError = error.message || "Workbench action failed";
+        focusGeometryError(state.saveError);
+        setStatus(state.saveError);
+      }
     } finally {
       if (load.isCurrent()) {
-        state.busy = false;
+        if (!activeJobStore.read()) state.busy = false;
         renderGuidedShell();
         render();
       }
@@ -1786,6 +1809,7 @@
     const acceptedJob = activeJobStore.read();
     if (acceptedJob) {
       state.busy = true;
+      state.editingFrozen = true;
       showWorkbench();
       setStatus("Reconnecting to the active workbench job…");
       render();
@@ -1797,11 +1821,13 @@
         setStatus(`Reconnected to ${recovered.productName}.`);
         return true;
       } catch (error) {
-        activeJobStore.clear(acceptedJob.jobId);
+        if (holdForActiveJobRecovery(error)) return true;
+        if (error?.terminal === true) activeJobStore.clear(error.jobId);
+        state.editingFrozen = false;
         state.saveError = error.message || "Could not reconnect to the active job";
         setStatus(state.saveError);
       } finally {
-        state.busy = false;
+        if (!activeJobStore.read()) state.busy = false;
         render();
       }
     }

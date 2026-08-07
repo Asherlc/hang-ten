@@ -216,6 +216,10 @@
     return match ? Number(match[1]) : null;
   }
 
+  function isRecoverableJobError(error) {
+    return Boolean(error?.jobId && error.terminal !== true);
+  }
+
   async function runFrozenApproval({
     setFrozen,
     cancelPointerSessions,
@@ -231,14 +235,17 @@
       if (typeof callback !== "function") throw new TypeError(`${name} must be a function`);
     }
     setFrozen(true);
+    let result;
     try {
       cancelPointerSessions();
       await flushDraft();
-      return await approve();
+      result = await approve();
     } catch (error) {
-      setFrozen(false);
+      if (!isRecoverableJobError(error)) setFrozen(false);
       throw error;
     }
+    setFrozen(false);
+    return result;
   }
 
   return {
@@ -249,6 +256,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    isRecoverableJobError,
     regionIdFromError,
     runFrozenApproval,
   };

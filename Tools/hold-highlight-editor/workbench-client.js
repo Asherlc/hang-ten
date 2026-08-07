@@ -25,17 +25,35 @@
     return (await request(`/api/jobs/${encodeURIComponent(jobId)}`)).job;
   }
 
-  async function pollJob(jobId, { interval = 350 } = {}) {
-    let job = await getJob(jobId);
-    while (ACTIVE_JOB_STATES.has(job.state)) {
+  async function pollJob(jobId, { interval = 350, maxTransientFailures = 3 } = {}) {
+    let transientFailures = 0;
+    while (true) {
+      let job;
+      try {
+        job = await getJob(jobId);
+        transientFailures = 0;
+      } catch (error) {
+        if (transientFailures >= maxTransientFailures) {
+          const uncertainty = error instanceof Error
+            ? error
+            : new Error(String(error || "Workbench polling failed"));
+          uncertainty.jobId = jobId;
+          uncertainty.terminal = false;
+          throw uncertainty;
+        }
+        transientFailures += 1;
+        await new Promise((resolve) => root.setTimeout(resolve, interval));
+        continue;
+      }
+      if (!ACTIVE_JOB_STATES.has(job.state)) {
+        if (job.state === "succeeded") return job.result;
+        const error = new Error(job.error || "Workbench job failed");
+        error.jobId = jobId;
+        error.terminal = true;
+        throw error;
+      }
       await new Promise((resolve) => root.setTimeout(resolve, interval));
-      job = await getJob(jobId);
     }
-    if (job.state === "succeeded") return job.result;
-    const error = new Error(job.error || "Workbench job failed");
-    error.jobId = jobId;
-    error.terminal = true;
-    throw error;
   }
 
   async function postJob(path, body, {

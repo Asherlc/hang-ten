@@ -9,6 +9,7 @@ const {
   checkpointComparisonUrl,
   validateEditableImageAlignment,
   createActiveJobStore,
+  isRecoverableJobError,
   regionIdFromError,
   runFrozenApproval,
 } = require("../workbench-controller.js");
@@ -225,6 +226,11 @@ test("accepted job identity survives controller recreation for refresh recovery"
     jobId: "job-17",
     boardId: "board-2",
   });
+  assert.equal(createActiveJobStore(storage).clear("job-stale"), false);
+  assert.deepEqual(createActiveJobStore(storage).read(), {
+    jobId: "job-17",
+    boardId: "board-2",
+  });
   createActiveJobStore(storage).clear("job-17");
   assert.equal(createActiveJobStore(storage).read(), null);
 });
@@ -232,6 +238,13 @@ test("accepted job identity survives controller recreation for refresh recovery"
 test("geometry error parsing identifies the region the UI must focus", () => {
   assert.equal(regionIdFromError("Stage 2 region 17: contour is invalid"), 17);
   assert.equal(regionIdFromError("job failed"), null);
+});
+
+test("only an accepted job without terminal confirmation remains recoverable", () => {
+  assert.equal(isRecoverableJobError(new Error("request rejected")), false);
+  assert.equal(isRecoverableJobError({ jobId: "job-17", terminal: true }), false);
+  assert.equal(isRecoverableJobError({ jobId: "job-17", terminal: false }), true);
+  assert.equal(isRecoverableJobError({ jobId: "job-17" }), true);
 });
 
 test("approval freezes and cancels editing before flushing the draft", async () => {
@@ -249,10 +262,11 @@ test("approval freezes and cancels editing before flushing the draft", async () 
     ["cancel"],
     ["flush"],
     ["approve"],
+    ["frozen", false],
   ]);
 });
 
-test("approval restores editing only after the approval sequence fails", async () => {
+test("approval restores editing after a pre-acceptance failure", async () => {
   const frozen = [];
 
   await assert.rejects(runFrozenApproval({
@@ -263,4 +277,38 @@ test("approval restores editing only after the approval sequence fails", async (
   }), /approval rejected/);
 
   assert.deepEqual(frozen, [true, false]);
+});
+
+test("approval restores editing after the server confirms the accepted job failed", async () => {
+  const frozen = [];
+  const failure = Object.assign(new Error("approval rejected"), {
+    jobId: "job-17",
+    terminal: true,
+  });
+
+  await assert.rejects(runFrozenApproval({
+    setFrozen(value) { frozen.push(value); },
+    cancelPointerSessions() {},
+    async flushDraft() {},
+    async approve() { throw failure; },
+  }), failure);
+
+  assert.deepEqual(frozen, [true, false]);
+});
+
+test("approval stays frozen while an accepted job has no confirmed terminal outcome", async () => {
+  const frozen = [];
+  const uncertainty = Object.assign(new Error("network unavailable"), {
+    jobId: "job-17",
+    terminal: false,
+  });
+
+  await assert.rejects(runFrozenApproval({
+    setFrozen(value) { frozen.push(value); },
+    cancelPointerSessions() {},
+    async flushDraft() {},
+    async approve() { throw uncertainty; },
+  }), uncertainty);
+
+  assert.deepEqual(frozen, [true]);
 });
