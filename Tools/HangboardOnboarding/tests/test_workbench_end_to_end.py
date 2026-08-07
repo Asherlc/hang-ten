@@ -68,6 +68,8 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     region_keys: tuple[str, ...],
 ) -> None:
     service = _fixture_service(tmp_path, region_keys=region_keys)
+    stage3_decoy = _downstream_decoy_keys(3, len(region_keys))
+    stage4_decoy = _downstream_decoy_keys(4, len(region_keys))
 
     current = service.create_from_upload(
         product_name, _fixture_image_bytes(color=color)
@@ -103,6 +105,7 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     manifest = json.loads((current.run_root / "run.json").read_text())
     assert manifest["stages"][2]["attempt"] == 2
     stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
+    assert stage2["regions"][0]["metadata"]["mode"] == "aperture"
 
     stage3 = _stage_document(
         current.run_root, 3, "stage-3-vector-regions.json"
@@ -132,9 +135,12 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     stage3 = _stage_document(
         current.run_root, 3, "stage-3-vector-regions.json"
     )
+    assert stage3["regions"][0]["metadata"]["mode"] == "surface"
+    assert set(_region_identity(stage3)[1]).isdisjoint(stage3_decoy)
 
     stage4 = _stage_document(current.run_root, 4, "stage-4-manifest.json")
     assert set(stage4) == {"canvas", "regions", "schemaVersion", "stage"}
+    assert set(_region_identity(stage4)[1]).isdisjoint(stage4_decoy)
     _assert_stable_identity_chain(stage2, stage3, stage4)
     assert _region_identity(stage2) == (
         list(range(1, len(region_keys) + 1)),
@@ -164,7 +170,9 @@ def test_identity_propagation_assertion_rejects_a_changed_upstream_inventory(
     tmp_path: Path, mutation: str
 ) -> None:
     service = _fixture_service(
-        tmp_path, region_keys=("grip-001", "grip-002", "grip-003")
+        tmp_path,
+        region_keys=("grip-001", "grip-002", "grip-003"),
+        stage3_identity_mutation=mutation,
     )
     current = service.create_from_upload("Fixture Board", _fixture_image_bytes())
     for stage in (0, 1):
@@ -189,19 +197,9 @@ def test_identity_propagation_assertion_rejects_a_changed_upstream_inventory(
     stage3 = _stage_document(
         current.run_root, 3, "stage-3-vector-regions.json"
     )
-    changed = deepcopy(stage2)
-    if mutation == "mutate":
-        changed["regions"][0]["key"] = "changed-key"
-    elif mutation == "drop":
-        changed["regions"].pop()
-    else:
-        changed["regions"][0], changed["regions"][1] = (
-            changed["regions"][1],
-            changed["regions"][0],
-        )
 
     with pytest.raises(AssertionError, match="stable region identity"):
-        _assert_stable_identity_chain(changed, stage3)
+        _assert_stable_identity_chain(stage2, stage3)
 
 
 def test_production_workbench_surface_contains_no_product_tokens() -> None:
@@ -258,10 +256,16 @@ def _fixture_image_bytes(color: tuple[int, int, int] = (45, 65, 85)) -> bytes:
 
 
 def _fixture_service(
-    root: Path, *, region_keys: tuple[str, ...] = ("grip-001",)
+    root: Path,
+    *,
+    region_keys: tuple[str, ...] = ("grip-001",),
+    stage3_identity_mutation: str | None = None,
 ) -> WorkbenchService:
     return WorkbenchService(
-        WorkbenchStore(root), runners=_stub_runners(region_keys)
+        WorkbenchStore(root),
+        runners=_stub_runners(
+            region_keys, stage3_identity_mutation=stage3_identity_mutation
+        ),
     )
 
 
@@ -280,10 +284,28 @@ def _create_cli_fixture_run(path: Path) -> Path:
 
 def _stub_runners(
     region_keys: tuple[str, ...] = ("grip-001",),
+    *,
+    stage3_identity_mutation: str | None = None,
 ) -> dict[int, _StubStageRunner]:
+    stage3_runner: _StubStageRunner = _StubStageRunner(
+        3, _downstream_decoy_keys(3, len(region_keys))
+    )
+    if stage3_identity_mutation is not None:
+        stage3_runner = _BrokenStage3Runner(
+            _downstream_decoy_keys(3, len(region_keys)),
+            stage3_identity_mutation,
+        )
     return {
-        stage: _StubStageRunner(stage, region_keys) for stage in range(5)
+        0: _StubStageRunner(0, ()),
+        1: _StubStageRunner(1, ()),
+        2: _StubStageRunner(2, region_keys),
+        3: stage3_runner,
+        4: _StubStageRunner(4, _downstream_decoy_keys(4, len(region_keys))),
     }
+
+
+def _downstream_decoy_keys(stage: int, count: int) -> tuple[str, ...]:
+    return tuple(f"stage-{stage}-decoy-{index:03d}" for index in range(1, count + 1))
 
 
 class _StubStageRunner:
@@ -475,6 +497,25 @@ class _StubStageRunner:
             "schemaVersion": 1,
             "stage": 4,
         }
+
+
+class _BrokenStage3Runner(_StubStageRunner):
+    def __init__(self, decoy_keys: tuple[str, ...], mutation: str) -> None:
+        super().__init__(3, decoy_keys)
+        assert mutation in {"mutate", "drop", "reorder"}
+        self.mutation = mutation
+
+    def _stage3_document(
+        self, source_regions: list[Mapping[str, object]]
+    ) -> dict[str, object]:
+        corrupted = deepcopy(source_regions)
+        if self.mutation == "mutate":
+            corrupted[0]["key"] = "changed-key"
+        elif self.mutation == "drop":
+            corrupted.pop()
+        else:
+            corrupted[0], corrupted[1] = corrupted[1], corrupted[0]
+        return super()._stage3_document(corrupted)
 
 
 def _stage_document(run_root: Path, stage: int, filename: str) -> dict[str, object]:
