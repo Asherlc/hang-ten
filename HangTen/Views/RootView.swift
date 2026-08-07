@@ -1476,6 +1476,13 @@ enum WorkoutStopwatchLifecycle {
 }
 
 struct WorkoutView: View {
+    private enum LandscapeLayout {
+        static let sideCueSlotWidth: CGFloat = 142
+        static let boardMaxHeight: CGFloat = 132
+        static let normalCueRowHeight: CGFloat = 149
+        static let previewLabelHeight: CGFloat = 13
+    }
+
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
     @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
@@ -1566,8 +1573,14 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board).map { cue in
+					WorkoutHoldCue(
+						hold: cue.hold,
+						gripType: cue.gripType,
+						fingerConfiguration: highlightedStep.flatMap { resolvedFingerConfiguration(for: $0) }
+					)
+				}
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1591,8 +1604,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					} else {
 						portraitSession(
@@ -1607,8 +1619,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					}
 				}
@@ -1785,8 +1796,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
 			VStack(alignment: .leading, spacing: 19) {
@@ -1809,11 +1819,11 @@ struct WorkoutView: View {
 					highlightMode: highlightMode
 				)
 					.padding(.horizontal, 2)
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
+				if let holdCue, countdown == 0, !isComplete, !isResting {
 					GripDiagramView(
-						hold: activeHold,
-						gripType: step.gripType,
-						fingerConfiguration: resolvedFingerConfiguration(for: step)
+						hold: holdCue.hold,
+						gripType: holdCue.gripType,
+						fingerConfiguration: holdCue.fingerConfiguration
 					)
 				}
 				cueCard(
@@ -1846,8 +1856,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		VStack(spacing: 9) {
 			landscapeHeader(
@@ -1863,42 +1872,38 @@ struct WorkoutView: View {
 				.tint(Color.hangGreenDark)
 
 			HStack(spacing: 12) {
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let posture = step.gripType ?? activeHold.gripType
-					let fingerCue = FingerCue(
-						fingerConfiguration: resolvedFingerConfiguration(for: step),
-						capacity: activeHold.fingerCapacity
-					)
-					GripHandCueCard(posture: posture, fingerCue: fingerCue, side: .left)
-						.frame(width: 142)
-				}
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete,
+					side: .left
+				)
 
 				VStack(alignment: .leading, spacing: 4) {
-					if showsHoldPreview {
-						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-							.frame(maxWidth: .infinity, alignment: .center)
-					}
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+						.opacity(showsHoldPreview ? 1 : 0)
+						.accessibilityHidden(!showsHoldPreview)
 					BoardMapView(
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode
 					)
 						.frame(maxWidth: .infinity)
-						.frame(height: isResting ? 60 : nil)
+						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
 				}
 				.frame(maxWidth: .infinity)
 
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let posture = step.gripType ?? activeHold.gripType
-					let fingerCue = FingerCue(
-						fingerConfiguration: resolvedFingerConfiguration(for: step),
-						capacity: activeHold.fingerCapacity
-					)
-					GripHandCueCard(posture: posture, fingerCue: fingerCue, side: .right)
-						.frame(width: 142)
-				}
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete,
+					side: .right
+				)
 			}
-			.frame(maxHeight: 132)
+			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 
 			HStack(alignment: .center, spacing: 12) {
 				landscapeCueCard(
@@ -1917,6 +1922,28 @@ struct WorkoutView: View {
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
+	}
+
+	private func landscapeHandCueSlot(
+		holdCue: WorkoutHoldCue?,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool,
+		side: GripCueSide
+	) -> some View {
+		ZStack {
+			Color.clear
+				.accessibilityHidden(true)
+			if let holdCue, countdown == 0, !isComplete, !isResting {
+				let fingerCue = FingerCue(
+					fingerConfiguration: holdCue.fingerConfiguration,
+					capacity: holdCue.hold.fingerCapacity
+				)
+				GripHandCueCard(posture: holdCue.gripType, fingerCue: fingerCue, side: side)
+			}
+		}
+		.frame(width: LandscapeLayout.sideCueSlotWidth)
+		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 	}
 
 	private func landscapeHeader(
