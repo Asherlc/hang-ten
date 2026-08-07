@@ -31,6 +31,8 @@
   const {
     createLatestLoadCoordinator,
     createOpeningBoardController,
+    openingScreenState,
+    renderOpeningFormVisibility,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
@@ -1662,23 +1664,23 @@
     });
   }
 
-  function renderOpeningList(container, boards, { emptyMessage, errorMessage, label, detail, onSelect }) {
+  function renderOpeningList(container, section, { label, detail, onSelect }) {
     container.replaceChildren();
-    if (errorMessage) {
+    if (section.state === "error") {
       const message = document.createElement("p");
       message.className = "opening-list-message error";
-      message.textContent = errorMessage;
+      message.textContent = section.message;
       container.appendChild(message);
       return;
     }
-    if (!boards.length) {
+    if (section.state === "empty") {
       const message = document.createElement("p");
       message.className = "opening-list-message";
-      message.textContent = emptyMessage;
+      message.textContent = section.message;
       container.appendChild(message);
       return;
     }
-    boards.forEach((board) => {
+    section.boards.forEach((board) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "opening-board-row";
@@ -1690,16 +1692,18 @@
 
   function renderOpeningSections() {
     const sections = openingSections(state.libraryBoards, state.boards);
-    renderOpeningList(el["repository-board-list"], sections.library, {
-      emptyMessage: "No published boards yet.",
-      errorMessage: state.openingErrors.library,
+    const screen = openingScreenState({
+      library: sections.library,
+      runtime: sections.inProgress,
+      errors: state.openingErrors,
+    });
+    renderOpeningFormVisibility(el["create-board-form"], screen);
+    renderOpeningList(el["repository-board-list"], screen.repository, {
       label: (board) => board.displayName || board.boardId,
       detail: (board) => `Version ${board.currentVersionId || "unavailable"}`,
       onSelect: selectLibraryBoard,
     });
-    renderOpeningList(el["in-progress-board-list"], sections.inProgress, {
-      emptyMessage: "No boards in progress.",
-      errorMessage: state.openingErrors.runtime,
+    renderOpeningList(el["in-progress-board-list"], screen.inProgress, {
       label: (board) => board.productName || board.boardId,
       detail: (board) => board.saved ? "Saved locally" : `Stage ${String(board.stage ?? 0)} · Unsaved`,
       onSelect: selectGuidedBoard,

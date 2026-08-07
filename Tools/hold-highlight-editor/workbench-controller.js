@@ -69,6 +69,26 @@
     });
   }
 
+  function openingScreenState({ library = [], runtime = [], errors = {} } = {}) {
+    const section = (boards, error, emptyMessage) => ({
+      state: error ? "error" : boards.length ? "boards" : "empty",
+      boards,
+      message: error || (boards.length ? "" : emptyMessage),
+    });
+    return {
+      repository: section(library, errors.library || "", "No published boards yet."),
+      inProgress: section(runtime, errors.runtime || "", "No boards in progress."),
+      createFormVisible: true,
+    };
+  }
+
+  function renderOpeningFormVisibility(form, screen) {
+    if (typeof form?.classList?.toggle !== "function") {
+      throw new TypeError("create board form must support classList.toggle");
+    }
+    form.classList.toggle("hidden", !screen?.createFormVisible);
+  }
+
   function createAutosaveCoordinator({ save, onStart = () => {}, onSuccess = () => {}, onError = () => {} }) {
     if (typeof save !== "function") throw new TypeError("save must be a function");
     let generation = 0;
@@ -371,6 +391,8 @@
   return {
     createLatestLoadCoordinator,
     createOpeningBoardController,
+    openingScreenState,
+    renderOpeningFormVisibility,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,

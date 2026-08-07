@@ -16,6 +16,8 @@ const {
   regionIdFromError,
   runFrozenApproval,
   createOpeningBoardController,
+  openingScreenState,
+  renderOpeningFormVisibility,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -87,6 +89,53 @@ test("opening board controller preserves the runtime list when the library reque
     runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
     errors: { library: "Repository unavailable", runtime: "" },
   });
+});
+
+test("opening screen renders empty board sections while leaving Create board visible", () => {
+  assert.deepEqual(openingScreenState({ library: [], runtime: [], errors: {} }), {
+    repository: { state: "empty", boards: [], message: "No published boards yet." },
+    inProgress: { state: "empty", boards: [], message: "No boards in progress." },
+    createFormVisible: true,
+  });
+});
+
+test("opening screen retains Create board when the repository list reports an error", () => {
+  assert.deepEqual(openingScreenState({
+    library: [],
+    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
+    errors: { library: "Repository unavailable", runtime: "" },
+  }), {
+    repository: { state: "error", boards: [], message: "Repository unavailable" },
+    inProgress: {
+      state: "boards",
+      boards: [{ boardId: "board-2", productName: "Beta", saved: false }],
+      message: "",
+    },
+    createFormVisible: true,
+  });
+});
+
+test("opening screen keeps the Create board form visible for empty and repository-error states", () => {
+  const classes = new Set(["hidden"]);
+  const form = {
+    classList: {
+      toggle(name, force) {
+        if (force) classes.add(name);
+        else classes.delete(name);
+      },
+    },
+  };
+
+  renderOpeningFormVisibility(form, openingScreenState({ library: [], runtime: [], errors: {} }));
+  assert.equal(classes.has("hidden"), false);
+
+  classes.add("hidden");
+  renderOpeningFormVisibility(form, openingScreenState({
+    library: [],
+    runtime: [],
+    errors: { library: "Repository unavailable" },
+  }));
+  assert.equal(classes.has("hidden"), false);
 });
 
 test("only the latest interleaved checkpoint load may commit identity, geometry, and autosave state", async () => {
