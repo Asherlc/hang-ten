@@ -126,6 +126,7 @@
       boardId: view.boardId,
       expectedRevisionId: view.revisionId,
       expectedStage: view.stage,
+      expectedCheckpointToken: view.checkpointToken,
     };
   }
 

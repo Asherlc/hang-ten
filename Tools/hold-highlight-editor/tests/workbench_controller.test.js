@@ -9,6 +9,7 @@ const {
   checkpointComparisonUrl,
   validateEditableImageAlignment,
   createActiveJobStore,
+  reconcileActiveJobs,
   clearMatchingAcceptedJob,
   clearConfirmedTerminalJob,
   isRecoverableJobError,
@@ -145,7 +146,12 @@ test("a background autosave failure is reported without rejecting the timer-faci
 
 test("dirty recovery is available synchronously before a slow or failing server save", () => {
   const store = createDraftStore(memoryStorage());
-  const view = { boardId: "board-a", revisionId: "revision-1", stage: 2 };
+  const view = {
+    boardId: "board-a",
+    revisionId: "revision-1",
+    stage: 2,
+    checkpointToken: "checkpoint-attempt-1",
+  };
   const entry = {
     ...view,
     key: store.keyFor(view),
@@ -158,12 +164,39 @@ test("dirty recovery is available synchronously before a slow or failing server 
   assert.deepEqual(store.read(view), { ...entry, dirty: true });
 });
 
+test("draft recovery rejects a stale checkpoint attempt within the same revision and stage", () => {
+  const storage = memoryStorage();
+  const store = createDraftStore(storage);
+  const firstAttempt = {
+    boardId: "board-a",
+    revisionId: "revision-1",
+    stage: 2,
+    checkpointToken: "checkpoint-attempt-1",
+  };
+  const retriedAttempt = {
+    ...firstAttempt,
+    checkpointToken: "checkpoint-attempt-2",
+  };
+  const entry = {
+    ...firstAttempt,
+    key: store.keyFor(firstAttempt),
+    generation: 1,
+    document: { version: "attempt-1-draft" },
+  };
+
+  store.writeDirty(entry);
+
+  assert.equal(store.read(retriedAttempt), null);
+  store.discardMismatched(retriedAttempt);
+  assert.equal(store.read(firstAttempt), null);
+});
+
 test("an older save completion cannot clear a newer local draft and mismatched pruning preserves other boards", () => {
   const storage = memoryStorage();
   const store = createDraftStore(storage);
-  const firstView = { boardId: "board-a", revisionId: "revision-1", stage: 2 };
-  const currentView = { boardId: "board-a", revisionId: "revision-2", stage: 3 };
-  const otherView = { boardId: "board-b", revisionId: "revision-1", stage: 2 };
+  const firstView = { boardId: "board-a", revisionId: "revision-1", stage: 2, checkpointToken: "checkpoint-a1" };
+  const currentView = { boardId: "board-a", revisionId: "revision-2", stage: 3, checkpointToken: "checkpoint-a2" };
+  const otherView = { boardId: "board-b", revisionId: "revision-1", stage: 2, checkpointToken: "checkpoint-b1" };
   const oldEntry = { ...firstView, key: store.keyFor(firstView), generation: 1, document: { version: 1 } };
   const currentEntry = { ...currentView, key: store.keyFor(currentView), generation: 3, document: { version: 3 } };
   const otherEntry = { ...otherView, key: store.keyFor(otherView), generation: 2, document: { version: 2 } };
@@ -235,6 +268,70 @@ test("accepted job identity survives controller recreation for refresh recovery"
   });
   createActiveJobStore(storage).clear("job-17");
   assert.equal(createActiveJobStore(storage).read(), null);
+});
+
+test("two tabs preserve and reconcile independent board and creation jobs after restart", async () => {
+  const storage = memoryStorage();
+  const firstTab = createActiveJobStore(storage);
+  const secondTab = createActiveJobStore(storage);
+  const boardJob = { jobId: "job-board-a", boardId: "board-a" };
+  const creationJob = { jobId: "job-create-b", boardId: null };
+  firstTab.write(boardJob);
+  secondTab.write(creationJob);
+
+  const restartedFirstTab = createActiveJobStore(storage);
+  const restartedSecondTab = createActiveJobStore(storage);
+  assert.deepEqual(restartedFirstTab.readAll(), [boardJob, creationJob]);
+  assert.deepEqual(restartedSecondTab.readAll(), [boardJob, creationJob]);
+
+  const pollsByTab = [[], []];
+  const pollFrom = (tabIndex) => async (jobId) => {
+    pollsByTab[tabIndex].push(jobId);
+    return jobId === boardJob.jobId
+      ? { boardId: "board-a", productName: "Board A" }
+      : { boardId: "board-b", productName: "Board B" };
+  };
+  const reconciliations = await Promise.all([
+    reconcileActiveJobs(restartedFirstTab, pollFrom(0)),
+    reconcileActiveJobs(restartedSecondTab, pollFrom(1)),
+  ]);
+
+  assert.deepEqual(pollsByTab.map((jobs) => jobs.sort()), [
+    ["job-board-a", "job-create-b"],
+    ["job-board-a", "job-create-b"],
+  ]);
+  for (const reconciliation of reconciliations) {
+    assert.deepEqual(
+      reconciliation.succeeded.map(({ acceptedJob, result }) => [acceptedJob, result.boardId]),
+      [[boardJob, "board-a"], [creationJob, "board-b"]],
+    );
+    assert.deepEqual(reconciliation.failed, []);
+    assert.deepEqual(reconciliation.unknown, []);
+  }
+  assert.deepEqual(restartedSecondTab.readAll(), []);
+});
+
+test("restart reconciliation retains genuinely unknown jobs while releasing only matching terminal jobs", async () => {
+  const storage = memoryStorage();
+  const store = createActiveJobStore(storage);
+  const failedJob = { jobId: "job-failed", boardId: "board-a" };
+  const unknownJob = { jobId: "job-unknown", boardId: "board-b" };
+  store.write(failedJob);
+  store.write(unknownJob);
+
+  const reconciliation = await reconcileActiveJobs(store, async (jobId) => {
+    if (jobId === failedJob.jobId) {
+      throw Object.assign(new Error("rejected"), { jobId, terminal: true });
+    }
+    throw Object.assign(new Error("network unavailable"), { jobId, terminal: false });
+  });
+
+  assert.deepEqual(reconciliation.succeeded, []);
+  assert.equal(reconciliation.failed.length, 1);
+  assert.equal(reconciliation.failed[0].acceptedJob.jobId, failedJob.jobId);
+  assert.equal(reconciliation.unknown.length, 1);
+  assert.equal(reconciliation.unknown[0].acceptedJob.jobId, unknownJob.jobId);
+  assert.deepEqual(store.readAll(), [unknownJob]);
 });
 
 test("geometry error parsing identifies the region the UI must focus", () => {

@@ -36,6 +36,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    reconcileActiveJobs,
     clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,
@@ -1266,6 +1267,7 @@
         boardId: state.board.boardId,
         revisionId: state.board.revisionId,
         stage: state.board.stage,
+        checkpointToken: state.board.checkpointToken,
         key: draftStorageKey(),
         generation: 0,
         document,
@@ -1286,6 +1288,7 @@
       boardId: view.boardId,
       revisionId: view.revisionId,
       stage: view.stage,
+      checkpointToken: view.checkpointToken,
       key: draftStorageKey(view),
       view,
       document,
@@ -1458,8 +1461,8 @@
     }
   }
 
-  function holdForStoredActiveJob() {
-    if (!activeJobStore.read()) return false;
+  function holdForStoredActiveJob(jobId = null) {
+    if (jobId == null ? !activeJobStore.read() : !activeJobStore.read(jobId)) return false;
     state.busy = true;
     state.editingFrozen = true;
     state.saveError = "";
@@ -1470,9 +1473,8 @@
   }
 
   function holdForActiveJobRecovery(error) {
-    const activeJob = activeJobStore.read();
-    if (!isRecoverableJobError(error) || activeJob?.jobId !== error.jobId) return false;
-    return holdForStoredActiveJob();
+    if (!isRecoverableJobError(error) || !activeJobStore.read(error.jobId)) return false;
+    return holdForStoredActiveJob(error.jobId);
   }
 
   function focusRegion(regionId) {
@@ -1736,7 +1738,7 @@
         el["setup-error"].classList.remove("hidden");
       }
     } finally {
-      el["setup-submit-button"].disabled = Boolean(activeJobStore.read());
+      el["setup-submit-button"].disabled = state.editingFrozen;
       renderSetupSourceKind(new FormData(el["setup-form"]).get("sourceKind"));
     }
   }
@@ -1787,7 +1789,7 @@
       }
     } finally {
       if (load.isCurrent()) {
-        if (!activeJobStore.read()) state.busy = false;
+        if (!state.editingFrozen) state.busy = false;
         renderGuidedShell();
         render();
       }
@@ -1856,7 +1858,7 @@
       }
     } finally {
       if (load.isCurrent()) {
-        if (!activeJobStore.read()) state.busy = false;
+        if (!state.editingFrozen) state.busy = false;
         renderGuidedShell();
         render();
       }
@@ -1867,33 +1869,43 @@
     state.guided = true;
     el["legacy-controls"].classList.add("hidden");
     showBoardPicker(false);
-    const acceptedJob = activeJobStore.read();
-    if (acceptedJob) {
+    const acceptedJobs = activeJobStore.readAll();
+    if (acceptedJobs.length) {
       state.busy = true;
       state.editingFrozen = true;
       showWorkbench();
-      setStatus("Reconnecting to the active workbench job…");
+      setStatus("Reconnecting to active workbench jobs…");
       render();
       try {
-        const recovered = await workbenchClient.pollJob(acceptedJob.jobId);
-        if (!clearMatchingAcceptedJob(activeJobStore, acceptedJob)) {
-          holdForStoredActiveJob();
-          return true;
-        }
-        state.boards = await workbenchClient.listBoards();
-        await loadCheckpoint(recovered);
-        setStatus(`Reconnected to ${recovered.productName}.`);
-        return true;
-      } catch (error) {
-        if (!clearConfirmedTerminalJob(activeJobStore, acceptedJob, error)) {
+        const reconciliation = await reconcileActiveJobs(
+          activeJobStore,
+          (jobId) => workbenchClient.pollJob(jobId),
+        );
+        if (reconciliation.unknown.length || activeJobStore.readAll().length) {
           holdForStoredActiveJob();
           return true;
         }
         state.editingFrozen = false;
-        state.saveError = error.message || "Could not reconnect to the active job";
+        state.boards = await workbenchClient.listBoards();
+        const recovered = reconciliation.succeeded.at(-1)?.result;
+        if (recovered) {
+          await loadCheckpoint(recovered);
+          setStatus(`Reconnected to ${recovered.productName}.`);
+          return true;
+        }
+        const failure = reconciliation.failed.at(-1)?.error;
+        if (failure) {
+          state.saveError = failure.message || "Could not reconnect to an active job";
+          setStatus(state.saveError);
+        }
+      } catch (error) {
+        holdForStoredActiveJob();
+        if (activeJobStore.readAll().length) return true;
+        state.editingFrozen = false;
+        state.saveError = error.message || "Could not reconcile active jobs";
         setStatus(state.saveError);
       } finally {
-        if (!activeJobStore.read()) state.busy = false;
+        if (!activeJobStore.readAll().length) state.busy = false;
         render();
       }
     }

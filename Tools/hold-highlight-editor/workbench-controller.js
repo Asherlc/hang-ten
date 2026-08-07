@@ -7,6 +7,7 @@
 
   const DRAFT_PREFIX = "hold-workbench-draft:";
   const ACTIVE_JOB_KEY = "hold-workbench-active-job";
+  const ACTIVE_JOB_PREFIX = `${ACTIVE_JOB_KEY}:`;
   const EDITABLE_STAGES = new Set([2, 3]);
 
   function createLatestLoadCoordinator() {
@@ -93,8 +94,8 @@
   }
 
   function draftKey(view) {
-    if (!view) return null;
-    return `${DRAFT_PREFIX}${view.boardId}:${view.revisionId}:${String(view.stage)}`;
+    if (!view || typeof view.checkpointToken !== "string" || !view.checkpointToken) return null;
+    return `${DRAFT_PREFIX}${view.boardId}:${view.revisionId}:${String(view.stage)}:${view.checkpointToken}`;
   }
 
   function createDraftStore(storage) {
@@ -110,14 +111,19 @@
       return record?.boardId === view.boardId
         && record?.revisionId === view.revisionId
         && record?.stage === view.stage
+        && record?.checkpointToken === view.checkpointToken
         && record.document;
     }
 
     function writeDirty(entry) {
+      if (typeof entry?.key !== "string" || !entry.key) {
+        throw new TypeError("checkpoint-bound draft key is required");
+      }
       storage.setItem(entry.key, JSON.stringify({
         boardId: entry.boardId,
         revisionId: entry.revisionId,
         stage: entry.stage,
+        checkpointToken: entry.checkpointToken,
         key: entry.key,
         generation: entry.generation,
         document: entry.document,
@@ -134,6 +140,7 @@
 
     function read(view) {
       const key = draftKey(view);
+      if (!key) return null;
       const record = parse(key);
       if (!record) return null;
       if (!matches(record, view)) {
@@ -180,35 +187,73 @@
   }
 
   function createActiveJobStore(storage) {
-    function read() {
+    function normalize(value) {
+      if (!value || typeof value.jobId !== "string" || !value.jobId) return null;
+      if (value.boardId != null && (typeof value.boardId !== "string" || !value.boardId)) return null;
+      return { jobId: value.jobId, boardId: value.boardId ?? null };
+    }
+
+    function parse(key) {
       try {
-        const value = JSON.parse(storage.getItem(ACTIVE_JOB_KEY) || "null");
-        if (!value || typeof value.jobId !== "string" || !value.jobId) return null;
-        if (value.boardId != null && typeof value.boardId !== "string") return null;
-        return { jobId: value.jobId, boardId: value.boardId ?? null };
+        return normalize(JSON.parse(storage.getItem(key) || "null"));
       } catch (_error) {
         return null;
       }
+    }
+
+    function keyFor(jobId) {
+      return `${ACTIVE_JOB_PREFIX}${encodeURIComponent(jobId)}`;
+    }
+
+    function readAll() {
+      const records = new Map();
+      const legacy = parse(ACTIVE_JOB_KEY);
+      if (legacy) records.set(legacy.jobId, legacy);
+      for (let index = 0; index < storage.length; index += 1) {
+        const key = storage.key(index);
+        if (!key?.startsWith(ACTIVE_JOB_PREFIX)) continue;
+        const record = parse(key);
+        if (record) records.set(record.jobId, record);
+      }
+      return [...records.values()].sort((left, right) => left.jobId.localeCompare(right.jobId));
+    }
+
+    function read(jobId = null) {
+      const records = readAll();
+      if (jobId == null) return records[0] || null;
+      return records.find((record) => record.jobId === jobId) || null;
     }
 
     function write(job) {
       if (!job || typeof job.jobId !== "string" || !job.jobId) {
         throw new TypeError("accepted job ID is required");
       }
-      storage.setItem(ACTIVE_JOB_KEY, JSON.stringify({
+      if (job.boardId != null && (typeof job.boardId !== "string" || !job.boardId)) {
+        throw new TypeError("accepted board ID must be a non-empty string or null");
+      }
+      const record = {
         jobId: job.jobId,
-        boardId: typeof job.boardId === "string" ? job.boardId : null,
-      }));
+        boardId: job.boardId ?? null,
+      };
+      storage.setItem(keyFor(record.jobId), JSON.stringify(record));
+      if (parse(ACTIVE_JOB_KEY)?.jobId === record.jobId) storage.removeItem(ACTIVE_JOB_KEY);
     }
 
     function clear(jobId) {
-      const current = read();
-      if (current?.jobId !== jobId) return false;
-      storage.removeItem(ACTIVE_JOB_KEY);
-      return true;
+      let cleared = false;
+      const key = keyFor(jobId);
+      if (parse(key)?.jobId === jobId) {
+        storage.removeItem(key);
+        cleared = true;
+      }
+      if (parse(ACTIVE_JOB_KEY)?.jobId === jobId) {
+        storage.removeItem(ACTIVE_JOB_KEY);
+        cleared = true;
+      }
+      return cleared;
     }
 
-    return Object.freeze({ read, write, clear });
+    return Object.freeze({ read, readAll, write, clear });
   }
 
   function regionIdFromError(message) {
@@ -228,6 +273,30 @@
   function clearConfirmedTerminalJob(store, acceptedJob, error) {
     if (error?.terminal !== true || error.jobId !== acceptedJob?.jobId) return false;
     return clearMatchingAcceptedJob(store, acceptedJob);
+  }
+
+  async function reconcileActiveJobs(store, pollJob) {
+    if (typeof store?.readAll !== "function" || typeof pollJob !== "function") {
+      throw new TypeError("active job store and poll function are required");
+    }
+    const outcomes = await Promise.all(store.readAll().map(async (acceptedJob) => {
+      try {
+        const result = await pollJob(acceptedJob.jobId);
+        clearMatchingAcceptedJob(store, acceptedJob);
+        return { state: "succeeded", acceptedJob, result };
+      } catch (error) {
+        if (error?.terminal === true && error.jobId === acceptedJob.jobId) {
+          clearConfirmedTerminalJob(store, acceptedJob, error);
+          return { state: "failed", acceptedJob, error };
+        }
+        return { state: "unknown", acceptedJob, error };
+      }
+    }));
+    return Object.freeze({
+      succeeded: outcomes.filter((outcome) => outcome.state === "succeeded"),
+      failed: outcomes.filter((outcome) => outcome.state === "failed"),
+      unknown: outcomes.filter((outcome) => outcome.state === "unknown"),
+    });
   }
 
   async function runFrozenApproval({
@@ -266,6 +335,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    reconcileActiveJobs,
     clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,

@@ -130,7 +130,9 @@ immutable. **Revise upstream** forks a new
 revision and marks replaced downstream lineage stale; stale or incomplete
 lineage cannot be selected by the final Save. Refreshing or restarting the
 server reloads the store, while the browser can also recover its newest
-same-revision local draft.
+same-checkpoint local draft. Retrying a stage changes the checkpoint identity,
+so drafts from an earlier attempt remain immutable but cannot be restored or
+approved over the replacement.
 
 Every workbench revision is CLI-compatible. Inspect a UI-created run by using
 the same explicit confinement root:

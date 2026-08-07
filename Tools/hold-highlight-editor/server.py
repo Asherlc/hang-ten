@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from ipaddress import ip_address
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import parse_qs, unquote, urlencode, urlsplit
@@ -255,6 +256,7 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         "productName": view.product_name,
         "stage": view.stage,
         "state": view.state,
+        "checkpointToken": view.checkpoint_token,
         "reviewUrl": review_url,
         "editorImageUrl": editor_image_url,
         "editorMode": view.editor_mode,
@@ -327,6 +329,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     editor_catalog: EditorCatalog | None
 
     def do_GET(self) -> None:  # noqa: N802
+        if not self._allow_request(mutation=False):
+            return
         request = urlsplit(self.path)
         path = request.path
         if path == "/api/boards":
@@ -407,6 +411,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
 
     def do_POST(self) -> None:  # noqa: N802
+        if not self._allow_request(mutation=True):
+            return
         request = urlsplit(self.path)
         try:
             service = self._workbench_service()
@@ -457,6 +463,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             )
 
     def do_PUT(self) -> None:  # noqa: N802
+        if not self._allow_request(mutation=True):
+            return
         request = urlsplit(self.path)
         if request.path != "/api/save":
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
@@ -600,6 +608,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         else:
             stage = self._required_stage(payload, "expectedStage")
             if path == "/api/drafts":
+                checkpoint_token = self._required_string(
+                    payload, "expectedCheckpointToken"
+                )
                 if "document" not in payload:
                     raise RequestError(
                         HTTPStatus.BAD_REQUEST, "document is required"
@@ -609,12 +620,17 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     board_id,
                     document,
                     expected_stage=stage,
+                    expected_checkpoint_token=checkpoint_token,
                     expected_revision_id=revision_id,
                 )
             elif path == "/api/approve":
+                checkpoint_token = self._required_string(
+                    payload, "expectedCheckpointToken"
+                )
                 operation = lambda: service.approve_and_advance(
                     board_id,
                     expected_stage=stage,
+                    expected_checkpoint_token=checkpoint_token,
                     expected_revision_id=revision_id,
                 )
             elif path == "/api/revise":
@@ -720,6 +736,33 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         values = parse_qs(query).get("run", [])
         return self.editor_catalog.get(values[0] if values else None)
 
+    def _allow_request(self, *, mutation: bool) -> bool:
+        host_values = self.headers.get_all("Host", [])
+        host = (
+            _loopback_authority(host_values[0], self.server.server_port)
+            if len(host_values) == 1
+            else None
+        )
+        if host is not None and mutation:
+            origin_values = self.headers.get_all("Origin", [])
+            if origin_values:
+                origin = (
+                    _loopback_origin(origin_values[0], self.server.server_port)
+                    if len(origin_values) == 1
+                    else None
+                )
+                if origin != host:
+                    host = None
+            elif self.headers.get("Sec-Fetch-Site") is not None:
+                host = None
+        if host is not None:
+            return True
+        self._send_json(
+            HTTPStatus.FORBIDDEN,
+            {"ok": False, "error": "request origin is not allowed"},
+        )
+        return False
+
     @staticmethod
     def _run_url(path: str, run_id: str, include_run: bool) -> str:
         return f"{path}?{urlencode({'run': run_id})}" if include_run else path
@@ -752,6 +795,53 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
 def _finite_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _loopback_authority(value: object, selected_port: int) -> tuple[str, int] | None:
+    if not isinstance(value, str) or not value or value.strip() != value:
+        return None
+    try:
+        parsed = urlsplit(f"//{value}")
+        port = parsed.port if parsed.port is not None else 80
+    except ValueError:
+        return None
+    if (
+        not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.path
+        or parsed.query
+        or parsed.fragment
+        or port != selected_port
+    ):
+        return None
+    hostname = parsed.hostname.lower().rstrip(".")
+    if hostname == "localhost":
+        return hostname, port
+    try:
+        if ip_address(hostname).is_loopback:
+            return hostname, port
+    except ValueError:
+        pass
+    return None
+
+
+def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | None:
+    if not isinstance(value, str) or not value or value.strip() != value:
+        return None
+    try:
+        parsed = urlsplit(value)
+    except ValueError:
+        return None
+    if (
+        parsed.scheme.lower() != "http"
+        or not parsed.netloc
+        or parsed.path
+        or parsed.query
+        or parsed.fragment
+    ):
+        return None
+    return _loopback_authority(parsed.netloc, selected_port)
 
 
 def _catalog_artifact(root: Path, value: str, field: str) -> Path:

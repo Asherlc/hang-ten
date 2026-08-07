@@ -799,8 +799,63 @@ def test_save_draft_is_immutable_and_published_before_approval(
 
     assert saved.stage == 2
     assert [path.name for path in drafts] == ["draft-0001.json"]
-    assert json.loads(drafts[0].read_text(encoding="utf-8")) == document
+    assert json.loads(drafts[0].read_text(encoding="utf-8")) == {
+        "checkpointToken": current.checkpoint_token,
+        "document": document,
+    }
     assert manifest["stages"][2]["attempt"] == 2
+    assert advanced.stage == 3
+
+
+def test_retry_quarantines_the_prior_attempt_draft_and_rejects_stale_approval(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(
+        current.board_id, expected_stage=1
+    )
+    stale_token = current.checkpoint_token
+    assert stale_token is not None
+    service.save_draft(
+        current.board_id,
+        _stage2_edit_document(),
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+        expected_checkpoint_token=stale_token,
+    )
+
+    retried = service.retry(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+
+    assert retried.checkpoint_token is not None
+    assert retried.checkpoint_token != stale_token
+    with pytest.raises(WorkbenchServiceError, match="expected checkpoint"):
+        service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=2,
+            expected_checkpoint_token=stale_token,
+        )
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit",
+        lambda *_args, **_kwargs: pytest.fail(
+            "the prior attempt draft must remain quarantined"
+        ),
+    )
+    advanced = service.approve_and_advance(
+        retried.board_id,
+        expected_revision_id=retried.revision_id,
+        expected_stage=2,
+        expected_checkpoint_token=retried.checkpoint_token,
+    )
     assert advanced.stage == 3
 
 

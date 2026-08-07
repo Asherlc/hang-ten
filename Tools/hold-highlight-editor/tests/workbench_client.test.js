@@ -92,6 +92,57 @@ test("an accepted mutation survives a transient poll failure without being submi
   }
 });
 
+test("draft and approval mutations bind the immutable checkpoint token", async () => {
+  const submissions = [];
+  let accepted = 0;
+  global.fetch = async (path, options = {}) => {
+    if (path === "/api/drafts" || path === "/api/approve") {
+      accepted += 1;
+      const jobId = `job-token-${String(accepted)}`;
+      submissions.push([path, JSON.parse(options.body)]);
+      return response({ ok: true, jobId, boardId: "board-9" });
+    }
+    const jobId = path.split("/").at(-1);
+    return response({
+      ok: true,
+      job: {
+        id: jobId,
+        boardId: "board-9",
+        state: "succeeded",
+        result: { boardId: "board-9" },
+        error: null,
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+  const view = {
+    boardId: "board-9",
+    revisionId: "revision-1",
+    stage: 2,
+    checkpointToken: "checkpoint-attempt-7",
+  };
+
+  await client.saveDraft(view, { regions: [] });
+  await client.approve(view);
+
+  assert.deepEqual(submissions, [
+    ["/api/drafts", {
+      boardId: "board-9",
+      expectedRevisionId: "revision-1",
+      expectedStage: 2,
+      expectedCheckpointToken: "checkpoint-attempt-7",
+      document: { regions: [] },
+    }],
+    ["/api/approve", {
+      boardId: "board-9",
+      expectedRevisionId: "revision-1",
+      expectedStage: 2,
+      expectedCheckpointToken: "checkpoint-attempt-7",
+    }],
+  ]);
+});
+
 test("exhausted poll transport failures retain the accepted nonterminal job identity", async () => {
   global.fetch = async () => { throw new TypeError("network unavailable"); };
   delete require.cache[require.resolve("../workbench-client.js")];

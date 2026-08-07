@@ -6,10 +6,11 @@ import sys
 import threading
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
+from http.client import HTTPConnection
 from pathlib import Path
 from threading import Event, Lock
 from urllib.error import HTTPError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 import pytest
@@ -66,6 +67,7 @@ class FakeWorkbenchView:
     editor_mode: str | None
     saved: bool
     stale_from_stage: int | None
+    checkpoint_token: str | None
 
 
 class FakeWorkbenchError(ValueError):
@@ -117,9 +119,15 @@ class FakeWorkbenchService:
         document: object,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str,
         expected_revision_id: str | None = None,
     ) -> FakeWorkbenchView:
-        view = self._expected(board_id, expected_revision_id, expected_stage)
+        view = self._expected(
+            board_id,
+            expected_revision_id,
+            expected_stage,
+            expected_checkpoint_token,
+        )
         self._drafts[board_id] = document
         return view
 
@@ -128,9 +136,15 @@ class FakeWorkbenchService:
         board_id: str,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str,
         expected_revision_id: str | None = None,
     ) -> FakeWorkbenchView:
-        view = self._expected(board_id, expected_revision_id, expected_stage)
+        view = self._expected(
+            board_id,
+            expected_revision_id,
+            expected_stage,
+            expected_checkpoint_token,
+        )
         self.approve_started.set()
         if self.approve_gate is not None:
             self.approve_gate.wait(1)
@@ -163,7 +177,11 @@ class FakeWorkbenchService:
         expected_stage: int,
         expected_revision_id: str | None = None,
     ) -> FakeWorkbenchView:
-        return self._expected(board_id, expected_revision_id, expected_stage)
+        view = self._expected(board_id, expected_revision_id, expected_stage)
+        return self._update(
+            view,
+            checkpoint_token=f"{view.checkpoint_token}-retry",
+        )
 
     def save(
         self, board_id: str, *, expected_revision_id: str | None = None
@@ -195,22 +213,36 @@ class FakeWorkbenchService:
                 editor_mode=None,
                 saved=False,
                 stale_from_stage=None,
+                checkpoint_token="checkpoint-0-attempt-1",
             )
             self._boards[board_id] = view
             return view
 
     def _expected(
-        self, board_id: str, revision_id: str | None, stage: int
+        self,
+        board_id: str,
+        revision_id: str | None,
+        stage: int,
+        checkpoint_token: str | None = None,
     ) -> FakeWorkbenchView:
         view = self.get_board(board_id)
         if revision_id != view.revision_id:
             raise FakeWorkbenchError("expected revision does not match")
         if stage != view.stage:
             raise FakeWorkbenchError("expected stage does not match")
+        if checkpoint_token is not None and checkpoint_token != view.checkpoint_token:
+            raise FakeWorkbenchError("expected checkpoint does not match")
         return view
 
     def _update(self, view: FakeWorkbenchView, **changes) -> FakeWorkbenchView:
         stage = changes.get("stage", view.stage)
+        state = changes.get("state", view.state)
+        if "checkpoint_token" not in changes:
+            changes["checkpoint_token"] = (
+                f"checkpoint-{stage}-attempt-1"
+                if state == "awaiting_review"
+                else None
+            )
         if stage in (2, 3) and "editor_image_path" not in changes:
             editor_image = view.run_root / "stages/01/stage-1-auto-rgba.png"
             editor_image.parent.mkdir(parents=True, exist_ok=True)
@@ -276,6 +308,7 @@ class PathLeakingWorkbenchService(FakeWorkbenchService):
         board_id: str,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str,
         expected_revision_id: str | None = None,
     ) -> FakeWorkbenchView:
         raise ValueError(f"could not open {self._root.resolve() / 'private.txt'}")
@@ -292,6 +325,7 @@ class GeometryFailWorkbenchService(FakeWorkbenchService):
         board_id: str,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str,
         expected_revision_id: str | None = None,
     ) -> FakeWorkbenchView:
         raise FakeWorkbenchError("Stage 2 region 17: contour is invalid")
@@ -480,6 +514,24 @@ def _post_json(url: str, payload: object):
         return response.status, json.load(response)
 
 
+def _raw_request(
+    base: str,
+    method: str,
+    path: str,
+    *,
+    body: bytes | None = None,
+    headers: dict[str, str] | None = None,
+) -> tuple[int, dict[str, object]]:
+    target = urlsplit(base)
+    connection = HTTPConnection(target.hostname, target.port)
+    try:
+        connection.request(method, path, body=body, headers=headers or {})
+        response = connection.getresponse()
+        return response.status, json.loads(response.read())
+    finally:
+        connection.close()
+
+
 def _poll_job(base: str, job_id: str):
     for _ in range(100):
         _status, payload = read_json(base + f"/api/jobs/{job_id}")
@@ -504,12 +556,18 @@ def _create_board(base: str):
 
 
 def _post_mutation(base: str, route: str, view: dict, **extra):
+    checkpoint = (
+        {"expectedCheckpointToken": view["checkpointToken"]}
+        if view.get("checkpointToken") is not None
+        else {}
+    )
     status, submitted = _post_json(
         base + route,
         {
             "boardId": view["boardId"],
             "expectedRevisionId": view["revisionId"],
             "expectedStage": view["stage"],
+            **checkpoint,
             **extra,
         },
     )
@@ -535,6 +593,76 @@ def test_server_serves_guided_browser_modules(running_workbench_server, asset):
         assert response.status == 200
         assert response.headers.get_content_type() == "text/javascript"
         assert response.read()
+
+
+def test_reads_reject_foreign_or_wrong_port_hosts_and_accept_loopback_authorities(
+    running_workbench_server,
+):
+    port = urlsplit(running_workbench_server).port
+    assert port is not None
+
+    for host in (f"127.0.0.1:{port}", f"localhost:{port}", f"[::1]:{port}"):
+        status, payload = _raw_request(
+            running_workbench_server,
+            "GET",
+            "/api/boards",
+            headers={"Host": host},
+        )
+        assert status == 200
+        assert payload["ok"] is True
+
+    for host in ("attacker.example", f"127.0.0.1:{port + 1}"):
+        status, payload = _raw_request(
+            running_workbench_server,
+            "GET",
+            "/api/boards",
+            headers={"Host": host},
+        )
+        assert status == 403
+        assert payload == {"ok": False, "error": "request origin is not allowed"}
+
+
+def test_mutations_reject_foreign_or_missing_browser_origins_but_allow_local_ui_and_cli(
+    running_workbench_server,
+):
+    body = json.dumps({
+        "productName": "Origin Board",
+        "source": "https://example.test/board.png",
+    }).encode()
+    common = {"Content-Type": "application/json"}
+
+    for headers in (
+        {**common, "Origin": "https://attacker.example"},
+        {**common, "Origin": "null"},
+        {**common, "Sec-Fetch-Site": "same-origin"},
+    ):
+        status, payload = _raw_request(
+            running_workbench_server,
+            "POST",
+            "/api/boards",
+            body=body,
+            headers=headers,
+        )
+        assert status == 403
+        assert payload == {"ok": False, "error": "request origin is not allowed"}
+
+    browser_status, browser_payload = _raw_request(
+        running_workbench_server,
+        "POST",
+        "/api/boards",
+        body=body,
+        headers={**common, "Origin": running_workbench_server},
+    )
+    cli_status, cli_payload = _raw_request(
+        running_workbench_server,
+        "POST",
+        "/api/boards",
+        body=body,
+        headers=common,
+    )
+
+    assert browser_status == cli_status == 202
+    assert browser_payload["ok"] is cli_payload["ok"] is True
 
 
 def test_create_url_run_returns_job_and_can_be_polled(running_workbench_server):
@@ -710,6 +838,7 @@ def test_workbench_mutations_require_optimistic_fields(
             "boardId": "board-1",
             "expectedRevisionId": "revision-1",
             "expectedStage": 0,
+            "expectedCheckpointToken": "checkpoint-0-attempt-1",
             **extra,
         }
         payload.pop(omitted)
@@ -721,6 +850,27 @@ def test_workbench_mutations_require_optimistic_fields(
         body = json.load(error.value)
         assert body["ok"] is False
         assert omitted in body["error"]
+
+
+@pytest.mark.parametrize("route", ["/api/drafts", "/api/approve"])
+def test_draft_and_approval_mutations_require_checkpoint_identity(
+    running_workbench_server, route
+):
+    payload = {
+        "boardId": "board-1",
+        "expectedRevisionId": "revision-1",
+        "expectedStage": 2,
+    }
+    if route == "/api/drafts":
+        payload["document"] = {"regions": []}
+
+    with pytest.raises(HTTPError) as error:
+        _post_json(running_workbench_server + route, payload)
+
+    assert error.value.code == 400
+    body = json.load(error.value)
+    assert body["ok"] is False
+    assert "expectedCheckpointToken" in body["error"]
 
 
 def test_final_save_requires_expected_revision(running_workbench_server):
@@ -745,6 +895,7 @@ def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):
                 "boardId": view["boardId"],
                 "expectedRevisionId": view["revisionId"],
                 "expectedStage": view["stage"],
+                "expectedCheckpointToken": view["checkpointToken"],
             },
         )
         assert status == 202
@@ -816,6 +967,7 @@ def test_failed_job_poll_exposes_safe_error_without_traceback(
             "boardId": view["boardId"],
             "expectedRevisionId": "revision-stale",
             "expectedStage": view["stage"],
+            "expectedCheckpointToken": view["checkpointToken"],
         },
     )
 
@@ -837,6 +989,7 @@ def test_geometry_job_error_retains_actionable_region_without_paths(tmp_path):
                 "boardId": view["boardId"],
                 "expectedRevisionId": view["revisionId"],
                 "expectedStage": view["stage"],
+                "expectedCheckpointToken": view["checkpointToken"],
             },
         )
         final = _poll_job(base, submitted["jobId"])
@@ -867,6 +1020,7 @@ def test_job_poll_redacts_path_from_untrusted_value_error(tmp_path):
                 "boardId": view["boardId"],
                 "expectedRevisionId": view["revisionId"],
                 "expectedStage": view["stage"],
+                "expectedCheckpointToken": view["checkpointToken"],
             },
         )
         final = _poll_job(base, submitted["jobId"])

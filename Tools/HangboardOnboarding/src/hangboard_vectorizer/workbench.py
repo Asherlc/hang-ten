@@ -56,6 +56,7 @@ class WorkbenchView:
     product_name: str
     stage: int
     state: str
+    checkpoint_token: str | None
     review_path: Path | None
     editor_image_path: Path | None
     editor_mode: str | None
@@ -184,6 +185,7 @@ class WorkbenchService:
         document: object,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str | None = None,
         expected_revision_id: str | None = None,
     ) -> WorkbenchView:
         """Validate and append an immutable draft for the pending editor stage."""
@@ -191,7 +193,15 @@ class WorkbenchService:
             board_id,
             expected_revision_id=expected_revision_id,
             expected_stage=expected_stage,
+            expected_checkpoint_token=(
+                self.__required_checkpoint_token(expected_checkpoint_token)
+                if expected_checkpoint_token is not None
+                else None
+            ),
         )
+        checkpoint_token = self.__checkpoint_token(revision, status)
+        if checkpoint_token is None:
+            raise WorkbenchServiceError("checkpoint identity is unavailable")
         if status["status"] != "awaiting_approval":
             raise WorkbenchServiceError(
                 f"stage {expected_stage} is not awaiting review"
@@ -205,7 +215,13 @@ class WorkbenchService:
         except ConversionError as error:
             raise self.__public_geometry_error(error) from error
         self.store.write_draft(
-            board.id, revision.id, expected_stage, validated
+            board.id,
+            revision.id,
+            expected_stage,
+            {
+                "checkpointToken": checkpoint_token,
+                "document": validated,
+            },
         )
         return self.__view(board.id, revision.id)
 
@@ -214,6 +230,7 @@ class WorkbenchService:
         board_id: str,
         *,
         expected_stage: int,
+        expected_checkpoint_token: str | None = None,
         expected_revision_id: str | None = None,
     ) -> WorkbenchView:
         """Approve one selected checkpoint and stop at the next review."""
@@ -221,13 +238,23 @@ class WorkbenchService:
             board_id,
             expected_revision_id=expected_revision_id,
             expected_stage=expected_stage,
+            expected_checkpoint_token=(
+                self.__required_checkpoint_token(expected_checkpoint_token)
+                if expected_checkpoint_token is not None
+                else None
+            ),
         )
         if status["status"] != "awaiting_approval":
             raise WorkbenchServiceError(
                 f"stage {expected_stage} is not awaiting review"
             )
 
-        self.__publish_latest_draft(board.id, revision, expected_stage)
+        checkpoint_token = self.__checkpoint_token(revision, status)
+        if checkpoint_token is None:
+            raise WorkbenchServiceError("checkpoint identity is unavailable")
+        self.__publish_latest_draft(
+            board.id, revision, expected_stage, checkpoint_token
+        )
         approved = approve_stage(revision.run_root, expected_stage)
         if approved["status"] == "complete":
             self.store.mark_revision_complete(board.id, revision.id)
@@ -390,6 +417,7 @@ class WorkbenchService:
         *,
         expected_revision_id: str | None,
         expected_stage: int,
+        expected_checkpoint_token: str | None = None,
     ) -> tuple[BoardRecord, RevisionRecord, Mapping[str, object]]:
         self.__validate_stage(expected_stage)
         board, revision = self.__active_revision(
@@ -400,7 +428,19 @@ class WorkbenchService:
             raise WorkbenchServiceError(
                 f"expected stage {expected_stage}, found stage {status['stage']}"
             )
+        if expected_checkpoint_token is not None:
+            current_token = self.__checkpoint_token(revision, status)
+            if expected_checkpoint_token != current_token:
+                raise WorkbenchServiceError(
+                    "expected checkpoint token does not match the active attempt"
+                )
         return board, revision, status
+
+    @staticmethod
+    def __required_checkpoint_token(value: object) -> str:
+        if not isinstance(value, str) or not value.strip():
+            raise WorkbenchServiceError("expected checkpoint token is required")
+        return value.strip()
 
     @staticmethod
     def __validate_stage(stage: object) -> None:
@@ -473,12 +513,55 @@ class WorkbenchService:
             product_name=board.product_name,
             stage=stage,
             state=_STATE_NAMES[raw_state],
+            checkpoint_token=self.__checkpoint_token(revision, status),
             review_path=review_path,
             editor_image_path=editor_image_path,
             editor_mode=editor_mode,
             saved=board.saved_revision_id == revision.id,
             stale_from_stage=revision.stale_from_stage,
         )
+
+    def __checkpoint_token(
+        self, revision: RevisionRecord, status: Mapping[str, object]
+    ) -> str | None:
+        if status.get("status") != "awaiting_approval":
+            return None
+        stage = status.get("stage")
+        manifest = self.__manifest(revision.run_root)
+        stages = manifest.get("stages")
+        if isinstance(stage, bool) or not isinstance(stage, int) or not isinstance(stages, list):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        record = next(
+            (
+                candidate
+                for candidate in stages
+                if isinstance(candidate, Mapping) and candidate.get("stage") == stage
+            ),
+            None,
+        )
+        if not isinstance(record, Mapping):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        attempt = record.get("attempt")
+        candidate_hash = record.get("candidateHashesSha256")
+        if (
+            isinstance(attempt, bool)
+            or not isinstance(attempt, int)
+            or attempt < 1
+            or not isinstance(candidate_hash, str)
+            or not candidate_hash
+        ):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        identity = json.dumps(
+            {
+                "attempt": attempt,
+                "candidateHashesSha256": candidate_hash,
+                "revisionId": revision.id,
+                "stage": stage,
+            },
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return sha256(identity).hexdigest()
 
     def __synchronize_revision(
         self, board_id: str, revision_id: str
@@ -661,12 +744,17 @@ class WorkbenchService:
         return value
 
     def __publish_latest_draft(
-        self, board_id: str, revision: RevisionRecord, stage: int
+        self,
+        board_id: str,
+        revision: RevisionRecord,
+        stage: int,
+        checkpoint_token: str,
     ) -> None:
-        draft = self.__latest_draft(board_id, revision, stage)
-        if draft is None:
+        document = self.__latest_draft(
+            board_id, revision, stage, checkpoint_token
+        )
+        if document is None:
             return
-        document = json.loads(draft.read_text(encoding="utf-8"))
         temporary_root = Path(
             tempfile.mkdtemp(
                 prefix=f".stage-{stage}-edit-", dir=revision.run_root.parent
@@ -681,8 +769,12 @@ class WorkbenchService:
             shutil.rmtree(temporary_root, ignore_errors=True)
 
     def __latest_draft(
-        self, board_id: str, revision: RevisionRecord, stage: int
-    ) -> Path | None:
+        self,
+        board_id: str,
+        revision: RevisionRecord,
+        stage: int,
+        checkpoint_token: str,
+    ) -> object | None:
         revision_root = self.store._revision_root(
             board_id, revision.id
         ).resolve(strict=True)
@@ -701,14 +793,23 @@ class WorkbenchService:
             if path.is_file()
             and (match := _DRAFT_FILE.fullmatch(path.name)) is not None
         ]
-        if not drafts:
-            return None
-        latest = max(drafts, key=lambda item: item[0])[1].resolve(strict=True)
-        try:
-            latest.relative_to(revision_root)
-        except ValueError as error:
-            raise WorkbenchServiceError("draft path escapes its revision") from error
-        return latest
+        for _identifier, path in sorted(drafts, reverse=True):
+            candidate = path.resolve(strict=True)
+            try:
+                candidate.relative_to(revision_root)
+            except ValueError as error:
+                raise WorkbenchServiceError("draft path escapes its revision") from error
+            try:
+                envelope = json.loads(candidate.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                raise WorkbenchServiceError("draft is invalid") from error
+            if (
+                isinstance(envelope, Mapping)
+                and envelope.get("checkpointToken") == checkpoint_token
+                and "document" in envelope
+            ):
+                return envelope["document"]
+        return None
 
     def __replay_reviewed_edit(
         self,

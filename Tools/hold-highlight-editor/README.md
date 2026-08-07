@@ -22,11 +22,13 @@ attempt for the current stage without overwriting its earlier evidence.
 
 Stage 2 edits the pixel-aligned contour inventory that produces the label map.
 Stage 3 edits the vector display paths that become the final interactive grip
-geometry. Both editors autosave validated drafts to the active revision;
-approval materializes the newest draft as a new checkpoint attempt. Undo/redo
-history is browser-local, and an unsaved same-browser recovery draft can be
-restored after refresh. Published attempts and approvals remain immutable on
-disk.
+geometry. Both editors autosave validated drafts bound to the active checkpoint
+attempt; approval materializes only the newest draft for that exact attempt.
+Undo/redo history is browser-local, and an unsaved same-browser recovery draft
+can be restored after refresh only while its checkpoint identity still matches.
+Accepted jobs are persisted independently and reconciled after refresh, so
+work on separate boards cannot overwrite another tab's recovery record.
+Published attempts and approvals remain immutable on disk.
 
 **Revise upstream** creates a new revision at the preceding approved stage and
 marks superseded downstream lineage stale. A typical local layout is:
@@ -143,4 +145,5 @@ Edge snapping is a local contrast aid, not automatic segmentation. It affects on
 Both export buttons remain available in server and static modes as recovery
 paths. In legacy/static mode, unsaved browser edits are lost when the page
 closes; guided workbench mode keeps a same-browser recovery draft and restores
-it only for the matching board, revision, and stage.
+it only for the matching board, revision, stage, and immutable checkpoint
+attempt.
