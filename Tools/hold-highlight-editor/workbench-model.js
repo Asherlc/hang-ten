@@ -34,5 +34,30 @@
     return Math.max(0, Math.min(STAGE_COUNT, value));
   }
 
-  return { timelineFor, canApprove };
+  function openingSections(libraryBoards = [], runtimeBoards = []) {
+    const byLabelThenId = (labelKey, idKey) => (left, right) => {
+      const labelOrder = String(left?.[labelKey] || "").localeCompare(
+        String(right?.[labelKey] || ""),
+        undefined,
+        { sensitivity: "base" },
+      );
+      if (labelOrder) return labelOrder;
+      return String(left?.[idKey] || "").localeCompare(String(right?.[idKey] || ""));
+    };
+    const library = Array.isArray(libraryBoards) ? [...libraryBoards] : [];
+    const runtime = Array.isArray(runtimeBoards) ? [...runtimeBoards] : [];
+    const currentVersions = new Map(library.map((board) => [board?.boardId, board?.currentVersionId]));
+    const inProgress = runtime.filter((board) => !(
+      board?.saved === true
+      && board.repositoryBoardId
+      && board.repositoryVersionId
+      && currentVersions.get(board.repositoryBoardId) === board.repositoryVersionId
+    ));
+    return {
+      library: library.sort(byLabelThenId("displayName", "boardId")),
+      inProgress: inProgress.sort(byLabelThenId("productName", "boardId")),
+    };
+  }
+
+  return { timelineFor, canApprove, openingSections };
 }));

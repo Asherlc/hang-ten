@@ -15,6 +15,7 @@ const {
   isRecoverableJobError,
   regionIdFromError,
   runFrozenApproval,
+  createOpeningBoardController,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -41,6 +42,52 @@ function memoryStorage() {
     removeItem(key) { values.delete(key); },
   };
 }
+
+test("opening board controller fetches both lists and opens the selected repository or runtime board", async () => {
+  const calls = [];
+  const controller = createOpeningBoardController({
+    async listLibraryBoards() {
+      calls.push("library");
+      return [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }];
+    },
+    async listBoards() {
+      calls.push("runtime");
+      return [{ boardId: "board-2", productName: "Beta", saved: false }];
+    },
+    async openLibraryBoard(boardId) {
+      calls.push(["open", boardId]);
+      return { boardId: "board-1", productName: "Alpha" };
+    },
+    async getBoard(boardId) {
+      calls.push(["get", boardId]);
+      return { boardId, productName: "Beta" };
+    },
+  });
+
+  assert.deepEqual(await controller.refresh(), {
+    library: [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }],
+    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
+    errors: { library: "", runtime: "" },
+  });
+  assert.deepEqual(await controller.openRepositoryBoard("alpha"), { boardId: "board-1", productName: "Alpha" });
+  assert.deepEqual(await controller.openRuntimeBoard("board-2"), { boardId: "board-2", productName: "Beta" });
+  assert.deepEqual(calls, ["library", "runtime", ["open", "alpha"], ["get", "board-2"]]);
+});
+
+test("opening board controller preserves the runtime list when the library request fails", async () => {
+  const controller = createOpeningBoardController({
+    async listLibraryBoards() { throw new Error("Repository unavailable"); },
+    async listBoards() { return [{ boardId: "board-2", productName: "Beta", saved: false }]; },
+    async openLibraryBoard() { throw new Error("not used"); },
+    async getBoard() { throw new Error("not used"); },
+  });
+
+  assert.deepEqual(await controller.refresh(), {
+    library: [],
+    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
+    errors: { library: "Repository unavailable", runtime: "" },
+  });
+});
 
 test("only the latest interleaved checkpoint load may commit identity, geometry, and autosave state", async () => {
   const coordinator = createLatestLoadCoordinator();

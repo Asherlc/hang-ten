@@ -13,45 +13,53 @@
         <div class="brand-mark setup-mark">H</div>
         <span class="eyebrow">Local onboarding</span>
         <h1 id="setup-title">Start a hangboard</h1>
-        <p>Bring one commercial board into the guided illustration pipeline. Work stays on this machine.</p>
-        <form id="setup-form" class="setup-form">
-          <label id="setup-product-field">
-            Product name
-            <input id="setup-product-input" name="productName" autocomplete="off" required placeholder="Commercial product name" />
-          </label>
-          <fieldset>
-            <legend>Image source</legend>
-            <label class="source-choice">
-              <input type="radio" name="sourceKind" value="url" checked />
-              <span>Image URL</span>
+        <p>Open a published board, continue work in progress, or bring a new commercial board into the guided illustration pipeline.</p>
+        <div class="opening-grid">
+          <section class="opening-section repository-section" aria-labelledby="repository-heading">
+            <div class="opening-heading">
+              <span class="eyebrow">Repository</span>
+              <h2 id="repository-heading">Published boards</h2>
+            </div>
+            <div id="repository-board-list" class="board-opening-list" aria-live="polite"></div>
+          </section>
+          <section class="opening-section progress-section" aria-labelledby="in-progress-heading">
+            <div class="opening-heading">
+              <span class="eyebrow">Workspace</span>
+              <h2 id="in-progress-heading">In progress</h2>
+            </div>
+            <div id="in-progress-board-list" class="board-opening-list" aria-live="polite"></div>
+          </section>
+          <form id="create-board-form" class="setup-form create-board-form">
+            <div class="opening-heading">
+              <span class="eyebrow">New work</span>
+              <h2>Create board</h2>
+            </div>
+            <label id="setup-product-field">
+              Product name
+              <input id="setup-product-input" name="productName" autocomplete="off" required placeholder="Commercial product name" />
             </label>
-            <label class="source-choice">
-              <input type="radio" name="sourceKind" value="upload" />
-              <span>Upload image</span>
+            <fieldset>
+              <legend>Image source</legend>
+              <label class="source-choice">
+                <input type="radio" name="sourceKind" value="url" checked />
+                <span>Image URL</span>
+              </label>
+              <label class="source-choice">
+                <input type="radio" name="sourceKind" value="upload" />
+                <span>Upload image</span>
+              </label>
+            </fieldset>
+            <label id="setup-url-field">
+              HTTP(S) URL
+              <input id="setup-url-input" type="url" placeholder="https://…" />
             </label>
-            <label class="source-choice">
-              <input type="radio" name="sourceKind" value="import" />
-              <span>Existing CLI run</span>
+            <label class="hidden" id="setup-upload-field">
+              Image file
+              <input id="setup-upload-input" type="file" accept="image/*" />
             </label>
-          </fieldset>
-          <label id="setup-url-field">
-            HTTP(S) URL
-            <input id="setup-url-input" type="url" placeholder="https://…" />
-          </label>
-          <label class="hidden" id="setup-upload-field">
-            Image file
-            <input id="setup-upload-input" type="file" accept="image/*" />
-          </label>
-          <label class="hidden" id="setup-import-field">
-            CLI run folder
-            <input id="setup-import-input" autocomplete="off" placeholder="/absolute/path/to/run" />
-          </label>
-          <p class="setup-error hidden" id="setup-error" role="alert"></p>
-          <button class="primary-button" id="setup-submit-button" type="submit">Create board</button>
-        </form>
-        <div class="setup-recents hidden" id="setup-recents-wrap">
-          <span class="eyebrow">Or continue</span>
-          <div id="setup-recents" class="setup-recent-list"></div>
+            <p class="setup-error hidden" id="setup-error" role="alert"></p>
+            <button class="primary-button" id="setup-submit-button" type="submit">Create board</button>
+          </form>
         </div>
       </div>
     </section>
@@ -105,7 +113,7 @@
           <section class="recent-block" id="recent-block">
             <div class="rail-heading">
               <span class="eyebrow">Recent runs</span>
-              <button class="quiet-button" type="button" id="new-board-button">New</button>
+              <button class="quiet-button" type="button" id="new-board-button">Boards</button>
             </div>
             <div class="recent-runs" id="recent-runs"></div>
           </section>

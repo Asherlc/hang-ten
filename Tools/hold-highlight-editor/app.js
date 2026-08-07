@@ -17,7 +17,7 @@
     mirrorCornerTreatments,
   } = globalThis.HoldEditorModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
-  const { timelineFor, canApprove } = globalThis.HoldWorkbenchModel;
+  const { timelineFor, canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
     parseDisplayPath,
     serializeDisplayPath,
@@ -30,6 +30,7 @@
   } = globalThis.HoldVectorPathModel;
   const {
     createLatestLoadCoordinator,
+    createOpeningBoardController,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
@@ -59,6 +60,12 @@
   const loadCoordinator = createLatestLoadCoordinator();
   const draftStore = createDraftStore(localStorage);
   const activeJobStore = createActiveJobStore(localStorage);
+  const openingBoardController = createOpeningBoardController({
+    listLibraryBoards: () => workbenchClient.listLibraryBoards(),
+    listBoards: () => workbenchClient.listBoards(),
+    openLibraryBoard: (boardId) => runTrackedJob((options) => workbenchClient.openLibraryBoard(boardId, options)),
+    getBoard: (boardId) => workbenchClient.getBoard(boardId),
+  });
   const autosaveCoordinator = createAutosaveCoordinator({
     save: (entry) => runTrackedJob((options) => workbenchClient.saveDraft(
       entry.view, entry.document, options,
@@ -115,6 +122,8 @@
     imagePixels: null,
     guided: false,
     boards: [],
+    libraryBoards: [],
+    openingErrors: { library: "", runtime: "" },
     board: null,
     editorMode: "contour",
     checkpointDocument: null,
@@ -143,8 +152,8 @@
     "tension-field", "curve-tension-slider", "curve-tension-value",
     "corner-treatment-field", "corner-number", "corner-treatment-select", "corner-amount-input",
     "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
-    "setup-screen", "workbench-screen", "setup-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input", "setup-import-input",
-    "setup-url-field", "setup-upload-field", "setup-import-field", "setup-error", "setup-submit-button", "setup-recents-wrap", "setup-recents",
+    "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
+    "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "legacy-controls",
   ].map((id) => [id, document.getElementById(id)]));
@@ -1642,26 +1651,65 @@
   }
 
   function renderRecentRuns() {
-    for (const container of [el["recent-runs"], el["setup-recents"]]) container.replaceChildren();
+    el["recent-runs"].replaceChildren();
     state.boards.forEach((board) => {
-      const makeButton = () => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
-        button.innerHTML = `<span>${escapeHTML(board.productName)}</span><small>Stage ${String(board.stage)}</small>`;
-        button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
-        return button;
-      };
-      el["recent-runs"].appendChild(makeButton());
-      el["setup-recents"].appendChild(makeButton());
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
+      button.innerHTML = `<span>${escapeHTML(board.productName)}</span><small>Stage ${String(board.stage)}</small>`;
+      button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
+      el["recent-runs"].appendChild(button);
     });
-    el["setup-recents-wrap"].classList.toggle("hidden", state.boards.length === 0);
+  }
+
+  function renderOpeningList(container, boards, { emptyMessage, errorMessage, label, detail, onSelect }) {
+    container.replaceChildren();
+    if (errorMessage) {
+      const message = document.createElement("p");
+      message.className = "opening-list-message error";
+      message.textContent = errorMessage;
+      container.appendChild(message);
+      return;
+    }
+    if (!boards.length) {
+      const message = document.createElement("p");
+      message.className = "opening-list-message";
+      message.textContent = emptyMessage;
+      container.appendChild(message);
+      return;
+    }
+    boards.forEach((board) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "opening-board-row";
+      button.innerHTML = `<span>${escapeHTML(label(board))}</span><small>${escapeHTML(detail(board))}</small>`;
+      button.addEventListener("click", () => void onSelect(board.boardId));
+      container.appendChild(button);
+    });
+  }
+
+  function renderOpeningSections() {
+    const sections = openingSections(state.libraryBoards, state.boards);
+    renderOpeningList(el["repository-board-list"], sections.library, {
+      emptyMessage: "No published boards yet.",
+      errorMessage: state.openingErrors.library,
+      label: (board) => board.displayName || board.boardId,
+      detail: (board) => `Version ${board.currentVersionId || "unavailable"}`,
+      onSelect: selectLibraryBoard,
+    });
+    renderOpeningList(el["in-progress-board-list"], sections.inProgress, {
+      emptyMessage: "No boards in progress.",
+      errorMessage: state.openingErrors.runtime,
+      label: (board) => board.productName || board.boardId,
+      detail: (board) => board.saved ? "Saved locally" : `Stage ${String(board.stage ?? 0)} · Unsaved`,
+      onSelect: selectGuidedBoard,
+    });
   }
 
   function showSetup() {
     el["setup-screen"].classList.remove("hidden");
     el["workbench-screen"].classList.add("hidden");
-    renderRecentRuns();
+    renderOpeningSections();
   }
 
   function showWorkbench() {
@@ -1670,9 +1718,39 @@
   }
 
   async function refreshBoards() {
-    state.boards = await workbenchClient.listBoards();
+    const opening = await openingBoardController.refresh();
+    state.libraryBoards = opening.library;
+    state.boards = opening.runtime;
+    state.openingErrors = { ...opening.errors };
     renderRecentRuns();
+    renderOpeningSections();
     return state.boards;
+  }
+
+  async function selectLibraryBoard(boardId) {
+    const load = loadCoordinator.begin();
+    state.busy = true;
+    showWorkbench();
+    renderSaveState();
+    try {
+      const view = await openingBoardController.openRepositoryBoard(boardId);
+      await refreshBoards();
+      if (!load.isCurrent()) return false;
+      const loaded = await loadCheckpoint(view, null, load);
+      if (loaded) setStatus(`Reviewing ${view.productName}.`);
+      return loaded;
+    } catch (error) {
+      if (!load.isCurrent()) return false;
+      state.openingErrors.library = error.message || "Could not open repository board.";
+      showSetup();
+      return false;
+    } finally {
+      if (load.isCurrent()) {
+        state.busy = false;
+        renderGuidedShell();
+        render();
+      }
+    }
   }
 
   async function selectGuidedBoard(boardId) {
@@ -1681,7 +1759,7 @@
     showWorkbench();
     renderSaveState();
     try {
-      const view = await workbenchClient.getBoard(boardId);
+      const view = await openingBoardController.openRuntimeBoard(boardId);
       if (!load.isCurrent()) return false;
       const loaded = await loadCheckpoint(view, null, load);
       if (loaded) setStatus(`Reviewing ${view.productName}.`);
@@ -1703,18 +1781,13 @@
   async function createGuidedBoard(event) {
     event.preventDefault();
     const productName = el["setup-product-input"].value.trim();
-    const sourceKind = new FormData(el["setup-form"]).get("sourceKind");
+    const sourceKind = new FormData(el["create-board-form"]).get("sourceKind");
     const source = el["setup-url-input"].value.trim();
     const upload = el["setup-upload-input"].files[0];
-    const importPath = el["setup-import-input"].value.trim();
     el["setup-error"].classList.add("hidden");
-    const invalid = sourceKind === "import"
-      ? !importPath
-      : !productName || (sourceKind === "url" ? !source : !upload);
+    const invalid = !productName || (sourceKind === "url" ? !source : !upload);
     if (invalid) {
-      el["setup-error"].textContent = sourceKind === "import"
-        ? "Enter the absolute folder path of a CLI onboarding run."
-        : "Enter a product name and choose one image source.";
+      el["setup-error"].textContent = "Enter a product name and choose one image source.";
       el["setup-error"].classList.remove("hidden");
       return;
     }
@@ -1723,7 +1796,6 @@
     el["setup-submit-button"].textContent = "Creating…";
     try {
       const view = await runTrackedJob((options) => {
-        if (sourceKind === "import") return workbenchClient.importRun(importPath, options);
         if (sourceKind === "url") return workbenchClient.createFromUrl(productName, source, options);
         return workbenchClient.createFromUpload(productName, upload, options);
       });
@@ -1739,18 +1811,16 @@
       }
     } finally {
       el["setup-submit-button"].disabled = state.editingFrozen;
-      renderSetupSourceKind(new FormData(el["setup-form"]).get("sourceKind"));
+      renderSetupSourceKind(new FormData(el["create-board-form"]).get("sourceKind"));
     }
   }
 
   function renderSetupSourceKind(sourceKind) {
-    const importing = sourceKind === "import";
-    el["setup-product-field"].classList.toggle("hidden", importing);
-    el["setup-product-input"].required = !importing;
+    el["setup-product-field"].classList.remove("hidden");
+    el["setup-product-input"].required = true;
     el["setup-url-field"].classList.toggle("hidden", sourceKind !== "url");
     el["setup-upload-field"].classList.toggle("hidden", sourceKind !== "upload");
-    el["setup-import-field"].classList.toggle("hidden", !importing);
-    el["setup-submit-button"].textContent = importing ? "Import run" : "Create board";
+    el["setup-submit-button"].textContent = "Create board";
   }
 
   async function approveCurrent() {
@@ -1835,7 +1905,7 @@
 
   async function finalSaveCurrent() {
     if (!state.board || state.busy) return;
-    await runGuidedMutation((options) => workbenchClient.finalSave(state.board, options), "Saved the approved revision locally.");
+    await runGuidedMutation((options) => workbenchClient.finalSave(state.board, options), "Saved to this repository.");
   }
 
   async function runGuidedMutation(operation, successMessage) {
@@ -1886,7 +1956,7 @@
           return true;
         }
         state.editingFrozen = false;
-        state.boards = await workbenchClient.listBoards();
+        await refreshBoards();
         const recovered = reconciliation.succeeded.at(-1)?.result;
         if (recovered) {
           await loadCheckpoint(recovered);
@@ -1909,19 +1979,9 @@
         render();
       }
     }
-    try {
-      state.boards = await workbenchClient.listBoards();
-    } catch (_error) {
-      return false;
-    }
-    renderRecentRuns();
-    if (!state.boards.length) {
-      showSetup();
-      setStatus("Create a board to begin.");
-      return true;
-    }
-    showWorkbench();
-    await selectGuidedBoard(state.boards[0].boardId);
+    await refreshBoards();
+    showSetup();
+    setStatus("Open a board or create one to begin.");
     return true;
   }
 
@@ -2394,8 +2454,11 @@
   el["compare-button"].addEventListener("click", () => setCompareEnabled(!state.compareEnabled));
   el["retry-button"].addEventListener("click", () => void retryCurrent());
   el["revise-button"].addEventListener("click", () => void reviseCurrent());
-  el["new-board-button"].addEventListener("click", showSetup);
-  el["setup-form"].addEventListener("submit", createGuidedBoard);
+  el["new-board-button"].addEventListener("click", () => {
+    showSetup();
+    void refreshBoards();
+  });
+  el["create-board-form"].addEventListener("submit", createGuidedBoard);
   document.querySelectorAll('input[name="sourceKind"]').forEach((input) => {
     input.addEventListener("change", () => {
       if (!input.checked) return;

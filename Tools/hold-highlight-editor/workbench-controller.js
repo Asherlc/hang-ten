@@ -28,6 +28,47 @@
     };
   }
 
+  function createOpeningBoardController({
+    listLibraryBoards,
+    listBoards,
+    openLibraryBoard,
+    getBoard,
+  }) {
+    for (const [name, callback] of Object.entries({
+      listLibraryBoards,
+      listBoards,
+      openLibraryBoard,
+      getBoard,
+    })) {
+      if (typeof callback !== "function") throw new TypeError(`${name} must be a function`);
+    }
+
+    const collect = (list) => Promise.resolve()
+      .then(list)
+      .then(
+        (boards) => ({ boards: Array.isArray(boards) ? boards : [], error: "" }),
+        (error) => ({ boards: [], error: error?.message || "Could not load boards." }),
+      );
+
+    async function refresh() {
+      const [library, runtime] = await Promise.all([
+        collect(listLibraryBoards),
+        collect(listBoards),
+      ]);
+      return Object.freeze({
+        library: library.boards,
+        runtime: runtime.boards,
+        errors: Object.freeze({ library: library.error, runtime: runtime.error }),
+      });
+    }
+
+    return Object.freeze({
+      refresh,
+      openRepositoryBoard: (boardId) => openLibraryBoard(boardId),
+      openRuntimeBoard: (boardId) => getBoard(boardId),
+    });
+  }
+
   function createAutosaveCoordinator({ save, onStart = () => {}, onSuccess = () => {}, onError = () => {} }) {
     if (typeof save !== "function") throw new TypeError("save must be a function");
     let generation = 0;
@@ -329,6 +370,7 @@
 
   return {
     createLatestLoadCoordinator,
+    createOpeningBoardController,
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
