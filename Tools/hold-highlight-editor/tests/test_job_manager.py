@@ -12,7 +12,12 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
 
-from job_manager import BoardJobManager, JobConflictError  # noqa: E402
+from job_manager import (  # noqa: E402
+    BoardJobManager,
+    JobCapacityError,
+    JobConflictError,
+    JobNotFoundError,
+)
 
 
 def test_job_manager_rejects_second_mutation_for_same_board():
@@ -42,6 +47,10 @@ def test_job_records_are_immutable_serializable_snapshots():
         "result": {"revisionId": "revision-1"},
         "error": None,
     }
+    finished.result["revisionId"] = "mutated"
+    detached = finished.as_dict()
+    detached["result"]["revisionId"] = "also-mutated"
+    assert manager.get(submitted.id).result == {"revisionId": "revision-1"}
 
 
 def test_job_manager_bounds_workers_but_runs_independent_boards():
@@ -98,3 +107,22 @@ def test_failed_job_has_safe_message_and_releases_board():
     assert failed.error == "job failed"
     assert "Traceback" not in failed.as_dict()["error"]
     assert retried.state == "succeeded"
+
+
+def test_job_manager_bounds_queued_work_and_completed_retention():
+    gate = Event()
+    manager = BoardJobManager(max_workers=1, max_queue=1, max_completed=2)
+    running = manager.submit("board-a", lambda: gate.wait(1))
+    queued = manager.submit("board-b", lambda: "queued")
+
+    with pytest.raises(JobCapacityError, match="capacity"):
+        manager.submit("board-c", lambda: "rejected")
+
+    gate.set()
+    manager.wait(running.id)
+    manager.wait(queued.id)
+    third = manager.wait(manager.submit("board-c", lambda: "third").id)
+
+    assert third.state == "succeeded"
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        manager.get(running.id)

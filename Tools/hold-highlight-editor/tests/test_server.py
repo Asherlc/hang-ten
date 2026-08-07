@@ -281,6 +281,22 @@ class PathLeakingWorkbenchService(FakeWorkbenchService):
         raise ValueError(f"could not open {self._root.resolve() / 'private.txt'}")
 
 
+class PathLeakingGetService(FakeWorkbenchService):
+    def list_boards(self) -> tuple[FakeWorkbenchView, ...]:
+        raise ValueError(f"could not scan {self._root.resolve() / 'private'}")
+
+
+class GeometryFailWorkbenchService(FakeWorkbenchService):
+    def approve_and_advance(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> FakeWorkbenchView:
+        raise FakeWorkbenchError("Stage 2 region 17: contour is invalid")
+
+
 def make_run(root: Path):
     image = root / "stages/01/attempt-0001/stage-1-auto-rgba.png"
     regions = root / "stages/02/attempt-0001/stage-2-regions.json"
@@ -784,6 +800,36 @@ def test_failed_job_poll_exposes_safe_error_without_traceback(
     assert "Traceback" not in json.dumps(final)
 
 
+def test_geometry_job_error_retains_actionable_region_without_paths(tmp_path):
+    service = GeometryFailWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        _status, submitted = _post_json(
+            base + "/api/approve",
+            {
+                "boardId": view["boardId"],
+                "expectedRevisionId": view["revisionId"],
+                "expectedStage": view["stage"],
+            },
+        )
+        final = _poll_job(base, submitted["jobId"])
+
+    assert final["state"] == "failed"
+    assert final["error"] == "Stage 2 region 17: contour is invalid"
+    assert str(tmp_path) not in json.dumps(final)
+
+
+def test_synchronous_board_gets_redact_untrusted_value_errors(tmp_path):
+    service = PathLeakingGetService(tmp_path / "workbench-private")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/boards")
+
+    assert error.value.code == 500
+    assert json.load(error.value) == {"ok": False, "error": "request failed"}
+    assert str(tmp_path) not in str(error.value)
+
+
 def test_job_poll_redacts_path_from_untrusted_value_error(tmp_path):
     service = PathLeakingWorkbenchService(tmp_path / "workbench-private")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
@@ -867,6 +913,26 @@ def test_artifact_endpoint_rejects_paths_outside_revision(
 
     assert error.value.code == 400
     assert json.load(error.value)["ok"] is False
+
+
+def test_artifact_endpoint_returns_safe_json_for_a_cyclic_symlink(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        run_root = service.get_board(view["boardId"]).run_root
+        (run_root / "loop").symlink_to("loop")
+        query = urlencode(
+            {
+                "boardId": view["boardId"],
+                "revisionId": view["revisionId"],
+                "path": "loop",
+            }
+        )
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + f"/api/artifact?{query}")
+
+    assert error.value.code == 404
+    assert json.load(error.value) == {"ok": False, "error": "artifact not found"}
 
 
 def test_unknown_job_returns_consistent_json_error(running_workbench_server):

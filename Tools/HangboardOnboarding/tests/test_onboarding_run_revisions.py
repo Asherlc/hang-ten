@@ -14,6 +14,7 @@ from hangboard_vectorizer.onboarding_run import (
     cached_source_path,
     read_status,
     replace_pending_checkpoint,
+    resume_run,
     start_run,
 )
 
@@ -37,6 +38,54 @@ def test_replace_pending_checkpoint_rejects_approved_or_wrong_stage(tmp_path: Pa
 
     with pytest.raises(OnboardingStateError, match="not awaiting approval"):
         replace_pending_checkpoint(run, _make_checkpoint(run.parent, stage=0, artifact_name="edited-stage-0"))
+
+
+def test_replace_pending_checkpoint_directly_rejects_the_wrong_stage(
+    tmp_path: Path,
+) -> None:
+    run = _started_run(tmp_path)
+
+    with pytest.raises(OnboardingStateError, match="does not match pending stage 0"):
+        replace_pending_checkpoint(
+            run,
+            _make_checkpoint(run.parent, stage=1, artifact_name="edited-stage-1"),
+        )
+
+
+def test_failed_stage_attempt_is_durable_across_restart_and_retry(
+    tmp_path: Path,
+) -> None:
+    run = _started_run(tmp_path)
+    approve_stage(run, 0)
+
+    with pytest.raises(RuntimeError, match="private runner detail"):
+        resume_run(run, runners={1: _FailingStage1Runner()})
+
+    failed_status = read_status(run)
+    manifest = json.loads((run / "run.json").read_text(encoding="utf-8"))
+    failure = manifest["failedAttempts"][0]
+    failure_root = run / failure["artifactRoot"]
+    evidence_before = {
+        path.name: path.read_bytes() for path in failure_root.iterdir() if path.is_file()
+    }
+    assert failed_status == {
+        "run": str(run),
+        "stage": 0,
+        "status": "failed",
+        "nextAction": "retry-stage-1",
+    }
+    assert failure["stage"] == 1
+    assert failure["attempt"] == 1
+    assert failure["status"] == "failed"
+    assert failure_root.joinpath(failure["logPath"]).is_file()
+    assert str(tmp_path) not in failure_root.joinpath(failure["logPath"]).read_text()
+
+    retried = resume_run(run, runners={1: _SuccessfulStage1Runner()})
+
+    assert retried["review"].endswith("stages/01/attempt-0002/stage-1-review.png")
+    assert {
+        path.name: path.read_bytes() for path in failure_root.iterdir() if path.is_file()
+    } == evidence_before
 
 
 def test_cached_source_path_returns_the_validated_cached_input(tmp_path: Path) -> None:
@@ -75,6 +124,22 @@ class _StubStage0Runner:
     def run(self, _context: object, artifact_root: Path) -> StageCheckpoint:
         return _make_checkpoint(
             artifact_root.parent, stage=0, artifact_name=artifact_root.name
+        )
+
+
+class _FailingStage1Runner:
+    stage = 1
+
+    def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
+        raise RuntimeError("private runner detail at /tmp/private-source.png")
+
+
+class _SuccessfulStage1Runner:
+    stage = 1
+
+    def run(self, _context: object, artifact_root: Path) -> StageCheckpoint:
+        return _make_checkpoint(
+            artifact_root.parent, stage=1, artifact_name=artifact_root.name
         )
 
 

@@ -6,6 +6,7 @@
   "use strict";
 
   const DRAFT_PREFIX = "hold-workbench-draft:";
+  const ACTIVE_JOB_KEY = "hold-workbench-active-job";
 
   function createLatestLoadCoordinator() {
     let latestToken = 0;
@@ -158,5 +159,49 @@
     return view.editorImageUrl || view.reviewUrl || null;
   }
 
-  return { createLatestLoadCoordinator, createAutosaveCoordinator, createDraftStore, checkpointImageUrl };
+  function createActiveJobStore(storage) {
+    function read() {
+      try {
+        const value = JSON.parse(storage.getItem(ACTIVE_JOB_KEY) || "null");
+        if (!value || typeof value.jobId !== "string" || !value.jobId) return null;
+        if (value.boardId != null && typeof value.boardId !== "string") return null;
+        return { jobId: value.jobId, boardId: value.boardId ?? null };
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function write(job) {
+      if (!job || typeof job.jobId !== "string" || !job.jobId) {
+        throw new TypeError("accepted job ID is required");
+      }
+      storage.setItem(ACTIVE_JOB_KEY, JSON.stringify({
+        jobId: job.jobId,
+        boardId: typeof job.boardId === "string" ? job.boardId : null,
+      }));
+    }
+
+    function clear(jobId) {
+      const current = read();
+      if (current?.jobId !== jobId) return false;
+      storage.removeItem(ACTIVE_JOB_KEY);
+      return true;
+    }
+
+    return Object.freeze({ read, write, clear });
+  }
+
+  function regionIdFromError(message) {
+    const match = String(message).match(/region\s+(\d+)/i);
+    return match ? Number(match[1]) : null;
+  }
+
+  return {
+    createLatestLoadCoordinator,
+    createAutosaveCoordinator,
+    createDraftStore,
+    checkpointImageUrl,
+    createActiveJobStore,
+    regionIdFromError,
+  };
 }));

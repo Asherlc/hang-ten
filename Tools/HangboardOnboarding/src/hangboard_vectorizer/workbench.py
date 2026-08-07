@@ -25,6 +25,7 @@ from .onboarding_run import (
     resume_run,
     start_run,
 )
+from .models import ConversionError
 from .review_edits import (
     materialize_stage2_edit,
     materialize_stage3_edit,
@@ -182,7 +183,10 @@ class WorkbenchService:
             raise WorkbenchServiceError(
                 "review drafts are supported only for Stage 2 and Stage 3"
             )
-        validated = validate_stage_edit(expected_stage, document)
+        try:
+            validated = validate_stage_edit(expected_stage, document)
+        except ConversionError as error:
+            raise self.__public_geometry_error(error) from error
         self.store.write_draft(
             board.id, revision.id, expected_stage, validated
         )
@@ -571,16 +575,31 @@ class WorkbenchService:
     ):
         manifest = WorkbenchService.__manifest(revision.run_root)
         context = RunContext(revision.run_root, MappingProxyType(manifest))
-        if stage == 2:
-            if not isinstance(document, Mapping):
-                raise WorkbenchServiceError("Stage 2 draft must be an object")
-            return materialize_stage2_edit(context, document, artifact_root)
-        if stage == 3:
-            if not isinstance(document, Mapping):
-                raise WorkbenchServiceError("Stage 3 draft must be an object")
-            return materialize_stage3_edit(context, document, artifact_root)
+        try:
+            if stage == 2:
+                if not isinstance(document, Mapping):
+                    raise WorkbenchServiceError("Stage 2 draft must be an object")
+                return materialize_stage2_edit(context, document, artifact_root)
+            if stage == 3:
+                if not isinstance(document, Mapping):
+                    raise WorkbenchServiceError("Stage 3 draft must be an object")
+                return materialize_stage3_edit(context, document, artifact_root)
+        except ConversionError as error:
+            raise WorkbenchService.__public_geometry_error(error) from error
         raise WorkbenchServiceError(
             "review drafts are supported only for Stage 2 and Stage 3"
         )
+
+    @staticmethod
+    def __public_geometry_error(error: ConversionError) -> WorkbenchServiceError:
+        message = str(error).strip()
+        if (
+            re.match(r"^Stage [23] region \d+: ", message)
+            and len(message) <= 500
+            and "/" not in message
+            and "\\" not in message
+        ):
+            return WorkbenchServiceError(message)
+        return WorkbenchServiceError("review geometry is invalid")
 
     __runners: Mapping[int, StageRunner]

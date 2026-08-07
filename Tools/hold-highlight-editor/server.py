@@ -20,6 +20,7 @@ from urllib.parse import parse_qs, unquote, urlencode, urlsplit
 
 from job_manager import (
     BoardJobManager,
+    JobCapacityError,
     JobConflictError,
     JobNotFoundError,
 )
@@ -287,6 +288,7 @@ def create_server(
         SessionHandler,
         workbench_service=workbench_service,
         job_manager=jobs,
+        public_error_types=public_job_error_types,
     )
 
 
@@ -300,9 +302,11 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         *,
         workbench_service: object | None,
         job_manager: BoardJobManager,
+        public_error_types: tuple[type[Exception], ...],
     ) -> None:
         self.workbench_service = workbench_service
         self.job_manager = job_manager
+        self.public_error_types = public_error_types
         super().__init__(server_address, request_handler)
 
     def server_close(self) -> None:
@@ -432,6 +436,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             self._send_json(error.status, {"ok": False, "error": str(error)})
         except JobConflictError as error:
             self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+        except JobCapacityError as error:
+            self._send_json(
+                HTTPStatus.SERVICE_UNAVAILABLE,
+                {"ok": False, "error": str(error)},
+            )
         except ValueError as error:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
         except Exception:
@@ -480,7 +489,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
             return
-        except ValueError as error:
+        except self._public_error_types() as error:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
         except Exception:
@@ -504,7 +513,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
             return
-        except ValueError as error:
+        except self._public_error_types() as error:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             return
         except Exception:
@@ -543,16 +552,17 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             artifact.relative_to(root)
             if not artifact.is_file():
                 raise FileNotFoundError
+            body = artifact.read_bytes()
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
             return
-        except (FileNotFoundError, ValueError):
+        except (FileNotFoundError, OSError, RuntimeError, ValueError):
             self._send_json(
                 HTTPStatus.NOT_FOUND,
                 {"ok": False, "error": "artifact not found"},
             )
             return
-        self._send_file(artifact)
+        self._send_file_body(artifact, body)
 
     def _post_upload(self, service: object, query: str) -> None:
         if not self.headers.get_content_type().startswith("image/"):
@@ -694,6 +704,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _job_manager(self) -> BoardJobManager:
         return self.server.job_manager
 
+    def _public_error_types(self) -> tuple[type[Exception], ...]:
+        return self.server.public_error_types
+
     def _selected_entry(self, query: str) -> CatalogSession:
         if self.editor_catalog is None:
             raise EditorError("no editor sessions are configured")
@@ -715,6 +728,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _send_file(self, path: Path) -> None:
         body = path.read_bytes()
+        self._send_file_body(path, body)
+
+    def _send_file_body(self, path: Path, body: bytes) -> None:
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)

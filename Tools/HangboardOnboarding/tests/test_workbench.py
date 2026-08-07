@@ -11,6 +11,7 @@ import pytest
 
 from hangboard_vectorizer import source_cache
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
+from hangboard_vectorizer.models import ConversionError
 from hangboard_vectorizer.onboard_cli import main as onboard_main
 from hangboard_vectorizer.onboarding_run import (
     RunContext,
@@ -356,6 +357,27 @@ def test_save_draft_is_immutable_and_published_before_approval(
     assert json.loads(drafts[0].read_text(encoding="utf-8")) == document
     assert manifest["stages"][2]["attempt"] == 2
     assert advanced.stage == 3
+
+
+def test_geometry_conversion_errors_are_public_and_retain_the_region_id(
+    service: WorkbenchService,
+    board_with_stage0: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    current = service.approve_and_advance(board_with_stage0.board_id, expected_stage=0)
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+    service.save_draft(current.board_id, _stage2_edit_document(), expected_stage=2)
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            ConversionError("Stage 2 region 7: contour is invalid")
+        ),
+    )
+
+    with pytest.raises(
+        WorkbenchServiceError, match=r"Stage 2 region 7: contour is invalid"
+    ):
+        service.approve_and_advance(current.board_id, expected_stage=2)
 
 
 def test_approval_selects_latest_draft_by_numeric_identifier(

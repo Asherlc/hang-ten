@@ -6,6 +6,8 @@ const {
   createAutosaveCoordinator,
   createDraftStore,
   checkpointImageUrl,
+  createActiveJobStore,
+  regionIdFromError,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -182,4 +184,21 @@ test("editable checkpoints use the clean editor image while preserving annotated
   assert.equal(checkpointImageUrl(view), view.editorImageUrl);
   assert.equal(view.reviewUrl, "/api/artifact?path=annotated.png");
   assert.equal(checkpointImageUrl({ stage: 1, reviewUrl: view.reviewUrl }), view.reviewUrl);
+});
+
+test("accepted job identity survives controller recreation for refresh recovery", () => {
+  const storage = memoryStorage();
+  createActiveJobStore(storage).write({ jobId: "job-17", boardId: "board-2" });
+
+  assert.deepEqual(createActiveJobStore(storage).read(), {
+    jobId: "job-17",
+    boardId: "board-2",
+  });
+  createActiveJobStore(storage).clear("job-17");
+  assert.equal(createActiveJobStore(storage).read(), null);
+});
+
+test("geometry error parsing identifies the region the UI must focus", () => {
+  assert.equal(regionIdFromError("Stage 2 region 17: contour is invalid"), 17);
+  assert.equal(regionIdFromError("job failed"), null);
 });

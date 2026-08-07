@@ -26,6 +26,8 @@
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
+    createActiveJobStore,
+    regionIdFromError,
   } = globalThis.HoldWorkbenchController;
 
   const STAGE_LABELS = [
@@ -42,8 +44,11 @@
   const AUTOSAVE_DELAY_MS = 500;
   const loadCoordinator = createLatestLoadCoordinator();
   const draftStore = createDraftStore(localStorage);
+  const activeJobStore = createActiveJobStore(localStorage);
   const autosaveCoordinator = createAutosaveCoordinator({
-    save: (entry) => workbenchClient.saveDraft(entry.view, entry.document),
+    save: (entry) => runTrackedJob((options) => workbenchClient.saveDraft(
+      entry.view, entry.document, options,
+    )),
     onStart: handleAutosaveStart,
     onSuccess: handleAutosaveSuccess,
     onError: handleAutosaveError,
@@ -1360,10 +1365,27 @@
   }
 
   function focusGeometryError(message) {
-    const match = String(message).match(/region\s+(\d+)/i);
-    const regionId = match ? Number(match[1]) : null;
+    const regionId = regionIdFromError(message);
     state.validationErrors = [{ regionId, message: String(message) }];
     if (regionId != null) focusRegion(regionId);
+  }
+
+  async function runTrackedJob(operation) {
+    let acceptedJobId = null;
+    const options = {
+      onAccepted(job) {
+        acceptedJobId = job.jobId;
+        activeJobStore.write(job);
+      },
+    };
+    try {
+      const result = await operation(options);
+      if (acceptedJobId) activeJobStore.clear(acceptedJobId);
+      return result;
+    } catch (error) {
+      if (acceptedJobId && error?.terminal) activeJobStore.clear(acceptedJobId);
+      throw error;
+    }
   }
 
   function focusRegion(regionId) {
@@ -1580,9 +1602,9 @@
     el["setup-submit-button"].disabled = true;
     el["setup-submit-button"].textContent = "Creating…";
     try {
-      const view = sourceKind === "url"
-        ? await workbenchClient.createFromUrl(productName, source)
-        : await workbenchClient.createFromUpload(productName, upload);
+      const view = await runTrackedJob((options) => sourceKind === "url"
+        ? workbenchClient.createFromUrl(productName, source, options)
+        : workbenchClient.createFromUpload(productName, upload, options));
       await refreshBoards();
       if (!load.isCurrent()) return;
       showWorkbench();
@@ -1612,7 +1634,7 @@
     renderSaveState();
     try {
       await flushDraft();
-      const updated = await workbenchClient.approve(view);
+      const updated = await runTrackedJob((options) => workbenchClient.approve(view, options));
       await refreshBoards();
       if (!load.isCurrent()) return;
       const loaded = await loadCheckpoint(updated, null, load);
@@ -1633,17 +1655,17 @@
 
   async function retryCurrent() {
     if (!state.board || state.busy) return;
-    await runGuidedMutation(() => workbenchClient.retry(state.board), "Checkpoint regenerated.");
+    await runGuidedMutation((options) => workbenchClient.retry(state.board, options), "Checkpoint regenerated.");
   }
 
   async function reviseCurrent() {
     if (!state.board || state.busy || state.board.stage < 1) return;
-    await runGuidedMutation(() => workbenchClient.revise(state.board, state.board.stage - 1), "Created a new upstream revision.");
+    await runGuidedMutation((options) => workbenchClient.revise(state.board, state.board.stage - 1, options), "Created a new upstream revision.");
   }
 
   async function finalSaveCurrent() {
     if (!state.board || state.busy) return;
-    await runGuidedMutation(() => workbenchClient.finalSave(state.board), "Saved the approved revision locally.");
+    await runGuidedMutation((options) => workbenchClient.finalSave(state.board, options), "Saved the approved revision locally.");
   }
 
   async function runGuidedMutation(operation, successMessage) {
@@ -1652,7 +1674,7 @@
     state.saveError = "";
     renderSaveState();
     try {
-      const updated = await operation();
+      const updated = await runTrackedJob(operation);
       await refreshBoards();
       if (!load.isCurrent()) return;
       const loaded = await loadCheckpoint(updated, null, load);
@@ -1672,14 +1694,36 @@
   }
 
   async function loadGuidedWorkbench() {
+    state.guided = true;
+    el["legacy-controls"].classList.add("hidden");
+    showBoardPicker(false);
+    const acceptedJob = activeJobStore.read();
+    if (acceptedJob) {
+      state.busy = true;
+      showWorkbench();
+      setStatus("Reconnecting to the active workbench job…");
+      render();
+      try {
+        const recovered = await workbenchClient.pollJob(acceptedJob.jobId);
+        activeJobStore.clear(acceptedJob.jobId);
+        state.boards = await workbenchClient.listBoards();
+        await loadCheckpoint(recovered);
+        setStatus(`Reconnected to ${recovered.productName}.`);
+        return true;
+      } catch (error) {
+        activeJobStore.clear(acceptedJob.jobId);
+        state.saveError = error.message || "Could not reconnect to the active job";
+        setStatus(state.saveError);
+      } finally {
+        state.busy = false;
+        render();
+      }
+    }
     try {
       state.boards = await workbenchClient.listBoards();
     } catch (_error) {
       return false;
     }
-    state.guided = true;
-    el["legacy-controls"].classList.add("hidden");
-    showBoardPicker(false);
     renderRecentRuns();
     if (!state.boards.length) {
       showSetup();

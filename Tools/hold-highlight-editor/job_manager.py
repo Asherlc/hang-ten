@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import json
+from collections import deque
 from collections.abc import Callable
+from copy import deepcopy
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
-from threading import Lock
+from threading import BoundedSemaphore, Lock
+from time import monotonic
 from typing import Any
 from uuid import uuid4
 
@@ -17,6 +20,10 @@ class JobConflictError(ValueError):
 
 class JobNotFoundError(ValueError):
     """Raised when a requested job identifier is unknown."""
+
+
+class JobCapacityError(ValueError):
+    """Raised when the bounded worker and queue capacity is exhausted."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -34,7 +41,7 @@ class JobRecord:
             "id": self.id,
             "boardId": self.board_id,
             "state": self.state,
-            "result": self.result,
+            "result": deepcopy(self.result),
             "error": self.error,
         }
 
@@ -48,7 +55,15 @@ class BoardJobManager:
         max_workers: int = 4,
         result_serializer: Callable[[object], object] | None = None,
         public_error_types: tuple[type[Exception], ...] = (),
+        max_queue: int | None = None,
+        max_completed: int = 256,
+        result_ttl_seconds: float = 3600,
     ) -> None:
+        if max_workers < 1:
+            raise ValueError("max_workers must be positive")
+        queue_limit = max_workers if max_queue is None else max_queue
+        if queue_limit < 0 or max_completed < 1 or result_ttl_seconds <= 0:
+            raise ValueError("job capacity and retention limits must be positive")
         self.__executor = ThreadPoolExecutor(
             max_workers=max_workers, thread_name_prefix="workbench"
         )
@@ -56,6 +71,11 @@ class BoardJobManager:
         self.__jobs: dict[str, JobRecord] = {}
         self.__active_jobs: dict[str, str] = {}
         self.__futures: dict[str, Future[None]] = {}
+        self.__capacity = BoundedSemaphore(max_workers + queue_limit)
+        self.__completed: deque[str] = deque()
+        self.__completed_at: dict[str, float] = {}
+        self.__max_completed = max_completed
+        self.__result_ttl_seconds = result_ttl_seconds
         self.__result_serializer = result_serializer or (lambda result: result)
         self.__public_error_types = public_error_types
 
@@ -64,35 +84,48 @@ class BoardJobManager:
             raise ValueError("board id must not be empty")
         job_id = uuid4().hex
         record = JobRecord(id=job_id, board_id=board_id, state="queued")
+        if not self.__capacity.acquire(blocking=False):
+            raise JobCapacityError("job queue capacity is exhausted")
         with self.__lock:
+            self.__prune_completed()
             if board_id in self.__active_jobs:
+                self.__capacity.release()
                 raise JobConflictError(f"a job is already running for board {board_id}")
             self.__jobs[job_id] = record
             self.__active_jobs[board_id] = job_id
             try:
-                self.__futures[job_id] = self.__executor.submit(
+                future = self.__executor.submit(
                     self.__run, job_id, operation
                 )
+                self.__futures[job_id] = future
             except Exception:
                 self.__jobs.pop(job_id, None)
                 self.__active_jobs.pop(board_id, None)
+                self.__capacity.release()
                 raise
+        future.add_done_callback(lambda _future: self.__forget_future(job_id))
         return record
 
     def get(self, job_id: str) -> JobRecord:
         with self.__lock:
+            self.__prune_completed()
             try:
-                return self.__jobs[job_id]
+                record = self.__jobs[job_id]
             except KeyError as error:
                 raise JobNotFoundError(f"unknown job: {job_id}") from error
+            return replace(record, result=deepcopy(record.result))
 
     def wait(self, job_id: str, timeout: float | None = None) -> JobRecord:
         with self.__lock:
-            try:
-                future = self.__futures[job_id]
-            except KeyError as error:
-                raise JobNotFoundError(f"unknown job: {job_id}") from error
-        future.result(timeout=timeout)
+            self.__prune_completed()
+            record = self.__jobs.get(job_id)
+            if record is None:
+                raise JobNotFoundError(f"unknown job: {job_id}")
+            future = self.__futures.get(job_id)
+            if future is None and record.state in {"queued", "running"}:
+                raise JobNotFoundError(f"unknown job: {job_id}")
+        if future is not None:
+            future.result(timeout=timeout)
         return self.get(job_id)
 
     def shutdown(self) -> None:
@@ -115,11 +148,32 @@ class BoardJobManager:
                 self.__jobs[job_id] = final
                 if self.__active_jobs.get(current.board_id) == job_id:
                     self.__active_jobs.pop(current.board_id)
+                self.__completed.append(job_id)
+                self.__completed_at[job_id] = monotonic()
+                self.__prune_completed()
+            self.__capacity.release()
 
     def __serializable_summary(self, result: object) -> Any:
         summary = self.__result_serializer(result)
         try:
-            json.dumps(summary, allow_nan=False)
+            encoded = json.dumps(summary, allow_nan=False)
         except (TypeError, ValueError) as error:
             raise ValueError("job result is not serializable") from error
-        return summary
+        return json.loads(encoded)
+
+    def __forget_future(self, job_id: str) -> None:
+        with self.__lock:
+            self.__futures.pop(job_id, None)
+
+    def __prune_completed(self) -> None:
+        cutoff = monotonic() - self.__result_ttl_seconds
+        while self.__completed:
+            job_id = self.__completed[0]
+            expired = self.__completed_at.get(job_id, 0) < cutoff
+            over_limit = len(self.__completed) > self.__max_completed
+            if not expired and not over_limit:
+                break
+            self.__completed.popleft()
+            self.__completed_at.pop(job_id, None)
+            self.__jobs.pop(job_id, None)
+            self.__futures.pop(job_id, None)
