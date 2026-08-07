@@ -50,6 +50,10 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private let audioSession: any WorkoutAudioSessionManaging
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
+    private var deactivationRetryTask: Task<Void, Never>?
+    private var remainingDeactivationRetries: Int
+
+    private static let maximumDeactivationRetries = 1
 
     override convenience init() {
         self.init(
@@ -64,6 +68,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     ) {
         self.synthesizer = synthesizer
         self.audioSession = audioSession
+        self.remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
         super.init()
         synthesizer.delegate = self
     }
@@ -100,6 +105,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
             try audioSession.configureForSpokenCues()
             try audioSession.activate()
             configuredAudioSession = true
+            remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
         } catch {
             logger.error("Unable to activate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
         }
@@ -116,8 +122,27 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         do {
             try audioSession.deactivateAndNotifyOthers()
             configuredAudioSession = false
+            deactivationRetryTask?.cancel()
+            deactivationRetryTask = nil
         } catch {
             logger.error("Unable to deactivate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
+            scheduleDeactivationRetryIfNeeded()
+        }
+    }
+
+    private func scheduleDeactivationRetryIfNeeded() {
+        guard configuredAudioSession,
+              !synthesizer.isSpeaking,
+              remainingDeactivationRetries > 0,
+              deactivationRetryTask == nil else { return }
+
+        remainingDeactivationRetries -= 1
+        deactivationRetryTask = Task { @MainActor [weak self] in
+            await Task.yield()
+            guard !Task.isCancelled, let self else { return }
+
+            deactivationRetryTask = nil
+            deactivateAudioSessionIfSpeechStopped()
         }
     }
 }

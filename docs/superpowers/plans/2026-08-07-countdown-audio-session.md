@@ -1,6 +1,6 @@
 # Countdown audio session recovery Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use a fresh subagent for every implementation or configuration task. Execute this plan task-by-task using the checkbox (`- [ ]`) workflow.
 
 **Goal:** Ensure spoken countdown cues stop and release iOS audio ducking only after speech has actually stopped, so music and podcasts recover their original volume.
 
@@ -12,6 +12,7 @@
 
 - Preserve the `.playback` category, `.spokenAudio` mode, `.duckOthers` behavior, speech voice/rate/volume settings, and numeric countdown policy.
 - Deactivate with `.notifyOthersOnDeactivation` only after the synthesizer reports that no utterance is speaking; do not leave the audio-session state marked inactive when deactivation throws.
+- If final deactivation throws after speech has ended, queue at most one retry and run it only while the synthesizer remains stopped; keep the configured-session state true until a deactivation succeeds.
 - Use test-driven development: the audio-coach regression test must fail before the production lifecycle change and pass afterward.
 - Keep implementation changes focused on session teardown; do not change workout timing, cue phrases, Bluetooth behavior, HealthKit records, or visible UI.
 - Keep logs, screenshots, simulator metadata, and other derived output under `.context`.
@@ -94,7 +95,7 @@
 
   Call the same helper from both `didFinish` and `didCancel`. This makes an immediate stop wait for the delegate callback when the synthesizer is still active, while a replacement cue keeps the session active because the new utterance is already speaking when the old cancellation callback arrives.
 
-  Make `deactivateAudioSession()` attempt `deactivateAndNotifyOthers()` before clearing its configured-session flag. Log activation/deactivation errors with the existing `WorkoutAudio` logger instead of swallowing them, so a transient `.isBusy` result remains retryable on the later delegate callback. Keep the production audio-session configuration exactly `.playback`, `.spokenAudio`, and `[.duckOthers]`, and keep deactivation exactly `.notifyOthersOnDeactivation`.
+  Make `deactivateAudioSession()` attempt `deactivateAndNotifyOthers()` before clearing its configured-session flag. Log activation/deactivation errors with the existing `WorkoutAudio` logger instead of swallowing them. If final deactivation fails after speech has ended, schedule one retry that re-checks `isSpeaking` before attempting teardown; do not create unbounded retry tasks. Keep the production audio-session configuration exactly `.playback`, `.spokenAudio`, and `[.duckOthers]`, and keep deactivation exactly `.notifyOthersOnDeactivation`.
 
 - [ ] **Step 4: Update the runtime note and run the focused green tests.**
 
@@ -113,7 +114,16 @@
     test 2>&1 | tee .context/audio-session-green.log
   ```
 
-  Confirm the command exits successfully and the output contains no failed tests. Then commit only the plan, coach, test, and runtime-note changes:
+  Focused `WorkoutAudioCoachTests` and generic `build-for-testing` are mandatory green gates. For the full suite, success is required unless it reports only the known unrelated baseline failure exactly as:
+
+  ```text
+  Failing tests:
+  	WorkoutActivityRecordingTests.testRecorderFailureSurfacesErrorWithoutCallingHealthKit()
+
+  ** TEST FAILED **
+  ```
+
+  That exact non-zero baseline result is allowed only when no additional test failures appear. Record the full-suite output and validate the commit against the same rule; any changed signature or any new failure blocks the commit. Then commit only the plan, coach, test, and runtime-note changes:
 
   ```bash
   rtk git add docs/superpowers/plans/2026-08-07-countdown-audio-session.md \

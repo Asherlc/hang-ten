@@ -614,6 +614,26 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
     }
+
+    func testDeactivationRetriesAfterTransientFailureOnceSpeechHasFinished() async {
+        let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 1)
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[0])
+        await Task.yield()
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
 }
 
 @MainActor
@@ -648,8 +668,14 @@ private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing
 private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
     private(set) var configurationCount = 0
     private(set) var activationCount = 0
+    private(set) var deactivationAttemptCount = 0
     private(set) var deactivationCount = 0
     private(set) var didDeactivateWithNotification = false
+    private var failedDeactivationAttempts: Int
+
+    init(failedDeactivationAttempts: Int = 0) {
+        self.failedDeactivationAttempts = failedDeactivationAttempts
+    }
 
     func configureForSpokenCues() throws {
         configurationCount += 1
@@ -660,9 +686,19 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
     }
 
     func deactivateAndNotifyOthers() throws {
+        deactivationAttemptCount += 1
+        guard failedDeactivationAttempts == 0 else {
+            failedDeactivationAttempts -= 1
+            throw RecordingWorkoutAudioSessionError.deactivationFailed
+        }
+
         deactivationCount += 1
         didDeactivateWithNotification = true
     }
+}
+
+private enum RecordingWorkoutAudioSessionError: Error {
+    case deactivationFailed
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
