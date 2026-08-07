@@ -116,10 +116,10 @@ class WorkbenchStore:
         if not isinstance(product_name, str) or not product_name.strip():
             raise WorkbenchStoreError("product name must not be empty")
         board_id = self._next_numbered_id(self._boards_root, _BOARD_ID, "board")
-        if reservation is not None:
-            reservation.board_id = board_id
         board_root = self._board_root(board_id)
         board_root.mkdir()
+        if reservation is not None:
+            reservation.board_id = board_id
         board = BoardRecord(
             id=board_id,
             product_name=product_name.strip(),

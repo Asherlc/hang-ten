@@ -284,6 +284,39 @@ def test_concurrent_board_reservations_publish_distinct_manifests(
     }
 
 
+def test_losing_initial_reservation_cannot_delete_another_store_winner(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    winner = WorkbenchStore(tmp_path)
+    loser = WorkbenchStore(tmp_path)
+    original_next_id = loser._next_numbered_id
+    winning_reservation = None
+
+    def collide(
+        root: Path,
+        pattern: object,
+        prefix: str,
+        **kwargs: object,
+    ) -> str:
+        nonlocal winning_reservation
+        if root == loser._boards_root and prefix == "board":
+            winning_reservation = winner.reserve_initial_revision("Winner")
+            return "board-0001"
+        return original_next_id(root, pattern, prefix, **kwargs)
+
+    monkeypatch.setattr(loser, "_next_numbered_id", collide)
+
+    with pytest.raises(FileExistsError):
+        loser.reserve_initial_revision("Loser")
+
+    assert winning_reservation is not None
+    winning_board, winning_revision = winning_reservation
+    persisted = WorkbenchStore(tmp_path).read_board(winning_board.id)
+    assert persisted.product_name == "Winner"
+    assert persisted.revisions == (winning_revision,)
+
+
 def test_write_draft_reports_serialization_errors_without_publishing(
     tmp_path: Path,
 ) -> None:
