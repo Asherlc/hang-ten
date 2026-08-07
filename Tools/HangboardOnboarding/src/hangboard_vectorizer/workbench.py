@@ -228,25 +228,86 @@ class WorkbenchService:
             previous_active_revision_id = matching_board.active_revision_id
             revision = self.store.create_revision(board.id)
         try:
-            self.__library.copy_current_run(library_board.board_id, revision.run_root)
-            self.store.activate_revision(board.id, revision.id)
-            self.store.mark_revision_complete(board.id, revision.id)
-            self.store.link_repository_version(
-                board.id,
-                repository_board_id=library_board.board_id,
-                repository_version_id=library_board.current_version_id,
+            copied_library_board = self.__library.copy_current_run(
+                library_board.board_id, revision.run_root
             )
         except Exception:
-            if matching_board is None:
-                self.__record_failed_creation(board, revision)
-            else:
-                self.store.mark_revision_failed(
-                    board.id,
-                    revision.id,
-                    restore_active_revision_id=previous_active_revision_id,
-                )
+            self.__fail_library_open(
+                board,
+                revision,
+                matching_board=matching_board,
+                previous_active_revision_id=previous_active_revision_id,
+            )
+            raise
+        try:
+            self.store.finalize_repository_open(
+                board.id,
+                revision.id,
+                repository_board_id=copied_library_board.board_id,
+                repository_version_id=copied_library_board.current_version_id,
+            )
+        except Exception:
+            if self.__repository_open_is_finalized(
+                board.id, revision, copied_library_board
+            ):
+                return self.__view(board.id, revision.id)
+            self.__fail_library_open(
+                board,
+                revision,
+                matching_board=matching_board,
+                previous_active_revision_id=previous_active_revision_id,
+            )
             raise
         return self.__view(board.id, revision.id)
+
+    def __fail_library_open(
+        self,
+        board: BoardRecord,
+        revision: RevisionRecord,
+        *,
+        matching_board: BoardRecord | None,
+        previous_active_revision_id: str,
+    ) -> None:
+        if matching_board is None:
+            self.__record_failed_creation(board, revision)
+            return
+        self.store.mark_revision_failed(
+            board.id,
+            revision.id,
+            restore_active_revision_id=previous_active_revision_id,
+        )
+
+    def __repository_open_is_finalized(
+        self,
+        board_id: str,
+        reserved_revision: RevisionRecord,
+        copied_library_board: LibraryBoard,
+    ) -> bool:
+        try:
+            persisted = self.store.read_board(board_id)
+            revision = next(
+                candidate
+                for candidate in persisted.revisions
+                if candidate.id == reserved_revision.id
+            )
+        except (StopIteration, OSError, ValueError):
+            return False
+        return (
+            persisted.active_revision_id == reserved_revision.id
+            and persisted.repository_board_id == copied_library_board.board_id
+            and persisted.repository_version_id
+            == copied_library_board.current_version_id
+            and revision.run_root == reserved_revision.run_root
+            and revision.parent_revision_id
+            == reserved_revision.parent_revision_id
+            and revision.fork_stage == reserved_revision.fork_stage
+            and revision.current_stage == _FINAL_STAGE
+            and revision.state == "complete"
+            and revision.stale_from_stage
+            == reserved_revision.stale_from_stage
+            and revision.publication_operation_id
+            == reserved_revision.publication_operation_id
+        )
 
     def get_board(
         self, board_id: str, *, revision_id: str | None = None

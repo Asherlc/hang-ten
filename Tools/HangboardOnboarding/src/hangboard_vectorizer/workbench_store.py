@@ -508,6 +508,39 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
+    def finalize_repository_open(
+        self,
+        board_id: str,
+        revision_id: str,
+        *,
+        repository_board_id: str,
+        repository_version_id: str,
+    ) -> BoardRecord:
+        """Atomically publish a copied repository revision and its identity."""
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        if revision.state != "pending":
+            raise WorkbenchStoreError(
+                f"revision {revision.id} is not pending repository finalization"
+            )
+        self._validate_repository_link(
+            repository_board_id, repository_version_id
+        )
+        completed = replace(
+            revision,
+            current_stage=_FINAL_STAGE,
+            state="complete",
+        )
+        updated = replace(
+            self._replace_revision(board, completed),
+            active_revision_id=completed.id,
+            repository_board_id=repository_board_id,
+            repository_version_id=repository_version_id,
+        )
+        self._write_board(updated)
+        return updated
+
+    @_synchronized
     def resolve_import_run(self, run_root: Path) -> Path:
         """Resolve and confine an import root before callers read any run data."""
         resolved_run = self._confined(Path(run_root))

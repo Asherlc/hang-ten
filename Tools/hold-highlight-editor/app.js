@@ -42,6 +42,7 @@
     validateEditableImageAlignment,
     createActiveJobStore,
     reconcileActiveJobs,
+    restoreOpeningAfterJobRecovery,
     clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,
@@ -1955,6 +1956,7 @@
     el["legacy-controls"].classList.add("hidden");
     showBoardPicker(false);
     const acceptedJobs = activeJobStore.readAll();
+    let recoveredFailure = null;
     if (acceptedJobs.length) {
       state.busy = true;
       state.editingFrozen = true;
@@ -1971,9 +1973,9 @@
           return true;
         }
         state.editingFrozen = false;
-        await refreshBoards();
         const recovered = reconciliation.succeeded.at(-1)?.result;
         if (recovered) {
+          await refreshBoards();
           await loadCheckpoint(recovered);
           setStatus(`Reconnected to ${recovered.productName}.`);
           return true;
@@ -1981,22 +1983,26 @@
         const failure = reconciliation.failed.at(-1)?.error;
         if (failure) {
           state.saveError = failure.message || "Could not reconnect to an active job";
-          setStatus(state.saveError);
+          recoveredFailure = failure;
         }
       } catch (error) {
         holdForStoredActiveJob();
         if (activeJobStore.readAll().length) return true;
         state.editingFrozen = false;
         state.saveError = error.message || "Could not reconcile active jobs";
-        setStatus(state.saveError);
+        recoveredFailure = error;
       } finally {
         if (!activeJobStore.readAll().length) state.busy = false;
         render();
       }
     }
-    await refreshBoards();
-    showSetup();
-    setStatus("Open a board or create one to begin.");
+    await restoreOpeningAfterJobRecovery({
+      failure: recoveredFailure,
+      refreshBoards,
+      showSetup,
+      setupError: el["setup-error"],
+      setStatus,
+    });
     return true;
   }
 

@@ -379,6 +379,34 @@
     });
   }
 
+  async function restoreOpeningAfterJobRecovery({
+    failure,
+    refreshBoards,
+    showSetup,
+    setupError,
+    setStatus,
+  }) {
+    for (const [name, callback] of Object.entries({
+      refreshBoards,
+      showSetup,
+      setStatus,
+    })) {
+      if (typeof callback !== "function") throw new TypeError(`${name} must be a function`);
+    }
+    if (typeof setupError?.classList?.toggle !== "function") {
+      throw new TypeError("setup error element must support classList.toggle");
+    }
+    const message = failure
+      ? failure.message || "Could not reconnect to an active job"
+      : "";
+    await refreshBoards();
+    showSetup();
+    setupError.textContent = message;
+    setupError.classList.toggle("hidden", !message);
+    setStatus(message || "Open a board or create one to begin.");
+    return message;
+  }
+
   async function runFrozenApproval({
     setFrozen,
     cancelPointerSessions,
@@ -421,6 +449,7 @@
     validateEditableImageAlignment,
     createActiveJobStore,
     reconcileActiveJobs,
+    restoreOpeningAfterJobRecovery,
     clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,

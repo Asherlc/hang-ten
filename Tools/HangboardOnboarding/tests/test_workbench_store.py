@@ -323,6 +323,61 @@ def test_store_persists_repository_link_without_changing_runtime_id(
     assert store.read_board(board.id) == linked
 
 
+def test_finalize_repository_open_publishes_complete_active_link_atomically(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board, revision = store.reserve_initial_revision("Example Board")
+    writes = []
+    actual_write = store._write_board
+
+    def record_write(updated, *args: object, **kwargs: object) -> None:
+        writes.append(updated)
+        actual_write(updated, *args, **kwargs)
+
+    monkeypatch.setattr(store, "_write_board", record_write)
+
+    finalized = store.finalize_repository_open(
+        board.id,
+        revision.id,
+        repository_board_id="example-board",
+        repository_version_id="revision-0001",
+    )
+
+    assert len(writes) == 1
+    assert finalized == store.read_board(board.id)
+    assert finalized.active_revision_id == revision.id
+    assert finalized.repository_board_id == "example-board"
+    assert finalized.repository_version_id == "revision-0001"
+    assert finalized.saved_revision_id is None
+    persisted_revision = store.read_revision(board.id, revision.id)
+    assert persisted_revision.current_stage == 4
+    assert persisted_revision.state == "complete"
+
+
+def test_finalize_repository_open_interruption_preserves_pending_unlinked_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board, revision = store.reserve_initial_revision("Example Board")
+    before = store.read_board(board.id)
+
+    def fail_replace(_source: object, _destination: object) -> None:
+        raise OSError("repository open replacement interrupted")
+
+    monkeypatch.setattr("hangboard_vectorizer.workbench_store.os.replace", fail_replace)
+
+    with pytest.raises(OSError, match="repository open replacement interrupted"):
+        store.finalize_repository_open(
+            board.id,
+            revision.id,
+            repository_board_id="example-board",
+            repository_version_id="revision-0001",
+        )
+
+    assert WorkbenchStore(tmp_path).read_board(board.id) == before
+
+
 def test_publish_repository_revision_updates_link_and_saved_revision_atomically(
     tmp_path: Path,
 ) -> None:

@@ -203,6 +203,155 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     )
 
 
+def test_open_library_board_links_the_exact_version_returned_by_copy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    newer_run = _complete_runtime_board(
+        _fixture_service(tmp_path / "newer-seed"),
+        entry.display_name,
+        color=(90, 110, 130),
+    )
+    actual_copy = library.copy_current_run
+    advanced_versions = []
+
+    def advance_current_then_copy(board_id: str, destination: Path) -> LibraryBoard:
+        advanced_versions.append(
+            library.publish(
+                display_name=entry.display_name,
+                run_root=newer_run.run_root,
+                board_id=entry.board_id,
+                expected_current_version_id=entry.current_version_id,
+            )
+        )
+        return actual_copy(board_id, destination)
+
+    monkeypatch.setattr(library, "copy_current_run", advance_current_then_copy)
+
+    opened = service.open_library_board(entry.board_id)
+
+    assert len(advanced_versions) == 1
+    assert opened.repository_board_id == entry.board_id
+    assert opened.repository_version_id == advanced_versions[0].version_id
+    assert opened.repository_version_id == "revision-0002"
+
+
+def test_first_library_open_never_exposes_an_active_unlinked_conflict_key(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    workspace = tmp_path / "workspace"
+    service = _fixture_service(workspace, library=library)
+    actual_write = service.store._write_board
+    active_snapshots = []
+
+    def record_published_state(updated, *args: object, **kwargs: object) -> None:
+        actual_write(updated, *args, **kwargs)
+        persisted = WorkbenchStore(workspace).read_board(updated.id)
+        if persisted.active_revision_id:
+            active_snapshots.append(
+                (
+                    persisted.active_revision_id,
+                    persisted.repository_board_id,
+                    persisted.repository_version_id,
+                    service.mutation_reservation_key(persisted.id),
+                )
+            )
+
+    monkeypatch.setattr(service.store, "_write_board", record_published_state)
+
+    opened = service.open_library_board(entry.board_id)
+
+    expected = (
+        opened.revision_id,
+        entry.board_id,
+        entry.current_version_id,
+        f"repository-board:{entry.board_id}",
+    )
+    assert active_snapshots
+    assert all(snapshot == expected for snapshot in active_snapshots)
+
+
+def test_interrupted_first_library_open_never_exposes_active_unlinked_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    workspace = tmp_path / "workspace"
+    service = _fixture_service(workspace, library=library)
+    actual_write = service.store._write_board
+    active_snapshots = []
+    interrupted = False
+
+    def interrupt_final_transition(updated, *args: object, **kwargs: object) -> None:
+        nonlocal interrupted
+        if (
+            not interrupted
+            and updated.active_revision_id
+            and updated.repository_board_id == entry.board_id
+            and updated.repository_version_id == entry.current_version_id
+        ):
+            interrupted = True
+            raise OSError("repository open finalization interrupted")
+        actual_write(updated, *args, **kwargs)
+        persisted = WorkbenchStore(workspace).read_board(updated.id)
+        if persisted.active_revision_id:
+            active_snapshots.append(
+                (
+                    persisted.repository_board_id,
+                    persisted.repository_version_id,
+                )
+            )
+
+    monkeypatch.setattr(service.store, "_write_board", interrupt_final_transition)
+
+    with pytest.raises(OSError, match="repository open finalization interrupted"):
+        service.open_library_board(entry.board_id)
+
+    persisted = service.store.list_boards()[0]
+    assert interrupted is True
+    assert active_snapshots == []
+    assert persisted.active_revision_id == ""
+    assert persisted.repository_board_id is None
+    assert persisted.repository_version_id is None
+    assert persisted.revisions[-1].state == "failed"
+
+
+def test_first_library_open_reconciles_post_replace_finalization_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    actual_write = service.store._write_board
+    injected = False
+
+    def fail_after_target_replace(updated, *args: object, **kwargs: object) -> None:
+        nonlocal injected
+        if (
+            not injected
+            and updated.active_revision_id
+            and updated.repository_board_id == entry.board_id
+            and updated.repository_version_id == entry.current_version_id
+        ):
+            actual_write(updated, *args, **kwargs)
+            injected = True
+            raise OSError("repository open post-replace error")
+        actual_write(updated, *args, **kwargs)
+
+    monkeypatch.setattr(service.store, "_write_board", fail_after_target_replace)
+
+    opened = service.open_library_board(entry.board_id)
+
+    persisted = service.store.read_board(opened.board_id)
+    revision = service.store.read_revision(opened.board_id, opened.revision_id)
+    assert injected is True
+    assert persisted.active_revision_id == opened.revision_id
+    assert persisted.repository_board_id == entry.board_id
+    assert persisted.repository_version_id == entry.current_version_id
+    assert revision.current_stage == 4
+    assert revision.state == "complete"
+
+
 def test_open_newer_library_version_preserves_divergent_runtime_revision(
     tmp_path: Path,
 ) -> None:
@@ -252,16 +401,21 @@ def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
         expected_current_version_id=entry.current_version_id,
     )
 
-    def fail_link(*_args: object, **_kwargs: object) -> None:
-        raise OSError("repository link interrupted")
+    actual_write = service.store._write_board
 
-    monkeypatch.setattr(service.store, "link_repository_version", fail_link)
-    with pytest.raises(OSError, match="repository link interrupted"):
+    def fail_finalization(updated, *args: object, **kwargs: object) -> None:
+        if updated.repository_version_id == "revision-0002":
+            raise OSError("repository finalization interrupted")
+        actual_write(updated, *args, **kwargs)
+
+    monkeypatch.setattr(service.store, "_write_board", fail_finalization)
+    with pytest.raises(OSError, match="repository finalization interrupted"):
         service.open_library_board(entry.board_id)
 
     board = service.store.read_board(opened.board_id)
     failed = board.revisions[-1]
     assert board.active_revision_id == divergent.revision_id
+    assert board.repository_version_id == entry.current_version_id
     assert failed.state == "failed"
 
 
