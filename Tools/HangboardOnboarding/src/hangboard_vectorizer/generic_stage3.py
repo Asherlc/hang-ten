@@ -377,16 +377,28 @@ def _approved_inputs(
         raise ConversionError("Stage 2 regions are invalid")
     reconstructed = np.zeros(labels.shape, np.uint16)
     seen_keys: set[str] = set()
-    for expected_id, region in enumerate(regions, start=1):
-        if not isinstance(region, dict) or region.get("id") != expected_id:
-            raise ConversionError("Stage 2 region order changed")
+    seen_ids: set[int] = set()
+    previous_id = 0
+    for region in regions:
+        if not isinstance(region, dict):
+            raise ConversionError("Stage 2 regions are invalid")
+        region_id = region.get("id")
+        if (
+            type(region_id) is not int
+            or region_id <= 0
+            or region_id in seen_ids
+            or region_id <= previous_id
+        ):
+            raise ConversionError("Stage 2 region IDs must be positive and increasing")
         key = region.get("key")
         if not isinstance(key, str) or not key or key in seen_keys:
             raise ConversionError("Stage 2 region keys must be stable and unique")
         if region.get("type") not in _TYPE_COLORS:
             raise ConversionError("Stage 2 region type is invalid")
+        seen_ids.add(region_id)
         seen_keys.add(key)
-        reconstructed[labels == expected_id] = expected_id
+        previous_id = region_id
+        reconstructed[labels == region_id] = region_id
     if not np.array_equal(reconstructed, labels):
         raise ConversionError("Stage 2 label raster contains unknown IDs")
     evidence = {
