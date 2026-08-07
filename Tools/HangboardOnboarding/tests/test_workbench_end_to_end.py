@@ -387,6 +387,47 @@ def test_save_retry_reconciles_publication_after_atomic_runtime_update_failure(
     assert len(repository_document["versions"]) == (2 if existing_board else 1)
 
 
+def test_independent_workspaces_with_identical_local_ids_conflict_on_save(
+    tmp_path: Path,
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    first_service = _fixture_service(tmp_path / "workspace-a", library=library)
+    second_service = _fixture_service(tmp_path / "workspace-b", library=library)
+    first_opened = first_service.open_library_board(entry.board_id)
+    second_opened = second_service.open_library_board(entry.board_id)
+    first_complete = _approve_to_completion(
+        first_service,
+        first_service.revise_stage(
+            first_opened.board_id,
+            stage=3,
+            expected_revision_id=first_opened.revision_id,
+        ),
+    )
+    second_complete = _approve_to_completion(
+        second_service,
+        second_service.revise_stage(
+            second_opened.board_id,
+            stage=3,
+            expected_revision_id=second_opened.revision_id,
+        ),
+    )
+    assert (first_complete.board_id, first_complete.revision_id) == (
+        second_complete.board_id,
+        second_complete.revision_id,
+    )
+
+    first_service.save(
+        first_complete.board_id,
+        expected_revision_id=first_complete.revision_id,
+    )
+
+    with pytest.raises(BoardLibraryError, match="conflict"):
+        second_service.save(
+            second_complete.board_id,
+            expected_revision_id=second_complete.revision_id,
+        )
+
+
 def test_repository_save_uses_one_combined_runtime_metadata_update(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

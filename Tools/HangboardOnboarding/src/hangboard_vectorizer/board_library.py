@@ -17,6 +17,7 @@ import stat
 import tempfile
 from threading import RLock
 import unicodedata
+from uuid import UUID
 
 from .onboarding_run import OnboardingStateError, read_status
 
@@ -134,33 +135,39 @@ class RepositoryBoardLibrary:
         run_root: Path,
         board_id: str | None,
         expected_current_version_id: str | None,
-        publication_token: str | None = None,
+        publication_operation_id: str | None = None,
     ) -> PublishedBoard:
         display_name = self._display_name(display_name, "displayName")
         run_root = Path(run_root)
         published = self._published_document_for_run(run_root)
-        if publication_token is not None:
-            publication_token = self._sha(publication_token, "publication token")
+        if publication_operation_id is not None:
+            publication_operation_id = self._operation_id(
+                publication_operation_id, "publication operation"
+            )
         if board_id is None:
             if expected_current_version_id is not None:
                 raise BoardLibraryError("new board must not have an expected current version")
+            existing = self._catalog_index()
+            reconciled = self._reconciled_publication(
+                existing.values(), published, publication_operation_id
+            )
+            if reconciled is not None:
+                return reconciled
             return self._publish_new(
-                display_name, run_root, published, publication_token
+                display_name, run_root, published, publication_operation_id
             )
         identifier = self._board_id(board_id, "board")
         current = self._catalog_index().get(identifier)
         if current is None:
             raise BoardLibraryError(f"board does not exist: {identifier}")
+        reconciled = self._reconciled_publication(
+            (current,), published, publication_operation_id
+        )
+        if reconciled is not None:
+            return reconciled
         if expected_current_version_id != current.current_version_id:
-            reconciled = self._reconciled_publication(
-                (current,),
-                display_name,
-                published["runIdentitySha256"],
-                publication_token,
-            )
-            if reconciled is not None:
-                return reconciled
             raise BoardLibraryError(
+                "publication conflict: "
                 f"expected {expected_current_version_id}, current {current.current_version_id}"
             )
         return self._publish_existing(
@@ -168,7 +175,7 @@ class RepositoryBoardLibrary:
             run_root,
             published,
             expected_current_version_id=expected_current_version_id,
-            publication_token=publication_token,
+            publication_operation_id=publication_operation_id,
         )
 
     def _publish_existing(
@@ -178,7 +185,7 @@ class RepositoryBoardLibrary:
         published: dict[str, object],
         *,
         expected_current_version_id: str,
-        publication_token: str | None,
+        publication_operation_id: str | None,
     ) -> PublishedBoard:
         package = board.package_path
         versions_root = self._safe_existing_directory(package / "versions", package, "versions")
@@ -190,10 +197,10 @@ class RepositoryBoardLibrary:
             self._validate_complete_run(stage_run)
             self._validate_published_run(published, stage_run)
             self._write_new_json(stage / "published.json", published)
-            self._write_publication_token(
+            self._write_publication_operation(
                 stage,
-                publication_token,
-                published["runIdentitySha256"],
+                publication_operation_id,
+                published,
             )
             self._fsync_tree(stage)
             with self._publication_lock():
@@ -203,13 +210,13 @@ class RepositoryBoardLibrary:
                 if current.current_version_id != expected_current_version_id:
                     reconciled = self._reconciled_publication(
                         (current,),
-                        board.display_name,
-                        published["runIdentitySha256"],
-                        publication_token,
+                        published,
+                        publication_operation_id,
                     )
                     if reconciled is not None:
                         return reconciled
                     raise BoardLibraryError(
+                        "publication conflict: "
                         f"expected {expected_current_version_id}, current {current.current_version_id}"
                     )
                 board_document = self._read_board_document(package / "board.json", package)
@@ -235,7 +242,7 @@ class RepositoryBoardLibrary:
         display_name: str,
         run_root: Path,
         published: dict[str, object],
-        publication_token: str | None,
+        publication_operation_id: str | None,
     ) -> PublishedBoard:
         self._prepare_write_parent(self._library_root / "boards")
         boards_root = self._library_root / "boards"
@@ -247,19 +254,18 @@ class RepositoryBoardLibrary:
             self._validate_complete_run(version / "run")
             self._validate_published_run(published, version / "run")
             self._write_new_json(version / "published.json", published)
-            self._write_publication_token(
+            self._write_publication_operation(
                 version,
-                publication_token,
-                published["runIdentitySha256"],
+                publication_operation_id,
+                published,
             )
             self._fsync_tree(stage)
             with self._publication_lock():
                 existing = self._catalog_index()
                 reconciled = self._reconciled_publication(
                     existing.values(),
-                    display_name,
-                    published["runIdentitySha256"],
-                    publication_token,
+                    published,
+                    publication_operation_id,
                 )
                 if reconciled is not None:
                     return reconciled
@@ -352,9 +358,7 @@ class RepositoryBoardLibrary:
                     raise BoardLibraryError("publishedPath does not match versionId")
                 run = self._safe_existing_directory(version_path / "run", version_path, "run")
                 published = self._read_published(version_path / "published.json", version_path)
-                self._read_publication_token(
-                    version_path, published["runIdentitySha256"]
-                )
+                self._read_publication_operation(version_path, published)
                 self._validate_complete_run(run)
                 self._validate_published_run(published, run)
                 seen.add(version_id)
@@ -468,84 +472,161 @@ class RepositoryBoardLibrary:
     def _reconciled_publication(
         self,
         boards: object,
-        display_name: str,
-        run_identity: object,
-        publication_token: str | None,
+        published: Mapping[str, object],
+        publication_operation_id: str | None,
     ) -> PublishedBoard | None:
-        if publication_token is None:
+        if publication_operation_id is None:
             return None
-        identity = self._sha(run_identity, "runIdentitySha256")
-        matches = [
-            board
-            for board in boards
-            if isinstance(board, LibraryBoard)
-            and board.display_name == display_name
-            and self._current_run_identity(board) == identity
-            and self._current_publication_token(board) == publication_token
-        ]
+        identity = self._sha(published.get("runIdentitySha256"), "runIdentitySha256")
+        evidence = self._published_evidence_digest(published)
+        matches: list[tuple[LibraryBoard, str]] = []
+        for board in boards:
+            if not isinstance(board, LibraryBoard):
+                continue
+            document = self._read_board_document(
+                board.package_path / "board.json", board.package_path
+            )
+            for value in self._list(document["versions"], "board.versions"):
+                version = self._mapping(value, "board version")
+                version_id = self._version_id(version["versionId"])
+                version_root = self._member_path(
+                    board.package_path,
+                    version["publishedPath"],
+                    "publishedPath",
+                    require_directory=True,
+                )
+                stored_published = self._read_published(
+                    version_root / "published.json", version_root
+                )
+                operation = self._read_publication_operation(
+                    version_root, stored_published
+                )
+                if operation is None or operation[0] != publication_operation_id:
+                    continue
+                if operation[1] != identity or operation[2] != evidence:
+                    raise BoardLibraryError(
+                        "publication operation corruption: evidence does not match"
+                    )
+                matches.append((board, version_id))
         if len(matches) > 1:
             raise BoardLibraryError(
-                "published run identity matches more than one repository board"
+                "publication operation corruption: operation is not globally unique"
             )
         if not matches:
             return None
-        board = matches[0]
-        return PublishedBoard(board, board.current_version_id)
+        board, version_id = matches[0]
+        return PublishedBoard(board, version_id)
 
-    def _current_publication_token(self, board: LibraryBoard) -> str | None:
-        version_root = board.current_run_path.parent
-        return self._read_publication_token(
-            version_root,
-            self._current_run_identity(board),
-        )
-
-    def _read_publication_token(
-        self, version_root: Path, run_identity: object
-    ) -> str | None:
+    def _read_publication_operation(
+        self, version_root: Path, published: Mapping[str, object]
+    ) -> tuple[str, str, str] | None:
         path = version_root / "publication.json"
         self._reject_symlinks(version_root, path)
         if not path.exists():
             return None
-        document = self._read_json(path, version_root, "publication token")
+        document = self._read_json(path, version_root, "publication operation")
+        if document.get("schemaVersion") == 1:
+            self._exact_keys(
+                document,
+                {"schemaVersion", "token", "runIdentitySha256"},
+                "publication token",
+            )
+            identity = self._sha(
+                document["runIdentitySha256"],
+                "publication token runIdentitySha256",
+            )
+            if identity != self._sha(
+                published.get("runIdentitySha256"),
+                "published runIdentitySha256",
+            ):
+                raise BoardLibraryError(
+                    "publication token does not match published run"
+                )
+            self._sha(document["token"], "publication token")
+            return None
         self._exact_keys(
             document,
-            {"schemaVersion", "token", "runIdentitySha256"},
-            "publication token",
+            {
+                "schemaVersion",
+                "operationId",
+                "runIdentitySha256",
+                "publishedEvidenceSha256",
+            },
+            "publication operation",
         )
-        if document["schemaVersion"] != _SCHEMA_VERSION:
-            raise BoardLibraryError("unsupported publication token schema version")
+        if document["schemaVersion"] != 2:
+            raise BoardLibraryError(
+                "unsupported publication operation schema version"
+            )
+        operation_id = self._operation_id(
+            document["operationId"], "publication operation identifier"
+        )
         identity = self._sha(
-            document["runIdentitySha256"], "publication token runIdentitySha256"
+            document["runIdentitySha256"],
+            "publication operation runIdentitySha256",
         )
-        if identity != self._sha(run_identity, "published runIdentitySha256"):
-            raise BoardLibraryError("publication token does not match published run")
-        return self._sha(document["token"], "publication token")
+        if identity != self._sha(
+            published.get("runIdentitySha256"), "published runIdentitySha256"
+        ):
+            raise BoardLibraryError(
+                "publication operation does not match published run"
+            )
+        evidence = self._sha(
+            document["publishedEvidenceSha256"],
+            "publication operation evidence digest",
+        )
+        if evidence != self._published_evidence_digest(published):
+            raise BoardLibraryError(
+                "publication operation corruption: published evidence does not match"
+            )
+        return operation_id, identity, evidence
 
-    def _write_publication_token(
+    def _write_publication_operation(
         self,
         version_root: Path,
-        publication_token: str | None,
-        run_identity: object,
+        publication_operation_id: str | None,
+        published: Mapping[str, object],
     ) -> None:
-        if publication_token is None:
+        if publication_operation_id is None:
             return
         self._write_new_json(
             version_root / "publication.json",
             {
-                "schemaVersion": _SCHEMA_VERSION,
-                "token": publication_token,
+                "schemaVersion": 2,
+                "operationId": publication_operation_id,
                 "runIdentitySha256": self._sha(
-                    run_identity, "published runIdentitySha256"
+                    published.get("runIdentitySha256"),
+                    "published runIdentitySha256",
+                ),
+                "publishedEvidenceSha256": self._published_evidence_digest(
+                    published
                 ),
             },
         )
 
-    def _current_run_identity(self, board: LibraryBoard) -> str:
-        version_root = board.current_run_path.parent
-        published = self._read_published(version_root / "published.json", version_root)
-        return self._sha(
-            published["runIdentitySha256"], "published runIdentitySha256"
-        )
+    def _published_evidence_digest(
+        self, published: Mapping[str, object]
+    ) -> str:
+        outputs: list[dict[str, str]] = []
+        for key, _ in _OUTPUTS:
+            output = self._mapping(published.get(key), f"published {key}")
+            outputs.append(
+                {
+                    "kind": key,
+                    "path": self._string(
+                        output.get("path"), f"published {key} path"
+                    ),
+                    "sha256": self._sha(
+                        output.get("sha256"), f"published {key} sha256"
+                    ),
+                }
+            )
+        canonical = json.dumps(
+            {"outputs": outputs, "schemaVersion": 1},
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return sha256(canonical).hexdigest()
 
     def _package_ids(self, boards_root: Path) -> set[str]:
         identifiers: set[str] = set()
@@ -797,6 +878,17 @@ class RepositoryBoardLibrary:
     def _sha(cls, value: object, label: str) -> str:
         result = cls._string(value, label)
         if not re.fullmatch(r"[0-9a-f]{64}", result):
+            raise BoardLibraryError(f"{label} is invalid")
+        return result
+
+    @classmethod
+    def _operation_id(cls, value: object, label: str) -> str:
+        result = cls._string(value, label)
+        try:
+            parsed = UUID(result)
+        except ValueError as error:
+            raise BoardLibraryError(f"{label} is invalid") from error
+        if parsed.version != 4 or str(parsed) != result:
             raise BoardLibraryError(f"{label} is invalid")
         return result
 

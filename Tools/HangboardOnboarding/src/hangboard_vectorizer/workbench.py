@@ -466,12 +466,15 @@ class WorkbenchService:
             )
         self.store.mark_revision_complete(board.id, revision.id)
         if self.__library is not None:
+            publication_operation_id = (
+                self.store.prepare_repository_publication(board.id, revision.id)
+            )
             published = self.__library.publish(
                 display_name=board.product_name,
                 run_root=revision.run_root,
                 board_id=board.repository_board_id,
                 expected_current_version_id=board.repository_version_id,
-                publication_token=self.__publication_token(board, revision),
+                publication_operation_id=publication_operation_id,
             )
             self.store.publish_repository_revision(
                 board.id,
@@ -486,23 +489,6 @@ class WorkbenchService:
     def __library_open_lock(self, board_id: str) -> RLock:
         with self.__library_open_locks_guard:
             return self.__library_open_locks.setdefault(board_id, RLock())
-
-    def __publication_token(
-        self, board: BoardRecord, revision: RevisionRecord
-    ) -> str:
-        identity = self.__manifest(revision.run_root).get("runIdentitySha256")
-        if not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{64}", identity):
-            raise WorkbenchServiceError("onboarding run identity is invalid")
-        value = json.dumps(
-            {
-                "runtimeBoardId": board.id,
-                "runtimeRevisionId": revision.id,
-                "runIdentitySha256": identity,
-            },
-            separators=(",", ":"),
-            sort_keys=True,
-        ).encode("utf-8")
-        return sha256(value).hexdigest()
 
     def __start(
         self, board: BoardRecord, revision: RevisionRecord, source: str

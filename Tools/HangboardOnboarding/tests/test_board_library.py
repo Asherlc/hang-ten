@@ -5,6 +5,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from threading import Event, Lock
+from uuid import uuid4
 
 from PIL import Image
 import pytest
@@ -198,7 +199,7 @@ def test_publish_conflict_leaves_current_pointer_unchanged(tmp_path: Path) -> No
     assert library.get_board(original.board_id).current_version_id == "revision-0001"
 
 
-def test_publish_reconciles_a_retried_new_board_by_run_identity(
+def test_publish_reconciles_a_retried_new_board_by_operation(
     tmp_path: Path,
 ) -> None:
     library_root = _library_root(tmp_path)
@@ -206,37 +207,42 @@ def test_publish_reconciles_a_retried_new_board_by_run_identity(
     _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
     library = RepositoryBoardLibrary(tmp_path)
     run = _complete_fixture_run(tmp_path / "run")
+    operation_id = str(uuid4())
 
     first = library.publish(
         display_name="Example Board",
         run_root=run,
         board_id=None,
         expected_current_version_id=None,
-        publication_token="a" * 64,
+        publication_operation_id=operation_id,
     )
+    assert _read_json(
+        first.board.package_path / "versions" / first.version_id / "publication.json"
+    )["operationId"] == operation_id
     retried = library.publish(
         display_name="Example Board",
         run_root=run,
         board_id=None,
         expected_current_version_id=None,
-        publication_token="a" * 64,
+        publication_operation_id=operation_id,
     )
 
     assert retried == first
     assert [board.board_id for board in library.list_boards()] == ["example-board"]
 
 
-def test_publish_reconciles_a_retried_existing_version_by_run_identity(
+def test_publish_reconciles_a_retried_existing_version_by_operation(
     tmp_path: Path,
 ) -> None:
     library, original = _complete_library(tmp_path)
     run = _complete_fixture_run(tmp_path / "new-run")
+    operation_id = str(uuid4())
     first = library.publish(
         display_name=original.display_name,
         run_root=run,
         board_id=original.board_id,
         expected_current_version_id=original.current_version_id,
-        publication_token="b" * 64,
+        publication_operation_id=operation_id,
     )
 
     retried = library.publish(
@@ -244,7 +250,7 @@ def test_publish_reconciles_a_retried_existing_version_by_run_identity(
         run_root=run,
         board_id=original.board_id,
         expected_current_version_id=original.current_version_id,
-        publication_token="b" * 64,
+        publication_operation_id=operation_id,
     )
 
     assert retried == first
@@ -253,6 +259,94 @@ def test_publish_reconciles_a_retried_existing_version_by_run_identity(
         "revision-0001",
         "revision-0002",
     ]
+
+
+def test_reconciliation_requires_unique_operation_and_exact_published_evidence(
+    tmp_path: Path,
+) -> None:
+    library, entry = _complete_library(tmp_path)
+    run = _complete_fixture_run(tmp_path / "run")
+    first = library.publish(
+        display_name=entry.display_name,
+        run_root=run,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+        publication_operation_id=str(uuid4()),
+    )
+
+    with pytest.raises(BoardLibraryError, match="conflict"):
+        library.publish(
+            display_name=entry.display_name,
+            run_root=run,
+            board_id=entry.board_id,
+            expected_current_version_id=entry.current_version_id,
+            publication_operation_id=str(uuid4()),
+        )
+
+    assert first.version_id == "revision-0002"
+
+
+def test_reconciliation_rejects_changed_evidence_for_the_same_operation(
+    tmp_path: Path,
+) -> None:
+    library, entry = _complete_library(tmp_path)
+    operation_id = str(uuid4())
+    first_run = _complete_fixture_run(tmp_path / "first-run")
+    changed_run = _complete_fixture_run(
+        tmp_path / "changed-run", stage4_color=(9, 8, 7)
+    )
+    assert _read_json(first_run / "run.json")["runIdentitySha256"] == _read_json(
+        changed_run / "run.json"
+    )["runIdentitySha256"]
+    library.publish(
+        display_name=entry.display_name,
+        run_root=first_run,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+        publication_operation_id=operation_id,
+    )
+
+    with pytest.raises(BoardLibraryError, match="corruption"):
+        library.publish(
+            display_name=entry.display_name,
+            run_root=changed_run,
+            board_id=entry.board_id,
+            expected_current_version_id=entry.current_version_id,
+            publication_operation_id=operation_id,
+        )
+
+
+def test_retry_finds_its_exact_operation_after_a_newer_version_is_current(
+    tmp_path: Path,
+) -> None:
+    library, entry = _complete_library(tmp_path)
+    first_run = _complete_fixture_run(tmp_path / "first-run")
+    operation_id = str(uuid4())
+    first = library.publish(
+        display_name=entry.display_name,
+        run_root=first_run,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+        publication_operation_id=operation_id,
+    )
+    library.publish(
+        display_name=entry.display_name,
+        run_root=_complete_fixture_run(tmp_path / "newer-run"),
+        board_id=entry.board_id,
+        expected_current_version_id=first.version_id,
+        publication_operation_id=str(uuid4()),
+    )
+
+    retried = library.publish(
+        display_name=entry.display_name,
+        run_root=first_run,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+        publication_operation_id=operation_id,
+    )
+
+    assert retried.version_id == "revision-0002"
+    assert library.get_board(entry.board_id).current_version_id == "revision-0003"
 
 
 def test_concurrent_new_board_publications_merge_and_sort_the_latest_catalog(
@@ -468,11 +562,16 @@ def _write_package(root: Path, *, board_id: str, display_name: str) -> None:
     )
 
 
-def _complete_fixture_run(run: Path) -> Path:
+def _complete_fixture_run(
+    run: Path, *, stage4_color: tuple[int, int, int] = (1, 2, 3)
+) -> Path:
     source = run.parent / f"{run.name}-source.png"
     source.parent.mkdir(parents=True, exist_ok=True)
     Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
-    runners = {stage: _StubStageRunner(stage) for stage in range(5)}
+    runners = {
+        stage: _StubStageRunner(stage, stage4_color=stage4_color)
+        for stage in range(5)
+    }
     start_run("Example Board", str(source), run, runners=runners, workspace_root=run.parent)
     for stage in range(5):
         approve_stage(run, stage)
@@ -537,8 +636,11 @@ def _write_json(path: Path, value: object) -> None:
 
 
 class _StubStageRunner:
-    def __init__(self, stage: int) -> None:
+    def __init__(
+        self, stage: int, *, stage4_color: tuple[int, int, int] = (1, 2, 3)
+    ) -> None:
         self.stage = stage
+        self.stage4_color = stage4_color
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
         artifact_root.mkdir(parents=True)
@@ -584,7 +686,7 @@ class _StubStageRunner:
             for field, name in (("normal", "stage-4-normal.png"), ("productSvg", "stage-4-product.svg"), ("manifest", "stage-4-manifest.json"), ("highlights", "stage-4-highlights.json")):
                 path = root / name
                 if path.suffix == ".png":
-                    Image.new("RGB", (4, 4), (1, 2, 3)).save(path)
+                    Image.new("RGB", (4, 4), self.stage4_color).save(path)
                 elif path.suffix == ".svg":
                     path.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>\n', encoding="utf-8")
                 else:

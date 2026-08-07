@@ -13,6 +13,7 @@ import shutil
 import tempfile
 from threading import RLock
 from typing import TypeVar
+from uuid import UUID, uuid4
 
 
 _SCHEMA_VERSION = 1
@@ -34,6 +35,7 @@ class RevisionRecord:
     current_stage: int
     state: str
     stale_from_stage: int | None
+    publication_operation_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -438,6 +440,22 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
+    def prepare_repository_publication(
+        self, board_id: str, revision_id: str
+    ) -> str:
+        """Persist and return the stable UUID for one repository publication."""
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        if revision.publication_operation_id is not None:
+            return revision.publication_operation_id
+        operation_id = str(uuid4())
+        updated_revision = replace(
+            revision, publication_operation_id=operation_id
+        )
+        self._write_board(self._replace_revision(board, updated_revision))
+        return operation_id
+
+    @_synchronized
     def publish_repository_revision(
         self,
         board_id: str,
@@ -642,6 +660,11 @@ class WorkbenchStore:
         stale_from_stage = self._optional_stage(
             record.get("staleFromStage"), "stale stage"
         )
+        publication_operation_id = record.get("publicationOperationId")
+        if publication_operation_id is not None:
+            publication_operation_id = self._publication_operation_id(
+                publication_operation_id
+            )
         return RevisionRecord(
             id=revision_id,
             run_root=run_root,
@@ -650,6 +673,7 @@ class WorkbenchStore:
             current_stage=current_stage,
             state=state,
             stale_from_stage=stale_from_stage,
+            publication_operation_id=publication_operation_id,
         )
 
     def _write_board(
@@ -676,6 +700,7 @@ class WorkbenchStore:
                         board_root / "revisions" / revision.id / "run"
                     ),
                     "parentRevisionId": revision.parent_revision_id,
+                    "publicationOperationId": revision.publication_operation_id,
                     "runRoot": Path(
                         os.path.relpath(revision.run_root, board_root)
                     ).as_posix(),
@@ -688,6 +713,24 @@ class WorkbenchStore:
             "schemaVersion": _SCHEMA_VERSION,
         }
         self._write_replaced_json(manifest_path, value, publication=publication)
+
+    @staticmethod
+    def _publication_operation_id(value: object) -> str:
+        if not isinstance(value, str):
+            raise WorkbenchStoreError(
+                "publication operation identifier is invalid"
+            )
+        try:
+            parsed = UUID(value)
+        except ValueError as error:
+            raise WorkbenchStoreError(
+                "publication operation identifier is invalid"
+            ) from error
+        if parsed.version != 4 or str(parsed) != value:
+            raise WorkbenchStoreError(
+                "publication operation identifier is invalid"
+            )
+        return value
 
     @staticmethod
     def _validate_repository_link(

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
+from uuid import UUID
 
 import pytest
 
@@ -215,6 +216,55 @@ def test_board_manifest_is_schema_versioned_and_survives_reopening(tmp_path: Pat
     assert manifest["revisions"][0]["runRoot"] == "revisions/revision-0001/run"
     assert reopened.product_name == "Example Board"
     assert reopened.revisions == (revision,)
+
+
+def test_prepare_publication_operation_is_persisted_and_stable(
+    tmp_path: Path,
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+
+    first = store.prepare_repository_publication(board.id, revision.id)
+    second = store.prepare_repository_publication(board.id, revision.id)
+
+    assert first == second
+    assert UUID(first).version == 4
+    assert store.read_revision(
+        board.id, revision.id
+    ).publication_operation_id == first
+
+
+def test_independent_workspaces_never_share_publication_operation(
+    tmp_path: Path,
+) -> None:
+    first_store, first_board, first_revision = _populated_store(
+        tmp_path / "workspace-a"
+    )
+    second_store, second_board, second_revision = _populated_store(
+        tmp_path / "workspace-b"
+    )
+
+    first = first_store.prepare_repository_publication(
+        first_board.id, first_revision.id
+    )
+    second = second_store.prepare_repository_publication(
+        second_board.id, second_revision.id
+    )
+
+    assert first != second
+
+
+def test_store_loads_old_revision_without_publication_operation(
+    tmp_path: Path,
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+    manifest_path = tmp_path / "boards" / board.id / "board.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["revisions"][0].pop("publicationOperationId", None)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    reopened = WorkbenchStore(tmp_path).read_revision(board.id, revision.id)
+
+    assert reopened.publication_operation_id is None
 
 
 def test_store_persists_repository_link_without_changing_runtime_id(
