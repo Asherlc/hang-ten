@@ -830,6 +830,30 @@ struct PlanDetailView: View {
         return currentPlan.steps.first?.gripType
     }
 
+    private var firstStepFingerConfiguration: FingerConfiguration? {
+        #if DEBUG
+        if let reviewConfiguration = reviewFingerConfiguration {
+            return reviewConfiguration
+        }
+        #endif
+        return currentPlan.steps.first?.fingerConfiguration
+    }
+
+    #if DEBUG
+    private var reviewFingerConfiguration: FingerConfiguration? {
+        guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
+            return nil
+        }
+
+        let rawSlots = rawValue
+            .split(separator: ",", omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
+        guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
+        return FingerConfiguration(engagedFingers: Set(slots))
+    }
+    #endif
+
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 21) {
@@ -938,7 +962,11 @@ struct PlanDetailView: View {
             BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
                 .padding(.horizontal, 12)
             if let firstStepHold {
-                GripDiagramView(hold: firstStepHold, gripType: firstStepGripType)
+                GripDiagramView(
+                    hold: firstStepHold,
+                    gripType: firstStepGripType,
+                    fingerConfiguration: firstStepFingerConfiguration
+                )
             }
 			if store.usesFallbackMapping(currentPlan, on: board) {
 				Text("Board mapping note: a source-specific hold variant uses the closest manufacturer-documented feature available on this board. The prescribed task text remains unchanged.")
@@ -1488,7 +1516,31 @@ struct WorkoutView: View {
         store.board(for: plan)
     }
 
-    private let timeline: WorkoutTimeline
+	private let timeline: WorkoutTimeline
+
+	private func resolvedFingerConfiguration(for step: WorkoutStep) -> FingerConfiguration? {
+		#if DEBUG
+		if let reviewConfiguration = reviewFingerConfiguration {
+			return reviewConfiguration
+		}
+		#endif
+		return step.fingerConfiguration
+	}
+
+	#if DEBUG
+	private var reviewFingerConfiguration: FingerConfiguration? {
+		guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
+			return nil
+		}
+
+		let rawSlots = rawValue
+			.split(separator: ",", omittingEmptySubsequences: false)
+			.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+		let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
+		guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
+		return FingerConfiguration(engagedFingers: Set(slots))
+	}
+	#endif
 
     var body: some View {
 		GeometryReader { geometry in
@@ -1758,7 +1810,11 @@ struct WorkoutView: View {
 				)
 					.padding(.horizontal, 2)
 				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					GripDiagramView(hold: activeHold, gripType: step.gripType)
+					GripDiagramView(
+						hold: activeHold,
+						gripType: step.gripType,
+						fingerConfiguration: resolvedFingerConfiguration(for: step)
+					)
 				}
 				cueCard(
 					step: step,
@@ -1808,8 +1864,12 @@ struct WorkoutView: View {
 
 			HStack(spacing: 12) {
 				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .left)
+					let posture = step.gripType ?? activeHold.gripType
+					let fingerCue = FingerCue(
+						fingerConfiguration: resolvedFingerConfiguration(for: step),
+						capacity: activeHold.fingerCapacity
+					)
+					GripHandCueCard(posture: posture, fingerCue: fingerCue, side: .left)
 						.frame(width: 142)
 				}
 
@@ -1829,8 +1889,12 @@ struct WorkoutView: View {
 				.frame(maxWidth: .infinity)
 
 				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .right)
+					let posture = step.gripType ?? activeHold.gripType
+					let fingerCue = FingerCue(
+						fingerConfiguration: resolvedFingerConfiguration(for: step),
+						capacity: activeHold.fingerCapacity
+					)
+					GripHandCueCard(posture: posture, fingerCue: fingerCue, side: .right)
 						.frame(width: 142)
 				}
 			}

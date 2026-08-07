@@ -333,7 +333,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                     timing: .fixed,
                     duration: 10
                 )],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(
+                    engagedFingers: [.index, .ring]
+                )
             )]
         )
 
@@ -358,6 +361,9 @@ final class CustomRoutineDraftTests: XCTestCase {
                 phase: .hang,
                 targets: [.kind(.jug)],
                 gripType: .openHand,
+                fingerConfiguration: FingerConfiguration(
+                    engagedFingers: [.pinky]
+                ),
                 activeDuration: 10
             )]
         )
@@ -386,9 +392,40 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 10
             )],
             gripType: sourceStep.gripType,
+            fingerConfiguration: sourceStep.fingerConfiguration,
             activeDuration: 10
         )
         XCTAssertEqual(duplicate.definition().steps, [expectedStep])
+    }
+
+    func testEditingRestStepClearsPostureAndExactFingerConfiguration() {
+        let source = CustomRoutineDefinition(
+            id: "custom.rest",
+            title: "Rest test",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "rest-step",
+                title: "Rest",
+                instruction: "Recover.",
+                accessory: "10s",
+                duration: 10,
+                phase: .rest,
+                targets: [.kind(.jug)],
+                gripType: .fullCrimp,
+                fingerConfiguration: FingerConfiguration(
+                    engagedFingers: [.middle, .pinky]
+                )
+            )]
+        )
+
+        let step = CustomRoutineDraft(editing: source).definition().steps[0]
+
+        XCTAssertNil(step.gripType)
+        XCTAssertNil(step.fingerConfiguration)
     }
 
     func testEditingDraftRetainsPersistedIdentityAndCannotBeRetargeted() {
