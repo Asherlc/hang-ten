@@ -1,6 +1,6 @@
 # Grip cue semantics design
 
-Date: 2026-08-07  
+Date: 2026-08-07
 Status: Approved by the user
 
 ## Problem
