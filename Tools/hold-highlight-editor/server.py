@@ -330,6 +330,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             "/styles.css": "styles.css",
             "/editor-model.js": "editor-model.js",
             "/workbench-client.js": "workbench-client.js",
+            "/workbench-controller.js": "workbench-controller.js",
             "/workbench-model.js": "workbench-model.js",
             "/vector-path-model.js": "vector-path-model.js",
             "/app.js": "app.js",

@@ -502,7 +502,7 @@ def running_workbench_server(tmp_path):
 
 @pytest.mark.parametrize(
     "asset",
-    ["workbench-client.js", "workbench-model.js", "vector-path-model.js"],
+    ["workbench-client.js", "workbench-controller.js", "workbench-model.js", "vector-path-model.js"],
 )
 def test_server_serves_guided_browser_modules(running_workbench_server, asset):
     with urlopen(running_workbench_server + f"/{asset}") as response:

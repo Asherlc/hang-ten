@@ -20,6 +20,11 @@
     bendPath,
     mirrorPath,
   } = globalThis.HoldVectorPathModel;
+  const {
+    createLatestLoadCoordinator,
+    createAutosaveCoordinator,
+    createDraftStore,
+  } = globalThis.HoldWorkbenchController;
 
   const STAGE_LABELS = [
     "Input",
@@ -33,6 +38,14 @@
   const PIPELINE_TO_TIMELINE_STAGE = [1, 2, 3, 5, 6];
   const EDITOR_STAGES = new Set([2, 3]);
   const AUTOSAVE_DELAY_MS = 500;
+  const loadCoordinator = createLatestLoadCoordinator();
+  const draftStore = createDraftStore(localStorage);
+  const autosaveCoordinator = createAutosaveCoordinator({
+    save: (entry) => workbenchClient.saveDraft(entry.view, entry.document),
+    onStart: handleAutosaveStart,
+    onSuccess: handleAutosaveSuccess,
+    onError: handleAutosaveError,
+  });
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -87,7 +100,6 @@
     validationErrors: [],
     busy: false,
     autosaveTimer: null,
-    autosavePromise: null,
     draftStatus: "clean",
   };
 
@@ -1008,7 +1020,7 @@
     state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
-    if (state.guided && EDITOR_STAGES.has(state.board?.stage)) scheduleDraftSave();
+    onDraftChanged();
     setStatus(`Undo: ${state.history[state.historyIndex + 1].label}`);
     render();
   }
@@ -1021,7 +1033,7 @@
     state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
-    if (state.guided && EDITOR_STAGES.has(state.board?.stage)) scheduleDraftSave();
+    onDraftChanged();
     setStatus(`Redo: ${state.history[state.historyIndex].label}`);
     render();
   }
@@ -1109,18 +1121,12 @@
   }
 
   function draftStorageKey(view = state.board) {
-    if (!view) return null;
-    return `hold-workbench-draft:${view.boardId}:${view.revisionId}:${String(view.stage)}`;
+    return draftStore.keyFor(view);
   }
 
   function discardStaleDrafts(view) {
     try {
-      const prefix = `hold-workbench-draft:${view.boardId}:`;
-      const current = draftStorageKey(view);
-      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
-        const key = localStorage.key(index);
-        if (key?.startsWith(prefix) && key !== current) localStorage.removeItem(key);
-      }
+      draftStore.discardMismatched(view);
     } catch (error) {
       console.warn("Could not prune stale local drafts", error);
     }
@@ -1129,13 +1135,7 @@
   function readStoredDraft(view) {
     discardStaleDrafts(view);
     try {
-      const value = JSON.parse(localStorage.getItem(draftStorageKey(view)) || "null");
-      if (
-        value?.boardId === view.boardId
-        && value?.revisionId === view.revisionId
-        && value?.stage === view.stage
-        && value.document
-      ) return value.document;
+      return draftStore.read(view);
     } catch (error) {
       console.warn("Could not restore the local draft", error);
     }
@@ -1173,17 +1173,73 @@
     state.dirty = JSON.stringify(state.regions) !== savedSnapshot;
     state.draftStatus = state.dirty ? "dirty" : "saved";
     try {
-      localStorage.setItem(draftStorageKey(), JSON.stringify({
+      const entry = {
         boardId: state.board.boardId,
         revisionId: state.board.revisionId,
         stage: state.board.stage,
+        key: draftStorageKey(),
+        generation: 0,
         document,
-      }));
+      };
+      draftStore.writeDirty(entry);
+      draftStore.markSaved(entry);
     } catch (error) {
       console.warn("Could not persist the local draft cache", error);
     }
-    if (state.dirty) scheduleDraftSave();
     renderSaveState();
+  }
+
+  function persistCurrentDraft() {
+    const document = serializeDraft();
+    if (!state.board || !document) return null;
+    const view = { ...state.board };
+    const entry = autosaveCoordinator.update({
+      boardId: view.boardId,
+      revisionId: view.revisionId,
+      stage: view.stage,
+      key: draftStorageKey(view),
+      view,
+      document,
+      snapshot: JSON.stringify(state.regions),
+    });
+    try {
+      draftStore.writeDirty(entry);
+    } catch (error) {
+      console.warn("Could not persist the local draft cache", error);
+    }
+    return entry;
+  }
+
+  function handleAutosaveStart(entry) {
+    if (draftStorageKey(state.board) !== entry.key) return;
+    state.draftStatus = "saving";
+    state.saveError = "";
+    renderSaveState();
+  }
+
+  function handleAutosaveSuccess(entry, updated) {
+    try {
+      draftStore.markSaved(entry);
+    } catch (error) {
+      console.warn("Could not update the local draft cache", error);
+    }
+    if (draftStorageKey(state.board) !== entry.key) return;
+    if (updated) state.board = updated;
+    state.savedSnapshot = entry.snapshot;
+    state.dirty = JSON.stringify(state.regions) !== entry.snapshot;
+    state.draftStatus = state.dirty ? "dirty" : "saved";
+    if (!state.dirty) setStatus("Draft saved to the active revision.");
+    renderSaveState();
+  }
+
+  function handleAutosaveError(entry, error) {
+    if (draftStorageKey(state.board) !== entry.key) return;
+    state.dirty = true;
+    state.draftStatus = "dirty";
+    state.saveError = error.message || "Draft save failed";
+    focusGeometryError(state.saveError);
+    setStatus(state.saveError);
+    render();
   }
 
   function validateGeometry() {
@@ -1239,7 +1295,9 @@
   function onDraftChanged() {
     if (!state.guided || !EDITOR_STAGES.has(state.board?.stage)) return;
     state.validationErrors = validateGeometry();
+    state.dirty = true;
     state.draftStatus = "dirty";
+    persistCurrentDraft();
     scheduleDraftSave();
     renderValidation();
   }
@@ -1249,12 +1307,12 @@
     if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
     state.autosaveTimer = setTimeout(() => {
       state.autosaveTimer = null;
-      void saveDraftNow();
+      void saveDraftNow(true);
     }, AUTOSAVE_DELAY_MS);
     renderSaveState();
   }
 
-  async function saveDraftNow() {
+  async function saveDraftNow(background = false) {
     if (!state.board || !EDITOR_STAGES.has(state.board.stage)) return null;
     state.validationErrors = validateGeometry();
     if (state.validationErrors.length) {
@@ -1262,45 +1320,16 @@
       render();
       return null;
     }
-    const view = state.board;
-    const key = draftStorageKey(view);
-    const document = serializeDraft();
-    const savedSnapshot = JSON.stringify(state.regions);
-    state.draftStatus = "saving";
-    state.saveError = "";
-    renderSaveState();
-    const saving = workbenchClient.saveDraft(view, document);
-    state.autosavePromise = saving;
-    try {
-      const updated = await saving;
-      if (draftStorageKey(state.board) !== key) return updated;
-      state.board = updated;
-      markDraftSaved(document, savedSnapshot);
-      setStatus("Draft saved to the active revision.");
-      return updated;
-    } catch (error) {
-      if (draftStorageKey(state.board) !== key) return null;
-      state.draftStatus = "dirty";
-      state.saveError = error.message || "Draft save failed";
-      focusGeometryError(state.saveError);
-      setStatus(state.saveError);
-      render();
-      throw error;
-    } finally {
-      if (state.autosavePromise === saving) state.autosavePromise = null;
-    }
+    if (!autosaveCoordinator.hasPending()) persistCurrentDraft();
+    return background ? autosaveCoordinator.savePending() : autosaveCoordinator.flush();
   }
 
   async function flushDraft() {
     if (state.autosaveTimer != null) {
       clearTimeout(state.autosaveTimer);
       state.autosaveTimer = null;
-      await saveDraftNow();
-    } else if (state.autosavePromise) {
-      await state.autosavePromise;
-    } else if (state.draftStatus === "dirty") {
-      await saveDraftNow();
     }
+    if (state.dirty || state.draftStatus === "saving") await saveDraftNow();
   }
 
   function focusGeometryError(message) {
@@ -1339,50 +1368,84 @@
     return `${url.pathname}?${url.searchParams.toString()}`;
   }
 
-  async function loadCheckpoint(view, providedDocument = null) {
+  async function loadCheckpoint(view, providedDocument = null, pendingLoad = null) {
     if (!view) return false;
-    if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
-    state.autosaveTimer = null;
-    state.autosavePromise = null;
-    state.board = view;
-    state.editorMode = view.editorMode || "contour";
-    state.checkpointDocument = null;
-    state.validationErrors = [];
-    state.saveError = "";
-    state.draftStatus = "clean";
-    state.drawing = false;
-    state.editPoints = false;
-    state.mirrorOntoSourceId = null;
-    state.regions = [];
-    state.baselineRegions = [];
-    state.selectedId = null;
-
-    if (view.reviewUrl) await setImageHref(view.reviewUrl, `Stage ${String(view.stage)} review`);
-    if (EDITOR_STAGES.has(view.stage)) {
-      let baselineDocument = providedDocument;
-      if (!baselineDocument) {
-        const documentUrl = checkpointDocumentUrl(view);
-        if (!documentUrl) throw new Error(`Stage ${String(view.stage)} checkpoint document is unavailable`);
-        const response = await fetch(documentUrl, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
-        baselineDocument = await response.json();
-      }
-      const restored = readStoredDraft(view);
-      state.checkpointDocument = clone(baselineDocument);
-      setRegions(restored || baselineDocument, `stage-${String(view.stage)}-checkpoint.json`, view.editorMode, baselineDocument);
-      if (restored) {
-        state.draftStatus = "saved";
-        state.savedSnapshot = JSON.stringify(state.regions);
-        setStatus("Restored the latest same-browser draft for this revision.");
-      }
-    } else {
-      resetHistory();
-      configureSvg();
-      render();
-      requestAnimationFrame(fitCanvas);
+    const ownsLoad = pendingLoad == null;
+    const load = pendingLoad || loadCoordinator.begin();
+    if (ownsLoad) {
+      state.busy = true;
+      renderSaveState();
     }
-    renderGuidedShell();
-    return true;
+    try {
+      if (!load.isCurrent()) return false;
+      const imageAsset = view.reviewUrl
+        ? await loadImageAsset(view.reviewUrl, `Stage ${String(view.stage)} review`)
+        : null;
+      if (!load.isCurrent()) return false;
+      let baselineDocument = providedDocument;
+      if (EDITOR_STAGES.has(view.stage)) {
+        if (!baselineDocument) {
+          const documentUrl = checkpointDocumentUrl(view);
+          if (!documentUrl) throw new Error(`Stage ${String(view.stage)} checkpoint document is unavailable`);
+          const response = await fetch(documentUrl, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
+          baselineDocument = await response.json();
+        }
+      }
+      if (!load.isCurrent()) return false;
+
+      return load.commit(() => {
+      if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
+      state.autosaveTimer = null;
+      state.board = view;
+      state.editorMode = view.editorMode || "contour";
+      state.checkpointDocument = null;
+      state.validationErrors = [];
+      state.saveError = "";
+      state.draftStatus = "clean";
+      state.drawing = false;
+      state.editPoints = false;
+      state.mirrorOntoSourceId = null;
+      state.regions = [];
+      state.baselineRegions = [];
+      state.selectedId = null;
+      state.imageHref = "";
+      state.imageName = "";
+      state.imagePixels = null;
+      el["board-image"].removeAttribute("href");
+      if (imageAsset) applyImageAsset(imageAsset);
+
+      if (EDITOR_STAGES.has(view.stage)) {
+        const restored = readStoredDraft(view);
+        state.checkpointDocument = clone(baselineDocument);
+        setRegions(restored?.document || baselineDocument, `stage-${String(view.stage)}-checkpoint.json`, view.editorMode, baselineDocument);
+        if (restored?.dirty) {
+          state.savedSnapshot = JSON.stringify(state.baselineRegions);
+          state.dirty = true;
+          state.draftStatus = "dirty";
+          persistCurrentDraft();
+          scheduleDraftSave();
+          setStatus("Restored an unsaved same-browser draft for this revision.");
+        } else if (restored) {
+          state.draftStatus = "saved";
+          state.savedSnapshot = JSON.stringify(state.regions);
+          setStatus("Restored the latest same-browser draft for this revision.");
+        }
+      } else {
+        resetHistory();
+        configureSvg();
+        render();
+        requestAnimationFrame(fitCanvas);
+      }
+        renderGuidedShell();
+      });
+    } finally {
+      if (ownsLoad && load.isCurrent()) {
+        state.busy = false;
+        renderGuidedShell();
+        render();
+      }
+    }
   }
 
   function timelineView(view) {
@@ -1449,20 +1512,27 @@
   }
 
   async function selectGuidedBoard(boardId) {
+    const load = loadCoordinator.begin();
     state.busy = true;
     showWorkbench();
     renderSaveState();
     try {
       const view = await workbenchClient.getBoard(boardId);
-      await loadCheckpoint(view);
-      setStatus(`Reviewing ${view.productName}.`);
+      if (!load.isCurrent()) return false;
+      const loaded = await loadCheckpoint(view, null, load);
+      if (loaded) setStatus(`Reviewing ${view.productName}.`);
+      return loaded;
     } catch (error) {
+      if (!load.isCurrent()) return false;
       state.saveError = error.message || "Could not load board";
       setStatus(state.saveError);
+      return false;
     } finally {
-      state.busy = false;
-      renderGuidedShell();
-      render();
+      if (load.isCurrent()) {
+        state.busy = false;
+        renderGuidedShell();
+        render();
+      }
     }
   }
 
@@ -1478,6 +1548,7 @@
       el["setup-error"].classList.remove("hidden");
       return;
     }
+    const load = loadCoordinator.begin();
     el["setup-submit-button"].disabled = true;
     el["setup-submit-button"].textContent = "Creating…";
     try {
@@ -1485,9 +1556,11 @@
         ? await workbenchClient.createFromUrl(productName, source)
         : await workbenchClient.createFromUpload(productName, upload);
       await refreshBoards();
+      if (!load.isCurrent()) return;
       showWorkbench();
-      await loadCheckpoint(view);
+      await loadCheckpoint(view, null, load);
     } catch (error) {
+      if (!load.isCurrent()) return;
       el["setup-error"].textContent = error.message || "Could not create the board.";
       el["setup-error"].classList.remove("hidden");
     } finally {
@@ -1504,23 +1577,29 @@
       render();
       return;
     }
+    const view = state.board;
+    const load = loadCoordinator.begin();
     state.busy = true;
     state.saveError = "";
     renderSaveState();
     try {
       await flushDraft();
-      const updated = await workbenchClient.approve(state.board);
+      const updated = await workbenchClient.approve(view);
       await refreshBoards();
-      await loadCheckpoint(updated);
-      setStatus(`Stage ${String(updated.stage)} is ready for review.`);
+      if (!load.isCurrent()) return;
+      const loaded = await loadCheckpoint(updated, null, load);
+      if (loaded) setStatus(`Stage ${String(updated.stage)} is ready for review.`);
     } catch (error) {
+      if (!load.isCurrent()) return;
       state.saveError = error.message || "Approval failed";
       focusGeometryError(state.saveError);
       setStatus(state.saveError);
     } finally {
-      state.busy = false;
-      renderGuidedShell();
-      render();
+      if (load.isCurrent()) {
+        state.busy = false;
+        renderGuidedShell();
+        render();
+      }
     }
   }
 
@@ -1540,22 +1619,27 @@
   }
 
   async function runGuidedMutation(operation, successMessage) {
+    const load = loadCoordinator.begin();
     state.busy = true;
     state.saveError = "";
     renderSaveState();
     try {
       const updated = await operation();
       await refreshBoards();
-      await loadCheckpoint(updated);
-      setStatus(successMessage);
+      if (!load.isCurrent()) return;
+      const loaded = await loadCheckpoint(updated, null, load);
+      if (loaded) setStatus(successMessage);
     } catch (error) {
+      if (!load.isCurrent()) return;
       state.saveError = error.message || "Workbench action failed";
       focusGeometryError(state.saveError);
       setStatus(state.saveError);
     } finally {
-      state.busy = false;
-      renderGuidedShell();
-      render();
+      if (load.isCurrent()) {
+        state.busy = false;
+        renderGuidedShell();
+        render();
+      }
     }
   }
 
@@ -1676,22 +1760,28 @@
     await loadDemo();
   }
 
-  async function setImageHref(href, name) {
-    await new Promise((resolve, reject) => {
+  async function loadImageAsset(href, name) {
+    const image = await new Promise((resolve, reject) => {
       const image = new Image();
-      image.onload = () => {
-        state.imageHref = href;
-        state.imageName = name;
-        el["board-image"].setAttribute("href", href);
-        captureImagePixels(image);
-        if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
-        resolve();
-      };
+      image.onload = () => resolve(image);
       image.onerror = reject;
       image.src = href;
     });
+    return { href, name, image };
+  }
+
+  function applyImageAsset({ href, name, image }) {
+    state.imageHref = href;
+    state.imageName = name;
+    el["board-image"].setAttribute("href", href);
+    captureImagePixels(image);
+    if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
     configureSvg();
     el["empty-state"].classList.add("hidden");
+  }
+
+  async function setImageHref(href, name) {
+    applyImageAsset(await loadImageAsset(href, name));
   }
 
   function captureImagePixels(image) {
