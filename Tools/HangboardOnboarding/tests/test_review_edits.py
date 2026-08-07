@@ -185,11 +185,72 @@ def test_stage2_edit_allows_distinct_valid_regions_to_overlap(
         Image.open(checkpoint.artifact_root / "stage-2-labels.png"),
         dtype=np.uint16,
     )
+    regions = json.loads(
+        (checkpoint.artifact_root / "stage-2-regions.json").read_text()
+    )["regions"]
 
     assert labels[40, 150] == 1
     assert labels[60, 225] == 2
     assert labels[80, 300] == 2
+    assert [
+        (region["areaPixels"], region["bounds"]) for region in regions
+    ] == [
+        (5120, [100, 30, 251, 71]),
+        (6191, [200, 50, 351, 91]),
+    ]
     assert _candidate_hashes_match(checkpoint.artifact_root)
+
+
+def test_stage2_edit_rejects_a_region_fully_owned_by_a_later_region(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0].update(
+        {
+            "anchor": [175, 50],
+            "bounds": [100, 30, 251, 71],
+            "contour": [[100, 30], [250, 30], [250, 70], [100, 70]],
+        }
+    )
+    edited["regions"][1].update(
+        {
+            "anchor": [300, 70],
+            "bounds": [50, 20, 401, 121],
+            "contour": [[50, 20], [400, 20], [400, 120], [50, 120]],
+        }
+    )
+
+    with pytest.raises(ConversionError, match=r"Stage 2 region 1: .*empty"):
+        materialize_stage2_edit(
+            _context(accepted_stage1_run), edited, tmp_path / "attempt"
+        )
+
+
+def test_stage2_edit_rejects_an_anchor_owned_by_a_later_region(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0].update(
+        {
+            "anchor": [225, 60],
+            "bounds": [100, 30, 251, 71],
+            "contour": [[100, 30], [250, 30], [250, 70], [100, 70]],
+        }
+    )
+    edited["regions"][1].update(
+        {
+            "anchor": [300, 70],
+            "bounds": [200, 50, 351, 91],
+            "contour": [[200, 50], [350, 50], [350, 90], [200, 90]],
+        }
+    )
+
+    with pytest.raises(
+        ConversionError, match=r"Stage 2 region 1: anchor .*owned label"
+    ):
+        materialize_stage2_edit(
+            _context(accepted_stage1_run), edited, tmp_path / "attempt"
+        )
 
 
 def test_stage3_edit_preserves_exact_display_paths(

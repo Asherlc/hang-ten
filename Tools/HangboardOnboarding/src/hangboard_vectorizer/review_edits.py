@@ -211,14 +211,24 @@ def _stage2_labels(
         mask = np.zeros(shape, dtype=np.uint8)
         cv2.fillPoly(mask, [contour], 1, lineType=cv2.LINE_8)
         occupied = mask.astype(bool)
-        area = int(occupied.sum())
-        if area == 0:
+        if not np.any(occupied):
             _region_error(2, region_id, "contour produces an empty label")
         anchor_x, anchor_y = (int(round(float(value))) for value in region["anchor"])
         if not occupied[anchor_y, anchor_x]:
             _region_error(2, region_id, "anchor is outside its contour")
         labels[occupied] = region_id
-        ys, xs = np.nonzero(occupied)
+        normalized.append(region)
+
+    for region in normalized:
+        region_id = int(region["id"])
+        owned = labels == region_id
+        area = int(owned.sum())
+        if area == 0:
+            _region_error(2, region_id, "contour produces an empty owned label")
+        anchor_x, anchor_y = (int(round(float(value))) for value in region["anchor"])
+        if labels[anchor_y, anchor_x] != region_id:
+            _region_error(2, region_id, "anchor is outside its owned label")
+        ys, xs = np.nonzero(owned)
         region["areaPixels"] = area
         region["bounds"] = [
             int(xs.min()),
@@ -226,7 +236,6 @@ def _stage2_labels(
             int(xs.max()) + 1,
             int(ys.max()) + 1,
         ]
-        normalized.append(region)
     return labels, normalized
 
 

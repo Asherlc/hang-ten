@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-import ast
 from collections.abc import Mapping
+from copy import deepcopy
 from hashlib import sha256
 from io import BytesIO
 import json
 from pathlib import Path
-import re
 
 from PIL import Image
+import numpy as np
 import pytest
 
 import hangboard_vectorizer.workbench as workbench_module
@@ -63,26 +63,11 @@ def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
 @pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)
 def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
     product_name: str,
     color: tuple[int, int, int],
     region_keys: tuple[str, ...],
 ) -> None:
     service = _fixture_service(tmp_path, region_keys=region_keys)
-    monkeypatch.setattr(
-        workbench_module,
-        "materialize_stage2_edit",
-        lambda context, document, artifact_root: _materialize_fixture_edit(
-            2, region_keys, context, document, artifact_root
-        ),
-    )
-    monkeypatch.setattr(
-        workbench_module,
-        "materialize_stage3_edit",
-        lambda context, document, artifact_root: _materialize_fixture_edit(
-            3, region_keys, context, document, artifact_root
-        ),
-    )
 
     current = service.create_from_upload(
         product_name, _fixture_image_bytes(color=color)
@@ -103,6 +88,7 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
         "schemaVersion",
         "stage",
     }
+    stage2["regions"][0]["metadata"]["mode"] = "aperture"
     service.save_draft(
         current.board_id,
         stage2,
@@ -114,6 +100,9 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
         expected_revision_id=revision_id,
         expected_stage=2,
     )
+    manifest = json.loads((current.run_root / "run.json").read_text())
+    assert manifest["stages"][2]["attempt"] == 2
+    stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
 
     stage3 = _stage_document(
         current.run_root, 3, "stage-3-vector-regions.json"
@@ -126,6 +115,7 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
         "silhouettePaths",
         "stage",
     }
+    stage3["regions"][0]["metadata"]["mode"] = "surface"
     service.save_draft(
         current.board_id,
         stage3,
@@ -137,13 +127,19 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
         expected_revision_id=revision_id,
         expected_stage=3,
     )
+    manifest = json.loads((current.run_root / "run.json").read_text())
+    assert manifest["stages"][3]["attempt"] == 2
+    stage3 = _stage_document(
+        current.run_root, 3, "stage-3-vector-regions.json"
+    )
 
     stage4 = _stage_document(current.run_root, 4, "stage-4-manifest.json")
     assert set(stage4) == {"canvas", "regions", "schemaVersion", "stage"}
-    expected_ids = list(range(1, len(region_keys) + 1))
-    assert _region_identity(stage2) == (expected_ids, list(region_keys))
-    assert _region_identity(stage3) == (expected_ids, list(region_keys))
-    assert _region_identity(stage4) == (expected_ids, list(region_keys))
+    _assert_stable_identity_chain(stage2, stage3, stage4)
+    assert _region_identity(stage2) == (
+        list(range(1, len(region_keys) + 1)),
+        list(region_keys),
+    )
     assert current.revision_id == revision_id
 
     complete = service.approve_and_advance(
@@ -163,20 +159,96 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     assert board_manifest["savedRevisionId"] == revision_id
 
 
-def test_workbench_control_flow_contains_no_product_key_conditionals() -> None:
-    python_modules = (
+@pytest.mark.parametrize("mutation", ("mutate", "drop", "reorder"))
+def test_identity_propagation_assertion_rejects_a_changed_upstream_inventory(
+    tmp_path: Path, mutation: str
+) -> None:
+    service = _fixture_service(
+        tmp_path, region_keys=("grip-001", "grip-002", "grip-003")
+    )
+    current = service.create_from_upload("Fixture Board", _fixture_image_bytes())
+    for stage in (0, 1):
+        current = service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=stage,
+        )
+    stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
+    service.save_draft(
+        current.board_id,
+        stage2,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+    current = service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=2,
+    )
+    stage2 = _stage_document(current.run_root, 2, "stage-2-regions.json")
+    stage3 = _stage_document(
+        current.run_root, 3, "stage-3-vector-regions.json"
+    )
+    changed = deepcopy(stage2)
+    if mutation == "mutate":
+        changed["regions"][0]["key"] = "changed-key"
+    elif mutation == "drop":
+        changed["regions"].pop()
+    else:
+        changed["regions"][0], changed["regions"][1] = (
+            changed["regions"][1],
+            changed["regions"][0],
+        )
+
+    with pytest.raises(AssertionError, match="stable region identity"):
+        _assert_stable_identity_chain(changed, stage3)
+
+
+def test_production_workbench_surface_contains_no_product_tokens() -> None:
+    onboarding_modules = (
         Path(workbench_module.__file__).resolve(),
         Path(workbench_module.__file__).with_name("workbench_store.py").resolve(),
         Path(workbench_module.__file__).with_name("review_edits.py").resolve(),
+        Path(workbench_module.__file__).with_name("onboarding_run.py").resolve(),
+        Path(workbench_module.__file__).with_name("onboard_cli.py").resolve(),
     )
     editor_root = Path(__file__).resolve().parents[2] / "hold-highlight-editor"
-    javascript_modules = tuple(editor_root.glob("workbench-*.js"))
+    editor_modules = tuple(
+        editor_root / name
+        for name in (
+            "server.py",
+            "job_manager.py",
+            "app.js",
+            "editor-model.js",
+            "vector-path-model.js",
+            "workbench-client.js",
+            "workbench-controller.js",
+            "workbench-model.js",
+        )
+    )
 
-    assert {
-        path.name: _product_specific_branches(path)
-        for path in (*python_modules, *javascript_modules)
-        if _product_specific_branches(path)
-    } == {}
+    violations: dict[str, list[str]] = {}
+    for path in (*onboarding_modules, *editor_modules):
+        normalized = "".join(
+            character
+            for character in path.read_text(encoding="utf-8").lower()
+            if character.isalnum()
+        )
+        matches = [
+            token
+            for token in (
+                "beastmaker",
+                "metolius",
+                "woodgrips",
+                "compactii",
+                "simulator3d",
+            )
+            if token in normalized
+        ]
+        if matches:
+            violations[str(path)] = matches
+
+    assert violations == {}
 
 
 def _fixture_image_bytes(color: tuple[int, int, int] = (45, 65, 85)) -> bytes:
@@ -214,29 +286,14 @@ def _stub_runners(
     }
 
 
-def _materialize_fixture_edit(
-    stage: int,
-    region_keys: tuple[str, ...],
-    context: RunContext,
-    document: Mapping[str, object],
-    artifact_root: Path,
-) -> StageCheckpoint:
-    return _StubStageRunner(
-        stage, region_keys, document_override=document
-    ).run(context, artifact_root)
-
-
 class _StubStageRunner:
     def __init__(
         self,
         stage: int,
         region_keys: tuple[str, ...],
-        *,
-        document_override: Mapping[str, object] | None = None,
     ) -> None:
         self.stage = stage
         self.region_keys = region_keys
-        self.document_override = document_override
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
         artifact_root.mkdir(parents=True)
@@ -278,11 +335,19 @@ class _StubStageRunner:
         if self.stage == 1:
             registered = artifact_root / "stage-1-auto-rgba.png"
             Image.new("RGBA", (128, 64), (10, 20, 30, 255)).save(registered)
-            candidate["registered"] = {"fileSha256": _hash_file(registered)}
+            with Image.open(registered) as image:
+                rgba = np.asarray(image, dtype=np.uint8)
+            candidate["registered"] = {
+                "alphaSha256": sha256(rgba[..., 3].tobytes()).hexdigest(),
+                "fileSha256": _hash_file(registered),
+                "height": 64,
+                "pixelSha256": sha256(rgba.tobytes()).hexdigest(),
+                "width": 128,
+            }
         elif self.stage == 2:
             regions = artifact_root / "stage-2-regions.json"
             labels = artifact_root / "stage-2-labels.png"
-            _write_json(regions, self.document_override or self._stage2_document())
+            _write_json(regions, self._stage2_document())
             Image.new("I;16", (128, 64), 0).save(labels)
             candidate.update(
                 {
@@ -292,37 +357,45 @@ class _StubStageRunner:
                 }
             )
         elif self.stage == 3:
+            stage2 = _accepted_stage_document(
+                context, 2, "regions", "stage-2-regions.json"
+            )
+            vector_document = self._stage3_document(stage2["regions"])
             regions = artifact_root / "stage-3-vector-regions.json"
             svg = artifact_root / "stage-3-vector.svg"
-            _write_json(regions, self.document_override or self._stage3_document())
+            _write_json(regions, vector_document)
             svg.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>\n')
             candidate.update(
                 {
-                    "regionCount": len(self.region_keys),
+                    "regionCount": len(vector_document["regions"]),
                     "vectorRegions": {"fileSha256": _hash_file(regions)},
                     "vectorSvg": {"fileSha256": _hash_file(svg)},
                 }
             )
         else:
+            stage3 = _accepted_stage_document(
+                context, 3, "vectorRegions", "stage-3-vector-regions.json"
+            )
+            stage4_document = self._stage4_document(stage3["regions"])
             normal = artifact_root / "stage-4-normal.png"
             product_svg = artifact_root / "stage-4-product.svg"
             manifest = artifact_root / "stage-4-manifest.json"
             highlights = artifact_root / "stage-4-highlights.json"
             Image.new("RGB", (128, 64), (1, 2, 3)).save(normal)
             product_svg.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>\n')
-            _write_json(manifest, self._stage4_document())
+            _write_json(manifest, stage4_document)
             _write_json(
                 highlights,
                 {
                     "regions": [
-                        {"id": index, "key": key}
-                        for index, key in enumerate(self.region_keys, start=1)
+                        {"id": region["id"], "key": region["key"]}
+                        for region in stage4_document["regions"]
                     ]
                 },
             )
             candidate.update(
                 {
-                    "regionCount": len(self.region_keys),
+                    "regionCount": len(stage4_document["regions"]),
                     "normal": {"fileSha256": _hash_file(normal)},
                     "productSvg": {"fileSha256": _hash_file(product_svg)},
                     "manifest": {"fileSha256": _hash_file(manifest)},
@@ -359,27 +432,24 @@ class _StubStageRunner:
             "stage": 2,
         }
 
-    def _stage3_document(self) -> dict[str, object]:
+    def _stage3_document(
+        self, source_regions: list[Mapping[str, object]]
+    ) -> dict[str, object]:
         return {
             "canvas": {"height": 64, "width": 128},
             "pieceCount": 1,
             "regions": [
                 {
-                    "anchor": [10 + 20 * offset, 15],
-                    "displayPath": (
-                        f"M {5 + 20 * offset} 10 L {15 + 20 * offset} 10 "
-                        f"L {15 + 20 * offset} 20 L {5 + 20 * offset} 20 Z"
-                    ),
-                    "id": index,
-                    "key": key,
-                    "metadata": {"fixture": True},
+                    "anchor": list(region["anchor"]),
+                    "displayPath": _contour_display_path(region["contour"]),
+                    "id": region["id"],
+                    "key": region["key"],
+                    "metadata": dict(region["metadata"]),
                     "pieceIndex": 0,
                     "primitive": "fixture-polygon",
-                    "type": "pocket",
+                    "type": region["type"],
                 }
-                for offset, (index, key) in enumerate(
-                    enumerate(self.region_keys, start=1)
-                )
+                for region in source_regions
             ],
             "schemaVersion": 1,
             "silhouettePaths": [
@@ -393,12 +463,14 @@ class _StubStageRunner:
             "stage": 3,
         }
 
-    def _stage4_document(self) -> dict[str, object]:
+    def _stage4_document(
+        self, source_regions: list[Mapping[str, object]]
+    ) -> dict[str, object]:
         return {
             "canvas": {"height": 64, "width": 128},
             "regions": [
-                {"id": index, "key": key}
-                for index, key in enumerate(self.region_keys, start=1)
+                {"id": region["id"], "key": region["key"]}
+                for region in source_regions
             ],
             "schemaVersion": 1,
             "stage": 4,
@@ -415,6 +487,34 @@ def _stage_document(run_root: Path, stage: int, filename: str) -> dict[str, obje
     return document
 
 
+def _accepted_stage_document(
+    context: RunContext,
+    stage: int,
+    acceptance_field: str,
+    filename: str,
+) -> dict[str, object]:
+    record = context.manifest["stages"][stage]
+    assert record["status"] == "approved"
+    acceptance_path = context.root / record["acceptancePath"]
+    assert _hash_file(acceptance_path) == record["acceptanceSha256"]
+    acceptance = json.loads(acceptance_path.read_text(encoding="utf-8"))
+    binding = acceptance[acceptance_field]
+    artifact_path = context.root / binding["path"]
+    assert artifact_path.name == filename
+    assert _hash_file(artifact_path) == binding["fileSha256"]
+    document = json.loads(artifact_path.read_text(encoding="utf-8"))
+    assert isinstance(document, dict)
+    return document
+
+
+def _contour_display_path(contour: object) -> str:
+    assert isinstance(contour, list) and len(contour) >= 3
+    first, *remaining = contour
+    commands = [f"M {first[0]} {first[1]}"]
+    commands.extend(f"L {point[0]} {point[1]}" for point in remaining)
+    return " ".join((*commands, "Z"))
+
+
 def _region_identity(
     document: Mapping[str, object],
 ) -> tuple[list[object], list[object]]:
@@ -426,32 +526,11 @@ def _region_identity(
     )
 
 
-def _product_specific_branches(path: Path) -> tuple[str, ...]:
-    source = path.read_text(encoding="utf-8")
-    product_keys = re.compile(
-        r"beastmaker|metolius|wood[-_ ]grips|compact[-_ ]ii|simulator[-_ ]3d",
-        re.IGNORECASE,
+def _assert_stable_identity_chain(*documents: Mapping[str, object]) -> None:
+    identities = [_region_identity(document) for document in documents]
+    assert all(identity == identities[0] for identity in identities[1:]), (
+        "stable region identity did not propagate between stages"
     )
-    if path.suffix == ".py":
-        tree = ast.parse(source)
-        conditionals = (
-            node.test
-            for node in ast.walk(tree)
-            if isinstance(node, (ast.If, ast.IfExp, ast.While))
-        )
-        return tuple(
-            segment
-            for condition in conditionals
-            if (segment := ast.get_source_segment(source, condition)) is not None
-            and product_keys.search(segment)
-        )
-    conditional = re.compile(
-        r"\b(?:if|switch|case)\b[^\n{};]*(?:"
-        + product_keys.pattern
-        + r")",
-        re.IGNORECASE,
-    )
-    return tuple(match.group(0) for match in conditional.finditer(source))
 
 
 def _write_json(path: Path, value: object) -> None:
