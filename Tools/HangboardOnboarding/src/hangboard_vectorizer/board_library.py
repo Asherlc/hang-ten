@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import tempfile
 from threading import RLock
 import unicodedata
@@ -57,7 +58,12 @@ class RepositoryBoardLibrary:
     __repository_locks: dict[Path, RLock] = {}
 
     def __init__(self, repository_root: Path) -> None:
-        self._repository_root = Path(repository_root).absolute()
+        try:
+            self._repository_root = Path(repository_root).resolve(strict=True)
+        except OSError as error:
+            raise BoardLibraryError("repository root is not accessible") from error
+        if not self._repository_root.is_dir():
+            raise BoardLibraryError("repository root is not a directory")
         self._library_root = self._repository_root / "Tools" / "HangboardOnboarding" / "board-library"
 
     def list_boards(self) -> tuple[LibraryBoard, ...]:
@@ -176,6 +182,7 @@ class RepositoryBoardLibrary:
     ) -> PublishedBoard:
         package = board.package_path
         versions_root = self._safe_existing_directory(package / "versions", package, "versions")
+        self._prepare_write_parent(versions_root)
         stage = Path(tempfile.mkdtemp(prefix=".publication.tmp-", dir=versions_root))
         try:
             stage_run = stage / "run"
@@ -551,6 +558,7 @@ class RepositoryBoardLibrary:
 
     @contextmanager
     def _publication_lock(self):
+        self._prepare_write_parent(self._library_root)
         self._reject_symlinks(self._repository_root, self._library_root)
         key = self._library_root.resolve(strict=False)
         with self.__repository_locks_guard:
@@ -654,16 +662,36 @@ class RepositoryBoardLibrary:
                 raise BoardLibraryError("symlinked run member is not allowed")
 
     def _prepare_write_parent(self, parent: Path) -> None:
-        parent = Path(parent)
-        parent.mkdir(parents=True, exist_ok=True)
-        if not parent.is_dir():
-            raise BoardLibraryError("write parent is not a directory")
         absolute = parent.absolute()
-        current = Path(absolute.anchor)
-        for part in absolute.parts[1:]:
+        try:
+            relative = absolute.relative_to(self._repository_root)
+        except ValueError:
+            root = Path(absolute.anchor)
+            relative = absolute.relative_to(root)
+        else:
+            root = self._repository_root
+        current = root
+        for part in relative.parts:
             current /= part
-            if current.is_symlink():
+            try:
+                mode = current.lstat().st_mode
+            except FileNotFoundError:
+                try:
+                    current.mkdir()
+                except FileExistsError:
+                    pass
+                except OSError as error:
+                    raise BoardLibraryError("write parent is not accessible") from error
+                try:
+                    mode = current.lstat().st_mode
+                except OSError as error:
+                    raise BoardLibraryError("write parent is not accessible") from error
+            except OSError as error:
+                raise BoardLibraryError("write parent is not accessible") from error
+            if stat.S_ISLNK(mode):
                 raise BoardLibraryError("write target contains a symlink")
+            if not stat.S_ISDIR(mode):
+                raise BoardLibraryError("write parent is not a directory")
 
     def _reject_write_target(self, path: Path) -> None:
         self._prepare_write_parent(path.parent)

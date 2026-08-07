@@ -88,6 +88,41 @@ def test_list_boards_rejects_a_symlinked_repository_ancestor(tmp_path: Path) -> 
         RepositoryBoardLibrary(repository).list_boards()
 
 
+def test_publish_rejects_descendant_symlink_before_creating_outside(
+    tmp_path: Path,
+) -> None:
+    repository, outside = _repository_with_symlinked_tools(tmp_path)
+    library = RepositoryBoardLibrary(repository)
+
+    with pytest.raises(BoardLibraryError, match="symlink"):
+        library.publish(
+            display_name="Example Board",
+            run_root=_complete_fixture_run(tmp_path / "run"),
+            board_id=None,
+            expected_current_version_id=None,
+        )
+
+    assert not (outside / "HangboardOnboarding" / "board-library" / "boards").exists()
+
+
+def test_repository_root_alias_is_trusted_but_descendant_symlinks_are_not(
+    tmp_path: Path,
+) -> None:
+    physical = _empty_repository(tmp_path / "physical")
+    alias = tmp_path / "repository-alias"
+    alias.symlink_to(physical, target_is_directory=True)
+    library = RepositoryBoardLibrary(alias)
+
+    published = library.publish(
+        display_name="Example Board",
+        run_root=_complete_fixture_run(tmp_path / "run"),
+        board_id=None,
+        expected_current_version_id=None,
+    )
+
+    assert published.board.board_id == "example-board"
+
+
 def test_copy_current_run_stages_then_atomically_renames(tmp_path: Path) -> None:
     library, expected = _complete_library(tmp_path)
     destination = tmp_path / "runtime" / "run"
@@ -460,6 +495,22 @@ def _published_output(value: object) -> dict[str, str]:
 
 def _library_root(root: Path) -> Path:
     return root / "Tools" / "HangboardOnboarding" / "board-library"
+
+
+def _empty_repository(root: Path) -> Path:
+    root.mkdir()
+    library_root = _library_root(root)
+    library_root.mkdir(parents=True)
+    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
+    return root
+
+
+def _repository_with_symlinked_tools(tmp_path: Path) -> tuple[Path, Path]:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    outside = _empty_repository(tmp_path / "outside")
+    (repository / "Tools").symlink_to(outside, target_is_directory=True)
+    return repository, outside
 
 
 def _tree_hashes(root: Path) -> dict[str, str]:
