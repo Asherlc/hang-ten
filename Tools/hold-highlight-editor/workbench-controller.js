@@ -220,9 +220,14 @@
     return Boolean(error?.jobId && error.terminal !== true);
   }
 
+  function clearMatchingAcceptedJob(store, acceptedJob) {
+    if (typeof acceptedJob?.jobId !== "string" || !acceptedJob.jobId) return false;
+    return store.clear(acceptedJob.jobId);
+  }
+
   function clearConfirmedTerminalJob(store, acceptedJob, error) {
     if (error?.terminal !== true || error.jobId !== acceptedJob?.jobId) return false;
-    return store.clear(acceptedJob.jobId);
+    return clearMatchingAcceptedJob(store, acceptedJob);
   }
 
   async function runFrozenApproval({
@@ -261,6 +266,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,
     regionIdFromError,

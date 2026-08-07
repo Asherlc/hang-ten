@@ -30,6 +30,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,
     regionIdFromError,
@@ -1394,7 +1395,7 @@
     };
     try {
       const result = await operation(options);
-      if (acceptedJob) activeJobStore.clear(acceptedJob.jobId);
+      if (acceptedJob) clearMatchingAcceptedJob(activeJobStore, acceptedJob);
       return result;
     } catch (error) {
       clearConfirmedTerminalJob(activeJobStore, acceptedJob, error);
@@ -1819,7 +1820,10 @@
       render();
       try {
         const recovered = await workbenchClient.pollJob(acceptedJob.jobId);
-        activeJobStore.clear(acceptedJob.jobId);
+        if (!clearMatchingAcceptedJob(activeJobStore, acceptedJob)) {
+          holdForStoredActiveJob();
+          return true;
+        }
         state.boards = await workbenchClient.listBoards();
         await loadCheckpoint(recovered);
         setStatus(`Reconnected to ${recovered.productName}.`);

@@ -157,6 +157,7 @@ test("missing malformed and mismatched job payloads remain nonterminal uncertain
     { ok: true, job: { id: "job-payload", boardId: "board-9", state: null, result: null, error: null } },
     { ok: true, job: { id: "job-other", boardId: "board-9", state: "failed", result: null, error: "job failed" } },
     { ok: true, job: { id: "job-payload", boardId: "board-9", state: "failed", result: null, error: null } },
+    { ok: true, job: { id: "job-payload", boardId: "board-9", state: "failed", result: { stale: true }, error: "job failed" } },
     { ok: true, job: { id: "job-payload", boardId: "board-9", state: "succeeded", error: null } },
   ];
   delete require.cache[require.resolve("../workbench-client.js")];

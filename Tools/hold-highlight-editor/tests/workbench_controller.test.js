@@ -9,6 +9,7 @@ const {
   checkpointComparisonUrl,
   validateEditableImageAlignment,
   createActiveJobStore,
+  clearMatchingAcceptedJob,
   clearConfirmedTerminalJob,
   isRecoverableJobError,
   regionIdFromError,
@@ -263,6 +264,20 @@ test("active job storage clears only for its matching confirmed terminal failure
 
   store.write({ jobId: "job-current", boardId: "board-3" });
   assert.equal(clearConfirmedTerminalJob(store, acceptedJob, { jobId: "job-17", terminal: true }), false);
+  assert.deepEqual(store.read(), { jobId: "job-current", boardId: "board-3" });
+});
+
+test("successful job release requires clearing the same persisted accepted job", () => {
+  const storage = memoryStorage();
+  const store = createActiveJobStore(storage);
+  const acceptedJob = { jobId: "job-17", boardId: "board-2" };
+  store.write(acceptedJob);
+
+  assert.equal(clearMatchingAcceptedJob(store, acceptedJob), true);
+  assert.equal(store.read(), null);
+
+  store.write({ jobId: "job-current", boardId: "board-3" });
+  assert.equal(clearMatchingAcceptedJob(store, acceptedJob), false);
   assert.deepEqual(store.read(), { jobId: "job-current", boardId: "board-3" });
 });
 

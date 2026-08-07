@@ -40,7 +40,9 @@
     if (!Object.prototype.hasOwnProperty.call(job, "error")) return false;
     if (job.error !== null && typeof job.error !== "string") return false;
     if (job.state === "succeeded" && (!job.result || typeof job.result !== "object")) return false;
-    if (job.state === "failed" && (typeof job.error !== "string" || !job.error)) return false;
+    if (job.state === "failed" && (
+      job.result !== null || typeof job.error !== "string" || !job.error
+    )) return false;
     return true;
   }
 
