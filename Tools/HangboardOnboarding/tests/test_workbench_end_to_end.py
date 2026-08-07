@@ -207,8 +207,13 @@ def test_open_newer_library_version_preserves_divergent_runtime_revision(
 
     assert published.version_id == "revision-0002"
     assert newer.board_id == opened.board_id
-    assert newer.revision_id != divergent.revision_id
+    assert newer.revision_id not in {opened.revision_id, divergent.revision_id}
     assert newer.repository_version_id == "revision-0002"
+    assert set(revisions) == {
+        opened.revision_id,
+        divergent.revision_id,
+        newer.revision_id,
+    }
     assert revisions[divergent.revision_id].state == "active"
     assert revisions[divergent.revision_id].run_root.is_dir()
 
