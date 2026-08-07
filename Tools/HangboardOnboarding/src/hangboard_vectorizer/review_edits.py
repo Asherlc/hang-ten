@@ -216,7 +216,9 @@ def _stage2_labels(
     for raw in document["regions"]:
         region = deepcopy(dict(raw))
         region_id = int(region["id"])
-        contour = np.rint(np.asarray(region["contour"], dtype=np.float64)).astype(np.int32)
+        authoritative = _stage2_authoritative_contour(region, shape)
+        region["contour"] = authoritative.tolist()
+        contour = np.rint(authoritative).astype(np.int32)
         mask = np.zeros(shape, dtype=np.uint8)
         cv2.fillPoly(mask, [contour], 1, lineType=cv2.LINE_8)
         occupied = mask.astype(bool)
@@ -246,6 +248,135 @@ def _stage2_labels(
             int(ys.max()) + 1,
         ]
     return labels, normalized
+
+
+def _stage2_authoritative_contour(
+    region: dict[str, object], shape: tuple[int, int]
+) -> np.ndarray:
+    region_id = region["id"]
+    points = np.asarray(region["contour"], dtype=np.float64)
+    metadata = region.get("metadata", {})
+    if not isinstance(metadata, Mapping):
+        _region_error(2, region_id, "metadata must be an object")
+    raw_treatments = metadata.get("cornerTreatments")
+    if raw_treatments is None:
+        return points
+    if not isinstance(raw_treatments, Mapping):
+        _region_error(2, region_id, "corner treatments must be an object")
+
+    treatments: dict[int, tuple[str, float]] = {}
+    for key, raw in raw_treatments.items():
+        if (
+            not isinstance(key, str)
+            or not key.isdigit()
+            or str(int(key)) != key
+            or not 0 <= int(key) < len(points)
+        ):
+            _region_error(2, region_id, "corner treatment index is invalid")
+        if not isinstance(raw, Mapping):
+            _region_error(2, region_id, "corner treatment is invalid")
+        treatment = raw.get("treatment")
+        amount = raw.get("amount")
+        if treatment not in {"sharp", "rounded"}:
+            _region_error(2, region_id, "corner treatment is invalid")
+        if (
+            isinstance(amount, bool)
+            or not isinstance(amount, (int, float))
+            or not math.isfinite(float(amount))
+            or float(amount) <= 0
+        ):
+            _region_error(2, region_id, "corner treatment amount is invalid")
+        treatments[int(key)] = (str(treatment), float(amount))
+
+    if not treatments:
+        return points
+    style = metadata.get("pathStyle", "straight")
+    if style not in {"straight", "smooth"}:
+        _region_error(2, region_id, "path style is invalid")
+    raw_tension = metadata.get("curveTension", 0.8)
+    if (
+        isinstance(raw_tension, bool)
+        or not isinstance(raw_tension, (int, float))
+        or not math.isfinite(float(raw_tension))
+    ):
+        _region_error(2, region_id, "curve tension is invalid")
+    tension = max(0.1, min(1.4, float(raw_tension))) / 6
+
+    corners: list[tuple[np.ndarray, np.ndarray]] = []
+    for index, vertex in enumerate(points):
+        treatment = treatments.get(index)
+        if treatment is None or treatment[0] != "rounded":
+            corners.append((vertex.copy(), vertex.copy()))
+            continue
+        previous = points[(index - 1) % len(points)]
+        following = points[(index + 1) % len(points)]
+        previous_length = float(np.linalg.norm(previous - vertex))
+        following_length = float(np.linalg.norm(following - vertex))
+        cut = min(treatment[1], previous_length / 2, following_length / 2)
+
+        def toward(target: np.ndarray, length: float) -> np.ndarray:
+            if length == 0:
+                return vertex.copy()
+            return vertex + (target - vertex) * cut / length
+
+        entry = toward(previous, previous_length)
+        exit_point = toward(following, following_length)
+        corners.append((entry, exit_point))
+
+    def point(value: np.ndarray) -> str:
+        return f"{float(value[0]):.12g} {float(value[1]):.12g}"
+
+    commands = [f"M {point(corners[0][1])}"]
+
+    def append_connector(from_index: int, to_index: int) -> None:
+        target = corners[to_index][0]
+        if style != "smooth" or from_index in treatments or to_index in treatments:
+            commands.append(f"L {point(target)}")
+            return
+        previous = points[(from_index - 1) % len(points)]
+        current = points[from_index]
+        following = points[to_index]
+        after_following = points[(to_index + 1) % len(points)]
+        control_one = current + (following - previous) * tension
+        control_two = following - (after_following - current) * tension
+        commands.append(
+            f"C {point(control_one)} {point(control_two)} {point(target)}"
+        )
+
+    for index in range(1, len(points)):
+        append_connector(index - 1, index)
+        if treatments.get(index, (None, 0))[0] == "rounded":
+            commands.append(f"Q {point(points[index])} {point(corners[index][1])}")
+    append_connector(len(points) - 1, 0)
+    if treatments.get(0, (None, 0))[0] == "rounded":
+        commands.append(f"Q {point(points[0])} {point(corners[0][1])}")
+    commands.append("Z")
+
+    height, width = shape
+    try:
+        path = parse_display_path(
+            " ".join(commands),
+            f"Stage 2 region {region_id} treated contour",
+            width,
+            height,
+            allow_linear_segments=True,
+        )
+        assert path is not None
+        contour = flatten_display_path(path, curve_steps=32)[:-1]
+    except (ConversionError, ValueError) as error:
+        raise ConversionError(
+            f"Stage 2 region {region_id}: corner treatment is invalid"
+        ) from error
+    if _self_intersects(contour):
+        _region_error(2, region_id, "treated contour has a prohibited self-intersection")
+
+    normalized_metadata = deepcopy(dict(metadata))
+    normalized_metadata.pop("cornerTreatments", None)
+    normalized_metadata["contourCornerTreatments"] = deepcopy(
+        dict(raw_treatments)
+    )
+    region["metadata"] = normalized_metadata
+    return contour
 
 
 def _stage3_document(

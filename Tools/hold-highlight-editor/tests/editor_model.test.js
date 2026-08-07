@@ -42,6 +42,40 @@ test("buildEditedDocument returns a detached complete artifact", () => {
   assert.equal(regions[0].key, "grip-001");
 });
 
+test("buildEditedDocument preserves a valid anchor inside a concave contour", () => {
+  const concave = {
+    ...baseline,
+    anchor: [1, 6],
+    contour: [[0, 0], [10, 0], [10, 10], [7, 10], [7, 3], [3, 3], [3, 10], [0, 10]],
+  };
+
+  const result = buildEditedDocument({
+    canvas: { width: 20, height: 20 },
+    regions: [concave],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+
+  assert.deepEqual(result.regions[0].anchor, [1, 6]);
+});
+
+test("buildEditedDocument replaces an invalid concave anchor with a deterministic interior pixel", () => {
+  const concave = {
+    ...baseline,
+    anchor: [5, 6],
+    contour: [[0, 0], [10, 0], [10, 10], [7, 10], [7, 3], [3, 3], [3, 10], [0, 10]],
+  };
+
+  const result = buildEditedDocument({
+    canvas: { width: 20, height: 20 },
+    regions: [concave],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+
+  assert.deepEqual(result.regions[0].anchor, [5, 2]);
+});
+
 test("buildCorrectionsDocument identifies added modified and deleted regions", () => {
   const modified = { ...baseline, contour: [[1, 0], [10, 0], [10, 10]] };
   const added = { ...baseline, id: 3, key: "grip-003" };

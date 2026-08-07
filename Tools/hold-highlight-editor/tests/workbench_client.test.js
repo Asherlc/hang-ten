@@ -10,13 +10,13 @@ test("a newly accepted job ID is exposed before polling completes", async () => 
   let releasePoll;
   global.fetch = async (path) => {
     calls.push(path);
-    if (path === "/api/boards") return response({ ok: true, jobId: "job-42", boardId: "board-9" });
+    if (path === "/api/boards") return response({ ok: true, jobId: "job-42" });
     await new Promise((resolve) => { releasePoll = resolve; });
     return response({
       ok: true,
       job: {
         id: "job-42",
-        boardId: "board-9",
+        boardId: "workbench-board-reservation-42",
         state: "succeeded",
         result: { boardId: "board-9" },
         error: null,
@@ -32,7 +32,7 @@ test("a newly accepted job ID is exposed before polling completes", async () => 
   });
   await new Promise((resolve) => setImmediate(resolve));
 
-  assert.deepEqual(accepted, [{ jobId: "job-42", boardId: "board-9" }]);
+  assert.deepEqual(accepted, [{ jobId: "job-42", boardId: null }]);
   releasePoll();
   assert.deepEqual(await pending, { boardId: "board-9" });
   assert.deepEqual(calls, ["/api/boards", "/api/jobs/job-42"]);

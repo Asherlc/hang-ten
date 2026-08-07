@@ -142,6 +142,31 @@
     return false;
   }
 
+  function movePathEndpoint(commands, commandIndex, endpoint) {
+    const result = validateCommands(commands).map((command) => ({ ...command }));
+    if (!Number.isInteger(commandIndex) || commandIndex < 0 || commandIndex >= result.length || result[commandIndex].type === "Z") {
+      throw new RangeError("Endpoint command index is invalid");
+    }
+    if (!Array.isArray(endpoint) || endpoint.length !== 2) {
+      throw new TypeError("Endpoint must contain two coordinates");
+    }
+    assertFinite(endpoint[0], "Endpoint x coordinate");
+    assertFinite(endpoint[1], "Endpoint y coordinate");
+    const command = result[commandIndex];
+    let closingIndex = -1;
+    if (command.type === "M") {
+      const subpath = subpathForCorner(result, commandIndex);
+      if (isExplicitClosingCommand(result, subpath.end - 1)) {
+        closingIndex = subpath.end - 1;
+      }
+    }
+    [command.x, command.y] = endpoint;
+    if (closingIndex >= 0) {
+      [result[closingIndex].x, result[closingIndex].y] = endpoint;
+    }
+    return result;
+  }
+
   function subpathForCorner(commands, cornerIndex) {
     let start = -1;
     for (let index = 0; index < commands.length; index += 1) {
@@ -339,5 +364,6 @@
     mirrorPath,
     treatPathCorner,
     isExplicitClosingCommand,
+    movePathEndpoint,
   };
 }));

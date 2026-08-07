@@ -270,6 +270,12 @@ test("active job storage clears only for its matching confirmed terminal failure
 test("successful job release requires clearing the same persisted accepted job", () => {
   const storage = memoryStorage();
   const store = createActiveJobStore(storage);
+  const creationJob = { jobId: "job-create", boardId: null };
+  store.write(creationJob);
+
+  assert.deepEqual(createActiveJobStore(storage).read(), creationJob);
+  assert.equal(clearMatchingAcceptedJob(store, creationJob), true);
+
   const acceptedJob = { jobId: "job-17", boardId: "board-2" };
   store.write(acceptedJob);
 

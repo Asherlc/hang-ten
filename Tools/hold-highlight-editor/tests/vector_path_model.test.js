@@ -9,6 +9,7 @@ const {
   mirrorPath,
   treatPathCorner,
   isExplicitClosingCommand,
+  movePathEndpoint,
 } = require("../vector-path-model.js");
 
 test("cubic display paths round-trip without flattening", () => {
@@ -130,6 +131,32 @@ test("isExplicitClosingCommand identifies terminal closure segments in their own
     isExplicitClosingCommand(parseDisplayPath("M 100 100 L 110 100 Z M 0 0 L 10 0 L 0 0 Z"), 5),
     true,
   );
+});
+
+test("moving a subpath start keeps explicit L Q and C closures attached", () => {
+  const cases = [
+    {
+      closing: "L 0 0",
+      expected: "M 100 100 L 110 100 Z M 2 3 L 10 0 L 2 3 Z",
+    },
+    {
+      closing: "Q 4 4 0 0",
+      expected: "M 100 100 L 110 100 Z M 2 3 L 10 0 Q 4 4 2 3 Z",
+    },
+    {
+      closing: "C 8 2 3 3 0 0",
+      expected: "M 100 100 L 110 100 Z M 2 3 L 10 0 C 8 2 3 3 2 3 Z",
+    },
+  ];
+
+  for (const { closing, expected } of cases) {
+    const source = parseDisplayPath(`M 100 100 L 110 100 Z M 0 0 L 10 0 ${closing} Z`);
+    const original = structuredClone(source);
+    const moved = movePathEndpoint(source, 3, [2, 3]);
+
+    assert.equal(serializeDisplayPath(moved), expected);
+    assert.deepEqual(source, original);
+  }
 });
 
 test("Stage 3 corner treatment rejects invalid inputs without mutation", () => {

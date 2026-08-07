@@ -32,11 +32,82 @@
     return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)].map((value) => round(value));
   }
 
+  function pointOnSegment([px, py], [x1, y1], [x2, y2]) {
+    const cross = (px - x1) * (y2 - y1) - (py - y1) * (x2 - x1);
+    if (Math.abs(cross) > 1e-9) return false;
+    return px >= Math.min(x1, x2) - 1e-9
+      && px <= Math.max(x1, x2) + 1e-9
+      && py >= Math.min(y1, y2) - 1e-9
+      && py <= Math.max(y1, y2) + 1e-9;
+  }
+
+  function pointInPolygon(point, points, includeBoundary = true) {
+    let inside = false;
+    for (let index = 0, previous = points.length - 1; index < points.length; previous = index, index += 1) {
+      const start = points[previous];
+      const end = points[index];
+      if (pointOnSegment(point, start, end)) return includeBoundary;
+      const crosses = (start[1] > point[1]) !== (end[1] > point[1]);
+      if (crosses) {
+        const intersectionX = start[0]
+          + (point[1] - start[1]) * (end[0] - start[0]) / (end[1] - start[1]);
+        if (point[0] < intersectionX) inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  function exportAnchor(region, contour) {
+    const existing = Array.isArray(region.anchor)
+      && region.anchor.length === 2
+      && region.anchor.every(Number.isFinite)
+      ? region.anchor.map((value) => round(value))
+      : null;
+    if (existing && pointInPolygon(existing.map(Math.round), contour)) return existing;
+
+    const center = centroid(contour);
+    const [minX, minY, maxX, maxY] = bounds(contour);
+    let best = null;
+    for (let y = Math.ceil(minY); y <= Math.floor(maxY); y += 1) {
+      const intersections = [];
+      for (let index = 0; index < contour.length; index += 1) {
+        const start = contour[index];
+        const end = contour[(index + 1) % contour.length];
+        if ((start[1] > y) === (end[1] > y)) continue;
+        intersections.push(start[0] + (y - start[1]) * (end[0] - start[0]) / (end[1] - start[1]));
+      }
+      intersections.sort((left, right) => left - right);
+      for (let index = 0; index + 1 < intersections.length; index += 2) {
+        const left = intersections[index];
+        const right = intersections[index + 1];
+        const first = Math.ceil(left + 1e-9);
+        const last = Math.floor(right - 1e-9);
+        if (first > last) continue;
+        const x = Math.round((first + last) / 2);
+        if (!pointInPolygon([x, y], contour, false)) continue;
+        const candidate = {
+          point: [x, y],
+          width: right - left,
+          centerDistance: Math.hypot(x - center[0], y - center[1]),
+        };
+        if (
+          best === null
+          || candidate.width > best.width
+          || (candidate.width === best.width && candidate.centerDistance < best.centerDistance)
+          || (candidate.width === best.width && candidate.centerDistance === best.centerDistance && y < best.point[1])
+          || (candidate.width === best.width && candidate.centerDistance === best.centerDistance && y === best.point[1] && x < best.point[0])
+        ) best = candidate;
+      }
+    }
+    if (best) return best.point;
+    return contour[0].map((value) => Math.round(value));
+  }
+
   function regionForExport(region) {
     const contour = region.contour.map(([x, y]) => [round(x), round(y)]);
     return {
       ...clone(region),
-      anchor: centroid(contour).map((value) => round(value)),
+      anchor: exportAnchor(region, contour),
       areaPixels: Math.round(polygonArea(contour)),
       bounds: bounds(contour),
       contour,

@@ -3,15 +3,22 @@
 from __future__ import annotations
 
 import json
+import os
 from collections import deque
 from collections.abc import Callable
 from copy import deepcopy
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
+from pathlib import Path
+import re
 from threading import BoundedSemaphore, Lock
+import tempfile
 from time import monotonic
 from typing import Any
 from uuid import uuid4
+
+
+_JOB_ID = re.compile(r"[0-9a-f]{32}\Z")
 
 
 class JobConflictError(ValueError):
@@ -58,12 +65,22 @@ class BoardJobManager:
         max_queue: int | None = None,
         max_completed: int = 256,
         result_ttl_seconds: float = 3600,
+        outcome_root: Path | None = None,
     ) -> None:
         if max_workers < 1:
             raise ValueError("max_workers must be positive")
         queue_limit = max_workers if max_queue is None else max_queue
         if queue_limit < 0 or max_completed < 1 or result_ttl_seconds <= 0:
             raise ValueError("job capacity and retention limits must be positive")
+        outcome_directory = (
+            Path(outcome_root).resolve(strict=False)
+            if outcome_root is not None
+            else None
+        )
+        if outcome_directory is not None:
+            outcome_directory.mkdir(parents=True, exist_ok=True)
+            if not outcome_directory.is_dir():
+                raise ValueError("job outcome root must be a directory")
         self.__executor = ThreadPoolExecutor(
             max_workers=max_workers, thread_name_prefix="workbench"
         )
@@ -78,6 +95,7 @@ class BoardJobManager:
         self.__result_ttl_seconds = result_ttl_seconds
         self.__result_serializer = result_serializer or (lambda result: result)
         self.__public_error_types = public_error_types
+        self.__outcome_root = outcome_directory
 
     def submit(self, board_id: str, operation: Callable[[], object]) -> JobRecord:
         if not isinstance(board_id, str) or not board_id:
@@ -109,10 +127,11 @@ class BoardJobManager:
     def get(self, job_id: str) -> JobRecord:
         with self.__lock:
             self.__prune_completed()
-            try:
-                record = self.__jobs[job_id]
-            except KeyError as error:
-                raise JobNotFoundError(f"unknown job: {job_id}") from error
+            record = self.__jobs.get(job_id)
+            if record is None:
+                record = self.__read_outcome(job_id)
+            if record is None:
+                raise JobNotFoundError(f"unknown job: {job_id}")
             return replace(record, result=deepcopy(record.result))
 
     def wait(self, job_id: str, timeout: float | None = None) -> JobRecord:
@@ -144,6 +163,12 @@ class BoardJobManager:
         except Exception:
             final = replace(current, state="failed", error="job failed")
         finally:
+            try:
+                self.__write_outcome(final)
+            except (OSError, TypeError, ValueError):
+                # The live terminal result remains available. Without a durable
+                # confirmation a later restart correctly leaves the client frozen.
+                pass
             with self.__lock:
                 self.__jobs[job_id] = final
                 if self.__active_jobs.get(current.board_id) == job_id:
@@ -164,6 +189,66 @@ class BoardJobManager:
     def __forget_future(self, job_id: str) -> None:
         with self.__lock:
             self.__futures.pop(job_id, None)
+
+    def __write_outcome(self, record: JobRecord) -> None:
+        if self.__outcome_root is None:
+            return
+        if _JOB_ID.fullmatch(record.id) is None:
+            raise ValueError("job outcome ID is invalid")
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{record.id}.", suffix=".tmp", dir=self.__outcome_root
+        )
+        temporary = Path(temporary_name)
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+                json.dump(record.as_dict(), stream, sort_keys=True, allow_nan=False)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, self.__outcome_root / f"{record.id}.json")
+            directory = os.open(self.__outcome_root, os.O_RDONLY)
+            try:
+                os.fsync(directory)
+            finally:
+                os.close(directory)
+        except Exception:
+            temporary.unlink(missing_ok=True)
+            raise
+
+    def __read_outcome(self, job_id: str) -> JobRecord | None:
+        if self.__outcome_root is None or _JOB_ID.fullmatch(job_id) is None:
+            return None
+        try:
+            value = json.loads(
+                (self.__outcome_root / f"{job_id}.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+        except (OSError, json.JSONDecodeError):
+            return None
+        if not isinstance(value, dict) or value.get("id") != job_id:
+            return None
+        board_id = value.get("boardId")
+        state = value.get("state")
+        result = value.get("result")
+        error = value.get("error")
+        if not isinstance(board_id, str) or not board_id:
+            return None
+        if state == "succeeded":
+            if error is not None:
+                return None
+        elif state == "failed":
+            if result is not None or not isinstance(error, str) or not error:
+                return None
+        else:
+            return None
+        return JobRecord(
+            id=job_id,
+            board_id=board_id,
+            state=state,
+            result=deepcopy(result),
+            error=error,
+        )
 
     def __prune_completed(self) -> None:
         cutoff = monotonic() - self.__result_ttl_seconds

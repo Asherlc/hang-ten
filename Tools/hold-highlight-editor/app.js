@@ -26,6 +26,7 @@
     mirrorPath,
     treatPathCorner,
     isExplicitClosingCommand,
+    movePathEndpoint,
   } = globalThis.HoldVectorPathModel;
   const {
     createLatestLoadCoordinator,
@@ -790,27 +791,18 @@
         const command = commands[state.handleSession.commandIndex];
         const [x, y] = pointer;
         if (state.handleSession.handleKind === "endpoint") {
-          const previousEndpoint = [command.x, command.y];
-          [command.x, command.y] = [x, y];
-          if (command.type === "M") {
-            const closing = commands.findLast((item, index) => (
-              index > state.handleSession.commandIndex
-              && item.type === "C"
-              && item.x === previousEndpoint[0]
-              && item.y === previousEndpoint[1]
-              && commands[index + 1]?.type === "Z"
-            ));
-            if (closing) [closing.x, closing.y] = [x, y];
-          }
+          const moved = movePathEndpoint(
+            commands, state.handleSession.commandIndex, [x, y],
+          );
           const corner = region.metadata.cornerTreatments?.[state.handleSession.commandIndex];
           if (corner) {
             region.displayPath = serializeDisplayPath(treatPathCorner(
-              commands,
+              moved,
               state.handleSession.commandIndex,
               corner.treatment,
               corner.amount,
             ));
-          } else region.displayPath = serializeDisplayPath(commands);
+          } else region.displayPath = serializeDisplayPath(moved);
         }
         else if (state.handleSession.handleKind === "control1") [command.x1, command.y1] = [x, y];
         else [command.x2, command.y2] = [x, y];

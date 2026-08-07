@@ -443,12 +443,13 @@ def test_save_review_preserves_proposal_and_writes_review_artifacts(tmp_path):
 
 
 @contextmanager
-def running_server(session, workbench_service=None):
+def running_server(session, workbench_service=None, job_outcome_root=None):
     server = create_server(
         session,
         "127.0.0.1",
         0,
         workbench_service=workbench_service,
+        job_outcome_root=job_outcome_root,
         public_job_error_types=(FakeWorkbenchError,)
         if workbench_service is not None
         else (),
@@ -556,6 +557,31 @@ def test_create_url_run_returns_job_and_can_be_polled(running_workbench_server):
     assert final["state"] == "succeeded"
     assert final["result"]["productName"] == "Example Board"
     assert "runRoot" not in final["result"]
+
+
+def test_completed_creation_job_reconciles_after_server_restart(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    session = make_run(tmp_path / "legacy")
+    outcome_root = tmp_path / "job-outcomes"
+    with running_server(session, service, outcome_root) as base:
+        status, submitted = _post_json(
+            base + "/api/boards",
+            {
+                "productName": "Restarted Board",
+                "source": "https://example.test/restarted.png",
+            },
+        )
+        completed = _poll_job(base, submitted["jobId"])
+
+    with running_server(session, service, outcome_root) as restarted:
+        recovered_status, recovered = read_json(
+            restarted + f"/api/jobs/{submitted['jobId']}"
+        )
+
+    assert status == 202
+    assert recovered_status == 200
+    assert recovered["job"] == completed
+    assert recovered["job"]["result"]["boardId"] == "board-1"
 
 
 def test_create_upload_accepts_only_bounded_images(running_workbench_server):
@@ -968,6 +994,7 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
     assert status == 200
     assert payload == {"ok": True, "boards": []}
     assert (workspace / "boards").is_dir()
+    assert (workspace / ".workbench-job-outcomes").is_dir()
 
 
 def test_http_session_loads_only_explicit_artifacts(tmp_path):

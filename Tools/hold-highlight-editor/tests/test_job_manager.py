@@ -12,6 +12,7 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
 
+import job_manager as job_manager_module  # noqa: E402
 from job_manager import (  # noqa: E402
     BoardJobManager,
     JobCapacityError,
@@ -126,3 +127,31 @@ def test_job_manager_bounds_queued_work_and_completed_retention():
     assert third.state == "succeeded"
     with pytest.raises(JobNotFoundError, match="unknown job"):
         manager.get(running.id)
+
+
+def test_completed_outcome_survives_expiry_and_manager_restart(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    now = [100.0]
+    monkeypatch.setattr(job_manager_module, "monotonic", lambda: now[0])
+    outcome_root = tmp_path / "job-outcomes"
+    manager = BoardJobManager(
+        max_workers=1,
+        result_ttl_seconds=1,
+        outcome_root=outcome_root,
+    )
+    submitted = manager.submit(
+        "workbench-board-reservation-1",
+        lambda: {"boardId": "board-1", "revisionId": "revision-1"},
+    )
+    expected = manager.wait(submitted.id).as_dict()
+
+    now[0] += 2
+    assert manager.get(submitted.id).as_dict() == expected
+    manager.shutdown()
+
+    restarted = BoardJobManager(max_workers=1, outcome_root=outcome_root)
+    try:
+        assert restarted.get(submitted.id).as_dict() == expected
+    finally:
+        restarted.shutdown()

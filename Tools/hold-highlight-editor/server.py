@@ -271,6 +271,7 @@ def create_server(
     workbench_service: object | None = None,
     max_workers: int = 4,
     public_job_error_types: tuple[type[Exception], ...] = (),
+    job_outcome_root: Path | None = None,
 ) -> ThreadingHTTPServer:
     catalog = (
         source
@@ -283,6 +284,7 @@ def create_server(
         max_workers=max_workers,
         result_serializer=_workbench_view_payload,
         public_error_types=public_job_error_types,
+        outcome_root=job_outcome_root,
     )
 
     class SessionHandler(EditorRequestHandler):
@@ -860,6 +862,12 @@ def _server_from_cli(
         parsed.port,
         workbench_service=service,
         public_job_error_types=public_job_error_types,
+        job_outcome_root=(
+            parsed.workspace_root.resolve(strict=False)
+            / ".workbench-job-outcomes"
+            if parsed.workspace_root is not None
+            else None
+        ),
     )
     return server, catalog
 

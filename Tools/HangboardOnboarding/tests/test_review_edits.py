@@ -3,6 +3,7 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 from pathlib import Path
+import shutil
 
 import numpy as np
 from PIL import Image
@@ -157,6 +158,124 @@ def test_stage2_edit_rebuilds_labels_review_and_candidate_hashes(
         accepted_stage1_run, 2
     )
     assert _artifact_hashes(baseline) == before
+
+
+def test_stage2_corner_treatment_changes_authoritative_contour_and_labels(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    untreated = _load_fixture("stage-2-regions-edited.json")
+    treated = json.loads(json.dumps(untreated))
+    treatment = {"5": {"treatment": "rounded", "amount": 20}}
+    treated["regions"][0]["metadata"]["cornerTreatments"] = treatment
+
+    untreated_checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), untreated, tmp_path / "untreated"
+    )
+    treated_checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), treated, tmp_path / "treated"
+    )
+    untreated_labels = np.asarray(
+        Image.open(untreated_checkpoint.artifact_root / "stage-2-labels.png"),
+        dtype=np.uint16,
+    )
+    treated_labels = np.asarray(
+        Image.open(treated_checkpoint.artifact_root / "stage-2-labels.png"),
+        dtype=np.uint16,
+    )
+    untreated_region = json.loads(
+        (untreated_checkpoint.artifact_root / "stage-2-regions.json").read_text()
+    )["regions"][0]
+    treated_region = json.loads(
+        (treated_checkpoint.artifact_root / "stage-2-regions.json").read_text()
+    )["regions"][0]
+
+    assert not np.array_equal(treated_labels, untreated_labels)
+    assert treated_region["contour"] != untreated_region["contour"]
+    assert "cornerTreatments" not in treated_region["metadata"]
+    assert treated_region["metadata"]["contourCornerTreatments"] == treatment
+
+
+def test_stage2_corner_treatment_accepts_an_adjacent_repeated_vertex(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    region = edited["regions"][0]
+    region["contour"].insert(1, region["contour"][0].copy())
+    region["metadata"]["cornerTreatments"] = {
+        "0": {"treatment": "rounded", "amount": 20}
+    }
+
+    checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), edited, tmp_path / "repeated-vertex"
+    )
+    materialized = json.loads(
+        (checkpoint.artifact_root / "stage-2-regions.json").read_text()
+    )["regions"][0]
+
+    assert all(
+        np.isfinite(coordinate)
+        for point in materialized["contour"]
+        for coordinate in point
+    )
+
+
+def test_stage2_corner_treatment_changes_stage3_source_geometry_without_command_metadata(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    untreated_run = tmp_path / "untreated-run"
+    treated_run = tmp_path / "treated-run"
+    shutil.copytree(accepted_stage1_run, untreated_run)
+    shutil.copytree(accepted_stage1_run, treated_run)
+    untreated = _load_fixture("stage-2-regions-edited.json")
+    treated = json.loads(json.dumps(untreated))
+    treatment = {"5": {"treatment": "rounded", "amount": 20}}
+    treated["regions"][0]["metadata"]["cornerTreatments"] = treatment
+
+    untreated_vector = _materialize_stage2_and_run_stage3(
+        untreated_run, untreated, tmp_path / "untreated-stage-2"
+    )
+    treated_vector = _materialize_stage2_and_run_stage3(
+        treated_run, treated, tmp_path / "treated-stage-2"
+    )
+    untreated_region = untreated_vector["regions"][0]
+    treated_region = treated_vector["regions"][0]
+
+    assert treated_region["sourceMaskSha256"] != untreated_region["sourceMaskSha256"]
+    assert "cornerTreatments" not in treated_region["metadata"]
+    assert treated_region["metadata"]["contourCornerTreatments"] == treatment
+
+
+def test_stage2_concave_contour_materializes_with_exported_interior_anchor(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    edited["regions"][0].update(
+        {
+            "anchor": [115, 75],
+            "bounds": [100, 30, 201, 101],
+            "contour": [
+                [100, 30],
+                [200, 30],
+                [200, 100],
+                [170, 100],
+                [170, 50],
+                [130, 50],
+                [130, 100],
+                [100, 100],
+            ],
+        }
+    )
+
+    checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), edited, tmp_path / "concave"
+    )
+    labels = np.asarray(
+        Image.open(checkpoint.artifact_root / "stage-2-labels.png"),
+        dtype=np.uint16,
+    )
+
+    assert labels[75, 115] == 1
+    assert labels[75, 150] == 0
 
 
 def test_stage2_edit_allows_distinct_valid_regions_to_overlap(
@@ -507,6 +626,46 @@ def test_materialization_rejects_a_changed_pending_candidate_hash_contract(
 
 def _context(run: Path) -> RunContext:
     return RunContext(run, json.loads((run / "run.json").read_text()))
+
+
+def _materialize_stage2_and_run_stage3(
+    run: Path, document: dict[str, object], checkpoint_root: Path
+) -> dict[str, object]:
+    checkpoint = materialize_stage2_edit(_context(run), document, checkpoint_root)
+    manifest = json.loads((run / "run.json").read_text())
+    artifact_relative = "stages/02/attempt-0002"
+    artifact_root = run / artifact_relative
+    shutil.copytree(checkpoint.artifact_root, artifact_root)
+    candidate = json.loads((artifact_root / "stage-2-candidate.json").read_text())
+    acceptance = {
+        "profile": candidate["profile"],
+        "regionCount": candidate["regionCount"],
+        "regions": {
+            **candidate["regions"],
+            "path": f"{artifact_relative}/stage-2-regions.json",
+        },
+        "registered": {
+            **candidate["registered"],
+            "path": f"{artifact_relative}/stage-2-labels.png",
+        },
+        "runIdentitySha256": manifest["runIdentitySha256"],
+        "stage": 2,
+    }
+    acceptance_path = run / "approvals/stage-2-acceptance.json"
+    acceptance_path.parent.mkdir()
+    _write_json(acceptance_path, acceptance)
+    manifest["stages"][2] = {
+        "acceptancePath": "approvals/stage-2-acceptance.json",
+        "acceptanceSha256": _hash_file(acceptance_path),
+        "artifactRoot": artifact_relative,
+        "stage": 2,
+        "status": "approved",
+    }
+    manifest["pipeline"] = {"currentStage": 2, "status": "ready_for_next_stage"}
+    _write_json(run / "run.json", manifest)
+    stage3_root = run / "stages/03/attempt-0001"
+    run_generic_stage3(_context(run), stage3_root)
+    return json.loads((stage3_root / "stage-3-vector-regions.json").read_text())
 
 
 def _load_fixture(name: str) -> dict[str, object]:

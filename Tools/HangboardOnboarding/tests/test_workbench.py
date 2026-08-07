@@ -936,6 +936,48 @@ def test_retry_resumes_an_imported_failed_run_without_changing_prior_evidence(
     } == prior_evidence
 
 
+@pytest.mark.parametrize("failed_stage", [3, 4], ids=["stage-3", "stage-4"])
+def test_failed_late_stage_reopens_after_restart_and_retries(
+    tmp_path: Path, failed_stage: int
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    failing_runners = _stub_runners()
+    failing_runners[failed_stage] = _FailingStageRunner(failed_stage)
+    service = WorkbenchService(store, runners=failing_runners)
+    current = service.create_from_upload("Retry Board", _fixture_image_bytes())
+    for stage in range(failed_stage - 1):
+        current = service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=stage,
+        )
+
+    with pytest.raises(RuntimeError, match="stage failure"):
+        service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=failed_stage - 1,
+        )
+
+    restarted = WorkbenchService(store, runners=_stub_runners())
+    failed = restarted.get_board(current.board_id)
+    assert failed.stage == failed_stage - 1
+    assert failed.state == "failed"
+    assert failed.review_path is None
+    assert failed.editor_image_path is None
+    assert failed.editor_mode is None
+
+    retried = restarted.retry(
+        failed.board_id,
+        expected_revision_id=failed.revision_id,
+        expected_stage=failed.stage,
+    )
+    assert retried.stage == failed_stage
+    assert retried.state == "awaiting_review"
+    assert retried.review_path is not None
+    assert f"stages/{failed_stage:02d}/attempt-0002" in retried.review_path.as_posix()
+
+
 def test_import_run_preserves_a_cli_root_and_lists_it(
     service: WorkbenchService, tmp_path: Path
 ) -> None:
@@ -1203,6 +1245,14 @@ class _FailAfterCacheRunner:
 
 class _FailingStage1Runner:
     stage = 1
+
+    def run(self, _context: RunContext, _artifact_root: Path) -> StageCheckpoint:
+        raise RuntimeError("stage failure")
+
+
+class _FailingStageRunner:
+    def __init__(self, stage: int) -> None:
+        self.stage = stage
 
     def run(self, _context: RunContext, _artifact_root: Path) -> StageCheckpoint:
         raise RuntimeError("stage failure")

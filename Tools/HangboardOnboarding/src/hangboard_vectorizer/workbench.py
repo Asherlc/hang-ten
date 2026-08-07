@@ -448,8 +448,13 @@ class WorkbenchService:
         )
         board = self.store.read_board(board.id)
         review_value = status.get("review")
-        editor_mode = "contour" if stage == 2 else "vector" if stage == 3 else None
-        if stage in (2, 3):
+        editable = raw_state == "awaiting_approval" and stage in (2, 3)
+        editor_mode = (
+            "contour" if editable and stage == 2
+            else "vector" if editable and stage == 3
+            else None
+        )
+        if editable:
             review_path, editor_image_path = self.__editable_artifacts(
                 revision, stage, review_value
             )
