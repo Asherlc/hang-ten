@@ -82,9 +82,15 @@ def _synchronized(
 class WorkbenchStore:
     """Own board manifests above CLI-compatible onboarding run directories."""
 
+    __workspace_locks_guard = RLock()
+    __workspace_locks: dict[Path, RLock] = {}
+
     def __init__(self, workspace: Path) -> None:
-        self._metadata_lock = RLock()
         self._workspace = Path(workspace).resolve(strict=False)
+        with self.__workspace_locks_guard:
+            self._metadata_lock = self.__workspace_locks.setdefault(
+                self._workspace, RLock()
+            )
         self._workspace.mkdir(parents=True, exist_ok=True)
         if not self._workspace.is_dir():
             raise WorkbenchStoreError(

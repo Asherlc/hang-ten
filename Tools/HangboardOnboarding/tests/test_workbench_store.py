@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from threading import Barrier
+from threading import Barrier, Event
 from uuid import UUID
 
 import pytest
@@ -251,6 +251,44 @@ def test_independent_workspaces_never_share_publication_operation(
     )
 
     assert first != second
+
+
+def test_two_store_instances_prepare_one_persisted_publication_operation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first_store, board, revision = _populated_store(tmp_path)
+    second_store = WorkbenchStore(tmp_path)
+    first_reached_write = Event()
+    second_read_stale_manifest = Event()
+    actual_first_write = first_store._write_board
+    actual_second_read = second_store.read_board
+
+    def pause_first_write(*args: object, **kwargs: object) -> None:
+        first_reached_write.set()
+        second_read_stale_manifest.wait(0.5)
+        actual_first_write(*args, **kwargs)
+
+    def record_second_read(board_id: str):
+        result = actual_second_read(board_id)
+        second_read_stale_manifest.set()
+        return result
+
+    monkeypatch.setattr(first_store, "_write_board", pause_first_write)
+    monkeypatch.setattr(second_store, "read_board", record_second_read)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(
+            first_store.prepare_repository_publication, board.id, revision.id
+        )
+        assert first_reached_write.wait(2)
+        second = executor.submit(
+            second_store.prepare_repository_publication, board.id, revision.id
+        )
+        operation_ids = (first.result(timeout=3), second.result(timeout=3))
+
+    assert operation_ids[0] == operation_ids[1]
+    assert WorkbenchStore(tmp_path).read_revision(
+        board.id, revision.id
+    ).publication_operation_id == operation_ids[0]
 
 
 def test_store_loads_old_revision_without_publication_operation(

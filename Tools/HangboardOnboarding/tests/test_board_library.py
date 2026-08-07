@@ -231,6 +231,77 @@ def test_publish_reconciles_a_retried_new_board_by_operation(
     assert [board.board_id for board in library.list_boards()] == ["example-board"]
 
 
+def test_legacy_publication_token_retries_new_board_with_schema_one_metadata(
+    tmp_path: Path,
+) -> None:
+    library = RepositoryBoardLibrary(_empty_repository(tmp_path / "repository"))
+    run = _complete_fixture_run(tmp_path / "run")
+
+    first = library.publish(
+        display_name="Example Board",
+        run_root=run,
+        board_id=None,
+        expected_current_version_id=None,
+        publication_token="a" * 64,
+    )
+    retried = library.publish(
+        display_name="Example Board",
+        run_root=run,
+        board_id=None,
+        expected_current_version_id=None,
+        publication_token="a" * 64,
+    )
+
+    assert retried == first
+    assert _read_json(
+        first.board.package_path / "versions" / first.version_id / "publication.json"
+    ) == {
+        "schemaVersion": 1,
+        "token": "a" * 64,
+        "runIdentitySha256": _read_json(run / "run.json")["runIdentitySha256"],
+    }
+
+
+def test_legacy_publication_token_retries_existing_current_version(
+    tmp_path: Path,
+) -> None:
+    library, original = _complete_library(tmp_path)
+    run = _complete_fixture_run(tmp_path / "new-run")
+    first = library.publish(
+        display_name=original.display_name,
+        run_root=run,
+        board_id=original.board_id,
+        expected_current_version_id=original.current_version_id,
+        publication_token="b" * 64,
+    )
+
+    retried = library.publish(
+        display_name=original.display_name,
+        run_root=run,
+        board_id=original.board_id,
+        expected_current_version_id=original.current_version_id,
+        publication_token="b" * 64,
+    )
+
+    assert retried == first
+
+
+def test_publish_rejects_simultaneous_legacy_and_uuid_operation_identities(
+    tmp_path: Path,
+) -> None:
+    library = RepositoryBoardLibrary(_empty_repository(tmp_path / "repository"))
+
+    with pytest.raises(BoardLibraryError, match="both"):
+        library.publish(
+            display_name="Example Board",
+            run_root=_complete_fixture_run(tmp_path / "run"),
+            board_id=None,
+            expected_current_version_id=None,
+            publication_operation_id=str(uuid4()),
+            publication_token="a" * 64,
+        )
+
+
 def test_publish_reconciles_a_retried_existing_version_by_operation(
     tmp_path: Path,
 ) -> None:
