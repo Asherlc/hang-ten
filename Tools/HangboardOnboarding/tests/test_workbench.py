@@ -352,34 +352,71 @@ def test_create_from_upload_caches_source_before_removing_temporary_file(
     assert list(created.run_root.parent.glob(".upload-*")) == []
 
 
-@pytest.mark.parametrize("source_kind", ("upload", "url"))
-def test_failed_creation_rolls_back_metadata_without_removing_upload_before_cache(
+def test_failed_stage0_creation_remains_active_and_retries_from_cached_upload(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    source_kind: str,
 ) -> None:
     runner = _FailAfterCacheRunner()
-    service = WorkbenchService(WorkbenchStore(tmp_path), runners={0: runner})
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: runner})
     content = _fixture_image_bytes()
-    if source_kind == "url":
-        monkeypatch.setattr(
-            source_cache,
-            "_read_network",
-            lambda locator, _limits: (content, locator),
-        )
 
     with pytest.raises(RuntimeError, match="stage failure"):
-        if source_kind == "upload":
-            service.create_from_upload("Failed Upload", content)
-        else:
-            service.create_from_url(
-                "Failed URL", "https://example.test/failed.png"
-            )
+        service.create_from_upload("Failed Upload", content)
 
     assert runner.saw_cached_source is True
-    assert runner.saw_upload is (source_kind == "upload")
+    assert runner.saw_upload is True
     assert list(tmp_path.rglob(".upload-*")) == []
-    assert service.list_boards() == ()
+    failed = service.list_boards()[0]
+    board = store.read_board(failed.board_id)
+    failure_log = (
+        failed.run_root
+        / "stages/00/attempt-0001/stage-0-failure.log"
+    )
+    evidence_before = failure_log.read_bytes()
+    assert failed.stage == 0
+    assert failed.state == "failed"
+    assert board.active_revision_id == failed.revision_id
+    assert cached_source_path(failed.run_root).read_bytes() == content
+
+    retrying_service = WorkbenchService(
+        store, runners={0: _StubStageRunner(0)}
+    )
+    retried = retrying_service.retry(
+        failed.board_id,
+        expected_revision_id=failed.revision_id,
+        expected_stage=0,
+    )
+
+    assert retried.stage == 0
+    assert retried.state == "awaiting_review"
+    assert retried.review_path is not None
+    assert "attempt-0002" in retried.review_path.as_posix()
+    assert failure_log.read_bytes() == evidence_before
+
+
+def test_failed_creation_before_source_cache_rolls_back_and_removes_upload(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: _StubStageRunner(0)})
+    saw_upload = False
+
+    def fail_before_cache(_source: str, destination: Path) -> None:
+        nonlocal saw_upload
+        saw_upload = any(destination.parent.parent.glob(".upload-*"))
+        raise RuntimeError("cache interrupted")
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.onboarding_run.cache_source", fail_before_cache
+    )
+
+    with pytest.raises(RuntimeError, match="cache interrupted"):
+        service.create_from_upload("Failed Upload", _fixture_image_bytes())
+
+    assert saw_upload is True
+    assert list(tmp_path.rglob(".upload-*")) == []
+    assert store.list_boards() == ()
 
 
 def test_post_publication_creation_failure_preserves_failed_run_evidence(

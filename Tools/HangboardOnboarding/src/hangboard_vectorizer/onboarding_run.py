@@ -101,12 +101,28 @@ def start_run(
                 raise OnboardingStateError("Stage 0 runner is not installed")
             artifact_root = temporary_root / "stages" / "00" / "attempt-0001"
             artifact_root.parent.mkdir(parents=True, exist_ok=True)
-            checkpoint = runner.run(
-                RunContext(temporary_root, MappingProxyType(manifest)),
-                artifact_root,
-            )
-            if checkpoint.stage != 0 or not checkpoint.machine_passed:
-                raise OnboardingStateError("Stage 0 did not publish a machine-passed checkpoint")
+            try:
+                checkpoint = runner.run(
+                    RunContext(temporary_root, MappingProxyType(manifest)),
+                    artifact_root,
+                )
+                if checkpoint.stage != 0 or not checkpoint.machine_passed:
+                    raise OnboardingStateError(
+                        "Stage 0 did not publish a machine-passed checkpoint"
+                    )
+            except Exception as error:
+                _publish_failed_attempt(
+                    temporary_root,
+                    manifest,
+                    stage=0,
+                    attempt=1,
+                    artifact_root=artifact_root,
+                    artifact_relative="stages/00/attempt-0001",
+                    error=error,
+                )
+                _load_and_validate(temporary_root)
+                temporary_root.replace(output)
+                raise
             _record_checkpoint(manifest, temporary_root, checkpoint, attempt=1)
             _write_manifest(temporary_root, manifest)
             temporary_root.replace(output)
@@ -535,9 +551,17 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
     failed_attempts = _list(failed_attempts_value, "failedAttempts")
     if current_stage < 0 or next_stage < 0:
         raise OnboardingStateError("run pipeline stages must be nonnegative")
-    if not stages:
+    failed_stage_zero = (
+        status == "failed"
+        and current_stage == 0
+        and next_stage == 0
+        and not stages
+    )
+    if not stages and not failed_stage_zero:
         raise OnboardingStateError("published run must contain a stage checkpoint")
-    if current_stage != len(stages) - 1 or next_stage != current_stage + 1:
+    if not failed_stage_zero and (
+        current_stage != len(stages) - 1 or next_stage != current_stage + 1
+    ):
         raise OnboardingStateError("run pipeline does not match published stage records")
     for expected_stage, record_object in enumerate(stages):
         record = _mapping(record_object, "stage record")
@@ -559,7 +583,7 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
             raise OnboardingStateError("run next stage is inconsistent")
         _require_prior_approvals(manifest, next_stage)
     if status == "failed":
-        if next_stage != current_stage + 1:
+        if next_stage != (0 if failed_stage_zero else current_stage + 1):
             raise OnboardingStateError("failed run next stage is inconsistent")
         _require_prior_approvals(manifest, next_stage)
         if failed_attempts and failed_attempts[-1].get("stage") != next_stage:
@@ -684,7 +708,7 @@ def _publish_failed_attempt(
         }
     )
     persisted["pipeline"] = {
-        "currentStage": stage - 1,
+        "currentStage": max(0, stage - 1),
         "nextAction": f"retry-stage-{stage}",
         "nextStage": stage,
         "status": "failed",
@@ -695,7 +719,7 @@ def _publish_failed_attempt(
 def _validate_failed_attempt(root: Path, record: Mapping[str, object]) -> None:
     stage = _integer(record.get("stage"), "failedAttempt.stage")
     attempt = _integer(record.get("attempt"), "failedAttempt.attempt")
-    if stage < 1 or stage > _FINAL_STAGE or attempt < 1:
+    if stage < 0 or stage > _FINAL_STAGE or attempt < 1:
         raise OnboardingStateError("failed attempt stage or number is invalid")
     if record.get("status") != "failed":
         raise OnboardingStateError("failed attempt status is invalid")

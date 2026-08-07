@@ -109,7 +109,7 @@ class WorkbenchService:
             prefix=".upload-", suffix=".image", dir=revision.run_root.parent
         )
         upload = Path(temporary_name)
-        cached = False
+        remove_upload = False
         try:
             with os.fdopen(descriptor, "wb") as stream:
                 descriptor = -1
@@ -118,15 +118,16 @@ class WorkbenchService:
                 os.fsync(stream.fileno())
             self.__start(board, revision, str(upload))
             cached_source_path(revision.run_root)
-            cached = True
+            remove_upload = True
             return self.__view(board.id, revision.id)
         except Exception:
             self.__record_failed_creation(board, revision)
+            remove_upload = True
             raise
         finally:
             if descriptor >= 0:
                 os.close(descriptor)
-            if cached:
+            if remove_upload:
                 upload.unlink(missing_ok=True)
 
     def import_run(self, run_root: Path) -> WorkbenchView:
@@ -359,6 +360,9 @@ class WorkbenchService:
         self, board: BoardRecord, revision: RevisionRecord
     ) -> None:
         if revision.run_root.exists():
+            if read_status(revision.run_root)["status"] == "failed":
+                self.__synchronize_revision(board.id, revision.id)
+                return
             self.store.mark_revision_failed(
                 board.id,
                 revision.id,

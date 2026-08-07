@@ -88,6 +88,54 @@ def test_failed_stage_attempt_is_durable_across_restart_and_retry(
     } == evidence_before
 
 
+def test_failed_stage0_start_is_durable_and_retryable_from_cached_source(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.png"
+    Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
+    run = tmp_path / "run"
+
+    with pytest.raises(RuntimeError, match="private runner detail"):
+        start_run(
+            "Example Board",
+            str(source),
+            run,
+            runners={0: _FailingStage0Runner()},
+            workspace_root=tmp_path,
+        )
+
+    failed_status = read_status(run)
+    manifest = json.loads((run / "run.json").read_text(encoding="utf-8"))
+    failure = manifest["failedAttempts"][0]
+    failure_log = run / failure["artifactRoot"] / failure["logPath"]
+    evidence_before = failure_log.read_bytes()
+    assert failed_status == {
+        "run": str(run),
+        "stage": 0,
+        "status": "failed",
+        "nextAction": "retry-stage-0",
+    }
+    assert failure == {
+        "artifactRoot": "stages/00/attempt-0001",
+        "attempt": 1,
+        "error": "stage execution failed",
+        "errorKind": "RuntimeError",
+        "logPath": "stage-0-failure.log",
+        "logSha256": sha256(evidence_before).hexdigest(),
+        "stage": 0,
+        "status": "failed",
+    }
+    assert str(tmp_path) not in evidence_before.decode("utf-8")
+
+    retried = resume_run(run, runners={0: _StubStage0Runner()})
+
+    assert retried["status"] == "awaiting_approval"
+    assert retried["review"].endswith(
+        "stages/00/attempt-0002/stage-0-review.png"
+    )
+    assert failure_log.read_bytes() == evidence_before
+
+
 def test_cached_source_path_returns_the_validated_cached_input(tmp_path: Path) -> None:
     run = _started_run(tmp_path)
 
@@ -129,6 +177,13 @@ class _StubStage0Runner:
 
 class _FailingStage1Runner:
     stage = 1
+
+    def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
+        raise RuntimeError("private runner detail at /tmp/private-source.png")
+
+
+class _FailingStage0Runner:
+    stage = 0
 
     def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
         raise RuntimeError("private runner detail at /tmp/private-source.png")
