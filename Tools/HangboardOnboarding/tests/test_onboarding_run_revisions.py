@@ -136,6 +136,67 @@ def test_failed_stage0_start_is_durable_and_retryable_from_cached_source(
     assert failure_log.read_bytes() == evidence_before
 
 
+def test_malformed_stage0_checkpoint_is_published_as_retryable_failure(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.png"
+    Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
+    run = tmp_path / "run"
+
+    with pytest.raises(
+        OnboardingStateError, match="required evidence is missing"
+    ):
+        start_run(
+            "Example Board",
+            str(source),
+            run,
+            runners={0: _MalformedStage0Runner()},
+            workspace_root=tmp_path,
+        )
+
+    assert cached_source_path(run).read_bytes() == source.read_bytes()
+    assert read_status(run) == {
+        "run": str(run),
+        "stage": 0,
+        "status": "failed",
+        "nextAction": "retry-stage-0",
+    }
+    manifest = json.loads((run / "run.json").read_text(encoding="utf-8"))
+    failure = manifest["failedAttempts"][0]
+    failure_log = run / failure["artifactRoot"] / "stage-0-failure.log"
+    assert failure["errorKind"] == "OnboardingStateError"
+    assert "required evidence is missing" in failure["error"]
+    assert failure_log.is_file()
+    assert str(tmp_path) not in failure_log.read_text(encoding="utf-8")
+
+
+def test_failed_stage0_manifest_requires_failure_attempt_evidence(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.png"
+    Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
+    run = tmp_path / "run"
+    with pytest.raises(RuntimeError, match="private runner detail"):
+        start_run(
+            "Example Board",
+            str(source),
+            run,
+            runners={0: _FailingStage0Runner()},
+            workspace_root=tmp_path,
+        )
+    manifest = json.loads((run / "run.json").read_text(encoding="utf-8"))
+    manifest["failedAttempts"] = []
+    (run / "run.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        OnboardingStateError, match="failed run attempt evidence is missing"
+    ):
+        read_status(run)
+
+
 def test_cached_source_path_returns_the_validated_cached_input(tmp_path: Path) -> None:
     run = _started_run(tmp_path)
 
@@ -187,6 +248,20 @@ class _FailingStage0Runner:
 
     def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
         raise RuntimeError("private runner detail at /tmp/private-source.png")
+
+
+class _MalformedStage0Runner:
+    stage = 0
+
+    def run(self, _context: object, artifact_root: Path) -> StageCheckpoint:
+        artifact_root.mkdir(parents=True)
+        return StageCheckpoint(
+            stage=0,
+            artifact_root=artifact_root,
+            candidate_hashes={},
+            review_path=artifact_root / "missing-review.png",
+            machine_passed=True,
+        )
 
 
 class _SuccessfulStage1Runner:

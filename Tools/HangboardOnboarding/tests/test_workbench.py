@@ -19,6 +19,7 @@ from hangboard_vectorizer.onboarding_run import (
     cached_source_path,
     read_status,
     replace_pending_checkpoint,
+    resume_run,
     start_run,
 )
 from hangboard_vectorizer.workbench import (
@@ -672,14 +673,8 @@ def test_retry_resumes_an_imported_failed_run_without_changing_prior_evidence(
         workspace_root=tmp_path,
     )
     approve_stage(cli_run, 0)
-    manifest = json.loads((cli_run / "run.json").read_text(encoding="utf-8"))
-    manifest["pipeline"] = {
-        "currentStage": 0,
-        "nextAction": "retry-stage-1",
-        "nextStage": 1,
-        "status": "failed",
-    }
-    _write_json(cli_run / "run.json", manifest)
+    with pytest.raises(RuntimeError, match="stage failure"):
+        resume_run(cli_run, runners={1: _FailingStage1Runner()})
     prior_evidence = {
         path.relative_to(cli_run).as_posix(): path.read_bytes()
         for path in sorted((cli_run / "stages/00").rglob("*"))
@@ -706,7 +701,7 @@ def test_retry_resumes_an_imported_failed_run_without_changing_prior_evidence(
     assert retried.stage == 1
     assert retried.state == "awaiting_review"
     assert retried.review_path is not None
-    assert "stages/01/attempt-0001" in retried.review_path.as_posix()
+    assert "stages/01/attempt-0002" in retried.review_path.as_posix()
     assert {
         path.relative_to(cli_run).as_posix(): path.read_bytes()
         for path in sorted((cli_run / "stages/00").rglob("*"))
@@ -963,6 +958,13 @@ class _FailAfterCacheRunner:
         assert isinstance(cached_path, str)
         self.saw_cached_source = (context.root / cached_path).is_file()
         self.saw_upload = any(context.root.parent.glob(".upload-*"))
+        raise RuntimeError("stage failure")
+
+
+class _FailingStage1Runner:
+    stage = 1
+
+    def run(self, _context: RunContext, _artifact_root: Path) -> StageCheckpoint:
         raise RuntimeError("stage failure")
 
 

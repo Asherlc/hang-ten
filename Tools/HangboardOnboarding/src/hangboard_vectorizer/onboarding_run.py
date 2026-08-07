@@ -110,6 +110,11 @@ def start_run(
                     raise OnboardingStateError(
                         "Stage 0 did not publish a machine-passed checkpoint"
                     )
+                _record_checkpoint(
+                    manifest, temporary_root, checkpoint, attempt=1
+                )
+                _validate_manifest(temporary_root, manifest)
+                _write_manifest(temporary_root, manifest)
             except Exception as error:
                 _publish_failed_attempt(
                     temporary_root,
@@ -123,8 +128,6 @@ def start_run(
                 _load_and_validate(temporary_root)
                 temporary_root.replace(output)
                 raise
-            _record_checkpoint(manifest, temporary_root, checkpoint, attempt=1)
-            _write_manifest(temporary_root, manifest)
             temporary_root.replace(output)
         except Exception:
             shutil.rmtree(temporary_root, ignore_errors=True)
@@ -586,7 +589,7 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
         if next_stage != (0 if failed_stage_zero else current_stage + 1):
             raise OnboardingStateError("failed run next stage is inconsistent")
         _require_prior_approvals(manifest, next_stage)
-        if failed_attempts and failed_attempts[-1].get("stage") != next_stage:
+        if not failed_attempts or failed_attempts[-1].get("stage") != next_stage:
             raise OnboardingStateError("failed run attempt evidence is missing")
     if status == "complete":
         if current_stage != _FINAL_STAGE:
