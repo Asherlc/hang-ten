@@ -1,5 +1,6 @@
 import XCTest
 import Combine
+import HealthKit
 import UIKit
 @testable import HangTen
 
@@ -55,6 +56,7 @@ final class AppStoreTests: XCTestCase {
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         historyStore.replace([local])
         let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
         let appStore = AppStore(
             healthKitService: healthStore,
             workoutHistoryStore: historyStore,
@@ -77,6 +79,7 @@ final class AppStoreTests: XCTestCase {
 
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
         let appStore = AppStore(
             healthKitService: healthStore,
             workoutHistoryStore: historyStore,
@@ -104,6 +107,7 @@ final class AppStoreTests: XCTestCase {
 
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
         let appStore = AppStore(
             healthKitService: healthStore,
             workoutHistoryStore: historyStore,
@@ -123,6 +127,7 @@ final class AppStoreTests: XCTestCase {
         )
         waitForHistory(in: appStore)
 
+        healthStore.authorizationState = .authorized
         appStore.requestHealthAuthorization()
         waitUntil { healthStore.saveCallCount == 1 }
 
@@ -222,6 +227,7 @@ final class AppStoreTests: XCTestCase {
         let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
         historyStore.replace([local])
         let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
         let appStore = AppStore(
             healthKitService: healthStore,
             workoutHistoryStore: historyStore,
@@ -233,6 +239,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(healthStore.fetchCallCount, 0)
         XCTAssertEqual(healthStore.saveCallCount, 0)
 
+        healthStore.authorizationState = .authorized
         appStore.requestHealthAuthorization()
         waitUntil { healthStore.saveCallCount == 1 }
 
@@ -280,6 +287,7 @@ final class AppStoreTests: XCTestCase {
         appStore.refreshHealthAuthorization()
         waitUntil { appStore.workoutHistory.source == .healthKit }
 
+        XCTAssertEqual(appStore.healthAuthorizationState, .authorized)
         XCTAssertTrue(appStore.workoutHistory.entries.isEmpty)
         XCTAssertFalse(appStore.shouldShowConnectAppleHealth)
     }
@@ -299,6 +307,70 @@ final class AppStoreTests: XCTestCase {
 
         XCTAssertFalse(appStore.hasRequestedHealthAuthorization)
         XCTAssertFalse(appStore.shouldShowConnectAppleHealth)
+    }
+
+    func testAuthorizedHealthKitReconcilesSyncAndImportsHistoryWithoutPrompting() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let healthRecord = HealthWorkoutRecord(
+            id: UUID(),
+            activityTypeRawValue: HKWorkoutActivityType.functionalStrengthTraining.rawValue,
+            brandName: HangTenHealthMetadata.brandName,
+            planTitle: "Authorized Plan",
+            sessionID: UUID(),
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_600)
+        )
+        let healthStore = FakeWorkoutHealthStore(fetchResult: .success([healthRecord]))
+        healthStore.authorizationState = .authorized
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertFalse(appStore.hasRequestedHealthAuthorization)
+        XCTAssertFalse(defaults.bool(forKey: Self.healthAuthorizationRequestedKey))
+
+        appStore.refreshHealthAuthorization()
+        waitUntil { appStore.workoutHistory.source == .healthKit }
+
+        XCTAssertEqual(appStore.healthAuthorizationState, .authorized)
+        XCTAssertTrue(appStore.hasRequestedHealthAuthorization)
+        XCTAssertTrue(defaults.bool(forKey: Self.healthAuthorizationRequestedKey))
+        XCTAssertEqual(appStore.workoutHistory.entries.map(\.id), [healthRecord.id])
+        XCTAssertGreaterThan(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.requestCallCount, 0)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+        XCTAssertFalse(appStore.shouldShowConnectAppleHealth)
+    }
+
+    func testNotDeterminedWithoutPersistedRequestFlagKeepsConnectActionAndLocalHistory() {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let healthStore = FakeWorkoutHealthStore(fetchResult: .success([]))
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: LocalWorkoutHistoryStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertEqual(appStore.healthAuthorizationState, .notDetermined)
+        XCTAssertFalse(appStore.hasRequestedHealthAuthorization)
+        XCTAssertFalse(defaults.bool(forKey: Self.healthAuthorizationRequestedKey))
+        XCTAssertTrue(appStore.shouldShowConnectAppleHealth)
+
+        appStore.refreshHealthAuthorization()
+
+        XCTAssertEqual(appStore.healthAuthorizationState, .notDetermined)
+        XCTAssertEqual(appStore.workoutHistory.source, .unavailable)
+        XCTAssertEqual(healthStore.fetchCallCount, 0)
+        XCTAssertEqual(healthStore.requestCallCount, 0)
     }
 
     func testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore() {

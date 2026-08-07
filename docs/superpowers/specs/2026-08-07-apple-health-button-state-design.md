@@ -27,9 +27,17 @@ The current `HealthAuthorizationState` is the source of truth for the connection
 
 The existing local-fallback behavior remains unchanged: if history is still represented by local fallback, the card may offer `Open app settings` so the user can manage Health permissions. This change only removes the misleading Connect action from an authorized state.
 
+If `refreshHealthAuthorization` observes `.authorized` while the persisted
+history-sync request flag is false, it persists the flag and enables HealthKit
+sync without prompting, then runs the existing history refresh/import path.
+This reconciliation does not change the authorization/button contract above:
+the current authorization state remains authoritative, and `.authorized` still
+hides `Connect Apple Health`.
+
 ## Implementation
 
 - Change `AppStore.shouldShowConnectAppleHealth` so it is true only for `.notDetermined`.
+- In `refreshHealthAuthorization`, reconcile an authorized state with a missing request flag by persisting the flag and enabling HealthKit sync without prompting before refreshing/importing history.
 - Keep `healthAction` in `RootView` unchanged; it already delegates Connect visibility to the AppStore property and handles denied/local-fallback settings separately.
 - Update `HangTenTests/AppStoreTests.swift` with a regression assertion that an authorized state with an empty HealthKit history does not show Connect. Also cover an authorized state without the persisted request flag so the current authorization state remains authoritative.
 - Update the Apple Health runtime and simulator-validation documentation to remove the old instruction to keep Connect available after an authorized empty query.

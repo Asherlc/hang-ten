@@ -1,6 +1,6 @@
 # Apple Health Button State Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Mandatory: use a fresh subagent for every implementation task or configuration change. Every task must include separate implementation and review checkpoints. Follow `superpowers:subagent-driven-development` or `superpowers:executing-plans` to execute this plan task-by-task. Retain checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ensure the Progress card never shows `Connect Apple Health` when HealthKit reports that Hang Ten is already authorized.
 
@@ -12,6 +12,8 @@
 
 - `.notDetermined` shows `Connect Apple Health`.
 - `.authorized` never shows `Connect Apple Health`, regardless of history contents or the persisted sync-request flag.
+- If `refreshHealthAuthorization` observes `.authorized` while the persisted request flag is false, persist the flag and enable HealthKit sync without prompting, then run the existing history refresh/import path.
+- Reconcile an authorized state with a missing request flag non-promptingly before refreshing history.
 - `.denied` keeps `Open app settings`; `.unavailable` shows no action.
 - Do not change HealthKit APIs, persistence formats, authorization requests, or unrelated UI behavior.
 - Follow a red-green TDD cycle: observe the regression test fail before changing production code, then verify focused and full test suites.

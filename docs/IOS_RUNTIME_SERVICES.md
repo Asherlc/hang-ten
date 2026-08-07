@@ -194,16 +194,18 @@ and reading. Authorization is requested only by the visible Connect Apple
 Health action. Progress appearance and scene-activation refreshes may update
 the sharing status without presenting an authorization sheet or prompting;
 they query HealthKit history only after the persisted request flag is enabled.
+When `refreshHealthAuthorization` observes `.authorized` while that flag is
+missing, it persists the flag and enables HealthKit sync without prompting,
+then refreshes/imports history.
 
-`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Until
-the user taps Connect Apple Health and that flag is persisted, initialization,
-Progress appearance, scene activation, and completion logging use only the
-local `UserDefaults` history fallback. No HealthKit workout-history query,
-workout save, or migration occurs on that path. The app may still read the
-HealthKit sharing status for the authorization pill. Connect enables HealthKit
-sync as it persists the flag, before requesting authorization. Once the flag is
-true, refresh and completion reconciliation may query HealthKit, upload pending
-records, and migrate matching history.
+`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Sync
+remains gated until either the user taps Connect Apple Health or
+`refreshHealthAuthorization` observes current `.authorized` and reconciles the
+missing flag without prompting. Until then, initialization, Progress
+appearance, scene activation, and completion logging use only the local
+`UserDefaults` history fallback; a `.notDetermined` status does not change that
+behavior. Once the flag is true, refresh and completion reconciliation may query
+HealthKit, import history, and upload pending records.
 
 Required configuration:
 
@@ -272,8 +274,8 @@ unavailable behavior remains as shown in the table.
 
 The `.unavailable` history source does not create an action by itself. In
 `RootView.healthAction`, any Connect or Settings action shown alongside that
-source comes from the current authorization state or persisted request state;
-an unavailable history source alone has no action.
+source comes from the current authorization state plus the local fallback
+history; an unavailable history source alone has no action.
 
 The history source copy is:
 

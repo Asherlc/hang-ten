@@ -365,7 +365,16 @@ final class AppStore: ObservableObject {
 
     func refreshHealthAuthorization() {
         healthAuthorizationState = healthKitService.authorizationState
+        reconcileAuthorizedHealthKitStateIfNeeded()
         refreshWorkoutHistory()
+    }
+
+    private func reconcileAuthorizedHealthKitStateIfNeeded() {
+        guard healthAuthorizationState == .authorized,
+              !hasRequestedHealthAuthorization else { return }
+        hasRequestedHealthAuthorization = true
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        workoutHistoryService.enableHealthKitSync()
     }
 
     func refreshWorkoutHistory() {
