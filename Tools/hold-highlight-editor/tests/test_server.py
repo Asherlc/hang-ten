@@ -151,16 +151,21 @@ class FakeWorkbenchService:
         )
 
     def library_open_reservation_key(self, board_id: str) -> str:
-        with self._lock:
-            existing = next(
-                (
-                    view
-                    for view in self._boards.values()
-                    if view.repository_board_id == board_id
-                ),
-                None,
-            )
-        return existing.board_id if existing is not None else f"repository-board:{board_id}"
+        board = next(
+            (entry for entry in self.library_boards if entry.board_id == board_id),
+            None,
+        )
+        if board is None:
+            raise FakeWorkbenchError(f"board does not exist: {board_id}")
+        return f"repository-board:{board.board_id}"
+
+    def mutation_reservation_key(self, board_id: str) -> str:
+        view = self.get_board(board_id)
+        return (
+            f"repository-board:{view.repository_board_id}"
+            if view.repository_board_id is not None
+            else view.board_id
+        )
 
     def get_board(
         self, board_id: str, *, revision_id: str | None = None
@@ -373,6 +378,21 @@ class BlockingLibraryOpenService(FakeWorkbenchService):
         self.open_started.set()
         self.open_gate.wait(1)
         return super().open_library_board(board_id)
+
+
+class PostLinkBlockingLibraryOpenService(FakeWorkbenchService):
+    """Expose the repository-to-runtime mapping before completing the open."""
+
+    def __init__(self, root: Path):
+        super().__init__(root)
+        self.open_linked = Event()
+        self.open_gate = Event()
+
+    def open_library_board(self, board_id: str) -> FakeWorkbenchView:
+        view = super().open_library_board(board_id)
+        self.open_linked.set()
+        self.open_gate.wait(1)
+        return view
 
 
 class PathLeakingWorkbenchService(FakeWorkbenchService):
@@ -886,32 +906,49 @@ def test_parallel_opens_of_one_repository_board_conflict_on_a_stable_key(tmp_pat
     assert conflict.value.code == 409
 
 
-def test_repository_open_conflicts_with_mutation_of_linked_runtime_board(tmp_path):
-    service = BlockingLibraryOpenService(tmp_path / "workbench")
-    service.open_gate.set()
-    existing = service.open_library_board("example-board")
-    service.open_started.clear()
-    service.open_gate.clear()
+def test_repository_open_conflicts_after_runtime_board_link_becomes_visible(tmp_path):
+    service = PostLinkBlockingLibraryOpenService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         first_status, first = _post_json(
             base + "/api/library/example-board/open", {}
         )
         assert first_status == 202
-        assert service.open_started.wait(1)
+        assert service.open_linked.wait(1)
+        existing = service.list_boards()[0]
+        first_poll_status, first_poll = read_json(
+            base + f"/api/jobs/{first['jobId']}"
+        )
 
-        with pytest.raises(HTTPError) as conflict:
-            _post_json(
-                base + "/api/retry",
+        second_open_status, _second_open = _raw_request(
+            base,
+            "POST",
+            "/api/library/example-board/open",
+            body=b"{}",
+            headers={"Content-Type": "application/json"},
+        )
+        mutation_status, _mutation = _raw_request(
+            base,
+            "POST",
+            "/api/retry",
+            body=json.dumps(
                 {
                     "boardId": existing.board_id,
                     "expectedRevisionId": existing.revision_id,
                     "expectedStage": existing.stage,
-                },
-            )
+                }
+            ).encode(),
+            headers={"Content-Type": "application/json"},
+        )
         service.open_gate.set()
-        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+        terminal = _poll_job(base, first["jobId"])
 
-    assert conflict.value.code == 409
+    assert first_poll_status == 200
+    assert first_poll["job"]["state"] == "running"
+    assert first_poll["job"]["boardId"] == "example-board"
+    assert second_open_status == 409
+    assert mutation_status == 409
+    assert terminal["state"] == "succeeded"
+    assert terminal["boardId"] == "example-board"
 
 
 def test_library_unknown_board_returns_not_found(tmp_path):

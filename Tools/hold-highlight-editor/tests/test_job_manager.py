@@ -33,6 +33,38 @@ def test_job_manager_rejects_second_mutation_for_same_board():
     assert manager.wait(second.id).state == "succeeded"
 
 
+def test_submit_uses_conflict_key_without_changing_logical_board_identity():
+    started = Event()
+    release = Event()
+    manager = BoardJobManager(max_workers=2)
+
+    first = manager.submit(
+        "board-0001",
+        lambda: (started.set(), release.wait(1))[1],
+        conflict_key="repository-board:example",
+    )
+    assert started.wait(1)
+    try:
+        with pytest.raises(JobConflictError, match="already running"):
+            manager.submit(
+                "board-0002",
+                lambda: None,
+                conflict_key="repository-board:example",
+            )
+        assert manager.get(first.id).board_id == "board-0001"
+        release.set()
+        assert manager.wait(first.id).state == "succeeded"
+        second = manager.submit(
+            "board-0002",
+            lambda: None,
+            conflict_key="repository-board:example",
+        )
+        assert manager.wait(second.id).state == "succeeded"
+    finally:
+        release.set()
+        manager.shutdown()
+
+
 def test_job_records_are_immutable_serializable_snapshots():
     manager = BoardJobManager(max_workers=1)
 

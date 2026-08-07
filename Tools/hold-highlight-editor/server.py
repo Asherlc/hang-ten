@@ -642,8 +642,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.NOT_FOUND, f"board does not exist: {board_id}"
             )
         self._submit_job(
-            service.library_open_reservation_key(board_id),
+            board_id,
             lambda: service.open_library_board(board_id),
+            conflict_key=service.library_open_reservation_key(board_id),
         )
 
     def _post_mutation(
@@ -695,10 +696,24 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     expected_stage=stage,
                     expected_revision_id=revision_id,
                 )
-        self._submit_job(board_id, operation)
+        self._submit_job(
+            board_id,
+            operation,
+            conflict_key=service.mutation_reservation_key(board_id),
+        )
 
-    def _submit_job(self, board_id: str, operation: object) -> None:
-        job = self._job_manager().submit(board_id, operation)
+    def _submit_job(
+        self,
+        board_id: str,
+        operation: object,
+        *,
+        conflict_key: str | None = None,
+    ) -> None:
+        job = self._job_manager().submit(
+            board_id,
+            operation,
+            conflict_key=conflict_key,
+        )
         self._send_json(
             HTTPStatus.ACCEPTED,
             {"ok": True, "jobId": job.id},

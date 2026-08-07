@@ -97,28 +97,35 @@ class BoardJobManager:
         self.__public_error_types = public_error_types
         self.__outcome_root = outcome_directory
 
-    def submit(self, board_id: str, operation: Callable[[], object]) -> JobRecord:
+    def submit(
+        self,
+        board_id: str,
+        operation: Callable[[], object],
+        *,
+        conflict_key: str | None = None,
+    ) -> JobRecord:
         if not isinstance(board_id, str) or not board_id:
             raise ValueError("board id must not be empty")
+        reservation_key = conflict_key or board_id
         job_id = uuid4().hex
         record = JobRecord(id=job_id, board_id=board_id, state="queued")
         if not self.__capacity.acquire(blocking=False):
             raise JobCapacityError("job queue capacity is exhausted")
         with self.__lock:
             self.__prune_completed()
-            if board_id in self.__active_jobs:
+            if reservation_key in self.__active_jobs:
                 self.__capacity.release()
                 raise JobConflictError(f"a job is already running for board {board_id}")
             self.__jobs[job_id] = record
-            self.__active_jobs[board_id] = job_id
+            self.__active_jobs[reservation_key] = job_id
             try:
                 future = self.__executor.submit(
-                    self.__run, job_id, operation
+                    self.__run, job_id, reservation_key, operation
                 )
                 self.__futures[job_id] = future
             except Exception:
                 self.__jobs.pop(job_id, None)
-                self.__active_jobs.pop(board_id, None)
+                self.__active_jobs.pop(reservation_key, None)
                 self.__capacity.release()
                 raise
         future.add_done_callback(lambda _future: self.__forget_future(job_id))
@@ -150,7 +157,12 @@ class BoardJobManager:
     def shutdown(self) -> None:
         self.__executor.shutdown(wait=True)
 
-    def __run(self, job_id: str, operation: Callable[[], object]) -> None:
+    def __run(
+        self,
+        job_id: str,
+        conflict_key: str,
+        operation: Callable[[], object],
+    ) -> None:
         with self.__lock:
             current = self.__jobs[job_id]
             self.__jobs[job_id] = replace(current, state="running")
@@ -171,8 +183,8 @@ class BoardJobManager:
                 pass
             with self.__lock:
                 self.__jobs[job_id] = final
-                if self.__active_jobs.get(current.board_id) == job_id:
-                    self.__active_jobs.pop(current.board_id)
+                if self.__active_jobs.get(conflict_key) == job_id:
+                    self.__active_jobs.pop(conflict_key)
                 self.__completed.append(job_id)
                 self.__completed_at[job_id] = monotonic()
                 self.__prune_completed()

@@ -53,6 +53,7 @@ def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
     service = _fixture_service(tmp_path)
     created = service.create_from_upload("Example Board", _fixture_image_bytes())
 
+    assert service.mutation_reservation_key(created.board_id) == created.board_id
     assert (
         main(
             [
@@ -184,6 +185,9 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     library, entry = _repository_library(tmp_path)
     service = _fixture_service(tmp_path / "workspace", library=library)
 
+    assert service.library_open_reservation_key(entry.board_id) == (
+        f"repository-board:{entry.board_id}"
+    )
     first = service.open_library_board(entry.board_id)
     second = service.open_library_board(entry.board_id)
 
@@ -191,6 +195,12 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     assert second.revision_id == first.revision_id
     assert second.repository_board_id == entry.board_id
     assert second.repository_version_id == entry.current_version_id
+    assert service.library_open_reservation_key(entry.board_id) == (
+        f"repository-board:{entry.board_id}"
+    )
+    assert service.mutation_reservation_key(first.board_id) == (
+        f"repository-board:{entry.board_id}"
+    )
 
 
 def test_open_newer_library_version_preserves_divergent_runtime_revision(

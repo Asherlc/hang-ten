@@ -188,18 +188,15 @@ class WorkbenchService:
         if self.__library is None:
             raise WorkbenchServiceError("repository board library is not configured")
         library_board = self.__library.get_board(board_id)
-        matching = next(
-            (
-                board
-                for board in self.store.list_boards()
-                if board.repository_board_id == library_board.board_id
-            ),
-            None,
-        )
+        return f"repository-board:{library_board.board_id}"
+
+    def mutation_reservation_key(self, board_id: str) -> str:
+        """Return the stable job key for a runtime board mutation."""
+        board = self.store.read_board(board_id)
         return (
-            matching.id
-            if matching is not None
-            else f"repository-board:{library_board.board_id}"
+            f"repository-board:{board.repository_board_id}"
+            if board.repository_board_id is not None
+            else board.id
         )
 
     def __open_library_board(self, board_id: str) -> WorkbenchView:
