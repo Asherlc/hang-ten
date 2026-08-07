@@ -1618,6 +1618,7 @@ struct WorkoutView: View {
 					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
 						.frame(maxWidth: .infinity, minHeight: 13, alignment: .center)
 						.opacity(showsHoldPreview ? 1 : 0)
+						.accessibilityHidden(!showsHoldPreview)
 					BoardMapView(
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
