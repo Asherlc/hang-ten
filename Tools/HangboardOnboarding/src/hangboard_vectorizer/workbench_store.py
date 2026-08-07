@@ -52,6 +52,11 @@ class _PublicationState:
     published: bool = False
 
 
+@dataclass(slots=True)
+class _InitialReservationState:
+    board_id: str | None = None
+
+
 _ResultT = TypeVar("_ResultT")
 
 
@@ -85,9 +90,34 @@ class WorkbenchStore:
     @_synchronized
     def create_board(self, product_name: str) -> BoardRecord:
         """Create a board manifest without manufacturing a product-specific ID."""
+        return self._create_board(product_name, reservation=None)
+
+    @_synchronized
+    def reserve_initial_revision(
+        self, product_name: str
+    ) -> tuple[BoardRecord, RevisionRecord]:
+        """Reserve one initial board and revision as a single cleanup transaction."""
+        reservation = _InitialReservationState()
+        try:
+            board = self._create_board(product_name, reservation=reservation)
+            revision = self.create_revision(board.id)
+        except Exception:
+            if reservation.board_id is not None:
+                self._discard_failed_initial_reservation(reservation.board_id)
+            raise
+        return board, revision
+
+    def _create_board(
+        self,
+        product_name: str,
+        *,
+        reservation: _InitialReservationState | None,
+    ) -> BoardRecord:
         if not isinstance(product_name, str) or not product_name.strip():
             raise WorkbenchStoreError("product name must not be empty")
         board_id = self._next_numbered_id(self._boards_root, _BOARD_ID, "board")
+        if reservation is not None:
+            reservation.board_id = board_id
         board_root = self._board_root(board_id)
         board_root.mkdir()
         board = BoardRecord(
@@ -105,6 +135,35 @@ class WorkbenchStore:
                 board_root.rmdir()
             raise
         return board
+
+    def _discard_failed_initial_reservation(self, board_id: str) -> None:
+        """Remove this transaction's board only when no run can have started."""
+        board_root = self._board_root(board_id)
+        if not board_root.exists():
+            return
+        board = self.read_board(board_id)
+        if (
+            board.active_revision_id
+            or board.saved_revision_id is not None
+            or len(board.revisions) > 1
+        ):
+            raise WorkbenchStoreError(
+                f"board {board.id} is not an unstarted initial reservation"
+            )
+        if board.revisions:
+            revision = board.revisions[0]
+            expected_root = self._revision_root(board.id, revision.id) / "run"
+            if (
+                revision.parent_revision_id is not None
+                or revision.state != "pending"
+                or revision.run_root != self._confined(expected_root)
+                or revision.run_root.exists()
+            ):
+                raise WorkbenchStoreError(
+                    f"board {board.id} is not an unstarted initial reservation"
+                )
+        shutil.rmtree(board_root)
+        self._fsync_directory(self._boards_root)
 
     @_synchronized
     def create_revision(
@@ -188,6 +247,10 @@ class WorkbenchStore:
             if revision.parent_revision_id != stale_parent_revision_id:
                 raise WorkbenchStoreError(
                     f"revision {stale_parent_revision_id} is not the reserved parent"
+                )
+            if board.active_revision_id != stale_parent_revision_id:
+                raise WorkbenchStoreError(
+                    f"active revision changed from {stale_parent_revision_id}"
                 )
             parent = self._revision(board, stale_parent_revision_id)
             stale_stage = (
@@ -406,6 +469,10 @@ class WorkbenchStore:
             raise WorkbenchStoreError("complete revision must be at the final stage")
         board = self.read_board(board_id)
         revision = self._revision(board, revision_id)
+        if revision.state == "pending":
+            raise WorkbenchStoreError(
+                f"revision {revision.id} is pending activation"
+            )
         if revision.current_stage == current_stage and revision.state == state:
             return revision
         updated_revision = replace(
@@ -420,11 +487,13 @@ class WorkbenchStore:
         board_id: str,
         revision_id: str,
         *,
-        restore_active_revision_id: str,
+        restore_active_revision_id: str | None,
     ) -> RevisionRecord:
-        """Retain failed evidence while restoring the last usable active lineage."""
+        """Retain failed evidence and restore or atomically preserve active lineage."""
         board = self.read_board(board_id)
         revision = self._revision(board, revision_id)
+        if restore_active_revision_id is None:
+            restore_active_revision_id = board.active_revision_id
         if restore_active_revision_id:
             self._validate_identifier(
                 restore_active_revision_id, "active revision"

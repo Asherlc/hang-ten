@@ -106,6 +106,93 @@ def test_activate_fork_revision_requires_atomic_parent_stale_marker(
     assert persisted.revisions[-1].state == "pending"
 
 
+def test_synchronize_revision_cannot_publish_a_pending_reservation(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    revision = store.create_revision(board.id)
+
+    with pytest.raises(WorkbenchStoreError, match="pending activation"):
+        store.synchronize_revision(
+            board.id,
+            revision.id,
+            current_stage=0,
+            state="active",
+        )
+
+    persisted = store.read_board(board.id)
+    assert persisted.active_revision_id == ""
+    assert persisted.revisions[0].state == "pending"
+
+
+def test_competing_fork_activation_cannot_overwrite_the_winning_child(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    parent = store.create_revision(board.id)
+    store.activate_revision(board.id, parent.id)
+    first = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+    second = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+    store.activate_revision(
+        board.id,
+        first.id,
+        stale_parent_revision_id=parent.id,
+        stale_from_stage=2,
+    )
+
+    with pytest.raises(WorkbenchStoreError, match="active revision changed"):
+        store.activate_revision(
+            board.id,
+            second.id,
+            stale_parent_revision_id=parent.id,
+            stale_from_stage=2,
+        )
+
+    persisted = store.read_board(board.id)
+    records = {revision.id: revision for revision in persisted.revisions}
+    assert persisted.active_revision_id == first.id
+    assert records[first.id].state == "active"
+    assert records[second.id].state == "pending"
+
+
+def test_mark_failed_fork_preserves_the_current_active_revision_atomically(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    parent = store.create_revision(board.id)
+    store.activate_revision(board.id, parent.id)
+    loser = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+    winner = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+    store.activate_revision(
+        board.id,
+        winner.id,
+        stale_parent_revision_id=parent.id,
+        stale_from_stage=2,
+    )
+
+    store.mark_revision_failed(
+        board.id,
+        loser.id,
+        restore_active_revision_id=None,
+    )
+
+    persisted = store.read_board(board.id)
+    records = {revision.id: revision for revision in persisted.revisions}
+    assert persisted.active_revision_id == winner.id
+    assert records[loser.id].state == "failed"
+
+
 def test_save_revision_is_atomic_and_rejects_stale_lineage(tmp_path):
     store, board, first = _populated_store(tmp_path)
     second = store.create_revision(board.id, parent_revision_id=first.id, fork_stage=2)

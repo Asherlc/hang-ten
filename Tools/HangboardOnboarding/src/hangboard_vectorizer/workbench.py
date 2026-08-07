@@ -88,8 +88,7 @@ class WorkbenchService:
             "https",
         }:
             raise WorkbenchServiceError("source URL must use HTTP(S)")
-        board = self.store.create_board(product_name)
-        revision = self.store.create_revision(board.id)
+        board, revision = self.store.reserve_initial_revision(product_name)
         try:
             self.__start(board, revision, source_url)
             self.store.activate_revision(board.id, revision.id)
@@ -104,14 +103,16 @@ class WorkbenchService:
         """Create a board from uploaded image bytes without retaining the upload."""
         if not isinstance(content, (bytes, bytearray, memoryview)) or not content:
             raise WorkbenchServiceError("upload content must not be empty")
-        board = self.store.create_board(product_name)
-        revision = self.store.create_revision(board.id)
-        descriptor, temporary_name = tempfile.mkstemp(
-            prefix=".upload-", suffix=".image", dir=revision.run_root.parent
-        )
-        upload = Path(temporary_name)
-        remove_upload = False
+        board, revision = self.store.reserve_initial_revision(product_name)
+        descriptor = -1
+        upload: Path | None = None
         try:
+            descriptor, temporary_name = tempfile.mkstemp(
+                prefix=".upload-",
+                suffix=".image",
+                dir=revision.run_root.parent,
+            )
+            upload = Path(temporary_name)
             with os.fdopen(descriptor, "wb") as stream:
                 descriptor = -1
                 stream.write(bytes(content))
@@ -120,16 +121,14 @@ class WorkbenchService:
             self.__start(board, revision, str(upload))
             cached_source_path(revision.run_root)
             self.store.activate_revision(board.id, revision.id)
-            remove_upload = True
             return self.__view(board.id, revision.id)
         except Exception:
             self.__record_failed_creation(board, revision)
-            remove_upload = True
             raise
         finally:
             if descriptor >= 0:
                 os.close(descriptor)
-            if remove_upload:
+            if upload is not None:
                 upload.unlink(missing_ok=True)
 
     def import_run(self, run_root: Path) -> WorkbenchView:
@@ -172,6 +171,11 @@ class WorkbenchService:
         selected = board.active_revision_id if revision_id is None else revision_id
         if not selected:
             raise WorkbenchServiceError(f"board {board.id} has no active revision")
+        revision = self.store.read_revision(board.id, selected)
+        if revision.state == "pending":
+            raise WorkbenchServiceError(
+                f"revision {revision.id} is pending activation"
+            )
         return self.__view(board.id, selected)
 
     def save_draft(
@@ -271,19 +275,19 @@ class WorkbenchService:
                     )
                 approve_stage(revision.run_root, accepted_stage)
                 resume_run(revision.run_root, runners=self.__runners)
+            self.store.activate_revision(
+                board.id,
+                revision.id,
+                stale_parent_revision_id=parent.id,
+                stale_from_stage=stage,
+            )
         except Exception:
             self.store.mark_revision_failed(
                 board.id,
                 revision.id,
-                restore_active_revision_id=parent.id,
+                restore_active_revision_id=None,
             )
             raise
-        self.store.activate_revision(
-            board.id,
-            revision.id,
-            stale_parent_revision_id=parent.id,
-            stale_from_stage=stage,
-        )
         return self.__view(board.id, revision.id)
 
     def retry(

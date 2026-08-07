@@ -7,6 +7,7 @@ from io import BytesIO
 import json
 from pathlib import Path
 from threading import Event
+import tempfile
 
 from PIL import Image
 import pytest
@@ -343,6 +344,14 @@ def test_concurrent_initial_creation_exposes_no_pending_revision(
             assert service.list_boards() == ()
             with pytest.raises(WorkbenchServiceError, match="no active revision"):
                 service.get_board(board.id)
+            with pytest.raises(WorkbenchServiceError, match="pending"):
+                service.get_board(
+                    board.id,
+                    revision_id=board.revisions[0].id,
+                )
+            assert store.read_revision(
+                board.id, board.revisions[0].id
+            ).state == "pending"
         finally:
             runner.release.set()
         created = future.result(timeout=5)
@@ -391,6 +400,14 @@ def test_concurrent_fork_replay_keeps_parent_active_until_child_is_usable(
             assert board.revisions[-1].state == "pending"
             assert service.get_board(complete_board.board_id) == complete_board
             assert service.list_boards() == (complete_board,)
+            with pytest.raises(WorkbenchServiceError, match="pending"):
+                service.get_board(
+                    complete_board.board_id,
+                    revision_id=board.revisions[-1].id,
+                )
+            assert service.store.read_revision(
+                complete_board.board_id, board.revisions[-1].id
+            ).state == "pending"
         finally:
             release.set()
         child = future.result(timeout=5)
@@ -400,6 +417,57 @@ def test_concurrent_fork_replay_keeps_parent_active_until_child_is_usable(
     assert persisted.active_revision_id == child.revision_id
     assert records[child.revision_id].state == "active"
     assert records[complete_board.revision_id].stale_from_stage == 3
+
+
+def test_competing_fork_activation_failure_retains_failed_child_and_winner(
+    service: WorkbenchService,
+    complete_board: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    first_entered = Event()
+    release_first = Event()
+    replay_count = 0
+
+    def block_first_replay(
+        context: RunContext,
+        document: Mapping[str, object],
+        artifact_root: Path,
+    ) -> StageCheckpoint:
+        nonlocal replay_count
+        replay_count += 1
+        if replay_count == 1:
+            first_entered.set()
+            if not release_first.wait(timeout=5):
+                raise TimeoutError("first replay was not released")
+        return _materialize_reviewed_stub(2, context, document, artifact_root)
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit",
+        block_first_replay,
+    )
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        losing_future = executor.submit(
+            service.revise_stage,
+            complete_board.board_id,
+            stage=3,
+        )
+        assert first_entered.wait(timeout=5)
+        winner = service.revise_stage(complete_board.board_id, stage=3)
+        try:
+            blocked = service.store.read_board(complete_board.board_id)
+            assert blocked.active_revision_id == winner.revision_id
+            assert blocked.revisions[1].state == "pending"
+        finally:
+            release_first.set()
+        with pytest.raises(WorkbenchStoreError, match="active revision changed"):
+            losing_future.result(timeout=5)
+
+    persisted = service.store.read_board(complete_board.board_id)
+    records = {revision.id: revision for revision in persisted.revisions}
+    assert persisted.active_revision_id == winner.revision_id
+    assert records[winner.revision_id].state == "active"
+    assert records["revision-0002"].state == "failed"
 
 
 def test_ui_created_run_is_inspectable_by_cli_status(
@@ -500,6 +568,83 @@ def test_failed_creation_before_source_cache_rolls_back_and_removes_upload(
     assert saw_upload is True
     assert list(tmp_path.rglob(".upload-*")) == []
     assert store.list_boards() == ()
+
+
+def test_initial_revision_reservation_failure_removes_the_empty_board(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: _StubStageRunner(0)})
+
+    def fail_revision_reservation(
+        _board_id: str,
+        *,
+        parent_revision_id: str | None = None,
+        fork_stage: int | None = None,
+    ) -> None:
+        del parent_revision_id, fork_stage
+        raise RuntimeError("revision reservation interrupted")
+
+    monkeypatch.setattr(store, "create_revision", fail_revision_reservation)
+
+    with pytest.raises(RuntimeError, match="revision reservation interrupted"):
+        service.create_from_upload("Interrupted Board", _fixture_image_bytes())
+
+    assert WorkbenchStore(tmp_path).list_boards() == ()
+    assert list(tmp_path.rglob(".upload-*")) == []
+
+
+def test_upload_staging_failure_removes_the_pending_board(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: _StubStageRunner(0)})
+    original_mkstemp = tempfile.mkstemp
+
+    def fail_upload_staging(*args: object, **kwargs: object) -> tuple[int, str]:
+        if kwargs.get("prefix") == ".upload-":
+            raise OSError("upload staging interrupted")
+        return original_mkstemp(*args, **kwargs)
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.tempfile.mkstemp",
+        fail_upload_staging,
+    )
+
+    with pytest.raises(OSError, match="upload staging interrupted"):
+        service.create_from_upload("Interrupted Board", _fixture_image_bytes())
+
+    assert WorkbenchStore(tmp_path).list_boards() == ()
+
+
+@pytest.mark.parametrize("failed_publication", [1, 2], ids=["board", "revision"])
+def test_initial_reservation_reconciles_post_replace_fsync_ambiguity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failed_publication: int,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: _StubStageRunner(0)})
+    original_fsync = store._fsync_directory
+    publications = 0
+
+    def fail_selected_publication(directory: Path) -> None:
+        nonlocal publications
+        if directory.name.startswith("board-"):
+            publications += 1
+            if publications == failed_publication:
+                raise OSError("manifest publication ambiguous")
+        original_fsync(directory)
+
+    monkeypatch.setattr(store, "_fsync_directory", fail_selected_publication)
+
+    with pytest.raises(OSError, match="manifest publication ambiguous"):
+        service.create_from_upload("Interrupted Board", _fixture_image_bytes())
+
+    assert WorkbenchStore(tmp_path).list_boards() == ()
+    assert list(tmp_path.rglob(".upload-*")) == []
 
 
 def test_post_publication_creation_failure_preserves_failed_run_evidence(
