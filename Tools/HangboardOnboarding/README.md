@@ -99,18 +99,35 @@ the template are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
-For the complete guided local workflow, start one workbench server against an
-explicitly owned workspace:
+For the complete guided local workflow, start the server from the repository
+root with its repository and transient-workspace defaults:
 
 ```bash
-rtk python3 Tools/hold-highlight-editor/server.py \
+rtk python Tools/hold-highlight-editor/server.py
+```
+
+This discovers the checkout, uses
+`Tools/HangboardOnboarding/board-library/` for saved boards, and writes
+in-progress work under `.context/hangboard-workbench/`. Automation can select
+different roots explicitly:
+
+```bash
+rtk python Tools/hold-highlight-editor/server.py \
+  --repository-root /absolute/path/to/checkout \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
-Open `http://localhost:4173`, enter the caller-asserted commercial product
-name, and create a board from either an HTTP(S) image URL or an image upload.
-The setup screen can also register an existing CLI run whose path is inside the
-explicit workbench workspace.
+Open `http://localhost:4173`, then create a board from either an HTTP(S) image
+URL or an image upload. The opening screen also lists valid repository boards;
+select one to open its current immutable version for editing. The exact
+[catalog and board-package schemas are documented in the repository board-library design](../../docs/superpowers/specs/2026-08-07-repository-board-library-design.md).
+When a complete revision is saved, the workbench publishes a new immutable
+version and updates the catalog pointer. **Save locally** writes those files
+for normal Git review, but never commits or pushes them.
+
+CLI and other programmatic workflows are producers of the same contract: pass
+a completed run to `RepositoryBoardLibrary.publish()`. The browser never asks
+the user to provide a CLI run directory.
 The workbench runs Stage 0 immediately, then stops at every checkpoint for
 review. **Approve & continue** records the approval and advances to the next
 checkpoint; **Retry** regenerates the current checkpoint as a new attempt while

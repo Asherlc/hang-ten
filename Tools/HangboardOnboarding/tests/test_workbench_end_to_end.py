@@ -39,6 +39,12 @@ _BOARD_FIXTURES = (
 )
 
 
+def test_checkout_repository_library_starts_with_an_empty_catalog() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+
+    assert RepositoryBoardLibrary(repository_root).list_boards() == ()
+
+
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

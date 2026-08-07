@@ -6,5 +6,5 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 
-# Conductor workspace-local state
-.context/
+# Default transient workbench workspace
+/.context/hangboard-workbench/

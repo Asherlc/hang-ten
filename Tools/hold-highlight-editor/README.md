@@ -4,16 +4,30 @@ A dependency-free local browser editor for hangboard grip-region artifacts.
 
 ## Run the guided local workbench
 
+From the repository root, launch the repository-backed workbench with its
+defaults:
+
 ```bash
-rtk python3 Tools/hold-highlight-editor/server.py \
+rtk python Tools/hold-highlight-editor/server.py
+```
+
+The server discovers the checkout, reads saved boards from
+`Tools/HangboardOnboarding/board-library/`, and keeps in-progress work in
+`.context/hangboard-workbench/`. Tests and automation can override those roots:
+
+```bash
+rtk python Tools/hold-highlight-editor/server.py \
+  --repository-root /absolute/path/to/checkout \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
 Open `http://localhost:4173`. Enter the exact commercial product name, choose
 an HTTP(S) image URL or local image upload, and select **Create board**. The
 image bytes, run manifests, approvals, drafts, and revisions stay under the
-explicit workspace root. Existing boards appear in **Recent runs** after a
-refresh or server restart.
+workspace root. The opening screen separately lists validated **Boards in this
+repository**; selecting one opens its current immutable version. The exact
+[catalog and board-package schemas are in the repository board-library design](../../docs/superpowers/specs/2026-08-07-repository-board-library-design.md).
+The browser never asks for a CLI run directory.
 
 Creation publishes Stage 0 and stops for review. **Approve & continue** binds
 the displayed checkpoint to its hashes, runs the next installed stage, and
@@ -55,10 +69,13 @@ rtk hangboard-onboard \
   --status
 ```
 
-At Stage 4, **Save locally** only selects the complete, current, non-stale
-revision in `board.json`. It does not copy artifacts into the Hang Ten app,
-modify the app's product catalog, or synchronize anything remotely. Hang Ten
-synchronization is a separate future command and is outside this workbench.
+At Stage 4, **Save locally** selects the complete, current, non-stale revision
+and publishes it as a new immutable repository-board version. It writes files
+for normal Git review, but never commits, pushes, copies artifacts into the Hang
+Ten app, modifies the app's product catalog, or synchronizes anything remotely.
+Hang Ten synchronization is a separate future command and is outside this
+workbench. CLI and other programmatic callers are producers of the same
+contract: they pass a completed run to `RepositoryBoardLibrary.publish()`.
 
 ## Edit and save one existing Stage 2 run
 
