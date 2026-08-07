@@ -965,22 +965,32 @@ def _argument_parser() -> ArgumentParser:
 
 def _create_workbench_service(
     workspace_root: Path,
-    repository_root: Path,
+    repository_root: Path | None,
 ) -> tuple[object, tuple[type[Exception], ...]]:
     onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
     source_value = str(onboarding_source)
     if source_value not in sys.path:
         sys.path.insert(0, source_value)
-    from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
     from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
     from hangboard_vectorizer.workbench_store import WorkbenchStore
+
+    library = None
+    public_error_types: tuple[type[Exception], ...] = (WorkbenchServiceError,)
+    if repository_root is not None:
+        from hangboard_vectorizer.board_library import (
+            BoardLibraryError,
+            RepositoryBoardLibrary,
+        )
+
+        library = RepositoryBoardLibrary(repository_root)
+        public_error_types = (WorkbenchServiceError, BoardLibraryError)
 
     return (
         WorkbenchService(
             WorkbenchStore(workspace_root),
-            library=RepositoryBoardLibrary(repository_root),
+            library=library,
         ),
-        (WorkbenchServiceError, BoardLibraryError),
+        public_error_types,
     )
 
 
@@ -1021,7 +1031,15 @@ def _server_from_cli(
         )
         workspace_root: Path | None = None
         if use_workbench:
-            repository_root = _configured_repository_root(parsed.repository_root)
+            use_repository_library = (
+                parsed.repository_root is not None
+                or (catalog is None and parsed.workspace_root is None)
+            )
+            repository_root = (
+                _configured_repository_root(parsed.repository_root)
+                if use_repository_library
+                else None
+            )
             workspace_root = (
                 parsed.workspace_root.expanduser().resolve(strict=False)
                 if parsed.workspace_root is not None

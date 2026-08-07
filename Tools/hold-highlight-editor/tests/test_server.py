@@ -1274,6 +1274,41 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
+def test_workspace_root_starts_without_repository_library_outside_a_checkout(
+    tmp_path, monkeypatch
+):
+    launch_directory = tmp_path / "standalone-launch"
+    launch_directory.mkdir()
+    workspace = tmp_path / "workspace"
+    monkeypatch.chdir(launch_directory)
+
+    server, catalog = server_module._server_from_cli(
+        ["--workspace-root", str(workspace), "--port", "0"]
+    )
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        boards_status, boards = read_json(
+            f"http://127.0.0.1:{server.server_port}/api/boards"
+        )
+        library_status, library = read_json(
+            f"http://127.0.0.1:{server.server_port}/api/library"
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert catalog is None
+    assert boards_status == 200
+    assert boards == {"ok": True, "boards": []}
+    assert library_status == 200
+    assert library == {"ok": True, "boards": []}
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
 def test_repository_root_constructs_library_backed_workbench(tmp_path):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
