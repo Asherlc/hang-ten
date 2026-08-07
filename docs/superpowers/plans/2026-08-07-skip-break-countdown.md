@@ -79,10 +79,10 @@ func testPausedSkipIntoRestTransitionsImmediatelyAndKeepsPaused() {
 
 - [ ] **Step 3: Run the focused tests and verify they fail for the missing behavior**
 
-Run:
+Run the focused tests on the workspace-owned simulator:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=8C227CC0-0876-4313-AF33-92BEBD371B4D' -derivedDataPath .context/derived-data -only-testing:HangTenTests/WorkoutSessionStateTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=42E604E8-5AC8-445A-84C5-74E1AFE9B8A5' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
 ```
 
 Expected result before the production change: the two new tests fail because the implementation starts a `.skip` countdown and sets `activeStartUptime` three seconds in the future instead of seeking immediately.
@@ -111,16 +111,17 @@ The existing `testFinalSkipSeeksDirectlyToCompletion` remains unchanged and cont
 
 - [ ] **Step 6: Run focused tests and then the complete test target**
 
-Run the focused class again:
+Run the focused class again on the workspace-owned simulator:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=8C227CC0-0876-4313-AF33-92BEBD371B4D' -derivedDataPath .context/derived-data -only-testing:HangTenTests/WorkoutSessionStateTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=42E604E8-5AC8-445A-84C5-74E1AFE9B8A5' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
 ```
 
-Then run all `HangTenTests`:
+Then run all `HangTenTests` through the cleanup wrapper; this final command
+shuts down and deletes the exact owned simulator in its exit trap:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=8C227CC0-0876-4313-AF33-92BEBD371B4D' -derivedDataPath .context/derived-data test
+rtk zsh .context/run-owned-xcode-tests.zsh test
 ```
 
 Expected result: both commands exit `0`; the focused suite covers immediate running and paused rest transitions, work-destination countdown behavior, cancellation/interruption, direct seek, and final completion, and the full target has zero failures.
