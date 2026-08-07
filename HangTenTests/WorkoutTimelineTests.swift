@@ -23,13 +23,15 @@ final class WorkoutTimelineTests: XCTestCase {
             duration: 10,
             phase: .hang,
             targets: [.kind(.edge)],
-            gripType: .halfCrimp
+            gripType: .halfCrimp,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
         )
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
         XCTAssertEqual(cue?.hold, hold)
         XCTAssertEqual(cue?.gripType, .halfCrimp)
+        XCTAssertEqual(cue?.fingerConfiguration?.orderedFingers, [.index, .ring])
     }
 
     func testHoldCueFallsBackToBoardHoldGrip() {
@@ -40,7 +42,8 @@ final class WorkoutTimelineTests: XCTestCase {
             detail: "Pocket",
             kind: .pocket,
             frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
-            gripType: .threeFingerPocket
+            gripType: .openHand,
+            fingerCapacity: 3
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -55,7 +58,8 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
-        XCTAssertEqual(cue?.gripType, .threeFingerPocket)
+        XCTAssertEqual(cue?.gripType, .openHand)
+        XCTAssertEqual(cue?.hold.fingerCapacity, 3)
     }
 
     func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
