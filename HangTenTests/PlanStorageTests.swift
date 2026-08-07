@@ -6,7 +6,7 @@ final class PlanStorageTests: XCTestCase {
         for legacyValue in ["sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket"] {
             let decoded = try JSONDecoder().decode(
                 GripType.self,
-                from: Data("\"\\(legacyValue)\"".utf8)
+                from: Data("\"\(legacyValue)\"".utf8)
             )
 
             XCTAssertEqual(decoded, .openHand, "Expected \\(legacyValue) to migrate to open-hand posture.")
