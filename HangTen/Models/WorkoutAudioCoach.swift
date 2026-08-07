@@ -3,14 +3,67 @@ import Combine
 import OSLog
 
 @MainActor
+protocol WorkoutSpeechSynthesizing: AnyObject {
+    var delegate: AVSpeechSynthesizerDelegate? { get set }
+    var isSpeaking: Bool { get }
+
+    @discardableResult
+    func stopSpeaking(at boundary: AVSpeechBoundary) -> Bool
+    func speak(_ utterance: AVSpeechUtterance)
+}
+
+extension AVSpeechSynthesizer: WorkoutSpeechSynthesizing {}
+
+@MainActor
+protocol WorkoutAudioSessionManaging: AnyObject {
+    func configureForSpokenCues() throws
+    func activate() throws
+    func deactivateAndNotifyOthers() throws
+}
+
+@MainActor
+private final class SystemWorkoutAudioSession: WorkoutAudioSessionManaging {
+    private let session: AVAudioSession
+
+    init(session: AVAudioSession = .sharedInstance()) {
+        self.session = session
+    }
+
+    func configureForSpokenCues() throws {
+        try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+    }
+
+    func activate() throws {
+        try session.setActive(true)
+    }
+
+    func deactivateAndNotifyOthers() throws {
+        try session.setActive(false, options: .notifyOthersOnDeactivation)
+    }
+}
+
+@MainActor
 final class WorkoutAudioCoach: NSObject, ObservableObject {
     @Published private(set) var isSpeaking = false
 
-    private let synthesizer = AVSpeechSynthesizer()
+    private let synthesizer: any WorkoutSpeechSynthesizing
+    private let audioSession: any WorkoutAudioSessionManaging
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
 
-    override init() {
+    override convenience init() {
+        self.init(
+            synthesizer: AVSpeechSynthesizer(),
+            audioSession: SystemWorkoutAudioSession()
+        )
+    }
+
+    init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging
+    ) {
+        self.synthesizer = synthesizer
+        self.audioSession = audioSession
         super.init()
         synthesizer.delegate = self
     }
@@ -33,7 +86,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
-        deactivateAudioSession()
+        deactivateAudioSessionIfSpeechStopped()
     }
 
     private var preferredLanguageCode: String {
@@ -42,20 +95,30 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     private func configureAudioSessionIfNeeded() {
         guard !configuredAudioSession else { return }
-        configuredAudioSession = true
 
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-        try? session.setActive(true)
+        do {
+            try audioSession.configureForSpokenCues()
+            try audioSession.activate()
+            configuredAudioSession = true
+        } catch {
+            logger.error("Unable to activate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    private func deactivateAudioSessionIfSpeechStopped() {
+        guard !synthesizer.isSpeaking else { return }
+        deactivateAudioSession()
     }
 
     private func deactivateAudioSession() {
         guard configuredAudioSession else { return }
-        configuredAudioSession = false
-        try? AVAudioSession.sharedInstance().setActive(
-            false,
-            options: .notifyOthersOnDeactivation
-        )
+
+        do {
+            try audioSession.deactivateAndNotifyOthers()
+            configuredAudioSession = false
+        } catch {
+            logger.error("Unable to deactivate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
+        }
     }
 }
 
@@ -75,9 +138,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor in
             isSpeaking = false
-            if !self.synthesizer.isSpeaking {
-                self.deactivateAudioSession()
-            }
+            self.deactivateAudioSessionIfSpeechStopped()
         }
     }
 
@@ -87,9 +148,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
     ) {
         Task { @MainActor in
             isSpeaking = false
-            if !self.synthesizer.isSpeaking {
-                self.deactivateAudioSession()
-            }
+            self.deactivateAudioSessionIfSpeechStopped()
         }
     }
 }

@@ -79,6 +79,8 @@ explicit resume.
 speaker preference is persisted with `@AppStorage`. When an utterance ends or
 the routine pauses/exits, the audio session deactivates with
 `.notifyOthersOnDeactivation` so other audio is no longer ducked.
+Cancellation waits for the speech delegate before deactivation, preventing an
+AVAudioSession-busy teardown from leaving other audio ducked.
 
 Audio moments are derived from clock state:
 

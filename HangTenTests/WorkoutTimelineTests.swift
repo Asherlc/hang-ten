@@ -1,3 +1,4 @@
+import AVFoundation
 import XCTest
 import SwiftUI
 import UIKit
@@ -562,6 +563,105 @@ final class WorkoutClockTests: XCTestCase {
         now += 0.4
 
         XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
+    }
+}
+
+@MainActor
+final class WorkoutAudioCoachTests: XCTestCase {
+    func testStopWaitsForSpeechCancellationBeforeDeactivatingAudioSession() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        coach.stop()
+
+        XCTAssertEqual(audioSession.activationCount, 1)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendCancellation()
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
+    func testReplacementCueKeepsAudioSessionActiveUntilReplacementFinishes() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        coach.speak("2")
+
+        synthesizer.sendCancellation(of: synthesizer.utterances[0])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.activationCount, 1)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[1])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+}
+
+@MainActor
+private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing {
+    var delegate: AVSpeechSynthesizerDelegate?
+    var isSpeaking = false
+    private(set) var utterances: [AVSpeechUtterance] = []
+
+    func stopSpeaking(at boundary: AVSpeechBoundary) -> Bool {
+        // Cancellation remains in progress until a test delivers its delegate callback.
+        return true
+    }
+
+    func speak(_ utterance: AVSpeechUtterance) {
+        utterances.append(utterance)
+        isSpeaking = true
+    }
+
+    func sendCancellation(of utterance: AVSpeechUtterance? = nil) {
+        delegate?.speechSynthesizer?(
+            AVSpeechSynthesizer(),
+            didCancel: utterance ?? utterances[0]
+        )
+    }
+
+    func sendFinish(of utterance: AVSpeechUtterance) {
+        delegate?.speechSynthesizer?(AVSpeechSynthesizer(), didFinish: utterance)
+    }
+}
+
+@MainActor
+private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
+    private(set) var configurationCount = 0
+    private(set) var activationCount = 0
+    private(set) var deactivationCount = 0
+    private(set) var didDeactivateWithNotification = false
+
+    func configureForSpokenCues() throws {
+        configurationCount += 1
+    }
+
+    func activate() throws {
+        activationCount += 1
+    }
+
+    func deactivateAndNotifyOthers() throws {
+        deactivationCount += 1
+        didDeactivateWithNotification = true
     }
 }
 
