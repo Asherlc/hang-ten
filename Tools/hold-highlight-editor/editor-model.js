@@ -62,7 +62,7 @@
     });
   }
 
-  function normalizePipelineDocument(document, fallbackCanvas) {
+  function normalizePipelineDocument(document, fallbackCanvas, editorMode = "contour") {
     const canvas = {
       width: Number(document.canvas?.width || document.width || fallbackCanvas.width),
       height: Number(document.canvas?.height || document.height || fallbackCanvas.height),
@@ -89,7 +89,7 @@
         },
       };
     });
-    return { canvas, regions };
+    return { canvas, regions, editorMode };
   }
 
   function buildEditedDocument({ canvas, regions, imageName, regionsName }) {

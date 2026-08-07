@@ -329,6 +329,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             "/index.html": "index.html",
             "/styles.css": "styles.css",
             "/editor-model.js": "editor-model.js",
+            "/workbench-client.js": "workbench-client.js",
+            "/workbench-model.js": "workbench-model.js",
+            "/vector-path-model.js": "vector-path-model.js",
             "/app.js": "app.js",
         }
         filename = static_files.get(path)

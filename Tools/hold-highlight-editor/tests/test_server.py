@@ -500,6 +500,17 @@ def running_workbench_server(tmp_path):
         yield base
 
 
+@pytest.mark.parametrize(
+    "asset",
+    ["workbench-client.js", "workbench-model.js", "vector-path-model.js"],
+)
+def test_server_serves_guided_browser_modules(running_workbench_server, asset):
+    with urlopen(running_workbench_server + f"/{asset}") as response:
+        assert response.status == 200
+        assert response.headers.get_content_type() == "text/javascript"
+        assert response.read()
+
+
 def test_create_url_run_returns_job_and_can_be_polled(running_workbench_server):
     status, created = _post_json(
         running_workbench_server + "/api/boards",

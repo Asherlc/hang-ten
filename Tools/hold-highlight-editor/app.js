@@ -11,6 +11,28 @@
     resolveHistorySelection,
     normalizePipelineDocument,
   } = globalThis.HoldEditorModel;
+  const workbenchClient = globalThis.HoldWorkbenchClient;
+  const { timelineFor, canApprove } = globalThis.HoldWorkbenchModel;
+  const {
+    parseDisplayPath,
+    serializeDisplayPath,
+    transformPath,
+    bendPath,
+    mirrorPath,
+  } = globalThis.HoldVectorPathModel;
+
+  const STAGE_LABELS = [
+    "Input",
+    "Source review",
+    "Cleanup review",
+    "Hold-contour refinement",
+    "Smoothing",
+    "Vector refinement",
+    "Save",
+  ];
+  const PIPELINE_TO_TIMELINE_STAGE = [1, 2, 3, 5, 6];
+  const EDITOR_STAGES = new Set([2, 3]);
+  const AUTOSAVE_DELAY_MS = 500;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -56,12 +78,23 @@
     mirrorOntoSourceId: null,
     snapEnabled: false,
     imagePixels: null,
+    guided: false,
+    boards: [],
+    board: null,
+    editorMode: "contour",
+    checkpointDocument: null,
+    compareEnabled: false,
+    validationErrors: [],
+    busy: false,
+    autosaveTimer: null,
+    autosavePromise: null,
+    draftStatus: "clean",
   };
 
   const el = Object.fromEntries([
     "region-list", "region-count", "region-search", "add-region-button",
     "canvas-viewport", "canvas-stage", "editor-svg", "board-image",
-    "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
+    "compare-overlay", "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
     "status-text", "zoom-label", "opacity-slider", "inspector-title",
     "inspector-empty", "inspector-form", "region-key-input",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
@@ -71,7 +104,11 @@
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
-    "board-picker", "board-picker-separator", "board-select",
+    "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
+    "setup-screen", "workbench-screen", "setup-form", "setup-product-input", "setup-url-input", "setup-upload-input",
+    "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "setup-recents-wrap", "setup-recents",
+    "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
+    "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "legacy-controls",
   ].map((id) => [id, document.getElementById(id)]));
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -81,6 +118,32 @@
   function setStatus(message) { el["status-text"].textContent = message; }
 
   function colorFor(region) { return TYPE_COLORS[region.type] || TYPE_COLORS.edge; }
+
+  function isVectorMode() { return state.editorMode === "vector"; }
+
+  function vectorPoints(region, includeHandles = true) {
+    try {
+      return parseDisplayPath(region.displayPath).flatMap((command) => {
+        if (command.type === "Z") return [];
+        const points = [[command.x, command.y]];
+        if (includeHandles && command.type === "Q") points.push([command.x1, command.y1]);
+        if (includeHandles && command.type === "C") points.push([command.x1, command.y1], [command.x2, command.y2]);
+        return points;
+      });
+    } catch (_error) {
+      return [];
+    }
+  }
+
+  function geometryPoints(region, includeHandles = true) {
+    return isVectorMode() ? vectorPoints(region, includeHandles) : region.contour;
+  }
+
+  function regionPath(region) {
+    return isVectorMode()
+      ? region.displayPath || ""
+      : pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension);
+  }
 
   function pathFor(points, style = "straight", tension = 0.8) {
     if (!points?.length) return "";
@@ -150,16 +213,60 @@
     renderHistoryControls();
     renderSaveState();
     renderToolState();
+    renderValidation();
   }
 
   function renderToolState() {
-    el["snap-button"].disabled = !state.imagePixels;
+    const editable = !state.guided || EDITOR_STAGES.has(state.board?.stage);
+    el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
     el["snap-button"].classList.toggle("active", state.snapEnabled);
     el["snap-button"].textContent = state.snapEnabled ? "Snap edges: on" : "Snap edges";
     el["mirror-onto-button"].classList.toggle("active", state.mirrorOntoSourceId != null);
+    el["add-region-button"].disabled = !editable || isVectorMode();
+    el["delete-button"].disabled = !editable || isVectorMode();
+    el["duplicate-button"].disabled = !editable || isVectorMode();
+    el["mirror-copy-button"].disabled = !editable || isVectorMode();
+    el["simplify-curve-button"].disabled = !editable || isVectorMode() || (selectedRegion()?.contour?.length || 0) < 6;
+    el["region-shape-select"].disabled = !editable || isVectorMode();
+    el["region-path-style-select"].disabled = !editable || isVectorMode();
+    el["curve-tension-slider"].disabled = !editable || isVectorMode();
+    el["compare-button"].classList.toggle("active", state.compareEnabled);
+    el["compare-button"].setAttribute("aria-pressed", state.compareEnabled ? "true" : "false");
+    el["canvas-viewport"].classList.toggle("static-checkpoint", !editable);
   }
 
   function renderSaveState() {
+    if (state.guided) {
+      const view = state.board;
+      const complete = view?.state === "complete";
+      const approving = Boolean(view && canApprove(view, {
+        valid: state.validationErrors.length === 0,
+        saving: state.draftStatus === "saving",
+        errors: state.validationErrors,
+      }));
+      el["save-state"].className = "save-state";
+      el["save-state"].textContent = state.saveError
+        ? "Action failed"
+        : state.busy
+          ? "Working…"
+          : state.draftStatus === "saving"
+            ? "Saving draft…"
+            : state.draftStatus === "dirty"
+              ? "Draft pending"
+              : state.draftStatus === "saved"
+                ? "Draft saved"
+                : complete && view?.saved
+                  ? "Saved locally"
+                  : "Up to date";
+      if (state.saveError) el["save-state"].classList.add("error");
+      else if (state.draftStatus === "dirty") el["save-state"].classList.add("dirty");
+      else if (state.draftStatus === "saved" || view?.saved) el["save-state"].classList.add("saved");
+      el["save-button"].textContent = complete ? (view.saved ? "Saved locally" : "Save locally") : "Approve & continue";
+      el["save-button"].disabled = state.busy || !view || (complete ? view.saved : !approving);
+      el["retry-button"].disabled = state.busy || !view || !["failed", "awaiting_review", "ready"].includes(view.state);
+      el["revise-button"].disabled = state.busy || !view || view.stage < 1;
+      return;
+    }
     const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving && !state.loadingSession);
     el["save-button"].disabled = !canSave;
     el["board-select"].disabled = state.loadingSession || state.saving;
@@ -188,15 +295,23 @@
   }
 
   function renderOverlay() {
+    el["compare-overlay"].replaceChildren();
     el["region-overlay"].replaceChildren();
     el["draft-overlay"].replaceChildren();
+
+    if (state.compareEnabled && state.overlayMode !== "none") {
+      state.baselineRegions.forEach((region) => {
+        const path = makeSvg("path", { d: isVectorMode() ? region.displayPath : pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension), class: "compare-shape" });
+        el["compare-overlay"].appendChild(path);
+      });
+    }
 
     if (state.overlayMode !== "none") {
       state.regions.forEach((region) => {
         if (state.overlayMode === "selected" && region.id !== state.selectedId) return;
         const group = makeSvg("g", { "data-region-id": region.id });
         const path = makeSvg("path", {
-          d: pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension),
+          d: regionPath(region),
           fill: colorFor(region),
           "fill-opacity": region.id === state.selectedId ? Math.min(state.opacity + 0.14, 0.8) : state.opacity,
           stroke: colorFor(region),
@@ -204,10 +319,10 @@
           class: `region-shape${region.id === state.selectedId ? " selected" : ""}`,
         });
         path.addEventListener("pointerdown", (event) => startRegionDrag(event, region.id));
-        path.addEventListener("dblclick", (event) => insertPointOnNearestEdge(event, region.id));
+        if (!isVectorMode()) path.addEventListener("dblclick", (event) => insertPointOnNearestEdge(event, region.id));
         group.appendChild(path);
 
-        const [cx, cy] = centroid(region.contour);
+        const [cx, cy] = Array.isArray(region.anchor) ? region.anchor : centroid(geometryPoints(region, false));
         const label = makeSvg("text", { x: cx, y: cy, class: "region-label" });
         label.textContent = region.id;
         group.appendChild(label);
@@ -215,11 +330,12 @@
         if (region.id === state.selectedId) {
           renderObjectControls(group, region);
           if (state.editPoints) {
-            region.contour.forEach(([x, y], index) => {
-              const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" });
-              handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
-              group.appendChild(handle);
-            });
+            if (isVectorMode()) renderVectorHandles(group, region);
+            else region.contour.forEach(([x, y], index) => {
+                const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" });
+                handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
+                group.appendChild(handle);
+              });
           }
         }
         el["region-overlay"].appendChild(group);
@@ -234,6 +350,53 @@
         el["draft-overlay"].appendChild(makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" }));
       });
     }
+  }
+
+  function renderVectorHandles(group, region) {
+    let commands;
+    try {
+      commands = parseDisplayPath(region.displayPath);
+    } catch (_error) {
+      return;
+    }
+    let previous = null;
+    commands.forEach((command, commandIndex) => {
+      if (command.type === "Z") {
+        previous = null;
+        return;
+      }
+      const endpoint = [command.x, command.y];
+      const controls = [];
+      if (command.type === "Q" || command.type === "C") controls.push([command.x1, command.y1, "control1"]);
+      if (command.type === "C") controls.push([command.x2, command.y2, "control2"]);
+      if (previous && controls.length) {
+        group.appendChild(makeSvg("line", { x1: previous[0], y1: previous[1], x2: controls[0][0], y2: controls[0][1], class: "vector-control-line" }));
+      }
+      if (controls.length) {
+        const last = controls.at(-1);
+        group.appendChild(makeSvg("line", { x1: last[0], y1: last[1], x2: endpoint[0], y2: endpoint[1], class: "vector-control-line" }));
+      }
+      controls.forEach(([x, y, kind]) => {
+        const handle = makeSvg("circle", { cx: x, cy: y, r: 4 / Math.max(state.zoom, 0.3), class: "vector-control-handle" });
+        handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, kind));
+        group.appendChild(handle);
+      });
+      const handle = makeSvg("circle", { cx: endpoint[0], cy: endpoint[1], r: 4.5 / Math.max(state.zoom, 0.3), class: "vector-endpoint-handle" });
+      handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, "endpoint"));
+      group.appendChild(handle);
+      previous = endpoint;
+    });
+  }
+
+  function renderValidation() {
+    el["validation-list"].replaceChildren();
+    state.validationErrors.forEach((error) => {
+      const item = document.createElement("li");
+      item.textContent = error.message;
+      if (error.regionId != null) item.addEventListener("click", () => focusRegion(error.regionId));
+      el["validation-list"].appendChild(item);
+    });
+    el["validation-panel"].classList.toggle("hidden", state.validationErrors.length === 0);
   }
 
   function renderRegionList() {
@@ -272,11 +435,15 @@
     el["tension-field"].classList.toggle("hidden", region.metadata.pathStyle !== "smooth");
     if (document.activeElement !== el["region-mode-select"]) el["region-mode-select"].value = region.metadata.mode || "surface";
     if (document.activeElement !== el["region-notes-input"]) el["region-notes-input"].value = region.metadata.humanNotes || "";
-    el["point-count"].textContent = region.contour.length;
-    el["area-value"].textContent = `${Math.round(polygonArea(region.contour)).toLocaleString()} px²`;
+    const points = geometryPoints(region);
+    el["point-count"].textContent = points.length;
+    const pointBounds = points.length ? bounds(points) : [0, 0, 0, 0];
+    el["area-value"].textContent = isVectorMode()
+      ? `${Math.round(Math.max(0, (pointBounds[2] - pointBounds[0]) * (pointBounds[3] - pointBounds[1]))).toLocaleString()} px² bounds`
+      : `${Math.round(polygonArea(region.contour)).toLocaleString()} px²`;
     el["edit-points-button"].classList.toggle("edit-points-active", state.editPoints);
     el["edit-points-button"].textContent = state.editPoints ? "Finish points" : "Edit points";
-    el["simplify-curve-button"].disabled = region.contour.length < 6;
+    el["simplify-curve-button"].disabled = isVectorMode() || region.contour.length < 6;
     el["previous-region-button"].disabled = state.regions.length < 2;
     el["next-region-button"].disabled = state.regions.length < 2;
   }
@@ -331,9 +498,11 @@
   }
 
   function orientedFrame(region) {
-    const center = centroid(region.contour);
+    const points = geometryPoints(region);
+    if (!points.length) return { center: [0, 0], rotation: 0, minX: 0, minY: 0, maxX: 0, maxY: 0, centerLocalX: 0, centerLocalY: 0, corners: [[0, 0], [0, 0], [0, 0], [0, 0]] };
+    const center = centroid(points);
     const rotation = Number(region.metadata.rotation || 0);
-    const local = region.contour.map((point) => worldToLocal(point, center, rotation));
+    const local = points.map((point) => worldToLocal(point, center, rotation));
     const [minX, minY, maxX, maxY] = bounds(local);
     return {
       center,
@@ -395,38 +564,58 @@
 
   function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 
+  function canEditGeometry() {
+    return !state.guided || EDITOR_STAGES.has(state.board?.stage);
+  }
+
   function startRegionDrag(event, id) {
-    if (state.drawing || state.spacePressed || event.button !== 0) return;
+    if (!canEditGeometry() || state.drawing || state.spacePressed || event.button !== 0) return;
     event.stopPropagation();
     selectRegion(id);
     const region = selectedRegion();
     const start = clientToSvg(event.clientX, event.clientY);
-    state.dragSession = { pointerId: event.pointerId, start, original: clone(region.contour), changed: false };
+    state.dragSession = {
+      pointerId: event.pointerId,
+      start,
+      original: isVectorMode() ? parseDisplayPath(region.displayPath) : clone(region.contour),
+      originalAnchor: clone(region.anchor || centroid(geometryPoints(region, false))),
+      changed: false,
+    };
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
   function startHandleDrag(event, id, index) {
-    if (event.button !== 0) return;
+    if (!canEditGeometry() || isVectorMode() || event.button !== 0) return;
     event.stopPropagation();
     selectRegion(id);
     state.handleSession = { pointerId: event.pointerId, index, changed: false };
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
+  function startVectorHandleDrag(event, id, commandIndex, handleKind) {
+    if (!canEditGeometry() || !isVectorMode() || event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    selectRegion(id);
+    state.handleSession = { pointerId: event.pointerId, commandIndex, handleKind, changed: false };
+    el["editor-svg"].setPointerCapture(event.pointerId);
+  }
+
   function startTransformDrag(event, id, kind) {
-    if (event.button !== 0) return;
+    if (!canEditGeometry() || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     selectRegion(id);
     const region = selectedRegion();
-    const center = centroid(region.contour);
+    const center = centroid(geometryPoints(region));
     const start = clientToSvg(event.clientX, event.clientY);
     state.transformSession = {
       pointerId: event.pointerId,
       kind,
       start,
       center,
-      original: clone(region.contour),
+      original: isVectorMode() ? parseDisplayPath(region.displayPath) : clone(region.contour),
+      originalAnchor: clone(region.anchor || center),
       rotation: Number(region.metadata.rotation || 0),
       bend: Number(region.metadata.bend || 0),
       changed: false,
@@ -435,7 +624,7 @@
   }
 
   function startResizeDrag(event, id, handle) {
-    if (event.button !== 0) return;
+    if (!canEditGeometry() || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     selectRegion(id);
@@ -444,7 +633,9 @@
       pointerId: event.pointerId,
       kind: "resize",
       resizeHandle: handle,
-      original: clone(region.contour),
+      original: isVectorMode() ? parseDisplayPath(region.displayPath) : clone(region.contour),
+      originalAnchor: clone(region.anchor || centroid(geometryPoints(region, false))),
+      originalBounds: bounds(geometryPoints(region)),
       rotation: Number(region.metadata.rotation || 0),
       changed: false,
     };
@@ -458,31 +649,52 @@
       const region = selectedRegion();
       if (session.kind === "resize") {
         const pointer = snapPoint(current, event.altKey);
-        region.contour = resizeContour({
-          points: session.original,
-          rotation: session.rotation,
-          handle: session.resizeHandle,
-          pointer,
-          preserveAspect: event.shiftKey,
-        });
+        if (isVectorMode()) resizeVectorRegion(region, session, pointer, event.shiftKey);
+        else region.contour = resizeContour({
+            points: session.original,
+            rotation: session.rotation,
+            handle: session.resizeHandle,
+            pointer,
+            preserveAspect: event.shiftKey,
+          });
       } else if (session.kind === "rotate") {
         const startAngle = Math.atan2(session.start[1] - session.center[1], session.start[0] - session.center[0]);
         const currentAngle = Math.atan2(current[1] - session.center[1], current[0] - session.center[0]);
         const delta = currentAngle - startAngle;
-        region.contour = session.original.map((point) => rotatePoint(point, session.center, delta));
+        if (isVectorMode()) {
+          const cosine = Math.cos(delta);
+          const sine = Math.sin(delta);
+          applyVectorMatrix(region, session, [
+            cosine,
+            sine,
+            -sine,
+            cosine,
+            session.center[0] - cosine * session.center[0] + sine * session.center[1],
+            session.center[1] - sine * session.center[0] - cosine * session.center[1],
+          ]);
+        } else region.contour = session.original.map((point) => rotatePoint(point, session.center, delta));
         region.metadata.rotation = session.rotation + delta;
       } else {
         const dx = current[0] - session.start[0];
         const dy = current[1] - session.start[1];
         const localDeltaY = -Math.sin(session.rotation) * dx + Math.cos(session.rotation) * dy;
-        const localPoints = session.original.map((point) => worldToLocal(point, session.center, session.rotation));
-        const [minX, , maxX] = bounds(localPoints);
-        const width = Math.max(maxX - minX, 1);
-        region.contour = localPoints.map(([x, y]) => {
-          const progress = clamp((x - minX) / width, 0, 1);
-          const influence = 4 * progress * (1 - progress);
-          return localToWorld([x, y + localDeltaY * influence], session.center, session.rotation);
-        });
+        if (isVectorMode()) {
+          const originalPoints = session.original.flatMap((command) => command.type === "Z" ? [] : [[command.x, command.y]]);
+          const originalBounds = bounds(originalPoints);
+          region.displayPath = serializeDisplayPath(bendPath(session.original, localDeltaY, originalBounds));
+          const [minX, , maxX] = originalBounds;
+          const progress = clamp((session.originalAnchor[0] - minX) / Math.max(maxX - minX, 1), 0, 1);
+          region.anchor = [session.originalAnchor[0], session.originalAnchor[1] + localDeltaY * 4 * progress * (1 - progress)];
+        } else {
+          const localPoints = session.original.map((point) => worldToLocal(point, session.center, session.rotation));
+          const [minX, , maxX] = bounds(localPoints);
+          const width = Math.max(maxX - minX, 1);
+          region.contour = localPoints.map(([x, y]) => {
+            const progress = clamp((x - minX) / width, 0, 1);
+            const influence = 4 * progress * (1 - progress);
+            return localToWorld([x, y + localDeltaY * influence], session.center, session.rotation);
+          });
+        }
         region.metadata.bend = session.bend + localDeltaY;
       }
       session.changed = true;
@@ -496,7 +708,8 @@
       const dx = current[0] - sx;
       const dy = current[1] - sy;
       const region = selectedRegion();
-      region.contour = state.dragSession.original.map(([x, y]) => [clamp(x + dx, 0, state.canvas.width), clamp(y + dy, 0, state.canvas.height)]);
+      if (isVectorMode()) applyVectorMatrix(region, state.dragSession, [1, 0, 0, 1, dx, dy]);
+      else region.contour = state.dragSession.original.map(([x, y]) => [clamp(x + dx, 0, state.canvas.width), clamp(y + dy, 0, state.canvas.height)]);
       state.dragSession.changed = true;
       renderOverlay();
       renderInspector();
@@ -505,11 +718,46 @@
     if (state.handleSession?.pointerId === event.pointerId) {
       const region = selectedRegion();
       const pointer = clientToSvg(event.clientX, event.clientY);
-      region.contour[state.handleSession.index] = snapPoint(pointer, event.altKey);
+      if (isVectorMode()) {
+        const commands = parseDisplayPath(region.displayPath);
+        const command = commands[state.handleSession.commandIndex];
+        const [x, y] = pointer;
+        if (state.handleSession.handleKind === "endpoint") [command.x, command.y] = [x, y];
+        else if (state.handleSession.handleKind === "control1") [command.x1, command.y1] = [x, y];
+        else [command.x2, command.y2] = [x, y];
+        region.displayPath = serializeDisplayPath(commands);
+      } else region.contour[state.handleSession.index] = snapPoint(pointer, event.altKey);
       state.handleSession.changed = true;
       renderOverlay();
       renderInspector();
     }
+  }
+
+  function applyVectorMatrix(region, session, matrix) {
+    region.displayPath = serializeDisplayPath(transformPath(session.original, matrix));
+    const [a, b, c, d, e, f] = matrix;
+    const [x, y] = session.originalAnchor;
+    region.anchor = [a * x + c * y + e, b * x + d * y + f];
+  }
+
+  function resizeVectorRegion(region, session, pointer, preserveAspect) {
+    const [minX, minY, maxX, maxY] = session.originalBounds;
+    const scalesX = session.resizeHandle.includes("e") || session.resizeHandle.includes("w");
+    const scalesY = session.resizeHandle.includes("n") || session.resizeHandle.includes("s");
+    const anchorX = session.resizeHandle.includes("w") ? maxX : minX;
+    const anchorY = session.resizeHandle.includes("n") ? maxY : minY;
+    const movingX = session.resizeHandle.includes("w") ? minX : maxX;
+    const movingY = session.resizeHandle.includes("n") ? minY : maxY;
+    let scaleX = scalesX ? (pointer[0] - anchorX) / Math.max(Math.abs(movingX - anchorX), 1e-6) : 1;
+    let scaleY = scalesY ? (pointer[1] - anchorY) / Math.max(Math.abs(movingY - anchorY), 1e-6) : 1;
+    scaleX = Math.max(0.05, scaleX);
+    scaleY = Math.max(0.05, scaleY);
+    if (preserveAspect && scalesX && scalesY) {
+      const dominant = Math.abs(scaleX - 1) >= Math.abs(scaleY - 1) ? scaleX : scaleY;
+      scaleX = dominant;
+      scaleY = dominant;
+    }
+    applyVectorMatrix(region, session, [scaleX, 0, 0, scaleY, anchorX * (1 - scaleX), anchorY * (1 - scaleY)]);
   }
 
   function onSvgPointerUp(event) {
@@ -570,6 +818,7 @@
   }
 
   function beginDraw() {
+    if (!canEditGeometry() || isVectorMode()) return;
     state.drawing = true;
     state.drawShape = el["new-shape-select"].value;
     state.draft = [];
@@ -621,7 +870,7 @@
   }
 
   function deleteSelected() {
-    if (state.selectedId == null) return;
+    if (state.selectedId == null || isVectorMode()) return;
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
@@ -632,7 +881,7 @@
 
   function duplicateSelected() {
     const source = selectedRegion();
-    if (!source) return;
+    if (!source || isVectorMode()) return;
     const nextId = state.regions.reduce((max, region) => Math.max(max, region.id), 0) + 1;
     const copy = clone(source);
     copy.id = nextId;
@@ -647,7 +896,7 @@
 
   function simplifySelectedCurve() {
     const region = selectedRegion();
-    if (!region || region.contour.length < 6) return;
+    if (!region || isVectorMode() || region.contour.length < 6) return;
     const before = region.contour.length;
     const tolerance = Math.max(1.5, Math.hypot(state.canvas.width, state.canvas.height) * 0.0025);
     const simplified = simplifyClosedContour(region.contour, tolerance);
@@ -665,7 +914,7 @@
 
   function mirrorSelectedCopy() {
     const source = selectedRegion();
-    if (!source) return;
+    if (!source || isVectorMode()) return;
     const nextId = state.regions.reduce((maximum, region) => Math.max(maximum, region.id), 0) + 1;
     const copy = clone(source);
     copy.id = nextId;
@@ -703,7 +952,10 @@
     const geometryKeys = ["shapeKind", "pathStyle", "curveTension", "bend"];
     geometryKeys.forEach((key) => { target.metadata[key] = source.metadata[key]; });
     target.metadata.rotation = -Number(source.metadata.rotation || 0);
-    target.contour = mirrorContour(source.contour, state.canvas.width);
+    if (isVectorMode()) {
+      target.displayPath = serializeDisplayPath(mirrorPath(parseDisplayPath(source.displayPath), state.canvas.width / 2));
+      if (Array.isArray(source.anchor)) target.anchor = [state.canvas.width - source.anchor[0], source.anchor[1]];
+    } else target.contour = mirrorContour(source.contour, state.canvas.width);
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
     commitHistory("Mirrored geometry onto region");
@@ -720,6 +972,7 @@
   }
 
   function togglePointEditing() {
+    if (!canEditGeometry()) return;
     state.editPoints = !state.editPoints;
     setStatus(state.editPoints ? "Point editing enabled." : "Object controls enabled.");
     render();
@@ -733,6 +986,7 @@
     state.historyIndex = state.history.length - 1;
     state.dirty = snapshot !== state.savedSnapshot;
     state.saveError = "";
+    onDraftChanged();
     renderHistoryControls();
     renderSaveState();
   }
@@ -754,6 +1008,7 @@
     state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
+    if (state.guided && EDITOR_STAGES.has(state.board?.stage)) scheduleDraftSave();
     setStatus(`Undo: ${state.history[state.historyIndex + 1].label}`);
     render();
   }
@@ -766,6 +1021,7 @@
     state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
+    if (state.guided && EDITOR_STAGES.has(state.board?.stage)) scheduleDraftSave();
     setStatus(`Redo: ${state.history[state.historyIndex].label}`);
     render();
   }
@@ -850,6 +1106,477 @@
     if (!state.panSession || state.panSession.pointerId !== event.pointerId) return;
     state.panSession = null;
     el["canvas-viewport"].classList.remove("panning");
+  }
+
+  function draftStorageKey(view = state.board) {
+    if (!view) return null;
+    return `hold-workbench-draft:${view.boardId}:${view.revisionId}:${String(view.stage)}`;
+  }
+
+  function discardStaleDrafts(view) {
+    try {
+      const prefix = `hold-workbench-draft:${view.boardId}:`;
+      const current = draftStorageKey(view);
+      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+        const key = localStorage.key(index);
+        if (key?.startsWith(prefix) && key !== current) localStorage.removeItem(key);
+      }
+    } catch (error) {
+      console.warn("Could not prune stale local drafts", error);
+    }
+  }
+
+  function readStoredDraft(view) {
+    discardStaleDrafts(view);
+    try {
+      const value = JSON.parse(localStorage.getItem(draftStorageKey(view)) || "null");
+      if (
+        value?.boardId === view.boardId
+        && value?.revisionId === view.revisionId
+        && value?.stage === view.stage
+        && value.document
+      ) return value.document;
+    } catch (error) {
+      console.warn("Could not restore the local draft", error);
+    }
+    return null;
+  }
+
+  function serializeDraft() {
+    if (!state.board || !EDITOR_STAGES.has(state.board.stage) || !state.checkpointDocument) return null;
+    if (state.board.stage === 2) {
+      const edited = buildEditedDocument({
+        canvas: state.canvas,
+        regions: state.regions,
+        imageName: state.imageName,
+        regionsName: state.regionsName,
+      });
+      return {
+        ...clone(state.checkpointDocument),
+        stage: 2,
+        canvas: clone(state.canvas),
+        labelEncoding: state.checkpointDocument.labelEncoding || "uint16-region-id",
+        regions: edited.regions,
+      };
+    }
+    return {
+      ...clone(state.checkpointDocument),
+      stage: 3,
+      canvas: clone(state.canvas),
+      regions: clone(state.regions),
+    };
+  }
+
+  function markDraftSaved(document = serializeDraft(), savedSnapshot = JSON.stringify(state.regions)) {
+    if (!state.board || !document) return;
+    state.savedSnapshot = savedSnapshot;
+    state.dirty = JSON.stringify(state.regions) !== savedSnapshot;
+    state.draftStatus = state.dirty ? "dirty" : "saved";
+    try {
+      localStorage.setItem(draftStorageKey(), JSON.stringify({
+        boardId: state.board.boardId,
+        revisionId: state.board.revisionId,
+        stage: state.board.stage,
+        document,
+      }));
+    } catch (error) {
+      console.warn("Could not persist the local draft cache", error);
+    }
+    if (state.dirty) scheduleDraftSave();
+    renderSaveState();
+  }
+
+  function validateGeometry() {
+    if (!state.board || !EDITOR_STAGES.has(state.board.stage)) return [];
+    const errors = [];
+    const baseline = state.baselineRegions;
+    state.regions.forEach((region, index) => {
+      if (region.id !== index + 1) errors.push({ regionId: region.id, message: `Region ${String(region.id)} has an invalid stable ID or order.` });
+      if (!region.key || state.regions.some((candidate, candidateIndex) => candidateIndex !== index && candidate.key === region.key)) {
+        errors.push({ regionId: region.id, message: `Region ${String(region.id)} has a missing or duplicate key.` });
+      }
+      if (state.board.stage === 2) {
+        const expected = baseline[index];
+        if (!expected || expected.id !== region.id || expected.key !== region.key || expected.type !== region.type) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed required Stage 2 identity.` });
+        }
+        if (!Array.isArray(region.contour) || region.contour.length < 3) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} needs at least three contour vertices.` });
+        } else if (region.contour.some(([x, y]) => !Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x >= state.canvas.width || y >= state.canvas.height)) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} has an out-of-bounds contour point.` });
+        } else if (polygonArea(region.contour) < 1) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} has degenerate geometry.` });
+        }
+      } else {
+        const expected = baseline[index];
+        if (!expected || expected.id !== region.id || expected.key !== region.key || expected.type !== region.type) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed required Stage 3 identity.` });
+        }
+        try {
+          const commands = parseDisplayPath(region.displayPath);
+          const points = commands.flatMap((command) => command.type === "Z" ? [] : vectorCommandPoints(command));
+          if (points.some(([x, y]) => x < 0 || y < 0 || x > state.canvas.width || y > state.canvas.height)) {
+            errors.push({ regionId: region.id, message: `Region ${String(region.id)} has an out-of-bounds vector endpoint or handle.` });
+          }
+        } catch (_error) {
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} has a malformed display path.` });
+        }
+      }
+    });
+    if (state.regions.length !== baseline.length) {
+      errors.unshift({ regionId: state.regions[0]?.id ?? null, message: `Stage ${String(state.board.stage)} region inventory no longer matches the generated checkpoint.` });
+    }
+    return errors;
+  }
+
+  function vectorCommandPoints(command) {
+    if (command.type === "M" || command.type === "L") return [[command.x, command.y]];
+    if (command.type === "Q") return [[command.x1, command.y1], [command.x, command.y]];
+    if (command.type === "C") return [[command.x1, command.y1], [command.x2, command.y2], [command.x, command.y]];
+    return [];
+  }
+
+  function onDraftChanged() {
+    if (!state.guided || !EDITOR_STAGES.has(state.board?.stage)) return;
+    state.validationErrors = validateGeometry();
+    state.draftStatus = "dirty";
+    scheduleDraftSave();
+    renderValidation();
+  }
+
+  function scheduleDraftSave() {
+    if (!state.guided || !EDITOR_STAGES.has(state.board?.stage)) return;
+    if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
+    state.autosaveTimer = setTimeout(() => {
+      state.autosaveTimer = null;
+      void saveDraftNow();
+    }, AUTOSAVE_DELAY_MS);
+    renderSaveState();
+  }
+
+  async function saveDraftNow() {
+    if (!state.board || !EDITOR_STAGES.has(state.board.stage)) return null;
+    state.validationErrors = validateGeometry();
+    if (state.validationErrors.length) {
+      focusRegion(state.validationErrors[0].regionId);
+      render();
+      return null;
+    }
+    const view = state.board;
+    const key = draftStorageKey(view);
+    const document = serializeDraft();
+    const savedSnapshot = JSON.stringify(state.regions);
+    state.draftStatus = "saving";
+    state.saveError = "";
+    renderSaveState();
+    const saving = workbenchClient.saveDraft(view, document);
+    state.autosavePromise = saving;
+    try {
+      const updated = await saving;
+      if (draftStorageKey(state.board) !== key) return updated;
+      state.board = updated;
+      markDraftSaved(document, savedSnapshot);
+      setStatus("Draft saved to the active revision.");
+      return updated;
+    } catch (error) {
+      if (draftStorageKey(state.board) !== key) return null;
+      state.draftStatus = "dirty";
+      state.saveError = error.message || "Draft save failed";
+      focusGeometryError(state.saveError);
+      setStatus(state.saveError);
+      render();
+      throw error;
+    } finally {
+      if (state.autosavePromise === saving) state.autosavePromise = null;
+    }
+  }
+
+  async function flushDraft() {
+    if (state.autosaveTimer != null) {
+      clearTimeout(state.autosaveTimer);
+      state.autosaveTimer = null;
+      await saveDraftNow();
+    } else if (state.autosavePromise) {
+      await state.autosavePromise;
+    } else if (state.draftStatus === "dirty") {
+      await saveDraftNow();
+    }
+  }
+
+  function focusGeometryError(message) {
+    const match = String(message).match(/region\s+(\d+)/i);
+    const regionId = match ? Number(match[1]) : null;
+    state.validationErrors = [{ regionId, message: String(message) }];
+    if (regionId != null) focusRegion(regionId);
+  }
+
+  function focusRegion(regionId) {
+    const numericId = Number(regionId);
+    if (!state.regions.some((region) => region.id === numericId)) return false;
+    state.selectedId = numericId;
+    state.editPoints = true;
+    render();
+    el["canvas-viewport"].focus({ preventScroll: true });
+    requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${String(numericId)}"]`)?.scrollIntoView({ block: "nearest" }));
+    return true;
+  }
+
+  function setCompareEnabled(enabled) {
+    state.compareEnabled = Boolean(enabled);
+    renderOverlay();
+    renderToolState();
+    return state.compareEnabled;
+  }
+
+  function checkpointDocumentUrl(view) {
+    const names = { 2: "stage-2-regions.json", 3: "stage-3-vector-regions.json" };
+    const name = names[view.stage];
+    if (!name || !view.reviewUrl) return null;
+    const url = new URL(view.reviewUrl, window.location.origin);
+    const path = url.searchParams.get("path");
+    if (!path) return null;
+    url.searchParams.set("path", path.replace(/[^/]+$/, name));
+    return `${url.pathname}?${url.searchParams.toString()}`;
+  }
+
+  async function loadCheckpoint(view, providedDocument = null) {
+    if (!view) return false;
+    if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
+    state.autosaveTimer = null;
+    state.autosavePromise = null;
+    state.board = view;
+    state.editorMode = view.editorMode || "contour";
+    state.checkpointDocument = null;
+    state.validationErrors = [];
+    state.saveError = "";
+    state.draftStatus = "clean";
+    state.drawing = false;
+    state.editPoints = false;
+    state.mirrorOntoSourceId = null;
+    state.regions = [];
+    state.baselineRegions = [];
+    state.selectedId = null;
+
+    if (view.reviewUrl) await setImageHref(view.reviewUrl, `Stage ${String(view.stage)} review`);
+    if (EDITOR_STAGES.has(view.stage)) {
+      let baselineDocument = providedDocument;
+      if (!baselineDocument) {
+        const documentUrl = checkpointDocumentUrl(view);
+        if (!documentUrl) throw new Error(`Stage ${String(view.stage)} checkpoint document is unavailable`);
+        const response = await fetch(documentUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
+        baselineDocument = await response.json();
+      }
+      const restored = readStoredDraft(view);
+      state.checkpointDocument = clone(baselineDocument);
+      setRegions(restored || baselineDocument, `stage-${String(view.stage)}-checkpoint.json`, view.editorMode, baselineDocument);
+      if (restored) {
+        state.draftStatus = "saved";
+        state.savedSnapshot = JSON.stringify(state.regions);
+        setStatus("Restored the latest same-browser draft for this revision.");
+      }
+    } else {
+      resetHistory();
+      configureSvg();
+      render();
+      requestAnimationFrame(fitCanvas);
+    }
+    renderGuidedShell();
+    return true;
+  }
+
+  function timelineView(view) {
+    const mappedStage = PIPELINE_TO_TIMELINE_STAGE[view.stage] ?? Math.min(view.stage, 6);
+    const mappedStale = view.staleFromStage == null ? null : (PIPELINE_TO_TIMELINE_STAGE[view.staleFromStage] ?? view.staleFromStage);
+    return { ...view, stage: mappedStage, staleFromStage: mappedStale };
+  }
+
+  function renderGuidedShell() {
+    if (!state.guided) return;
+    const view = state.board;
+    el["stage-timeline"].replaceChildren();
+    const timeline = timelineFor(view ? timelineView(view) : {});
+    timeline.forEach((row, index) => {
+      const item = document.createElement("li");
+      item.className = `stage-row ${row.state}`;
+      item.innerHTML = `<span class="stage-dot">${row.state === "complete" ? "✓" : String(index + 1)}</span><span>${escapeHTML(STAGE_LABELS[index])}</span>`;
+      el["stage-timeline"].appendChild(item);
+    });
+    renderRecentRuns();
+    el["board-title"].textContent = view?.productName || "Hangboard Workbench";
+    el["board-state"].textContent = view
+      ? `Revision ${view.revisionId} · ${view.state.replaceAll("_", " ")}`
+      : "Create or choose a board to begin.";
+    el["checkpoint-title"].textContent = view
+      ? `${view.editorMode === "vector" ? "Exact vector" : view.editorMode === "contour" ? "Contour" : "Visual"} · Stage ${String(view.stage)}`
+      : "Waiting for a board";
+    el["inventory-block"].classList.toggle("hidden", !view || !EDITOR_STAGES.has(view.stage));
+    renderSaveState();
+  }
+
+  function renderRecentRuns() {
+    for (const container of [el["recent-runs"], el["setup-recents"]]) container.replaceChildren();
+    state.boards.forEach((board) => {
+      const makeButton = () => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
+        button.innerHTML = `<span>${escapeHTML(board.productName)}</span><small>Stage ${String(board.stage)}</small>`;
+        button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
+        return button;
+      };
+      el["recent-runs"].appendChild(makeButton());
+      el["setup-recents"].appendChild(makeButton());
+    });
+    el["setup-recents-wrap"].classList.toggle("hidden", state.boards.length === 0);
+  }
+
+  function showSetup() {
+    el["setup-screen"].classList.remove("hidden");
+    el["workbench-screen"].classList.add("hidden");
+    renderRecentRuns();
+  }
+
+  function showWorkbench() {
+    el["setup-screen"].classList.add("hidden");
+    el["workbench-screen"].classList.remove("hidden");
+  }
+
+  async function refreshBoards() {
+    state.boards = await workbenchClient.listBoards();
+    renderRecentRuns();
+    return state.boards;
+  }
+
+  async function selectGuidedBoard(boardId) {
+    state.busy = true;
+    showWorkbench();
+    renderSaveState();
+    try {
+      const view = await workbenchClient.getBoard(boardId);
+      await loadCheckpoint(view);
+      setStatus(`Reviewing ${view.productName}.`);
+    } catch (error) {
+      state.saveError = error.message || "Could not load board";
+      setStatus(state.saveError);
+    } finally {
+      state.busy = false;
+      renderGuidedShell();
+      render();
+    }
+  }
+
+  async function createGuidedBoard(event) {
+    event.preventDefault();
+    const productName = el["setup-product-input"].value.trim();
+    const sourceKind = new FormData(el["setup-form"]).get("sourceKind");
+    const source = el["setup-url-input"].value.trim();
+    const upload = el["setup-upload-input"].files[0];
+    el["setup-error"].classList.add("hidden");
+    if (!productName || (sourceKind === "url" ? !source : !upload)) {
+      el["setup-error"].textContent = "Enter a product name and choose one image source.";
+      el["setup-error"].classList.remove("hidden");
+      return;
+    }
+    el["setup-submit-button"].disabled = true;
+    el["setup-submit-button"].textContent = "Creating…";
+    try {
+      const view = sourceKind === "url"
+        ? await workbenchClient.createFromUrl(productName, source)
+        : await workbenchClient.createFromUpload(productName, upload);
+      await refreshBoards();
+      showWorkbench();
+      await loadCheckpoint(view);
+    } catch (error) {
+      el["setup-error"].textContent = error.message || "Could not create the board.";
+      el["setup-error"].classList.remove("hidden");
+    } finally {
+      el["setup-submit-button"].disabled = false;
+      el["setup-submit-button"].textContent = "Create board";
+    }
+  }
+
+  async function approveCurrent() {
+    if (!state.board || state.busy) return;
+    state.validationErrors = validateGeometry();
+    if (state.validationErrors.length) {
+      focusRegion(state.validationErrors[0].regionId);
+      render();
+      return;
+    }
+    state.busy = true;
+    state.saveError = "";
+    renderSaveState();
+    try {
+      await flushDraft();
+      const updated = await workbenchClient.approve(state.board);
+      await refreshBoards();
+      await loadCheckpoint(updated);
+      setStatus(`Stage ${String(updated.stage)} is ready for review.`);
+    } catch (error) {
+      state.saveError = error.message || "Approval failed";
+      focusGeometryError(state.saveError);
+      setStatus(state.saveError);
+    } finally {
+      state.busy = false;
+      renderGuidedShell();
+      render();
+    }
+  }
+
+  async function retryCurrent() {
+    if (!state.board || state.busy) return;
+    await runGuidedMutation(() => workbenchClient.retry(state.board), "Checkpoint regenerated.");
+  }
+
+  async function reviseCurrent() {
+    if (!state.board || state.busy || state.board.stage < 1) return;
+    await runGuidedMutation(() => workbenchClient.revise(state.board, state.board.stage - 1), "Created a new upstream revision.");
+  }
+
+  async function finalSaveCurrent() {
+    if (!state.board || state.busy) return;
+    await runGuidedMutation(() => workbenchClient.finalSave(state.board), "Saved the approved revision locally.");
+  }
+
+  async function runGuidedMutation(operation, successMessage) {
+    state.busy = true;
+    state.saveError = "";
+    renderSaveState();
+    try {
+      const updated = await operation();
+      await refreshBoards();
+      await loadCheckpoint(updated);
+      setStatus(successMessage);
+    } catch (error) {
+      state.saveError = error.message || "Workbench action failed";
+      focusGeometryError(state.saveError);
+      setStatus(state.saveError);
+    } finally {
+      state.busy = false;
+      renderGuidedShell();
+      render();
+    }
+  }
+
+  async function loadGuidedWorkbench() {
+    try {
+      state.boards = await workbenchClient.listBoards();
+    } catch (_error) {
+      return false;
+    }
+    state.guided = true;
+    el["legacy-controls"].classList.add("hidden");
+    showBoardPicker(false);
+    renderRecentRuns();
+    if (!state.boards.length) {
+      showSetup();
+      setStatus("Create a board to begin.");
+      return true;
+    }
+    showWorkbench();
+    await selectGuidedBoard(state.boards[0].boardId);
+    return true;
   }
 
   async function loadDemo() {
@@ -943,6 +1670,7 @@
   }
 
   async function loadInitialSession() {
+    if (await loadGuidedWorkbench()) return;
     if (await loadServerCatalog()) return;
     showBoardPicker(false);
     await loadDemo();
@@ -1012,11 +1740,13 @@
     renderToolState();
   }
 
-  function setRegions(data, name = "regions.json") {
-    const normalized = normalizePipelineDocument(data, state.canvas);
+  function setRegions(data, name = "regions.json", editorMode = "contour", baselineData = data) {
+    const normalized = normalizePipelineDocument(data, state.canvas, editorMode);
+    const baseline = normalizePipelineDocument(baselineData, normalized.canvas, editorMode);
     state.canvas = normalized.canvas;
     state.regions = normalized.regions;
-    state.baselineRegions = clone(state.regions);
+    state.baselineRegions = clone(baseline.regions);
+    state.editorMode = normalized.editorMode;
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;
     resetHistory();
@@ -1147,6 +1877,10 @@
     return ({ freeform: "Freeform", "curved-freeform": "Curved freeform", rectangle: "Rectangle", "rounded-rectangle": "Rounded rectangle", "arced-rectangle": "Arced rectangle", ellipse: "Ellipse", capsule: "Capsule" })[kind] || "Freeform";
   }
 
+  function normalizeRegion(region, fallbackId) {
+    return normalizePipelineDocument({ canvas: state.canvas, regions: [region] }, state.canvas, "contour").regions.map((item) => ({ ...item, id: fallbackId }))[0];
+  }
+
   function shapeContour(kind, start, end) {
     let [x1, y1] = start;
     let [x2, y2] = end;
@@ -1235,7 +1969,7 @@
 
   function convertSelectedShape(kind) {
     const region = selectedRegion();
-    if (!region) return;
+    if (!region || isVectorMode()) return;
     if (kind !== "freeform") {
       const [x1, y1, x2, y2] = bounds(region.contour);
       region.contour = shapeContour(kind, [x1, y1], [x2, y2]);
@@ -1268,7 +2002,24 @@
   el["snap-button"].addEventListener("click", toggleEdgeSnapping);
   el["export-button"].addEventListener("click", exportEditedRegions);
   el["corrections-button"].addEventListener("click", exportCorrections);
-  el["save-button"].addEventListener("click", saveToRun);
+  el["save-button"].addEventListener("click", () => {
+    if (!state.guided) void saveToRun();
+    else if (state.board?.state === "complete") void finalSaveCurrent();
+    else void approveCurrent();
+  });
+  el["compare-button"].addEventListener("click", () => setCompareEnabled(!state.compareEnabled));
+  el["retry-button"].addEventListener("click", () => void retryCurrent());
+  el["revise-button"].addEventListener("click", () => void reviseCurrent());
+  el["new-board-button"].addEventListener("click", showSetup);
+  el["setup-form"].addEventListener("submit", createGuidedBoard);
+  document.querySelectorAll('input[name="sourceKind"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      const upload = input.value === "upload" && input.checked;
+      if (!input.checked) return;
+      el["setup-url-field"].classList.toggle("hidden", upload);
+      el["setup-upload-field"].classList.toggle("hidden", !upload);
+    });
+  });
   el["fit-button"].addEventListener("click", fitCanvas);
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
@@ -1358,6 +2109,14 @@
     if (!state.dirty) return;
     event.preventDefault();
     event.returnValue = "";
+  });
+
+  window.HoldEditor = Object.freeze({
+    loadCheckpoint,
+    serializeDraft,
+    markDraftSaved,
+    focusRegion,
+    setCompareEnabled,
   });
 
   configureSvg();

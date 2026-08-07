@@ -159,3 +159,10 @@ test("normalizePipelineDocument adapts historical generated region artifacts", (
   assert.equal(result.regions[0].metadata.mode, "surface");
   assert.equal(result.regions[0].metadata.sourceRegionId, "piece-01-hold-01");
 });
+
+test("normalizePipelineDocument keeps Stage 3 display paths exact", () => {
+  const source = { width: 1000, height: 300, regions: [{ id: 13, key: "hold-13", type: "edge", displayPath: "M 10 20 C 15 10 25 10 30 20 Z" }] };
+  const result = normalizePipelineDocument(source, { width: 10, height: 10 }, "vector");
+  assert.equal(result.regions[0].displayPath, source.regions[0].displayPath);
+  assert.equal(result.editorMode, "vector");
+});
