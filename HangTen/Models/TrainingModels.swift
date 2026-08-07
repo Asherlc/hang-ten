@@ -815,7 +815,8 @@ enum MetoliusCycleBuilder {
         instruction: String,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
         task(
             title: title,
@@ -824,7 +825,8 @@ enum MetoliusCycleBuilder {
             duration: TimeInterval(count) * pullUpDuration,
             phase: phase,
             targets: targets,
-            gripType: gripType
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration
         )
     }
 
@@ -834,7 +836,8 @@ enum MetoliusCycleBuilder {
         instruction: String,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
         task(
             title: title,
@@ -843,7 +846,8 @@ enum MetoliusCycleBuilder {
             duration: TimeInterval(count) * repetitionDuration,
             phase: phase,
             targets: targets,
-            gripType: gripType
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration
         )
     }
 
@@ -853,7 +857,8 @@ enum MetoliusCycleBuilder {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
         task(
             title: title,
@@ -862,7 +867,8 @@ enum MetoliusCycleBuilder {
             duration: duration,
             phase: phase,
             targets: targets,
-            gripType: gripType
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration
         )
     }
 
@@ -873,7 +879,8 @@ enum MetoliusCycleBuilder {
         duration: TimeInterval,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
         task(
             title: title,
@@ -883,6 +890,7 @@ enum MetoliusCycleBuilder {
             phase: phase,
             targets: targets,
             gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             timing: .undefined
         )
     }
@@ -892,7 +900,8 @@ enum MetoliusCycleBuilder {
         instruction: String,
         phase: WorkoutPhase,
         targets: [HoldTarget],
-        gripType: GripType? = nil
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> MetoliusTaskDefinition {
         task(
             title: title,
@@ -902,6 +911,7 @@ enum MetoliusCycleBuilder {
             phase: phase,
             targets: targets,
             gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             timing: .stopwatch
         )
     }
@@ -968,6 +978,7 @@ enum MetoliusCycleBuilder {
         phase: WorkoutPhase,
         targets: [HoldTarget],
         gripType: GripType?,
+        fingerConfiguration: FingerConfiguration?,
         timing: WorkoutSegmentTiming = .fixed
     ) -> MetoliusTaskDefinition {
         MetoliusTaskDefinition(
@@ -978,6 +989,7 @@ enum MetoliusCycleBuilder {
             phase: phase,
             targets: targets,
             gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             timing: timing
         )
     }
@@ -1025,18 +1037,18 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: expanded(planID: "entry", [
             [MetoliusCycleBuilder.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
-            [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .openHand)],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
             [MetoliusCycleBuilder.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
             [
-                MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper),
+                MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand),
                 MetoliusCycleBuilder.repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
             ],
             [MetoliusCycleBuilder.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
             [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
-            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)]
         ])
     )
 
@@ -1055,14 +1067,14 @@ enum LegacyPlanSeedCatalog {
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Large-edge pull-ups", instruction: "Do 3 pull-ups on the large edge.", phase: .pull, targets: [.feature(.largeEdge)])
             ],
             [
-                MetoliusCycleBuilder.pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .sloper),
+                MetoliusCycleBuilder.pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .openHand),
                 MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.mediumEdge)])
             ],
             [
                 MetoliusCycleBuilder.fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
                 MetoliusCycleBuilder.fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
             ],
-            [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)],
+            [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)],
             [
                 MetoliusCycleBuilder.fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
                 MetoliusCycleBuilder.pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
@@ -1077,10 +1089,10 @@ enum LegacyPlanSeedCatalog {
             ],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
             [
-                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .sloper),
+                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .openHand),
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
             ],
-            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .sloper)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)]
         ])
     )
 
@@ -1101,7 +1113,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .sloper
+                    gripType: .openHand
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 3,
@@ -1118,7 +1130,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .sloper
+                    gripType: .openHand
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "L-sit or hanging knee curls",
@@ -1126,7 +1138,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .sloper
+                    gripType: .openHand
                 )
             ],
             [
@@ -1136,7 +1148,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Do 5 pull-ups on a three-finger pocket.",
                     phase: .pull,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .threeFingerPocket
+                    gripType: .openHand
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
@@ -1144,7 +1156,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 25,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .threeFingerPocket
+                    gripType: .openHand
                 )
             ],
             [
@@ -1202,7 +1214,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 15,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .threeFingerPocket
+                    gripType: .openHand
                 )
             ],
             [
@@ -1220,7 +1232,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 15,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .sloper
+                    gripType: .openHand
                 )
             ],
             [
@@ -1230,7 +1242,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .twoFingerPocket
+                    gripType: .openHand
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 3,
@@ -1246,7 +1258,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .sloper
+                    gripType: .openHand
                 )
             ]
         ])
