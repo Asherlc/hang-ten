@@ -48,7 +48,7 @@ enum HoldCueStyle: String, Hashable {
 /// Manufacturer routines often name a hold by function instead of by board
 /// ID. Features let a board declare the closest physical match once, keeping
 /// routine content unchanged as more boards are added.
-enum HoldFeature: String, Codable, Hashable {
+enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case roundSloper
     case largeSlope
@@ -61,6 +61,25 @@ enum HoldFeature: String, Codable, Hashable {
     case fourFingerPocket
     case fourFingerFlatEdge
     case fourFingerIncutEdge
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .jug: "Jug"
+        case .roundSloper: "Round sloper"
+        case .largeSlope: "Large sloper"
+        case .largeEdge: "Large edge"
+        case .mediumEdge: "Medium edge"
+        case .smallEdge: "Small edge"
+        case .pocket: "Pocket"
+        case .twoFingerPocket: "Two-finger pocket"
+        case .threeFingerPocket: "Three-finger pocket"
+        case .fourFingerPocket: "Four-finger pocket"
+        case .fourFingerFlatEdge: "Four-finger flat edge"
+        case .fourFingerIncutEdge: "Four-finger incut edge"
+        }
+    }
 }
 
 enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
@@ -231,10 +250,20 @@ enum WorkoutSegmentKind: String, Codable, Hashable {
     case rest
 }
 
-enum WorkoutSegmentTiming: String, Codable, Hashable {
+enum WorkoutSegmentTiming: String, CaseIterable, Codable, Hashable, Identifiable {
     case fixed
     case stopwatch
     case undefined
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .fixed: "Timed"
+        case .stopwatch: "Stopwatch"
+        case .undefined: "Unspecified"
+        }
+    }
 }
 
 struct WorkoutSegment: Hashable {
@@ -271,12 +300,14 @@ struct WorkoutSegment: Hashable {
     }
 }
 
-enum WorkoutPhase: String, Codable, Hashable {
+enum WorkoutPhase: String, CaseIterable, Codable, Hashable, Identifiable {
     case warmUp
     case hang
     case rest
     case pull
     case coolDown
+
+    var id: String { rawValue }
 
     var label: String {
         switch self {
@@ -434,11 +465,13 @@ struct MetoliusTaskDefinition: Hashable {
 enum RoutineProvenance: String, Codable, Hashable {
     case official
     case adapted
+    case custom
 
     var label: String {
         switch self {
         case .official: "Official"
         case .adapted: "Adapted"
+        case .custom: "Custom"
         }
     }
 
@@ -448,6 +481,8 @@ enum RoutineProvenance: String, Codable, Hashable {
             "Task order, repetitions, and prescribed times match the linked manufacturer routine."
         case .adapted:
             "This app version changes or supplements the source for guided timing, safety, or board fit."
+        case .custom:
+            "Created in Hang Ten."
         }
     }
 }
@@ -458,7 +493,7 @@ struct TrainingPlan: Identifiable, Hashable {
     let subtitle: String
     let level: String
     let sourceLabel: String
-    let sourceURL: URL
+    let sourceURL: URL?
     let provenance: RoutineProvenance
     let boardID: String?
     let steps: [WorkoutStep]

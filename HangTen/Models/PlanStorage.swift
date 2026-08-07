@@ -42,7 +42,7 @@ struct PlanMetadata: Codable, Hashable {
     let subtitle: String
     let level: String
     let sourceLabel: String
-    let sourceURL: URL
+    let sourceURL: URL?
     let provenance: RoutineProvenance
     let category: String
     let tags: [String]
@@ -55,7 +55,7 @@ struct PlanMetadata: Codable, Hashable {
         subtitle: String,
         level: String,
         sourceLabel: String,
-        sourceURL: URL,
+        sourceURL: URL?,
         provenance: RoutineProvenance,
         category: String = "general",
         tags: [String] = [],
@@ -328,6 +328,73 @@ struct WorkoutStepDefinition: Codable, Hashable {
         activeDuration = try container.decodeIfPresent(
             TimeInterval.self,
             forKey: .activeDuration
+        )
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(instruction, forKey: .instruction)
+        try container.encode(accessory, forKey: .accessory)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(phase, forKey: .phase)
+        try container.encode(targets, forKey: .targets)
+        try container.encode(segments, forKey: .segments)
+        try container.encodeIfPresent(gripType, forKey: .gripType)
+        try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
+    }
+}
+
+extension WorkoutTargetDefinition {
+    /// Converts a resolved runtime target back into a portable definition.
+    /// A caller may supply a semantic ID lookup when it owns reusable board
+    /// mappings; local custom routines intentionally persist direct targets.
+    static func from(
+        _ target: HoldTarget,
+        semanticHoldID: (([String]) -> String?)? = nil
+    ) -> WorkoutTargetDefinition {
+        if let kind = target.kind {
+            return .kind(kind)
+        }
+        if let feature = target.feature {
+            return .feature(feature, fallbacks: target.fallbackFeatures)
+        }
+        if let semanticID = semanticHoldID?(target.holdIDs) {
+            return .semantic(semanticID)
+        }
+        return .holdIDs(target.holdIDs)
+    }
+}
+
+extension WorkoutStepDefinition {
+    /// Keeps persistence and duplication on the same conversion boundary,
+    /// including explicit segment timing and one-segment rest rows.
+    static func from(
+        _ step: WorkoutStep,
+        id: String? = nil,
+        semanticHoldID: (([String]) -> String?)? = nil
+    ) -> WorkoutStepDefinition {
+        WorkoutStepDefinition(
+            id: id ?? step.id,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets.map { WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID) },
+            segments: step.segments.map { segment in
+                WorkoutSegmentDefinition(
+                    kind: segment.kind,
+                    targets: segment.targets.map {
+                        WorkoutTargetDefinition.from($0, semanticHoldID: semanticHoldID)
+                    },
+                    timing: segment.timing,
+                    duration: segment.duration
+                )
+            },
+            gripType: step.gripType,
+            activeDuration: step.timedWorkDuration
         )
     }
 }
@@ -614,8 +681,8 @@ enum PlanLibraryValidator {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
         if let activeDuration = step.activeDuration {
-            if !activeDuration.isFinite || activeDuration < 0 {
-                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration must be finite and non-negative."))
+            if !activeDuration.isFinite || activeDuration <= 0 {
+                issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration must be finite and greater than zero."))
             }
             if activeDuration > step.duration {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration cannot exceed total duration."))
@@ -627,6 +694,7 @@ enum PlanLibraryValidator {
         if step.phase != .rest && step.targets.isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
+        let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
             let targetPath = "\(path).segments[\(index)].target"
             let timingPath = "\(path).segments[\(index)].timing"
@@ -683,7 +751,16 @@ enum PlanLibraryValidator {
                 }
             }
             if let duration = segment.duration {
-                if !duration.isFinite || duration < 0 {
+                if isCompoundStep && segment.timing == .fixed {
+                    if !duration.isFinite || duration <= 0 {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: durationPath,
+                                message: "Segment duration must be finite and greater than zero."
+                            )
+                        )
+                    }
+                } else if !duration.isFinite || duration < 0 {
                     issues.append(
                         PlanValidationIssue(
                             path: durationPath,
@@ -699,6 +776,27 @@ enum PlanLibraryValidator {
                         )
                     )
                 }
+            }
+        }
+
+        if step.segments.count > 1 {
+            for (index, segment) in step.segments.enumerated() where segment.timing != .fixed {
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(path).segments[\(index)].timing",
+                        message: "Compound segments must use fixed timing."
+                    )
+                )
+            }
+            let durations = step.segments.compactMap(\.duration)
+            if durations.count == step.segments.count,
+               durations.reduce(0, +) != step.duration {
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(path).duration",
+                        message: "Compound segment durations must equal the total step duration."
+                    )
+                )
             }
         }
     }
@@ -719,7 +817,8 @@ enum PlanLibraryValidator {
         if plan.metadata.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).title", message: "Plan title cannot be empty."))
         }
-        if plan.metadata.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if plan.metadata.provenance != .custom,
+           plan.metadata.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).subtitle", message: "Plan subtitle cannot be empty."))
         }
         if plan.metadata.level.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -728,8 +827,10 @@ enum PlanLibraryValidator {
         if plan.metadata.sourceLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(metadataPath).sourceLabel", message: "Source label cannot be empty."))
         }
-        let sourceScheme = plan.metadata.sourceURL.scheme?.lowercased()
-        if sourceScheme != "http" && sourceScheme != "https" {
+        let sourceScheme = plan.metadata.sourceURL?.scheme?.lowercased()
+        if plan.metadata.provenance != .custom && sourceScheme != "http" && sourceScheme != "https" {
+            issues.append(PlanValidationIssue(path: "\(metadataPath).sourceURL", message: "Source URL must use HTTP or HTTPS."))
+        } else if let sourceScheme, sourceScheme != "http" && sourceScheme != "https" {
             issues.append(PlanValidationIssue(path: "\(metadataPath).sourceURL", message: "Source URL must use HTTP or HTTPS."))
         }
         if let boardID = plan.boardID, boardByID[boardID] == nil {
@@ -762,8 +863,13 @@ enum PlanLibraryValidator {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
                     let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
                     let resolvedID = sourceID + suffix
-                    if !expandedStepIDs.insert(resolvedID).inserted {
-                        issues.append(PlanValidationIssue(path: referencePath, message: "Expanded step ID \"\(resolvedID)\" is repeated in the plan."))
+                    for expandedID in expandedIDsEmittedByNormalizer(
+                        for: step,
+                        resolvedID: resolvedID
+                    ) {
+                        if !expandedStepIDs.insert(expandedID).inserted {
+                            issues.append(PlanValidationIssue(path: referencePath, message: "Expanded step ID \"\(expandedID)\" is repeated in the plan."))
+                        }
                     }
                     validateTargets(
                         step.targets,
@@ -789,6 +895,33 @@ enum PlanLibraryValidator {
                 }
             }
         }
+    }
+
+    private static func expandedIDsEmittedByNormalizer(
+        for step: WorkoutStepDefinition,
+        resolvedID: String
+    ) -> [String] {
+        if step.segments.count > 1 {
+            let durations = step.segments.compactMap(\.duration)
+            guard step.segments.allSatisfy({ $0.timing == .fixed }),
+                  durations.count == step.segments.count,
+                  durations.allSatisfy({ $0.isFinite && $0 > 0 }),
+                  step.duration.isFinite,
+                  step.duration > 0,
+                  durations.reduce(0, +) == step.duration else {
+                return []
+            }
+            return step.segments.indices.map { "\(resolvedID).segment-\($0 + 1)" }
+        }
+        if step.segments.isEmpty,
+           let activeDuration = step.activeDuration,
+           activeDuration.isFinite,
+           step.duration.isFinite,
+           activeDuration > 0,
+           activeDuration < step.duration {
+            return ["\(resolvedID).segment-1", "\(resolvedID).segment-2"]
+        }
+        return [resolvedID]
     }
 
     private static func validateTargets(
@@ -928,21 +1061,22 @@ struct PlanDefinitionResolver {
                         mapping: mapping,
                         board: board
                     )
-                    steps.append(
-                        WorkoutStep(
-                            id: resolvedID,
-                            number: steps.count + 1,
-                            title: stepDefinition.title,
-                            instruction: stepDefinition.instruction,
-                            accessory: stepDefinition.accessory,
-                            duration: stepDefinition.duration,
-                            phase: stepDefinition.phase,
-                            targets: targets,
-                            segments: segments,
-                            gripType: stepDefinition.gripType,
-                            timedWorkDuration: stepDefinition.activeDuration
-                        )
+                    let resolvedStep = WorkoutStep(
+                        id: resolvedID,
+                        number: steps.count + 1,
+                        title: stepDefinition.title,
+                        instruction: stepDefinition.instruction,
+                        accessory: stepDefinition.accessory,
+                        duration: stepDefinition.duration,
+                        phase: stepDefinition.phase,
+                        targets: targets,
+                        segments: segments,
+                        gripType: stepDefinition.gripType,
+                        timedWorkDuration: stepDefinition.activeDuration
                     )
+                    for normalizedStep in try WorkoutStepNormalizer.expand(resolvedStep) {
+                        steps.append(normalizedStep.withNumber(steps.count + 1))
+                    }
                 }
             }
         }
@@ -1235,7 +1369,7 @@ enum BuiltInPlanLibraryDefinition {
             return WorkoutBlockDefinition(
                 id: "shared.progressive-warm-up",
                 title: "Progressive warm-up",
-                steps: [stepDefinition(from: step, id: "warm-up")]
+                steps: [WorkoutStepDefinition.from(step, id: "warm-up", semanticHoldID: semanticID(for:))]
             )
         }
         let sharedCoolDown = legacyPlans.first {
@@ -1244,7 +1378,7 @@ enum BuiltInPlanLibraryDefinition {
             WorkoutBlockDefinition(
                 id: "shared.cool-down",
                 title: "Cool down",
-                steps: [stepDefinition(from: $0, id: "cool-down")]
+                steps: [WorkoutStepDefinition.from($0, id: "cool-down", semanticHoldID: semanticID(for:))]
             )
         }
 
@@ -1348,7 +1482,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [stepDefinition(from: first)]
+                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticID(for:))]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1368,7 +1502,9 @@ enum BuiltInPlanLibraryDefinition {
             let middleBlock = WorkoutBlockDefinition(
                 id: "\(plan.id).main",
                 title: plan.title,
-                steps: plan.steps[firstIndex..<lastIndex].map { stepDefinition(from: $0) }
+                steps: plan.steps[firstIndex..<lastIndex].map {
+                    WorkoutStepDefinition.from($0, semanticHoldID: semanticID(for:))
+                }
             )
             blocks.append(middleBlock)
             references.append(WorkoutBlockReference(blockID: middleBlock.id))
@@ -1398,44 +1534,50 @@ enum BuiltInPlanLibraryDefinition {
         )
     }
 
-    private static func stepDefinition(from step: WorkoutStep, id: String? = nil) -> WorkoutStepDefinition {
-        WorkoutStepDefinition(
-            id: id ?? step.id,
-            title: step.title,
-            instruction: step.instruction,
-            accessory: step.accessory,
-            duration: step.duration,
-            phase: step.phase,
-            targets: step.targets.flatMap { targetDefinitions(from: $0) },
-            segments: step.segments.map { segment in
-                WorkoutSegmentDefinition(
-                    kind: segment.kind,
-                    targets: segment.targets.flatMap { targetDefinitions(from: $0) },
-                    timing: segment.timing,
-                    duration: segment.duration
-                )
-            },
-            gripType: step.gripType,
-            activeDuration: step.timedWorkDuration
-        )
-    }
-
-    private static func targetDefinitions(from target: HoldTarget) -> [WorkoutTargetDefinition] {
-        if let kind = target.kind {
-            return [.kind(kind)]
-        }
-        if let feature = target.feature {
-            return [.feature(feature, fallbacks: target.fallbackFeatures)]
-        }
-        let targetIDs = Set(target.holdIDs)
+    private static func semanticID(for holdIDs: [String]) -> String? {
+        let targetIDs = Set(holdIDs)
         if let semanticID = semanticHoldIDs.first(where: { Set($0.value) == targetIDs })?.key {
-            return [.semantic(semanticID)]
+            return semanticID
         }
-        return [.holdIDs(target.holdIDs)]
+        return nil
     }
 }
 
 // MARK: - Compatibility facade
+
+#if DEBUG
+/// Builds the DEBUG drift-guard baseline at the same literal-step boundary
+/// used by the runtime resolver.
+private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
+    LegacyPlanSeedCatalog.all.map { seedPlan in
+        let literalSteps: [WorkoutStep]
+        do {
+            literalSteps = try seedPlan.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .enumerated()
+                .map { index, step in
+                    step.withNumber(index + 1)
+                }
+        } catch {
+            preconditionFailure(
+                "Legacy plan \(seedPlan.id) could not be literalized: \(error)"
+            )
+        }
+
+        return TrainingPlan(
+            id: seedPlan.id,
+            title: seedPlan.title,
+            subtitle: seedPlan.subtitle,
+            level: seedPlan.level,
+            sourceLabel: seedPlan.sourceLabel,
+            sourceURL: seedPlan.sourceURL,
+            provenance: seedPlan.provenance,
+            boardID: seedPlan.boardID,
+            steps: literalSteps
+        )
+    }
+}
+#endif
 
 /// Runtime callers keep the small `PlanCatalog` API they already use, while
 /// the data behind it now comes from one validated, versioned store.
@@ -1444,7 +1586,7 @@ enum PlanCatalog {
         let result = PlanLibraryStore.builtIn
         #if DEBUG
         assert(
-            result.plans == LegacyPlanSeedCatalog.all,
+            result.plans == literalizedLegacyPlanCatalog(),
             "Bundled plan definitions drifted from the source-audited seed catalog"
         )
         #endif
