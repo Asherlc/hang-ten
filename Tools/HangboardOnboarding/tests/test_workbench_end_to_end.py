@@ -12,7 +12,11 @@ import numpy as np
 import pytest
 
 import hangboard_vectorizer.workbench as workbench_module
-from hangboard_vectorizer.board_library import LibraryBoard, RepositoryBoardLibrary
+from hangboard_vectorizer.board_library import (
+    BoardLibraryError,
+    LibraryBoard,
+    RepositoryBoardLibrary,
+)
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.onboard_cli import main
 from hangboard_vectorizer.onboarding_run import RunContext, start_run
@@ -179,6 +183,57 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     assert second.revision_id == first.revision_id
     assert second.repository_board_id == entry.board_id
     assert second.repository_version_id == entry.current_version_id
+
+
+def test_open_newer_library_version_preserves_divergent_runtime_revision(
+    tmp_path: Path,
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    opened = service.open_library_board(entry.board_id)
+    divergent = service.revise_stage(
+        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+    )
+    published = library.publish(
+        display_name=entry.display_name,
+        run_root=opened.run_root,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+    )
+
+    newer = service.open_library_board(entry.board_id)
+    runtime_board = service.store.read_board(opened.board_id)
+    revisions = {revision.id: revision for revision in runtime_board.revisions}
+
+    assert published.version_id == "revision-0002"
+    assert newer.board_id == opened.board_id
+    assert newer.revision_id != divergent.revision_id
+    assert newer.repository_version_id == "revision-0002"
+    assert revisions[divergent.revision_id].state == "active"
+    assert revisions[divergent.revision_id].run_root.is_dir()
+
+
+def test_save_repository_conflict_leaves_runtime_revision_unsaved(
+    tmp_path: Path,
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    opened = service.open_library_board(entry.board_id)
+    library.publish(
+        display_name=entry.display_name,
+        run_root=opened.run_root,
+        board_id=entry.board_id,
+        expected_current_version_id=entry.current_version_id,
+    )
+
+    with pytest.raises(BoardLibraryError, match="expected revision-0001"):
+        service.save(
+            opened.board_id, expected_revision_id=opened.revision_id
+        )
+
+    runtime_board = service.store.read_board(opened.board_id)
+    assert runtime_board.saved_revision_id is None
+    assert runtime_board.repository_version_id == "revision-0001"
 
 
 def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> None:
