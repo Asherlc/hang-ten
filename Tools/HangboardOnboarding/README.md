@@ -161,12 +161,13 @@ rtk hangboard-onboard \
   --status
 ```
 
-An imported CLI run remains at its exact confined run path; the workspace
-board manifest registers that path instead of copying or rewriting the run.
-The UI's final **Save locally** atomically records which complete, current
-revision is selected in `board.json`. It does not publish to Hang Ten, update
-the app catalog, or perform remote synchronization. A separate future command
-must implement the Hang Ten synchronization boundary.
+CLI-compatible runs are programmatic producers: once a run is complete, its
+caller passes it to `RepositoryBoardLibrary.publish()` to create an immutable
+repository-board version. The browser never asks for a CLI run directory. Its
+final **Save locally** publishes the complete, current revision as an immutable
+repository version and writes the catalog/package files for normal Git review;
+it never commits, pushes, updates the Hang Ten app catalog, or synchronizes
+remotely.
 
 The lower-level CLI remains useful for scripted operation. Start a persisted
 run from one local image or HTTP(S) source:
