@@ -4,14 +4,14 @@
 
 **Goal:** Show the next work step's grip cue during hold previews while keeping the workout board's layout stable between active work and rest.
 
-**Architecture:** Add a pure `WorkoutHoldCuePolicy` beside the existing workout board-cue policy. It resolves the highlighted step's single-hold cue and effective grip type once, then `WorkoutView` passes that value to both portrait and landscape renderers. Landscape keeps the board's existing constrained cue-row footprint instead of applying a rest-only height.
+**Architecture:** Add a pure `WorkoutHoldCuePolicy` beside the existing workout board-cue policy. It resolves the highlighted step's single-hold cue and effective grip type once, using the board-backed target resolver to verify that the supplied highlighted hold belongs to the step. `WorkoutView` passes that value to both portrait and landscape renderers. Landscape keeps the board's existing constrained cue-row footprint instead of applying a rest-only height.
 
 **Tech Stack:** Swift 5, SwiftUI, XCTest, Xcode 26, iOS 17+.
 
 ## Global Constraints
 
 - The minimum deployment target remains iOS 17.0.
-- The resolver returns a cue only for the existing single-target case.
+- The resolver accepts the highlighted step, candidate hold, and board; it returns a cue only for the existing single-target case when the board-backed target resolver contains that hold.
 - The highlighted/preview step is the grip metadata source; its explicit `gripType` overrides the board hold default.
 - Countdown, completed-session, and final-rest states show no grip cue.
 - Both portrait and landscape consume the same resolved hold and grip type.
@@ -37,19 +37,23 @@
   }
   ```
 
-- Produces `WorkoutHoldCuePolicy.resolve(step:hold:)`:
+- Produces `WorkoutHoldCuePolicy.resolve(step:hold:on:)`:
 
   ```swift
   enum WorkoutHoldCuePolicy {
-      static func resolve(step: WorkoutStep?, hold: BoardHold?) -> WorkoutHoldCue?
+      static func resolve(
+          step: WorkoutStep?,
+          hold: BoardHold?,
+          on board: TrainingBoard
+      ) -> WorkoutHoldCue?
   }
   ```
 
-- The resolver returns `nil` when either input is absent or `step.targets.count != 1`; otherwise it returns the supplied hold and `step.gripType ?? hold.gripType`.
+- The resolver returns `nil` when the step or hold is absent, the step does not have exactly one target, or `BoardTargetResolver.resolveHoldIDs(for:on:)` cannot prove that the supplied hold belongs to that target. Otherwise it returns the supplied hold and `step.gripType ?? hold.gripType`.
 
 - [ ] **Step 1: Write the failing tests**
 
-  Add these tests to `WorkoutTimelineTests` before adding the production type. Use a board hold whose default grip is `.openHand`, and create ordinary `WorkoutStep` values with the existing initializer and one or two `.kind(...)` targets.
+  Add these tests to `WorkoutTimelineTests` before adding the production type. Use a board hold whose default grip is `.openHand`, create a `TrainingBoard` fixture containing the highlighted hold, and create ordinary `WorkoutStep` values with the existing initializer and one or two `.kind(...)` targets. The mismatch case should provide a board containing both the target hold and a different highlighted hold.
 
   ```swift
   func testHoldCuePrefersSingleTargetStepGripOverride() {
@@ -74,7 +78,7 @@
           gripType: .halfCrimp
       )
 
-      let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold)
+      let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board)
 
       XCTAssertEqual(cue?.hold, hold)
       XCTAssertEqual(cue?.gripType, .halfCrimp)
@@ -101,7 +105,7 @@
           targets: [.kind(.pocket)]
       )
 
-      let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold)
+      let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board)
 
       XCTAssertEqual(cue?.gripType, .threeFingerPocket)
   }
@@ -126,9 +130,12 @@
           targets: [.kind(.edge), .kind(.jug)]
       )
 
-      XCTAssertNil(WorkoutHoldCuePolicy.resolve(step: step, hold: hold))
+      XCTAssertNil(WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board))
   }
   ```
+
+  Also cover a matching single-target hold and a different highlighted hold;
+  the latter must return `nil` even when both holds are present on the board.
 
 - [ ] **Step 2: Run the focused tests and verify RED**
 
@@ -156,8 +163,17 @@
   }
 
   enum WorkoutHoldCuePolicy {
-      static func resolve(step: WorkoutStep?, hold: BoardHold?) -> WorkoutHoldCue? {
-          guard let step, step.targets.count == 1, let hold else {
+      static func resolve(
+          step: WorkoutStep?,
+          hold: BoardHold?,
+          on board: TrainingBoard
+      ) -> WorkoutHoldCue? {
+          guard let step,
+                step.targets.count == 1,
+                let target = step.targets.first,
+                let hold,
+                BoardTargetResolver.resolveHoldIDs(for: target, on: board).contains(hold.id)
+          else {
               return nil
           }
 
@@ -171,8 +187,9 @@
 
 - [ ] **Step 4: Run the focused tests and verify GREEN**
 
-  Run the exact focused command from Step 2. Expected: the three new resolver
-  tests and all existing `WorkoutTimelineTests` pass with zero failures.
+  Run the exact focused command from Step 2. Expected: the resolver override,
+  board-grip fallback, matching, mismatching, and multi-target tests plus all
+  existing `WorkoutTimelineTests` pass with zero failures.
 
 - [ ] **Step 5: Commit the model/test task**
 
@@ -187,7 +204,7 @@
 - Modify: `HangTen/Views/RootView.swift` in `WorkoutView.body`, `portraitSession`, and `landscapeSession`
 
 **Interfaces:**
-- Consumes `WorkoutHoldCuePolicy.resolve(step:hold:)` and `WorkoutHoldCue` from Task 1.
+- Consumes `WorkoutHoldCuePolicy.resolve(step:hold:on:)` and `WorkoutHoldCue` from Task 1.
 - Produces one `holdCue: WorkoutHoldCue?` from `highlightedStep` and the first board hold in `WorkoutView.body`.
 - `portraitSession` and `landscapeSession` receive `holdCue` instead of separate `showsGenericHoldCue` and `activeHold` arguments.
 
@@ -206,7 +223,7 @@
 
   ```swift
   let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
-  let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold)
+  let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
   ```
 
   Pass `holdCue` into both `portraitSession(...)` and `landscapeSession(...)`.
@@ -223,16 +240,22 @@
   }
   ```
 
-  In `landscapeSession`, use the same condition for both hand cards:
+  In `landscapeSession`, keep both side slots mounted on either side of the
+  board using the shared `landscapeHandCueSlot(...)` helper so the board keeps
+  the same footprint during previews and active work. The helper should always
+  reserve the 142-point slot width and only render the cue card when the cue is
+  available:
 
   ```swift
-  if let holdCue, countdown == 0, !isComplete {
-      GripHandCueCard(hold: holdCue.hold, gripType: holdCue.gripType, side: .left)
-          .frame(width: 142)
-  }
+  landscapeHandCueSlot(
+      holdCue: holdCue,
+      countdown: countdown,
+      isComplete: isComplete,
+      side: .left
+  )
   ```
 
-  Keep the mirrored `.right` card on the other side of the board. Do not add a
+  Keep the mirrored `.right` slot on the other side of the board. Do not add a
   cue for multi-target steps, because the resolver returns `nil` for them.
 
 - [ ] **Step 4: Remove the landscape rest-only board height**
@@ -303,4 +326,3 @@
   Confirm only the approved spec, plan, model/test, and workout-layout files
   changed; all workspace-owned simulator and `.context` artifacts have been
   cleaned up before reporting completion.
-

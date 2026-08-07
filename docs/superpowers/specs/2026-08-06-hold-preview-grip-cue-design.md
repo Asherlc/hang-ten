@@ -28,9 +28,21 @@ between an active step and its preview.
 
 ### 1. Resolve one shared hold cue
 
-Add a small pure hold-cue resolver/value in the workout model layer. It takes
-the currently highlighted step and the first resolved board hold and returns a
-cue only when the step has exactly one target. The returned value contains:
+Add a small pure hold-cue resolver/value in the workout model layer. Its
+`WorkoutHoldCuePolicy.resolve(step:hold:on:)` method takes the currently
+highlighted step, the first resolved board hold, and the `TrainingBoard`. It
+returns a cue only when the step has exactly one target and
+`BoardTargetResolver.resolveHoldIDs(for:on:)` contains the supplied hold's ID;
+otherwise it returns `nil` because the target cannot be proven to match. The
+returned value contains:
+
+```swift
+static func resolve(
+    step: WorkoutStep?,
+    hold: BoardHold?,
+    on board: TrainingBoard
+) -> WorkoutHoldCue?
+```
 
 - the resolved `BoardHold` used by the board highlight;
 - the effective `GripType`, preferring the step-level override and falling back
@@ -72,8 +84,8 @@ the board does not alter the board map's own geometry.
 1. `WorkoutTimeline` resolves the current active or next preview step.
 2. `AppStore.holdIDs(for:on:)` resolves that step's semantic targets to board
    hold IDs.
-3. `WorkoutView` selects the highlighted board hold and asks the hold-cue
-   resolver for the effective grip metadata.
+3. `WorkoutView` selects the highlighted board hold and asks the board-backed
+   hold-cue resolver for the effective grip metadata.
 4. Both portrait and landscape consume that same cue value while the board
    consumes the same IDs and highlight mode as before.
 
@@ -85,6 +97,8 @@ board mapping changes are required.
 - Explicit and timed rest previews use the next non-rest step's grip type.
 - Consecutive rest steps continue to preview the first later work step.
 - A step-level grip override wins over the board hold's default grip type.
+- A highlighted hold must be included in the board-backed resolution of the
+  step's single target; otherwise no cue is shown.
 - A step with multiple targets does not show a single-hold grip cue.
 - A final rest, countdown, and completed session do not show a grip cue.
 - Existing active work cues remain visually and semantically unchanged.
@@ -97,10 +111,11 @@ Add focused unit coverage for the pure hold-cue resolver:
 
 - a single-target step uses its explicit grip override;
 - a single-target step falls back to the board hold's grip type;
+- a highlighted hold that matches the board-backed target resolves a cue;
+- a different highlighted hold returns no cue;
 - a multi-target step returns no cue.
 
 Retain the existing `WorkoutTimelineTests` coverage for timed rest, explicit
 rest, consecutive rest, final rest, and board cue suppression. Run the focused
 XCTest cases and the complete XCTest target, then build the app target to
 confirm the shared cue is wired into both SwiftUI orientations.
-

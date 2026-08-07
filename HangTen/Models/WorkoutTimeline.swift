@@ -77,8 +77,17 @@ struct WorkoutHoldCue: Equatable {
 }
 
 enum WorkoutHoldCuePolicy {
-    static func resolve(step: WorkoutStep?, hold: BoardHold?) -> WorkoutHoldCue? {
-        guard let step, step.targets.count == 1, let hold else {
+    static func resolve(
+        step: WorkoutStep?,
+        hold: BoardHold?,
+        on board: TrainingBoard
+    ) -> WorkoutHoldCue? {
+        guard let step,
+              step.targets.count == 1,
+              let target = step.targets.first,
+              let hold,
+              BoardTargetResolver.resolveHoldIDs(for: target, on: board).contains(hold.id)
+        else {
             return nil
         }
 
