@@ -58,8 +58,130 @@
       curveTension: round(region.metadata?.curveTension ?? 0.8),
       rotation: round(region.metadata?.rotation ?? 0),
       bend: round(region.metadata?.bend ?? 0),
+      cornerTreatments: clone(region.metadata?.cornerTreatments || {}),
       notes: region.metadata?.humanNotes || "",
     });
+  }
+
+  function contourPath(points, style = "straight", tension = 0.8, cornerTreatments = {}) {
+    validateContour(points);
+    const treatments = normalizeCornerTreatments(cornerTreatments, points.length);
+    if (Object.keys(treatments).length === 0) {
+      return style === "smooth" ? smoothClosedPath(points, tension) : straightClosedPath(points);
+    }
+    if (!new Set(["straight", "smooth"]).has(style)) throw new TypeError("Contour path style is invalid");
+    const corners = points.map((point, index) => cornerGeometry(points, index, treatments[index]));
+    let result = `M ${formatPoint(corners[0].exit)}`;
+    for (let index = 1; index < points.length; index += 1) {
+      result += connectorPath(points, corners, index - 1, index, style, tension, treatments);
+      if (treatments[index]?.treatment === "rounded") {
+        result += ` Q ${formatPoint(points[index])} ${formatPoint(corners[index].exit)}`;
+      }
+    }
+    result += connectorPath(points, corners, points.length - 1, 0, style, tension, treatments);
+    if (treatments[0]?.treatment === "rounded") {
+      result += ` Q ${formatPoint(points[0])} ${formatPoint(corners[0].exit)}`;
+    }
+    return `${result} Z`;
+  }
+
+  function straightClosedPath(points) {
+    return `M ${points.map(formatPoint).join(" L ")} Z`;
+  }
+
+  function smoothClosedPath(points, tension) {
+    const tangentScale = Math.max(0.1, Math.min(1.4, Number(tension) || 0.8)) / 6;
+    let result = `M ${formatPoint(points[0])}`;
+    for (let index = 0; index < points.length; index += 1) {
+      const previous = points[(index - 1 + points.length) % points.length];
+      const current = points[index];
+      const next = points[(index + 1) % points.length];
+      const afterNext = points[(index + 2) % points.length];
+      const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
+      const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
+      result += ` C ${formatPoint(controlOne)} ${formatPoint(controlTwo)} ${formatPoint(next)}`;
+    }
+    return `${result} Z`;
+  }
+
+  function connectorPath(points, corners, fromIndex, toIndex, style, tension, treatments) {
+    const target = corners[toIndex].entry;
+    if (style !== "smooth" || treatments[fromIndex] || treatments[toIndex]) return ` L ${formatPoint(target)}`;
+    const tangentScale = Math.max(0.1, Math.min(1.4, Number(tension) || 0.8)) / 6;
+    const previous = points[(fromIndex - 1 + points.length) % points.length];
+    const current = points[fromIndex];
+    const next = points[toIndex];
+    const afterNext = points[(toIndex + 1) % points.length];
+    const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
+    const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
+    return ` C ${formatPoint(controlOne)} ${formatPoint(controlTwo)} ${formatPoint(target)}`;
+  }
+
+  function cornerGeometry(points, index, treatment) {
+    const vertex = points[index];
+    if (treatment?.treatment !== "rounded") return { entry: vertex.slice(), exit: vertex.slice() };
+    const previous = points[(index - 1 + points.length) % points.length];
+    const next = points[(index + 1) % points.length];
+    const previousLength = Math.hypot(vertex[0] - previous[0], vertex[1] - previous[1]);
+    const nextLength = Math.hypot(next[0] - vertex[0], next[1] - vertex[1]);
+    const cut = Math.min(treatment.amount, previousLength / 2, nextLength / 2);
+    const toward = (target, length) => length === 0 ? vertex.slice() : [
+      vertex[0] + (target[0] - vertex[0]) * cut / length,
+      vertex[1] + (target[1] - vertex[1]) * cut / length,
+    ];
+    return { entry: toward(previous, previousLength), exit: toward(next, nextLength) };
+  }
+
+  function shiftCornerTreatmentsForInsertion(cornerTreatments, insertionIndex, pointCount) {
+    if (!Number.isInteger(insertionIndex) || insertionIndex < 0 || insertionIndex > pointCount) {
+      throw new RangeError("Corner insertion index is invalid");
+    }
+    const treatments = normalizeCornerTreatments(cornerTreatments, pointCount);
+    return Object.fromEntries(Object.entries(treatments).map(([key, value]) => {
+      const index = Number(key);
+      return [index >= insertionIndex ? index + 1 : index, clone(value)];
+    }));
+  }
+
+  function mirrorCornerTreatments(cornerTreatments, pointCount) {
+    const treatments = normalizeCornerTreatments(cornerTreatments, pointCount);
+    return Object.fromEntries(Object.entries(treatments).map(([key, value]) => [
+      pointCount - 1 - Number(key), clone(value),
+    ]));
+  }
+
+  function normalizeCornerTreatments(cornerTreatments, pointCount) {
+    if (!cornerTreatments || typeof cornerTreatments !== "object" || Array.isArray(cornerTreatments)) {
+      throw new TypeError("Corner treatments must be an object");
+    }
+    const result = {};
+    for (const [key, treatment] of Object.entries(cornerTreatments)) {
+      const index = Number(key);
+      if (!Number.isInteger(index) || index < 0 || index >= pointCount || String(index) !== key) {
+        throw new RangeError("Corner treatment index is invalid");
+      }
+      if (!treatment || !new Set(["sharp", "rounded"]).has(treatment.treatment)) {
+        throw new TypeError("Corner treatment must be sharp or rounded");
+      }
+      if (!Number.isFinite(treatment.amount) || treatment.amount <= 0) {
+        throw new RangeError("Corner treatment amount must be finite and positive");
+      }
+      result[index] = { treatment: treatment.treatment, amount: treatment.amount };
+    }
+    return result;
+  }
+
+  function validateContour(points) {
+    if (!Array.isArray(points) || points.length < 3) throw new TypeError("Contour must contain at least three points");
+    for (const point of points) {
+      if (!Array.isArray(point) || point.length !== 2 || !point.every(Number.isFinite)) {
+        throw new TypeError("Contour coordinates must be finite points");
+      }
+    }
+  }
+
+  function formatPoint([x, y]) {
+    return `${round(x)} ${round(y)}`;
   }
 
   function normalizePipelineDocument(document, fallbackCanvas, editorMode = "contour") {
@@ -309,5 +431,8 @@
     resolveHistorySelection,
     normalizePipelineDocument,
     nextStage2RegionId,
+    contourPath,
+    shiftCornerTreatmentsForInsertion,
+    mirrorCornerTreatments,
   };
 }));

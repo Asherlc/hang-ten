@@ -56,6 +56,119 @@
     return transformPath(commands, [-1, 0, 0, 1, axisX * 2, 0]);
   }
 
+  function treatPathCorner(commands, cornerIndex, treatment, amount) {
+    const result = validateCommands(commands).map((command) => ({ ...command }));
+    if (!Number.isInteger(cornerIndex) || cornerIndex < 0 || cornerIndex >= result.length || result[cornerIndex].type === "Z") {
+      throw new RangeError("Corner index is invalid");
+    }
+    if (!new Set(["sharp", "rounded"]).has(treatment)) throw new TypeError("Corner treatment must be sharp or rounded");
+    if (!Number.isFinite(amount) || amount <= 0) throw new RangeError("Corner treatment amount must be finite and positive");
+    const subpath = subpathForCorner(result, cornerIndex);
+    const corner = result[cornerIndex];
+    const endpoint = [corner.x, corner.y];
+    const closesExplicitly = cornerIndex === subpath.start
+      && result[subpath.end - 1].type === "C"
+      && result[subpath.end - 1].x === endpoint[0]
+      && result[subpath.end - 1].y === endpoint[1];
+    const previousIndex = cornerIndex === subpath.start
+      ? subpath.end - (closesExplicitly ? 2 : 1)
+      : cornerIndex - 1;
+    const nextIndex = cornerIndex === subpath.end - 1 ? subpath.start : cornerIndex + 1;
+    const previousEndpoint = [result[previousIndex].x, result[previousIndex].y];
+    const nextEndpoint = nextIndex === subpath.start
+      ? [result[subpath.start].x, result[subpath.start].y]
+      : [result[nextIndex].x, result[nextIndex].y];
+
+    let incomingIndex = cornerIndex;
+    if (cornerIndex === subpath.start && closesExplicitly) {
+      incomingIndex = subpath.end - 1;
+    } else if (cornerIndex === subpath.start) {
+      const closingStart = result[subpath.end - 1];
+      result.splice(subpath.end, 0, {
+        type: "C",
+        x1: closingStart.x,
+        y1: closingStart.y,
+        x2: endpoint[0],
+        y2: endpoint[1],
+        x: endpoint[0],
+        y: endpoint[1],
+      });
+      incomingIndex = subpath.end;
+    } else {
+      result[incomingIndex] = asCubic(result[incomingIndex], [result[incomingIndex - 1].x, result[incomingIndex - 1].y]);
+    }
+
+    let outgoingIndex = cornerIndex + 1;
+    if (cornerIndex === subpath.end - 1) {
+      result.splice(subpath.end, 0, {
+        type: "C",
+        x1: endpoint[0],
+        y1: endpoint[1],
+        x2: result[subpath.start].x,
+        y2: result[subpath.start].y,
+        x: result[subpath.start].x,
+        y: result[subpath.start].y,
+      });
+      outgoingIndex = subpath.end;
+    } else {
+      result[outgoingIndex] = asCubic(result[outgoingIndex], endpoint);
+    }
+
+    const incoming = result[incomingIndex];
+    const outgoing = result[outgoingIndex];
+    if (treatment === "sharp") {
+      [incoming.x2, incoming.y2] = endpoint;
+      [outgoing.x1, outgoing.y1] = endpoint;
+      return result;
+    }
+    const direction = normalizedDirection(previousEndpoint, nextEndpoint, endpoint);
+    [incoming.x2, incoming.y2] = [endpoint[0] - direction[0] * amount, endpoint[1] - direction[1] * amount];
+    [outgoing.x1, outgoing.y1] = [endpoint[0] + direction[0] * amount, endpoint[1] + direction[1] * amount];
+    return result;
+  }
+
+  function subpathForCorner(commands, cornerIndex) {
+    let start = -1;
+    for (let index = 0; index < commands.length; index += 1) {
+      if (commands[index].type === "M") start = index;
+      if (commands[index].type === "Z") {
+        if (cornerIndex >= start && cornerIndex < index) return { start, end: index };
+        start = -1;
+      }
+    }
+    throw new RangeError("Corner index is not part of a closed subpath");
+  }
+
+  function asCubic(command, start) {
+    if (command.type === "C") return { ...command };
+    if (command.type === "L") return {
+      type: "C", x1: start[0], y1: start[1], x2: command.x, y2: command.y, x: command.x, y: command.y,
+    };
+    if (command.type === "Q") return {
+      type: "C",
+      x1: start[0] + (command.x1 - start[0]) * 2 / 3,
+      y1: start[1] + (command.y1 - start[1]) * 2 / 3,
+      x2: command.x + (command.x1 - command.x) * 2 / 3,
+      y2: command.y + (command.y1 - command.y) * 2 / 3,
+      x: command.x,
+      y: command.y,
+    };
+    throw new TypeError("Selected corner has no adjacent drawable segment");
+  }
+
+  function normalizedDirection(previous, next, endpoint) {
+    let dx = next[0] - previous[0];
+    let dy = next[1] - previous[1];
+    let length = Math.hypot(dx, dy);
+    if (length === 0) {
+      dx = next[0] - endpoint[0];
+      dy = next[1] - endpoint[1];
+      length = Math.hypot(dx, dy);
+    }
+    if (length === 0) throw new RangeError("Corner treatment requires distinct adjacent endpoints");
+    return [dx / length, dy / length];
+  }
+
   function tokenize(data) {
     const tokens = [];
     let index = 0;
@@ -209,5 +322,6 @@
     transformPath,
     bendPath,
     mirrorPath,
+    treatPathCorner,
   };
 }));

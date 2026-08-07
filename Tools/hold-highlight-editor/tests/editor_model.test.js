@@ -12,6 +12,9 @@ const {
   resolveHistorySelection,
   normalizePipelineDocument,
   nextStage2RegionId,
+  contourPath,
+  shiftCornerTreatmentsForInsertion,
+  mirrorCornerTreatments,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -63,6 +66,63 @@ test("curve and transform metadata count as modifications", () => {
   const result = buildCorrectionsDocument({ baselineRegions: [baseline], regions: [changed] });
 
   assert.equal(result.summary.modified, 1);
+});
+
+test("mixed Stage 2 corner treatments route only rounded vertices and clamp to adjacent edges", () => {
+  const points = [[0, 0], [10, 0], [10, 10], [0, 10]];
+  const treatments = {
+    0: { treatment: "sharp", amount: 3 },
+    1: { treatment: "rounded", amount: 100 },
+  };
+
+  assert.equal(
+    contourPath(points, "straight", 0.8, treatments),
+    "M 0 0 L 5 0 Q 10 0 10 5 L 10 10 L 0 10 L 0 0 Z",
+  );
+});
+
+test("Stage 2 corner metadata shifts on insertion and remaps to mirrored winding", () => {
+  const treatments = {
+    1: { treatment: "rounded", amount: 4 },
+    3: { treatment: "sharp", amount: 2 },
+  };
+
+  const shifted = shiftCornerTreatmentsForInsertion(treatments, 2, 4);
+  assert.deepEqual(shifted, {
+    1: { treatment: "rounded", amount: 4 },
+    4: { treatment: "sharp", amount: 2 },
+  });
+  assert.deepEqual(mirrorCornerTreatments(shifted, 5), {
+    3: { treatment: "rounded", amount: 4 },
+    0: { treatment: "sharp", amount: 2 },
+  });
+  assert.deepEqual(treatments, {
+    1: { treatment: "rounded", amount: 4 },
+    3: { treatment: "sharp", amount: 2 },
+  });
+});
+
+test("correction comparison detects a per-corner treatment-only change", () => {
+  const changed = structuredClone(baseline);
+  changed.metadata.cornerTreatments = { 1: { treatment: "rounded", amount: 4 } };
+
+  const result = buildCorrectionsDocument({ baselineRegions: [baseline], regions: [changed] });
+
+  assert.equal(result.summary.modified, 1);
+});
+
+test("Stage 2 corner helpers reject malformed data without mutating inputs", () => {
+  const points = [[0, 0], [10, 0], [10, 10]];
+  const treatments = { 1: { treatment: "rounded", amount: 2 } };
+  const originalPoints = structuredClone(points);
+  const originalTreatments = structuredClone(treatments);
+
+  assert.throws(() => contourPath(points, "straight", 0.8, { 3: treatments[1] }), /index/i);
+  assert.throws(() => contourPath(points, "straight", 0.8, { 1: { treatment: "soft", amount: 2 } }), /treatment/i);
+  assert.throws(() => contourPath(points, "straight", 0.8, { 1: { treatment: "rounded", amount: 0 } }), /amount/i);
+  assert.throws(() => shiftCornerTreatmentsForInsertion(treatments, -1, points.length), /index/i);
+  assert.deepEqual(points, originalPoints);
+  assert.deepEqual(treatments, originalTreatments);
 });
 
 test("resizeContour scales a corner around its opposite corner", () => {

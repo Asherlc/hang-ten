@@ -12,6 +12,9 @@
     resolveHistorySelection,
     normalizePipelineDocument,
     nextStage2RegionId,
+    contourPath,
+    shiftCornerTreatmentsForInsertion,
+    mirrorCornerTreatments,
   } = globalThis.HoldEditorModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { timelineFor, canApprove } = globalThis.HoldWorkbenchModel;
@@ -21,6 +24,7 @@
     transformPath,
     bendPath,
     mirrorPath,
+    treatPathCorner,
   } = globalThis.HoldVectorPathModel;
   const {
     createLatestLoadCoordinator,
@@ -76,6 +80,7 @@
     regions: [],
     baselineRegions: [],
     selectedId: null,
+    selectedCornerIndex: null,
     overlayMode: "all",
     opacity: 0.34,
     zoom: 1,
@@ -133,6 +138,7 @@
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
+    "corner-treatment-field", "corner-number", "corner-treatment-select", "corner-amount-input",
     "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "setup-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input", "setup-import-input",
     "setup-url-field", "setup-upload-field", "setup-import-field", "setup-error", "setup-submit-button", "setup-recents-wrap", "setup-recents",
@@ -171,29 +177,13 @@
   function regionPath(region) {
     return isVectorMode()
       ? region.displayPath || ""
-      : pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension);
+      : contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {});
   }
 
   function pathFor(points, style = "straight", tension = 0.8) {
     if (!points?.length) return "";
-    if (style === "smooth" && points.length >= 3) return smoothClosedPath(points, tension);
-    return `M ${points.map(([x, y]) => `${round(x)} ${round(y)}`).join(" L ")} Z`;
-  }
-
-  function smoothClosedPath(points, tension = 0.8) {
-    const count = points.length;
-    const tangentScale = clamp(Number(tension) || 0.8, 0.1, 1.4) / 6;
-    let result = `M ${round(points[0][0])} ${round(points[0][1])}`;
-    for (let index = 0; index < count; index += 1) {
-      const previous = points[(index - 1 + count) % count];
-      const current = points[index];
-      const next = points[(index + 1) % count];
-      const afterNext = points[(index + 2) % count];
-      const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
-      const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
-      result += ` C ${round(controlOne[0])} ${round(controlOne[1])}, ${round(controlTwo[0])} ${round(controlTwo[1])}, ${round(next[0])} ${round(next[1])}`;
-    }
-    return `${result} Z`;
+    if (points.length < 3) return `M ${points.map(([x, y]) => `${round(x)} ${round(y)}`).join(" L ")}`;
+    return contourPath(points, style, tension, {});
   }
 
   function round(value, digits = 2) {
@@ -341,7 +331,7 @@
       && state.overlayMode !== "none"
     ) {
       state.baselineRegions.forEach((region) => {
-        const path = makeSvg("path", { d: isVectorMode() ? region.displayPath : pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension), class: "compare-shape" });
+        const path = makeSvg("path", { d: isVectorMode() ? region.displayPath : contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {}), class: "compare-shape" });
         el["compare-overlay"].appendChild(path);
       });
     }
@@ -372,7 +362,8 @@
           if (state.editPoints) {
             if (isVectorMode()) renderVectorHandles(group, region);
             else region.contour.forEach(([x, y], index) => {
-                const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" });
+                const selected = state.selectedCornerIndex === index;
+                const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: `vertex-handle${selected ? " selected-corner" : ""}` });
                 handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
                 group.appendChild(handle);
               });
@@ -421,9 +412,16 @@
         handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, kind));
         group.appendChild(handle);
       });
-      const handle = makeSvg("circle", { cx: endpoint[0], cy: endpoint[1], r: 4.5 / Math.max(state.zoom, 0.3), class: "vector-endpoint-handle" });
-      handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, "endpoint"));
-      group.appendChild(handle);
+      const isExplicitClosure = command.type === "C"
+        && commands[commandIndex + 1]?.type === "Z"
+        && command.x === commands.find((item) => item.type === "M")?.x
+        && command.y === commands.find((item) => item.type === "M")?.y;
+      if (!isExplicitClosure) {
+        const selected = state.selectedCornerIndex === commandIndex;
+        const handle = makeSvg("circle", { cx: endpoint[0], cy: endpoint[1], r: 4.5 / Math.max(state.zoom, 0.3), class: `vector-endpoint-handle${selected ? " selected-corner" : ""}` });
+        handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, "endpoint"));
+        group.appendChild(handle);
+      }
       previous = endpoint;
     });
   }
@@ -464,7 +462,10 @@
     el["inspector-title"].textContent = region ? `Region ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
-    if (!region) return;
+    if (!region) {
+      el["corner-treatment-field"].classList.add("hidden");
+      return;
+    }
     if (document.activeElement !== el["region-key-input"]) el["region-key-input"].value = region.key;
     if (document.activeElement !== el["region-type-select"]) el["region-type-select"].value = region.type;
     if (document.activeElement !== el["region-shape-select"]) el["region-shape-select"].value = region.metadata.shapeKind || "freeform";
@@ -473,6 +474,17 @@
     if (document.activeElement !== el["curve-tension-slider"]) el["curve-tension-slider"].value = tensionPercent;
     el["curve-tension-value"].value = `${tensionPercent}%`;
     el["tension-field"].classList.toggle("hidden", region.metadata.pathStyle !== "smooth");
+    const cornerIndex = state.selectedCornerIndex;
+    const cornerSelected = Number.isInteger(cornerIndex);
+    const corner = cornerSelected ? region.metadata.cornerTreatments?.[cornerIndex] : null;
+    el["corner-treatment-field"].classList.toggle("hidden", !cornerSelected);
+    el["corner-treatment-select"].disabled = !cornerSelected;
+    el["corner-amount-input"].disabled = !cornerSelected;
+    if (cornerSelected) {
+      el["corner-number"].textContent = String(cornerIndex + 1);
+      if (document.activeElement !== el["corner-treatment-select"]) el["corner-treatment-select"].value = corner?.treatment || "sharp";
+      if (document.activeElement !== el["corner-amount-input"]) el["corner-amount-input"].value = String(corner?.amount || 12);
+    }
     if (document.activeElement !== el["region-mode-select"]) el["region-mode-select"].value = region.metadata.mode || "surface";
     if (document.activeElement !== el["region-notes-input"]) el["region-notes-input"].value = region.metadata.humanNotes || "";
     const points = geometryPoints(region);
@@ -586,7 +598,10 @@
       completeMirrorOnto(id);
       return;
     }
-    if (id !== state.selectedId) state.editPoints = false;
+    if (id !== state.selectedId) {
+      state.editPoints = false;
+      state.selectedCornerIndex = null;
+    }
     state.selectedId = id;
     render();
     const region = selectedRegion();
@@ -638,7 +653,9 @@
     if (!canEditGeometry() || isVectorMode() || event.button !== 0) return;
     event.stopPropagation();
     selectRegion(id);
+    state.selectedCornerIndex = index;
     state.handleSession = { pointerId: event.pointerId, index, changed: false };
+    render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -647,7 +664,9 @@
     event.preventDefault();
     event.stopPropagation();
     selectRegion(id);
+    if (handleKind === "endpoint") state.selectedCornerIndex = commandIndex;
     state.handleSession = { pointerId: event.pointerId, commandIndex, handleKind, changed: false };
+    render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -772,10 +791,32 @@
         const commands = parseDisplayPath(region.displayPath);
         const command = commands[state.handleSession.commandIndex];
         const [x, y] = pointer;
-        if (state.handleSession.handleKind === "endpoint") [command.x, command.y] = [x, y];
+        if (state.handleSession.handleKind === "endpoint") {
+          const previousEndpoint = [command.x, command.y];
+          [command.x, command.y] = [x, y];
+          if (command.type === "M") {
+            const closing = commands.findLast((item, index) => (
+              index > state.handleSession.commandIndex
+              && item.type === "C"
+              && item.x === previousEndpoint[0]
+              && item.y === previousEndpoint[1]
+              && commands[index + 1]?.type === "Z"
+            ));
+            if (closing) [closing.x, closing.y] = [x, y];
+          }
+          const corner = region.metadata.cornerTreatments?.[state.handleSession.commandIndex];
+          if (corner) {
+            region.displayPath = serializeDisplayPath(treatPathCorner(
+              commands,
+              state.handleSession.commandIndex,
+              corner.treatment,
+              corner.amount,
+            ));
+          } else region.displayPath = serializeDisplayPath(commands);
+        }
         else if (state.handleSession.handleKind === "control1") [command.x1, command.y1] = [x, y];
         else [command.x2, command.y2] = [x, y];
-        region.displayPath = serializeDisplayPath(commands);
+        if (state.handleSession.handleKind !== "endpoint") region.displayPath = serializeDisplayPath(commands);
       } else region.contour[state.handleSession.index] = snapPoint(pointer, event.altKey);
       state.handleSession.changed = true;
       renderOverlay();
@@ -846,6 +887,10 @@
       }
     }
     region.contour.splice(bestIndex, 0, point);
+    region.metadata.cornerTreatments = shiftCornerTreatmentsForInsertion(
+      region.metadata.cornerTreatments || {}, bestIndex, region.contour.length - 1,
+    );
+    state.selectedCornerIndex = bestIndex;
     commitHistory("Added control point");
     render();
   }
@@ -865,6 +910,7 @@
     state.draft = [];
     state.primitiveSession = null;
     state.selectedId = null;
+    state.selectedCornerIndex = null;
     el["draw-instruction"].classList.add("visible");
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
@@ -895,6 +941,7 @@
     state.draft = [];
     state.primitiveSession = null;
     state.selectedId = nextId;
+    state.selectedCornerIndex = null;
     el["draw-instruction"].classList.remove("visible");
     commitHistory("Added region");
     setStatus(`Added ${region.key}.`);
@@ -915,6 +962,7 @@
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
+    state.selectedCornerIndex = null;
     commitHistory("Deleted region");
     setStatus(`Deleted ${region.key}. Undo is available.`);
     render();
@@ -932,6 +980,7 @@
     copy.metadata.humanNotes = "Duplicated manually";
     state.regions.push(copy);
     state.selectedId = nextId;
+    state.selectedCornerIndex = null;
     commitHistory("Duplicated region");
     render();
   }
@@ -948,6 +997,8 @@
       return;
     }
     region.contour = simplified;
+    delete region.metadata.cornerTreatments;
+    state.selectedCornerIndex = null;
     region.metadata.shapeKind = "freeform";
     region.metadata.pathStyle = "smooth";
     commitHistory("Simplified curve");
@@ -964,10 +1015,12 @@
     copy.id = nextId;
     copy.key = `grip-${String(nextId).padStart(3, "0")}`;
     copy.contour = mirrorContour(source.contour, state.canvas.width);
+    copy.metadata.cornerTreatments = mirrorCornerTreatments(source.metadata.cornerTreatments || {}, source.contour.length);
     copy.metadata.rotation = -Number(source.metadata.rotation || 0);
     copy.metadata.humanNotes = `Mirrored from ${source.key}`;
     state.regions.push(copy);
     state.selectedId = nextId;
+    state.selectedCornerIndex = null;
     commitHistory("Mirrored region copy");
     setStatus(`Created mirrored copy ${copy.key}.`);
     render();
@@ -995,15 +1048,22 @@
       state.mirrorOntoSourceId = null;
       return;
     }
-    const geometryKeys = ["shapeKind", "pathStyle", "curveTension", "bend"];
-    geometryKeys.forEach((key) => { target.metadata[key] = source.metadata[key]; });
+    const geometryKeys = ["shapeKind", "pathStyle", "curveTension", "bend", "cornerTreatments"];
+    geometryKeys.forEach((key) => {
+      if (source.metadata[key] === undefined) delete target.metadata[key];
+      else target.metadata[key] = clone(source.metadata[key]);
+    });
     target.metadata.rotation = -Number(source.metadata.rotation || 0);
     if (isVectorMode()) {
       target.displayPath = serializeDisplayPath(mirrorPath(parseDisplayPath(source.displayPath), state.canvas.width / 2));
       if (Array.isArray(source.anchor)) target.anchor = [state.canvas.width - source.anchor[0], source.anchor[1]];
-    } else target.contour = mirrorContour(source.contour, state.canvas.width);
+    } else {
+      target.contour = mirrorContour(source.contour, state.canvas.width);
+      target.metadata.cornerTreatments = mirrorCornerTreatments(source.metadata.cornerTreatments || {}, source.contour.length);
+    }
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
+    state.selectedCornerIndex = null;
     commitHistory("Mirrored geometry onto region");
     setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
     render();
@@ -1051,7 +1111,9 @@
     state.historyIndex -= 1;
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
-    state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
+    const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
+    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
     onDraftChanged();
@@ -1064,7 +1126,9 @@
     state.historyIndex += 1;
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
-    state.selectedId = resolveHistorySelection(entry, state.regions, state.selectedId);
+    const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
+    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
     onDraftChanged();
@@ -1424,6 +1488,7 @@
   function focusRegion(regionId) {
     const numericId = Number(regionId);
     if (!state.regions.some((region) => region.id === numericId)) return false;
+    if (state.selectedId !== numericId) state.selectedCornerIndex = null;
     state.selectedId = numericId;
     state.editPoints = true;
     render();
@@ -1512,6 +1577,7 @@
       state.regions = [];
       state.baselineRegions = [];
       state.selectedId = null;
+      state.selectedCornerIndex = null;
       state.imageHref = "";
       state.imageName = "";
       state.imagePixels = null;
@@ -2043,6 +2109,7 @@
     state.editorMode = normalized.editorMode;
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;
+    state.selectedCornerIndex = null;
     resetHistory();
     configureSvg();
     render();
@@ -2168,6 +2235,23 @@
     render();
   }
 
+  function updateSelectedCorner(patch, label) {
+    if (!canEditGeometry() || !Number.isInteger(state.selectedCornerIndex)) return;
+    const region = selectedRegion();
+    if (!region) return;
+    const index = state.selectedCornerIndex;
+    const current = region.metadata.cornerTreatments?.[index] || { treatment: "sharp", amount: 12 };
+    const next = { ...current, ...patch };
+    region.metadata.cornerTreatments = { ...(region.metadata.cornerTreatments || {}), [index]: next };
+    if (isVectorMode()) {
+      region.displayPath = serializeDisplayPath(treatPathCorner(
+        parseDisplayPath(region.displayPath), index, next.treatment, next.amount,
+      ));
+    }
+    commitHistory(label);
+    render();
+  }
+
   function shapeLabel(kind) {
     return ({ freeform: "Freeform", "curved-freeform": "Curved freeform", rectangle: "Rectangle", "rounded-rectangle": "Rounded rectangle", "arced-rectangle": "Arced rectangle", ellipse: "Ellipse", capsule: "Capsule" })[kind] || "Freeform";
   }
@@ -2269,6 +2353,8 @@
     if (kind !== "freeform") {
       const [x1, y1, x2, y2] = bounds(region.contour);
       region.contour = shapeContour(kind, [x1, y1], [x2, y2]);
+      delete region.metadata.cornerTreatments;
+      state.selectedCornerIndex = null;
     }
     region.metadata.shapeKind = kind;
     region.metadata.rotation = 0;
@@ -2334,6 +2420,14 @@
     if (!canEditGeometry() || !selectedRegion()) return;
     commitHistory("Changed curve tension");
     render();
+  });
+  el["corner-treatment-select"].addEventListener("change", (event) => {
+    updateSelectedCorner({ treatment: event.target.value }, "Changed corner treatment");
+  });
+  el["corner-amount-input"].addEventListener("change", (event) => {
+    const amount = clamp(Number(event.target.value), 0.5, 100);
+    if (!Number.isFinite(amount)) return renderInspector();
+    updateSelectedCorner({ amount }, "Changed corner amount");
   });
   el["region-mode-select"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.mode = event.target.value; }, "Changed interaction mode"));
   el["region-notes-input"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.humanNotes = event.target.value; }, "Updated review notes"));

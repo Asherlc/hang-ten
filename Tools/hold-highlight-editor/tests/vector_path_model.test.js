@@ -7,6 +7,7 @@ const {
   transformPath,
   bendPath,
   mirrorPath,
+  treatPathCorner,
 } = require("../vector-path-model.js");
 
 test("cubic display paths round-trip without flattening", () => {
@@ -36,6 +37,61 @@ test("bendPath offsets endpoints and control handles without changing commands",
   );
 
   assert.equal(serializeDisplayPath(bent), "M 0 10 Q 50 30 100 10 C 25 25 75 25 100 10 Z");
+});
+
+test("rounded Stage 3 junction aligns adjacent cubic handles without moving endpoints", () => {
+  const source = parseDisplayPath("M 0 0 L 10 0 L 20 0 L 20 10 Z");
+  const rounded = treatPathCorner(source, 1, "rounded", 2);
+
+  assert.equal(
+    serializeDisplayPath(rounded),
+    "M 0 0 C 0 0 8 0 10 0 C 12 0 20 0 20 0 L 20 10 Z",
+  );
+  assert.deepEqual(rounded.filter((command) => command.type !== "Z").map(({ x, y }) => [x, y]), [[0, 0], [10, 0], [20, 0], [20, 10]]);
+  assert.equal(serializeDisplayPath(source), "M 0 0 L 10 0 L 20 0 L 20 10 Z");
+});
+
+test("sharp Stage 3 junction collapses incoming and outgoing handles to the endpoint", () => {
+  const source = parseDisplayPath("M 0 0 C 3 0 7 0 10 0 C 13 3 17 3 20 0 Z");
+  const sharp = treatPathCorner(source, 1, "sharp", 3);
+
+  assert.equal(
+    serializeDisplayPath(sharp),
+    "M 0 0 C 3 0 10 0 10 0 C 10 0 17 3 20 0 Z",
+  );
+});
+
+test("Stage 3 treatment supports the closing M corner", () => {
+  const source = parseDisplayPath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
+  const rounded = treatPathCorner(source, 0, "rounded", Math.SQRT2);
+
+  assert.equal(
+    serializeDisplayPath(rounded),
+    "M 0 0 C 1 -1 10 0 10 0 L 10 10 L 0 10 C 0 10 -1 1 0 0 Z",
+  );
+});
+
+test("closing M treatment can be changed without adding duplicate closure segments", () => {
+  const source = parseDisplayPath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
+  const rounded = treatPathCorner(source, 0, "rounded", Math.SQRT2);
+  const sharp = treatPathCorner(rounded, 0, "sharp", 4);
+
+  assert.equal(
+    serializeDisplayPath(sharp),
+    "M 0 0 C 0 0 10 0 10 0 L 10 10 L 0 10 C 0 10 0 0 0 0 Z",
+  );
+});
+
+test("Stage 3 corner treatment rejects invalid inputs without mutation", () => {
+  const source = parseDisplayPath("M 0 0 Q 5 0 10 0 L 10 10 Z");
+  const original = structuredClone(source);
+
+  assert.throws(() => treatPathCorner(source, 9, "rounded", 2), /index/i);
+  assert.throws(() => treatPathCorner(source, 1, "soft", 2), /treatment/i);
+  assert.throws(() => treatPathCorner(source, 1, "rounded", Number.NaN), /amount/i);
+  assert.throws(() => treatPathCorner(source, 1, "rounded", 0), /amount/i);
+  assert.throws(() => treatPathCorner([{ type: "M", x: 0, y: 0 }], 0, "sharp", 2), /closed/i);
+  assert.deepEqual(source, original);
 });
 
 test("display path parsing rejects relative, unsupported, and non-finite coordinates", () => {
