@@ -169,18 +169,21 @@
   function normalizeBounds(bounds) {
     let minX;
     let maxX;
+    const keyedBounds = bounds && typeof bounds === "object" && !Array.isArray(bounds);
+    if (keyedBounds) {
+      for (const key of ["minX", "maxX", "minY", "maxY", "left", "right", "top", "bottom"]) {
+        if (key in bounds) assertFinite(bounds[key], `Bend bounds ${key}`);
+      }
+    }
     if (Array.isArray(bounds) && bounds.length === 4) {
       for (let index = 0; index < 4; index += 1) assertFinite(bounds[index], "Bend bounds value");
       [minX, , maxX] = bounds;
     }
-    else if (bounds && typeof bounds === "object" && "width" in bounds) {
+    else if (keyedBounds && "width" in bounds) {
       for (const key of ["x", "y", "width", "height"]) assertFinite(bounds[key], `Bend bounds ${key}`);
       minX = bounds.x;
       maxX = bounds.x + bounds.width;
-    } else if (bounds && typeof bounds === "object") {
-      for (const key of ["minX", "maxX", "minY", "maxY", "left", "right", "top", "bottom"]) {
-        if (key in bounds) assertFinite(bounds[key], `Bend bounds ${key}`);
-      }
+    } else if (keyedBounds) {
       minX = bounds.minX ?? bounds.left;
       maxX = bounds.maxX ?? bounds.right;
     }

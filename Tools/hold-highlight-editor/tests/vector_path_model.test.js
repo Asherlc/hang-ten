@@ -113,3 +113,14 @@ test("bendPath validates non-finite aliases even when finite primary bounds are 
 
   for (const bounds of invalidBounds) assert.throws(() => bendPath(commands, 1, bounds), /finite/i);
 });
+
+test("bendPath validates aliases mixed into rectangle bounds and preserves valid keyed forms", () => {
+  const commands = parseDisplayPath("M 0 0 L 1 0 Z");
+  for (const alias of ["minX", "maxX", "minY", "maxY", "left", "right", "top", "bottom"]) {
+    const bounds = { x: 0, y: 0, width: 1, height: 1, [alias]: Number.POSITIVE_INFINITY };
+    assert.throws(() => bendPath(commands, 1, bounds), /finite/i);
+  }
+
+  assert.equal(serializeDisplayPath(bendPath(commands, 1, { x: 0, y: 0, width: 1, height: 1 })), "M 0 0 L 1 0 Z");
+  assert.equal(serializeDisplayPath(bendPath(commands, 1, { left: 0, right: 1, top: 0, bottom: 1 })), "M 0 0 L 1 0 Z");
+});
