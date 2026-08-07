@@ -1615,16 +1615,16 @@ struct WorkoutView: View {
 				}
 
 				VStack(alignment: .leading, spacing: 4) {
-					if showsHoldPreview {
-						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-							.frame(maxWidth: .infinity, alignment: .center)
-					}
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+						.frame(maxWidth: .infinity, minHeight: 13, alignment: .center)
+						.opacity(showsHoldPreview ? 1 : 0)
 					BoardMapView(
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode
 					)
 						.frame(maxWidth: .infinity)
+						.frame(height: 132)
 				}
 				.frame(maxWidth: .infinity)
 
@@ -1633,7 +1633,7 @@ struct WorkoutView: View {
 						.frame(width: 142)
 				}
 			}
-			.frame(maxHeight: 132)
+			.frame(height: 149)
 
 			HStack(alignment: .center, spacing: 12) {
 				landscapeCueCard(
