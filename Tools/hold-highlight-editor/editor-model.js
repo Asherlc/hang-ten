@@ -105,9 +105,15 @@
 
   function regionForExport(region) {
     const contour = region.contour.map(([x, y]) => [round(x), round(y)]);
+    const authoritativeContour = stage2AuthoritativeContour(
+      contour,
+      region.metadata?.pathStyle || "straight",
+      region.metadata?.curveTension ?? 0.8,
+      region.metadata?.cornerTreatments,
+    );
     return {
       ...clone(region),
-      anchor: exportAnchor(region, contour),
+      anchor: exportAnchor(region, authoritativeContour),
       areaPixels: Math.round(polygonArea(contour)),
       bounds: bounds(contour),
       contour,
@@ -140,20 +146,31 @@
     if (Object.keys(treatments).length === 0) {
       return style === "smooth" ? smoothClosedPath(points, tension) : straightClosedPath(points);
     }
+    return `${treatedPathCommands(points, style, tension, treatments).map(serializePathCommand).join(" ")} Z`;
+  }
+
+  function stage2AuthoritativeContour(points, style, tension, cornerTreatments) {
+    if (cornerTreatments === undefined || cornerTreatments === null) return clone(points);
+    const treatments = normalizeCornerTreatments(cornerTreatments, points.length);
+    if (Object.keys(treatments).length === 0) return clone(points);
+    return flattenPathCommands(treatedPathCommands(points, style, tension, treatments), 32);
+  }
+
+  function treatedPathCommands(points, style, tension, treatments) {
     if (!new Set(["straight", "smooth"]).has(style)) throw new TypeError("Contour path style is invalid");
     const corners = points.map((point, index) => cornerGeometry(points, index, treatments[index]));
-    let result = `M ${formatPoint(corners[0].exit)}`;
+    const result = [{ type: "M", point: corners[0].exit }];
     for (let index = 1; index < points.length; index += 1) {
-      result += connectorPath(points, corners, index - 1, index, style, tension, treatments);
+      result.push(connectorCommand(points, corners, index - 1, index, style, tension, treatments));
       if (treatments[index]?.treatment === "rounded") {
-        result += ` Q ${formatPoint(points[index])} ${formatPoint(corners[index].exit)}`;
+        result.push({ type: "Q", control: points[index], point: corners[index].exit });
       }
     }
-    result += connectorPath(points, corners, points.length - 1, 0, style, tension, treatments);
+    result.push(connectorCommand(points, corners, points.length - 1, 0, style, tension, treatments));
     if (treatments[0]?.treatment === "rounded") {
-      result += ` Q ${formatPoint(points[0])} ${formatPoint(corners[0].exit)}`;
+      result.push({ type: "Q", control: points[0], point: corners[0].exit });
     }
-    return `${result} Z`;
+    return result;
   }
 
   function straightClosedPath(points) {
@@ -175,9 +192,9 @@
     return `${result} Z`;
   }
 
-  function connectorPath(points, corners, fromIndex, toIndex, style, tension, treatments) {
+  function connectorCommand(points, corners, fromIndex, toIndex, style, tension, treatments) {
     const target = corners[toIndex].entry;
-    if (style !== "smooth" || treatments[fromIndex] || treatments[toIndex]) return ` L ${formatPoint(target)}`;
+    if (style !== "smooth" || treatments[fromIndex] || treatments[toIndex]) return { type: "L", point: target };
     const tangentScale = Math.max(0.1, Math.min(1.4, Number(tension) || 0.8)) / 6;
     const previous = points[(fromIndex - 1 + points.length) % points.length];
     const current = points[fromIndex];
@@ -185,7 +202,43 @@
     const afterNext = points[(toIndex + 1) % points.length];
     const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
     const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
-    return ` C ${formatPoint(controlOne)} ${formatPoint(controlTwo)} ${formatPoint(target)}`;
+    return { type: "C", controlOne, controlTwo, point: target };
+  }
+
+  function serializePathCommand(command) {
+    if (command.type === "M" || command.type === "L") return `${command.type} ${formatPoint(command.point)}`;
+    if (command.type === "Q") return `Q ${formatPoint(command.control)} ${formatPoint(command.point)}`;
+    return `C ${formatPoint(command.controlOne)} ${formatPoint(command.controlTwo)} ${formatPoint(command.point)}`;
+  }
+
+  function flattenPathCommands(commands, curveSteps) {
+    const result = [];
+    let current = null;
+    for (const command of commands) {
+      if (command.type === "M" || command.type === "L") {
+        current = command.point.slice();
+        result.push(current);
+        continue;
+      }
+      const start = current;
+      for (let step = 1; step <= curveSteps; step += 1) {
+        const progress = step / curveSteps;
+        const remaining = 1 - progress;
+        if (command.type === "Q") {
+          current = [
+            remaining ** 2 * start[0] + 2 * remaining * progress * command.control[0] + progress ** 2 * command.point[0],
+            remaining ** 2 * start[1] + 2 * remaining * progress * command.control[1] + progress ** 2 * command.point[1],
+          ];
+        } else {
+          current = [
+            remaining ** 3 * start[0] + 3 * remaining ** 2 * progress * command.controlOne[0] + 3 * remaining * progress ** 2 * command.controlTwo[0] + progress ** 3 * command.point[0],
+            remaining ** 3 * start[1] + 3 * remaining ** 2 * progress * command.controlOne[1] + 3 * remaining * progress ** 2 * command.controlTwo[1] + progress ** 3 * command.point[1],
+          ];
+        }
+        result.push(current);
+      }
+    }
+    return result;
   }
 
   function cornerGeometry(points, index, treatment) {

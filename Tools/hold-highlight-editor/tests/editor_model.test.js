@@ -76,6 +76,35 @@ test("buildEditedDocument replaces an invalid concave anchor with a deterministi
   assert.deepEqual(result.regions[0].anchor, [5, 2]);
 });
 
+test("buildEditedDocument replaces a treated anchor cut away by a rounded corner", () => {
+  const rounded = {
+    ...baseline,
+    anchor: [0, 0],
+    contour: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    metadata: {
+      ...baseline.metadata,
+      pathStyle: "straight",
+      curveTension: 0.8,
+      cornerTreatments: { 0: { treatment: "rounded", amount: 4 } },
+    },
+  };
+  const original = structuredClone(rounded);
+  const input = {
+    canvas: { width: 20, height: 20 },
+    regions: [rounded],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  };
+
+  const first = buildEditedDocument(input);
+  const second = buildEditedDocument(input);
+
+  assert.notDeepEqual(first.regions[0].anchor, [0, 0]);
+  assert.deepEqual(first.regions[0].anchor, [5, 4]);
+  assert.deepEqual(second.regions[0].anchor, [5, 4]);
+  assert.deepEqual(rounded, original);
+});
+
 test("buildCorrectionsDocument identifies added modified and deleted regions", () => {
   const modified = { ...baseline, contour: [[1, 0], [10, 0], [10, 10]] };
   const added = { ...baseline, id: 3, key: "grip-003" };

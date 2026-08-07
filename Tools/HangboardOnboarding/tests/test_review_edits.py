@@ -4,6 +4,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import shutil
+import subprocess
 
 import numpy as np
 from PIL import Image
@@ -276,6 +277,63 @@ def test_stage2_concave_contour_materializes_with_exported_interior_anchor(
 
     assert labels[75, 115] == 1
     assert labels[75, 150] == 0
+
+
+def test_stage2_treated_anchor_from_browser_export_owns_its_region_label(
+    accepted_stage1_run: Path, tmp_path: Path
+) -> None:
+    edited = _load_fixture("stage-2-regions-edited.json")
+    browser_region = {
+        **edited["regions"][0],
+        "anchor": [0, 0],
+        "contour": [[0, 0], [10, 0], [10, 10], [0, 10]],
+        "metadata": {
+            "mode": "surface",
+            "shapeKind": "freeform",
+            "pathStyle": "straight",
+            "curveTension": 0.8,
+            "cornerTreatments": {
+                "0": {"treatment": "rounded", "amount": 4}
+            },
+        },
+    }
+    editor_model = (
+        Path(__file__).resolve().parents[2]
+        / "hold-highlight-editor"
+        / "editor-model.js"
+    )
+    script = """
+const fs = require("node:fs");
+const { buildEditedDocument } = require(process.argv[1]);
+const input = JSON.parse(fs.readFileSync(0, "utf8"));
+process.stdout.write(JSON.stringify(buildEditedDocument(input)));
+"""
+    exported = subprocess.run(
+        ["node", "-e", script, str(editor_model)],
+        input=json.dumps(
+            {
+                "canvas": edited["canvas"],
+                "regions": [browser_region],
+                "imageName": "stage-1-auto-rgba.png",
+                "regionsName": "stage-2-regions.json",
+            }
+        ),
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    edited["regions"][0] = json.loads(exported.stdout)["regions"][0]
+
+    checkpoint = materialize_stage2_edit(
+        _context(accepted_stage1_run), edited, tmp_path / "treated-anchor"
+    )
+    labels = np.asarray(
+        Image.open(checkpoint.artifact_root / "stage-2-labels.png"),
+        dtype=np.uint16,
+    )
+    anchor_x, anchor_y = edited["regions"][0]["anchor"]
+
+    assert labels[anchor_y, anchor_x] == 1
 
 
 def test_stage2_edit_allows_distinct_valid_regions_to_overlap(
