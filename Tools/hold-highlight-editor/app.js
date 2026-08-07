@@ -30,6 +30,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    clearConfirmedTerminalJob,
     isRecoverableJobError,
     regionIdFromError,
     runFrozenApproval,
@@ -1384,29 +1385,26 @@
   }
 
   async function runTrackedJob(operation) {
-    let acceptedJobId = null;
+    let acceptedJob = null;
     const options = {
       onAccepted(job) {
-        acceptedJobId = job.jobId;
+        acceptedJob = job;
         activeJobStore.write(job);
       },
     };
     try {
       const result = await operation(options);
-      if (acceptedJobId) activeJobStore.clear(acceptedJobId);
+      if (acceptedJob) activeJobStore.clear(acceptedJob.jobId);
       return result;
     } catch (error) {
-      if (acceptedJobId && error?.terminal === true && error.jobId === acceptedJobId) {
-        activeJobStore.clear(error.jobId);
-      }
+      clearConfirmedTerminalJob(activeJobStore, acceptedJob, error);
       holdForActiveJobRecovery(error);
       throw error;
     }
   }
 
-  function holdForActiveJobRecovery(error) {
-    const activeJob = activeJobStore.read();
-    if (!isRecoverableJobError(error) || activeJob?.jobId !== error.jobId) return false;
+  function holdForStoredActiveJob() {
+    if (!activeJobStore.read()) return false;
     state.busy = true;
     state.editingFrozen = true;
     state.saveError = "";
@@ -1414,6 +1412,12 @@
     renderGuidedShell();
     render();
     return true;
+  }
+
+  function holdForActiveJobRecovery(error) {
+    const activeJob = activeJobStore.read();
+    if (!isRecoverableJobError(error) || activeJob?.jobId !== error.jobId) return false;
+    return holdForStoredActiveJob();
   }
 
   function focusRegion(regionId) {
@@ -1821,8 +1825,10 @@
         setStatus(`Reconnected to ${recovered.productName}.`);
         return true;
       } catch (error) {
-        if (holdForActiveJobRecovery(error)) return true;
-        if (error?.terminal === true) activeJobStore.clear(error.jobId);
+        if (!clearConfirmedTerminalJob(activeJobStore, acceptedJob, error)) {
+          holdForStoredActiveJob();
+          return true;
+        }
         state.editingFrozen = false;
         state.saveError = error.message || "Could not reconnect to the active job";
         setStatus(state.saveError);

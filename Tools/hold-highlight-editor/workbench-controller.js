@@ -220,6 +220,11 @@
     return Boolean(error?.jobId && error.terminal !== true);
   }
 
+  function clearConfirmedTerminalJob(store, acceptedJob, error) {
+    if (error?.terminal !== true || error.jobId !== acceptedJob?.jobId) return false;
+    return store.clear(acceptedJob.jobId);
+  }
+
   async function runFrozenApproval({
     setFrozen,
     cancelPointerSessions,
@@ -256,6 +261,7 @@
     checkpointComparisonUrl,
     validateEditableImageAlignment,
     createActiveJobStore,
+    clearConfirmedTerminalJob,
     isRecoverableJobError,
     regionIdFromError,
     runFrozenApproval,

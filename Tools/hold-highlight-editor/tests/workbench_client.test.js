@@ -12,7 +12,16 @@ test("a newly accepted job ID is exposed before polling completes", async () => 
     calls.push(path);
     if (path === "/api/boards") return response({ ok: true, jobId: "job-42", boardId: "board-9" });
     await new Promise((resolve) => { releasePoll = resolve; });
-    return response({ ok: true, job: { id: "job-42", state: "succeeded", result: { boardId: "board-9" } } });
+    return response({
+      ok: true,
+      job: {
+        id: "job-42",
+        boardId: "board-9",
+        state: "succeeded",
+        result: { boardId: "board-9" },
+        error: null,
+      },
+    });
   };
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
@@ -121,6 +130,48 @@ test("a server-confirmed failed job reports a terminal error with its accepted i
   });
 });
 
+test("an unknown server job state remains nonterminal uncertainty", async () => {
+  global.fetch = async () => response({
+    ok: true,
+    job: {
+      id: "job-future",
+      boardId: "board-9",
+      state: "paused",
+      result: null,
+      error: null,
+    },
+  });
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  await assert.rejects(client.pollJob("job-future", { interval: 0 }), (error) => {
+    assert.equal(error.jobId, "job-future");
+    assert.equal(error.terminal, false);
+    return true;
+  });
+});
+
+test("missing malformed and mismatched job payloads remain nonterminal uncertainty", async () => {
+  const cases = [
+    { ok: true },
+    { ok: true, job: { id: "job-payload", boardId: "board-9", state: null, result: null, error: null } },
+    { ok: true, job: { id: "job-other", boardId: "board-9", state: "failed", result: null, error: "job failed" } },
+    { ok: true, job: { id: "job-payload", boardId: "board-9", state: "failed", result: null, error: null } },
+    { ok: true, job: { id: "job-payload", boardId: "board-9", state: "succeeded", error: null } },
+  ];
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  for (const payload of cases) {
+    global.fetch = async () => response(payload);
+    await assert.rejects(client.pollJob("job-payload", { interval: 0 }), (error) => {
+      assert.equal(error.jobId, "job-payload");
+      assert.equal(error.terminal, false);
+      return true;
+    });
+  }
+});
+
 test("importRun submits an explicit CLI run root to the import endpoint", async () => {
   const calls = [];
   global.fetch = async (path, options = {}) => {
@@ -128,7 +179,13 @@ test("importRun submits an explicit CLI run root to the import endpoint", async 
     if (path === "/api/boards/import") return response({ ok: true, jobId: "job-import" });
     return response({
       ok: true,
-      job: { id: "job-import", state: "succeeded", result: { boardId: "board-imported" } },
+      job: {
+        id: "job-import",
+        boardId: "board-imported",
+        state: "succeeded",
+        result: { boardId: "board-imported" },
+        error: null,
+      },
     });
   };
   delete require.cache[require.resolve("../workbench-client.js")];

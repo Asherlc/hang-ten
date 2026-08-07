@@ -25,6 +25,25 @@
     return (await request(`/api/jobs/${encodeURIComponent(jobId)}`)).job;
   }
 
+  function uncertainJobError(jobId, message, cause = null) {
+    const error = cause instanceof Error ? cause : new Error(message);
+    error.jobId = jobId;
+    error.terminal = false;
+    return error;
+  }
+
+  function validJobPayload(job, jobId) {
+    if (!job || typeof job !== "object" || Array.isArray(job)) return false;
+    if (job.id !== jobId || typeof job.boardId !== "string" || !job.boardId) return false;
+    if (typeof job.state !== "string") return false;
+    if (!Object.prototype.hasOwnProperty.call(job, "result")) return false;
+    if (!Object.prototype.hasOwnProperty.call(job, "error")) return false;
+    if (job.error !== null && typeof job.error !== "string") return false;
+    if (job.state === "succeeded" && (!job.result || typeof job.result !== "object")) return false;
+    if (job.state === "failed" && (typeof job.error !== "string" || !job.error)) return false;
+    return true;
+  }
+
   async function pollJob(jobId, { interval = 350, maxTransientFailures = 3 } = {}) {
     let transientFailures = 0;
     while (true) {
@@ -34,23 +53,24 @@
         transientFailures = 0;
       } catch (error) {
         if (transientFailures >= maxTransientFailures) {
-          const uncertainty = error instanceof Error
-            ? error
-            : new Error(String(error || "Workbench polling failed"));
-          uncertainty.jobId = jobId;
-          uncertainty.terminal = false;
-          throw uncertainty;
+          throw uncertainJobError(jobId, "Workbench polling failed", error);
         }
         transientFailures += 1;
         await new Promise((resolve) => root.setTimeout(resolve, interval));
         continue;
       }
-      if (!ACTIVE_JOB_STATES.has(job.state)) {
-        if (job.state === "succeeded") return job.result;
+      if (!validJobPayload(job, jobId)) {
+        throw uncertainJobError(jobId, "Workbench returned an uncertain job response");
+      }
+      if (job.state === "succeeded") return job.result;
+      if (job.state === "failed") {
         const error = new Error(job.error || "Workbench job failed");
         error.jobId = jobId;
         error.terminal = true;
         throw error;
+      }
+      if (!ACTIVE_JOB_STATES.has(job.state)) {
+        throw uncertainJobError(jobId, `Workbench returned unknown job state: ${job.state}`);
       }
       await new Promise((resolve) => root.setTimeout(resolve, interval));
     }

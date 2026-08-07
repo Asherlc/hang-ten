@@ -9,6 +9,7 @@ const {
   checkpointComparisonUrl,
   validateEditableImageAlignment,
   createActiveJobStore,
+  clearConfirmedTerminalJob,
   isRecoverableJobError,
   regionIdFromError,
   runFrozenApproval,
@@ -245,6 +246,24 @@ test("only an accepted job without terminal confirmation remains recoverable", (
   assert.equal(isRecoverableJobError({ jobId: "job-17", terminal: true }), false);
   assert.equal(isRecoverableJobError({ jobId: "job-17", terminal: false }), true);
   assert.equal(isRecoverableJobError({ jobId: "job-17" }), true);
+});
+
+test("active job storage clears only for its matching confirmed terminal failure", () => {
+  const storage = memoryStorage();
+  const store = createActiveJobStore(storage);
+  const acceptedJob = { jobId: "job-17", boardId: "board-2" };
+  store.write(acceptedJob);
+
+  assert.equal(clearConfirmedTerminalJob(store, acceptedJob, new Error("request failed")), false);
+  assert.equal(clearConfirmedTerminalJob(store, acceptedJob, { jobId: "job-other", terminal: true }), false);
+  assert.equal(clearConfirmedTerminalJob(store, acceptedJob, { jobId: "job-17", terminal: false }), false);
+  assert.deepEqual(store.read(), acceptedJob);
+  assert.equal(clearConfirmedTerminalJob(store, acceptedJob, { jobId: "job-17", terminal: true }), true);
+  assert.equal(store.read(), null);
+
+  store.write({ jobId: "job-current", boardId: "board-3" });
+  assert.equal(clearConfirmedTerminalJob(store, acceptedJob, { jobId: "job-17", terminal: true }), false);
+  assert.deepEqual(store.read(), { jobId: "job-current", boardId: "board-3" });
 });
 
 test("approval freezes and cancels editing before flushing the draft", async () => {
