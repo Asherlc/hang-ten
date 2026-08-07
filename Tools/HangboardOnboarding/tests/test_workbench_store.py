@@ -15,7 +15,95 @@ def test_store_creates_cli_compatible_revision_layout(tmp_path):
     board = store.create_board("Metolius Simulator 3D")
     revision = store.create_revision(board.id)
     assert revision.run_root == tmp_path / "boards" / board.id / "revisions" / "revision-0001" / "run"
-    assert store.read_board(board.id).active_revision_id == "revision-0001"
+    assert revision.state == "pending"
+    assert store.read_board(board.id).active_revision_id == ""
+
+
+def test_activate_initial_revision_is_atomic_when_manifest_replace_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    revision = store.create_revision(board.id)
+
+    def fail_replace(_source: object, _destination: object) -> None:
+        raise OSError("replacement interrupted")
+
+    monkeypatch.setattr("hangboard_vectorizer.workbench_store.os.replace", fail_replace)
+
+    with pytest.raises(OSError, match="replacement interrupted"):
+        store.activate_revision(board.id, revision.id)
+
+    persisted = WorkbenchStore(tmp_path).read_board(board.id)
+    assert persisted.active_revision_id == ""
+    assert persisted.revisions[0].state == "pending"
+
+
+def test_activate_fork_revision_publishes_child_and_stale_parent_together(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    parent = store.create_revision(board.id)
+    store.activate_revision(board.id, parent.id)
+    child = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+
+    activated = store.activate_revision(
+        board.id,
+        child.id,
+        stale_parent_revision_id=parent.id,
+        stale_from_stage=2,
+    )
+
+    reopened = WorkbenchStore(tmp_path).read_board(board.id)
+    records = {revision.id: revision for revision in reopened.revisions}
+    assert activated.id == child.id
+    assert reopened.active_revision_id == child.id
+    assert records[child.id].state == "active"
+    assert records[parent.id].stale_from_stage == 2
+
+
+@pytest.mark.parametrize(
+    ("stale_parent_revision_id", "stale_from_stage"),
+    [("revision-0001", None), (None, 2)],
+)
+def test_activate_revision_requires_paired_stale_parent_arguments(
+    tmp_path: Path,
+    stale_parent_revision_id: str | None,
+    stale_from_stage: int | None,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    revision = store.create_revision(board.id)
+
+    with pytest.raises(WorkbenchStoreError, match="provided together"):
+        store.activate_revision(
+            board.id,
+            revision.id,
+            stale_parent_revision_id=stale_parent_revision_id,
+            stale_from_stage=stale_from_stage,
+        )
+
+
+def test_activate_fork_revision_requires_atomic_parent_stale_marker(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    board = store.create_board("Example Board")
+    parent = store.create_revision(board.id)
+    store.activate_revision(board.id, parent.id)
+    child = store.create_revision(
+        board.id, parent_revision_id=parent.id, fork_stage=2
+    )
+
+    with pytest.raises(WorkbenchStoreError, match="stale parent"):
+        store.activate_revision(board.id, child.id)
+
+    persisted = store.read_board(board.id)
+    assert persisted.active_revision_id == parent.id
+    assert persisted.revisions[-1].state == "pending"
 
 
 def test_save_revision_is_atomic_and_rejects_stale_lineage(tmp_path):
@@ -192,7 +280,8 @@ def test_create_revision_keeps_published_directory_when_directory_fsync_fails(
 
     reopened = WorkbenchStore(tmp_path)
     revision = reopened.read_revision(board.id, "revision-0001")
-    assert reopened.read_board(board.id).active_revision_id == revision.id
+    assert reopened.read_board(board.id).active_revision_id == ""
+    assert revision.state == "pending"
     assert revision.run_root.parent.is_dir()
 
 

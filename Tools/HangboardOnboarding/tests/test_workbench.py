@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 from io import BytesIO
 import json
 from pathlib import Path
+from threading import Event
 
 from PIL import Image
 import pytest
@@ -318,6 +320,86 @@ def test_revision_replay_failure_does_not_mark_parent_lineage_stale(
     assert child.parent_revision_id == parent.id
     assert child.state == "failed"
     assert child.run_root.is_dir()
+
+
+def test_concurrent_initial_creation_exposes_no_pending_revision(
+    tmp_path: Path,
+) -> None:
+    runner = _BlockingStageRunner(0)
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners={0: runner})
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(
+            service.create_from_upload,
+            "Concurrent Board",
+            _fixture_image_bytes(),
+        )
+        assert runner.entered.wait(timeout=5)
+        board = store.list_boards()[0]
+        try:
+            assert board.active_revision_id == ""
+            assert board.revisions[0].state == "pending"
+            assert service.list_boards() == ()
+            with pytest.raises(WorkbenchServiceError, match="no active revision"):
+                service.get_board(board.id)
+        finally:
+            runner.release.set()
+        created = future.result(timeout=5)
+
+    persisted = store.read_board(created.board_id)
+    assert persisted.active_revision_id == created.revision_id
+    assert [
+        revision.id
+        for revision in persisted.revisions
+        if revision.state == "active"
+    ] == [created.revision_id]
+
+
+def test_concurrent_fork_replay_keeps_parent_active_until_child_is_usable(
+    service: WorkbenchService,
+    complete_board: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    entered = Event()
+    release = Event()
+
+    def block_replay(
+        context: RunContext,
+        document: Mapping[str, object],
+        artifact_root: Path,
+    ) -> StageCheckpoint:
+        entered.set()
+        if not release.wait(timeout=5):
+            raise TimeoutError("replay was not released")
+        return _materialize_reviewed_stub(2, context, document, artifact_root)
+
+    monkeypatch.setattr(
+        "hangboard_vectorizer.workbench.materialize_stage2_edit", block_replay
+    )
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(
+            service.revise_stage,
+            complete_board.board_id,
+            stage=3,
+        )
+        assert entered.wait(timeout=5)
+        try:
+            board = service.store.read_board(complete_board.board_id)
+            assert board.active_revision_id == complete_board.revision_id
+            assert board.revisions[-1].state == "pending"
+            assert service.get_board(complete_board.board_id) == complete_board
+            assert service.list_boards() == (complete_board,)
+        finally:
+            release.set()
+        child = future.result(timeout=5)
+
+    persisted = service.store.read_board(complete_board.board_id)
+    records = {revision.id: revision for revision in persisted.revisions}
+    assert persisted.active_revision_id == child.revision_id
+    assert records[child.revision_id].state == "active"
+    assert records[complete_board.revision_id].stale_from_stage == 3
 
 
 def test_ui_created_run_is_inspectable_by_cli_status(
@@ -942,6 +1024,19 @@ class _StubStageRunner:
                     _write_json(path, {})
                 candidate[field] = {"fileSha256": _hash_file(path)}
         return candidate
+
+
+class _BlockingStageRunner(_StubStageRunner):
+    def __init__(self, stage: int) -> None:
+        super().__init__(stage)
+        self.entered = Event()
+        self.release = Event()
+
+    def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
+        self.entered.set()
+        if not self.release.wait(timeout=5):
+            raise TimeoutError("stage runner was not released")
+        return super().run(context, artifact_root)
 
 
 class _FailAfterCacheRunner:

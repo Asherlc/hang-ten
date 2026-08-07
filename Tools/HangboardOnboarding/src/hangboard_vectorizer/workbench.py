@@ -92,6 +92,7 @@ class WorkbenchService:
         revision = self.store.create_revision(board.id)
         try:
             self.__start(board, revision, source_url)
+            self.store.activate_revision(board.id, revision.id)
             return self.__view(board.id, revision.id)
         except Exception:
             self.__record_failed_creation(board, revision)
@@ -118,6 +119,7 @@ class WorkbenchService:
                 os.fsync(stream.fileno())
             self.__start(board, revision, str(upload))
             cached_source_path(revision.run_root)
+            self.store.activate_revision(board.id, revision.id)
             remove_upload = True
             return self.__view(board.id, revision.id)
         except Exception:
@@ -276,8 +278,11 @@ class WorkbenchService:
                 restore_active_revision_id=parent.id,
             )
             raise
-        self.store.mark_descendants_stale(
-            board.id, parent.id, from_stage=stage
+        self.store.activate_revision(
+            board.id,
+            revision.id,
+            stale_parent_revision_id=parent.id,
+            stale_from_stage=stage,
         )
         return self.__view(board.id, revision.id)
 
@@ -361,7 +366,11 @@ class WorkbenchService:
     ) -> None:
         if revision.run_root.exists():
             if read_status(revision.run_root)["status"] == "failed":
-                self.__synchronize_revision(board.id, revision.id)
+                self.store.mark_revision_failed(
+                    board.id,
+                    revision.id,
+                    restore_active_revision_id=revision.id,
+                )
                 return
             self.store.mark_revision_failed(
                 board.id,

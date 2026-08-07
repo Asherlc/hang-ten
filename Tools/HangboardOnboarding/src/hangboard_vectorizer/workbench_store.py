@@ -138,12 +138,11 @@ class WorkbenchStore:
             parent_revision_id=parent_revision_id,
             fork_stage=fork_stage,
             current_stage=0,
-            state="active",
+            state="pending",
             stale_from_stage=None,
         )
         updated = replace(
             board,
-            active_revision_id=revision.id,
             revisions=(*board.revisions, revision),
         )
         publication = _PublicationState()
@@ -154,6 +153,59 @@ class WorkbenchStore:
                 revision_root.rmdir()
             raise
         return revision
+
+    @_synchronized
+    def activate_revision(
+        self,
+        board_id: str,
+        revision_id: str,
+        *,
+        stale_parent_revision_id: str | None = None,
+        stale_from_stage: int | None = None,
+    ) -> RevisionRecord:
+        """Publish one usable reserved revision and optional stale parent atomically."""
+        if (stale_parent_revision_id is None) != (stale_from_stage is None):
+            raise WorkbenchStoreError(
+                "stale parent revision and stale stage must be provided together"
+            )
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        if revision.state != "pending":
+            raise WorkbenchStoreError(
+                f"revision {revision.id} is not pending activation"
+            )
+        if (
+            revision.parent_revision_id is not None
+            and stale_parent_revision_id is None
+        ):
+            raise WorkbenchStoreError(
+                "fork activation requires a stale parent revision and stale stage"
+            )
+        updated_board = board
+        if stale_parent_revision_id is not None:
+            self._validate_identifier(stale_parent_revision_id, "revision")
+            self._validate_stage(stale_from_stage)
+            if revision.parent_revision_id != stale_parent_revision_id:
+                raise WorkbenchStoreError(
+                    f"revision {stale_parent_revision_id} is not the reserved parent"
+                )
+            parent = self._revision(board, stale_parent_revision_id)
+            stale_stage = (
+                stale_from_stage
+                if parent.stale_from_stage is None
+                else min(stale_from_stage, parent.stale_from_stage)
+            )
+            updated_board = self._replace_revision(
+                updated_board,
+                replace(parent, stale_from_stage=stale_stage),
+            )
+        activated = replace(revision, state="active")
+        updated_board = replace(
+            self._replace_revision(updated_board, activated),
+            active_revision_id=activated.id,
+        )
+        self._write_board(updated_board)
+        return activated
 
     @_synchronized
     def register_run(
@@ -210,10 +262,11 @@ class WorkbenchStore:
         revision = self._revision(board, revision_id)
         expected_root = self._revision_root(board.id, revision.id) / "run"
         if (
-            board.active_revision_id != revision.id
+            board.active_revision_id
             or board.saved_revision_id is not None
             or board.revisions != (revision,)
             or revision.parent_revision_id is not None
+            or revision.state != "pending"
             or revision.run_root != self._confined(expected_root)
             or revision.run_root.exists()
         ):
@@ -467,7 +520,7 @@ class WorkbenchStore:
             )
         current_stage = self._stage(record.get("currentStage"), "current stage")
         state = self._string(record.get("state"), "revision state")
-        if state not in {"active", "complete", "failed"}:
+        if state not in {"pending", "active", "complete", "failed"}:
             raise WorkbenchStoreError(f"revision state is invalid: {state}")
         stale_from_stage = self._optional_stage(
             record.get("staleFromStage"), "stale stage"
