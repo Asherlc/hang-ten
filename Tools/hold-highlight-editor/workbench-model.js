@@ -16,7 +16,7 @@
       let state = "upcoming";
       if (stage < currentStage || (completed && stage === currentStage)) state = "complete";
       else if (stage === currentStage) state = "current";
-      if (state === "complete" && staleFromStage !== null && stage >= staleFromStage && !completed) state = "stale";
+      if (state === "complete" && staleFromStage !== null && stage >= staleFromStage) state = "stale";
       return { stage, state };
     });
   }

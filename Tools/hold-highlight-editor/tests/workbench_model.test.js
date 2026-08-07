@@ -13,6 +13,11 @@ test("timeline completes the final stage after a completed workflow", () => {
   assert.deepEqual(rows.map((row) => row.state), ["complete", "complete", "complete", "complete", "complete", "complete", "complete"]);
 });
 
+test("stale stages take precedence in a completed workflow", () => {
+  const rows = timelineFor({ stage: 6, state: "complete", staleFromStage: 2 });
+  assert.deepEqual(rows.map((row) => row.state), ["complete", "complete", "stale", "stale", "stale", "stale", "stale"]);
+});
+
 test("canApprove permits an unchanged generated checkpoint and rejects invalid drafts", () => {
   assert.equal(canApprove({ state: "awaiting_review" }), true);
   assert.equal(canApprove({ state: "awaiting_review" }, { valid: false }), false);

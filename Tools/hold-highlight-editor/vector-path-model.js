@@ -24,7 +24,7 @@
       index += count;
       commands.push(commandFromValues(type, values));
     }
-    return commands;
+    return validatePathStructure(commands);
   }
 
   function serializeDisplayPath(commands) {
@@ -44,8 +44,7 @@
 
   function bendPath(commands, amount, bounds) {
     assertFinite(amount, "Bend amount");
-    const { minX, maxX } = normalizeBounds(bounds);
-    const width = maxX - minX;
+    const { minX, width } = normalizeBounds(bounds);
     return validateCommands(commands).map((command) => transformCommand(command, (x, y) => {
       const progress = Math.max(0, Math.min(1, (x - minX) / width));
       return [x, y + amount * 4 * progress * (1 - progress)];
@@ -98,13 +97,19 @@
 
   function transformCommand(command, transform) {
     if (command.type === "Z") return { type: "Z" };
-    const endpoint = transform(command.x, command.y);
+    const transformPoint = (x, y) => {
+      const point = transform(x, y);
+      assertFinite(point[0], "Transformed display path coordinate");
+      assertFinite(point[1], "Transformed display path coordinate");
+      return point;
+    };
+    const endpoint = transformPoint(command.x, command.y);
     if (command.type === "M" || command.type === "L") return { type: command.type, x: endpoint[0], y: endpoint[1] };
-    const firstHandle = transform(command.x1, command.y1);
+    const firstHandle = transformPoint(command.x1, command.y1);
     if (command.type === "Q") return {
       type: "Q", x1: firstHandle[0], y1: firstHandle[1], x: endpoint[0], y: endpoint[1],
     };
-    const secondHandle = transform(command.x2, command.y2);
+    const secondHandle = transformPoint(command.x2, command.y2);
     return {
       type: "C", x1: firstHandle[0], y1: firstHandle[1], x2: secondHandle[0], y2: secondHandle[1], x: endpoint[0], y: endpoint[1],
     };
@@ -112,13 +117,31 @@
 
   function validateCommands(commands) {
     if (!Array.isArray(commands)) throw new TypeError("Display path commands must be an array");
-    return commands.map((command) => {
+    const validated = commands.map((command) => {
       if (!command || typeof command !== "object") throw new TypeError("Display path command must be an object");
       const count = PARAMETER_COUNT[command.type];
       if (count === undefined) throw new TypeError(`Unsupported display path command: ${String(command.type)}`);
       for (const value of valuesForCommand(command)) assertFinite(value, "Display path coordinate");
       return command;
     });
+    return validatePathStructure(validated);
+  }
+
+  function validatePathStructure(commands) {
+    if (commands.length === 0) throw new TypeError("Display path cannot be empty");
+    let subpathOpen = false;
+    for (const command of commands) {
+      if (command.type === "M") {
+        if (subpathOpen) throw new TypeError("Each display path subpath must be closed before starting another");
+        subpathOpen = true;
+      } else if (!subpathOpen) {
+        throw new TypeError("Each display path subpath must start with M");
+      } else if (command.type === "Z") {
+        subpathOpen = false;
+      }
+    }
+    if (subpathOpen) throw new TypeError("Each display path subpath must be closed with Z");
+    return commands;
   }
 
   function valuesForCommand(command) {
@@ -139,25 +162,34 @@
         ? [matrix.a, matrix.b, matrix.c, matrix.d, matrix.e, matrix.f]
         : null;
     if (!values || values.length !== 6) throw new TypeError("Transform matrix must contain six values");
-    values.forEach((value) => assertFinite(value, "Transform matrix value"));
+    for (let index = 0; index < 6; index += 1) assertFinite(values[index], "Transform matrix value");
     return values.slice();
   }
 
   function normalizeBounds(bounds) {
     let minX;
     let maxX;
-    if (Array.isArray(bounds) && bounds.length === 4) [minX, , maxX] = bounds;
+    if (Array.isArray(bounds) && bounds.length === 4) {
+      for (let index = 0; index < 4; index += 1) assertFinite(bounds[index], "Bend bounds value");
+      [minX, , maxX] = bounds;
+    }
     else if (bounds && typeof bounds === "object" && "width" in bounds) {
+      for (const key of ["x", "y", "width", "height"]) assertFinite(bounds[key], `Bend bounds ${key}`);
       minX = bounds.x;
       maxX = bounds.x + bounds.width;
     } else if (bounds && typeof bounds === "object") {
       minX = bounds.minX ?? bounds.left;
       maxX = bounds.maxX ?? bounds.right;
+      for (const key of ["minY", "maxY", "top", "bottom"]) {
+        if (key in bounds) assertFinite(bounds[key], `Bend bounds ${key}`);
+      }
     }
     assertFinite(minX, "Bend bounds minimum x");
     assertFinite(maxX, "Bend bounds maximum x");
-    if (maxX <= minX) throw new RangeError("Bend bounds must have positive width");
-    return { minX, maxX };
+    const width = maxX - minX;
+    assertFinite(width, "Bend bounds width");
+    if (width <= 0) throw new RangeError("Bend bounds must have positive width");
+    return { minX, width };
   }
 
   function assertFinite(value, label) {
