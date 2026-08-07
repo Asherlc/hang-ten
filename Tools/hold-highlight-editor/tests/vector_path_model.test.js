@@ -8,6 +8,7 @@ const {
   bendPath,
   mirrorPath,
   treatPathCorner,
+  isExplicitClosingCommand,
 } = require("../vector-path-model.js");
 
 test("cubic display paths round-trip without flattening", () => {
@@ -79,6 +80,55 @@ test("closing M treatment can be changed without adding duplicate closure segmen
   assert.equal(
     serializeDisplayPath(sharp),
     "M 0 0 C 0 0 10 0 10 0 L 10 10 L 0 10 C 0 10 0 0 0 0 Z",
+  );
+});
+
+test("rounded closing M treatment converts explicit closure segments in place", () => {
+  const cases = [
+    {
+      source: "M 0 0 L 10 0 L 10 10 L 0 0 Z",
+      expected: "M 0 0 C 0 -2 10 0 10 0 L 10 10 C 10 10 0 2 0 0 Z",
+    },
+    {
+      source: "M 0 0 L 10 0 L 10 10 Q 3 7 0 0 Z",
+      expected: "M 0 0 C 0 -2 10 0 10 0 L 10 10 C 5.333333333333333 8 0 2 0 0 Z",
+    },
+  ];
+
+  for (const { source: path, expected } of cases) {
+    const source = parseDisplayPath(path);
+    const original = structuredClone(source);
+    const closingIndex = source.length - 2;
+    const rounded = treatPathCorner(source, 0, "rounded", 2);
+
+    assert.equal(serializeDisplayPath(rounded), expected);
+    assert.equal(rounded[closingIndex].type, "C");
+    assert.equal(rounded.length, source.length);
+    assert.deepEqual(
+      rounded.filter((command) => command.type !== "Z").map(({ x, y }) => [x, y]),
+      source.filter((command) => command.type !== "Z").map(({ x, y }) => [x, y]),
+    );
+    assert.deepEqual(source, original);
+  }
+});
+
+test("isExplicitClosingCommand identifies terminal closure segments in their own subpath", () => {
+  const terminalClosures = [
+    "M 0 0 L 10 0 L 0 0 Z",
+    "M 0 0 L 10 0 Q 4 4 0 0 Z",
+    "M 0 0 L 10 0 C 6 2 3 3 0 0 Z",
+  ];
+
+  for (const source of terminalClosures) {
+    const commands = parseDisplayPath(source);
+    assert.equal(isExplicitClosingCommand(commands, commands.length - 2), true);
+  }
+
+  assert.equal(isExplicitClosingCommand(parseDisplayPath("M 0 0 L 0 0 L 10 0 Z"), 1), false);
+  assert.equal(isExplicitClosingCommand(parseDisplayPath("M 0 0 L 10 0 L 5 5 Z"), 2), false);
+  assert.equal(
+    isExplicitClosingCommand(parseDisplayPath("M 100 100 L 110 100 Z M 0 0 L 10 0 L 0 0 Z"), 5),
+    true,
   );
 });
 

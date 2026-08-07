@@ -25,6 +25,7 @@
     bendPath,
     mirrorPath,
     treatPathCorner,
+    isExplicitClosingCommand,
   } = globalThis.HoldVectorPathModel;
   const {
     createLatestLoadCoordinator,
@@ -412,10 +413,7 @@
         handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, kind));
         group.appendChild(handle);
       });
-      const isExplicitClosure = command.type === "C"
-        && commands[commandIndex + 1]?.type === "Z"
-        && command.x === commands.find((item) => item.type === "M")?.x
-        && command.y === commands.find((item) => item.type === "M")?.y;
+      const isExplicitClosure = isExplicitClosingCommand(commands, commandIndex);
       if (!isExplicitClosure) {
         const selected = state.selectedCornerIndex === commandIndex;
         const handle = makeSvg("circle", { cx: endpoint[0], cy: endpoint[1], r: 4.5 / Math.max(state.zoom, 0.3), class: `vector-endpoint-handle${selected ? " selected-corner" : ""}` });

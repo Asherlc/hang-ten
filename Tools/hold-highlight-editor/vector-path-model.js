@@ -67,9 +67,7 @@
     const corner = result[cornerIndex];
     const endpoint = [corner.x, corner.y];
     const closesExplicitly = cornerIndex === subpath.start
-      && result[subpath.end - 1].type === "C"
-      && result[subpath.end - 1].x === endpoint[0]
-      && result[subpath.end - 1].y === endpoint[1];
+      && isExplicitClosingCommand(result, subpath.end - 1);
     const previousIndex = cornerIndex === subpath.start
       ? subpath.end - (closesExplicitly ? 2 : 1)
       : cornerIndex - 1;
@@ -82,6 +80,10 @@
     let incomingIndex = cornerIndex;
     if (cornerIndex === subpath.start && closesExplicitly) {
       incomingIndex = subpath.end - 1;
+      result[incomingIndex] = asCubic(
+        result[incomingIndex],
+        [result[incomingIndex - 1].x, result[incomingIndex - 1].y],
+      );
     } else if (cornerIndex === subpath.start) {
       const closingStart = result[subpath.end - 1];
       result.splice(subpath.end, 0, {
@@ -125,6 +127,19 @@
     [incoming.x2, incoming.y2] = [endpoint[0] - direction[0] * amount, endpoint[1] - direction[1] * amount];
     [outgoing.x1, outgoing.y1] = [endpoint[0] + direction[0] * amount, endpoint[1] + direction[1] * amount];
     return result;
+  }
+
+  function isExplicitClosingCommand(commands, commandIndex) {
+    const validated = validateCommands(commands);
+    if (!Number.isInteger(commandIndex) || commandIndex < 0 || commandIndex >= validated.length) return false;
+    const command = validated[commandIndex];
+    if (!new Set(["L", "Q", "C"]).has(command.type) || validated[commandIndex + 1]?.type !== "Z") return false;
+    for (let index = commandIndex - 1; index >= 0; index -= 1) {
+      if (validated[index].type === "M") {
+        return command.x === validated[index].x && command.y === validated[index].y;
+      }
+    }
+    return false;
   }
 
   function subpathForCorner(commands, cornerIndex) {
@@ -323,5 +338,6 @@
     bendPath,
     mirrorPath,
     treatPathCorner,
+    isExplicitClosingCommand,
   };
 }));
