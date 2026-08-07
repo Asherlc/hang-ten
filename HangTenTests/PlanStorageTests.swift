@@ -9,9 +9,7 @@ final class PlanStorageTests: XCTestCase {
                 from: Data("\"\(legacyValue)\"".utf8)
             )
             let reencoded = try JSONEncoder().encode(decoded)
-            let reencodedRawValue = try XCTUnwrap(
-                JSONSerialization.jsonObject(with: reencoded) as? String
-            )
+            let reencodedRawValue = try JSONDecoder().decode(String.self, from: reencoded)
 
             XCTAssertEqual(decoded, .openHand, "Expected \(legacyValue) to migrate to open-hand posture.")
             XCTAssertEqual(reencodedRawValue, "openHand")
