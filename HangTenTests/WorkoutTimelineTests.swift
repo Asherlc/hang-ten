@@ -4,6 +4,185 @@ import UIKit
 @testable import HangTen
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testHoldCuePrefersSingleTargetStepGripOverride() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            gripType: .openHand
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            gripType: .halfCrimp
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.hold, hold)
+        XCTAssertEqual(cue?.gripType, .halfCrimp)
+    }
+
+    func testHoldCueFallsBackToBoardHoldGrip() {
+        let hold = BoardHold(
+            id: "cue-pocket",
+            name: "Cue pocket",
+            shortLabel: "P",
+            detail: "Pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            gripType: .threeFingerPocket
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.pocket)]
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.gripType, .threeFingerPocket)
+    }
+
+    func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
+        let hold = BoardHold(
+            id: "fallback-edge",
+            name: "Fallback edge",
+            shortLabel: "F",
+            detail: "Fallback edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            features: [.largeEdge]
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.feature(.smallEdge, fallbacks: [.largeEdge])]
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.hold, hold)
+    }
+
+    func testHoldCueIsUnavailableForMultiTargetSteps() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge), .kind(.jug)]
+        )
+
+        XCTAssertNil(WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold])))
+    }
+
+    func testHoldCueResolvesWhenHighlightedHoldMatchesSingleTarget() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.ids(hold.id)]
+        )
+
+        XCTAssertNotNil(
+            WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+        )
+    }
+
+    func testHoldCueIsUnavailableWhenHighlightedHoldDoesNotMatchSingleTarget() {
+        let targetHold = BoardHold(
+            id: "target-edge",
+            name: "Target edge",
+            shortLabel: "T",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let highlightedHold = BoardHold(
+            id: "highlighted-jug",
+            name: "Highlighted jug",
+            shortLabel: "J",
+            detail: "Jug",
+            kind: .jug,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.ids(targetHold.id)]
+        )
+
+        XCTAssertNil(
+            WorkoutHoldCuePolicy.resolve(
+                step: step,
+                hold: highlightedHold,
+                on: board(containing: [targetHold, highlightedHold])
+            )
+        )
+    }
+
+    private func board(containing holds: [BoardHold]) -> TrainingBoard {
+        TrainingBoard(
+            id: "cue-board",
+            manufacturer: "Test",
+            name: "Cue board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            holds: holds,
+            productURL: URL(string: "https://example.com/cue-board")!,
+            photoAssetName: nil
+        )
+    }
+
     private let steps: [WorkoutStep] = [
         WorkoutStep(
             id: "first",
