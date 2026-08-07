@@ -82,7 +82,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
+enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
     case index
     case middle
     case ring
@@ -100,14 +100,58 @@ enum FingerSlot: String, CaseIterable, Hashable, Identifiable {
     }
 }
 
+struct FingerConfiguration: Codable, Hashable {
+    let engagedFingers: Set<FingerSlot>
+
+    init(engagedFingers: Set<FingerSlot>) {
+        self.engagedFingers = engagedFingers
+    }
+
+    var count: Int { engagedFingers.count }
+
+    var orderedFingers: [FingerSlot] {
+        FingerSlot.allCases.filter(engagedFingers.contains)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case engagedFingers
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let decodedFingers = try container.decode([FingerSlot].self, forKey: .engagedFingers)
+        guard !decodedFingers.isEmpty else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .engagedFingers,
+                in: container,
+                debugDescription: "Finger configuration must include at least one finger."
+            )
+        }
+        engagedFingers = Set(decodedFingers)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(orderedFingers, forKey: .engagedFingers)
+    }
+}
+
 enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case openHand
     case halfCrimp
     case fullCrimp
-    case fourFingerPocket
-    case threeFingerPocket
-    case twoFingerPocket
-    case sloper
+
+    /// Legacy source compatibility; encodes as the open-hand posture.
+    static let fourFingerPocket = GripType.openHand
+
+    /// Legacy source compatibility; encodes as the open-hand posture.
+    static let threeFingerPocket = GripType.openHand
+
+    /// Legacy source compatibility; encodes as the open-hand posture.
+    static let twoFingerPocket = GripType.openHand
+
+    /// Legacy source compatibility; encodes as the open-hand posture.
+    static let sloper = GripType.openHand
 
     var id: String { rawValue }
 
@@ -116,26 +160,37 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         case .openHand: "Open hand"
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
-        case .fourFingerPocket: "Four-finger pocket"
-        case .threeFingerPocket: "Three-finger pocket"
-        case .twoFingerPocket: "Two-finger pocket"
-        case .sloper: "Open-hand sloper"
         }
     }
 
     var activeFingers: Set<FingerSlot> {
-        switch self {
-        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
-            Set(FingerSlot.allCases)
-        case .threeFingerPocket:
-            [.index, .middle, .ring]
-        case .twoFingerPocket:
-            [.middle, .ring]
-        }
+        Set(FingerSlot.allCases)
     }
 
     var thumbEngaged: Bool {
         self == .fullCrimp
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        switch rawValue {
+        case "sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket":
+            self = .openHand
+        default:
+            guard let gripType = Self(rawValue: rawValue) else {
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Unknown grip posture: \(rawValue)."
+                )
+            }
+            self = gripType
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
     }
 }
 
@@ -146,6 +201,7 @@ struct BoardHold: Identifiable, Hashable {
     let detail: String
     let kind: HoldKind
     let gripType: GripType
+    let fingerCapacity: Int
     let cueStyle: HoldCueStyle
     let frame: HoldFrame
     let sizeMillimeters: Int?
@@ -160,6 +216,7 @@ struct BoardHold: Identifiable, Hashable {
         frame: HoldFrame,
         sizeMillimeters: Int? = nil,
         gripType: GripType = .openHand,
+        fingerCapacity: Int = 4,
         cueStyle: HoldCueStyle? = nil,
         features: Set<HoldFeature>? = nil
     ) {
@@ -169,23 +226,24 @@ struct BoardHold: Identifiable, Hashable {
         self.detail = detail
         self.kind = kind
         self.gripType = gripType
+        self.fingerCapacity = fingerCapacity
         self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : .slot))
         self.frame = frame
         self.sizeMillimeters = sizeMillimeters
-        self.features = features ?? Self.defaultFeatures(kind: kind, gripType: gripType)
+        self.features = features ?? Self.defaultFeatures(kind: kind, fingerCapacity: fingerCapacity)
     }
 
-    private static func defaultFeatures(kind: HoldKind, gripType: GripType) -> Set<HoldFeature> {
+    private static func defaultFeatures(kind: HoldKind, fingerCapacity: Int) -> Set<HoldFeature> {
         switch kind {
         case .jug:
             return [.jug]
         case .edge:
             return []
         case .pocket:
-            switch gripType {
-            case .twoFingerPocket:
+            switch fingerCapacity {
+            case 2:
                 return [.pocket, .twoFingerPocket]
-            case .threeFingerPocket:
+            case 3:
                 return [.pocket, .threeFingerPocket]
             default:
                 return [.pocket, .fourFingerPocket]
@@ -353,6 +411,7 @@ struct WorkoutStep: Identifiable, Hashable {
     let targets: [HoldTarget]
     let segments: [WorkoutSegment]
     let gripType: GripType?
+    let fingerConfiguration: FingerConfiguration?
     /// When set, the app splits the minute into timed work and timed rest.
     /// Manufacturer task cycles leave this nil because the athlete completes
     /// the listed reps/hangs, then rests for whatever remains in the minute.
@@ -369,6 +428,7 @@ struct WorkoutStep: Identifiable, Hashable {
         targets: [HoldTarget],
         segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil,
         timedWorkDuration: TimeInterval? = nil
     ) {
         self.id = id
@@ -381,6 +441,7 @@ struct WorkoutStep: Identifiable, Hashable {
         self.targets = targets
         self.segments = segments
         self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
         self.timedWorkDuration = timedWorkDuration
     }
 
@@ -426,6 +487,7 @@ struct WorkoutStep: Identifiable, Hashable {
             targets: targets,
             segments: segments,
             gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             timedWorkDuration: timedWorkDuration
         )
     }
@@ -439,6 +501,7 @@ struct MetoliusTaskDefinition: Hashable {
     let phase: WorkoutPhase
     let targets: [HoldTarget]
     let gripType: GripType?
+    let fingerConfiguration: FingerConfiguration?
     let timing: WorkoutSegmentTiming
 
     init(
@@ -449,6 +512,7 @@ struct MetoliusTaskDefinition: Hashable {
         phase: WorkoutPhase,
         targets: [HoldTarget],
         gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil,
         timing: WorkoutSegmentTiming = .fixed
     ) {
         self.title = title
@@ -458,6 +522,7 @@ struct MetoliusTaskDefinition: Hashable {
         self.phase = phase
         self.targets = targets
         self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
         self.timing = timing
     }
 }
@@ -547,7 +612,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.158, y: 0.035, width: 0.190, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .sloper,
+                gripType: .openHand,
                 features: [.largeSlope]
             ),
             BoardHold(
@@ -558,7 +623,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.652, y: 0.035, width: 0.190, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .sloper,
+                gripType: .openHand,
                 features: [.largeSlope]
             ),
             BoardHold(
@@ -569,7 +634,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .sloper,
+                gripType: .openHand,
                 features: [.roundSloper]
             ),
             BoardHold(
@@ -600,7 +665,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .threeFingerPocket
+                fingerCapacity: 3
             ),
             BoardHold(
                 id: "pocket-29-three-right",
@@ -610,7 +675,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.692, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .threeFingerPocket
+                fingerCapacity: 3
             ),
             BoardHold(
                 id: "pocket-29-two-left",
@@ -620,7 +685,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
-                gripType: .twoFingerPocket
+                fingerCapacity: 2
             ),
             BoardHold(
                 id: "pocket-29-two-right",
@@ -630,7 +695,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.595, y: 0.370, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
-                gripType: .twoFingerPocket
+                fingerCapacity: 2
             ),
             BoardHold(
                 id: "pocket-29-four-center",
@@ -640,7 +705,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .fourFingerPocket
+                fingerCapacity: 4
             ),
             BoardHold(
                 id: "edge-19-left",
@@ -670,7 +735,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
                 sizeMillimeters: 19,
-                gripType: .threeFingerPocket
+                fingerCapacity: 3
             ),
             BoardHold(
                 id: "pocket-19-three-right",
@@ -680,7 +745,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.680, y: 0.733, width: 0.104, height: 0.140),
                 sizeMillimeters: 19,
-                gripType: .threeFingerPocket
+                fingerCapacity: 3
             ),
             BoardHold(
                 id: "pocket-19-two-left",
@@ -690,7 +755,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
                 sizeMillimeters: 19,
-                gripType: .twoFingerPocket
+                fingerCapacity: 2
             ),
             BoardHold(
                 id: "pocket-19-two-right",
@@ -700,7 +765,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.591, y: 0.733, width: 0.073, height: 0.140),
                 sizeMillimeters: 19,
-                gripType: .twoFingerPocket
+                fingerCapacity: 2
             ),
             BoardHold(
                 id: "pocket-19-four-center",
@@ -710,7 +775,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.733, width: 0.150, height: 0.140),
                 sizeMillimeters: 19,
-                gripType: .fourFingerPocket
+                fingerCapacity: 4
             )
         ],
         productURL: URL(string: "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards")!,
@@ -870,6 +935,7 @@ enum MetoliusCycleBuilder {
                     )
                 ],
                 gripType: task.gripType,
+                fingerConfiguration: task.fingerConfiguration,
                 timedWorkDuration: task.timing == .fixed ? task.duration : nil
             )
         }
