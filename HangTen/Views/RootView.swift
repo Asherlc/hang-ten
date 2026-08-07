@@ -1320,8 +1320,8 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1345,8 +1345,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					} else {
 						portraitSession(
@@ -1361,8 +1360,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					}
 				}
@@ -1539,8 +1537,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
 			VStack(alignment: .leading, spacing: 19) {
@@ -1563,8 +1560,8 @@ struct WorkoutView: View {
 					highlightMode: highlightMode
 				)
 					.padding(.horizontal, 2)
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					GripDiagramView(hold: activeHold, gripType: step.gripType)
+				if let holdCue, countdown == 0, !isComplete {
+					GripDiagramView(hold: holdCue.hold, gripType: holdCue.gripType)
 				}
 				cueCard(
 					step: step,
@@ -1596,8 +1593,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		VStack(spacing: 9) {
 			landscapeHeader(
@@ -1613,9 +1609,8 @@ struct WorkoutView: View {
 				.tint(Color.hangGreenDark)
 
 			HStack(spacing: 12) {
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .left)
+				if let holdCue, countdown == 0, !isComplete {
+					GripHandCueCard(hold: holdCue.hold, gripType: holdCue.gripType, side: .left)
 						.frame(width: 142)
 				}
 
@@ -1630,13 +1625,11 @@ struct WorkoutView: View {
 						highlightMode: highlightMode
 					)
 						.frame(maxWidth: .infinity)
-						.frame(height: isResting ? 60 : nil)
 				}
 				.frame(maxWidth: .infinity)
 
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .right)
+				if let holdCue, countdown == 0, !isComplete {
+					GripHandCueCard(hold: holdCue.hold, gripType: holdCue.gripType, side: .right)
 						.frame(width: 142)
 				}
 			}
