@@ -1172,7 +1172,25 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertEqual(state.currentElapsed(planDuration: 90, at: uptime + 4.25), 1.25, accuracy: 0.000_1)
     }
 
-    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
+    func testRunningSkipIntoRestTransitionsImmediatelyAndKeepsRunning() {
+        let now: TimeInterval = 100
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            activeStartUptime: now - 10,
+            pausedElapsed: 10,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+        )
+
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.activeStartUptime, now)
+        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now), 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 1), 61)
+    }
+
+    func testPausedSkipIntoRestTransitionsImmediatelyAndKeepsPaused() {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
@@ -1182,7 +1200,24 @@ final class WorkoutSessionStateTests: XCTestCase {
         )
 
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+
+        XCTAssertNil(state.countdownKind)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 10), 60)
+    }
+
+    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
+        let now: TimeInterval = 100
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            activeStartUptime: nil,
+            pausedElapsed: 65,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+        )
+
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.countdownKind, .skip)
         XCTAssertEqual(state.countdownRemaining(at: now), 3)
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
@@ -1193,7 +1228,7 @@ final class WorkoutSessionStateTests: XCTestCase {
         state.transitionExpiredCountdown(at: countdownStart)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.activeStartUptime, countdownStart)
-        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 80)
         XCTAssertTrue(state.canNavigate(planDuration: timeline.duration, at: countdownStart))
     }
 
@@ -1278,8 +1313,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
@@ -1288,7 +1323,7 @@ final class WorkoutSessionStateTests: XCTestCase {
 
         XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
@@ -1296,8 +1331,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
@@ -1306,7 +1341,7 @@ final class WorkoutSessionStateTests: XCTestCase {
 
         XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
@@ -1314,8 +1349,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 

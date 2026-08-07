@@ -1398,6 +1398,8 @@ struct WorkoutSessionState: Equatable {
 
         if target >= planDuration {
             seek(to: target, planDuration: planDuration, at: uptime)
+        } else if timeline.step(at: target)?.phase == .rest {
+            seek(to: target, planDuration: planDuration, at: uptime)
         } else {
             startSkipCountdown(to: target, at: uptime)
         }
