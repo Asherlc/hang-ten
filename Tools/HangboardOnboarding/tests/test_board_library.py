@@ -115,6 +115,27 @@ def test_publish_appends_version_without_mutating_previous_version(tmp_path: Pat
     assert library.get_board(original.board_id).current_version_id == "revision-0002"
 
 
+def test_list_boards_rejects_a_corrupted_noncurrent_published_version(
+    tmp_path: Path,
+) -> None:
+    library, original = _complete_library(tmp_path)
+    library.publish(
+        display_name=original.display_name,
+        run_root=_complete_fixture_run(tmp_path / "new-run"),
+        board_id=original.board_id,
+        expected_current_version_id=original.current_version_id,
+    )
+    published_path = (
+        original.package_path / "versions" / "revision-0001" / "published.json"
+    )
+    published = _read_json(published_path)
+    published["definition"]["sha256"] = "0" * 64
+    _write_json(published_path, published)
+
+    with pytest.raises(BoardLibraryError, match="published"):
+        library.list_boards()
+
+
 def test_publish_conflict_leaves_current_pointer_unchanged(tmp_path: Path) -> None:
     library, original = _complete_library(tmp_path)
 

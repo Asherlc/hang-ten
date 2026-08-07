@@ -242,7 +242,7 @@ class RepositoryBoardLibrary:
             raise BoardLibraryError("displayName does not match catalog")
         current_id = self._board_id(document["currentVersionId"], "currentVersionId")
         versions = self._list(document["versions"], "board.versions")
-        found: Path | None = None
+        found_run: Path | None = None
         seen: set[str] = set()
         for value in versions:
             version = self._mapping(value, "board version")
@@ -259,15 +259,15 @@ class RepositoryBoardLibrary:
             expected = package / "versions" / version_id
             if version_path != expected:
                 raise BoardLibraryError("publishedPath does not match versionId")
+            run = self._safe_existing_directory(version_path / "run", version_path, "run")
+            published = self._read_published(version_path / "published.json", version_path)
+            self._validate_complete_run(run)
+            self._validate_published_run(published, run)
             if version_id == current_id:
-                found = version_path
-        if found is None:
+                found_run = run
+        if found_run is None:
             raise BoardLibraryError("currentVersionId is missing from versions")
-        run = self._safe_existing_directory(found / "run", found, "run")
-        published = self._read_published(found / "published.json", found)
-        self._validate_complete_run(run)
-        self._validate_published_run(published, run)
-        return LibraryBoard(board_id, display_name, package, current_id, run)
+        return LibraryBoard(board_id, display_name, package, current_id, found_run)
 
     def _read_board_document(self, path: Path, package: Path) -> dict[str, object]:
         document = self._read_json(path, package, "board")
