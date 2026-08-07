@@ -352,6 +352,13 @@ final class CustomRoutineStoreTests: XCTestCase {
             [.holdIDs(["edge-19-right"])]
         ])
         XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1, 1])
+        let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
+        let persistedJSON = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: persistedData) as? [String: Any]
+        )
+        let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
+        let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
+        XCTAssertEqual(persistedSteps.first?["activeDuration"] as? Double, 8)
         XCTAssertEqual(stored.steps[2].segments[0].timing, .undefined)
         XCTAssertEqual(stored.steps[3].segments[0].timing, .stopwatch)
         XCTAssertEqual(CustomRoutineDraft(editing: stored).definition(), stored)

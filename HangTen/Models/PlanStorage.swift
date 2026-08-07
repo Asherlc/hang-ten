@@ -330,6 +330,20 @@ struct WorkoutStepDefinition: Codable, Hashable {
             forKey: .activeDuration
         )
     }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(instruction, forKey: .instruction)
+        try container.encode(accessory, forKey: .accessory)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(phase, forKey: .phase)
+        try container.encode(targets, forKey: .targets)
+        try container.encode(segments, forKey: .segments)
+        try container.encodeIfPresent(gripType, forKey: .gripType)
+        try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
+    }
 }
 
 extension WorkoutTargetDefinition {

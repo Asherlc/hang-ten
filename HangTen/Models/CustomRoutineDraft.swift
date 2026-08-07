@@ -10,6 +10,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var targets: [WorkoutTargetDefinition]
     var timing: WorkoutSegmentTiming
     var gripType: GripType?
+    let activeDuration: TimeInterval?
 
     init(
         id: String,
@@ -20,7 +21,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         phase: WorkoutPhase,
         targets: [WorkoutTargetDefinition],
         timing: WorkoutSegmentTiming,
-        gripType: GripType?
+        gripType: GripType?,
+        activeDuration: TimeInterval? = nil
     ) {
         self.id = id
         self.title = title
@@ -31,6 +33,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         self.targets = targets
         self.timing = timing
         self.gripType = gripType
+        self.activeDuration = activeDuration
     }
 
     var isRest: Bool {
@@ -205,7 +208,8 @@ struct CustomRoutineDraft: Equatable {
             phase: definition.phase,
             targets: definition.targets,
             timing: definition.segments.first?.timing ?? .fixed,
-            gripType: definition.gripType
+            gripType: definition.gripType,
+            activeDuration: definition.activeDuration
         )
     }
 
@@ -228,7 +232,8 @@ struct CustomRoutineDraft: Equatable {
             phase: step.phase,
             targets: targets,
             segments: [segment],
-            gripType: step.isRest ? nil : step.gripType
+            gripType: step.isRest ? nil : step.gripType,
+            activeDuration: step.activeDuration
         )
     }
 
