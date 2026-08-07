@@ -10,6 +10,11 @@
     const factor = 10 ** digits;
     return Math.round(value * factor) / factor;
   };
+  const roundRasterCoordinate = (value) => {
+    const lower = Math.floor(value);
+    if (value - lower !== 0.5) return Math.round(value);
+    return lower % 2 === 0 ? lower : lower + 1;
+  };
 
   function polygonArea(points) {
     let sum = 0;
@@ -63,7 +68,7 @@
       && region.anchor.every(Number.isFinite)
       ? region.anchor.map((value) => round(value))
       : null;
-    if (existing && pointInPolygon(existing.map(Math.round), contour)) return existing;
+    if (existing && pointInPolygon(existing.map(roundRasterCoordinate), contour)) return existing;
 
     const center = centroid(contour);
     const [minX, minY, maxX, maxY] = bounds(contour);
@@ -100,7 +105,7 @@
       }
     }
     if (best) return best.point;
-    return contour[0].map((value) => Math.round(value));
+    return contour[0].map(roundRasterCoordinate);
   }
 
   function regionForExport(region) {

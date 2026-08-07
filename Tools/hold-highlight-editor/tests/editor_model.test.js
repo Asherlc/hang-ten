@@ -105,6 +105,29 @@ test("buildEditedDocument replaces a treated anchor cut away by a rounded corner
   assert.deepEqual(rounded, original);
 });
 
+test("buildEditedDocument uses Python pixel rounding for a fractional treated anchor", () => {
+  const rounded = {
+    ...baseline,
+    anchor: [0.5, 0.5],
+    contour: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    metadata: {
+      ...baseline.metadata,
+      pathStyle: "straight",
+      curveTension: 0.8,
+      cornerTreatments: { 0: { treatment: "rounded", amount: 4 } },
+    },
+  };
+
+  const result = buildEditedDocument({
+    canvas: { width: 20, height: 20 },
+    regions: [rounded],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+
+  assert.deepEqual(result.regions[0].anchor, [5, 4]);
+});
+
 test("buildCorrectionsDocument identifies added modified and deleted regions", () => {
   const modified = { ...baseline, contour: [[1, 0], [10, 0], [10, 10]] };
   const added = { ...baseline, id: 3, key: "grip-003" };

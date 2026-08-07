@@ -285,7 +285,7 @@ def test_stage2_treated_anchor_from_browser_export_owns_its_region_label(
     edited = _load_fixture("stage-2-regions-edited.json")
     browser_region = {
         **edited["regions"][0],
-        "anchor": [0, 0],
+        "anchor": [0.5, 0.5],
         "contour": [[0, 0], [10, 0], [10, 10], [0, 10]],
         "metadata": {
             "mode": "surface",
