@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const {
   buildEditedDocument,
   buildCorrectionsDocument,
+  resizeTransform,
   resizeContour,
   simplifyClosedContour,
   mirrorContour,
@@ -98,6 +99,47 @@ test("resizeContour preserves aspect ratio from corner handles", () => {
   });
 
   assert.deepEqual(result, [[0, 0], [30, 0], [30, 30], [0, 30]]);
+});
+
+test("resizeContour uses signed local deltas for every side and corner handle", () => {
+  const points = [[0, 0], [10, 0], [10, 10], [0, 10]];
+  const cases = [
+    ["n", [5, -10], [0, -10, 10, 10]],
+    ["s", [5, 20], [0, 0, 10, 20]],
+    ["w", [-10, 5], [-10, 0, 10, 10]],
+    ["e", [20, 5], [0, 0, 20, 10]],
+    ["nw", [-10, -20], [-10, -20, 10, 10]],
+    ["ne", [20, -20], [0, -20, 20, 10]],
+    ["sw", [-10, 20], [-10, 0, 10, 20]],
+    ["se", [20, 20], [0, 0, 20, 20]],
+  ];
+
+  for (const [handle, pointer, expectedBounds] of cases) {
+    const resized = resizeContour({ points, handle, pointer });
+    const xs = resized.map(([x]) => x);
+    const ys = resized.map(([, y]) => y);
+    assert.deepEqual(
+      [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
+      expectedBounds,
+      handle,
+    );
+  }
+});
+
+test("resizeTransform scales rotated vector geometry in its local frame", () => {
+  const points = [[10, 0], [10, 10], [0, 10], [0, 0]];
+  const matrix = resizeTransform({
+    points,
+    rotation: Math.PI / 2,
+    handle: "e",
+    pointer: [5, 15],
+  });
+  const transformed = points.map(([x, y]) => [
+    Math.round((matrix[0] * x + matrix[2] * y + matrix[4]) * 1e8) / 1e8,
+    Math.round((matrix[1] * x + matrix[3] * y + matrix[5]) * 1e8) / 1e8,
+  ]);
+
+  assert.deepEqual(transformed, [[10, 0], [10, 15], [0, 15], [0, 0]]);
 });
 
 test("mirrorContour reflects across the canvas center and reverses winding", () => {

@@ -65,6 +65,9 @@ def test_approve_and_advance_stops_at_next_review(
     assert result.state == "awaiting_review"
     assert result.review_path is not None
     assert result.review_path.name == "stage-1-review.png"
+    revision = service.store.read_revision(result.board_id, result.revision_id)
+    assert revision.current_stage == 1
+    assert revision.state == "active"
 
 
 def test_editable_stages_expose_a_clean_canvas_aligned_image_separate_from_review(
@@ -183,7 +186,13 @@ def test_revision_replay_failure_does_not_mark_parent_lineage_stale(
     parent = service.store.read_revision(
         complete_board.board_id, complete_board.revision_id
     )
+    board = service.store.read_board(complete_board.board_id)
+    child = board.revisions[-1]
     assert parent.stale_from_stage is None
+    assert board.active_revision_id == parent.id
+    assert child.parent_revision_id == parent.id
+    assert child.state == "failed"
+    assert child.run_root.is_dir()
 
 
 def test_ui_created_run_is_inspectable_by_cli_status(
@@ -247,6 +256,53 @@ def test_failed_creation_rolls_back_metadata_without_removing_upload_before_cach
     assert runner.saw_upload is (source_kind == "upload")
     assert list(tmp_path.rglob(".upload-*")) == []
     assert service.list_boards() == ()
+
+
+def test_post_publication_creation_failure_preserves_failed_run_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    service = WorkbenchService(store, runners=_stub_runners())
+
+    monkeypatch.setattr(
+        WorkbenchService,
+        "_WorkbenchService__view",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            RuntimeError("view publication interrupted")
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="view publication interrupted"):
+        service.create_from_upload("Interrupted Board", _fixture_image_bytes())
+
+    board = store.list_boards()[0]
+    revision = board.revisions[0]
+    assert board.active_revision_id == ""
+    assert revision.state == "failed"
+    assert revision.run_root.is_dir()
+
+
+def test_import_rejects_an_outside_run_before_reading_its_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace = tmp_path / "workspace"
+    outside = tmp_path / "outside-run"
+    outside.mkdir()
+    service = WorkbenchService(WorkbenchStore(workspace), runners=_stub_runners())
+    reads = []
+
+    def record_read(run_root: Path):
+        reads.append(run_root)
+        raise AssertionError("outside run was read")
+
+    monkeypatch.setattr("hangboard_vectorizer.workbench.read_status", record_read)
+
+    with pytest.raises(WorkbenchStoreError, match="workspace"):
+        service.import_run(outside)
+
+    assert reads == []
 
 
 def test_create_from_url_uses_shared_source_cache_without_network_in_tests(
@@ -472,6 +528,12 @@ def test_retry_resumes_an_imported_failed_run_without_changing_prior_evidence(
         WorkbenchStore(tmp_path), runners=_stub_runners()
     )
     imported = service.import_run(cli_run)
+    imported_record = service.store.read_revision(
+        imported.board_id, imported.revision_id
+    )
+
+    assert imported_record.current_stage == 0
+    assert imported_record.state == "failed"
 
     retried = service.retry(
         imported.board_id,

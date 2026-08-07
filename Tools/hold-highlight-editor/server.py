@@ -17,6 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import parse_qs, unquote, urlencode, urlsplit
+from uuid import uuid4
 
 from job_manager import (
     BoardJobManager,
@@ -28,7 +29,11 @@ from job_manager import (
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
-_BOARD_ALLOCATION_JOB_KEY = "workbench-board-allocation"
+
+
+def _new_board_reservation_key() -> str:
+    """Give each independent pre-board operation its own exclusion key."""
+    return f"workbench-board-reservation-{uuid4().hex}"
 
 
 class EditorError(ValueError):
@@ -411,14 +416,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 product_name = self._required_string(payload, "productName")
                 source = self._required_string(payload, "source")
                 self._submit_job(
-                    _BOARD_ALLOCATION_JOB_KEY,
+                    _new_board_reservation_key(),
                     lambda: service.create_from_url(product_name, source),
                 )
                 return
             if request.path == "/api/boards/import":
                 run_root = Path(self._required_string(payload, "runRoot"))
                 self._submit_job(
-                    _BOARD_ALLOCATION_JOB_KEY,
+                    _new_board_reservation_key(),
                     lambda: service.import_run(run_root),
                 )
                 return
@@ -577,7 +582,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not content:
             raise RequestError(HTTPStatus.BAD_REQUEST, "upload must not be empty")
         self._submit_job(
-            _BOARD_ALLOCATION_JOB_KEY,
+            _new_board_reservation_key(),
             lambda: service.create_from_upload(product_name, content),
         )
 

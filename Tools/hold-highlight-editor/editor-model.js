@@ -132,7 +132,8 @@
     };
   }
 
-  function resizeContour({ points, rotation = 0, handle, pointer, preserveAspect = false }) {
+  function resizeTransform({ points, rotation = 0, handle, pointer, preserveAspect = false }) {
+    if (!Array.isArray(points) || points.length === 0) throw new TypeError("resize points are required");
     const center = centroid(points);
     const cosine = Math.cos(rotation);
     const sine = Math.sin(rotation);
@@ -146,7 +147,14 @@
       center[1] + x * sine + y * cosine,
     ];
     const local = points.map(toLocal);
-    const [minX, minY, maxX, maxY] = bounds(local);
+    const localXs = local.map(([x]) => x);
+    const localYs = local.map(([, y]) => y);
+    const [minX, minY, maxX, maxY] = [
+      Math.min(...localXs),
+      Math.min(...localYs),
+      Math.max(...localXs),
+      Math.max(...localYs),
+    ];
     const localPointer = toLocal(pointer);
     const scalesX = handle.includes("e") || handle.includes("w");
     const scalesY = handle.includes("n") || handle.includes("s");
@@ -154,8 +162,9 @@
     const anchorY = handle.includes("n") ? maxY : minY;
     const movingX = handle.includes("w") ? minX : maxX;
     const movingY = handle.includes("n") ? minY : maxY;
-    let scaleX = scalesX ? (localPointer[0] - anchorX) / Math.max(Math.abs(movingX - anchorX), 1e-6) : 1;
-    let scaleY = scalesY ? (localPointer[1] - anchorY) / Math.max(Math.abs(movingY - anchorY), 1e-6) : 1;
+    const signedFloor = (value) => Math.abs(value) < 1e-6 ? (value < 0 ? -1e-6 : 1e-6) : value;
+    let scaleX = scalesX ? (localPointer[0] - anchorX) / signedFloor(movingX - anchorX) : 1;
+    let scaleY = scalesY ? (localPointer[1] - anchorY) / signedFloor(movingY - anchorY) : 1;
     scaleX = Math.max(0.05, scaleX);
     scaleY = Math.max(0.05, scaleY);
     if (preserveAspect && scalesX && scalesY) {
@@ -163,10 +172,32 @@
       scaleX = dominant;
       scaleY = dominant;
     }
-    return local.map(([x, y]) => toWorld([
-      scalesX ? anchorX + (x - anchorX) * scaleX : x,
-      scalesY ? anchorY + (y - anchorY) * scaleY : y,
-    ])).map(([x, y]) => [round(x), round(y)]);
+    const transformPoint = (point) => {
+      const [x, y] = toLocal(point);
+      return toWorld([
+        scalesX ? anchorX + (x - anchorX) * scaleX : x,
+        scalesY ? anchorY + (y - anchorY) * scaleY : y,
+      ]);
+    };
+    const origin = transformPoint([0, 0]);
+    const unitX = transformPoint([1, 0]);
+    const unitY = transformPoint([0, 1]);
+    return [
+      unitX[0] - origin[0],
+      unitX[1] - origin[1],
+      unitY[0] - origin[0],
+      unitY[1] - origin[1],
+      origin[0],
+      origin[1],
+    ].map((value) => Math.abs(value) < 1e-12 ? 0 : value);
+  }
+
+  function resizeContour(options) {
+    const matrix = resizeTransform(options);
+    return options.points.map(([x, y]) => [
+      round(matrix[0] * x + matrix[2] * y + matrix[4]),
+      round(matrix[1] * x + matrix[3] * y + matrix[5]),
+    ]);
   }
 
   function mirrorContour(points, canvasWidth) {
@@ -270,6 +301,7 @@
   return {
     buildEditedDocument,
     buildCorrectionsDocument,
+    resizeTransform,
     resizeContour,
     simplifyClosedContour,
     mirrorContour,

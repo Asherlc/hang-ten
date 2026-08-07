@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
+from functools import wraps
 import json
 import os
 from pathlib import Path
 import re
 import shutil
 import tempfile
+from threading import RLock
+from typing import TypeVar
 
 
 _SCHEMA_VERSION = 1
@@ -49,10 +52,27 @@ class _PublicationState:
     published: bool = False
 
 
+_ResultT = TypeVar("_ResultT")
+
+
+def _synchronized(
+    method: Callable[..., _ResultT],
+) -> Callable[..., _ResultT]:
+    @wraps(method)
+    def locked(
+        self: WorkbenchStore, *args: object, **kwargs: object
+    ) -> _ResultT:
+        with self._metadata_lock:
+            return method(self, *args, **kwargs)
+
+    return locked
+
+
 class WorkbenchStore:
     """Own board manifests above CLI-compatible onboarding run directories."""
 
     def __init__(self, workspace: Path) -> None:
+        self._metadata_lock = RLock()
         self._workspace = Path(workspace).resolve(strict=False)
         self._workspace.mkdir(parents=True, exist_ok=True)
         if not self._workspace.is_dir():
@@ -62,6 +82,7 @@ class WorkbenchStore:
         self._boards_root = self._confined(self._workspace / "boards")
         self._boards_root.mkdir(exist_ok=True)
 
+    @_synchronized
     def create_board(self, product_name: str) -> BoardRecord:
         """Create a board manifest without manufacturing a product-specific ID."""
         if not isinstance(product_name, str) or not product_name.strip():
@@ -85,6 +106,7 @@ class WorkbenchStore:
             raise
         return board
 
+    @_synchronized
     def create_revision(
         self,
         board_id: str,
@@ -133,15 +155,12 @@ class WorkbenchStore:
             raise
         return revision
 
+    @_synchronized
     def register_run(
         self, product_name: str, run_root: Path
     ) -> tuple[BoardRecord, RevisionRecord]:
         """Register one existing CLI run without copying or relocating it."""
-        resolved_run = self._confined(Path(run_root))
-        if not resolved_run.is_dir():
-            raise WorkbenchStoreError(
-                f"imported run root is not a directory: {resolved_run}"
-            )
+        resolved_run = self.resolve_import_run(run_root)
         if any(
             revision.run_root == resolved_run
             for board in self.list_boards()
@@ -182,6 +201,7 @@ class WorkbenchStore:
             raise
         return updated, revision
 
+    @_synchronized
     def _discard_unstarted_board(
         self, board_id: str, revision_id: str
     ) -> None:
@@ -203,6 +223,7 @@ class WorkbenchStore:
         shutil.rmtree(self._board_root(board.id))
         self._fsync_directory(self._boards_root)
 
+    @_synchronized
     def read_board(self, board_id: str) -> BoardRecord:
         """Read and validate one board manifest from the confined workspace."""
         manifest_path = self._manifest_path(board_id)
@@ -216,11 +237,13 @@ class WorkbenchStore:
             ) from error
         return self._board_from_json(value, board_id)
 
+    @_synchronized
     def read_revision(self, board_id: str, revision_id: str) -> RevisionRecord:
         """Return a validated immutable revision record."""
         self._validate_identifier(revision_id, "revision")
         return self._revision(self.read_board(board_id), revision_id)
 
+    @_synchronized
     def list_boards(self) -> tuple[BoardRecord, ...]:
         """Return every persisted board in stable identifier order."""
         board_ids = sorted(
@@ -230,6 +253,7 @@ class WorkbenchStore:
         )
         return tuple(self.read_board(board_id) for board_id in board_ids)
 
+    @_synchronized
     def write_draft(
         self,
         board_id: str,
@@ -250,6 +274,7 @@ class WorkbenchStore:
         self._write_new_json(draft_path, document)
         return draft_path
 
+    @_synchronized
     def mark_descendants_stale(
         self, board_id: str, revision_id: str, *, from_stage: int
     ) -> RevisionRecord:
@@ -266,6 +291,7 @@ class WorkbenchStore:
         self._write_board(self._replace_revision(board, updated_revision))
         return updated_revision
 
+    @_synchronized
     def mark_revision_complete(
         self, board_id: str, revision_id: str
     ) -> RevisionRecord:
@@ -278,6 +304,7 @@ class WorkbenchStore:
         self._write_board(self._replace_revision(board, updated_revision))
         return updated_revision
 
+    @_synchronized
     def save_revision(self, board_id: str, revision_id: str) -> BoardRecord:
         """Atomically select a complete, current revision as the local saved version."""
         board = self.read_board(board_id)
@@ -298,6 +325,65 @@ class WorkbenchStore:
         )
         self._write_board(updated)
         return updated
+
+    @_synchronized
+    def resolve_import_run(self, run_root: Path) -> Path:
+        """Resolve and confine an import root before callers read any run data."""
+        resolved_run = self._confined(Path(run_root))
+        if not resolved_run.is_dir():
+            raise WorkbenchStoreError(
+                f"imported run root is not a directory: {resolved_run}"
+            )
+        return resolved_run
+
+    @_synchronized
+    def synchronize_revision(
+        self,
+        board_id: str,
+        revision_id: str,
+        *,
+        current_stage: int,
+        state: str,
+    ) -> RevisionRecord:
+        """Persist the current onboarding state represented by a run manifest."""
+        self._validate_stage(current_stage)
+        if state not in {"active", "complete", "failed"}:
+            raise WorkbenchStoreError(f"revision state is invalid: {state}")
+        if state == "complete" and current_stage != _FINAL_STAGE:
+            raise WorkbenchStoreError("complete revision must be at the final stage")
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        if revision.current_stage == current_stage and revision.state == state:
+            return revision
+        updated_revision = replace(
+            revision, current_stage=current_stage, state=state
+        )
+        self._write_board(self._replace_revision(board, updated_revision))
+        return updated_revision
+
+    @_synchronized
+    def mark_revision_failed(
+        self,
+        board_id: str,
+        revision_id: str,
+        *,
+        restore_active_revision_id: str,
+    ) -> RevisionRecord:
+        """Retain failed evidence while restoring the last usable active lineage."""
+        board = self.read_board(board_id)
+        revision = self._revision(board, revision_id)
+        if restore_active_revision_id:
+            self._validate_identifier(
+                restore_active_revision_id, "active revision"
+            )
+            self._revision(board, restore_active_revision_id)
+        updated_revision = replace(revision, state="failed")
+        updated_board = replace(
+            self._replace_revision(board, updated_revision),
+            active_revision_id=restore_active_revision_id,
+        )
+        self._write_board(updated_board)
+        return updated_revision
 
     def _board_from_json(self, value: object, expected_id: str) -> BoardRecord:
         manifest = self._mapping(value, "board manifest")
@@ -381,7 +467,7 @@ class WorkbenchStore:
             )
         current_stage = self._stage(record.get("currentStage"), "current stage")
         state = self._string(record.get("state"), "revision state")
-        if state not in {"active", "complete"}:
+        if state not in {"active", "complete", "failed"}:
             raise WorkbenchStoreError(f"revision state is invalid: {state}")
         stale_from_stage = self._optional_stage(
             record.get("staleFromStage"), "stale stage"

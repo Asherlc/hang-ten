@@ -4,6 +4,7 @@
   const {
     buildEditedDocument,
     buildCorrectionsDocument,
+    resizeTransform,
     resizeContour,
     simplifyClosedContour,
     mirrorContour,
@@ -28,6 +29,7 @@
     checkpointImageUrl,
     createActiveJobStore,
     regionIdFromError,
+    runFrozenApproval,
   } = globalThis.HoldWorkbenchController;
 
   const STAGE_LABELS = [
@@ -106,6 +108,7 @@
     compareEnabled: false,
     validationErrors: [],
     busy: false,
+    editingFrozen: false,
     autosaveTimer: null,
     draftStatus: "clean",
     nextRegionId: 1,
@@ -125,8 +128,8 @@
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value",
     "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
-    "setup-screen", "workbench-screen", "setup-form", "setup-product-input", "setup-url-input", "setup-upload-input",
-    "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "setup-recents-wrap", "setup-recents",
+    "setup-screen", "workbench-screen", "setup-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input", "setup-import-input",
+    "setup-url-field", "setup-upload-field", "setup-import-field", "setup-error", "setup-submit-button", "setup-recents-wrap", "setup-recents",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "legacy-controls",
   ].map((id) => [id, document.getElementById(id)]));
@@ -237,7 +240,7 @@
   }
 
   function renderToolState() {
-    const editable = !state.busy && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
+    const editable = !state.busy && !state.editingFrozen && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
     el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
     el["snap-button"].classList.toggle("active", state.snapEnabled);
     el["snap-button"].textContent = state.snapEnabled ? "Snap edges: on" : "Snap edges";
@@ -252,6 +255,10 @@
     el["curve-tension-slider"].disabled = !editable || isVectorMode();
     el["region-type-select"].disabled = !editable || isVectorMode();
     el["region-key-input"].disabled = !editable || state.guided;
+    el["region-mode-select"].disabled = !editable;
+    el["region-notes-input"].disabled = !editable;
+    el["edit-points-button"].disabled = !editable;
+    el["mirror-onto-button"].disabled = !editable;
     el["compare-button"].classList.toggle("active", state.compareEnabled);
     el["compare-button"].setAttribute("aria-pressed", state.compareEnabled ? "true" : "false");
     el["canvas-viewport"].classList.toggle("static-checkpoint", !editable);
@@ -559,8 +566,8 @@
   }
 
   function renderHistoryControls() {
-    el["undo-button"].disabled = state.historyIndex <= 0;
-    el["redo-button"].disabled = state.historyIndex >= state.history.length - 1;
+    el["undo-button"].disabled = !canEditGeometry() || state.historyIndex <= 0;
+    el["redo-button"].disabled = !canEditGeometry() || state.historyIndex >= state.history.length - 1;
   }
 
   function selectRegion(id) {
@@ -587,7 +594,7 @@
   function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 
   function canEditGeometry() {
-    return !state.busy && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
+    return !state.busy && !state.editingFrozen && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
   }
 
   function allocateRegionId() {
@@ -666,8 +673,8 @@
       kind: "resize",
       resizeHandle: handle,
       original: isVectorMode() ? parseDisplayPath(region.displayPath) : clone(region.contour),
+      originalPoints: clone(geometryPoints(region)),
       originalAnchor: clone(region.anchor || centroid(geometryPoints(region, false))),
-      originalBounds: bounds(geometryPoints(region)),
       rotation: Number(region.metadata.rotation || 0),
       changed: false,
     };
@@ -773,23 +780,13 @@
   }
 
   function resizeVectorRegion(region, session, pointer, preserveAspect) {
-    const [minX, minY, maxX, maxY] = session.originalBounds;
-    const scalesX = session.resizeHandle.includes("e") || session.resizeHandle.includes("w");
-    const scalesY = session.resizeHandle.includes("n") || session.resizeHandle.includes("s");
-    const anchorX = session.resizeHandle.includes("w") ? maxX : minX;
-    const anchorY = session.resizeHandle.includes("n") ? maxY : minY;
-    const movingX = session.resizeHandle.includes("w") ? minX : maxX;
-    const movingY = session.resizeHandle.includes("n") ? minY : maxY;
-    let scaleX = scalesX ? (pointer[0] - anchorX) / Math.max(Math.abs(movingX - anchorX), 1e-6) : 1;
-    let scaleY = scalesY ? (pointer[1] - anchorY) / Math.max(Math.abs(movingY - anchorY), 1e-6) : 1;
-    scaleX = Math.max(0.05, scaleX);
-    scaleY = Math.max(0.05, scaleY);
-    if (preserveAspect && scalesX && scalesY) {
-      const dominant = Math.abs(scaleX - 1) >= Math.abs(scaleY - 1) ? scaleX : scaleY;
-      scaleX = dominant;
-      scaleY = dominant;
-    }
-    applyVectorMatrix(region, session, [scaleX, 0, 0, scaleY, anchorX * (1 - scaleX), anchorY * (1 - scaleY)]);
+    applyVectorMatrix(region, session, resizeTransform({
+      points: session.originalPoints,
+      rotation: session.rotation,
+      handle: session.resizeHandle,
+      pointer,
+      preserveAspect,
+    }));
   }
 
   function onSvgPointerUp(event) {
@@ -822,6 +819,7 @@
   }
 
   function insertPointOnNearestEdge(event, id) {
+    if (!canEditGeometry()) return;
     event.preventDefault();
     event.stopPropagation();
     selectRegion(id);
@@ -865,7 +863,7 @@
   }
 
   function finishDraw() {
-    if (!state.drawing || state.draft.length < 3) return;
+    if (!canEditGeometry() || !state.drawing || state.draft.length < 3) return;
     const nextId = allocateRegionId();
     const isCurved = state.drawShape === "curved-freeform";
     const region = normalizeRegion({
@@ -902,7 +900,7 @@
   }
 
   function deleteSelected() {
-    if (state.selectedId == null || isVectorMode()) return;
+    if (!canEditGeometry() || state.selectedId == null || isVectorMode()) return;
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
@@ -912,6 +910,7 @@
   }
 
   function duplicateSelected() {
+    if (!canEditGeometry()) return;
     const source = selectedRegion();
     if (!source || isVectorMode()) return;
     const nextId = allocateRegionId();
@@ -927,6 +926,7 @@
   }
 
   function simplifySelectedCurve() {
+    if (!canEditGeometry()) return;
     const region = selectedRegion();
     if (!region || isVectorMode() || region.contour.length < 6) return;
     const before = region.contour.length;
@@ -945,6 +945,7 @@
   }
 
   function mirrorSelectedCopy() {
+    if (!canEditGeometry()) return;
     const source = selectedRegion();
     if (!source || isVectorMode()) return;
     const nextId = allocateRegionId();
@@ -962,6 +963,7 @@
   }
 
   function beginMirrorOnto() {
+    if (!canEditGeometry()) return;
     const source = selectedRegion();
     if (!source) return;
     if (state.mirrorOntoSourceId === source.id) {
@@ -975,6 +977,7 @@
   }
 
   function completeMirrorOnto(targetId) {
+    if (!canEditGeometry()) return;
     const source = state.regions.find((region) => region.id === state.mirrorOntoSourceId);
     const target = state.regions.find((region) => region.id === targetId);
     if (!source || !target) {
@@ -1033,7 +1036,7 @@
   }
 
   function undo() {
-    if (state.historyIndex <= 0) return;
+    if (!canEditGeometry() || state.historyIndex <= 0) return;
     state.historyIndex -= 1;
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
@@ -1046,7 +1049,7 @@
   }
 
   function redo() {
-    if (state.historyIndex >= state.history.length - 1) return;
+    if (!canEditGeometry() || state.historyIndex >= state.history.length - 1) return;
     state.historyIndex += 1;
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
@@ -1452,6 +1455,7 @@
       state.checkpointDocument = null;
       state.validationErrors = [];
       state.saveError = "";
+      state.editingFrozen = false;
       state.draftStatus = "clean";
       state.drawing = false;
       state.editPoints = false;
@@ -1592,9 +1596,15 @@
     const sourceKind = new FormData(el["setup-form"]).get("sourceKind");
     const source = el["setup-url-input"].value.trim();
     const upload = el["setup-upload-input"].files[0];
+    const importPath = el["setup-import-input"].value.trim();
     el["setup-error"].classList.add("hidden");
-    if (!productName || (sourceKind === "url" ? !source : !upload)) {
-      el["setup-error"].textContent = "Enter a product name and choose one image source.";
+    const invalid = sourceKind === "import"
+      ? !importPath
+      : !productName || (sourceKind === "url" ? !source : !upload);
+    if (invalid) {
+      el["setup-error"].textContent = sourceKind === "import"
+        ? "Enter the absolute folder path of a CLI onboarding run."
+        : "Enter a product name and choose one image source.";
       el["setup-error"].classList.remove("hidden");
       return;
     }
@@ -1602,9 +1612,11 @@
     el["setup-submit-button"].disabled = true;
     el["setup-submit-button"].textContent = "Creating…";
     try {
-      const view = await runTrackedJob((options) => sourceKind === "url"
-        ? workbenchClient.createFromUrl(productName, source, options)
-        : workbenchClient.createFromUpload(productName, upload, options));
+      const view = await runTrackedJob((options) => {
+        if (sourceKind === "import") return workbenchClient.importRun(importPath, options);
+        if (sourceKind === "url") return workbenchClient.createFromUrl(productName, source, options);
+        return workbenchClient.createFromUpload(productName, upload, options);
+      });
       await refreshBoards();
       if (!load.isCurrent()) return;
       showWorkbench();
@@ -1615,8 +1627,18 @@
       el["setup-error"].classList.remove("hidden");
     } finally {
       el["setup-submit-button"].disabled = false;
-      el["setup-submit-button"].textContent = "Create board";
+      renderSetupSourceKind(new FormData(el["setup-form"]).get("sourceKind"));
     }
+  }
+
+  function renderSetupSourceKind(sourceKind) {
+    const importing = sourceKind === "import";
+    el["setup-product-field"].classList.toggle("hidden", importing);
+    el["setup-product-input"].required = !importing;
+    el["setup-url-field"].classList.toggle("hidden", sourceKind !== "url");
+    el["setup-upload-field"].classList.toggle("hidden", sourceKind !== "upload");
+    el["setup-import-field"].classList.toggle("hidden", !importing);
+    el["setup-submit-button"].textContent = importing ? "Import run" : "Create board";
   }
 
   async function approveCurrent() {
@@ -1633,8 +1655,15 @@
     state.saveError = "";
     renderSaveState();
     try {
-      await flushDraft();
-      const updated = await runTrackedJob((options) => workbenchClient.approve(view, options));
+      const updated = await runFrozenApproval({
+        setFrozen(value) {
+          state.editingFrozen = value;
+          renderToolState();
+        },
+        cancelPointerSessions,
+        flushDraft,
+        approve: () => runTrackedJob((options) => workbenchClient.approve(view, options)),
+      });
       await refreshBoards();
       if (!load.isCurrent()) return;
       const loaded = await loadCheckpoint(updated, null, load);
@@ -1651,6 +1680,33 @@
         render();
       }
     }
+  }
+
+  function cancelPointerSessions() {
+    const captures = [
+      [state.transformSession, el["editor-svg"]],
+      [state.dragSession, el["editor-svg"]],
+      [state.handleSession, el["editor-svg"]],
+      [state.primitiveSession, el["canvas-viewport"]],
+      [state.panSession, el["canvas-viewport"]],
+    ];
+    captures.forEach(([session, target]) => {
+      if (session?.pointerId == null || typeof target?.hasPointerCapture !== "function") return;
+      if (target.hasPointerCapture(session.pointerId)) target.releasePointerCapture(session.pointerId);
+    });
+    if ([state.transformSession, state.dragSession, state.handleSession].some((session) => session?.changed)) {
+      commitHistory("Completed active edit before approval");
+    }
+    state.transformSession = null;
+    state.dragSession = null;
+    state.handleSession = null;
+    state.primitiveSession = null;
+    state.panSession = null;
+    state.drawing = false;
+    state.draft = [];
+    state.mirrorOntoSourceId = null;
+    el["draw-instruction"].classList.remove("visible");
+    el["canvas-viewport"].classList.remove("panning");
   }
 
   async function retryCurrent() {
@@ -2033,6 +2089,7 @@
   }
 
   function updateSelected(mutator, label) {
+    if (!canEditGeometry()) return;
     const region = selectedRegion();
     if (!region) return;
     mutator(region);
@@ -2135,6 +2192,7 @@
   }
 
   function convertSelectedShape(kind) {
+    if (!canEditGeometry()) return;
     const region = selectedRegion();
     if (!region || isVectorMode()) return;
     if (kind !== "freeform") {
@@ -2181,10 +2239,8 @@
   el["setup-form"].addEventListener("submit", createGuidedBoard);
   document.querySelectorAll('input[name="sourceKind"]').forEach((input) => {
     input.addEventListener("change", () => {
-      const upload = input.value === "upload" && input.checked;
       if (!input.checked) return;
-      el["setup-url-field"].classList.toggle("hidden", upload);
-      el["setup-upload-field"].classList.toggle("hidden", !upload);
+      renderSetupSourceKind(input.value);
     });
   });
   el["fit-button"].addEventListener("click", fitCanvas);
@@ -2196,6 +2252,7 @@
   el["region-shape-select"].addEventListener("change", (event) => convertSelectedShape(event.target.value));
   el["region-path-style-select"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.pathStyle = event.target.value; }, "Changed path style"));
   el["curve-tension-slider"].addEventListener("input", (event) => {
+    if (!canEditGeometry()) return;
     const region = selectedRegion();
     if (!region) return;
     region.metadata.curveTension = Number(event.target.value) / 100;
@@ -2203,7 +2260,7 @@
     renderOverlay();
   });
   el["curve-tension-slider"].addEventListener("change", () => {
-    if (!selectedRegion()) return;
+    if (!canEditGeometry() || !selectedRegion()) return;
     commitHistory("Changed curve tension");
     render();
   });

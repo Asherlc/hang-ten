@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 
 import pytest
 
@@ -86,6 +88,25 @@ def test_register_run_rejects_a_root_outside_the_workspace(tmp_path: Path) -> No
 
     with pytest.raises(WorkbenchStoreError, match="workspace"):
         store.register_run("Example Board", outside)
+
+
+def test_concurrent_board_reservations_publish_distinct_manifests(
+    tmp_path: Path,
+) -> None:
+    store = WorkbenchStore(tmp_path)
+    barrier = Barrier(8)
+
+    def create(index: int):
+        barrier.wait()
+        return store.create_board(f"Board {index}")
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        boards = tuple(executor.map(create, range(8)))
+
+    assert len({board.id for board in boards}) == 8
+    assert {board.id for board in store.list_boards()} == {
+        board.id for board in boards
+    }
 
 
 def test_write_draft_reports_serialization_errors_without_publishing(

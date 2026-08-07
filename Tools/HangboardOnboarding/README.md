@@ -109,6 +109,8 @@ rtk python3 Tools/hold-highlight-editor/server.py \
 
 Open `http://localhost:4173`, enter the caller-asserted commercial product
 name, and create a board from either an HTTP(S) image URL or an image upload.
+The setup screen can also register an existing CLI run whose path is inside the
+explicit workbench workspace.
 The workbench runs Stage 0 immediately, then stops at every checkpoint for
 review. **Approve & continue** records the approval and advances to the next
 checkpoint; **Retry** regenerates the current checkpoint as a new attempt while
@@ -120,9 +122,11 @@ review: refine each retained region's final display path. Valid Stage 2 and
 Stage 3 edits autosave as immutable drafts and are materialized only when that
 checkpoint is approved.
 
-The workspace store persists `boards/board-NNNN/board.json`, immutable
-`revisions/revision-NNNN/run/` directories, and per-revision
-`drafts/stage-N/draft-NNNN.json` files. **Revise upstream** forks a new
+The workspace store persists `boards/board-NNNN/board.json`, evolving
+CLI-compatible `revisions/revision-NNNN/run/` directories, and immutable
+per-revision `drafts/stage-N/draft-NNNN.json` files. Published stage attempts,
+artifacts, approval evidence, and failure diagnostics inside each run remain
+immutable. **Revise upstream** forks a new
 revision and marks replaced downstream lineage stale; stale or incomplete
 lineage cannot be selected by the final Save. Refreshing or restarting the
 server reloads the store, while the browser can also recover its newest

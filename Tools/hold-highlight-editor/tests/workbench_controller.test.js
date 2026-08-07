@@ -8,6 +8,7 @@ const {
   checkpointImageUrl,
   createActiveJobStore,
   regionIdFromError,
+  runFrozenApproval,
 } = require("../workbench-controller.js");
 
 function deferred() {
@@ -201,4 +202,35 @@ test("accepted job identity survives controller recreation for refresh recovery"
 test("geometry error parsing identifies the region the UI must focus", () => {
   assert.equal(regionIdFromError("Stage 2 region 17: contour is invalid"), 17);
   assert.equal(regionIdFromError("job failed"), null);
+});
+
+test("approval freezes and cancels editing before flushing the draft", async () => {
+  const calls = [];
+  const result = await runFrozenApproval({
+    setFrozen(value) { calls.push(["frozen", value]); },
+    cancelPointerSessions() { calls.push(["cancel"]); },
+    async flushDraft() { calls.push(["flush"]); },
+    async approve() { calls.push(["approve"]); return "advanced"; },
+  });
+
+  assert.equal(result, "advanced");
+  assert.deepEqual(calls, [
+    ["frozen", true],
+    ["cancel"],
+    ["flush"],
+    ["approve"],
+  ]);
+});
+
+test("approval restores editing only after the approval sequence fails", async () => {
+  const frozen = [];
+
+  await assert.rejects(runFrozenApproval({
+    setFrozen(value) { frozen.push(value); },
+    cancelPointerSessions() {},
+    async flushDraft() {},
+    async approve() { throw new Error("approval rejected"); },
+  }), /approval rejected/);
+
+  assert.deepEqual(frozen, [true, false]);
 });

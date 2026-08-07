@@ -196,6 +196,31 @@
     return match ? Number(match[1]) : null;
   }
 
+  async function runFrozenApproval({
+    setFrozen,
+    cancelPointerSessions,
+    flushDraft,
+    approve,
+  }) {
+    for (const [name, callback] of Object.entries({
+      setFrozen,
+      cancelPointerSessions,
+      flushDraft,
+      approve,
+    })) {
+      if (typeof callback !== "function") throw new TypeError(`${name} must be a function`);
+    }
+    setFrozen(true);
+    try {
+      cancelPointerSessions();
+      await flushDraft();
+      return await approve();
+    } catch (error) {
+      setFrozen(false);
+      throw error;
+    }
+  }
+
   return {
     createLatestLoadCoordinator,
     createAutosaveCoordinator,
@@ -203,5 +228,6 @@
     checkpointImageUrl,
     createActiveJobStore,
     regionIdFromError,
+    runFrozenApproval,
   };
 }));

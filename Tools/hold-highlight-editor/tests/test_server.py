@@ -740,7 +740,7 @@ def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):
     assert json.load(conflict.value)["ok"] is False
 
 
-def test_pre_board_jobs_share_one_allocation_lock(tmp_path):
+def test_independent_board_creation_jobs_run_concurrently(tmp_path):
     service = RaceRevealingCreationService(tmp_path / "workbench")
     imported_run = tmp_path / "imported-run"
     imported_run.mkdir()
@@ -762,21 +762,22 @@ def test_pre_board_jobs_share_one_allocation_lock(tmp_path):
             method="POST",
             headers={"Content-Type": "image/png"},
         )
-        try:
-            with pytest.raises(HTTPError) as upload_conflict:
-                urlopen(upload)
-            with pytest.raises(HTTPError) as import_conflict:
-                _post_json(
-                    base + "/api/boards/import",
-                    {"runRoot": str(imported_run)},
-                )
-        finally:
-            service.creation_release.set()
-        assert _poll_job(base, first["jobId"])["state"] == "succeeded"
+        with urlopen(upload) as response:
+            assert response.status == 202
+            second = json.load(response)
+        third_status, third = _post_json(
+            base + "/api/boards/import",
+            {"runRoot": str(imported_run)},
+        )
+        assert third_status == 202
+        service.creation_release.set()
+        finals = [
+            _poll_job(base, job_id)["state"]
+            for job_id in (first["jobId"], second["jobId"], third["jobId"])
+        ]
 
-    assert upload_conflict.value.code == 409
-    assert import_conflict.value.code == 409
-    assert service.overlapped is False
+    assert finals == ["succeeded", "succeeded", "succeeded"]
+    assert service.overlapped is True
 
 
 def test_failed_job_poll_exposes_safe_error_without_traceback(

@@ -28,3 +28,21 @@ test("a newly accepted job ID is exposed before polling completes", async () => 
   assert.deepEqual(await pending, { boardId: "board-9" });
   assert.deepEqual(calls, ["/api/boards", "/api/jobs/job-42"]);
 });
+
+test("importRun submits an explicit CLI run root to the import endpoint", async () => {
+  const calls = [];
+  global.fetch = async (path, options = {}) => {
+    calls.push([path, options]);
+    if (path === "/api/boards/import") return response({ ok: true, jobId: "job-import" });
+    return response({
+      ok: true,
+      job: { id: "job-import", state: "succeeded", result: { boardId: "board-imported" } },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(await client.importRun("/workspace/cli-run"), { boardId: "board-imported" });
+  assert.equal(calls[0][0], "/api/boards/import");
+  assert.deepEqual(JSON.parse(calls[0][1].body), { runRoot: "/workspace/cli-run" });
+});

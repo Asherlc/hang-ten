@@ -140,4 +140,7 @@ Shortcuts outside text fields:
 
 Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
 
-Both export buttons remain available in server and static modes as recovery paths. Unsaved browser edits are lost when the page closes.
+Both export buttons remain available in server and static modes as recovery
+paths. In legacy/static mode, unsaved browser edits are lost when the page
+closes; guided workbench mode keeps a same-browser recovery draft and restores
+it only for the matching board, revision, and stage.

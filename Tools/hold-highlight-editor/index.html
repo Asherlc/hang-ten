@@ -15,7 +15,7 @@
         <h1 id="setup-title">Start a hangboard</h1>
         <p>Bring one commercial board into the guided illustration pipeline. Work stays on this machine.</p>
         <form id="setup-form" class="setup-form">
-          <label>
+          <label id="setup-product-field">
             Product name
             <input id="setup-product-input" name="productName" autocomplete="off" required placeholder="Commercial product name" />
           </label>
@@ -29,6 +29,10 @@
               <input type="radio" name="sourceKind" value="upload" />
               <span>Upload image</span>
             </label>
+            <label class="source-choice">
+              <input type="radio" name="sourceKind" value="import" />
+              <span>Existing CLI run</span>
+            </label>
           </fieldset>
           <label id="setup-url-field">
             HTTP(S) URL
@@ -37,6 +41,10 @@
           <label class="hidden" id="setup-upload-field">
             Image file
             <input id="setup-upload-input" type="file" accept="image/*" />
+          </label>
+          <label class="hidden" id="setup-import-field">
+            CLI run folder
+            <input id="setup-import-input" autocomplete="off" placeholder="/absolute/path/to/run" />
           </label>
           <p class="setup-error hidden" id="setup-error" role="alert"></p>
           <button class="primary-button" id="setup-submit-button" type="submit">Create board</button>

@@ -90,10 +90,10 @@ class WorkbenchService:
         revision = self.store.create_revision(board.id)
         try:
             self.__start(board, revision, source_url)
+            return self.__view(board.id, revision.id)
         except Exception:
-            self.store._discard_unstarted_board(board.id, revision.id)
+            self.__record_failed_creation(board, revision)
             raise
-        return self.__view(board.id, revision.id)
 
     def create_from_upload(
         self, product_name: str, content: bytes | bytearray | memoryview
@@ -117,19 +117,19 @@ class WorkbenchService:
             self.__start(board, revision, str(upload))
             cached_source_path(revision.run_root)
             cached = True
+            return self.__view(board.id, revision.id)
         except Exception:
-            self.store._discard_unstarted_board(board.id, revision.id)
+            self.__record_failed_creation(board, revision)
             raise
         finally:
             if descriptor >= 0:
                 os.close(descriptor)
             if cached:
                 upload.unlink(missing_ok=True)
-        return self.__view(board.id, revision.id)
 
     def import_run(self, run_root: Path) -> WorkbenchView:
         """Register a validated CLI run in place beneath the store workspace."""
-        run_root = Path(run_root).resolve(strict=True)
+        run_root = self.store.resolve_import_run(run_root)
         status = read_status(run_root)
         manifest = self.__manifest(run_root)
         product = manifest.get("product")
@@ -139,9 +139,17 @@ class WorkbenchService:
         if not isinstance(product_name, str) or not product_name.strip():
             raise WorkbenchServiceError("onboarding product name is invalid")
         board, revision = self.store.register_run(product_name, run_root)
-        if status["status"] == "complete":
-            self.store.mark_revision_complete(board.id, revision.id)
-        return self.__view(board.id, revision.id)
+        try:
+            if status["status"] == "complete":
+                self.store.mark_revision_complete(board.id, revision.id)
+            return self.__view(board.id, revision.id)
+        except Exception:
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id="",
+            )
+            raise
 
     def list_boards(self) -> tuple[WorkbenchView, ...]:
         """Return active revision views for all persisted boards."""
@@ -216,7 +224,11 @@ class WorkbenchService:
             self.store.mark_revision_complete(board.id, revision.id)
             return self.__view(board.id, revision.id)
 
-        resume_run(revision.run_root, runners=self.__runners)
+        try:
+            resume_run(revision.run_root, runners=self.__runners)
+        except Exception:
+            self.__synchronize_revision(board.id, revision.id)
+            raise
         return self.__view(board.id, revision.id)
 
     def revise_stage(
@@ -243,16 +255,24 @@ class WorkbenchService:
         revision = self.store.create_revision(
             board.id, parent_revision_id=parent.id, fork_stage=stage
         )
-        self.__start(board, revision, str(source))
-        for accepted_stage in range(stage):
-            if accepted_stage in (2, 3):
-                self.__replay_reviewed_edit(
-                    source_revision=parent,
-                    target_revision=revision,
-                    stage=accepted_stage,
-                )
-            approve_stage(revision.run_root, accepted_stage)
-            resume_run(revision.run_root, runners=self.__runners)
+        try:
+            self.__start(board, revision, str(source))
+            for accepted_stage in range(stage):
+                if accepted_stage in (2, 3):
+                    self.__replay_reviewed_edit(
+                        source_revision=parent,
+                        target_revision=revision,
+                        stage=accepted_stage,
+                    )
+                approve_stage(revision.run_root, accepted_stage)
+                resume_run(revision.run_root, runners=self.__runners)
+        except Exception:
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id=parent.id,
+            )
+            raise
         self.store.mark_descendants_stale(
             board.id, parent.id, from_stage=stage
         )
@@ -272,7 +292,11 @@ class WorkbenchService:
             expected_stage=expected_stage,
         )
         if status["status"] in {"ready_for_next_stage", "failed"}:
-            resume_run(revision.run_root, runners=self.__runners)
+            try:
+                resume_run(revision.run_root, runners=self.__runners)
+            except Exception:
+                self.__synchronize_revision(board_id, revision.id)
+                raise
             return self.__view(board_id, revision.id)
         if status["status"] != "awaiting_approval":
             raise WorkbenchServiceError(
@@ -328,6 +352,18 @@ class WorkbenchService:
             runners=self.__runners,
             workspace_root=revision.run_root.parent,
         )
+
+    def __record_failed_creation(
+        self, board: BoardRecord, revision: RevisionRecord
+    ) -> None:
+        if revision.run_root.exists():
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id="",
+            )
+            return
+        self.store._discard_unstarted_board(board.id, revision.id)
 
     def __expected_checkpoint(
         self,
@@ -385,6 +421,13 @@ class WorkbenchService:
         raw_state = status["status"]
         if not isinstance(raw_state, str) or raw_state not in _STATE_NAMES:
             raise WorkbenchServiceError("onboarding status state is invalid")
+        revision = self.store.synchronize_revision(
+            board.id,
+            revision.id,
+            current_stage=stage,
+            state=self.__stored_state(raw_state),
+        )
+        board = self.store.read_board(board.id)
         review_value = status.get("review")
         review_path = (
             revision.run_root / review_value
@@ -407,6 +450,31 @@ class WorkbenchService:
             saved=board.saved_revision_id == revision.id,
             stale_from_stage=revision.stale_from_stage,
         )
+
+    def __synchronize_revision(
+        self, board_id: str, revision_id: str
+    ) -> RevisionRecord:
+        status = read_status(self.store.read_revision(board_id, revision_id).run_root)
+        stage = status.get("stage")
+        raw_state = status.get("status")
+        if isinstance(stage, bool) or not isinstance(stage, int):
+            raise WorkbenchServiceError("onboarding status stage is invalid")
+        if not isinstance(raw_state, str) or raw_state not in _STATE_NAMES:
+            raise WorkbenchServiceError("onboarding status state is invalid")
+        return self.store.synchronize_revision(
+            board_id,
+            revision_id,
+            current_stage=stage,
+            state=self.__stored_state(raw_state),
+        )
+
+    @staticmethod
+    def __stored_state(raw_state: str) -> str:
+        if raw_state == "complete":
+            return "complete"
+        if raw_state == "failed":
+            return "failed"
+        return "active"
 
     def __editor_image_path(
         self, revision: RevisionRecord, stage: int
