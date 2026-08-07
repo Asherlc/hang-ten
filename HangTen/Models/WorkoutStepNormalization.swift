@@ -65,7 +65,8 @@ enum WorkoutStepNormalizer {
                     phase: step.phase,
                     targets: segment.targets,
                     segments: [segment],
-                    gripType: step.gripType
+                    gripType: step.gripType,
+                    timedWorkDuration: duration
                 )
             case .rest:
                 return WorkoutStep(

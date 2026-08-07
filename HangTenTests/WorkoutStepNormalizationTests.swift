@@ -27,6 +27,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         XCTAssertEqual(result.map(\.phase), [.hang, .rest])
         XCTAssertEqual(result.map { $0.segments.count }, [1, 1])
         XCTAssertEqual(result[0].targets, [.kind(.edge)])
+        XCTAssertEqual(result[0].timedWorkDuration, 20)
         XCTAssertTrue(result[1].targets.isEmpty)
     }
 
