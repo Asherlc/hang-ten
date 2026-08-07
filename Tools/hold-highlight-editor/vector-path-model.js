@@ -178,11 +178,11 @@
       minX = bounds.x;
       maxX = bounds.x + bounds.width;
     } else if (bounds && typeof bounds === "object") {
-      minX = bounds.minX ?? bounds.left;
-      maxX = bounds.maxX ?? bounds.right;
-      for (const key of ["minY", "maxY", "top", "bottom"]) {
+      for (const key of ["minX", "maxX", "minY", "maxY", "left", "right", "top", "bottom"]) {
         if (key in bounds) assertFinite(bounds[key], `Bend bounds ${key}`);
       }
+      minX = bounds.minX ?? bounds.left;
+      maxX = bounds.maxX ?? bounds.right;
     }
     assertFinite(minX, "Bend bounds minimum x");
     assertFinite(maxX, "Bend bounds maximum x");

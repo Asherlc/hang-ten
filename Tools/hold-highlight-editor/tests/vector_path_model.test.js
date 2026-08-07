@@ -101,3 +101,15 @@ test("bendPath validates every supplied bound and derived width", () => {
     /finite/i,
   );
 });
+
+test("bendPath validates non-finite aliases even when finite primary bounds are present", () => {
+  const commands = parseDisplayPath("M 0 0 L 1 0 Z");
+  const invalidBounds = [
+    { minX: 0, maxX: 1, left: Number.POSITIVE_INFINITY },
+    { minX: 0, maxX: 1, right: Number.NaN },
+    { minX: 0, maxX: 1, minY: 0, maxY: 1, top: Number.POSITIVE_INFINITY },
+    { minX: 0, maxX: 1, minY: 0, maxY: 1, bottom: Number.NaN },
+  ];
+
+  for (const bounds of invalidBounds) assert.throws(() => bendPath(commands, 1, bounds), /finite/i);
+});
