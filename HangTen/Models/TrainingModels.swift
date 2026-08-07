@@ -103,7 +103,8 @@ enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
 struct FingerConfiguration: Codable, Hashable {
     let engagedFingers: Set<FingerSlot>
 
-    init(engagedFingers: Set<FingerSlot>) {
+    init?(engagedFingers: Set<FingerSlot>) {
+        guard !engagedFingers.isEmpty else { return nil }
         self.engagedFingers = engagedFingers
     }
 
@@ -127,10 +128,28 @@ struct FingerConfiguration: Codable, Hashable {
                 debugDescription: "Finger configuration must include at least one finger."
             )
         }
-        engagedFingers = Set(decodedFingers)
+        guard let configuration = Self(engagedFingers: Set(decodedFingers)) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .engagedFingers,
+                in: container,
+                debugDescription: "Finger configuration must include at least one finger."
+            )
+        }
+        self = configuration
     }
 
     func encode(to encoder: Encoder) throws {
+        guard !engagedFingers.isEmpty else {
+            let container = encoder.container(keyedBy: CodingKeys.self)
+            throw EncodingError.invalidValue(
+                engagedFingers,
+                EncodingError.Context(
+                    codingPath: container.codingPath + [CodingKeys.engagedFingers],
+                    debugDescription: "Finger configuration must include at least one finger."
+                )
+            )
+        }
+
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(orderedFingers, forKey: .engagedFingers)
     }
@@ -141,18 +160,6 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case halfCrimp
     case fullCrimp
 
-    /// Legacy source compatibility; encodes as the open-hand posture.
-    static let fourFingerPocket = GripType.openHand
-
-    /// Legacy source compatibility; encodes as the open-hand posture.
-    static let threeFingerPocket = GripType.openHand
-
-    /// Legacy source compatibility; encodes as the open-hand posture.
-    static let twoFingerPocket = GripType.openHand
-
-    /// Legacy source compatibility; encodes as the open-hand posture.
-    static let sloper = GripType.openHand
-
     var id: String { rawValue }
 
     var label: String {
@@ -161,10 +168,6 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
         }
-    }
-
-    var activeFingers: Set<FingerSlot> {
-        Set(FingerSlot.allCases)
     }
 
     var thumbEngaged: Bool {
@@ -207,6 +210,8 @@ struct BoardHold: Identifiable, Hashable {
     let sizeMillimeters: Int?
     let features: Set<HoldFeature>
 
+    static let validFingerCapacityRange = 1...4
+
     init(
         id: String,
         name: String,
@@ -220,6 +225,11 @@ struct BoardHold: Identifiable, Hashable {
         cueStyle: HoldCueStyle? = nil,
         features: Set<HoldFeature>? = nil
     ) {
+        precondition(
+            Self.validFingerCapacityRange.contains(fingerCapacity),
+            "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+        )
+
         self.id = id
         self.name = name
         self.shortLabel = shortLabel
@@ -241,6 +251,8 @@ struct BoardHold: Identifiable, Hashable {
             return []
         case .pocket:
             switch fingerCapacity {
+            case 1:
+                return [.pocket]
             case 2:
                 return [.pocket, .twoFingerPocket]
             case 3:
@@ -1559,7 +1571,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "repeaters-warm-up")]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket),
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
             ]
 
@@ -1608,8 +1620,8 @@ enum LegacyPlanSeedCatalog {
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
-                ("Center sloper", [.ids("sloper-round-center")], .sloper),
-                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .threeFingerPocket),
+                ("Center sloper", [.ids("sloper-round-center")], .openHand),
+                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .openHand),
                 ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),
                 ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp)
             ]
@@ -1647,7 +1659,7 @@ enum LegacyPlanSeedCatalog {
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket)
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1736,7 +1748,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "density-warm-up")]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .fourFingerPocket)
+                ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
             ]
 
             for (holdIndex, grip) in grips.enumerated() {

@@ -310,6 +310,23 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge, fallbacks: [])]])
     }
 
+    func testTogglingLastExactFingerOffOmitsFingerConfigurationFromDefinitionEncoding() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addStep()
+
+        draft.steps[0].toggleFinger(.index)
+        XCTAssertEqual(draft.steps[0].fingerConfiguration?.orderedFingers, [.index])
+
+        draft.steps[0].toggleFinger(.index)
+        XCTAssertNil(draft.steps[0].fingerConfiguration)
+
+        let encoded = try JSONEncoder().encode(draft.definition())
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let steps = try XCTUnwrap(object["steps"] as? [[String: Any]])
+
+        XCTAssertNil(steps[0]["fingerConfiguration"])
+    }
+
     func testEditingDraftRoundTripsNormalizedOneSegmentDefinition() {
         let source = CustomRoutineDefinition(
             id: "custom.fixed",

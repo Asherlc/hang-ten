@@ -63,7 +63,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
     }
 
     func testCompoundExpansionRetainsExactFingersOnWorkAndClearsThemOnRest() throws {
-        let expectedConfiguration = FingerConfiguration(engagedFingers: [.index])
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index]))
         let source = WorkoutStep(
             id: "exact-fingers",
             number: 2,
@@ -108,7 +108,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
                 timing: .stopwatch,
                 duration: nil
             )],
-            gripType: .sloper
+            gripType: .openHand
         )
 
         let result = try WorkoutStepNormalizer.expand(source)

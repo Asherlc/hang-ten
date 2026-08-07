@@ -8,15 +8,27 @@ final class PlanStorageTests: XCTestCase {
                 GripType.self,
                 from: Data("\"\(legacyValue)\"".utf8)
             )
+            let reencoded = try JSONEncoder().encode(decoded)
+            let reencodedRawValue = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: reencoded) as? String
+            )
 
-            XCTAssertEqual(decoded, .openHand, "Expected \\(legacyValue) to migrate to open-hand posture.")
+            XCTAssertEqual(decoded, .openHand, "Expected \(legacyValue) to migrate to open-hand posture.")
+            XCTAssertEqual(reencodedRawValue, "openHand")
         }
+    }
+
+    func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
+        XCTAssertNil(FingerConfiguration(engagedFingers: []))
+
+        let emptyPayload = Data(#"{ "engagedFingers": [] }"#.utf8)
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: emptyPayload))
     }
 
     func testFingerConfigurationRoundTripsExactFingerSetsInSlotOrder() throws {
         let configurations = [
-            FingerConfiguration(engagedFingers: [.pinky]),
-            FingerConfiguration(engagedFingers: [.index, .ring])
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.pinky])),
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
         ]
 
         let data = try JSONEncoder().encode(configurations)

@@ -21,8 +21,35 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(fourFingerPocket.gripType, .openHand)
     }
 
+    func testPocketDefaultFeaturesRespectCapacityBoundaries() {
+        let oneFingerPocket = BoardHold(
+            id: "one-finger",
+            name: "One finger",
+            shortLabel: "1",
+            detail: "One-finger pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            fingerCapacity: 1
+        )
+        let fourFingerPocket = BoardHold(
+            id: "four-finger",
+            name: "Four finger",
+            shortLabel: "4",
+            detail: "Four-finger pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            fingerCapacity: 4
+        )
+
+        XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
+        XCTAssertEqual(oneFingerPocket.features, [.pocket])
+        XCTAssertFalse(oneFingerPocket.features.contains(.fourFingerPocket))
+        XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
+        XCTAssertEqual(fourFingerPocket.features, [.pocket, .fourFingerPocket])
+    }
+
     func testPlanResolutionRetainsExactFingerConfiguration() throws {
-        let expectedConfiguration = FingerConfiguration(engagedFingers: [.index])
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index]))
         let step = WorkoutStepDefinition(
             id: "exact-finger-step",
             title: "One-finger hang",
@@ -70,7 +97,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
-        let expectedConfiguration = FingerConfiguration(engagedFingers: [.index, .ring])
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
         let definition = CustomRoutineDefinition(
             id: "custom.exact-fingers",
             title: "Exact finger routine",
