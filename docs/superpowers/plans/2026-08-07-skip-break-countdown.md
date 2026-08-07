@@ -82,7 +82,7 @@ func testPausedSkipIntoRestTransitionsImmediatelyAndKeepsPaused() {
 Run the focused tests on the workspace-owned simulator:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=42E604E8-5AC8-445A-84C5-74E1AFE9B8A5' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=C1B82F8E-687F-41EB-8487-3CAA9C52005E' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
 ```
 
 Expected result before the production change: the two new tests fail because the implementation starts a `.skip` countdown and sets `activeStartUptime` three seconds in the future instead of seeking immediately.
@@ -114,7 +114,7 @@ The existing `testFinalSkipSeeksDirectlyToCompletion` remains unchanged and cont
 Run the focused class again on the workspace-owned simulator:
 
 ```bash
-rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=42E604E8-5AC8-445A-84C5-74E1AFE9B8A5' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=C1B82F8E-687F-41EB-8487-3CAA9C52005E' -derivedDataPath .context/derived-data -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO -only-testing:HangTenTests/WorkoutSessionStateTests test
 ```
 
 Then run all `HangTenTests` through the cleanup wrapper; this final command
