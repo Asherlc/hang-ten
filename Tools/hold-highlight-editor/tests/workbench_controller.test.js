@@ -6,6 +6,8 @@ const {
   createAutosaveCoordinator,
   createDraftStore,
   checkpointImageUrl,
+  checkpointComparisonUrl,
+  validateEditableImageAlignment,
   createActiveJobStore,
   regionIdFromError,
   runFrozenApproval,
@@ -185,6 +187,34 @@ test("editable checkpoints use the clean editor image while preserving annotated
   assert.equal(checkpointImageUrl(view), view.editorImageUrl);
   assert.equal(view.reviewUrl, "/api/artifact?path=annotated.png");
   assert.equal(checkpointImageUrl({ stage: 1, reviewUrl: view.reviewUrl }), view.reviewUrl);
+});
+
+test("editable checkpoint comparison selects the review separately from the editor image", () => {
+  const view = {
+    stage: 2,
+    editorImageUrl: "/api/artifact?path=clean.png",
+    reviewUrl: "/api/artifact?path=annotated.png",
+  };
+
+  assert.equal(checkpointImageUrl(view), "/api/artifact?path=clean.png");
+  assert.equal(checkpointComparisonUrl(view), "/api/artifact?path=annotated.png");
+  assert.notEqual(checkpointComparisonUrl(view), checkpointImageUrl(view));
+  assert.equal(checkpointComparisonUrl({ stage: 1, reviewUrl: view.reviewUrl }), null);
+});
+
+test("editable checkpoint image dimensions must match the geometry canvas", () => {
+  const view = {
+    stage: 3,
+    editorImageUrl: "/api/artifact?path=clean.png",
+    reviewUrl: "/api/artifact?path=annotated.png",
+  };
+  const imageAsset = { image: { naturalWidth: 1000, naturalHeight: 159 } };
+  const geometry = { canvas: { width: 1000, height: 160 }, regions: [] };
+
+  assert.throws(
+    () => validateEditableImageAlignment(view, imageAsset, geometry),
+    /image dimensions do not match geometry canvas/,
+  );
 });
 
 test("accepted job identity survives controller recreation for refresh recovery", () => {

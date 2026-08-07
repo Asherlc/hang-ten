@@ -158,20 +158,25 @@
             </div>
           </div>
 
-          <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
-            <div class="canvas-stage" id="canvas-stage">
-              <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard checkpoint editor">
-                <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
-                <g id="compare-overlay"></g>
-                <g id="region-overlay"></g>
-                <g id="draft-overlay"></g>
-              </svg>
+          <div class="checkpoint-views">
+            <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
+              <div class="canvas-stage" id="canvas-stage">
+                <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard checkpoint editor">
+                  <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
+                  <g id="compare-overlay"></g>
+                  <g id="region-overlay"></g>
+                  <g id="draft-overlay"></g>
+                </svg>
+              </div>
+              <div class="empty-state" id="empty-state">
+                <strong>No checkpoint selected</strong>
+                <span>Create or choose a recent board to begin.</span>
+              </div>
+              <div class="draw-instruction" id="draw-instruction">Click around the hold. Press Enter to finish or Escape to cancel.</div>
             </div>
-            <div class="empty-state" id="empty-state">
-              <strong>No checkpoint selected</strong>
-              <span>Create or choose a recent board to begin.</span>
+            <div class="annotated-review hidden" id="annotated-review" aria-label="Annotated checkpoint review">
+              <img id="annotated-review-image" alt="" />
             </div>
-            <div class="draw-instruction" id="draw-instruction">Click around the hold. Press Enter to finish or Escape to cancel.</div>
           </div>
 
           <div class="validation-panel hidden" id="validation-panel" role="alert">

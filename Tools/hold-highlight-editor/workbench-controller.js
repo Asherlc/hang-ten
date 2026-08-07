@@ -7,6 +7,7 @@
 
   const DRAFT_PREFIX = "hold-workbench-draft:";
   const ACTIVE_JOB_KEY = "hold-workbench-active-job";
+  const EDITABLE_STAGES = new Set([2, 3]);
 
   function createLatestLoadCoordinator() {
     let latestToken = 0;
@@ -159,6 +160,25 @@
     return view.editorImageUrl || view.reviewUrl || null;
   }
 
+  function checkpointComparisonUrl(view) {
+    if (!view || !EDITABLE_STAGES.has(view.stage) || !view.editorImageUrl) return null;
+    if (!view.reviewUrl || view.reviewUrl === view.editorImageUrl) return null;
+    return view.reviewUrl;
+  }
+
+  function validateEditableImageAlignment(view, imageAsset, geometryDocument) {
+    if (!view || !EDITABLE_STAGES.has(view.stage)) return imageAsset;
+    const image = imageAsset?.image || imageAsset;
+    const canvas = geometryDocument?.canvas;
+    const validCanvas = Number.isInteger(canvas?.width) && canvas.width > 0
+      && Number.isInteger(canvas?.height) && canvas.height > 0;
+    if (!validCanvas) throw new Error("Editable geometry canvas is invalid");
+    if (image?.naturalWidth !== canvas.width || image?.naturalHeight !== canvas.height) {
+      throw new Error("Editable image dimensions do not match geometry canvas");
+    }
+    return imageAsset;
+  }
+
   function createActiveJobStore(storage) {
     function read() {
       try {
@@ -226,6 +246,8 @@
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
+    checkpointComparisonUrl,
+    validateEditableImageAlignment,
     createActiveJobStore,
     regionIdFromError,
     runFrozenApproval,

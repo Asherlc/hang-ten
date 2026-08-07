@@ -14,6 +14,8 @@ import tempfile
 from types import MappingProxyType
 from urllib.parse import urlparse
 
+from PIL import Image
+
 from .onboarding_run import (
     DEFAULT_STAGE_RUNNERS,
     RunContext,
@@ -429,13 +431,18 @@ class WorkbenchService:
         )
         board = self.store.read_board(board.id)
         review_value = status.get("review")
-        review_path = (
-            revision.run_root / review_value
-            if isinstance(review_value, str)
-            else None
-        )
         editor_mode = "contour" if stage == 2 else "vector" if stage == 3 else None
-        editor_image_path = self.__editor_image_path(revision, stage)
+        if stage in (2, 3):
+            review_path, editor_image_path = self.__editable_artifacts(
+                revision, stage, review_value
+            )
+        else:
+            review_path = (
+                revision.run_root / review_value
+                if isinstance(review_value, str)
+                else None
+            )
+            editor_image_path = None
         return WorkbenchView(
             board_id=board.id,
             revision_id=revision.id,
@@ -507,6 +514,84 @@ class WorkbenchService:
         ):
             raise WorkbenchServiceError("clean editor image evidence changed")
         return image_path
+
+    def __editable_artifacts(
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        review_value: object,
+    ) -> tuple[Path, Path]:
+        try:
+            editor_path = self.__editor_image_path(revision, stage)
+            if editor_path is None:
+                raise ValueError("editor image is missing")
+            review_path = self.__confined_run_path(
+                revision.run_root, review_value
+            )
+            document = self.__editable_document(revision, stage)
+            canvas = document.get("canvas")
+            if not isinstance(canvas, Mapping):
+                raise ValueError("geometry canvas is missing")
+            width = canvas.get("width")
+            height = canvas.get("height")
+            if (
+                isinstance(width, bool)
+                or not isinstance(width, int)
+                or width <= 0
+                or isinstance(height, bool)
+                or not isinstance(height, int)
+                or height <= 0
+            ):
+                raise ValueError("geometry canvas is invalid")
+            with Image.open(editor_path) as editor_image:
+                editor_image.load()
+                image_size = editor_image.size
+            editor_hash = sha256(editor_path.read_bytes()).hexdigest()
+            review_hash = sha256(review_path.read_bytes()).hexdigest()
+            if (
+                image_size != (width, height)
+                or editor_path == review_path
+                or editor_hash == review_hash
+            ):
+                raise ValueError("editable artifacts do not align")
+            return review_path, editor_path
+        except (OSError, RuntimeError, SyntaxError, TypeError, ValueError) as error:
+            raise WorkbenchServiceError(
+                "inconsistent editable evidence"
+            ) from error
+
+    def __editable_document(
+        self, revision: RevisionRecord, stage: int
+    ) -> dict[str, object]:
+        manifest = self.__manifest(revision.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= stage:
+            raise ValueError("editable stage evidence is missing")
+        record = stages[stage]
+        if not isinstance(record, Mapping):
+            raise ValueError("editable stage evidence is invalid")
+        filename = (
+            "stage-2-regions.json"
+            if stage == 2
+            else "stage-3-vector-regions.json"
+        )
+        artifact_root = record.get("artifactRoot")
+        if not isinstance(artifact_root, str):
+            raise ValueError("editable artifact root is invalid")
+        document_path = self.__confined_run_path(
+            revision.run_root, f"{artifact_root}/{filename}"
+        )
+        hashes_path = self.__confined_run_path(
+            revision.run_root, record.get("candidateHashesPath")
+        )
+        hashes = self.__read_object(hashes_path, "editable candidate hashes")
+        expected_hash = hashes.get(filename)
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(document_path.read_bytes()).hexdigest() != expected_hash
+        ):
+            raise ValueError("editable geometry is not hash-bound")
+        return self.__read_object(document_path, "editable geometry")
 
     @staticmethod
     def __confined_run_path(run_root: Path, relative: object) -> Path:

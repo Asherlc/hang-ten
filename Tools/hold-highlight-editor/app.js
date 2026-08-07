@@ -27,6 +27,8 @@
     createAutosaveCoordinator,
     createDraftStore,
     checkpointImageUrl,
+    checkpointComparisonUrl,
+    validateEditableImageAlignment,
     createActiveJobStore,
     regionIdFromError,
     runFrozenApproval,
@@ -117,6 +119,7 @@
   const el = Object.fromEntries([
     "region-list", "region-count", "region-search", "add-region-button",
     "canvas-viewport", "canvas-stage", "editor-svg", "board-image",
+    "annotated-review", "annotated-review-image",
     "compare-overlay", "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
     "status-text", "zoom-label", "opacity-slider", "inspector-title",
     "inspector-empty", "inspector-form", "region-key-input",
@@ -229,6 +232,7 @@
   }
 
   function render() {
+    renderComparisonView();
     renderOverlay();
     renderRegionList();
     renderInspector();
@@ -328,7 +332,11 @@
     el["region-overlay"].replaceChildren();
     el["draft-overlay"].replaceChildren();
 
-    if (state.compareEnabled && state.overlayMode !== "none") {
+    if (
+      state.compareEnabled
+      && !checkpointComparisonUrl(state.board)
+      && state.overlayMode !== "none"
+    ) {
       state.baselineRegions.forEach((region) => {
         const path = makeSvg("path", { d: isVectorMode() ? region.displayPath : pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension), class: "compare-shape" });
         el["compare-overlay"].appendChild(path);
@@ -1404,9 +1412,19 @@
 
   function setCompareEnabled(enabled) {
     state.compareEnabled = Boolean(enabled);
+    renderComparisonView();
     renderOverlay();
     renderToolState();
     return state.compareEnabled;
+  }
+
+  function renderComparisonView() {
+    const separateReview = Boolean(
+      state.guided && checkpointComparisonUrl(state.board)
+    );
+    const showReview = separateReview && state.compareEnabled;
+    el["canvas-viewport"].classList.toggle("hidden", showReview);
+    el["annotated-review"].classList.toggle("hidden", !showReview);
   }
 
   function checkpointDocumentUrl(view) {
@@ -1444,7 +1462,16 @@
           if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
           baselineDocument = await response.json();
         }
+        validateEditableImageAlignment(view, imageAsset, baselineDocument);
       }
+      if (!load.isCurrent()) return false;
+      const comparisonUrl = checkpointComparisonUrl(view);
+      const reviewAsset = comparisonUrl
+        ? await loadImageAsset(
+          comparisonUrl,
+          `Stage ${String(view.stage)} annotated review`,
+        )
+        : null;
       if (!load.isCurrent()) return false;
 
       return load.commit(() => {
@@ -1467,7 +1494,10 @@
       state.imageName = "";
       state.imagePixels = null;
       el["board-image"].removeAttribute("href");
+      el["annotated-review-image"].removeAttribute("src");
+      el["annotated-review-image"].alt = "";
       if (imageAsset) applyImageAsset(imageAsset);
+      if (reviewAsset) applyAnnotatedReviewAsset(reviewAsset);
 
       if (EDITOR_STAGES.has(view.stage)) {
         const restored = readStoredDraft(view);
@@ -1906,6 +1936,11 @@
     if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
     configureSvg();
     el["empty-state"].classList.add("hidden");
+  }
+
+  function applyAnnotatedReviewAsset({ href, name }) {
+    el["annotated-review-image"].src = href;
+    el["annotated-review-image"].alt = name;
   }
 
   async function setImageHref(href, name) {

@@ -86,6 +86,57 @@ def test_editable_stages_expose_a_clean_canvas_aligned_image_separate_from_revie
         assert editor_image.size == (4, 4)
 
 
+def test_get_board_rejects_editable_artifact_canvas_mismatched_to_clean_image(
+    service: WorkbenchService, board_with_stage0: WorkbenchView
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+    assert service.get_board(current.board_id).stage == 2
+
+    manifest = json.loads((current.run_root / "run.json").read_text(encoding="utf-8"))
+    record = manifest["stages"][2]
+    artifact_root = current.run_root / record["artifactRoot"]
+    regions_path = artifact_root / "stage-2-regions.json"
+    _write_json(
+        regions_path,
+        {"canvas": {"width": 5, "height": 4}, "regions": []},
+    )
+    candidate_path = artifact_root / "stage-2-candidate.json"
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    candidate["regions"]["fileSha256"] = _hash_file(regions_path)
+    _write_json(candidate_path, candidate)
+    _rehash_pending_checkpoint(current.run_root, manifest, record)
+
+    with pytest.raises(
+        WorkbenchServiceError, match="inconsistent editable evidence"
+    ):
+        service.get_board(current.board_id)
+
+
+def test_get_board_rejects_editable_artifact_review_with_same_hash_as_clean_image(
+    service: WorkbenchService, board_with_stage0: WorkbenchView
+) -> None:
+    current = service.approve_and_advance(
+        board_with_stage0.board_id, expected_stage=0
+    )
+    current = service.approve_and_advance(current.board_id, expected_stage=1)
+    assert current.editor_image_path is not None
+    assert current.review_path is not None
+
+    manifest = json.loads((current.run_root / "run.json").read_text(encoding="utf-8"))
+    record = manifest["stages"][2]
+    current.review_path.write_bytes(current.editor_image_path.read_bytes())
+    record["reviewSha256"] = _hash_file(current.review_path)
+    _rehash_pending_checkpoint(current.run_root, manifest, record)
+
+    with pytest.raises(
+        WorkbenchServiceError, match="inconsistent editable evidence"
+    ):
+        service.get_board(current.board_id)
+
+
 def test_revising_approved_stage_forks_revision_and_marks_old_descendants_stale(
     service: WorkbenchService, complete_board: WorkbenchView
 ) -> None:
@@ -742,7 +793,10 @@ class _StubStageRunner:
         elif self.stage == 2:
             regions = artifact_root / "stage-2-regions.json"
             labels = artifact_root / "stage-2-labels.png"
-            _write_json(regions, {"regions": []})
+            _write_json(
+                regions,
+                {"canvas": {"width": 4, "height": 4}, "regions": []},
+            )
             Image.new("I;16", (4, 4), 0).save(labels)
             candidate.update(
                 {
@@ -754,7 +808,10 @@ class _StubStageRunner:
         elif self.stage == 3:
             regions = artifact_root / "stage-3-vector-regions.json"
             svg = artifact_root / "stage-3-vector.svg"
-            _write_json(regions, {"regions": []})
+            _write_json(
+                regions,
+                {"canvas": {"width": 4, "height": 4}, "regions": []},
+            )
             svg.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>\n')
             candidate.update(
                 {
@@ -805,3 +862,20 @@ def _write_json(path: Path, value: object) -> None:
 
 def _hash_file(path: Path) -> str:
     return sha256(path.read_bytes()).hexdigest()
+
+
+def _rehash_pending_checkpoint(
+    run_root: Path,
+    manifest: dict[str, object],
+    record: dict[str, object],
+) -> None:
+    artifact_root = run_root / str(record["artifactRoot"])
+    hashes = {
+        path.name: _hash_file(path)
+        for path in sorted(artifact_root.iterdir())
+        if path.is_file() and path.name != "candidate-hashes.json"
+    }
+    hashes_path = artifact_root / "candidate-hashes.json"
+    _write_json(hashes_path, hashes)
+    record["candidateHashesSha256"] = _hash_file(hashes_path)
+    _write_json(run_root / "run.json", manifest)

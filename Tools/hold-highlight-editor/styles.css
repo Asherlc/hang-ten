@@ -139,10 +139,13 @@ button:disabled { opacity: .35; cursor: default; }
 .opacity-control input { width: 72px; accent-color: var(--accent); }
 .zoom-label { width: 43px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
 
-.canvas-viewport { position: relative; min-height: 0; overflow: hidden; outline: none; background-color: #d6d7d3; background-image: linear-gradient(45deg, #cbccc8 25%, transparent 25%), linear-gradient(-45deg, #cbccc8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cbccc8 75%), linear-gradient(-45deg, transparent 75%, #cbccc8 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+.checkpoint-views { position: relative; min-height: 0; overflow: hidden; }
+.canvas-viewport { position: relative; width: 100%; height: 100%; min-height: 0; overflow: hidden; outline: none; background-color: #d6d7d3; background-image: linear-gradient(45deg, #cbccc8 25%, transparent 25%), linear-gradient(-45deg, #cbccc8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cbccc8 75%), linear-gradient(-45deg, transparent 75%, #cbccc8 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
 .canvas-viewport.panning, .canvas-viewport.panning * { cursor: grabbing !important; }
 .canvas-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; filter: drop-shadow(0 10px 22px #0005); }
 #editor-svg { display: block; overflow: visible; user-select: none; }
+.annotated-review { position: absolute; inset: 0; display: grid; place-items: center; overflow: auto; padding: 18px; background: #10110f; }
+.annotated-review img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; box-shadow: 0 10px 22px #0008; }
 .empty-state { position: absolute; inset: 0; display: grid; place-content: center; gap: 7px; text-align: center; color: #5c6259; pointer-events: none; }
 .empty-state strong { color: #3e433d; }
 .empty-state.hidden { display: none; }
