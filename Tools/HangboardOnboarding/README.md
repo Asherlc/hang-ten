@@ -8,6 +8,30 @@ photo supplies board geometry and alignment diagnostics; the caller asserts
 the product identity and verifies it in the preview. The photo is not restyled
 into a run-specific illustration.
 
+## Run the Apple Silicon macOS workbench release
+
+From a Hang Ten checkout, download both assets from a release directory, verify
+the archive, extract it, and launch the executable:
+
+```bash
+curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.tar.gz
+curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.sha256
+shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+tar -xzf hangboard-workbench-macos-arm64.tar.gz
+./hangboard-workbench
+```
+
+The executable opens the workbench in the default browser automatically. It
+must run from inside a Hang Ten checkout, or receive the checkout explicitly
+with `--repository-root`. Use `--workspace-root` to move transient work,
+`--no-open` to suppress browser launch, `--port` to select another port, and
+`--version` to print the embedded source commit.
+
+The release is unsigned. If Gatekeeper blocks its first launch, use Finder's
+**Open** context-menu action to approve that executable.
+
+For source development, use the Python workbench command documented below.
+
 ## Install
 
 Python 3.11 or newer is required. From this directory:
