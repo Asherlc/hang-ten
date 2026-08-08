@@ -169,6 +169,68 @@ def test_copy_current_run_copies_only_a_validated_confined_run(tmp_path: Path) -
     assert not list(destination.parent.glob(f".{destination.name}.tmp-*"))
 
 
+def test_copy_current_run_returns_identity_from_the_exact_copied_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    canonical = _complete_board(repository, "copy-board", "Copy Board")
+    replacement = _complete_board(
+        tmp_path / "replacement", "copy-board", "Copy Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    before = library.get_board("copy-board")
+    replacement_token = sha256((replacement / "run.json").read_bytes()).hexdigest()
+    destination = tmp_path / "runtime" / "run"
+    original_copy = library._copy_tree
+
+    def replace_out_of_band_then_copy(source: Path, target: Path) -> None:
+        shutil.rmtree(source)
+        shutil.copytree(replacement, source)
+        original_copy(source, target)
+
+    monkeypatch.setattr(library, "_copy_tree", replace_out_of_band_then_copy)
+
+    copied = library.copy_current_run("copy-board", destination)
+
+    assert replacement_token != before.revision_token
+    assert copied.run_path == canonical
+    assert copied.revision_token == replacement_token
+    assert copied.revision_token == sha256(
+        (destination / "run.json").read_bytes()
+    ).hexdigest()
+    assert (
+        sha256((canonical / "run.json").read_bytes()).hexdigest()
+        == replacement_token
+    )
+
+
+def test_copy_current_run_rejects_an_out_of_band_board_identity_replacement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "copy-board", "Copy Board")
+    replacement = _complete_board(
+        tmp_path / "replacement", "different-board", "Different Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    destination = tmp_path / "runtime" / "run"
+    original_copy = library._copy_tree
+
+    def replace_out_of_band_then_copy(source: Path, target: Path) -> None:
+        shutil.rmtree(source)
+        shutil.copytree(replacement, source)
+        original_copy(source, target)
+
+    monkeypatch.setattr(library, "_copy_tree", replace_out_of_band_then_copy)
+
+    with pytest.raises(BoardLibraryError, match="requested board"):
+        library.copy_current_run("copy-board", destination)
+
+    assert not destination.exists()
+
+
 def test_copy_current_run_rejects_a_symlinked_destination_parent(tmp_path: Path) -> None:
     _complete_board(tmp_path, "copy-board", "Copy Board")
     outside = tmp_path / "outside"
@@ -395,6 +457,68 @@ def test_publish_rejects_board_id_that_does_not_match_the_run(
             board_id="different-board",
             expected_revision_token=None,
         )
+
+
+def test_publish_preserves_an_out_of_band_replacement_captured_during_copy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    canonical = _complete_board(repository, "conflict-board", "Conflict Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "conflict-board", "Conflict Board"
+    )
+    changed = _complete_board(
+        tmp_path / "changed", "conflict-board", "Conflict Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("conflict-board")
+    changed_token = sha256((changed / "run.json").read_bytes()).hexdigest()
+    copy_started, release_copy = Event(), Event()
+    original_copy = library._copy_tree
+    results: list[object] = []
+    errors: list[BaseException] = []
+
+    def paused_candidate_copy(source: Path, target: Path) -> None:
+        copy_started.set()
+        if not release_copy.wait(2):
+            raise TimeoutError("candidate copy was not released")
+        original_copy(source, target)
+
+    def publish_board() -> None:
+        try:
+            results.append(
+                library.publish(
+                    run_root=candidate,
+                    board_id=existing.board_id,
+                    expected_revision_token=existing.revision_token,
+                )
+            )
+        except BaseException as error:
+            errors.append(error)
+
+    monkeypatch.setattr(library, "_copy_tree", paused_candidate_copy)
+    publication_thread = Thread(target=publish_board)
+    publication_thread.start()
+    assert copy_started.wait(2)
+    try:
+        shutil.rmtree(canonical)
+        shutil.copytree(changed, canonical)
+    finally:
+        release_copy.set()
+        publication_thread.join(3)
+
+    assert not publication_thread.is_alive()
+    assert results == []
+    assert len(errors) == 1
+    assert isinstance(errors[0], BoardLibraryError)
+    assert "publication conflict" in str(errors[0])
+    assert library.get_board("conflict-board").revision_token == changed_token
+    assert not [
+        path
+        for path in (_boards_root(repository) / ".transactions").iterdir()
+        if path.name != "lock"
+    ]
 
 
 def test_publish_fsyncs_rollback_destination_before_canonical_source(
@@ -710,7 +834,7 @@ def test_recovery_retains_ambiguous_transaction_evidence(tmp_path: Path) -> None
     assert canonical.exists()
 
 
-def test_recovery_installs_valid_candidate_but_retains_invalid_rollback_evidence(
+def test_recovery_does_not_install_candidate_with_invalid_rollback_evidence(
     tmp_path: Path,
 ) -> None:
     repository = tmp_path / "repository"
@@ -741,7 +865,7 @@ def test_recovery_installs_valid_candidate_but_retains_invalid_rollback_evidence
 
     snapshot = RepositoryBoardLibrary(repository).snapshot()
 
-    assert [board.revision_token for board in snapshot.boards] == [candidate_token]
+    assert snapshot.boards == ()
     assert [(item.code, item.path) for item in snapshot.diagnostics] == [
         ("invalid_transaction", ".transactions/invalid-rollback")
     ]
@@ -764,6 +888,47 @@ def test_snapshot_reports_invalid_utf8_transaction_journal(tmp_path: Path) -> No
         ("invalid_transaction", ".transactions/invalid-utf8")
     ]
     assert transaction.exists()
+
+
+def test_recovery_restores_a_valid_captured_package_that_mismatches_the_journal(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    prior = _complete_board(tmp_path / "prior", "recovery-board", "Recovery Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "recovery-board", "Recovery Board"
+    )
+    changed = _complete_board(
+        tmp_path / "changed", "recovery-board", "Recovery Board"
+    )
+    expected_token = sha256((prior / "run.json").read_bytes()).hexdigest()
+    candidate_token = sha256((candidate / "run.json").read_bytes()).hexdigest()
+    changed_token = sha256((changed / "run.json").read_bytes()).hexdigest()
+    transaction = _boards_root(repository) / ".transactions" / "captured-conflict"
+    transaction.mkdir(parents=True)
+    shutil.copytree(candidate, transaction / "candidate")
+    shutil.copytree(changed, transaction / "rollback")
+    _write_json(
+        transaction / "journal.json",
+        {
+            "schemaVersion": 1,
+            "boardId": "recovery-board",
+            "expectedRevisionToken": expected_token,
+            "candidateRevisionToken": candidate_token,
+            "phase": "prior_moved",
+        },
+    )
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.revision_token for board in snapshot.boards] == [changed_token]
+    assert [(item.code, item.path) for item in snapshot.diagnostics] == [
+        ("invalid_transaction", ".transactions/captured-conflict")
+    ]
+    assert transaction.exists()
+    assert not (transaction / "rollback").exists()
+    assert (transaction / "candidate").exists()
 
 
 @pytest.mark.parametrize("proven_package", ["candidate", "rollback"])

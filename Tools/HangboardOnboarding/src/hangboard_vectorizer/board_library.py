@@ -182,7 +182,17 @@ class RepositoryBoardLibrary:
             try:
                 staged_run = stage / "run"
                 self._copy_tree(board.run_path, staged_run)
-                self._validate_complete_run(staged_run)
+                staged_board = self._validated_package(staged_run)
+                if staged_board.board_id != requested:
+                    raise BoardLibraryError(
+                        "copied run does not match the requested board"
+                    )
+                copied_board = LibraryBoard(
+                    board_id=staged_board.board_id,
+                    display_name=staged_board.display_name,
+                    run_path=board.run_path,
+                    revision_token=staged_board.revision_token,
+                )
                 shutil.move(str(staged_run), str(stage / "payload"))
                 (stage / "payload").replace(destination)
                 self._fsync_directory(destination.parent)
@@ -191,7 +201,7 @@ class RepositoryBoardLibrary:
                 raise
             else:
                 shutil.rmtree(stage, ignore_errors=True)
-        return board
+        return copied_board
 
     def publish(
         self,
@@ -359,6 +369,23 @@ class RepositoryBoardLibrary:
             self._move_path(current_path, rollback_path)
             self._fsync_directory(transaction)
             self._fsync_directory(self._boards_root)
+            captured_problem = self._captured_package_problem(
+                rollback_path, journal
+            )
+            if captured_problem is not None:
+                self._move_path(rollback_path, current_path)
+                self._fsync_directory(self._boards_root)
+                self._fsync_directory(transaction)
+                self._remove_transaction(transaction)
+                raise BoardLibraryError(
+                    f"publication conflict: {captured_problem}"
+                )
+        elif journal.expected_revision_token is not None:
+            self._remove_transaction(transaction)
+            raise BoardLibraryError(
+                "publication conflict: expected revision "
+                f"{journal.expected_revision_token}, current revision absent"
+            )
         self._write_journal(transaction, journal.document(phase="prior_moved"))
         self._move_path(candidate_path, current_path)
         self._fsync_directory(self._boards_root)
@@ -435,6 +462,20 @@ class RepositoryBoardLibrary:
         rollback_state_problem = rollback_problem
         if rollback is not None and not rollback_valid:
             rollback_state_problem = "rollback package does not match its journal"
+
+        if rollback_state_problem is not None:
+            self._retain_conflicting_rollback_locked(
+                transaction=transaction,
+                current_path=current_path,
+                candidate_path=candidate_path,
+                rollback_path=rollback_path,
+                current=current,
+                rollback=rollback,
+                journal=journal,
+            )
+            raise BoardLibraryError(
+                f"captured canonical package has {rollback_state_problem}"
+            )
 
         if invalid_canonical_retained and current is not None:
             raise BoardLibraryError(
@@ -514,6 +555,58 @@ class RepositoryBoardLibrary:
         ]
         detail = "; ".join(problems) if problems else "required packages are missing"
         raise BoardLibraryError(detail)
+
+    def _captured_package_problem(
+        self, rollback_path: Path, journal: _TransactionJournal
+    ) -> str | None:
+        captured, problem = self._probe_package(rollback_path)
+        if problem is not None:
+            return f"captured canonical package is invalid: {problem}"
+        if captured is None:
+            return "captured canonical package is missing"
+        if captured.board_id != journal.board_id:
+            return (
+                "captured board ID does not match the transaction board: "
+                f"{captured.board_id}"
+            )
+        if captured.revision_token == journal.expected_revision_token:
+            return None
+        expected = journal.expected_revision_token or "absent"
+        return (
+            f"expected revision {expected}, captured revision "
+            f"{captured.revision_token}"
+        )
+
+    def _retain_conflicting_rollback_locked(
+        self,
+        *,
+        transaction: Path,
+        current_path: Path,
+        candidate_path: Path,
+        rollback_path: Path,
+        current: LibraryBoard | None,
+        rollback: LibraryBoard | None,
+        journal: _TransactionJournal,
+    ) -> None:
+        if (
+            current is not None
+            and current.revision_token == journal.candidate_revision_token
+            and not candidate_path.exists()
+            and not candidate_path.is_symlink()
+        ):
+            self._move_path(current_path, candidate_path)
+            self._fsync_directory(transaction)
+            self._fsync_directory(self._boards_root)
+            current = None
+        if (
+            current is None
+            and rollback is not None
+            and not current_path.exists()
+            and not current_path.is_symlink()
+        ):
+            self._move_path(rollback_path, current_path)
+            self._fsync_directory(self._boards_root)
+            self._fsync_directory(transaction)
 
     def _read_transaction_journal(
         self, transaction: Path

@@ -522,6 +522,7 @@ class WorkbenchService:
             )
         self.store.mark_revision_complete(board.id, revision.id)
         if self.__library is not None:
+            self.store.preflight_repository_revision(board.id, revision.id)
             published = self.__library.publish(
                 run_root=revision.run_root,
                 board_id=board.repository_board_id,

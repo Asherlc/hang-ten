@@ -445,6 +445,14 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
+    def preflight_repository_revision(
+        self, board_id: str, revision_id: str
+    ) -> RevisionRecord:
+        """Read-only validation that one exact active revision can be published."""
+        board = self.read_board(board_id)
+        return self._active_savable_revision(board, revision_id)
+
+    @_synchronized
     def publish_repository_revision(
         self,
         board_id: str,
@@ -455,7 +463,7 @@ class WorkbenchStore:
     ) -> BoardRecord:
         """Atomically save a revision and record the repository revision it published."""
         board = self.read_board(board_id)
-        revision = self._savable_revision(board, revision_id)
+        revision = self._active_savable_revision(board, revision_id)
         self._validate_repository_link(
             repository_board_id, repository_revision_token
         )
@@ -876,6 +884,17 @@ class WorkbenchStore:
                 f"revision {revision.id} does not have a complete lineage"
             )
         return revision
+
+    @classmethod
+    def _active_savable_revision(
+        cls, board: BoardRecord, revision_id: str
+    ) -> RevisionRecord:
+        if board.active_revision_id != revision_id:
+            actual = board.active_revision_id or "none"
+            raise WorkbenchStoreError(
+                f"active revision changed: expected {revision_id}, found {actual}"
+            )
+        return cls._savable_revision(board, revision_id)
 
     @staticmethod
     def _replace_revision(

@@ -216,9 +216,45 @@ def test_board_manifest_is_schema_versioned_and_survives_reopening(tmp_path: Pat
 
     assert manifest["schemaVersion"] == 2
     assert manifest["revisions"][0]["runRoot"] == "revisions/revision-0001/run"
+    assert "repositoryVersionId" not in manifest
     assert "publicationOperationId" not in manifest["revisions"][0]
     assert reopened.product_name == "Example Board"
     assert reopened.revisions == (revision,)
+
+
+def test_schema_1_repository_link_loads_safely_and_migrates_on_next_mutation(
+    tmp_path: Path,
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+    second = store.create_revision(board.id)
+    manifest_path = tmp_path / "boards" / board.id / "board.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["schemaVersion"] = 1
+    manifest["repositoryBoardId"] = "example-board"
+    manifest["repositoryVersionId"] = "revision-0042"
+    manifest.pop("repositoryRevisionToken", None)
+    manifest["revisions"][0]["publicationOperationId"] = (
+        "77377ba8-d4e7-48aa-afb4-5a762f3f7040"
+    )
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    legacy = WorkbenchStore(tmp_path).read_board(board.id)
+
+    assert tuple(item.id for item in legacy.revisions) == (revision.id, second.id)
+    assert legacy.repository_board_id == "example-board"
+    assert legacy.repository_revision_token is None
+    assert json.loads(manifest_path.read_text(encoding="utf-8"))["schemaVersion"] == 1
+
+    store.mark_descendants_stale(board.id, revision.id, from_stage=2)
+    migrated = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert migrated["schemaVersion"] == 2
+    assert migrated["repositoryBoardId"] == "example-board"
+    assert migrated["repositoryRevisionToken"] is None
+    assert "repositoryVersionId" not in migrated
+    assert all(
+        "publicationOperationId" not in item for item in migrated["revisions"]
+    )
 
 
 def test_store_persists_repository_revision_without_changing_runtime_id(
@@ -313,6 +349,46 @@ def test_publish_repository_revision_updates_link_and_saved_revision_atomically(
     assert published.repository_board_id == "example-board"
     assert published.repository_revision_token == _REVISION_TOKEN_A
     assert WorkbenchStore(tmp_path).read_board(board.id) == published
+
+
+def test_repository_preflight_is_read_only_for_the_active_complete_revision(
+    tmp_path: Path,
+) -> None:
+    store, board, revision = _populated_store(tmp_path)
+    store.activate_revision(board.id, revision.id)
+    store.mark_revision_complete(board.id, revision.id)
+    manifest_path = tmp_path / "boards" / board.id / "board.json"
+    before = manifest_path.read_bytes()
+
+    validated = store.preflight_repository_revision(board.id, revision.id)
+
+    assert validated.id == revision.id
+    assert manifest_path.read_bytes() == before
+
+
+@pytest.mark.parametrize("operation", ("preflight", "finalize"))
+def test_repository_publication_gates_reject_a_non_active_complete_revision(
+    tmp_path: Path, operation: str
+) -> None:
+    store, board, active = _populated_store(tmp_path)
+    store.activate_revision(board.id, active.id)
+    store.mark_revision_complete(board.id, active.id)
+    inactive = store.create_revision(board.id)
+    store.mark_revision_complete(board.id, inactive.id)
+    before = store.read_board(board.id)
+
+    with pytest.raises(WorkbenchStoreError, match="active revision changed"):
+        if operation == "preflight":
+            store.preflight_repository_revision(board.id, inactive.id)
+        else:
+            store.publish_repository_revision(
+                board.id,
+                inactive.id,
+                repository_board_id="example-board",
+                repository_revision_token=_REVISION_TOKEN_A,
+            )
+
+    assert store.read_board(board.id) == before
 
 
 def test_publish_repository_revision_failure_preserves_all_previous_metadata(
