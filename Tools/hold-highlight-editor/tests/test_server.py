@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import shutil
 import sys
 import threading
 from contextlib import contextmanager
@@ -656,6 +657,16 @@ def _poll_job(base: str, job_id: str):
         if job["state"] in {"succeeded", "failed"}:
             return job
     pytest.fail("fake deterministic job did not finish within bounded polls")
+
+
+def _await_workbench_job(base: str, job_id: str):
+    for _ in range(200):
+        _status, payload = read_json(base + f"/api/jobs/{job_id}")
+        job = payload["job"]
+        if job["state"] in {"succeeded", "failed"}:
+            return job
+        Event().wait(0.01)
+    pytest.fail("workbench job did not finish within bounded polls")
 
 
 def _create_board(base: str):
@@ -1548,6 +1559,127 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     assert payload["diagnostics"][0]["path"] == "broken-board"
     assert payload["diagnostics"][0]["code"] == "invalid_run"
     assert str(tmp_path) not in json.dumps(payload)
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypatch):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    canonical_run = (
+        EDITOR_ROOT.parent
+        / "HangboardOnboarding"
+        / "boards"
+        / "metolius-wood-grips-compact-ii"
+    )
+    shutil.copytree(
+        canonical_run,
+        repository
+        / "Tools"
+        / "HangboardOnboarding"
+        / "boards"
+        / "metolius-wood-grips-compact-ii",
+    )
+    workspace = tmp_path / "external-workspace"
+    server, _catalog = server_module._server_from_cli(
+        [
+            "--repository-root",
+            str(repository),
+            "--workspace-root",
+            str(workspace),
+            "--port",
+            "0",
+        ]
+    )
+    service = server.workbench_service
+    library = service._WorkbenchService__library
+    copy_current_run = library.copy_current_run
+
+    def create_destination_before_copy(board_id: str, destination: Path):
+        shutil.copytree(canonical_run, destination)
+        return copy_current_run(board_id, destination)
+
+    monkeypatch.setattr(library, "copy_current_run", create_destination_before_copy)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        _status, accepted = _post_json(
+            base + "/api/library/metolius-wood-grips-compact-ii/open", {}
+        )
+        outcome = _await_workbench_job(base, accepted["jobId"])
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert outcome["state"] == "failed"
+    assert str(workspace) not in outcome["error"]
+    assert outcome["error"] == "repository operation failed"
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_repository_save_job_redacts_write_target_path(tmp_path, monkeypatch):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "HangboardOnboarding" / "boards").mkdir(parents=True)
+    workspace = tmp_path / "workspace"
+    imported_run = workspace / "imported-run"
+    shutil.copytree(
+        EDITOR_ROOT.parent
+        / "HangboardOnboarding"
+        / "boards"
+        / "metolius-wood-grips-compact-ii",
+        imported_run,
+    )
+    server, _catalog = server_module._server_from_cli(
+        [
+            "--repository-root",
+            str(repository),
+            "--workspace-root",
+            str(workspace),
+            "--port",
+            "0",
+        ]
+    )
+    service = server.workbench_service
+    library = service._WorkbenchService__library
+    copy_tree = library._copy_tree
+
+    def create_write_target_before_copy(source: Path, destination: Path):
+        destination.mkdir(parents=True)
+        return copy_tree(source, destination)
+
+    monkeypatch.setattr(library, "_copy_tree", create_write_target_before_copy)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        _status, imported = _post_json(
+            base + "/api/boards/import", {"runRoot": str(imported_run)}
+        )
+        imported_outcome = _await_workbench_job(base, imported["jobId"])
+        assert imported_outcome["state"] == "succeeded"
+        view = imported_outcome["result"]
+        _status, accepted = _post_json(
+            base + f"/api/boards/{view['boardId']}/save",
+            {
+                "boardId": view["boardId"],
+                "expectedRevisionId": view["revisionId"],
+            },
+        )
+        outcome = _await_workbench_job(base, accepted["jobId"])
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+    assert outcome["state"] == "failed"
+    assert str(repository) not in outcome["error"]
+    assert outcome["error"] == "repository operation failed"
 
 
 @pytest.mark.filterwarnings(

@@ -41,6 +41,15 @@ def _new_board_reservation_key() -> str:
     return f"workbench-board-reservation-{uuid4().hex}"
 
 
+def _public_job_error_message(error: Exception) -> str:
+    message = str(error)
+    return (
+        "repository operation failed"
+        if _ABSOLUTE_PATH_IN_TEXT.search(message)
+        else message
+    )
+
+
 class EditorError(ValueError):
     """A safe, user-facing editor session or payload error."""
 
@@ -292,6 +301,7 @@ def create_server(
         max_workers=max_workers,
         result_serializer=_workbench_view_payload,
         public_error_types=public_job_error_types,
+        public_error_formatter=_public_job_error_message,
         outcome_root=job_outcome_root,
     )
 

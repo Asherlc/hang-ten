@@ -62,6 +62,7 @@ class BoardJobManager:
         max_workers: int = 4,
         result_serializer: Callable[[object], object] | None = None,
         public_error_types: tuple[type[Exception], ...] = (),
+        public_error_formatter: Callable[[Exception], str] | None = None,
         max_queue: int | None = None,
         max_completed: int = 256,
         result_ttl_seconds: float = 3600,
@@ -95,6 +96,7 @@ class BoardJobManager:
         self.__result_ttl_seconds = result_ttl_seconds
         self.__result_serializer = result_serializer or (lambda result: result)
         self.__public_error_types = public_error_types
+        self.__public_error_formatter = public_error_formatter or str
         self.__outcome_root = outcome_directory
 
     def submit(
@@ -171,7 +173,11 @@ class BoardJobManager:
             summary = self.__serializable_summary(operation())
             final = replace(current, state="succeeded", result=summary)
         except self.__public_error_types as error:
-            final = replace(current, state="failed", error=str(error))
+            final = replace(
+                current,
+                state="failed",
+                error=self.__public_error_message(error),
+            )
         except Exception:
             final = replace(current, state="failed", error="job failed")
         finally:
@@ -189,6 +195,13 @@ class BoardJobManager:
                 self.__completed_at[job_id] = monotonic()
                 self.__prune_completed()
             self.__capacity.release()
+
+    def __public_error_message(self, error: Exception) -> str:
+        try:
+            message = self.__public_error_formatter(error)
+        except Exception:
+            return "job failed"
+        return message if isinstance(message, str) and message else "job failed"
 
     def __serializable_summary(self, result: object) -> Any:
         summary = self.__result_serializer(result)
