@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 import json
 from pathlib import Path
-from threading import Event, Lock
-from uuid import uuid4
 
 from PIL import Image
 import pytest
@@ -21,629 +18,185 @@ from hangboard_vectorizer.onboarding_run import (
 )
 
 
-def test_list_boards_returns_validated_casefold_order(tmp_path: Path) -> None:
-    library = _library_with_packages(tmp_path, ("Zulu", "alpha", "Alpha"))
+def test_snapshot_discovers_self_describing_runs_and_sorts_them(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "charlie", "charlie")
+    _complete_board(tmp_path, "alpha-2", "Alpha 2")
+    _complete_board(tmp_path, "alpha-1", "alpha 1")
 
-    assert [(item.display_name, item.board_id) for item in library.list_boards()] == [
-        ("alpha", "alpha"),
-        ("Alpha", "alpha-2"),
-        ("Zulu", "zulu"),
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == [
+        "alpha-1",
+        "alpha-2",
+        "charlie",
+    ]
+    assert snapshot.diagnostics == ()
+    assert all(len(board.revision_token) == 64 for board in snapshot.boards)
+
+
+def test_invalid_board_is_diagnostic_without_hiding_valid_boards(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "valid-board", "Valid Board")
+    invalid = _complete_board(tmp_path, "wrong-directory", "Wrong Directory")
+    manifest = _read_json(invalid / "run.json")
+    product = manifest["product"]
+    assert isinstance(product, dict)
+    product["key"] = "different-key"
+    _write_json(invalid / "run.json", manifest)
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == ["valid-board"]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("wrong-directory", "identity_mismatch")
+    ]
+    assert "Tools/HangboardOnboarding/boards/wrong-directory/run.json" in snapshot.diagnostics[0].message
+
+
+def test_snapshot_ignores_hidden_transaction_directories(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "visible-board", "Visible Board")
+    transaction = _boards_root(tmp_path) / ".publication.tmp-123"
+    transaction.mkdir()
+    (transaction / "run.json").write_text("not inspected", encoding="utf-8")
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == ["visible-board"]
+    assert snapshot.diagnostics == ()
+
+
+def test_snapshot_reports_symlinked_board_directories(tmp_path: Path) -> None:
+    target = _complete_board(tmp_path, "valid-board", "Valid Board")
+    (_boards_root(tmp_path) / "linked-board").symlink_to(target, target_is_directory=True)
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == ["valid-board"]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("linked-board", "invalid_path")
     ]
 
 
-@pytest.mark.parametrize("package_path", ("../outside", "/tmp/outside"))
-def test_catalog_rejects_package_paths_outside_library(
-    tmp_path: Path, package_path: str
-) -> None:
-    library = _library_with_catalog_entry(tmp_path, package_path=package_path)
+def test_snapshot_reports_invalid_board_ids(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "valid-board", "Valid Board")
+    invalid = _boards_root(tmp_path) / "Invalid_Board"
+    invalid.mkdir()
 
-    with pytest.raises(BoardLibraryError, match="packagePath"):
-        library.list_boards()
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
 
-
-def test_catalog_rejects_duplicate_ids_and_unknown_schema_versions(tmp_path: Path) -> None:
-    library = _library_with_packages(tmp_path, ("Alpha",))
-    catalog = _read_json(_library_root(tmp_path) / "catalog.json")
-    catalog["boards"].append(dict(catalog["boards"][0]))
-    _write_json(_library_root(tmp_path) / "catalog.json", catalog)
-
-    with pytest.raises(BoardLibraryError, match="duplicate boardId"):
-        library.list_boards()
-
-    catalog["boards"] = catalog["boards"][:1]
-    catalog["schemaVersion"] = 2
-    _write_json(_library_root(tmp_path) / "catalog.json", catalog)
-    with pytest.raises(BoardLibraryError, match="catalog schema"):
-        library.list_boards()
+    assert [board.board_id for board in snapshot.boards] == ["valid-board"]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("Invalid_Board", "invalid_board_id")
+    ]
 
 
-def test_list_boards_rejects_symlinked_packages_and_bad_published_hashes(
-    tmp_path: Path,
-) -> None:
-    library, board = _complete_library(tmp_path)
-    package = board.package_path
-    moved = package.with_name("moved-package")
-    package.rename(moved)
-    package.symlink_to(moved, target_is_directory=True)
+def test_snapshot_reports_missing_run_manifest(tmp_path: Path) -> None:
+    missing = _boards_root(tmp_path) / "missing-manifest"
+    missing.mkdir(parents=True)
 
-    with pytest.raises(BoardLibraryError, match="symlink"):
-        library.list_boards()
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
 
-    package.unlink()
-    moved.rename(package)
-    published = _read_json(package / "versions" / "revision-0001" / "published.json")
-    published["definition"]["sha256"] = "0" * 64
-    _write_json(package / "versions" / "revision-0001" / "published.json", published)
-    with pytest.raises(BoardLibraryError, match="published"):
-        library.list_boards()
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("missing-manifest", "missing_manifest")
+    ]
+    assert "Tools/HangboardOnboarding/boards/missing-manifest/run.json" in snapshot.diagnostics[0].message
 
 
-def test_list_boards_rejects_a_symlinked_repository_ancestor(tmp_path: Path) -> None:
-    outside = tmp_path / "outside"
-    _library_with_packages(outside, ("Example Board",))
-    repository = tmp_path / "repository"
-    repository.mkdir()
-    (repository / "Tools").symlink_to(outside / "Tools", target_is_directory=True)
+def test_snapshot_reports_incomplete_runs(tmp_path: Path) -> None:
+    _incomplete_board(tmp_path, "incomplete-board", "Incomplete Board")
 
-    with pytest.raises(BoardLibraryError, match="symlink"):
-        RepositoryBoardLibrary(repository).list_boards()
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
 
-
-def test_publish_rejects_descendant_symlink_before_creating_outside(
-    tmp_path: Path,
-) -> None:
-    repository, outside = _repository_with_symlinked_tools(tmp_path)
-    library = RepositoryBoardLibrary(repository)
-
-    with pytest.raises(BoardLibraryError, match="symlink"):
-        library.publish(
-            display_name="Example Board",
-            run_root=_complete_fixture_run(tmp_path / "run"),
-            board_id=None,
-            expected_current_version_id=None,
-        )
-
-    assert not (outside / "HangboardOnboarding" / "board-library" / "boards").exists()
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("incomplete-board", "invalid_run")
+    ]
 
 
-def test_repository_root_alias_is_trusted_but_descendant_symlinks_are_not(
-    tmp_path: Path,
-) -> None:
-    physical = _empty_repository(tmp_path / "physical")
-    alias = tmp_path / "repository-alias"
-    alias.symlink_to(physical, target_is_directory=True)
-    library = RepositoryBoardLibrary(alias)
+def test_snapshot_reports_bad_approval_hashes(tmp_path: Path) -> None:
+    run = _complete_board(tmp_path, "approval-board", "Approval Board")
+    approval = run / "approvals" / "stage-3.json"
+    document = _read_json(approval)
+    document["decision"] = "rejected"
+    _write_json(approval, document)
 
-    published = library.publish(
-        display_name="Example Board",
-        run_root=_complete_fixture_run(tmp_path / "run"),
-        board_id=None,
-        expected_current_version_id=None,
-    )
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
 
-    assert published.board.board_id == "example-board"
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("approval-board", "invalid_run")
+    ]
 
 
-def test_copy_current_run_stages_then_atomically_renames(tmp_path: Path) -> None:
-    library, expected = _complete_library(tmp_path)
+def test_snapshot_reports_bad_stage_four_output_hashes(tmp_path: Path) -> None:
+    run = _complete_board(tmp_path, "output-board", "Output Board")
+    normal = _stage_four_acceptance(run)["normal"]
+    assert isinstance(normal, dict)
+    output = run / str(normal["path"])
+    output.write_bytes(b"changed output")
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("output-board", "invalid_outputs")
+    ]
+
+
+def test_snapshot_revision_tokens_are_deterministic(tmp_path: Path) -> None:
+    run = _complete_board(tmp_path, "token-board", "Token Board")
+    library = RepositoryBoardLibrary(tmp_path)
+
+    first = library.snapshot().boards[0]
+    second = library.snapshot().boards[0]
+
+    assert first.revision_token == second.revision_token
+    assert first.revision_token == sha256((run / "run.json").read_bytes()).hexdigest()
+
+
+def test_copy_current_run_copies_only_a_validated_confined_run(tmp_path: Path) -> None:
+    run = _complete_board(tmp_path, "copy-board", "Copy Board")
     destination = tmp_path / "runtime" / "run"
 
-    opened = library.copy_current_run(expected.board_id, destination)
+    board = RepositoryBoardLibrary(tmp_path).copy_current_run("copy-board", destination)
 
-    assert opened.current_run_path != destination
-    assert {key: value for key, value in read_status(destination).items() if key != "run"} == {
-        key: value
-        for key, value in read_status(opened.current_run_path).items()
-        if key != "run"
-    }
+    assert board.run_path == run
+    assert destination != run
+    assert read_status(destination)["status"] == "complete"
     assert not list(destination.parent.glob(f".{destination.name}.tmp-*"))
 
 
-def test_copy_current_run_rejects_an_existing_destination(tmp_path: Path) -> None:
-    library, board = _complete_library(tmp_path)
-    destination = tmp_path / "runtime" / "run"
-    destination.mkdir(parents=True)
+def test_copy_current_run_rejects_a_symlinked_destination_parent(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "copy-board", "Copy Board")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    runtime = tmp_path / "runtime"
+    runtime.symlink_to(outside, target_is_directory=True)
 
-    with pytest.raises(BoardLibraryError, match="destination already exists"):
-        library.copy_current_run(board.board_id, destination)
+    with pytest.raises(BoardLibraryError, match="symlink"):
+        RepositoryBoardLibrary(tmp_path).copy_current_run("copy-board", runtime / "run")
 
-
-def test_publish_appends_version_without_mutating_previous_version(tmp_path: Path) -> None:
-    library, original = _complete_library(tmp_path)
-    old_hashes = _tree_hashes(original.current_run_path)
-
-    result = library.publish(
-        display_name=original.display_name,
-        run_root=_complete_fixture_run(tmp_path / "new-run"),
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-    )
-
-    assert result.version_id == "revision-0002"
-    assert _tree_hashes(original.current_run_path) == old_hashes
-    assert library.get_board(original.board_id).current_version_id == "revision-0002"
+    assert not (outside / "run").exists()
 
 
-def test_list_boards_rejects_a_corrupted_noncurrent_published_version(
-    tmp_path: Path,
-) -> None:
-    library, original = _complete_library(tmp_path)
-    library.publish(
-        display_name=original.display_name,
-        run_root=_complete_fixture_run(tmp_path / "new-run"),
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-    )
-    published_path = (
-        original.package_path / "versions" / "revision-0001" / "published.json"
-    )
-    published = _read_json(published_path)
-    published["definition"]["sha256"] = "0" * 64
-    _write_json(published_path, published)
-
-    with pytest.raises(BoardLibraryError, match="published"):
-        library.list_boards()
-
-
-def test_publish_conflict_leaves_current_pointer_unchanged(tmp_path: Path) -> None:
-    library, original = _complete_library(tmp_path)
-
-    with pytest.raises(BoardLibraryError, match="expected revision-0000.*revision-0001"):
-        library.publish(
-            display_name=original.display_name,
-            run_root=_complete_fixture_run(tmp_path / "new-run"),
-            board_id=original.board_id,
-            expected_current_version_id="revision-0000",
-        )
-
-    assert library.get_board(original.board_id).current_version_id == "revision-0001"
-
-
-def test_publish_reconciles_a_retried_new_board_by_operation(
-    tmp_path: Path,
-) -> None:
-    library_root = _library_root(tmp_path)
-    library_root.mkdir(parents=True)
-    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
+def test_get_board_rejects_invalid_and_missing_boards(tmp_path: Path) -> None:
+    invalid = _boards_root(tmp_path) / "Invalid_Board"
+    invalid.mkdir(parents=True)
     library = RepositoryBoardLibrary(tmp_path)
-    run = _complete_fixture_run(tmp_path / "run")
-    operation_id = str(uuid4())
 
-    first = library.publish(
-        display_name="Example Board",
-        run_root=run,
-        board_id=None,
-        expected_current_version_id=None,
-        publication_operation_id=operation_id,
-    )
-    assert _read_json(
-        first.board.package_path / "versions" / first.version_id / "publication.json"
-    )["operationId"] == operation_id
-    retried = library.publish(
-        display_name="Example Board",
-        run_root=run,
-        board_id=None,
-        expected_current_version_id=None,
-        publication_operation_id=operation_id,
-    )
-
-    assert retried == first
-    assert [board.board_id for board in library.list_boards()] == ["example-board"]
+    with pytest.raises(BoardLibraryError, match="identifier is invalid"):
+        library.get_board("Invalid_Board")
+    with pytest.raises(BoardLibraryError, match="does not exist"):
+        library.get_board("missing-board")
 
 
-def test_legacy_publication_token_retries_new_board_with_schema_one_metadata(
-    tmp_path: Path,
-) -> None:
-    library = RepositoryBoardLibrary(_empty_repository(tmp_path / "repository"))
-    run = _complete_fixture_run(tmp_path / "run")
-
-    first = library.publish(
-        display_name="Example Board",
-        run_root=run,
-        board_id=None,
-        expected_current_version_id=None,
-        publication_token="a" * 64,
-    )
-    retried = library.publish(
-        display_name="Example Board",
-        run_root=run,
-        board_id=None,
-        expected_current_version_id=None,
-        publication_token="a" * 64,
-    )
-
-    assert retried == first
-    assert _read_json(
-        first.board.package_path / "versions" / first.version_id / "publication.json"
-    ) == {
-        "schemaVersion": 1,
-        "token": "a" * 64,
-        "runIdentitySha256": _read_json(run / "run.json")["runIdentitySha256"],
-    }
-
-
-def test_legacy_publication_token_retries_existing_current_version(
-    tmp_path: Path,
-) -> None:
-    library, original = _complete_library(tmp_path)
-    run = _complete_fixture_run(tmp_path / "new-run")
-    first = library.publish(
-        display_name=original.display_name,
-        run_root=run,
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-        publication_token="b" * 64,
-    )
-
-    retried = library.publish(
-        display_name=original.display_name,
-        run_root=run,
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-        publication_token="b" * 64,
-    )
-
-    assert retried == first
-
-
-def test_publish_rejects_simultaneous_legacy_and_uuid_operation_identities(
-    tmp_path: Path,
-) -> None:
-    library = RepositoryBoardLibrary(_empty_repository(tmp_path / "repository"))
-
-    with pytest.raises(BoardLibraryError, match="both"):
-        library.publish(
-            display_name="Example Board",
-            run_root=_complete_fixture_run(tmp_path / "run"),
-            board_id=None,
-            expected_current_version_id=None,
-            publication_operation_id=str(uuid4()),
-            publication_token="a" * 64,
-        )
-
-
-def test_publish_reconciles_a_retried_existing_version_by_operation(
-    tmp_path: Path,
-) -> None:
-    library, original = _complete_library(tmp_path)
-    run = _complete_fixture_run(tmp_path / "new-run")
-    operation_id = str(uuid4())
-    first = library.publish(
-        display_name=original.display_name,
-        run_root=run,
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-        publication_operation_id=operation_id,
-    )
-
-    retried = library.publish(
-        display_name=original.display_name,
-        run_root=run,
-        board_id=original.board_id,
-        expected_current_version_id=original.current_version_id,
-        publication_operation_id=operation_id,
-    )
-
-    assert retried == first
-    board_document = _read_json(original.package_path / "board.json")
-    assert [version["versionId"] for version in board_document["versions"]] == [
-        "revision-0001",
-        "revision-0002",
-    ]
-
-
-def test_reconciliation_requires_unique_operation_and_exact_published_evidence(
-    tmp_path: Path,
-) -> None:
-    library, entry = _complete_library(tmp_path)
-    run = _complete_fixture_run(tmp_path / "run")
-    first = library.publish(
-        display_name=entry.display_name,
-        run_root=run,
-        board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
-        publication_operation_id=str(uuid4()),
-    )
-
-    with pytest.raises(BoardLibraryError, match="conflict"):
-        library.publish(
-            display_name=entry.display_name,
-            run_root=run,
-            board_id=entry.board_id,
-            expected_current_version_id=entry.current_version_id,
-            publication_operation_id=str(uuid4()),
-        )
-
-    assert first.version_id == "revision-0002"
-
-
-def test_reconciliation_rejects_changed_evidence_for_the_same_operation(
-    tmp_path: Path,
-) -> None:
-    library, entry = _complete_library(tmp_path)
-    operation_id = str(uuid4())
-    first_run = _complete_fixture_run(tmp_path / "first-run")
-    changed_run = _complete_fixture_run(
-        tmp_path / "changed-run", stage4_color=(9, 8, 7)
-    )
-    assert _read_json(first_run / "run.json")["runIdentitySha256"] == _read_json(
-        changed_run / "run.json"
-    )["runIdentitySha256"]
-    library.publish(
-        display_name=entry.display_name,
-        run_root=first_run,
-        board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
-        publication_operation_id=operation_id,
-    )
-
-    with pytest.raises(BoardLibraryError, match="corruption"):
-        library.publish(
-            display_name=entry.display_name,
-            run_root=changed_run,
-            board_id=entry.board_id,
-            expected_current_version_id=entry.current_version_id,
-            publication_operation_id=operation_id,
-        )
-
-
-def test_retry_finds_its_exact_operation_after_a_newer_version_is_current(
-    tmp_path: Path,
-) -> None:
-    library, entry = _complete_library(tmp_path)
-    first_run = _complete_fixture_run(tmp_path / "first-run")
-    operation_id = str(uuid4())
-    first = library.publish(
-        display_name=entry.display_name,
-        run_root=first_run,
-        board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
-        publication_operation_id=operation_id,
-    )
-    library.publish(
-        display_name=entry.display_name,
-        run_root=_complete_fixture_run(tmp_path / "newer-run"),
-        board_id=entry.board_id,
-        expected_current_version_id=first.version_id,
-        publication_operation_id=str(uuid4()),
-    )
-
-    retried = library.publish(
-        display_name=entry.display_name,
-        run_root=first_run,
-        board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
-        publication_operation_id=operation_id,
-    )
-
-    assert retried.version_id == "revision-0002"
-    assert library.get_board(entry.board_id).current_version_id == "revision-0003"
-
-
-def test_concurrent_new_board_publications_merge_and_sort_the_latest_catalog(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library_root = _library_root(tmp_path)
-    library_root.mkdir(parents=True)
-    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
-    first_library = RepositoryBoardLibrary(tmp_path)
-    second_library = RepositoryBoardLibrary(tmp_path)
-    first_run = _complete_fixture_run(tmp_path / "first-run")
-    second_run = _complete_fixture_run(tmp_path / "second-run")
-    actual_replace = RepositoryBoardLibrary._replace_json
-    replace_guard = Lock()
-    first_replace = Event()
-    release_first = Event()
-    catalog_replaces = 0
-
-    def coordinate_catalog_replace(
-        self: RepositoryBoardLibrary,
-        path: Path,
-        value: object,
-        root: Path,
-    ) -> None:
-        nonlocal catalog_replaces
-        if path.name == "catalog.json":
-            with replace_guard:
-                catalog_replaces += 1
-                position = catalog_replaces
-            if position == 1:
-                first_replace.set()
-                release_first.wait(0.5)
-            else:
-                release_first.set()
-        actual_replace(self, path, value, root)
-
-    monkeypatch.setattr(RepositoryBoardLibrary, "_replace_json", coordinate_catalog_replace)
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        first = executor.submit(
-            first_library.publish,
-            display_name="Zulu Board",
-            run_root=first_run,
-            board_id=None,
-            expected_current_version_id=None,
-        )
-        assert first_replace.wait(2)
-        second = executor.submit(
-            second_library.publish,
-            display_name="alpha Board",
-            run_root=second_run,
-            board_id=None,
-            expected_current_version_id=None,
-        )
-        results = (first.result(timeout=5), second.result(timeout=5))
-
-    assert {result.board.board_id for result in results} == {
-        "alpha-board",
-        "zulu-board",
-    }
-    catalog = _read_json(library_root / "catalog.json")
-    assert [entry["boardId"] for entry in catalog["boards"]] == [
-        "alpha-board",
-        "zulu-board",
-    ]
-
-
-def test_library_validation_errors_name_catalog_board_and_version(
-    tmp_path: Path,
-) -> None:
-    library, board = _complete_library(tmp_path)
-    published_path = (
-        board.package_path / "versions" / "revision-0001" / "published.json"
-    )
-    published = _read_json(published_path)
-    published["definition"]["sha256"] = "0" * 64
-    _write_json(published_path, published)
-
-    with pytest.raises(
-        BoardLibraryError,
-        match=r"catalog\.boards\[0\].*example-board.*revision-0001.*published",
-    ):
-        library.list_boards()
-
-
-@pytest.mark.parametrize(
-    ("field", "value", "message"),
-    (
-        ("parentVersionId", "revision-9999", "parentVersionId"),
-        ("publishedAt", "tomorrow", "publishedAt"),
-    ),
-)
-def test_board_versions_require_earlier_parents_and_utc_timestamps(
-    tmp_path: Path, field: str, value: str, message: str
-) -> None:
-    library, board = _complete_library(tmp_path)
-    board_path = board.package_path / "board.json"
-    document = _read_json(board_path)
-    document["versions"][0][field] = value
-    _write_json(board_path, document)
-
-    with pytest.raises(BoardLibraryError, match=message):
-        library.list_boards()
-
-
-@pytest.mark.parametrize("failure", ("version", "board", "catalog"))
-def test_publish_failures_preserve_prior_visibility(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
-) -> None:
-    library, original = _complete_library(tmp_path)
-    new_board = failure == "catalog"
-    run = _complete_fixture_run(tmp_path / "new-run")
-    actual_replace = __import__("os").replace
-
-    def fail_selected_replace(source: object, destination: object) -> None:
-        target = Path(destination)
-        if (
-            failure == "version" and target.name == "revision-0002"
-        ) or (failure == "board" and target.name == "board.json") or (
-            failure == "catalog" and target.name == "catalog.json"
-        ):
-            raise OSError(f"{failure} replacement interrupted")
-        actual_replace(source, destination)
-
-    monkeypatch.setattr("hangboard_vectorizer.board_library.os.replace", fail_selected_replace)
-    with pytest.raises(OSError, match=f"{failure} replacement interrupted"):
-        library.publish(
-            display_name="New Board" if new_board else original.display_name,
-            run_root=run,
-            board_id=None if new_board else original.board_id,
-            expected_current_version_id=None if new_board else original.current_version_id,
-        )
-
-    if new_board:
-        assert [item.board_id for item in library.list_boards()] == [original.board_id]
-    else:
-        assert library.get_board(original.board_id).current_version_id == "revision-0001"
-
-
-def _library_with_packages(root: Path, names: tuple[str, ...]) -> RepositoryBoardLibrary:
-    library_root = _library_root(root)
-    boards: list[dict[str, str]] = []
-    for name in names:
-        board_id = _slug(name)
-        suffix = 2
-        while any(entry["boardId"] == board_id for entry in boards):
-            board_id = f"{_slug(name)}-{suffix}"
-            suffix += 1
-        _write_package(root, board_id=board_id, display_name=name)
-        boards.append(
-            {
-                "boardId": board_id,
-                "displayName": name,
-                "packagePath": f"boards/{board_id}",
-            }
-        )
-    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": boards})
-    return RepositoryBoardLibrary(root)
-
-
-def _library_with_catalog_entry(root: Path, *, package_path: str) -> RepositoryBoardLibrary:
-    library_root = _library_root(root)
-    library_root.mkdir(parents=True)
-    _write_json(
-        library_root / "catalog.json",
-        {
-            "schemaVersion": 1,
-            "boards": [
-                {
-                    "boardId": "example-board",
-                    "displayName": "Example Board",
-                    "packagePath": package_path,
-                }
-            ],
-        },
-    )
-    return RepositoryBoardLibrary(root)
-
-
-def _complete_library(root: Path) -> tuple[RepositoryBoardLibrary, object]:
-    library = _library_with_packages(root, ("Example Board",))
-    return library, library.get_board("example-board")
-
-
-def _write_package(root: Path, *, board_id: str, display_name: str) -> None:
-    package = _library_root(root) / "boards" / board_id
-    run = _complete_fixture_run(package / "versions" / "revision-0001" / "run")
-    acceptance = _stage4_acceptance(run)
-    published = {
-        "schemaVersion": 1,
-        "runIdentitySha256": _read_json(run / "run.json")["runIdentitySha256"],
-        "definition": _published_output(acceptance["manifest"]),
-        "image": _published_output(acceptance["normal"]),
-        "selectableSvg": _published_output(acceptance["productSvg"]),
-        "highlights": _published_output(acceptance["highlights"]),
-    }
-    _write_json(package / "versions" / "revision-0001" / "published.json", published)
-    _write_json(
-        package / "board.json",
-        {
-            "schemaVersion": 1,
-            "boardId": board_id,
-            "displayName": display_name,
-            "currentVersionId": "revision-0001",
-            "versions": [
-                {
-                    "versionId": "revision-0001",
-                    "parentVersionId": None,
-                    "publishedAt": "2026-08-07T00:00:00Z",
-                    "publishedPath": "versions/revision-0001",
-                }
-            ],
-        },
-    )
-
-
-def _complete_fixture_run(
-    run: Path, *, stage4_color: tuple[int, int, int] = (1, 2, 3)
-) -> Path:
-    source = run.parent / f"{run.name}-source.png"
-    source.parent.mkdir(parents=True, exist_ok=True)
-    Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
-    runners = {
-        stage: _StubStageRunner(stage, stage4_color=stage4_color)
-        for stage in range(5)
-    }
-    start_run("Example Board", str(source), run, runners=runners, workspace_root=run.parent)
+def _complete_board(repository: Path, board_id: str, product_name: str) -> Path:
+    assert _product_key(product_name) == board_id
+    run = _boards_root(repository) / board_id
+    run.parent.mkdir(parents=True, exist_ok=True)
+    source = _source_image(repository, board_id)
+    runners = {stage: _StubStageRunner(stage) for stage in range(5)}
+    start_run(product_name, str(source), run, runners=runners, workspace_root=repository)
     for stage in range(5):
         approve_stage(run, stage)
         if stage < 4:
@@ -652,46 +205,43 @@ def _complete_fixture_run(
     return run
 
 
-def _stage4_acceptance(run: Path) -> dict[str, object]:
+def _incomplete_board(repository: Path, board_id: str, product_name: str) -> Path:
+    assert _product_key(product_name) == board_id
+    run = _boards_root(repository) / board_id
+    run.parent.mkdir(parents=True, exist_ok=True)
+    source = _source_image(repository, board_id)
+    start_run(
+        product_name,
+        str(source),
+        run,
+        runners={stage: _StubStageRunner(stage) for stage in range(5)},
+        workspace_root=repository,
+    )
+    assert read_status(run)["status"] == "awaiting_approval"
+    return run
+
+
+def _source_image(repository: Path, name: str) -> Path:
+    source = repository / ".fixtures" / f"{name}.png"
+    source.parent.mkdir(exist_ok=True)
+    Image.new("RGB", (512, 512), (45, 65, 85)).save(source)
+    return source
+
+
+def _stage_four_acceptance(run: Path) -> dict[str, object]:
     manifest = _read_json(run / "run.json")
-    stage = manifest["stages"][4]
-    return _read_json(run / stage["acceptancePath"])
+    stages = manifest["stages"]
+    assert isinstance(stages, list)
+    stage = stages[4]
+    assert isinstance(stage, dict)
+    return _read_json(run / str(stage["acceptancePath"]))
 
 
-def _published_output(value: object) -> dict[str, str]:
-    assert isinstance(value, dict)
-    return {"path": f"run/{value['path']}", "sha256": value["fileSha256"]}
+def _boards_root(repository: Path) -> Path:
+    return repository / "Tools" / "HangboardOnboarding" / "boards"
 
 
-def _library_root(root: Path) -> Path:
-    return root / "Tools" / "HangboardOnboarding" / "board-library"
-
-
-def _empty_repository(root: Path) -> Path:
-    root.mkdir()
-    library_root = _library_root(root)
-    library_root.mkdir(parents=True)
-    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
-    return root
-
-
-def _repository_with_symlinked_tools(tmp_path: Path) -> tuple[Path, Path]:
-    repository = tmp_path / "repository"
-    repository.mkdir()
-    outside = _empty_repository(tmp_path / "outside")
-    (repository / "Tools").symlink_to(outside, target_is_directory=True)
-    return repository, outside
-
-
-def _tree_hashes(root: Path) -> dict[str, str]:
-    return {
-        str(path.relative_to(root)): sha256(path.read_bytes()).hexdigest()
-        for path in sorted(root.rglob("*"))
-        if path.is_file()
-    }
-
-
-def _slug(value: str) -> str:
+def _product_key(value: str) -> str:
     return "-".join(value.lower().split())
 
 
@@ -702,16 +252,12 @@ def _read_json(path: Path) -> dict[str, object]:
 
 
 def _write_json(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 class _StubStageRunner:
-    def __init__(
-        self, stage: int, *, stage4_color: tuple[int, int, int] = (1, 2, 3)
-    ) -> None:
+    def __init__(self, stage: int) -> None:
         self.stage = stage
-        self.stage4_color = stage4_color
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
         artifact_root.mkdir(parents=True)
@@ -757,7 +303,7 @@ class _StubStageRunner:
             for field, name in (("normal", "stage-4-normal.png"), ("productSvg", "stage-4-product.svg"), ("manifest", "stage-4-manifest.json"), ("highlights", "stage-4-highlights.json")):
                 path = root / name
                 if path.suffix == ".png":
-                    Image.new("RGB", (4, 4), self.stage4_color).save(path)
+                    Image.new("RGB", (4, 4), (1, 2, 3)).save(path)
                 elif path.suffix == ".svg":
                     path.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>\n', encoding="utf-8")
                 else:
