@@ -81,9 +81,8 @@ def test_benchmark_cli_rejects_outputs_outside_workspace_root(
 
 
 def _accepted_run() -> Path:
-    checkout = Path(__file__).resolve().parents[1]
-    repository = checkout.parent.parent if checkout.parent.name == ".worktrees" else checkout
-    path = repository / "work/real-metolius-compact-ii/onboarding-visual-test-v3"
-    if not path.exists():
-        pytest.skip("accepted Metolius visual baseline is not available")
-    return path
+    repository = Path(__file__).resolve().parents[3]
+    return (
+        repository
+        / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
+    )

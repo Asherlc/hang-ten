@@ -7,7 +7,7 @@ documentation were copied without semantic changes. Eight legacy test modules
 that depended on mutable, unversioned `work/real-beastmaker/**` directories
 were omitted; see `TESTING.md`.
 
-`reference/metolius-compact-ii/accepted-run` is the accepted visual run with
+`boards/metolius-wood-grips-compact-ii/` is the accepted visual run with
 run identity
 `30c65a90865de3c7de6e8e27a061056c4ef59e2d7a700e1406e3ae272e83e0b6`.
 It is intentionally versioned so `hangboard-semantic-benchmark` can fail
@@ -15,4 +15,7 @@ closed unless cached semantic replay reproduces its Stage 2 labels, Stage 3
 geometry, and Stage 4 highlight pixels exactly with zero live model calls.
 
 Generated onboarding runs do not belong here. Put them below the Hang Ten
-repository's ignored `.context/hangboard-onboarding/` directory.
+repository's ignored `.context/` directory. Only complete runs with approved
+checkpoints through Stage 4 may be committed under `boards/<board-id>/`, as
+specified by the
+[unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).

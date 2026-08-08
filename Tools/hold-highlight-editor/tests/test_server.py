@@ -1487,9 +1487,8 @@ def test_workspace_root_starts_without_repository_library_outside_a_checkout(
 def test_repository_root_constructs_library_backed_workbench(tmp_path):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
-    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
+    library = repository / "Tools" / "HangboardOnboarding" / "boards"
     library.mkdir(parents=True)
-    (library / "catalog.json").write_text('{"schemaVersion":1,"boards":[]}')
     workspace = tmp_path / "workspace"
 
     server, catalog = server_module._server_from_cli(
@@ -1559,9 +1558,8 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
 ):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
-    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
+    library = repository / "Tools" / "HangboardOnboarding" / "boards"
     library.mkdir(parents=True)
-    (library / "catalog.json").write_text('{"schemaVersion":1,"boards":[]}')
     launch_directory = repository / "nested" / "checkout"
     launch_directory.mkdir(parents=True)
     monkeypatch.chdir(launch_directory)

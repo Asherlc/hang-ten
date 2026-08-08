@@ -12,7 +12,7 @@ rtk python Tools/hold-highlight-editor/server.py
 ```
 
 The server discovers the checkout, reads saved boards from
-`Tools/HangboardOnboarding/board-library/`, and keeps in-progress work in
+`Tools/HangboardOnboarding/boards/`, and keeps in-progress work in
 `.context/hangboard-workbench/`. Tests and automation can override those roots:
 
 ```bash
@@ -25,8 +25,8 @@ Open `http://localhost:4173`. Enter the exact commercial product name, choose
 an HTTP(S) image URL or local image upload, and select **Create board**. The
 image bytes, run manifests, approvals, drafts, and revisions stay under the
 workspace root. The opening screen separately lists validated **Boards in this
-repository**; selecting one opens its current immutable version. The exact
-[catalog and board-package schemas are in the repository board-library design](../../docs/superpowers/specs/2026-08-07-repository-board-library-design.md).
+repository**; selecting one opens its current committed version. The exact
+[package and publication contract is in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
 The browser never asks for a CLI run directory.
 
 Creation publishes Stage 0 and stops for review. **Approve & continue** binds
@@ -70,9 +70,11 @@ rtk hangboard-onboard \
 ```
 
 At Stage 4, **Save locally** selects the complete, current, non-stale revision
-and publishes it as a new immutable repository-board version. It writes files
-for normal Git review, but never commits, pushes, copies artifacts into the Hang
-Ten app, modifies the app's product catalog, or synchronizes anything remotely.
+and publishes it to `Tools/HangboardOnboarding/boards/<board-id>/`. Only complete
+runs with approved checkpoints through Stage 4 belong there; all unfinished
+runs stay under `.context/`. Save writes files for normal Git review, but never
+commits, pushes, copies artifacts into the Hang Ten app, modifies the app's
+product catalog, or synchronizes anything remotely.
 Hang Ten synchronization is a separate future command and is outside this
 workbench. CLI and other programmatic callers are producers of the same
 contract: they pass a completed run to `RepositoryBoardLibrary.publish()`.

@@ -106,10 +106,10 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/hold-highlight-editor/server.py
 ```
 
-This discovers the checkout, uses
-`Tools/HangboardOnboarding/board-library/` for saved boards, and writes
-in-progress work under `.context/hangboard-workbench/`. Automation can select
-different roots explicitly:
+This discovers the checkout, reads complete approved boards from
+`Tools/HangboardOnboarding/boards/<board-id>/`, and writes in-progress work
+under `.context/hangboard-workbench/`. Automation can select different roots
+explicitly:
 
 ```bash
 rtk python Tools/hold-highlight-editor/server.py \
@@ -119,11 +119,12 @@ rtk python Tools/hold-highlight-editor/server.py \
 
 Open `http://localhost:4173`, then create a board from either an HTTP(S) image
 URL or an image upload. The opening screen also lists valid repository boards;
-select one to open its current immutable version for editing. The exact
-[catalog and board-package schemas are documented in the repository board-library design](../../docs/superpowers/specs/2026-08-07-repository-board-library-design.md).
-When a complete revision is saved, the workbench publishes a new immutable
-version and updates the catalog pointer. **Save locally** writes those files
-for normal Git review, but never commits or pushes them.
+select one to open its current committed package for editing. The exact
+[package and publication contract is documented in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md),
+which supersedes the prior repository library design. When a complete revision
+is saved, the workbench atomically replaces the canonical board package.
+**Save locally** writes those files for normal Git review, but never commits or
+pushes them.
 
 CLI and other programmatic workflows are producers of the same contract: pass
 a completed run to `RepositoryBoardLibrary.publish()`. The browser never asks
@@ -161,32 +162,42 @@ rtk hangboard-onboard \
   --status
 ```
 
-CLI-compatible runs are programmatic producers: once a run is complete, its
-caller passes it to `RepositoryBoardLibrary.publish()` to create an immutable
-repository-board version. The browser never asks for a CLI run directory. Its
-final **Save locally** publishes the complete, current revision as an immutable
-repository version and writes the catalog/package files for normal Git review;
-it never commits, pushes, updates the Hang Ten app catalog, or synchronizes
+CLI-compatible runs are programmatic producers: once a run is complete and all
+five checkpoints are approved, its caller passes it to
+`RepositoryBoardLibrary.publish()` to update
+`Tools/HangboardOnboarding/boards/<board-id>/`. The browser never asks for a
+CLI run directory. Only complete approved runs belong in the canonical boards
+directory; all unfinished runs belong under the ignored `.context/` directory.
+Final **Save locally** writes the canonical package for normal Git review; it
+never commits, pushes, updates the Hang Ten app catalog, or synchronizes
 remotely.
 
 The lower-level CLI remains useful for scripted operation. Start a persisted
 run from one local image or HTTP(S) source:
 
 ```bash
-hangboard-onboard --product-name "Metolius Wood Grips Compact II" --source photo.jpg --output work/metolius-onboarding
+hangboard-onboard --product-name "Metolius Wood Grips Compact II" \
+  --source photo.jpg \
+  --output .context/hangboard-onboarding/metolius-onboarding
 ```
 
 Approve the displayed Stage 0 review, then resume the run:
 
 ```bash
-hangboard-onboard --output work/metolius-onboarding --approve stage-0
-hangboard-onboard --output work/metolius-onboarding --resume
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --approve stage-0
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --resume
 ```
 
 Validate and inspect the current state without changing it:
 
 ```bash
-hangboard-onboard --output work/metolius-onboarding --status
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --status
 ```
 
 Replay the accepted Metolius compact semantic cache and write an offline parity
@@ -194,8 +205,8 @@ report with zero live model calls:
 
 ```bash
 hangboard-semantic-benchmark \
-  --accepted-run work/real-metolius-compact-ii/onboarding-visual-test-v3 \
-  --output token-optimization-v1/report.json
+  --accepted-run Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii \
+  --output .context/hangboard-onboarding/metolius-parity/report.json
 ```
 
 The command reports model activity separately from deterministic local work.

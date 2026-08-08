@@ -41,10 +41,15 @@ _BOARD_FIXTURES = (
 )
 
 
-def test_checkout_repository_library_starts_with_an_empty_catalog() -> None:
+def test_checkout_repository_library_discovers_compact_ii() -> None:
     repository_root = Path(__file__).resolve().parents[3]
 
-    assert RepositoryBoardLibrary(repository_root).snapshot().boards == ()
+    snapshot = RepositoryBoardLibrary(repository_root).snapshot()
+
+    assert tuple(board.board_id for board in snapshot.boards) == (
+        "metolius-wood-grips-compact-ii",
+    )
+    assert snapshot.diagnostics == ()
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
@@ -539,37 +544,6 @@ def test_save_existing_board_uses_expected_repository_revision_token(
 
     assert saved.repository_revision_token != entry.revision_token
     assert expected_tokens == [entry.revision_token]
-
-
-def test_unknown_legacy_repository_token_fails_safe_on_changed_save(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    workspace = tmp_path / "workspace"
-    service = _fixture_service(workspace, library=library)
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    manifest_path = workspace / "boards" / opened.board_id / "board.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["schemaVersion"] = 1
-    manifest["repositoryVersionId"] = "revision-0001"
-    manifest.pop("repositoryRevisionToken")
-    _write_json(manifest_path, manifest)
-    legacy_service = _fixture_service(workspace, library=library)
-
-    with pytest.raises(BoardLibraryError, match="publication conflict"):
-        legacy_service.save(
-            complete.board_id,
-            expected_revision_id=complete.revision_id,
-        )
-
-    persisted = legacy_service.store.read_board(complete.board_id)
-    assert persisted.saved_revision_id is None
-    assert persisted.repository_board_id == entry.board_id
-    assert persisted.repository_revision_token is None
 
 
 @pytest.mark.parametrize("existing_board", (False, True))

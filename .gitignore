@@ -6,6 +6,8 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 
-# Default transient workbench workspace
+# Default transient hangboard workspaces
 /.context/hangboard-workbench/
+/.context/hangboard-onboarding/
+/.context/hangboard-onboarding-venv/
 /Tools/HangboardOnboarding/boards/.transactions/
