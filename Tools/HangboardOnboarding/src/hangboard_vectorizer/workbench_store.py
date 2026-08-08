@@ -13,17 +13,17 @@ import shutil
 import tempfile
 from threading import RLock
 from typing import TypeVar
-from uuid import UUID, uuid4
 
 
-_SCHEMA_VERSION = 1
+_SCHEMA_VERSION = 2
+_LEGACY_SCHEMA_VERSION = 1
 _FINAL_STAGE = 4
 _IDENTIFIER = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 _BOARD_ID = re.compile(r"board-(\d+)\Z")
 _REVISION_ID = re.compile(r"revision-(\d+)\Z")
 _DRAFT_ID = re.compile(r"draft-(\d+)\.json\Z")
 _REPOSITORY_BOARD_ID = re.compile(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
-_REPOSITORY_VERSION_ID = re.compile(r"revision-(\d+)\Z")
+_REPOSITORY_REVISION_TOKEN = re.compile(r"[0-9a-f]{64}\Z")
 
 
 @dataclass(frozen=True, slots=True)
@@ -35,7 +35,6 @@ class RevisionRecord:
     current_stage: int
     state: str
     stale_from_stage: int | None
-    publication_operation_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,7 +45,7 @@ class BoardRecord:
     saved_revision_id: str | None
     revisions: tuple[RevisionRecord, ...]
     repository_board_id: str | None = None
-    repository_version_id: str | None = None
+    repository_revision_token: str | None = None
 
 
 class WorkbenchStoreError(ValueError):
@@ -446,63 +445,47 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
-    def prepare_repository_publication(
-        self, board_id: str, revision_id: str
-    ) -> str:
-        """Persist and return the stable UUID for one repository publication."""
-        board = self.read_board(board_id)
-        revision = self._revision(board, revision_id)
-        if revision.publication_operation_id is not None:
-            return revision.publication_operation_id
-        operation_id = str(uuid4())
-        updated_revision = replace(
-            revision, publication_operation_id=operation_id
-        )
-        self._write_board(self._replace_revision(board, updated_revision))
-        return operation_id
-
-    @_synchronized
     def publish_repository_revision(
         self,
         board_id: str,
         revision_id: str,
         *,
         repository_board_id: str,
-        repository_version_id: str,
+        repository_revision_token: str,
     ) -> BoardRecord:
-        """Atomically save a revision and record the repository version it published."""
+        """Atomically save a revision and record the repository revision it published."""
         board = self.read_board(board_id)
         revision = self._savable_revision(board, revision_id)
         self._validate_repository_link(
-            repository_board_id, repository_version_id
+            repository_board_id, repository_revision_token
         )
         updated = replace(
             board,
             active_revision_id=revision.id,
             saved_revision_id=revision.id,
             repository_board_id=repository_board_id,
-            repository_version_id=repository_version_id,
+            repository_revision_token=repository_revision_token,
         )
         self._write_board(updated)
         return updated
 
     @_synchronized
-    def link_repository_version(
+    def link_repository_revision(
         self,
         board_id: str,
         *,
         repository_board_id: str,
-        repository_version_id: str,
+        repository_revision_token: str,
     ) -> BoardRecord:
-        """Atomically record the repository version represented by this board."""
+        """Atomically record the repository revision represented by this board."""
         board = self.read_board(board_id)
         self._validate_repository_link(
-            repository_board_id, repository_version_id
+            repository_board_id, repository_revision_token
         )
         updated = replace(
             board,
             repository_board_id=repository_board_id,
-            repository_version_id=repository_version_id,
+            repository_revision_token=repository_revision_token,
         )
         self._write_board(updated)
         return updated
@@ -514,7 +497,7 @@ class WorkbenchStore:
         revision_id: str,
         *,
         repository_board_id: str,
-        repository_version_id: str,
+        repository_revision_token: str,
     ) -> BoardRecord:
         """Atomically publish a copied repository revision and its identity."""
         board = self.read_board(board_id)
@@ -524,7 +507,7 @@ class WorkbenchStore:
                 f"revision {revision.id} is not pending repository finalization"
             )
         self._validate_repository_link(
-            repository_board_id, repository_version_id
+            repository_board_id, repository_revision_token
         )
         completed = replace(
             revision,
@@ -535,7 +518,7 @@ class WorkbenchStore:
             self._replace_revision(board, completed),
             active_revision_id=completed.id,
             repository_board_id=repository_board_id,
-            repository_version_id=repository_version_id,
+            repository_revision_token=repository_revision_token,
         )
         self._write_board(updated)
         return updated
@@ -607,7 +590,8 @@ class WorkbenchStore:
 
     def _board_from_json(self, value: object, expected_id: str) -> BoardRecord:
         manifest = self._mapping(value, "board manifest")
-        if manifest.get("schemaVersion") != _SCHEMA_VERSION:
+        schema_version = manifest.get("schemaVersion")
+        if schema_version not in {_LEGACY_SCHEMA_VERSION, _SCHEMA_VERSION}:
             raise WorkbenchStoreError("board manifest schema version is unsupported")
         board_id = self._string(manifest.get("id"), "board id")
         self._validate_identifier(board_id, "board")
@@ -625,9 +609,13 @@ class WorkbenchStore:
                 saved_revision_id, "saved revision id"
             )
         repository_board_id = manifest.get("repositoryBoardId")
-        repository_version_id = manifest.get("repositoryVersionId")
+        repository_revision_token = (
+            None
+            if schema_version == _LEGACY_SCHEMA_VERSION
+            else manifest.get("repositoryRevisionToken")
+        )
         self._validate_repository_link(
-            repository_board_id, repository_version_id
+            repository_board_id, repository_revision_token
         )
 
         raw_revisions = manifest.get("revisions")
@@ -661,7 +649,7 @@ class WorkbenchStore:
             saved_revision_id=saved_revision_id,
             revisions=revisions,
             repository_board_id=repository_board_id,
-            repository_version_id=repository_version_id,
+            repository_revision_token=repository_revision_token,
         )
 
     def _revision_from_json(
@@ -699,11 +687,6 @@ class WorkbenchStore:
         stale_from_stage = self._optional_stage(
             record.get("staleFromStage"), "stale stage"
         )
-        publication_operation_id = record.get("publicationOperationId")
-        if publication_operation_id is not None:
-            publication_operation_id = self._publication_operation_id(
-                publication_operation_id
-            )
         return RevisionRecord(
             id=revision_id,
             run_root=run_root,
@@ -712,7 +695,6 @@ class WorkbenchStore:
             current_stage=current_stage,
             state=state,
             stale_from_stage=stale_from_stage,
-            publication_operation_id=publication_operation_id,
         )
 
     def _write_board(
@@ -728,7 +710,7 @@ class WorkbenchStore:
             "id": board.id,
             "productName": board.product_name,
             "repositoryBoardId": board.repository_board_id,
-            "repositoryVersionId": board.repository_version_id,
+            "repositoryRevisionToken": board.repository_revision_token,
             "revisions": [
                 {
                     "currentStage": revision.current_stage,
@@ -739,7 +721,6 @@ class WorkbenchStore:
                         board_root / "revisions" / revision.id / "run"
                     ),
                     "parentRevisionId": revision.parent_revision_id,
-                    "publicationOperationId": revision.publication_operation_id,
                     "runRoot": Path(
                         os.path.relpath(revision.run_root, board_root)
                     ).as_posix(),
@@ -754,30 +735,12 @@ class WorkbenchStore:
         self._write_replaced_json(manifest_path, value, publication=publication)
 
     @staticmethod
-    def _publication_operation_id(value: object) -> str:
-        if not isinstance(value, str):
-            raise WorkbenchStoreError(
-                "publication operation identifier is invalid"
-            )
-        try:
-            parsed = UUID(value)
-        except ValueError as error:
-            raise WorkbenchStoreError(
-                "publication operation identifier is invalid"
-            ) from error
-        if parsed.version != 4 or str(parsed) != value:
-            raise WorkbenchStoreError(
-                "publication operation identifier is invalid"
-            )
-        return value
-
-    @staticmethod
     def _validate_repository_link(
-        repository_board_id: object, repository_version_id: object
+        repository_board_id: object, repository_revision_token: object
     ) -> None:
-        if (repository_board_id is None) != (repository_version_id is None):
+        if repository_board_id is None and repository_revision_token is not None:
             raise WorkbenchStoreError(
-                "repository board and version identifiers must be provided together"
+                "repository board identifier and revision token must be provided together"
             )
         if repository_board_id is None:
             return
@@ -786,11 +749,13 @@ class WorkbenchStore:
             or not _REPOSITORY_BOARD_ID.fullmatch(repository_board_id)
         ):
             raise WorkbenchStoreError("repository board identifier is invalid")
+        if repository_revision_token is None:
+            return
         if (
-            not isinstance(repository_version_id, str)
-            or not _REPOSITORY_VERSION_ID.fullmatch(repository_version_id)
+            not isinstance(repository_revision_token, str)
+            or not _REPOSITORY_REVISION_TOKEN.fullmatch(repository_revision_token)
         ):
-            raise WorkbenchStoreError("repository version identifier is invalid")
+            raise WorkbenchStoreError("repository revision token is invalid")
 
     def _write_replaced_json(
         self,

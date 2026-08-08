@@ -17,7 +17,7 @@ from urllib.parse import urlparse
 
 from PIL import Image
 
-from .board_library import LibraryBoard, RepositoryBoardLibrary
+from .board_library import LibraryBoard, LibrarySnapshot, RepositoryBoardLibrary
 from .onboarding_run import (
     DEFAULT_STAGE_RUNNERS,
     RunContext,
@@ -65,7 +65,7 @@ class WorkbenchView:
     saved: bool
     stale_from_stage: int | None
     repository_board_id: str | None
-    repository_version_id: str | None
+    repository_revision_token: str | None
 
 
 class WorkbenchServiceError(ValueError):
@@ -172,11 +172,11 @@ class WorkbenchService:
             if board.active_revision_id
         )
 
-    def list_library_boards(self) -> tuple[LibraryBoard, ...]:
-        """Return repository packages available to open in this workbench."""
+    def library_snapshot(self) -> LibrarySnapshot:
+        """Return repository packages and diagnostics available to the workbench."""
         if self.__library is None:
-            return ()
-        return self.__library.list_boards()
+            return LibrarySnapshot(boards=(), diagnostics=())
+        return self.__library.snapshot()
 
     def open_library_board(self, board_id: str) -> WorkbenchView:
         """Copy the current repository package into an active runtime revision."""
@@ -206,7 +206,7 @@ class WorkbenchService:
         for board in self.store.list_boards():
             if (
                 board.repository_board_id == library_board.board_id
-                and board.repository_version_id == library_board.current_version_id
+                and board.repository_revision_token == library_board.revision_token
             ):
                 return self.__view(board.id, board.active_revision_id)
 
@@ -244,7 +244,7 @@ class WorkbenchService:
                 board.id,
                 revision.id,
                 repository_board_id=copied_library_board.board_id,
-                repository_version_id=copied_library_board.current_version_id,
+                repository_revision_token=copied_library_board.revision_token,
             )
         except Exception:
             if self.__repository_open_is_finalized(
@@ -295,8 +295,8 @@ class WorkbenchService:
         return (
             persisted.active_revision_id == reserved_revision.id
             and persisted.repository_board_id == copied_library_board.board_id
-            and persisted.repository_version_id
-            == copied_library_board.current_version_id
+            and persisted.repository_revision_token
+            == copied_library_board.revision_token
             and revision.run_root == reserved_revision.run_root
             and revision.parent_revision_id
             == reserved_revision.parent_revision_id
@@ -305,8 +305,6 @@ class WorkbenchService:
             and revision.state == "complete"
             and revision.stale_from_stage
             == reserved_revision.stale_from_stage
-            and revision.publication_operation_id
-            == reserved_revision.publication_operation_id
         )
 
     def get_board(
@@ -524,21 +522,16 @@ class WorkbenchService:
             )
         self.store.mark_revision_complete(board.id, revision.id)
         if self.__library is not None:
-            publication_operation_id = (
-                self.store.prepare_repository_publication(board.id, revision.id)
-            )
             published = self.__library.publish(
-                display_name=board.product_name,
                 run_root=revision.run_root,
                 board_id=board.repository_board_id,
-                expected_current_version_id=board.repository_version_id,
-                publication_operation_id=publication_operation_id,
+                expected_revision_token=board.repository_revision_token,
             )
             self.store.publish_repository_revision(
                 board.id,
                 revision.id,
                 repository_board_id=published.board.board_id,
-                repository_version_id=published.version_id,
+                repository_revision_token=published.revision_token,
             )
         else:
             self.store.save_revision(board.id, revision.id)
@@ -687,7 +680,7 @@ class WorkbenchService:
             saved=board.saved_revision_id == revision.id,
             stale_from_stage=revision.stale_from_stage,
             repository_board_id=board.repository_board_id,
-            repository_version_id=board.repository_version_id,
+            repository_revision_token=board.repository_revision_token,
         )
 
     def __checkpoint_token(

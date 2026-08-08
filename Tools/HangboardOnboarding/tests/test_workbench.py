@@ -721,6 +721,8 @@ def test_list_and_get_boards_return_the_active_revision_view(
 
     assert [view.board_id for view in listed] == [board_with_stage0.board_id]
     assert service.get_board(board_with_stage0.board_id) == board_with_stage0
+    assert service.library_snapshot().boards == ()
+    assert service.library_snapshot().diagnostics == ()
 
 
 def test_optimistic_revision_mismatch_does_not_advance(

@@ -44,7 +44,7 @@ _BOARD_FIXTURES = (
 def test_checkout_repository_library_starts_with_an_empty_catalog() -> None:
     repository_root = Path(__file__).resolve().parents[3]
 
-    assert RepositoryBoardLibrary(repository_root).list_boards() == ()
+    assert RepositoryBoardLibrary(repository_root).snapshot().boards == ()
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
@@ -179,7 +179,7 @@ def test_product_neutral_workflow_preserves_stable_ids_through_local_save(
     assert board_manifest["savedRevisionId"] == revision_id
 
 
-def test_open_library_board_copies_current_version_and_is_idempotent(
+def test_open_library_board_copies_current_token_and_is_idempotent(
     tmp_path: Path,
 ) -> None:
     library, entry = _repository_library(tmp_path)
@@ -188,13 +188,14 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     assert service.library_open_reservation_key(entry.board_id) == (
         f"repository-board:{entry.board_id}"
     )
+    assert service.library_snapshot() == library.snapshot()
     first = service.open_library_board(entry.board_id)
     second = service.open_library_board(entry.board_id)
 
     assert second.board_id == first.board_id
     assert second.revision_id == first.revision_id
     assert second.repository_board_id == entry.board_id
-    assert second.repository_version_id == entry.current_version_id
+    assert second.repository_revision_token == entry.revision_token
     assert service.library_open_reservation_key(entry.board_id) == (
         f"repository-board:{entry.board_id}"
     )
@@ -203,7 +204,7 @@ def test_open_library_board_copies_current_version_and_is_idempotent(
     )
 
 
-def test_open_library_board_links_the_exact_version_returned_by_copy(
+def test_open_library_board_links_the_exact_token_returned_by_copy(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     library, entry = _repository_library(tmp_path)
@@ -214,15 +215,14 @@ def test_open_library_board_links_the_exact_version_returned_by_copy(
         color=(90, 110, 130),
     )
     actual_copy = library.copy_current_run
-    advanced_versions = []
+    advanced_revisions = []
 
     def advance_current_then_copy(board_id: str, destination: Path) -> LibraryBoard:
-        advanced_versions.append(
+        advanced_revisions.append(
             library.publish(
-                display_name=entry.display_name,
                 run_root=newer_run.run_root,
                 board_id=entry.board_id,
-                expected_current_version_id=entry.current_version_id,
+                expected_revision_token=entry.revision_token,
             )
         )
         return actual_copy(board_id, destination)
@@ -231,10 +231,9 @@ def test_open_library_board_links_the_exact_version_returned_by_copy(
 
     opened = service.open_library_board(entry.board_id)
 
-    assert len(advanced_versions) == 1
+    assert len(advanced_revisions) == 1
     assert opened.repository_board_id == entry.board_id
-    assert opened.repository_version_id == advanced_versions[0].version_id
-    assert opened.repository_version_id == "revision-0002"
+    assert opened.repository_revision_token == advanced_revisions[0].revision_token
 
 
 def test_first_library_open_never_exposes_an_active_unlinked_conflict_key(
@@ -254,7 +253,7 @@ def test_first_library_open_never_exposes_an_active_unlinked_conflict_key(
                 (
                     persisted.active_revision_id,
                     persisted.repository_board_id,
-                    persisted.repository_version_id,
+                    persisted.repository_revision_token,
                     service.mutation_reservation_key(persisted.id),
                 )
             )
@@ -266,7 +265,7 @@ def test_first_library_open_never_exposes_an_active_unlinked_conflict_key(
     expected = (
         opened.revision_id,
         entry.board_id,
-        entry.current_version_id,
+        entry.revision_token,
         f"repository-board:{entry.board_id}",
     )
     assert active_snapshots
@@ -289,7 +288,7 @@ def test_interrupted_first_library_open_never_exposes_active_unlinked_state(
             not interrupted
             and updated.active_revision_id
             and updated.repository_board_id == entry.board_id
-            and updated.repository_version_id == entry.current_version_id
+            and updated.repository_revision_token == entry.revision_token
         ):
             interrupted = True
             raise OSError("repository open finalization interrupted")
@@ -299,7 +298,7 @@ def test_interrupted_first_library_open_never_exposes_active_unlinked_state(
             active_snapshots.append(
                 (
                     persisted.repository_board_id,
-                    persisted.repository_version_id,
+                    persisted.repository_revision_token,
                 )
             )
 
@@ -313,7 +312,7 @@ def test_interrupted_first_library_open_never_exposes_active_unlinked_state(
     assert active_snapshots == []
     assert persisted.active_revision_id == ""
     assert persisted.repository_board_id is None
-    assert persisted.repository_version_id is None
+    assert persisted.repository_revision_token is None
     assert persisted.revisions[-1].state == "failed"
 
 
@@ -331,7 +330,7 @@ def test_first_library_open_reconciles_post_replace_finalization_error(
             not injected
             and updated.active_revision_id
             and updated.repository_board_id == entry.board_id
-            and updated.repository_version_id == entry.current_version_id
+            and updated.repository_revision_token == entry.revision_token
         ):
             actual_write(updated, *args, **kwargs)
             injected = True
@@ -347,12 +346,12 @@ def test_first_library_open_reconciles_post_replace_finalization_error(
     assert injected is True
     assert persisted.active_revision_id == opened.revision_id
     assert persisted.repository_board_id == entry.board_id
-    assert persisted.repository_version_id == entry.current_version_id
+    assert persisted.repository_revision_token == entry.revision_token
     assert revision.current_stage == 4
     assert revision.state == "complete"
 
 
-def test_open_newer_library_version_preserves_divergent_runtime_revision(
+def test_open_changed_library_manifest_preserves_divergent_runtime_revision(
     tmp_path: Path,
 ) -> None:
     library, entry = _repository_library(tmp_path)
@@ -361,21 +360,25 @@ def test_open_newer_library_version_preserves_divergent_runtime_revision(
     divergent = service.revise_stage(
         opened.board_id, stage=3, expected_revision_id=opened.revision_id
     )
+    changed = _complete_runtime_board(
+        _fixture_service(tmp_path / "changed-seed"),
+        entry.display_name,
+        color=(90, 110, 130),
+    )
     published = library.publish(
-        display_name=entry.display_name,
-        run_root=opened.run_root,
+        run_root=changed.run_root,
         board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
+        expected_revision_token=entry.revision_token,
     )
 
     newer = service.open_library_board(entry.board_id)
     runtime_board = service.store.read_board(opened.board_id)
     revisions = {revision.id: revision for revision in runtime_board.revisions}
 
-    assert published.version_id == "revision-0002"
+    assert published.revision_token != entry.revision_token
     assert newer.board_id == opened.board_id
     assert newer.revision_id not in {opened.revision_id, divergent.revision_id}
-    assert newer.repository_version_id == "revision-0002"
+    assert newer.repository_revision_token == published.revision_token
     assert set(revisions) == {
         opened.revision_id,
         divergent.revision_id,
@@ -394,17 +397,21 @@ def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
     divergent = service.revise_stage(
         opened.board_id, stage=3, expected_revision_id=opened.revision_id
     )
+    changed = _complete_runtime_board(
+        _fixture_service(tmp_path / "changed-seed"),
+        entry.display_name,
+        color=(90, 110, 130),
+    )
     library.publish(
-        display_name=entry.display_name,
-        run_root=opened.run_root,
+        run_root=changed.run_root,
         board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
+        expected_revision_token=entry.revision_token,
     )
 
     actual_write = service.store._write_board
 
     def fail_finalization(updated, *args: object, **kwargs: object) -> None:
-        if updated.repository_version_id == "revision-0002":
+        if updated.repository_revision_token != entry.revision_token:
             raise OSError("repository finalization interrupted")
         actual_write(updated, *args, **kwargs)
 
@@ -415,7 +422,7 @@ def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
     board = service.store.read_board(opened.board_id)
     failed = board.revisions[-1]
     assert board.active_revision_id == divergent.revision_id
-    assert board.repository_version_id == entry.current_version_id
+    assert board.repository_revision_token == entry.revision_token
     assert failed.state == "failed"
 
 
@@ -460,21 +467,25 @@ def test_save_repository_conflict_leaves_runtime_revision_unsaved(
     library, entry = _repository_library(tmp_path)
     service = _fixture_service(tmp_path / "workspace", library=library)
     opened = service.open_library_board(entry.board_id)
+    changed = _complete_runtime_board(
+        _fixture_service(tmp_path / "changed-seed"),
+        entry.display_name,
+        color=(90, 110, 130),
+    )
     library.publish(
-        display_name=entry.display_name,
-        run_root=opened.run_root,
+        run_root=changed.run_root,
         board_id=entry.board_id,
-        expected_current_version_id=entry.current_version_id,
+        expected_revision_token=entry.revision_token,
     )
 
-    with pytest.raises(BoardLibraryError, match="expected revision-0001"):
+    with pytest.raises(BoardLibraryError, match="publication conflict"):
         service.save(
             opened.board_id, expected_revision_id=opened.revision_id
         )
 
     runtime_board = service.store.read_board(opened.board_id)
     assert runtime_board.saved_revision_id is None
-    assert runtime_board.repository_version_id == "revision-0001"
+    assert runtime_board.repository_revision_token == entry.revision_token
 
 
 def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> None:
@@ -486,15 +497,17 @@ def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> N
         complete.board_id, expected_revision_id=complete.revision_id
     )
 
-    entries = library.list_boards()
+    entries = library.snapshot().boards
     assert [(entry.board_id, entry.display_name) for entry in entries] == [
         (saved.repository_board_id, complete.product_name)
     ]
-    assert saved.repository_version_id == "revision-0001"
+    assert saved.repository_revision_token == entries[0].revision_token
     assert saved.saved is True
 
 
-def test_save_existing_board_uses_expected_repository_version(tmp_path: Path) -> None:
+def test_save_existing_board_uses_expected_repository_revision_token(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     library, entry = _repository_library(tmp_path)
     service = _fixture_service(tmp_path / "workspace", library=library)
     opened = service.open_library_board(entry.board_id)
@@ -502,12 +515,61 @@ def test_save_existing_board_uses_expected_repository_version(tmp_path: Path) ->
         opened.board_id, stage=3, expected_revision_id=opened.revision_id
     )
     complete = _approve_to_completion(service, revised)
+    expected_tokens = []
+    actual_publish = library.publish
+
+    def record_expected_token(
+        *,
+        run_root: Path,
+        board_id: str | None,
+        expected_revision_token: str | None,
+    ):
+        expected_tokens.append(expected_revision_token)
+        return actual_publish(
+            run_root=run_root,
+            board_id=board_id,
+            expected_revision_token=expected_revision_token,
+        )
+
+    monkeypatch.setattr(library, "publish", record_expected_token)
 
     saved = service.save(
         complete.board_id, expected_revision_id=complete.revision_id
     )
 
-    assert saved.repository_version_id == "revision-0002"
+    assert saved.repository_revision_token != entry.revision_token
+    assert expected_tokens == [entry.revision_token]
+
+
+def test_unknown_legacy_repository_token_fails_safe_on_changed_save(
+    tmp_path: Path,
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    workspace = tmp_path / "workspace"
+    service = _fixture_service(workspace, library=library)
+    opened = service.open_library_board(entry.board_id)
+    revised = service.revise_stage(
+        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+    )
+    complete = _approve_to_completion(service, revised)
+    manifest_path = workspace / "boards" / opened.board_id / "board.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["schemaVersion"] = 1
+    manifest["repositoryVersionId"] = "revision-0001"
+    manifest.pop("repositoryRevisionToken")
+    _write_json(manifest_path, manifest)
+    legacy_service = _fixture_service(workspace, library=library)
+
+    with pytest.raises(BoardLibraryError, match="publication conflict"):
+        legacy_service.save(
+            complete.board_id,
+            expected_revision_id=complete.revision_id,
+        )
+
+    persisted = legacy_service.store.read_board(complete.board_id)
+    assert persisted.saved_revision_id is None
+    assert persisted.repository_board_id == entry.board_id
+    assert persisted.repository_revision_token is None
 
 
 @pytest.mark.parametrize("existing_board", (False, True))
@@ -542,13 +604,9 @@ def test_save_retry_reconciles_publication_after_atomic_runtime_update_failure(
         complete.board_id, expected_revision_id=complete.revision_id
     )
     repository_board = library.get_board(saved.repository_board_id)
-    repository_document = json.loads(
-        (repository_board.package_path / "board.json").read_text(encoding="utf-8")
-    )
-
     assert saved.saved is True
-    assert len(library.list_boards()) == 1
-    assert len(repository_document["versions"]) == (2 if existing_board else 1)
+    assert len(library.snapshot().boards) == 1
+    assert repository_board.revision_token == saved.repository_revision_token
 
 
 def test_independent_workspaces_with_identical_local_ids_conflict_on_save(
@@ -602,7 +660,7 @@ def test_repository_save_uses_one_combined_runtime_metadata_update(
     def reject_legacy_update(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("split repository metadata update was used")
 
-    monkeypatch.setattr(service.store, "link_repository_version", reject_legacy_update)
+    monkeypatch.setattr(service.store, "link_repository_revision", reject_legacy_update)
     monkeypatch.setattr(service.store, "save_revision", reject_legacy_update)
 
     saved = service.save(
@@ -614,7 +672,7 @@ def test_repository_save_uses_one_combined_runtime_metadata_update(
 
 
 @pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)
-def test_repository_open_edit_save_replay_is_product_neutral(
+def test_product_neutral_repository_replay(
     tmp_path: Path,
     product_name: str,
     color: tuple[int, int, int],
@@ -637,8 +695,8 @@ def test_repository_open_edit_save_replay_is_product_neutral(
     )
     reopened = service.open_library_board(entry.board_id)
 
-    assert saved.repository_version_id == "revision-0002"
-    assert reopened.repository_version_id == "revision-0002"
+    assert saved.repository_revision_token != entry.revision_token
+    assert reopened.repository_revision_token == saved.repository_revision_token
 
 
 def test_stage2_inventory_mutation_propagates_unchanged_through_stage4(
@@ -805,9 +863,8 @@ def _fixture_service(
 
 
 def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
-    library_root = root / "Tools" / "HangboardOnboarding" / "board-library"
+    library_root = root / "Tools" / "HangboardOnboarding" / "boards"
     library_root.mkdir(parents=True)
-    _write_json(library_root / "catalog.json", {"schemaVersion": 1, "boards": []})
     return RepositoryBoardLibrary(root)
 
 
@@ -822,10 +879,9 @@ def _repository_library(
     seed = _fixture_service(root / "seed", region_keys=region_keys)
     complete = _complete_runtime_board(seed, product_name, color=color)
     published = library.publish(
-        display_name=product_name,
         run_root=complete.run_root,
         board_id=None,
-        expected_current_version_id=None,
+        expected_revision_token=None,
     )
     return library, published.board
 

@@ -3,12 +3,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from threading import Barrier, Event
-from uuid import UUID
+from threading import Barrier
 
 import pytest
 
 from hangboard_vectorizer.workbench_store import WorkbenchStore, WorkbenchStoreError
+
+
+_REVISION_TOKEN_A = "a" * 64
 
 
 def test_store_creates_cli_compatible_revision_layout(tmp_path):
@@ -212,114 +214,64 @@ def test_board_manifest_is_schema_versioned_and_survives_reopening(tmp_path: Pat
     )
     reopened = WorkbenchStore(tmp_path).read_board(board.id)
 
-    assert manifest["schemaVersion"] == 1
+    assert manifest["schemaVersion"] == 2
     assert manifest["revisions"][0]["runRoot"] == "revisions/revision-0001/run"
+    assert "repositoryVersionId" not in manifest
+    assert "publicationOperationId" not in manifest["revisions"][0]
     assert reopened.product_name == "Example Board"
     assert reopened.revisions == (revision,)
 
 
-def test_prepare_publication_operation_is_persisted_and_stable(
+def test_schema_1_repository_link_loads_safely_and_migrates_on_next_mutation(
     tmp_path: Path,
 ) -> None:
     store, board, revision = _populated_store(tmp_path)
-
-    first = store.prepare_repository_publication(board.id, revision.id)
-    second = store.prepare_repository_publication(board.id, revision.id)
-
-    assert first == second
-    assert UUID(first).version == 4
-    assert store.read_revision(
-        board.id, revision.id
-    ).publication_operation_id == first
-
-
-def test_independent_workspaces_never_share_publication_operation(
-    tmp_path: Path,
-) -> None:
-    first_store, first_board, first_revision = _populated_store(
-        tmp_path / "workspace-a"
-    )
-    second_store, second_board, second_revision = _populated_store(
-        tmp_path / "workspace-b"
-    )
-
-    first = first_store.prepare_repository_publication(
-        first_board.id, first_revision.id
-    )
-    second = second_store.prepare_repository_publication(
-        second_board.id, second_revision.id
-    )
-
-    assert first != second
-
-
-def test_two_store_instances_prepare_one_persisted_publication_operation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    first_store, board, revision = _populated_store(tmp_path)
-    second_store = WorkbenchStore(tmp_path)
-    first_reached_write = Event()
-    second_read_stale_manifest = Event()
-    actual_first_write = first_store._write_board
-    actual_second_read = second_store.read_board
-
-    def pause_first_write(*args: object, **kwargs: object) -> None:
-        first_reached_write.set()
-        second_read_stale_manifest.wait(0.5)
-        actual_first_write(*args, **kwargs)
-
-    def record_second_read(board_id: str):
-        result = actual_second_read(board_id)
-        second_read_stale_manifest.set()
-        return result
-
-    monkeypatch.setattr(first_store, "_write_board", pause_first_write)
-    monkeypatch.setattr(second_store, "read_board", record_second_read)
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        first = executor.submit(
-            first_store.prepare_repository_publication, board.id, revision.id
-        )
-        assert first_reached_write.wait(2)
-        second = executor.submit(
-            second_store.prepare_repository_publication, board.id, revision.id
-        )
-        operation_ids = (first.result(timeout=3), second.result(timeout=3))
-
-    assert operation_ids[0] == operation_ids[1]
-    assert WorkbenchStore(tmp_path).read_revision(
-        board.id, revision.id
-    ).publication_operation_id == operation_ids[0]
-
-
-def test_store_loads_old_revision_without_publication_operation(
-    tmp_path: Path,
-) -> None:
-    store, board, revision = _populated_store(tmp_path)
+    second = store.create_revision(board.id)
     manifest_path = tmp_path / "boards" / board.id / "board.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["revisions"][0].pop("publicationOperationId", None)
+    manifest["schemaVersion"] = 1
+    manifest["repositoryBoardId"] = "example-board"
+    manifest["repositoryVersionId"] = "revision-0042"
+    manifest.pop("repositoryRevisionToken", None)
+    manifest["revisions"][0]["publicationOperationId"] = (
+        "77377ba8-d4e7-48aa-afb4-5a762f3f7040"
+    )
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
-    reopened = WorkbenchStore(tmp_path).read_revision(board.id, revision.id)
+    legacy = WorkbenchStore(tmp_path).read_board(board.id)
 
-    assert reopened.publication_operation_id is None
+    assert tuple(item.id for item in legacy.revisions) == (revision.id, second.id)
+    assert legacy.repository_board_id == "example-board"
+    assert legacy.repository_revision_token is None
+    assert json.loads(manifest_path.read_text(encoding="utf-8"))["schemaVersion"] == 1
+
+    store.mark_descendants_stale(board.id, revision.id, from_stage=2)
+    migrated = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert migrated["schemaVersion"] == 2
+    assert migrated["repositoryBoardId"] == "example-board"
+    assert migrated["repositoryRevisionToken"] is None
+    assert "repositoryVersionId" not in migrated
+    assert all(
+        "publicationOperationId" not in item for item in migrated["revisions"]
+    )
 
 
-def test_store_persists_repository_link_without_changing_runtime_id(
+def test_store_persists_repository_revision_without_changing_runtime_id(
     tmp_path: Path,
 ) -> None:
     store = WorkbenchStore(tmp_path)
     board, _revision = store.reserve_initial_revision("Example Board")
 
-    linked = store.link_repository_version(
+    linked = store.link_repository_revision(
         board.id,
         repository_board_id="example-board",
-        repository_version_id="revision-0001",
+        repository_revision_token=_REVISION_TOKEN_A,
     )
 
     assert linked.id == board.id
     assert linked.repository_board_id == "example-board"
-    assert linked.repository_version_id == "revision-0001"
+    assert linked.repository_revision_token == _REVISION_TOKEN_A
     assert store.read_board(board.id) == linked
 
 
@@ -341,14 +293,14 @@ def test_finalize_repository_open_publishes_complete_active_link_atomically(
         board.id,
         revision.id,
         repository_board_id="example-board",
-        repository_version_id="revision-0001",
+        repository_revision_token=_REVISION_TOKEN_A,
     )
 
     assert len(writes) == 1
     assert finalized == store.read_board(board.id)
     assert finalized.active_revision_id == revision.id
     assert finalized.repository_board_id == "example-board"
-    assert finalized.repository_version_id == "revision-0001"
+    assert finalized.repository_revision_token == _REVISION_TOKEN_A
     assert finalized.saved_revision_id is None
     persisted_revision = store.read_revision(board.id, revision.id)
     assert persisted_revision.current_stage == 4
@@ -372,7 +324,7 @@ def test_finalize_repository_open_interruption_preserves_pending_unlinked_state(
             board.id,
             revision.id,
             repository_board_id="example-board",
-            repository_version_id="revision-0001",
+            repository_revision_token=_REVISION_TOKEN_A,
         )
 
     assert WorkbenchStore(tmp_path).read_board(board.id) == before
@@ -389,13 +341,13 @@ def test_publish_repository_revision_updates_link_and_saved_revision_atomically(
         board.id,
         revision.id,
         repository_board_id="example-board",
-        repository_version_id="revision-0001",
+        repository_revision_token=_REVISION_TOKEN_A,
     )
 
     assert published.active_revision_id == revision.id
     assert published.saved_revision_id == revision.id
     assert published.repository_board_id == "example-board"
-    assert published.repository_version_id == "revision-0001"
+    assert published.repository_revision_token == _REVISION_TOKEN_A
     assert WorkbenchStore(tmp_path).read_board(board.id) == published
 
 
@@ -416,7 +368,7 @@ def test_publish_repository_revision_failure_preserves_all_previous_metadata(
             board.id,
             revision.id,
             repository_board_id="example-board",
-            repository_version_id="revision-0001",
+            repository_revision_token=_REVISION_TOKEN_A,
         )
 
     assert WorkbenchStore(tmp_path).read_board(board.id) == before
@@ -427,31 +379,45 @@ def test_store_loads_old_manifest_without_repository_link(tmp_path: Path) -> Non
     manifest_path = tmp_path / "boards" / board.id / "board.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest.pop("repositoryBoardId")
-    manifest.pop("repositoryVersionId")
+    manifest.pop("repositoryRevisionToken")
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
     reopened = WorkbenchStore(tmp_path).read_board(board.id)
 
     assert reopened.repository_board_id is None
-    assert reopened.repository_version_id is None
+    assert reopened.repository_revision_token is None
 
 
 @pytest.mark.parametrize(
-    ("repository_board_id", "repository_version_id"),
-    (("example-board", None), (None, "revision-0001")),
+    ("repository_board_id", "repository_revision_token"),
+    ((None, _REVISION_TOKEN_A),),
 )
-def test_store_rejects_incomplete_repository_links(
+def test_store_rejects_revision_token_without_repository_board_id(
     tmp_path: Path,
     repository_board_id: str | None,
-    repository_version_id: str | None,
+    repository_revision_token: str | None,
 ) -> None:
     store, board, _revision = _populated_store(tmp_path)
 
     with pytest.raises(WorkbenchStoreError, match="provided together"):
-        store.link_repository_version(
+        store.link_repository_revision(
             board.id,
             repository_board_id=repository_board_id,  # type: ignore[arg-type]
-            repository_version_id=repository_version_id,  # type: ignore[arg-type]
+            repository_revision_token=repository_revision_token,  # type: ignore[arg-type]
+        )
+
+
+@pytest.mark.parametrize("revision_token", ("a" * 63, "A" * 64, "g" * 64))
+def test_store_rejects_invalid_repository_revision_token(
+    tmp_path: Path, revision_token: str
+) -> None:
+    store, board, _revision = _populated_store(tmp_path)
+
+    with pytest.raises(WorkbenchStoreError, match="revision token"):
+        store.link_repository_revision(
+            board.id,
+            repository_board_id="example-board",
+            repository_revision_token=revision_token,
         )
 
 
