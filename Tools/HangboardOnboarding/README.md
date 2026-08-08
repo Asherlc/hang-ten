@@ -23,9 +23,11 @@ tar -xzf hangboard-workbench-macos-arm64.tar.gz
 
 The executable opens the workbench in the default browser automatically. It
 must run from inside a Hang Ten checkout, or receive the checkout explicitly
-with `--repository-root`. Use `--workspace-root` to move transient work,
+with `--repository-root`. `--workspace-root` only moves transient work; it does
+not disable repository discovery or replace `--repository-root`. Use
 `--no-open` to suppress browser launch, `--port` to select another port, and
-`--version` to print the embedded source commit.
+`--version` to print the embedded source commit. Repository-free startup is
+reserved for explicit legacy `--run-dir` or `--catalog` inputs.
 
 The release is unsigned. If Gatekeeper blocks its first launch, use Finder's
 **Open** context-menu action to approve that executable.

@@ -27,6 +27,7 @@ from job_manager import (
     JobConflictError,
     JobNotFoundError,
 )
+from workbench_assets import STATIC_ASSET_ROUTES
 
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
@@ -60,6 +61,14 @@ class RequestError(EditorError):
     def __init__(self, status: HTTPStatus, message: str) -> None:
         super().__init__(message)
         self.status = status
+
+
+class StaticAssetError(EditorError):
+    """A safe startup error naming a logical workbench asset."""
+
+
+class ServerBindError(EditorError):
+    """A safe startup error naming only the requested bind address."""
 
 
 @dataclass(frozen=True)
@@ -291,6 +300,12 @@ def create_server(
     public_job_error_types: tuple[type[Exception], ...] = (),
     job_outcome_root: Path | None = None,
 ) -> ThreadingHTTPServer:
+    resolved_editor_root = Path(editor_root).resolve(strict=False)
+    for asset in dict.fromkeys(
+        asset for _route, asset in STATIC_ASSET_ROUTES
+    ):
+        if not (resolved_editor_root / asset).is_file():
+            raise StaticAssetError(f"required static asset is missing: {asset}")
     catalog = (
         source
         if isinstance(source, EditorCatalog)
@@ -312,7 +327,7 @@ def create_server(
     return WorkbenchHTTPServer(
         (host, port),
         SessionHandler,
-        editor_root=editor_root,
+        editor_root=resolved_editor_root,
         workbench_service=workbench_service,
         job_manager=jobs,
         public_error_types=public_job_error_types,
@@ -368,18 +383,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/artifact":
             self._get_workbench_artifact(request.query)
             return
-        static_files = {
-            "/": "index.html",
-            "/index.html": "index.html",
-            "/styles.css": "styles.css",
-            "/editor-model.js": "editor-model.js",
-            "/workbench-client.js": "workbench-client.js",
-            "/workbench-controller.js": "workbench-controller.js",
-            "/workbench-model.js": "workbench-model.js",
-            "/vector-path-model.js": "vector-path-model.js",
-            "/app.js": "app.js",
-        }
-        filename = static_files.get(path)
+        filename = next(
+            (
+                asset
+                for route, asset in STATIC_ASSET_ROUTES
+                if route == path
+            ),
+            None,
+        )
         if filename is not None:
             try:
                 self._send_file(self.server.editor_root / filename)
@@ -1123,7 +1134,7 @@ def _server_from_cli(
         if use_workbench:
             use_repository_library = (
                 parsed.repository_root is not None
-                or (catalog is None and parsed.workspace_root is None)
+                or catalog is None
             )
             repository_root = (
                 _configured_repository_root(parsed.repository_root)
@@ -1144,19 +1155,24 @@ def _server_from_cli(
             public_job_error_types = ()
     except (EditorError, OSError, ValueError) as error:
         parser.error(str(error))
-    server = create_server(
-        catalog,
-        parsed.host,
-        parsed.port,
-        editor_root=editor_root,
-        workbench_service=service,
-        public_job_error_types=public_job_error_types,
-        job_outcome_root=(
-            workspace_root / ".workbench-job-outcomes"
-            if workspace_root is not None
-            else None
-        ),
-    )
+    try:
+        server = create_server(
+            catalog,
+            parsed.host,
+            parsed.port,
+            editor_root=editor_root,
+            workbench_service=service,
+            public_job_error_types=public_job_error_types,
+            job_outcome_root=(
+                workspace_root / ".workbench-job-outcomes"
+                if workspace_root is not None
+                else None
+            ),
+        )
+    except OSError as error:
+        raise ServerBindError(
+            f"could not bind to {parsed.host}:{parsed.port}"
+        ) from error
     return server, catalog
 
 

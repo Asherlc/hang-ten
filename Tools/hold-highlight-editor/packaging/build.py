@@ -12,16 +12,12 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 
-STATIC_ASSETS = (
-    "index.html",
-    "styles.css",
-    "app.js",
-    "editor-model.js",
-    "vector-path-model.js",
-    "workbench-client.js",
-    "workbench-controller.js",
-    "workbench-model.js",
-)
+_EDITOR_MODULE_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_EDITOR_MODULE_ROOT))
+
+import workbench_assets  # noqa: E402
+
+
 _COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 
 
@@ -41,7 +37,7 @@ def _validate_source_layout(repository_root: Path) -> tuple[Path, Path]:
     editor_root = _editor_root(repository_root)
     onboarding_root = _onboarding_root(repository_root)
     required_files = [editor_root / "workbench_binary.py"] + [
-        editor_root / asset for asset in STATIC_ASSETS
+        editor_root / asset for asset in workbench_assets.STATIC_ASSETS
     ]
     missing = [path for path in required_files if not path.is_file()]
     if missing:
@@ -112,7 +108,7 @@ def _pyinstaller_arguments(
         "--hidden-import",
         "hangboard_vectorizer.board_library",
     ]
-    for asset in STATIC_ASSETS:
+    for asset in workbench_assets.STATIC_ASSETS:
         arguments.extend(_add_data_argument(editor_root / asset))
     arguments.extend(_add_data_argument(metadata_path))
     return arguments

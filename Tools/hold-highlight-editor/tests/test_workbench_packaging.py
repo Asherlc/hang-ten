@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,9 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
+sys.path.insert(0, str(EDITOR_ROOT))
+
+import workbench_assets  # noqa: E402
 
 
 def _load_build_module():
@@ -33,20 +37,43 @@ def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
     arguments = build._pyinstaller_arguments(REPOSITORY_ROOT, metadata, dist, work)
     joined = "\n".join(arguments)
 
-    for asset in (
-        "index.html",
-        "styles.css",
-        "app.js",
-        "editor-model.js",
-        "vector-path-model.js",
-        "workbench-client.js",
-        "workbench-controller.js",
-        "workbench-model.js",
-    ):
+    for asset in workbench_assets.STATIC_ASSETS:
         assert asset in joined
     assert "hangboard_vectorizer" in joined
     assert "Tools/HangboardOnboarding/boards" not in joined
     assert "/tests/" not in joined
+
+
+def test_pyinstaller_arguments_follow_the_shared_static_asset_manifest(
+    tmp_path, monkeypatch
+):
+    repository = tmp_path / "repository"
+    editor_root = repository / "Tools" / "hold-highlight-editor"
+    editor_root.mkdir(parents=True)
+    (editor_root / "workbench_binary.py").write_text("", encoding="utf-8")
+    (editor_root / "manifest-only.js").write_text("", encoding="utf-8")
+    (
+        repository
+        / "Tools"
+        / "HangboardOnboarding"
+        / "src"
+        / "hangboard_vectorizer"
+    ).mkdir(parents=True)
+    metadata = tmp_path / "metadata"
+    metadata.mkdir()
+    (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
+    monkeypatch.setattr(workbench_assets, "STATIC_ASSETS", ("manifest-only.js",))
+
+    arguments = build._pyinstaller_arguments(
+        repository,
+        metadata,
+        tmp_path / "dist",
+        tmp_path / "work",
+    )
+    joined = "\n".join(arguments)
+
+    assert "manifest-only.js" in joined
+    assert "index.html" not in joined
 
 
 def test_pyinstaller_arguments_exclude_product_and_evidence_resources(tmp_path):

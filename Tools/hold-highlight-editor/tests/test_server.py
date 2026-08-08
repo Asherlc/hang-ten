@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import math
 import shutil
+import socket
 import sys
 import threading
 from contextlib import contextmanager
@@ -20,6 +21,7 @@ EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
 
 import server as server_module  # noqa: E402
+from workbench_assets import STATIC_ASSETS  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
     EditorError,
@@ -626,7 +628,11 @@ def running_server(
 def test_server_uses_configured_editor_root(tmp_path):
     editor_root = tmp_path / "embedded-editor"
     editor_root.mkdir()
-    (editor_root / "index.html").write_text("frozen editor", encoding="utf-8")
+    for asset in STATIC_ASSETS:
+        (editor_root / asset).write_text(
+            "frozen editor" if asset == "index.html" else asset,
+            encoding="utf-8",
+        )
     service = FakeWorkbenchService(tmp_path / "workbench")
 
     with running_server(
@@ -638,12 +644,55 @@ def test_server_uses_configured_editor_root(tmp_path):
             status = response.status
             body = response.read()
         with pytest.raises(HTTPError) as missing:
-            urlopen(base + "/styles.css")
+            urlopen(base + "/not-in-manifest.js")
 
     assert status == 200
     assert body == b"frozen editor"
     assert missing.value.code == 404
     assert str(editor_root) not in missing.value.read().decode()
+
+
+def test_server_routes_static_files_from_the_shared_manifest(tmp_path, monkeypatch):
+    editor_root = tmp_path / "embedded-editor"
+    editor_root.mkdir()
+    (editor_root / "manifest-only.js").write_text(
+        "manifest asset", encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        server_module,
+        "STATIC_ASSET_ROUTES",
+        (("/manifest-only.js", "manifest-only.js"),),
+        raising=False,
+    )
+
+    with running_server(make_run(tmp_path / "legacy"), editor_root=editor_root) as base:
+        with urlopen(base + "/manifest-only.js") as response:
+            status = response.status
+            body = response.read()
+
+    assert status == 200
+    assert body == b"manifest asset"
+
+
+def test_required_static_assets_are_validated_before_binding(tmp_path):
+    editor_root = tmp_path / "incomplete-editor"
+    editor_root.mkdir()
+
+    with socket.socket() as occupied:
+        occupied.bind(("127.0.0.1", 0))
+        occupied.listen()
+        host, port = occupied.getsockname()
+        with pytest.raises(
+            EditorError, match="required static asset is missing: index.html"
+        ) as error:
+            create_server(
+                make_run(tmp_path / "legacy"),
+                host,
+                port,
+                editor_root=editor_root,
+            )
+
+    assert str(editor_root) not in str(error.value)
 
 
 def read_json(url: str):
@@ -1463,7 +1512,28 @@ def test_unknown_job_returns_consistent_json_error(running_workbench_server):
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
-def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
+def test_workspace_root_keeps_the_discovered_repository_library(
+    tmp_path, monkeypatch
+):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    canonical_run = (
+        EDITOR_ROOT.parent
+        / "HangboardOnboarding"
+        / "boards"
+        / "metolius-wood-grips-compact-ii"
+    )
+    shutil.copytree(
+        canonical_run,
+        repository
+        / "Tools"
+        / "HangboardOnboarding"
+        / "boards"
+        / "metolius-wood-grips-compact-ii",
+    )
+    launch_directory = repository / "nested" / "launch"
+    launch_directory.mkdir(parents=True)
+    monkeypatch.chdir(launch_directory)
     workspace = tmp_path / "workspace"
     server, catalog = server_module._server_from_cli(
         ["--workspace-root", str(workspace), "--port", "0"]
@@ -1472,7 +1542,7 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
     thread.start()
     try:
         status, payload = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/boards"
+            f"http://127.0.0.1:{server.server_port}/api/library"
         )
     finally:
         server.shutdown()
@@ -1482,7 +1552,10 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
     assert catalog is None
     assert server.server_address[0] == "127.0.0.1"
     assert status == 200
-    assert payload == {"ok": True, "boards": []}
+    assert [board["boardId"] for board in payload["boards"]] == [
+        "metolius-wood-grips-compact-ii"
+    ]
+    assert payload["diagnostics"] == []
     assert (workspace / "boards").is_dir()
     assert (workspace / ".workbench-job-outcomes").is_dir()
 
@@ -1490,36 +1563,21 @@ def test_workspace_root_startup_constructs_real_empty_workbench(tmp_path):
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
-def test_workspace_root_starts_without_repository_library_outside_a_checkout(
-    tmp_path, monkeypatch
+def test_workspace_root_requires_a_repository_outside_explicit_legacy_mode(
+    tmp_path, monkeypatch, capsys
 ):
     launch_directory = tmp_path / "standalone-launch"
     launch_directory.mkdir()
     workspace = tmp_path / "workspace"
     monkeypatch.chdir(launch_directory)
 
-    server, catalog = server_module._server_from_cli(
-        ["--workspace-root", str(workspace), "--port", "0"]
-    )
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    try:
-        boards_status, boards = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/boards"
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            ["--workspace-root", str(workspace), "--port", "0"]
         )
-        library_status, library = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/library"
-        )
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2)
 
-    assert catalog is None
-    assert boards_status == 200
-    assert boards == {"ok": True, "boards": []}
-    assert library_status == 200
-    assert library == {"ok": True, "boards": [], "diagnostics": []}
+    assert error.value.code == 2
+    assert "could not find a repository root" in capsys.readouterr().err
 
 
 @pytest.mark.filterwarnings(

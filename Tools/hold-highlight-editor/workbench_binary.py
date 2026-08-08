@@ -10,7 +10,14 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import Callable
 
-from server import EditorCatalog, EditorError, WorkbenchHTTPServer, _server_from_cli
+from server import (
+    EditorCatalog,
+    EditorError,
+    ServerBindError,
+    StaticAssetError,
+    WorkbenchHTTPServer,
+    _server_from_cli,
+)
 
 
 class PackagedWorkbenchError(ValueError):
@@ -61,16 +68,21 @@ def _run(
     host, port = server.server_address[:2]
     url = f"http://{host}:{port}/"
     shutdown_requested = False
+    shutdown_signals = (signal.SIGINT, signal.SIGTERM)
 
     def interrupt_once(_signum, _frame) -> None:
         nonlocal shutdown_requested
         if shutdown_requested:
             return
         shutdown_requested = True
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        for shutdown_signal in shutdown_signals:
+            signal.signal(shutdown_signal, signal.SIG_IGN)
         raise KeyboardInterrupt
 
-    previous_interrupt_handler = signal.signal(signal.SIGINT, interrupt_once)
+    previous_handlers = {
+        shutdown_signal: signal.signal(shutdown_signal, interrupt_once)
+        for shutdown_signal in shutdown_signals
+    }
     try:
         print(f"Hangboard Workbench: {url}", flush=True)
         if not no_open:
@@ -82,9 +94,11 @@ def _run(
     except KeyboardInterrupt:
         pass
     finally:
-        server.server_close()
-        if not shutdown_requested:
-            signal.signal(signal.SIGINT, previous_interrupt_handler)
+        try:
+            server.server_close()
+        finally:
+            for shutdown_signal, previous_handler in previous_handlers.items():
+                signal.signal(shutdown_signal, previous_handler)
     return 0
 
 
@@ -95,7 +109,7 @@ def main(arguments: list[str] | None = None) -> int:
             server_factory=_server_from_cli,
             browser_open=webbrowser.open,
         )
-    except PackagedWorkbenchError as error:
+    except (PackagedWorkbenchError, ServerBindError, StaticAssetError) as error:
         print(f"Hangboard Workbench: {error}", file=sys.stderr)
     except (EditorError, OSError):
         print("Hangboard Workbench: could not start", file=sys.stderr)

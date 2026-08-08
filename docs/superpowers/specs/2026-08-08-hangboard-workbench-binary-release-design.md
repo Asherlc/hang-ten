@@ -82,20 +82,23 @@ entrypoint must not create an alternate API, persistence layer, or board path.
 
 ### Resource resolution
 
-Static editor files and Python package data cannot rely on repository-relative
+Static editor files and build metadata cannot rely on repository-relative
 `__file__` paths inside a frozen executable. Resource lookup therefore accepts
 an explicit editor root, using the checked-in editor directory for source runs
 and the PyInstaller extraction root for frozen runs.
 
-The frozen build explicitly includes:
+The frozen application's explicit inputs are limited to:
 
-- editor HTML, CSS, and JavaScript runtime files;
-- the complete `hangboard_vectorizer` package needed by the workbench;
-- package data declared by `hangboard_vectorizer.evidence` and
-  `hangboard_vectorizer.products`.
+- the packaged entrypoint, server, and required `hangboard_vectorizer`
+  workbench modules;
+- the HTML, CSS, and JavaScript files named by one shared static asset
+  manifest;
+- generated build metadata containing the exact source commit.
 
 Tests, evaluation fixtures, reference runs, committed board packages, `.git`,
-and `.context` are not embedded. Published boards are always read from the
+and `.context` are not embedded. Packaging must not collect product or evidence
+resources from `hangboard_vectorizer.products` or
+`hangboard_vectorizer.evidence`. Published boards are always read from the
 checkout selected at runtime.
 
 ### Python imports
@@ -112,10 +115,11 @@ pinned build configuration. The build environment installs the onboarding
 project and a pinned PyInstaller version into an isolated environment before
 building.
 
-The configuration declares all static resources and hidden imports rather than
-depending on accidental module discovery. It also embeds a generated build
-metadata module containing the exact Git commit. Build metadata is reproducible
-for the same source commit and does not modify tracked source files.
+The configuration consumes the shared static asset manifest and declares the
+required hidden workbench imports rather than depending on accidental resource
+discovery. It also embeds generated build metadata containing the exact Git
+commit. Build metadata is reproducible for the same source commit and does not
+modify tracked source files.
 
 The executable is archived with `tar.gz` so its executable mode survives
 download. CI computes SHA-256 over the final archive, and the checksum filename
@@ -140,19 +144,23 @@ The workflow performs these ordered gates:
 4. build the arm64 executable;
 5. verify the Mach-O architecture is `arm64`;
 6. run `--version` and require the exact checked-out commit;
-7. launch the executable with `--no-open` on an isolated port against the CI
+7. launch the executable with `--no-open` on isolated ports against the CI
    checkout;
-8. request both a static UI asset and `/api/library` successfully;
-9. stop the process and verify the smoke-test log contains no startup failure;
+8. request `/`, `/api/library`, and every file named by the shared static asset
+   manifest successfully;
+9. stop one frozen parent/child pair with `SIGINT` and another with `SIGTERM`,
+   requiring exit status zero, no remaining child, and no traceback;
 10. create the archive and checksum;
 11. publish the immutable GitHub Release.
 
 The release tag is
 `hangboard-workbench-main-<github-run-number>-<short-commit>`. The release title
-includes the short commit and links back to the source SHA. The release is
-marked as the latest release and contains only the archive and checksum.
-Concurrency is serialized for the release workflow so two rapid `main` pushes
-cannot race while assigning latest-release status. Earlier releases and tags
+includes the short commit and links back to the source SHA. The release contains
+only the archive and checksum. Immediately before creating it, CI resolves
+`refs/heads/main`: the release is marked Latest only when that tip still equals
+the built SHA, and is created with `--latest=false` otherwise. Concurrency is
+serialized for the release workflow, while this tip check also protects a
+retried older run from displacing a newer release. Earlier releases and tags
 remain immutable.
 
 Pull requests run the build and smoke-test gates without publishing a release.

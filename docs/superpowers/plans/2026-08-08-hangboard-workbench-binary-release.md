@@ -4,7 +4,7 @@
 
 **Goal:** Ship the repository-backed workbench as a dependency-free Apple Silicon macOS executable and publish a verified immutable GitHub Release after every successful push to `main`.
 
-**Architecture:** A focused packaged entrypoint reuses the existing server factory while resolving frozen static resources explicitly. A deterministic PyInstaller build script embeds the UI, onboarding package data, and source commit into one arm64 executable. GitHub Actions builds and smoke-tests the real executable on pull requests and publishes checksummed release assets only for `main` pushes.
+**Architecture:** A focused packaged entrypoint reuses the existing server factory while resolving frozen static resources explicitly. A deterministic PyInstaller build script embeds the required workbench modules, one shared UI asset manifest, and source commit into one arm64 executable without collecting product or evidence resources. GitHub Actions builds and smoke-tests the real executable on pull requests and publishes checksummed release assets only for `main` pushes.
 
 **Tech Stack:** Python 3.12, PyInstaller 6.22.0, existing Python `http.server` workbench, OpenCV/NumPy/Pillow/Requests, Node test runner, GitHub Actions on `macos-15`, GitHub CLI releases.
 
@@ -13,6 +13,7 @@
 - The first binary target is Apple Silicon macOS (`arm64`) only.
 - The released executable must require no Python, Node, OpenCV, NumPy, Pillow, Requests, or application dependency installation.
 - The checkout remains the authoritative source for `Tools/HangboardOnboarding/boards/`; committed board packages must not be embedded.
+- `hangboard_vectorizer.products` and `hangboard_vectorizer.evidence` resources must not be collected; only required workbench modules, shared-manifest UI assets, and build metadata are explicit application inputs.
 - Drafts remain under `.context/hangboard-workbench/`, and canonical publication paths and schemas must not change.
 - Visual algorithms, protected visual outputs, and the product-neutral pipeline must remain unchanged.
 - Every successful push to `main` publishes one immutable release; failed verification publishes none.
@@ -22,11 +23,13 @@
 ## File Structure
 
 - Create `Tools/hold-highlight-editor/workbench_binary.py`: packaged-only startup, version reporting, browser launch, and frozen resource selection.
+- Create `Tools/hold-highlight-editor/workbench_assets.py`: one explicit static route and asset manifest shared by serving, validation, packaging, tests, and CI.
 - Modify `Tools/hold-highlight-editor/server.py`: accept an explicit static resource root without changing API or workflow behavior.
 - Create `Tools/hold-highlight-editor/tests/test_workbench_binary.py`: unit tests for packaged startup and version/resource behavior.
 - Modify `Tools/hold-highlight-editor/tests/test_server.py`: prove static assets come from the server instance's configured resource root.
 - Create `Tools/hold-highlight-editor/packaging/build.py`: deterministic PyInstaller invocation and build-input validation.
 - Create `Tools/hold-highlight-editor/tests/test_workbench_packaging.py`: validate the build manifest without requiring PyInstaller in the unit-test process.
+- Create `Tools/hold-highlight-editor/tests/test_workbench_release_workflow.py`: parse the workflow, syntax-check extracted shell, and enforce smoke, permission, and Latest policies.
 - Create `.github/workflows/hangboard-workbench-release.yml`: PR build gate and immutable `main` release publication.
 - Modify `Tools/hold-highlight-editor/README.md`: binary quick start, checksum, flags, and Gatekeeper note.
 - Modify `Tools/HangboardOnboarding/README.md`: point workbench users to the released binary while preserving source instructions.
@@ -231,7 +234,7 @@ rtk git commit -m "Add packaged workbench entrypoint"
 - Modify: `.gitignore`
 
 **Interfaces:**
-- Consumes: `workbench_binary.py` and the static assets enumerated by `server.py`.
+- Consumes: `workbench_binary.py` and the static assets enumerated by `workbench_assets.py`.
 - Produces: `packaging/build.py --commit <40-hex-sha> --dist-dir <path> --work-dir <path>` and `<dist-dir>/hangboard-workbench`.
 - Produces: `_pyinstaller_arguments(repository_root: Path, metadata_root: Path, dist_dir: Path, work_dir: Path) -> list[str]`, which is testable without importing PyInstaller.
 
@@ -243,11 +246,7 @@ Create tests that load `packaging/build.py` with `importlib.util` and assert:
 def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
     arguments = build._pyinstaller_arguments(REPOSITORY_ROOT, metadata, dist, work)
     joined = "\n".join(arguments)
-    for asset in (
-        "index.html", "styles.css", "app.js", "editor-model.js",
-        "vector-path-model.js", "workbench-client.js",
-        "workbench-controller.js", "workbench-model.js",
-    ):
+    for asset in workbench_assets.STATIC_ASSETS:
         assert asset in joined
     assert "hangboard_vectorizer" in joined
     assert "Tools/HangboardOnboarding/boards" not in joined
@@ -284,17 +283,17 @@ arguments = [
     "--workpath", str(work_dir / "pyinstaller"),
     "--specpath", str(work_dir / "spec"),
     "--paths", str(onboarding_root / "src"),
-    "--collect-data", "hangboard_vectorizer",
     "--hidden-import", "hangboard_vectorizer.workbench",
     "--hidden-import", "hangboard_vectorizer.workbench_store",
     "--hidden-import", "hangboard_vectorizer.board_library",
 ]
 ```
 
-Append one `--add-data`, `<source>:<destination>` pair for each explicit static
-asset and for `build-commit.txt`. Reject a non-Darwin host or non-arm64 machine
-before invoking PyInstaller. After the build, require exactly one executable at
-the expected output path.
+Append one `--add-data`, `<source>:<destination>` pair for each asset in the
+shared static manifest and for `build-commit.txt`. Do not use `--collect-data`
+for `hangboard_vectorizer` and do not add product or evidence resources. Reject
+a non-Darwin host or non-arm64 machine before invoking PyInstaller. After the
+build, require exactly one executable at the expected output path.
 
 Add PyInstaller `build/`, `dist/`, and generated `*.spec` paths under the editor
 packaging directory to `.gitignore` without ignoring release source files.
@@ -329,8 +328,10 @@ Expected: `file` reports an arm64 Mach-O executable and `--version` prints the
 exact HEAD SHA. Replace the example commit argument with the literal
 40-character SHA printed by the preceding `rtk git rev-parse HEAD` command.
 
-Launch the binary from the repository root with `--no-open --port 41739`, poll
-`/api/library` and `/`, then interrupt it and require a clean exit.
+Launch the binary from the repository root on isolated ports, request
+`/api/library`, `/`, and every shared-manifest asset, then stop separate frozen
+parent/child pairs with `SIGINT` and `SIGTERM`. Require exit zero, no remaining
+process, and no traceback for both.
 
 - [ ] **Step 6: Commit Task 2**
 
@@ -349,7 +350,7 @@ rtk git commit -m "Package workbench as arm64 binary"
 **Interfaces:**
 - Consumes: `packaging/build.py --commit/--dist-dir/--work-dir` and `workbench_binary.py --version/--no-open`.
 - Produces: workflow artifact `hangboard-workbench-release-<run-id>` containing `hangboard-workbench-macos-arm64.tar.gz` and `hangboard-workbench-macos-arm64.sha256`.
-- Produces on `main`: tag `hangboard-workbench-main-<run-number>-<short-sha>` and an immutable latest GitHub Release for the exact `github.sha`.
+- Produces on `main`: tag `hangboard-workbench-main-<run-number>-<short-sha>` and an immutable GitHub Release for the exact `github.sha`, marked Latest only if that SHA is still the current `refs/heads/main` tip.
 
 - [ ] **Step 1: Add the build-and-release workflow**
 
@@ -377,9 +378,11 @@ SHA.
 
 - [ ] **Step 2: Add the executable smoke gate and cleanup**
 
-Run the binary from `$GITHUB_WORKSPACE` with `--no-open --port 41739`, redirect
-logs under `$RUNNER_TEMP`, and install a shell `trap` that interrupts and waits
-for the owned PID on every exit. Poll up to 30 seconds, then require:
+Run the binary from `$GITHUB_WORKSPACE` with `--no-open` on isolated ports,
+redirect logs under `$RUNNER_TEMP`, and install a shell `trap` that stops and
+waits for the exact owned PID on every exit. For both `SIGINT` and `SIGTERM`,
+poll up to 30 seconds, request every static asset supplied by the shared
+manifest, and require `/` plus `/api/library`:
 
 ```bash
 curl --fail --silent --show-error http://127.0.0.1:41739/ >/dev/null
@@ -387,7 +390,9 @@ curl --fail --silent --show-error http://127.0.0.1:41739/api/library \
   | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
 ```
 
-Fail if the process exits before readiness. Print the confined log on failure.
+Fail if the process exits before readiness or does not exit zero after its
+signal. Require that neither frozen parent nor child remains and that the
+confined log contains no traceback or packaged startup error.
 
 - [ ] **Step 3: Archive, checksum, and upload the verified assets**
 
@@ -421,13 +426,15 @@ gh release create "$tag" \
   --target "$GITHUB_SHA" \
   --title "Hangboard Workbench ${short_sha}" \
   --notes "Dependency-free Apple Silicon workbench built from ${GITHUB_SHA}." \
-  --latest
+  "$latest_flag"
 ```
 
 Use `GH_TOKEN: ${{ github.token }}` only on this step. Before creating, fail if
 the tag or release already exists at a different commit; treat an existing
 release at the exact commit as an idempotent rerun only after both named assets
-are present.
+are present. Immediately before a new release, resolve `refs/heads/main` and
+set `latest_flag` to `--latest` only when it equals `GITHUB_SHA`; otherwise pass
+`--latest=false` so an older retried run cannot displace a newer release.
 
 - [ ] **Step 5: Validate workflow syntax and policy locally**
 
@@ -438,8 +445,10 @@ rtk ruby -e 'require "yaml"; YAML.load_file(".github/workflows/hangboard-workben
 rtk rg -n 'macos-15|pyinstaller==6.22.0|contents: write|gh release create|api/library|shasum -a 256' .github/workflows/hangboard-workbench-release.yml
 ```
 
-Expected: valid YAML; `contents: write` appears only in the conditional release
-job; the build job contains both real-executable smoke requests.
+Expected: valid YAML and valid extracted build/release shell; `contents: write`
+appears only in the conditional release job; the build job covers every shared
+static asset, both signals, clean parent/child teardown, and traceback checks;
+policy tests exercise both conditional Latest branches.
 
 - [ ] **Step 6: Commit Task 3**
 
@@ -522,9 +531,10 @@ rtk git rev-parse HEAD
 ```
 
 Build with the literal final SHA in the isolated PyInstaller environment from
-Task 2. Require arm64 architecture, exact `--version`, successful `/` and
-`/api/library` responses, clean shutdown, archive creation, and checksum
-verification.
+Task 2. Require arm64 architecture, exact `--version`, successful `/`,
+`/api/library`, and every static asset response, clean `SIGINT` and `SIGTERM`
+shutdown with no parent or child left, archive creation, checksum verification,
+and absence of product/evidence resources.
 
 - [ ] **Step 5: Verify protected visual artifacts are unchanged**
 

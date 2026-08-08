@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import signal
+import socket
 import sys
 from pathlib import Path
 
@@ -8,6 +9,7 @@ import pytest
 
 
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
 
 import workbench_binary  # noqa: E402
@@ -112,15 +114,83 @@ def test_browser_failure_prints_url_and_keeps_serving(monkeypatch, tmp_path, cap
     assert "http://127.0.0.1:4317/" in capsys.readouterr().out
 
 
-def test_run_absorbs_a_late_duplicate_interrupt(monkeypatch, tmp_path):
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_main_names_a_missing_static_asset_without_exposing_its_root(
+    monkeypatch, tmp_path, capsys
+):
+    resource_root = tmp_path / "private-frozen-root"
+    resource_root.mkdir()
+    monkeypatch.setattr(workbench_binary, "_resource_root", lambda: resource_root)
+
+    result = workbench_binary.main(
+        [
+            "--no-open",
+            "--repository-root",
+            str(REPOSITORY_ROOT),
+            "--workspace-root",
+            str(tmp_path / "workspace"),
+            "--port",
+            "0",
+        ]
+    )
+
+    assert result == 2
+    error = capsys.readouterr().err
+    assert "required static asset is missing: index.html" in error
+    assert str(resource_root) not in error
+
+
+@pytest.mark.filterwarnings(
+    "ignore:urllib3 .* doesn't match a supported version!"
+)
+def test_main_names_the_requested_host_and_port_when_binding_fails(
+    tmp_path, capsys
+):
+    with socket.socket() as occupied:
+        occupied.bind(("127.0.0.1", 0))
+        occupied.listen()
+        host, port = occupied.getsockname()
+        result = workbench_binary.main(
+            [
+                "--no-open",
+                "--repository-root",
+                str(REPOSITORY_ROOT),
+                "--workspace-root",
+                str(tmp_path / "private-workspace"),
+                "--host",
+                host,
+                "--port",
+                str(port),
+            ]
+        )
+
+    assert result == 2
+    error = capsys.readouterr().err
+    assert f"could not bind to {host}:{port}" in error
+    assert str(tmp_path) not in error
+    assert "Address already in use" not in error
+
+
+@pytest.mark.parametrize(
+    ("initial_signal", "late_signal"),
+    [
+        (signal.SIGINT, signal.SIGTERM),
+        (signal.SIGTERM, signal.SIGINT),
+    ],
+)
+def test_run_absorbs_a_late_shutdown_signal_and_restores_both_handlers(
+    monkeypatch, tmp_path, initial_signal, late_signal
+):
     class InterruptingServer(FakeServer):
         def serve_forever(self) -> None:
             self.served = True
-            signal.raise_signal(signal.SIGINT)
+            signal.raise_signal(initial_signal)
 
         def server_close(self) -> None:
             self.closed = True
-            signal.raise_signal(signal.SIGINT)
+            signal.raise_signal(late_signal)
 
     server = InterruptingServer(("127.0.0.1", 4317))
 
@@ -129,7 +199,16 @@ def test_run_absorbs_a_late_duplicate_interrupt(monkeypatch, tmp_path):
         return server, None
 
     monkeypatch.setattr(workbench_binary, "_resource_root", lambda: tmp_path)
-    previous_handler = signal.signal(signal.SIGINT, signal.default_int_handler)
+    installed_handlers = {
+        shutdown_signal: (lambda _signum, _frame: None)
+        for shutdown_signal in (signal.SIGINT, signal.SIGTERM)
+    }
+    original_handlers = {
+        shutdown_signal: signal.signal(
+            shutdown_signal, installed_handlers[shutdown_signal]
+        )
+        for shutdown_signal in installed_handlers
+    }
     try:
         try:
             result = workbench_binary._run(
@@ -139,8 +218,11 @@ def test_run_absorbs_a_late_duplicate_interrupt(monkeypatch, tmp_path):
             )
         except KeyboardInterrupt:
             pytest.fail("late duplicate interrupt escaped the entrypoint boundary")
+        for shutdown_signal, installed_handler in installed_handlers.items():
+            assert signal.getsignal(shutdown_signal) is installed_handler
     finally:
-        signal.signal(signal.SIGINT, previous_handler)
+        for shutdown_signal, original_handler in original_handlers.items():
+            signal.signal(shutdown_signal, original_handler)
 
     assert result == 0
     assert server.served and server.closed
