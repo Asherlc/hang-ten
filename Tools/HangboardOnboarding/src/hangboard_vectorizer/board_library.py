@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from contextlib import contextmanager
 from dataclasses import dataclass
+import fcntl
 from hashlib import sha256
 import json
 import os
@@ -12,6 +14,9 @@ import re
 import shutil
 import stat
 import tempfile
+from threading import RLock
+from typing import Iterator
+from uuid import uuid4
 
 from .onboarding_run import OnboardingStateError, read_status
 
@@ -30,7 +35,10 @@ _DIAGNOSTIC_CODES = {
     "identity_mismatch",
     "invalid_run",
     "invalid_outputs",
+    "invalid_transaction",
 }
+_TRANSACTION_SCHEMA_VERSION = 1
+_TRANSACTION_PHASES = {"staged", "prior_moved", "candidate_installed"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,6 +46,12 @@ class LibraryBoard:
     board_id: str
     display_name: str
     run_path: Path
+    revision_token: str
+
+
+@dataclass(frozen=True, slots=True)
+class PublishedBoard:
+    board: LibraryBoard
     revision_token: str
 
 
@@ -52,6 +66,23 @@ class LibraryDiagnostic:
 class LibrarySnapshot:
     boards: tuple[LibraryBoard, ...]
     diagnostics: tuple[LibraryDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class _TransactionJournal:
+    board_id: str
+    expected_revision_token: str | None
+    candidate_revision_token: str
+    phase: str
+
+    def document(self, *, phase: str | None = None) -> dict[str, object]:
+        return {
+            "schemaVersion": _TRANSACTION_SCHEMA_VERSION,
+            "boardId": self.board_id,
+            "expectedRevisionToken": self.expected_revision_token,
+            "candidateRevisionToken": self.candidate_revision_token,
+            "phase": self.phase if phase is None else phase,
+        }
 
 
 class BoardLibraryError(ValueError):
@@ -69,6 +100,9 @@ class _BoardDiagnosticError(Exception):
 class RepositoryBoardLibrary:
     """Discover immutable, complete onboarding runs directly from the repository."""
 
+    _locks_guard = RLock()
+    _locks: dict[Path, RLock] = {}
+
     def __init__(self, repository_root: Path) -> None:
         try:
             self._repository_root = Path(repository_root).resolve(strict=True)
@@ -79,6 +113,9 @@ class RepositoryBoardLibrary:
         self._boards_root = (
             self._repository_root / "Tools" / "HangboardOnboarding" / "boards"
         )
+        self._transactions_root = self._boards_root / ".transactions"
+        with self._locks_guard:
+            self._in_process_lock = self._locks.setdefault(self._boards_root, RLock())
 
     def snapshot(self) -> LibrarySnapshot:
         """Return all independently valid board runs and diagnostics for the rest."""
@@ -94,11 +131,15 @@ class RepositoryBoardLibrary:
                     ),
                 ),
             )
-        if not self._boards_root.exists():
-            return LibrarySnapshot(boards=(), diagnostics=())
+        with self._publication_lock():
+            transaction_diagnostics = self._recover_transactions_locked()
+            return self._snapshot_locked(transaction_diagnostics)
 
+    def _snapshot_locked(
+        self, transaction_diagnostics: tuple[LibraryDiagnostic, ...]
+    ) -> LibrarySnapshot:
         boards: list[LibraryBoard] = []
-        diagnostics: list[LibraryDiagnostic] = []
+        diagnostics = list(transaction_diagnostics)
         try:
             entries = sorted(self._boards_root.iterdir(), key=lambda entry: entry.name)
         except OSError as error:
@@ -123,25 +164,414 @@ class RepositoryBoardLibrary:
         raise BoardLibraryError(f"board does not exist: {requested}")
 
     def copy_current_run(self, board_id: str, destination: Path) -> LibraryBoard:
-        board = self.get_board(board_id)
-        destination = Path(destination).absolute()
-        if destination.exists() or destination.is_symlink():
-            raise BoardLibraryError(f"destination already exists: {destination}")
-        self._prepare_write_parent(destination.parent)
-        stage = Path(tempfile.mkdtemp(prefix=f".{destination.name}.tmp-", dir=destination.parent))
-        try:
-            staged_run = stage / "run"
-            self._copy_tree(board.run_path, staged_run)
-            self._validate_complete_run(staged_run)
-            shutil.move(str(staged_run), str(stage / "payload"))
-            (stage / "payload").replace(destination)
-            self._fsync_directory(destination.parent)
-        except Exception:
-            shutil.rmtree(stage, ignore_errors=True)
-            raise
-        else:
-            shutil.rmtree(stage, ignore_errors=True)
+        requested = self._board_id(board_id, "board")
+        with self._publication_lock():
+            self._recover_transactions_locked()
+            board = self._optional_board_locked(requested)
+            if board is None:
+                raise BoardLibraryError(f"board does not exist: {requested}")
+            destination = Path(destination).absolute()
+            if destination.exists() or destination.is_symlink():
+                raise BoardLibraryError(f"destination already exists: {destination}")
+            self._prepare_write_parent(destination.parent)
+            stage = Path(
+                tempfile.mkdtemp(
+                    prefix=f".{destination.name}.tmp-", dir=destination.parent
+                )
+            )
+            try:
+                staged_run = stage / "run"
+                self._copy_tree(board.run_path, staged_run)
+                self._validate_complete_run(staged_run)
+                shutil.move(str(staged_run), str(stage / "payload"))
+                (stage / "payload").replace(destination)
+                self._fsync_directory(destination.parent)
+            except Exception:
+                shutil.rmtree(stage, ignore_errors=True)
+                raise
+            else:
+                shutil.rmtree(stage, ignore_errors=True)
         return board
+
+    def publish(
+        self,
+        *,
+        run_root: Path,
+        board_id: str | None,
+        expected_revision_token: str | None,
+    ) -> PublishedBoard:
+        candidate = self._validated_package(run_root)
+        identifier = (
+            candidate.board_id
+            if board_id is None
+            else self._board_id(board_id, "board")
+        )
+        if identifier != candidate.board_id:
+            raise BoardLibraryError("board ID does not match run product key")
+        with self._publication_lock():
+            diagnostics = self._recover_transactions_locked()
+            if diagnostics:
+                raise BoardLibraryError(
+                    "publication recovery requires manual intervention: "
+                    + diagnostics[0].message
+                )
+            current = self._optional_board_locked(identifier)
+            if (
+                current is not None
+                and current.revision_token == candidate.revision_token
+            ):
+                return PublishedBoard(current, current.revision_token)
+            self._require_expected_revision(current, expected_revision_token)
+            self._replace_board_locked(candidate, current)
+        published = self.get_board(identifier)
+        return PublishedBoard(published, published.revision_token)
+
+    @contextmanager
+    def _publication_lock(self) -> Iterator[None]:
+        with self._in_process_lock:
+            self._prepare_write_parent(self._boards_root.parent)
+            try:
+                self._boards_root.mkdir(exist_ok=True)
+                self._transactions_root.mkdir(exist_ok=True)
+            except OSError as error:
+                raise BoardLibraryError(
+                    "publication lock directory is not accessible"
+                ) from error
+            self._safe_existing_directory(
+                self._transactions_root, self._boards_root, "transaction root"
+            )
+            lock_path = self._transactions_root / "lock"
+            flags = os.O_RDWR | os.O_CREAT
+            if hasattr(os, "O_NOFOLLOW"):
+                flags |= os.O_NOFOLLOW
+            try:
+                descriptor = os.open(lock_path, flags, 0o600)
+            except OSError as error:
+                raise BoardLibraryError("publication lock is not accessible") from error
+            try:
+                if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+                    raise BoardLibraryError("publication lock is not a file")
+                fcntl.flock(descriptor, fcntl.LOCK_EX)
+                yield
+            finally:
+                try:
+                    fcntl.flock(descriptor, fcntl.LOCK_UN)
+                finally:
+                    os.close(descriptor)
+
+    def _validated_package(self, run_root: Path) -> LibraryBoard:
+        run = Path(run_root).absolute()
+        self._safe_existing_directory(run, run.parent, "run")
+        self._reject_tree_symlinks(run)
+        manifest_path = run / "run.json"
+        manifest = self._read_json(manifest_path, run, "run manifest")
+        product = self._mapping(manifest.get("product"), "run product")
+        board_id = self._board_id(product.get("key"), "run product key")
+        try:
+            self._validate_complete_run(run, manifest)
+        except _BoardDiagnosticError as error:
+            raise BoardLibraryError(error.message) from error
+        display_name = self._display_name(
+            product.get("normalizedName"), "run product normalizedName"
+        )
+        return LibraryBoard(
+            board_id=board_id,
+            display_name=display_name,
+            run_path=run,
+            revision_token=sha256(manifest_path.read_bytes()).hexdigest(),
+        )
+
+    def _optional_board_locked(self, board_id: str) -> LibraryBoard | None:
+        path = self._boards_root / board_id
+        if not path.exists() and not path.is_symlink():
+            return None
+        try:
+            return self._read_board(path)
+        except _BoardDiagnosticError as error:
+            raise BoardLibraryError(
+                f"current board package is invalid: {error.message}"
+            ) from error
+
+    @staticmethod
+    def _require_expected_revision(
+        current: LibraryBoard | None, expected_revision_token: str | None
+    ) -> None:
+        current_token = current.revision_token if current is not None else None
+        if current_token == expected_revision_token:
+            return
+        expected = expected_revision_token or "absent"
+        actual = current_token or "absent"
+        raise BoardLibraryError(
+            "publication conflict: "
+            f"expected revision {expected}, current revision {actual}"
+        )
+
+    def _replace_board_locked(
+        self, candidate: LibraryBoard, current: LibraryBoard | None
+    ) -> None:
+        transaction = Path(
+            tempfile.mkdtemp(
+                prefix=f"{candidate.board_id}-", dir=self._transactions_root
+            )
+        )
+        self._fsync_directory(self._transactions_root)
+        staged = transaction / "candidate"
+        journal = _TransactionJournal(
+            board_id=candidate.board_id,
+            expected_revision_token=(
+                current.revision_token if current is not None else None
+            ),
+            candidate_revision_token=candidate.revision_token,
+            phase="staged",
+        )
+        journaled = False
+        try:
+            self._copy_tree(candidate.run_path, staged)
+            staged_package = self._validated_package(staged)
+            if (
+                staged_package.board_id != candidate.board_id
+                or staged_package.revision_token != candidate.revision_token
+            ):
+                raise BoardLibraryError("copied publication candidate changed")
+            self._fsync_tree(staged)
+            self._write_journal(transaction, journal.document())
+            journaled = True
+            self._finish_transaction_locked(transaction, journal)
+        except Exception:
+            if not journaled:
+                shutil.rmtree(transaction, ignore_errors=True)
+                self._fsync_directory(self._transactions_root)
+            raise
+
+    def _finish_transaction_locked(
+        self, transaction: Path, journal: _TransactionJournal
+    ) -> None:
+        current_path = self._boards_root / journal.board_id
+        rollback_path = transaction / "rollback"
+        candidate_path = transaction / "candidate"
+        if current_path.exists() or current_path.is_symlink():
+            if rollback_path.exists() or rollback_path.is_symlink():
+                raise BoardLibraryError("transaction rollback path already exists")
+            self._move_path(current_path, rollback_path)
+            self._fsync_directory(self._boards_root)
+            self._fsync_directory(transaction)
+        self._write_journal(transaction, journal.document(phase="prior_moved"))
+        self._move_path(candidate_path, current_path)
+        self._fsync_directory(self._boards_root)
+        self._fsync_directory(transaction)
+        self._write_journal(
+            transaction, journal.document(phase="candidate_installed")
+        )
+        self._remove_transaction(transaction)
+
+    def _recover_transactions_locked(self) -> tuple[LibraryDiagnostic, ...]:
+        diagnostics: list[LibraryDiagnostic] = []
+        try:
+            entries = sorted(
+                self._transactions_root.iterdir(), key=lambda path: path.name
+            )
+        except OSError as error:
+            raise BoardLibraryError("transaction root is not readable") from error
+        for transaction in entries:
+            if transaction.name == "lock":
+                continue
+            path = self._transaction_relative(transaction)
+            if transaction.is_symlink() or not transaction.is_dir():
+                diagnostics.append(
+                    LibraryDiagnostic(
+                        path,
+                        "invalid_transaction",
+                        self._message(
+                            transaction,
+                            "transaction evidence must be a non-symlink directory",
+                        ),
+                    )
+                )
+                continue
+            try:
+                self._recover_transaction_locked(transaction)
+            except (BoardLibraryError, OSError) as error:
+                diagnostics.append(
+                    LibraryDiagnostic(
+                        path,
+                        "invalid_transaction",
+                        self._message(
+                            transaction, f"transaction is ambiguous: {error}"
+                        ),
+                    )
+                )
+        return tuple(diagnostics)
+
+    def _recover_transaction_locked(self, transaction: Path) -> None:
+        journal = self._read_transaction_journal(transaction)
+        current_path = self._boards_root / journal.board_id
+        candidate_path = transaction / "candidate"
+        rollback_path = transaction / "rollback"
+        current, current_problem = self._probe_package(current_path, canonical=True)
+        candidate, candidate_problem = self._probe_package(candidate_path)
+        rollback, rollback_problem = self._probe_package(rollback_path)
+        candidate_valid = (
+            candidate is not None
+            and candidate.board_id == journal.board_id
+            and candidate.revision_token == journal.candidate_revision_token
+        )
+        rollback_valid = (
+            rollback is not None
+            and rollback.board_id == journal.board_id
+            and journal.expected_revision_token is not None
+            and rollback.revision_token == journal.expected_revision_token
+        )
+        candidate_state_problem = candidate_problem
+        if candidate is not None and not candidate_valid:
+            candidate_state_problem = "candidate package does not match its journal"
+        rollback_state_problem = rollback_problem
+        if rollback is not None and not rollback_valid:
+            rollback_state_problem = "rollback package does not match its journal"
+
+        if (
+            current is not None
+            and current.revision_token == journal.candidate_revision_token
+        ):
+            if (
+                candidate_state_problem is not None
+                or rollback_state_problem is not None
+            ):
+                problem = candidate_state_problem or rollback_state_problem
+                raise BoardLibraryError(f"installed candidate has {problem}")
+            self._remove_transaction(transaction)
+            return
+        if current_problem is not None:
+            raise BoardLibraryError(f"canonical package {current_problem}")
+
+        if current is not None:
+            if (
+                current.revision_token == journal.expected_revision_token
+                and candidate_valid
+                and rollback is None
+                and rollback_problem is None
+            ):
+                self._finish_transaction_locked(transaction, journal)
+                return
+            raise BoardLibraryError(
+                "canonical package does not prove the expected transaction state"
+            )
+
+        if candidate_valid:
+            self._write_journal(
+                transaction, journal.document(phase="prior_moved")
+            )
+            self._move_path(candidate_path, current_path)
+            self._fsync_directory(self._boards_root)
+            self._fsync_directory(transaction)
+            self._write_journal(
+                transaction, journal.document(phase="candidate_installed")
+            )
+            if rollback_state_problem is not None:
+                raise BoardLibraryError(
+                    f"installed the candidate but retained {rollback_state_problem}"
+                )
+            self._remove_transaction(transaction)
+            return
+
+        if rollback_valid:
+            self._move_path(rollback_path, current_path)
+            self._fsync_directory(self._boards_root)
+            self._fsync_directory(transaction)
+            reason = candidate_state_problem or "candidate package is missing"
+            raise BoardLibraryError(
+                f"restored the prior package because the {reason}"
+            )
+
+        problems = [
+            problem
+            for problem in (candidate_state_problem, rollback_state_problem)
+            if problem
+        ]
+        detail = "; ".join(problems) if problems else "required packages are missing"
+        raise BoardLibraryError(detail)
+
+    def _read_transaction_journal(
+        self, transaction: Path
+    ) -> _TransactionJournal:
+        document = self._read_json(
+            transaction / "journal.json", transaction, "transaction journal"
+        )
+        if document.get("schemaVersion") != _TRANSACTION_SCHEMA_VERSION:
+            raise BoardLibraryError("transaction journal schema version is invalid")
+        board_id = self._board_id(document.get("boardId"), "transaction board")
+        expected_value = document.get("expectedRevisionToken")
+        expected = (
+            None
+            if expected_value is None
+            else self._sha(expected_value, "transaction expected revision token")
+        )
+        candidate = self._sha(
+            document.get("candidateRevisionToken"),
+            "transaction candidate revision token",
+        )
+        phase = self._string(document.get("phase"), "transaction phase")
+        if phase not in _TRANSACTION_PHASES:
+            raise BoardLibraryError("transaction phase is invalid")
+        return _TransactionJournal(board_id, expected, candidate, phase)
+
+    def _probe_package(
+        self, path: Path, *, canonical: bool = False
+    ) -> tuple[LibraryBoard | None, str | None]:
+        if not path.exists() and not path.is_symlink():
+            return None, None
+        try:
+            package = (
+                self._read_board(path)
+                if canonical
+                else self._validated_package(path)
+            )
+        except (BoardLibraryError, _BoardDiagnosticError) as error:
+            message = (
+                error.message
+                if isinstance(error, _BoardDiagnosticError)
+                else str(error)
+            )
+            return None, f"at {self._repository_relative(path)} is invalid: {message}"
+        return package, None
+
+    def _write_journal(
+        self, transaction: Path, document: Mapping[str, object]
+    ) -> None:
+        journal = transaction / "journal.json"
+        temporary = transaction / f".journal-{uuid4().hex}.tmp"
+        payload = (
+            json.dumps(document, indent=2, sort_keys=True).encode("utf-8") + b"\n"
+        )
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        descriptor: int | None = None
+        try:
+            descriptor = os.open(temporary, flags, 0o600)
+            with os.fdopen(descriptor, "wb") as stream:
+                descriptor = None
+                stream.write(payload)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, journal)
+            self._fsync_directory(transaction)
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+            temporary.unlink(missing_ok=True)
+
+    def _move_path(self, source: Path, destination: Path) -> None:
+        source.replace(destination)
+
+    def _remove_transaction(self, transaction: Path) -> None:
+        shutil.rmtree(transaction)
+        self._fsync_directory(self._transactions_root)
+
+    def _transaction_relative(self, transaction: Path) -> str:
+        try:
+            return transaction.relative_to(self._boards_root).as_posix()
+        except ValueError:
+            return transaction.as_posix()
 
     def _boards_root_problem(self) -> str | None:
         try:
@@ -396,6 +826,23 @@ class RepositoryBoardLibrary:
         self._reject_write_target(destination)
         shutil.copytree(source, destination, symlinks=False)
         self._reject_tree_symlinks(destination)
+
+    def _fsync_tree(self, root: Path) -> None:
+        self._reject_tree_symlinks(root)
+        directories = [root]
+        for path in root.rglob("*"):
+            if path.is_dir():
+                directories.append(path)
+                continue
+            descriptor = os.open(path, os.O_RDONLY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
+        for directory in sorted(
+            directories, key=lambda path: len(path.parts), reverse=True
+        ):
+            self._fsync_directory(directory)
 
     @staticmethod
     def _fsync_directory(path: Path) -> None:

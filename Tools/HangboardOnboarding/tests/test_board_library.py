@@ -3,10 +3,13 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 from pathlib import Path
+import shutil
+from threading import Event, Thread
 
 from PIL import Image
 import pytest
 
+from hangboard_vectorizer import board_library
 from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.onboarding_run import (
@@ -179,6 +182,70 @@ def test_copy_current_run_rejects_a_symlinked_destination_parent(tmp_path: Path)
     assert not (outside / "run").exists()
 
 
+def test_copy_current_run_holds_the_publication_lock_until_copy_finishes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "copy-board", "Copy Board")
+    candidate = _complete_board(tmp_path / "candidate", "copy-board", "Copy Board")
+    reader = RepositoryBoardLibrary(repository)
+    publisher = RepositoryBoardLibrary(repository)
+    existing = reader.get_board("copy-board")
+    destination = tmp_path / "runtime" / "run"
+    copy_started, release_copy, publication_finished = Event(), Event(), Event()
+    copied: list[object] = []
+    published: list[object] = []
+    errors: list[BaseException] = []
+    original_copy = reader._copy_tree
+
+    def paused_copy(source: Path, target: Path) -> None:
+        copy_started.set()
+        if not release_copy.wait(2):
+            raise TimeoutError("copy was not released")
+        original_copy(source, target)
+
+    def copy_board() -> None:
+        try:
+            copied.append(reader.copy_current_run("copy-board", destination))
+        except BaseException as error:
+            errors.append(error)
+
+    def publish_board() -> None:
+        try:
+            published.append(
+                publisher.publish(
+                    run_root=candidate,
+                    board_id=existing.board_id,
+                    expected_revision_token=existing.revision_token,
+                )
+            )
+        except BaseException as error:
+            errors.append(error)
+        finally:
+            publication_finished.set()
+
+    monkeypatch.setattr(reader, "_copy_tree", paused_copy)
+    copy_thread = Thread(target=copy_board)
+    publication_thread = Thread(target=publish_board)
+    copy_thread.start()
+    assert copy_started.wait(2)
+    publication_thread.start()
+    try:
+        assert not publication_finished.wait(0.2)
+    finally:
+        release_copy.set()
+        copy_thread.join(2)
+        publication_thread.join(2)
+
+    assert errors == []
+    assert copied == [existing]
+    assert len(published) == 1
+    assert sha256((destination / "run.json").read_bytes()).hexdigest() == (
+        existing.revision_token
+    )
+
+
 def test_get_board_rejects_invalid_and_missing_boards(tmp_path: Path) -> None:
     invalid = _boards_root(tmp_path) / "Invalid_Board"
     invalid.mkdir(parents=True)
@@ -188,6 +255,340 @@ def test_get_board_rejects_invalid_and_missing_boards(tmp_path: Path) -> None:
         library.get_board("Invalid_Board")
     with pytest.raises(BoardLibraryError, match="does not exist"):
         library.get_board("missing-board")
+
+
+@pytest.mark.parametrize("replacing", [False, True], ids=["new", "replacement"])
+def test_publish_installs_a_validated_canonical_package(
+    tmp_path: Path, replacing: bool
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    candidate = _complete_board(
+        tmp_path / "candidate", "publish-board", "Publish Board"
+    )
+    runtime_candidate = tmp_path / "runtime" / "selected-run"
+    runtime_candidate.parent.mkdir()
+    candidate.rename(runtime_candidate)
+    candidate = runtime_candidate
+    library = RepositoryBoardLibrary(repository)
+    existing = (
+        _complete_board(repository, "publish-board", "Publish Board")
+        if replacing
+        else None
+    )
+    previous = library.get_board("publish-board") if existing is not None else None
+
+    published = library.publish(
+        run_root=candidate,
+        board_id=previous.board_id if previous is not None else None,
+        expected_revision_token=(
+            previous.revision_token if previous is not None else None
+        ),
+    )
+
+    assert isinstance(published, board_library.PublishedBoard)
+    if previous is not None:
+        assert published.revision_token != previous.revision_token
+    assert published.board.board_id == "publish-board"
+    assert published.board.run_path == _boards_root(repository) / "publish-board"
+    assert library.get_board("publish-board").revision_token == published.revision_token
+    assert not (
+        _boards_root(repository) / "publish-board" / "publication.json"
+    ).exists()
+
+
+def test_publish_identical_retry_succeeds_before_stale_token_conflict(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "retry-board", "Retry Board")
+    candidate = _complete_board(tmp_path / "candidate", "retry-board", "Retry Board")
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("retry-board")
+    published = library.publish(
+        run_root=candidate,
+        board_id=existing.board_id,
+        expected_revision_token=existing.revision_token,
+    )
+
+    retried = library.publish(
+        run_root=candidate,
+        board_id=existing.board_id,
+        expected_revision_token="not-a-revision-token",
+    )
+
+    assert retried == published
+
+
+def test_publish_reports_invalid_candidate_as_a_library_error(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    candidate = _complete_board(
+        tmp_path / "candidate", "invalid-board", "Invalid Board"
+    )
+    normal = _stage_four_acceptance(candidate)["normal"]
+    assert isinstance(normal, dict)
+    (candidate / str(normal["path"])).write_bytes(b"invalid output")
+
+    with pytest.raises(BoardLibraryError, match="Stage 4"):
+        RepositoryBoardLibrary(repository).publish(
+            run_root=candidate,
+            board_id=None,
+            expected_revision_token=None,
+        )
+
+    assert not (_boards_root(repository) / "invalid-board").exists()
+
+
+@pytest.mark.parametrize(
+    "conflict",
+    ["changed-current", "new-board-collision", "malformed-expected"],
+    ids=["changed-current", "new-board-collision", "malformed-expected"],
+)
+def test_publish_rejects_revision_conflicts(tmp_path: Path, conflict: str) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    canonical = _complete_board(repository, "conflict-board", "Conflict Board")
+    library = RepositoryBoardLibrary(repository)
+    expected = library.get_board("conflict-board")
+    changed = _complete_board(tmp_path / "changed", "conflict-board", "Conflict Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "conflict-board", "Conflict Board"
+    )
+    shutil.rmtree(canonical)
+    shutil.copytree(changed, canonical)
+    current = library.get_board("conflict-board")
+    assert current.revision_token not in {
+        expected.revision_token,
+        sha256((candidate / "run.json").read_bytes()).hexdigest(),
+    }
+
+    board_id = None if conflict == "new-board-collision" else expected.board_id
+    expected_token = {
+        "changed-current": expected.revision_token,
+        "new-board-collision": None,
+        "malformed-expected": "not-a-revision-token",
+    }[conflict]
+    with pytest.raises(BoardLibraryError) as raised:
+        library.publish(
+            run_root=candidate,
+            board_id=board_id,
+            expected_revision_token=expected_token,
+        )
+
+    assert (expected_token or "absent") in str(raised.value)
+    assert current.revision_token in str(raised.value)
+    assert library.get_board("conflict-board") == current
+
+
+def test_publish_rejects_board_id_that_does_not_match_the_run(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    candidate = _complete_board(tmp_path / "candidate", "actual-board", "Actual Board")
+
+    with pytest.raises(BoardLibraryError, match="does not match run product key"):
+        RepositoryBoardLibrary(repository).publish(
+            run_root=candidate,
+            board_id="different-board",
+            expected_revision_token=None,
+        )
+
+
+@pytest.mark.parametrize(
+    "failure_point",
+    [
+        "before-rollback-move",
+        "after-rollback-move",
+        "after-candidate-installation",
+        "before-cleanup",
+    ],
+)
+def test_snapshot_recovers_interrupted_replacement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure_point: str
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "recovery-board", "Recovery Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "recovery-board", "Recovery Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("recovery-board")
+    candidate_token = sha256((candidate / "run.json").read_bytes()).hexdigest()
+    original_move = RepositoryBoardLibrary._move_path
+    original_remove = RepositoryBoardLibrary._remove_transaction
+
+    def interrupted_move(
+        self: RepositoryBoardLibrary, source: Path, destination: Path
+    ) -> None:
+        is_rollback = destination.name == "rollback"
+        is_installation = source.name == "candidate"
+        if failure_point == "before-rollback-move" and is_rollback:
+            raise OSError("injected before rollback move")
+        original_move(self, source, destination)
+        if failure_point == "after-rollback-move" and is_rollback:
+            raise OSError("injected after rollback move")
+        if failure_point == "after-candidate-installation" and is_installation:
+            raise OSError("injected after candidate installation")
+
+    def interrupted_remove(self: RepositoryBoardLibrary, transaction: Path) -> None:
+        if failure_point == "before-cleanup":
+            raise OSError("injected before cleanup")
+        original_remove(self, transaction)
+
+    monkeypatch.setattr(RepositoryBoardLibrary, "_move_path", interrupted_move)
+    monkeypatch.setattr(
+        RepositoryBoardLibrary, "_remove_transaction", interrupted_remove
+    )
+    with pytest.raises(OSError, match="injected"):
+        library.publish(
+            run_root=candidate,
+            board_id=existing.board_id,
+            expected_revision_token=existing.revision_token,
+        )
+    monkeypatch.undo()
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert len(snapshot.boards) == 1
+    assert snapshot.boards[0].board_id == "recovery-board"
+    assert snapshot.boards[0].revision_token == candidate_token
+    assert snapshot.diagnostics == ()
+    transactions = _boards_root(repository) / ".transactions"
+    assert [path.name for path in transactions.iterdir()] == ["lock"]
+
+
+def test_recovery_restores_prior_when_staged_candidate_is_invalid(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "restore-board", "Restore Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "restore-board", "Restore Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("restore-board")
+    original_move = RepositoryBoardLibrary._move_path
+
+    def fail_after_rollback(
+        self: RepositoryBoardLibrary, source: Path, destination: Path
+    ) -> None:
+        original_move(self, source, destination)
+        if destination.name == "rollback":
+            raise OSError("injected after rollback move")
+
+    monkeypatch.setattr(RepositoryBoardLibrary, "_move_path", fail_after_rollback)
+    with pytest.raises(OSError, match="injected"):
+        library.publish(
+            run_root=candidate,
+            board_id=existing.board_id,
+            expected_revision_token=existing.revision_token,
+        )
+    monkeypatch.undo()
+    staged = next(
+        path / "candidate"
+        for path in (_boards_root(repository) / ".transactions").iterdir()
+        if path.is_dir()
+    )
+    (staged / "run.json").write_text("not json", encoding="utf-8")
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.revision_token for board in snapshot.boards] == [
+        existing.revision_token
+    ]
+    assert [(item.code, item.path) for item in snapshot.diagnostics] == [
+        (
+            "invalid_transaction",
+            staged.parent.relative_to(_boards_root(repository)).as_posix(),
+        )
+    ]
+    assert staged.parent.exists()
+
+
+def test_recovery_retains_ambiguous_transaction_evidence(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    canonical = _complete_board(repository, "ambiguous-board", "Ambiguous Board")
+    expected_run = _complete_board(
+        tmp_path / "expected", "ambiguous-board", "Ambiguous Board"
+    )
+    candidate = _complete_board(
+        tmp_path / "candidate", "ambiguous-board", "Ambiguous Board"
+    )
+    current = RepositoryBoardLibrary(repository).get_board("ambiguous-board")
+    transaction = _boards_root(repository) / ".transactions" / "ambiguous"
+    transaction.mkdir(parents=True)
+    shutil.copytree(expected_run, transaction / "rollback")
+    shutil.copytree(candidate, transaction / "candidate")
+    _write_json(
+        transaction / "journal.json",
+        {
+            "schemaVersion": 1,
+            "boardId": "ambiguous-board",
+            "expectedRevisionToken": sha256(
+                (expected_run / "run.json").read_bytes()
+            ).hexdigest(),
+            "candidateRevisionToken": sha256(
+                (candidate / "run.json").read_bytes()
+            ).hexdigest(),
+            "phase": "prior_moved",
+        },
+    )
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.revision_token for board in snapshot.boards] == [
+        current.revision_token
+    ]
+    assert [(item.code, item.path) for item in snapshot.diagnostics] == [
+        ("invalid_transaction", ".transactions/ambiguous")
+    ]
+    assert transaction.exists()
+    assert canonical.exists()
+
+
+def test_recovery_installs_valid_candidate_but_retains_invalid_rollback_evidence(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    prior = _complete_board(tmp_path / "prior", "evidence-board", "Evidence Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "evidence-board", "Evidence Board"
+    )
+    transaction = _boards_root(repository) / ".transactions" / "invalid-rollback"
+    transaction.mkdir(parents=True)
+    shutil.copytree(prior, transaction / "rollback")
+    shutil.copytree(candidate, transaction / "candidate")
+    expected_token = sha256((prior / "run.json").read_bytes()).hexdigest()
+    candidate_token = sha256((candidate / "run.json").read_bytes()).hexdigest()
+    (transaction / "rollback" / "run.json").write_text(
+        "not json", encoding="utf-8"
+    )
+    _write_json(
+        transaction / "journal.json",
+        {
+            "schemaVersion": 1,
+            "boardId": "evidence-board",
+            "expectedRevisionToken": expected_token,
+            "candidateRevisionToken": candidate_token,
+            "phase": "prior_moved",
+        },
+    )
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.revision_token for board in snapshot.boards] == [candidate_token]
+    assert [(item.code, item.path) for item in snapshot.diagnostics] == [
+        ("invalid_transaction", ".transactions/invalid-rollback")
+    ]
+    assert transaction.exists()
+    assert (transaction / "rollback").exists()
 
 
 def _complete_board(repository: Path, board_id: str, product_name: str) -> Path:
