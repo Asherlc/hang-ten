@@ -7,6 +7,7 @@ import json
 import math
 import mimetypes
 import os
+import re
 import sys
 import tempfile
 from argparse import ArgumentParser
@@ -30,6 +31,9 @@ from job_manager import (
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
+_ABSOLUTE_PATH_IN_TEXT = re.compile(
+    r"(?:^|[\s(\"'\[:=])(?:/|[A-Za-z]:[\\/])"
+)
 
 
 def _new_board_reservation_key() -> str:
@@ -539,11 +543,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 for board in snapshot.boards
             ]
             diagnostics = [
-                {
-                    "path": self._relative_diagnostic_path(diagnostic.path),
-                    "code": diagnostic.code,
-                    "message": diagnostic.message,
-                }
+                self._library_diagnostic_payload(diagnostic)
                 for diagnostic in snapshot.diagnostics
             ]
         except RequestError as error:
@@ -667,6 +667,18 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path.is_absolute() or ".." in path.parts:
             raise EditorError("repository diagnostic path must be relative")
         return path.as_posix()
+
+    @classmethod
+    def _library_diagnostic_payload(cls, diagnostic: object) -> dict[str, str]:
+        path = cls._relative_diagnostic_path(diagnostic.path)
+        message = diagnostic.message
+        if (
+            not isinstance(message, str)
+            or not message
+            or _ABSOLUTE_PATH_IN_TEXT.search(message)
+        ):
+            message = f"{path}: repository package is invalid"
+        return {"path": path, "code": diagnostic.code, "message": message}
 
     def _post_mutation(
         self, service: object, path: str, payload: dict[str, Any]

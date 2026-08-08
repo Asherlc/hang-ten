@@ -902,6 +902,32 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
     }
 
 
+def test_library_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    service.library = replace(
+        service.library,
+        diagnostics=(
+            FakeLibraryDiagnostic(
+                path="broken-board",
+                code="invalid_transaction",
+                message=f"recovery failed while moving {tmp_path / 'private-rollback'}",
+            ),
+        ),
+    )
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(base, "GET", "/api/library")
+
+    assert status == 200
+    assert payload["diagnostics"] == [
+        {
+            "path": "broken-board",
+            "code": "invalid_transaction",
+            "message": "broken-board: repository package is invalid",
+        }
+    ]
+    assert str(tmp_path) not in json.dumps(payload)
+
+
 def test_post_library_open_is_a_tracked_board_job(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
