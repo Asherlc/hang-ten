@@ -134,11 +134,7 @@ final class AppStore: ObservableObject {
     }
 
     var shouldShowConnectAppleHealth: Bool {
-        guard healthAuthorizationState != .unavailable,
-              healthAuthorizationState != .denied else { return false }
-        return healthAuthorizationState == .notDetermined ||
-            !hasRequestedHealthAuthorization ||
-            (workoutHistory.source == .healthKit && workoutHistory.entries.isEmpty)
+        healthAuthorizationState == .notDetermined
     }
 
     var plans: [TrainingPlan] {
@@ -369,7 +365,16 @@ final class AppStore: ObservableObject {
 
     func refreshHealthAuthorization() {
         healthAuthorizationState = healthKitService.authorizationState
+        reconcileAuthorizedHealthKitStateIfNeeded()
         refreshWorkoutHistory()
+    }
+
+    private func reconcileAuthorizedHealthKitStateIfNeeded() {
+        guard healthAuthorizationState == .authorized,
+              !hasRequestedHealthAuthorization else { return }
+        hasRequestedHealthAuthorization = true
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        workoutHistoryService.enableHealthKitSync()
     }
 
     func refreshWorkoutHistory() {

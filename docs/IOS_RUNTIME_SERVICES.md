@@ -196,16 +196,18 @@ and reading. Authorization is requested only by the visible Connect Apple
 Health action. Progress appearance and scene-activation refreshes may update
 the sharing status without presenting an authorization sheet or prompting;
 they query HealthKit history only after the persisted request flag is enabled.
+When `refreshHealthAuthorization` observes `.authorized` while that flag is
+missing, it persists the flag and enables HealthKit sync without prompting,
+then refreshes/imports history.
 
-`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Until
-the user taps Connect Apple Health and that flag is persisted, initialization,
-Progress appearance, scene activation, and completion logging use only the
-local `UserDefaults` history fallback. No HealthKit workout-history query,
-workout save, or migration occurs on that path. The app may still read the
-HealthKit sharing status for the authorization pill. Connect enables HealthKit
-sync as it persists the flag, before requesting authorization. Once the flag is
-true, refresh and completion reconciliation may query HealthKit, upload pending
-records, and migrate matching history.
+`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Sync
+remains gated until either the user taps Connect Apple Health or
+`refreshHealthAuthorization` observes current `.authorized` and reconciles the
+missing flag without prompting. Until then, initialization, Progress
+appearance, scene activation, and completion logging use only the local
+`UserDefaults` history fallback; a `.notDetermined` status does not change that
+behavior. Once the flag is true, refresh and completion reconciliation may query
+HealthKit, import history, and upload pending records.
 
 Required configuration:
 
@@ -260,23 +262,22 @@ card. Its current status copy is:
 | unavailable | `Unavailable` | `Apple Health is not available on this device.` | none |
 | not determined | `Not connected` | `Connect once to save completed routines as functional strength workouts.` | `Connect Apple Health` |
 | denied | `Access denied` | `Workout access is off. You can enable it for Hang Ten in Settings.` | `Open app settings` |
-| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Connect Apple Health` when `hasRequestedHealthAuthorization == false` or a successful refresh yields an empty `.healthKit` snapshot; `Open app settings` for `.localFallback`; none when accepted HealthKit history is visible |
+| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Open app settings` for `.localFallback`; none when accepted HealthKit history is visible |
 
 The authorization state reflects the workout sharing/write state exposed by
 HealthKit; `Connected` does not prove that workout reads are visible, and
 HealthKit does not expose a separate readable-history authorization state. The
-Progress action combines this state with the persisted
-`hasRequestedHealthAuthorization` flag and the history source. Before the
-request flag is true it offers Connect Apple Health. After a request, local
-fallback maps to Open app settings, a successful empty `.healthKit` snapshot
-keeps Connect Apple Health available as a conservative recovery action, and
-visible accepted HealthKit history has no action. Denied and unavailable
-behavior remains as shown in the table.
+Progress action is driven by the current HealthAuthorizationState. Before
+authorization is determined it offers Connect Apple Health. Once HealthKit
+reports authorized access, it never offers Connect Apple Health, including for
+an empty .healthKit snapshot or when the persisted history-sync request flag
+is false. Local fallback may offer Open app settings, while denied and
+unavailable behavior remains as shown in the table.
 
 The `.unavailable` history source does not create an action by itself. In
 `RootView.healthAction`, any Connect or Settings action shown alongside that
-source comes from the current authorization state or persisted request state;
-an unavailable history source alone has no action.
+source comes from the current authorization state plus the local fallback
+history; an unavailable history source alone has no action.
 
 The history source copy is:
 
