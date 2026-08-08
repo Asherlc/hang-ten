@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import signal
 import sys
 from pathlib import Path
 
@@ -109,6 +110,40 @@ def test_browser_failure_prints_url_and_keeps_serving(monkeypatch, tmp_path, cap
     assert result == 0
     assert server.served and server.closed
     assert "http://127.0.0.1:4317/" in capsys.readouterr().out
+
+
+def test_run_absorbs_a_late_duplicate_interrupt(monkeypatch, tmp_path):
+    class InterruptingServer(FakeServer):
+        def serve_forever(self) -> None:
+            self.served = True
+            signal.raise_signal(signal.SIGINT)
+
+        def server_close(self) -> None:
+            self.closed = True
+            signal.raise_signal(signal.SIGINT)
+
+    server = InterruptingServer(("127.0.0.1", 4317))
+
+    def server_factory(_arguments, *, editor_root):
+        assert editor_root == tmp_path
+        return server, None
+
+    monkeypatch.setattr(workbench_binary, "_resource_root", lambda: tmp_path)
+    previous_handler = signal.signal(signal.SIGINT, signal.default_int_handler)
+    try:
+        try:
+            result = workbench_binary._run(
+                ["--no-open"],
+                server_factory=server_factory,
+                browser_open=lambda _url: True,
+            )
+        except KeyboardInterrupt:
+            pytest.fail("late duplicate interrupt escaped the entrypoint boundary")
+    finally:
+        signal.signal(signal.SIGINT, previous_handler)
+
+    assert result == 0
+    assert server.served and server.closed
 
 
 @pytest.mark.parametrize("contents", [None, "short", "A" * 40])

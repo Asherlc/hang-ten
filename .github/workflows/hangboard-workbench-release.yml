@@ -78,6 +78,7 @@ jobs:
           executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
           smoke_log="$RUNNER_TEMP/hangboard-workbench-smoke.log"
           workbench_pid=""
+          workbench_child_pid=""
           cleanup() {
             status=$?
             trap - EXIT
@@ -86,6 +87,9 @@ jobs:
                 kill -INT "$workbench_pid" || true
               fi
               wait "$workbench_pid" || true
+            fi
+            if [[ -n "$workbench_child_pid" ]] && kill -0 "$workbench_child_pid" 2>/dev/null; then
+              kill -INT "$workbench_child_pid" || true
             fi
             if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
               cat "$smoke_log" >&2
@@ -116,6 +120,34 @@ jobs:
           curl --fail --silent --show-error http://127.0.0.1:41739/ >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:41739/api/library \
             | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+
+          workbench_child_pid="$(pgrep -P "$workbench_pid" || true)"
+          if [[ -z "$workbench_child_pid" || "$workbench_child_pid" == *$'\n'* ]]; then
+            echo "Expected exactly one frozen workbench child process." >&2
+            exit 1
+          fi
+          kill -INT "$workbench_pid"
+          if wait "$workbench_pid"; then
+            shutdown_status=0
+          else
+            shutdown_status=$?
+          fi
+          if [[ "$shutdown_status" -ne 0 ]]; then
+            echo "Workbench exited with status $shutdown_status after SIGINT." >&2
+            cat "$smoke_log" >&2
+            exit 1
+          fi
+          if kill -0 "$workbench_child_pid" 2>/dev/null; then
+            echo "Workbench child remained after clean shutdown." >&2
+            exit 1
+          fi
+          if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
+            echo "Workbench smoke log contains a shutdown or startup error." >&2
+            cat "$smoke_log" >&2
+            exit 1
+          fi
+          workbench_pid=""
+          workbench_child_pid=""
 
       - name: Archive verified executable
         run: |

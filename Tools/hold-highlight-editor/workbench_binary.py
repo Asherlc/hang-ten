@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import signal
 import sys
 import webbrowser
 from argparse import ArgumentParser
@@ -59,8 +60,19 @@ def _run(
     server, _catalog = server_factory(forwarded, editor_root=root)
     host, port = server.server_address[:2]
     url = f"http://{host}:{port}/"
-    print(f"Hangboard Workbench: {url}", flush=True)
+    shutdown_requested = False
+
+    def interrupt_once(_signum, _frame) -> None:
+        nonlocal shutdown_requested
+        if shutdown_requested:
+            return
+        shutdown_requested = True
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        raise KeyboardInterrupt
+
+    previous_interrupt_handler = signal.signal(signal.SIGINT, interrupt_once)
     try:
+        print(f"Hangboard Workbench: {url}", flush=True)
         if not no_open:
             try:
                 browser_open(url)
@@ -71,6 +83,8 @@ def _run(
         pass
     finally:
         server.server_close()
+        if not shutdown_requested:
+            signal.signal(signal.SIGINT, previous_interrupt_handler)
     return 0
 
 
