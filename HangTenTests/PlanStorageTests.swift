@@ -2,6 +2,96 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testGripTypeDecodesLegacyHoldCombinedValuesAsOpenHand() throws {
+        for legacyValue in ["sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket"] {
+            let decoded = try JSONDecoder().decode(
+                GripType.self,
+                from: Data("\"\(legacyValue)\"".utf8)
+            )
+            let reencoded = try JSONEncoder().encode(decoded)
+            let reencodedRawValue = try JSONDecoder().decode(String.self, from: reencoded)
+
+            XCTAssertEqual(decoded, .openHand, "Expected \(legacyValue) to migrate to open-hand posture.")
+            XCTAssertEqual(reencodedRawValue, "openHand")
+        }
+    }
+
+    func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
+        XCTAssertNil(FingerConfiguration(engagedFingers: []))
+
+        let emptyPayload = Data(#"{ "engagedFingers": [] }"#.utf8)
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: emptyPayload))
+    }
+
+    func testFingerConfigurationRejectsDuplicateEngagedFingersInDecodedPayload() throws {
+        let duplicatePayload = Data(#"{ "engagedFingers": ["index", "index"] }"#.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: duplicatePayload)) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected duplicate fingers to produce a data-corrupted decoding error, got: \(error)")
+            }
+
+            XCTAssertEqual(context.codingPath.last?.stringValue, "engagedFingers")
+            XCTAssertEqual(context.debugDescription, "Finger configuration cannot include duplicate fingers.")
+        }
+    }
+
+    func testFingerCueCapacityAccessibilityLabelUsesSingularForOneFinger() {
+        XCTAssertEqual(FingerCue.capacity(1).accessibilityLabel, "Up to 1 finger")
+        XCTAssertEqual(FingerCue.capacity(2).accessibilityLabel, "Up to 2 fingers")
+    }
+
+    func testFingerConfigurationRoundTripsExactFingerSetsInSlotOrder() throws {
+        let configurations = [
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.pinky])),
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
+        ]
+
+        let data = try JSONEncoder().encode(configurations)
+        let decoded = try JSONDecoder().decode([FingerConfiguration].self, from: data)
+
+        XCTAssertEqual(decoded, configurations)
+        XCTAssertEqual(decoded[0].count, 1)
+        XCTAssertEqual(decoded[0].orderedFingers, [.pinky])
+        XCTAssertEqual(decoded[1].count, 2)
+        XCTAssertEqual(decoded[1].orderedFingers, [.index, .ring])
+        XCTAssertEqual(
+            try JSONSerialization.jsonObject(with: data) as? [[String: [String]]],
+            [
+                ["engagedFingers": ["pinky"]],
+                ["engagedFingers": ["index", "ring"]]
+            ]
+        )
+    }
+
+    func testWorkoutStepDefinitionRoundTripsFingerConfigurationWithCurrentPostureVocabulary() throws {
+        let data = Data(
+            #"""
+            {
+              "id": "exact-fingers",
+              "title": "Exact fingers",
+              "instruction": "Use index and ring.",
+              "accessory": "Test fixture",
+              "duration": 10,
+              "phase": "hang",
+              "targets": [],
+              "gripType": "halfCrimp",
+              "fingerConfiguration": { "engagedFingers": ["index", "ring"] }
+            }
+            """#.utf8
+        )
+
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: data)
+        let encoded = try JSONEncoder().encode(decoded)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let fingerConfiguration = try XCTUnwrap(object["fingerConfiguration"] as? [String: [String]])
+
+        XCTAssertEqual(decoded.gripType, .halfCrimp)
+        XCTAssertEqual(decoded.fingerConfiguration?.orderedFingers, [.index, .ring])
+        XCTAssertEqual(object["gripType"] as? String, "halfCrimp")
+        XCTAssertEqual(fingerConfiguration["engagedFingers"], ["index", "ring"])
+    }
+
     func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
@@ -54,19 +144,24 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(definition: makeLibrary(steps: steps))
         let resolvedSteps = try XCTUnwrap(store.plan(id: "test.plan")).steps
 
+        XCTAssertEqual(resolvedSteps.map(\.id), [
+            "fixed.segment-1", "fixed.segment-2", "stopwatch", "undefined"
+        ])
+        XCTAssertEqual(resolvedSteps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
             resolvedSteps[0].segments,
-            [
-                WorkoutSegment(kind: .work, target: .feature(.mediumEdge), timing: .fixed, duration: 20),
-                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 40)
-            ]
+            [WorkoutSegment(kind: .work, target: .feature(.mediumEdge), timing: .fixed, duration: 20)]
         )
         XCTAssertEqual(
             resolvedSteps[1].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.roundSloper), timing: .stopwatch, duration: nil)]
+            [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 40)]
         )
         XCTAssertEqual(
             resolvedSteps[2].segments,
+            [WorkoutSegment(kind: .work, target: .feature(.roundSloper), timing: .stopwatch, duration: nil)]
+        )
+        XCTAssertEqual(
+            resolvedSteps[3].segments,
             [WorkoutSegment(kind: .work, target: .feature(.jug), timing: .undefined, duration: nil)]
         )
     }
@@ -92,7 +187,7 @@ final class PlanStorageTests: XCTestCase {
                   "title": "Segment step",
                   "instruction": "Use both holds.",
                   "accessory": "10s",
-                  "duration": 10,
+                  "duration": 20,
                   "phase": "hang",
                   "targets": [{ "feature": "mediumEdge" }, { "kind": "jug" }],
                   "segments": [
@@ -105,7 +200,8 @@ final class PlanStorageTests: XCTestCase {
                     {
                       "kind": "work",
                       "target": { "feature": "mediumEdge" },
-                      "timing": "undefined"
+                      "timing": "fixed",
+                      "duration": 10
                     }
                   ]
                 }]
@@ -131,7 +227,10 @@ final class PlanStorageTests: XCTestCase {
         )
 
         let store = try PlanLibraryStore(data: data)
-        let resolvedSegments = try XCTUnwrap(store.plan(id: "segment.plan")).steps[0].segments
+        let resolvedSteps = try XCTUnwrap(store.plan(id: "segment.plan")).steps
+        let resolvedSegments = resolvedSteps.flatMap(\.segments)
+        XCTAssertEqual(resolvedSteps.map(\.id), ["segment.step.segment-1", "segment.step.segment-2"])
+        XCTAssertEqual(resolvedSteps.map(\.number), [1, 2])
         let encoded = try store.encodedData()
         let encodedObject = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
         let encodedBlocks = try XCTUnwrap(encodedObject["blocks"] as? [[String: Any]])
@@ -229,19 +328,22 @@ final class PlanStorageTests: XCTestCase {
         let steps = try XCTUnwrap(store.plan(id: "legacy.plan")).steps
 
         XCTAssertEqual(store.definition.schemaVersion, PlanDefinitionSchema.currentVersion)
+        XCTAssertEqual(steps.map(\.id), ["rest", "timed.segment-1", "timed.segment-2", "untimed"])
+        XCTAssertEqual(steps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
             steps[0].segments,
             [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 30)]
         )
         XCTAssertEqual(
             steps[1].segments,
-            [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10),
-                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 20)
-            ]
+            [WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)]
         )
         XCTAssertEqual(
             steps[2].segments,
+            [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 20)]
+        )
+        XCTAssertEqual(
+            steps[3].segments,
             [WorkoutSegment(kind: .work, target: .kind(.jug), timing: .undefined, duration: nil)]
         )
     }
@@ -352,6 +454,26 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testActiveDurationMustBeFiniteAndGreaterThanZero() {
+        for invalidDuration in [0.0, -1.0, .infinity] {
+            let step = WorkoutStepDefinition(
+                id: "active",
+                title: "Active",
+                instruction: "Hang.",
+                accessory: "Test fixture",
+                duration: 30,
+                phase: .hang,
+                targets: [.kind(.edge)],
+                activeDuration: invalidDuration
+            )
+
+            XCTAssertTrue(makeLibrary(steps: [step]).validationIssues(availableBoards: BoardCatalog.all).contains {
+                $0.path == "blocks[0].steps[0].activeDuration" &&
+                    $0.message == "Active duration must be finite and greater than zero."
+            })
+        }
+    }
+
     func testSegmentDurationCannotExceedEnclosingStep() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
@@ -362,6 +484,175 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertTrue(validationIssues(for: segment, stepDuration: 30).contains {
             $0.path == "blocks[0].steps[0].segments[0].duration"
+        })
+    }
+
+    func testCompoundSegmentsMustSumToTheEnclosingStepDuration() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].duration" &&
+                $0.message == "Compound segment durations must equal the total step duration."
+        })
+    }
+
+    func testCompoundSegmentDurationMustBeGreaterThanZero() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].duration" &&
+                $0.message == "Segment duration must be finite and greater than zero."
+        })
+    }
+
+    func testCompoundEnclosingDurationMustBeGreaterThanZero() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 0,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].duration" &&
+                $0.message == "Duration must be finite and greater than zero."
+        })
+    }
+
+    func testPlanValidationDetectsGeneratedSegmentIDCollisionWithFlatStep() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "foo",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 10)
+                    ]
+                ),
+                makeStep(
+                    id: "foo.segment-1",
+                    duration: 10,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+            $0.message == "Expanded step ID \"foo.segment-1\" is repeated in the plan."
+        })
+    }
+
+    func testCompoundSegmentWithNonFixedTimingReportsTheTimingPath() {
+        let issues = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "compound",
+                    duration: 30,
+                    targets: [.kind(.edge)],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
+                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                    ]
+                )
+            ]
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].segments[0].timing" &&
+                $0.message == "Compound segments must use fixed timing."
+        })
+    }
+
+    func testPlanDuplicateValidationUsesActiveDurationGeneratedSegmentIDs() {
+        let timed = WorkoutStepDefinition(
+            id: "timed",
+            title: "Timed",
+            instruction: "Hang.",
+            accessory: "Test fixture",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 10
+        )
+        let flat = makeStep(
+            id: "timed.segment-2",
+            duration: 30,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [timed, flat]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+                $0.message == "Expanded step ID \"timed.segment-2\" is repeated in the plan."
+        })
+    }
+
+    func testPlanDuplicateValidationKeepsActiveDurationCollisionDiagnosticAtPlanBlockPath() {
+        let timed = WorkoutStepDefinition(
+            id: "active-collision",
+            title: "Timed",
+            instruction: "Hang.",
+            accessory: "Test fixture",
+            duration: 30,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 10
+        )
+        let flat = makeStep(
+            id: "active-collision.segment-1",
+            duration: 30,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [timed, flat]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0]" &&
+                $0.message == "Expanded step ID \"active-collision.segment-1\" is repeated in the plan."
         })
     }
 
@@ -524,6 +815,32 @@ final class PlanStorageTests: XCTestCase {
             recovery.segments,
             [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 480)]
         )
+    }
+
+    func testPlanCatalogMatchesLiteralizedLegacyPlanSeeds() throws {
+        let expectedPlans = try LegacyPlanSeedCatalog.all.map { seedPlan in
+            let literalSteps = try seedPlan.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .enumerated()
+                .map { index, step in
+                    step.withNumber(index + 1)
+                }
+
+            return TrainingPlan(
+                id: seedPlan.id,
+                title: seedPlan.title,
+                subtitle: seedPlan.subtitle,
+                level: seedPlan.level,
+                sourceLabel: seedPlan.sourceLabel,
+                sourceURL: seedPlan.sourceURL,
+                provenance: seedPlan.provenance,
+                boardID: seedPlan.boardID,
+                steps: literalSteps
+            )
+        }
+
+        XCTAssertEqual(PlanLibraryStore.builtIn.plans, expectedPlans)
+        XCTAssertEqual(PlanCatalog.all, expectedPlans)
     }
 
     private func validationIssues(

@@ -1,9 +1,193 @@
+import AVFoundation
 import XCTest
 import SwiftUI
 import UIKit
 @testable import HangTen
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testHoldCuePrefersSingleTargetStepGripOverride() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            gripType: .openHand
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            gripType: .halfCrimp,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.hold, hold)
+        XCTAssertEqual(cue?.gripType, .halfCrimp)
+        XCTAssertEqual(cue?.fingerConfiguration?.orderedFingers, [.index, .ring])
+    }
+
+    func testHoldCueFallsBackToBoardHoldGrip() {
+        let hold = BoardHold(
+            id: "cue-pocket",
+            name: "Cue pocket",
+            shortLabel: "P",
+            detail: "Pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            gripType: .openHand,
+            fingerCapacity: 3
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.pocket)]
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.gripType, .openHand)
+        XCTAssertEqual(cue?.hold.fingerCapacity, 3)
+    }
+
+    func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
+        let hold = BoardHold(
+            id: "fallback-edge",
+            name: "Fallback edge",
+            shortLabel: "F",
+            detail: "Fallback edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            features: [.largeEdge]
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.feature(.smallEdge, fallbacks: [.largeEdge])]
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+
+        XCTAssertEqual(cue?.hold, hold)
+    }
+
+    func testHoldCueIsUnavailableForMultiTargetSteps() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge), .kind(.jug)]
+        )
+
+        XCTAssertNil(WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold])))
+    }
+
+    func testHoldCueResolvesWhenHighlightedHoldMatchesSingleTarget() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.ids(hold.id)]
+        )
+
+        XCTAssertNotNil(
+            WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
+        )
+    }
+
+    func testHoldCueIsUnavailableWhenHighlightedHoldDoesNotMatchSingleTarget() {
+        let targetHold = BoardHold(
+            id: "target-edge",
+            name: "Target edge",
+            shortLabel: "T",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let highlightedHold = BoardHold(
+            id: "highlighted-jug",
+            name: "Highlighted jug",
+            shortLabel: "J",
+            detail: "Jug",
+            kind: .jug,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.ids(targetHold.id)]
+        )
+
+        XCTAssertNil(
+            WorkoutHoldCuePolicy.resolve(
+                step: step,
+                hold: highlightedHold,
+                on: board(containing: [targetHold, highlightedHold])
+            )
+        )
+    }
+
+    private func board(containing holds: [BoardHold]) -> TrainingBoard {
+        TrainingBoard(
+            id: "cue-board",
+            manufacturer: "Test",
+            name: "Cue board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            holds: holds,
+            productURL: URL(string: "https://example.com/cue-board")!,
+            photoAssetName: nil
+        )
+    }
+
     private let steps: [WorkoutStep] = [
         WorkoutStep(
             id: "first",
@@ -384,6 +568,146 @@ final class WorkoutClockTests: XCTestCase {
 
         XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
     }
+}
+
+@MainActor
+final class WorkoutAudioCoachTests: XCTestCase {
+    func testStopWaitsForSpeechCancellationBeforeDeactivatingAudioSession() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        coach.stop()
+
+        XCTAssertEqual(audioSession.activationCount, 1)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendCancellation()
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
+    func testReplacementCueKeepsAudioSessionActiveUntilReplacementFinishes() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        coach.speak("2")
+
+        synthesizer.sendCancellation(of: synthesizer.utterances[0])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.activationCount, 1)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[1])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
+    func testDeactivationRetriesAfterTransientFailureOnceSpeechHasFinished() async {
+        let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 1)
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+        let deactivation = expectation(description: "retries deactivation after a transient failure")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivation.fulfill()
+        }
+
+        coach.speak("3")
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[0])
+        await fulfillment(of: [deactivation], timeout: 1)
+
+        XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+}
+
+@MainActor
+private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing {
+    var delegate: AVSpeechSynthesizerDelegate?
+    var isSpeaking = false
+    private(set) var utterances: [AVSpeechUtterance] = []
+
+    func stopSpeaking(at boundary: AVSpeechBoundary) -> Bool {
+        // Cancellation remains in progress until a test delivers its delegate callback.
+        return true
+    }
+
+    func speak(_ utterance: AVSpeechUtterance) {
+        utterances.append(utterance)
+        isSpeaking = true
+    }
+
+    func sendCancellation(of utterance: AVSpeechUtterance? = nil) {
+        delegate?.speechSynthesizer?(
+            AVSpeechSynthesizer(),
+            didCancel: utterance ?? utterances[0]
+        )
+    }
+
+    func sendFinish(of utterance: AVSpeechUtterance) {
+        delegate?.speechSynthesizer?(AVSpeechSynthesizer(), didFinish: utterance)
+    }
+}
+
+@MainActor
+private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
+    private(set) var configurationCount = 0
+    private(set) var activationCount = 0
+    private(set) var deactivationAttemptCount = 0
+    private(set) var deactivationCount = 0
+    private(set) var didDeactivateWithNotification = false
+    var onSuccessfulNotificationAwareDeactivation: (() -> Void)?
+    private var failedDeactivationAttempts: Int
+
+    init(failedDeactivationAttempts: Int = 0) {
+        self.failedDeactivationAttempts = failedDeactivationAttempts
+    }
+
+    func configureForSpokenCues() throws {
+        configurationCount += 1
+    }
+
+    func activate() throws {
+        activationCount += 1
+    }
+
+    func deactivateAndNotifyOthers() throws {
+        deactivationAttemptCount += 1
+        guard failedDeactivationAttempts == 0 else {
+            failedDeactivationAttempts -= 1
+            throw RecordingWorkoutAudioSessionError.deactivationFailed
+        }
+
+        deactivationCount += 1
+        didDeactivateWithNotification = true
+        onSuccessfulNotificationAwareDeactivation?()
+    }
+}
+
+private enum RecordingWorkoutAudioSessionError: Error {
+    case deactivationFailed
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
@@ -993,7 +1317,25 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertEqual(state.currentElapsed(planDuration: 90, at: uptime + 4.25), 1.25, accuracy: 0.000_1)
     }
 
-    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
+    func testRunningSkipIntoRestTransitionsImmediatelyAndKeepsRunning() {
+        let now: TimeInterval = 100
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            activeStartUptime: now - 10,
+            pausedElapsed: 10,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+        )
+
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.activeStartUptime, now)
+        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now), 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 1), 61)
+    }
+
+    func testPausedSkipIntoRestTransitionsImmediatelyAndKeepsPaused() {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
@@ -1003,7 +1345,24 @@ final class WorkoutSessionStateTests: XCTestCase {
         )
 
         XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+
+        XCTAssertNil(state.countdownKind)
+        XCTAssertNil(state.activeStartUptime)
         XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 10), 60)
+    }
+
+    func testPausedSessionSkipCountsDownThenExplicitExpiryStartsRunningDestination() {
+        let now: TimeInterval = 100
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(
+            activeStartUptime: nil,
+            pausedElapsed: 65,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
+        )
+
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: now))
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.countdownKind, .skip)
         XCTAssertEqual(state.countdownRemaining(at: now), 3)
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
@@ -1014,7 +1373,7 @@ final class WorkoutSessionStateTests: XCTestCase {
         state.transitionExpiredCountdown(at: countdownStart)
         XCTAssertNil(state.countdownKind)
         XCTAssertEqual(state.activeStartUptime, countdownStart)
-        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 60)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: countdownStart), 80)
         XCTAssertTrue(state.canNavigate(planDuration: timeline.duration, at: countdownStart))
     }
 
@@ -1099,8 +1458,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
@@ -1109,7 +1468,7 @@ final class WorkoutSessionStateTests: XCTestCase {
 
         XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
@@ -1117,8 +1476,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 
@@ -1127,7 +1486,7 @@ final class WorkoutSessionStateTests: XCTestCase {
 
         XCTAssertNil(state.activeStartUptime)
         XCTAssertNil(state.countdownKind)
-        XCTAssertEqual(state.pausedElapsed, 60)
+        XCTAssertEqual(state.pausedElapsed, 80)
         XCTAssertEqual(state.routineStartedAt, Date(timeIntervalSinceReferenceDate: 2_980))
     }
 
@@ -1135,8 +1494,8 @@ final class WorkoutSessionStateTests: XCTestCase {
         let now: TimeInterval = 100
         let timeline = WorkoutTimeline(steps: steps)
         var state = WorkoutSessionState(
-            activeStartUptime: now - 10,
-            pausedElapsed: 10,
+            activeStartUptime: now - 65,
+            pausedElapsed: 0,
             routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_980)
         )
 

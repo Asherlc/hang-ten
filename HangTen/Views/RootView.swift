@@ -333,12 +333,13 @@ private struct StatCard: View {
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
     @State private var filters = PlanFilters()
+    @State private var isCreatingRoutine = false
 
     var body: some View {
         let compatiblePlans = store.plans
         let metadataByPlanID = Dictionary(
-            compatiblePlans.compactMap { plan in
-                PlanCatalog.metadata(for: plan.id).map { (plan.id, $0) }
+            compatiblePlans.map { plan in
+                (plan.id, store.metadata(for: plan))
             },
             uniquingKeysWith: { first, _ in first }
         )
@@ -349,6 +350,9 @@ struct PlansView: View {
                 guard let metadata = metadataByPlanID[plan.id] else { return false }
                 return filters.matches(metadata)
             }
+        let customPlanIDs = Set(store.customPlans.map(\.id))
+        let myRoutines = filteredPlans.filter { customPlanIDs.contains($0.id) }
+        let libraryPlans = filteredPlans.filter { !customPlanIDs.contains($0.id) }
 
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -363,7 +367,59 @@ struct PlansView: View {
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
 
+                        Button {
+                            isCreatingRoutine = true
+                        } label: {
+                            Label("Create routine", systemImage: "plus")
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.hangInk)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .background(
+                                    Color.hangGreen,
+                                    in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("customRoutine.create")
+
+                        if let persistenceError = store.customRoutinePersistenceError {
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.orange)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Some custom routines are unavailable")
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.hangInk)
+                                    Text(persistenceError)
+                                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                                        .foregroundStyle(Color.hangMuted)
+                                }
+                            }
+                            .padding(12)
+                            .background(
+                                Color.orange.opacity(0.12),
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
+                            .accessibilityIdentifier("customRoutine.persistenceError")
+                        }
+
                         filterBar(options: filterOptions)
+                    }
+
+                    if !myRoutines.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "My routines")
+                            ForEach(myRoutines) { plan in
+                                FavoritePlanCard(
+                                    plan: plan,
+                                    board: store.board(for: plan),
+                                    isFavorite: store.isFavorite(plan)
+                                ) {
+                                    store.toggleFavorite(plan)
+                                }
+                            }
+                        }
                     }
 
                     if compatiblePlans.isEmpty {
@@ -378,8 +434,10 @@ struct PlansView: View {
                         NoMatchingPlansCard {
                             filters.clear()
                         }
-                    } else {
-                        ForEach(filteredPlans) { plan in
+                    } else if !libraryPlans.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            SectionLabel(title: "Training library")
+                            ForEach(libraryPlans) { plan in
                             FavoritePlanCard(
                                 plan: plan,
                                 board: store.board(for: plan),
@@ -387,6 +445,7 @@ struct PlansView: View {
                             ) {
                                 store.toggleFavorite(plan)
                             }
+                        }
                         }
                     }
 
@@ -398,6 +457,14 @@ struct PlansView: View {
             }
             .background(Color.hangBackground)
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $isCreatingRoutine) {
+                CustomRoutineEditorView(
+                    draft: CustomRoutineDraft(
+                        createWith: .boardSpecific(boardID: store.selectedBoard.id)
+                    ),
+                    onSave: store.saveCustomRoutine
+                )
+            }
         }
     }
 
@@ -720,14 +787,32 @@ private struct FavoritePlanCard: View {
 
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dismiss) private var dismiss
     let plan: TrainingPlan
+    @State private var editorDraft: CustomRoutineDraft?
+    @State private var isShowingEditor = false
+    @State private var isShowingDeleteConfirmation = false
+    @State private var lifecycleError: String?
+
+    private var currentPlan: TrainingPlan {
+        store.plans.first(where: { $0.id == plan.id }) ?? plan
+    }
+
+    @MainActor
+    static func duplicateDefinition(
+        for plan: TrainingPlan,
+        in store: AppStore
+    ) throws -> CustomRoutineDefinition {
+        let currentPlan = store.plans.first(where: { $0.id == plan.id }) ?? plan
+        return try store.duplicateRoutine(currentPlan)
+    }
 
     private var board: TrainingBoard {
-        store.board(for: plan)
+        store.board(for: currentPlan)
     }
 
     private var firstStepHoldIDs: Set<String> {
-        guard let firstStep = plan.steps.first else { return [] }
+        guard let firstStep = currentPlan.steps.first else { return [] }
         return store.holdIDs(for: firstStep, on: board)
     }
 
@@ -742,8 +827,32 @@ struct PlanDetailView: View {
             return reviewGrip
         }
         #endif
-        return plan.steps.first?.gripType
+        return currentPlan.steps.first?.gripType
     }
+
+    private var firstStepFingerConfiguration: FingerConfiguration? {
+        #if DEBUG
+        if let reviewConfiguration = reviewFingerConfiguration {
+            return reviewConfiguration
+        }
+        #endif
+        return currentPlan.steps.first?.fingerConfiguration
+    }
+
+    #if DEBUG
+    private var reviewFingerConfiguration: FingerConfiguration? {
+        guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
+            return nil
+        }
+
+        let rawSlots = rawValue
+            .split(separator: ",", omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
+        guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
+        return FingerConfiguration(engagedFingers: Set(slots))
+    }
+    #endif
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -761,36 +870,75 @@ struct PlanDetailView: View {
         .background(Color.hangBackground)
         .navigationTitle("Plan")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button("Duplicate", action: duplicateRoutine)
+                    if store.isCustom(plan) {
+                        Button("Edit", action: editRoutine)
+                        Button("Delete", role: .destructive) {
+                            isShowingDeleteConfirmation = true
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+                .accessibilityIdentifier("customRoutine.actions")
+            }
+        }
+        .sheet(isPresented: $isShowingEditor) {
+            if let editorDraft {
+                CustomRoutineEditorView(draft: editorDraft, onSave: store.saveCustomRoutine)
+            }
+        }
+        .confirmationDialog(
+            "Delete \(currentPlan.title)?",
+            isPresented: $isShowingDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive, action: deleteRoutine)
+                .accessibilityIdentifier("customRoutine.deleteConfirm")
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This custom routine will be removed from your library.")
+        }
+        .alert("Routine action failed", isPresented: lifecycleErrorAlertBinding) {
+            Button("OK", role: .cancel) {
+                lifecycleError = nil
+            }
+        } message: {
+            Text(lifecycleError ?? "An unknown error occurred.")
+        }
     }
 
     private var titleBlock: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
+                Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
                 Pill(
-                    title: plan.provenance.label,
+                    title: currentPlan.provenance.label,
                     tint: Color.hangGreenDark,
                     fill: Color.hangGreen.opacity(0.16)
                 )
                 Spacer()
-                Label(plan.durationLabel, systemImage: "timer")
+                Label(currentPlan.durationLabel, systemImage: "timer")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
-            Text(plan.title)
+            Text(currentPlan.title)
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-            Text(plan.subtitle)
+            Text(currentPlan.subtitle)
                 .font(.system(size: 15, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(destination: WorkoutView(plan: plan, startsImmediately: true)) {
+            NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
                 HStack {
                     Image(systemName: "play.fill")
                     Text("Start routine")
                     Spacer()
-                    Text(plan.durationLabel)
+                    Text(currentPlan.durationLabel)
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                 }
                 .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -814,9 +962,13 @@ struct PlanDetailView: View {
             BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
                 .padding(.horizontal, 12)
             if let firstStepHold {
-                GripDiagramView(hold: firstStepHold, gripType: firstStepGripType)
+                GripDiagramView(
+                    hold: firstStepHold,
+                    gripType: firstStepGripType,
+                    fingerConfiguration: firstStepFingerConfiguration
+                )
             }
-			if store.usesFallbackMapping(plan, on: board) {
+			if store.usesFallbackMapping(currentPlan, on: board) {
 				Text("Board mapping note: a source-specific hold variant uses the closest manufacturer-documented feature available on this board. The prescribed task text remains unchanged.")
 					.font(.system(size: 12, weight: .medium, design: .rounded))
 					.foregroundStyle(Color.hangMuted)
@@ -831,14 +983,14 @@ struct PlanDetailView: View {
             HStack {
                 SectionLabel(title: "Session flow")
                 Spacer()
-                Text("\(plan.steps.count) cues")
+                Text("\(currentPlan.steps.count) cues")
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
             }
             .padding(.bottom, 14)
 
-            ForEach(Array(plan.steps.enumerated()), id: \.element.id) { index, step in
-                StepRow(step: step, isLast: index == plan.steps.count - 1)
+            ForEach(Array(currentPlan.steps.enumerated()), id: \.element.id) { index, step in
+                StepRow(step: step, isLast: index == currentPlan.steps.count - 1)
             }
 
         }
@@ -864,29 +1016,99 @@ struct PlanDetailView: View {
         .background(Color.warmUp.opacity(0.13), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
+    @ViewBuilder
     private var sourceCard: some View {
-        Link(destination: plan.sourceURL) {
-            HStack(alignment: .top, spacing: 12) {
+        if let sourceURL = currentPlan.sourceURL {
+            Link(destination: sourceURL) {
+                sourceCardContent(showsExternalLink: true)
+            }
+            .buttonStyle(.plain)
+        } else {
+            customSourceCard
+        }
+    }
+
+    private var customSourceCard: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Created in Hang Ten")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text("This is a custom routine stored on this device.")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .hangCard(padding: 16)
+    }
+
+    private func sourceCardContent(showsExternalLink: Bool) -> some View {
+        HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "book.pages.fill")
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Source: \(plan.sourceLabel)")
+                    Text("Source: \(currentPlan.sourceLabel)")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text(plan.provenance.detail)
+                    Text(currentPlan.provenance.detail)
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "arrow.up.right")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
+                if showsExternalLink {
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                }
             }
             .hangCard(padding: 16)
+    }
+
+    private var lifecycleErrorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { lifecycleError != nil },
+            set: { isPresented in
+                if !isPresented {
+                    lifecycleError = nil
+                }
+            }
+        )
+    }
+
+    private func duplicateRoutine() {
+        do {
+            editorDraft = CustomRoutineDraft(
+                duplicate: try Self.duplicateDefinition(for: plan, in: store)
+            )
+            isShowingEditor = true
+        } catch {
+            lifecycleError = error.localizedDescription
         }
-        .buttonStyle(.plain)
+    }
+
+    private func editRoutine() {
+        guard let definition = store.customDefinition(for: plan.id) else {
+            lifecycleError = "The custom routine could not be found."
+            return
+        }
+        editorDraft = CustomRoutineDraft(editing: definition)
+        isShowingEditor = true
+    }
+
+    private func deleteRoutine() {
+        do {
+            try store.deleteCustomRoutine(id: plan.id)
+            dismiss()
+        } catch {
+            lifecycleError = error.localizedDescription
+        }
     }
 }
 
@@ -1204,6 +1426,8 @@ struct WorkoutSessionState: Equatable {
 
         if target >= planDuration {
             seek(to: target, planDuration: planDuration, at: uptime)
+        } else if timeline.step(at: target)?.phase == .rest {
+            seek(to: target, planDuration: planDuration, at: uptime)
         } else {
             startSkipCountdown(to: target, at: uptime)
         }
@@ -1254,6 +1478,13 @@ enum WorkoutStopwatchLifecycle {
 }
 
 struct WorkoutView: View {
+    private enum LandscapeLayout {
+        static let sideCueSlotWidth: CGFloat = 142
+        static let boardMaxHeight: CGFloat = 132
+        static let normalCueRowHeight: CGFloat = 149
+        static let previewLabelHeight: CGFloat = 13
+    }
+
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
     @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
@@ -1294,7 +1525,31 @@ struct WorkoutView: View {
         store.board(for: plan)
     }
 
-    private let timeline: WorkoutTimeline
+	private let timeline: WorkoutTimeline
+
+	private func resolvedFingerConfiguration(for step: WorkoutStep) -> FingerConfiguration? {
+		#if DEBUG
+		if let reviewConfiguration = reviewFingerConfiguration {
+			return reviewConfiguration
+		}
+		#endif
+		return step.fingerConfiguration
+	}
+
+	#if DEBUG
+	private var reviewFingerConfiguration: FingerConfiguration? {
+		guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
+			return nil
+		}
+
+		let rawSlots = rawValue
+			.split(separator: ",", omittingEmptySubsequences: false)
+			.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+		let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
+		guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
+		return FingerConfiguration(engagedFingers: Set(slots))
+	}
+	#endif
 
     var body: some View {
 		GeometryReader { geometry in
@@ -1320,8 +1575,14 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let showsGenericHoldCue = highlightedStep?.targets.count == 1
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board).map { cue in
+					WorkoutHoldCue(
+						hold: cue.hold,
+						gripType: cue.gripType,
+						fingerConfiguration: highlightedStep.flatMap { resolvedFingerConfiguration(for: $0) }
+					)
+				}
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1345,8 +1606,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					} else {
 						portraitSession(
@@ -1361,8 +1621,7 @@ struct WorkoutView: View {
 							highlightedHoldIDs: highlightedHoldIDs,
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
-							showsGenericHoldCue: showsGenericHoldCue,
-							activeHold: activeHold
+							holdCue: holdCue
 						)
 					}
 				}
@@ -1539,8 +1798,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		ScrollView(showsIndicators: false) {
 			VStack(alignment: .leading, spacing: 19) {
@@ -1563,8 +1821,12 @@ struct WorkoutView: View {
 					highlightMode: highlightMode
 				)
 					.padding(.horizontal, 2)
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					GripDiagramView(hold: activeHold, gripType: step.gripType)
+				if let holdCue, countdown == 0, !isComplete, !isResting {
+					GripDiagramView(
+						hold: holdCue.hold,
+						gripType: holdCue.gripType,
+						fingerConfiguration: holdCue.fingerConfiguration
+					)
 				}
 				cueCard(
 					step: step,
@@ -1596,8 +1858,7 @@ struct WorkoutView: View {
 		highlightedHoldIDs: Set<String>,
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
-		showsGenericHoldCue: Bool,
-		activeHold: BoardHold?
+		holdCue: WorkoutHoldCue?
 	) -> some View {
 		VStack(spacing: 9) {
 			landscapeHeader(
@@ -1613,34 +1874,38 @@ struct WorkoutView: View {
 				.tint(Color.hangGreenDark)
 
 			HStack(spacing: 12) {
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .left)
-						.frame(width: 142)
-				}
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete,
+					side: .left
+				)
 
 				VStack(alignment: .leading, spacing: 4) {
-					if showsHoldPreview {
-						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-							.frame(maxWidth: .infinity, alignment: .center)
-					}
+					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+						.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+						.opacity(showsHoldPreview ? 1 : 0)
+						.accessibilityHidden(!showsHoldPreview)
 					BoardMapView(
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode
 					)
 						.frame(maxWidth: .infinity)
-						.frame(height: isResting ? 60 : nil)
+						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
 				}
 				.frame(maxWidth: .infinity)
 
-				if showsGenericHoldCue, countdown == 0, !isComplete, !isResting, let activeHold {
-					let gripType = step.gripType ?? activeHold.gripType
-					GripHandCueCard(hold: activeHold, gripType: gripType, side: .right)
-						.frame(width: 142)
-				}
+				landscapeHandCueSlot(
+					holdCue: holdCue,
+					countdown: countdown,
+					isResting: isResting,
+					isComplete: isComplete,
+					side: .right
+				)
 			}
-			.frame(maxHeight: 132)
+			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 
 			HStack(alignment: .center, spacing: 12) {
 				landscapeCueCard(
@@ -1659,6 +1924,28 @@ struct WorkoutView: View {
 		}
 		.padding(.horizontal, 16)
 		.padding(.vertical, 10)
+	}
+
+	private func landscapeHandCueSlot(
+		holdCue: WorkoutHoldCue?,
+		countdown: Int,
+		isResting: Bool,
+		isComplete: Bool,
+		side: GripCueSide
+	) -> some View {
+		ZStack {
+			Color.clear
+				.accessibilityHidden(true)
+			if let holdCue, countdown == 0, !isComplete, !isResting {
+				let fingerCue = FingerCue(
+					fingerConfiguration: holdCue.fingerConfiguration,
+					capacity: holdCue.hold.fingerCapacity
+				)
+				GripHandCueCard(posture: holdCue.gripType, fingerCue: fingerCue, side: side)
+			}
+		}
+		.frame(width: LandscapeLayout.sideCueSlotWidth)
+		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 	}
 
 	private func landscapeHeader(

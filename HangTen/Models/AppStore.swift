@@ -11,6 +11,8 @@ final class AppStore: ObservableObject {
     @Published var lastSessionTitle: String?
     @Published private(set) var sessionHistory: [WorkoutSessionRecord]
     @Published private(set) var sessionPersistenceError: String?
+    @Published private(set) var customPlans: [TrainingPlan]
+    @Published private(set) var customRoutinePersistenceError: String?
     @Published private(set) var favoritePlanIDs: Set<String>
     @Published private(set) var healthAuthorizationState: HealthAuthorizationState
     @Published private(set) var healthAuthorizationError: String?
@@ -22,6 +24,8 @@ final class AppStore: ObservableObject {
     private let motherboardBluetoothService: MotherboardBluetoothService
     private let motherboardSettingsStore: MotherboardSettingsStore
     private let workoutSessionStore: WorkoutSessionStoring
+    private let customRoutineStore: CustomRoutineStoring
+    private var customDefinitions: [CustomRoutineDefinition]
     private var preservesCompletionError = false
     private var healthAuthorizationErrorKind: HealthErrorKind?
 
@@ -31,6 +35,7 @@ final class AppStore: ObservableObject {
         motherboardSettingsStore: MotherboardSettingsStore? = nil,
         workoutSessionStore: WorkoutSessionStoring? = nil,
         workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
+        customRoutineStore: CustomRoutineStoring? = nil,
         defaults: UserDefaults = .standard
     ) {
         self.defaults = defaults
@@ -41,6 +46,12 @@ final class AppStore: ObservableObject {
         self.motherboardSettingsStore = motherboardSettingsStore ?? MotherboardSettingsStore(
             defaults: defaults
         )
+
+        let resolvedCustomRoutineStore = customRoutineStore ?? CustomRoutineStore(defaults: defaults)
+        self.customRoutineStore = resolvedCustomRoutineStore
+        customDefinitions = resolvedCustomRoutineStore.routines
+        customPlans = []
+        customRoutinePersistenceError = resolvedCustomRoutineStore.persistenceError
 
         let resolvedSessionStore = workoutSessionStore ?? WorkoutSessionStore(defaults: defaults)
         self.workoutSessionStore = resolvedSessionStore
@@ -72,6 +83,7 @@ final class AppStore: ObservableObject {
                 self.recordSessionPersistence(result)
             }
         }
+        reloadCustomRoutines()
     }
 
     deinit {}
@@ -122,17 +134,72 @@ final class AppStore: ObservableObject {
     }
 
     var shouldShowConnectAppleHealth: Bool {
-        guard healthAuthorizationState != .unavailable,
-              healthAuthorizationState != .denied else { return false }
-        return healthAuthorizationState == .notDetermined ||
-            !hasRequestedHealthAuthorization ||
-            (workoutHistory.source == .healthKit && workoutHistory.entries.isEmpty)
+        healthAuthorizationState == .notDetermined
     }
 
     var plans: [TrainingPlan] {
-        PlanCatalog.all.filter { plan in
+        (PlanCatalog.all + customPlans).filter { plan in
             isCompatible(plan, with: selectedBoard)
         }
+    }
+
+    func metadata(for plan: TrainingPlan) -> PlanMetadata {
+        if let definition = customDefinition(for: plan.id) {
+            return customMetadata(for: definition)
+        }
+        guard let metadata = PlanCatalog.metadata(for: plan.id) else {
+            preconditionFailure("Missing metadata for plan \(plan.id)")
+        }
+        return metadata
+    }
+
+    func isCustom(_ plan: TrainingPlan) -> Bool {
+        customDefinition(for: plan.id) != nil
+    }
+
+    func customDefinition(for id: String) -> CustomRoutineDefinition? {
+        customDefinitions.first { $0.id == id }
+    }
+
+    func saveCustomRoutine(_ definition: CustomRoutineDefinition) throws {
+        do {
+            try customRoutineStore.save(definition)
+            reloadCustomRoutines()
+        } catch {
+            customRoutinePersistenceError = error.localizedDescription
+            throw error
+        }
+    }
+
+    func deleteCustomRoutine(id: String) throws {
+        do {
+            try customRoutineStore.delete(id: id)
+            reloadCustomRoutines()
+        } catch {
+            customRoutinePersistenceError = error.localizedDescription
+            throw error
+        }
+    }
+
+    func duplicateRoutine(_ plan: TrainingPlan) throws -> CustomRoutineDefinition {
+        let metadata = metadata(for: plan)
+        let normalizedSteps = try plan.steps.flatMap(WorkoutStepNormalizer.expand)
+        let normalizedPlan = TrainingPlan(
+            id: plan.id,
+            title: plan.title,
+            subtitle: plan.subtitle,
+            level: plan.level,
+            sourceLabel: plan.sourceLabel,
+            sourceURL: plan.sourceURL,
+            provenance: plan.provenance,
+            boardID: plan.boardID,
+            steps: normalizedSteps
+        )
+        return try CustomRoutineStore.definition(
+            from: normalizedPlan,
+            metadata: metadata,
+            id: "custom.\(UUID().uuidString)"
+        )
     }
 
     var favoritePlans: [TrainingPlan] {
@@ -186,6 +253,34 @@ final class AppStore: ObservableObject {
         return plan.steps
             .flatMap(\.targets)
             .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
+    }
+
+    private func reloadCustomRoutines() {
+        let definitions = customRoutineStore.routines
+        var plans: [TrainingPlan] = []
+        var resolvedDefinitions: [CustomRoutineDefinition] = []
+        var resolutionError: String?
+
+        for definition in definitions {
+            guard CustomRoutineValidator.idIssues(for: definition.id).isEmpty else {
+                resolutionError = "Some custom routines could not be loaded."
+                continue
+            }
+            do {
+                plans.append(try customRoutineStore.plan(for: definition))
+                resolvedDefinitions.append(definition)
+            } catch {
+                resolutionError = error.localizedDescription
+            }
+        }
+
+        customDefinitions = resolvedDefinitions
+        customPlans = plans
+        customRoutinePersistenceError = customRoutineStore.persistenceError ?? resolutionError
+    }
+
+    private func customMetadata(for definition: CustomRoutineDefinition) -> PlanMetadata {
+        CustomRoutineStore.metadata(for: definition)
     }
 
     func markSessionComplete(
@@ -270,7 +365,16 @@ final class AppStore: ObservableObject {
 
     func refreshHealthAuthorization() {
         healthAuthorizationState = healthKitService.authorizationState
+        reconcileAuthorizedHealthKitStateIfNeeded()
         refreshWorkoutHistory()
+    }
+
+    private func reconcileAuthorizedHealthKitStateIfNeeded() {
+        guard healthAuthorizationState == .authorized,
+              !hasRequestedHealthAuthorization else { return }
+        hasRequestedHealthAuthorization = true
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        workoutHistoryService.enableHealthKitSync()
     }
 
     func refreshWorkoutHistory() {

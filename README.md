@@ -98,6 +98,17 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
+The hangboard guide uses the repository-local staged onboarding tool in
+`Tools/HangboardOnboarding`. Run its accepted Compact II parity fixture without
+a model call before onboarding a new product:
+
+```sh
+scripts/hangboard-tools.sh benchmark
+```
+
+The report is written under `.context/hangboard-onboarding/`; Python packages,
+caches, and generated board runs remain local and are not part of the app.
+
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
 

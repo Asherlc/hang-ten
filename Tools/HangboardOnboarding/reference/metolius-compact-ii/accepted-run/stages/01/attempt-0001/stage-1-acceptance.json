@@ -1,0 +1,34 @@
+{
+  "approvalPath": "approvals/stage-1.json",
+  "approvalSha256": "eae936591999baa301f6263c46b7df4a3973287fc3c80bc75c465235db85ab7e",
+  "candidateHashes": {
+    "stage-1-auto-rgba.png": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1",
+    "stage-1-candidate.json": "6f550f38da78f5583d04d13cb35b87e05fc909d8d722c909ea4eddb16aa65ca3",
+    "stage-1-review.png": "6bf88bb6aa1e94358e4f9aefe31682ed4382e8c1565f6cea04da5977ccbb39d8"
+  },
+  "candidateHashesSha256": "48230c5bcc138bf4ddf795c03708908b83ecc7449498b25c3a4b49caa6860928",
+  "inputAcceptance": {
+    "path": "stages/00/attempt-0001/stage-0-acceptance.json",
+    "sha256": "1d925bfbda1020f259478e72a1ee490a97fe709b2ab59ab21f3756f437505d9e"
+  },
+  "profile": {
+    "detail_mix": 0.65,
+    "profile_id": "generic-photo-cleanup-v1",
+    "tone_cap_lab": 5.0
+  },
+  "registered": {
+    "alphaSha256": "c4382ff3cff29609488f3aff7f697b03482bcc6f2dae139c71a78a7e34207fc0",
+    "fileSha256": "99c5cc2af8f3a471487441a2d75f45fdf52cab9fda92f1aa8d3b13c65946c5b1",
+    "height": 261,
+    "path": "stages/01/attempt-0001/stage-1-auto-rgba.png",
+    "pixelSha256": "15aa858cd35d8e6d0496ba46ef6dc3f99866ddaa831755f91294e504ca763e2a",
+    "width": 1000
+  },
+  "review": {
+    "path": "stages/01/attempt-0001/stage-1-review.png",
+    "sha256": "6bf88bb6aa1e94358e4f9aefe31682ed4382e8c1565f6cea04da5977ccbb39d8"
+  },
+  "runIdentitySha256": "30c65a90865de3c7de6e8e27a061056c4ef59e2d7a700e1406e3ae272e83e0b6",
+  "schemaVersion": 1,
+  "stage": 1
+}
