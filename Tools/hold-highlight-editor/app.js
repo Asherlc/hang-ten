@@ -33,6 +33,7 @@
     createOpeningBoardController,
     openingScreenState,
     renderOpeningFormVisibility,
+    renderRepositoryDiagnostics,
     openingActionsDisabled,
     handleOpeningSelectionFailure,
     createAutosaveCoordinator,
@@ -128,6 +129,7 @@
     guided: false,
     boards: [],
     libraryBoards: [],
+    libraryDiagnostics: [],
     openingErrors: { library: "", runtime: "" },
     board: null,
     editorMode: "contour",
@@ -158,7 +160,7 @@
     "corner-treatment-field", "corner-number", "corner-treatment-select", "corner-amount-input",
     "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
-    "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "in-progress-board-list",
+    "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "legacy-controls",
   ].map((id) => [id, document.getElementById(id)]));
@@ -1699,14 +1701,16 @@
     const sections = openingSections(state.libraryBoards, state.boards);
     const screen = openingScreenState({
       library: sections.library,
+      diagnostics: state.libraryDiagnostics,
       runtime: sections.inProgress,
       errors: state.openingErrors,
     });
     renderOpeningFormVisibility(el["create-board-form"], screen);
+    renderRepositoryDiagnostics(el["repository-diagnostics"], screen.repositoryDiagnostics);
     el["setup-submit-button"].disabled = openingActionsDisabled(state);
     renderOpeningList(el["repository-board-list"], screen.repository, {
       label: (board) => board.displayName || board.boardId,
-      detail: (board) => `Version ${board.currentVersionId || "unavailable"}`,
+      detail: () => "Ready to open",
       onSelect: selectLibraryBoard,
     });
     renderOpeningList(el["in-progress-board-list"], screen.inProgress, {
@@ -1730,6 +1734,7 @@
   async function refreshBoards() {
     const opening = await openingBoardController.refresh();
     state.libraryBoards = opening.library;
+    state.libraryDiagnostics = opening.diagnostics;
     state.boards = opening.runtime;
     state.openingErrors = { ...opening.errors };
     renderRecentRuns();

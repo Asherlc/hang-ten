@@ -248,18 +248,25 @@ test("importRun submits an explicit CLI run root to the import endpoint", async 
   assert.deepEqual(JSON.parse(calls[0][1].body), { runRoot: "/workspace/cli-run" });
 });
 
-test("listLibraryBoards returns the repository catalog", async () => {
+test("listLibraryBoards returns repository boards and diagnostics", async () => {
   const calls = [];
   global.fetch = async (path) => {
     calls.push(path);
-    return response({ ok: true, boards: [{ boardId: "example-board" }] });
+    return response({
+      ok: true,
+      boards: [{ boardId: "example-board" }],
+      diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
+    });
   };
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
 
   assert.deepEqual(
     await client.listLibraryBoards(),
-    [{ boardId: "example-board" }],
+    {
+      boards: [{ boardId: "example-board" }],
+      diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
+    },
   );
   assert.deepEqual(calls, ["/api/library"]);
 });

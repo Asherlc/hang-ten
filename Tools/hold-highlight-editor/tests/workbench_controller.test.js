@@ -18,6 +18,7 @@ const {
   createOpeningBoardController,
   openingScreenState,
   renderOpeningFormVisibility,
+  renderRepositoryDiagnostics,
   handleOpeningSelectionFailure,
   openingActionsDisabled,
 } = require("../workbench-controller.js");
@@ -52,7 +53,10 @@ test("opening board controller fetches both lists and opens the selected reposit
   const controller = createOpeningBoardController({
     async listLibraryBoards() {
       calls.push("library");
-      return [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }];
+      return {
+        boards: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+        diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
+      };
     },
     async listBoards() {
       calls.push("runtime");
@@ -69,7 +73,8 @@ test("opening board controller fetches both lists and opens the selected reposit
   });
 
   assert.deepEqual(await controller.refresh(), {
-    library: [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }],
+    library: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+    diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
     runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
     errors: { library: "", runtime: "" },
   });
@@ -88,6 +93,7 @@ test("opening board controller preserves the runtime list when the library reque
 
   assert.deepEqual(await controller.refresh(), {
     library: [],
+    diagnostics: [],
     runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
     errors: { library: "Repository unavailable", runtime: "" },
   });
@@ -97,6 +103,7 @@ test("opening screen renders empty board sections while leaving Create board vis
   assert.deepEqual(openingScreenState({ library: [], runtime: [], errors: {} }), {
     repository: { state: "empty", boards: [], message: "No published boards yet." },
     inProgress: { state: "empty", boards: [], message: "No boards in progress." },
+    repositoryDiagnostics: [],
     createFormVisible: true,
   });
 });
@@ -113,8 +120,62 @@ test("opening screen retains Create board when the repository list reports an er
       boards: [{ boardId: "board-2", productName: "Beta", saved: false }],
       message: "",
     },
+    repositoryDiagnostics: [],
     createFormVisible: true,
   });
+});
+
+test("opening screen keeps valid repository boards selectable while exposing package diagnostics", () => {
+  const diagnostics = [{
+    path: "broken-board",
+    code: "invalid_run",
+    message: "broken-board: run is not Stage 4 complete",
+  }];
+  const screen = openingScreenState({
+    library: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+    diagnostics,
+  });
+
+  assert.equal(screen.repository.state, "boards");
+  assert.equal(screen.repository.boards[0].boardId, "alpha");
+  assert.deepEqual(screen.repositoryDiagnostics, diagnostics);
+});
+
+test("opening screen with only package diagnostics omits the misleading empty-library message", () => {
+  const screen = openingScreenState({
+    library: [],
+    diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
+  });
+
+  assert.deepEqual(screen.repository, { state: "diagnostics", boards: [], message: "" });
+  assert.notEqual(screen.repository.message, "No published boards yet.");
+});
+
+test("repository diagnostics render their relative path and message", () => {
+  const makeNode = (tagName) => ({
+    tagName,
+    children: [],
+    textContent: "",
+    className: "",
+    classList: { toggle() {} },
+    append(...children) { this.children.push(...children); },
+    replaceChildren(...children) { this.children = [...children]; },
+  });
+  const ownerDocument = { createElement: makeNode };
+  const container = { ...makeNode("div"), ownerDocument };
+
+  renderRepositoryDiagnostics(container, [{
+    path: "broken-board",
+    code: "invalid_run",
+    message: "broken-board: run is not Stage 4 complete",
+  }]);
+
+  assert.equal(container.children[0].textContent, "Repository warnings");
+  assert.equal(container.children[1].children[0].children[0].textContent, "broken-board");
+  assert.equal(
+    container.children[1].children[0].children[1].textContent,
+    "broken-board: run is not Stage 4 complete",
+  );
 });
 
 test("opening screen keeps the Create board form visible for empty and repository-error states", () => {

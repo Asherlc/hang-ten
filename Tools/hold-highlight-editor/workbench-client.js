@@ -99,7 +99,11 @@
   }
 
   async function listLibraryBoards() {
-    return (await request("/api/library")).boards;
+    const payload = await request("/api/library");
+    return {
+      boards: Array.isArray(payload.boards) ? payload.boards : [],
+      diagnostics: Array.isArray(payload.diagnostics) ? payload.diagnostics : [],
+    };
   }
 
   async function createFromUrl(productName, source, options = {}) {

@@ -27,27 +27,28 @@ test("canApprove permits an unchanged generated checkpoint and rejects invalid d
 });
 
 test("openingSections separates repository boards from unfinished runtime work", () => {
+  const revisionToken = "a".repeat(64);
   assert.deepEqual(openingSections(
-    [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }],
+    [{ boardId: "alpha", displayName: "Alpha", revisionToken }],
     [
-      { boardId: "board-0001", productName: "Alpha", repositoryBoardId: "alpha", repositoryVersionId: "revision-0001", saved: true },
-      { boardId: "board-0002", productName: "Beta", repositoryBoardId: null, repositoryVersionId: null, saved: false },
-      { boardId: "board-0003", productName: "Alpha edit", repositoryBoardId: "alpha", repositoryVersionId: "revision-0001", saved: false },
+      { boardId: "board-0001", productName: "Alpha", repositoryBoardId: "alpha", repositoryRevisionToken: revisionToken, saved: true },
+      { boardId: "board-0002", productName: "Beta", repositoryBoardId: null, repositoryRevisionToken: null, saved: false },
+      { boardId: "board-0003", productName: "Alpha edit", repositoryBoardId: "alpha", repositoryRevisionToken: revisionToken, saved: false },
     ],
   ), {
-    library: [{ boardId: "alpha", displayName: "Alpha", currentVersionId: "revision-0001" }],
+    library: [{ boardId: "alpha", displayName: "Alpha", revisionToken }],
     inProgress: [
-      { boardId: "board-0003", productName: "Alpha edit", repositoryBoardId: "alpha", repositoryVersionId: "revision-0001", saved: false },
-      { boardId: "board-0002", productName: "Beta", repositoryBoardId: null, repositoryVersionId: null, saved: false },
+      { boardId: "board-0003", productName: "Alpha edit", repositoryBoardId: "alpha", repositoryRevisionToken: revisionToken, saved: false },
+      { boardId: "board-0002", productName: "Beta", repositoryBoardId: null, repositoryRevisionToken: null, saved: false },
     ],
   });
 });
 
 test("openingSections sorts copied sections by case-insensitive labels and stable IDs", () => {
   const libraryBoards = [
-    { boardId: "charlie", displayName: "charlie", currentVersionId: "revision-0001" },
-    { boardId: "alpha-2", displayName: "Alpha", currentVersionId: "revision-0002" },
-    { boardId: "alpha-1", displayName: "alpha", currentVersionId: "revision-0001" },
+    { boardId: "charlie", displayName: "charlie", revisionToken: "c".repeat(64) },
+    { boardId: "alpha-2", displayName: "Alpha", revisionToken: "b".repeat(64) },
+    { boardId: "alpha-1", displayName: "alpha", revisionToken: "a".repeat(64) },
   ];
   const runtimeBoards = [
     { boardId: "bravo-2", productName: "Bravo", saved: false },

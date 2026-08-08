@@ -263,7 +263,7 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         "saved": view.saved,
         "staleFromStage": view.stale_from_stage,
         "repositoryBoardId": view.repository_board_id,
-        "repositoryVersionId": view.repository_version_id,
+        "repositoryRevisionToken": view.repository_revision_token,
     }
 
 
@@ -529,13 +529,22 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _get_library(self) -> None:
         try:
             service = self._workbench_service()
+            snapshot = service.library_snapshot()
             boards = [
                 {
                     "boardId": board.board_id,
                     "displayName": board.display_name,
-                    "currentVersionId": board.current_version_id,
+                    "revisionToken": board.revision_token,
                 }
-                for board in service.list_library_boards()
+                for board in snapshot.boards
+            ]
+            diagnostics = [
+                {
+                    "path": self._relative_diagnostic_path(diagnostic.path),
+                    "code": diagnostic.code,
+                    "message": diagnostic.message,
+                }
+                for diagnostic in snapshot.diagnostics
             ]
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
@@ -549,7 +558,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {"ok": False, "error": "request failed"},
             )
             return
-        self._send_json(HTTPStatus.OK, {"ok": True, "boards": boards})
+        self._send_json(
+            HTTPStatus.OK,
+            {"ok": True, "boards": boards, "diagnostics": diagnostics},
+        )
 
     def _get_board(self, board_id: str, query: str) -> None:
         try:
@@ -636,7 +648,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not board_id:
             raise RequestError(HTTPStatus.NOT_FOUND, "not found")
         if not any(
-            board.board_id == board_id for board in service.list_library_boards()
+            board.board_id == board_id for board in service.library_snapshot().boards
         ):
             raise RequestError(
                 HTTPStatus.NOT_FOUND, f"board does not exist: {board_id}"
@@ -646,6 +658,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             lambda: service.open_library_board(board_id),
             conflict_key=service.library_open_reservation_key(board_id),
         )
+
+    @staticmethod
+    def _relative_diagnostic_path(value: object) -> str:
+        if not isinstance(value, str) or not value:
+            raise EditorError("repository diagnostic path must be relative")
+        path = Path(value)
+        if path.is_absolute() or ".." in path.parts:
+            raise EditorError("repository diagnostic path must be relative")
+        return path.as_posix()
 
     def _post_mutation(
         self, service: object, path: str, payload: dict[str, Any]

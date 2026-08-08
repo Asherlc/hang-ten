@@ -46,12 +46,12 @@
     };
     const library = Array.isArray(libraryBoards) ? [...libraryBoards] : [];
     const runtime = Array.isArray(runtimeBoards) ? [...runtimeBoards] : [];
-    const currentVersions = new Map(library.map((board) => [board?.boardId, board?.currentVersionId]));
+    const currentRevisions = new Map(library.map((board) => [board?.boardId, board?.revisionToken]));
     const inProgress = runtime.filter((board) => !(
       board?.saved === true
       && board.repositoryBoardId
-      && board.repositoryVersionId
-      && currentVersions.get(board.repositoryBoardId) === board.repositoryVersionId
+      && board.repositoryRevisionToken
+      && currentRevisions.get(board.repositoryBoardId) === board.repositoryRevisionToken
     ));
     return {
       library: library.sort(byLabelThenId("displayName", "boardId")),

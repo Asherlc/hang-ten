@@ -8,6 +8,7 @@ const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
 
 test("the guided opening screen offers repository and in-progress board pickers", () => {
   assert.match(markup, /id="repository-board-list"/);
+  assert.match(markup, /id="repository-diagnostics"/);
   assert.match(markup, /id="in-progress-board-list"/);
   assert.match(markup, /id="create-board-form"/);
   assert.match(markup, /name="sourceKind" value="url"/);

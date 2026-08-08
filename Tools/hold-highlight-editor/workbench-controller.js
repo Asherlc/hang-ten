@@ -50,13 +50,29 @@
         (error) => ({ boards: [], error: error?.message || "Could not load boards." }),
       );
 
+    const collectLibrary = () => Promise.resolve()
+      .then(listLibraryBoards)
+      .then(
+        (library) => ({
+          boards: Array.isArray(library?.boards) ? library.boards : [],
+          diagnostics: Array.isArray(library?.diagnostics) ? library.diagnostics : [],
+          error: "",
+        }),
+        (error) => ({
+          boards: [],
+          diagnostics: [],
+          error: error?.message || "Could not load repository boards.",
+        }),
+      );
+
     async function refresh() {
       const [library, runtime] = await Promise.all([
-        collect(listLibraryBoards),
+        collectLibrary(),
         collect(listBoards),
       ]);
       return Object.freeze({
         library: library.boards,
+        diagnostics: library.diagnostics,
         runtime: runtime.boards,
         errors: Object.freeze({ library: library.error, runtime: runtime.error }),
       });
@@ -69,15 +85,22 @@
     });
   }
 
-  function openingScreenState({ library = [], runtime = [], errors = {} } = {}) {
+  function openingScreenState({ library = [], diagnostics = [], runtime = [], errors = {} } = {}) {
     const section = (boards, error, emptyMessage) => ({
       state: error ? "error" : boards.length ? "boards" : "empty",
       boards,
       message: error || (boards.length ? "" : emptyMessage),
     });
+    const repositoryDiagnostics = Array.isArray(diagnostics) ? diagnostics : [];
+    const repository = section(library, errors.library || "", "No published boards yet.");
+    if (!errors.library && !library.length && repositoryDiagnostics.length) {
+      repository.state = "diagnostics";
+      repository.message = "";
+    }
     return {
-      repository: section(library, errors.library || "", "No published boards yet."),
+      repository,
       inProgress: section(runtime, errors.runtime || "", "No boards in progress."),
+      repositoryDiagnostics,
       createFormVisible: true,
     };
   }
@@ -87,6 +110,33 @@
       throw new TypeError("create board form must support classList.toggle");
     }
     form.classList.toggle("hidden", !screen?.createFormVisible);
+  }
+
+  function renderRepositoryDiagnostics(container, diagnostics) {
+    if (typeof container?.replaceChildren !== "function"
+      || typeof container?.classList?.toggle !== "function"
+      || typeof container?.ownerDocument?.createElement !== "function") {
+      throw new TypeError("repository diagnostic container is required");
+    }
+    const items = Array.isArray(diagnostics) ? diagnostics : [];
+    container.replaceChildren();
+    container.classList.toggle("hidden", items.length === 0);
+    if (!items.length) return;
+
+    const heading = container.ownerDocument.createElement("p");
+    heading.className = "repository-diagnostics-heading";
+    heading.textContent = "Repository warnings";
+    const list = container.ownerDocument.createElement("ul");
+    for (const diagnostic of items) {
+      const item = container.ownerDocument.createElement("li");
+      const path = container.ownerDocument.createElement("code");
+      const message = container.ownerDocument.createElement("span");
+      path.textContent = diagnostic?.path || "unknown package";
+      message.textContent = diagnostic?.message || "Repository package is invalid";
+      item.append(path, message);
+      list.append(item);
+    }
+    container.append(heading, list);
   }
 
   function openingActionsDisabled({ busy = false, editingFrozen = false } = {}) {
@@ -440,6 +490,7 @@
     createOpeningBoardController,
     openingScreenState,
     renderOpeningFormVisibility,
+    renderRepositoryDiagnostics,
     openingActionsDisabled,
     handleOpeningSelectionFailure,
     createAutosaveCoordinator,

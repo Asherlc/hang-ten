@@ -52,6 +52,8 @@ CORRECTIONS = {
     "deleted": [],
 }
 
+REPOSITORY_REVISION_TOKEN = "a" * 64
+
 
 @dataclass(frozen=True)
 class FakeWorkbenchView:
@@ -69,14 +71,27 @@ class FakeWorkbenchView:
     stale_from_stage: int | None
     checkpoint_token: str | None
     repository_board_id: str | None = None
-    repository_version_id: str | None = None
+    repository_revision_token: str | None = None
 
 
 @dataclass(frozen=True)
 class FakeLibraryBoard:
     board_id: str
     display_name: str
-    current_version_id: str
+    revision_token: str
+
+
+@dataclass(frozen=True)
+class FakeLibraryDiagnostic:
+    path: str
+    code: str
+    message: str
+
+
+@dataclass(frozen=True)
+class FakeLibrarySnapshot:
+    boards: tuple[FakeLibraryBoard, ...]
+    diagnostics: tuple[FakeLibraryDiagnostic, ...]
 
 
 class FakeWorkbenchError(ValueError):
@@ -92,11 +107,20 @@ class FakeWorkbenchService:
         self._lock = Lock()
         self.approve_started = Event()
         self.approve_gate: Event | None = None
-        self.library_boards: tuple[FakeLibraryBoard, ...] = (
-            FakeLibraryBoard(
-                board_id="example-board",
-                display_name="Example Board",
-                current_version_id="revision-0001",
+        self.library = FakeLibrarySnapshot(
+            boards=(
+                FakeLibraryBoard(
+                    board_id="example-board",
+                    display_name="Example Board",
+                    revision_token=REPOSITORY_REVISION_TOKEN,
+                ),
+            ),
+            diagnostics=(
+                FakeLibraryDiagnostic(
+                    path="broken-board",
+                    code="invalid_run",
+                    message="broken-board: run is not Stage 4 complete",
+                ),
             ),
         )
         self.library_error: FakeWorkbenchError | None = None
@@ -118,16 +142,16 @@ class FakeWorkbenchService:
         with self._lock:
             return tuple(self._boards.values())
 
-    def list_library_boards(self) -> tuple[FakeLibraryBoard, ...]:
+    def library_snapshot(self) -> FakeLibrarySnapshot:
         if self.library_error is not None:
             raise self.library_error
-        return self.library_boards
+        return self.library
 
     def open_library_board(self, board_id: str) -> FakeWorkbenchView:
         if self.library_error is not None:
             raise self.library_error
         board = next(
-            (entry for entry in self.library_boards if entry.board_id == board_id),
+            (entry for entry in self.library.boards if entry.board_id == board_id),
             None,
         )
         if board is None:
@@ -138,7 +162,7 @@ class FakeWorkbenchService:
                     view
                     for view in self._boards.values()
                     if view.repository_board_id == board.board_id
-                    and view.repository_version_id == board.current_version_id
+                    and view.repository_revision_token == board.revision_token
                 ),
                 None,
             )
@@ -147,12 +171,12 @@ class FakeWorkbenchService:
         return self._update(
             self._create(board.display_name, b"repository-board"),
             repository_board_id=board.board_id,
-            repository_version_id=board.current_version_id,
+            repository_revision_token=board.revision_token,
         )
 
     def library_open_reservation_key(self, board_id: str) -> str:
         board = next(
-            (entry for entry in self.library_boards if entry.board_id == board_id),
+            (entry for entry in self.library.boards if entry.board_id == board_id),
             None,
         )
         if board is None:
@@ -865,7 +889,14 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
             {
                 "boardId": "example-board",
                 "displayName": "Example Board",
-                "currentVersionId": "revision-0001",
+                "revisionToken": REPOSITORY_REVISION_TOKEN,
+            }
+        ],
+        "diagnostics": [
+            {
+                "path": "broken-board",
+                "code": "invalid_run",
+                "message": "broken-board: run is not Stage 4 complete",
             }
         ],
     }
@@ -886,7 +917,7 @@ def test_post_library_open_is_a_tracked_board_job(tmp_path):
     assert status == 202
     assert terminal["state"] == "succeeded"
     assert terminal["result"]["repositoryBoardId"] == "example-board"
-    assert terminal["result"]["repositoryVersionId"] == "revision-0001"
+    assert terminal["result"]["repositoryRevisionToken"] == REPOSITORY_REVISION_TOKEN
 
 
 def test_parallel_opens_of_one_repository_board_conflict_on_a_stable_key(tmp_path):
@@ -1421,7 +1452,7 @@ def test_workspace_root_starts_without_repository_library_outside_a_checkout(
     assert boards_status == 200
     assert boards == {"ok": True, "boards": []}
     assert library_status == 200
-    assert library == {"ok": True, "boards": []}
+    assert library == {"ok": True, "boards": [], "diagnostics": []}
 
 
 @pytest.mark.filterwarnings(
@@ -1458,19 +1489,19 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
 
     assert catalog is None
     assert status == 200
-    assert payload == {"ok": True, "boards": []}
+    assert payload == {"ok": True, "boards": [], "diagnostics": []}
     assert (workspace / "boards").is_dir()
 
 
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
-def test_repository_catalog_validation_errors_are_safe_bad_requests(tmp_path):
+def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
-    library = repository / "Tools" / "HangboardOnboarding" / "board-library"
-    library.mkdir(parents=True)
-    (library / "catalog.json").write_text('{"schemaVersion":99,"boards":[]}')
+    broken = repository / "Tools" / "HangboardOnboarding" / "boards" / "broken-board"
+    broken.mkdir(parents=True)
+    (broken / "run.json").write_text("{}")
 
     server, _catalog = server_module._server_from_cli(
         ["--repository-root", str(repository), "--workspace-root", str(tmp_path / "workspace"), "--port", "0"]
@@ -1486,8 +1517,12 @@ def test_repository_catalog_validation_errors_are_safe_bad_requests(tmp_path):
         server.server_close()
         thread.join(timeout=2)
 
-    assert status == 400
-    assert payload == {"ok": False, "error": "unsupported catalog schema version"}
+    assert status == 200
+    assert payload["ok"] is True
+    assert payload["boards"] == []
+    assert payload["diagnostics"][0]["path"] == "broken-board"
+    assert payload["diagnostics"][0]["code"] == "invalid_run"
+    assert str(tmp_path) not in json.dumps(payload)
 
 
 @pytest.mark.filterwarnings(
@@ -1519,7 +1554,7 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
 
     assert catalog is None
     assert status == 200
-    assert payload == {"ok": True, "boards": []}
+    assert payload == {"ok": True, "boards": [], "diagnostics": []}
     assert (repository / ".context" / "hangboard-workbench" / "boards").is_dir()
 
 
