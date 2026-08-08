@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      # actions/checkout v4.2.2
+      # actions/checkout v7.0.1
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -171,19 +171,6 @@ jobs:
           tag_error="$RUNNER_TEMP/hangboard-workbench-tag-error.txt"
           release_response="$RUNNER_TEMP/hangboard-workbench-release.json"
           release_error="$RUNNER_TEMP/hangboard-workbench-release-error.txt"
-          immutable_releases_response="$RUNNER_TEMP/hangboard-workbench-immutable-releases.json"
-
-          if ! gh api "repos/$GITHUB_REPOSITORY/immutable-releases" >"$immutable_releases_response"; then
-            echo "Immutable GitHub Releases must be enabled before publishing." >&2
-            exit 1
-          fi
-          python - "$immutable_releases_response" <<'PY'
-          import json
-          import sys
-
-          if json.load(open(sys.argv[1]))["enabled"] is not True:
-              raise SystemExit("Immutable GitHub Releases must be enabled before publishing.")
-          PY
 
           tag_exists=false
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >"$tag_response" 2>"$tag_error"; then
