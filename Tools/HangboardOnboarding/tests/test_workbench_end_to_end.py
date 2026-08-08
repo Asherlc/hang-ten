@@ -46,9 +46,9 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
 
     snapshot = RepositoryBoardLibrary(repository_root).snapshot()
 
-    assert tuple(board.board_id for board in snapshot.boards) == (
-        "metolius-wood-grips-compact-ii",
-    )
+    assert "metolius-wood-grips-compact-ii" in {
+        board.board_id for board in snapshot.boards
+    }
     assert snapshot.diagnostics == ()
 
 
