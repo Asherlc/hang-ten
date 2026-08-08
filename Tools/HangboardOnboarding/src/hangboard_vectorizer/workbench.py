@@ -404,6 +404,11 @@ class WorkbenchService:
             return self.__view(board.id, revision.id)
 
         try:
+            if expected_stage == 1 and revision.parent_revision_id is not None:
+                parent = self.store.read_revision(
+                    board.id, revision.parent_revision_id
+                )
+                self.__carry_stage2_replay_input(parent, revision)
             resume_run(revision.run_root, runners=self.__runners)
         except Exception:
             self.__synchronize_revision(board.id, revision.id)
@@ -444,6 +449,8 @@ class WorkbenchService:
                         stage=accepted_stage,
                     )
                 approve_stage(revision.run_root, accepted_stage)
+                if accepted_stage == 1:
+                    self.__carry_stage2_replay_input(parent, revision)
                 resume_run(revision.run_root, runners=self.__runners)
             self.store.activate_revision(
                 board.id,
@@ -1018,6 +1025,150 @@ class WorkbenchService:
             replace_pending_checkpoint(target_revision.run_root, checkpoint)
         finally:
             shutil.rmtree(temporary_root, ignore_errors=True)
+
+    def __carry_stage2_replay_input(
+        self,
+        source_revision: RevisionRecord,
+        target_revision: RevisionRecord,
+    ) -> None:
+        manifest = self.__manifest(source_revision.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= 2:
+            return
+        record = stages[2]
+        if not isinstance(record, Mapping):
+            return
+        candidate_hashes_path = self.__confined_run_path(
+            source_revision.run_root, record.get("candidateHashesPath")
+        )
+        candidate_hashes_content = self.__read_bytes(
+            candidate_hashes_path, "Stage 2 candidate hashes"
+        )
+        expected_candidate_hashes_hash = record.get("candidateHashesSha256")
+        if (
+            not isinstance(expected_candidate_hashes_hash, str)
+            or sha256(candidate_hashes_content).hexdigest()
+            != expected_candidate_hashes_hash
+        ):
+            raise WorkbenchServiceError("Stage 2 candidate hashes changed")
+        candidate_hashes = self.__parse_object(
+            candidate_hashes_content, "Stage 2 candidate hashes"
+        )
+        capture_name = "stage-2-semantic-capture.json"
+        if capture_name not in candidate_hashes:
+            return
+        artifact_root = record.get("artifactRoot")
+        if not isinstance(artifact_root, str):
+            raise WorkbenchServiceError("Stage 2 artifact root is invalid")
+        capture_path = self.__confined_run_path(
+            source_revision.run_root, f"{artifact_root}/{capture_name}"
+        )
+        capture_content = self.__read_bytes(
+            capture_path, "Stage 2 semantic capture"
+        )
+        expected_capture_hash = candidate_hashes[capture_name]
+        if (
+            not isinstance(expected_capture_hash, str)
+            or sha256(capture_content).hexdigest() != expected_capture_hash
+        ):
+            raise WorkbenchServiceError("Stage 2 semantic capture changed")
+        capture = self.__parse_object(
+            capture_content, "Stage 2 semantic capture"
+        )
+        proposal = capture.get("proposal")
+        if not isinstance(proposal, Mapping) or "path" not in proposal:
+            return
+        relative_path = proposal.get("path")
+        expected_hash = proposal.get("sha256")
+        if not isinstance(relative_path, str):
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        source_path = self.__confined_run_path(
+            source_revision.run_root, relative_path
+        )
+        content = self.__read_bytes(
+            source_path, "accepted Stage 2 replay input"
+        )
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(content).hexdigest() != expected_hash
+        ):
+            raise WorkbenchServiceError(
+                "accepted Stage 2 replay input changed"
+            )
+        document = self.__parse_object(
+            content, "accepted Stage 2 replay input"
+        )
+        target_manifest = self.__manifest(target_revision.run_root)
+        target_stages = target_manifest.get("stages")
+        if not isinstance(target_stages, list) or len(target_stages) <= 1:
+            raise WorkbenchServiceError("child Stage 1 acceptance is missing")
+        target_stage1 = target_stages[1]
+        if not isinstance(target_stage1, Mapping):
+            raise WorkbenchServiceError("child Stage 1 acceptance is invalid")
+        acceptance_path = self.__confined_run_path(
+            target_revision.run_root, target_stage1.get("acceptancePath")
+        )
+        acceptance = self.__read_object(
+            acceptance_path, "child Stage 1 acceptance"
+        )
+        registered = acceptance.get("registered")
+        acceptance_hash = target_stage1.get("acceptanceSha256")
+        if (
+            not isinstance(registered, Mapping)
+            or not isinstance(acceptance_hash, str)
+            or not isinstance(registered.get("fileSha256"), str)
+        ):
+            raise WorkbenchServiceError("child Stage 1 acceptance is invalid")
+        document["inputAcceptanceSha256"] = acceptance_hash
+        document["inputRasterSha256"] = registered["fileSha256"]
+        rebound_content = (
+            json.dumps(document, indent=2, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        self.__write_replay_input(
+            target_revision.run_root, relative_path, rebound_content
+        )
+
+    @staticmethod
+    def __write_replay_input(
+        run_root: Path, relative: object, content: bytes
+    ) -> None:
+        if not isinstance(relative, str) or not relative:
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        relative_path = Path(relative)
+        if relative_path.is_absolute() or ".." in relative_path.parts:
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        try:
+            root = run_root.resolve(strict=True)
+            destination = root / relative_path
+            parent = destination.parent.resolve(strict=False)
+            parent.relative_to(root)
+            parent.mkdir(parents=True, exist_ok=True)
+            parent = parent.resolve(strict=True)
+            parent.relative_to(root)
+            destination = parent / destination.name
+            with destination.open("xb") as stream:
+                stream.write(content)
+        except (OSError, RuntimeError, ValueError) as error:
+            raise WorkbenchServiceError(
+                "could not carry accepted Stage 2 replay input"
+            ) from error
+
+    @staticmethod
+    def __read_bytes(path: Path, label: str) -> bytes:
+        try:
+            return path.read_bytes()
+        except OSError as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+
+    @staticmethod
+    def __parse_object(content: bytes, label: str) -> dict[str, object]:
+        try:
+            value = json.loads(content)
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+        if not isinstance(value, dict):
+            raise WorkbenchServiceError(f"{label} is invalid")
+        return value
 
     @staticmethod
     def __manifest(run_root: Path) -> dict[str, object]:

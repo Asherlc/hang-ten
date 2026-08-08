@@ -14,6 +14,7 @@ const {
   clearConfirmedTerminalJob,
   isRecoverableJobError,
   regionIdFromError,
+  geometryValidationError,
   runFrozenApproval,
   createOpeningBoardController,
   openingScreenState,
@@ -533,6 +534,23 @@ test("restart reconciliation retains genuinely unknown jobs while releasing only
 test("geometry error parsing identifies the region the UI must focus", () => {
   assert.equal(regionIdFromError("Stage 2 region 17: contour is invalid"), 17);
   assert.equal(regionIdFromError("job failed"), null);
+});
+
+test("guided-action failures enter geometry validation only for public geometry errors", () => {
+  assert.equal(typeof geometryValidationError, "function");
+  assert.equal(geometryValidationError("job failed"), null);
+  assert.deepEqual(
+    geometryValidationError("Stage 2 region 17: contour is invalid"),
+    { regionId: 17, message: "Stage 2 region 17: contour is invalid" },
+  );
+  assert.deepEqual(
+    geometryValidationError("Stage 3 region 4: malformed displayPath"),
+    { regionId: 4, message: "Stage 3 region 4: malformed displayPath" },
+  );
+  assert.deepEqual(
+    geometryValidationError("review geometry is invalid"),
+    { regionId: null, message: "review geometry is invalid" },
+  );
 });
 
 test("only an accepted job without terminal confirmation remains recoverable", () => {

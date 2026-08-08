@@ -20,9 +20,19 @@ from hangboard_vectorizer.board_library import (
     RepositoryBoardLibrary,
 )
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
+from hangboard_vectorizer.generic_stage2 import GenericStage2Runner
 from hangboard_vectorizer.onboard_cli import main
-from hangboard_vectorizer.onboarding_run import RunContext, start_run
-from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchView
+from hangboard_vectorizer.onboarding_run import (
+    RunContext,
+    approve_stage,
+    resume_run,
+    start_run,
+)
+from hangboard_vectorizer.workbench import (
+    WorkbenchService,
+    WorkbenchServiceError,
+    WorkbenchView,
+)
 from hangboard_vectorizer.workbench_store import WorkbenchStore, WorkbenchStoreError
 
 
@@ -730,6 +740,222 @@ def test_product_neutral_repository_replay(
     assert reopened.repository_revision_token == saved.repository_revision_token
 
 
+def test_revision_replays_hash_bound_file_semantic_proposal_into_child_run(
+    tmp_path: Path,
+) -> None:
+    service, current, proposal, _proposal_path = _accepted_file_proposal_parent(
+        tmp_path
+    )
+
+    revised = service.revise_stage(
+        current.board_id,
+        stage=3,
+        expected_revision_id=current.revision_id,
+    )
+
+    child_proposal = revised.run_root / "inputs/stage-2-semantic-proposal.json"
+    assert revised.stage == 3
+    child_manifest = json.loads((revised.run_root / "run.json").read_text())
+    child_stage1 = child_manifest["stages"][1]
+    child_acceptance = json.loads(
+        (revised.run_root / child_stage1["acceptancePath"]).read_text()
+    )
+    expected_child_proposal = dict(proposal)
+    expected_child_proposal["inputAcceptanceSha256"] = child_stage1[
+        "acceptanceSha256"
+    ]
+    expected_child_proposal["inputRasterSha256"] = child_acceptance[
+        "registered"
+    ]["fileSha256"]
+    child_proposal_bytes = child_proposal.read_bytes()
+    assert json.loads(child_proposal_bytes) == expected_child_proposal
+    child_stage2 = child_manifest["stages"][2]
+    child_capture = json.loads(
+        (
+            revised.run_root
+            / child_stage2["artifactRoot"]
+            / "stage-2-semantic-capture.json"
+        ).read_text()
+    )
+    assert child_capture["proposal"] == {
+        "path": "inputs/stage-2-semantic-proposal.json",
+        "provider": "file",
+        "sha256": sha256(child_proposal_bytes).hexdigest(),
+    }
+
+
+@pytest.mark.parametrize("revised_stage", (0, 1))
+def test_deferred_revision_carries_file_proposal_when_stage1_is_approved(
+    tmp_path: Path, revised_stage: int
+) -> None:
+    service, current, proposal, _proposal_path = _accepted_file_proposal_parent(
+        tmp_path
+    )
+    revised = service.revise_stage(
+        current.board_id,
+        stage=revised_stage,
+        expected_revision_id=current.revision_id,
+    )
+    while revised.stage < 1:
+        revised = service.approve_and_advance(
+            revised.board_id,
+            expected_revision_id=revised.revision_id,
+            expected_stage=revised.stage,
+        )
+
+    advanced = service.approve_and_advance(
+        revised.board_id,
+        expected_revision_id=revised.revision_id,
+        expected_stage=1,
+    )
+
+    child_manifest = json.loads((advanced.run_root / "run.json").read_text())
+    child_stage1 = child_manifest["stages"][1]
+    child_acceptance = json.loads(
+        (advanced.run_root / child_stage1["acceptancePath"]).read_text()
+    )
+    expected_child_proposal = dict(proposal)
+    expected_child_proposal["inputAcceptanceSha256"] = child_stage1[
+        "acceptanceSha256"
+    ]
+    expected_child_proposal["inputRasterSha256"] = child_acceptance[
+        "registered"
+    ]["fileSha256"]
+    child_proposal_bytes = (
+        advanced.run_root / "inputs/stage-2-semantic-proposal.json"
+    ).read_bytes()
+    child_stage2 = child_manifest["stages"][2]
+    child_capture = json.loads(
+        (
+            advanced.run_root
+            / child_stage2["artifactRoot"]
+            / "stage-2-semantic-capture.json"
+        ).read_text()
+    )
+    assert advanced.stage == 2
+    assert json.loads(child_proposal_bytes) == expected_child_proposal
+    assert child_capture["proposal"] == {
+        "path": "inputs/stage-2-semantic-proposal.json",
+        "provider": "file",
+        "sha256": sha256(child_proposal_bytes).hexdigest(),
+    }
+
+
+def test_revision_replay_rejects_candidate_hashes_changed_after_acceptance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    service, current, _proposal, _proposal_path = (
+        _accepted_file_proposal_parent(tmp_path)
+    )
+    manifest = json.loads((current.run_root / "run.json").read_text())
+    stage2 = manifest["stages"][2]
+    candidate_hashes_path = current.run_root / stage2["candidateHashesPath"]
+    original_resume_run = workbench_module.resume_run
+    changed = False
+
+    def change_hashes_after_parent_validation(*args: object, **kwargs: object) -> object:
+        nonlocal changed
+        result = original_resume_run(*args, **kwargs)
+        if not changed:
+            candidate_hashes_path.write_bytes(
+                candidate_hashes_path.read_bytes() + b" "
+            )
+            changed = True
+        return result
+
+    monkeypatch.setattr(
+        workbench_module, "resume_run", change_hashes_after_parent_validation
+    )
+
+    with pytest.raises(
+        WorkbenchServiceError, match="Stage 2 candidate hashes changed"
+    ):
+        service.revise_stage(
+            current.board_id,
+            stage=3,
+            expected_revision_id=current.revision_id,
+        )
+
+
+def test_revision_replay_rejects_semantic_capture_changed_after_acceptance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    service, current, _proposal, _proposal_path = (
+        _accepted_file_proposal_parent(tmp_path)
+    )
+    manifest = json.loads((current.run_root / "run.json").read_text())
+    stage2 = manifest["stages"][2]
+    capture_path = (
+        current.run_root
+        / stage2["artifactRoot"]
+        / "stage-2-semantic-capture.json"
+    )
+    capture = json.loads(capture_path.read_text())
+    capture["changedAfterAcceptance"] = True
+    changed_capture = (
+        json.dumps(capture, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    original_resume_run = workbench_module.resume_run
+    changed = False
+
+    def change_capture_after_parent_validation(*args: object, **kwargs: object) -> object:
+        nonlocal changed
+        result = original_resume_run(*args, **kwargs)
+        if not changed:
+            capture_path.write_bytes(changed_capture)
+            changed = True
+        return result
+
+    monkeypatch.setattr(
+        workbench_module, "resume_run", change_capture_after_parent_validation
+    )
+
+    with pytest.raises(
+        WorkbenchServiceError, match="Stage 2 semantic capture changed"
+    ):
+        service.revise_stage(
+            current.board_id,
+            stage=3,
+            expected_revision_id=current.revision_id,
+        )
+
+
+def test_revision_replay_parses_the_hash_validated_proposal_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    service, current, proposal, proposal_path = _accepted_file_proposal_parent(
+        tmp_path
+    )
+    changed_proposal = deepcopy(proposal)
+    changed_proposal["regions"][0]["metadata"] = {"raceMarker": "unverified"}
+    changed_proposal_text = (
+        json.dumps(changed_proposal, indent=2, sort_keys=True) + "\n"
+    )
+    original_read_text = Path.read_text
+
+    def replace_proposal_on_reopen(
+        path: Path, *args: object, **kwargs: object
+    ) -> str:
+        if path == proposal_path:
+            return changed_proposal_text
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", replace_proposal_on_reopen)
+
+    revised = service.revise_stage(
+        current.board_id,
+        stage=3,
+        expected_revision_id=current.revision_id,
+    )
+
+    child_proposal = json.loads(
+        (
+            revised.run_root / "inputs/stage-2-semantic-proposal.json"
+        ).read_bytes()
+    )
+    assert child_proposal["regions"][0]["metadata"] == {}
+
+
 def test_stage2_inventory_mutation_propagates_unchanged_through_stage4(
     tmp_path: Path,
 ) -> None:
@@ -941,6 +1167,63 @@ def _approve_to_completion(
         expected_revision_id=current.revision_id,
         expected_stage=current.stage,
     )
+
+
+def _accepted_file_proposal_parent(
+    root: Path,
+) -> tuple[WorkbenchService, WorkbenchView, dict[str, object], Path]:
+    runners = _stub_runners(("grip-001",))
+    runners[2] = GenericStage2Runner()
+    service = WorkbenchService(WorkbenchStore(root), runners=runners)
+    current = service.create_from_upload(
+        "Generic File Proposal Board", _fixture_image_bytes()
+    )
+    current = service.approve_and_advance(
+        current.board_id,
+        expected_revision_id=current.revision_id,
+        expected_stage=0,
+    )
+    approve_stage(current.run_root, 1)
+    manifest = json.loads((current.run_root / "run.json").read_text())
+    stage1 = manifest["stages"][1]
+    acceptance = json.loads(
+        (current.run_root / stage1["acceptancePath"]).read_text()
+    )
+    proposal: dict[str, object] = {
+        "canvas": {"height": 64, "width": 128},
+        "inputAcceptanceSha256": stage1["acceptanceSha256"],
+        "inputRasterSha256": acceptance["registered"]["fileSha256"],
+        "productKey": manifest["product"]["key"],
+        "provider": "file",
+        "regions": [
+            {
+                "anchor": [24, 24],
+                "geometry": {
+                    "mode": "surface",
+                    "polygon": [[12, 12], [36, 12], [36, 36], [12, 36]],
+                },
+                "id": 1,
+                "key": "grip-001",
+                "metadata": {},
+                "type": "edge",
+            }
+        ],
+        "schemaVersion": 1,
+    }
+    proposal_path = current.run_root / "inputs/stage-2-semantic-proposal.json"
+    proposal_path.write_text(
+        json.dumps(proposal, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    resume_run(current.run_root, runners=runners)
+    current = service.get_board(current.board_id)
+    for stage in (2, 3):
+        current = service.approve_and_advance(
+            current.board_id,
+            expected_revision_id=current.revision_id,
+            expected_stage=stage,
+        )
+    return service, current, proposal, proposal_path
 
 
 def _create_cli_fixture_run(path: Path) -> Path:

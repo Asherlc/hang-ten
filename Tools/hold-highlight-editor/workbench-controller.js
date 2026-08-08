@@ -391,6 +391,14 @@
     return match ? Number(match[1]) : null;
   }
 
+  function geometryValidationError(message) {
+    const text = String(message);
+    const regionMatch = text.match(/^Stage [23] region\s+(\d+):/);
+    if (regionMatch) return { regionId: Number(regionMatch[1]), message: text };
+    if (text === "review geometry is invalid") return { regionId: null, message: text };
+    return null;
+  }
+
   function isRecoverableJobError(error) {
     return Boolean(error?.jobId && error.terminal !== true);
   }
@@ -505,6 +513,7 @@
     clearConfirmedTerminalJob,
     isRecoverableJobError,
     regionIdFromError,
+    geometryValidationError,
     runFrozenApproval,
   };
 }));

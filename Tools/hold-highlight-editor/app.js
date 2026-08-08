@@ -47,7 +47,7 @@
     clearMatchingAcceptedJob,
     clearConfirmedTerminalJob,
     isRecoverableJobError,
-    regionIdFromError,
+    geometryValidationError,
     runFrozenApproval,
   } = globalThis.HoldWorkbenchController;
 
@@ -1453,9 +1453,11 @@
   }
 
   function focusGeometryError(message) {
-    const regionId = regionIdFromError(message);
-    state.validationErrors = [{ regionId, message: String(message) }];
-    if (regionId != null) focusRegion(regionId);
+    const error = geometryValidationError(message);
+    if (!error) return false;
+    state.validationErrors = [error];
+    if (error.regionId != null) focusRegion(error.regionId);
+    return true;
   }
 
   async function runTrackedJob(operation) {
