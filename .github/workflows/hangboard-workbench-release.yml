@@ -15,6 +15,7 @@ permissions:
 concurrency:
   group: hangboard-workbench-release-${{ github.ref }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   build:
@@ -29,7 +30,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # actions/setup-python v5.6.0
+      # actions/setup-python v6.3.0
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
@@ -145,7 +146,7 @@ jobs:
       contents: write
 
     steps:
-      # actions/download-artifact v4.3.0
+      # actions/download-artifact v5.0.0
       - name: Download verified release assets
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
@@ -170,6 +171,19 @@ jobs:
           tag_error="$RUNNER_TEMP/hangboard-workbench-tag-error.txt"
           release_response="$RUNNER_TEMP/hangboard-workbench-release.json"
           release_error="$RUNNER_TEMP/hangboard-workbench-release-error.txt"
+          immutable_releases_response="$RUNNER_TEMP/hangboard-workbench-immutable-releases.json"
+
+          if ! gh api "repos/$GITHUB_REPOSITORY/immutable-releases" >"$immutable_releases_response"; then
+            echo "Immutable GitHub Releases must be enabled before publishing." >&2
+            exit 1
+          fi
+          python - "$immutable_releases_response" <<'PY'
+          import json
+          import sys
+
+          if json.load(open(sys.argv[1]))["enabled"] is not True:
+              raise SystemExit("Immutable GitHub Releases must be enabled before publishing.")
+          PY
 
           tag_exists=false
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >"$tag_response" 2>"$tag_error"; then
@@ -190,9 +204,7 @@ jobs:
             exit 1
           fi
 
-          release_exists=false
           if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" >"$release_response" 2>"$release_error"; then
-            release_exists=true
             release_commit="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["target_commitish"])' "$release_response")"
             if [[ "$release_commit" != "$GITHUB_SHA" ]]; then
               echo "Existing release $tag targets $release_commit, not $GITHUB_SHA." >&2
@@ -202,11 +214,18 @@ jobs:
           import json
           import sys
 
-          assets = {asset["name"] for asset in json.load(open(sys.argv[1]))["assets"]}
-          required = {"hangboard-workbench-macos-arm64.tar.gz", "hangboard-workbench-macos-arm64.sha256"}
-          missing = sorted(required - assets)
-          if missing:
-              raise SystemExit(f"Existing release is missing required assets: {', '.join(missing)}")
+          release = json.load(open(sys.argv[1]))
+          if release["draft"] or release["prerelease"] or not release["published_at"]:
+              raise SystemExit("Existing release must be published and neither draft nor prerelease.")
+          asset_names = sorted(asset["name"] for asset in release["assets"])
+          required_asset_names = sorted([
+              "hangboard-workbench-macos-arm64.sha256",
+              "hangboard-workbench-macos-arm64.tar.gz",
+          ])
+          if asset_names != required_asset_names:
+              raise SystemExit(
+                  f"Existing release assets must exactly match required assets: {asset_names}"
+              )
           PY
             exit 0
           elif ! grep -q 'HTTP 404' "$release_error"; then
