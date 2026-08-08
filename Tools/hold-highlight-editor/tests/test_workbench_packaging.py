@@ -49,6 +49,24 @@ def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
     assert "/tests/" not in joined
 
 
+def test_pyinstaller_arguments_exclude_product_and_evidence_resources(tmp_path):
+    metadata = tmp_path / "metadata"
+    metadata.mkdir()
+    (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
+
+    arguments = build._pyinstaller_arguments(
+        REPOSITORY_ROOT,
+        metadata,
+        tmp_path / "dist",
+        tmp_path / "work",
+    )
+    joined = "\n".join(arguments)
+
+    assert "--collect-data" not in arguments
+    assert "hangboard_vectorizer.products" not in joined
+    assert "hangboard_vectorizer.evidence" not in joined
+
+
 @pytest.mark.parametrize("commit", ["A" * 40, "a" * 39, "a" * 41, "not-a-sha"])
 def test_commit_must_be_exact_lowercase_sha(commit, tmp_path):
     with pytest.raises(build.BuildError, match="40-character lowercase SHA"):

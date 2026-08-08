@@ -105,8 +105,6 @@ def _pyinstaller_arguments(
         str(work_dir / "spec"),
         "--paths",
         str(onboarding_root / "src"),
-        "--collect-data",
-        "hangboard_vectorizer",
         "--hidden-import",
         "hangboard_vectorizer.workbench",
         "--hidden-import",
