@@ -450,12 +450,21 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 )
                 self._post_library_open(service, board_id)
                 return
+            if request.path.startswith("/api/boards/") and request.path.endswith("/save"):
+                board_id = unquote(
+                    request.path.removeprefix("/api/boards/").removesuffix("/save")
+                )
+                if self._required_string(payload, "boardId") != board_id:
+                    raise RequestError(
+                        HTTPStatus.BAD_REQUEST, "boardId must match the save route"
+                    )
+                self._post_mutation(service, "/api/final-save", payload)
+                return
             if request.path in {
                 "/api/drafts",
                 "/api/approve",
                 "/api/revise",
                 "/api/retry",
-                "/api/final-save",
             }:
                 self._post_mutation(service, request.path, payload)
                 return

@@ -1103,13 +1103,13 @@ def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
     assert revised["revisionId"].endswith("-revised")
 
 
-def test_final_save_returns_saved_revision(running_workbench_server):
+def test_board_scoped_save_returns_saved_revision(running_workbench_server):
     view = _create_board(running_workbench_server)
     for _ in range(5):
         view = _post_mutation(running_workbench_server, "/api/approve", view)
 
     saved = _post_mutation(
-        running_workbench_server, "/api/final-save", view
+        running_workbench_server, f"/api/boards/{view['boardId']}/save", view
     )
 
     assert view["state"] == "complete"
@@ -1168,10 +1168,10 @@ def test_draft_and_approval_mutations_require_checkpoint_identity(
     assert "expectedCheckpointToken" in body["error"]
 
 
-def test_final_save_requires_expected_revision(running_workbench_server):
+def test_board_scoped_save_requires_expected_revision(running_workbench_server):
     with pytest.raises(HTTPError) as error:
         _post_json(
-            running_workbench_server + "/api/final-save",
+            running_workbench_server + "/api/boards/board-1/save",
             {"boardId": "board-1", "expectedStage": 4},
         )
 

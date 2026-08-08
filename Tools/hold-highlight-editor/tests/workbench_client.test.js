@@ -298,3 +298,35 @@ test("openLibraryBoard posts to the encoded repository route", async () => {
     "/api/jobs/job-library",
   ]);
 });
+
+test("finalSave posts to the encoded board-scoped save route", async () => {
+  const calls = [];
+  global.fetch = async (path, options = {}) => {
+    calls.push([path, options]);
+    if (path === "/api/boards/board%209/save") {
+      return response({ ok: true, jobId: "job-save", boardId: "board 9" });
+    }
+    return response({
+      ok: true,
+      job: {
+        id: "job-save",
+        boardId: "board 9",
+        state: "succeeded",
+        result: { boardId: "board 9", saved: true },
+        error: null,
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(
+    await client.finalSave({ boardId: "board 9", revisionId: "revision-1" }),
+    { boardId: "board 9", saved: true },
+  );
+  assert.equal(calls[0][0], "/api/boards/board%209/save");
+  assert.deepEqual(JSON.parse(calls[0][1].body), {
+    boardId: "board 9",
+    expectedRevisionId: "revision-1",
+  });
+});

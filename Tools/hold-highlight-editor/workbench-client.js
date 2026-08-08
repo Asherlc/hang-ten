@@ -163,7 +163,7 @@
   }
 
   async function finalSave(view, options = {}) {
-    return postJob("/api/final-save", {
+    return postJob(`/api/boards/${encodeURIComponent(view.boardId)}/save`, {
       boardId: view.boardId,
       expectedRevisionId: view.revisionId,
     }, options);
