@@ -595,13 +595,20 @@ def test_save_review_preserves_proposal_and_writes_review_artifacts(tmp_path):
 
 
 @contextmanager
-def running_server(session, workbench_service=None, job_outcome_root=None):
+def running_server(
+    session,
+    workbench_service=None,
+    job_outcome_root=None,
+    *,
+    editor_root=EDITOR_ROOT,
+):
     server = create_server(
         session,
         "127.0.0.1",
         0,
         workbench_service=workbench_service,
         job_outcome_root=job_outcome_root,
+        editor_root=editor_root,
         public_job_error_types=(FakeWorkbenchError,)
         if workbench_service is not None
         else (),
@@ -614,6 +621,29 @@ def running_server(session, workbench_service=None, job_outcome_root=None):
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def test_server_uses_configured_editor_root(tmp_path):
+    editor_root = tmp_path / "embedded-editor"
+    editor_root.mkdir()
+    (editor_root / "index.html").write_text("frozen editor", encoding="utf-8")
+    service = FakeWorkbenchService(tmp_path / "workbench")
+
+    with running_server(
+        make_run(tmp_path / "legacy"),
+        service,
+        editor_root=editor_root,
+    ) as base:
+        with urlopen(base + "/") as response:
+            status = response.status
+            body = response.read()
+        with pytest.raises(HTTPError) as missing:
+            urlopen(base + "/styles.css")
+
+    assert status == 200
+    assert body == b"frozen editor"
+    assert missing.value.code == 404
+    assert str(editor_root) not in missing.value.read().decode()
 
 
 def read_json(url: str):

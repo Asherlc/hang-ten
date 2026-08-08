@@ -285,6 +285,7 @@ def create_server(
     host: str = "127.0.0.1",
     port: int = 4173,
     *,
+    editor_root: Path = EDITOR_ROOT,
     workbench_service: object | None = None,
     max_workers: int = 4,
     public_job_error_types: tuple[type[Exception], ...] = (),
@@ -311,6 +312,7 @@ def create_server(
     return WorkbenchHTTPServer(
         (host, port),
         SessionHandler,
+        editor_root=editor_root,
         workbench_service=workbench_service,
         job_manager=jobs,
         public_error_types=public_job_error_types,
@@ -325,10 +327,12 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         server_address: tuple[str, int],
         request_handler: type[BaseHTTPRequestHandler],
         *,
+        editor_root: Path,
         workbench_service: object | None,
         job_manager: BoardJobManager,
         public_error_types: tuple[type[Exception], ...],
     ) -> None:
+        self.editor_root = Path(editor_root).resolve(strict=False)
         self.workbench_service = workbench_service
         self.job_manager = job_manager
         self.public_error_types = public_error_types
@@ -377,7 +381,13 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         }
         filename = static_files.get(path)
         if filename is not None:
-            self._send_file(EDITOR_ROOT / filename)
+            try:
+                self._send_file(self.server.editor_root / filename)
+            except OSError:
+                self._send_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"ok": False, "error": "static asset not found"},
+                )
             return
         if path == "/api/sessions":
             self._send_json(
@@ -1034,12 +1044,23 @@ def _create_workbench_service(
     workspace_root: Path,
     repository_root: Path | None,
 ) -> tuple[object, tuple[type[Exception], ...]]:
-    onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
-    source_value = str(onboarding_source)
-    if source_value not in sys.path:
-        sys.path.insert(0, source_value)
-    from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
-    from hangboard_vectorizer.workbench_store import WorkbenchStore
+    try:
+        from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
+        from hangboard_vectorizer.workbench_store import WorkbenchStore
+    except ModuleNotFoundError as error:
+        if error.name not in {
+            "hangboard_vectorizer",
+            "hangboard_vectorizer.workbench",
+            "hangboard_vectorizer.workbench_store",
+        }:
+            raise
+        onboarding_source = EDITOR_ROOT.parent / "HangboardOnboarding" / "src"
+        source_value = str(onboarding_source)
+        if source_value not in sys.path:
+            sys.path.insert(0, source_value)
+        sys.modules.pop("hangboard_vectorizer", None)
+        from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
+        from hangboard_vectorizer.workbench_store import WorkbenchStore
 
     library = None
     public_error_types: tuple[type[Exception], ...] = (WorkbenchServiceError,)
@@ -1082,6 +1103,8 @@ def _configured_repository_root(value: Path | None) -> Path:
 
 def _server_from_cli(
     arguments: list[str] | None = None,
+    *,
+    editor_root: Path = EDITOR_ROOT,
 ) -> tuple[WorkbenchHTTPServer, EditorCatalog | None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
@@ -1125,6 +1148,7 @@ def _server_from_cli(
         catalog,
         parsed.host,
         parsed.port,
+        editor_root=editor_root,
         workbench_service=service,
         public_job_error_types=public_job_error_types,
         job_outcome_root=(
