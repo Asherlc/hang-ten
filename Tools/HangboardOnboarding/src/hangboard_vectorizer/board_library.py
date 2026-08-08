@@ -223,8 +223,10 @@ class RepositoryBoardLibrary:
                 return PublishedBoard(current, current.revision_token)
             self._require_expected_revision(current, expected_revision_token)
             self._replace_board_locked(candidate, current)
-        published = self.get_board(identifier)
-        return PublishedBoard(published, published.revision_token)
+            published = self._optional_board_locked(identifier)
+            if published is None:
+                raise BoardLibraryError("published board package is missing")
+            return PublishedBoard(published, published.revision_token)
 
     @contextmanager
     def _publication_lock(self) -> Iterator[None]:
@@ -232,7 +234,9 @@ class RepositoryBoardLibrary:
             self._prepare_write_parent(self._boards_root.parent)
             try:
                 self._boards_root.mkdir(exist_ok=True)
+                self._fsync_directory(self._boards_root.parent)
                 self._transactions_root.mkdir(exist_ok=True)
+                self._fsync_directory(self._boards_root)
             except OSError as error:
                 raise BoardLibraryError(
                     "publication lock directory is not accessible"
@@ -353,8 +357,8 @@ class RepositoryBoardLibrary:
             if rollback_path.exists() or rollback_path.is_symlink():
                 raise BoardLibraryError("transaction rollback path already exists")
             self._move_path(current_path, rollback_path)
-            self._fsync_directory(self._boards_root)
             self._fsync_directory(transaction)
+            self._fsync_directory(self._boards_root)
         self._write_journal(transaction, journal.document(phase="prior_moved"))
         self._move_path(candidate_path, current_path)
         self._fsync_directory(self._boards_root)
@@ -407,6 +411,10 @@ class RepositoryBoardLibrary:
         current_path = self._boards_root / journal.board_id
         candidate_path = transaction / "candidate"
         rollback_path = transaction / "rollback"
+        invalid_canonical_path = transaction / "invalid-canonical"
+        invalid_canonical_retained = (
+            invalid_canonical_path.exists() or invalid_canonical_path.is_symlink()
+        )
         current, current_problem = self._probe_package(current_path, canonical=True)
         candidate, candidate_problem = self._probe_package(candidate_path)
         rollback, rollback_problem = self._probe_package(rollback_path)
@@ -428,6 +436,10 @@ class RepositoryBoardLibrary:
         if rollback is not None and not rollback_valid:
             rollback_state_problem = "rollback package does not match its journal"
 
+        if invalid_canonical_retained and current is not None:
+            raise BoardLibraryError(
+                "recovered package has retained invalid canonical evidence"
+            )
         if (
             current is not None
             and current.revision_token == journal.candidate_revision_token
@@ -441,7 +453,16 @@ class RepositoryBoardLibrary:
             self._remove_transaction(transaction)
             return
         if current_problem is not None:
-            raise BoardLibraryError(f"canonical package {current_problem}")
+            if invalid_canonical_retained:
+                raise BoardLibraryError(
+                    "canonical package is invalid and prior invalid evidence exists"
+                )
+            if not candidate_valid and not rollback_valid:
+                raise BoardLibraryError(f"canonical package {current_problem}")
+            self._move_path(current_path, invalid_canonical_path)
+            self._fsync_directory(transaction)
+            self._fsync_directory(self._boards_root)
+            invalid_canonical_retained = True
 
         if current is not None:
             if (
@@ -469,6 +490,10 @@ class RepositoryBoardLibrary:
             if rollback_state_problem is not None:
                 raise BoardLibraryError(
                     f"installed the candidate but retained {rollback_state_problem}"
+                )
+            if invalid_canonical_retained:
+                raise BoardLibraryError(
+                    "installed the candidate and retained invalid canonical evidence"
                 )
             self._remove_transaction(transaction)
             return
@@ -701,7 +726,7 @@ class RepositoryBoardLibrary:
         path = self._safe_existing_file(path, root, label)
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
             raise BoardLibraryError(f"{label} is not valid JSON") from error
         return self._mapping(value, label)
 
@@ -795,9 +820,11 @@ class RepositoryBoardLibrary:
         current = root
         for part in relative.parts:
             current /= part
+            needs_parent_sync = False
             try:
                 mode = current.lstat().st_mode
             except FileNotFoundError:
+                needs_parent_sync = True
                 try:
                     current.mkdir()
                 except FileExistsError:
@@ -814,6 +841,8 @@ class RepositoryBoardLibrary:
                 raise BoardLibraryError("write target contains a symlink")
             if not stat.S_ISDIR(mode):
                 raise BoardLibraryError("write parent is not a directory")
+            if needs_parent_sync:
+                self._fsync_directory(current.parent)
 
     def _reject_write_target(self, path: Path) -> None:
         self._prepare_write_parent(path.parent)
