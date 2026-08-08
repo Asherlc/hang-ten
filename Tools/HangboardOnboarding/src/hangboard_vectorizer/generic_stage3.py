@@ -87,7 +87,14 @@ def run_generic_stage3(
     svg = _svg(first, rgba)
     if svg != _svg(second, rgba):
         raise ConversionError("generic Stage 3 SVG generation is not deterministic")
-    review = _review_image(rgba, labels, first)
+    candidate = {
+        "inputAcceptance": evidence["stage2Acceptance"],
+        "inputLabels": evidence["stage2Labels"],
+        "inputRegions": evidence["stage2Regions"],
+        "inputRgba": evidence["stage1Rgba"],
+        "profile": asdict(profile),
+        "stage": 3,
+    }
     temporary_root: Path | None = None
     try:
         artifact_root.parent.mkdir(parents=True, exist_ok=True)
@@ -96,33 +103,15 @@ def run_generic_stage3(
                 prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent
             )
         )
-        regions_path = temporary_root / "stage-3-vector-regions.json"
-        svg_path = temporary_root / "stage-3-vector.svg"
-        review_path = temporary_root / "stage-3-review.png"
-        regions_path.write_bytes(first_bytes)
-        svg_path.write_text(svg, encoding="utf-8")
-        _write_png(review_path, review)
-
-        candidate = {
-            "inputAcceptance": evidence["stage2Acceptance"],
-            "inputLabels": evidence["stage2Labels"],
-            "inputRegions": evidence["stage2Regions"],
-            "inputRgba": evidence["stage1Rgba"],
-            "profile": asdict(profile),
-            "regionCount": len(first["regions"]),
-            "stage": 3,
-            "vectorRegions": {
-                "fileSha256": _hash_file(regions_path),
-                "path": "stage-3-vector-regions.json",
-            },
-            "vectorSvg": {
-                "fileSha256": _hash_file(svg_path),
-                "path": "stage-3-vector.svg",
-            },
-        }
-        _write_json(temporary_root / "stage-3-candidate.json", candidate)
-        hashes = {name: _hash_file(temporary_root / name) for name in _CANDIDATE_FILES}
-        _write_json(temporary_root / "candidate-hashes.json", hashes)
+        hashes = build_stage3_artifacts(
+            temporary_root,
+            rgba=rgba,
+            labels=labels,
+            vector_document=first,
+            candidate=candidate,
+            preserved_files={},
+            candidate_files=_CANDIDATE_FILES,
+        )
         temporary_root.replace(artifact_root)
         return StageCheckpoint(
             stage=3,
@@ -135,6 +124,56 @@ def run_generic_stage3(
         if temporary_root is not None:
             shutil.rmtree(temporary_root, ignore_errors=True)
         raise
+
+
+def build_stage3_artifacts(
+    artifact_root: Path,
+    *,
+    rgba: np.ndarray,
+    labels: np.ndarray,
+    vector_document: Mapping[str, object],
+    candidate: Mapping[str, object],
+    preserved_files: Mapping[str, bytes],
+    candidate_files: tuple[str, ...],
+) -> dict[str, str]:
+    """Write one complete deterministic Stage 3 candidate into an empty directory."""
+    if any(artifact_root.iterdir()):
+        raise FileExistsError(f"Stage 3 artifact root is not empty: {artifact_root}")
+    regions = vector_document["regions"]
+    if not isinstance(regions, list):
+        raise ConversionError("Stage 3 vector-region document is invalid")
+    for name, content in preserved_files.items():
+        _validate_artifact_name(name)
+        if name == "candidate-hashes.json":
+            raise ConversionError("candidate hashes must be written last")
+        (artifact_root / name).write_bytes(content)
+
+    regions_path = artifact_root / "stage-3-vector-regions.json"
+    svg_path = artifact_root / "stage-3-vector.svg"
+    regions_path.write_bytes(_json_bytes(vector_document))
+    svg_path.write_text(_svg(vector_document, rgba), encoding="utf-8")
+    _write_png(artifact_root / "stage-3-review.png", _review_image(rgba, labels, vector_document))
+
+    candidate_document = dict(candidate)
+    candidate_document.update(
+        {
+            "regionCount": len(regions),
+            "stage": 3,
+            "vectorRegions": {
+                "fileSha256": _hash_file(regions_path),
+                "path": "stage-3-vector-regions.json",
+            },
+            "vectorSvg": {
+                "fileSha256": _hash_file(svg_path),
+                "path": "stage-3-vector.svg",
+            },
+        }
+    )
+    _write_json(artifact_root / "stage-3-candidate.json", candidate_document)
+    hashes = _candidate_hashes(artifact_root, candidate_files)
+    _write_json(artifact_root / "candidate-hashes.json", hashes)
+    _verify_candidate_hashes(artifact_root, hashes)
+    return hashes
 
 
 def _vector_document(
@@ -338,16 +377,28 @@ def _approved_inputs(
         raise ConversionError("Stage 2 regions are invalid")
     reconstructed = np.zeros(labels.shape, np.uint16)
     seen_keys: set[str] = set()
-    for expected_id, region in enumerate(regions, start=1):
-        if not isinstance(region, dict) or region.get("id") != expected_id:
-            raise ConversionError("Stage 2 region order changed")
+    seen_ids: set[int] = set()
+    previous_id = 0
+    for region in regions:
+        if not isinstance(region, dict):
+            raise ConversionError("Stage 2 regions are invalid")
+        region_id = region.get("id")
+        if (
+            type(region_id) is not int
+            or region_id <= 0
+            or region_id in seen_ids
+            or region_id <= previous_id
+        ):
+            raise ConversionError("Stage 2 region IDs must be positive and increasing")
         key = region.get("key")
         if not isinstance(key, str) or not key or key in seen_keys:
             raise ConversionError("Stage 2 region keys must be stable and unique")
         if region.get("type") not in _TYPE_COLORS:
             raise ConversionError("Stage 2 region type is invalid")
+        seen_ids.add(region_id)
         seen_keys.add(key)
-        reconstructed[labels == expected_id] = expected_id
+        previous_id = region_id
+        reconstructed[labels == region_id] = region_id
     if not np.array_equal(reconstructed, labels):
         raise ConversionError("Stage 2 label raster contains unknown IDs")
     evidence = {
@@ -865,6 +916,32 @@ def _hash_file(path: Path) -> str:
 
 def _hash_bytes(value: bytes) -> str:
     return sha256(value).hexdigest()
+
+
+def _candidate_hashes(root: Path, names: tuple[str, ...]) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for name in names:
+        _validate_artifact_name(name)
+        if name == "candidate-hashes.json" or name in hashes:
+            raise ConversionError(f"invalid Stage 3 candidate artifact: {name}")
+        path = root / name
+        if not path.is_file():
+            raise ConversionError(f"missing Stage 3 candidate artifact: {name}")
+        hashes[name] = _hash_file(path)
+    return hashes
+
+
+def _verify_candidate_hashes(root: Path, hashes: Mapping[str, str]) -> None:
+    recorded = _read_json(root / "candidate-hashes.json")
+    if recorded != hashes or any(
+        _hash_file(root / name) != expected for name, expected in hashes.items()
+    ):
+        raise ConversionError("Stage 3 candidate hash verification failed")
+
+
+def _validate_artifact_name(name: str) -> None:
+    if not isinstance(name, str) or not name or Path(name).name != name:
+        raise ConversionError("Stage 3 candidate artifact name is invalid")
 
 
 def _number(value: float) -> str:

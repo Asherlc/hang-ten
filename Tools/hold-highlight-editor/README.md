@@ -2,14 +2,93 @@
 
 A dependency-free local browser editor for hangboard grip-region artifacts.
 
-## Edit and save an onboarding run
+## Run the guided local workbench
+
+From the repository root, launch the repository-backed workbench with its
+defaults:
+
+```bash
+rtk python Tools/hold-highlight-editor/server.py
+```
+
+The server discovers the checkout, reads saved boards from
+`Tools/HangboardOnboarding/boards/`, and keeps in-progress work in
+`.context/hangboard-workbench/`. Tests and automation can override those roots:
+
+```bash
+rtk python Tools/hold-highlight-editor/server.py \
+  --repository-root /absolute/path/to/checkout \
+  --workspace-root /absolute/path/to/workbench-workspace
+```
+
+Open `http://localhost:4173`. Enter the exact commercial product name, choose
+an HTTP(S) image URL or local image upload, and select **Create board**. The
+image bytes, run manifests, approvals, drafts, and revisions stay under the
+workspace root. The opening screen separately lists validated **Boards in this
+repository**; selecting one opens its current committed version. The exact
+[package and publication contract is in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
+The browser never asks for a CLI run directory.
+
+Creation publishes Stage 0 and stops for review. **Approve & continue** binds
+the displayed checkpoint to its hashes, runs the next installed stage, and
+stops at the next review automatically. **Retry** publishes a new immutable
+attempt for the current stage without overwriting its earlier evidence.
+
+Stage 2 edits the pixel-aligned contour inventory that produces the label map.
+Stage 3 edits the vector display paths that become the final interactive grip
+geometry. Both editors autosave validated drafts bound to the active checkpoint
+attempt; approval materializes only the newest draft for that exact attempt.
+Undo/redo history is browser-local, and an unsaved same-browser recovery draft
+can be restored after refresh only while its checkpoint identity still matches.
+Accepted jobs are persisted independently and reconciled after refresh, so
+work on separate boards cannot overwrite another tab's recovery record.
+Published attempts and approvals remain immutable on disk.
+
+**Revise upstream** creates a new revision at the preceding approved stage and
+marks superseded downstream lineage stale. A typical local layout is:
+
+```text
+workbench-workspace/
+  boards/
+    board-0001/
+      board.json
+      revisions/
+        revision-0001/
+          run/
+          drafts/stage-2/draft-0001.json
+          drafts/stage-3/draft-0001.json
+```
+
+Each revision `run/` is a CLI-compatible onboarding run. Check one without
+changing it by using the same confinement root:
+
+```bash
+rtk hangboard-onboard \
+  --workspace-root /absolute/path/to/workbench-workspace \
+  --output /absolute/path/to/workbench-workspace/boards/board-0001/revisions/revision-0001/run \
+  --status
+```
+
+At Stage 4, **Save locally** selects the complete, current, non-stale revision
+and publishes it to `Tools/HangboardOnboarding/boards/<board-id>/`. Only complete
+runs with approved checkpoints through Stage 4 belong there; all unfinished
+runs stay under `.context/`. Save writes files for normal Git review, but never
+commits, pushes, copies artifacts into the Hang Ten app, modifies the app's
+product catalog, or synchronizes anything remotely.
+Hang Ten synchronization is a separate future command and is outside this
+workbench. CLI and other programmatic callers are producers of the same
+contract: they pass a completed run to `RepositoryBoardLibrary.publish()`.
+
+## Edit and save one existing Stage 2 run
 
 ```bash
 rtk python3 Tools/hold-highlight-editor/server.py \
   --run-dir /absolute/path/to/onboarding-run
 ```
 
-Then open `http://localhost:4173`. The server loads the run's unique `stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes these review artifacts beside the Stage 2 proposal:
+Then open `http://localhost:4173`. The server loads the run's unique
+`stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes
+these review artifacts beside the Stage 2 proposal:
 
 - `stage-2-regions.edited.json`: complete edited region artifact.
 - `stage-2-human-corrections.json`: added, modified, and deleted regions relative to the automatic proposal.
@@ -82,4 +161,8 @@ Shortcuts outside text fields:
 
 Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
 
-Both export buttons remain available in server and static modes as recovery paths. Unsaved browser edits are lost when the page closes.
+Both export buttons remain available in server and static modes as recovery
+paths. In legacy/static mode, unsaved browser edits are lost when the page
+closes; guided workbench mode keeps a same-browser recovery draft and restores
+it only for the matching board, revision, stage, and immutable checkpoint
+attempt.

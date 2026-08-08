@@ -4,17 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
-    <title>Hold Region Editor</title>
+    <title>Hangboard Workbench</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
+    <section class="setup-screen hidden" id="setup-screen" aria-labelledby="setup-title">
+      <div class="setup-card">
+        <div class="brand-mark setup-mark">H</div>
+        <span class="eyebrow">Local onboarding</span>
+        <h1 id="setup-title">Start a hangboard</h1>
+        <p>Open a published board, continue work in progress, or bring a new commercial board into the guided illustration pipeline.</p>
+        <div class="opening-grid">
+          <section class="opening-section repository-section" aria-labelledby="repository-heading">
+            <div class="opening-heading">
+              <span class="eyebrow">Repository</span>
+              <h2 id="repository-heading">Published boards</h2>
+            </div>
+            <div id="repository-board-list" class="board-opening-list" aria-live="polite"></div>
+            <div id="repository-diagnostics" class="repository-diagnostics hidden" aria-live="polite"></div>
+          </section>
+          <section class="opening-section progress-section" aria-labelledby="in-progress-heading">
+            <div class="opening-heading">
+              <span class="eyebrow">Workspace</span>
+              <h2 id="in-progress-heading">In progress</h2>
+            </div>
+            <div id="in-progress-board-list" class="board-opening-list" aria-live="polite"></div>
+          </section>
+          <form id="create-board-form" class="setup-form create-board-form">
+            <div class="opening-heading">
+              <span class="eyebrow">New work</span>
+              <h2>Create board</h2>
+            </div>
+            <label id="setup-product-field">
+              Product name
+              <input id="setup-product-input" name="productName" autocomplete="off" required placeholder="Commercial product name" />
+            </label>
+            <fieldset>
+              <legend>Image source</legend>
+              <label class="source-choice">
+                <input type="radio" name="sourceKind" value="url" checked />
+                <span>Image URL</span>
+              </label>
+              <label class="source-choice">
+                <input type="radio" name="sourceKind" value="upload" />
+                <span>Upload image</span>
+              </label>
+            </fieldset>
+            <label id="setup-url-field">
+              HTTP(S) URL
+              <input id="setup-url-input" type="url" placeholder="https://…" />
+            </label>
+            <label class="hidden" id="setup-upload-field">
+              Image file
+              <input id="setup-upload-input" type="file" accept="image/*" />
+            </label>
+            <p class="setup-error hidden" id="setup-error" role="alert"></p>
+            <button class="primary-button" id="setup-submit-button" type="submit">Create board</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <main class="app-shell" id="workbench-screen">
       <header class="topbar">
         <div class="brand-block">
           <div class="brand-mark">H</div>
           <div>
-            <h1>Hold Region Editor</h1>
-            <p>Correct automatic grip regions without changing the source image.</p>
+            <h1 id="board-title">Hangboard Workbench</h1>
+            <p id="board-state">Review each checkpoint, then continue the pipeline.</p>
           </div>
         </div>
 
@@ -24,50 +81,70 @@
             <select id="board-select" aria-label="Board to edit"></select>
           </label>
           <span class="toolbar-separator board-picker-separator hidden" id="board-picker-separator"></span>
-          <button class="tool-button" id="load-image-button">Load image</button>
-          <button class="tool-button" id="load-regions-button">Load regions</button>
+          <div class="legacy-controls" id="legacy-controls">
+            <button class="tool-button" id="load-image-button">Load image</button>
+            <button class="tool-button" id="load-regions-button">Load regions</button>
+          </div>
           <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
           <button class="icon-button" id="undo-button" title="Undo (⌘Z)" aria-label="Undo">↶</button>
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
-          <button class="tool-button accent" id="save-button" disabled>Save</button>
-          <span class="save-state" id="save-state">Static mode</span>
-          <button class="tool-button" id="export-button">Export edited regions</button>
-          <button class="tool-button" id="corrections-button">Export corrections</button>
+          <button class="tool-button" id="compare-button" aria-pressed="false">Compare</button>
+          <button class="tool-button" id="retry-button" disabled>Retry</button>
+          <button class="tool-button" id="revise-button" disabled>Revise upstream</button>
+          <span class="save-state" id="save-state">Checking workspace…</span>
+          <button class="tool-button accent" id="save-button" disabled>Approve &amp; continue</button>
+          <button class="tool-button export-action" id="export-button">Export edited regions</button>
+          <button class="tool-button export-action" id="corrections-button">Export corrections</button>
         </div>
       </header>
 
       <section class="workspace-grid">
         <aside class="panel region-panel">
-          <div class="panel-heading">
-            <div>
-              <span class="eyebrow">Inventory</span>
-              <h2>Grip regions</h2>
+          <section class="workflow-block" id="workflow-block">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">Progress</span>
+                <h2>Pipeline</h2>
+              </div>
             </div>
-            <span class="count-badge" id="region-count">0</span>
-          </div>
+            <ol class="stage-timeline" id="stage-timeline" aria-label="Onboarding stages"></ol>
+          </section>
 
-          <label class="search-field">
-            <span>⌕</span>
-            <input id="region-search" type="search" placeholder="Filter grips" />
-          </label>
+          <section class="recent-block" id="recent-block">
+            <div class="rail-heading">
+              <span class="eyebrow">Recent runs</span>
+              <button class="quiet-button" type="button" id="new-board-button">Boards</button>
+            </div>
+            <div class="recent-runs" id="recent-runs"></div>
+          </section>
 
-          <div class="region-list" id="region-list" role="listbox" aria-label="Grip regions"></div>
-
-          <div class="shape-create-row">
-            <select id="new-shape-select" aria-label="New region shape">
-              <option value="freeform">Freeform</option>
-              <option value="curved-freeform">Curved freeform</option>
-              <option value="rectangle">Rectangle</option>
-              <option value="rounded-rectangle">Rounded rectangle</option>
-              <option value="arced-rectangle">Arced rectangle</option>
-              <option value="ellipse">Ellipse</option>
-              <option value="capsule">Capsule</option>
-            </select>
-            <button class="add-region-button" id="add-region-button">
-              <span>＋</span> Add
-            </button>
-          </div>
+          <section class="inventory-block" id="inventory-block">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">Inventory</span>
+                <h2>Grip regions</h2>
+              </div>
+              <span class="count-badge" id="region-count">0</span>
+            </div>
+            <label class="search-field">
+              <span>⌕</span>
+              <input id="region-search" type="search" placeholder="Filter grips" />
+            </label>
+            <div class="region-list" id="region-list" role="listbox" aria-label="Grip regions"></div>
+            <div class="shape-create-row">
+              <select id="new-shape-select" aria-label="New region shape">
+                <option value="freeform">Freeform</option>
+                <option value="curved-freeform">Curved freeform</option>
+                <option value="rectangle">Rectangle</option>
+                <option value="rounded-rectangle">Rounded rectangle</option>
+                <option value="arced-rectangle">Arced rectangle</option>
+                <option value="ellipse">Ellipse</option>
+                <option value="capsule">Capsule</option>
+              </select>
+              <button class="add-region-button" id="add-region-button"><span>＋</span> Add</button>
+            </div>
+          </section>
         </aside>
 
         <section class="canvas-column">
@@ -77,12 +154,12 @@
               <button data-overlay="selected">Selected only</button>
               <button data-overlay="none">Image only</button>
             </div>
-
+            <div class="checkpoint-label">
+              <span class="eyebrow">Checkpoint</span>
+              <strong id="checkpoint-title">Waiting for a board</strong>
+            </div>
             <div class="canvas-actions">
-              <label class="opacity-control">
-                Overlay
-                <input id="opacity-slider" type="range" min="5" max="80" value="34" />
-              </label>
+              <label class="opacity-control">Overlay <input id="opacity-slider" type="range" min="5" max="80" value="34" /></label>
               <button class="icon-button" id="zoom-out-button" title="Zoom out">−</button>
               <span class="zoom-label" id="zoom-label">100%</span>
               <button class="icon-button" id="zoom-in-button" title="Zoom in">＋</button>
@@ -90,29 +167,34 @@
             </div>
           </div>
 
-          <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
-            <div class="canvas-stage" id="canvas-stage">
-              <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard region editor">
-                <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
-                <g id="region-overlay"></g>
-                <g id="draft-overlay"></g>
-              </svg>
+          <div class="checkpoint-views">
+            <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
+              <div class="canvas-stage" id="canvas-stage">
+                <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard checkpoint editor">
+                  <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
+                  <g id="compare-overlay"></g>
+                  <g id="region-overlay"></g>
+                  <g id="draft-overlay"></g>
+                </svg>
+              </div>
+              <div class="empty-state" id="empty-state">
+                <strong>No checkpoint selected</strong>
+                <span>Create or choose a recent board to begin.</span>
+              </div>
+              <div class="draw-instruction" id="draw-instruction">Click around the hold. Press Enter to finish or Escape to cancel.</div>
             </div>
-            <div class="empty-state" id="empty-state">
-              <strong>Drop a board image and region JSON here</strong>
-              <span>or use the load controls above</span>
-            </div>
-            <div class="draw-instruction" id="draw-instruction">
-              Click around the hold. Press Enter to finish or Escape to cancel.
+            <div class="annotated-review hidden" id="annotated-review" aria-label="Annotated checkpoint review">
+              <img id="annotated-review-image" alt="" />
             </div>
           </div>
 
+          <div class="validation-panel hidden" id="validation-panel" role="alert">
+            <strong>Fix geometry before approval</strong>
+            <ul id="validation-list"></ul>
+          </div>
           <footer class="statusbar">
-            <span id="status-text">Loading Simulator demo…</span>
-            <span class="shortcut-hints">
-              <kbd>Click</kbd> select · <kbd>Drag</kbd> move · <kbd>Double-click</kbd> add point ·
-              <kbd>[ ]</kbd> navigate · <kbd>M</kbd> mirror · <kbd>S</kbd> snap · <kbd>Space</kbd> pan
-            </span>
+            <span id="status-text">Checking for recent runs…</span>
+            <span class="shortcut-hints"><kbd>Click</kbd> select · <kbd>Drag</kbd> move · <kbd>Double-click</kbd> add point · <kbd>[ ]</kbd> navigate · <kbd>M</kbd> mirror · <kbd>S</kbd> snap · <kbd>Space</kbd> pan</span>
           </footer>
         </section>
 
@@ -123,70 +205,31 @@
               <h2 id="inspector-title">No selection</h2>
             </div>
           </div>
-
-          <div class="inspector-empty" id="inspector-empty">
-            Select a region to edit its shape and metadata.
-          </div>
-
+          <div class="inspector-empty" id="inspector-empty">Select a region to edit its exact geometry and metadata.</div>
           <form class="inspector-form hidden" id="inspector-form">
-            <label>
-              Region key
-              <input id="region-key-input" type="text" autocomplete="off" />
+            <label>Region key <input id="region-key-input" type="text" autocomplete="off" /></label>
+            <label>Grip type
+              <select id="region-type-select"><option value="pocket">Pocket</option><option value="edge">Edge</option><option value="sloper">Sloper</option><option value="jug">Jug</option></select>
             </label>
-
-            <label>
-              Grip type
-              <select id="region-type-select">
-                <option value="pocket">Pocket</option>
-                <option value="edge">Edge</option>
-                <option value="sloper">Sloper</option>
-                <option value="jug">Jug</option>
-              </select>
+            <label>Shape
+              <select id="region-shape-select"><option value="freeform">Freeform</option><option value="rectangle">Rectangle</option><option value="rounded-rectangle">Rounded rectangle</option><option value="arced-rectangle">Arced rectangle</option><option value="ellipse">Ellipse</option><option value="capsule">Capsule</option></select>
             </label>
-
-            <label>
-              Shape
-              <select id="region-shape-select">
-                <option value="freeform">Freeform</option>
-                <option value="rectangle">Rectangle</option>
-                <option value="rounded-rectangle">Rounded rectangle</option>
-                <option value="arced-rectangle">Arced rectangle</option>
-                <option value="ellipse">Ellipse</option>
-                <option value="capsule">Capsule</option>
-              </select>
+            <label>Path style
+              <select id="region-path-style-select"><option value="straight">Straight segments</option><option value="smooth">Smooth curve</option></select>
             </label>
-
-            <label>
-              Path style
-              <select id="region-path-style-select">
-                <option value="straight">Straight segments</option>
-                <option value="smooth">Smooth curve</option>
-              </select>
+            <label class="tension-field hidden" id="tension-field"><span>Curve tension <output id="curve-tension-value">80%</output></span><input id="curve-tension-slider" type="range" min="10" max="140" value="80" /></label>
+            <fieldset class="corner-treatment-field hidden" id="corner-treatment-field">
+              <legend>Corner <span id="corner-number">—</span></legend>
+              <label>Treatment
+                <select id="corner-treatment-select" disabled><option value="sharp">Sharp</option><option value="rounded">Rounded</option></select>
+              </label>
+              <label>Radius / amount (px) <input id="corner-amount-input" type="number" min="0.5" max="100" step="0.5" value="12" disabled /></label>
+            </fieldset>
+            <label>Interaction mode
+              <select id="region-mode-select"><option value="aperture">Aperture</option><option value="surface">Surface</option></select>
             </label>
-
-            <label class="tension-field hidden" id="tension-field">
-              <span>Curve tension <output id="curve-tension-value">80%</output></span>
-              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" />
-            </label>
-
-            <label>
-              Interaction mode
-              <select id="region-mode-select">
-                <option value="aperture">Aperture</option>
-                <option value="surface">Surface</option>
-              </select>
-            </label>
-
-            <label>
-              Review notes
-              <textarea id="region-notes-input" rows="4" placeholder="Why was this region changed?"></textarea>
-            </label>
-
-            <div class="metric-grid">
-              <div><span>Points</span><strong id="point-count">—</strong></div>
-              <div><span>Area</span><strong id="area-value">—</strong></div>
-            </div>
-
+            <label>Review notes <textarea id="region-notes-input" rows="4" placeholder="Why was this region changed?"></textarea></label>
+            <div class="metric-grid"><div><span>Points</span><strong id="point-count">—</strong></div><div><span>Area</span><strong id="area-value">—</strong></div></div>
             <div class="inspector-actions">
               <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
               <button type="button" class="tool-button" id="next-region-button">Next →</button>
@@ -198,14 +241,7 @@
               <button type="button" class="tool-button danger" id="delete-button">Delete region</button>
             </div>
           </form>
-
-          <div class="legend">
-            <span class="eyebrow">Types</span>
-            <div><i class="dot jug"></i> Jug</div>
-            <div><i class="dot sloper"></i> Sloper</div>
-            <div><i class="dot edge"></i> Edge</div>
-            <div><i class="dot pocket"></i> Pocket</div>
-          </div>
+          <div class="legend"><span class="eyebrow">Types</span><div><i class="dot jug"></i> Jug</div><div><i class="dot sloper"></i> Sloper</div><div><i class="dot edge"></i> Edge</div><div><i class="dot pocket"></i> Pocket</div></div>
         </aside>
       </section>
     </main>
@@ -214,6 +250,10 @@
     <input id="regions-file-input" type="file" accept="application/json,.json" hidden />
 
     <script src="editor-model.js"></script>
+    <script src="workbench-client.js"></script>
+    <script src="workbench-controller.js"></script>
+    <script src="workbench-model.js"></script>
+    <script src="vector-path-model.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
