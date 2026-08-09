@@ -50,8 +50,9 @@ scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
 ```
 
-After a run is approved, copy it into the canonical package and move the board
-to the next lifecycle state:
+After a run is approved, copy it into the canonical package. Registration only
+accepts symlink-free `.context` runs, advances the board lifecycle when
+appropriate, and never downgrades a shipped board:
 
 ```sh
 scripts/hangboard-tools.sh catalog register \

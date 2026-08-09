@@ -39,7 +39,9 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in `BoardCatalog` in `TrainingModels.swift`.
+and hold metadata lives in `Hangboards/*.json` and the generated
+`HangTen/Models/GeneratedBoardCatalog.swift`, not in hand-authored
+`TrainingModels.swift`.
 
 ## Run
 

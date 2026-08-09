@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -10,6 +12,7 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CATALOG_PATH = REPO_ROOT / "Hangboards" / "catalog.json"
 BOARD_PATH = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "board.json"
+EXPORT_SCRIPT_PATH = REPO_ROOT / "scripts" / "export-board-catalog.sh"
 COMPACT_II_HOLD_IDS = [
     "jug-left",
     "jug-right",
@@ -63,7 +66,7 @@ def test_render_swift_catalog_contains_compact_ii_and_all_stable_hold_ids() -> N
         assert f'id: "{hold_id}"' in rendered
 
 
-def test_render_swift_catalog_uses_swift_defaults_for_pocket_features() -> None:
+def test_render_swift_catalog_preserves_manifest_pocket_features() -> None:
     module = load_module()
     board = module.load_board(BOARD_PATH)
 
@@ -73,7 +76,18 @@ def test_render_swift_catalog_uses_swift_defaults_for_pocket_features() -> None:
         if 'id: "pocket-29-three-left"' in block
     )
 
-    assert "features:" not in pocket_block
+    assert "features: [.pocket, .threeFingerPocket]" in pocket_block
+
+
+def test_export_swift_catalog_rejects_unsupported_swift_enums(tmp_path: Path) -> None:
+    module = load_module()
+    board_payload = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
+    board_payload["holds"][0]["kind"] = "pinch"
+    board_path = tmp_path / "board.json"
+    board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unsupported Swift HoldKind"):
+        module.load_board(board_path)
 
 
 def test_export_swift_catalog_check_detects_drift(tmp_path: Path) -> None:
@@ -85,3 +99,15 @@ def test_export_swift_catalog_check_detects_drift(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="drift"):
         module.export_swift_catalog(CATALOG_PATH, output_path, check=True)
+
+
+def test_export_board_catalog_shell_check_succeeds_for_checked_in_tree() -> None:
+    result = subprocess.run(
+        [str(EXPORT_SCRIPT_PATH), "--check"],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr

@@ -108,8 +108,9 @@ The canonical package for each board lives under `Hangboards/`:
   `shipped`.
 
 Stage output is still written to temporary, ignored run folders first (for
-example under `.context/hangboard-onboarding/...`). Register once a run is
-intended to be permanent:
+example under `.context/hangboard-onboarding/...`). Registration only accepts
+symlink-free `.context` runs, advances lifecycle when appropriate, and never
+downgrades a shipped board. Register once a run is intended to be permanent:
 
 ```bash
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json

@@ -79,6 +79,10 @@ class BoardCatalogTests(unittest.TestCase):
         self.assertEqual(len(board.holds), 19)
         self.assertEqual({hold.id for hold in board.holds}, COMPACT_II_HOLD_IDS)
         self.assertEqual({hold.region_id for hold in board.holds}, set(range(1, 20)))
+        pocket_holds = [hold for hold in board.holds if hold.kind == "pocket"]
+        self.assertTrue(pocket_holds)
+        for hold in pocket_holds:
+            self.assertIn("pocket", hold.features)
 
     def test_validate_catalog_rejects_duplicate_ids_and_escaping_paths(self) -> None:
         module = load_module()
@@ -163,6 +167,38 @@ class BoardCatalogTests(unittest.TestCase):
                 "onboarding/runs/accepted-run",
             )
 
+    def test_register_run_preserves_shipped_lifecycle(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_root = workspace / ".context"
+            context_run_root = context_root / "hangboard-onboarding" / "accepted-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            board_payload["lifecycle"] = "shipped"
+            board_payload["onboardingRuns"] = []
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+            registered = module.register_run(
+                catalog_path,
+                "metolius.wood-grips-compact-ii",
+                context_run_root,
+                run_id="accepted-run",
+            )
+
+            self.assertEqual(registered.lifecycle, "shipped")
+            self.assertEqual([run.lifecycle for run in registered.onboarding_runs], ["approved"])
+
+            persisted = module.load_board(board_path)
+            self.assertEqual(persisted.lifecycle, "shipped")
+
+            catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+            self.assertEqual(catalog_payload["boards"][0]["lifecycle"], "shipped")
+
     def test_register_run_rejects_reference_path_and_accepts_context_run(self) -> None:
         module = load_module()
 
@@ -200,6 +236,62 @@ class BoardCatalogTests(unittest.TestCase):
 
             persisted = module.load_board(board_path)
             self.assertEqual([run.id for run in persisted.onboarding_runs], ["accepted-run"])
+
+    def test_validate_catalog_rejects_unsupported_swift_hold_enums(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+
+            invalid_cases = [
+                ("kind", "pinch", "unsupported Swift HoldKind"),
+                ("gripType", "monoPocket", "unsupported Swift GripType"),
+                ("features", ["pocket", "monoPocket"], "unsupported Swift HoldFeature"),
+            ]
+
+            for field, value, message in invalid_cases:
+                mutated = json.loads(json.dumps(board_payload))
+                mutated["holds"][0][field] = value
+                board_path.write_text(json.dumps(mutated, indent=2) + "\n", encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, message):
+                    module.validate_catalog(catalog_path)
+
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+    def test_register_run_rejects_nested_symlink_escape(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_root = workspace / ".context"
+            context_run_root = context_root / "hangboard-onboarding" / "accepted-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+
+            catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+            catalog_payload["boards"][0]["lifecycle"] = "draft"
+            catalog_path.write_text(json.dumps(catalog_payload, indent=2) + "\n", encoding="utf-8")
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            board_payload["lifecycle"] = "draft"
+            board_payload["onboardingRuns"] = []
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+            outside_root = workspace / "outside"
+            outside_root.mkdir()
+            (outside_root / "payload.txt").write_text("escape", encoding="utf-8")
+            (context_run_root / "escape-link").symlink_to(outside_root, target_is_directory=True)
+
+            with self.assertRaisesRegex(ValueError, "symlink"):
+                module.register_run(
+                    catalog_path,
+                    "metolius.wood-grips-compact-ii",
+                    context_run_root,
+                    run_id="accepted-run",
+                )
 
 
 def copy_catalog_fixture(destination_root: Path) -> tuple[Path, Path]:
