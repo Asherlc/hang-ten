@@ -9,10 +9,10 @@ rtk python3 Tools/hold-highlight-editor/server.py \
   --run-dir /absolute/path/to/onboarding-run
 ```
 
-Then open `http://localhost:4173`. Choose a board when more than one run is available, edit existing highlights, add a new highlight and choose its hold type, delete incorrect highlights, then save or export the review. The server loads the run's generated `stage-1-auto-rgba.png` input image and `stage-2-regions.json` input regions. **Save** atomically writes these review artifacts beside the generated proposal:
+Then open `http://localhost:4173`. Choose a board when more than one run is available, edit existing highlights, add a new highlight and choose its hold type, delete incorrect highlights, then save or export the review. The server loads the run's generated `stage-1-auto-rgba.png` input image and `stage-2-regions.json` input hold highlights. **Save** atomically writes these review artifacts beside the generated proposal:
 
-- `stage-2-regions.edited.json`: complete edited region artifact.
-- `stage-2-human-corrections.json`: added, modified, and deleted regions relative to the automatic proposal.
+- `stage-2-regions.edited.json`: complete edited hold-highlight artifact.
+- `stage-2-human-corrections.json`: added, modified, and deleted hold highlights relative to the automatic proposal.
 
 The generated `stage-2-regions.json` is never overwritten.
 
@@ -59,7 +59,7 @@ rtk python3 -m http.server 4173 --directory Tools/hold-highlight-editor
 
 Any generated `stage-1-auto-rgba.png` image and compatible `stage-2-regions.json` can be loaded through the toolbar or by dropping both files onto the canvas. If a `demo/` directory is supplied, the editor loads it automatically.
 
-Regions can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
+Hold highlights can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
 Selected highlights expose object-level rotate and bend handles. The full inspector retains hold key, hold type, shape, path style, hold interaction mode, and hold notes for each selected highlight. Individual contour points remain available behind the **Edit points** toggle for fine correction.
 
@@ -68,18 +68,18 @@ Selected highlights expose object-level rotate and bend handles. The full inspec
 1. Draw one side of a repeated or symmetric hold layout.
 2. Use the eight frame handles to resize, the circular handle to rotate, and the diamond handle to bend. Hold Shift while resizing a corner to preserve aspect ratio.
 3. Use **Simplify curve** when a smooth outline has too many controls; undo immediately if the reduction is too aggressive.
-4. Use **Mirror copy** to create a new symmetric region, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
+4. Use **Mirror copy** to create a new symmetric hold highlight, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
 5. Enable **Snap edges** when direct point or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
 6. Save the reviewed run.
 
 Shortcuts outside text fields:
 
-- `[` / `]`: previous or next region
+- `[` / `]`: previous or next hold highlight
 - `M`: mirror copy
 - `E`: toggle detailed point editing
 - `S`: toggle edge snapping
 - `Space`: pan
 
-Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
+Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a hold highlight during load, move, rotate, bend, mirror, or save.
 
 Both export buttons remain available in server and static modes as recovery paths. Unsaved browser edits are lost when the page closes.

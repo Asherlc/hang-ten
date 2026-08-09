@@ -26,7 +26,7 @@
           <span class="toolbar-separator board-picker-separator hidden" id="board-picker-separator"></span>
           <div class="hidden" id="static-load-controls">
             <button class="tool-button" id="load-image-button">Load image</button>
-            <button class="tool-button" id="load-regions-button">Load regions</button>
+            <button class="tool-button" id="load-regions-button">Load highlights</button>
           </div>
           <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
@@ -34,7 +34,7 @@
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
           <button class="tool-button accent" id="save-button" disabled>Save</button>
           <span class="save-state" id="save-state">Static mode</span>
-          <button class="tool-button" id="export-button">Export edited regions</button>
+          <button class="tool-button" id="export-button">Export edited highlights</button>
           <button class="tool-button" id="corrections-button">Export corrections</button>
         </div>
       </header>
@@ -75,7 +75,7 @@
         <section class="canvas-column">
           <div class="canvas-header">
             <div class="segmented-control" aria-label="Overlay visibility">
-              <button class="active" data-overlay="all">All regions</button>
+              <button class="active" data-overlay="all">All highlights</button>
               <button data-overlay="selected">Selected only</button>
               <button data-overlay="none">Image only</button>
             </div>
@@ -101,7 +101,7 @@
               </svg>
             </div>
             <div class="empty-state" id="empty-state">
-              <strong>Drop a board image and region JSON here</strong>
+              <strong>Drop a board image and hold-highlight JSON here</strong>
               <span>or use the load controls above</span>
             </div>
             <div class="draw-instruction" id="draw-instruction">
@@ -181,7 +181,7 @@
 
             <label>
               Hold notes
-              <textarea id="region-notes-input" rows="4" placeholder="Why was this region changed?"></textarea>
+              <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
             </label>
 
             <div class="metric-grid">

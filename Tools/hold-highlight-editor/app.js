@@ -10,6 +10,8 @@
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
+    canSaveEditorState,
+    runSessionLoadTransaction,
   } = globalThis.HoldEditorModel;
 
   const TYPE_COLORS = {
@@ -160,7 +162,7 @@
   }
 
   function renderSaveState() {
-    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving && !state.loadingSession);
+    const canSave = canSaveEditorState(state);
     el["save-button"].disabled = !canSave;
     el["board-select"].disabled = state.loadingSession || state.saving;
     el["save-state"].className = "save-state";
@@ -322,13 +324,13 @@
     const top = localToWorld([frame.centerLocalX, frame.minY], frame.center, frame.rotation);
     const rotatePoint = localToWorld([frame.centerLocalX, frame.minY - handleOffset], frame.center, frame.rotation);
     group.appendChild(makeSvg("line", { x1: top[0], y1: top[1], x2: rotatePoint[0], y2: rotatePoint[1], class: "transform-stem" }));
-    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate region" });
+    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate hold highlight" });
     rotateHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "rotate"));
     group.appendChild(rotateHandle);
 
     const bendPoint = localToWorld([frame.centerLocalX, frame.minY + Math.min((frame.maxY - frame.minY) * 0.3, 14 / Math.max(state.zoom, 0.3))], frame.center, frame.rotation);
     const bendSize = 6 / Math.max(state.zoom, 0.3);
-    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend region" });
+    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend hold highlight" });
     bendHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "bend"));
     group.appendChild(bendHandle);
   }
@@ -518,14 +520,14 @@
   function onSvgPointerUp(event) {
     if (state.transformSession?.pointerId === event.pointerId) {
       if (state.transformSession.changed) {
-        const labels = { rotate: "Rotated region", bend: "Bent region", resize: "Resized region" };
+        const labels = { rotate: "Rotated hold highlight", bend: "Bent hold highlight", resize: "Resized hold highlight" };
         commitHistory(labels[state.transformSession.kind]);
       }
       state.transformSession = null;
       render();
     }
     if (state.dragSession?.pointerId === event.pointerId) {
-      if (state.dragSession.changed) commitHistory("Moved region");
+      if (state.dragSession.changed) commitHistory("Moved hold highlight");
       state.dragSession = null;
       render();
     }
@@ -859,7 +861,7 @@
   async function loadDemo() {
     try {
       const [regionsResponse] = await Promise.all([fetch("demo/stage-2-regions.json", { cache: "no-store" })]);
-      if (!regionsResponse.ok) throw new Error("Demo regions unavailable");
+      if (!regionsResponse.ok) throw new Error("Demo hold highlights unavailable");
       const data = await regionsResponse.json();
       await setImageHref("demo/stage-1-auto-rgba.png", "Simulator Stage 1 demo");
       setRegions(data, "stage-2-regions.json");
@@ -891,19 +893,44 @@
   }
 
   async function loadServerSession(runId) {
-    const previousRunId = state.selectedRunId;
+    const current = {
+      editor: state,
+      visible: {
+        boardValue: state.selectedRunId || el["board-select"].value,
+        status: el["status-text"].textContent,
+      },
+    };
     state.loadingSession = true;
     renderSaveState();
     try {
-      const sessionUrl = `/api/session?run=${encodeURIComponent(runId)}`;
-      const sessionResponse = await fetch(sessionUrl, { cache: "no-store" });
-      if (!sessionResponse.ok || !sessionResponse.headers.get("content-type")?.includes("application/json")) return false;
-      const session = await sessionResponse.json();
-      if (!session.ok) return false;
-      const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
-      if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
-      const regions = await regionsResponse.json();
-      await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
+      const transition = await runSessionLoadTransaction(current, {
+        loadSession: async () => {
+          const sessionUrl = `/api/session?run=${encodeURIComponent(runId)}`;
+          const response = await fetch(sessionUrl, { cache: "no-store" });
+          if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+            throw new Error("Could not load the selected board session");
+          }
+          const session = await response.json();
+          if (!session.ok) throw new Error(session.error || "Could not load the selected board session");
+          return session;
+        },
+        loadRegions: async (session) => {
+          const response = await fetch(session.regionsUrl, { cache: "no-store" });
+          if (!response.ok) throw new Error("Could not load hold highlights from the run");
+          return response.json();
+        },
+        normalizeRegions: (regions) => normalizePipelineDocument(regions, state.canvas),
+        loadImage: (session) => loadImageAsset(session.imageUrl),
+      });
+      if (!transition.ok) {
+        console.warn(transition.error);
+        el["board-select"].value = transition.value.visible.boardValue;
+        setStatus(transition.value.visible.status);
+        return false;
+      }
+
+      const { session, normalized, imageAsset } = transition.value;
+      applyImageAsset(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png", imageAsset);
       state.serverSession = session;
       state.selectedRunId = session.id;
       state.drawing = false;
@@ -911,15 +938,15 @@
       state.primitiveSession = null;
       state.editPoints = false;
       state.mirrorOntoSourceId = null;
-      setRegions(regions, session.regionsPath || "stage-2-regions.json");
+      applyRegions(normalized, session.regionsPath || "stage-2-regions.json");
       showStaticLoadControls(false);
       el["board-select"].value = session.id;
       setStatus(`Loaded ${session.label}. Edit the hold highlights and save changes into this generated run.`);
       return true;
     } catch (error) {
       console.warn(error);
-      if (previousRunId) el["board-select"].value = previousRunId;
-      setStatus(`Could not switch boards: ${error.message || error}`);
+      el["board-select"].value = current.visible.boardValue;
+      setStatus(current.visible.status);
       return false;
     } finally {
       state.loadingSession = false;
@@ -958,42 +985,48 @@
     await loadDemo();
   }
 
-  async function setImageHref(href, name) {
-    await new Promise((resolve, reject) => {
+  async function loadImageAsset(href) {
+    const image = await new Promise((resolve, reject) => {
       const image = new Image();
-      image.onload = () => {
-        state.imageHref = href;
-        state.imageName = name;
-        el["board-image"].setAttribute("href", href);
-        captureImagePixels(image);
-        if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
-        resolve();
-      };
+      image.onload = () => resolve(image);
       image.onerror = reject;
       image.src = href;
     });
-    configureSvg();
-    el["empty-state"].classList.add("hidden");
+    return { image, imagePixels: readImagePixels(image) };
   }
 
-  function captureImagePixels(image) {
+  function applyImageAsset(href, name, { image, imagePixels }) {
+    state.imageHref = href;
+    state.imageName = name;
+    state.imagePixels = imagePixels;
+    if (!imagePixels) state.snapEnabled = false;
+    el["board-image"].setAttribute("href", href);
+    if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
+    configureSvg();
+    el["empty-state"].classList.add("hidden");
+    renderToolState();
+  }
+
+  async function setImageHref(href, name) {
+    applyImageAsset(href, name, await loadImageAsset(href));
+  }
+
+  function readImagePixels(image) {
     try {
       const canvas = document.createElement("canvas");
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
       const context = canvas.getContext("2d", { willReadFrequently: true });
       context.drawImage(image, 0, 0);
-      state.imagePixels = {
+      return {
         rgba: context.getImageData(0, 0, canvas.width, canvas.height).data,
         width: canvas.width,
         height: canvas.height,
       };
     } catch (error) {
-      state.imagePixels = null;
-      state.snapEnabled = false;
       console.warn("Edge snapping unavailable for this image", error);
+      return null;
     }
-    renderToolState();
   }
 
   function snapPoint(point, bypass = false) {
@@ -1023,7 +1056,10 @@
   }
 
   function setRegions(data, name = "regions.json") {
-    const normalized = normalizePipelineDocument(data, state.canvas);
+    applyRegions(normalizePipelineDocument(data, state.canvas), name);
+  }
+
+  function applyRegions(normalized, name) {
     state.canvas = normalized.canvas;
     state.regions = normalized.regions;
     state.baselineRegions = clone(state.regions);
@@ -1099,7 +1135,7 @@
   function exportEditedRegions() {
     const payload = editedDocument();
     downloadJson(payload, "stage-2-regions.edited.json");
-    setStatus(`Exported ${payload.regions.length} edited regions.`);
+    setStatus(`Exported ${payload.regions.length} edited hold highlights.`);
   }
 
   function exportCorrections() {
@@ -1285,8 +1321,8 @@
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
   el["opacity-slider"].addEventListener("input", (event) => { state.opacity = Number(event.target.value) / 100; renderOverlay(); });
-  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed region"));
-  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed grip type"));
+  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed hold highlight"));
+  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed hold type"));
   el["region-shape-select"].addEventListener("change", (event) => convertSelectedShape(event.target.value));
   el["region-path-style-select"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.pathStyle = event.target.value; }, "Changed path style"));
   el["curve-tension-slider"].addEventListener("input", (event) => {

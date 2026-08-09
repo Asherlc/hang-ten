@@ -67,3 +67,27 @@ test("describes static save mode with hold-editor wording", () => {
   assert.match(app, /save hold highlights in this Hold Editor/i);
   assert.doesNotMatch(app, /onboarding run/);
 });
+
+test("uses hold-highlight terminology in visible editor controls", () => {
+  assert.match(index, />Load highlights</);
+  assert.match(index, />Export edited highlights</);
+  assert.match(index, />All highlights</);
+  assert.match(index, /Drop a board image and hold-highlight JSON here/);
+  assert.match(index, /Why was this hold highlight changed\?/);
+  assert.doesNotMatch(index, />Load regions</);
+  assert.doesNotMatch(index, />All regions</);
+});
+
+test("uses hold-highlight terminology in runtime messages", () => {
+  assert.match(app, /Rotated hold highlight/);
+  assert.match(app, /Exported .* edited hold highlights/);
+  assert.doesNotMatch(app, /"(?:Rotated|Bent|Resized|Moved|Renamed) region"/);
+  assert.doesNotMatch(app, /edited regions\.`/);
+});
+
+test("documents hold-highlight operations without generic region prose", () => {
+  assert.match(readme, /Hold highlights can be drawn/);
+  assert.match(readme, /previous or next hold highlight/);
+  assert.doesNotMatch(readme, /Regions can be drawn/);
+  assert.doesNotMatch(readme, /symmetric region/);
+});

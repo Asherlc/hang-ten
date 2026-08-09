@@ -123,6 +123,22 @@
     };
   }
 
+  function canSaveEditorState({ serverSession, dirty, saving, loadingSession }) {
+    return Boolean(serverSession && dirty && !saving && !loadingSession);
+  }
+
+  async function runSessionLoadTransaction(current, { loadSession, loadRegions, normalizeRegions, loadImage }) {
+    try {
+      const session = await loadSession();
+      const regions = await loadRegions(session);
+      const normalized = normalizeRegions(regions);
+      const imageAsset = await loadImage(session);
+      return { ok: true, value: { session, normalized, imageAsset }, error: null };
+    } catch (error) {
+      return { ok: false, value: current, error };
+    }
+  }
+
   function resizeContour({ points, rotation = 0, handle, pointer, preserveAspect = false }) {
     const center = centroid(points);
     const cosine = Math.cos(rotation);
@@ -267,5 +283,7 @@
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
+    canSaveEditorState,
+    runSessionLoadTransaction,
   };
 }));
