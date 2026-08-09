@@ -33,7 +33,7 @@ from workbench_assets import STATIC_ASSET_ROUTES
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
 _ABSOLUTE_PATH_IN_TEXT = re.compile(
-    r"(?:/(?!/)[^\s/]|[A-Za-z]:[\\/])"
+    r"(?:(?<![A-Za-z0-9/])/(?!/)[^\s/]|[A-Za-z]:[\\/])"
 )
 
 
@@ -875,6 +875,12 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         return self.editor_catalog.get(values[0] if values else None)
 
     def _allow_request(self, *, mutation: bool) -> bool:
+        if not _loopback_peer(self.client_address):
+            self._send_json(
+                HTTPStatus.FORBIDDEN,
+                {"ok": False, "error": "request origin is not allowed"},
+            )
+            return False
         host_values = self.headers.get_all("Host", [])
         host = (
             _loopback_authority(host_values[0], self.server.server_port)
@@ -933,6 +939,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
 def _finite_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def _loopback_peer(value: object) -> bool:
+    if not isinstance(value, tuple) or not value or not isinstance(value[0], str):
+        return False
+    try:
+        return ip_address(value[0]).is_loopback
+    except ValueError:
+        return False
 
 
 def _loopback_authority(value: object, selected_port: int) -> tuple[str, int] | None:
@@ -1112,6 +1127,19 @@ def _configured_repository_root(value: Path | None) -> Path:
     return root
 
 
+def _configured_workspace_root(value: Path, repository_root: Path) -> Path:
+    workspace_root = Path(value).expanduser().resolve(strict=False)
+    context_root = (repository_root / ".context").resolve(strict=False)
+    try:
+        context_root.relative_to(repository_root)
+        workspace_root.relative_to(context_root)
+    except ValueError as error:
+        raise EditorError(
+            "workspace root must stay under repository .context"
+        ) from error
+    return workspace_root
+
+
 def _server_from_cli(
     arguments: list[str] | None = None,
     *,
@@ -1138,17 +1166,17 @@ def _server_from_cli(
             )
             repository_root = (
                 _configured_repository_root(parsed.repository_root)
-                if use_repository_library
+                if use_repository_library or parsed.workspace_root is not None
                 else None
             )
             workspace_root = (
-                parsed.workspace_root.expanduser().resolve(strict=False)
+                _configured_workspace_root(parsed.workspace_root, repository_root)
                 if parsed.workspace_root is not None
                 else repository_root / ".context" / "hangboard-workbench"
             )
             service, public_job_error_types = _create_workbench_service(
                 workspace_root,
-                repository_root,
+                repository_root if use_repository_library else None,
             )
         else:
             service = None

@@ -9,6 +9,7 @@ import threading
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
+from email.message import Message
 from http.client import HTTPConnection
 from pathlib import Path
 from threading import Event, Lock
@@ -831,6 +832,31 @@ def test_reads_reject_foreign_or_wrong_port_hosts_and_accept_loopback_authoritie
         assert payload == {"ok": False, "error": "request origin is not allowed"}
 
 
+def test_request_rejects_non_loopback_peer_with_a_forged_loopback_host():
+    class RequestHandler:
+        def __init__(self):
+            self.headers = Message()
+            self.headers["Host"] = "127.0.0.1:4173"
+            self.server = type("Server", (), {"server_port": 4173})()
+            self.client_address = ("203.0.113.8", 61337)
+            self.response = None
+
+        def _send_json(self, status, value):
+            self.response = (status, value)
+
+    handler = RequestHandler()
+
+    allowed = server_module.EditorRequestHandler._allow_request(
+        handler, mutation=False
+    )
+
+    assert allowed is False
+    assert handler.response == (
+        403,
+        {"ok": False, "error": "request origin is not allowed"},
+    )
+
+
 def test_mutations_reject_foreign_or_missing_browser_origins_but_allow_local_ui_and_cli(
     running_workbench_server,
 ):
@@ -1418,7 +1444,34 @@ def test_job_poll_redacts_path_from_untrusted_value_error(tmp_path):
     assert str(tmp_path) not in json.dumps(final)
 
 
-@pytest.mark.parametrize(("delimiter",), [("<",), ("{",), (",",), (".",)])
+@pytest.mark.parametrize(
+    "message",
+    [
+        "could not load truncated-board/run.json",
+        "recovery found .transactions/captured-conflict",
+        "diagnostic mentions and/or",
+        "availability is 24/7",
+    ],
+)
+def test_public_job_error_keeps_repository_relative_diagnostic_paths(message: str):
+    assert server_module._public_job_error_message(ValueError(message)) == message
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "could not load /private/workbench/secret.txt",
+        r"could not load C:\\private\\workbench\\secret.txt",
+    ],
+)
+def test_public_job_error_redacts_rooted_unix_and_windows_paths(message: str):
+    assert (
+        server_module._public_job_error_message(ValueError(message))
+        == "repository operation failed"
+    )
+
+
+@pytest.mark.parametrize("delimiter", ["<", "{", ",", "."])
 def test_public_job_error_redacts_absolute_paths_after_arbitrary_delimiters(
     tmp_path: Path, delimiter: str
 ):
@@ -1550,7 +1603,7 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     launch_directory = repository / "nested" / "launch"
     launch_directory.mkdir(parents=True)
     monkeypatch.chdir(launch_directory)
-    workspace = tmp_path / "workspace"
+    workspace = repository / ".context" / "workspace"
     server, catalog = server_module._server_from_cli(
         ["--workspace-root", str(workspace), "--port", "0"]
     )
@@ -1596,6 +1649,27 @@ def test_workspace_root_requires_a_repository_outside_explicit_legacy_mode(
     assert "could not find a repository root" in capsys.readouterr().err
 
 
+def test_workspace_root_rejects_an_escape_from_repository_context(tmp_path, capsys):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    escaped_workspace = tmp_path / "escaped-workspace"
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            [
+                "--repository-root",
+                str(repository),
+                "--workspace-root",
+                str(escaped_workspace),
+                "--port",
+                "0",
+            ]
+        )
+
+    assert error.value.code == 2
+    assert "workspace root must stay under repository .context" in capsys.readouterr().err
+
+
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
@@ -1604,7 +1678,7 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     (repository / ".git").mkdir(parents=True)
     library = repository / "Tools" / "HangboardOnboarding" / "boards"
     library.mkdir(parents=True)
-    workspace = tmp_path / "workspace"
+    workspace = repository / ".context" / "workspace"
 
     server, catalog = server_module._server_from_cli(
         [
@@ -1644,7 +1718,7 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     (broken / "run.json").write_text("{}")
 
     server, _catalog = server_module._server_from_cli(
-        ["--repository-root", str(repository), "--workspace-root", str(tmp_path / "workspace"), "--port", "0"]
+        ["--repository-root", str(repository), "--workspace-root", str(repository / ".context" / "workspace"), "--port", "0"]
     )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -1685,7 +1759,7 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
         / "boards"
         / "metolius-wood-grips-compact-ii",
     )
-    workspace = tmp_path / "external-workspace"
+    workspace = repository / ".context" / "external-workspace"
     server, _catalog = server_module._server_from_cli(
         [
             "--repository-root",
@@ -1730,7 +1804,7 @@ def test_repository_save_job_redacts_write_target_path(tmp_path, monkeypatch):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardOnboarding" / "boards").mkdir(parents=True)
-    workspace = tmp_path / "workspace"
+    workspace = repository / ".context" / "workspace"
     imported_run = workspace / "imported-run"
     shutil.copytree(
         EDITOR_ROOT.parent
