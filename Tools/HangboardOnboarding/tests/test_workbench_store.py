@@ -34,8 +34,20 @@ def test_initial_reservation_cleanup_does_not_mask_the_publication_error(
 
     monkeypatch.setattr(store, "_write_board", fail_with_residual_file)
 
-    with pytest.raises(RuntimeError, match="manifest publication failed"):
+    def fail_cleanup(board_id: str) -> None:
+        residual = tmp_path / "boards" / board_id / ".manifest-write-residual"
+        assert residual.exists()
+        raise OSError("residual cleanup interrupted")
+
+    monkeypatch.setattr(store, "_discard_failed_initial_reservation", fail_cleanup)
+
+    with pytest.raises(RuntimeError, match="manifest publication failed") as caught:
         store.reserve_initial_revision("Example Board")
+
+    assert caught.value.args == ("manifest publication failed",)
+    assert caught.value.__notes__ == [
+        "initial reservation cleanup also failed: residual cleanup interrupted"
+    ]
 
 
 def test_activate_initial_revision_is_atomic_when_manifest_replace_fails(
