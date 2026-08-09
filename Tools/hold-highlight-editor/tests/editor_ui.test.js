@@ -37,3 +37,17 @@ test("uses hold-highlight language in visible editor status", () => {
   assert.match(app, /setStatus\(`Deleted \$\{region\.key\} highlight\. Undo is available\.`\)/);
   assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
 });
+
+test("handles drawing Enter and Escape before the focused-control guard", () => {
+  const drawingShortcut = app.indexOf('event.key === "Enter" && state.drawing');
+  const focusedControlGuard = app.indexOf('if (editingText) return;');
+
+  assert.notEqual(drawingShortcut, -1);
+  assert.notEqual(focusedControlGuard, -1);
+  assert.ok(drawingShortcut < focusedControlGuard);
+  assert.match(app, /event\.key === "Escape" && state\.drawing/);
+});
+
+test("preserves the selected primitive shape when adding a highlight", () => {
+  assert.match(app, /shapeKind: state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+});

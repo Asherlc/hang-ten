@@ -594,7 +594,7 @@
       contour: state.draft,
       metadata: {
         mode: "surface",
-        shapeKind: "freeform",
+        shapeKind: state.drawShape === "curved-freeform" ? "freeform" : state.drawShape,
         pathStyle: isCurved ? "smooth" : "straight",
         curveTension: 0.8,
         humanNotes: "Added manually",
@@ -1326,6 +1326,16 @@
   window.addEventListener("keydown", (event) => {
     const editingText = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName);
     if (event.code === "Space" && !editingText) { state.spacePressed = true; event.preventDefault(); }
+    if (event.key === "Enter" && state.drawing) {
+      event.preventDefault();
+      finishDraw();
+      return;
+    }
+    if (event.key === "Escape" && state.drawing) {
+      event.preventDefault();
+      cancelDraw();
+      return;
+    }
     if (editingText) return;
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
       event.preventDefault();
@@ -1333,10 +1343,6 @@
     } else if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
       deleteSelected();
-    } else if (event.key === "Enter" && state.drawing) {
-      finishDraw();
-    } else if (event.key === "Escape" && state.drawing) {
-      cancelDraw();
     } else if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
       state.mirrorOntoSourceId = null;
       setStatus("Mirror replacement cancelled.");
