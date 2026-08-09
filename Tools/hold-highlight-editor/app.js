@@ -9,7 +9,6 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
-    normalizeRegion,
     normalizePipelineDocument,
   } = globalThis.HoldEditorModel;
 
