@@ -319,7 +319,7 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
 .validation-panel ul { margin: 5px 0 0; padding-left: 17px; font-size: 10px; line-height: 1.5; }
 .validation-panel button { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; }
 .validation-panel button:not(:disabled) { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
-.validation-panel button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.validation-panel button:focus-visible { outline: 2px solid currentcolor; outline-offset: 2px; }
 .compare-shape { fill: none; stroke: #fff; stroke-width: 2px; stroke-dasharray: 7 5; opacity: .7; vector-effect: non-scaling-stroke; pointer-events: none; }
 .vector-control-line { stroke: #fff9e966; stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .vector-control-handle { fill: #10110f; stroke: #fff9e9; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: grab; }
