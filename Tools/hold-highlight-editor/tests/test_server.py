@@ -18,7 +18,9 @@ from server import (  # noqa: E402
     EditorCatalog,
     EditorError,
     catalog_from_inputs,
+    catalog_regions_document,
     create_server,
+    discover_catalog_outline_sessions,
     discover_session,
     load_catalog,
     save_review,
@@ -335,3 +337,175 @@ def test_http_unknown_route_returns_json_404(tmp_path):
             urlopen(base + "/api/nope")
         assert error.value.code == 404
         assert json.load(error.value)["ok"] is False
+
+
+def catalog_outline(identifier, kind="edge", commands=None, **extra):
+    return {
+        "id": identifier,
+        "label": f"Manual {kind} {identifier}",
+        "kind": kind,
+        "confidence": "approximate",
+        "bounds": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.2},
+        "path": {
+            "closed": True,
+            "commands": commands or [
+                {"command": "M", "to": [0.1, 0.2]},
+                {"command": "L", "to": [0.3, 0.2]},
+                {"command": "L", "to": [0.3, 0.4]},
+                {"command": "L", "to": [0.1, 0.4]},
+            ],
+        },
+        **extra,
+    }
+
+
+def make_catalog_board(root: Path, stem: str, outlines):
+    source_dir = root / "source"
+    outline_dir = root / "outlines"
+    source_dir.mkdir(exist_ok=True)
+    outline_dir.mkdir(exist_ok=True)
+    image_path = source_dir / f"{stem}.png"
+    outline_path = outline_dir / f"{stem}.json"
+    image_path.write_bytes(f"png:{stem}".encode())
+    outline_path.write_text(json.dumps({
+        "schemaVersion": 1,
+        "coordinateSpace": "normalized",
+        "canvas": {"width": 100, "height": 50},
+        "sourceImage": f"../{stem}.png",
+        "references": [{"title": "Reference", "url": "https://example.test"}],
+        "outlines": outlines,
+    }, indent=2))
+    return source_dir, outline_dir, image_path, outline_path
+
+
+def test_catalog_outline_discovery_uses_json_stems_and_requires_source_png(tmp_path):
+    source_dir, outline_dir, _, _ = make_catalog_board(tmp_path, "alpha-board", [catalog_outline("hold-01")])
+    make_catalog_board(tmp_path, "beta-board", [catalog_outline("hold-01")])
+
+    sessions = discover_catalog_outline_sessions(source_dir, outline_dir)
+
+    assert [session.label for session in sessions] == ["alpha-board", "beta-board"]
+    assert [session.session.image_path.name for session in sessions] == ["alpha-board.png", "beta-board.png"]
+    assert [session.session.catalog_outline_path.name for session in sessions] == ["alpha-board.json", "beta-board.json"]
+
+    (source_dir / "alpha-board.png").unlink()
+    with pytest.raises(EditorError, match="matching PNG"):
+        discover_catalog_outline_sessions(source_dir, outline_dir)
+
+
+def test_real_catalog_discovers_all_outline_stems_and_root_sources():
+    catalog_root = EDITOR_ROOT.parents[1] / "docs/hangboard-generative-catalog"
+
+    sessions = discover_catalog_outline_sessions(catalog_root, catalog_root / "outlines")
+
+    assert len(sessions) == 32
+    assert [session.label for session in sessions] == sorted(session.label for session in sessions)
+    assert all(session.session.image_path == catalog_root / f"{session.label}.png" for session in sessions)
+
+
+def test_catalog_regions_flatten_cubics_to_pixel_contours_without_control_points(tmp_path):
+    commands = [
+        {"command": "M", "to": [0.1, 0.2]},
+        {"command": "C", "controls": [[0.2, 0.2], [0.2, 0.4]], "to": [0.3, 0.4]},
+        {"command": "L", "to": [0.1, 0.4]},
+    ]
+    source_dir, outline_dir, _, _ = make_catalog_board(tmp_path, "curved-board", [catalog_outline("hold-01", "rail", commands)])
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+
+    regions = catalog_regions_document(session)
+
+    region = regions["regions"][0]
+    assert regions["canvas"] == {"width": 100, "height": 50}
+    assert region["id"] == 1
+    assert region["type"] == "edge"
+    assert region["metadata"]["sourceRegionId"] == "hold-01"
+    assert region["contour"][0] == [10.0, 10.0]
+    assert [30.0, 20.0] in region["contour"]
+    assert [20.0, 10.0] not in region["contour"]
+    assert [20.0, 20.0] not in region["contour"]
+    assert region["contour"][-1] == [10.0, 20.0]
+    assert region["contour"].count(region["contour"][0]) == 1
+
+
+def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(tmp_path):
+    source_dir, outline_dir, first_image, first_outline = make_catalog_board(
+        tmp_path,
+        "first-board",
+        [
+            catalog_outline("hold-01", "rail", customMetadata={"keep": True}),
+            catalog_outline("hold-02", "pocket"),
+            catalog_outline("hold-03", "jug", notes="untouched"),
+        ],
+    )
+    _, _, second_image, second_outline = make_catalog_board(
+        tmp_path,
+        "second-board",
+        [catalog_outline("hold-01", "pocket")],
+    )
+    original_first_image = first_image.read_bytes()
+    original_second_image = second_image.read_bytes()
+    original_untouched = json.loads(first_outline.read_text())["outlines"][2]
+    catalog = catalog_from_inputs([], None, source_dir, outline_dir)
+
+    with running_server(catalog) as base:
+        status, sessions = read_json(base + "/api/sessions")
+        assert status == 200
+        assert [entry["label"] for entry in sessions["sessions"]] == ["first-board", "second-board"]
+        status, selected = read_json(base + "/api/session?run=run-2")
+        assert status == 200
+        with urlopen(base + selected["regionsUrl"]) as response:
+            assert json.load(response)["regions"][0]["type"] == "pocket"
+
+        status, selected = read_json(base + "/api/session?run=run-1")
+        with urlopen(base + selected["regionsUrl"]) as response:
+            editor_regions = json.load(response)
+        edited = [
+            {
+                **editor_regions["regions"][0],
+                "contour": [[15, 15], [35, 15], [35, 25], [15, 25]],
+            },
+            editor_regions["regions"][2],
+            {
+                "id": 99,
+                "key": "new-hold",
+                "type": "sloper",
+                "contour": [[50, 10], [70, 10], [70, 30], [50, 30]],
+                "metadata": {"mode": "surface"},
+            },
+        ]
+        request = Request(
+            base + selected["saveUrl"],
+            data=json.dumps({"regions": {"canvas": editor_regions["canvas"], "regions": edited}}).encode(),
+            method="PUT",
+            headers={"Content-Type": "application/json"},
+        )
+        with urlopen(request) as response:
+            saved = json.load(response)
+
+    saved_document = json.loads(first_outline.read_text())
+    saved_by_id = {outline["id"]: outline for outline in saved_document["outlines"]}
+    assert saved["ok"] is True
+    assert saved["catalogPath"] == "first-board.json"
+    assert list(saved_by_id) == ["hold-01", "hold-03", "hold-04"]
+    assert saved_by_id["hold-01"]["kind"] == "rail"
+    assert saved_by_id["hold-01"]["customMetadata"] == {"keep": True}
+    assert saved_by_id["hold-01"]["path"] == {
+        "closed": True,
+        "commands": [
+            {"command": "M", "to": [0.15, 0.3]},
+            {"command": "L", "to": [0.35, 0.3]},
+            {"command": "L", "to": [0.35, 0.5]},
+            {"command": "L", "to": [0.15, 0.5]},
+        ],
+    }
+    assert saved_by_id["hold-01"]["bounds"] == {"x": 0.15, "y": 0.3, "width": 0.2, "height": 0.2}
+    assert saved_by_id["hold-03"] == original_untouched
+    assert saved_by_id["hold-04"]["kind"] == "sloper"
+    assert saved_document["schemaVersion"] == 1
+    assert saved_document["coordinateSpace"] == "normalized"
+    assert saved_document["sourceImage"] == "../first-board.png"
+    assert saved_document["references"] == [{"title": "Reference", "url": "https://example.test"}]
+    assert first_image.read_bytes() == original_first_image
+    assert second_image.read_bytes() == original_second_image
+    assert json.loads(second_outline.read_text())["outlines"][0]["id"] == "hold-01"
+    assert not list(outline_dir.glob(".first-board.json.*.tmp"))
