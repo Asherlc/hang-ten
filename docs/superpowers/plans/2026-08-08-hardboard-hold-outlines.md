@@ -356,3 +356,42 @@ rtk git status --short
 ```
 
 Expected: the full suite passes, the check reports 32 valid documents, and only the intended spec, tool, test, documentation, and outline JSON files are present in the worktree.
+
+### Task 4: Repair the approved JSON contract and review renderer
+
+**Files:**
+- Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outlines.py`
+- Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outline_cli.py`
+- Modify: `Tools/HangboardOnboarding/tests/test_catalog_outlines.py`
+- Modify: `Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py`
+- Modify: `Tools/HangboardOnboarding/README.md`
+- Modify: `Tools/HangboardOnboarding/TESTING.md`
+- Regenerate: `docs/hangboard-generative-catalog/outlines/*.json`
+- Regenerate: `.context/hardboard-outlines/reviews/*.png`
+
+**Requirements:**
+
+- Serialize `sourceImage` as `../<source-basename>.png` so it resolves relative to each JSON file.
+- Serialize `bounds` as `{ "x", "y", "width", "height" }` and `notes` as a string while accepting only that approved shape on read.
+- Validate `x + width <= 1` and `y + height <= 1`.
+- Flatten cubic commands deterministically for review overlays, including both control points, rather than drawing only command endpoints.
+- Make `--check` print a successful count and actionable failure details.
+- Add tests for path resolution, object bounds, string notes, overflow rejection, cubic overlay flattening, and check output.
+
+### Task 5: Improve catalog outline quality and visual regression coverage
+
+**Files:**
+- Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outlines.py`
+- Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outline_sources.json`
+- Modify: `Tools/HangboardOnboarding/tests/test_catalog_outlines.py`
+- Modify: `Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py`
+- Regenerate: `docs/hangboard-generative-catalog/outlines/*.json`
+- Regenerate: `.context/hardboard-outlines/reviews/*.png`
+
+**Requirements:**
+
+- Reject board silhouette fragments, boundary-touching slivers, tiny end caps, and large triangles crossing unrelated geometry.
+- Prefer closed internal shadow/recess contours and long rail bands; use symmetry only when the visible/source evidence supports it.
+- Add board-family regression checks for Beastmaker, Metolius, Tension, Trango two-piece, Lattice, So iLL, and Zlagboard representatives.
+- Require every output to have at least one plausible hold contour, no contour spanning an unrelated board silhouette, and no obvious one-sided omission on a visibly symmetric board where a mirrored candidate is stable.
+- Re-run and visually inspect all 32 overlays before committing regenerated artifacts.
