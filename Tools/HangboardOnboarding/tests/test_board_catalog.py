@@ -220,6 +220,62 @@ class BoardCatalogTests(unittest.TestCase):
             self.assertEqual(registered.onboarding_runs[0].region_count, 19)
             self.assertEqual(module.load_catalog(catalog_path).boards[0].lifecycle, "onboarding")
 
+    def test_register_run_estimates_regions_from_latest_stage_4_artifact_root(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_run_root = workspace / ".context" / "hangboard-onboarding" / "partial-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+
+            run_path = context_run_root / "run.json"
+            run_payload = json.loads(run_path.read_text(encoding="utf-8"))
+            run_payload["pipeline"]["status"] = "awaiting_approval"
+            latest_stage4 = json.loads(
+                json.dumps(next(stage for stage in run_payload["stages"] if stage["stage"] == 4))
+            )
+            latest_stage4["attempt"] = 2
+            latest_stage4["artifactRoot"] = "stages/04/attempt-0002/custom"
+            run_payload["stages"].append(latest_stage4)
+            run_path.write_text(json.dumps(run_payload, indent=2) + "\n", encoding="utf-8")
+
+            manifest_path = (
+                context_run_root
+                / "stages"
+                / "04"
+                / "attempt-0002"
+                / "custom"
+                / "stage-4-manifest.json"
+            )
+            manifest_path.parent.mkdir(parents=True)
+            manifest_payload = json.loads(
+                (
+                    context_run_root
+                    / "stages"
+                    / "04"
+                    / "attempt-0001"
+                    / "stage-4-manifest.json"
+                ).read_text(encoding="utf-8")
+            )
+            manifest_payload["regions"] = manifest_payload["regions"][:3]
+            manifest_path.write_text(
+                json.dumps(manifest_payload, indent=2) + "\n", encoding="utf-8"
+            )
+
+            self._make_draft_board_and_catalog(catalog_path, board_path)
+
+            registered = module.register_run(
+                catalog_path,
+                "metolius.wood-grips-compact-ii",
+                context_run_root,
+                run_id="partial-run",
+            )
+
+            self.assertEqual(registered.lifecycle, "onboarding")
+            self.assertEqual(registered.onboarding_runs[0].region_count, 3)
+
     def test_register_run_estimates_zero_regions_when_stage_4_manifest_is_absent(self) -> None:
         module = load_module()
 

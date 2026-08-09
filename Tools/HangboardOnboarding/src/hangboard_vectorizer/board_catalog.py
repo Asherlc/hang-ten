@@ -733,8 +733,36 @@ def _swift_string_literal(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def _stage4_manifest_path(run_root: Path, *, fallback_to_default: bool) -> Path:
+    default_manifest_path = (
+        run_root / "stages" / "04" / "attempt-0001" / "stage-4-manifest.json"
+    )
+    run_manifest_path = run_root / "run.json"
+    if not run_manifest_path.exists():
+        if fallback_to_default:
+            return default_manifest_path
+        _load_json_payload(run_manifest_path, str(run_manifest_path))
+
+    run_manifest = _load_json_payload(run_manifest_path, str(run_manifest_path))
+    stages = _required_list(run_manifest, "stages", str(run_manifest_path))
+    stage4_records = [
+        stage for stage in stages if isinstance(stage, Mapping) and stage.get("stage") == 4
+    ]
+    if not stage4_records:
+        if fallback_to_default:
+            return default_manifest_path
+        raise ValueError("complete onboarding run is missing stage 4")
+
+    stage4 = stage4_records[-1]
+    artifact_root = _required_str(stage4, "artifactRoot", "run manifest stage 4 artifactRoot")
+    artifact_root_path = Path(artifact_root)
+    if artifact_root_path.is_absolute() or ".." in artifact_root_path.parts:
+        raise ValueError("run manifest stage 4 artifactRoot must be a safe relative path")
+    return run_root / artifact_root_path / "stage-4-manifest.json"
+
+
 def _estimate_region_count(run_root: Path) -> int:
-    manifest_path = run_root / "stages" / "04" / "attempt-0001" / "stage-4-manifest.json"
+    manifest_path = _stage4_manifest_path(run_root, fallback_to_default=True)
     if not manifest_path.exists():
         return 0
     manifest = _load_json_payload(manifest_path, str(manifest_path))
@@ -752,16 +780,7 @@ def canonicalize_region_key(value: str) -> str:
 
 
 def _validate_and_count_regions(run_root: Path, board: BoardDocument) -> int:
-    run_manifest = _load_json_payload(run_root / "run.json", str(run_root / "run.json"))
-    stages = _required_list(run_manifest, "stages", str(run_root / "run.json"))
-    stage4_records = [stage for stage in stages if isinstance(stage, Mapping) and stage.get("stage") == 4]
-    if not stage4_records:
-        raise ValueError("complete onboarding run is missing stage 4")
-    stage4 = stage4_records[-1]
-    artifact_root = _required_str(stage4, "artifactRoot", "run manifest stage 4 artifactRoot")
-    if Path(artifact_root).is_absolute() or ".." in Path(artifact_root).parts:
-        raise ValueError("run manifest stage 4 artifactRoot must be a safe relative path")
-    manifest_path = run_root / artifact_root / "stage-4-manifest.json"
+    manifest_path = _stage4_manifest_path(run_root, fallback_to_default=False)
     stage4_manifest = _load_json_payload(manifest_path, str(manifest_path))
     regions = _required_list(stage4_manifest, "regions", str(manifest_path))
 
