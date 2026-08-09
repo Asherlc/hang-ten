@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from dataclasses import FrozenInstanceError
 import json
@@ -231,6 +232,40 @@ def test_failed_outcome_is_removed_after_expiry(
     restarted = make_manager(max_workers=1, outcome_root=outcome_root)
     with pytest.raises(JobNotFoundError, match="unknown job"):
         restarted.get(submitted.id)
+
+
+def test_restarted_manager_prunes_persisted_outcomes_evicted_by_retention_limit(
+    tmp_path: Path, make_manager
+):
+    outcome_root = tmp_path / "job-outcomes"
+    manager = make_manager(max_workers=1, max_completed=1, outcome_root=outcome_root)
+    first = manager.wait(
+        manager.submit(
+            "board-a",
+            lambda: {"boardId": "board-a", "revisionId": "revision-1"},
+        ).id
+    )
+    first_path = outcome_root / f"{first.id}.json"
+    assert first_path.exists()
+    manager.shutdown()
+
+    unrelated = outcome_root / "notes.txt"
+    unrelated.write_text("leave me alone\n", encoding="utf-8")
+    os.utime(first_path, (100, 100))
+
+    restarted = make_manager(max_workers=1, max_completed=1, outcome_root=outcome_root)
+    second = restarted.wait(
+        restarted.submit(
+            "board-b",
+            lambda: {"boardId": "board-b", "revisionId": "revision-2"},
+        ).id
+    )
+
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        restarted.get(first.id)
+    assert not first_path.exists()
+    assert (outcome_root / f"{second.id}.json").exists()
+    assert unrelated.read_text(encoding="utf-8") == "leave me alone\n"
 
 
 @pytest.mark.parametrize(

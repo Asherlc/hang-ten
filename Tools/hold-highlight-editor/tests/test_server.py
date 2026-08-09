@@ -832,11 +832,12 @@ def test_reads_reject_foreign_or_wrong_port_hosts_and_accept_loopback_authoritie
         assert payload == {"ok": False, "error": "request origin is not allowed"}
 
 
-def test_request_rejects_non_loopback_peer_with_a_forged_loopback_host():
+def test_request_rejects_non_loopback_peer_with_forged_loopback_host_and_origin():
     class RequestHandler:
         def __init__(self):
             self.headers = Message()
             self.headers["Host"] = "127.0.0.1:4173"
+            self.headers["Origin"] = "http://127.0.0.1:4173"
             self.server = type("Server", (), {"server_port": 4173})()
             self.client_address = ("203.0.113.8", 61337)
             self.response = None
@@ -847,7 +848,7 @@ def test_request_rejects_non_loopback_peer_with_a_forged_loopback_host():
     handler = RequestHandler()
 
     allowed = server_module.EditorRequestHandler._allow_request(
-        handler, mutation=False
+        handler, mutation=True
     )
 
     assert allowed is False
@@ -1661,6 +1662,33 @@ def test_workspace_root_rejects_an_escape_from_repository_context(tmp_path, caps
                 str(repository),
                 "--workspace-root",
                 str(escaped_workspace),
+                "--port",
+                "0",
+            ]
+        )
+
+    assert error.value.code == 2
+    assert "workspace root must stay under repository .context" in capsys.readouterr().err
+
+
+def test_workspace_root_rejects_a_symlink_escape_from_repository_context(
+    tmp_path, capsys
+):
+    repository = tmp_path / "repository"
+    (repository / ".git").mkdir(parents=True)
+    escaped_workspace = tmp_path / "escaped-workspace"
+    escaped_workspace.mkdir()
+    linked_workspace = repository / ".context" / "workspace"
+    linked_workspace.parent.mkdir()
+    linked_workspace.symlink_to(escaped_workspace, target_is_directory=True)
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            [
+                "--repository-root",
+                str(repository),
+                "--workspace-root",
+                str(linked_workspace),
                 "--port",
                 "0",
             ]

@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 from threading import BoundedSemaphore, Lock
 import tempfile
-from time import monotonic
+from time import monotonic, time
 from typing import Any
 from uuid import uuid4
 
@@ -98,6 +98,7 @@ class BoardJobManager:
         self.__public_error_types = public_error_types
         self.__public_error_formatter = public_error_formatter or str
         self.__outcome_root = outcome_directory
+        self.__restore_completed_outcomes()
 
     def submit(
         self,
@@ -274,6 +275,32 @@ class BoardJobManager:
             result=deepcopy(result),
             error=error,
         )
+
+    def __restore_completed_outcomes(self) -> None:
+        if self.__outcome_root is None:
+            return
+        restored: list[tuple[float, str]] = []
+        startup_monotonic = monotonic()
+        startup_wall_time = time()
+        for path in self.__outcome_root.glob("*.json"):
+            if not path.is_file():
+                continue
+            job_id = path.stem
+            if _JOB_ID.fullmatch(job_id) is None:
+                continue
+            if self.__read_outcome(job_id) is None:
+                continue
+            try:
+                completed_wall_time = path.stat().st_mtime
+            except OSError:
+                continue
+            age_seconds = max(0.0, startup_wall_time - completed_wall_time)
+            restored.append((startup_monotonic - age_seconds, job_id))
+        restored.sort()
+        for completed_at, job_id in restored:
+            self.__completed.append(job_id)
+            self.__completed_at[job_id] = completed_at
+        self.__prune_completed()
 
     def __prune_completed(self) -> None:
         cutoff = monotonic() - self.__result_ttl_seconds

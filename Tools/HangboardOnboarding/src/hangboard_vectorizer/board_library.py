@@ -108,6 +108,17 @@ class _TransactionDecision:
     problem: str | None
 
 
+@dataclass(frozen=True, slots=True)
+class _PreparedTransaction:
+    decision: _TransactionDecision
+    current_path: Path
+    candidate_path: Path
+    rollback_path: Path
+    invalid_canonical_path: Path
+    replacement: LibraryBoard | None
+    suppress_current: bool
+
+
 class BoardLibraryError(ValueError):
     """Raised when a requested board or file operation is unsafe."""
 
@@ -547,6 +558,16 @@ class RepositoryBoardLibrary:
     def _inspect_transaction_read_only(
         self, transaction: Path
     ) -> tuple[str, LibraryBoard | None, bool, str | None]:
+        prepared = self._prepare_transaction(transaction)
+        decision = prepared.decision
+        return (
+            decision.journal.board_id,
+            prepared.replacement,
+            prepared.suppress_current,
+            decision.problem,
+        )
+
+    def _prepare_transaction(self, transaction: Path) -> _PreparedTransaction:
         decision = self._classify_transaction(transaction)
         replacement = None
         suppress_current = False
@@ -565,11 +586,15 @@ class RepositoryBoardLibrary:
             suppress_current = True
         elif decision.kind is _TransactionDecisionKind.AMBIGUOUS:
             suppress_current = decision.current_problem is not None
-        return (
-            decision.journal.board_id,
-            replacement,
-            suppress_current,
-            decision.problem,
+        journal = decision.journal
+        return _PreparedTransaction(
+            decision=decision,
+            current_path=self._boards_root / journal.board_id,
+            candidate_path=transaction / "candidate",
+            rollback_path=transaction / "rollback",
+            invalid_canonical_path=transaction / "invalid-canonical",
+            replacement=replacement,
+            suppress_current=suppress_current,
         )
 
     def _classify_transaction(self, transaction: Path) -> _TransactionDecision:
@@ -675,12 +700,13 @@ class RepositoryBoardLibrary:
         )
 
     def _recover_transaction_locked(self, transaction: Path) -> None:
-        decision = self._classify_transaction(transaction)
+        prepared = self._prepare_transaction(transaction)
+        decision = prepared.decision
         journal = decision.journal
-        current_path = self._boards_root / journal.board_id
-        candidate_path = transaction / "candidate"
-        rollback_path = transaction / "rollback"
-        invalid_canonical_path = transaction / "invalid-canonical"
+        current_path = prepared.current_path
+        candidate_path = prepared.candidate_path
+        rollback_path = prepared.rollback_path
+        invalid_canonical_path = prepared.invalid_canonical_path
 
         if decision.kind is _TransactionDecisionKind.CONFLICTING_ROLLBACK:
             self._retain_conflicting_rollback_locked(
