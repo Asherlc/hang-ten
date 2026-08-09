@@ -33,7 +33,7 @@ _DATA = Path(__file__).parent / "data"
 
 @pytest.mark.parametrize(
     ("builder", "generated_name", "document_name", "document"),
-    (
+    [
         (
             build_stage2_artifacts,
             "stage-2-labels.png",
@@ -82,7 +82,7 @@ _DATA = Path(__file__).parent / "data"
             "vector_document",
             {"regions": [], "silhouettePaths": []},
         ),
-    ),
+    ],
 )
 def test_artifact_builders_reject_preserved_generated_names(
     tmp_path: Path,
