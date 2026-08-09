@@ -166,7 +166,7 @@
     el["save-state"].className = "save-state";
     if (!state.serverSession) {
       el["save-state"].textContent = "Static mode";
-      el["save-button"].title = "Start server.py with --run-dir to save into an onboarding run";
+      el["save-button"].title = "Start server.py with --run-dir to save into a board run";
     } else if (state.saveError) {
       el["save-state"].textContent = "Save failed";
       el["save-state"].classList.add("error");
@@ -258,7 +258,7 @@
 
   function renderInspector() {
     const region = selectedRegion();
-    el["inspector-title"].textContent = region ? `Region ${region.id}` : "No selection";
+    el["inspector-title"].textContent = region ? `Hold ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
     if (!region) return;
@@ -319,13 +319,13 @@
     const top = localToWorld([frame.centerLocalX, frame.minY], frame.center, frame.rotation);
     const rotatePoint = localToWorld([frame.centerLocalX, frame.minY - handleOffset], frame.center, frame.rotation);
     group.appendChild(makeSvg("line", { x1: top[0], y1: top[1], x2: rotatePoint[0], y2: rotatePoint[1], class: "transform-stem" }));
-    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate region" });
+    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate highlight" });
     rotateHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "rotate"));
     group.appendChild(rotateHandle);
 
     const bendPoint = localToWorld([frame.centerLocalX, frame.minY + Math.min((frame.maxY - frame.minY) * 0.3, 14 / Math.max(state.zoom, 0.3))], frame.center, frame.rotation);
     const bendSize = 6 / Math.max(state.zoom, 0.3);
-    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend region" });
+    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend highlight" });
     bendHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "bend"));
     group.appendChild(bendHandle);
   }
@@ -381,7 +381,7 @@
     state.selectedId = id;
     render();
     const region = selectedRegion();
-    if (region) setStatus(`Selected ${region.key}. Drag the shape or its control points.`);
+    if (region) setStatus(`Selected ${region.key} hold highlight. Drag the shape or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
   }
 
@@ -515,14 +515,14 @@
   function onSvgPointerUp(event) {
     if (state.transformSession?.pointerId === event.pointerId) {
       if (state.transformSession.changed) {
-        const labels = { rotate: "Rotated region", bend: "Bent region", resize: "Resized region" };
+        const labels = { rotate: "Rotated highlight", bend: "Bent highlight", resize: "Resized highlight" };
         commitHistory(labels[state.transformSession.kind]);
       }
       state.transformSession = null;
       render();
     }
     if (state.dragSession?.pointerId === event.pointerId) {
-      if (state.dragSession.changed) commitHistory("Moved region");
+      if (state.dragSession.changed) commitHistory("Moved highlight");
       state.dragSession = null;
       render();
     }
@@ -579,7 +579,7 @@
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
       : `Drag to create a ${shapeLabel(state.drawShape).toLowerCase()}. Press Escape to cancel.`;
-    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} region.`);
+    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} highlight.`);
     render();
   }
 
@@ -606,8 +606,8 @@
     state.primitiveSession = null;
     state.selectedId = nextId;
     el["draw-instruction"].classList.remove("visible");
-    commitHistory("Added region");
-    setStatus(`Added ${region.key}.`);
+    commitHistory("Added highlight");
+    setStatus(`Added ${region.key} highlight.`);
     render();
   }
 
@@ -625,8 +625,8 @@
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
-    commitHistory("Deleted region");
-    setStatus(`Deleted ${region.key}. Undo is available.`);
+    commitHistory("Deleted highlight");
+    setStatus(`Deleted ${region.key} highlight. Undo is available.`);
     render();
   }
 
@@ -641,7 +641,7 @@
     copy.metadata.humanNotes = "Duplicated manually";
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Duplicated region");
+    commitHistory("Duplicated highlight");
     render();
   }
 
@@ -675,7 +675,7 @@
     copy.metadata.humanNotes = `Mirrored from ${source.key}`;
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Mirrored region copy");
+    commitHistory("Mirrored highlight copy");
     setStatus(`Created mirrored copy ${copy.key}.`);
     render();
   }
@@ -688,7 +688,7 @@
       setStatus("Mirror replacement cancelled.");
     } else {
       state.mirrorOntoSourceId = source.id;
-      setStatus(`Mirror ${source.key} onto which target? Select another region.`);
+      setStatus(`Mirror ${source.key} onto which target? Select another highlight.`);
     }
     renderToolState();
   }
@@ -706,7 +706,7 @@
     target.contour = mirrorContour(source.contour, state.canvas.width);
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
-    commitHistory("Mirrored geometry onto region");
+    commitHistory("Mirrored geometry onto highlight");
     setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
     render();
   }
@@ -738,7 +738,7 @@
   }
 
   function resetHistory() {
-    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions", selectedId: state.selectedId }];
+    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded highlights", selectedId: state.selectedId }];
     state.historyIndex = 0;
     state.savedSnapshot = state.history[0].snapshot;
     state.dirty = false;
@@ -859,9 +859,9 @@
       const data = await regionsResponse.json();
       await setImageHref("demo/stage-1-auto-rgba.png", "Simulator Stage 1 demo");
       setRegions(data, "stage-2-regions.json");
-      setStatus("Simulator demo loaded. Select a region to begin editing.");
+      setStatus("Simulator demo loaded. Select a hold highlight to begin editing.");
     } catch (error) {
-      setStatus("Load an image and region JSON to begin.");
+      setStatus("Load a board image and highlight JSON to begin.");
       console.warn(error);
     }
   }
@@ -893,7 +893,7 @@
       const session = await sessionResponse.json();
       if (!session.ok) return false;
       const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
-      if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
+      if (!regionsResponse.ok) throw new Error("Could not load hold highlights from the run");
       const regions = await regionsResponse.json();
       await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
       state.serverSession = session;
@@ -905,7 +905,7 @@
       state.mirrorOntoSourceId = null;
       setRegions(regions, session.regionsPath || "stage-2-regions.json");
       el["board-select"].value = session.id;
-      setStatus(`Editing ${session.label}. Changes can be saved into this generated run.`);
+      setStatus(`Editing ${session.label} hold highlights. Changes can be saved into this generated run.`);
       return true;
     } catch (error) {
       console.warn(error);
@@ -1057,7 +1057,7 @@
     reader.onload = () => {
       try {
         setRegions(JSON.parse(reader.result), file.name);
-        setStatus(`Loaded ${file.name} with ${state.regions.length} regions.`);
+        setStatus(`Loaded ${file.name} with ${state.regions.length} hold highlights.`);
       } catch (error) {
         setStatus(`Could not read ${file.name}.`);
         console.error(error);
@@ -1087,7 +1087,7 @@
   function exportEditedRegions() {
     const payload = editedDocument();
     downloadJson(payload, "stage-2-regions.edited.json");
-    setStatus(`Exported ${payload.regions.length} edited regions.`);
+    setStatus(`Exported ${payload.regions.length} edited hold highlights.`);
   }
 
   function exportCorrections() {
@@ -1112,7 +1112,7 @@
       state.savedSnapshot = JSON.stringify(state.regions);
       state.dirty = false;
       state.hasSaved = true;
-      setStatus(`Saved ${result.regionsPath} and ${result.correctionsPath}.`);
+      setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
       state.saveError = error.message || "Save failed";
       setStatus(state.saveError);
@@ -1273,8 +1273,8 @@
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
   el["opacity-slider"].addEventListener("input", (event) => { state.opacity = Number(event.target.value) / 100; renderOverlay(); });
-  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed region"));
-  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed grip type"));
+  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed highlight"));
+  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed hold type"));
   el["region-shape-select"].addEventListener("change", (event) => convertSelectedShape(event.target.value));
   el["region-path-style-select"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.pathStyle = event.target.value; }, "Changed path style"));
   el["curve-tension-slider"].addEventListener("input", (event) => {
