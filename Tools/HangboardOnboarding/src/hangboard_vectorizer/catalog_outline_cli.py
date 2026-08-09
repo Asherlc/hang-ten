@@ -93,3 +93,7 @@ def _check_outputs(sources: list[Path], output_dir: Path) -> int:
         if document.source_image != source.name:
             return 1
     return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -472,9 +472,16 @@ def detect_hold_candidates(
     outlines: list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]] = []
     min_area = max(18, board_area // 500)
     max_area = max(min_area + 1, board_area // 3)
+    min_height = max(4, rgb.shape[0] // 36)
+    max_strip_width = rgb.shape[1] * 0.75
+    max_strip_height = rgb.shape[0] * 0.12
     for label in range(1, stats.shape[0]):
         x, y, width, height, area = stats[label]
         if area < min_area or area > max_area:
+            continue
+        if height < min_height:
+            continue
+        if width > max_strip_width and height < max_strip_height:
             continue
         component = np.where(labels == label, 255, 0).astype(np.uint8)
         component = cv2.bitwise_and(component, board)
@@ -491,6 +498,12 @@ def detect_hold_candidates(
             hull = cv2.convexHull(contour).reshape(-1, 2)
             points = _unique_points(hull)
         if len(points) < 3:
+            continue
+        point_width = int(np.ptp(points[:, 0])) if len(points) else 0
+        point_height = int(np.ptp(points[:, 1])) if len(points) else 0
+        if point_height < min_height:
+            continue
+        if point_width > max_strip_width and point_height < max_strip_height:
             continue
         kind = _candidate_kind(width, height)
         outlines.append(
@@ -598,6 +611,13 @@ def _fallback_horizontal_rail_candidates(
     return tuple((points, kind, note) for points, kind, note, _ in outlines)
 
 
+def detect_hold_candidates_with_fallback(image: np.ndarray, board_mask: np.ndarray) -> tuple[tuple[np.ndarray, str, str], ...]:
+    candidates = detect_hold_candidates(image, board_mask)
+    if candidates:
+        return candidates
+    return _fallback_hold_candidates(image)
+
+
 def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
     with Image.open(source_path) as image:
         rgba = image.convert("RGBA")
@@ -605,22 +625,31 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
         canvas_width, canvas_height = rgba.size
     board_mask = detect_board_mask(pixel_data)
     candidates = detect_hold_candidates(pixel_data, board_mask)
+    clip_mask = board_mask
+    if not candidates:
+        clip_mask = _broad_board_mask(_rgb_image(pixel_data))
+        candidates = _fallback_hold_candidates(pixel_data)
     if not candidates:
         raise ValueError(f"no hold candidates detected for {source_path.name}")
     references = _references_for_stem(source_path.stem)
     outlines: list[HoldOutline] = []
     for index, (contour, kind, note) in enumerate(candidates, start=1):
-        clipped = _clip_contour_to_mask(contour, board_mask)
+        clipped = _clip_contour_to_mask(contour, clip_mask)
         if len(clipped) < 3 or _polygon_area(clipped) <= 0.0:
             continue
         path = normalize_contour(clipped, canvas_width, canvas_height)
+        bounds = path_bounds(path)
+        if kind == "rail" and bounds[3] < 0.025:
+            continue
+        if kind == "rail" and bounds[2] > 0.75 and bounds[3] < 0.12:
+            continue
         outlines.append(
             HoldOutline(
                 id=f"hold-{index:02d}",
                 label=f"Approximate {kind} {index}",
                 kind=kind,
                 confidence=_APPROXIMATE_CONFIDENCE,
-                bounds=path_bounds(path),
+                bounds=bounds,
                 path=path,
                 notes=(note,),
             )
@@ -814,6 +843,138 @@ def _candidate_kind(width: int, height: int) -> str:
     if aspect_ratio >= 1.3:
         return "edge"
     return "pocket"
+
+
+def _fallback_hold_candidates(image: np.ndarray) -> tuple[tuple[np.ndarray, str, str], ...]:
+    rgb = _rgb_image(image)
+    grayscale = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    board_mask = _broad_board_mask(rgb)
+    image_area = int(grayscale.shape[0] * grayscale.shape[1])
+    min_area = max(150, image_area // 6000)
+    max_width = grayscale.shape[1] * 0.65
+    max_height = grayscale.shape[0] * 0.18
+
+    sigma = max(9.0, min(grayscale.shape[:2]) / 90.0)
+    blurred = cv2.GaussianBlur(grayscale, (0, 0), sigmaX=sigma, sigmaY=sigma)
+    local_contrast = cv2.subtract(blurred, grayscale)
+    _, contrast_mask = cv2.threshold(local_contrast, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contrast_mask = cv2.bitwise_and(contrast_mask, board_mask)
+    contrast_mask = cv2.morphologyEx(contrast_mask, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8), iterations=2)
+    contrast_mask = cv2.morphologyEx(contrast_mask, cv2.MORPH_OPEN, np.ones((3, 3), dtype=np.uint8), iterations=1)
+
+    board_pixels = grayscale[board_mask > 0]
+    threshold = float(np.median(board_pixels) - max(15.0, float(np.std(board_pixels)) * 0.7))
+    dark_mask = np.where((board_mask > 0) & (grayscale <= threshold), 255, 0).astype(np.uint8)
+    dark_mask = cv2.morphologyEx(dark_mask, cv2.MORPH_CLOSE, np.ones((3, 3), dtype=np.uint8), iterations=2)
+    dark_mask = cv2.morphologyEx(dark_mask, cv2.MORPH_OPEN, np.ones((3, 3), dtype=np.uint8), iterations=1)
+
+    outlines = _collect_mask_candidates(
+        contrast_mask,
+        min_area=min_area,
+        max_width=max_width,
+        max_height=max_height,
+        note="approximate local-contrast recess candidate; verify against visible board geometry",
+    )
+    outlines.extend(
+        _collect_mask_candidates(
+            dark_mask,
+            min_area=min_area,
+            max_width=max_width,
+            max_height=max_height,
+            note="approximate dark recess candidate; verify against visible board geometry",
+        )
+    )
+    deduped = _dedupe_candidate_outlines(outlines)
+    deduped.sort(key=lambda item: item[3])
+    return tuple((points, kind, note) for points, kind, note, _ in deduped)
+
+
+def _broad_board_mask(rgb: np.ndarray) -> np.ndarray:
+    border = np.concatenate((rgb[0, :, :], rgb[-1, :, :], rgb[:, 0, :], rgb[:, -1, :]), axis=0)
+    background = np.median(border.astype(np.float32), axis=0)
+    distance = np.linalg.norm(rgb.astype(np.float32) - background, axis=2)
+    threshold = max(12.0, float(np.percentile(distance, 60)))
+    candidate = np.where(distance >= threshold, 255, 0).astype(np.uint8)
+    candidate = cv2.morphologyEx(candidate, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8), iterations=2)
+    candidate = cv2.morphologyEx(candidate, cv2.MORPH_OPEN, np.ones((5, 5), dtype=np.uint8), iterations=1)
+    component = _largest_component(candidate)
+    if component is None:
+        raise ValueError("broad board mask could not be determined")
+    return component
+
+
+def _collect_mask_candidates(
+    mask: np.ndarray,
+    *,
+    min_area: int,
+    max_width: float,
+    max_height: float,
+    note: str,
+) -> list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]]:
+    _, labels, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    outlines: list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]] = []
+    for label in range(1, stats.shape[0]):
+        x, y, width, height, area = stats[label]
+        if area < min_area:
+            continue
+        if width > max_width or height > max_height:
+            continue
+        component = np.where(labels == label, 255, 0).astype(np.uint8)
+        contours, _ = cv2.findContours(component, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not contours:
+            continue
+        contour = max(contours, key=cv2.contourArea)
+        if cv2.contourArea(contour) <= 1.0:
+            continue
+        simplified = cv2.approxPolyDP(contour, epsilon=max(1.0, cv2.arcLength(contour, True) * 0.02), closed=True)
+        points = _unique_points(simplified.reshape(-1, 2))
+        if len(points) < 3:
+            continue
+        outlines.append(
+            (
+                points.astype(np.float64),
+                _candidate_kind(width, height),
+                note,
+                (int(y), int(x), int(height), int(width)),
+            )
+        )
+    return outlines
+
+
+def _dedupe_candidate_outlines(
+    outlines: list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]]
+) -> list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]]:
+    deduped: list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]] = []
+    for outline in sorted(outlines, key=lambda item: (item[3][0], item[3][1], item[3][2] * item[3][3])):
+        _, _, _, bounds = outline
+        if any(_bounds_iou(bounds, existing[3]) >= 0.5 for existing in deduped):
+            continue
+        deduped.append(outline)
+    return deduped
+
+
+def _bounds_iou(left: tuple[int, int, int, int], right: tuple[int, int, int, int]) -> float:
+    left_y, left_x, left_h, left_w = left
+    right_y, right_x, right_h, right_w = right
+    left_x2 = left_x + left_w
+    left_y2 = left_y + left_h
+    right_x2 = right_x + right_w
+    right_y2 = right_y + right_h
+    overlap_x1 = max(left_x, right_x)
+    overlap_y1 = max(left_y, right_y)
+    overlap_x2 = min(left_x2, right_x2)
+    overlap_y2 = min(left_y2, right_y2)
+    overlap_w = max(0, overlap_x2 - overlap_x1)
+    overlap_h = max(0, overlap_y2 - overlap_y1)
+    intersection = overlap_w * overlap_h
+    if intersection == 0:
+        return 0.0
+    left_area = left_w * left_h
+    right_area = right_w * right_h
+    union = left_area + right_area - intersection
+    if union <= 0:
+        return 0.0
+    return intersection / union
 
 
 def _references_for_stem(stem: str) -> tuple[Mapping[str, object], ...]:

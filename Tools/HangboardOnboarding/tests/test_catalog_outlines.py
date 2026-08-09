@@ -4,6 +4,8 @@ from dataclasses import replace
 import importlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -18,6 +20,7 @@ from hangboard_vectorizer.catalog_outlines import (
     path_bounds,
     detect_hold_candidates,
     validate_catalog_document,
+    vectorize_catalog_image,
     write_catalog_document,
 )
 
@@ -270,6 +273,42 @@ def test_fallback_contours_respect_notched_board_mask(
         assert all(board_mask[y, x] > 0 for x, y in pixels)
 
 
+def test_vectorize_catalog_image_detects_escape_unlimited_slots() -> None:
+    source = (
+        Path(__file__).resolve().parents[3]
+        / "docs"
+        / "hangboard-generative-catalog"
+        / "escape-unlimited.png"
+    )
+
+    document = vectorize_catalog_image(source)
+
+    assert document.source_image == "escape-unlimited.png"
+    assert len(document.outlines) >= 5
+
+
+def test_vectorize_catalog_image_avoids_board_shelf_strip_false_positives() -> None:
+    root = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog"
+
+    for filename in ("beastmaker-2000.png", "target10a-linebreaker-base.png"):
+        document = vectorize_catalog_image(root / filename)
+        assert all(
+            not (
+                outline.kind == "rail"
+                and outline.bounds[3] < 0.025
+            )
+            for outline in document.outlines
+        )
+        assert all(
+            not (
+                outline.kind == "rail"
+                and outline.bounds[2] > 0.75
+                and outline.bounds[3] < 0.12
+            )
+            for outline in document.outlines
+        )
+
+
 def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -> None:
     try:
         cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
@@ -309,6 +348,36 @@ def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) ->
     assert result.exit_code == 0
     assert (tmp_path / "out" / "board.json").exists()
     assert not (tmp_path / "out" / "contact-sheet-primary.json").exists()
+
+
+def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
+    source_dir = tmp_path / "source"
+    output_dir = tmp_path / "out"
+    review_dir = tmp_path / "review"
+    write_synthetic_board(source_dir / "board.png")
+    write_synthetic_board(source_dir / "contact-sheet-primary.png")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "hangboard_vectorizer.catalog_outline_cli",
+            "--source-dir",
+            str(source_dir),
+            "--output-dir",
+            str(output_dir),
+            "--review-dir",
+            str(review_dir),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert (output_dir / "board.json").exists()
+    assert not (output_dir / "contact-sheet-primary.json").exists()
+    assert (review_dir / "board.png").exists()
     assert (tmp_path / "review" / "board.png").exists()
 
 
