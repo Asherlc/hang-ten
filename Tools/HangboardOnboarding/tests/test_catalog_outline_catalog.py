@@ -66,3 +66,47 @@ def test_catalog_outline_documents_match_catalog_sources() -> None:
             assert (document.canvas_width, document.canvas_height) == source_image.size
         assert document.references == _expected_references(output_path.stem)
         validate_catalog_document(document, source_path=source_path)
+
+
+def test_catalog_sources_include_conservative_outline_guidance() -> None:
+    hints = load_catalog_source_hints()
+
+    assert set(hints) == {path.stem for path in _catalog_sources()}
+    for stem, entry in hints.items():
+        guidance = entry["outlineGuidance"]
+        assert isinstance(guidance["approximateHoldCount"], int)
+        assert guidance["approximateHoldCount"] > 0
+        assert isinstance(guidance["minimumContours"], int)
+        assert guidance["minimumContours"] > 0
+        assert isinstance(guidance["layout"], str) and guidance["layout"]
+        assert isinstance(guidance["symmetric"], bool)
+        assert isinstance(guidance["allowsLongRails"], bool)
+
+
+def test_every_catalog_output_has_plausible_internal_outline_geometry() -> None:
+    outputs = _catalog_outputs()
+    assert len(outputs) == 32
+
+    for output_path in outputs:
+        document = CatalogOutlineDocument.from_json(
+            json.loads(output_path.read_text(encoding="utf-8"))
+        )
+        assert document.outlines
+        for outline in document.outlines:
+            x, y, width, height = outline.bounds
+            assert x > 0.005 and y > 0.005, (output_path.name, outline.id, outline.bounds)
+            assert x + width < 0.995 and y + height < 0.995, (
+                output_path.name,
+                outline.id,
+                outline.bounds,
+            )
+            assert width >= 0.012 and height >= 0.012, (
+                output_path.name,
+                outline.id,
+                outline.bounds,
+            )
+            assert not (width > 0.88 and height < 0.18), (
+                output_path.name,
+                outline.id,
+                outline.bounds,
+            )

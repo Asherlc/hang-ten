@@ -19,6 +19,7 @@ from hangboard_vectorizer.catalog_outlines import (
     normalize_contour,
     path_bounds,
     detect_hold_candidates,
+    load_catalog_source_hints,
     validate_catalog_document,
     vectorize_catalog_image,
     write_catalog_document,
@@ -354,6 +355,49 @@ def test_vectorize_catalog_image_avoids_board_shelf_strip_false_positives() -> N
             )
             for outline in document.outlines
         )
+
+
+def test_representative_board_families_have_internal_plausible_contours() -> None:
+    root = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog"
+    representatives = (
+        "beastmaker-2000",
+        "metolius-contact",
+        "tension-whetstone",
+        "trango-rock-prodigy-training-center",
+        "lattice-triple-rung",
+        "soill-training-tiles",
+        "zlagboard-pro",
+    )
+
+    for stem in representatives:
+        document = vectorize_catalog_image(root / f"{stem}.png")
+        assert len(document.outlines) >= 3, stem
+        for outline in document.outlines:
+            x, y, width, height = outline.bounds
+            assert x > 0.01 and y > 0.01, (stem, outline.id, outline.bounds)
+            assert x + width < 0.99 and y + height < 0.99, (
+                stem,
+                outline.id,
+                outline.bounds,
+            )
+            assert width >= 0.018 and height >= 0.018, (
+                stem,
+                outline.id,
+                outline.bounds,
+            )
+            guidance = load_catalog_source_hints()[stem]["outlineGuidance"]
+            if not guidance["allowsLongRails"]:
+                assert not (width > 0.70 and height < 0.16), (
+                    stem,
+                    outline.id,
+                    outline.bounds,
+                )
+
+        assert len(document.outlines) >= int(guidance["minimumContours"]), stem
+        if guidance["symmetric"]:
+            left = sum(outline.bounds[0] + outline.bounds[2] / 2 < 0.46 for outline in document.outlines)
+            right = sum(outline.bounds[0] + outline.bounds[2] / 2 > 0.54 for outline in document.outlines)
+            assert left >= 2 and right >= 2, (stem, left, right)
 
 
 def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -> None:

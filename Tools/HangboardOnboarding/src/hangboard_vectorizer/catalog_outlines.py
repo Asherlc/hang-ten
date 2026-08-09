@@ -371,14 +371,8 @@ def _validate_path(path: OutlinePath) -> None:
 
 
 def _validate_bounds(bounds: Bounds, path: OutlinePath) -> None:
+    _validate_normalized_bounds(bounds, "outline bounds")
     x, y, width, height = bounds
-    for value in bounds:
-        if not 0.0 <= value <= 1.0 or not math.isfinite(value):
-            raise ValueError("outline bounds must stay in normalized space")
-    if width <= 0.0 or height <= 0.0:
-        raise ValueError("outline bounds must be non-degenerate")
-    if x + width > 1.0 + _EPSILON or y + height > 1.0 + _EPSILON:
-        raise ValueError("outline bounds must stay within normalized space")
     path_x, path_y, path_width, path_height = path_bounds(path)
     path_max_x = path_x + path_width
     path_max_y = path_y + path_height
@@ -391,6 +385,17 @@ def _validate_bounds(bounds: Bounds, path: OutlinePath) -> None:
         or bounds_max_y + _EPSILON < path_max_y
     ):
         raise ValueError("outline bounds must contain all normalized path coordinates")
+
+
+def _validate_normalized_bounds(bounds: Bounds, field: str) -> None:
+    x, y, width, height = bounds
+    for value in bounds:
+        if not 0.0 <= value <= 1.0 or not math.isfinite(value):
+            raise ValueError(f"{field} must stay in normalized space")
+    if width <= 0.0 or height <= 0.0:
+        raise ValueError(f"{field} must be non-degenerate")
+    if x + width > 1.0 + _EPSILON or y + height > 1.0 + _EPSILON:
+        raise ValueError(f"{field} must stay within normalized space")
 
 
 def write_catalog_document(document: CatalogOutlineDocument, output_path: Path) -> None:
@@ -431,6 +436,36 @@ def load_catalog_source_hints(path: Path | None = None) -> Mapping[str, object]:
             _string(reference_mapping.get("title"), "reference.title")
             _string(reference_mapping.get("url"), "reference.url")
             _string_tuple(reference_mapping.get("hints", ()), "reference.hints")
+        guidance = _mapping(
+            reference_root.get("outlineGuidance"),
+            f"catalog outline sources.{product}.outlineGuidance",
+        )
+        _positive_int(
+            guidance.get("approximateHoldCount"),
+            "outlineGuidance.approximateHoldCount",
+        )
+        _positive_int(guidance.get("minimumContours"), "outlineGuidance.minimumContours")
+        _string(guidance.get("layout"), "outlineGuidance.layout")
+        if not isinstance(guidance.get("symmetric"), bool):
+            raise ValueError("outlineGuidance.symmetric must be a boolean")
+        if not isinstance(guidance.get("allowsLongRails"), bool):
+            raise ValueError("outlineGuidance.allowsLongRails must be a boolean")
+        raw_contours = guidance.get("manualContours")
+        if not isinstance(raw_contours, Sequence) or isinstance(raw_contours, str):
+            raise ValueError("outlineGuidance.manualContours must be a sequence")
+        for index, raw_contour in enumerate(raw_contours):
+            contour = _mapping(raw_contour, f"outlineGuidance.manualContours[{index}]")
+            kind = _string(contour.get("kind"), "manual contour.kind")
+            if kind not in _KINDS:
+                raise ValueError("manual contour.kind is unsupported")
+            bounds = _bounds_tuple(
+                contour.get("bounds"),
+                "manual contour.bounds",
+            )
+            _validate_normalized_bounds(bounds, "manual contour.bounds")
+            mirror = contour.get("mirror", False)
+            if not isinstance(mirror, bool):
+                raise ValueError("manual contour.mirror must be a boolean")
     return root
 
 
@@ -648,7 +683,10 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
         pixel_data = np.array(rgba, dtype=np.uint8)
         canvas_width, canvas_height = rgba.size
     board_mask = detect_board_mask(pixel_data)
-    candidates = detect_hold_candidates(pixel_data, board_mask)
+    candidates = _manual_candidates_for_stem(source_path.stem, canvas_width, canvas_height)
+    manual_override = bool(candidates)
+    if not candidates:
+        candidates = detect_hold_candidates(pixel_data, board_mask)
     clip_mask = board_mask
     if not candidates:
         clip_mask = _broad_board_mask(_rgb_image(pixel_data))
@@ -658,14 +696,20 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
     references = _references_for_stem(source_path.stem)
     outlines: list[HoldOutline] = []
     for index, (contour, kind, note) in enumerate(candidates, start=1):
-        clipped = _clip_contour_to_mask(contour, clip_mask)
+        clipped = (
+            contour
+            if manual_override
+            else _clip_contour_to_mask(contour, clip_mask)
+        )
         if len(clipped) < 3 or _polygon_area(clipped) <= 0.0:
+            continue
+        if not manual_override and not _candidate_is_plausible(clipped, kind, canvas_width, canvas_height):
             continue
         path = normalize_contour(clipped, canvas_width, canvas_height)
         bounds = path_bounds(path)
-        if kind == "rail" and bounds[3] < 0.025:
+        if not manual_override and kind == "rail" and bounds[3] < 0.025:
             continue
-        if kind == "rail" and bounds[2] > 0.75 and bounds[3] < 0.12:
+        if not manual_override and kind == "rail" and bounds[2] > 0.75 and bounds[3] < 0.12:
             continue
         outlines.append(
             HoldOutline(
@@ -1017,6 +1061,95 @@ def _references_for_stem(stem: str) -> tuple[Mapping[str, object], ...]:
         }
         for reference in references
     )
+
+
+def _manual_candidates_for_stem(
+    stem: str, width: int, height: int
+) -> tuple[tuple[np.ndarray, str, str], ...]:
+    payload = load_catalog_source_hints()
+    entry = payload.get(stem)
+    if not isinstance(entry, Mapping):
+        return ()
+    guidance = entry.get("outlineGuidance")
+    if not isinstance(guidance, Mapping):
+        return ()
+    raw_contours = guidance.get("manualContours", ())
+    if not isinstance(raw_contours, Sequence) or isinstance(raw_contours, str):
+        return ()
+    candidates: list[tuple[np.ndarray, str, str, tuple[float, float, float, float]]] = []
+    for raw_contour in raw_contours:
+        contour = _mapping(raw_contour, "manual contour")
+        bounds = _bounds_tuple(contour.get("bounds"), "manual contour.bounds")
+        kind = _string(contour.get("kind"), "manual contour.kind")
+        mirror = contour.get("mirror", False)
+        variants = (bounds, _mirror_bounds(bounds)) if mirror else (bounds,)
+        for variant in variants:
+            points = _rounded_rectangle_contour(variant, width, height)
+            candidates.append(
+                (
+                    points,
+                    kind,
+                    "hand-edited approximate internal contour guided by visible source layout",
+                    variant,
+                )
+            )
+    candidates.sort(key=lambda item: (item[3][1], item[3][0], item[3][2], item[3][3]))
+    return tuple((points, kind, note) for points, kind, note, _ in candidates)
+
+
+def _mirror_bounds(bounds: Bounds) -> Bounds:
+    x, y, width, height = bounds
+    return (1.0 - x - width, y, width, height)
+
+
+def _rounded_rectangle_contour(
+    bounds: Bounds, width: int, height: int
+) -> np.ndarray:
+    x, y, box_width, box_height = bounds
+    radius = min(box_width, box_height) * 0.22
+    points = np.array(
+        [
+            (x + radius, y),
+            (x + box_width - radius, y),
+            (x + box_width, y + radius),
+            (x + box_width, y + box_height - radius),
+            (x + box_width - radius, y + box_height),
+            (x + radius, y + box_height),
+            (x, y + box_height - radius),
+            (x, y + radius),
+        ],
+        dtype=np.float64,
+    )
+    return points * np.array([width, height], dtype=np.float64)
+
+
+def _candidate_is_plausible(
+    contour: np.ndarray, kind: str, width: int, height: int
+) -> bool:
+    x, y, box_width, box_height = cv2.boundingRect(
+        np.asarray(contour, dtype=np.float64).astype(np.int32)
+    )
+    normalized = (x / width, y / height, box_width / width, box_height / height)
+    left, top, normalized_width, normalized_height = normalized
+    if (
+        left <= 0.005
+        or top <= 0.005
+        or left + normalized_width >= 0.995
+        or top + normalized_height >= 0.995
+    ):
+        return False
+    if normalized_width < 0.012 or normalized_height < 0.012:
+        return False
+    if normalized_width > 0.88 and normalized_height < 0.18:
+        return False
+    if kind != "rail" and normalized_width > 0.70 and normalized_height < 0.16:
+        return False
+    if len(contour) <= 4 and normalized_width > 0.30 and normalized_height > 0.12:
+        return False
+    bounding_area = max(1.0, float(box_width * box_height))
+    if _polygon_area(contour) / bounding_area < 0.18:
+        return False
+    return True
 
 
 def _clip_contour_to_mask(contour: np.ndarray, board_mask: np.ndarray) -> np.ndarray:
