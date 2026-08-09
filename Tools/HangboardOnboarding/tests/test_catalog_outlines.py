@@ -16,6 +16,7 @@ from hangboard_vectorizer.catalog_outlines import (
     OutlinePath,
     normalize_contour,
     path_bounds,
+    detect_hold_candidates,
     validate_catalog_document,
     write_catalog_document,
 )
@@ -30,6 +31,17 @@ def write_synthetic_board(path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     image.save(path)
     return path
+
+
+def synthetic_low_contrast_white_rail_board() -> tuple[np.ndarray, np.ndarray]:
+    height, width = 180, 320
+    image = np.full((height, width, 4), (250, 250, 250, 255), dtype=np.uint8)
+    board_mask = np.zeros((height, width), dtype=np.uint8)
+    board_mask[24:156, 24:296] = 255
+    image[board_mask > 0, :3] = (246, 246, 246)
+    for y in (68, 94, 120):
+        image[y : y + 9, 32:288, :3] = (242, 242, 242)
+    return image, board_mask
 
 
 def sample_document() -> CatalogOutlineDocument:
@@ -217,6 +229,18 @@ def test_detector_returns_stable_candidates_for_synthetic_board(tmp_path: Path) 
     assert first.to_json() == second.to_json()
     assert len(first.outlines) >= 2
     assert all(outline.confidence == "approximate" for outline in first.outlines)
+
+
+def test_detector_falls_back_to_low_contrast_horizontal_rail_bands() -> None:
+    image, board_mask = synthetic_low_contrast_white_rail_board()
+
+    candidates = detect_hold_candidates(image, board_mask)
+
+    assert len(candidates) == 3
+    assert all(kind in {"rail", "edge"} for _, kind, _ in candidates)
+    starts = [int(np.min(contour[:, 1])) for contour, _, _ in candidates]
+    assert all(abs(actual - expected) <= 2 for actual, expected in zip(starts, (68, 94, 120)))
+    assert all(np.ptp(contour[:, 0]) >= 240 for contour, _, _ in candidates)
 
 
 def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -> None:

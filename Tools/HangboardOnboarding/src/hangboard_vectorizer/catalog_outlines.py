@@ -502,6 +502,98 @@ def detect_hold_candidates(
             )
         )
     outlines.sort(key=lambda item: item[3])
+    if outlines:
+        return tuple((points, kind, note) for points, kind, note, _ in outlines)
+    return _fallback_horizontal_rail_candidates(rgb, board)
+
+
+def _fallback_horizontal_rail_candidates(
+    image: np.ndarray, board_mask: np.ndarray
+) -> tuple[tuple[np.ndarray, str, str], ...]:
+    board = np.where(board_mask > 0, 255, 0).astype(np.uint8)
+    grayscale = cv2.cvtColor(_rgb_image(image), cv2.COLOR_RGB2GRAY).astype(np.float32)
+    row_counts = np.count_nonzero(board, axis=1)
+    valid_rows = row_counts >= max(8, board.shape[1] // 4)
+    if not np.any(valid_rows):
+        return ()
+
+    row_profile = np.full(grayscale.shape[0], np.nan, dtype=np.float32)
+    for row in np.flatnonzero(valid_rows):
+        row_profile[row] = float(np.mean(grayscale[row][board[row] > 0]))
+    valid_indices = np.flatnonzero(valid_rows)
+    row_profile = np.interp(
+        np.arange(len(row_profile)), valid_indices, row_profile[valid_indices]
+    ).astype(np.float32)
+    smoothing_sigma = max(1.0, grayscale.shape[0] / 100.0)
+    smooth_profile = cv2.GaussianBlur(
+        row_profile.reshape((-1, 1)), (1, 0), sigmaX=0, sigmaY=smoothing_sigma
+    ).reshape(-1)
+    deviation = np.abs(row_profile - smooth_profile)
+    threshold = max(0.8, float(np.percentile(deviation[valid_rows], 75)))
+    selected_rows = valid_rows & (deviation >= threshold)
+    if not np.any(selected_rows):
+        return ()
+
+    band_mask = np.where(
+        selected_rows[:, np.newaxis] & (board > 0), 255, 0
+    ).astype(np.uint8)
+    vertical_kernel_size = max(9, min(15, grayscale.shape[0] // 30))
+    if vertical_kernel_size % 2 == 0:
+        vertical_kernel_size += 1
+    band_mask = cv2.morphologyEx(
+        band_mask,
+        cv2.MORPH_CLOSE,
+        np.ones((vertical_kernel_size, 1), dtype=np.uint8),
+        iterations=1,
+    )
+    horizontal_kernel = np.ones(
+        (1, max(9, grayscale.shape[1] // 48)), dtype=np.uint8
+    )
+    band_mask = cv2.morphologyEx(
+        band_mask, cv2.MORPH_CLOSE, horizontal_kernel, iterations=1
+    )
+    band_mask = cv2.morphologyEx(
+        band_mask, cv2.MORPH_OPEN, np.ones((3, 3), dtype=np.uint8), iterations=1
+    )
+
+    _, labels, stats, _ = cv2.connectedComponentsWithStats(band_mask, 8)
+    min_width = max(20, grayscale.shape[1] // 3)
+    max_height = max(8, grayscale.shape[0] // 5)
+    outlines: list[tuple[np.ndarray, str, str, tuple[int, int, int, int]]] = []
+    for label in range(1, stats.shape[0]):
+        x, y, width, height, area = stats[label]
+        if width < min_width or height < 3 or height > max_height or area <= 0:
+            continue
+        component = np.where(labels == label, 255, 0).astype(np.uint8)
+        contours, _ = cv2.findContours(
+            component, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        )
+        if not contours:
+            continue
+        contour = max(contours, key=cv2.contourArea)
+        simplified = cv2.approxPolyDP(
+            contour,
+            epsilon=max(1.0, cv2.arcLength(contour, True) * 0.02),
+            closed=True,
+        )
+        points = _unique_points(simplified.reshape(-1, 2))
+        if len(points) < 3:
+            points = _unique_points(cv2.convexHull(contour).reshape(-1, 2))
+        if len(points) < 3:
+            continue
+        outlines.append(
+            (
+                points.astype(np.float64),
+                "edge"
+                if width >= grayscale.shape[1] * 0.75
+                else "rail",
+                "approximate low-contrast horizontal rail band; verify against visible board geometry",
+                (int(y), int(x), int(height), int(width)),
+            )
+        )
+    outlines.sort(key=lambda item: item[3])
+    if len(outlines) < 3:
+        return ()
     return tuple((points, kind, note) for points, kind, note, _ in outlines)
 
 
