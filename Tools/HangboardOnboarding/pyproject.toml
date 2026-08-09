@@ -17,6 +17,7 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
+hangboard-catalog-flat = "hangboard_vectorizer.catalog_flat_illustrations:main"
 hangboard-catalog-outlines = "hangboard_vectorizer.catalog_outline_cli:main"
 hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
 hangboard-semantic-benchmark = "hangboard_vectorizer.semantic_benchmark:main"
