@@ -1,6 +1,6 @@
-# Hold Region Editor
+# Hold Editor
 
-A dependency-free local browser editor for hangboard grip-region artifacts.
+A dependency-free local browser editor for hangboard hold-highlight artifacts.
 
 ## Run the Apple Silicon macOS release
 

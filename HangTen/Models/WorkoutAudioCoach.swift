@@ -14,6 +14,56 @@ protocol WorkoutSpeechSynthesizing: AnyObject {
 
 extension AVSpeechSynthesizer: WorkoutSpeechSynthesizing {}
 
+struct WorkoutSpeechOwnership {
+    private struct SpeechIdentity {
+        let utterance: AVSpeechUtterance
+        let generation: Int
+    }
+
+    private var generation = 0
+    private var activeSpeech: SpeechIdentity?
+    private var pendingStop: SpeechIdentity?
+
+    mutating func begin(_ utterance: AVSpeechUtterance) {
+        generation += 1
+        activeSpeech = SpeechIdentity(utterance: utterance, generation: generation)
+        pendingStop = nil
+    }
+
+    mutating func requestStop() {
+        generation += 1
+        if let activeSpeech {
+            pendingStop = SpeechIdentity(utterance: activeSpeech.utterance, generation: generation)
+        } else {
+            pendingStop = nil
+        }
+        activeSpeech = nil
+    }
+
+    func ownsActive(_ utterance: AVSpeechUtterance) -> Bool {
+        owns(activeSpeech, utterance: utterance)
+    }
+
+    func ownsPendingStop(_ utterance: AVSpeechUtterance) -> Bool {
+        owns(pendingStop, utterance: utterance)
+    }
+
+    mutating func finishActive(_ utterance: AVSpeechUtterance) {
+        guard ownsActive(utterance) else { return }
+        activeSpeech = nil
+    }
+
+    mutating func finishPendingStop(_ utterance: AVSpeechUtterance) {
+        guard ownsPendingStop(utterance) else { return }
+        pendingStop = nil
+    }
+
+    private func owns(_ identity: SpeechIdentity?, utterance: AVSpeechUtterance) -> Bool {
+        guard let identity else { return false }
+        return identity.generation == generation && identity.utterance === utterance
+    }
+}
+
 @MainActor
 protocol WorkoutAudioSessionManaging: AnyObject {
     func configureForSpokenCues() throws
@@ -52,6 +102,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private var configuredAudioSession = false
     private var deactivationRetryTask: Task<Void, Never>?
     private var remainingDeactivationRetries: Int
+    private var speechOwnership = WorkoutSpeechOwnership()
 
     private static let maximumDeactivationRetries = 1
 
@@ -75,22 +126,28 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     func speak(_ phrase: String) {
         guard !phrase.isEmpty else { return }
+        deactivationRetryTask?.cancel()
+        deactivationRetryTask = nil
         configureAudioSessionIfNeeded()
-
-        synthesizer.stopSpeaking(at: .immediate)
 
         let utterance = AVSpeechUtterance(string: phrase)
         utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
         utterance.rate = phrase.count <= 2 ? 0.50 : 0.47
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
+        speechOwnership.begin(utterance)
+        isSpeaking = true
+        synthesizer.stopSpeaking(at: .immediate)
         logger.notice("Speaking cue: \(phrase, privacy: .public)")
         synthesizer.speak(utterance)
     }
 
     func stop() {
-        synthesizer.stopSpeaking(at: .immediate)
+        deactivationRetryTask?.cancel()
+        deactivationRetryTask = nil
+        speechOwnership.requestStop()
         isSpeaking = false
+        synthesizer.stopSpeaking(at: .immediate)
         deactivateAudioSessionIfSpeechStopped()
     }
 
@@ -148,12 +205,37 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 }
 
 extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
+    private func ownsActiveSpeech(_ utterance: AVSpeechUtterance) -> Bool {
+        speechOwnership.ownsActive(utterance)
+    }
+
+    private func ownsPendingStop(_ utterance: AVSpeechUtterance) -> Bool {
+        speechOwnership.ownsPendingStop(utterance)
+    }
+
+    private func handleSpeechStart(for utterance: AVSpeechUtterance) {
+        guard ownsActiveSpeech(utterance) else { return }
+        isSpeaking = true
+    }
+
+    private func handleSpeechEnd(for utterance: AVSpeechUtterance) {
+        if ownsPendingStop(utterance) {
+            speechOwnership.finishPendingStop(utterance)
+            deactivateAudioSessionIfSpeechStopped()
+            return
+        }
+
+        guard ownsActiveSpeech(utterance) else { return }
+        speechOwnership.finishActive(utterance)
+        isSpeaking = false
+    }
+
     nonisolated func speechSynthesizer(
         _ synthesizer: AVSpeechSynthesizer,
         didStart utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
-            isSpeaking = true
+            handleSpeechStart(for: utterance)
         }
     }
 
@@ -162,8 +244,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         didFinish utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
-            isSpeaking = false
-            self.deactivateAudioSessionIfSpeechStopped()
+            handleSpeechEnd(for: utterance)
         }
     }
 
@@ -172,8 +253,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         didCancel utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
-            isSpeaking = false
-            self.deactivateAudioSessionIfSpeechStopped()
+            handleSpeechEnd(for: utterance)
         }
     }
 }

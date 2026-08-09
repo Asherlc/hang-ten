@@ -388,6 +388,35 @@
     };
   }
 
+  function canSaveEditorState({ serverSession, dirty, saving, loadingSession }) {
+    return Boolean(serverSession && dirty && !saving && !loadingSession);
+  }
+
+  function formatSessionLoadError(error) {
+    const trustedMessages = new Set([
+      "Could not load the selected board session",
+      "Could not load hold highlights from the run",
+    ]);
+    return error instanceof Error && trustedMessages.has(error.message)
+      ? `Could not load the selected board: ${error.message}`
+      : "Could not load the selected board. Please try again.";
+  }
+
+  async function runSessionLoadTransaction(current, { loadSession, loadRegions, normalizeRegions, loadImage }) {
+    try {
+      const session = await loadSession();
+      const regions = await loadRegions(session);
+      const imageAsset = await loadImage(session);
+      const normalized = normalizeRegions(regions, {
+        width: imageAsset.image.naturalWidth,
+        height: imageAsset.image.naturalHeight,
+      });
+      return { ok: true, value: { session, normalized, imageAsset }, error: null };
+    } catch (error) {
+      return { ok: false, value: current, error };
+    }
+  }
+
   function resizeTransform({ points, rotation = 0, handle, pointer, preserveAspect = false }) {
     if (!Array.isArray(points) || points.length === 0) throw new TypeError("resize points are required");
     const center = centroid(points);
@@ -569,5 +598,8 @@
     isExportableContour,
     shiftCornerTreatmentsForInsertion,
     mirrorCornerTreatments,
+    canSaveEditorState,
+    runSessionLoadTransaction,
+    formatSessionLoadError,
   };
 }));
