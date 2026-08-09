@@ -16,6 +16,10 @@ from hangboard_vectorizer.catalog_outlines import (
     write_catalog_document,
 )
 
+_CONTACT_SHEET_NAMES = frozenset(
+    {"contact-sheet-primary.png", "flat-illustrations-contact-sheet.png"}
+)
+
 
 @dataclass(slots=True)
 class CliResult:
@@ -68,7 +72,7 @@ def _discover_sources(source_dir: Path, limit: int | None) -> list[Path]:
     sources = sorted(
         path
         for path in source_dir.glob("*.png")
-        if path.is_file() and path.name != "contact-sheet-primary.png"
+        if path.is_file() and path.name not in _CONTACT_SHEET_NAMES
     )
     if limit is not None:
         return sources[:limit]

@@ -37,7 +37,12 @@ def render_flat_illustration(
     validate_catalog_document(document, source_path=source_path)
     with Image.open(source_path) as source_image:
         rgb = np.array(source_image.convert("RGB"), dtype=np.uint8)
+    outline_masks = tuple(
+        _outline_mask(outline.path, document.canvas_width, document.canvas_height)
+        for outline in document.outlines
+    )
     board_mask = _detect_board_components(rgb)
+    board_mask = _merge_outline_support(board_mask, outline_masks)
 
     rendered = np.full(rgb.shape, PARCHMENT_COLOR, dtype=np.uint8)
     rendered[board_mask] = BOARD_COLOR
@@ -45,8 +50,7 @@ def render_flat_illustration(
     contour = _mask_boundary(board_mask)
     rendered[contour] = CONTOUR_COLOR
 
-    for outline in document.outlines:
-        hold_mask = _outline_mask(outline.path, document.canvas_width, document.canvas_height)
+    for hold_mask in outline_masks:
         hold_mask &= board_mask
         rendered[hold_mask] = CAVITY_COLOR
 
@@ -115,9 +119,11 @@ def _detect_board_components(rgb: np.ndarray) -> np.ndarray:
         (rgb[0, :, :], rgb[-1, :, :], rgb[:, 0, :], rgb[:, -1, :]),
         axis=0,
     )
-    background = np.median(border.astype(np.float32), axis=0)
+    border_float = border.astype(np.float32)
+    background = np.median(border_float, axis=0)
     distance = np.linalg.norm(rgb.astype(np.float32) - background, axis=2)
-    threshold = max(18.0, float(np.percentile(distance, 82)))
+    border_distance = np.linalg.norm(border_float - background, axis=1)
+    threshold = _border_noise_threshold(border_distance)
     candidate = np.where(distance >= threshold, 255, 0).astype(np.uint8)
     if not np.any(candidate):
         grayscale = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
@@ -151,10 +157,33 @@ def _detect_board_components(rgb: np.ndarray) -> np.ndarray:
     return normalized > 0
 
 
+def _border_noise_threshold(border_distance: np.ndarray) -> float:
+    median = float(np.median(border_distance))
+    mad_sigma = float(np.median(np.abs(border_distance - median))) * 1.4826
+    std_sigma = float(border_distance.std())
+    noise_sigma = max(mad_sigma, std_sigma, 0.5)
+    return max(6.0, median + 10.0 * noise_sigma)
+
+
+def _merge_outline_support(
+    board_mask: np.ndarray, outline_masks: tuple[np.ndarray, ...]
+) -> np.ndarray:
+    supported = board_mask.copy()
+    for outline_mask in outline_masks:
+        supported |= outline_mask
+    supported = cv2.morphologyEx(
+        np.where(supported, 255, 0).astype(np.uint8),
+        cv2.MORPH_CLOSE,
+        np.ones((3, 3), dtype=np.uint8),
+        iterations=1,
+    )
+    return supported > 0
+
+
 def _mask_boundary(mask: np.ndarray) -> np.ndarray:
     raster = np.where(mask, 255, 0).astype(np.uint8)
-    boundary = cv2.morphologyEx(raster, cv2.MORPH_GRADIENT, np.ones((3, 3), dtype=np.uint8))
-    return boundary > 0
+    eroded = cv2.erode(raster, np.ones((3, 3), dtype=np.uint8), iterations=1)
+    return (raster > 0) & ~(eroded > 0)
 
 
 def _outline_mask(path: OutlinePath, width: int, height: int) -> np.ndarray:

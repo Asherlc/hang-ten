@@ -559,6 +559,7 @@ def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) ->
     runner = cli.CliRunner()
     write_synthetic_board(tmp_path / "board.png")
     write_synthetic_board(tmp_path / "contact-sheet-primary.png")
+    write_synthetic_board(tmp_path / "flat-illustrations-contact-sheet.png")
 
     result = runner.invoke(
         cli.main,
@@ -575,6 +576,7 @@ def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) ->
     assert result.exit_code == 0
     assert (tmp_path / "out" / "board.json").exists()
     assert not (tmp_path / "out" / "contact-sheet-primary.json").exists()
+    assert not (tmp_path / "out" / "flat-illustrations-contact-sheet.json").exists()
 
 
 def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
@@ -583,6 +585,7 @@ def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
     review_dir = tmp_path / "review"
     write_synthetic_board(source_dir / "board.png")
     write_synthetic_board(source_dir / "contact-sheet-primary.png")
+    write_synthetic_board(source_dir / "flat-illustrations-contact-sheet.png")
 
     result = subprocess.run(
         [
@@ -604,6 +607,7 @@ def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     assert (output_dir / "board.json").exists()
     assert not (output_dir / "contact-sheet-primary.json").exists()
+    assert not (output_dir / "flat-illustrations-contact-sheet.json").exists()
     assert (review_dir / "board.png").exists()
     assert (tmp_path / "review" / "board.png").exists()
 

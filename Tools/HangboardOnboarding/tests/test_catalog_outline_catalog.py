@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from PIL import Image
@@ -13,9 +14,14 @@ from hangboard_vectorizer.catalog_outlines import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SOURCE_DIR = REPO_ROOT / "docs" / "hangboard-generative-catalog"
-OUTPUT_DIR = SOURCE_DIR / "outlines"
-CONTACT_SHEET_NAME = "contact-sheet-primary.png"
+DEFAULT_SOURCE_DIR = REPO_ROOT / "docs" / "hangboard-generative-catalog"
+SOURCE_DIR = Path(os.environ.get("HANGBOARD_CATALOG_SOURCE_DIR", str(DEFAULT_SOURCE_DIR)))
+OUTPUT_DIR = Path(
+    os.environ.get("HANGBOARD_CATALOG_OUTLINE_DIR", str(DEFAULT_SOURCE_DIR / "outlines"))
+)
+CONTACT_SHEET_NAMES = frozenset(
+    {"contact-sheet-primary.png", "flat-illustrations-contact-sheet.png"}
+)
 
 
 def _catalog_sources() -> tuple[Path, ...]:
@@ -23,7 +29,7 @@ def _catalog_sources() -> tuple[Path, ...]:
         sorted(
             path
             for path in SOURCE_DIR.glob("*.png")
-            if path.is_file() and path.name != CONTACT_SHEET_NAME
+            if path.is_file() and path.name not in CONTACT_SHEET_NAMES
         )
     )
 
@@ -52,7 +58,7 @@ def test_catalog_outline_documents_match_catalog_sources() -> None:
     expected_stems = {path.stem for path in sources}
     actual_stems = {path.stem for path in outputs}
 
-    assert CONTACT_SHEET_NAME not in {path.name for path in outputs}
+    assert not CONTACT_SHEET_NAMES.intersection({path.name for path in outputs})
     assert actual_stems == expected_stems
     assert expected_stems == set(load_catalog_source_hints())
 
@@ -81,6 +87,10 @@ def test_catalog_sources_include_conservative_outline_guidance() -> None:
         assert isinstance(guidance["layout"], str) and guidance["layout"]
         assert isinstance(guidance["symmetric"], bool)
         assert isinstance(guidance["allowsLongRails"], bool)
+
+
+def test_catalog_source_discovery_excludes_flat_contact_sheet() -> None:
+    assert not CONTACT_SHEET_NAMES.intersection({path.name for path in _catalog_sources()})
 
 
 def test_every_catalog_output_has_plausible_internal_outline_geometry() -> None:
