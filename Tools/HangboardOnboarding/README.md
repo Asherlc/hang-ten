@@ -99,6 +99,28 @@ the template are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
+The canonical package for each board lives under `Hangboards/`:
+
+- `Hangboards/catalog.json` is the package registry.
+- `Hangboards/<board-folder>/board.json` is that board’s current source of
+  truth.
+- Lifecycle values progress as `draft` → `onboarding` → `approved` →
+  `shipped`.
+
+Stage output is still written to temporary, ignored run folders first (for
+example under `.context/hangboard-onboarding/...`). Register once a run is
+intended to be permanent:
+
+```bash
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/metolius-onboarding-run \
+  --run-id metolius-onboarding-run
+```
+
 Start a persisted onboarding run from one local image or HTTP(S) source:
 
 ```bash
