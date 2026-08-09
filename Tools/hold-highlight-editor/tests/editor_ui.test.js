@@ -15,6 +15,7 @@ test("renders the guided Hangboard Workbench shell instead of the old static tit
   assert.match(index, /<h1 id="board-title">Hangboard Workbench<\/h1>/);
   assert.match(index, /Review each checkpoint, then continue the pipeline\./);
   assert.doesNotMatch(index, /<title>Hold Editor<\/title>/);
+  assert.doesNotMatch(index, /<h1>Hold Editor<\/h1>/);
   assert.doesNotMatch(index, /Hold Region Editor/);
 });
 
@@ -52,6 +53,8 @@ test("app uses guided approval and local-save wording for current revisions", ()
   assert.match(app, /"Approve & continue"/);
   assert.match(app, /"Save locally"/);
   assert.match(app, /"Saved locally"/);
+  assert.doesNotMatch(app, /save hold highlights/i);
+  assert.doesNotMatch(app, /edited hold highlights/i);
   assert.match(app, /detail: \(board\) => board\.saved \? "Saved locally" : `Stage \$\{String\(board\.stage \?\? 0\)\} · Unsaved`,/);
   assert.match(app, /runGuidedMutation\(\(options\) => workbenchClient\.finalSave\(state\.board, options\), "Saved to this repository\."\)/);
 });
