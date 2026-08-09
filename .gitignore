@@ -6,5 +6,17 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 
+# Default transient hangboard workspaces
+/.context/
+/Tools/HangboardOnboarding/boards/.transactions/
+
+# PyInstaller output for the local workbench release build
+/Tools/hold-highlight-editor/packaging/build/
+/Tools/hold-highlight-editor/packaging/dist/
+/Tools/hold-highlight-editor/packaging/*.spec
+
 # Conductor workspace-local state
 .context/
+
+# Local git worktrees
+.worktrees/

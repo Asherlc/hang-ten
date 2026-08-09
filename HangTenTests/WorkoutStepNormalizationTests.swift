@@ -62,6 +62,36 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         XCTAssertEqual(result[0].duration, 8)
     }
 
+    func testCompoundExpansionRetainsExactFingersOnWorkAndClearsThemOnRest() throws {
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index]))
+        let source = WorkoutStep(
+            id: "exact-fingers",
+            number: 2,
+            title: "Exact finger repeat",
+            instruction: "Use only the prescribed finger.",
+            accessory: "8s work · 4s rest",
+            duration: 12,
+            phase: .hang,
+            targets: [.feature(.threeFingerPocket)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .feature(.threeFingerPocket),
+                    timing: .fixed,
+                    duration: 8
+                ),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ],
+            gripType: .openHand,
+            fingerConfiguration: expectedConfiguration
+        )
+
+        let result = try WorkoutStepNormalizer.expand(source)
+
+        XCTAssertEqual(result[0].fingerConfiguration, expectedConfiguration)
+        XCTAssertNil(result[1].fingerConfiguration)
+    }
+
     func testSingleStopwatchStepRemainsOneStepWithItsCap() throws {
         let source = WorkoutStep(
             id: "max",
@@ -78,7 +108,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
                 timing: .stopwatch,
                 duration: nil
             )],
-            gripType: .sloper
+            gripType: .openHand
         )
 
         let result = try WorkoutStepNormalizer.expand(source)
