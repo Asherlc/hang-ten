@@ -55,4 +55,19 @@ Files intentionally not changed
 
 Notes / concerns
 
-- The accepted pilot still has very subtle warm background variation rather than a mathematically uniform fill, but it stays within the flat warm-palette intent and passed the traceability checks.
+- Superseded by fix round below.
+
+Fix round after task review
+
+- Review feedback required a perfectly uniform solid warm parchment background with no halo, vignette, glow, gradient, cast shadow, or localized variation.
+- I regenerated `docs/hangboard-generative-catalog/flat-illustrations/metolius-project-flat.png` with a stricter prompt that preserved the board silhouette and flat cavity shapes while requiring an exact solid `#F2E7D6` background.
+- The model continued to introduce visible background variation, so I applied a narrow local cleanup to the regenerated pilot only: edge-connected background pixels were flattened to the exact parchment color while leaving the board silhouette and cavity shapes intact.
+
+Focused verification for fix round
+
+- Re-opened the saved pilot image locally after the regeneration and cleanup.
+- Confirmed the board silhouette, side pocket groups, center pockets, and stacked long center rails remained intact.
+- Sampled multiple background points at the top edge, side edges, center above the board, and lower background.
+- Verified every sampled background point decodes to the same RGB value: `242,231,214`.
+- Confirmed the source file `docs/hangboard-generative-catalog/metolius-project.png` was not modified.
+- Confirmed the task report, pilot review note, and pilot PNG are the only artifacts intended for the fix-round commit.
