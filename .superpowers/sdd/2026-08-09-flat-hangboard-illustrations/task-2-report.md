@@ -91,3 +91,51 @@ Changed files for fix pass
 Updated assessment
 
 - Batch QA verdict: PASS
+
+Final silhouette repair pass — August 9, 2026
+
+Summary
+
+Applied the requested final review fixes to exactly six outputs:
+
+- `docs/hangboard-generative-catalog/flat-illustrations/beastmaker-2000-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/tension-grindstone-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/trango-rock-prodigy-natural-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/yy-verticalboard-one-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/metolius-contact-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/zlagboard-evo-flat.png`
+
+Implementation notes
+
+- Regenerated each repaired file from its original source PNG using a stronger high-contrast flat prompt that explicitly preserved the full connected board body as a solid warm board plane on a parchment background, with cavities rendered as darker flat cut-ins.
+- Replaced the six prior repaired outputs only; no other flat preview PNGs were regenerated in this pass.
+- Normalized edge-connected background pixels on the six repaired files to the exact parchment review color so the boards remain clearly separated from the background and the rebuilt contact sheet stays visually uniform.
+- Rebuilt `docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png` after all six replacements.
+- Removed the hidden temp file `.metolius-project-flat.png-G2cB` after confirming it was a zero-byte workspace-local temp artifact, and kept it out of the staged set.
+
+Focused verification
+
+- Visually rechecked `beastmaker-2000-flat.png` and confirmed the connected rectangular body, top blocks, and major cavity pattern remain visible and traceable.
+- Visually rechecked `tension-grindstone-flat.png` and confirmed the connected three-section body, center opening, and separated cavity bands remain crisp and legible.
+- Visually rechecked `trango-rock-prodigy-natural-flat.png` and confirmed both board planes, the center bridge/opening, and the lower cavity groups remain connected and readable.
+- Visually rechecked `yy-verticalboard-one-flat.png` and confirmed the connected outer body and center opening remain visible with the major hold rows preserved.
+- Visually rechecked `metolius-contact-flat.png` and confirmed the continuous outer contour remains visible with the major cavity structure preserved.
+- Visually rechecked `zlagboard-evo-flat.png` and confirmed the continuous outer contour remains visible with the major cavity groupings preserved.
+- Visually rechecked the rebuilt contact sheet and confirmed all six repaired boards read correctly in their labeled positions against the uniform parchment review background.
+- Reconfirmed the inventory remains 32 source board PNG stems and 32 `*-flat.png` outputs with no missing or extra files.
+
+Changed files for final silhouette repair pass
+
+- `docs/hangboard-generative-catalog/flat-illustrations/beastmaker-2000-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/tension-grindstone-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/trango-rock-prodigy-natural-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/yy-verticalboard-one-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/metolius-contact-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/zlagboard-evo-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png`
+- `.context/flat-hangboard-illustrations/batch-review.md`
+- this report file
+
+Updated assessment
+
+- Batch QA verdict: PASS
