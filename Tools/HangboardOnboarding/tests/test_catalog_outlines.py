@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import importlib
 import json
 from pathlib import Path
 
 import numpy as np
+from PIL import Image, ImageDraw
 import pytest
 
 from hangboard_vectorizer.catalog_outlines import (
@@ -17,6 +19,17 @@ from hangboard_vectorizer.catalog_outlines import (
     validate_catalog_document,
     write_catalog_document,
 )
+
+
+def write_synthetic_board(path: Path) -> Path:
+    image = Image.new("RGBA", (240, 180), (246, 246, 246, 255))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((20, 20, 220, 160), radius=18, fill=(154, 112, 72, 255))
+    draw.rounded_rectangle((50, 50, 105, 80), radius=10, fill=(110, 78, 48, 255))
+    draw.rounded_rectangle((130, 92, 195, 125), radius=12, fill=(96, 70, 44, 255))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(path)
+    return path
 
 
 def sample_document() -> CatalogOutlineDocument:
@@ -186,3 +199,63 @@ def test_write_catalog_document_is_stable_and_atomic(tmp_path: Path) -> None:
     persisted = json.loads(output_path.read_text(encoding="utf-8"))
     assert persisted == document.to_json()
     assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_detector_returns_stable_candidates_for_synthetic_board(tmp_path: Path) -> None:
+    source = write_synthetic_board(tmp_path / "synthetic.png")
+    vectorize = getattr(
+        importlib.import_module("hangboard_vectorizer.catalog_outlines"),
+        "vectorize_catalog_image",
+        None,
+    )
+    if vectorize is None:
+        pytest.fail("vectorize_catalog_image is missing")
+
+    first = vectorize(source)
+    second = vectorize(source)
+
+    assert first.to_json() == second.to_json()
+    assert len(first.outlines) >= 2
+    assert all(outline.confidence == "approximate" for outline in first.outlines)
+
+
+def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -> None:
+    try:
+        cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    except ModuleNotFoundError:
+        pytest.fail("catalog_outline_cli module is missing")
+    runner = cli.CliRunner()
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(tmp_path), "--output-dir", str(tmp_path / "out"), "--check"],
+    )
+
+    assert result.exit_code != 0
+
+
+def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) -> None:
+    try:
+        cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    except ModuleNotFoundError:
+        pytest.fail("catalog_outline_cli module is missing")
+    runner = cli.CliRunner()
+    write_synthetic_board(tmp_path / "board.png")
+    write_synthetic_board(tmp_path / "contact-sheet-primary.png")
+
+    result = runner.invoke(
+        cli.main,
+        [
+            "--source-dir",
+            str(tmp_path),
+            "--output-dir",
+            str(tmp_path / "out"),
+            "--review-dir",
+            str(tmp_path / "review"),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert (tmp_path / "out" / "board.json").exists()
+    assert not (tmp_path / "out" / "contact-sheet-primary.json").exists()
+    assert (tmp_path / "review" / "board.png").exists()
