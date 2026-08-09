@@ -636,6 +636,8 @@ def normalize_contour(contour: np.ndarray, width: int, height: int) -> OutlinePa
         raise ValueError("contour points must be finite")
     _positive_int(width, "width")
     _positive_int(height, "height")
+    if np.all(points == points[0]):
+        raise ValueError("contour must contain at least three unique points")
     if np.allclose(points[0], points[-1]):
         points = points[:-1]
     if len(points) < 3:

@@ -1,4 +1,4 @@
-# Generated Hardboard Hold Outlines Implementation Plan
+# Generated Hangboard Hold Outlines Implementation Plan
 
 > **For agentic workers:** REQUIRED: Every task must use `superpowers:subagent-driven-development` with a fresh subagent. The controller must run both an implementation checkpoint and a review checkpoint after every task before starting the next one. Steps use checkbox (`- [ ]`) syntax for tracking.
 

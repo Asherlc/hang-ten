@@ -241,6 +241,28 @@ def test_normalize_contour_emits_lines_and_curves_in_range() -> None:
     assert all(0.0 <= value <= 1.0 for value in path.all_coordinates())
 
 
+@pytest.mark.parametrize(
+    "contour",
+    [
+        np.array([10, 10], dtype=float),
+        np.array([[10, 10], [20, 20]], dtype=float),
+        np.array([[10, 10, 10], [20, 20, 20], [30, 30, 30]], dtype=float),
+        np.array([[10, 10], [20, np.nan], [30, 30]], dtype=float),
+    ],
+    ids=["not-a-point-sequence", "too-few-points", "wrong-point-shape", "non-finite-point"],
+)
+def test_normalize_contour_rejects_malformed_contours(contour: np.ndarray) -> None:
+    with pytest.raises(ValueError):
+        normalize_contour(contour, 100, 100)
+
+
+def test_normalize_contour_rejects_an_all_identical_contour() -> None:
+    contour = np.array([[10, 10], [10, 10], [10, 10], [10, 10]], dtype=float)
+
+    with pytest.raises(ValueError, match="at least three unique points"):
+        normalize_contour(contour, 100, 100)
+
+
 def test_normalize_contour_keeps_persistent_corner_as_line_endpoint() -> None:
     contour = np.array(
         [

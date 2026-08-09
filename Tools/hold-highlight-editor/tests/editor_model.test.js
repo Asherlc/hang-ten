@@ -83,6 +83,84 @@ test("deleting the final highlight stays saveable and emits its deletion correct
   assert.deepEqual(corrections.deleted, [{ id: 1, key: "grip-001" }]);
 });
 
+test("canSaveEditorState rejects a save already in progress", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: true,
+    saving: true,
+    loadingSession: false,
+  }), false);
+});
+
+test("canSaveEditorState rejects a session still loading", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: true,
+    saving: false,
+    loadingSession: true,
+  }), false);
+});
+
+test("canSaveEditorState rejects a clean editor", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: false,
+    saving: false,
+    loadingSession: false,
+  }), false);
+});
+
+test("canSaveEditorState rejects an editor without a server session", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: null,
+    dirty: true,
+    saving: false,
+    loadingSession: false,
+  }), false);
+});
+
+test("a loadSession failure preserves the original snapshot and error", async () => {
+  const current = {
+    editor: { regions: [baseline], selectedId: 1 },
+    visible: { boardValue: "board-a", status: "Selected hold grip-001." },
+  };
+  const before = structuredClone(current);
+  const error = new Error("Could not load the selected board session");
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => { throw error; },
+    loadRegions: async () => { throw new Error("loadRegions should not run"); },
+    normalizeRegions: (document) => document,
+    loadImage: async () => { throw new Error("loadImage should not run"); },
+  });
+
+  assert.equal(result.ok, false);
+  assert.strictEqual(result.value, current);
+  assert.deepEqual(current, before);
+  assert.strictEqual(result.error, error);
+});
+
+test("a loadRegions failure preserves the original snapshot and error", async () => {
+  const current = {
+    editor: { regions: [baseline], selectedId: 1 },
+    visible: { boardValue: "board-a", status: "Selected hold grip-001." },
+  };
+  const before = structuredClone(current);
+  const error = new Error("Could not load hold highlights from the run");
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => ({ id: "board-b", label: "Board B", imageUrl: "/board-b.png", regionsUrl: "/board-b.json" }),
+    loadRegions: async () => { throw error; },
+    normalizeRegions: (document) => document,
+    loadImage: async () => { throw new Error("loadImage should not run"); },
+  });
+
+  assert.equal(result.ok, false);
+  assert.strictEqual(result.value, current);
+  assert.deepEqual(current, before);
+  assert.strictEqual(result.error, error);
+});
+
 test("a failed session transaction preserves the complete editing document and visible state", async () => {
   const current = {
     editor: {
