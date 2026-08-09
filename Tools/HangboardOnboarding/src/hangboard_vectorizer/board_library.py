@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass
+from enum import Enum, auto
 import fcntl
 from hashlib import sha256
 import json
@@ -82,6 +83,29 @@ class _TransactionJournal:
             "candidateRevisionToken": self.candidate_revision_token,
             "phase": self.phase if phase is None else phase,
         }
+
+
+class _TransactionDecisionKind(Enum):
+    CONFLICTING_ROLLBACK = auto()
+    RETAINED_INVALID_CANONICAL = auto()
+    INSTALLED_CANDIDATE = auto()
+    FINISH_TRANSACTION = auto()
+    UNPROVEN_CANONICAL = auto()
+    INSTALL_CANDIDATE = auto()
+    RESTORE_ROLLBACK = auto()
+    AMBIGUOUS = auto()
+
+
+@dataclass(frozen=True, slots=True)
+class _TransactionDecision:
+    kind: _TransactionDecisionKind
+    journal: _TransactionJournal
+    current: LibraryBoard | None
+    candidate: LibraryBoard | None
+    rollback: LibraryBoard | None
+    current_problem: str | None
+    invalid_canonical_retained: bool
+    problem: str | None
 
 
 class BoardLibraryError(ValueError):
@@ -523,6 +547,32 @@ class RepositoryBoardLibrary:
     def _inspect_transaction_read_only(
         self, transaction: Path
     ) -> tuple[str, LibraryBoard | None, bool, str | None]:
+        decision = self._classify_transaction(transaction)
+        replacement = None
+        suppress_current = False
+        if decision.kind is _TransactionDecisionKind.CONFLICTING_ROLLBACK:
+            if decision.current is None and decision.rollback is not None:
+                replacement = decision.rollback
+            suppress_current = decision.current is None
+        elif decision.kind in {
+            _TransactionDecisionKind.FINISH_TRANSACTION,
+            _TransactionDecisionKind.INSTALL_CANDIDATE,
+        }:
+            replacement = decision.candidate
+            suppress_current = True
+        elif decision.kind is _TransactionDecisionKind.RESTORE_ROLLBACK:
+            replacement = decision.rollback
+            suppress_current = True
+        elif decision.kind is _TransactionDecisionKind.AMBIGUOUS:
+            suppress_current = decision.current_problem is not None
+        return (
+            decision.journal.board_id,
+            replacement,
+            suppress_current,
+            decision.problem,
+        )
+
+    def _classify_transaction(self, transaction: Path) -> _TransactionDecision:
         journal = self._read_transaction_journal(transaction)
         current_path = self._boards_root / journal.board_id
         candidate_path = transaction / "candidate"
@@ -553,66 +603,67 @@ class RepositoryBoardLibrary:
             rollback_state_problem = "rollback package does not match its journal"
 
         if rollback_state_problem is not None:
-            replacement = rollback if current is None and rollback is not None else None
-            return (
-                journal.board_id,
-                replacement,
-                current is None,
-                f"captured canonical package has {rollback_state_problem}",
-            )
-        if invalid_canonical_retained and current is not None:
-            return (
-                journal.board_id,
-                None,
-                False,
-                "recovered package has retained invalid canonical evidence",
-            )
-        if (
+            kind = _TransactionDecisionKind.CONFLICTING_ROLLBACK
+            problem = f"captured canonical package has {rollback_state_problem}"
+        elif invalid_canonical_retained and current is not None:
+            kind = _TransactionDecisionKind.RETAINED_INVALID_CANONICAL
+            problem = "recovered package has retained invalid canonical evidence"
+        elif (
             current is not None
             and current.revision_token == journal.candidate_revision_token
         ):
+            kind = _TransactionDecisionKind.INSTALLED_CANDIDATE
             problem = candidate_state_problem or rollback_state_problem
-            return journal.board_id, None, False, (
+            problem = (
                 None if problem is None else f"installed candidate has {problem}"
             )
-        if current is not None:
+        elif current is not None:
             if (
                 current.revision_token == journal.expected_revision_token
                 and candidate_valid
                 and rollback is None
                 and rollback_problem is None
             ):
-                return journal.board_id, candidate, True, None
-            return (
-                journal.board_id,
-                None,
-                False,
-                "canonical package does not prove the expected transaction state",
-            )
-        if candidate_valid:
+                kind = _TransactionDecisionKind.FINISH_TRANSACTION
+                problem = None
+            else:
+                kind = _TransactionDecisionKind.UNPROVEN_CANONICAL
+                problem = (
+                    "canonical package does not prove the expected transaction state"
+                )
+        elif candidate_valid:
+            kind = _TransactionDecisionKind.INSTALL_CANDIDATE
             problem = None
             if invalid_canonical_retained or current_problem is not None:
                 problem = "installed the candidate and retained invalid canonical evidence"
-            return journal.board_id, candidate, True, problem
-        if rollback_valid:
+        elif rollback_valid:
+            kind = _TransactionDecisionKind.RESTORE_ROLLBACK
             reason = candidate_state_problem or "candidate package is missing"
-            return (
-                journal.board_id,
-                rollback,
-                True,
-                f"restored the prior package because the {reason}",
-            )
-        problems = [
-            problem
-            for problem in (
+            problem = f"restored the prior package because the {reason}"
+        else:
+            kind = _TransactionDecisionKind.AMBIGUOUS
+            problems = [
+                state_problem
+                for state_problem in (
                 current_problem,
                 candidate_state_problem,
                 rollback_state_problem,
+                )
+                if state_problem
+            ]
+            problem = (
+                "; ".join(problems) if problems else "required packages are missing"
             )
-            if problem
-        ]
-        detail = "; ".join(problems) if problems else "required packages are missing"
-        return journal.board_id, None, current_problem is not None, detail
+        return _TransactionDecision(
+            kind=kind,
+            journal=journal,
+            current=current,
+            candidate=candidate,
+            rollback=rollback,
+            current_problem=current_problem,
+            invalid_canonical_retained=invalid_canonical_retained,
+            problem=problem,
+        )
 
     def _transaction_diagnostic(
         self, transaction: Path, reason: str
@@ -624,91 +675,56 @@ class RepositoryBoardLibrary:
         )
 
     def _recover_transaction_locked(self, transaction: Path) -> None:
-        journal = self._read_transaction_journal(transaction)
+        decision = self._classify_transaction(transaction)
+        journal = decision.journal
         current_path = self._boards_root / journal.board_id
         candidate_path = transaction / "candidate"
         rollback_path = transaction / "rollback"
         invalid_canonical_path = transaction / "invalid-canonical"
-        invalid_canonical_retained = (
-            invalid_canonical_path.exists() or invalid_canonical_path.is_symlink()
-        )
-        current, current_problem = self._probe_package(current_path, canonical=True)
-        candidate, candidate_problem = self._probe_package(candidate_path)
-        rollback, rollback_problem = self._probe_package(rollback_path)
-        candidate_valid = (
-            candidate is not None
-            and candidate.board_id == journal.board_id
-            and candidate.revision_token == journal.candidate_revision_token
-        )
-        rollback_valid = (
-            rollback is not None
-            and rollback.board_id == journal.board_id
-            and journal.expected_revision_token is not None
-            and rollback.revision_token == journal.expected_revision_token
-        )
-        candidate_state_problem = candidate_problem
-        if candidate is not None and not candidate_valid:
-            candidate_state_problem = "candidate package does not match its journal"
-        rollback_state_problem = rollback_problem
-        if rollback is not None and not rollback_valid:
-            rollback_state_problem = "rollback package does not match its journal"
 
-        if rollback_state_problem is not None:
+        if decision.kind is _TransactionDecisionKind.CONFLICTING_ROLLBACK:
             self._retain_conflicting_rollback_locked(
                 transaction=transaction,
                 current_path=current_path,
                 candidate_path=candidate_path,
                 rollback_path=rollback_path,
-                current=current,
-                rollback=rollback,
+                current=decision.current,
+                rollback=decision.rollback,
                 journal=journal,
             )
-            raise BoardLibraryError(
-                f"captured canonical package has {rollback_state_problem}"
-            )
+            raise BoardLibraryError(decision.problem or "transaction conflict")
 
-        if invalid_canonical_retained and current is not None:
-            raise BoardLibraryError(
-                "recovered package has retained invalid canonical evidence"
-            )
-        if (
-            current is not None
-            and current.revision_token == journal.candidate_revision_token
-        ):
-            if (
-                candidate_state_problem is not None
-                or rollback_state_problem is not None
-            ):
-                problem = candidate_state_problem or rollback_state_problem
-                raise BoardLibraryError(f"installed candidate has {problem}")
+        if decision.kind is _TransactionDecisionKind.RETAINED_INVALID_CANONICAL:
+            raise BoardLibraryError(decision.problem or "invalid canonical evidence")
+        if decision.kind is _TransactionDecisionKind.INSTALLED_CANDIDATE:
+            if decision.problem is not None:
+                raise BoardLibraryError(decision.problem)
             self._remove_transaction(transaction)
             return
-        if current_problem is not None:
+
+        invalid_canonical_retained = decision.invalid_canonical_retained
+        if decision.current_problem is not None:
             if invalid_canonical_retained:
                 raise BoardLibraryError(
                     "canonical package is invalid and prior invalid evidence exists"
                 )
-            if not candidate_valid and not rollback_valid:
-                raise BoardLibraryError(f"canonical package {current_problem}")
+            if decision.kind not in {
+                _TransactionDecisionKind.INSTALL_CANDIDATE,
+                _TransactionDecisionKind.RESTORE_ROLLBACK,
+            }:
+                raise BoardLibraryError(
+                    f"canonical package {decision.current_problem}"
+                )
             self._move_path(current_path, invalid_canonical_path)
             self._fsync_directory(transaction)
             self._fsync_directory(self._boards_root)
             invalid_canonical_retained = True
 
-        if current is not None:
-            if (
-                current.revision_token == journal.expected_revision_token
-                and candidate_valid
-                and rollback is None
-                and rollback_problem is None
-            ):
-                self._finish_transaction_locked(transaction, journal)
-                return
-            raise BoardLibraryError(
-                "canonical package does not prove the expected transaction state"
-            )
+        if decision.kind is _TransactionDecisionKind.FINISH_TRANSACTION:
+            self._finish_transaction_locked(transaction, journal)
+            return
 
-        if candidate_valid:
+        if decision.kind is _TransactionDecisionKind.INSTALL_CANDIDATE:
             self._write_journal(
                 transaction, journal.document(phase="prior_moved")
             )
@@ -718,10 +734,6 @@ class RepositoryBoardLibrary:
             self._write_journal(
                 transaction, journal.document(phase="candidate_installed")
             )
-            if rollback_state_problem is not None:
-                raise BoardLibraryError(
-                    f"installed the candidate but retained {rollback_state_problem}"
-                )
             if invalid_canonical_retained:
                 raise BoardLibraryError(
                     "installed the candidate and retained invalid canonical evidence"
@@ -729,22 +741,13 @@ class RepositoryBoardLibrary:
             self._remove_transaction(transaction)
             return
 
-        if rollback_valid:
+        if decision.kind is _TransactionDecisionKind.RESTORE_ROLLBACK:
             self._move_path(rollback_path, current_path)
             self._fsync_directory(self._boards_root)
             self._fsync_directory(transaction)
-            reason = candidate_state_problem or "candidate package is missing"
-            raise BoardLibraryError(
-                f"restored the prior package because the {reason}"
-            )
+            raise BoardLibraryError(decision.problem or "restored the prior package")
 
-        problems = [
-            problem
-            for problem in (candidate_state_problem, rollback_state_problem)
-            if problem
-        ]
-        detail = "; ".join(problems) if problems else "required packages are missing"
-        raise BoardLibraryError(detail)
+        raise BoardLibraryError(decision.problem or "canonical package state is ambiguous")
 
     def _captured_package_problem(
         self, rollback_path: Path, journal: _TransactionJournal

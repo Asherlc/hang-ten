@@ -1010,6 +1010,61 @@ def test_publish_removes_stray_transaction_file(tmp_path: Path) -> None:
     assert not stray.exists()
 
 
+def test_recovery_reports_stray_transaction_unlink_failure_with_context(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    library = RepositoryBoardLibrary(repository)
+    transactions = _boards_root(repository) / ".transactions"
+    transactions.mkdir(parents=True)
+    stray = transactions / "unlink-failure"
+    stray.write_text("not transaction evidence", encoding="utf-8")
+    failure = OSError("injected unlink failure")
+    original_unlink = Path.unlink
+
+    def fail_unlink(path: Path, *, missing_ok: bool = False) -> None:
+        if path == stray:
+            raise failure
+        original_unlink(path, missing_ok=missing_ok)
+
+    monkeypatch.setattr(Path, "unlink", fail_unlink)
+
+    with pytest.raises(BoardLibraryError) as raised:
+        library._recover_transactions_locked()
+
+    assert str(raised.value) == "stray transaction entry is not removable"
+    assert raised.value.__cause__ is failure
+
+
+def test_recovery_reports_transaction_directory_fsync_failure_with_context(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    library = RepositoryBoardLibrary(repository)
+    transactions = _boards_root(repository) / ".transactions"
+    transactions.mkdir(parents=True)
+    stray = transactions / "fsync-failure"
+    stray.write_text("not transaction evidence", encoding="utf-8")
+    failure = OSError("injected directory fsync failure")
+    original_fsync = library._fsync_directory
+
+    def fail_fsync(path: Path) -> None:
+        if path == transactions:
+            raise failure
+        original_fsync(path)
+
+    monkeypatch.setattr(library, "_fsync_directory", fail_fsync)
+
+    with pytest.raises(BoardLibraryError) as raised:
+        library._recover_transactions_locked()
+
+    assert str(raised.value) == "stray transaction entry is not removable"
+    assert raised.value.__cause__ is failure
+    assert not stray.exists()
+
+
 def test_publish_retains_invalid_canonical_transaction_evidence(
     tmp_path: Path,
 ) -> None:
