@@ -1351,21 +1351,6 @@ enum LegacyPlanSeedCatalog {
         )
     }
 
-    private static func coolDownStep(id: String) -> WorkoutStep {
-        WorkoutStep(
-            id: id,
-            number: 0,
-            title: "Cool down",
-            instruction: "Stay on the easy jugs and let your breathing settle before you step away.",
-            accessory: "Easy movement · gentle release",
-            duration: 60,
-            phase: .coolDown,
-            targets: [.ids("jug-left", "jug-right")],
-            segments: [fixedWork(.ids("jug-left", "jug-right"), 60)],
-            gripType: .openHand
-        )
-    }
-
     private static func numbered(_ steps: [WorkoutStep]) -> [WorkoutStep] {
         steps.enumerated().map { index, step in
             step.withNumber(index + 1)
@@ -1433,7 +1418,6 @@ enum LegacyPlanSeedCatalog {
                 targets: [.ids("edge-19-left", "edge-19-right")],
                 gripType: .halfCrimp
             ),
-            coolDownStep(id: "max-hangs-cool-down")
         ])
     )
 
@@ -1474,7 +1458,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "f80-cool-down"))
             return steps
         }())
     )
@@ -1518,7 +1501,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "f100-cool-down"))
             return steps
         }())
     )
@@ -1560,7 +1542,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "int-hangs-cool-down"))
             return steps
         }())
     )
@@ -1608,7 +1589,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "repeaters-cool-down"))
             return steps
         }())
     )
@@ -1647,7 +1627,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 )
             }
-            steps.append(coolDownStep(id: "abrahangs-cool-down"))
             return steps
         }())
     )
@@ -1695,7 +1674,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "horst-753-cool-down"))
             return steps
         }())
     )
@@ -1737,7 +1715,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "ladders-cool-down"))
             return steps
         }())
     )
@@ -1796,7 +1773,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 }
             }
-            steps.append(coolDownStep(id: "density-cool-down"))
             return steps
         }())
     )
@@ -1826,7 +1802,6 @@ enum LegacyPlanSeedCatalog {
                     )
                 )
             }
-            steps.append(coolDownStep(id: "zlagboard-cool-down"))
             return steps
         }())
     )

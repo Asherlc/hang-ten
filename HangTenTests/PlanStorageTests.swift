@@ -725,6 +725,18 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
     }
 
+    func testBuiltInPlansDoNotEndWithCooldownSteps() {
+        XCTAssertTrue(
+            LegacyPlanSeedCatalog.all.allSatisfy { $0.steps.last?.phase != .coolDown }
+        )
+        XCTAssertFalse(
+            BuiltInPlanLibraryDefinition.document.blocks.contains { $0.id == "shared.cool-down" }
+        )
+        XCTAssertTrue(
+            PlanLibraryStore.builtIn.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+        )
+    }
+
     func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
         let abrahangsWarmUp = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
