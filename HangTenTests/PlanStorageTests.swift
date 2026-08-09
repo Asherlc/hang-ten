@@ -755,6 +755,22 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.gripType, .halfCrimp)
     }
 
+    func testAbrahangsFourthGripUsesExactThreeFingerPocketConfiguration() throws {
+        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+        let step = try XCTUnwrap(
+            store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
+                $0.id == "abrahangs-grip-4"
+            }
+        )
+
+        XCTAssertEqual(step.title, "Abrahang · Three-finger pocket")
+        XCTAssertEqual(
+            step.fingerConfiguration,
+            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+        )
+        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle, .ring])
+    }
+
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
         let minuteEightTaskOne = try XCTUnwrap(
             LegacyPlanSeedCatalog.metoliusAdvanced.steps.first {

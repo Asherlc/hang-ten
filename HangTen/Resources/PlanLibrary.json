@@ -4971,6 +4971,13 @@
           "accessory" : "10s hang · 50s rest · feet supported",
           "activeDuration" : 10,
           "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring"
+            ]
+          },
           "gripType" : "openHand",
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",

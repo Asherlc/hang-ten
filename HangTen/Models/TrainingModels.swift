@@ -1320,7 +1320,8 @@ enum LegacyPlanSeedCatalog {
         active: TimeInterval,
         rest: TimeInterval,
         targets: [HoldTarget],
-        gripType: GripType
+        gripType: GripType,
+        fingerConfiguration: FingerConfiguration? = nil
     ) -> WorkoutStep {
         WorkoutStep(
             id: id,
@@ -1333,6 +1334,7 @@ enum LegacyPlanSeedCatalog {
             targets: targets,
             segments: [fixedWork(targets[0], active)] + (rest > 0 ? [fixedRest(rest)] : []),
             gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             timedWorkDuration: active
         )
     }
@@ -1624,13 +1626,13 @@ enum LegacyPlanSeedCatalog {
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
             var steps = [warmUpStep(id: "abrahangs-warm-up", duration: 120)]
-            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
-                ("Center sloper", [.ids("sloper-round-center")], .openHand),
-                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .openHand),
-                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),
-                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp)
+            let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
+                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand, nil),
+                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
+                ("Center sloper", [.ids("sloper-round-center")], .openHand, nil),
+                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, nil),
+                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp, nil)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1643,7 +1645,8 @@ enum LegacyPlanSeedCatalog {
                         active: 10,
                         rest: 50,
                         targets: grip.targets,
-                        gripType: grip.grip
+                        gripType: grip.grip,
+                        fingerConfiguration: grip.fingerConfiguration
                     )
                 )
             }
