@@ -216,118 +216,14 @@
     {
       "bounds": {
         "height": 0.07000000000000006,
-        "width": 0.3,
-        "x": 0.12,
-        "y": 0.52
-      },
-      "confidence": "approximate",
-      "id": "hold-03",
-      "kind": "rail",
-      "label": "Approximate rail 3",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
-      "path": {
-        "closed": true,
-        "commands": [
-          {
-            "command": "M",
-            "to": [
-              0.1354,
-              0.52
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.22513333333333332,
-                0.52
-              ],
-              [
-                0.40973333333333334,
-                0.5251333333333333
-              ]
-            ],
-            "to": [
-              0.4046,
-              0.52
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.42,
-              0.5354
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.42,
-              0.5746000000000001
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.32513333333333333,
-                0.5797333333333334
-              ],
-              [
-                0.13026666666666667,
-                0.5848666666666668
-              ]
-            ],
-            "to": [
-              0.1354,
-              0.5900000000000001
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.12,
-              0.5746000000000001
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.12,
-                0.5615333333333334
-              ],
-              [
-                0.12513333333333335,
-                0.5302666666666667
-              ]
-            ],
-            "to": [
-              0.12,
-              0.5354
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.1354,
-              0.52
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "bounds": {
-        "height": 0.07000000000000006,
         "width": 0.10000000000000003,
         "x": 0.36999999999999994,
         "y": 0.52
       },
       "confidence": "approximate",
-      "id": "hold-04",
+      "id": "hold-03",
       "kind": "edge",
-      "label": "Approximate edge 4",
+      "label": "Approximate edge 3",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -412,9 +308,9 @@
         "y": 0.52
       },
       "confidence": "approximate",
-      "id": "hold-05",
+      "id": "hold-04",
       "kind": "rail",
-      "label": "Approximate rail 5",
+      "label": "Approximate rail 4",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -516,9 +412,9 @@
         "y": 0.64
       },
       "confidence": "approximate",
-      "id": "hold-06",
+      "id": "hold-05",
       "kind": "rail",
-      "label": "Approximate rail 6",
+      "label": "Approximate rail 5",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -603,9 +499,9 @@
         "y": 0.64
       },
       "confidence": "approximate",
-      "id": "hold-07",
+      "id": "hold-06",
       "kind": "rail",
-      "label": "Approximate rail 7",
+      "label": "Approximate rail 6",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,

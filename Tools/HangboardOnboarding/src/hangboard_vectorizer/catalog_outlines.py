@@ -683,33 +683,71 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
         pixel_data = np.array(rgba, dtype=np.uint8)
         canvas_width, canvas_height = rgba.size
     board_mask = detect_board_mask(pixel_data)
-    candidates = _manual_candidates_for_stem(source_path.stem, canvas_width, canvas_height)
-    manual_override = bool(candidates)
-    if not candidates:
-        candidates = detect_hold_candidates(pixel_data, board_mask)
+    source_support = _manual_source_board_mask(pixel_data, board_mask)
+    raw_manual = _manual_candidates_for_stem(source_path.stem, canvas_width, canvas_height)
+    manual_candidates = tuple(
+        candidate
+        for candidate in raw_manual
+        if _manual_contour_is_supported(
+            candidate[0], candidate[1], pixel_data, source_support
+        )
+    )
+    minimum_contours = _minimum_contours_for_stem(source_path.stem)
+    candidates: list[tuple[np.ndarray, str, str, bool]] = [
+        (*candidate, True) for candidate in manual_candidates
+    ]
+    if len(candidates) < minimum_contours:
+        candidates.extend(
+            (*candidate, False)
+            for candidate in detect_hold_candidates(pixel_data, board_mask)
+        )
     clip_mask = board_mask
     if not candidates:
         clip_mask = _broad_board_mask(_rgb_image(pixel_data))
-        candidates = _fallback_hold_candidates(pixel_data)
+        candidates.extend(
+            (*candidate, False) for candidate in _fallback_hold_candidates(pixel_data)
+        )
     if not candidates:
         raise ValueError(f"no hold candidates detected for {source_path.name}")
     references = _references_for_stem(source_path.stem)
     outlines: list[HoldOutline] = []
-    for index, (contour, kind, note) in enumerate(candidates, start=1):
+    for index, (contour, kind, note, is_manual) in enumerate(candidates, start=1):
         clipped = (
             contour
-            if manual_override
+            if is_manual
             else _clip_contour_to_mask(contour, clip_mask)
         )
         if len(clipped) < 3 or _polygon_area(clipped) <= 0.0:
             continue
-        if not manual_override and not _candidate_is_plausible(clipped, kind, canvas_width, canvas_height):
+        source_supported = is_manual and _manual_contour_is_supported(
+            clipped, kind, pixel_data, source_support
+        )
+        if not _candidate_is_plausible(clipped, kind, canvas_width, canvas_height):
+            normalized_width = path_bounds(normalize_contour(
+                clipped, canvas_width, canvas_height
+            ))[2]
+            normalized_height = path_bounds(normalize_contour(
+                clipped, canvas_width, canvas_height
+            ))[3]
+            if not (
+                source_supported
+                and kind in {"edge", "rail"}
+                and normalized_width <= 0.82
+                and normalized_height >= 0.03
+            ):
+                continue
+        if is_manual and not source_supported:
             continue
         path = normalize_contour(clipped, canvas_width, canvas_height)
         bounds = path_bounds(path)
-        if not manual_override and kind == "rail" and bounds[3] < 0.025:
+        if kind == "rail" and bounds[3] < 0.025:
             continue
-        if not manual_override and kind == "rail" and bounds[2] > 0.75 and bounds[3] < 0.12:
+        if (
+            kind == "rail"
+            and not _allows_long_rails_for_stem(source_path.stem)
+            and bounds[2] > 0.75
+            and bounds[3] < 0.12
+        ):
             continue
         outlines.append(
             HoldOutline(
@@ -735,6 +773,27 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
     )
     validate_catalog_document(document, source_path=source_path)
     return document
+
+
+def _minimum_contours_for_stem(stem: str) -> int:
+    payload = load_catalog_source_hints()
+    entry = payload.get(stem)
+    if not isinstance(entry, Mapping):
+        return 1
+    guidance = entry.get("outlineGuidance")
+    if not isinstance(guidance, Mapping):
+        return 1
+    value = guidance.get("minimumContours", 1)
+    return int(value) if isinstance(value, int) and value > 0 else 1
+
+
+def _allows_long_rails_for_stem(stem: str) -> bool:
+    payload = load_catalog_source_hints()
+    entry = payload.get(stem)
+    if not isinstance(entry, Mapping):
+        return False
+    guidance = entry.get("outlineGuidance")
+    return isinstance(guidance, Mapping) and guidance.get("allowsLongRails") is True
 
 
 def render_catalog_review_overlay(source_path: Path, document: CatalogOutlineDocument, output_path: Path) -> None:
@@ -1097,6 +1156,99 @@ def _manual_candidates_for_stem(
     return tuple((points, kind, note) for points, kind, note, _ in candidates)
 
 
+def _manual_source_board_mask(image: np.ndarray, board_mask: np.ndarray) -> np.ndarray:
+    """Recover separated board pieces for source alignment without changing detection."""
+
+    rgb = _rgb_image(image)
+    border = np.concatenate(
+        (rgb[0, :, :], rgb[-1, :, :], rgb[:, 0, :], rgb[:, -1, :]), axis=0
+    )
+    background = np.median(border.astype(np.float32), axis=0)
+    distance = np.linalg.norm(rgb.astype(np.float32) - background, axis=2)
+    threshold = max(12.0, float(np.percentile(distance, 60)))
+    candidate = np.where(distance >= threshold, 255, 0).astype(np.uint8)
+    candidate = cv2.morphologyEx(
+        candidate, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8), iterations=2
+    )
+    candidate = cv2.morphologyEx(
+        candidate, cv2.MORPH_OPEN, np.ones((5, 5), dtype=np.uint8), iterations=1
+    )
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(candidate, 8)
+    largest_area = max(
+        (int(stats[index, cv2.CC_STAT_AREA]) for index in range(1, count)),
+        default=0,
+    )
+    minimum_area = max(64, int(largest_area * 0.05))
+    separated_boards = np.zeros_like(candidate)
+    for index in range(1, count):
+        if int(stats[index, cv2.CC_STAT_AREA]) >= minimum_area:
+            separated_boards[labels == index] = 255
+    return cv2.bitwise_or(board_mask, separated_boards)
+
+
+def _manual_contour_is_supported(
+    contour: np.ndarray,
+    kind: str,
+    image: np.ndarray,
+    board_mask: np.ndarray,
+) -> bool:
+    """Require board placement plus local boundary evidence for manual boxes."""
+
+    rgb = _rgb_image(image)
+    grayscale = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    height, width = grayscale.shape
+    points = np.rint(np.asarray(contour, dtype=np.float64)).astype(np.int32)
+    if points.ndim != 2 or len(points) < 3:
+        return False
+    contour_mask = np.zeros((height, width), dtype=np.uint8)
+    cv2.fillPoly(contour_mask, [points.reshape((-1, 1, 2))], 255)
+    area = int(np.count_nonzero(contour_mask))
+    if area == 0:
+        return False
+    board_overlap = np.count_nonzero((contour_mask > 0) & (board_mask > 0)) / area
+    if board_overlap < 0.35:
+        return False
+
+    boundary = np.zeros_like(contour_mask)
+    cv2.polylines(
+        boundary,
+        [points.reshape((-1, 1, 2))],
+        isClosed=True,
+        color=255,
+        thickness=max(2, min(7, int(min(width, height) * 0.004))),
+    )
+    radius = max(5, min(24, int(min(width, height) * 0.018)))
+    ring_kernel = np.ones((radius * 2 + 1, radius * 2 + 1), dtype=np.uint8)
+    boundary_band = cv2.dilate(boundary, ring_kernel, iterations=1) > 0
+    inner = cv2.erode(contour_mask, ring_kernel, iterations=1) > 0
+    outer = (
+        (cv2.dilate(contour_mask, ring_kernel, iterations=1) > 0)
+        & (contour_mask == 0)
+        & (board_mask > 0)
+    )
+    if not inner.any() or not outer.any():
+        return False
+
+    contrast = abs(float(np.mean(grayscale[inner])) - float(np.mean(grayscale[outer])))
+    gradient_x = cv2.Sobel(grayscale, cv2.CV_32F, 1, 0)
+    gradient_y = cv2.Sobel(grayscale, cv2.CV_32F, 0, 1)
+    gradient = cv2.magnitude(gradient_x, gradient_y)
+    board_gradient = gradient[board_mask > 0]
+    if board_gradient.size == 0:
+        return False
+    local_gradient = float(np.percentile(gradient[boundary_band], 75))
+    board_baseline = max(1.0, float(np.percentile(board_gradient, 65)))
+    edge_ratio = local_gradient / board_baseline
+
+    # A quiet flat patch can have photographic texture, but it should not have
+    # both a weak luminance step and a boundary gradient stronger than the board.
+    if contrast < 3.0:
+        return False
+    if kind == "rail":
+        return contrast >= 7.0 or edge_ratio >= 1.18
+    return contrast >= 5.0 or edge_ratio >= 1.22
+
+
 def _mirror_bounds(bounds: Bounds) -> Bounds:
     x, y, width, height = bounds
     return (1.0 - x - width, y, width, height)
@@ -1173,16 +1325,58 @@ def _polygon_area(points: np.ndarray) -> float:
 
 
 def _outline_path_to_pixels(path: OutlinePath, width: int, height: int) -> np.ndarray:
+    """Flatten an editable path into a deterministic pixel polyline for review."""
+
     contour: list[tuple[int, int]] = []
+    current: Point | None = None
+    subpath_start: Point | None = None
+
+    def append(point: Point) -> None:
+        pixel = _point_to_pixel(point, width, height)
+        if not contour or contour[-1] != pixel:
+            contour.append(pixel)
+
     for command in path.commands:
-        if command.command == "C" and command.controls is not None:
-            for control in command.controls:
-                contour.append(_point_to_pixel(control, width, height))
-        contour.append(_point_to_pixel(command.to, width, height))
-    unique = list(dict.fromkeys(contour))
-    if len(unique) < 3:
+        if command.command == "M":
+            if current is not None:
+                raise ValueError("outline path review renderer supports one subpath")
+            current = command.to
+            subpath_start = command.to
+            append(command.to)
+            continue
+        if current is None:
+            raise ValueError("outline path must begin with a move command")
+        if command.command == "L":
+            current = command.to
+            append(command.to)
+            continue
+        if command.controls is None:
+            raise ValueError("cubic outline command is missing controls")
+
+        control_1, control_2 = command.controls
+        # A fixed subdivision count keeps review overlays reproducible while
+        # retaining the actual curve shape instead of drawing its controls.
+        for step in range(1, 17):
+            t = step / 16.0
+            inverse = 1.0 - t
+            point = (
+                inverse**3 * current[0]
+                + 3.0 * inverse**2 * t * control_1[0]
+                + 3.0 * inverse * t**2 * control_2[0]
+                + t**3 * command.to[0],
+                inverse**3 * current[1]
+                + 3.0 * inverse**2 * t * control_1[1]
+                + 3.0 * inverse * t**2 * control_2[1]
+                + t**3 * command.to[1],
+            )
+            append(point)
+        current = command.to
+
+    if path.closed and subpath_start is not None:
+        append(subpath_start)
+    if len(contour) < 3:
         raise ValueError("outline path must yield at least three drawable points")
-    return np.array(unique, dtype=np.int32)
+    return np.array(contour, dtype=np.int32)
 
 
 def _point_to_pixel(point: Point, width: int, height: int) -> tuple[int, int]:

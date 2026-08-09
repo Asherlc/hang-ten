@@ -423,119 +423,15 @@
     },
     {
       "bounds": {
-        "height": 0.06,
-        "width": 0.08999999999999997,
-        "x": 0.66,
-        "y": 0.35
-      },
-      "confidence": "approximate",
-      "id": "hold-05",
-      "kind": "pocket",
-      "label": "Approximate pocket 5",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
-      "path": {
-        "closed": true,
-        "commands": [
-          {
-            "command": "M",
-            "to": [
-              0.6732,
-              0.35
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.6944,
-                0.35
-              ],
-              [
-                0.7412,
-                0.3544
-              ]
-            ],
-            "to": [
-              0.7368,
-              0.35
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.75,
-              0.36319999999999997
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.75,
-              0.3968
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.7244,
-                0.4012
-              ],
-              [
-                0.6688000000000001,
-                0.40559999999999996
-              ]
-            ],
-            "to": [
-              0.6732,
-              0.41
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.66,
-              0.3968
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.66,
-                0.3856
-              ],
-              [
-                0.6644,
-                0.35879999999999995
-              ]
-            ],
-            "to": [
-              0.66,
-              0.36319999999999997
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.6732,
-              0.35
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "bounds": {
         "height": 0.07,
         "width": 0.13,
         "x": 0.79,
         "y": 0.35
       },
       "confidence": "approximate",
-      "id": "hold-06",
+      "id": "hold-05",
       "kind": "sloper",
-      "label": "Approximate sloper 6",
+      "label": "Approximate sloper 5",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -632,101 +528,14 @@
     {
       "bounds": {
         "height": 0.06000000000000005,
-        "width": 0.14999999999999997,
-        "x": 0.08000000000000002,
-        "y": 0.47
-      },
-      "confidence": "approximate",
-      "id": "hold-07",
-      "kind": "edge",
-      "label": "Approximate edge 7",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
-      "path": {
-        "closed": true,
-        "commands": [
-          {
-            "command": "M",
-            "to": [
-              0.0932,
-              0.47
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.13440000000000002,
-                0.47
-              ],
-              [
-                0.22119999999999998,
-                0.4744
-              ]
-            ],
-            "to": [
-              0.21680000000000002,
-              0.47
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.22999999999999998,
-              0.48319999999999996
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.18439999999999998,
-                0.49879999999999997
-              ],
-              [
-                0.0888,
-                0.5256
-              ]
-            ],
-            "to": [
-              0.0932,
-              0.53
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.08000000000000002,
-              0.5168
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.08000000000000002,
-              0.48319999999999996
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.0932,
-              0.47
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "bounds": {
-        "height": 0.06000000000000005,
         "width": 0.08999999999999997,
         "x": 0.27,
         "y": 0.47
       },
       "confidence": "approximate",
-      "id": "hold-08",
+      "id": "hold-06",
       "kind": "pocket",
-      "label": "Approximate pocket 8",
+      "label": "Approximate pocket 6",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -828,9 +637,9 @@
         "y": 0.47
       },
       "confidence": "approximate",
-      "id": "hold-09",
+      "id": "hold-07",
       "kind": "pocket",
-      "label": "Approximate pocket 9",
+      "label": "Approximate pocket 7",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -932,9 +741,9 @@
         "y": 0.47
       },
       "confidence": "approximate",
-      "id": "hold-10",
+      "id": "hold-08",
       "kind": "pocket",
-      "label": "Approximate pocket 10",
+      "label": "Approximate pocket 8",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1036,9 +845,9 @@
         "y": 0.47
       },
       "confidence": "approximate",
-      "id": "hold-11",
+      "id": "hold-09",
       "kind": "pocket",
-      "label": "Approximate pocket 11",
+      "label": "Approximate pocket 9",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1140,9 +949,9 @@
         "y": 0.47
       },
       "confidence": "approximate",
-      "id": "hold-12",
+      "id": "hold-10",
       "kind": "edge",
-      "label": "Approximate edge 12",
+      "label": "Approximate edge 10",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1244,9 +1053,9 @@
         "y": 0.58
       },
       "confidence": "approximate",
-      "id": "hold-13",
+      "id": "hold-11",
       "kind": "edge",
-      "label": "Approximate edge 13",
+      "label": "Approximate edge 11",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1348,9 +1157,9 @@
         "y": 0.58
       },
       "confidence": "approximate",
-      "id": "hold-14",
+      "id": "hold-12",
       "kind": "edge",
-      "label": "Approximate edge 14",
+      "label": "Approximate edge 12",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1447,101 +1256,14 @@
     {
       "bounds": {
         "height": 0.05999999999999994,
-        "width": 0.14999999999999997,
-        "x": 0.08000000000000002,
-        "y": 0.59
-      },
-      "confidence": "approximate",
-      "id": "hold-15",
-      "kind": "edge",
-      "label": "Approximate edge 15",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
-      "path": {
-        "closed": true,
-        "commands": [
-          {
-            "command": "M",
-            "to": [
-              0.0932,
-              0.59
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.13440000000000002,
-                0.59
-              ],
-              [
-                0.22119999999999998,
-                0.5943999999999998
-              ]
-            ],
-            "to": [
-              0.21680000000000002,
-              0.59
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.22999999999999998,
-              0.6031999999999998
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.18439999999999998,
-                0.6187999999999999
-              ],
-              [
-                0.0888,
-                0.6456
-              ]
-            ],
-            "to": [
-              0.0932,
-              0.6499999999999999
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.08000000000000002,
-              0.6367999999999999
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.08000000000000002,
-              0.6031999999999998
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.0932,
-              0.59
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "bounds": {
-        "height": 0.05999999999999994,
         "width": 0.10999999999999999,
         "x": 0.28,
         "y": 0.59
       },
       "confidence": "approximate",
-      "id": "hold-16",
+      "id": "hold-13",
       "kind": "edge",
-      "label": "Approximate edge 16",
+      "label": "Approximate edge 13",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1643,9 +1365,9 @@
         "y": 0.59
       },
       "confidence": "approximate",
-      "id": "hold-17",
+      "id": "hold-14",
       "kind": "edge",
-      "label": "Approximate edge 17",
+      "label": "Approximate edge 14",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1730,9 +1452,9 @@
         "y": 0.59
       },
       "confidence": "approximate",
-      "id": "hold-18",
+      "id": "hold-15",
       "kind": "edge",
-      "label": "Approximate edge 18",
+      "label": "Approximate edge 15",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,

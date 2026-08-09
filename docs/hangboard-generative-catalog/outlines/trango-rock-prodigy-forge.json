@@ -911,117 +911,13 @@
       "bounds": {
         "height": 0.06499999999999995,
         "width": 0.07999999999999996,
-        "x": 0.36000000000000004,
+        "x": 0.56,
         "y": 0.56
       },
       "confidence": "approximate",
       "id": "hold-10",
       "kind": "edge",
       "label": "Approximate edge 10",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
-      "path": {
-        "closed": true,
-        "commands": [
-          {
-            "command": "M",
-            "to": [
-              0.3743,
-              0.56
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.39143333333333336,
-                0.56
-              ],
-              [
-                0.4304666666666667,
-                0.5647666666666668
-              ]
-            ],
-            "to": [
-              0.4257,
-              0.56
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.44,
-              0.5743
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.44,
-              0.6107
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.41809999999999997,
-                0.6154666666666667
-              ],
-              [
-                0.3695333333333333,
-                0.6202333333333333
-              ]
-            ],
-            "to": [
-              0.3743,
-              0.625
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.36000000000000004,
-              0.6107
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.36000000000000004,
-                0.5985666666666667
-              ],
-              [
-                0.3647666666666667,
-                0.5695333333333333
-              ]
-            ],
-            "to": [
-              0.36000000000000004,
-              0.5743
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.3743,
-              0.56
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "bounds": {
-        "height": 0.06499999999999995,
-        "width": 0.07999999999999996,
-        "x": 0.56,
-        "y": 0.56
-      },
-      "confidence": "approximate",
-      "id": "hold-11",
-      "kind": "edge",
-      "label": "Approximate edge 11",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,
@@ -1123,9 +1019,9 @@
         "y": 0.56
       },
       "confidence": "approximate",
-      "id": "hold-12",
+      "id": "hold-11",
       "kind": "pocket",
-      "label": "Approximate pocket 12",
+      "label": "Approximate pocket 11",
       "notes": "hand-edited approximate internal contour guided by visible source layout",
       "path": {
         "closed": true,

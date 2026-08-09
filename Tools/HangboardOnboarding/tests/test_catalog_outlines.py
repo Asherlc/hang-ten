@@ -17,6 +17,8 @@ from hangboard_vectorizer.catalog_outlines import (
     OutlineCommand,
     OutlinePath,
     normalize_contour,
+    _outline_path_to_pixels,
+    _manual_contour_is_supported,
     path_bounds,
     detect_hold_candidates,
     load_catalog_source_hints,
@@ -251,6 +253,46 @@ def test_normalize_contour_keeps_persistent_corner_as_line_endpoint() -> None:
     line_endpoints = {command.to for command in path.commands if command.command == "L"}
     assert (0.9, 0.1) in line_endpoints
     assert any(command.command == "C" for command in path.commands)
+
+
+def test_outline_path_to_pixels_flattens_cubics_without_control_point_spikes() -> None:
+    path = OutlinePath(
+        commands=(
+            OutlineCommand("M", (0.10, 0.50)),
+            OutlineCommand(
+                "C",
+                (0.90, 0.50),
+                controls=((0.25, 0.05), (0.75, 0.05)),
+            ),
+            OutlineCommand("L", (0.90, 0.90)),
+            OutlineCommand("L", (0.10, 0.90)),
+        ),
+        closed=True,
+    )
+
+    pixels = _outline_path_to_pixels(path, 100, 100)
+
+    assert tuple(pixels[0]) == (10, 50)
+    assert tuple(pixels[-2]) == (10, 90)
+    assert tuple(pixels[-1]) == tuple(pixels[0])
+    assert len(pixels) > 8
+    assert int(np.min(pixels[:, 1])) >= 15
+    assert not any(tuple(point) in {(25, 5), (75, 5)} for point in pixels)
+
+
+def test_manual_contour_source_guard_rejects_flat_board_and_accepts_recess() -> None:
+    height, width = 180, 240
+    image = np.full((height, width, 4), (246, 190, 120, 255), dtype=np.uint8)
+    board_mask = np.zeros((height, width), dtype=np.uint8)
+    board_mask[20:160, 20:220] = 255
+    contour = np.array(
+        [[60, 60], [140, 60], [140, 100], [60, 100]], dtype=np.float64
+    )
+
+    assert not _manual_contour_is_supported(contour, "edge", image, board_mask)
+
+    image[68:92, 60:140, :3] = (80, 60, 40)
+    assert _manual_contour_is_supported(contour, "edge", image, board_mask)
 
 
 def test_write_catalog_document_is_stable_and_atomic(tmp_path: Path) -> None:
@@ -618,11 +660,8 @@ def test_review_overlay_flattens_cubic_controls_for_polylines(
 
     assert rendered_polylines
     flattened = rendered_polylines[0].reshape(-1, 2)
-    expected_points = {
-        (10, 10),
-        (90, 10),
-        (99, 30),
-        (99, 70),
-        (90, 90),
-    }
-    assert expected_points.issubset({tuple(point) for point in flattened})
+    rendered_points = {tuple(point) for point in flattened}
+    assert {(10, 10), (90, 10), (90, 90)}.issubset(rendered_points)
+    assert len(flattened) > 10
+    assert (99, 30) not in rendered_points
+    assert (99, 70) not in rendered_points
