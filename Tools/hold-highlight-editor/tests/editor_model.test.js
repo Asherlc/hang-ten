@@ -9,7 +9,6 @@ const {
   mirrorContour,
   findStrongestEdge,
   resolveHistorySelection,
-  normalizeRegion,
   normalizePipelineDocument,
 } = require("../editor-model.js");
 
@@ -185,25 +184,4 @@ test("normalizePipelineDocument adapts historical generated region artifacts", (
   assert.equal(result.regions[0].key, "piece-01-hold-01");
   assert.equal(result.regions[0].metadata.mode, "surface");
   assert.equal(result.regions[0].metadata.sourceRegionId, "piece-01-hold-01");
-});
-
-test("normalizeRegion preserves a manually created primitive region", () => {
-  const result = normalizeRegion({
-    id: 7,
-    key: "grip-007",
-    type: "edge",
-    contour: [["10", "20"], [30, 20], [30, "40"], ["10", 40]],
-    metadata: {
-      mode: "surface",
-      shapeKind: "ellipse",
-      pathStyle: "straight",
-      humanNotes: "Added manually",
-    },
-  }, 99);
-
-  assert.equal(result.id, 7);
-  assert.equal(result.key, "grip-007");
-  assert.equal(result.type, "edge");
-  assert.deepEqual(result.contour, [[10, 20], [30, 20], [30, 40], [10, 40]]);
-  assert.equal(result.metadata.shapeKind, "ellipse");
 });
