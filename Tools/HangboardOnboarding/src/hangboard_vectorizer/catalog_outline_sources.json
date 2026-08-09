@@ -1,0 +1,217 @@
+{
+  "beastmaker-1000": {
+    "references": [
+      {
+        "title": "Beastmaker Fingerboards",
+        "url": "https://www.beastmaker.co.uk/collections/fingerboards",
+        "hints": [
+          "2 jugs",
+          "35-degree and 20-degree slopers",
+          "two- through four-finger pockets"
+        ]
+      }
+    ]
+  },
+  "beastmaker-2000": {
+    "references": [
+      {
+        "title": "Beastmaker Fingerboards",
+        "url": "https://www.beastmaker.co.uk/collections/fingerboards",
+        "hints": [
+          "advanced pocket and sloper layout",
+          "no beginner jugs claimed without visual confirmation"
+        ]
+      }
+    ]
+  },
+  "tension-whetstone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "top jug with ergo bumps",
+          "40mm center edge",
+          "40mm two-finger pockets",
+          "40/30/25/20mm edges"
+        ]
+      }
+    ]
+  },
+  "tension-grindstone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "full-width bar jug",
+          "50mm center edge",
+          "30/25/20/15/10/8mm edges"
+        ]
+      }
+    ]
+  },
+  "tension-honestone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "35- and 45-degree top slopers",
+          "25mm center edge",
+          "one-finger pockets",
+          "20/15/10/8mm edges"
+        ]
+      }
+    ]
+  },
+  "metolius-project": {
+    "references": [
+      {
+        "title": "Project Training Board",
+        "url": "https://www.metoliusclimbing.com/products/project-training-board",
+        "hints": [
+          "broad arc",
+          "outward and downward taper",
+          "perfectly symmetric CAD/CAM layout"
+        ]
+      }
+    ]
+  },
+  "metolius-climbers-edge": {
+    "references": [
+      {
+        "title": "Climbers Edge Board",
+        "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+        "hints": [
+          "7.5/10/12.5/15/17.5/20mm edges",
+          "40mm radius round sloper",
+          "20-degree flat sloper",
+          "jugs"
+        ]
+      }
+    ]
+  },
+  "metolius-simulator-3d": {
+    "references": [
+      {
+        "title": "Simulator 3D Training Guide",
+        "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+        "hints": [
+          "outer jugs",
+          "flat and round slopers",
+          "deep/medium/shallow edges",
+          "numbered pocket rows"
+        ]
+      }
+    ]
+  },
+  "metolius-contact": {
+    "references": [
+      {
+        "title": "Metolius Climbing Hold Catalog",
+        "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
+        "hints": [
+          "11 pockets",
+          "four central edges",
+          "top pull-up jugs",
+          "rounded and flat slopers"
+        ]
+      }
+    ]
+  },
+  "trango-rock-prodigy-natural": {
+    "references": [
+      {
+        "title": "Rock Prodigy Natural",
+        "url": "https://trango.com/products/rock-prodigy-natural",
+        "hints": [
+          "two variable-depth rails",
+          "three pockets",
+          "closed crimp",
+          "small and large pinches"
+        ]
+      }
+    ]
+  },
+  "trango-rock-prodigy-forge": {
+    "references": [
+      {
+        "title": "Rock Prodigy Forge",
+        "url": "https://trango.com/products/rock-prodigy-forge",
+        "hints": [
+          "closed-crimp grip with thumb support",
+          "drafted pockets",
+          "steeper slopers",
+          "different holds from Training Center"
+        ]
+      }
+    ]
+  },
+  "trango-rock-prodigy-pivot": {
+    "references": [
+      {
+        "title": "Rock Prodigy Pivot",
+        "url": "https://trango.com/products/rock-prodigy-pivot",
+        "hints": [
+          "22 distinct grip positions",
+          "rotatable four-orientation system",
+          "adjustable shoulder width"
+        ]
+      }
+    ]
+  },
+  "trango-rock-prodigy-training-center": {
+    "references": [
+      {
+        "title": "Rock Prodigy Training Center",
+        "url": "https://trango.com/products/rock-prodigy-training-center",
+        "hints": [
+          "two-piece adjustable layout",
+          "index bumps along variable edge rails",
+          "symmetric hold design"
+        ]
+      }
+    ]
+  },
+  "lattice-triple-rung": {
+    "references": [
+      {
+        "title": "Triple Rung",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "hints": [
+          "continuous 45mm, 20mm, and 10mm edges",
+          "no pockets",
+          "wide-radius extruded design"
+        ]
+      }
+    ]
+  },
+  "frictitious-megalith": {
+    "references": [
+      {
+        "title": "The Megalith",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "hints": [
+          "full-width pull-up jug",
+          "pockets",
+          "flat and unlevel shoulder-width edges",
+          "8mm to 40mm edges"
+        ]
+      }
+    ]
+  },
+  "soill-split-palm": {
+    "references": [
+      {
+        "title": "Split Palm",
+        "url": "https://soillholds.com/products/split-palm",
+        "hints": [
+          "two slopers",
+          "pinch",
+          "multiple crimp sizes and angles"
+        ]
+      }
+    ]
+  }
+}

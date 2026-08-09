@@ -16,6 +16,9 @@
     isExportableContour,
     shiftCornerTreatmentsForInsertion,
     mirrorCornerTreatments,
+    canSaveEditorState,
+    runSessionLoadTransaction,
+    formatSessionLoadError,
   } = globalThis.HoldEditorModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { timelineFor, canApprove, openingSections } = globalThis.HoldWorkbenchModel;
@@ -326,7 +329,7 @@
       el["revise-button"].disabled = state.busy || !view || view.stage < 1;
       return;
     }
-    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving && !state.loadingSession);
+    const canSave = canSaveEditorState(state);
     el["save-button"].disabled = !canSave;
     el["board-select"].disabled = state.loadingSession || state.saving;
     el["save-state"].className = "save-state";
@@ -2057,7 +2060,7 @@
       const session = await sessionResponse.json();
       if (!session.ok) return false;
       const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
-      if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
+      if (!regionsResponse.ok) throw new Error("Could not load hold highlights from the run");
       const regions = await regionsResponse.json();
       await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
       state.serverSession = session;
@@ -2074,7 +2077,7 @@
     } catch (error) {
       console.warn(error);
       if (previousRunId) el["board-select"].value = previousRunId;
-      setStatus(`Could not switch boards: ${error.message || error}`);
+      setStatus(formatSessionLoadError(error));
       return false;
     } finally {
       state.loadingSession = false;

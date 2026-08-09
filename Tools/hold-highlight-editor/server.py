@@ -1042,7 +1042,7 @@ def _atomic_write_json(path: Path, value: object) -> None:
 
 
 def _argument_parser() -> ArgumentParser:
-    parser = ArgumentParser(description="Serve the hold-region editor for pipeline-generated onboarding runs")
+    parser = ArgumentParser(description="Serve the Hold Editor for pipeline-generated onboarding runs")
     parser.add_argument(
         "--run-dir",
         action="append",
@@ -1206,7 +1206,7 @@ def _server_from_cli(
 
 def main() -> None:
     server, catalog = _server_from_cli()
-    print(f"Hold Region Editor: http://{server.server_address[0]}:{server.server_port}")
+    print(f"Hold Editor: http://{server.server_address[0]}:{server.server_port}")
     if catalog is not None:
         for entry in catalog.sessions:
             print(f"Run [{entry.id}] {entry.label}: {entry.session.run_dir}")
