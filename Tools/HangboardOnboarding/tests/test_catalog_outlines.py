@@ -23,11 +23,23 @@ def sample_document() -> CatalogOutlineDocument:
     return CatalogOutlineDocument(
         schema_version=1,
         source_image="board.png",
-        source_width=100,
-        source_height=100,
-        holds=(
+        canvas_width=100,
+        canvas_height=100,
+        coordinate_space="normalized",
+        references=(
+            {
+                "title": "Manufacturer photo",
+                "url": "https://example.com/board",
+                "hints": ("front-lit", "square-on"),
+            },
+        ),
+        outlines=(
             HoldOutline(
-                hold_id="hold-01",
+                id="hold-01",
+                label="Main edge",
+                kind="edge",
+                confidence=0.91,
+                bounds=(0.1, 0.1, 0.9, 0.8),
                 path=OutlinePath(
                     commands=(
                         OutlineCommand("M", (0.1, 0.1)),
@@ -41,6 +53,7 @@ def sample_document() -> CatalogOutlineDocument:
                     ),
                     closed=True,
                 ),
+                notes=("traced from catalog silhouette",),
             ),
         ),
     )
@@ -49,22 +62,22 @@ def sample_document() -> CatalogOutlineDocument:
 def replace_first_coordinate(
     document: CatalogOutlineDocument, x: float, y: float
 ) -> CatalogOutlineDocument:
-    hold = document.holds[0]
+    hold = document.outlines[0]
     command = hold.path.commands[0]
     commands = (replace(command, to=(x, y)), *hold.path.commands[1:])
     return replace(
         document,
-        holds=(replace(hold, path=replace(hold.path, commands=commands)),),
+        outlines=(replace(hold, path=replace(hold.path, commands=commands)),),
     )
 
 
 def with_commands(
     document: CatalogOutlineDocument, commands: tuple[OutlineCommand, ...]
 ) -> CatalogOutlineDocument:
-    hold = document.holds[0]
+    hold = document.outlines[0]
     return replace(
         document,
-        holds=(replace(hold, path=replace(hold.path, commands=commands)),),
+        outlines=(replace(hold, path=replace(hold.path, commands=commands)),),
     )
 
 
@@ -75,7 +88,43 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
 
     assert restored == document
     validate_catalog_document(restored)
-    assert path_bounds(restored.holds[0].path) == pytest.approx((0.1, 0.1, 0.9, 0.8))
+    assert restored.to_json() == {
+        "schemaVersion": 1,
+        "sourceImage": "board.png",
+        "canvas": {"width": 100, "height": 100},
+        "coordinateSpace": "normalized",
+        "references": [
+            {
+                "title": "Manufacturer photo",
+                "url": "https://example.com/board",
+                "hints": ["front-lit", "square-on"],
+            }
+        ],
+        "outlines": [
+            {
+                "id": "hold-01",
+                "label": "Main edge",
+                "kind": "edge",
+                "confidence": 0.91,
+                "bounds": [0.1, 0.1, 0.9, 0.8],
+                "path": {
+                    "closed": True,
+                    "commands": [
+                        {"command": "M", "to": [0.1, 0.1]},
+                        {"command": "L", "to": [0.9, 0.1]},
+                        {
+                            "command": "C",
+                            "controls": [[1.0, 0.3], [1.0, 0.7]],
+                            "to": [0.9, 0.9],
+                        },
+                        {"command": "L", "to": [0.1, 0.1]},
+                    ],
+                },
+                "notes": ["traced from catalog silhouette"],
+            }
+        ],
+    }
+    assert path_bounds(restored.outlines[0].path) == pytest.approx((0.1, 0.1, 0.9, 0.8))
 
 
 def test_validator_rejects_coordinates_outside_normalized_canvas() -> None:
@@ -106,6 +155,28 @@ def test_normalize_contour_emits_lines_and_curves_in_range() -> None:
     assert all(0.0 <= value <= 1.0 for value in path.all_coordinates())
 
 
+def test_normalize_contour_keeps_persistent_corner_as_line_endpoint() -> None:
+    contour = np.array(
+        [
+            [10, 10],
+            [45, 10],
+            [50, 12],
+            [55, 10],
+            [90, 10],
+            [95, 50],
+            [90, 90],
+            [10, 90],
+        ],
+        dtype=float,
+    )
+
+    path = normalize_contour(contour, 100, 100)
+
+    line_endpoints = {command.to for command in path.commands if command.command == "L"}
+    assert (0.9, 0.1) in line_endpoints
+    assert any(command.command == "C" for command in path.commands)
+
+
 def test_write_catalog_document_is_stable_and_atomic(tmp_path: Path) -> None:
     output_path = tmp_path / "catalog-outlines.json"
     document = sample_document()
@@ -115,4 +186,3 @@ def test_write_catalog_document_is_stable_and_atomic(tmp_path: Path) -> None:
     persisted = json.loads(output_path.read_text(encoding="utf-8"))
     assert persisted == document.to_json()
     assert not list(tmp_path.glob("*.tmp"))
-

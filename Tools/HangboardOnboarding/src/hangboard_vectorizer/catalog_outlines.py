@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 import json
 import math
@@ -15,14 +15,28 @@ from PIL import Image
 
 
 Point = tuple[float, float]
+Bounds = tuple[float, float, float, float]
+
+_KINDS = frozenset({"pocket", "edge", "rail", "jug", "sloper"})
+_EPSILON = 1e-9
 
 
-def _point(value: object, field: str) -> Point:
-    if not isinstance(value, Sequence) or isinstance(value, str) or len(value) != 2:
-        raise ValueError(f"{field} must be a coordinate pair")
-    x = _finite_float(value[0], f"{field}[0]")
-    y = _finite_float(value[1], f"{field}[1]")
-    return (x, y)
+def _mapping(value: object, field: str) -> Mapping[str, object]:
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{field} must be an object")
+    return value
+
+
+def _string(value: object, field: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"{field} must be a non-empty string")
+    return value
+
+
+def _positive_int(value: object, field: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{field} must be a positive integer")
+    return value
 
 
 def _finite_float(value: object, field: str) -> float:
@@ -34,16 +48,31 @@ def _finite_float(value: object, field: str) -> float:
     return number
 
 
-def _positive_int(value: object, field: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
-        raise ValueError(f"{field} must be a positive integer")
-    return value
+def _point(value: object, field: str) -> Point:
+    if not isinstance(value, Sequence) or isinstance(value, str) or len(value) != 2:
+        raise ValueError(f"{field} must be a coordinate pair")
+    return (
+        _finite_float(value[0], f"{field}[0]"),
+        _finite_float(value[1], f"{field}[1]"),
+    )
 
 
-def _mapping(value: object, field: str) -> Mapping[str, object]:
-    if not isinstance(value, Mapping):
-        raise ValueError(f"{field} must be an object")
-    return value
+def _bounds(value: object, field: str) -> Bounds:
+    if not isinstance(value, Sequence) or isinstance(value, str) or len(value) != 4:
+        raise ValueError(f"{field} must be a four-number bounds tuple")
+    return (
+        _finite_float(value[0], f"{field}[0]"),
+        _finite_float(value[1], f"{field}[1]"),
+        _finite_float(value[2], f"{field}[2]"),
+        _finite_float(value[3], f"{field}[3]"),
+    )
+
+
+def _string_tuple(value: object, field: str) -> tuple[str, ...]:
+    if not isinstance(value, Sequence) or isinstance(value, str):
+        raise ValueError(f"{field} must be a list of strings")
+    items = tuple(_string(item, field) for item in value)
+    return items
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,8 +102,9 @@ class OutlineCommand:
     @classmethod
     def from_json(cls, payload: object) -> "OutlineCommand":
         root = _mapping(payload, "outline command")
+        command = _string(root.get("command"), "outline command.command")
         controls = root.get("controls")
-        parsed_controls = None
+        parsed_controls: tuple[Point, Point] | None = None
         if controls is not None:
             if (
                 not isinstance(controls, Sequence)
@@ -86,11 +116,7 @@ class OutlineCommand:
                 _point(controls[0], "controls[0]"),
                 _point(controls[1], "controls[1]"),
             )
-        return cls(
-            command=str(root.get("command")),
-            to=_point(root.get("to"), "to"),
-            controls=parsed_controls,
-        )
+        return cls(command=command, to=_point(root.get("to"), "to"), controls=parsed_controls)
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,70 +156,124 @@ class OutlinePath:
 
 @dataclass(frozen=True, slots=True)
 class HoldOutline:
-    hold_id: str
+    id: str
+    label: str
+    kind: str
+    confidence: float
+    bounds: Bounds
     path: OutlinePath
+    notes: tuple[str, ...]
 
     def __post_init__(self) -> None:
-        if not self.hold_id:
-            raise ValueError("hold_id must be non-empty")
+        _string(self.id, "id")
+        _string(self.label, "label")
+        if self.kind not in _KINDS:
+            raise ValueError("kind is unsupported")
+        if not 0.0 <= self.confidence <= 1.0 or not math.isfinite(self.confidence):
+            raise ValueError("confidence must be finite and normalized")
+        _bounds(self.bounds, "bounds")
 
     def to_json(self) -> dict[str, object]:
-        return {"holdId": self.hold_id, "path": self.path.to_json()}
+        return {
+            "id": self.id,
+            "label": self.label,
+            "kind": self.kind,
+            "confidence": self.confidence,
+            "bounds": list(self.bounds),
+            "path": self.path.to_json(),
+            "notes": list(self.notes),
+        }
 
     @classmethod
     def from_json(cls, payload: object) -> "HoldOutline":
-        root = _mapping(payload, "hold outline")
-        hold_id = root.get("holdId")
-        if not isinstance(hold_id, str) or not hold_id:
-            raise ValueError("holdId must be a non-empty string")
-        return cls(hold_id=hold_id, path=OutlinePath.from_json(root.get("path")))
+        root = _mapping(payload, "outline")
+        raw_notes = root.get("notes", ())
+        return cls(
+            id=_string(root.get("id"), "outline.id"),
+            label=_string(root.get("label"), "outline.label"),
+            kind=_string(root.get("kind"), "outline.kind"),
+            confidence=_finite_float(root.get("confidence"), "outline.confidence"),
+            bounds=_bounds(root.get("bounds"), "outline.bounds"),
+            path=OutlinePath.from_json(root.get("path")),
+            notes=_string_tuple(raw_notes, "outline.notes"),
+        )
 
 
 @dataclass(frozen=True, slots=True)
 class CatalogOutlineDocument:
     schema_version: int
     source_image: str
-    source_width: int
-    source_height: int
-    holds: tuple[HoldOutline, ...]
+    canvas_width: int
+    canvas_height: int
+    coordinate_space: str
+    references: tuple[Mapping[str, object], ...]
+    outlines: tuple[HoldOutline, ...]
 
     def __post_init__(self) -> None:
         _positive_int(self.schema_version, "schema_version")
-        if not self.source_image:
-            raise ValueError("source_image must be non-empty")
-        _positive_int(self.source_width, "source_width")
-        _positive_int(self.source_height, "source_height")
-        if not self.holds:
-            raise ValueError("holds must not be empty")
+        _string(self.source_image, "source_image")
+        _positive_int(self.canvas_width, "canvas_width")
+        _positive_int(self.canvas_height, "canvas_height")
+        if self.coordinate_space != "normalized":
+            raise ValueError('coordinate_space must be "normalized"')
+        if not self.outlines:
+            raise ValueError("outlines must not be empty")
+        self._validate_references()
+
+    def _validate_references(self) -> None:
+        for index, reference in enumerate(self.references):
+            if not isinstance(reference, Mapping):
+                raise ValueError(f"references[{index}] must be an object")
+            _string(reference.get("title"), f"references[{index}].title")
+            _string(reference.get("url"), f"references[{index}].url")
+            _string_tuple(reference.get("hints", ()), f"references[{index}].hints")
 
     def to_json(self) -> dict[str, object]:
         return {
             "schemaVersion": self.schema_version,
             "sourceImage": self.source_image,
-            "sourceWidth": self.source_width,
-            "sourceHeight": self.source_height,
-            "holds": [hold.to_json() for hold in self.holds],
+            "canvas": {"width": self.canvas_width, "height": self.canvas_height},
+            "coordinateSpace": self.coordinate_space,
+            "references": [
+                {
+                    "title": str(reference["title"]),
+                    "url": str(reference["url"]),
+                    "hints": list(_string_tuple(reference.get("hints", ()), "reference.hints")),
+                }
+                for reference in self.references
+            ],
+            "outlines": [outline.to_json() for outline in self.outlines],
         }
 
     @classmethod
     def from_json(cls, payload: object) -> "CatalogOutlineDocument":
         root = _mapping(payload, "catalog outline document")
-        raw_holds = root.get("holds")
-        if not isinstance(raw_holds, Sequence) or isinstance(raw_holds, str):
-            raise ValueError("holds must be a sequence")
-        source_image = root.get("sourceImage")
-        if not isinstance(source_image, str) or not source_image:
-            raise ValueError("sourceImage must be a non-empty string")
+        canvas = _mapping(root.get("canvas"), "canvas")
+        raw_references = root.get("references", ())
+        if not isinstance(raw_references, Sequence) or isinstance(raw_references, str):
+            raise ValueError("references must be a sequence")
+        raw_outlines = root.get("outlines")
+        if not isinstance(raw_outlines, Sequence) or isinstance(raw_outlines, str):
+            raise ValueError("outlines must be a sequence")
         return cls(
             schema_version=_positive_int(root.get("schemaVersion"), "schemaVersion"),
-            source_image=source_image,
-            source_width=_positive_int(root.get("sourceWidth"), "sourceWidth"),
-            source_height=_positive_int(root.get("sourceHeight"), "sourceHeight"),
-            holds=tuple(HoldOutline.from_json(item) for item in raw_holds),
+            source_image=_string(root.get("sourceImage"), "sourceImage"),
+            canvas_width=_positive_int(canvas.get("width"), "canvas.width"),
+            canvas_height=_positive_int(canvas.get("height"), "canvas.height"),
+            coordinate_space=_string(root.get("coordinateSpace"), "coordinateSpace"),
+            references=tuple(
+                {
+                    "title": _string(_mapping(item, "reference").get("title"), "reference.title"),
+                    "url": _string(_mapping(item, "reference").get("url"), "reference.url"),
+                    "hints": _string_tuple(_mapping(item, "reference").get("hints", ()), "reference.hints"),
+                }
+                for item in raw_references
+            ),
+            outlines=tuple(HoldOutline.from_json(item) for item in raw_outlines),
         )
 
 
-def path_bounds(path: OutlinePath) -> tuple[float, float, float, float]:
+def path_bounds(path: OutlinePath) -> Bounds:
     if not path.commands:
         raise ValueError("outline path must not be empty")
     xs: list[float] = []
@@ -217,21 +297,24 @@ def validate_catalog_document(
 ) -> None:
     if document.schema_version != 1:
         raise ValueError("schemaVersion must be 1")
-    if document.source_width <= 0 or document.source_height <= 0:
+    if document.coordinate_space != "normalized":
+        raise ValueError('coordinateSpace must be "normalized"')
+    if document.canvas_width <= 0 or document.canvas_height <= 0:
         raise ValueError("source dimensions must be positive")
     seen_ids: set[str] = set()
-    for hold in document.holds:
-        if hold.hold_id in seen_ids:
-            raise ValueError("hold IDs must be unique")
-        seen_ids.add(hold.hold_id)
-        _validate_path(hold.path)
+    for outline in document.outlines:
+        if outline.id in seen_ids:
+            raise ValueError("outline IDs must be unique")
+        seen_ids.add(outline.id)
+        _validate_path(outline.path)
+        _validate_bounds(outline.bounds, outline.path)
     if source_path is not None:
         try:
             with Image.open(source_path) as image:
                 width, height = image.size
         except OSError as error:
             raise ValueError(f"source dimensions could not be read: {source_path}") from error
-        if (width, height) != (document.source_width, document.source_height):
+        if (width, height) != (document.canvas_width, document.canvas_height):
             raise ValueError("source dimensions do not match the source image")
 
 
@@ -249,16 +332,36 @@ def _validate_path(path: OutlinePath) -> None:
     if any(command.command == "M" for command in drawing_commands):
         raise ValueError("outline path may only move once")
     for value in path.all_coordinates():
-        if not 0.0 <= value <= 1.0:
-            raise ValueError("outline coordinates must stay on the normalized canvas")
         if not math.isfinite(value):
             raise ValueError("outline coordinates must be finite")
-    start = commands[0].to
-    if drawing_commands[-1].to != start:
+        if not 0.0 <= value <= 1.0:
+            raise ValueError("outline coordinates must stay in normalized space")
+    if drawing_commands[-1].to != commands[0].to:
         raise ValueError("outline path must end where it started to stay closed")
     _, _, width, height = path_bounds(path)
     if width <= 0.0 or height <= 0.0:
         raise ValueError("outline path bounds must describe a non-degenerate closed shape")
+
+
+def _validate_bounds(bounds: Bounds, path: OutlinePath) -> None:
+    x, y, width, height = bounds
+    for value in bounds:
+        if not 0.0 <= value <= 1.0 or not math.isfinite(value):
+            raise ValueError("outline bounds must stay in normalized space")
+    if width <= 0.0 or height <= 0.0:
+        raise ValueError("outline bounds must be non-degenerate")
+    path_x, path_y, path_width, path_height = path_bounds(path)
+    path_max_x = path_x + path_width
+    path_max_y = path_y + path_height
+    bounds_max_x = x + width
+    bounds_max_y = y + height
+    if (
+        x > path_x + _EPSILON
+        or y > path_y + _EPSILON
+        or bounds_max_x + _EPSILON < path_max_x
+        or bounds_max_y + _EPSILON < path_max_y
+    ):
+        raise ValueError("outline bounds must contain all normalized path coordinates")
 
 
 def write_catalog_document(document: CatalogOutlineDocument, output_path: Path) -> None:
@@ -297,43 +400,46 @@ def normalize_contour(contour: np.ndarray, width: int, height: int) -> OutlinePa
     if len(points) < 3:
         raise ValueError("contour must contain at least three unique points")
 
+    scale = np.array([width, height], dtype=np.float64)
     smaller_extent = float(max(min(np.ptp(points[:, 0]), np.ptp(points[:, 1])), 1.0))
     tolerance = smaller_extent * 0.12
     corner_indices = _persistent_corner_indices(points, tolerance)
-    normalized = points / np.array([width, height], dtype=np.float64)
 
-    commands: list[OutlineCommand] = [OutlineCommand("M", _tuple_point(normalized[0]))]
+    commands: list[OutlineCommand] = [OutlineCommand("M", _tuple_point(points[0] / scale))]
     for start_index, end_index in zip(
         corner_indices, corner_indices[1:] + corner_indices[:1], strict=False
     ):
         span = _span(points, start_index, end_index)
-        destination = _tuple_point(span[-1] / np.array([width, height], dtype=np.float64))
-        if len(span) <= 2:
-            commands.append(OutlineCommand("L", destination))
+        if len(span) == 1:
+            commands.append(OutlineCommand("L", _tuple_point(span[0] / scale)))
             continue
-        control_1 = _tuple_point(span[1] / np.array([width, height], dtype=np.float64))
-        control_2 = _tuple_point(span[-2] / np.array([width, height], dtype=np.float64))
+
+        smooth_points = span[:-1]
+        corner_point = span[-1]
+        smooth_end = smooth_points[-1]
+        control_1, control_2 = _cubic_controls(points[start_index], smooth_end, corner_point)
         commands.append(
-            OutlineCommand("C", destination, controls=(control_1, control_2))
+            OutlineCommand(
+                "C",
+                _tuple_point(smooth_end / scale),
+                controls=(_tuple_point(control_1 / scale), _tuple_point(control_2 / scale)),
+            )
         )
+        commands.append(OutlineCommand("L", _tuple_point(corner_point / scale)))
     return OutlinePath(commands=tuple(commands), closed=True)
-
-
-def _tuple_point(value: np.ndarray) -> Point:
-    return (float(value[0]), float(value[1]))
 
 
 def _persistent_corner_indices(points: np.ndarray, tolerance: float) -> list[int]:
     angles = [_turn_angle(points, index) for index in range(len(points))]
     indices = [0]
     for index in range(1, len(points)):
-        if angles[index] >= 135.0 and _point_distance(points[index], points[indices[-1]]) >= tolerance:
+        if angles[index] <= 100.0 and _point_distance(points[index], points[indices[-1]]) >= tolerance:
             indices.append(index)
-    ranked = sorted(range(1, len(points)), key=lambda index: angles[index], reverse=True)
+    ranked = sorted(range(1, len(points)), key=lambda index: angles[index])
     for index in ranked:
         if index not in indices:
             indices.append(index)
-        if len(indices) >= 3:
+        if len(indices) >= 4:
             break
     return sorted(set(indices))
 
@@ -361,3 +467,13 @@ def _span(points: np.ndarray, start_index: int, end_index: int) -> np.ndarray:
     if start_index > end_index:
         return np.vstack((points[start_index + 1 :], points[: end_index + 1]))
     raise ValueError("contour span requires distinct corner indices")
+
+
+def _cubic_controls(start: np.ndarray, smooth_end: np.ndarray, corner_point: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    control_1 = start + (smooth_end - start) / 3.0
+    control_2 = smooth_end + (corner_point - smooth_end) / 3.0
+    return control_1, control_2
+
+
+def _tuple_point(value: np.ndarray) -> Point:
+    return (float(value[0]), float(value[1]))
