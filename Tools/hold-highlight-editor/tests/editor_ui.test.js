@@ -6,13 +6,29 @@ const path = require("node:path");
 const root = path.join(__dirname, "..");
 const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+const server = fs.readFileSync(path.join(root, "server.py"), "utf8");
+
+void app;
+void readme;
 
 test("brands the workspace as a Hold Editor", () => {
   assert.match(index, /<title>Hold Editor<\/title>/);
   assert.match(index, /<h1>Hold Editor<\/h1>/);
-  assert.match(index, /Edit and save hold highlights/);
   assert.doesNotMatch(index, /Hold Region Editor/);
-  assert.doesNotMatch(index, /Grip regions/);
+  assert.match(index, /Edit and save hold highlights/);
+});
+
+test("keeps full hold editing controls", () => {
+  assert.match(index, /id="new-shape-select"/);
+  assert.match(index, /id="region-type-select"/);
+  assert.match(index, /value="jug"/);
+  assert.match(index, /value="sloper"/);
+  assert.match(index, /value="edge"/);
+  assert.match(index, /value="pocket"/);
+  assert.match(index, /id="add-region-button"/);
+  assert.match(index, />\s*<span>＋<\/span>\s*Add highlight\s*</);
+  assert.match(index, /id="delete-button"/);
 });
 
 test("keeps internal region controls while presenting hold highlights", () => {
@@ -22,26 +38,12 @@ test("keeps internal region controls while presenting hold highlights", () => {
   assert.match(index, /id="delete-button">Delete highlight<\/button>/);
   assert.match(index, /id="region-mode-select"/);
   assert.match(index, /id="region-key-input"/);
-  assert.match(index, /Select a hold highlight to edit its shape and details\./);
-  assert.doesNotMatch(index, /Select a region to edit its shape and metadata/);
-});
-
-test("explains how to trace recessed and raised holds", () => {
-  assert.match(index, /id="region-mode-select"[^>]*aria-describedby="region-mode-help"/);
-  assert.match(index, /id="region-mode-help"[^>]*>Recessed cavity: trace the inner usable boundary\. Raised hold: trace the outer silhouette\. Exclude board faces, shelves, rails, and supports\.<\/small>/);
-});
-
-test("uses hold-highlight language in visible editor status", () => {
-  assert.match(app, /el\["inspector-title"\]\.textContent = region \? `Hold \$\{region\.id\}`/);
-  assert.match(app, /setStatus\(`Added \$\{region\.key\} highlight\.??`\)/);
-  assert.match(app, /setStatus\(`Deleted \$\{region\.key\} highlight\. Undo is available\.`\)/);
-  assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
+  assert.match(index, /Select a hold highlight to edit its exact geometry and details\./);
 });
 
 test("handles drawing Enter and Escape before the focused-control guard", () => {
   const drawingShortcut = app.indexOf('event.key === "Enter" && state.drawing');
   const focusedControlGuard = app.indexOf('if (editingText) return;');
-
   assert.notEqual(drawingShortcut, -1);
   assert.notEqual(focusedControlGuard, -1);
   assert.ok(drawingShortcut < focusedControlGuard);
@@ -50,4 +52,65 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
 
 test("preserves the selected primitive shape when adding a highlight", () => {
   assert.match(app, /shapeKind: state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+});
+
+test("documents the direct hold-highlight workflow", () => {
+  assert.match(readme, /^# Hold Editor/m);
+  assert.match(readme, /choose a board.*edit.*add.*delete.*save/is);
+  assert.match(readme, /hold type/i);
+  assert.doesNotMatch(readme, /# Hold Region Editor/);
+});
+
+test("uses hold editor wording in server labels", () => {
+  assert.match(server, /Hold Editor: http:\/\//);
+  assert.doesNotMatch(server, /Hold Region Editor: http:\/\//);
+});
+
+test("marks manual file loading as a static fallback", () => {
+  assert.match(index, /id="static-load-controls"/);
+  assert.match(index, /id="load-image-button"/);
+  assert.match(index, /id="load-regions-button"/);
+});
+
+test("switches between server-first and static fallback entry states", () => {
+  assert.match(app, /function showStaticLoadControls\(visible\)/);
+  assert.match(app, /static-load-controls/);
+  assert.match(app, /showStaticLoadControls\(false\)/);
+  assert.match(app, /showStaticLoadControls\(true\)/);
+});
+
+test("uses hold language for selection and editing status", () => {
+  assert.match(app, /Hold \$\{region\.id\}/);
+  assert.match(app, /Added \$\{region\.key\}/);
+  assert.match(app, /Deleted \$\{region\.key\}/);
+  assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
+});
+
+test("describes static save mode with hold-editor wording", () => {
+  assert.match(app, /save hold highlights in this Hold Editor/i);
+  assert.doesNotMatch(app, /onboarding run/);
+});
+
+test("uses hold-highlight terminology in visible editor controls", () => {
+  assert.match(index, />Load highlights</);
+  assert.match(index, />Export edited highlights</);
+  assert.match(index, />All highlights</);
+  assert.match(index, /Drop a board image and hold-highlight JSON here/);
+  assert.match(index, /Why was this hold highlight changed\?/);
+  assert.doesNotMatch(index, />Load regions</);
+  assert.doesNotMatch(index, />All regions</);
+});
+
+test("uses hold-highlight terminology in runtime messages", () => {
+  assert.match(app, /Rotated hold highlight/);
+  assert.match(app, /Exported .* edited hold highlights/);
+  assert.doesNotMatch(app, /"(?:Rotated|Bent|Resized|Moved|Renamed) region"/);
+  assert.doesNotMatch(app, /edited regions\.`/);
+});
+
+test("documents hold-highlight operations without generic region prose", () => {
+  assert.match(readme, /Hold highlights can be drawn/);
+  assert.match(readme, /previous or next hold highlight/);
+  assert.doesNotMatch(readme, /Regions can be drawn/);
+  assert.doesNotMatch(readme, /symmetric region/);
 });

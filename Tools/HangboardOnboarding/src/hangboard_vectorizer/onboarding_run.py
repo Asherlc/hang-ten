@@ -101,14 +101,32 @@ def start_run(
                 raise OnboardingStateError("Stage 0 runner is not installed")
             artifact_root = temporary_root / "stages" / "00" / "attempt-0001"
             artifact_root.parent.mkdir(parents=True, exist_ok=True)
-            checkpoint = runner.run(
-                RunContext(temporary_root, MappingProxyType(manifest)),
-                artifact_root,
-            )
-            if checkpoint.stage != 0 or not checkpoint.machine_passed:
-                raise OnboardingStateError("Stage 0 did not publish a machine-passed checkpoint")
-            _record_checkpoint(manifest, temporary_root, checkpoint, attempt=1)
-            _write_manifest(temporary_root, manifest)
+            try:
+                checkpoint = runner.run(
+                    RunContext(temporary_root, MappingProxyType(manifest)),
+                    artifact_root,
+                )
+                if checkpoint.stage != 0 or not checkpoint.machine_passed:
+                    raise OnboardingStateError(
+                        "Stage 0 did not publish a machine-passed checkpoint"
+                    )
+                _record_checkpoint(
+                    manifest, temporary_root, checkpoint, attempt=1
+                )
+                _validate_manifest(temporary_root, manifest)
+                _write_manifest(temporary_root, manifest)
+            except Exception as error:
+                _publish_failed_attempt(
+                    temporary_root,
+                    stage=0,
+                    attempt=1,
+                    artifact_root=artifact_root,
+                    artifact_relative="stages/00/attempt-0001",
+                    error=error,
+                )
+                _load_and_validate(temporary_root)
+                temporary_root.replace(output)
+                raise
             temporary_root.replace(output)
         except Exception:
             shutil.rmtree(temporary_root, ignore_errors=True)
@@ -200,12 +218,12 @@ def resume_run(
     *,
     runners: Mapping[int, StageRunner] | None = None,
 ) -> Mapping[str, object]:
-    """Run exactly the next registered stage after all preceding approvals."""
+    """Run or retry exactly the next stage after all preceding approvals."""
     output = Path(output)
     with _exclusive_lock(_run_lock_path(output)):
         manifest = _load_and_validate(output)
         pipeline = _mapping(manifest["pipeline"], "pipeline")
-        if pipeline["status"] != "ready_for_next_stage":
+        if pipeline["status"] not in {"ready_for_next_stage", "failed"}:
             raise OnboardingStateError("run is not ready to resume")
         next_stage = _integer(pipeline["nextStage"], "pipeline.nextStage")
         _require_prior_approvals(manifest, next_stage)
@@ -224,7 +242,6 @@ def resume_run(
         staging_root = Path(tempfile.mkdtemp(prefix=f".stage-{next_stage:02d}.tmp-", dir=output))
         staged_artifact = staging_root / "artifacts"
         published = False
-        artifact_parent_created = not artifact_root.parent.exists()
         try:
             checkpoint = runner.run(
                 RunContext(output, MappingProxyType(manifest)), staged_artifact
@@ -250,6 +267,118 @@ def resume_run(
                 "status": "awaiting_approval",
             }
             _write_manifest(output, manifest)
+        except Exception as error:
+            if published:
+                shutil.rmtree(artifact_root, ignore_errors=True)
+            _publish_failed_attempt(
+                output,
+                stage=next_stage,
+                attempt=attempt,
+                artifact_root=artifact_root,
+                artifact_relative=artifact_relative,
+                error=error,
+            )
+            raise
+        finally:
+            shutil.rmtree(staging_root, ignore_errors=True)
+    return _checkpoint_result(output, stage=next_stage, status="awaiting_approval")
+
+
+def replace_pending_checkpoint(
+    output: Path,
+    checkpoint: StageCheckpoint,
+) -> Mapping[str, object]:
+    """Atomically select a new immutable attempt for the pending stage."""
+    output = Path(output)
+    with _exclusive_lock(_run_lock_path(output)):
+        manifest = _load_and_validate(output)
+        pipeline = _mapping(manifest["pipeline"], "pipeline")
+        current_stage = _integer(pipeline["currentStage"], "pipeline.currentStage")
+        if pipeline["status"] != "awaiting_approval":
+            raise OnboardingStateError(f"Stage {current_stage} is not awaiting approval")
+        if checkpoint.stage != current_stage:
+            raise OnboardingStateError(
+                f"checkpoint stage {checkpoint.stage} does not match pending stage {current_stage}"
+            )
+        if not checkpoint.machine_passed:
+            raise OnboardingStateError(f"Stage {current_stage} was not machine-passed")
+
+        old_record = _stage_record(manifest, current_stage)
+        if old_record["status"] != "review_pending":
+            raise OnboardingStateError(f"Stage {current_stage} is not awaiting approval")
+        attempt = _next_attempt(manifest, current_stage)
+        artifact_relative = f"stages/{current_stage:02d}/attempt-{attempt:04d}"
+        artifact_root = output / artifact_relative
+        if _lexists(artifact_root):
+            raise OnboardingStateError(
+                f"Stage {current_stage} artifact root already exists"
+            )
+
+        staging_root = Path(
+            tempfile.mkdtemp(prefix=f".stage-{current_stage:02d}-revision.tmp-", dir=output)
+        )
+        staged_artifact = staging_root / "artifacts"
+        published = False
+        artifact_parent_created = not artifact_root.parent.exists()
+        try:
+            source_relative = _relative_to_root(
+                checkpoint.artifact_root.parent, checkpoint.artifact_root
+            )
+            source_record = _checkpoint_record(
+                checkpoint.artifact_root.parent,
+                checkpoint,
+                attempt=attempt,
+                artifact_relative=source_relative,
+            )
+            _validate_checkpoint(
+                checkpoint.artifact_root.parent,
+                source_record,
+                require_artifact_layout=False,
+            )
+            try:
+                review_name = checkpoint.review_path.relative_to(
+                    checkpoint.artifact_root
+                )
+            except ValueError as error:
+                raise OnboardingStateError(
+                    "stage review path must be inside the artifact root"
+                ) from error
+            shutil.copytree(checkpoint.artifact_root, staged_artifact)
+            staged_checkpoint = StageCheckpoint(
+                stage=checkpoint.stage,
+                artifact_root=staged_artifact,
+                candidate_hashes=checkpoint.candidate_hashes,
+                review_path=staged_artifact / review_name,
+                machine_passed=checkpoint.machine_passed,
+            )
+            staged_record = _checkpoint_record(
+                output,
+                staged_checkpoint,
+                attempt=attempt,
+                artifact_relative=_relative_to_root(output, staged_artifact),
+            )
+            _validate_checkpoint(output, staged_record, require_artifact_layout=False)
+
+            artifact_root.parent.mkdir(parents=True, exist_ok=True)
+            staged_artifact.replace(artifact_root)
+            published = True
+            published_checkpoint = StageCheckpoint(
+                stage=checkpoint.stage,
+                artifact_root=artifact_root,
+                candidate_hashes=checkpoint.candidate_hashes,
+                review_path=artifact_root / review_name,
+                machine_passed=checkpoint.machine_passed,
+            )
+            replacement_record = _checkpoint_record(
+                output,
+                published_checkpoint,
+                attempt=attempt,
+                artifact_relative=artifact_relative,
+            )
+            _validate_checkpoint(output, replacement_record)
+            stages = _list(manifest["stages"], "stages")
+            stages[current_stage] = replacement_record
+            _write_manifest(output, manifest)
         except Exception:
             if published:
                 shutil.rmtree(artifact_root, ignore_errors=True)
@@ -258,7 +387,7 @@ def resume_run(
             raise
         finally:
             shutil.rmtree(staging_root, ignore_errors=True)
-    return _checkpoint_result(output, stage=next_stage, status="awaiting_approval")
+    return _checkpoint_result(output, stage=current_stage, status="awaiting_approval")
 
 
 def read_status(output: Path) -> Mapping[str, object]:
@@ -266,6 +395,21 @@ def read_status(output: Path) -> Mapping[str, object]:
     output = Path(output)
     manifest = _load_and_validate(output)
     return _status_result(output, manifest)
+
+
+def cached_source_path(output: Path) -> Path:
+    """Return the validated, run-confined source image for revision replay."""
+    output = Path(output)
+    manifest = _load_and_validate(output)
+    source = _mapping(manifest["source"], "source")
+    cached_path = _absolute_relative(output, source["cachedPath"])
+    try:
+        resolved_root = output.resolve(strict=True)
+        resolved_path = cached_path.resolve(strict=True)
+        resolved_path.relative_to(resolved_root)
+    except (OSError, ValueError) as error:
+        raise OnboardingStateError("cached source escapes the run") from error
+    return resolved_path
 
 
 def _initial_manifest(identity: CommercialIdentityAssertion, source: CachedSource) -> dict[str, object]:
@@ -292,6 +436,7 @@ def _initial_manifest(identity: CommercialIdentityAssertion, source: CachedSourc
         }
     )
     return {
+        "failedAttempts": [],
         "pipeline": {
             "currentStage": 0,
             "nextAction": "approve-stage-0",
@@ -404,11 +549,21 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
         next_stage = _integer(pipeline.get("nextStage"), "pipeline.nextStage")
         _string(pipeline.get("nextAction"), "pipeline.nextAction")
     stages = _list(manifest.get("stages"), "stages")
+    failed_attempts_value = manifest.get("failedAttempts", [])
+    failed_attempts = _list(failed_attempts_value, "failedAttempts")
     if current_stage < 0 or next_stage < 0:
         raise OnboardingStateError("run pipeline stages must be nonnegative")
-    if not stages:
+    failed_stage_zero = (
+        status == "failed"
+        and current_stage == 0
+        and next_stage == 0
+        and not stages
+    )
+    if not stages and not failed_stage_zero:
         raise OnboardingStateError("published run must contain a stage checkpoint")
-    if current_stage != len(stages) - 1 or next_stage != current_stage + 1:
+    if not failed_stage_zero and (
+        current_stage != len(stages) - 1 or next_stage != current_stage + 1
+    ):
         raise OnboardingStateError("run pipeline does not match published stage records")
     for expected_stage, record_object in enumerate(stages):
         record = _mapping(record_object, "stage record")
@@ -418,6 +573,8 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
         _validate_checkpoint(root, record)
         if record["status"] == "approved":
             _validate_approval(root, manifest, record)
+    for failure in failed_attempts:
+        _validate_failed_attempt(root, failure)
     if status == "awaiting_approval":
         record = _stage_record(manifest, current_stage)
         if record.get("status") != "review_pending" or next_stage != current_stage + 1:
@@ -427,6 +584,12 @@ def _validate_manifest(root: Path, manifest: dict[str, object]) -> None:
         if next_stage != current_stage + 1:
             raise OnboardingStateError("run next stage is inconsistent")
         _require_prior_approvals(manifest, next_stage)
+    if status == "failed":
+        if next_stage != (0 if failed_stage_zero else current_stage + 1):
+            raise OnboardingStateError("failed run next stage is inconsistent")
+        _require_prior_approvals(manifest, next_stage)
+        if not failed_attempts or failed_attempts[-1].get("stage") != next_stage:
+            raise OnboardingStateError("failed run attempt evidence is missing")
     if status == "complete":
         if current_stage != _FINAL_STAGE:
             raise OnboardingStateError("run completed before its final stage")
@@ -498,6 +661,84 @@ def _validate_checkpoint(
     candidate_path = _absolute_relative(root, record["candidatePath"])
     if not candidate_path.is_file():
         raise OnboardingStateError("stage candidate is missing")
+
+
+def _publish_failed_attempt(
+    root: Path,
+    *,
+    stage: int,
+    attempt: int,
+    artifact_root: Path,
+    artifact_relative: str,
+    error: Exception,
+) -> None:
+    """Publish confined immutable failure evidence before re-raising a runner error."""
+    persisted = _read_json(root / "run.json")
+    if not isinstance(persisted, dict):
+        raise OnboardingStateError("run manifest must be an object") from error
+    artifact_root.parent.mkdir(parents=True, exist_ok=True)
+    artifact_root.mkdir(exist_ok=True)
+    log_name = f"stage-{stage}-failure.log"
+    log_path = artifact_root / log_name
+    if _lexists(log_path):
+        raise OnboardingStateError("failed attempt log already exists") from error
+    summary = _safe_failure_summary(error)
+    _write_json_file(
+        log_path,
+        {
+            "attempt": attempt,
+            "errorKind": type(error).__name__,
+            "error": summary,
+            "schemaVersion": _SCHEMA_VERSION,
+            "stage": stage,
+        },
+    )
+    failed_attempts = _list(
+        persisted.setdefault("failedAttempts", []), "failedAttempts"
+    )
+    failed_attempts.append(
+        {
+            "artifactRoot": artifact_relative,
+            "attempt": attempt,
+            "error": summary,
+            "errorKind": type(error).__name__,
+            "logPath": log_name,
+            "logSha256": _hash_file(log_path),
+            "stage": stage,
+            "status": "failed",
+        }
+    )
+    persisted["pipeline"] = {
+        "currentStage": max(0, stage - 1),
+        "nextAction": f"retry-stage-{stage}",
+        "nextStage": stage,
+        "status": "failed",
+    }
+    _write_manifest(root, persisted)
+
+
+def _validate_failed_attempt(root: Path, record: Mapping[str, object]) -> None:
+    stage = _integer(record.get("stage"), "failedAttempt.stage")
+    attempt = _integer(record.get("attempt"), "failedAttempt.attempt")
+    if stage < 0 or stage > _FINAL_STAGE or attempt < 1:
+        raise OnboardingStateError("failed attempt stage or number is invalid")
+    if record.get("status") != "failed":
+        raise OnboardingStateError("failed attempt status is invalid")
+    artifact = _string(record.get("artifactRoot"), "failedAttempt.artifactRoot")
+    if artifact != f"stages/{stage:02d}/attempt-{attempt:04d}":
+        raise OnboardingStateError("failed attempt artifact root is inconsistent")
+    log_name = _string(record.get("logPath"), "failedAttempt.logPath")
+    if Path(log_name).name != log_name:
+        raise OnboardingStateError("failed attempt log path is invalid")
+    log_path = _absolute_relative(root, f"{artifact}/{log_name}")
+    if _hash_file(log_path) != record.get("logSha256"):
+        raise OnboardingStateError("failed attempt log does not match its recorded hash")
+    _string(record.get("error"), "failedAttempt.error")
+    _string(record.get("errorKind"), "failedAttempt.errorKind")
+
+
+def _safe_failure_summary(_error: Exception) -> str:
+    return "stage execution failed"
 
 
 def _validate_approval(root: Path, manifest: Mapping[str, object], record: Mapping[str, object]) -> None:
@@ -724,6 +965,11 @@ def _require_prior_approvals(manifest: Mapping[str, object], next_stage: int) ->
 
 def _next_attempt(manifest: Mapping[str, object], stage: int) -> int:
     attempts = [record["attempt"] for record in _list(manifest["stages"], "stages") if record.get("stage") == stage]
+    attempts.extend(
+        record["attempt"]
+        for record in _list(manifest.get("failedAttempts", []), "failedAttempts")
+        if record.get("stage") == stage
+    )
     return max(attempts, default=0) + 1
 
 

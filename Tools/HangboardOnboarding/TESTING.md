@@ -53,3 +53,11 @@ Because the detector emits approximate hold semantics, the generated JSON and
 review overlays must be visually inspected before runtime use. The overlay PNGs
 in `.context/hardboard-outlines/reviews` are the review artifact of record for
 wide, square, and other representative board layouts.
+
+The benchmark reads the complete approved Compact II package from
+`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`. Canonical
+packages under `boards/<board-id>/` must be complete and approved through Stage
+4; unfinished test and operator runs stay under the ignored `.context/`
+directory. See the
+[unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md);
+it supersedes the prior repository library design.

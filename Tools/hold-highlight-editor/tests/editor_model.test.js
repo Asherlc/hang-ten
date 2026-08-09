@@ -490,7 +490,7 @@ test("resizeContour clamps a handle dragged past its anchor without flipping", (
     pointer: [-10, 5],
   });
 
-  assert.deepEqual(result, [[0, 0], [0.5, 0], [0.5, 10], [0, 10]]);
+  assert.deepEqual(result, [[0, 0], [6, 0], [6, 10], [0, 10]]);
 });
 
 test("resizeContour uses signed local deltas for every side and corner handle", () => {

@@ -1,6 +1,6 @@
 # Hold Editor UI Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED WORKFLOW: For every task in this plan, dispatch a fresh subagent and use superpowers:subagent-driven-development, including implementation and review checkpoints. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Reframe the existing onboarding browser UI as a single-screen, full-feature Hold Editor for editing, adding, and deleting typed hold highlights.
 
@@ -213,7 +213,9 @@ rtk git commit -m "feat: make hold editor server-first"
 
 **Files:**
 - Modify: `Tools/hold-highlight-editor/README.md`
-- Test: `Tools/hold-highlight-editor/tests/editor_ui.test.js` (only if documentation-facing copy is asserted)
+- Modify: `Tools/hold-highlight-editor/index.html`
+- Modify: `Tools/hold-highlight-editor/server.py`
+- Test: `Tools/hold-highlight-editor/tests/editor_ui.test.js`
 
 **Interfaces:**
 - Consumes: the completed single-screen Hold Editor UI and existing server/catalog behavior.
@@ -251,6 +253,8 @@ Update `Tools/hold-highlight-editor/README.md` to:
 3. Keep the current server launch, catalog, static fallback, artifact-output, geometry, shortcut, and safety details.
 4. Replace language that presents Stage 1/Stage 2 as user-facing steps with language that identifies them as generated input artifacts. Keep exact artifact filenames where they are part of the server contract.
 5. State that the full inspector retains hold key, type, shape, path style, interaction mode, and review notes.
+6. Change the visible add button label to `Add highlight` while preserving its existing ID and click behavior.
+7. Change the server’s user-facing startup/error labels from `Hold Region Editor` to `Hold Editor`; preserve the CLI command, routes, artifact paths, and error behavior.
 
 - [ ] **Step 4: Run focused and repository tests**
 

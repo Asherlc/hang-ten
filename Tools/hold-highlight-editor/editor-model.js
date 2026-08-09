@@ -447,26 +447,19 @@
     const anchorY = handle.includes("n") ? maxY : minY;
     const movingX = handle.includes("w") ? minX : maxX;
     const movingY = handle.includes("n") ? minY : maxY;
-<<<<<<< HEAD
-    let scaleX = scalesX ? (localPointer[0] - anchorX) / Math.max(Math.abs(movingX - anchorX), 1e-6) : 1;
-    let scaleY = scalesY ? (localPointer[1] - anchorY) / Math.max(Math.abs(movingY - anchorY), 1e-6) : 1;
+    const signedFloor = (value) => Math.abs(value) < 1e-6 ? (value < 0 ? -1e-6 : 1e-6) : value;
+    let scaleX = scalesX ? (localPointer[0] - anchorX) / signedFloor(movingX - anchorX) : 1;
+    let scaleY = scalesY ? (localPointer[1] - anchorY) / signedFloor(movingY - anchorY) : 1;
     const localWidth = Math.max(maxX - minX, 1e-6);
     const localHeight = Math.max(maxY - minY, 1e-6);
     const minimumSize = 6;
     const minimumScaleX = minimumSize / localWidth;
     const minimumScaleY = minimumSize / localHeight;
-    scaleX = scalesX ? Math.max(minimumScaleX, scaleX) : 1;
-    scaleY = scalesY ? Math.max(minimumScaleY, scaleY) : 1;
-=======
-    const signedFloor = (value) => Math.abs(value) < 1e-6 ? (value < 0 ? -1e-6 : 1e-6) : value;
-    let scaleX = scalesX ? (localPointer[0] - anchorX) / signedFloor(movingX - anchorX) : 1;
-    let scaleY = scalesY ? (localPointer[1] - anchorY) / signedFloor(movingY - anchorY) : 1;
-    scaleX = Math.max(0.05, scaleX);
-    scaleY = Math.max(0.05, scaleY);
->>>>>>> origin/main
+    scaleX = scalesX ? Math.max(0.05, minimumScaleX, scaleX) : 1;
+    scaleY = scalesY ? Math.max(0.05, minimumScaleY, scaleY) : 1;
     if (preserveAspect && scalesX && scalesY) {
       const dominant = Math.abs(scaleX - 1) >= Math.abs(scaleY - 1) ? scaleX : scaleY;
-      const minimumScale = Math.max(minimumScaleX, minimumScaleY);
+      const minimumScale = Math.max(0.05, minimumScaleX, minimumScaleY);
       scaleX = Math.max(minimumScale, dominant);
       scaleY = Math.max(minimumScale, dominant);
     }

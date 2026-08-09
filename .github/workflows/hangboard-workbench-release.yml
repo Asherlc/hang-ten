@@ -1,0 +1,304 @@
+name: Build and release Hangboard Workbench
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hangboard-workbench-release-${{ github.ref }}
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  build:
+    name: Build verified arm64 workbench
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # actions/setup-python v6.3.0
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+
+      - name: Install workbench build dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
+
+      - name: Run focused Python suite
+        run: python -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
+
+      - name: Run focused Node suite
+        run: node --test Tools/hold-highlight-editor/tests/*.test.js
+
+      - name: Build arm64 workbench executable
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
+          work_dir="$RUNNER_TEMP/hangboard-workbench-build"
+          rm -rf "$release_dir" "$work_dir"
+          mkdir -p "$release_dir" "$work_dir"
+          python Tools/hold-highlight-editor/packaging/build.py \
+            --commit "$GITHUB_SHA" \
+            --dist-dir "$release_dir" \
+            --work-dir "$work_dir"
+
+      - name: Verify executable identity
+        run: |
+          set -euo pipefail
+          executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
+          architecture="$(uname -m)"
+          echo "Runner architecture: $architecture"
+          test "$architecture" = "arm64"
+          file "$executable" | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
+          grep -q "arm64" "$RUNNER_TEMP/hangboard-workbench-file.txt"
+          "$executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
+          grep -Fqx "$GITHUB_SHA" "$RUNNER_TEMP/hangboard-workbench-version.txt"
+
+      - name: Smoke test executable and clean up
+        run: |
+          set -euo pipefail
+          executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
+          smoke_log=""
+          workbench_pid=""
+          workbench_child_pid=""
+          cleanup() {
+            status=$?
+            trap - EXIT
+            if [[ -n "$workbench_pid" ]]; then
+              if kill -0 "$workbench_pid" 2>/dev/null; then
+                kill -TERM "$workbench_pid" || true
+              fi
+              wait "$workbench_pid" || true
+            fi
+            if [[ -n "$workbench_child_pid" ]] && kill -0 "$workbench_child_pid" 2>/dev/null; then
+              kill -TERM "$workbench_child_pid" || true
+            fi
+            if [[ "$status" -ne 0 && -n "$smoke_log" && -f "$smoke_log" ]]; then
+              cat "$smoke_log" >&2
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
+          smoke_signal() {
+            shutdown_signal="$1"
+            port="$2"
+            smoke_log="$RUNNER_TEMP/hangboard-workbench-smoke-${shutdown_signal}.log"
+            workbench_pid=""
+            workbench_child_pid=""
+
+            cd "$GITHUB_WORKSPACE"
+            "$executable" --no-open --port "$port" >"$smoke_log" 2>&1 &
+            workbench_pid=$!
+            ready=false
+            for _ in {1..30}; do
+              if ! kill -0 "$workbench_pid" 2>/dev/null; then
+                echo "Workbench exited before becoming ready for SIG${shutdown_signal}." >&2
+                exit 1
+              fi
+              if curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null; then
+                ready=true
+                break
+              fi
+              sleep 1
+            done
+            if [[ "$ready" != "true" ]]; then
+              echo "Workbench did not become ready within 30 seconds for SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+
+            curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
+            while IFS= read -r asset_path; do
+              curl --fail --silent --show-error "http://127.0.0.1:${port}${asset_path}" >/dev/null
+            done < <(
+              python - <<'PY'
+          import sys
+
+          sys.path.insert(0, "Tools/hold-highlight-editor")
+          from workbench_assets import STATIC_ASSETS
+
+          for asset in STATIC_ASSETS:
+              print(f"/{asset}")
+          PY
+            )
+            curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
+              | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+
+            workbench_child_pid="$(pgrep -P "$workbench_pid" || true)"
+            if [[ -z "$workbench_child_pid" || "$workbench_child_pid" == *$'\n'* ]]; then
+              echo "Expected exactly one frozen workbench child process for SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+            kill -"$shutdown_signal" "$workbench_pid"
+            if wait "$workbench_pid"; then
+              shutdown_status=0
+            else
+              shutdown_status=$?
+            fi
+            if [[ "$shutdown_status" -ne 0 ]]; then
+              echo "Workbench exited with status $shutdown_status after SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+            if kill -0 "$workbench_pid" 2>/dev/null; then
+              echo "Workbench parent remained after SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+            if kill -0 "$workbench_child_pid" 2>/dev/null; then
+              echo "Workbench child remained after SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+            if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
+              echo "Workbench smoke log contains an error after SIG${shutdown_signal}." >&2
+              exit 1
+            fi
+            workbench_pid=""
+            workbench_child_pid=""
+          }
+
+          smoke_signal INT 41739
+          smoke_signal TERM 41740
+
+      - name: Archive verified executable
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
+          cd "$release_dir"
+          tar -czf hangboard-workbench-macos-arm64.tar.gz hangboard-workbench
+          shasum -a 256 hangboard-workbench-macos-arm64.tar.gz > hangboard-workbench-macos-arm64.sha256
+          shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload verified release assets
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hangboard-workbench-release-${{ github.run_id }}
+          path: |
+            ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.tar.gz
+            ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.sha256
+          if-no-files-found: error
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    name: Publish immutable workbench release
+    runs-on: macos-15
+    timeout-minutes: 15
+    permissions:
+      # Required to create the immutable GitHub release and upload its assets.
+      contents: write
+
+    steps:
+      # actions/download-artifact v5.0.0
+      - name: Download verified release assets
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: hangboard-workbench-release-${{ github.run_id }}
+          path: release
+
+      - name: Verify downloaded release assets
+        run: |
+          set -euo pipefail
+          cd release
+          shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
+      - name: Publish immutable GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          select_latest_flag() {
+            if [[ "$1" == "$2" ]]; then
+              printf '%s\n' --latest
+            else
+              printf '%s\n' --latest=false
+            fi
+          }
+
+          release_dir="$GITHUB_WORKSPACE/release"
+          tag="hangboard-workbench-main-${GITHUB_RUN_NUMBER}-${GITHUB_SHA::12}"
+          short_sha="${GITHUB_SHA::12}"
+          tag_response="$RUNNER_TEMP/hangboard-workbench-tag.json"
+          tag_error="$RUNNER_TEMP/hangboard-workbench-tag-error.txt"
+          release_response="$RUNNER_TEMP/hangboard-workbench-release.json"
+          release_error="$RUNNER_TEMP/hangboard-workbench-release-error.txt"
+
+          tag_exists=false
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >"$tag_response" 2>"$tag_error"; then
+            tag_exists=true
+            tag_type="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["object"]["type"])' "$tag_response")"
+            tag_commit="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["object"]["sha"])' "$tag_response")"
+            if [[ "$tag_type" == "tag" ]]; then
+              annotated_tag_response="$RUNNER_TEMP/hangboard-workbench-annotated-tag.json"
+              gh api "repos/$GITHUB_REPOSITORY/git/tags/$tag_commit" >"$annotated_tag_response"
+              tag_commit="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["object"]["sha"])' "$annotated_tag_response")"
+            fi
+            if [[ "$tag_commit" != "$GITHUB_SHA" ]]; then
+              echo "Existing tag $tag targets $tag_commit, not $GITHUB_SHA." >&2
+              exit 1
+            fi
+          elif ! grep -q 'HTTP 404' "$tag_error"; then
+            cat "$tag_error" >&2
+            exit 1
+          fi
+
+          if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" >"$release_response" 2>"$release_error"; then
+            release_commit="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["target_commitish"])' "$release_response")"
+            if [[ "$release_commit" != "$GITHUB_SHA" ]]; then
+              echo "Existing release $tag targets $release_commit, not $GITHUB_SHA." >&2
+              exit 1
+            fi
+            python - "$release_response" <<'PY'
+          import json
+          import sys
+
+          release = json.load(open(sys.argv[1]))
+          if release["draft"] or release["prerelease"] or not release["published_at"]:
+              raise SystemExit("Existing release must be published and neither draft nor prerelease.")
+          asset_names = sorted(asset["name"] for asset in release["assets"])
+          required_asset_names = sorted([
+              "hangboard-workbench-macos-arm64.sha256",
+              "hangboard-workbench-macos-arm64.tar.gz",
+          ])
+          if asset_names != required_asset_names:
+              raise SystemExit(
+                  f"Existing release assets must exactly match required assets: {asset_names}"
+              )
+          PY
+            exit 0
+          elif ! grep -q 'HTTP 404' "$release_error"; then
+            cat "$release_error" >&2
+            exit 1
+          fi
+
+          if [[ "$tag_exists" == "true" ]]; then
+            echo "Existing tag $tag has no release; creating the missing release." >&2
+          fi
+          main_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          latest_flag="$(select_latest_flag "$main_sha" "$GITHUB_SHA")"
+          cd "$release_dir"
+          gh release create "$tag" \
+            hangboard-workbench-macos-arm64.tar.gz \
+            hangboard-workbench-macos-arm64.sha256 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Hangboard Workbench ${short_sha}" \
+            --notes "Dependency-free Apple Silicon workbench built from ${GITHUB_SHA}." \
+            "$latest_flag"

@@ -86,6 +86,10 @@ def test_file_provider_keeps_the_existing_candidate_artifacts_and_proposal_bindi
         "sha256": proposal_hash,
     }
     assert candidate["proposalSha256"] == proposal_hash
+    assert candidate["registered"]["path"] == "stage-2-labels.png"
+    assert candidate["registered"]["fileSha256"] == sha256(
+        (root / "stage-2-labels.png").read_bytes()
+    ).hexdigest()
     assert not (root / "stage-2-semantic-response.json").exists()
     assert not (root / "stage-2-semantic-evidence.json").exists()
 

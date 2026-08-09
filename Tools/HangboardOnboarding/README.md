@@ -8,6 +8,32 @@ photo supplies board geometry and alignment diagnostics; the caller asserts
 the product identity and verifies it in the preview. The photo is not restyled
 into a run-specific illustration.
 
+## Run the Apple Silicon macOS workbench release
+
+From a Hang Ten checkout, download both assets from a release directory, verify
+the archive, extract it, and launch the executable:
+
+```bash
+curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.tar.gz
+curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.sha256
+shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+tar -xzf hangboard-workbench-macos-arm64.tar.gz
+./hangboard-workbench
+```
+
+The executable opens the workbench in the default browser automatically. It
+must run from inside a Hang Ten checkout, or receive the checkout explicitly
+with `--repository-root`. `--workspace-root` only moves transient work; it does
+not disable repository discovery or replace `--repository-root`. Use
+`--no-open` to suppress browser launch, `--port` to select another port, and
+`--version` to print the embedded source commit. Repository-free startup is
+reserved for explicit legacy `--run-dir` or `--catalog` inputs.
+
+The release is unsigned. If Gatekeeper blocks its first launch, use Finder's
+**Open** context-menu action to approve that executable.
+
+For source development, use the Python workbench command documented below.
+
 ## Install
 
 Python 3.11 or newer is required. From this directory:
@@ -124,21 +150,105 @@ scripts/hangboard-tools.sh catalog register \
 
 Start a persisted onboarding run from one local image or HTTP(S) source:
 
+For the complete guided local workflow, start the server from the repository
+root with its repository and transient-workspace defaults:
+
 ```bash
-hangboard-onboard --product-name "Metolius Wood Grips Compact II" --source photo.jpg --output work/metolius-onboarding
+rtk python Tools/hold-highlight-editor/server.py
+```
+
+This discovers the checkout, reads complete approved boards from
+`Tools/HangboardOnboarding/boards/<board-id>/`, and writes in-progress work
+under `.context/hangboard-workbench/`. Automation can select different roots
+explicitly:
+
+```bash
+rtk python Tools/hold-highlight-editor/server.py \
+  --repository-root /absolute/path/to/checkout \
+  --workspace-root /absolute/path/to/workbench-workspace
+```
+
+Open `http://localhost:4173`, then create a board from either an HTTP(S) image
+URL or an image upload. The opening screen also lists valid repository boards;
+select one to open its current committed package for editing. The exact
+[package and publication contract is documented in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md),
+which supersedes the prior repository library design. When a complete revision
+is saved, the workbench atomically replaces the canonical board package.
+**Save locally** writes those files for normal Git review, but never commits or
+pushes them.
+
+CLI and other programmatic workflows are producers of the same contract: pass
+a completed run to `RepositoryBoardLibrary.publish()`. The browser never asks
+the user to provide a CLI run directory.
+The workbench runs Stage 0 immediately, then stops at every checkpoint for
+review. **Approve & continue** records the approval and advances to the next
+checkpoint; **Retry** regenerates the current checkpoint as a new attempt while
+preserving prior files.
+
+Stage 2 is the contour and pixel-label review: add, delete, or correct the
+stable region inventory against the registered raster. Stage 3 is the vector
+review: refine each retained region's final display path. Valid Stage 2 and
+Stage 3 edits autosave as immutable drafts and are materialized only when that
+checkpoint is approved.
+
+The workspace store persists `boards/board-NNNN/board.json`, evolving
+CLI-compatible `revisions/revision-NNNN/run/` directories, and immutable
+per-revision `drafts/stage-N/draft-NNNN.json` files. Published stage attempts,
+artifacts, approval evidence, and failure diagnostics inside each run remain
+immutable. **Revise upstream** forks a new
+revision and marks replaced downstream lineage stale; stale or incomplete
+lineage cannot be selected by the final Save. Refreshing or restarting the
+server reloads the store, while the browser can also recover its newest
+same-checkpoint local draft. Retrying a stage changes the checkpoint identity,
+so drafts from an earlier attempt remain immutable but cannot be restored or
+approved over the replacement.
+
+Every workbench revision is CLI-compatible. Inspect a UI-created run by using
+the same explicit confinement root:
+
+```bash
+rtk hangboard-onboard \
+  --workspace-root /absolute/path/to/workbench-workspace \
+  --output /absolute/path/to/workbench-workspace/boards/board-0001/revisions/revision-0001/run \
+  --status
+```
+
+CLI-compatible runs are programmatic producers: once a run is complete and all
+five checkpoints are approved, its caller passes it to
+`RepositoryBoardLibrary.publish()` to update
+`Tools/HangboardOnboarding/boards/<board-id>/`. The browser never asks for a
+CLI run directory. Only complete approved runs belong in the canonical boards
+directory; all unfinished runs belong under the ignored `.context/` directory.
+Final **Save locally** writes the canonical package for normal Git review; it
+never commits, pushes, updates the Hang Ten app catalog, or synchronizes
+remotely.
+
+The lower-level CLI remains useful for scripted operation. Start a persisted
+run from one local image or HTTP(S) source:
+
+```bash
+hangboard-onboard --product-name "Metolius Wood Grips Compact II" \
+  --source photo.jpg \
+  --output .context/hangboard-onboarding/metolius-onboarding
 ```
 
 Approve the displayed Stage 0 review, then resume the run:
 
 ```bash
-hangboard-onboard --output work/metolius-onboarding --approve stage-0
-hangboard-onboard --output work/metolius-onboarding --resume
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --approve stage-0
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --resume
 ```
 
 Validate and inspect the current state without changing it:
 
 ```bash
-hangboard-onboard --output work/metolius-onboarding --status
+hangboard-onboard \
+  --output .context/hangboard-onboarding/metolius-onboarding \
+  --status
 ```
 
 Replay the accepted Metolius compact semantic cache and write an offline parity
@@ -146,17 +256,18 @@ report with zero live model calls:
 
 ```bash
 hangboard-semantic-benchmark \
-  --accepted-run work/real-metolius-compact-ii/onboarding-visual-test-v3 \
-  --output token-optimization-v1/report.json
+  --accepted-run Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii \
+  --output .context/hangboard-onboarding/metolius-parity/report.json
 ```
 
 The command reports model activity separately from deterministic local work.
 See [docs/token-efficient-onboarding.md](docs/token-efficient-onboarding.md)
 for the cache identity, escalation rules, and measurement limits.
 
-The current runner stops after generic Stage 0 approval: Stage 1 is not
-installed yet. Stage 0 records a caller-asserted product name, preserves the
-exact cached source bytes, and emits one hash-bound review image for approval.
+The shared runner records the caller-asserted product name, preserves the exact
+cached source bytes, and publishes every generated checkpoint as hash-bound,
+immutable review evidence. CLI and UI operations use the same manifests,
+approval state machine, stage runners, and revision directories.
 
 Known products are intentionally curated rather than automatically recognized.
 To add one, use an authoritative, clean product photo to create and review a
