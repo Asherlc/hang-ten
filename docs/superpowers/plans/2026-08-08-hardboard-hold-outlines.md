@@ -15,6 +15,7 @@
 - Use normalized `0...1` coordinates and preserve source pixel dimensions.
 - Use explicit `M`, `L`, and cubic `C` path commands; do not emit dense pixel point clouds.
 - Keep labels, kinds, confidence, and notes as visual estimates; do not claim manufacturer-verified semantics.
+- Use advisory manufacturer/source hints where available, preserving source URLs in each document’s `references` array.
 - Generated outlines are editable calibration artifacts, not Swift runtime hit-testing geometry.
 - Generation must be deterministic and write outputs transactionally.
 - Generated review artifacts belong under `.context/hardboard-outlines/`.
@@ -101,6 +102,7 @@ Run: `rtk git add Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_out
 **Files:**
 - Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outlines.py`
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outline_cli.py`
+- Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outline_sources.json`
 - Modify: `Tools/HangboardOnboarding/pyproject.toml`
 - Modify: `Tools/HangboardOnboarding/tests/test_catalog_outlines.py`
 
@@ -108,7 +110,127 @@ Run: `rtk git add Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_out
 - `detect_board_mask(image: np.ndarray) -> np.ndarray` returns one binary board mask for an RGB/RGBA image.
 - `detect_hold_candidates(image: np.ndarray, board_mask: np.ndarray) -> tuple[tuple[np.ndarray, str, str], ...]` returns ordered `(closed_pixel_contour, kind, note)` candidates.
 - `vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument` produces a validated document without reading external state.
+- `load_catalog_source_hints(path: Path | None = None) -> Mapping[str, object]` loads the checked-in advisory product/source table.
 - CLI entry point `hangboard-catalog-outlines` supports `--source-dir`, `--output-dir`, `--review-dir`, `--limit`, and `--check`; `--check` validates existing JSONs without rewriting them.
+
+The checked-in source-hint table must use this shape and these authoritative hints where a matching product is known; unmatched stems remain valid with an empty reference list:
+
+```json
+{
+  "beastmaker-1000": {
+    "references": [{
+      "title": "Beastmaker Fingerboards",
+      "url": "https://www.beastmaker.co.uk/collections/fingerboards",
+      "hints": ["2 jugs", "35-degree and 20-degree slopers", "two- through four-finger pockets"]
+    }]
+  },
+  "beastmaker-2000": {
+    "references": [{
+      "title": "Beastmaker Fingerboards",
+      "url": "https://www.beastmaker.co.uk/collections/fingerboards",
+      "hints": ["advanced pocket and sloper layout", "no beginner jugs claimed without visual confirmation"]
+    }]
+  },
+  "tension-whetstone": {
+    "references": [{
+      "title": "Tension Hangboards",
+      "url": "https://tensionclimbing.com/pages/hangboards",
+      "hints": ["top jug with ergo bumps", "40mm center edge", "40mm two-finger pockets", "40/30/25/20mm edges"]
+    }]
+  },
+  "tension-grindstone": {
+    "references": [{
+      "title": "Tension Hangboards",
+      "url": "https://tensionclimbing.com/pages/hangboards",
+      "hints": ["full-width bar jug", "50mm center edge", "30/25/20/15/10/8mm edges"]
+    }]
+  },
+  "tension-honestone": {
+    "references": [{
+      "title": "Tension Hangboards",
+      "url": "https://tensionclimbing.com/pages/hangboards",
+      "hints": ["35- and 45-degree top slopers", "25mm center edge", "one-finger pockets", "20/15/10/8mm edges"]
+    }]
+  },
+  "metolius-project": {
+    "references": [{
+      "title": "Project Training Board",
+      "url": "https://www.metoliusclimbing.com/products/project-training-board",
+      "hints": ["broad arc", "outward and downward taper", "perfectly symmetric CAD/CAM layout"]
+    }]
+  },
+  "metolius-climbers-edge": {
+    "references": [{
+      "title": "Climbers Edge Board",
+      "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+      "hints": ["7.5/10/12.5/15/17.5/20mm edges", "40mm radius round sloper", "20-degree flat sloper", "jugs"]
+    }]
+  },
+  "metolius-simulator-3d": {
+    "references": [{
+      "title": "Simulator 3D Training Guide",
+      "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+      "hints": ["outer jugs", "flat and round slopers", "deep/medium/shallow edges", "numbered pocket rows"]
+    }]
+  },
+  "metolius-contact": {
+    "references": [{
+      "title": "Metolius Climbing Hold Catalog",
+      "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
+      "hints": ["11 pockets", "four central edges", "top pull-up jugs", "rounded and flat slopers"]
+    }]
+  },
+  "trango-rock-prodigy-natural": {
+    "references": [{
+      "title": "Rock Prodigy Natural",
+      "url": "https://trango.com/products/rock-prodigy-natural",
+      "hints": ["two variable-depth rails", "three pockets", "closed crimp", "small and large pinches"]
+    }]
+  },
+  "trango-rock-prodigy-forge": {
+    "references": [{
+      "title": "Rock Prodigy Forge",
+      "url": "https://trango.com/products/rock-prodigy-forge",
+      "hints": ["closed-crimp grip with thumb support", "drafted pockets", "steeper slopers", "different holds from Training Center"]
+    }]
+  },
+  "trango-rock-prodigy-pivot": {
+    "references": [{
+      "title": "Rock Prodigy Pivot",
+      "url": "https://trango.com/products/rock-prodigy-pivot",
+      "hints": ["22 distinct grip positions", "rotatable four-orientation system", "adjustable shoulder width"]
+    }]
+  },
+  "trango-rock-prodigy-training-center": {
+    "references": [{
+      "title": "Rock Prodigy Training Center",
+      "url": "https://trango.com/products/rock-prodigy-training-center",
+      "hints": ["two-piece adjustable layout", "index bumps along variable edge rails", "symmetric hold design"]
+    }]
+  },
+  "lattice-triple-rung": {
+    "references": [{
+      "title": "Triple Rung",
+      "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+      "hints": ["continuous 45mm, 20mm, and 10mm edges", "no pockets", "wide-radius extruded design"]
+    }]
+  },
+  "frictitious-megalith": {
+    "references": [{
+      "title": "The Megalith",
+      "url": "https://frictitiousclimbing.com/products/megalith",
+      "hints": ["full-width pull-up jug", "pockets", "flat and unlevel shoulder-width edges", "8mm to 40mm edges"]
+    }]
+  },
+  "soill-split-palm": {
+    "references": [{
+      "title": "Split Palm",
+      "url": "https://soillholds.com/products/split-palm",
+      "hints": ["two slopers", "pinch", "multiple crimp sizes and angles"]
+    }]
+  }
+}
+```
 
 - [ ] **Step 1: Write failing detector and CLI tests**
 
@@ -147,7 +269,7 @@ Expected: failures for missing detector, CLI, and entry-point behavior.
 
 - [ ] **Step 3: Implement board and hold candidate extraction**
 
-Use Pillow for decoding and OpenCV for masks, connected components, edge extraction, morphology, contour simplification, and overlay drawing. Keep the algorithm local and deterministic: remove the dominant background, select the largest plausible board component, derive internal hold candidates from persistent local contrast/edge regions constrained to the board mask, reject tiny/noisy components, order candidates top-to-bottom then left-to-right, and assign `confidence: "approximate"` with non-authoritative notes. Do not use a model call or infer depth/finger count.
+Use Pillow for decoding and OpenCV for masks, connected components, edge extraction, morphology, contour simplification, and overlay drawing. Keep the algorithm local and deterministic: remove the dominant background, select the largest plausible board component, derive internal hold candidates from persistent local contrast/edge regions constrained to the board mask, reject tiny/noisy components, order candidates top-to-bottom then left-to-right, and assign `confidence: "approximate"` with non-authoritative notes. Load matching entries from `catalog_outline_sources.json` to attach URLs and broad hold/layout hints, but do not use those hints to move a contour or claim depth/finger count that is not visible. Do not use a model call.
 
 Use the schema’s `normalize_contour()` for all emitted candidates. Ensure candidate contours are clipped to the board mask, contain at least three unique points, and have nonzero area. Render review overlays with source pixels plus a contrasting outline and ID label; review images are diagnostic only.
 
@@ -174,6 +296,7 @@ Run: `rtk git add Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_out
 **Files:**
 - Create: `docs/hangboard-generative-catalog/outlines/*.json` for all 32 individual board images.
 - Create: `Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py`
+- Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_outline_sources.json`
 - Modify: `Tools/HangboardOnboarding/README.md`
 - Modify: `Tools/HangboardOnboarding/TESTING.md`
 
@@ -183,7 +306,7 @@ Run: `rtk git add Tools/HangboardOnboarding/src/hangboard_vectorizer/catalog_out
 
 - [ ] **Step 1: Add the full-catalog validation test**
 
-Add a test that asserts the source and output stems are exactly equal, each document’s `sourceImage` resolves to the matching PNG, each canvas matches the PNG dimensions, every outline path is valid and normalized, and no output is generated for the contact sheet.
+Add a test that asserts the source and output stems are exactly equal, each document’s `sourceImage` resolves to the matching PNG, each canvas matches the PNG dimensions, every outline path is valid and normalized, each document’s `references` entries match the source-hint table, and no output is generated for the contact sheet.
 
 - [ ] **Step 2: Run the validation test before generation and verify the expected failure**
 
@@ -216,7 +339,7 @@ Expected: exit 0 and report 32 valid outline documents with no contact-sheet out
 
 - [ ] **Step 5: Document the generator and hand-editing contract**
 
-Add README/TESTING documentation showing the full `hangboard_vectorizer.catalog_outline_cli` command, the JSON command shape, normalized coordinate convention, the purpose of `bounds`, and the fact that generated semantics are approximate and must be reviewed before runtime use.
+Add README/TESTING documentation showing the full `hangboard_vectorizer.catalog_outline_cli` command, the JSON command shape, normalized coordinate convention, the purpose of `bounds`, the advisory source-hint policy, and the fact that generated semantics are approximate and must be reviewed before runtime use.
 
 - [ ] **Step 6: Commit the generated artifacts and docs**
 

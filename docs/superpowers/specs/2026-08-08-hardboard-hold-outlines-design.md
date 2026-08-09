@@ -22,6 +22,13 @@ Each board document will contain:
   "sourceImage": "../board-name.png",
   "canvas": { "width": 1536, "height": 1024 },
   "coordinateSpace": "normalized",
+  "references": [
+    {
+      "title": "Manufacturer product or hold-layout source",
+      "url": "https://example.com/product",
+      "hints": ["two jugs", "three edge depths"]
+    }
+  ],
   "outlines": [
     {
       "id": "hold-001",
@@ -45,9 +52,13 @@ Each board document will contain:
 
 `M`, `L`, and cubic `C` commands are sufficient for GUI editing and avoid the ambiguity of a free-form SVG string. All path points use normalized coordinates, while the `canvas` object preserves the source pixel frame for round-tripping and review overlays. `bounds` is redundant by design: it supports selection handles and quick GUI layout without reparsing the path.
 
+`references` is advisory provenance. Manufacturer sources can guide hold counts, broad layout, and likely grip categories when the generated raster is ambiguous, but they must not override the visible raster or turn an estimate into verified geometry. Documents without a useful source use an empty array.
+
 ## Vectorization approach
 
 Use deterministic local image processing to propose candidate hold regions and simplify their contours into mixed line/cubic paths. Prefer long straight runs for board rails and edges, smooth cubic curves for rounded pockets and sculpted holds, and preserve concave corners where they are visually meaningful. The generator must not invent manufacturer semantics; `label`, `kind`, `confidence`, and `notes` are editable visual annotations.
+
+Before finalizing candidates, consult the maintained source hints for matching product names. Use official manufacturer pages, manuals, and hold-layout guides first; record the URL and only the broad facts that help identify or arrange visible holds. Community or retailer references may be used only as low-confidence orientation hints.
 
 The generated JSON is a starting point for hand correction. It is not runtime interaction geometry and must not be wired into `BoardDesign` or hit testing by this change.
 
