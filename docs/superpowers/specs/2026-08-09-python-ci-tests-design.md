@@ -16,9 +16,10 @@ Add a `python` job to `.github/workflows/ci.yml` with the following behavior:
 2. Check out the repository with the same pinned checkout action already used by the workflow.
 3. Install Python 3.11 with the repository's pinned GitHub Action convention.
 4. Enable pip caching, keyed by `Tools/HangboardOnboarding/pyproject.toml`.
-5. From `Tools/HangboardOnboarding`, install the package and development extra with `python -m pip install -e ".[dev]"`.
-6. From the same directory, run `python -m pytest -q --junitxml=pytest-results.xml`.
-7. Upload `pytest-results.xml` as a diagnostic artifact when the job fails.
+5. From `Tools/HangboardOnboarding`, install `setuptools>=68` and `wheel` explicitly because an existing test builds a wheel with `--no-build-isolation`.
+6. Install the package and development extra with `python -m pip install -e ".[dev]"`.
+7. From the same directory, run `python -m pytest -q --junitxml=pytest-results.xml`.
+8. Upload `pytest-results.xml` as a diagnostic artifact when the job fails.
 
 The job is independent of the macOS build and XCTest jobs, so Python failures are reported as their own required CI check without changing Apple-platform test behavior.
 
