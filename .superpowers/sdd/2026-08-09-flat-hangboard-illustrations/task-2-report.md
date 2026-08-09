@@ -56,3 +56,38 @@ Remaining concerns
 - `soill-iron-palm-2-flat.png` remains lighter and simpler than ideal.
 - `trango-rock-prodigy-pivot-flat.png` remains softer and less clean internally than the strongest boards.
 - These are usable preview references, but they are the first candidates for any later regeneration pass.
+
+Fix pass — August 9, 2026
+
+Summary
+
+Applied the requested review fixes to exactly two outputs:
+
+- `docs/hangboard-generative-catalog/flat-illustrations/soill-iron-palm-2-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/trango-rock-prodigy-pivot-flat.png`
+
+Implementation notes
+
+- Regenerated `soill-iron-palm-2-flat.png` from the original source PNG with a tighter prompt that explicitly preserved the two dominant circular palm pods, the central connecting body, and the large lower curved cavity.
+- Regenerated `trango-rock-prodigy-pivot-flat.png` from the original source PNG with a tighter prompt that explicitly preserved the paired-board layout, crisp silhouettes, and clearly separated internal cavities while removing sketchy remnants.
+- Rebuilt `docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png` after both replacements.
+- Updated `.context/flat-hangboard-illustrations/batch-review.md` to record the repair pass and final verdict.
+
+Focused verification
+
+- Visually rechecked `soill-iron-palm-2-flat.png` after replacement and confirmed the two circular palm pods, central connecting body, and large lower curved cavity are present and readable.
+- Visually rechecked `trango-rock-prodigy-pivot-flat.png` after replacement and confirmed the paired-board layout, center gap, crisp silhouettes, and clearly separated internal cavities are present.
+- Visually rechecked the rebuilt contact sheet to confirm both repaired boards read correctly in their labeled catalog positions.
+- Confirmed the source/output inventory remains 32 source stems and 32 flat outputs with no missing or extra `*-flat.png` files.
+
+Changed files for fix pass
+
+- `docs/hangboard-generative-catalog/flat-illustrations/soill-iron-palm-2-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations/trango-rock-prodigy-pivot-flat.png`
+- `docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png`
+- `.context/flat-hangboard-illustrations/batch-review.md`
+- this report file
+
+Updated assessment
+
+- Batch QA verdict: PASS
