@@ -70,7 +70,7 @@
     "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button", "simplify-curve-button",
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
-    "tension-field", "curve-tension-slider", "curve-tension-value",
+    "tension-field", "curve-tension-slider", "curve-tension-value", "static-load-controls",
     "board-picker", "board-picker-separator", "board-select",
   ].map((id) => [id, document.getElementById(id)]));
 
@@ -258,10 +258,13 @@
 
   function renderInspector() {
     const region = selectedRegion();
-    el["inspector-title"].textContent = region ? `Region ${region.id}` : "No selection";
+    el["inspector-title"].textContent = region ? `Hold ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
-    if (!region) return;
+    if (!region) {
+      el["inspector-empty"].textContent = "Select a hold highlight to edit its shape and details.";
+      return;
+    }
     if (document.activeElement !== el["region-key-input"]) el["region-key-input"].value = region.key;
     if (document.activeElement !== el["region-type-select"]) el["region-type-select"].value = region.type;
     if (document.activeElement !== el["region-shape-select"]) el["region-shape-select"].value = region.metadata.shapeKind || "freeform";
@@ -381,7 +384,7 @@
     state.selectedId = id;
     render();
     const region = selectedRegion();
-    if (region) setStatus(`Selected ${region.key}. Drag the shape or its control points.`);
+    if (region) setStatus(`Selected hold ${region.key}. Drag the highlight or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
   }
 
@@ -579,7 +582,7 @@
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
       : `Drag to create a ${shapeLabel(state.drawShape).toLowerCase()}. Press Escape to cancel.`;
-    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} region.`);
+    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} hold highlight.`);
     render();
   }
 
@@ -606,8 +609,8 @@
     state.primitiveSession = null;
     state.selectedId = nextId;
     el["draw-instruction"].classList.remove("visible");
-    commitHistory("Added region");
-    setStatus(`Added ${region.key}.`);
+    commitHistory("Added hold highlight");
+    setStatus(`Added ${region.key} hold highlight.`);
     render();
   }
 
@@ -625,8 +628,8 @@
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
-    commitHistory("Deleted region");
-    setStatus(`Deleted ${region.key}. Undo is available.`);
+    commitHistory("Deleted hold highlight");
+    setStatus(`Deleted ${region.key} hold highlight. Undo is available.`);
     render();
   }
 
@@ -641,7 +644,8 @@
     copy.metadata.humanNotes = "Duplicated manually";
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Duplicated region");
+    commitHistory("Duplicated hold highlight");
+    setStatus(`Duplicated hold highlight ${copy.key}.`);
     render();
   }
 
@@ -652,14 +656,14 @@
     const tolerance = Math.max(1.5, Math.hypot(state.canvas.width, state.canvas.height) * 0.0025);
     const simplified = simplifyClosedContour(region.contour, tolerance);
     if (simplified.length >= before) {
-      setStatus(`${region.key} already has a sparse contour.`);
+      setStatus(`${region.key} already has a sparse hold highlight contour.`);
       return;
     }
     region.contour = simplified;
     region.metadata.shapeKind = "freeform";
     region.metadata.pathStyle = "smooth";
     commitHistory("Simplified curve");
-    setStatus(`Simplified ${region.key} from ${before} to ${simplified.length} controls.`);
+    setStatus(`Simplified ${region.key} hold highlight from ${before} to ${simplified.length} controls.`);
     render();
   }
 
@@ -675,8 +679,8 @@
     copy.metadata.humanNotes = `Mirrored from ${source.key}`;
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Mirrored region copy");
-    setStatus(`Created mirrored copy ${copy.key}.`);
+    commitHistory("Mirrored hold highlight copy");
+    setStatus(`Created mirrored hold highlight copy ${copy.key}.`);
     render();
   }
 
@@ -688,7 +692,7 @@
       setStatus("Mirror replacement cancelled.");
     } else {
       state.mirrorOntoSourceId = source.id;
-      setStatus(`Mirror ${source.key} onto which target? Select another region.`);
+      setStatus(`Mirror ${source.key} onto which target? Select another hold highlight.`);
     }
     renderToolState();
   }
@@ -706,8 +710,8 @@
     target.contour = mirrorContour(source.contour, state.canvas.width);
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
-    commitHistory("Mirrored geometry onto region");
-    setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
+    commitHistory("Mirrored geometry onto hold highlight");
+    setStatus(`Replaced ${target.key} hold highlight with mirrored geometry from ${source.key}.`);
     render();
   }
 
@@ -738,7 +742,7 @@
   }
 
   function resetHistory() {
-    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions", selectedId: state.selectedId }];
+    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded hold highlights", selectedId: state.selectedId }];
     state.historyIndex = 0;
     state.savedSnapshot = state.history[0].snapshot;
     state.dirty = false;
@@ -842,7 +846,7 @@
       if (Math.abs(x2 - x1) >= 6 && Math.abs(y2 - y1) >= 6) finishDraw();
       else {
         state.draft = [];
-        setStatus("Drag a larger area to create the shape.");
+        setStatus("Drag a larger area to create the hold highlight.");
         renderOverlay();
       }
       return;
@@ -859,9 +863,9 @@
       const data = await regionsResponse.json();
       await setImageHref("demo/stage-1-auto-rgba.png", "Simulator Stage 1 demo");
       setRegions(data, "stage-2-regions.json");
-      setStatus("Simulator demo loaded. Select a region to begin editing.");
+      setStatus("Simulator demo loaded. Select a hold highlight to begin editing.");
     } catch (error) {
-      setStatus("Load an image and region JSON to begin.");
+      setStatus("Load an image and hold highlight JSON to begin.");
       console.warn(error);
     }
   }
@@ -869,6 +873,10 @@
   function showBoardPicker(visible) {
     el["board-picker"].classList.toggle("hidden", !visible);
     el["board-picker-separator"].classList.toggle("hidden", !visible);
+  }
+
+  function showStaticLoadControls(visible) {
+    el["static-load-controls"].classList.toggle("hidden", !visible);
   }
 
   function populateBoardPicker(sessions) {
@@ -904,8 +912,9 @@
       state.editPoints = false;
       state.mirrorOntoSourceId = null;
       setRegions(regions, session.regionsPath || "stage-2-regions.json");
+      showStaticLoadControls(false);
       el["board-select"].value = session.id;
-      setStatus(`Editing ${session.label}. Changes can be saved into this generated run.`);
+      setStatus(`Loaded ${session.label}. Edit the hold highlights and save changes into this generated run.`);
       return true;
     } catch (error) {
       console.warn(error);
@@ -944,6 +953,7 @@
 
   async function loadInitialSession() {
     if (await loadServerCatalog()) return;
+    showStaticLoadControls(true);
     showBoardPicker(false);
     await loadDemo();
   }
@@ -1037,6 +1047,7 @@
     state.serverSession = null;
     state.selectedRunId = null;
     showBoardPicker(false);
+    showStaticLoadControls(true);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = async () => {
@@ -1052,12 +1063,13 @@
     state.serverSession = null;
     state.selectedRunId = null;
     showBoardPicker(false);
+    showStaticLoadControls(true);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = () => {
       try {
         setRegions(JSON.parse(reader.result), file.name);
-        setStatus(`Loaded ${file.name} with ${state.regions.length} regions.`);
+        setStatus(`Loaded ${file.name} with ${state.regions.length} hold highlights.`);
       } catch (error) {
         setStatus(`Could not read ${file.name}.`);
         console.error(error);
@@ -1112,7 +1124,7 @@
       state.savedSnapshot = JSON.stringify(state.regions);
       state.dirty = false;
       state.hasSaved = true;
-      setStatus(`Saved ${result.regionsPath} and ${result.correctionsPath}.`);
+      setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
       state.saveError = error.message || "Save failed";
       setStatus(state.saveError);

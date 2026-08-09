@@ -34,3 +34,17 @@ test("marks manual file loading as a static fallback", () => {
   assert.match(index, /id="load-image-button"/);
   assert.match(index, /id="load-regions-button"/);
 });
+
+test("switches between server-first and static fallback entry states", () => {
+  assert.match(app, /function showStaticLoadControls\(visible\)/);
+  assert.match(app, /static-load-controls/);
+  assert.match(app, /showStaticLoadControls\(false\)/);
+  assert.match(app, /showStaticLoadControls\(true\)/);
+});
+
+test("uses hold language for selection and editing status", () => {
+  assert.match(app, /Hold \$\{region\.id\}/);
+  assert.match(app, /Added \$\{region\.key\}/);
+  assert.match(app, /Deleted \$\{region\.key\}/);
+  assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
+});
