@@ -552,7 +552,7 @@ def render_catalog_review_overlay(source_path: Path, document: CatalogOutlineDoc
         review = image.convert("RGBA")
     canvas = np.array(review, dtype=np.uint8)
     overlay = canvas.copy()
-    for index, outline in enumerate(document.outlines, start=1):
+    for outline in document.outlines:
         contour = _outline_path_to_pixels(
             outline.path, document.canvas_width, document.canvas_height
         ).reshape((-1, 1, 2))
@@ -561,7 +561,7 @@ def render_catalog_review_overlay(source_path: Path, document: CatalogOutlineDoc
         x, y, _, _ = cv2.boundingRect(contour)
         cv2.putText(
             overlay,
-            str(index),
+            outline.id,
             (x, max(14, y + 14)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,
@@ -571,7 +571,7 @@ def render_catalog_review_overlay(source_path: Path, document: CatalogOutlineDoc
         )
         cv2.putText(
             overlay,
-            str(index),
+            outline.id,
             (x, max(14, y + 14)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,

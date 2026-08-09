@@ -259,3 +259,30 @@ def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) ->
     assert (tmp_path / "out" / "board.json").exists()
     assert not (tmp_path / "out" / "contact-sheet-primary.json").exists()
     assert (tmp_path / "review" / "board.png").exists()
+
+
+def test_review_overlay_labels_with_outline_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = write_synthetic_board(tmp_path / "board.png")
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    document = outlines_module.vectorize_catalog_image(source)
+    document = replace(
+        document,
+        outlines=tuple(
+            replace(outline, id=f"catalog-outline-{index}")
+            for index, outline in enumerate(document.outlines, start=1)
+        ),
+    )
+
+    labels: list[str] = []
+    original_put_text = outlines_module.cv2.putText
+
+    def capture_put_text(image: np.ndarray, text: str, *args: object) -> np.ndarray:
+        labels.append(text)
+        return original_put_text(image, text, *args)
+
+    monkeypatch.setattr(outlines_module.cv2, "putText", capture_put_text)
+    outlines_module.render_catalog_review_overlay(
+        source, document, tmp_path / "review" / "board.png"
+    )
+
+    assert labels == [outline.id for outline in document.outlines for _ in range(2)]
