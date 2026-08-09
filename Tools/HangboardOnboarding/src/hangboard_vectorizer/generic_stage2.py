@@ -228,6 +228,9 @@ _CANDIDATE_FILES = (
     "stage-2-review.png",
     "stage-2-candidate.json",
 )
+_GENERATED_ARTIFACT_NAMES = frozenset(
+    (*_CANDIDATE_FILES[1:], "candidate-hashes.json")
+)
 _TYPE_COLORS: Mapping[str, tuple[int, int, int]] = MappingProxyType(
     {
         "jug": (238, 105, 54),
@@ -362,8 +365,8 @@ def build_stage2_artifacts(
         raise ConversionError("Stage 2 region document is invalid")
     for name, content in preserved_files.items():
         _validate_artifact_name(name)
-        if name == "candidate-hashes.json":
-            raise ConversionError("candidate hashes must be written last")
+        if name in _GENERATED_ARTIFACT_NAMES:
+            raise ConversionError(f"Stage 2 preserved artifact name is reserved: {name}")
         (artifact_root / name).write_bytes(content)
 
     label_path = artifact_root / "stage-2-labels.png"

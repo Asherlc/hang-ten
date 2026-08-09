@@ -21,9 +21,23 @@ from job_manager import (  # noqa: E402
 )
 
 
-def test_job_manager_rejects_second_mutation_for_same_board():
+@pytest.fixture
+def make_manager():
+    managers = []
+
+    def build(**options) -> BoardJobManager:
+        manager = BoardJobManager(**options)
+        managers.append(manager)
+        return manager
+
+    yield build
+    for manager in managers:
+        manager.shutdown()
+
+
+def test_job_manager_rejects_second_mutation_for_same_board(make_manager):
     gate = Event()
-    manager = BoardJobManager(max_workers=2)
+    manager = make_manager(max_workers=2)
     first = manager.submit("board-a", lambda: gate.wait(1))
     with pytest.raises(JobConflictError, match="already running"):
         manager.submit("board-a", lambda: None)
@@ -33,10 +47,10 @@ def test_job_manager_rejects_second_mutation_for_same_board():
     assert manager.wait(second.id).state == "succeeded"
 
 
-def test_submit_uses_conflict_key_without_changing_logical_board_identity():
+def test_submit_uses_conflict_key_without_changing_logical_board_identity(make_manager):
     started = Event()
     release = Event()
-    manager = BoardJobManager(max_workers=2)
+    manager = make_manager(max_workers=2)
 
     first = manager.submit(
         "board-0001",
@@ -62,11 +76,10 @@ def test_submit_uses_conflict_key_without_changing_logical_board_identity():
         assert manager.wait(second.id).state == "succeeded"
     finally:
         release.set()
-        manager.shutdown()
 
 
-def test_job_records_are_immutable_serializable_snapshots():
-    manager = BoardJobManager(max_workers=1)
+def test_job_records_are_immutable_serializable_snapshots(make_manager):
+    manager = make_manager(max_workers=1)
 
     submitted = manager.submit("board-a", lambda: {"revisionId": "revision-1"})
     finished = manager.wait(submitted.id)
@@ -86,11 +99,11 @@ def test_job_records_are_immutable_serializable_snapshots():
     assert manager.get(submitted.id).result == {"revisionId": "revision-1"}
 
 
-def test_job_manager_bounds_workers_but_runs_independent_boards():
+def test_job_manager_bounds_workers_but_runs_independent_boards(make_manager):
     first_started = Event()
     second_started = Event()
     release = Event()
-    manager = BoardJobManager(max_workers=2)
+    manager = make_manager(max_workers=2)
 
     first = manager.submit(
         "board-a", lambda: (first_started.set(), release.wait(1))[1]
@@ -106,11 +119,11 @@ def test_job_manager_bounds_workers_but_runs_independent_boards():
     assert manager.wait(second.id).state == "succeeded"
 
 
-def test_job_manager_never_runs_more_than_configured_worker_count():
+def test_job_manager_never_runs_more_than_configured_worker_count(make_manager):
     first_started = Event()
     second_started = Event()
     release = Event()
-    manager = BoardJobManager(max_workers=1)
+    manager = make_manager(max_workers=1)
 
     first = manager.submit(
         "board-a", lambda: (first_started.set(), release.wait(1))[1]
@@ -127,8 +140,8 @@ def test_job_manager_never_runs_more_than_configured_worker_count():
     assert second_started.is_set()
 
 
-def test_failed_job_has_safe_message_and_releases_board():
-    manager = BoardJobManager(max_workers=1)
+def test_failed_job_has_safe_message_and_releases_board(make_manager):
+    manager = make_manager(max_workers=1)
 
     def fail():
         raise RuntimeError("secret implementation detail")
@@ -142,9 +155,9 @@ def test_failed_job_has_safe_message_and_releases_board():
     assert retried.state == "succeeded"
 
 
-def test_job_manager_bounds_queued_work_and_completed_retention():
+def test_job_manager_bounds_queued_work_and_completed_retention(make_manager):
     gate = Event()
-    manager = BoardJobManager(max_workers=1, max_queue=1, max_completed=2)
+    manager = make_manager(max_workers=1, max_queue=1, max_completed=2)
     running = manager.submit("board-a", lambda: gate.wait(1))
     queued = manager.submit("board-b", lambda: "queued")
 
@@ -162,12 +175,12 @@ def test_job_manager_bounds_queued_work_and_completed_retention():
 
 
 def test_completed_outcome_survives_expiry_and_manager_restart(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, make_manager
 ):
     now = [100.0]
     monkeypatch.setattr(job_manager_module, "monotonic", lambda: now[0])
     outcome_root = tmp_path / "job-outcomes"
-    manager = BoardJobManager(
+    manager = make_manager(
         max_workers=1,
         result_ttl_seconds=1,
         outcome_root=outcome_root,
@@ -182,8 +195,62 @@ def test_completed_outcome_survives_expiry_and_manager_restart(
     assert manager.get(submitted.id).as_dict() == expected
     manager.shutdown()
 
-    restarted = BoardJobManager(max_workers=1, outcome_root=outcome_root)
-    try:
-        assert restarted.get(submitted.id).as_dict() == expected
-    finally:
-        restarted.shutdown()
+    restarted = make_manager(max_workers=1, outcome_root=outcome_root)
+    assert restarted.get(submitted.id).as_dict() == expected
+
+
+def test_failed_outcome_survives_expiry_and_manager_restart(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, make_manager
+):
+    now = [100.0]
+    monkeypatch.setattr(job_manager_module, "monotonic", lambda: now[0])
+    outcome_root = tmp_path / "job-outcomes"
+    manager = make_manager(
+        max_workers=1,
+        result_ttl_seconds=1,
+        outcome_root=outcome_root,
+    )
+
+    def fail():
+        raise RuntimeError("private failure detail")
+
+    submitted = manager.submit("board-a", fail)
+    expected = manager.wait(submitted.id).as_dict()
+    assert expected["state"] == "failed"
+    assert expected["error"] == "job failed"
+
+    now[0] += 2
+    assert manager.get(submitted.id).as_dict() == expected
+    manager.shutdown()
+
+    restarted = make_manager(max_workers=1, outcome_root=outcome_root)
+    assert restarted.get(submitted.id).as_dict() == expected
+
+
+@pytest.mark.parametrize(
+    ("record_update",),
+    [
+        ({"id": "f" * 32},),
+        ({"boardId": None},),
+        ({"state": "succeeded", "error": "must be absent"},),
+    ],
+)
+def test_malformed_outcome_records_are_rejected(
+    tmp_path: Path, make_manager, record_update: dict[str, object]
+):
+    outcome_root = tmp_path / "job-outcomes"
+    outcome_root.mkdir()
+    job_id = "a" * 32
+    record = {
+        "id": job_id,
+        "boardId": "board-a",
+        "state": "succeeded",
+        "result": {"revisionId": "revision-1"},
+        "error": None,
+        **record_update,
+    }
+    (outcome_root / f"{job_id}.json").write_text(json.dumps(record))
+    manager = make_manager(max_workers=1, outcome_root=outcome_root)
+
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        manager.get(job_id)

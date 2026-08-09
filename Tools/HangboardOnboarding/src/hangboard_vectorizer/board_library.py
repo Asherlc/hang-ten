@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass
 import fcntl
@@ -15,7 +15,6 @@ import shutil
 import stat
 import tempfile
 from threading import RLock
-from typing import Iterator
 from uuid import uuid4
 
 from .onboarding_run import OnboardingStateError, read_status
@@ -93,6 +92,7 @@ class _BoardDiagnosticError(Exception):
     def __init__(self, code: str, message: str) -> None:
         if code not in _DIAGNOSTIC_CODES:
             raise ValueError(f"unknown board diagnostic code: {code}")
+        super().__init__(message)
         self.code = code
         self.message = message
 
@@ -131,11 +131,25 @@ class RepositoryBoardLibrary:
                     ),
                 ),
             )
-        with self._publication_lock():
-            transaction_diagnostics = self._recover_transactions_locked()
-            return self._snapshot_locked(transaction_diagnostics)
+        if not self._boards_root.exists():
+            return LibrarySnapshot(boards=(), diagnostics=())
+        replacements, suppressed, transaction_diagnostics = (
+            self._inspect_transactions_read_only()
+        )
+        snapshot = self._snapshot_contents(transaction_diagnostics)
+        boards = [
+            board for board in snapshot.boards if board.board_id not in suppressed
+        ]
+        boards.extend(replacements.values())
+        boards.sort(key=lambda board: (board.display_name.casefold(), board.board_id))
+        diagnostics = tuple(
+            diagnostic
+            for diagnostic in snapshot.diagnostics
+            if diagnostic.path not in suppressed
+        )
+        return LibrarySnapshot(tuple(boards), diagnostics)
 
-    def _snapshot_locked(
+    def _snapshot_contents(
         self, transaction_diagnostics: tuple[LibraryDiagnostic, ...]
     ) -> LibrarySnapshot:
         boards: list[LibraryBoard] = []
@@ -170,7 +184,12 @@ class RepositoryBoardLibrary:
             board = self._optional_board_locked(requested)
             if board is None:
                 raise BoardLibraryError(f"board does not exist: {requested}")
-            destination = Path(destination).absolute()
+            destination = Path(destination)
+            if ".." in destination.parts:
+                raise BoardLibraryError(
+                    "destination must not contain parent-directory components"
+                )
+            destination = destination.absolute()
             if destination.exists() or destination.is_symlink():
                 raise BoardLibraryError(f"destination already exists: {destination}")
             self._prepare_write_parent(destination.parent)
@@ -282,7 +301,7 @@ class RepositoryBoardLibrary:
         product = self._mapping(manifest.get("product"), "run product")
         board_id = self._board_id(product.get("key"), "run product key")
         try:
-            self._validate_complete_run(run, manifest)
+            self._validate_complete_run(run, manifest, scanned=True)
         except _BoardDiagnosticError as error:
             raise BoardLibraryError(error.message) from error
         display_name = self._display_name(
@@ -408,16 +427,17 @@ class RepositoryBoardLibrary:
                 continue
             path = self._transaction_relative(transaction)
             if transaction.is_symlink() or not transaction.is_dir():
-                diagnostics.append(
-                    LibraryDiagnostic(
-                        path,
-                        "invalid_transaction",
-                        self._message(
-                            transaction,
-                            "transaction evidence must be a non-symlink directory",
-                        ),
-                    )
-                )
+                transaction.unlink()
+                self._fsync_directory(self._transactions_root)
+                continue
+            candidate = transaction / "candidate"
+            rollback = transaction / "rollback"
+            invalid_canonical = transaction / "invalid-canonical"
+            if not any(
+                item.exists() or item.is_symlink()
+                for item in (candidate, rollback, invalid_canonical)
+            ):
+                self._remove_transaction(transaction)
                 continue
             try:
                 self._recover_transaction_locked(transaction)
@@ -432,6 +452,171 @@ class RepositoryBoardLibrary:
                     )
                 )
         return tuple(diagnostics)
+
+    def _inspect_transactions_read_only(
+        self,
+    ) -> tuple[
+        dict[str, LibraryBoard], set[str], tuple[LibraryDiagnostic, ...]
+    ]:
+        replacements: dict[str, LibraryBoard] = {}
+        suppressed: set[str] = set()
+        diagnostics: list[LibraryDiagnostic] = []
+        if (
+            not self._transactions_root.exists()
+            and not self._transactions_root.is_symlink()
+        ):
+            return replacements, suppressed, ()
+        if self._transactions_root.is_symlink() or not self._transactions_root.is_dir():
+            return (
+                replacements,
+                suppressed,
+                (
+                    LibraryDiagnostic(
+                        ".transactions",
+                        "invalid_transaction",
+                        self._message(
+                            self._transactions_root,
+                            "transaction root must be a non-symlink directory",
+                        ),
+                    ),
+                ),
+            )
+        try:
+            entries = sorted(
+                self._transactions_root.iterdir(), key=lambda path: path.name
+            )
+        except OSError as error:
+            raise BoardLibraryError("transaction root is not readable") from error
+        for transaction in entries:
+            if transaction.name == "lock":
+                continue
+            if transaction.is_symlink() or not transaction.is_dir():
+                diagnostics.append(
+                    self._transaction_diagnostic(
+                        transaction,
+                        "transaction evidence must be a non-symlink directory",
+                    )
+                )
+                continue
+            try:
+                board_id, replacement, suppress_current, problem = (
+                    self._inspect_transaction_read_only(transaction)
+                )
+            except (BoardLibraryError, OSError) as error:
+                diagnostics.append(
+                    self._transaction_diagnostic(transaction, str(error))
+                )
+                continue
+            if suppress_current:
+                suppressed.add(board_id)
+            if replacement is not None:
+                replacements[board_id] = replacement
+            if problem is not None:
+                diagnostics.append(self._transaction_diagnostic(transaction, problem))
+        return replacements, suppressed, tuple(diagnostics)
+
+    def _inspect_transaction_read_only(
+        self, transaction: Path
+    ) -> tuple[str, LibraryBoard | None, bool, str | None]:
+        journal = self._read_transaction_journal(transaction)
+        current_path = self._boards_root / journal.board_id
+        candidate_path = transaction / "candidate"
+        rollback_path = transaction / "rollback"
+        invalid_canonical_path = transaction / "invalid-canonical"
+        invalid_canonical_retained = (
+            invalid_canonical_path.exists() or invalid_canonical_path.is_symlink()
+        )
+        current, current_problem = self._probe_package(current_path, canonical=True)
+        candidate, candidate_problem = self._probe_package(candidate_path)
+        rollback, rollback_problem = self._probe_package(rollback_path)
+        candidate_valid = (
+            candidate is not None
+            and candidate.board_id == journal.board_id
+            and candidate.revision_token == journal.candidate_revision_token
+        )
+        rollback_valid = (
+            rollback is not None
+            and rollback.board_id == journal.board_id
+            and journal.expected_revision_token is not None
+            and rollback.revision_token == journal.expected_revision_token
+        )
+        candidate_state_problem = candidate_problem
+        if candidate is not None and not candidate_valid:
+            candidate_state_problem = "candidate package does not match its journal"
+        rollback_state_problem = rollback_problem
+        if rollback is not None and not rollback_valid:
+            rollback_state_problem = "rollback package does not match its journal"
+
+        if rollback_state_problem is not None:
+            replacement = rollback if current is None and rollback is not None else None
+            return (
+                journal.board_id,
+                replacement,
+                current is None,
+                f"captured canonical package has {rollback_state_problem}",
+            )
+        if invalid_canonical_retained and current is not None:
+            return (
+                journal.board_id,
+                None,
+                False,
+                "recovered package has retained invalid canonical evidence",
+            )
+        if (
+            current is not None
+            and current.revision_token == journal.candidate_revision_token
+        ):
+            problem = candidate_state_problem or rollback_state_problem
+            return journal.board_id, None, False, (
+                None if problem is None else f"installed candidate has {problem}"
+            )
+        if current is not None:
+            if (
+                current.revision_token == journal.expected_revision_token
+                and candidate_valid
+                and rollback is None
+                and rollback_problem is None
+            ):
+                return journal.board_id, candidate, True, None
+            return (
+                journal.board_id,
+                None,
+                False,
+                "canonical package does not prove the expected transaction state",
+            )
+        if candidate_valid:
+            problem = None
+            if invalid_canonical_retained or current_problem is not None:
+                problem = "installed the candidate and retained invalid canonical evidence"
+            return journal.board_id, candidate, True, problem
+        if rollback_valid:
+            reason = candidate_state_problem or "candidate package is missing"
+            return (
+                journal.board_id,
+                rollback,
+                True,
+                f"restored the prior package because the {reason}",
+            )
+        problems = [
+            problem
+            for problem in (
+                current_problem,
+                candidate_state_problem,
+                rollback_state_problem,
+            )
+            if problem
+        ]
+        detail = "; ".join(problems) if problems else "required packages are missing"
+        return journal.board_id, None, current_problem is not None, detail
+
+    def _transaction_diagnostic(
+        self, transaction: Path, reason: str
+    ) -> LibraryDiagnostic:
+        return LibraryDiagnostic(
+            self._transaction_relative(transaction),
+            "invalid_transaction",
+            self._message(transaction, f"transaction is ambiguous: {reason}"),
+        )
 
     def _recover_transaction_locked(self, transaction: Path) -> None:
         journal = self._read_transaction_journal(transaction)
@@ -729,7 +914,7 @@ class RepositoryBoardLibrary:
             )
 
         try:
-            self._validate_complete_run(run, manifest)
+            self._validate_complete_run(run, manifest, scanned=True)
             display_name = self._display_name(
                 product.get("normalizedName"), "run product normalizedName"
             )
@@ -745,10 +930,15 @@ class RepositoryBoardLibrary:
         )
 
     def _validate_complete_run(
-        self, run: Path, manifest: dict[str, object] | None = None
+        self,
+        run: Path,
+        manifest: dict[str, object] | None = None,
+        *,
+        scanned: bool = False,
     ) -> None:
-        self._safe_existing_directory(run, run.parent, "run")
-        self._reject_tree_symlinks(run)
+        if not scanned:
+            self._safe_existing_directory(run, run.parent, "run")
+            self._reject_tree_symlinks(run)
         if manifest is None:
             manifest = self._read_json(run / "run.json", run, "run manifest")
         output_problem = self._stage_four_output_problem(run, manifest)
@@ -769,10 +959,15 @@ class RepositoryBoardLibrary:
         try:
             stages = self._list(manifest.get("stages"), "run stages")
             if len(stages) != 5:
-                return None
+                return self._message(
+                    run,
+                    "Stage 4 outputs are invalid: run stages must contain five entries",
+                )
             stage = self._mapping(stages[4], "stage 4")
             if stage.get("stage") != 4:
-                return None
+                return self._message(
+                    run, "Stage 4 outputs are invalid: fifth run stage must be Stage 4"
+                )
             acceptance_path = self._member_path(
                 run,
                 stage.get("acceptancePath"),

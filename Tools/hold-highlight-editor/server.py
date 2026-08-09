@@ -33,7 +33,7 @@ from workbench_assets import STATIC_ASSET_ROUTES
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
 _ABSOLUTE_PATH_IN_TEXT = re.compile(
-    r"(?:^|[\s(\"'\[:=])(?:/|[A-Za-z]:[\\/])"
+    r"(?:/(?!/)[^\s/]|[A-Za-z]:[\\/])"
 )
 
 

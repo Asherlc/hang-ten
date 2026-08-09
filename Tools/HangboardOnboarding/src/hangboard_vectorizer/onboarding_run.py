@@ -118,7 +118,6 @@ def start_run(
             except Exception as error:
                 _publish_failed_attempt(
                     temporary_root,
-                    manifest,
                     stage=0,
                     attempt=1,
                     artifact_root=artifact_root,
@@ -243,7 +242,6 @@ def resume_run(
         staging_root = Path(tempfile.mkdtemp(prefix=f".stage-{next_stage:02d}.tmp-", dir=output))
         staged_artifact = staging_root / "artifacts"
         published = False
-        artifact_parent_created = not artifact_root.parent.exists()
         try:
             checkpoint = runner.run(
                 RunContext(output, MappingProxyType(manifest)), staged_artifact
@@ -270,9 +268,10 @@ def resume_run(
             }
             _write_manifest(output, manifest)
         except Exception as error:
+            if published:
+                shutil.rmtree(artifact_root, ignore_errors=True)
             _publish_failed_attempt(
                 output,
-                manifest,
                 stage=next_stage,
                 attempt=attempt,
                 artifact_root=artifact_root,
@@ -666,7 +665,6 @@ def _validate_checkpoint(
 
 def _publish_failed_attempt(
     root: Path,
-    _manifest: Mapping[str, object],
     *,
     stage: int,
     attempt: int,
@@ -739,16 +737,7 @@ def _validate_failed_attempt(root: Path, record: Mapping[str, object]) -> None:
     _string(record.get("errorKind"), "failedAttempt.errorKind")
 
 
-def _safe_failure_summary(error: Exception) -> str:
-    message = str(error).strip()
-    if (
-        message
-        and len(message) <= 500
-        and "/" not in message
-        and "\\" not in message
-        and "file:" not in message.lower()
-    ):
-        return message
+def _safe_failure_summary(_error: Exception) -> str:
     return "stage execution failed"
 
 

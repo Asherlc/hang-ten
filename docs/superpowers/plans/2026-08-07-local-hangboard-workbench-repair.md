@@ -1,10 +1,12 @@
 # Local Hangboard Workbench Repair Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use a fresh subagent for every implementation or configuration task, with separate implementation and review checkpoints for each task. Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Close the remaining workbench UI, persistence, and job-lifecycle gaps without changing visual-pipeline output quality.
 
 **Architecture:** Preserve the existing CLI-compatible run format and thin browser/server split. Repair the mismatched identity and artifact contracts at their consumer boundaries, make accepted background work recoverable until a terminal outcome is known, and publish revision pointers only after their run data is usable.
+
+> **Superseding revision contract:** The pending-then-atomic-activation flow in this repair supersedes the earlier plan's immediate-active revision behavior. New and forked revisions remain pending until run creation or replay succeeds; activation and stale-lineage marking then occur in one atomic store update.
 
 **Tech Stack:** Python 3.11, `ThreadingHTTPServer`, Pillow, vanilla JavaScript, SVG, Node's built-in test runner, pytest 8+
 

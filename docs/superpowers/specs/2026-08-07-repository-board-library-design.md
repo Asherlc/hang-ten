@@ -1,5 +1,7 @@
 # Repository Board Library Design
 
+> **Superseded by:** [Unified Hangboard Repository Design](2026-08-07-unified-hangboard-repository-design.md). This document is retained as a historical record of the earlier catalog/version design.
+
 **Date:** 2026-08-07
 
 ## Summary

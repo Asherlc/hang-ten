@@ -33,7 +33,11 @@ from hangboard_vectorizer.workbench import (
     WorkbenchServiceError,
     WorkbenchView,
 )
-from hangboard_vectorizer.workbench_store import WorkbenchStore, WorkbenchStoreError
+from hangboard_vectorizer.workbench_store import (
+    BoardRecord,
+    WorkbenchStore,
+    WorkbenchStoreError,
+)
 
 
 _BOARD_FIXTURES = (
@@ -441,7 +445,7 @@ def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
     assert failed.state == "failed"
 
 
-def test_parallel_library_opens_share_one_runtime_board(
+def test_parallel_library_opens_are_serialized_and_share_one_runtime_board(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     library, entry = _repository_library(tmp_path)
@@ -450,30 +454,56 @@ def test_parallel_library_opens_share_one_runtime_board(
     copy_guard = Lock()
     first_copy = Event()
     release_first = Event()
+    second_started = Event()
     copy_count = 0
 
     def coordinate_copy(board_id: str, destination: Path) -> LibraryBoard:
         nonlocal copy_count
         with copy_guard:
             copy_count += 1
-            position = copy_count
-        if position == 1:
-            first_copy.set()
-            release_first.wait(0.5)
-        else:
-            release_first.set()
+        first_copy.set()
+        if not release_first.wait(timeout=5):
+            raise TimeoutError("first library copy was not released")
         return actual_copy(board_id, destination)
+
+    def open_second() -> WorkbenchView:
+        second_started.set()
+        return service.open_library_board(entry.board_id)
 
     monkeypatch.setattr(library, "copy_current_run", coordinate_copy)
     with ThreadPoolExecutor(max_workers=2) as executor:
         first = executor.submit(service.open_library_board, entry.board_id)
         assert first_copy.wait(2)
-        second = executor.submit(service.open_library_board, entry.board_id)
+        second = executor.submit(open_second)
+        assert second_started.wait(2)
+        with copy_guard:
+            assert copy_count == 1
+        release_first.set()
         opened = (first.result(timeout=5), second.result(timeout=5))
 
     assert opened[0].board_id == opened[1].board_id
     assert opened[0].revision_id == opened[1].revision_id
     assert len(service.store.list_boards()) == 1
+
+
+def test_open_library_board_scans_runtime_boards_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    actual_list_boards = service.store.list_boards
+    scan_count = 0
+
+    def count_scans() -> tuple[BoardRecord, ...]:
+        nonlocal scan_count
+        scan_count += 1
+        return actual_list_boards()
+
+    monkeypatch.setattr(service.store, "list_boards", count_scans)
+
+    service.open_library_board(entry.board_id)
+
+    assert scan_count == 1
 
 
 def test_save_repository_conflict_leaves_runtime_revision_unsaved(

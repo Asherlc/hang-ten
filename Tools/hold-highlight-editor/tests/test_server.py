@@ -6,6 +6,7 @@ import shutil
 import socket
 import sys
 import threading
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from http.client import HTTPConnection
@@ -735,6 +736,7 @@ def _poll_job(base: str, job_id: str):
         job = payload["job"]
         if job["state"] in {"succeeded", "failed"}:
             return job
+        time.sleep(0.01)
     pytest.fail("fake deterministic job did not finish within bounded polls")
 
 
@@ -744,7 +746,7 @@ def _await_workbench_job(base: str, job_id: str):
         job = payload["job"]
         if job["state"] in {"succeeded", "failed"}:
             return job
-        Event().wait(0.01)
+        time.sleep(0.01)
     pytest.fail("workbench job did not finish within bounded polls")
 
 
@@ -1207,7 +1209,7 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
 
 
 @pytest.mark.parametrize(
-    "route, extra",
+    ("route", "extra"),
     [
         ("/api/drafts", {"document": {}}),
         ("/api/approve", {}),
@@ -1414,6 +1416,20 @@ def test_job_poll_redacts_path_from_untrusted_value_error(tmp_path):
     assert final["state"] == "failed"
     assert final["error"] == "job failed"
     assert str(tmp_path) not in json.dumps(final)
+
+
+@pytest.mark.parametrize(("delimiter",), [("<",), ("{",), (",",), (".",)])
+def test_public_job_error_redacts_absolute_paths_after_arbitrary_delimiters(
+    tmp_path: Path, delimiter: str
+):
+    private_path = tmp_path / "workbench-private" / "secret.txt"
+
+    message = server_module._public_job_error_message(
+        ValueError(f"repository failed{delimiter}{private_path}")
+    )
+
+    assert message == "repository operation failed"
+    assert str(private_path) not in message
 
 
 def test_workbench_request_limits_are_enforced(running_workbench_server):

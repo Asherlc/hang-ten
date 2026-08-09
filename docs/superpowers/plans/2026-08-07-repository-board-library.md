@@ -1,6 +1,8 @@
 # Repository Board Library Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Historical plan:** Superseded by `2026-08-07-unified-hangboard-repository.md`. Direct discovery of canonical board runs and their `run.json` revision tokens is authoritative; the catalog and nested-version design below is preserved only as history.
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use a fresh subagent for every implementation or configuration task, with separate implementation and review checkpoints for each task. Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the local workbench list, open, edit, and save versioned hangboard packages in the repository while retaining URL/upload creation and never running Git.
 

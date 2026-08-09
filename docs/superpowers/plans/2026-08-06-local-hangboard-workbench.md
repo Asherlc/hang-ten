@@ -1,6 +1,6 @@
 # Local Hangboard Workbench Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use a fresh subagent for every implementation or configuration task, with separate implementation and review checkpoints for each task. Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a local guided workbench that creates or resumes hangboard onboarding runs, automatically advances to visual checkpoints, supports Stage 2 contour refinement and Stage 3 vector refinement, and saves one approved local revision without publishing it.
 
@@ -127,14 +127,22 @@ def test_store_creates_cli_compatible_revision_layout(tmp_path):
 def test_save_revision_is_atomic_and_rejects_stale_lineage(tmp_path):
     store, board, first = _populated_store(tmp_path)
     second = store.create_revision(board.id, parent_revision_id=first.id, fork_stage=2)
-    store.mark_descendants_stale(board.id, first.id, from_stage=2)
+    assert second.state == "pending"
+    assert store.read_board(board.id).active_revision_id == first.id
+    second.run_root.mkdir()
+    store.activate_revision(
+        board.id,
+        second.id,
+        stale_parent_revision_id=first.id,
+        stale_from_stage=2,
+    )
     with pytest.raises(WorkbenchStoreError, match="stale"):
         store.save_revision(board.id, first.id)
     store.mark_revision_complete(board.id, second.id)
     assert store.save_revision(board.id, second.id).saved_revision_id == second.id
 ```
 
-Define `_populated_store(tmp_path)` in this test module by constructing `WorkbenchStore(tmp_path)`, calling `create_board("Example Board")`, creating its first revision, and returning exactly `(store, board, revision)`.
+Define `_populated_store(tmp_path)` in this test module by constructing `WorkbenchStore(tmp_path)`, calling `create_board("Example Board")`, creating and activating its first usable revision, and returning exactly `(store, board, revision)`. Revision creation reserves pending state; callers activate it only after its run is created successfully, and activation atomically selects the child while marking the parent lineage stale.
 
 - [ ] **Step 2: Run the store tests and confirm the missing module failure**
 

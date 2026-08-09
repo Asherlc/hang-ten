@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 from PIL import Image
 
 from .board_library import LibraryBoard, LibrarySnapshot, RepositoryBoardLibrary
+from .generic_stage0 import StageCheckpoint
 from .onboarding_run import (
     DEFAULT_STAGE_RUNNERS,
     RunContext,
@@ -203,7 +204,8 @@ class WorkbenchService:
         if self.__library is None:
             raise WorkbenchServiceError("repository board library is not configured")
         library_board = self.__library.get_board(board_id)
-        for board in self.store.list_boards():
+        boards = self.store.list_boards()
+        for board in boards:
             if (
                 board.repository_board_id == library_board.board_id
                 and board.repository_revision_token == library_board.revision_token
@@ -213,7 +215,7 @@ class WorkbenchService:
         matching_board = next(
             (
                 board
-                for board in self.store.list_boards()
+                for board in boards
                 if board.repository_board_id == library_board.board_id
             ),
             None,
@@ -848,6 +850,8 @@ class WorkbenchService:
             ):
                 raise ValueError("editable artifacts do not align")
             return review_path, editor_path
+        # WorkbenchServiceError derives from ValueError. Collapse every confined
+        # evidence failure to the same public message so paths and details stay private.
         except (
             Image.DecompressionBombError,
             OSError,
@@ -1183,7 +1187,7 @@ class WorkbenchService:
         stage: int,
         document: object,
         artifact_root: Path,
-    ):
+    ) -> StageCheckpoint:
         manifest = WorkbenchService.__manifest(revision.run_root)
         context = RunContext(revision.run_root, MappingProxyType(manifest))
         try:

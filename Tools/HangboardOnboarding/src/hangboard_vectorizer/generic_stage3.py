@@ -37,6 +37,7 @@ _CANDIDATE_FILES = (
     "stage-3-vector.svg",
     "stage-3-review.png",
 )
+_GENERATED_ARTIFACT_NAMES = frozenset((*_CANDIDATE_FILES, "candidate-hashes.json"))
 
 
 @dataclass(frozen=True, slots=True)
@@ -144,8 +145,8 @@ def build_stage3_artifacts(
         raise ConversionError("Stage 3 vector-region document is invalid")
     for name, content in preserved_files.items():
         _validate_artifact_name(name)
-        if name == "candidate-hashes.json":
-            raise ConversionError("candidate hashes must be written last")
+        if name in _GENERATED_ARTIFACT_NAMES:
+            raise ConversionError(f"Stage 3 preserved artifact name is reserved: {name}")
         (artifact_root / name).write_bytes(content)
 
     regions_path = artifact_root / "stage-3-vector-regions.json"

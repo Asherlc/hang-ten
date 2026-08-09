@@ -1,6 +1,6 @@
 # Unified Hangboard Repository Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use a fresh subagent for every implementation or configuration task, with separate implementation and review checkpoints for each task. Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace catalog and nested repository versions with one directly discovered, Stage 4-complete run directory per board, using Git as published history.
 
@@ -576,6 +576,8 @@ rtk git mv Tools/HangboardOnboarding/reference/metolius-compact-ii/accepted-run 
 ```
 
 Remove empty superseded reference directories if Git no longer tracks content. Delete `Tools/HangboardOnboarding/board-library/catalog.json` with an `apply_patch` deletion so only the canonical location remains.
+
+> **Authoritative repository contract:** This unified plan supersedes the earlier repository-board-library and repository-library residual-remediation plans. Direct discovery of one canonical Stage 4 run per board, with `run.json` revision tokens, is the source of truth; catalog/version layouts and publication-operation records are historical designs only.
 
 - [ ] **Step 4: Update benchmark entrypoints and documentation**
 

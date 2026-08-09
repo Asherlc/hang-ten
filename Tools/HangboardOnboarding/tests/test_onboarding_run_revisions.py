@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 from PIL import Image
 import pytest
 
+from hangboard_vectorizer import onboarding_run
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.onboarding_run import (
     OnboardingStateError,
@@ -78,7 +80,9 @@ def test_failed_stage_attempt_is_durable_across_restart_and_retry(
     assert failure["attempt"] == 1
     assert failure["status"] == "failed"
     assert failure_root.joinpath(failure["logPath"]).is_file()
-    assert str(tmp_path) not in failure_root.joinpath(failure["logPath"]).read_text()
+    failure_text = failure_root.joinpath(failure["logPath"]).read_text()
+    assert str(tmp_path) not in failure_text
+    assert "/tmp/private-source.png" not in failure_text
 
     retried = resume_run(run, runners={1: _SuccessfulStage1Runner()})
 
@@ -126,6 +130,7 @@ def test_failed_stage0_start_is_durable_and_retryable_from_cached_source(
         "status": "failed",
     }
     assert str(tmp_path) not in evidence_before.decode("utf-8")
+    assert "/tmp/private-source.png" not in evidence_before.decode("utf-8")
 
     retried = resume_run(run, runners={0: _StubStage0Runner()})
 
@@ -165,9 +170,64 @@ def test_malformed_stage0_checkpoint_is_published_as_retryable_failure(
     failure = manifest["failedAttempts"][0]
     failure_log = run / failure["artifactRoot"] / "stage-0-failure.log"
     assert failure["errorKind"] == "OnboardingStateError"
-    assert "required evidence is missing" in failure["error"]
+    assert failure["error"] == "stage execution failed"
     assert failure_log.is_file()
     assert str(tmp_path) not in failure_log.read_text(encoding="utf-8")
+
+
+def test_failure_evidence_redacts_short_secret_messages(tmp_path: Path) -> None:
+    run = _started_run(tmp_path)
+    approve_stage(run, 0)
+
+    with pytest.raises(RuntimeError, match="Authorization: Bearer"):
+        resume_run(run, runners={1: _SecretFailingStage1Runner()})
+
+    manifest = json.loads((run / "run.json").read_text(encoding="utf-8"))
+    failure = manifest["failedAttempts"][0]
+    failure_log = run / failure["artifactRoot"] / failure["logPath"]
+    assert failure["error"] == "stage execution failed"
+    assert "secret-token" not in failure_log.read_text(encoding="utf-8")
+
+
+def test_failed_stage_after_artifact_publication_removes_rejected_output(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    run = _started_run(tmp_path)
+    approve_stage(run, 0)
+    actual_validate_checkpoint = onboarding_run._validate_checkpoint
+
+    def reject_published_stage(
+        root: Path,
+        record: Mapping[str, object],
+        *,
+        require_artifact_layout: bool = True,
+    ) -> None:
+        if (
+            record.get("stage") == 1
+            and record.get("artifactRoot") == "stages/01/attempt-0001"
+            and require_artifact_layout
+        ):
+            raise OnboardingStateError("post-publication validation failed")
+        actual_validate_checkpoint(
+            root,
+            record,
+            require_artifact_layout=require_artifact_layout,
+        )
+
+    monkeypatch.setattr(
+        onboarding_run,
+        "_validate_checkpoint",
+        reject_published_stage,
+    )
+
+    with pytest.raises(OnboardingStateError, match="post-publication"):
+        resume_run(run, runners={1: _SuccessfulStage1Runner()})
+
+    artifact_root = run / "stages/01/attempt-0001"
+    assert {path.name for path in artifact_root.iterdir()} == {
+        "stage-1-failure.log"
+    }
 
 
 def test_failed_stage0_manifest_requires_failure_attempt_evidence(
@@ -248,6 +308,13 @@ class _FailingStage0Runner:
 
     def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
         raise RuntimeError("private runner detail at /tmp/private-source.png")
+
+
+class _SecretFailingStage1Runner:
+    stage = 1
+
+    def run(self, _context: object, _artifact_root: Path) -> StageCheckpoint:
+        raise RuntimeError("Authorization: Bearer secret-token")
 
 
 class _MalformedStage0Runner:

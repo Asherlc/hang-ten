@@ -109,6 +109,7 @@
   }
 
   function regionForExport(region) {
+    validateContour(region?.contour);
     const contour = region.contour.map(([x, y]) => [round(x), round(y)]);
     const authoritativeContour = stage2AuthoritativeContour(
       contour,
@@ -300,13 +301,17 @@
     return result;
   }
 
+  function isExportableContour(points) {
+    return Array.isArray(points)
+      && points.length >= 3
+      && points.every((point) => Array.isArray(point)
+        && point.length === 2
+        && point.every(Number.isFinite));
+  }
+
   function validateContour(points) {
     if (!Array.isArray(points) || points.length < 3) throw new TypeError("Contour must contain at least three points");
-    for (const point of points) {
-      if (!Array.isArray(point) || point.length !== 2 || !point.every(Number.isFinite)) {
-        throw new TypeError("Contour coordinates must be finite points");
-      }
-    }
+    if (!isExportableContour(points)) throw new TypeError("Contour coordinates must be finite points");
   }
 
   function formatPoint([x, y]) {
@@ -561,6 +566,7 @@
     normalizePipelineDocument,
     nextStage2RegionId,
     contourPath,
+    isExportableContour,
     shiftCornerTreatmentsForInsertion,
     mirrorCornerTreatments,
   };

@@ -13,6 +13,7 @@
     normalizePipelineDocument,
     nextStage2RegionId,
     contourPath,
+    isExportableContour,
     shiftCornerTreatmentsForInsertion,
     mirrorCornerTreatments,
   } = globalThis.HoldEditorModel;
@@ -194,9 +195,16 @@
   }
 
   function regionPath(region) {
-    return isVectorMode()
-      ? region.displayPath || ""
-      : contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {});
+    if (isVectorMode()) return region.displayPath || "";
+    try {
+      return contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {});
+    } catch (_error) {
+      try {
+        return pathFor(region.contour);
+      } catch (_fallbackError) {
+        return "";
+      }
+    }
   }
 
   function pathFor(points, style = "straight", tension = 0.8) {
@@ -256,7 +264,9 @@
   }
 
   function renderToolState() {
-    const editable = !state.busy && !state.editingFrozen && (!state.guided || EDITOR_STAGES.has(state.board?.stage));
+    const editable = canEditGeometry();
+    const hasExportableContours = state.regions.length > 0
+      && state.regions.every((region) => isExportableContour(region.contour));
     el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
     el["snap-button"].classList.toggle("active", state.snapEnabled);
     el["snap-button"].textContent = state.snapEnabled ? "Snap edges: on" : "Snap edges";
@@ -277,6 +287,8 @@
     el["mirror-onto-button"].disabled = !editable;
     el["compare-button"].classList.toggle("active", state.compareEnabled);
     el["compare-button"].setAttribute("aria-pressed", state.compareEnabled ? "true" : "false");
+    el["export-button"].disabled = !hasExportableContours;
+    el["corrections-button"].disabled = !hasExportableContours;
     el["canvas-viewport"].classList.toggle("static-checkpoint", !editable);
   }
 
@@ -350,7 +362,7 @@
       && state.overlayMode !== "none"
     ) {
       state.baselineRegions.forEach((region) => {
-        const path = makeSvg("path", { d: isVectorMode() ? region.displayPath : contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {}), class: "compare-shape" });
+        const path = makeSvg("path", { d: regionPath(region), class: "compare-shape" });
         el["compare-overlay"].appendChild(path);
       });
     }
@@ -446,8 +458,15 @@
     el["validation-list"].replaceChildren();
     state.validationErrors.forEach((error) => {
       const item = document.createElement("li");
-      item.textContent = error.message;
-      if (error.regionId != null) item.addEventListener("click", () => focusRegion(error.regionId));
+      if (error.regionId == null) {
+        item.textContent = error.message;
+      } else {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = error.message;
+        button.addEventListener("click", () => focusRegion(error.regionId));
+        item.appendChild(button);
+      }
       el["validation-list"].appendChild(item);
     });
     el["validation-panel"].classList.toggle("hidden", state.validationErrors.length === 0);
@@ -1273,8 +1292,8 @@
     };
   }
 
-  function markDraftSaved(document = serializeDraft(), savedSnapshot = JSON.stringify(state.regions)) {
-    if (!state.board || !document) return;
+  function markDraftSaved(draftDocument = serializeDraft(), savedSnapshot = JSON.stringify(state.regions)) {
+    if (!state.board || !draftDocument) return;
     state.savedSnapshot = savedSnapshot;
     state.dirty = JSON.stringify(state.regions) !== savedSnapshot;
     state.draftStatus = state.dirty ? "dirty" : "saved";
@@ -1286,7 +1305,7 @@
         checkpointToken: state.board.checkpointToken,
         key: draftStorageKey(),
         generation: 0,
-        document,
+        document: draftDocument,
       };
       draftStore.writeDirty(entry);
       draftStore.markSaved(entry);
@@ -1297,8 +1316,8 @@
   }
 
   function persistCurrentDraft() {
-    const document = serializeDraft();
-    if (!state.board || !document) return null;
+    const draftDocument = serializeDraft();
+    if (!state.board || !draftDocument) return null;
     const view = { ...state.board };
     const entry = autosaveCoordinator.update({
       boardId: view.boardId,
@@ -1307,7 +1326,7 @@
       checkpointToken: view.checkpointToken,
       key: draftStorageKey(view),
       view,
-      document,
+      document: draftDocument,
       snapshot: JSON.stringify(state.regions),
     });
     try {
@@ -2010,6 +2029,12 @@
       setupError: el["setup-error"],
       setStatus,
     });
+    if (state.openingErrors.library && state.openingErrors.runtime) {
+      state.guided = false;
+      el["legacy-controls"].classList.remove("hidden");
+      showWorkbench();
+      return false;
+    }
     return true;
   }
 
@@ -2114,7 +2139,7 @@
     const image = await new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = () => resolve(image);
-      image.onerror = reject;
+      image.onerror = () => reject(new Error(`Could not load image asset: ${href}`));
       image.src = href;
     });
     return { href, name, image };

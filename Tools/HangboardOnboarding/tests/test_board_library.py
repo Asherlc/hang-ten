@@ -21,6 +21,12 @@ from hangboard_vectorizer.onboarding_run import (
 )
 
 
+def test_board_diagnostic_error_formats_its_message() -> None:
+    error = board_library._BoardDiagnosticError("invalid_run", "broken run")
+
+    assert str(error) == "broken run"
+
+
 def test_snapshot_discovers_self_describing_runs_and_sorts_them(tmp_path: Path) -> None:
     _complete_board(tmp_path, "charlie", "charlie")
     _complete_board(tmp_path, "alpha-2", "Alpha 2")
@@ -35,6 +41,26 @@ def test_snapshot_discovers_self_describing_runs_and_sorts_them(tmp_path: Path) 
     ]
     assert snapshot.diagnostics == ()
     assert all(len(board.revision_token) == 64 for board in snapshot.boards)
+
+
+def test_snapshot_does_not_create_repository_paths(tmp_path: Path) -> None:
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert snapshot == board_library.LibrarySnapshot(boards=(), diagnostics=())
+    assert not _boards_root(tmp_path).exists()
+
+
+def test_snapshot_reports_a_symlinked_transaction_root(tmp_path: Path) -> None:
+    boards = _boards_root(tmp_path)
+    boards.mkdir(parents=True)
+    (boards / ".transactions").symlink_to(tmp_path / "missing-transactions")
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        (".transactions", "invalid_transaction")
+    ]
 
 
 def test_invalid_board_is_diagnostic_without_hiding_valid_boards(tmp_path: Path) -> None:
@@ -146,6 +172,27 @@ def test_snapshot_reports_bad_stage_four_output_hashes(tmp_path: Path) -> None:
     ]
 
 
+def test_snapshot_reports_bad_stage_four_hash_when_stages_are_truncated(
+    tmp_path: Path,
+) -> None:
+    run = _complete_board(tmp_path, "truncated-board", "Truncated Board")
+    normal = _stage_four_acceptance(run)["normal"]
+    assert isinstance(normal, dict)
+    (run / str(normal["path"])).write_bytes(b"changed output")
+    manifest = _read_json(run / "run.json")
+    stages = manifest["stages"]
+    assert isinstance(stages, list)
+    manifest["stages"] = stages[:4]
+    _write_json(run / "run.json", manifest)
+
+    snapshot = RepositoryBoardLibrary(tmp_path).snapshot()
+
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("truncated-board", "invalid_outputs")
+    ]
+
+
 def test_snapshot_revision_tokens_are_deterministic(tmp_path: Path) -> None:
     run = _complete_board(tmp_path, "token-board", "Token Board")
     library = RepositoryBoardLibrary(tmp_path)
@@ -155,6 +202,25 @@ def test_snapshot_revision_tokens_are_deterministic(tmp_path: Path) -> None:
 
     assert first.revision_token == second.revision_token
     assert first.revision_token == sha256((run / "run.json").read_bytes()).hexdigest()
+
+
+def test_package_validation_scans_the_run_tree_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = _complete_board(tmp_path, "scan-board", "Scan Board")
+    library = RepositoryBoardLibrary(tmp_path)
+    original = library._reject_tree_symlinks
+    scanned: list[Path] = []
+
+    def record_scan(root: Path) -> None:
+        scanned.append(root)
+        original(root)
+
+    monkeypatch.setattr(library, "_reject_tree_symlinks", record_scan)
+
+    library._validated_package(run)
+
+    assert scanned == [run]
 
 
 def test_copy_current_run_copies_only_a_validated_confined_run(tmp_path: Path) -> None:
@@ -167,6 +233,18 @@ def test_copy_current_run_copies_only_a_validated_confined_run(tmp_path: Path) -
     assert destination != run
     assert read_status(destination)["status"] == "complete"
     assert not list(destination.parent.glob(f".{destination.name}.tmp-*"))
+
+
+def test_copy_current_run_rejects_parent_directory_components(tmp_path: Path) -> None:
+    _complete_board(tmp_path, "copy-board", "Copy Board")
+    destination = tmp_path / "runtime" / ".." / "escaped-run"
+
+    with pytest.raises(BoardLibraryError, match="parent-directory"):
+        RepositoryBoardLibrary(tmp_path).copy_current_run(
+            "copy-board", destination
+        )
+
+    assert not (tmp_path / "escaped-run").exists()
 
 
 def test_copy_current_run_returns_identity_from_the_exact_copied_bytes(
@@ -300,6 +378,8 @@ def test_copy_current_run_holds_the_publication_lock_until_copy_finishes(
         copy_thread.join(2)
         publication_thread.join(2)
 
+    assert not copy_thread.is_alive()
+    assert not publication_thread.is_alive()
     assert errors == []
     assert copied == [existing]
     assert len(published) == 1
@@ -688,7 +768,7 @@ def test_concurrent_publishers_return_the_package_each_installed(
         "before-cleanup",
     ],
 )
-def test_snapshot_recovers_interrupted_replacement(
+def test_snapshot_inspects_interrupted_replacement_without_writing(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure_point: str
 ) -> None:
     repository = tmp_path / "repository"
@@ -740,6 +820,15 @@ def test_snapshot_recovers_interrupted_replacement(
     assert snapshot.boards[0].revision_token == candidate_token
     assert snapshot.diagnostics == ()
     transactions = _boards_root(repository) / ".transactions"
+    assert len([path for path in transactions.iterdir() if path.name != "lock"]) == 1
+
+    published = RepositoryBoardLibrary(repository).publish(
+        run_root=candidate,
+        board_id="recovery-board",
+        expected_revision_token=existing.revision_token,
+    )
+
+    assert published.revision_token == candidate_token
     assert [path.name for path in transactions.iterdir()] == ["lock"]
 
 
@@ -873,21 +962,78 @@ def test_recovery_does_not_install_candidate_with_invalid_rollback_evidence(
     assert (transaction / "rollback").exists()
 
 
-def test_snapshot_reports_invalid_utf8_transaction_journal(tmp_path: Path) -> None:
+def test_publish_removes_invalid_journal_without_package_evidence(
+    tmp_path: Path,
+) -> None:
     repository = tmp_path / "repository"
     repository.mkdir()
     _complete_board(repository, "utf8-board", "UTF8 Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "utf8-board", "UTF8 Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("utf8-board")
     transaction = _boards_root(repository) / ".transactions" / "invalid-utf8"
     transaction.mkdir(parents=True)
     (transaction / "journal.json").write_bytes(b"\xff\xfe")
 
-    snapshot = RepositoryBoardLibrary(repository).snapshot()
+    published = library.publish(
+        run_root=candidate,
+        board_id="utf8-board",
+        expected_revision_token=existing.revision_token,
+    )
 
-    assert [board.board_id for board in snapshot.boards] == ["utf8-board"]
-    assert [(item.code, item.path) for item in snapshot.diagnostics] == [
-        ("invalid_transaction", ".transactions/invalid-utf8")
-    ]
-    assert transaction.exists()
+    assert published.board.board_id == "utf8-board"
+    assert not transaction.exists()
+
+
+def test_publish_removes_stray_transaction_file(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "stray-board", "Stray Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "stray-board", "Stray Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("stray-board")
+    stray = _boards_root(repository) / ".transactions" / "stray"
+    stray.parent.mkdir()
+    stray.write_text("not transaction evidence", encoding="utf-8")
+
+    published = library.publish(
+        run_root=candidate,
+        board_id="stray-board",
+        expected_revision_token=existing.revision_token,
+    )
+
+    assert published.board.board_id == "stray-board"
+    assert not stray.exists()
+
+
+def test_publish_retains_invalid_canonical_transaction_evidence(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    _complete_board(repository, "evidence-board", "Evidence Board")
+    candidate = _complete_board(
+        tmp_path / "candidate", "evidence-board", "Evidence Board"
+    )
+    library = RepositoryBoardLibrary(repository)
+    existing = library.get_board("evidence-board")
+    transaction = _boards_root(repository) / ".transactions" / "retained-evidence"
+    evidence = transaction / "invalid-canonical"
+    evidence.mkdir(parents=True)
+    (evidence / "run.json").write_text("not json", encoding="utf-8")
+
+    with pytest.raises(BoardLibraryError, match="manual intervention"):
+        library.publish(
+            run_root=candidate,
+            board_id="evidence-board",
+            expected_revision_token=existing.revision_token,
+        )
+
+    assert evidence.exists()
 
 
 def test_recovery_restores_a_valid_captured_package_that_mismatches_the_journal(
@@ -927,7 +1073,7 @@ def test_recovery_restores_a_valid_captured_package_that_mismatches_the_journal(
         ("invalid_transaction", ".transactions/captured-conflict")
     ]
     assert transaction.exists()
-    assert not (transaction / "rollback").exists()
+    assert (transaction / "rollback").exists()
     assert (transaction / "candidate").exists()
 
 
@@ -976,7 +1122,8 @@ def test_recovery_preserves_invalid_canonical_before_using_proven_package(
     assert [(item.code, item.path) for item in second.diagnostics] == [
         ("invalid_transaction", f".transactions/{proven_package}")
     ]
-    assert (transaction / "invalid-canonical").exists()
+    assert canonical.exists()
+    assert not (transaction / "invalid-canonical").exists()
 
 
 def _complete_board(repository: Path, board_id: str, product_name: str) -> Path:

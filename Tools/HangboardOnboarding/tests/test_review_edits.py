@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -10,8 +11,14 @@ import numpy as np
 from PIL import Image
 import pytest
 
-from hangboard_vectorizer.generic_stage2 import run_generic_stage2
-from hangboard_vectorizer.generic_stage3 import run_generic_stage3
+from hangboard_vectorizer.generic_stage2 import (
+    build_stage2_artifacts,
+    run_generic_stage2,
+)
+from hangboard_vectorizer.generic_stage3 import (
+    build_stage3_artifacts,
+    run_generic_stage3,
+)
 from hangboard_vectorizer.onboarding_run import RunContext
 from hangboard_vectorizer.review_edits import (
     materialize_stage2_edit,
@@ -22,6 +29,81 @@ from hangboard_vectorizer.models import ConversionError
 
 
 _DATA = Path(__file__).parent / "data"
+
+
+@pytest.mark.parametrize(
+    ("builder", "generated_name", "document_name", "document"),
+    (
+        (
+            build_stage2_artifacts,
+            "stage-2-labels.png",
+            "region_document",
+            {"regions": []},
+        ),
+        (
+            build_stage2_artifacts,
+            "stage-2-regions.json",
+            "region_document",
+            {"regions": []},
+        ),
+        (
+            build_stage2_artifacts,
+            "stage-2-review.png",
+            "region_document",
+            {"regions": []},
+        ),
+        (
+            build_stage2_artifacts,
+            "stage-2-candidate.json",
+            "region_document",
+            {"regions": []},
+        ),
+        (
+            build_stage3_artifacts,
+            "stage-3-vector-regions.json",
+            "vector_document",
+            {"regions": [], "silhouettePaths": []},
+        ),
+        (
+            build_stage3_artifacts,
+            "stage-3-vector.svg",
+            "vector_document",
+            {"regions": [], "silhouettePaths": []},
+        ),
+        (
+            build_stage3_artifacts,
+            "stage-3-review.png",
+            "vector_document",
+            {"regions": [], "silhouettePaths": []},
+        ),
+        (
+            build_stage3_artifacts,
+            "stage-3-candidate.json",
+            "vector_document",
+            {"regions": [], "silhouettePaths": []},
+        ),
+    ),
+)
+def test_artifact_builders_reject_preserved_generated_names(
+    tmp_path: Path,
+    builder: Callable[..., dict[str, str]],
+    generated_name: str,
+    document_name: str,
+    document: dict[str, object],
+) -> None:
+    artifact_root = tmp_path / "artifacts"
+    artifact_root.mkdir()
+    arguments = {
+        "rgba": np.full((2, 2, 4), 255, dtype=np.uint8),
+        "labels": np.zeros((2, 2), dtype=np.uint16),
+        document_name: document,
+        "candidate": {},
+        "preserved_files": {generated_name: b"preserved bytes"},
+        "candidate_files": (),
+    }
+
+    with pytest.raises(ConversionError, match="reserved"):
+        builder(artifact_root, **arguments)
 
 
 @pytest.fixture
@@ -308,8 +390,11 @@ const { buildEditedDocument } = require(process.argv[1]);
 const input = JSON.parse(fs.readFileSync(0, "utf8"));
 process.stdout.write(JSON.stringify(buildEditedDocument(input)));
 """
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is required for the editor-model integration test")
     exported = subprocess.run(
-        ["node", "-e", script, str(editor_model)],
+        [node, "-e", script, str(editor_model)],
         input=json.dumps(
             {
                 "canvas": edited["canvas"],
@@ -321,6 +406,7 @@ process.stdout.write(JSON.stringify(buildEditedDocument(input)));
         text=True,
         capture_output=True,
         check=True,
+        timeout=10,
     )
     edited["regions"][0] = json.loads(exported.stdout)["regions"][0]
 

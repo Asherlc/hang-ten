@@ -13,6 +13,7 @@ const {
   normalizePipelineDocument,
   nextStage2RegionId,
   contourPath,
+  isExportableContour,
   shiftCornerTreatmentsForInsertion,
   mirrorCornerTreatments,
 } = require("../editor-model.js");
@@ -40,6 +41,27 @@ test("buildEditedDocument returns a detached complete artifact", () => {
   assert.equal(result.editor.name, "hold-highlight-editor");
   result.regions[0].key = "changed";
   assert.equal(regions[0].key, "grip-001");
+});
+
+test("buildEditedDocument rejects regions without an exportable contour", () => {
+  for (const contour of [[], undefined]) {
+    assert.throws(
+      () => buildEditedDocument({
+        canvas: { width: 100, height: 50 },
+        regions: [{ ...baseline, contour }],
+        imageName: "stage-1-auto-rgba.png",
+        regionsName: "stage-2-regions.json",
+      }),
+      /Contour must contain at least three points/,
+    );
+  }
+});
+
+test("isExportableContour rejects malformed and non-finite points", () => {
+  assert.equal(isExportableContour([[0, 0], [10, 0], [10, 10]]), true);
+  assert.equal(isExportableContour([["oops", 0], [10, 0], [10, 10]]), false);
+  assert.equal(isExportableContour([[Number.NaN, 0], [10, 0], [10, 10]]), false);
+  assert.equal(isExportableContour([[0, 0], [10, 0]]), false);
 });
 
 test("buildEditedDocument preserves a valid anchor inside a concave contour", () => {
@@ -108,13 +130,13 @@ test("buildEditedDocument replaces a treated anchor cut away by a rounded corner
 test("buildEditedDocument uses Python pixel rounding for a fractional treated anchor", () => {
   const rounded = {
     ...baseline,
-    anchor: [0.5, 0.5],
-    contour: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    anchor: [2.5, 2],
+    contour: [[0, 0], [2.4, 0], [2.4, 5], [0, 5]],
     metadata: {
       ...baseline.metadata,
       pathStyle: "straight",
       curveTension: 0.8,
-      cornerTreatments: { 0: { treatment: "rounded", amount: 4 } },
+      cornerTreatments: { 0: { treatment: "rounded", amount: 0.5 } },
     },
   };
 
@@ -125,7 +147,7 @@ test("buildEditedDocument uses Python pixel rounding for a fractional treated an
     regionsName: "stage-2-regions.json",
   });
 
-  assert.deepEqual(result.regions[0].anchor, [5, 4]);
+  assert.deepEqual(result.regions[0].anchor, [2.5, 2]);
 });
 
 test("buildCorrectionsDocument identifies added modified and deleted regions", () => {
@@ -245,6 +267,42 @@ test("resizeContour preserves aspect ratio from corner handles", () => {
   });
 
   assert.deepEqual(result, [[0, 0], [30, 0], [30, 30], [0, 30]]);
+});
+
+test("resizeContour uses the dominant horizontal corner scale when preserving aspect ratio", () => {
+  const result = resizeContour({
+    points: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    rotation: 0,
+    handle: "se",
+    pointer: [30, 15],
+    preserveAspect: true,
+  });
+
+  assert.deepEqual(result, [[0, 0], [30, 0], [30, 30], [0, 30]]);
+});
+
+test("resizeTransform remains finite for a zero-width point set", () => {
+  const points = [[2, 0], [2, 10], [2, 5]];
+  const matrix = resizeTransform({
+    points,
+    rotation: 0,
+    handle: "e",
+    pointer: [5, 5],
+  });
+
+  assert.equal(matrix.every(Number.isFinite), true);
+  assert.deepEqual(resizeContour({ points, handle: "e", pointer: [5, 5] }), points);
+});
+
+test("resizeContour clamps a handle dragged past its anchor without flipping", () => {
+  const result = resizeContour({
+    points: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    rotation: 0,
+    handle: "e",
+    pointer: [-10, 5],
+  });
+
+  assert.deepEqual(result, [[0, 0], [0.5, 0], [0.5, 10], [0, 10]]);
 });
 
 test("resizeContour uses signed local deltas for every side and corner handle", () => {

@@ -458,6 +458,7 @@ def test_competing_fork_activation_failure_retains_failed_child_and_winner(
             blocked = service.store.read_board(complete_board.board_id)
             assert blocked.active_revision_id == winner.revision_id
             assert blocked.revisions[1].state == "pending"
+            losing_revision_id = blocked.revisions[1].id
         finally:
             release_first.set()
         with pytest.raises(WorkbenchStoreError, match="active revision changed"):
@@ -467,7 +468,7 @@ def test_competing_fork_activation_failure_retains_failed_child_and_winner(
     records = {revision.id: revision for revision in persisted.revisions}
     assert persisted.active_revision_id == winner.revision_id
     assert records[winner.revision_id].state == "active"
-    assert records["revision-0002"].state == "failed"
+    assert records[losing_revision_id].state == "failed"
 
 
 def test_ui_created_run_is_inspectable_by_cli_status(

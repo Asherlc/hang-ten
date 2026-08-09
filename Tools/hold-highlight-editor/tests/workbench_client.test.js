@@ -38,6 +38,34 @@ test("a newly accepted job ID is exposed before polling completes", async () => 
   assert.deepEqual(calls, ["/api/boards", "/api/jobs/job-42"]);
 });
 
+test("createFromUpload sends the raw image with its media type and encoded product name", async () => {
+  const calls = [];
+  const image = { type: "image/webp", bytes: new Uint8Array([1, 2, 3]) };
+  global.fetch = async (path, options = {}) => {
+    calls.push([path, options]);
+    if (path.startsWith("/api/boards/upload?")) {
+      return response({ ok: true, jobId: "job-upload", boardId: "board-upload" });
+    }
+    return response({
+      ok: true,
+      job: {
+        id: "job-upload",
+        boardId: "board-upload",
+        state: "succeeded",
+        result: { boardId: "board-upload" },
+        error: null,
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(await client.createFromUpload("Board & Rail", image), { boardId: "board-upload" });
+  assert.equal(calls[0][0], "/api/boards/upload?productName=Board+%26+Rail");
+  assert.deepEqual(calls[0][1].headers, { "Content-Type": "image/webp" });
+  assert.equal(calls[0][1].body, image);
+});
+
 test("an accepted mutation survives a transient poll failure without being submitted again", async () => {
   const calls = [];
   let pollAttempt = 0;

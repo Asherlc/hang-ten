@@ -513,7 +513,7 @@ def test_concurrent_board_reservations_publish_distinct_manifests(
     tmp_path: Path,
 ) -> None:
     store = WorkbenchStore(tmp_path)
-    barrier = Barrier(8)
+    barrier = Barrier(8, timeout=5)
 
     def create(index: int):
         barrier.wait()
