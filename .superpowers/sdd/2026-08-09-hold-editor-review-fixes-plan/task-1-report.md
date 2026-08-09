@@ -70,3 +70,29 @@ It could not run because the environment has no `pytest` module (`No module name
 
 - Python server tests remain unexecuted because `pytest` is unavailable in this environment.
 - The implementation intentionally treats non-`Error` thrown values as unexpected and uses the generic user-facing message.
+
+## Round 1 review fix
+
+Changed only the session-load error formatter and its regression test. `formatSessionLoadError` now uses an allowlist for the trusted messages emitted by `app.js` (`Could not load the selected board session` and `Could not load hold highlights from the run`); all other `Error` instances, including internal `SyntaxError`/`TypeError` failures, use the generic status.
+
+### TDD red
+
+Command:
+
+```text
+rtk node --test Tools/hold-highlight-editor/tests/editor_model.test.js
+```
+
+Result before the production change: 15 passed, 1 failed. The regression expected `Board image failed to load` to map to the generic message, but the formatter exposed it as `Could not load the selected board: Board image failed to load`.
+
+### TDD green and verification
+
+Commands:
+
+```text
+rtk node --test Tools/hold-highlight-editor/tests/editor_model.test.js
+rtk node --test Tools/hold-highlight-editor/tests/editor_ui.test.js
+rtk git diff --check
+```
+
+Results: model tests 16 passed, UI tests 11 passed, and diff check passed with no output.

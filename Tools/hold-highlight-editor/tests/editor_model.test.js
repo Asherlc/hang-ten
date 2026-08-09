@@ -155,11 +155,11 @@ test("a successful session transaction gives normalization the incoming image di
 test("session load errors become specific user-facing status without exposing unexpected values", () => {
   assert.equal(
     formatSessionLoadError(new Error("Board image failed to load")),
-    "Could not load the selected board: Board image failed to load",
+    "Could not load the selected board. Please try again.",
   );
   assert.equal(
-    formatSessionLoadError({ reason: "not safe to display" }),
-    "Could not load the selected board. Please try again.",
+    formatSessionLoadError(new Error("Could not load hold highlights from the run")),
+    "Could not load the selected board: Could not load hold highlights from the run",
   );
 });
 

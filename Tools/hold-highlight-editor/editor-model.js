@@ -128,7 +128,11 @@
   }
 
   function formatSessionLoadError(error) {
-    return error instanceof Error && error.message
+    const trustedMessages = new Set([
+      "Could not load the selected board session",
+      "Could not load hold highlights from the run",
+    ]);
+    return error instanceof Error && trustedMessages.has(error.message)
       ? `Could not load the selected board: ${error.message}`
       : "Could not load the selected board. Please try again.";
   }
