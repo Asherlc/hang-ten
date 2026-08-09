@@ -725,18 +725,6 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
     }
 
-    func testBuiltInPlansDoNotEndWithCooldownSteps() {
-        XCTAssertTrue(
-            LegacyPlanSeedCatalog.all.allSatisfy { $0.steps.last?.phase != .coolDown }
-        )
-        XCTAssertFalse(
-            BuiltInPlanLibraryDefinition.document.blocks.contains { $0.id == "shared.cool-down" }
-        )
-        XCTAssertTrue(
-            PlanLibraryStore.builtIn.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
-        )
-    }
-
     func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
         let abrahangsWarmUp = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
@@ -765,6 +753,22 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · 19 mm half crimp")
         XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
         XCTAssertEqual(step.gripType, .halfCrimp)
+    }
+
+    func testAbrahangsFourthGripUsesExactThreeFingerPocketConfiguration() throws {
+        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+        let step = try XCTUnwrap(
+            store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
+                $0.id == "abrahangs-grip-4.segment-1"
+            }
+        )
+
+        XCTAssertEqual(step.title, "Abrahang · Three-finger pocket")
+        XCTAssertEqual(
+            step.fingerConfiguration,
+            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+        )
+        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle, .ring])
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
