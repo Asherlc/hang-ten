@@ -10,6 +10,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var targets: [WorkoutTargetDefinition]
     var timing: WorkoutSegmentTiming
     var gripType: GripType?
+    var fingerConfiguration: FingerConfiguration?
     let activeDuration: TimeInterval?
 
     init(
@@ -22,6 +23,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         targets: [WorkoutTargetDefinition],
         timing: WorkoutSegmentTiming,
         gripType: GripType?,
+        fingerConfiguration: FingerConfiguration? = nil,
         activeDuration: TimeInterval? = nil
     ) {
         self.id = id
@@ -33,6 +35,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         self.targets = targets
         self.timing = timing
         self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
         self.activeDuration = activeDuration
     }
 
@@ -42,6 +45,18 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 
     var isStopwatch: Bool {
         timing == .stopwatch
+    }
+
+    mutating func toggleFinger(_ finger: FingerSlot) {
+        guard !isRest else { return }
+
+        var engagedFingers = fingerConfiguration?.engagedFingers ?? []
+        if !engagedFingers.insert(finger).inserted {
+            engagedFingers.remove(finger)
+        }
+        fingerConfiguration = engagedFingers.isEmpty
+            ? nil
+            : FingerConfiguration(engagedFingers: engagedFingers)
     }
 }
 
@@ -209,6 +224,7 @@ struct CustomRoutineDraft: Equatable {
             targets: definition.targets,
             timing: definition.segments.first?.timing ?? .fixed,
             gripType: definition.gripType,
+            fingerConfiguration: definition.fingerConfiguration,
             activeDuration: definition.activeDuration
         )
     }
@@ -233,6 +249,7 @@ struct CustomRoutineDraft: Equatable {
             targets: targets,
             segments: [segment],
             gripType: step.isRest ? nil : step.gripType,
+            fingerConfiguration: step.isRest ? nil : step.fingerConfiguration,
             activeDuration: step.activeDuration
         )
     }

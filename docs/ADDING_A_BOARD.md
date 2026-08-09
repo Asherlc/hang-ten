@@ -29,6 +29,47 @@ The Compact II audit used these official sources (checked August 1, 2026):
 
 ## 2. Run the staged onboarding pipeline
 
+The canonical package is the source of truth for Compact II:
+
+```text
+Hangboards/
+  catalog.json
+  metolius-wood-grips-compact-ii/
+    board.json
+    onboarding/runs/<run-id>/...
+```
+
+Lifecycle states for `board.json` are `draft`, `onboarding`, `approved`, and
+`shipped`.
+
+While onboarding, keep temporary runs under `.context/...` and validate the
+registry without mutating the repository:
+
+```sh
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+```
+
+After a run is approved, copy it into the canonical package. Registration only
+accepts symlink-free `.context` runs, advances the board lifecycle when
+appropriate, and never downgrades a shipped board:
+
+```sh
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/manufacturer-model \
+  --run-id manufacturer-model
+```
+
+After the canonical `board.json` is marked `shipped`, regenerate the checked-in
+Swift catalog from JSON before shipping app updates:
+
+```sh
+scripts/export-board-catalog.sh
+scripts/export-board-catalog.sh --check
+```
+
 Hang Ten vendors the reviewed onboarding tool under
 `Tools/HangboardOnboarding`. Its model-facing contract is deliberately small:
 one batched semantic response supplies generic grip hints, while deterministic

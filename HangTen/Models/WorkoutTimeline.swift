@@ -74,6 +74,17 @@ struct WorkoutBoardCue: Equatable {
 struct WorkoutHoldCue: Equatable {
     let hold: BoardHold
     let gripType: GripType
+    let fingerConfiguration: FingerConfiguration?
+
+    init(
+        hold: BoardHold,
+        gripType: GripType,
+        fingerConfiguration: FingerConfiguration? = nil
+    ) {
+        self.hold = hold
+        self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
+    }
 }
 
 enum WorkoutHoldCueVisibilityPolicy {
@@ -104,7 +115,8 @@ enum WorkoutHoldCuePolicy {
 
         return WorkoutHoldCue(
             hold: hold,
-            gripType: step.gripType ?? hold.gripType
+            gripType: step.gripType ?? hold.gripType,
+            fingerConfiguration: step.fingerConfiguration
         )
     }
 }
