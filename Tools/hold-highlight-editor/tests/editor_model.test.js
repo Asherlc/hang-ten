@@ -10,6 +10,9 @@ const {
   findStrongestEdge,
   resolveHistorySelection,
   normalizePipelineDocument,
+  canSaveEditorState,
+  runSessionLoadTransaction,
+  formatSessionLoadError,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -51,6 +54,191 @@ test("buildCorrectionsDocument identifies added modified and deleted regions", (
   assert.deepEqual(result.added.map((region) => region.id), [3]);
   assert.deepEqual(result.modified.map((change) => change.after.id), [1]);
   assert.deepEqual(result.deleted, [{ id: 2, key: "grip-002" }]);
+});
+
+test("deleting the final highlight stays saveable and emits its deletion correction", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    regions: [],
+    dirty: true,
+    saving: false,
+    loadingSession: false,
+  }), true);
+
+  const edited = buildEditedDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+  const corrections = buildCorrectionsDocument({
+    baselineRegions: [baseline],
+    regions: [],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+
+  assert.deepEqual(edited.regions, []);
+  assert.deepEqual(corrections.summary, { added: 0, modified: 0, deleted: 1 });
+  assert.deepEqual(corrections.deleted, [{ id: 1, key: "grip-001" }]);
+});
+
+test("canSaveEditorState rejects a save already in progress", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: true,
+    saving: true,
+    loadingSession: false,
+  }), false);
+});
+
+test("canSaveEditorState rejects a session still loading", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: true,
+    saving: false,
+    loadingSession: true,
+  }), false);
+});
+
+test("canSaveEditorState rejects a clean editor", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: { id: "board-a" },
+    dirty: false,
+    saving: false,
+    loadingSession: false,
+  }), false);
+});
+
+test("canSaveEditorState rejects an editor without a server session", () => {
+  assert.equal(canSaveEditorState({
+    serverSession: null,
+    dirty: true,
+    saving: false,
+    loadingSession: false,
+  }), false);
+});
+
+test("a loadSession failure preserves the original snapshot and error", async () => {
+  const current = {
+    editor: { regions: [baseline], selectedId: 1 },
+    visible: { boardValue: "board-a", status: "Selected hold grip-001." },
+  };
+  const before = structuredClone(current);
+  const error = new Error("Could not load the selected board session");
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => { throw error; },
+    loadRegions: async () => { throw new Error("loadRegions should not run"); },
+    normalizeRegions: (document) => document,
+    loadImage: async () => { throw new Error("loadImage should not run"); },
+  });
+
+  assert.equal(result.ok, false);
+  assert.strictEqual(result.value, current);
+  assert.deepEqual(current, before);
+  assert.strictEqual(result.error, error);
+});
+
+test("a loadRegions failure preserves the original snapshot and error", async () => {
+  const current = {
+    editor: { regions: [baseline], selectedId: 1 },
+    visible: { boardValue: "board-a", status: "Selected hold grip-001." },
+  };
+  const before = structuredClone(current);
+  const error = new Error("Could not load hold highlights from the run");
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => ({ id: "board-b", label: "Board B", imageUrl: "/board-b.png", regionsUrl: "/board-b.json" }),
+    loadRegions: async () => { throw error; },
+    normalizeRegions: (document) => document,
+    loadImage: async () => { throw new Error("loadImage should not run"); },
+  });
+
+  assert.equal(result.ok, false);
+  assert.strictEqual(result.value, current);
+  assert.deepEqual(current, before);
+  assert.strictEqual(result.error, error);
+});
+
+test("a failed session transaction preserves the complete editing document and visible state", async () => {
+  const current = {
+    editor: {
+      canvas: { width: 100, height: 50 },
+      imageHref: "/api/artifact/image?run=board-a",
+      imageName: "board-a.png",
+      regionsName: "board-a-regions.json",
+      regions: [baseline],
+      baselineRegions: [baseline],
+      selectedId: 1,
+      history: [{ snapshot: JSON.stringify([baseline]), label: "Loaded hold highlights", selectedId: 1 }],
+      historyIndex: 0,
+      savedSnapshot: JSON.stringify([baseline]),
+      dirty: true,
+      serverSession: { id: "board-a" },
+    },
+    visible: {
+      boardValue: "board-a",
+      status: "Selected hold grip-001.",
+      imageHref: "/api/artifact/image?run=board-a",
+      staticControlsHidden: true,
+    },
+  };
+  const before = structuredClone(current);
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => ({ id: "board-b", label: "Board B", imageUrl: "/board-b.png", regionsUrl: "/board-b.json" }),
+    loadRegions: async () => ({ canvas: { width: 200, height: 80 }, regions: [] }),
+    normalizeRegions: (document) => document,
+    loadImage: async () => {
+      throw new Error("Board image failed to load");
+    },
+  });
+
+  assert.equal(result.ok, false);
+  assert.strictEqual(result.value, current);
+  assert.deepEqual(current, before);
+  assert.equal(result.error.message, "Board image failed to load");
+});
+
+test("a successful session transaction returns the fully staged replacement", async () => {
+  const current = { editor: { regions: [baseline] }, visible: { boardValue: "board-a" } };
+  const session = { id: "board-b", label: "Board B", imageUrl: "/board-b.png", regionsUrl: "/board-b.json" };
+  const normalized = { canvas: { width: 200, height: 80 }, regions: [] };
+  const imageAsset = { image: { naturalWidth: 200, naturalHeight: 80 }, imagePixels: null };
+
+  const result = await runSessionLoadTransaction(current, {
+    loadSession: async () => session,
+    loadRegions: async () => ({ width: 200, height: 80, regions: [] }),
+    normalizeRegions: () => normalized,
+    loadImage: async () => imageAsset,
+  });
+
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.value, { session, normalized, imageAsset });
+  assert.equal(result.error, null);
+});
+
+test("a successful session transaction gives normalization the incoming image dimensions", async () => {
+  const result = await runSessionLoadTransaction({ editor: {}, visible: {} }, {
+    loadSession: async () => ({ id: "board-b" }),
+    loadRegions: async () => ({ regions: [] }),
+    normalizeRegions: (document, fallbackCanvas) => normalizePipelineDocument(document, fallbackCanvas),
+    loadImage: async () => ({ image: { naturalWidth: 240, naturalHeight: 120 }, imagePixels: null }),
+  });
+
+  assert.deepEqual(result.value.normalized.canvas, { width: 240, height: 120 });
+});
+
+test("session load errors become specific user-facing status without exposing unexpected values", () => {
+  assert.equal(
+    formatSessionLoadError(new Error("Board image failed to load")),
+    "Could not load the selected board. Please try again.",
+  );
+  assert.equal(
+    formatSessionLoadError(new Error("Could not load hold highlights from the run")),
+    "Could not load the selected board: Could not load hold highlights from the run",
+  );
 });
 
 test("curve and transform metadata count as modifications", () => {

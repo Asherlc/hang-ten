@@ -8,3 +8,6 @@ xcuserdata/
 
 # Conductor workspace-local state
 .context/
+
+# Local git worktrees
+.worktrees/

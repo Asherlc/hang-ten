@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
-    <title>Hold Region Editor</title>
+    <title>Hold Editor</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -13,8 +13,8 @@
         <div class="brand-block">
           <div class="brand-mark">H</div>
           <div>
-            <h1>Hold Region Editor</h1>
-            <p>Correct automatic grip regions without changing the source image.</p>
+            <h1>Hold Editor</h1>
+            <p>Edit and save hold highlights.</p>
           </div>
         </div>
 
@@ -24,15 +24,17 @@
             <select id="board-select" aria-label="Board to edit"></select>
           </label>
           <span class="toolbar-separator board-picker-separator hidden" id="board-picker-separator"></span>
-          <button class="tool-button" id="load-image-button">Load image</button>
-          <button class="tool-button" id="load-regions-button">Load regions</button>
+          <div class="hidden" id="static-load-controls">
+            <button class="tool-button" id="load-image-button">Load image</button>
+            <button class="tool-button" id="load-regions-button">Load highlights</button>
+          </div>
           <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
           <button class="icon-button" id="undo-button" title="Undo (⌘Z)" aria-label="Undo">↶</button>
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
           <button class="tool-button accent" id="save-button" disabled>Save</button>
           <span class="save-state" id="save-state">Static mode</span>
-          <button class="tool-button" id="export-button">Export edited regions</button>
+          <button class="tool-button" id="export-button">Export edited highlights</button>
           <button class="tool-button" id="corrections-button">Export corrections</button>
         </div>
       </header>
@@ -41,21 +43,21 @@
         <aside class="panel region-panel">
           <div class="panel-heading">
             <div>
-              <span class="eyebrow">Inventory</span>
-              <h2>Grip regions</h2>
+              <span class="eyebrow">Hold highlights</span>
+              <h2>Hold highlights</h2>
             </div>
             <span class="count-badge" id="region-count">0</span>
           </div>
 
           <label class="search-field">
             <span>⌕</span>
-            <input id="region-search" type="search" placeholder="Filter grips" />
+            <input id="region-search" type="search" placeholder="Filter highlights" />
           </label>
 
-          <div class="region-list" id="region-list" role="listbox" aria-label="Grip regions"></div>
+          <div class="region-list" id="region-list" role="listbox" aria-label="Hold highlights"></div>
 
           <div class="shape-create-row">
-            <select id="new-shape-select" aria-label="New region shape">
+            <select id="new-shape-select" aria-label="New highlight shape">
               <option value="freeform">Freeform</option>
               <option value="curved-freeform">Curved freeform</option>
               <option value="rectangle">Rectangle</option>
@@ -64,8 +66,8 @@
               <option value="ellipse">Ellipse</option>
               <option value="capsule">Capsule</option>
             </select>
-            <button class="add-region-button" id="add-region-button">
-              <span>＋</span> Add
+            <button class="add-region-button" id="add-region-button" aria-label="Add highlight">
+              <span>＋</span> Add highlight
             </button>
           </div>
         </aside>
@@ -73,7 +75,7 @@
         <section class="canvas-column">
           <div class="canvas-header">
             <div class="segmented-control" aria-label="Overlay visibility">
-              <button class="active" data-overlay="all">All regions</button>
+              <button class="active" data-overlay="all">All highlights</button>
               <button data-overlay="selected">Selected only</button>
               <button data-overlay="none">Image only</button>
             </div>
@@ -92,14 +94,14 @@
 
           <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
             <div class="canvas-stage" id="canvas-stage">
-              <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard region editor">
+              <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard hold highlight editor">
                 <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
                 <g id="region-overlay"></g>
                 <g id="draft-overlay"></g>
               </svg>
             </div>
             <div class="empty-state" id="empty-state">
-              <strong>Drop a board image and region JSON here</strong>
+              <strong>Drop a board image and hold-highlight JSON here</strong>
               <span>or use the load controls above</span>
             </div>
             <div class="draw-instruction" id="draw-instruction">
@@ -125,17 +127,17 @@
           </div>
 
           <div class="inspector-empty" id="inspector-empty">
-            Select a region to edit its shape and metadata.
+            Select a hold highlight to edit its shape and details.
           </div>
 
           <form class="inspector-form hidden" id="inspector-form">
             <label>
-              Region key
+              Hold key
               <input id="region-key-input" type="text" autocomplete="off" />
             </label>
 
             <label>
-              Grip type
+              Hold type
               <select id="region-type-select">
                 <option value="pocket">Pocket</option>
                 <option value="edge">Edge</option>
@@ -170,7 +172,7 @@
             </label>
 
             <label>
-              Interaction mode
+              Hold interaction mode
               <select id="region-mode-select">
                 <option value="aperture">Aperture</option>
                 <option value="surface">Surface</option>
@@ -178,8 +180,8 @@
             </label>
 
             <label>
-              Review notes
-              <textarea id="region-notes-input" rows="4" placeholder="Why was this region changed?"></textarea>
+              Hold notes
+              <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
             </label>
 
             <div class="metric-grid">
@@ -195,7 +197,7 @@
               <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
               <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
               <button type="button" class="tool-button" id="mirror-onto-button">Mirror onto…</button>
-              <button type="button" class="tool-button danger" id="delete-button">Delete region</button>
+              <button type="button" class="tool-button danger" id="delete-button">Delete highlight</button>
             </div>
           </form>
 

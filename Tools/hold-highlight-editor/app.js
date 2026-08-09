@@ -10,6 +10,9 @@
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
+    canSaveEditorState,
+    runSessionLoadTransaction,
+    formatSessionLoadError,
   } = globalThis.HoldEditorModel;
 
   const TYPE_COLORS = {
@@ -70,7 +73,7 @@
     "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button", "simplify-curve-button",
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
-    "tension-field", "curve-tension-slider", "curve-tension-value",
+    "tension-field", "curve-tension-slider", "curve-tension-value", "static-load-controls",
     "board-picker", "board-picker-separator", "board-select",
   ].map((id) => [id, document.getElementById(id)]));
 
@@ -160,13 +163,13 @@
   }
 
   function renderSaveState() {
-    const canSave = Boolean(state.serverSession && state.regions.length && state.dirty && !state.saving && !state.loadingSession);
+    const canSave = canSaveEditorState(state);
     el["save-button"].disabled = !canSave;
     el["board-select"].disabled = state.loadingSession || state.saving;
     el["save-state"].className = "save-state";
     if (!state.serverSession) {
       el["save-state"].textContent = "Static mode";
-      el["save-button"].title = "Start server.py with --run-dir to save into an onboarding run";
+      el["save-button"].title = "Start server.py with --run-dir to save hold highlights in this Hold Editor";
     } else if (state.saveError) {
       el["save-state"].textContent = "Save failed";
       el["save-state"].classList.add("error");
@@ -258,10 +261,13 @@
 
   function renderInspector() {
     const region = selectedRegion();
-    el["inspector-title"].textContent = region ? `Region ${region.id}` : "No selection";
+    el["inspector-title"].textContent = region ? `Hold ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
-    if (!region) return;
+    if (!region) {
+      el["inspector-empty"].textContent = "Select a hold highlight to edit its shape and details.";
+      return;
+    }
     if (document.activeElement !== el["region-key-input"]) el["region-key-input"].value = region.key;
     if (document.activeElement !== el["region-type-select"]) el["region-type-select"].value = region.type;
     if (document.activeElement !== el["region-shape-select"]) el["region-shape-select"].value = region.metadata.shapeKind || "freeform";
@@ -319,13 +325,13 @@
     const top = localToWorld([frame.centerLocalX, frame.minY], frame.center, frame.rotation);
     const rotatePoint = localToWorld([frame.centerLocalX, frame.minY - handleOffset], frame.center, frame.rotation);
     group.appendChild(makeSvg("line", { x1: top[0], y1: top[1], x2: rotatePoint[0], y2: rotatePoint[1], class: "transform-stem" }));
-    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate region" });
+    const rotateHandle = makeSvg("circle", { cx: rotatePoint[0], cy: rotatePoint[1], r: 6 / Math.max(state.zoom, 0.3), class: "transform-handle", "aria-label": "Rotate hold highlight" });
     rotateHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "rotate"));
     group.appendChild(rotateHandle);
 
     const bendPoint = localToWorld([frame.centerLocalX, frame.minY + Math.min((frame.maxY - frame.minY) * 0.3, 14 / Math.max(state.zoom, 0.3))], frame.center, frame.rotation);
     const bendSize = 6 / Math.max(state.zoom, 0.3);
-    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend region" });
+    const bendHandle = makeSvg("rect", { x: bendPoint[0] - bendSize, y: bendPoint[1] - bendSize, width: bendSize * 2, height: bendSize * 2, rx: 1.5, class: "transform-handle bend-handle", transform: `rotate(45 ${bendPoint[0]} ${bendPoint[1]})`, "aria-label": "Bend hold highlight" });
     bendHandle.addEventListener("pointerdown", (event) => startTransformDrag(event, region.id, "bend"));
     group.appendChild(bendHandle);
   }
@@ -381,7 +387,7 @@
     state.selectedId = id;
     render();
     const region = selectedRegion();
-    if (region) setStatus(`Selected ${region.key}. Drag the shape or its control points.`);
+    if (region) setStatus(`Selected hold ${region.key}. Drag the highlight or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
   }
 
@@ -515,14 +521,14 @@
   function onSvgPointerUp(event) {
     if (state.transformSession?.pointerId === event.pointerId) {
       if (state.transformSession.changed) {
-        const labels = { rotate: "Rotated region", bend: "Bent region", resize: "Resized region" };
+        const labels = { rotate: "Rotated hold highlight", bend: "Bent hold highlight", resize: "Resized hold highlight" };
         commitHistory(labels[state.transformSession.kind]);
       }
       state.transformSession = null;
       render();
     }
     if (state.dragSession?.pointerId === event.pointerId) {
-      if (state.dragSession.changed) commitHistory("Moved region");
+      if (state.dragSession.changed) commitHistory("Moved hold highlight");
       state.dragSession = null;
       render();
     }
@@ -579,7 +585,7 @@
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
       : `Drag to create a ${shapeLabel(state.drawShape).toLowerCase()}. Press Escape to cancel.`;
-    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} region.`);
+    setStatus(`Creating a ${shapeLabel(state.drawShape).toLowerCase()} hold highlight.`);
     render();
   }
 
@@ -606,8 +612,8 @@
     state.primitiveSession = null;
     state.selectedId = nextId;
     el["draw-instruction"].classList.remove("visible");
-    commitHistory("Added region");
-    setStatus(`Added ${region.key}.`);
+    commitHistory("Added hold highlight");
+    setStatus(`Added ${region.key} hold highlight.`);
     render();
   }
 
@@ -625,8 +631,8 @@
     const region = selectedRegion();
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
-    commitHistory("Deleted region");
-    setStatus(`Deleted ${region.key}. Undo is available.`);
+    commitHistory("Deleted hold highlight");
+    setStatus(`Deleted ${region.key} hold highlight. Undo is available.`);
     render();
   }
 
@@ -641,7 +647,8 @@
     copy.metadata.humanNotes = "Duplicated manually";
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Duplicated region");
+    commitHistory("Duplicated hold highlight");
+    setStatus(`Duplicated hold highlight ${copy.key}.`);
     render();
   }
 
@@ -652,14 +659,14 @@
     const tolerance = Math.max(1.5, Math.hypot(state.canvas.width, state.canvas.height) * 0.0025);
     const simplified = simplifyClosedContour(region.contour, tolerance);
     if (simplified.length >= before) {
-      setStatus(`${region.key} already has a sparse contour.`);
+      setStatus(`${region.key} already has a sparse hold highlight contour.`);
       return;
     }
     region.contour = simplified;
     region.metadata.shapeKind = "freeform";
     region.metadata.pathStyle = "smooth";
     commitHistory("Simplified curve");
-    setStatus(`Simplified ${region.key} from ${before} to ${simplified.length} controls.`);
+    setStatus(`Simplified ${region.key} hold highlight from ${before} to ${simplified.length} controls.`);
     render();
   }
 
@@ -675,8 +682,8 @@
     copy.metadata.humanNotes = `Mirrored from ${source.key}`;
     state.regions.push(copy);
     state.selectedId = nextId;
-    commitHistory("Mirrored region copy");
-    setStatus(`Created mirrored copy ${copy.key}.`);
+    commitHistory("Mirrored hold highlight copy");
+    setStatus(`Created mirrored hold highlight copy ${copy.key}.`);
     render();
   }
 
@@ -688,7 +695,7 @@
       setStatus("Mirror replacement cancelled.");
     } else {
       state.mirrorOntoSourceId = source.id;
-      setStatus(`Mirror ${source.key} onto which target? Select another region.`);
+      setStatus(`Mirror ${source.key} onto which target? Select another hold highlight.`);
     }
     renderToolState();
   }
@@ -706,8 +713,8 @@
     target.contour = mirrorContour(source.contour, state.canvas.width);
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
-    commitHistory("Mirrored geometry onto region");
-    setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
+    commitHistory("Mirrored geometry onto hold highlight");
+    setStatus(`Replaced ${target.key} hold highlight with mirrored geometry from ${source.key}.`);
     render();
   }
 
@@ -738,7 +745,7 @@
   }
 
   function resetHistory() {
-    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded regions", selectedId: state.selectedId }];
+    state.history = [{ snapshot: JSON.stringify(state.regions), label: "Loaded hold highlights", selectedId: state.selectedId }];
     state.historyIndex = 0;
     state.savedSnapshot = state.history[0].snapshot;
     state.dirty = false;
@@ -842,7 +849,7 @@
       if (Math.abs(x2 - x1) >= 6 && Math.abs(y2 - y1) >= 6) finishDraw();
       else {
         state.draft = [];
-        setStatus("Drag a larger area to create the shape.");
+        setStatus("Drag a larger area to create the hold highlight.");
         renderOverlay();
       }
       return;
@@ -855,13 +862,13 @@
   async function loadDemo() {
     try {
       const [regionsResponse] = await Promise.all([fetch("demo/stage-2-regions.json", { cache: "no-store" })]);
-      if (!regionsResponse.ok) throw new Error("Demo regions unavailable");
+      if (!regionsResponse.ok) throw new Error("Demo hold highlights unavailable");
       const data = await regionsResponse.json();
       await setImageHref("demo/stage-1-auto-rgba.png", "Simulator Stage 1 demo");
       setRegions(data, "stage-2-regions.json");
-      setStatus("Simulator demo loaded. Select a region to begin editing.");
+      setStatus("Simulator demo loaded. Select a hold highlight to begin editing.");
     } catch (error) {
-      setStatus("Load an image and region JSON to begin.");
+      setStatus("Load an image and hold highlight JSON to begin.");
       console.warn(error);
     }
   }
@@ -869,6 +876,10 @@
   function showBoardPicker(visible) {
     el["board-picker"].classList.toggle("hidden", !visible);
     el["board-picker-separator"].classList.toggle("hidden", !visible);
+  }
+
+  function showStaticLoadControls(visible) {
+    el["static-load-controls"].classList.toggle("hidden", !visible);
   }
 
   function populateBoardPicker(sessions) {
@@ -883,19 +894,44 @@
   }
 
   async function loadServerSession(runId) {
-    const previousRunId = state.selectedRunId;
+    const current = {
+      editor: state,
+      visible: {
+        boardValue: state.selectedRunId || el["board-select"].value,
+        status: el["status-text"].textContent,
+      },
+    };
     state.loadingSession = true;
     renderSaveState();
     try {
-      const sessionUrl = `/api/session?run=${encodeURIComponent(runId)}`;
-      const sessionResponse = await fetch(sessionUrl, { cache: "no-store" });
-      if (!sessionResponse.ok || !sessionResponse.headers.get("content-type")?.includes("application/json")) return false;
-      const session = await sessionResponse.json();
-      if (!session.ok) return false;
-      const regionsResponse = await fetch(session.regionsUrl, { cache: "no-store" });
-      if (!regionsResponse.ok) throw new Error("Could not load Stage 2 regions from the run");
-      const regions = await regionsResponse.json();
-      await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
+      const transition = await runSessionLoadTransaction(current, {
+        loadSession: async () => {
+          const sessionUrl = `/api/session?run=${encodeURIComponent(runId)}`;
+          const response = await fetch(sessionUrl, { cache: "no-store" });
+          if (!response.ok || !response.headers.get("content-type")?.includes("application/json")) {
+            throw new Error("Could not load the selected board session");
+          }
+          const session = await response.json();
+          if (!session.ok) throw new Error(session.error || "Could not load the selected board session");
+          return session;
+        },
+        loadRegions: async (session) => {
+          const response = await fetch(session.regionsUrl, { cache: "no-store" });
+          if (!response.ok) throw new Error("Could not load hold highlights from the run");
+          return response.json();
+        },
+        normalizeRegions: (regions, incomingCanvas) => normalizePipelineDocument(regions, incomingCanvas),
+        loadImage: (session) => loadImageAsset(session.imageUrl),
+      });
+      if (!transition.ok) {
+        console.warn(transition.error);
+        el["board-select"].value = transition.value.visible.boardValue;
+        setStatus(formatSessionLoadError(transition.error));
+        return false;
+      }
+
+      const { session, normalized, imageAsset } = transition.value;
+      applyImageAsset(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png", imageAsset);
       state.serverSession = session;
       state.selectedRunId = session.id;
       state.drawing = false;
@@ -903,14 +939,15 @@
       state.primitiveSession = null;
       state.editPoints = false;
       state.mirrorOntoSourceId = null;
-      setRegions(regions, session.regionsPath || "stage-2-regions.json");
+      applyRegions(normalized, session.regionsPath || "stage-2-regions.json");
+      showStaticLoadControls(false);
       el["board-select"].value = session.id;
-      setStatus(`Editing ${session.label}. Changes can be saved into this generated run.`);
+      setStatus(`Loaded ${session.label}. Edit the hold highlights and save changes into this generated run.`);
       return true;
     } catch (error) {
       console.warn(error);
-      if (previousRunId) el["board-select"].value = previousRunId;
-      setStatus(`Could not switch boards: ${error.message || error}`);
+      el["board-select"].value = current.visible.boardValue;
+      setStatus(formatSessionLoadError(error));
       return false;
     } finally {
       state.loadingSession = false;
@@ -944,46 +981,53 @@
 
   async function loadInitialSession() {
     if (await loadServerCatalog()) return;
+    showStaticLoadControls(true);
     showBoardPicker(false);
     await loadDemo();
   }
 
-  async function setImageHref(href, name) {
-    await new Promise((resolve, reject) => {
+  async function loadImageAsset(href) {
+    const image = await new Promise((resolve, reject) => {
       const image = new Image();
-      image.onload = () => {
-        state.imageHref = href;
-        state.imageName = name;
-        el["board-image"].setAttribute("href", href);
-        captureImagePixels(image);
-        if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
-        resolve();
-      };
+      image.onload = () => resolve(image);
       image.onerror = reject;
       image.src = href;
     });
-    configureSvg();
-    el["empty-state"].classList.add("hidden");
+    return { image, imagePixels: readImagePixels(image) };
   }
 
-  function captureImagePixels(image) {
+  function applyImageAsset(href, name, { image, imagePixels }) {
+    state.imageHref = href;
+    state.imageName = name;
+    state.imagePixels = imagePixels;
+    if (!imagePixels) state.snapEnabled = false;
+    el["board-image"].setAttribute("href", href);
+    if (!state.regions.length) state.canvas = { width: image.naturalWidth, height: image.naturalHeight };
+    configureSvg();
+    el["empty-state"].classList.add("hidden");
+    renderToolState();
+  }
+
+  async function setImageHref(href, name) {
+    applyImageAsset(href, name, await loadImageAsset(href));
+  }
+
+  function readImagePixels(image) {
     try {
       const canvas = document.createElement("canvas");
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
       const context = canvas.getContext("2d", { willReadFrequently: true });
       context.drawImage(image, 0, 0);
-      state.imagePixels = {
+      return {
         rgba: context.getImageData(0, 0, canvas.width, canvas.height).data,
         width: canvas.width,
         height: canvas.height,
       };
     } catch (error) {
-      state.imagePixels = null;
-      state.snapEnabled = false;
       console.warn("Edge snapping unavailable for this image", error);
+      return null;
     }
-    renderToolState();
   }
 
   function snapPoint(point, bypass = false) {
@@ -1013,7 +1057,10 @@
   }
 
   function setRegions(data, name = "regions.json") {
-    const normalized = normalizePipelineDocument(data, state.canvas);
+    applyRegions(normalizePipelineDocument(data, state.canvas), name);
+  }
+
+  function applyRegions(normalized, name) {
     state.canvas = normalized.canvas;
     state.regions = normalized.regions;
     state.baselineRegions = clone(state.regions);
@@ -1037,6 +1084,7 @@
     state.serverSession = null;
     state.selectedRunId = null;
     showBoardPicker(false);
+    showStaticLoadControls(true);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = async () => {
@@ -1052,12 +1100,13 @@
     state.serverSession = null;
     state.selectedRunId = null;
     showBoardPicker(false);
+    showStaticLoadControls(true);
     renderSaveState();
     const reader = new FileReader();
     reader.onload = () => {
       try {
         setRegions(JSON.parse(reader.result), file.name);
-        setStatus(`Loaded ${file.name} with ${state.regions.length} regions.`);
+        setStatus(`Loaded ${file.name} with ${state.regions.length} hold highlights.`);
       } catch (error) {
         setStatus(`Could not read ${file.name}.`);
         console.error(error);
@@ -1087,7 +1136,7 @@
   function exportEditedRegions() {
     const payload = editedDocument();
     downloadJson(payload, "stage-2-regions.edited.json");
-    setStatus(`Exported ${payload.regions.length} edited regions.`);
+    setStatus(`Exported ${payload.regions.length} edited hold highlights.`);
   }
 
   function exportCorrections() {
@@ -1112,7 +1161,7 @@
       state.savedSnapshot = JSON.stringify(state.regions);
       state.dirty = false;
       state.hasSaved = true;
-      setStatus(`Saved ${result.regionsPath} and ${result.correctionsPath}.`);
+      setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
       state.saveError = error.message || "Save failed";
       setStatus(state.saveError);
@@ -1273,8 +1322,8 @@
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
   el["opacity-slider"].addEventListener("input", (event) => { state.opacity = Number(event.target.value) / 100; renderOverlay(); });
-  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed region"));
-  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed grip type"));
+  el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed hold highlight"));
+  el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed hold type"));
   el["region-shape-select"].addEventListener("change", (event) => convertSelectedShape(event.target.value));
   el["region-path-style-select"].addEventListener("change", (event) => updateSelected((region) => { region.metadata.pathStyle = event.target.value; }, "Changed path style"));
   el["curve-tension-slider"].addEventListener("input", (event) => {
