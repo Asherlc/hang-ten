@@ -9,69 +9,85 @@ const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
 const server = fs.readFileSync(path.join(root, "server.py"), "utf8");
 
-test("renders the guided Hangboard Workbench shell instead of the old static title", () => {
-  assert.match(index, /<title>Hangboard Workbench<\/title>/);
-  assert.match(index, /<h1 id="setup-title">Start a hangboard<\/h1>/);
-  assert.match(index, /<h1 id="board-title">Hangboard Workbench<\/h1>/);
-  assert.match(index, /Review each checkpoint, then continue the pipeline\./);
-  assert.doesNotMatch(index, /<title>Hold Editor<\/title>/);
-  assert.doesNotMatch(index, /<h1>Hold Editor<\/h1>/);
+void app;
+void readme;
+
+test("brands the workspace as a Hold Editor", () => {
+  assert.match(index, /<title>Hold Editor<\/title>/);
+  assert.match(index, /<h1>Hold Editor<\/h1>/);
   assert.doesNotMatch(index, /Hold Region Editor/);
+  assert.match(index, /Edit and save hold highlights/);
 });
 
-test("shows the guided pipeline and region-review controls", () => {
-  assert.match(index, /<h2>Pipeline<\/h2>/);
-  assert.match(index, /<h2>Grip regions<\/h2>/);
-  assert.match(index, /aria-label="Grip regions"/);
+test("keeps full hold editing controls", () => {
   assert.match(index, /id="new-shape-select"/);
-  assert.match(index, /value="curved-freeform"/);
+  assert.match(index, /id="region-type-select"/);
+  assert.match(index, /value="jug"/);
+  assert.match(index, /value="sloper"/);
+  assert.match(index, /value="edge"/);
+  assert.match(index, /value="pocket"/);
   assert.match(index, /id="add-region-button"/);
-  assert.match(index, /No checkpoint selected/);
-  assert.match(index, /Why was this region changed\?/);
+  assert.match(index, />\s*<span>＋<\/span>\s*Add highlight\s*</);
+  assert.match(index, /id="delete-button"/);
 });
 
-test("keeps legacy file-loading controls inside the workbench toolbar", () => {
-  assert.match(index, /id="legacy-controls"/);
-  assert.match(index, /id="load-image-button">Load image</);
-  assert.match(index, /id="load-regions-button">Load regions</);
-  assert.match(index, /id="export-button">Export edited regions</);
-  assert.match(index, /id="corrections-button">Export corrections</);
-  assert.doesNotMatch(index, /id="static-load-controls"/);
-});
-
-test("app switches between guided workbench labels and legacy static mode", () => {
-  assert.match(app, /el\["board-title"\]\.textContent = view\?\.productName \|\| "Hangboard Workbench"/);
-  assert.match(app, /el\["board-state"\]\.textContent = view[\s\S]*"Create or choose a board to begin\.";/);
-  assert.match(app, /el\["checkpoint-title"\]\.textContent = view[\s\S]*"Waiting for a board";/);
-  assert.match(app, /el\["setup-submit-button"\]\.textContent = "Create board";/);
-  assert.match(app, /el\["legacy-controls"\]\.classList\.add\("hidden"\)/);
-  assert.match(app, /el\["legacy-controls"\]\.classList\.remove\("hidden"\)/);
-  assert.match(app, /el\["save-state"\]\.textContent = "Static mode"/);
-});
-
-test("app uses guided approval and local-save wording for current revisions", () => {
-  assert.match(app, /"Approve & continue"/);
-  assert.match(app, /"Save locally"/);
-  assert.match(app, /"Saved locally"/);
-  assert.doesNotMatch(app, /save hold highlights/i);
-  assert.doesNotMatch(app, /edited hold highlights/i);
-  assert.match(app, /detail: \(board\) => board\.saved \? "Saved locally" : `Stage \$\{String\(board\.stage \?\? 0\)\} · Unsaved`,/);
-  assert.match(app, /runGuidedMutation\(\(options\) => workbenchClient\.finalSave\(state\.board, options\), "Saved to this repository\."\)/);
-});
-
-test("server still exposes the legacy Hold Editor CLI entrypoint", () => {
-  assert.match(server, /ArgumentParser\(description="Serve the Hold Editor for pipeline-generated onboarding runs"\)/);
-  assert.match(server, /help="Persistent workbench workspace; may be combined with legacy run inputs"/);
-  assert.match(server, /print\(f"Hold Editor: http:\/\/\{server\.server_address\[0\]\}:\{server\.server_port\}"\)/);
-});
-
-test("README documents both the guided workbench flow and the legacy static editor modes", () => {
+test("documents the direct hold-highlight workflow", () => {
   assert.match(readme, /^# Hold Editor/m);
-  assert.match(readme, /## Run the guided local workbench/);
-  assert.match(readme, /select \*\*Create board\*\*/);
-  assert.match(readme, /## Edit and save one existing Stage 2 run/);
-  assert.match(readme, /## Static mode/);
-  assert.match(readme, /legacy\/static mode, unsaved browser edits are lost/);
-  assert.match(readme, /Both export buttons remain available in server and static modes as recovery/);
+  assert.match(readme, /choose a board.*edit.*add.*delete.*save/is);
+  assert.match(readme, /hold type/i);
   assert.doesNotMatch(readme, /# Hold Region Editor/);
+});
+
+test("uses hold editor wording in server labels", () => {
+  assert.match(server, /Hold Editor: http:\/\//);
+  assert.doesNotMatch(server, /Hold Region Editor: http:\/\//);
+});
+
+test("marks manual file loading as a static fallback", () => {
+  assert.match(index, /id="static-load-controls"/);
+  assert.match(index, /id="load-image-button"/);
+  assert.match(index, /id="load-regions-button"/);
+});
+
+test("switches between server-first and static fallback entry states", () => {
+  assert.match(app, /function showStaticLoadControls\(visible\)/);
+  assert.match(app, /static-load-controls/);
+  assert.match(app, /showStaticLoadControls\(false\)/);
+  assert.match(app, /showStaticLoadControls\(true\)/);
+});
+
+test("uses hold language for selection and editing status", () => {
+  assert.match(app, /Hold \$\{region\.id\}/);
+  assert.match(app, /Added \$\{region\.key\}/);
+  assert.match(app, /Deleted \$\{region\.key\}/);
+  assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
+});
+
+test("describes static save mode with hold-editor wording", () => {
+  assert.match(app, /save hold highlights in this Hold Editor/i);
+  assert.doesNotMatch(app, /onboarding run/);
+});
+
+test("uses hold-highlight terminology in visible editor controls", () => {
+  assert.match(index, />Load highlights</);
+  assert.match(index, />Export edited highlights</);
+  assert.match(index, />All highlights</);
+  assert.match(index, /Drop a board image and hold-highlight JSON here/);
+  assert.match(index, /Why was this hold highlight changed\?/);
+  assert.doesNotMatch(index, />Load regions</);
+  assert.doesNotMatch(index, />All regions</);
+});
+
+test("uses hold-highlight terminology in runtime messages", () => {
+  assert.match(app, /Rotated hold highlight/);
+  assert.match(app, /Exported .* edited hold highlights/);
+  assert.doesNotMatch(app, /"(?:Rotated|Bent|Resized|Moved|Renamed) region"/);
+  assert.doesNotMatch(app, /edited regions\.`/);
+});
+
+test("documents hold-highlight operations without generic region prose", () => {
+  assert.match(readme, /Hold highlights can be drawn/);
+  assert.match(readme, /previous or next hold highlight/);
+  assert.doesNotMatch(readme, /Regions can be drawn/);
+  assert.doesNotMatch(readme, /symmetric region/);
 });
