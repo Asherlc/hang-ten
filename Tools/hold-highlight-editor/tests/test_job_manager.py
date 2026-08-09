@@ -174,7 +174,7 @@ def test_job_manager_bounds_queued_work_and_completed_retention(make_manager):
         manager.get(running.id)
 
 
-def test_completed_outcome_survives_expiry_and_manager_restart(
+def test_completed_outcome_is_removed_after_expiry(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, make_manager
 ):
     now = [100.0]
@@ -189,17 +189,20 @@ def test_completed_outcome_survives_expiry_and_manager_restart(
         "workbench-board-reservation-1",
         lambda: {"boardId": "board-1", "revisionId": "revision-1"},
     )
-    expected = manager.wait(submitted.id).as_dict()
+    assert manager.wait(submitted.id).state == "succeeded"
 
     now[0] += 2
-    assert manager.get(submitted.id).as_dict() == expected
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        manager.get(submitted.id)
+    assert not (outcome_root / f"{submitted.id}.json").exists()
     manager.shutdown()
 
     restarted = make_manager(max_workers=1, outcome_root=outcome_root)
-    assert restarted.get(submitted.id).as_dict() == expected
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        restarted.get(submitted.id)
 
 
-def test_failed_outcome_survives_expiry_and_manager_restart(
+def test_failed_outcome_is_removed_after_expiry(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, make_manager
 ):
     now = [100.0]
@@ -215,16 +218,19 @@ def test_failed_outcome_survives_expiry_and_manager_restart(
         raise RuntimeError("private failure detail")
 
     submitted = manager.submit("board-a", fail)
-    expected = manager.wait(submitted.id).as_dict()
-    assert expected["state"] == "failed"
-    assert expected["error"] == "job failed"
+    completed = manager.wait(submitted.id)
+    assert completed.state == "failed"
+    assert completed.error == "job failed"
 
     now[0] += 2
-    assert manager.get(submitted.id).as_dict() == expected
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        manager.get(submitted.id)
+    assert not (outcome_root / f"{submitted.id}.json").exists()
     manager.shutdown()
 
     restarted = make_manager(max_workers=1, outcome_root=outcome_root)
-    assert restarted.get(submitted.id).as_dict() == expected
+    with pytest.raises(JobNotFoundError, match="unknown job"):
+        restarted.get(submitted.id)
 
 
 @pytest.mark.parametrize(

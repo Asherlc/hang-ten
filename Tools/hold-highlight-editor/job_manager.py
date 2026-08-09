@@ -287,3 +287,8 @@ class BoardJobManager:
             self.__completed_at.pop(job_id, None)
             self.__jobs.pop(job_id, None)
             self.__futures.pop(job_id, None)
+            if self.__outcome_root is not None:
+                try:
+                    (self.__outcome_root / f"{job_id}.json").unlink(missing_ok=True)
+                except OSError:
+                    pass
