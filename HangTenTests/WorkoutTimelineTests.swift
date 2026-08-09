@@ -571,6 +571,33 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 @MainActor
+final class WorkoutSpeechOwnershipTests: XCTestCase {
+    func testGenerationAndUtteranceIdentityProtectActiveAndPendingStopOwnership() {
+        var ownership = WorkoutSpeechOwnership()
+        let firstUtterance = AVSpeechUtterance(string: "3")
+        let replacementUtterance = AVSpeechUtterance(string: "2")
+
+        ownership.begin(firstUtterance)
+        XCTAssertTrue(ownership.ownsActive(firstUtterance))
+
+        ownership.requestStop()
+        XCTAssertFalse(ownership.ownsActive(firstUtterance))
+        XCTAssertTrue(ownership.ownsPendingStop(firstUtterance))
+        ownership.finishPendingStop(firstUtterance)
+        XCTAssertFalse(ownership.ownsPendingStop(firstUtterance))
+
+        ownership.begin(replacementUtterance)
+        XCTAssertFalse(ownership.ownsPendingStop(firstUtterance))
+        XCTAssertTrue(ownership.ownsActive(replacementUtterance))
+
+        ownership.finishActive(firstUtterance)
+        XCTAssertTrue(ownership.ownsActive(replacementUtterance))
+        ownership.finishActive(replacementUtterance)
+        XCTAssertFalse(ownership.ownsActive(replacementUtterance))
+    }
+}
+
+@MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
     func testStopWaitsForSpeechCancellationBeforeDeactivatingAudioSession() async {
         let audioSession = RecordingWorkoutAudioSession()
