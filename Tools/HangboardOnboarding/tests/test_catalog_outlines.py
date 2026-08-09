@@ -140,8 +140,81 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
     assert path_bounds(restored.outlines[0].path) == pytest.approx((0.1, 0.1, 0.9, 0.8))
 
 
+def test_outline_models_canonicalize_nested_inputs_for_direct_and_json_construction() -> None:
+    endpoint = [0.1, 0.2]
+    controls = [[0.2, 0.3], [0.3, 0.4]]
+    commands = [OutlineCommand("C", endpoint, controls=controls)]
+    bounds = [0.1, 0.1, 0.8, 0.8]
+    notes = ["editable"]
+    references = [
+        {
+            "title": "Manufacturer photo",
+            "url": "https://example.com/board",
+            "hints": ["front-lit"],
+        }
+    ]
+    outlines = [
+        HoldOutline(
+            id="hold-01",
+            label="Main edge",
+            kind="edge",
+            confidence=0.91,
+            bounds=bounds,
+            path=OutlinePath(commands=commands, closed=True),
+            notes=notes,
+        )
+    ]
+    document = CatalogOutlineDocument(
+        schema_version=1,
+        source_image="board.png",
+        canvas_width=100,
+        canvas_height=100,
+        coordinate_space="normalized",
+        references=references,
+        outlines=outlines,
+    )
+
+    endpoint[0] = 0.9
+    controls[0][0] = 0.9
+    commands.clear()
+    bounds[0] = 0.9
+    notes.append("changed")
+    references[0]["title"] = "Changed"
+    references[0]["hints"].append("changed")
+    outlines.clear()
+    restored = CatalogOutlineDocument.from_json(document.to_json())
+
+    assert document.outlines[0].path.commands[0].to == (0.1, 0.2)
+    assert document.outlines[0].path.commands[0].controls == ((0.2, 0.3), (0.3, 0.4))
+    assert document.outlines[0].bounds == (0.1, 0.1, 0.8, 0.8)
+    assert document.outlines[0].notes == ("editable",)
+    assert document.references[0]["title"] == "Manufacturer photo"
+    assert document.references[0]["hints"] == ("front-lit",)
+    assert restored.references[0]["hints"] == ("front-lit",)
+    with pytest.raises(TypeError):
+        document.references[0]["title"] = "Changed"
+
+
 def test_validator_rejects_coordinates_outside_normalized_canvas() -> None:
     document = replace_first_coordinate(sample_document(), 1.01, 0.4)
+
+    with pytest.raises(ValueError, match="normalized"):
+        validate_catalog_document(document)
+
+
+@pytest.mark.parametrize(
+    "bounds",
+    [
+        (0.1, 0.1, 0.91, 0.8),
+        (0.1, 0.1, 0.9, 0.91),
+    ],
+    ids=["horizontal", "vertical"],
+)
+def test_validator_rejects_bounds_that_overflow_normalized_canvas(
+    bounds: tuple[float, float, float, float],
+) -> None:
+    sample = sample_document()
+    document = replace(sample, outlines=(replace(sample.outlines[0], bounds=bounds),))
 
     with pytest.raises(ValueError, match="normalized"):
         validate_catalog_document(document)
@@ -259,6 +332,53 @@ def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) ->
     assert (tmp_path / "out" / "board.json").exists()
     assert not (tmp_path / "out" / "contact-sheet-primary.json").exists()
     assert (tmp_path / "review" / "board.png").exists()
+
+
+def test_cli_stores_output_relative_source_image_and_check_resolves_it(tmp_path: Path) -> None:
+    cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "source"
+    output_dir = tmp_path / "artifacts" / "outlines"
+    write_synthetic_board(source_dir / "board.png")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir)],
+    )
+
+    assert result.exit_code == 0
+    output_path = output_dir / "board.json"
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    assert payload["sourceImage"] == "../../source/board.png"
+    assert runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    ).exit_code == 0
+
+    payload["sourceImage"] = "../source/board.png"
+    output_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    assert runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    ).exit_code != 0
+
+
+def test_overlay_samples_cubic_segments_instead_of_using_their_endpoint_chord() -> None:
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    path = OutlinePath(
+        commands=(
+            OutlineCommand("M", (0.1, 0.1)),
+            OutlineCommand("C", (0.9, 0.1), controls=((0.3, 0.9), (0.7, 0.9))),
+            OutlineCommand("L", (0.9, 0.2)),
+            OutlineCommand("L", (0.1, 0.1)),
+        ),
+        closed=True,
+    )
+
+    pixels = outlines_module._outline_path_to_pixels(path, 100, 100)
+
+    assert pixels[:, 1].max() > 60
 
 
 def test_review_overlay_labels_with_outline_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

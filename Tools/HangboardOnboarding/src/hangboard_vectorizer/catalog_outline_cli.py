@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import io
 import json
+import os
 from pathlib import Path
 from typing import Any
 from contextlib import redirect_stderr, redirect_stdout
@@ -58,7 +59,9 @@ def main(argv: list[str] | None = None) -> int:
         args.review_dir.mkdir(parents=True, exist_ok=True)
     for source in sources:
         document = vectorize_catalog_image(source)
-        write_catalog_document(document, args.output_dir / f"{source.stem}.json")
+        output_path = args.output_dir / f"{source.stem}.json"
+        document = replace(document, source_image=_source_image_reference(source, output_path))
+        write_catalog_document(document, output_path)
         if args.review_dir is not None:
             render_catalog_review_overlay(source, document, args.review_dir / source.name)
     return 0
@@ -87,9 +90,17 @@ def _check_outputs(sources: list[Path], output_dir: Path) -> int:
         try:
             payload = json.loads(output_path.read_text(encoding="utf-8"))
             document = CatalogOutlineDocument.from_json(payload)
-            validate_catalog_document(document, source_path=source)
+            source_image = Path(document.source_image)
+            if source_image.is_absolute():
+                return 1
+            resolved_source = (output_path.parent / source_image).resolve()
+            if resolved_source != source.resolve():
+                return 1
+            validate_catalog_document(document, source_path=resolved_source)
         except (OSError, ValueError, json.JSONDecodeError):
             return 1
-        if document.source_image != source.name:
-            return 1
     return 0
+
+
+def _source_image_reference(source: Path, output_path: Path) -> str:
+    return Path(os.path.relpath(source.resolve(), output_path.parent.resolve())).as_posix()

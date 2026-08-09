@@ -1,6 +1,6 @@
 # Generated Hardboard Hold Outlines Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Every task must be implemented by a fresh subagent. The controller must run both an implementation checkpoint and a review checkpoint after every task before starting the next one. REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate hand-editable normalized vector hold outlines as JSON for the 32 individual PNGs in `docs/hangboard-generative-catalog/`.
 

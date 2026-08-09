@@ -9,6 +9,7 @@ import math
 import os
 from pathlib import Path
 import tempfile
+from types import MappingProxyType
 
 import cv2
 import numpy as np
@@ -77,6 +78,17 @@ def _string_tuple(value: object, field: str) -> tuple[str, ...]:
     return items
 
 
+def _reference(value: object, field: str) -> Mapping[str, object]:
+    root = _mapping(value, field)
+    return MappingProxyType(
+        {
+            "title": _string(root.get("title"), f"{field}.title"),
+            "url": _string(root.get("url"), f"{field}.url"),
+            "hints": _string_tuple(root.get("hints", ()), f"{field}.hints"),
+        }
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class OutlineCommand:
     command: str
@@ -86,12 +98,23 @@ class OutlineCommand:
     def __post_init__(self) -> None:
         if self.command not in {"M", "L", "C"}:
             raise ValueError("outline command must be M, L, or C")
-        _point(self.to, "to")
+        object.__setattr__(self, "to", _point(self.to, "to"))
         if self.command == "C":
-            if self.controls is None or len(self.controls) != 2:
+            if (
+                self.controls is None
+                or not isinstance(self.controls, Sequence)
+                or isinstance(self.controls, str)
+                or len(self.controls) != 2
+            ):
                 raise ValueError("cubic outline commands require two control points")
-            _point(self.controls[0], "controls[0]")
-            _point(self.controls[1], "controls[1]")
+            object.__setattr__(
+                self,
+                "controls",
+                (
+                    _point(self.controls[0], "controls[0]"),
+                    _point(self.controls[1], "controls[1]"),
+                ),
+            )
         elif self.controls is not None:
             raise ValueError("only cubic outline commands accept control points")
 
@@ -125,6 +148,15 @@ class OutlineCommand:
 class OutlinePath:
     commands: tuple[OutlineCommand, ...]
     closed: bool
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.commands, Sequence) or isinstance(self.commands, str):
+            raise ValueError("outline path commands must be a sequence")
+        if not all(isinstance(command, OutlineCommand) for command in self.commands):
+            raise ValueError("outline path commands must be outline commands")
+        if not isinstance(self.closed, bool):
+            raise ValueError("outline path closed flag must be a boolean")
+        object.__setattr__(self, "commands", tuple(self.commands))
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -176,7 +208,10 @@ class HoldOutline:
                 raise ValueError('string confidence must be "approximate"')
         elif not 0.0 <= self.confidence <= 1.0 or not math.isfinite(self.confidence):
             raise ValueError("confidence must be finite and normalized")
-        _bounds(self.bounds, "bounds")
+        object.__setattr__(self, "bounds", _bounds(self.bounds, "bounds"))
+        if not isinstance(self.path, OutlinePath):
+            raise ValueError("path must be an outline path")
+        object.__setattr__(self, "notes", _string_tuple(self.notes, "notes"))
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -221,17 +256,25 @@ class CatalogOutlineDocument:
         _positive_int(self.canvas_height, "canvas_height")
         if self.coordinate_space != "normalized":
             raise ValueError('coordinate_space must be "normalized"')
+        if not isinstance(self.references, Sequence) or isinstance(self.references, str):
+            raise ValueError("references must be a sequence")
+        object.__setattr__(
+            self,
+            "references",
+            tuple(_reference(reference, f"references[{index}]") for index, reference in enumerate(self.references)),
+        )
+        if not isinstance(self.outlines, Sequence) or isinstance(self.outlines, str):
+            raise ValueError("outlines must be a sequence")
+        if not all(isinstance(outline, HoldOutline) for outline in self.outlines):
+            raise ValueError("outlines must contain hold outlines")
+        object.__setattr__(self, "outlines", tuple(self.outlines))
         if not self.outlines:
             raise ValueError("outlines must not be empty")
         self._validate_references()
 
     def _validate_references(self) -> None:
         for index, reference in enumerate(self.references):
-            if not isinstance(reference, Mapping):
-                raise ValueError(f"references[{index}] must be an object")
-            _string(reference.get("title"), f"references[{index}].title")
-            _string(reference.get("url"), f"references[{index}].url")
-            _string_tuple(reference.get("hints", ()), f"references[{index}].hints")
+            _reference(reference, f"references[{index}]")
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -355,6 +398,8 @@ def _validate_bounds(bounds: Bounds, path: OutlinePath) -> None:
             raise ValueError("outline bounds must stay in normalized space")
     if width <= 0.0 or height <= 0.0:
         raise ValueError("outline bounds must be non-degenerate")
+    if x + width > 1.0 + _EPSILON or y + height > 1.0 + _EPSILON:
+        raise ValueError("outline bounds must stay in normalized space")
     path_x, path_y, path_width, path_height = path_bounds(path)
     path_max_x = path_x + path_width
     path_max_y = path_y + path_height
@@ -763,14 +808,36 @@ def _polygon_area(points: np.ndarray) -> float:
 
 def _outline_path_to_pixels(path: OutlinePath, width: int, height: int) -> np.ndarray:
     contour: list[tuple[int, int]] = []
+    current: Point | None = None
     for command in path.commands:
-        contour.append(
-            (
-                min(width - 1, max(0, int(round(command.to[0] * width)))),
-                min(height - 1, max(0, int(round(command.to[1] * height)))),
-            )
-        )
+        if command.command == "C":
+            if current is None or command.controls is None:
+                raise ValueError("cubic outline command requires a starting point and controls")
+            control_1, control_2 = command.controls
+            for t in np.linspace(0.0, 1.0, 17)[1:]:
+                inverse_t = 1.0 - t
+                point = (
+                    inverse_t**3 * current[0]
+                    + 3.0 * inverse_t**2 * t * control_1[0]
+                    + 3.0 * inverse_t * t**2 * control_2[0]
+                    + t**3 * command.to[0],
+                    inverse_t**3 * current[1]
+                    + 3.0 * inverse_t**2 * t * control_1[1]
+                    + 3.0 * inverse_t * t**2 * control_2[1]
+                    + t**3 * command.to[1],
+                )
+                contour.append(_normalized_point_to_pixel(point, width, height))
+        else:
+            contour.append(_normalized_point_to_pixel(command.to, width, height))
+        current = command.to
     unique = list(dict.fromkeys(contour))
     if len(unique) < 3:
         raise ValueError("outline path must yield at least three drawable points")
     return np.array(unique, dtype=np.int32)
+
+
+def _normalized_point_to_pixel(point: Point, width: int, height: int) -> tuple[int, int]:
+    return (
+        min(width - 1, max(0, int(round(point[0] * width)))),
+        min(height - 1, max(0, int(round(point[1] * height)))),
+    )
