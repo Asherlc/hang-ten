@@ -87,6 +87,16 @@ struct WorkoutHoldCue: Equatable {
     }
 }
 
+enum WorkoutHoldCueVisibilityPolicy {
+    static func showsCue(
+        holdCue: WorkoutHoldCue?,
+        countdown: Int,
+        isComplete: Bool
+    ) -> Bool {
+        holdCue != nil && countdown == 0 && !isComplete
+    }
+}
+
 enum WorkoutHoldCuePolicy {
     static func resolve(
         step: WorkoutStep?,
