@@ -87,6 +87,32 @@ test("resizeContour limits a side handle to one local axis", () => {
   assert.deepEqual(result, [[0, 0], [20, 0], [20, 10], [0, 10]]);
 });
 
+test("resizeContour keeps a side resize above the minimum canvas width", () => {
+  const result = resizeContour({
+    points: [[0, 0], [40, 0], [40, 20], [0, 20]],
+    rotation: 0,
+    handle: "e",
+    pointer: [-20, 10],
+  });
+
+  const xs = result.map(([x]) => x);
+  assert.ok(Math.max(...xs) - Math.min(...xs) >= 6);
+});
+
+test("resizeContour keeps both dimensions above minimum for an inward corner resize", () => {
+  const result = resizeContour({
+    points: [[0, 0], [40, 0], [40, 20], [0, 20]],
+    rotation: 0,
+    handle: "se",
+    pointer: [-20, -20],
+  });
+
+  const xs = result.map(([x]) => x);
+  const ys = result.map(([, y]) => y);
+  assert.ok(Math.max(...xs) - Math.min(...xs) >= 6);
+  assert.ok(Math.max(...ys) - Math.min(...ys) >= 6);
+});
+
 test("resizeContour preserves aspect ratio from corner handles", () => {
   const result = resizeContour({
     points: [[0, 0], [10, 0], [10, 10], [0, 10]],
