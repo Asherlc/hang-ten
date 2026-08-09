@@ -759,7 +759,7 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
         let step = try XCTUnwrap(
             store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
-                $0.id == "abrahangs-grip-4"
+                $0.id == "abrahangs-grip-4.segment-1"
             }
         )
 
