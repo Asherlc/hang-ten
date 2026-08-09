@@ -427,8 +427,13 @@ class RepositoryBoardLibrary:
                 continue
             path = self._transaction_relative(transaction)
             if transaction.is_symlink() or not transaction.is_dir():
-                transaction.unlink()
-                self._fsync_directory(self._transactions_root)
+                try:
+                    transaction.unlink()
+                    self._fsync_directory(self._transactions_root)
+                except OSError as error:
+                    raise BoardLibraryError(
+                        "stray transaction entry is not removable"
+                    ) from error
                 continue
             candidate = transaction / "candidate"
             rollback = transaction / "rollback"
