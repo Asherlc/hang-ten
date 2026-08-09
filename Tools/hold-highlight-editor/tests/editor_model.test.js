@@ -9,6 +9,7 @@ const {
   mirrorContour,
   findStrongestEdge,
   resolveHistorySelection,
+  normalizeRegion,
   normalizePipelineDocument,
 } = require("../editor-model.js");
 
@@ -139,6 +140,26 @@ test("resolveHistorySelection restores the selection stored with an undo snapsho
   assert.equal(resolveHistorySelection({ selectedId: 1 }, regions, 20), 1);
   assert.equal(resolveHistorySelection({}, regions, 2), 2);
   assert.equal(resolveHistorySelection({ selectedId: 9 }, regions, 20), null);
+});
+
+test("normalizeRegion preserves primitive metadata and coerces contour points to numbers", () => {
+  const result = normalizeRegion({
+    id: "7",
+    key: "grip-007",
+    type: "edge",
+    contour: [["1", "2"], [3, "4"], ["5", 6]],
+    metadata: {
+      mode: "surface",
+      shapeKind: "rounded-rectangle",
+      pathStyle: "straight",
+    },
+  }, 9);
+
+  assert.equal(result.id, 7);
+  assert.equal(result.key, "grip-007");
+  assert.equal(result.type, "edge");
+  assert.deepEqual(result.contour, [[1, 2], [3, 4], [5, 6]]);
+  assert.equal(result.metadata.shapeKind, "rounded-rectangle");
 });
 
 test("normalizePipelineDocument adapts historical generated region artifacts", () => {
