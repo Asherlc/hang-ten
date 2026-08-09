@@ -492,7 +492,18 @@
         item.dataset.regionId = region.id;
         item.setAttribute("role", "option");
         item.setAttribute("aria-selected", region.id === state.selectedId ? "true" : "false");
-        item.innerHTML = `<i class="dot ${escapeHTML(region.type)}"></i><span class="region-id">${region.id}</span><span class="region-key">${escapeHTML(region.key)}</span><span class="region-type">${escapeHTML(region.type)}</span>`;
+        const dot = document.createElement("i");
+        dot.className = `dot ${region.type}`;
+        const regionId = document.createElement("span");
+        regionId.className = "region-id";
+        regionId.textContent = region.id;
+        const regionKey = document.createElement("span");
+        regionKey.className = "region-key";
+        regionKey.textContent = region.key;
+        const regionType = document.createElement("span");
+        regionType.className = "region-type";
+        regionType.textContent = region.type;
+        item.append(dot, regionId, regionKey, regionType);
         item.addEventListener("click", () => selectRegion(region.id));
         el["region-list"].appendChild(item);
       });
@@ -1670,7 +1681,12 @@
     timeline.forEach((row, index) => {
       const item = document.createElement("li");
       item.className = `stage-row ${row.state}`;
-      item.innerHTML = `<span class="stage-dot">${row.state === "complete" ? "✓" : String(index + 1)}</span><span>${escapeHTML(STAGE_LABELS[index])}</span>`;
+      const stageDot = document.createElement("span");
+      stageDot.className = "stage-dot";
+      stageDot.textContent = row.state === "complete" ? "✓" : String(index + 1);
+      const stageLabel = document.createElement("span");
+      stageLabel.textContent = STAGE_LABELS[index];
+      item.append(stageDot, stageLabel);
       el["stage-timeline"].appendChild(item);
     });
     renderRecentRuns();
@@ -1692,7 +1708,11 @@
       button.type = "button";
       button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
       button.disabled = openingActionsDisabled(state);
-      button.innerHTML = `<span>${escapeHTML(board.productName)}</span><small>Stage ${String(board.stage)}</small>`;
+      const productName = document.createElement("span");
+      productName.textContent = board.productName;
+      const stage = document.createElement("small");
+      stage.textContent = `Stage ${String(board.stage)}`;
+      button.append(productName, stage);
       button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
       el["recent-runs"].appendChild(button);
     });
