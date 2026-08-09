@@ -1821,12 +1821,11 @@ struct WorkoutView: View {
 					highlightMode: highlightMode
 				)
 					.padding(.horizontal, 2)
-				if WorkoutHoldCueVisibilityPolicy.showsCue(
+				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
 					holdCue: holdCue,
 					countdown: countdown,
-					isComplete: isComplete,
-					isResting: isResting
-				), let holdCue {
+					isComplete: isComplete
+				) {
 					GripDiagramView(
 						hold: holdCue.hold,
 						gripType: holdCue.gripType,
@@ -1941,12 +1940,11 @@ struct WorkoutView: View {
 		ZStack {
 			Color.clear
 				.accessibilityHidden(true)
-			if WorkoutHoldCueVisibilityPolicy.showsCue(
+			if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
 				holdCue: holdCue,
 				countdown: countdown,
-				isComplete: isComplete,
-				isResting: isResting
-			), let holdCue {
+				isComplete: isComplete
+			) {
 				let fingerCue = FingerCue(
 					fingerConfiguration: holdCue.fingerConfiguration,
 					capacity: holdCue.hold.fingerCapacity

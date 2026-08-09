@@ -155,8 +155,7 @@ final class WorkoutTimelineTests: XCTestCase {
             WorkoutHoldCueVisibilityPolicy.showsCue(
                 holdCue: holdCue,
                 countdown: 0,
-                isComplete: false,
-                isResting: true
+                isComplete: false
             )
         )
     }
@@ -178,24 +177,21 @@ final class WorkoutTimelineTests: XCTestCase {
             WorkoutHoldCueVisibilityPolicy.showsCue(
                 holdCue: holdCue,
                 countdown: 3,
-                isComplete: false,
-                isResting: true
+                isComplete: false
             )
         )
         XCTAssertFalse(
             WorkoutHoldCueVisibilityPolicy.showsCue(
                 holdCue: holdCue,
                 countdown: 0,
-                isComplete: true,
-                isResting: true
+                isComplete: true
             )
         )
         XCTAssertFalse(
             WorkoutHoldCueVisibilityPolicy.showsCue(
                 holdCue: nil,
                 countdown: 0,
-                isComplete: false,
-                isResting: true
+                isComplete: false
             )
         )
     }

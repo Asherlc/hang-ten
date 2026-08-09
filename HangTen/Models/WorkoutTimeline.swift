@@ -91,8 +91,7 @@ enum WorkoutHoldCueVisibilityPolicy {
     static func showsCue(
         holdCue: WorkoutHoldCue?,
         countdown: Int,
-        isComplete: Bool,
-        isResting: Bool
+        isComplete: Bool
     ) -> Bool {
         holdCue != nil && countdown == 0 && !isComplete
     }
