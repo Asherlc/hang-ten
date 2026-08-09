@@ -555,6 +555,7 @@ def _fallback_horizontal_rail_candidates(
     band_mask = cv2.morphologyEx(
         band_mask, cv2.MORPH_OPEN, np.ones((3, 3), dtype=np.uint8), iterations=1
     )
+    band_mask = cv2.bitwise_and(band_mask, board)
 
     _, labels, stats, _ = cv2.connectedComponentsWithStats(band_mask, 8)
     min_width = max(20, grayscale.shape[1] // 3)

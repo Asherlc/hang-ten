@@ -243,6 +243,33 @@ def test_detector_falls_back_to_low_contrast_horizontal_rail_bands() -> None:
     assert all(np.ptp(contour[:, 0]) >= 240 for contour, _, _ in candidates)
 
 
+def test_fallback_contours_respect_notched_board_mask(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    image, board_mask = synthetic_low_contrast_white_rail_board()
+    for row, y in enumerate(range(94, 142)):
+        start = max(24, 182 - (41 * (row + 1) // 48))
+        board_mask[y, start:183] = 0
+
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    raw_contours: list[np.ndarray] = []
+    original_find_contours = outlines_module.cv2.findContours
+
+    def capture_find_contours(mask: np.ndarray, *args: object) -> tuple[object, object]:
+        contours, hierarchy = original_find_contours(mask, *args)
+        raw_contours.extend(contour.reshape(-1, 2) for contour in contours)
+        return contours, hierarchy
+
+    monkeypatch.setattr(outlines_module.cv2, "findContours", capture_find_contours)
+    candidates = detect_hold_candidates(image, board_mask)
+
+    assert candidates
+    assert raw_contours
+    for contour in raw_contours:
+        pixels = np.rint(contour).astype(int)
+        assert all(board_mask[y, x] > 0 for x, y in pixels)
+
+
 def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -> None:
     try:
         cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
