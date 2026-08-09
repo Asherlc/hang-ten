@@ -183,6 +183,76 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHoldCueVisibilityShowsAvailableRestPreviewCue() {
+        let holdCue = WorkoutHoldCue(
+            hold: BoardHold(
+                id: "cue-edge",
+                name: "Cue edge",
+                shortLabel: "E",
+                detail: "Edge",
+                kind: .edge,
+                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            ),
+            gripType: .openHand
+        )
+
+        XCTAssertTrue(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 0,
+                isComplete: false,
+                isResting: true
+            )
+        )
+        XCTAssertTrue(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 0,
+                isComplete: false,
+                isResting: false
+            )
+        )
+    }
+
+    func testHoldCueVisibilitySuppressesCountdownCompletionAndMissingCue() {
+        let holdCue = WorkoutHoldCue(
+            hold: BoardHold(
+                id: "cue-edge",
+                name: "Cue edge",
+                shortLabel: "E",
+                detail: "Edge",
+                kind: .edge,
+                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            ),
+            gripType: .openHand
+        )
+
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 3,
+                isComplete: false,
+                isResting: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 0,
+                isComplete: true,
+                isResting: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: nil,
+                countdown: 0,
+                isComplete: false,
+                isResting: true
+            )
+        )
+    }
+
     private let steps: [WorkoutStep] = [
         WorkoutStep(
             id: "first",
@@ -1112,6 +1182,48 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 phrase: "2"
             )
         )
+    }
+}
+
+final class WorkoutAudioCoachSpeechLifecycleTests: XCTestCase {
+    func testFinishingOldCueIsIgnoredWhileNewCueRemainsActive() {
+        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
+        let oldCueID = lifecycle.beginCue()
+        let newCueID = lifecycle.beginCue()
+
+        XCTAssertEqual(lifecycle.finishCue(oldCueID), .ignore)
+        XCTAssertEqual(lifecycle.activeCueID, newCueID)
+        XCTAssertTrue(lifecycle.hasActiveCue)
+    }
+
+    func testFinishingCueKeepsAudioSessionActiveAndLeavesCueingEnabled() {
+        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
+        let cueID = lifecycle.beginCue()
+
+        XCTAssertEqual(lifecycle.finishCue(cueID), .keepAudioSessionActive)
+        XCTAssertTrue(lifecycle.isCueing)
+        XCTAssertFalse(lifecycle.hasActiveCue)
+    }
+
+    func testStoppingCueDeactivatesAudioSessionAndInvalidatesPendingCue() {
+        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
+        let cueID = lifecycle.beginCue()
+
+        XCTAssertEqual(lifecycle.stop(), .deactivateAudioSession)
+        XCTAssertFalse(lifecycle.isCueing)
+        XCTAssertEqual(lifecycle.finishCue(cueID), .ignore)
+    }
+
+    func testBeginningAfterStopCreatesNewActiveCue() {
+        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
+        let firstCueID = lifecycle.beginCue()
+
+        _ = lifecycle.stop()
+        let secondCueID = lifecycle.beginCue()
+
+        XCTAssertNotEqual(firstCueID, secondCueID)
+        XCTAssertTrue(lifecycle.isCueing)
+        XCTAssertEqual(lifecycle.finishCue(secondCueID), .keepAudioSessionActive)
     }
 }
 

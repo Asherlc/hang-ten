@@ -1761,7 +1761,12 @@ struct WorkoutView: View {
 					highlightMode: highlightMode
 				)
 					.padding(.horizontal, 2)
-				if let holdCue, countdown == 0, !isComplete {
+				if WorkoutHoldCueVisibilityPolicy.showsCue(
+					holdCue: holdCue,
+					countdown: countdown,
+					isComplete: isComplete,
+					isResting: isResting
+				), let holdCue {
 					GripDiagramView(hold: holdCue.hold, gripType: holdCue.gripType)
 				}
 				cueCard(
@@ -1813,6 +1818,7 @@ struct WorkoutView: View {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
 					countdown: countdown,
+					isResting: isResting,
 					isComplete: isComplete,
 					side: .left
 				)
@@ -1835,6 +1841,7 @@ struct WorkoutView: View {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
 					countdown: countdown,
+					isResting: isResting,
 					isComplete: isComplete,
 					side: .right
 				)
@@ -1863,13 +1870,19 @@ struct WorkoutView: View {
 	private func landscapeHandCueSlot(
 		holdCue: WorkoutHoldCue?,
 		countdown: Int,
+		isResting: Bool,
 		isComplete: Bool,
 		side: GripCueSide
 	) -> some View {
 		ZStack {
 			Color.clear
 				.accessibilityHidden(true)
-			if let holdCue, countdown == 0, !isComplete {
+			if WorkoutHoldCueVisibilityPolicy.showsCue(
+				holdCue: holdCue,
+				countdown: countdown,
+				isComplete: isComplete,
+				isResting: isResting
+			), let holdCue {
 				GripHandCueCard(hold: holdCue.hold, gripType: holdCue.gripType, side: side)
 			}
 		}

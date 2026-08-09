@@ -9,6 +9,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private let synthesizer = AVSpeechSynthesizer()
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
+    private var speechLifecycle = WorkoutAudioCoachSpeechLifecycle()
+    private var activeUtterance: AVSpeechUtterance?
 
     override init() {
         super.init()
@@ -19,21 +21,26 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         guard !phrase.isEmpty else { return }
         configureAudioSessionIfNeeded()
 
-        synthesizer.stopSpeaking(at: .immediate)
-
         let utterance = AVSpeechUtterance(string: phrase)
         utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
         utterance.rate = phrase.count <= 2 ? 0.50 : 0.47
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
+        speechLifecycle.beginCue()
+        activeUtterance = utterance
+        synthesizer.stopSpeaking(at: .immediate)
         logger.notice("Speaking cue: \(phrase, privacy: .public)")
         synthesizer.speak(utterance)
     }
 
     func stop() {
+        let completion = speechLifecycle.stop()
+        activeUtterance = nil
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
-        deactivateAudioSession()
+        if completion == .deactivateAudioSession {
+            deactivateAudioSession()
+        }
     }
 
     private var preferredLanguageCode: String {
@@ -65,6 +72,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         didStart utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
+            guard self.activeUtterance === utterance else { return }
             isSpeaking = true
         }
     }
@@ -74,10 +82,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         didFinish utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
-            isSpeaking = false
-            if !self.synthesizer.isSpeaking {
-                self.deactivateAudioSession()
-            }
+            self.finishCue(for: utterance)
         }
     }
 
@@ -86,10 +91,53 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         didCancel utterance: AVSpeechUtterance
     ) {
         Task { @MainActor in
-            isSpeaking = false
-            if !self.synthesizer.isSpeaking {
-                self.deactivateAudioSession()
-            }
+            self.finishCue(for: utterance)
         }
+    }
+
+    private func finishCue(for utterance: AVSpeechUtterance) {
+        guard activeUtterance === utterance,
+              let cueID = speechLifecycle.activeCueID,
+              speechLifecycle.finishCue(cueID) == .keepAudioSessionActive else { return }
+
+        activeUtterance = nil
+        isSpeaking = false
+    }
+}
+
+struct WorkoutAudioCoachSpeechLifecycle {
+    enum CueCompletion: Equatable {
+        case ignore
+        case keepAudioSessionActive
+        case deactivateAudioSession
+    }
+
+    private var nextCueID = 0
+    private(set) var activeCueID: Int?
+    private(set) var isCueing = false
+
+    var hasActiveCue: Bool {
+        activeCueID != nil
+    }
+
+    @discardableResult
+    mutating func beginCue() -> Int {
+        nextCueID += 1
+        activeCueID = nextCueID
+        isCueing = true
+        return nextCueID
+    }
+
+    mutating func finishCue(_ cueID: Int) -> CueCompletion {
+        guard activeCueID == cueID else { return .ignore }
+        activeCueID = nil
+        return .keepAudioSessionActive
+    }
+
+    mutating func stop() -> CueCompletion {
+        nextCueID += 1
+        activeCueID = nil
+        isCueing = false
+        return .deactivateAudioSession
     }
 }
