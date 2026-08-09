@@ -229,7 +229,10 @@ _CANDIDATE_FILES = (
     "stage-2-candidate.json",
 )
 _GENERATED_ARTIFACT_NAMES = frozenset(
-    (*_CANDIDATE_FILES[1:], "candidate-hashes.json")
+    (
+        *(name for name in _CANDIDATE_FILES if name != "stage-2-semantic-capture.json"),
+        "candidate-hashes.json",
+    )
 )
 _TYPE_COLORS: Mapping[str, tuple[int, int, int]] = MappingProxyType(
     {
