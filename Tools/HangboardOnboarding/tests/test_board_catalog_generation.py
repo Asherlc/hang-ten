@@ -13,6 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 CATALOG_PATH = REPO_ROOT / "Hangboards" / "catalog.json"
 BOARD_PATH = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "board.json"
 EXPORT_SCRIPT_PATH = REPO_ROOT / "scripts" / "export-board-catalog.sh"
+GENERATED_CATALOG_PATH = REPO_ROOT / "HangTen" / "Models" / "GeneratedBoardCatalog.swift"
 COMPACT_II_HOLD_IDS = [
     "jug-left",
     "jug-right",
@@ -111,3 +112,24 @@ def test_export_board_catalog_shell_check_succeeds_for_checked_in_tree() -> None
     )
 
     assert result.returncode == 0, result.stderr
+
+
+def test_export_board_catalog_shell_check_fails_for_stale_catalog_without_modifying_checkout() -> None:
+    original_catalog = GENERATED_CATALOG_PATH.read_bytes()
+    try:
+        GENERATED_CATALOG_PATH.write_bytes(original_catalog + b"\n// drift\n")
+
+        result = subprocess.run(
+            [str(EXPORT_SCRIPT_PATH), "--check"],
+            cwd=REPO_ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+        assert result.returncode == 1
+        assert "drift detected" in result.stderr
+    finally:
+        GENERATED_CATALOG_PATH.write_bytes(original_catalog)
+
+    assert GENERATED_CATALOG_PATH.read_bytes() == original_catalog

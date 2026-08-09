@@ -120,6 +120,23 @@ class BoardCatalogTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "inside"):
                 module.validate_catalog(catalog_path)
 
+    def test_validate_catalog_reports_missing_hold_frame_with_precise_path(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            del board_payload["holds"][0]["frame"]
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"board\.holds\[0\]\.frame is missing",
+            ):
+                module.validate_catalog(catalog_path)
+
     def test_register_run_copies_artifacts_and_derives_approved_lifecycle(self) -> None:
         module = load_module()
 
@@ -166,6 +183,167 @@ class BoardCatalogTests(unittest.TestCase):
                 persisted.onboarding_runs[0].path.as_posix(),
                 "onboarding/runs/accepted-run",
             )
+
+    def test_register_run_keeps_non_complete_run_in_onboarding_lifecycle(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_run_root = workspace / ".context" / "hangboard-onboarding" / "partial-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+
+            catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+            catalog_payload["boards"][0]["lifecycle"] = "draft"
+            catalog_path.write_text(json.dumps(catalog_payload, indent=2) + "\n", encoding="utf-8")
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            board_payload["lifecycle"] = "draft"
+            board_payload["onboardingRuns"] = []
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+            run_payload = json.loads((context_run_root / "run.json").read_text(encoding="utf-8"))
+            run_payload["pipeline"]["status"] = "awaiting_approval"
+            (context_run_root / "run.json").write_text(
+                json.dumps(run_payload, indent=2) + "\n", encoding="utf-8"
+            )
+
+            registered = module.register_run(
+                catalog_path,
+                "metolius.wood-grips-compact-ii",
+                context_run_root,
+                run_id="partial-run",
+            )
+
+            self.assertEqual(registered.lifecycle, "onboarding")
+            self.assertEqual(registered.onboarding_runs[0].lifecycle, "onboarding")
+            self.assertEqual(registered.onboarding_runs[0].status, "awaiting_approval")
+            self.assertEqual(registered.onboarding_runs[0].region_count, 19)
+            self.assertEqual(module.load_catalog(catalog_path).boards[0].lifecycle, "onboarding")
+
+    def test_register_run_estimates_zero_regions_when_stage_4_manifest_is_absent(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_run_root = workspace / ".context" / "hangboard-onboarding" / "partial-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+            (context_run_root / "stages" / "04" / "attempt-0001" / "stage-4-manifest.json").unlink()
+
+            catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+            catalog_payload["boards"][0]["lifecycle"] = "draft"
+            catalog_path.write_text(json.dumps(catalog_payload, indent=2) + "\n", encoding="utf-8")
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            board_payload["lifecycle"] = "draft"
+            board_payload["onboardingRuns"] = []
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+            run_payload = json.loads((context_run_root / "run.json").read_text(encoding="utf-8"))
+            run_payload["pipeline"]["status"] = "ready_for_next_stage"
+            (context_run_root / "run.json").write_text(
+                json.dumps(run_payload, indent=2) + "\n", encoding="utf-8"
+            )
+
+            registered = module.register_run(
+                catalog_path,
+                "metolius.wood-grips-compact-ii",
+                context_run_root,
+                run_id="partial-run",
+            )
+
+            self.assertEqual(registered.lifecycle, "onboarding")
+            self.assertEqual(registered.onboarding_runs[0].region_count, 0)
+            self.assertEqual(module.load_catalog(catalog_path).boards[0].lifecycle, "onboarding")
+
+    def test_register_run_rejects_invalid_complete_run_manifests(self) -> None:
+        module = load_module()
+        mutations = (
+            ("missing stage 4", lambda run: run["stages"].pop(), "missing stage 4"),
+            (
+                "absolute artifact root",
+                lambda run: next(stage for stage in run["stages"] if stage["stage"] == 4).__setitem__(
+                    "artifactRoot", "/tmp/stage-4"
+                ),
+                "safe relative path",
+            ),
+            (
+                "parent artifact root",
+                lambda run: next(stage for stage in run["stages"] if stage["stage"] == 4).__setitem__(
+                    "artifactRoot", "stages/04/attempt-0001/.."
+                ),
+                "safe relative path",
+            ),
+        )
+
+        for name, mutate, expected_error in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp_dir:
+                workspace = Path(temp_dir)
+                catalog_path, board_root = copy_catalog_fixture(workspace)
+                board_path = board_root / "board.json"
+                context_run_root = workspace / ".context" / "hangboard-onboarding" / "complete-run"
+                shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+                run_path = context_run_root / "run.json"
+                run_payload = json.loads(run_path.read_text(encoding="utf-8"))
+                mutate(run_payload)
+                run_path.write_text(json.dumps(run_payload, indent=2) + "\n", encoding="utf-8")
+                self._make_draft_board_and_catalog(catalog_path, board_path)
+
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    module.register_run(
+                        catalog_path,
+                        "metolius.wood-grips-compact-ii",
+                        context_run_root,
+                        run_id="complete-run",
+                    )
+
+        for name, mutate, expected_error in (
+            (
+                "duplicate region ids",
+                lambda manifest: manifest["regions"][1].__setitem__("id", manifest["regions"][0]["id"]),
+                "duplicate stage-4 region id",
+            ),
+            (
+                "region key mismatch",
+                lambda manifest: manifest["regions"][0].__setitem__("key", "jug-right"),
+                "does not match board hold",
+            ),
+            (
+                "run and manifest region count mismatch",
+                lambda manifest: manifest["regions"].pop(),
+                "run region count does not match board hold count",
+            ),
+        ):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp_dir:
+                workspace = Path(temp_dir)
+                catalog_path, board_root = copy_catalog_fixture(workspace)
+                board_path = board_root / "board.json"
+                context_run_root = workspace / ".context" / "hangboard-onboarding" / "complete-run"
+                shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+                manifest_path = context_run_root / "stages" / "04" / "attempt-0001" / "stage-4-manifest.json"
+                manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+                mutate(manifest_payload)
+                manifest_path.write_text(
+                    json.dumps(manifest_payload, indent=2) + "\n", encoding="utf-8"
+                )
+                self._make_draft_board_and_catalog(catalog_path, board_path)
+
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    module.register_run(
+                        catalog_path,
+                        "metolius.wood-grips-compact-ii",
+                        context_run_root,
+                        run_id="complete-run",
+                    )
+
+    @staticmethod
+    def _make_draft_board_and_catalog(catalog_path: Path, board_path: Path) -> None:
+        catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+        catalog_payload["boards"][0]["lifecycle"] = "draft"
+        catalog_path.write_text(json.dumps(catalog_payload, indent=2) + "\n", encoding="utf-8")
+        board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+        board_payload["lifecycle"] = "draft"
+        board_payload["onboardingRuns"] = []
+        board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
 
     def test_register_run_preserves_shipped_lifecycle(self) -> None:
         module = load_module()

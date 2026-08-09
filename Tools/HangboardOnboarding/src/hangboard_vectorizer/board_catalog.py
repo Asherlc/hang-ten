@@ -158,7 +158,7 @@ class BoardHold:
         kind = _required_str(payload, "kind", f"{source}.kind")
         if kind not in _SWIFT_HOLD_KINDS:
             raise ValueError(f"{source}.kind has unsupported Swift HoldKind {kind!r}")
-        frame_raw = _required_mapping(payload, "frame", f"{source}.frame")
+        frame_raw = _required_mapping(payload, "frame", source)
         frame = BoardHoldFrame.from_json(frame_raw, f"{source}.frame")
         region_id = payload.get("regionId")
         parsed_region_id = (

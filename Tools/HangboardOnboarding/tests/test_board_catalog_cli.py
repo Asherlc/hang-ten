@@ -136,3 +136,57 @@ def test_catalog_cli_register_writes_approved_run_and_updates_catalog(tmp_path: 
     assert status["lifecycle"] == "approved"
     assert status["onboardingRuns"][0]["status"] == "complete"
     assert status["onboardingRuns"][0]["id"] == "accepted-run"
+
+
+def test_catalog_cli_validate_missing_catalog_returns_error(tmp_path: Path):
+    result = subprocess.run(
+        [
+            str(SCRIPT_PATH),
+            "catalog",
+            "validate",
+            "--catalog",
+            str(tmp_path / "missing-catalog.json"),
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "does not exist" in result.stderr
+
+
+def test_catalog_cli_register_unknown_board_returns_error(tmp_path: Path):
+    catalog_path, _ = _fixture_catalog(tmp_path)
+
+    result = subprocess.run(
+        [
+            str(SCRIPT_PATH),
+            "catalog",
+            "register",
+            "--catalog",
+            str(catalog_path),
+            "--board",
+            "unknown.board",
+            "--run",
+            str(tmp_path / ".context" / "missing-run"),
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "board id not found" in result.stderr
+
+
+def test_catalog_cli_malformed_command_returns_usage_error():
+    result = subprocess.run(
+        [str(SCRIPT_PATH), "catalog"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 2
+    assert "usage:" in result.stderr.lower()
