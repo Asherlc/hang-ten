@@ -24,16 +24,227 @@
       }
     ]
   },
-  "tension-whetstone": {
+  "dewoodstok-woodbord": {
     "references": [
       {
-        "title": "Tension Hangboards",
-        "url": "https://tensionclimbing.com/pages/hangboards",
+        "title": "deWoodstok Woodbord",
+        "url": "https://dewoodstok.com/",
         "hints": [
-          "top jug with ergo bumps",
-          "40mm center edge",
-          "40mm two-finger pockets",
-          "40/30/25/20mm edges"
+          "training hangboard from solid bamboo",
+          "compact one-piece layout",
+          "symmetric edge-focused profile"
+        ]
+      }
+    ]
+  },
+  "escape-beta": {
+    "references": [
+      {
+        "title": "Beta Board",
+        "url": "https://escapeclimbing.com/products/ec72100",
+        "hints": [
+          "dual texture surface",
+          "ergonomic edge-and-pocket layout",
+          "skin-friendly training profile"
+        ]
+      }
+    ]
+  },
+  "escape-unlimited": {
+    "references": [
+      {
+        "title": "Unlimited Board",
+        "url": "https://escapeclimbing.com/products/ec72000",
+        "hints": [
+          "simplified full-width edge design",
+          "open-ended grip positions",
+          "wide training span"
+        ]
+      }
+    ]
+  },
+  "evolv-kilter-basic-long": {
+    "references": [
+      {
+        "title": "Basic Training Board (Long)",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "hints": [
+          "rounded jug",
+          "20mm, 15mm, and 10mm rounded edges",
+          "simple full-width board"
+        ]
+      }
+    ]
+  },
+  "frictitious-doormount-pro-7": {
+    "references": [
+      {
+        "title": "DoorMount Pro 7",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "hints": [
+          "seven-hold layout",
+          "35mm to 10mm edges",
+          "pull-up jug and pockets"
+        ]
+      }
+    ]
+  },
+  "frictitious-megalith": {
+    "references": [
+      {
+        "title": "The Megalith",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "hints": [
+          "full-width pull-up jug",
+          "pockets",
+          "flat and unlevel shoulder-width edges",
+          "8mm to 40mm edges"
+        ]
+      }
+    ]
+  },
+  "lattice-triple-rung": {
+    "references": [
+      {
+        "title": "Triple Rung",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "hints": [
+          "continuous 45mm, 20mm, and 10mm edges",
+          "no pockets",
+          "wide-radius extruded design"
+        ]
+      }
+    ]
+  },
+  "metolius-climbers-edge": {
+    "references": [
+      {
+        "title": "Climbers Edge Board",
+        "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+        "hints": [
+          "7.5/10/12.5/15/17.5/20mm edges",
+          "40mm radius round sloper",
+          "20-degree flat sloper",
+          "jugs"
+        ]
+      }
+    ]
+  },
+  "metolius-contact": {
+    "references": [
+      {
+        "title": "Metolius Climbing Hold Catalog",
+        "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
+        "hints": [
+          "11 pockets",
+          "four central edges",
+          "top pull-up jugs",
+          "rounded and flat slopers"
+        ]
+      }
+    ]
+  },
+  "metolius-project": {
+    "references": [
+      {
+        "title": "Project Training Board",
+        "url": "https://www.metoliusclimbing.com/products/project-training-board",
+        "hints": [
+          "broad arc",
+          "outward and downward taper",
+          "perfectly symmetric CAD/CAM layout"
+        ]
+      }
+    ]
+  },
+  "metolius-simulator-3d": {
+    "references": [
+      {
+        "title": "Simulator 3D Training Guide",
+        "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+        "hints": [
+          "outer jugs",
+          "flat and round slopers",
+          "deep/medium/shallow edges",
+          "numbered pocket rows"
+        ]
+      }
+    ]
+  },
+  "moon-armstrong": {
+    "references": [
+      {
+        "title": "Moon Armstrong Fingerboard",
+        "url": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
+        "hints": [
+          "22mm and 18mm central one-arm edges",
+          "shoulder-width two-arm layout",
+          "jug and slopers"
+        ]
+      }
+    ]
+  },
+  "nature-stoak-board-iii": {
+    "references": [
+      {
+        "title": "Nature Climbing Stoak Board III",
+        "url": "https://natureclimbing.com/products/stoak-board-iii",
+        "hints": [
+          "recycled granite center edge",
+          "22mm one-arm edge",
+          "comfortable top jug"
+        ]
+      }
+    ]
+  },
+  "soill-iron-palm-2": {
+    "references": [
+      {
+        "title": "Iron Palm 2.0",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "hints": [
+          "slopey slopers",
+          "thicker incut top rung",
+          "thumb-catch pinches and edges"
+        ]
+      }
+    ]
+  },
+  "soill-split-palm": {
+    "references": [
+      {
+        "title": "Split Palm",
+        "url": "https://soillholds.com/products/split-palm",
+        "hints": [
+          "two slopers",
+          "pinch",
+          "multiple crimp sizes and angles"
+        ]
+      }
+    ]
+  },
+  "soill-training-tiles": {
+    "references": [
+      {
+        "title": "Training Tiles • So iLL x Meagan Martin",
+        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
+        "hints": [
+          "two-piece training tile layout",
+          "beginner-to-advanced versatility",
+          "wide mirrored spacing"
+        ]
+      }
+    ]
+  },
+  "target10a-linebreaker-base": {
+    "references": [
+      {
+        "title": "Linebreaker BASE Trainingsboard",
+        "url": "https://www.target10a.com/en/linebreaker-boards/515-linebreaker-base-trainingsboard-airbase.html",
+        "hints": [
+          "many relatively deep grips",
+          "four-, three-, and two-finger pockets",
+          "large pull-up jugs"
         ]
       }
     ]
@@ -65,71 +276,16 @@
       }
     ]
   },
-  "metolius-project": {
+  "tension-whetstone": {
     "references": [
       {
-        "title": "Project Training Board",
-        "url": "https://www.metoliusclimbing.com/products/project-training-board",
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
         "hints": [
-          "broad arc",
-          "outward and downward taper",
-          "perfectly symmetric CAD/CAM layout"
-        ]
-      }
-    ]
-  },
-  "metolius-climbers-edge": {
-    "references": [
-      {
-        "title": "Climbers Edge Board",
-        "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
-        "hints": [
-          "7.5/10/12.5/15/17.5/20mm edges",
-          "40mm radius round sloper",
-          "20-degree flat sloper",
-          "jugs"
-        ]
-      }
-    ]
-  },
-  "metolius-simulator-3d": {
-    "references": [
-      {
-        "title": "Simulator 3D Training Guide",
-        "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
-        "hints": [
-          "outer jugs",
-          "flat and round slopers",
-          "deep/medium/shallow edges",
-          "numbered pocket rows"
-        ]
-      }
-    ]
-  },
-  "metolius-contact": {
-    "references": [
-      {
-        "title": "Metolius Climbing Hold Catalog",
-        "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
-        "hints": [
-          "11 pockets",
-          "four central edges",
-          "top pull-up jugs",
-          "rounded and flat slopers"
-        ]
-      }
-    ]
-  },
-  "trango-rock-prodigy-natural": {
-    "references": [
-      {
-        "title": "Rock Prodigy Natural",
-        "url": "https://trango.com/products/rock-prodigy-natural",
-        "hints": [
-          "two variable-depth rails",
-          "three pockets",
-          "closed crimp",
-          "small and large pinches"
+          "top jug with ergo bumps",
+          "40mm center edge",
+          "40mm two-finger pockets",
+          "40/30/25/20mm edges"
         ]
       }
     ]
@@ -144,6 +300,20 @@
           "drafted pockets",
           "steeper slopers",
           "different holds from Training Center"
+        ]
+      }
+    ]
+  },
+  "trango-rock-prodigy-natural": {
+    "references": [
+      {
+        "title": "Rock Prodigy Natural",
+        "url": "https://trango.com/products/rock-prodigy-natural",
+        "hints": [
+          "two variable-depth rails",
+          "three pockets",
+          "closed crimp",
+          "small and large pinches"
         ]
       }
     ]
@@ -174,42 +344,80 @@
       }
     ]
   },
-  "lattice-triple-rung": {
+  "yy-verticalboard-evo": {
     "references": [
       {
-        "title": "Triple Rung",
-        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "title": "VerticalBoard Evo",
+        "url": "https://www.yyvertical.com/en/collections/poutres-escalade",
         "hints": [
-          "continuous 45mm, 20mm, and 10mm edges",
-          "no pockets",
-          "wide-radius extruded design"
+          "43°, 38°, and 35° dishes",
+          "20mm and 18mm edges",
+          "one- and two-finger pockets"
         ]
       }
     ]
   },
-  "frictitious-megalith": {
+  "yy-verticalboard-first": {
     "references": [
       {
-        "title": "The Megalith",
-        "url": "https://frictitiousclimbing.com/products/megalith",
+        "title": "VerticalBoard First",
+        "url": "https://www.yyvertical.com/en/blogs/news/la-nouvelle-gamme-de-poutres-d-escalade-verticalboard",
         "hints": [
-          "full-width pull-up jug",
-          "pockets",
-          "flat and unlevel shoulder-width edges",
-          "8mm to 40mm edges"
+          "progressive beginner-to-intermediate layout",
+          "simple symmetric training board",
+          "large holds and edges"
         ]
       }
     ]
   },
-  "soill-split-palm": {
+  "yy-verticalboard-light": {
     "references": [
       {
-        "title": "Split Palm",
-        "url": "https://soillholds.com/products/split-palm",
+        "title": "VerticalBoard Light",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
         "hints": [
-          "two slopers",
-          "pinch",
-          "multiple crimp sizes and angles"
+          "beginner-focused simple layout",
+          "large accessible holds",
+          "intuitive symmetric spacing"
+        ]
+      }
+    ]
+  },
+  "yy-verticalboard-one": {
+    "references": [
+      {
+        "title": "VerticalBoard One",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "hints": [
+          "5 sizes of rulers",
+          "two types of bidoigts",
+          "multifunction central handle"
+        ]
+      }
+    ]
+  },
+  "zlagboard-evo": {
+    "references": [
+      {
+        "title": "Zlagboard.Evo",
+        "url": "https://zlagboard.com/hangboards",
+        "hints": [
+          "compact light design",
+          "crimps, pockets, slopers, and jugs",
+          "beginner-to-intermediate board"
+        ]
+      }
+    ]
+  },
+  "zlagboard-pro": {
+    "references": [
+      {
+        "title": "Zlagboard.Pro",
+        "url": "https://zlagboard.com/hangboards",
+        "hints": [
+          "ergonomical hold shapes and sizes",
+          "crimps, pockets, slopers, and jugs",
+          "full-size training board"
         ]
       }
     ]

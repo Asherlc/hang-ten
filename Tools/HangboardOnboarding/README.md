@@ -163,6 +163,64 @@ Stage 1 → Stage 2 → Stage 3 hash chain, finalizes candidate hashes before an
 manual comparison evidence is read, and writes an acceptance record with a
 six-panel review image.
 
+## Generate catalog hold outlines
+
+Use the catalog CLI to emit editable hold-outline JSON for every product image
+in `docs/hangboard-generative-catalog`:
+
+```bash
+python -m hangboard_vectorizer.catalog_outline_cli \
+  --source-dir docs/hangboard-generative-catalog \
+  --output-dir docs/hangboard-generative-catalog/outlines \
+  --review-dir .context/hardboard-outlines/reviews
+```
+
+The command discovers only top-level `*.png` sources, skips the exact contact
+sheet name `contact-sheet-primary.png`, sorts the remaining 32 board images
+lexicographically, and writes one `<stem>.json` document per source plus an
+optional overlay PNG for review. `--check` validates the source/output set,
+JSON schema, normalized geometry, and source canvas dimensions without writing
+files.
+
+Each outline document uses normalized coordinates in a source-sized canvas:
+
+```json
+{
+  "schemaVersion": 1,
+  "sourceImage": "escape-unlimited.png",
+  "canvas": {"width": 1774, "height": 887},
+  "coordinateSpace": "normalized",
+  "references": [
+    {
+      "title": "Unlimited Board",
+      "url": "https://escapeclimbing.com/products/ec72000",
+      "hints": ["simplified full-width edge design"]
+    }
+  ],
+  "outlines": [
+    {
+      "id": "hold-01",
+      "label": "Approximate rail 1",
+      "kind": "rail",
+      "confidence": "approximate",
+      "bounds": [0.06, 0.25, 0.10, 0.06],
+      "path": {"closed": true, "commands": [{"command": "M", "to": [0.06, 0.25]}]},
+      "notes": ["approximate dark recess candidate; verify against visible board geometry"]
+    }
+  ]
+}
+```
+
+`path` coordinates are always normalized to `0..1` in the source image's own
+canvas. `bounds` is the normalized axis-aligned box enclosing the path and is
+used as a coarse edit/review aid rather than an authoritative hold semantic.
+
+The `references` field is advisory only: it preserves manufacturer URLs and
+coarse source hints for human review, but those hints must not be treated as
+measured geometry or exact finger-depth claims. Generated hold kinds, labels,
+and regions remain approximate. Review the overlay PNGs and the JSON before
+using these catalog outlines at runtime.
+
 ## Override regions
 
 Pass `--overrides overrides.json` to rename, disable, split, merge, or add
