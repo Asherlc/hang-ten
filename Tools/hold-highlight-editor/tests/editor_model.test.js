@@ -10,6 +10,7 @@ const {
   mirrorContour,
   findStrongestEdge,
   resolveHistorySelection,
+  normalizeRegion,
   normalizePipelineDocument,
   nextStage2RegionId,
   contourPath,
@@ -44,6 +45,33 @@ test("buildEditedDocument returns a detached complete artifact", () => {
   assert.equal(result.editor.name, "hold-highlight-editor");
   result.regions[0].key = "changed";
   assert.equal(regions[0].key, "grip-001");
+});
+
+test("normalizeRegion normalizes a single loaded region with fallback semantics", () => {
+  const source = {
+    id: "legacy-pocket",
+    points: [["1", "2"], ["10", "2"], ["10", "12"]],
+    type: "pocket",
+    mode: "surface",
+    metadata: {
+      humanNotes: "Loaded from stage 2",
+      curveTension: "0.65",
+    },
+  };
+
+  const direct = normalizeRegion(source, 1);
+  const fromPipeline = normalizePipelineDocument({
+    width: 1000,
+    height: 259,
+    regions: [source],
+  }, { width: 10, height: 10 }).regions[0];
+
+  assert.deepEqual(direct, fromPipeline);
+  assert.equal(direct.id, 1);
+  assert.equal(direct.key, "legacy-pocket");
+  assert.deepEqual(direct.contour, [[1, 2], [10, 2], [10, 12]]);
+  assert.equal(direct.metadata.mode, "surface");
+  assert.equal(direct.metadata.sourceRegionId, "legacy-pocket");
 });
 
 test("buildEditedDocument rejects regions without an exportable contour", () => {

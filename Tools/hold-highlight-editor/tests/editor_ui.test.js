@@ -85,6 +85,29 @@ test("uses hold-highlight terminology in runtime messages", () => {
   assert.doesNotMatch(app, /edited regions\.`/);
 });
 
+test("handles draw Enter and Escape before the focused-control guard", () => {
+  const keydown = app.slice(
+    app.indexOf('window.addEventListener("keydown"'),
+    app.indexOf('window.addEventListener("keyup"'),
+  );
+  const guardIndex = keydown.indexOf("if (editingText) return;");
+  const enterIndex = keydown.indexOf('event.key === "Enter" && state.drawing');
+  const escapeIndex = keydown.indexOf('event.key === "Escape" && state.drawing');
+
+  assert.ok(enterIndex !== -1, "expected Enter draw handler");
+  assert.ok(escapeIndex !== -1, "expected Escape draw handler");
+  assert.ok(guardIndex !== -1, "expected focused-control guard");
+  assert.ok(enterIndex < guardIndex, "Enter draw handler should run before the focused-control guard");
+  assert.ok(escapeIndex < guardIndex, "Escape draw handler should run before the focused-control guard");
+});
+
+test("uses shared normalizeRegion and preserves primitive shape kinds while drawing", () => {
+  assert.match(app, /normalizeRegion,/);
+  assert.doesNotMatch(app, /function normalizeRegion\(/);
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /shapeKind:\s*primitiveShapeKind/);
+});
+
 test("documents hold-highlight operations without generic region prose", () => {
   assert.match(readme, /Hold highlights can be drawn/);
   assert.match(readme, /previous or next hold highlight/);
