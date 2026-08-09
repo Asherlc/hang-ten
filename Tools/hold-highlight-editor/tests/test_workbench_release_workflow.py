@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -17,6 +18,12 @@ WORKFLOW_PATH = (
 sys.path.insert(0, str(EDITOR_ROOT))
 
 from workbench_assets import STATIC_ASSETS  # noqa: E402
+
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ruby") is None,
+    reason="Ruby is required to parse the release workflow",
+)
 
 
 def _workflow() -> dict[str, object]:
@@ -45,10 +52,13 @@ def _step(job: dict[str, object], name: str) -> dict[str, object]:
 
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
     jobs = _workflow()["jobs"]
-    for job_name in ("build", "release"):
-        for index, step in enumerate(jobs[job_name]["steps"]):
+    for job_name, job in jobs.items():
+        for index, step in enumerate(job["steps"]):
             script = step.get("run")
             if script is None:
+                continue
+            shell = step.get("shell")
+            if shell is not None and not shell.startswith("bash"):
                 continue
             script_path = tmp_path / f"{job_name}-{index}.sh"
             script_path.write_text(script, encoding="utf-8")
@@ -132,6 +142,7 @@ def _latest_function() -> str:
     [
         ("a" * 40, "a" * 40, "--latest"),
         ("b" * 40, "a" * 40, "--latest=false"),
+        ("", "a" * 40, "--latest=false"),
     ],
 )
 def test_latest_flag_depends_on_the_current_main_tip(main_sha, built_sha, expected):

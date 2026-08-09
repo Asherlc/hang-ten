@@ -202,6 +202,7 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 15
     permissions:
+      # Required to create the immutable GitHub release and upload its assets.
       contents: write
 
     steps:

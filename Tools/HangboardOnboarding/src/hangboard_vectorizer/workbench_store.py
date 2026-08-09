@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from contextlib import suppress
 from dataclasses import dataclass, replace
 from functools import wraps
 import json
@@ -112,9 +113,14 @@ class WorkbenchStore:
         try:
             board = self._create_board(product_name, reservation=reservation)
             revision = self.create_revision(board.id)
-        except Exception:
+        except Exception as error:
             if reservation.board_id is not None:
-                self._discard_failed_initial_reservation(reservation.board_id)
+                try:
+                    self._discard_failed_initial_reservation(reservation.board_id)
+                except Exception as cleanup_error:
+                    error.add_note(
+                        f"initial reservation cleanup also failed: {cleanup_error}"
+                    )
             raise
         return board, revision
 
@@ -143,7 +149,8 @@ class WorkbenchStore:
             self._write_board(board, publication=publication)
         except Exception:
             if not publication.published:
-                board_root.rmdir()
+                with suppress(OSError):
+                    board_root.rmdir()
             raise
         return board
 
@@ -220,7 +227,8 @@ class WorkbenchStore:
             self._write_board(updated, publication=publication)
         except Exception:
             if not publication.published:
-                revision_root.rmdir()
+                with suppress(OSError):
+                    revision_root.rmdir()
             raise
         return revision
 
@@ -323,7 +331,8 @@ class WorkbenchStore:
             self._write_board(updated, publication=publication)
         except Exception:
             if not publication.published:
-                revision_root.rmdir()
+                with suppress(OSError):
+                    revision_root.rmdir()
             raise
         return updated, revision
 

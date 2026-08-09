@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import tempfile
 from types import MappingProxyType
+from typing import NoReturn
 
 import cv2
 import numpy as np
@@ -314,7 +315,12 @@ def _stage2_authoritative_contour(
         following_length = float(np.linalg.norm(following - vertex))
         cut = min(treatment[1], previous_length / 2, following_length / 2)
 
-        def toward(target: np.ndarray, length: float) -> np.ndarray:
+        def toward(
+            target: np.ndarray,
+            length: float,
+            vertex: np.ndarray = vertex,
+            cut: float = cut,
+        ) -> np.ndarray:
             if length == 0:
                 return vertex.copy()
             return vertex + (target - vertex) * cut / length
@@ -673,18 +679,28 @@ def _self_intersects(contour: np.ndarray) -> bool:
     if len(points) < 3 or np.unique(points, axis=0).shape[0] < 3:
         return True
     count = len(points)
+    coordinates = [(float(x), float(y)) for x, y in points]
     for first_index in range(count):
-        first_start = points[first_index]
-        first_end = points[(first_index + 1) % count]
-        if np.array_equal(first_start, first_end):
+        first_start = coordinates[first_index]
+        first_end = coordinates[(first_index + 1) % count]
+        if first_start == first_end:
             return True
+        first_min_x, first_max_x = sorted((first_start[0], first_end[0]))
+        first_min_y, first_max_y = sorted((first_start[1], first_end[1]))
         for second_index in range(first_index + 1, count):
             if second_index == first_index + 1 or (
                 first_index == 0 and second_index == count - 1
             ):
                 continue
-            second_start = points[second_index]
-            second_end = points[(second_index + 1) % count]
+            second_start = coordinates[second_index]
+            second_end = coordinates[(second_index + 1) % count]
+            if (
+                max(second_start[0], second_end[0]) < first_min_x - 1e-9
+                or min(second_start[0], second_end[0]) > first_max_x + 1e-9
+                or max(second_start[1], second_end[1]) < first_min_y - 1e-9
+                or min(second_start[1], second_end[1]) > first_max_y + 1e-9
+            ):
+                continue
             if _segments_intersect(first_start, first_end, second_start, second_end):
                 return True
     return False
@@ -703,19 +719,25 @@ def _display_contour_is_degenerate(
 
 
 def _segments_intersect(
-    first_start: np.ndarray,
-    first_end: np.ndarray,
-    second_start: np.ndarray,
-    second_end: np.ndarray,
+    first_start: tuple[float, float],
+    first_end: tuple[float, float],
+    second_start: tuple[float, float],
+    second_end: tuple[float, float],
 ) -> bool:
     epsilon = 1e-9
 
-    def cross(a: np.ndarray, b: np.ndarray, c: np.ndarray) -> float:
-        first = b - a
-        second = c - a
-        return float(first[0] * second[1] - first[1] * second[0])
+    def cross(
+        a: tuple[float, float],
+        b: tuple[float, float],
+        c: tuple[float, float],
+    ) -> float:
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
 
-    def on_segment(a: np.ndarray, b: np.ndarray, point: np.ndarray) -> bool:
+    def on_segment(
+        a: tuple[float, float],
+        b: tuple[float, float],
+        point: tuple[float, float],
+    ) -> bool:
         return (
             min(a[0], b[0]) - epsilon <= point[0] <= max(a[0], b[0]) + epsilon
             and min(a[1], b[1]) - epsilon <= point[1] <= max(a[1], b[1]) + epsilon
@@ -775,5 +797,5 @@ def _hash_file(path: Path) -> str:
         raise ConversionError(f"could not read reviewed artifact: {path.name}") from error
 
 
-def _region_error(stage: int, region_id: object, message: str) -> None:
+def _region_error(stage: int, region_id: object, message: str) -> NoReturn:
     raise ConversionError(f"Stage {stage} region {region_id}: {message}")

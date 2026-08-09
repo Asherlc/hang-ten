@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 from pathlib import Path
 
@@ -40,8 +41,16 @@ def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
     for asset in workbench_assets.STATIC_ASSETS:
         assert asset in joined
     assert "hangboard_vectorizer" in joined
-    assert "Tools/HangboardOnboarding/boards" not in joined
-    assert "/tests/" not in joined
+
+    embedded_operands = [
+        arguments[index + 1]
+        for index, value in enumerate(arguments)
+        if value in {"--add-data", "--add-binary"}
+    ]
+    for operand in embedded_operands:
+        source = Path(operand.split(os.pathsep, maxsplit=1)[0])
+        assert "boards" not in source.parts, operand
+        assert "tests" not in source.parts, operand
 
 
 def test_pyinstaller_arguments_follow_the_shared_static_asset_manifest(

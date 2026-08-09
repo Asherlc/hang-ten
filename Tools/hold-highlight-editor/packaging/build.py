@@ -8,7 +8,7 @@ import platform
 import re
 import sys
 import tempfile
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
 
@@ -145,7 +145,7 @@ def _build(repository_root: Path, commit: str, dist_dir: Path, work_dir: Path) -
     return _require_expected_output(dist_dir)
 
 
-def _arguments(arguments: list[str] | None = None):
+def _arguments(arguments: list[str] | None = None) -> Namespace:
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--dist-dir", required=True, type=Path)

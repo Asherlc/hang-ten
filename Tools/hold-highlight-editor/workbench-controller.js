@@ -139,6 +139,43 @@
     container.append(heading, list);
   }
 
+  function renderOpeningBoardList(container, section, {
+    label,
+    detail,
+    onSelect,
+    disabled = false,
+  }) {
+    if (typeof container?.replaceChildren !== "function"
+      || typeof container?.appendChild !== "function"
+      || typeof container?.ownerDocument?.createElement !== "function") {
+      throw new TypeError("opening board list container is required");
+    }
+    if (typeof label !== "function" || typeof detail !== "function" || typeof onSelect !== "function") {
+      throw new TypeError("opening board list callbacks are required");
+    }
+    container.replaceChildren();
+    if (section.state === "error" || section.state === "empty") {
+      const message = container.ownerDocument.createElement("p");
+      message.className = `opening-list-message${section.state === "error" ? " error" : ""}`;
+      message.textContent = section.message;
+      container.appendChild(message);
+      return;
+    }
+    for (const board of section.boards) {
+      const button = container.ownerDocument.createElement("button");
+      const name = container.ownerDocument.createElement("span");
+      const description = container.ownerDocument.createElement("small");
+      button.type = "button";
+      button.className = "opening-board-row";
+      button.disabled = Boolean(disabled);
+      name.textContent = label(board);
+      description.textContent = detail(board);
+      button.append(name, description);
+      button.addEventListener("click", () => onSelect(board.boardId));
+      container.appendChild(button);
+    }
+  }
+
   function openingActionsDisabled({ busy = false, editingFrozen = false } = {}) {
     return Boolean(busy || editingFrozen);
   }
@@ -193,7 +230,7 @@
 
     function ensureSave() {
       if (activeSave) return activeSave;
-      const saving = drain();
+      const saving = Promise.resolve().then(drain);
       activeSave = saving;
       saving.then(
         () => { if (activeSave === saving) activeSave = null; },
@@ -499,6 +536,7 @@
     openingScreenState,
     renderOpeningFormVisibility,
     renderRepositoryDiagnostics,
+    renderOpeningBoardList,
     openingActionsDisabled,
     handleOpeningSelectionFailure,
     createAutosaveCoordinator,

@@ -2,9 +2,14 @@
 
 **Date:** 2026-08-06
 
+> **Repository behavior superseded:** The repository discovery, publication,
+> and save contract in this document is superseded by
+> `2026-08-07-unified-hangboard-repository-design.md`. Final Save now publishes
+> a canonical Stage 4 board package into the repository.
+
 ## Summary
 
-Build a local browser workbench that guides one hangboard through the existing onboarding pipeline. The workbench runs automatically to each visual checkpoint, pauses for human review or refinement, and continues after approval. It uses the same orchestration and artifact contracts as the CLI, saves approved work to the local filesystem-backed pipeline store, and leaves synchronization to Hang Ten to a separate future command.
+Build a local browser workbench that guides one hangboard through the existing onboarding pipeline. The workbench runs automatically to each visual checkpoint, pauses for human review or refinement, and continues after approval. It uses the same orchestration and artifact contracts as the CLI and publishes approved work as a canonical Stage 4 board package during Final Save.
 
 ## Goals
 
@@ -18,7 +23,6 @@ Build a local browser workbench that guides one hangboard through the existing o
 
 ## Non-goals
 
-- Syncing or publishing boards to Hang Ten.
 - Reimplementing detection, cleanup, smoothing, or rendering in the browser.
 - Adding product-specific templates, coordinates, masks, hold inventories, or tuning paths.
 - Introducing a database or remote service.
@@ -49,7 +53,7 @@ Creating a run requires a commercial product name plus either an image URL or a 
 
 ### Loopback server
 
-The existing local editor server becomes a thin workbench server. It owns filesystem access, job lifecycle, catalog queries, draft writes, approval transitions, and status delivery to the browser. It invokes shared Python orchestration APIs rather than reproducing pipeline behavior or parsing shell output.
+The existing local editor server becomes a thin workbench server. It owns filesystem access, job lifecycle, repository board discovery, draft writes, approval transitions, and status delivery to the browser. It invokes shared Python orchestration APIs rather than reproducing pipeline behavior or parsing shell output.
 
 Only one mutating job may operate on a board at a time. Independent boards may run concurrently. The browser receives current job state through a lightweight status endpoint or server-sent event stream and can reconnect after a refresh.
 
@@ -93,9 +97,9 @@ Both modes share selection, transform, shape, curve, mirror, undo, redo, compari
 4. Manual changes autosave as a draft revision separate from generated files.
 5. Approval validates and seals that revision, updates the manifest, and launches the next pipeline work.
 6. Editing an approved upstream stage forks a new lineage. Prior downstream attempts remain available but are marked stale and cannot become the current saved version accidentally.
-7. Final **Save** validates a complete lineage and records it as the board's current approved local version.
+7. Final **Save** validates a complete lineage, publishes its canonical Stage 4 board package, and records the repository revision token on the runtime revision.
 
-Save is not an export or publish action. A later, separate command will read saved board versions and synchronize them to Hang Ten.
+Save performs the recoverable repository publication defined by the unified repository design. It leaves resulting Git working-tree changes for the user to review and commit; the service does not invoke Git.
 
 ## Geometry Validation
 
@@ -138,6 +142,6 @@ Schema and deterministic-render snapshots catch mechanical regressions. Human vi
 - A user can efficiently correct all logical holds, approve smoothing, and polish exact final vectors.
 - Refreshing or closing the browser loses neither running work nor saved drafts.
 - Revising an earlier stage preserves history and prevents stale descendants from being saved as current.
-- Final Save records a complete approved lineage locally without exporting or syncing it.
+- Final Save publishes a complete approved lineage as the canonical Stage 4 board package.
 - The CLI can discover and resume UI-created runs, and the UI can discover and resume CLI-created runs.
 - The same production implementation handles all three validation boards without product-specific logic or data embedded in code.

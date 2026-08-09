@@ -9,6 +9,7 @@ const {
   mirrorPath,
   treatPathCorner,
   isExplicitClosingCommand,
+  explicitClosingCommandChecker,
   movePathEndpoint,
 } = require("../vector-path-model.js");
 
@@ -131,6 +132,16 @@ test("isExplicitClosingCommand identifies terminal closure segments in their own
     isExplicitClosingCommand(parseDisplayPath("M 100 100 L 110 100 Z M 0 0 L 10 0 L 0 0 Z"), 5),
     true,
   );
+});
+
+test("an explicit closing command checker validates once for repeated rendering checks", () => {
+  const commands = parseDisplayPath("M 0 0 L 10 0 L 0 0 Z");
+  const isExplicitClosureAt = explicitClosingCommandChecker(commands);
+
+  assert.equal(isExplicitClosureAt(0), false);
+  assert.equal(isExplicitClosureAt(1), false);
+  assert.equal(isExplicitClosureAt(2), true);
+  assert.equal(isExplicitClosureAt(3), false);
 });
 
 test("moving a subpath start keeps explicit L Q and C closures attached", () => {

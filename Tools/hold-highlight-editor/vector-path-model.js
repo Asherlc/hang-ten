@@ -6,6 +6,7 @@
   "use strict";
 
   const PARAMETER_COUNT = { M: 2, L: 2, Q: 4, C: 6, Z: 0 };
+  const DRAWABLE_COMMANDS = new Set(["L", "Q", "C"]);
 
   function parseDisplayPath(data) {
     if (typeof data !== "string") throw new TypeError("Display path must be a string");
@@ -56,6 +57,11 @@
     return transformPath(commands, [-1, 0, 0, 1, axisX * 2, 0]);
   }
 
+  /**
+   * Returns a treated command array without mutating the input. The treated
+   * corner retains cornerIndex; adding an explicit closure can shift commands
+   * that belong to later subpaths.
+   */
   function treatPathCorner(commands, cornerIndex, treatment, amount) {
     const result = validateCommands(commands).map((command) => ({ ...command }));
     if (!Number.isInteger(cornerIndex) || cornerIndex < 0 || cornerIndex >= result.length || result[cornerIndex].type === "Z") {
@@ -67,7 +73,7 @@
     const corner = result[cornerIndex];
     const endpoint = [corner.x, corner.y];
     const closesExplicitly = cornerIndex === subpath.start
-      && isExplicitClosingCommand(result, subpath.end - 1);
+      && isExplicitClosingValidatedCommand(result, subpath.end - 1);
     const previousIndex = cornerIndex === subpath.start
       ? subpath.end - (closesExplicitly ? 2 : 1)
       : cornerIndex - 1;
@@ -131,9 +137,18 @@
 
   function isExplicitClosingCommand(commands, commandIndex) {
     const validated = validateCommands(commands);
+    return isExplicitClosingValidatedCommand(validated, commandIndex);
+  }
+
+  function explicitClosingCommandChecker(commands) {
+    const validated = validateCommands(commands);
+    return (commandIndex) => isExplicitClosingValidatedCommand(validated, commandIndex);
+  }
+
+  function isExplicitClosingValidatedCommand(validated, commandIndex) {
     if (!Number.isInteger(commandIndex) || commandIndex < 0 || commandIndex >= validated.length) return false;
     const command = validated[commandIndex];
-    if (!new Set(["L", "Q", "C"]).has(command.type) || validated[commandIndex + 1]?.type !== "Z") return false;
+    if (!DRAWABLE_COMMANDS.has(command.type) || validated[commandIndex + 1]?.type !== "Z") return false;
     for (let index = commandIndex - 1; index >= 0; index -= 1) {
       if (validated[index].type === "M") {
         return command.x === validated[index].x && command.y === validated[index].y;
@@ -156,7 +171,7 @@
     let closingIndex = -1;
     if (command.type === "M") {
       const subpath = subpathForCorner(result, commandIndex);
-      if (isExplicitClosingCommand(result, subpath.end - 1)) {
+      if (isExplicitClosingValidatedCommand(result, subpath.end - 1)) {
         closingIndex = subpath.end - 1;
       }
     }
@@ -364,6 +379,7 @@
     mirrorPath,
     treatPathCorner,
     isExplicitClosingCommand,
+    explicitClosingCommandChecker,
     movePathEndpoint,
   };
 }));

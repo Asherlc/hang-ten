@@ -17,6 +17,7 @@ const {
   geometryValidationError,
   runFrozenApproval,
   createOpeningBoardController,
+  renderOpeningBoardList,
   openingScreenState,
   renderOpeningFormVisibility,
   renderRepositoryDiagnostics,
@@ -82,6 +83,51 @@ test("opening board controller fetches both lists and opens the selected reposit
   assert.deepEqual(await controller.openRepositoryBoard("alpha"), { boardId: "board-1", productName: "Alpha" });
   assert.deepEqual(await controller.openRuntimeBoard("board-2"), { boardId: "board-2", productName: "Beta" });
   assert.deepEqual(calls, ["library", "runtime", ["open", "alpha"], ["get", "board-2"]]);
+});
+
+test("opening board rows pass the selected repository and runtime identifiers", () => {
+  const selected = [];
+  const makeContainer = () => ({
+    children: [],
+    ownerDocument: {
+      createElement() {
+        return {
+          listeners: {},
+          append(...children) { this.children = children; },
+          addEventListener(name, callback) { this.listeners[name] = callback; },
+        };
+      },
+    },
+    replaceChildren(...children) { this.children = children; },
+    appendChild(child) { this.children.push(child); },
+  });
+  const repository = makeContainer();
+  const inProgress = makeContainer();
+
+  renderOpeningBoardList(repository, {
+    state: "boards",
+    boards: [{ boardId: "metolius-compact-ii", displayName: "Wood Grips Compact II" }],
+  }, {
+    label: (board) => board.displayName,
+    detail: () => "Ready to open",
+    onSelect: (boardId) => selected.push(["openLibraryBoard", boardId]),
+  });
+  renderOpeningBoardList(inProgress, {
+    state: "boards",
+    boards: [{ boardId: "runtime-board-17", productName: "Draft board" }],
+  }, {
+    label: (board) => board.productName,
+    detail: () => "Stage 2",
+    onSelect: (boardId) => selected.push(["getBoard", boardId]),
+  });
+
+  repository.children[0].listeners.click();
+  inProgress.children[0].listeners.click();
+
+  assert.deepEqual(selected, [
+    ["openLibraryBoard", "metolius-compact-ii"],
+    ["getBoard", "runtime-board-17"],
+  ]);
 });
 
 test("opening board controller preserves the runtime list when the library request fails", async () => {
@@ -267,6 +313,47 @@ test("only the latest interleaved checkpoint load may commit identity, geometry,
     regions: [{ id: 2 }],
     autosaveKey: "draft:board-b",
   });
+});
+
+test("cancelling an in-flight checkpoint load prevents its commit", async () => {
+  const coordinator = createLatestLoadCoordinator();
+  const geometry = deferred();
+  const state = { boardId: null, regions: [] };
+  const load = coordinator.begin();
+  const loading = geometry.promise.then((regions) => load.commit(() => {
+    state.boardId = "board-a";
+    state.regions = regions;
+  }));
+
+  coordinator.cancel();
+  geometry.resolve([{ id: 1 }]);
+
+  assert.equal(await loading, false);
+  assert.deepEqual(state, { boardId: null, regions: [] });
+});
+
+test("a reentrant autosave request reuses the save already being started", async () => {
+  const calls = [];
+  let reentered = false;
+  let reentrantSave;
+  let coordinator;
+  coordinator = createAutosaveCoordinator({
+    async save(entry) {
+      calls.push(entry.document.version);
+      if (!reentered) {
+        reentered = true;
+        reentrantSave = coordinator.requestLatest();
+      }
+      return { revisionId: "revision" };
+    },
+  });
+  coordinator.update({ key: "board:revision:2", document: { version: 1 } });
+
+  await coordinator.requestLatest();
+  await reentrantSave;
+
+  assert.deepEqual(calls, [1]);
+  assert.equal(coordinator.hasPending(), false);
 });
 
 test("an edit during an active autosave produces one serialized latest follow-up", async () => {

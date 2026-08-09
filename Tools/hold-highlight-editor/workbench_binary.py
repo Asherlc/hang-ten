@@ -7,8 +7,8 @@ import signal
 import sys
 import webbrowser
 from argparse import ArgumentParser
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from server import (
     EditorCatalog,

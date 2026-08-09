@@ -22,6 +22,22 @@ def test_store_creates_cli_compatible_revision_layout(tmp_path):
     assert store.read_board(board.id).active_revision_id == ""
 
 
+def test_initial_reservation_cleanup_does_not_mask_the_publication_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = WorkbenchStore(tmp_path)
+
+    def fail_with_residual_file(board, **_kwargs: object) -> None:
+        residual = tmp_path / "boards" / board.id / ".manifest-write-residual"
+        residual.write_text("incomplete", encoding="utf-8")
+        raise RuntimeError("manifest publication failed")
+
+    monkeypatch.setattr(store, "_write_board", fail_with_residual_file)
+
+    with pytest.raises(RuntimeError, match="manifest publication failed"):
+        store.reserve_initial_revision("Example Board")
+
+
 def test_activate_initial_revision_is_atomic_when_manifest_replace_fails(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

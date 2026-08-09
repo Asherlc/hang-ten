@@ -27,6 +27,7 @@
     mirrorPath,
     treatPathCorner,
     isExplicitClosingCommand,
+    explicitClosingCommandChecker,
     movePathEndpoint,
   } = globalThis.HoldVectorPathModel;
   const {
@@ -35,6 +36,7 @@
     openingScreenState,
     renderOpeningFormVisibility,
     renderRepositoryDiagnostics,
+    renderOpeningBoardList,
     openingActionsDisabled,
     handleOpeningSelectionFailure,
     createAutosaveCoordinator,
@@ -421,6 +423,7 @@
     } catch (_error) {
       return;
     }
+    const isExplicitClosureAt = explicitClosingCommandChecker(commands);
     let previous = null;
     commands.forEach((command, commandIndex) => {
       if (command.type === "Z") {
@@ -443,7 +446,7 @@
         handle.addEventListener("pointerdown", (event) => startVectorHandleDrag(event, region.id, commandIndex, kind));
         group.appendChild(handle);
       });
-      const isExplicitClosure = isExplicitClosingCommand(commands, commandIndex);
+      const isExplicitClosure = isExplicitClosureAt(commandIndex);
       if (!isExplicitClosure) {
         const selected = state.selectedCornerIndex === commandIndex;
         const handle = makeSvg("circle", { cx: endpoint[0], cy: endpoint[1], r: 4.5 / Math.max(state.zoom, 0.3), class: `vector-endpoint-handle${selected ? " selected-corner" : ""}` });
@@ -1691,33 +1694,6 @@
     });
   }
 
-  function renderOpeningList(container, section, { label, detail, onSelect }) {
-    container.replaceChildren();
-    if (section.state === "error") {
-      const message = document.createElement("p");
-      message.className = "opening-list-message error";
-      message.textContent = section.message;
-      container.appendChild(message);
-      return;
-    }
-    if (section.state === "empty") {
-      const message = document.createElement("p");
-      message.className = "opening-list-message";
-      message.textContent = section.message;
-      container.appendChild(message);
-      return;
-    }
-    section.boards.forEach((board) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "opening-board-row";
-      button.disabled = openingActionsDisabled(state);
-      button.innerHTML = `<span>${escapeHTML(label(board))}</span><small>${escapeHTML(detail(board))}</small>`;
-      button.addEventListener("click", () => void onSelect(board.boardId));
-      container.appendChild(button);
-    });
-  }
-
   function renderOpeningSections() {
     const sections = openingSections(state.libraryBoards, state.boards);
     const screen = openingScreenState({
@@ -1729,15 +1705,17 @@
     renderOpeningFormVisibility(el["create-board-form"], screen);
     renderRepositoryDiagnostics(el["repository-diagnostics"], screen.repositoryDiagnostics);
     el["setup-submit-button"].disabled = openingActionsDisabled(state);
-    renderOpeningList(el["repository-board-list"], screen.repository, {
+    renderOpeningBoardList(el["repository-board-list"], screen.repository, {
       label: (board) => board.displayName || board.boardId,
       detail: () => "Ready to open",
       onSelect: selectLibraryBoard,
+      disabled: openingActionsDisabled(state),
     });
-    renderOpeningList(el["in-progress-board-list"], screen.inProgress, {
+    renderOpeningBoardList(el["in-progress-board-list"], screen.inProgress, {
       label: (board) => board.productName || board.boardId,
       detail: (board) => board.saved ? "Saved locally" : `Stage ${String(board.stage ?? 0)} · Unsaved`,
       onSelect: selectGuidedBoard,
+      disabled: openingActionsDisabled(state),
     });
   }
 

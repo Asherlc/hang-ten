@@ -6,11 +6,24 @@ const { restoreOpeningAfterJobRecovery } = require("../workbench-controller.js")
 
 const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
 
+function actualElementIds(html) {
+  const withoutComments = html.replace(/<!--[\s\S]*?-->/g, "");
+  const ids = new Set();
+  for (const tag of withoutComments.matchAll(/<[A-Za-z][^>]*>/g)) {
+    const id = tag[0].match(/\sid=(?:"([^"]+)"|'([^']+)')/);
+    if (id) ids.add(id[1] || id[2]);
+  }
+  return ids;
+}
+
 test("the guided opening screen offers repository and in-progress board pickers", () => {
-  assert.match(markup, /id="repository-board-list"/);
-  assert.match(markup, /id="repository-diagnostics"/);
-  assert.match(markup, /id="in-progress-board-list"/);
-  assert.match(markup, /id="create-board-form"/);
+  const ids = actualElementIds(markup);
+  for (const id of [
+    "repository-board-list",
+    "repository-diagnostics",
+    "in-progress-board-list",
+    "create-board-form",
+  ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
   assert.match(markup, /name="sourceKind" value="url"/);
   assert.match(markup, /name="sourceKind" value="upload"/);
   assert.doesNotMatch(markup, /name="sourceKind" value="import"/);

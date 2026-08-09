@@ -32,6 +32,27 @@
     return error;
   }
 
+  function pollingDeadlineError(jobId) {
+    const error = uncertainJobError(jobId, "Workbench polling deadline expired");
+    error.pollingDeadline = true;
+    return error;
+  }
+
+  async function getJobBeforeDeadline(jobId, remainingDuration) {
+    let timeoutId;
+    const deadline = new Promise((_resolve, reject) => {
+      timeoutId = root.setTimeout(
+        () => reject(pollingDeadlineError(jobId)),
+        Math.max(0, remainingDuration),
+      );
+    });
+    try {
+      return await Promise.race([getJob(jobId), deadline]);
+    } finally {
+      if (typeof root.clearTimeout === "function") root.clearTimeout(timeoutId);
+    }
+  }
+
   function validJobPayload(job, jobId) {
     if (!job || typeof job !== "object" || Array.isArray(job)) return false;
     if (job.id !== jobId || typeof job.boardId !== "string" || !job.boardId) return false;
@@ -46,14 +67,26 @@
     return true;
   }
 
-  async function pollJob(jobId, { interval = 350, maxTransientFailures = 3 } = {}) {
+  async function pollJob(jobId, {
+    interval = 350,
+    maxTransientFailures = 3,
+    maxDuration = 300_000,
+  } = {}) {
+    if (!Number.isFinite(maxDuration) || maxDuration < 0) {
+      throw new RangeError("Polling duration must be finite and non-negative");
+    }
+    const deadline = Date.now() + maxDuration;
     let transientFailures = 0;
     while (true) {
       let job;
       try {
-        job = await getJob(jobId);
+        job = await getJobBeforeDeadline(jobId, deadline - Date.now());
         transientFailures = 0;
       } catch (error) {
+        if (error?.pollingDeadline) throw error;
+        if (Date.now() >= deadline) {
+          throw pollingDeadlineError(jobId);
+        }
         if (transientFailures >= maxTransientFailures) {
           throw uncertainJobError(jobId, "Workbench polling failed", error);
         }
@@ -73,6 +106,9 @@
       }
       if (!ACTIVE_JOB_STATES.has(job.state)) {
         throw uncertainJobError(jobId, `Workbench returned unknown job state: ${job.state}`);
+      }
+      if (Date.now() >= deadline) {
+        throw pollingDeadlineError(jobId);
       }
       await new Promise((resolve) => root.setTimeout(resolve, interval));
     }

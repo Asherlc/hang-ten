@@ -34,7 +34,7 @@ From the repository root, launch the repository-backed workbench with its
 defaults:
 
 ```bash
-rtk python Tools/hold-highlight-editor/server.py
+rtk python3 Tools/hold-highlight-editor/server.py
 ```
 
 The server discovers the checkout, reads saved boards from
@@ -42,7 +42,7 @@ The server discovers the checkout, reads saved boards from
 `.context/hangboard-workbench/`. Tests and automation can override those roots:
 
 ```bash
-rtk python Tools/hold-highlight-editor/server.py \
+rtk python3 Tools/hold-highlight-editor/server.py \
   --repository-root /absolute/path/to/checkout \
   --workspace-root /absolute/path/to/workbench-workspace
 ```

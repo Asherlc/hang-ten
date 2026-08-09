@@ -70,7 +70,8 @@ test("an accepted mutation survives a transient poll failure without being submi
   const calls = [];
   let pollAttempt = 0;
   const originalSetTimeout = global.setTimeout;
-  global.setTimeout = (resolve) => {
+  global.setTimeout = (resolve, delay) => {
+    if (delay > 1_000) return originalSetTimeout(resolve, delay);
     queueMicrotask(resolve);
     return 1;
   };
@@ -185,6 +186,67 @@ test("exhausted poll transport failures retain the accepted nonterminal job iden
       return true;
     },
   );
+});
+
+test("a polling deadline retains the active job as nonterminal uncertainty", async () => {
+  global.fetch = async () => response({
+    ok: true,
+    job: {
+      id: "job-running",
+      boardId: "board-9",
+      state: "running",
+      result: null,
+      error: null,
+    },
+  });
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  await assert.rejects(
+    client.pollJob("job-running", { interval: 0, maxDuration: 0 }),
+    (error) => {
+      assert.match(error.message, /deadline/i);
+      assert.equal(error.jobId, "job-running");
+      assert.equal(error.terminal, false);
+      return true;
+    },
+  );
+});
+
+test("a polling deadline bounds a stalled job request", async () => {
+  let releaseRequest;
+  global.fetch = async () => new Promise((resolve) => {
+    releaseRequest = () => resolve(response({
+      ok: true,
+      job: {
+        id: "job-stalled",
+        boardId: "board-9",
+        state: "running",
+        result: null,
+        error: null,
+      },
+    }));
+  });
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+  const polling = client.pollJob("job-stalled", { interval: 0, maxDuration: 0 });
+
+  try {
+    const outcome = await Promise.race([
+      polling.then(() => "resolved", () => "rejected"),
+      new Promise((resolve) => setTimeout(() => resolve("still-pending"), 20)),
+    ]);
+    assert.equal(outcome, "rejected");
+    await assert.rejects(polling, (error) => {
+      assert.match(error.message, /deadline/i);
+      assert.equal(error.jobId, "job-stalled");
+      assert.equal(error.terminal, false);
+      return true;
+    });
+  } finally {
+    releaseRequest?.();
+    await polling.catch(() => {});
+  }
 });
 
 test("a server-confirmed failed job reports a terminal error with its accepted identity", async () => {
