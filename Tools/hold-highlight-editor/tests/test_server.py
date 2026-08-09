@@ -417,7 +417,7 @@ def test_catalog_regions_flatten_cubics_to_pixel_contours_without_control_points
     region = regions["regions"][0]
     assert regions["canvas"] == {"width": 100, "height": 50}
     assert region["id"] == 1
-    assert region["type"] == "edge"
+    assert region["type"] == "rail"
     assert region["metadata"]["sourceRegionId"] == "hold-01"
     assert region["contour"][0] == [10.0, 10.0]
     assert [30.0, 20.0] in region["contour"]

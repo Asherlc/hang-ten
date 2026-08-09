@@ -199,7 +199,7 @@ def catalog_regions_document(session: EditorSession) -> dict[str, Any]:
     for outline in outlines:
         source_id = outline["id"]
         outline_type = outline.get("kind", "edge")
-        editor_type = outline_type if outline_type in {"jug", "sloper", "edge", "pocket"} else "edge"
+        editor_type = outline_type
         regions.append(
             {
                 "id": editor_ids[source_id],
