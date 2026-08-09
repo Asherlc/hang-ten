@@ -137,6 +137,69 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHoldCueVisibilityShowsAvailableRestPreviewCue() {
+        let holdCue = WorkoutHoldCue(
+            hold: BoardHold(
+                id: "cue-edge",
+                name: "Cue edge",
+                shortLabel: "E",
+                detail: "Edge",
+                kind: .edge,
+                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            ),
+            gripType: .openHand,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
+        )
+
+        XCTAssertTrue(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 0,
+                isComplete: false,
+                isResting: true
+            )
+        )
+    }
+
+    func testHoldCueVisibilityStillSuppressesCountdownCompletionAndMissingCue() {
+        let holdCue = WorkoutHoldCue(
+            hold: BoardHold(
+                id: "cue-edge",
+                name: "Cue edge",
+                shortLabel: "E",
+                detail: "Edge",
+                kind: .edge,
+                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            ),
+            gripType: .openHand
+        )
+
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 3,
+                isComplete: false,
+                isResting: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 0,
+                isComplete: true,
+                isResting: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: nil,
+                countdown: 0,
+                isComplete: false,
+                isResting: true
+            )
+        )
+    }
+
     func testHoldCueIsUnavailableWhenHighlightedHoldDoesNotMatchSingleTarget() {
         let targetHold = BoardHold(
             id: "target-edge",
