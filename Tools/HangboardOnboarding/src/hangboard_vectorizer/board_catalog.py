@@ -373,6 +373,7 @@ def register_run(
     board = load_board(board_path)
 
     source_run_root = Path(run_path).resolve(strict=False)
+    _require_context_run_path(source_run_root, "run")
     if not source_run_root.exists() or not source_run_root.is_dir():
         raise ValueError(f"run path does not exist or is not a directory: {source_run_root}")
     registered_id = run_id or source_run_root.name
@@ -504,6 +505,14 @@ def _find_board_entry(catalog: CatalogDocument, board_id: str) -> CatalogBoardEn
         if entry.id == board_id:
             return entry
     return None
+
+
+def _require_context_run_path(candidate: Path, source: str) -> None:
+    resolved_candidate = candidate.resolve(strict=False)
+    for parent in (resolved_candidate, *resolved_candidate.parents):
+        if parent.name == ".context":
+            return
+    raise ValueError(f"{source} path must be inside a .context directory")
 
 
 def _estimate_region_count(run_root: Path) -> int:

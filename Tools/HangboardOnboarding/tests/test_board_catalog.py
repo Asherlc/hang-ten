@@ -123,6 +123,9 @@ class BoardCatalogTests(unittest.TestCase):
             workspace = Path(temp_dir)
             catalog_path, board_root = copy_catalog_fixture(workspace)
             board_path = board_root / "board.json"
+            context_root = workspace / ".context"
+            context_run_root = context_root / "hangboard-onboarding" / "accepted-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
 
             catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
             catalog_payload["boards"][0]["lifecycle"] = "draft"
@@ -136,7 +139,7 @@ class BoardCatalogTests(unittest.TestCase):
             registered = module.register_run(
                 catalog_path,
                 "metolius.wood-grips-compact-ii",
-                ACCEPTED_RUN_PATH,
+                context_run_root,
                 run_id="accepted-run",
             )
 
@@ -159,6 +162,44 @@ class BoardCatalogTests(unittest.TestCase):
                 persisted.onboarding_runs[0].path.as_posix(),
                 "onboarding/runs/accepted-run",
             )
+
+    def test_register_run_rejects_reference_path_and_accepts_context_run(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+
+            catalog_payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+            catalog_payload["boards"][0]["lifecycle"] = "draft"
+            catalog_path.write_text(json.dumps(catalog_payload, indent=2) + "\n", encoding="utf-8")
+            board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+            board_payload["lifecycle"] = "draft"
+            board_payload["onboardingRuns"] = []
+            board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "inside a \\.context directory"):
+                module.register_run(
+                    catalog_path,
+                    "metolius.wood-grips-compact-ii",
+                    ACCEPTED_RUN_PATH,
+                    run_id="reference-run",
+                )
+
+            context_root = workspace / ".context"
+            context_run_root = context_root / "hangboard-onboarding" / "accepted-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+
+            module.register_run(
+                catalog_path,
+                "metolius.wood-grips-compact-ii",
+                context_run_root,
+                run_id="accepted-run",
+            )
+
+            persisted = module.load_board(board_path)
+            self.assertEqual([run.id for run in persisted.onboarding_runs], ["accepted-run"])
 
 
 def copy_catalog_fixture(destination_root: Path) -> tuple[Path, Path]:
