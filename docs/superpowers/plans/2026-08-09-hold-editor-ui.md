@@ -1,6 +1,6 @@
 # Hold Editor UI Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED WORKFLOW: For every task in this plan, dispatch a fresh subagent and use superpowers:subagent-driven-development, including implementation and review checkpoints. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Reframe the existing onboarding browser UI as a single-screen, full-feature Hold Editor for editing, adding, and deleting typed hold highlights.
 
