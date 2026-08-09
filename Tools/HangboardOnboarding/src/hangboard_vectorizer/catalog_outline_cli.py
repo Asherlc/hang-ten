@@ -77,21 +77,31 @@ def _discover_sources(source_dir: Path, limit: int | None) -> list[Path]:
 
 def _check_outputs(sources: list[Path], output_dir: Path) -> int:
     if not sources:
+        print("No source PNG files found")
         return 1
     expected = {source.stem for source in sources}
     actual = {path.stem for path in output_dir.glob("*.json")} if output_dir.exists() else set()
     if expected != actual:
+        missing = sorted(expected - actual)
+        unexpected = sorted(actual - expected)
+        if missing:
+            print(f"Missing outline JSON: {', '.join(missing)}")
+        if unexpected:
+            print(f"Unexpected outline JSON: {', '.join(unexpected)}")
         return 1
+    verified = 0
     for source in sources:
         output_path = output_dir / f"{source.stem}.json"
         try:
             payload = json.loads(output_path.read_text(encoding="utf-8"))
             document = CatalogOutlineDocument.from_json(payload)
             validate_catalog_document(document, source_path=source)
-        except (OSError, ValueError, json.JSONDecodeError):
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            print(f"{output_path.name}: {error}")
             return 1
-        if document.source_image != source.name:
-            return 1
+        verified += 1
+    suffix = "" if verified == 1 else "s"
+    print(f"Verified {verified} catalog outline document{suffix}")
     return 0
 
 

@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.05595315549772284,
-        0.4946236559139785,
-        0.8926480156148341,
-        0.021505376344086002
-      ],
+      "bounds": {
+        "height": 0.021505376344086002,
+        "width": 0.8926480156148341,
+        "x": 0.05595315549772284,
+        "y": 0.4946236559139785
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "edge",
       "label": "Approximate edge 1",
-      "notes": [
-        "approximate low-contrast horizontal rail band; verify against visible board geometry"
-      ],
+      "notes": "approximate low-contrast horizontal rail band; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -95,19 +93,17 @@
       }
     },
     {
-      "bounds": [
-        0.06115810019518542,
-        0.5366568914956011,
-        0.8841899804814574,
-        0.03323558162267848
-      ],
+      "bounds": {
+        "height": 0.03323558162267848,
+        "width": 0.8841899804814574,
+        "x": 0.06115810019518542,
+        "y": 0.5366568914956011
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "edge",
       "label": "Approximate edge 2",
-      "notes": [
-        "approximate low-contrast horizontal rail band; verify against visible board geometry"
-      ],
+      "notes": "approximate low-contrast horizontal rail band; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -256,19 +252,17 @@
       }
     },
     {
-      "bounds": [
-        0.057905009759271306,
-        0.6089931573802542,
-        0.8887443070917372,
-        0.017595307917888547
-      ],
+      "bounds": {
+        "height": 0.017595307917888547,
+        "width": 0.8887443070917372,
+        "x": 0.057905009759271306,
+        "y": 0.6089931573802542
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "edge",
       "label": "Approximate edge 3",
-      "notes": [
-        "approximate low-contrast horizontal rail band; verify against visible board geometry"
-      ],
+      "notes": "approximate low-contrast horizontal rail band; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -357,5 +351,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "evolv-kilter-basic-long.png"
+  "sourceImage": "../evolv-kilter-basic-long.png"
 }

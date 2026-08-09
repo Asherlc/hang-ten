@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.7936865839909808,
-        0.3810597519729425,
-        0.13810597519729428,
-        0.08793686583990978
-      ],
+      "bounds": {
+        "height": 0.08793686583990978,
+        "width": 0.13810597519729428,
+        "x": 0.7936865839909808,
+        "y": 0.3810597519729425
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -153,19 +151,17 @@
       }
     },
     {
-      "bounds": [
-        0.5473506200676438,
-        0.37993235625704624,
-        0.22040586245772265,
-        0.09019165727170236
-      ],
+      "bounds": {
+        "height": 0.09019165727170236,
+        "width": 0.22040586245772265,
+        "x": 0.5473506200676438,
+        "y": 0.37993235625704624
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -348,19 +344,17 @@
       }
     },
     {
-      "bounds": [
-        0.0935738444193912,
-        0.6189402480270575,
-        0.443630214205186,
-        0.02931228861330326
-      ],
+      "bounds": {
+        "height": 0.02931228861330326,
+        "width": 0.443630214205186,
+        "x": 0.0935738444193912,
+        "y": 0.6189402480270575
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
       "label": "Approximate rail 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -771,5 +765,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "frictitious-doormount-pro-7.png"
+  "sourceImage": "../frictitious-doormount-pro-7.png"
 }

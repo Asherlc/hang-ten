@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.40669856459330145,
-        0.357066950053135,
-        0.5520334928229665,
-        0.0733262486716259
-      ],
+      "bounds": {
+        "height": 0.0733262486716259,
+        "width": 0.5520334928229665,
+        "x": 0.40669856459330145,
+        "y": 0.357066950053135
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -424,19 +422,17 @@
       }
     },
     {
-      "bounds": [
-        0.6124401913875598,
-        0.4463336875664187,
-        0.3175837320574163,
-        0.09351753453772577
-      ],
+      "bounds": {
+        "height": 0.09351753453772577,
+        "width": 0.3175837320574163,
+        "x": 0.6124401913875598,
+        "y": 0.4463336875664187
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -547,19 +543,17 @@
       }
     },
     {
-      "bounds": [
-        0.06758373205741627,
-        0.4495217853347503,
-        0.31638755980861244,
-        0.08820403825717316
-      ],
+      "bounds": {
+        "height": 0.08820403825717316,
+        "width": 0.31638755980861244,
+        "x": 0.06758373205741627,
+        "y": 0.4495217853347503
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
       "label": "Approximate rail 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -665,5 +659,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "tension-grindstone.png"
+  "sourceImage": "../tension-grindstone.png"
 }

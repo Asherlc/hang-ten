@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.7649379932356257,
-        0.34047350620067646,
-        0.14148816234498307,
-        0.0811724915445321
-      ],
+      "bounds": {
+        "height": 0.0811724915445321,
+        "width": 0.14148816234498307,
+        "x": 0.7649379932356257,
+        "y": 0.34047350620067646
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -129,19 +127,17 @@
       }
     },
     {
-      "bounds": [
-        0.7626832018038332,
-        0.4532130777903044,
-        0.13303269447576094,
-        0.08004509582863584
-      ],
+      "bounds": {
+        "height": 0.08004509582863584,
+        "width": 0.13303269447576094,
+        "x": 0.7626832018038332,
+        "y": 0.4532130777903044
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -276,19 +272,17 @@
       }
     },
     {
-      "bounds": [
-        0.8483652762119503,
-        0.6335963923337091,
-        0.037767756482525394,
-        0.07102593010146563
-      ],
+      "bounds": {
+        "height": 0.07102593010146563,
+        "width": 0.037767756482525394,
+        "x": 0.8483652762119503,
+        "y": 0.6335963923337091
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "pocket",
       "label": "Approximate pocket 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -377,5 +371,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "yy-verticalboard-first.png"
+  "sourceImage": "../yy-verticalboard-first.png"
 }

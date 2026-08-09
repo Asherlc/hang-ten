@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.5036040365209035,
-        0.3655629139072848,
-        0.46948582412301776,
-        0.3655629139072848
-      ],
+      "bounds": {
+        "height": 0.3655629139072848,
+        "width": 0.46948582412301776,
+        "x": 0.5036040365209035,
+        "y": 0.3655629139072848
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -112,19 +110,17 @@
       }
     },
     {
-      "bounds": [
-        0.8197981739548295,
-        0.4,
-        0.11388755406054774,
-        0.08609271523178808
-      ],
+      "bounds": {
+        "height": 0.08609271523178808,
+        "width": 0.11388755406054774,
+        "x": 0.8197981739548295,
+        "y": 0.4
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -218,19 +214,17 @@
       }
     },
     {
-      "bounds": [
-        0.8164344065353195,
-        0.552317880794702,
-        0.12013455069678047,
-        0.07814569536423843
-      ],
+      "bounds": {
+        "height": 0.07814569536423843,
+        "width": 0.12013455069678047,
+        "x": 0.8164344065353195,
+        "y": 0.552317880794702
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
       "label": "Approximate rail 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -336,5 +330,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "zlagboard-evo.png"
+  "sourceImage": "../zlagboard-evo.png"
 }

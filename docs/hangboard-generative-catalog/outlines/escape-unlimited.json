@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.06708004509582864,
-        0.25140924464487036,
-        0.10428410372040585,
-        0.06313416009019163
-      ],
+      "bounds": {
+        "height": 0.06313416009019163,
+        "width": 0.10428410372040585,
+        "x": 0.06708004509582864,
+        "y": 0.25140924464487036
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate local-contrast recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate local-contrast recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -136,19 +134,17 @@
       }
     },
     {
-      "bounds": [
-        0.06764374295377677,
-        0.38218714768883877,
-        0.41206313416009016,
-        0.050732807215332576
-      ],
+      "bounds": {
+        "height": 0.050732807215332576,
+        "width": 0.41206313416009016,
+        "x": 0.06764374295377677,
+        "y": 0.38218714768883877
+      },
       "confidence": "approximate",
       "id": "hold-13",
       "kind": "rail",
       "label": "Approximate rail 13",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -242,19 +238,17 @@
       }
     },
     {
-      "bounds": [
-        0.5152198421645998,
-        0.38218714768883877,
-        0.415445321307779,
-        0.0653889515219842
-      ],
+      "bounds": {
+        "height": 0.0653889515219842,
+        "width": 0.415445321307779,
+        "x": 0.5152198421645998,
+        "y": 0.38218714768883877
+      },
       "confidence": "approximate",
       "id": "hold-14",
       "kind": "rail",
       "label": "Approximate rail 14",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -348,19 +342,17 @@
       }
     },
     {
-      "bounds": [
-        0.06313416009019165,
-        0.5490417136414881,
-        0.41657271702367527,
-        0.040586245772266105
-      ],
+      "bounds": {
+        "height": 0.040586245772266105,
+        "width": 0.41657271702367527,
+        "x": 0.06313416009019165,
+        "y": 0.5490417136414881
+      },
       "confidence": "approximate",
       "id": "hold-15",
       "kind": "rail",
       "label": "Approximate rail 15",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -454,19 +446,17 @@
       }
     },
     {
-      "bounds": [
-        0.5186020293122886,
-        0.5490417136414881,
-        0.41713641488162345,
-        0.045095828635851265
-      ],
+      "bounds": {
+        "height": 0.045095828635851265,
+        "width": 0.41713641488162345,
+        "x": 0.5186020293122886,
+        "y": 0.5490417136414881
+      },
       "confidence": "approximate",
       "id": "hold-16",
       "kind": "rail",
       "label": "Approximate rail 16",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -572,5 +562,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "escape-unlimited.png"
+  "sourceImage": "../escape-unlimited.png"
 }

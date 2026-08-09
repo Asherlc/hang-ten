@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.019138755980861243,
-        0.35167464114832536,
-        0.189792663476874,
-        0.031100478468899517
-      ],
+      "bounds": {
+        "height": 0.031100478468899517,
+        "width": 0.189792663476874,
+        "x": 0.019138755980861243,
+        "y": 0.35167464114832536
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -112,19 +110,17 @@
       }
     },
     {
-      "bounds": [
-        0.023125996810207338,
-        0.4409888357256778,
-        0.1323763955342903,
-        0.03508771929824561
-      ],
+      "bounds": {
+        "height": 0.03508771929824561,
+        "width": 0.1323763955342903,
+        "x": 0.023125996810207338,
+        "y": 0.4409888357256778
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -247,5 +243,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "soill-split-palm.png"
+  "sourceImage": "../soill-split-palm.png"
 }

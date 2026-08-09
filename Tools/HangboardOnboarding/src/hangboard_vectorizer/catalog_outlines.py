@@ -60,6 +60,16 @@ def _point(value: object, field: str) -> Point:
 
 
 def _bounds(value: object, field: str) -> Bounds:
+    root = _mapping(value, field)
+    return (
+        _finite_float(root.get("x"), f"{field}.x"),
+        _finite_float(root.get("y"), f"{field}.y"),
+        _finite_float(root.get("width"), f"{field}.width"),
+        _finite_float(root.get("height"), f"{field}.height"),
+    )
+
+
+def _bounds_tuple(value: object, field: str) -> Bounds:
     if not isinstance(value, Sequence) or isinstance(value, str) or len(value) != 4:
         raise ValueError(f"{field} must be a four-number bounds tuple")
     return (
@@ -164,7 +174,7 @@ class HoldOutline:
     confidence: float | str
     bounds: Bounds
     path: OutlinePath
-    notes: tuple[str, ...]
+    notes: str
 
     def __post_init__(self) -> None:
         _string(self.id, "id")
@@ -176,7 +186,8 @@ class HoldOutline:
                 raise ValueError('string confidence must be "approximate"')
         elif not 0.0 <= self.confidence <= 1.0 or not math.isfinite(self.confidence):
             raise ValueError("confidence must be finite and normalized")
-        _bounds(self.bounds, "bounds")
+        _bounds_tuple(self.bounds, "bounds")
+        _string(self.notes, "notes")
 
     def to_json(self) -> dict[str, object]:
         return {
@@ -184,15 +195,19 @@ class HoldOutline:
             "label": self.label,
             "kind": self.kind,
             "confidence": self.confidence,
-            "bounds": list(self.bounds),
+            "bounds": {
+                "x": self.bounds[0],
+                "y": self.bounds[1],
+                "width": self.bounds[2],
+                "height": self.bounds[3],
+            },
             "path": self.path.to_json(),
-            "notes": list(self.notes),
+            "notes": self.notes,
         }
 
     @classmethod
     def from_json(cls, payload: object) -> "HoldOutline":
         root = _mapping(payload, "outline")
-        raw_notes = root.get("notes", ())
         return cls(
             id=_string(root.get("id"), "outline.id"),
             label=_string(root.get("label"), "outline.label"),
@@ -200,7 +215,7 @@ class HoldOutline:
             confidence=_confidence(root.get("confidence"), "outline.confidence"),
             bounds=_bounds(root.get("bounds"), "outline.bounds"),
             path=OutlinePath.from_json(root.get("path")),
-            notes=_string_tuple(raw_notes, "outline.notes"),
+            notes=_string(root.get("notes"), "outline.notes"),
         )
 
 
@@ -223,6 +238,8 @@ class CatalogOutlineDocument:
             raise ValueError('coordinate_space must be "normalized"')
         if not self.outlines:
             raise ValueError("outlines must not be empty")
+        if not self.source_image.startswith("../"):
+            raise ValueError('source_image must be a relative "../<basename>.png" path')
         self._validate_references()
 
     def _validate_references(self) -> None:
@@ -314,6 +331,11 @@ def validate_catalog_document(
         _validate_path(outline.path)
         _validate_bounds(outline.bounds, outline.path)
     if source_path is not None:
+        expected_source_image = f"../{source_path.name}"
+        if document.source_image != expected_source_image:
+            raise ValueError(
+                f"sourceImage must be {expected_source_image} for {source_path.name}"
+            )
         try:
             with Image.open(source_path) as image:
                 width, height = image.size
@@ -355,6 +377,8 @@ def _validate_bounds(bounds: Bounds, path: OutlinePath) -> None:
             raise ValueError("outline bounds must stay in normalized space")
     if width <= 0.0 or height <= 0.0:
         raise ValueError("outline bounds must be non-degenerate")
+    if x + width > 1.0 + _EPSILON or y + height > 1.0 + _EPSILON:
+        raise ValueError("outline bounds must stay within normalized space")
     path_x, path_y, path_width, path_height = path_bounds(path)
     path_max_x = path_x + path_width
     path_max_y = path_y + path_height
@@ -651,14 +675,14 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
                 confidence=_APPROXIMATE_CONFIDENCE,
                 bounds=bounds,
                 path=path,
-                notes=(note,),
+                notes=note,
             )
         )
     if not outlines:
         raise ValueError(f"no valid hold outlines detected for {source_path.name}")
     document = CatalogOutlineDocument(
         schema_version=1,
-        source_image=source_path.name,
+        source_image=f"../{source_path.name}",
         canvas_width=canvas_width,
         canvas_height=canvas_height,
         coordinate_space="normalized",
@@ -1018,13 +1042,18 @@ def _polygon_area(points: np.ndarray) -> float:
 def _outline_path_to_pixels(path: OutlinePath, width: int, height: int) -> np.ndarray:
     contour: list[tuple[int, int]] = []
     for command in path.commands:
-        contour.append(
-            (
-                min(width - 1, max(0, int(round(command.to[0] * width)))),
-                min(height - 1, max(0, int(round(command.to[1] * height)))),
-            )
-        )
+        if command.command == "C" and command.controls is not None:
+            for control in command.controls:
+                contour.append(_point_to_pixel(control, width, height))
+        contour.append(_point_to_pixel(command.to, width, height))
     unique = list(dict.fromkeys(contour))
     if len(unique) < 3:
         raise ValueError("outline path must yield at least three drawable points")
     return np.array(unique, dtype=np.int32)
+
+
+def _point_to_pixel(point: Point, width: int, height: int) -> tuple[int, int]:
+    return (
+        min(width - 1, max(0, int(round(point[0] * width)))),
+        min(height - 1, max(0, int(round(point[1] * height)))),
+    )

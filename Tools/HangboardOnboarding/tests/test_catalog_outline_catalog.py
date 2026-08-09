@@ -61,7 +61,7 @@ def test_catalog_outline_documents_match_catalog_sources() -> None:
         payload = json.loads(output_path.read_text(encoding="utf-8"))
         document = CatalogOutlineDocument.from_json(payload)
 
-        assert document.source_image == source_path.name
+        assert document.source_image == f"../{source_path.name}"
         with Image.open(source_path) as source_image:
             assert (document.canvas_width, document.canvas_height) == source_image.size
         assert document.references == _expected_references(output_path.stem)

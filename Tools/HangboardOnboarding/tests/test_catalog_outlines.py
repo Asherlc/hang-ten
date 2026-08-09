@@ -50,7 +50,7 @@ def synthetic_low_contrast_white_rail_board() -> tuple[np.ndarray, np.ndarray]:
 def sample_document() -> CatalogOutlineDocument:
     return CatalogOutlineDocument(
         schema_version=1,
-        source_image="board.png",
+        source_image="../board.png",
         canvas_width=100,
         canvas_height=100,
         coordinate_space="normalized",
@@ -81,7 +81,7 @@ def sample_document() -> CatalogOutlineDocument:
                     ),
                     closed=True,
                 ),
-                notes=("traced from catalog silhouette",),
+                notes="traced from catalog silhouette",
             ),
         ),
     )
@@ -118,7 +118,7 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
     validate_catalog_document(restored)
     assert restored.to_json() == {
         "schemaVersion": 1,
-        "sourceImage": "board.png",
+        "sourceImage": "../board.png",
         "canvas": {"width": 100, "height": 100},
         "coordinateSpace": "normalized",
         "references": [
@@ -134,7 +134,7 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
                 "label": "Main edge",
                 "kind": "edge",
                 "confidence": 0.91,
-                "bounds": [0.1, 0.1, 0.9, 0.8],
+                "bounds": {"x": 0.1, "y": 0.1, "width": 0.9, "height": 0.8},
                 "path": {
                     "closed": True,
                     "commands": [
@@ -148,11 +148,25 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
                         {"command": "L", "to": [0.1, 0.1]},
                     ],
                 },
-                "notes": ["traced from catalog silhouette"],
+                "notes": "traced from catalog silhouette",
             }
         ],
     }
     assert path_bounds(restored.outlines[0].path) == pytest.approx((0.1, 0.1, 0.9, 0.8))
+
+
+def test_outline_reader_rejects_legacy_bounds_and_notes_shapes() -> None:
+    payload = sample_document().to_json()
+    payload["outlines"][0]["bounds"] = [0.1, 0.1, 0.9, 0.8]
+
+    with pytest.raises(ValueError, match="bounds must be an object"):
+        CatalogOutlineDocument.from_json(payload)
+
+    payload = sample_document().to_json()
+    payload["outlines"][0]["notes"] = ["traced from catalog silhouette"]
+
+    with pytest.raises(ValueError, match="notes"):
+        CatalogOutlineDocument.from_json(payload)
 
 
 def test_validator_rejects_coordinates_outside_normalized_canvas() -> None:
@@ -166,6 +180,39 @@ def test_validator_rejects_open_or_degenerate_path() -> None:
     document = with_commands(sample_document(), (OutlineCommand("M", (0.1, 0.1)),))
 
     with pytest.raises(ValueError, match="closed"):
+        validate_catalog_document(document)
+
+
+def test_validator_rejects_bounds_that_overflow_normalized_canvas() -> None:
+    document = CatalogOutlineDocument(
+        schema_version=1,
+        source_image="../board.png",
+        canvas_width=100,
+        canvas_height=100,
+        coordinate_space="normalized",
+        references=(),
+        outlines=(
+            HoldOutline(
+                id="hold-overflow",
+                label="Overflow edge",
+                kind="edge",
+                confidence=0.75,
+                bounds=(0.2, 0.2, 0.81, 0.6),
+                path=OutlinePath(
+                    commands=(
+                        OutlineCommand("M", (0.2, 0.2)),
+                        OutlineCommand("L", (0.95, 0.2)),
+                        OutlineCommand("L", (0.95, 0.8)),
+                        OutlineCommand("L", (0.2, 0.2)),
+                    ),
+                    closed=True,
+                ),
+                notes="fits path but exceeds normalized extent",
+            ),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="within normalized space"):
         validate_catalog_document(document)
 
 
@@ -283,7 +330,7 @@ def test_vectorize_catalog_image_detects_escape_unlimited_slots() -> None:
 
     document = vectorize_catalog_image(source)
 
-    assert document.source_image == "escape-unlimited.png"
+    assert document.source_image == "../escape-unlimited.png"
     assert len(document.outlines) >= 5
 
 
@@ -322,6 +369,28 @@ def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -
     )
 
     assert result.exit_code != 0
+    assert "No source PNG files found" in result.output
+
+
+def test_cli_check_reports_verified_count_for_relative_source_paths(tmp_path: Path) -> None:
+    try:
+        cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    except ModuleNotFoundError:
+        pytest.fail("catalog_outline_cli module is missing")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "sources"
+    output_dir = tmp_path / "out"
+    source = write_synthetic_board(source_dir / "board.png")
+    write_catalog_document(vectorize_catalog_image(source), output_dir / "board.json")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    )
+
+    assert source.exists()
+    assert result.exit_code == 0
+    assert "Verified 1 catalog outline document" in result.output
 
 
 def test_cli_excludes_contact_sheet_and_writes_review_overlay(tmp_path: Path) -> None:
@@ -406,3 +475,38 @@ def test_review_overlay_labels_with_outline_ids(tmp_path: Path, monkeypatch: pyt
     )
 
     assert labels == [outline.id for outline in document.outlines for _ in range(2)]
+
+
+def test_review_overlay_flattens_cubic_controls_for_polylines(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = write_synthetic_board(tmp_path / "board.png")
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    document = sample_document()
+    rendered_polylines: list[np.ndarray] = []
+    original_polylines = outlines_module.cv2.polylines
+
+    def capture_polylines(
+        image: np.ndarray,
+        contours: list[np.ndarray],
+        *args: object,
+        **kwargs: object,
+    ) -> np.ndarray:
+        rendered_polylines.append(contours[0].copy())
+        return original_polylines(image, contours, *args, **kwargs)
+
+    monkeypatch.setattr(outlines_module.cv2, "polylines", capture_polylines)
+    outlines_module.render_catalog_review_overlay(
+        source, document, tmp_path / "review" / "board.png"
+    )
+
+    assert rendered_polylines
+    flattened = rendered_polylines[0].reshape(-1, 2)
+    expected_points = {
+        (10, 10),
+        (90, 10),
+        (99, 30),
+        (99, 70),
+        (90, 90),
+    }
+    assert expected_points.issubset({tuple(point) for point in flattened})

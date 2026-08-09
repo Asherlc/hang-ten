@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.546875,
-        0.35546875,
-        0.400390625,
-        0.044921875
-      ],
+      "bounds": {
+        "height": 0.044921875,
+        "width": 0.400390625,
+        "x": 0.546875,
+        "y": 0.35546875
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -256,19 +254,17 @@
       }
     },
     {
-      "bounds": [
-        0.4303385416666667,
-        0.51171875,
-        0.12890624999999994,
-        0.0390625
-      ],
+      "bounds": {
+        "height": 0.0390625,
+        "width": 0.12890624999999994,
+        "x": 0.4303385416666667,
+        "y": 0.51171875
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -379,19 +375,17 @@
       }
     },
     {
-      "bounds": [
-        0.5787760416666666,
-        0.5908203125,
-        0.35677083333333337,
-        0.05859375
-      ],
+      "bounds": {
+        "height": 0.05859375,
+        "width": 0.35677083333333337,
+        "x": 0.5787760416666666,
+        "y": 0.5908203125
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
       "label": "Approximate rail 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -485,19 +479,17 @@
       }
     },
     {
-      "bounds": [
-        0.05859375,
-        0.6171875,
-        0.3463541666666667,
-        0.0341796875
-      ],
+      "bounds": {
+        "height": 0.0341796875,
+        "width": 0.3463541666666667,
+        "x": 0.05859375,
+        "y": 0.6171875
+      },
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "rail",
       "label": "Approximate rail 4",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -587,5 +579,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "frictitious-megalith.png"
+  "sourceImage": "../frictitious-megalith.png"
 }

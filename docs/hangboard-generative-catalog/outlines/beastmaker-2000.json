@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.056169429097605895,
-        0.6422651933701657,
-        0.21915285451197056,
-        0.12430939226519333
-      ],
+      "bounds": {
+        "height": 0.12430939226519333,
+        "width": 0.21915285451197056,
+        "x": 0.056169429097605895,
+        "y": 0.6422651933701657
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
       "label": "Approximate rail 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -160,19 +158,17 @@
       }
     },
     {
-      "bounds": [
-        0.3641804788213628,
-        0.6422651933701657,
-        0.23941068139963168,
-        0.13259668508287292
-      ],
+      "bounds": {
+        "height": 0.13259668508287292,
+        "width": 0.23941068139963168,
+        "x": 0.3641804788213628,
+        "y": 0.6422651933701657
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -307,19 +303,17 @@
       }
     },
     {
-      "bounds": [
-        0.2490791896869245,
-        0.6505524861878453,
-        0.06353591160220995,
-        0.11602209944751374
-      ],
+      "bounds": {
+        "height": 0.11602209944751374,
+        "width": 0.06353591160220995,
+        "x": 0.2490791896869245,
+        "y": 0.6505524861878453
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "edge",
       "label": "Approximate edge 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -502,19 +496,17 @@
       }
     },
     {
-      "bounds": [
-        0.8176795580110497,
-        0.6671270718232044,
-        0.12338858195211788,
-        0.09806629834254144
-      ],
+      "bounds": {
+        "height": 0.09806629834254144,
+        "width": 0.12338858195211788,
+        "x": 0.8176795580110497,
+        "y": 0.6671270718232044
+      },
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "rail",
       "label": "Approximate rail 4",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -684,5 +676,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "beastmaker-2000.png"
+  "sourceImage": "../beastmaker-2000.png"
 }

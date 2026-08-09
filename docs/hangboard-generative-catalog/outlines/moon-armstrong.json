@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.6124401913875598,
-        0.2784272051009564,
-        0.15011961722488043,
-        0.3878852284803401
-      ],
+      "bounds": {
+        "height": 0.3878852284803401,
+        "width": 0.15011961722488043,
+        "x": 0.6124401913875598,
+        "y": 0.2784272051009564
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "pocket",
       "label": "Approximate pocket 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -249,19 +247,17 @@
       }
     },
     {
-      "bounds": [
-        0.4084928229665072,
-        0.2879914984059511,
-        0.1752392344497608,
-        0.06376195536663126
-      ],
+      "bounds": {
+        "height": 0.06376195536663126,
+        "width": 0.1752392344497608,
+        "x": 0.4084928229665072,
+        "y": 0.2879914984059511
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
       "label": "Approximate rail 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -396,19 +392,17 @@
       }
     },
     {
-      "bounds": [
-        0.38935406698564595,
-        0.29543039319872477,
-        0.0047846889952152805,
-        0.09883103081827843
-      ],
+      "bounds": {
+        "height": 0.09883103081827843,
+        "width": 0.0047846889952152805,
+        "x": 0.38935406698564595,
+        "y": 0.29543039319872477
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "pocket",
       "label": "Approximate pocket 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -485,19 +479,17 @@
       }
     },
     {
-      "bounds": [
-        0.05741626794258373,
-        0.3018065887353879,
-        0.15251196172248804,
-        0.38682252922422955
-      ],
+      "bounds": {
+        "height": 0.38682252922422955,
+        "width": 0.15251196172248804,
+        "x": 0.05741626794258373,
+        "y": 0.3018065887353879
+      },
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "pocket",
       "label": "Approximate pocket 4",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -944,19 +936,17 @@
       }
     },
     {
-      "bounds": [
-        0.6220095693779905,
-        0.42826780021253985,
-        0.12799043062200954,
-        0.06907545164718387
-      ],
+      "bounds": {
+        "height": 0.06907545164718387,
+        "width": 0.12799043062200954,
+        "x": 0.6220095693779905,
+        "y": 0.42826780021253985
+      },
       "confidence": "approximate",
       "id": "hold-05",
       "kind": "rail",
       "label": "Approximate rail 5",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1115,19 +1105,17 @@
       }
     },
     {
-      "bounds": [
-        0.7894736842105263,
-        0.43251859723698194,
-        0.15729665071770338,
-        0.0318809776833156
-      ],
+      "bounds": {
+        "height": 0.0318809776833156,
+        "width": 0.15729665071770338,
+        "x": 0.7894736842105263,
+        "y": 0.43251859723698194
+      },
       "confidence": "approximate",
       "id": "hold-06",
       "kind": "rail",
       "label": "Approximate rail 6",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1221,19 +1209,17 @@
       }
     },
     {
-      "bounds": [
-        0.23145933014354067,
-        0.4505844845908608,
-        0.16925837320574164,
-        0.0998937300743889
-      ],
+      "bounds": {
+        "height": 0.0998937300743889,
+        "width": 0.16925837320574164,
+        "x": 0.23145933014354067,
+        "y": 0.4505844845908608
+      },
       "confidence": "approximate",
       "id": "hold-07",
       "kind": "rail",
       "label": "Approximate rail 7",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1351,19 +1337,17 @@
       }
     },
     {
-      "bounds": [
-        0.8020334928229665,
-        0.47502656748140276,
-        0.125,
-        0.07438894792773648
-      ],
+      "bounds": {
+        "height": 0.07438894792773648,
+        "width": 0.125,
+        "x": 0.8020334928229665,
+        "y": 0.47502656748140276
+      },
       "confidence": "approximate",
       "id": "hold-08",
       "kind": "rail",
       "label": "Approximate rail 8",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1498,19 +1482,17 @@
       }
     },
     {
-      "bounds": [
-        0.24162679425837322,
-        0.48459086078639746,
-        0.1255980861244019,
-        0.06695005313496283
-      ],
+      "bounds": {
+        "height": 0.06695005313496283,
+        "width": 0.1255980861244019,
+        "x": 0.24162679425837322,
+        "y": 0.48459086078639746
+      },
       "confidence": "approximate",
       "id": "hold-09",
       "kind": "rail",
       "label": "Approximate rail 9",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1621,19 +1603,17 @@
       }
     },
     {
-      "bounds": [
-        0.23564593301435408,
-        0.5706695005313497,
-        0.15849282296650716,
-        0.03400637619553659
-      ],
+      "bounds": {
+        "height": 0.03400637619553659,
+        "width": 0.15849282296650716,
+        "x": 0.23564593301435408,
+        "y": 0.5706695005313497
+      },
       "confidence": "approximate",
       "id": "hold-10",
       "kind": "rail",
       "label": "Approximate rail 10",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1744,19 +1724,17 @@
       }
     },
     {
-      "bounds": [
-        0.7936602870813397,
-        0.5749202975557917,
-        0.14892344497607657,
-        0.043570669500531456
-      ],
+      "bounds": {
+        "height": 0.043570669500531456,
+        "width": 0.14892344497607657,
+        "x": 0.7936602870813397,
+        "y": 0.5749202975557917
+      },
       "confidence": "approximate",
       "id": "hold-11",
       "kind": "rail",
       "label": "Approximate rail 11",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1874,19 +1852,17 @@
       }
     },
     {
-      "bounds": [
-        0.80622009569378,
-        0.6131774707757705,
-        0.07655502392344493,
-        0.057385759829968075
-      ],
+      "bounds": {
+        "height": 0.057385759829968075,
+        "width": 0.07655502392344493,
+        "x": 0.80622009569378,
+        "y": 0.6131774707757705
+      },
       "confidence": "approximate",
       "id": "hold-12",
       "kind": "rail",
       "label": "Approximate rail 12",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -1980,19 +1956,17 @@
       }
     },
     {
-      "bounds": [
-        0.2458133971291866,
-        0.6184909670563231,
-        0.062200956937799035,
-        0.06163655685441016
-      ],
+      "bounds": {
+        "height": 0.06163655685441016,
+        "width": 0.062200956937799035,
+        "x": 0.2458133971291866,
+        "y": 0.6184909670563231
+      },
       "confidence": "approximate",
       "id": "hold-13",
       "kind": "edge",
       "label": "Approximate edge 13",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -2086,19 +2060,17 @@
       }
     },
     {
-      "bounds": [
-        0.7206937799043063,
-        0.6705632306057385,
-        0.21411483253588515,
-        0.05207226354941552
-      ],
+      "bounds": {
+        "height": 0.05207226354941552,
+        "width": 0.21411483253588515,
+        "x": 0.7206937799043063,
+        "y": 0.6705632306057385
+      },
       "confidence": "approximate",
       "id": "hold-14",
       "kind": "rail",
       "label": "Approximate rail 14",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -2221,5 +2193,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "moon-armstrong.png"
+  "sourceImage": "../moon-armstrong.png"
 }

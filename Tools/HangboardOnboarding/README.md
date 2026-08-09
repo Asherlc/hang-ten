@@ -179,15 +179,17 @@ The command discovers only top-level `*.png` sources, skips the exact contact
 sheet name `contact-sheet-primary.png`, sorts the remaining 32 board images
 lexicographically, and writes one `<stem>.json` document per source plus an
 optional overlay PNG for review. `--check` validates the source/output set,
-JSON schema, normalized geometry, and source canvas dimensions without writing
-files.
+JSON schema, normalized geometry, relative source-image wiring, and source
+canvas dimensions without writing files. A successful run prints how many
+catalog outline documents were verified; failures name the missing or invalid
+JSON file.
 
 Each outline document uses normalized coordinates in a source-sized canvas:
 
 ```json
 {
   "schemaVersion": 1,
-  "sourceImage": "escape-unlimited.png",
+  "sourceImage": "../escape-unlimited.png",
   "canvas": {"width": 1774, "height": 887},
   "coordinateSpace": "normalized",
   "references": [
@@ -203,17 +205,19 @@ Each outline document uses normalized coordinates in a source-sized canvas:
       "label": "Approximate rail 1",
       "kind": "rail",
       "confidence": "approximate",
-      "bounds": [0.06, 0.25, 0.10, 0.06],
+      "bounds": {"x": 0.06, "y": 0.25, "width": 0.10, "height": 0.06},
       "path": {"closed": true, "commands": [{"command": "M", "to": [0.06, 0.25]}]},
-      "notes": ["approximate dark recess candidate; verify against visible board geometry"]
+      "notes": "approximate dark recess candidate; verify against visible board geometry"
     }
   ]
 }
 ```
 
 `path` coordinates are always normalized to `0..1` in the source image's own
-canvas. `bounds` is the normalized axis-aligned box enclosing the path and is
-used as a coarse edit/review aid rather than an authoritative hold semantic.
+canvas. `sourceImage` resolves from each JSON file back to its sibling catalog
+PNG via `../<basename>.png`. `bounds` is the normalized axis-aligned box
+enclosing the path and is used as a coarse edit/review aid rather than an
+authoritative hold semantic.
 
 The `references` field is advisory only: it preserves manufacturer URLs and
 coarse source hints for human review, but those hints must not be treated as

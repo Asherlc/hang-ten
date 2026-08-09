@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.947265625,
-        0.34375,
-        0.00520833333333337,
-        0.1162109375
-      ],
+      "bounds": {
+        "height": 0.1162109375,
+        "width": 0.00520833333333337,
+        "x": 0.947265625,
+        "y": 0.34375
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "pocket",
       "label": "Approximate pocket 1",
-      "notes": [
-        "approximate local-contrast recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate local-contrast recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -95,19 +93,17 @@
       }
     },
     {
-      "bounds": [
-        0.044921875,
-        0.353515625,
-        0.011067708333333336,
-        0.091796875
-      ],
+      "bounds": {
+        "height": 0.091796875,
+        "width": 0.011067708333333336,
+        "x": 0.044921875,
+        "y": 0.353515625
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "pocket",
       "label": "Approximate pocket 2",
-      "notes": [
-        "approximate local-contrast recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate local-contrast recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -184,19 +180,17 @@
       }
     },
     {
-      "bounds": [
-        0.08919270833333333,
-        0.3623046875,
-        0.02734375,
-        0.03125
-      ],
+      "bounds": {
+        "height": 0.03125,
+        "width": 0.02734375,
+        "x": 0.08919270833333333,
+        "y": 0.3623046875
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "edge",
       "label": "Approximate edge 3",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -386,19 +380,17 @@
       }
     },
     {
-      "bounds": [
-        0.060546875,
-        0.36328125,
-        0.01822916666666667,
-        0.0224609375
-      ],
+      "bounds": {
+        "height": 0.0224609375,
+        "width": 0.01822916666666667,
+        "x": 0.060546875,
+        "y": 0.36328125
+      },
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "pocket",
       "label": "Approximate pocket 4",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -499,19 +491,17 @@
       }
     },
     {
-      "bounds": [
-        0.9375,
-        0.3779296875,
-        0.013671875,
-        0.025390625
-      ],
+      "bounds": {
+        "height": 0.025390625,
+        "width": 0.013671875,
+        "x": 0.9375,
+        "y": 0.3779296875
+      },
       "confidence": "approximate",
       "id": "hold-05",
       "kind": "pocket",
       "label": "Approximate pocket 5",
-      "notes": [
-        "approximate dark recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate dark recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -626,19 +616,17 @@
       }
     },
     {
-      "bounds": [
-        0.947265625,
-        0.474609375,
-        0.01432291666666663,
-        0.119140625
-      ],
+      "bounds": {
+        "height": 0.119140625,
+        "width": 0.01432291666666663,
+        "x": 0.947265625,
+        "y": 0.474609375
+      },
       "confidence": "approximate",
       "id": "hold-06",
       "kind": "pocket",
       "label": "Approximate pocket 6",
-      "notes": [
-        "approximate local-contrast recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate local-contrast recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -780,19 +768,17 @@
       }
     },
     {
-      "bounds": [
-        0.034505208333333336,
-        0.4853515625,
-        0.016276041666666664,
-        0.0908203125
-      ],
+      "bounds": {
+        "height": 0.0908203125,
+        "width": 0.016276041666666664,
+        "x": 0.034505208333333336,
+        "y": 0.4853515625
+      },
       "confidence": "approximate",
       "id": "hold-07",
       "kind": "pocket",
       "label": "Approximate pocket 7",
-      "notes": [
-        "approximate local-contrast recess candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate local-contrast recess candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -922,5 +908,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "lattice-triple-rung.png"
+  "sourceImage": "../lattice-triple-rung.png"
 }

@@ -6,19 +6,17 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
-      "bounds": [
-        0.17903645833333334,
-        0.2880859375,
-        0.020833333333333315,
-        0.037109375
-      ],
+      "bounds": {
+        "height": 0.037109375,
+        "width": 0.020833333333333315,
+        "x": 0.17903645833333334,
+        "y": 0.2880859375
+      },
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "pocket",
       "label": "Approximate pocket 1",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -129,19 +127,17 @@
       }
     },
     {
-      "bounds": [
-        0.048828125,
-        0.2939453125,
-        0.09895833333333334,
-        0.09765625
-      ],
+      "bounds": {
+        "height": 0.09765625,
+        "width": 0.09895833333333334,
+        "x": 0.048828125,
+        "y": 0.2939453125
+      },
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "edge",
       "label": "Approximate edge 2",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -276,19 +272,17 @@
       }
     },
     {
-      "bounds": [
-        0.0234375,
-        0.3583984375,
-        0.4680989583333333,
-        0.2080078125
-      ],
+      "bounds": {
+        "height": 0.2080078125,
+        "width": 0.4680989583333333,
+        "x": 0.0234375,
+        "y": 0.3583984375
+      },
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
       "label": "Approximate rail 3",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -567,19 +561,17 @@
       }
     },
     {
-      "bounds": [
-        0.033203125,
-        0.546875,
-        0.4095052083333333,
-        0.08984375
-      ],
+      "bounds": {
+        "height": 0.08984375,
+        "width": 0.4095052083333333,
+        "x": 0.033203125,
+        "y": 0.546875
+      },
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "rail",
       "label": "Approximate rail 4",
-      "notes": [
-        "approximate catalog contrast candidate; verify against visible board geometry"
-      ],
+      "notes": "approximate catalog contrast candidate; verify against visible board geometry",
       "path": {
         "closed": true,
         "commands": [
@@ -709,5 +701,5 @@
     }
   ],
   "schemaVersion": 1,
-  "sourceImage": "soill-training-tiles.png"
+  "sourceImage": "../soill-training-tiles.png"
 }
