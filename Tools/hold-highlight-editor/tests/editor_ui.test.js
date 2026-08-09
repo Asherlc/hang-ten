@@ -7,6 +7,7 @@ const root = path.join(__dirname, "..");
 const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");
+const server = fs.readFileSync(path.join(root, "server.py"), "utf8");
 
 void app;
 void readme;
@@ -26,7 +27,20 @@ test("keeps full hold editing controls", () => {
   assert.match(index, /value="edge"/);
   assert.match(index, /value="pocket"/);
   assert.match(index, /id="add-region-button"/);
+  assert.match(index, />\s*<span>＋<\/span>\s*Add highlight\s*</);
   assert.match(index, /id="delete-button"/);
+});
+
+test("documents the direct hold-highlight workflow", () => {
+  assert.match(readme, /^# Hold Editor/m);
+  assert.match(readme, /choose a board.*edit.*add.*delete.*save/is);
+  assert.match(readme, /hold type/i);
+  assert.doesNotMatch(readme, /# Hold Region Editor/);
+});
+
+test("uses hold editor wording in server labels", () => {
+  assert.match(server, /Hold Editor: http:\/\//);
+  assert.doesNotMatch(server, /Hold Region Editor: http:\/\//);
 });
 
 test("marks manual file loading as a static fallback", () => {

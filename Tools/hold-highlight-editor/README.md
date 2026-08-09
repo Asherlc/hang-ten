@@ -1,15 +1,15 @@
-# Hold Region Editor
+# Hold Editor
 
-A dependency-free local browser editor for hangboard grip-region artifacts.
+A dependency-free local browser editor for hangboard hold-highlight artifacts.
 
-## Edit and save an onboarding run
+## Edit and save hold highlights from a generated run
 
 ```bash
 rtk python3 Tools/hold-highlight-editor/server.py \
   --run-dir /absolute/path/to/onboarding-run
 ```
 
-Then open `http://localhost:4173`. The server loads the run's unique `stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes these review artifacts beside the Stage 2 proposal:
+Then open `http://localhost:4173`. Choose a board when more than one run is available, edit existing highlights, add a new highlight and choose its hold type, delete incorrect highlights, then save or export the review. The server loads the run's generated `stage-1-auto-rgba.png` input image and `stage-2-regions.json` input regions. **Save** atomically writes these review artifacts beside the generated proposal:
 
 - `stage-2-regions.edited.json`: complete edited region artifact.
 - `stage-2-human-corrections.json`: added, modified, and deleted regions relative to the automatic proposal.
@@ -28,7 +28,7 @@ rtk python3 Tools/hold-highlight-editor/server.py \
   --run-dir /absolute/path/to/second-onboarding-run
 ```
 
-Use a catalog when runs need friendly labels or when historical Stage 1 and Stage 2 artifacts live in different subdirectories:
+Use a catalog when runs need friendly labels or when generated input artifacts live in different subdirectories:
 
 ```json
 {
@@ -57,11 +57,11 @@ To use the editor without filesystem Save support:
 rtk python3 -m http.server 4173 --directory Tools/hold-highlight-editor
 ```
 
-Any Stage 1 image and compatible `stage-2-regions.json` can be loaded through the toolbar or by dropping both files onto the canvas. If a `demo/` directory is supplied, the editor loads it automatically.
+Any generated `stage-1-auto-rgba.png` image and compatible `stage-2-regions.json` can be loaded through the toolbar or by dropping both files onto the canvas. If a `demo/` directory is supplied, the editor loads it automatically.
 
 Regions can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
-Selected regions expose object-level rotate and bend handles. Individual contour points remain available behind the **Edit points** toggle for fine correction.
+Selected highlights expose object-level rotate and bend handles. The full inspector retains hold key, hold type, shape, path style, hold interaction mode, and hold notes for each selected highlight. Individual contour points remain available behind the **Edit points** toggle for fine correction.
 
 ## Fast tracing workflow
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local filesystem boundary for the dependency-free hold-region editor."""
+"""Local filesystem boundary for the dependency-free hold editor."""
 
 from __future__ import annotations
 
@@ -388,13 +388,13 @@ def _atomic_write_json(path: Path, value: object) -> None:
 
 
 def main() -> None:
-    parser = ArgumentParser(description="Serve the hold-region editor for pipeline-generated onboarding runs")
+    parser = ArgumentParser(description="Serve the Hold Editor for pipeline-generated runs")
     parser.add_argument(
         "--run-dir",
         action="append",
         default=[],
         type=Path,
-        help="Onboarding run containing one Stage 1 image and Stage 2 regions file; repeat to add boards",
+        help="Run containing one stage-1 image and stage-2 regions file; repeat to add boards",
     )
     parser.add_argument("--catalog", type=Path, help="JSON catalog for named runs or explicit historical artifact paths")
     parser.add_argument("--host", default="127.0.0.1", help="Listen address (default: 127.0.0.1)")
@@ -405,7 +405,7 @@ def main() -> None:
     except EditorError as error:
         parser.error(str(error))
     server = create_server(catalog, arguments.host, arguments.port)
-    print(f"Hold Region Editor: http://{arguments.host}:{server.server_port}")
+    print(f"Hold Editor: http://{arguments.host}:{server.server_port}")
     for entry in catalog.sessions:
         print(f"Run [{entry.id}] {entry.label}: {entry.session.run_dir}")
     try:
