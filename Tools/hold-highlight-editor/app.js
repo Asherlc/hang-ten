@@ -166,7 +166,7 @@
     el["save-state"].className = "save-state";
     if (!state.serverSession) {
       el["save-state"].textContent = "Static mode";
-      el["save-button"].title = "Start server.py with --run-dir to save into an onboarding run";
+      el["save-button"].title = "Start server.py with --run-dir to save hold highlights in this Hold Editor";
     } else if (state.saveError) {
       el["save-state"].textContent = "Save failed";
       el["save-state"].classList.add("error");

@@ -48,3 +48,8 @@ test("uses hold language for selection and editing status", () => {
   assert.match(app, /Deleted \$\{region\.key\}/);
   assert.doesNotMatch(app, /Select a region to edit its shape and metadata/);
 });
+
+test("describes static save mode with hold-editor wording", () => {
+  assert.match(app, /save hold highlights in this Hold Editor/i);
+  assert.doesNotMatch(app, /onboarding run/);
+});
