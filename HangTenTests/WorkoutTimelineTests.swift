@@ -615,8 +615,123 @@ final class WorkoutAudioCoachTests: XCTestCase {
         synthesizer.sendFinish(of: synthesizer.utterances[1])
         await Task.yield()
 
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        coach.stop()
+
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
+    func testStaleCallbackFromReplacedCueDoesNotAffectReplacement() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        let replacedUtterance = synthesizer.utterances[0]
+        coach.speak("2")
+        let replacementUtterance = synthesizer.utterances[1]
+        synthesizer.sendStart(of: replacementUtterance)
+
+        synthesizer.sendCancellation(of: replacedUtterance)
+        await Task.yield()
+
+        XCTAssertTrue(coach.isSpeaking)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.sendFinish(of: replacementUtterance)
+        await Task.yield()
+
+        XCTAssertFalse(coach.isSpeaking)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+    }
+
+    func testCueCompletionDoesNotDeactivateAudioSessionDuringCountdownSequence() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[0])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        coach.speak("2")
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: synthesizer.utterances[1])
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        coach.stop()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+    }
+
+    func testStopOwnsCancellationAndIgnoresLaterCallbacks() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        let stoppedUtterance = synthesizer.utterances[0]
+        coach.stop()
+
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendCancellation(of: stoppedUtterance)
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertFalse(coach.isSpeaking)
+
+        synthesizer.sendFinish(of: stoppedUtterance)
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+    }
+
+    func testNewCueAfterStopStartsFreshAudioSessionGeneration() async {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        let stoppedUtterance = synthesizer.utterances[0]
+        coach.stop()
+
+        coach.speak("2")
+        let newUtterance = synthesizer.utterances[1]
+        synthesizer.sendStart(of: newUtterance)
+        synthesizer.sendCancellation(of: stoppedUtterance)
+        await Task.yield()
+
+        XCTAssertEqual(audioSession.activationCount, 1)
+        XCTAssertEqual(audioSession.deactivationCount, 0)
+        XCTAssertTrue(coach.isSpeaking)
+
+        synthesizer.isSpeaking = false
+        synthesizer.sendFinish(of: newUtterance)
+        await Task.yield()
+        coach.stop()
+
+        XCTAssertEqual(audioSession.deactivationCount, 1)
     }
 
     func testDeactivationRetriesAfterTransientFailureOnceSpeechHasFinished() async {
@@ -635,6 +750,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
+        coach.stop()
         await fulfillment(of: [deactivation], timeout: 1)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
@@ -657,6 +773,13 @@ private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing
     func speak(_ utterance: AVSpeechUtterance) {
         utterances.append(utterance)
         isSpeaking = true
+    }
+
+    func sendStart(of utterance: AVSpeechUtterance) {
+        delegate?.speechSynthesizer?(
+            AVSpeechSynthesizer(),
+            didStart: utterance
+        )
     }
 
     func sendCancellation(of utterance: AVSpeechUtterance? = nil) {
