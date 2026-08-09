@@ -12,6 +12,7 @@
     normalizePipelineDocument,
     canSaveEditorState,
     runSessionLoadTransaction,
+    formatSessionLoadError,
   } = globalThis.HoldEditorModel;
 
   const TYPE_COLORS = {
@@ -919,13 +920,13 @@
           if (!response.ok) throw new Error("Could not load hold highlights from the run");
           return response.json();
         },
-        normalizeRegions: (regions) => normalizePipelineDocument(regions, state.canvas),
+        normalizeRegions: (regions, incomingCanvas) => normalizePipelineDocument(regions, incomingCanvas),
         loadImage: (session) => loadImageAsset(session.imageUrl),
       });
       if (!transition.ok) {
         console.warn(transition.error);
         el["board-select"].value = transition.value.visible.boardValue;
-        setStatus(transition.value.visible.status);
+        setStatus(formatSessionLoadError(transition.error));
         return false;
       }
 
@@ -946,7 +947,7 @@
     } catch (error) {
       console.warn(error);
       el["board-select"].value = current.visible.boardValue;
-      setStatus(current.visible.status);
+      setStatus(formatSessionLoadError(error));
       return false;
     } finally {
       state.loadingSession = false;

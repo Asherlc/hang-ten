@@ -127,12 +127,21 @@
     return Boolean(serverSession && dirty && !saving && !loadingSession);
   }
 
+  function formatSessionLoadError(error) {
+    return error instanceof Error && error.message
+      ? `Could not load the selected board: ${error.message}`
+      : "Could not load the selected board. Please try again.";
+  }
+
   async function runSessionLoadTransaction(current, { loadSession, loadRegions, normalizeRegions, loadImage }) {
     try {
       const session = await loadSession();
       const regions = await loadRegions(session);
-      const normalized = normalizeRegions(regions);
       const imageAsset = await loadImage(session);
+      const normalized = normalizeRegions(regions, {
+        width: imageAsset.image.naturalWidth,
+        height: imageAsset.image.naturalHeight,
+      });
       return { ok: true, value: { session, normalized, imageAsset }, error: null };
     } catch (error) {
       return { ok: false, value: current, error };
@@ -285,5 +294,6 @@
     normalizePipelineDocument,
     canSaveEditorState,
     runSessionLoadTransaction,
+    formatSessionLoadError,
   };
 }));

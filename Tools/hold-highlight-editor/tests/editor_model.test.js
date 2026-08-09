@@ -12,6 +12,7 @@ const {
   normalizePipelineDocument,
   canSaveEditorState,
   runSessionLoadTransaction,
+  formatSessionLoadError,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -138,6 +139,28 @@ test("a successful session transaction returns the fully staged replacement", as
   assert.equal(result.ok, true);
   assert.deepEqual(result.value, { session, normalized, imageAsset });
   assert.equal(result.error, null);
+});
+
+test("a successful session transaction gives normalization the incoming image dimensions", async () => {
+  const result = await runSessionLoadTransaction({ editor: {}, visible: {} }, {
+    loadSession: async () => ({ id: "board-b" }),
+    loadRegions: async () => ({ regions: [] }),
+    normalizeRegions: (document, fallbackCanvas) => normalizePipelineDocument(document, fallbackCanvas),
+    loadImage: async () => ({ image: { naturalWidth: 240, naturalHeight: 120 }, imagePixels: null }),
+  });
+
+  assert.deepEqual(result.value.normalized.canvas, { width: 240, height: 120 });
+});
+
+test("session load errors become specific user-facing status without exposing unexpected values", () => {
+  assert.equal(
+    formatSessionLoadError(new Error("Board image failed to load")),
+    "Could not load the selected board: Board image failed to load",
+  );
+  assert.equal(
+    formatSessionLoadError({ reason: "not safe to display" }),
+    "Could not load the selected board. Please try again.",
+  );
 });
 
 test("curve and transform metadata count as modifications", () => {
