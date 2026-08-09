@@ -372,6 +372,78 @@ def test_cli_check_rejects_missing_or_malformed_catalog_output(tmp_path: Path) -
     assert "No source PNG files found" in result.output
 
 
+def test_cli_check_reports_missing_output_stem(tmp_path: Path) -> None:
+    cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "sources"
+    output_dir = tmp_path / "out"
+    write_synthetic_board(source_dir / "board.png")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    )
+
+    assert result.exit_code == 1
+    assert result.output == "Missing outline JSON: board\n"
+
+
+def test_cli_check_reports_unexpected_extra_json(tmp_path: Path) -> None:
+    cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "sources"
+    output_dir = tmp_path / "out"
+    source = write_synthetic_board(source_dir / "board.png")
+    write_catalog_document(vectorize_catalog_image(source), output_dir / "board.json")
+    (output_dir / "extra.json").write_text("{}", encoding="utf-8")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    )
+
+    assert result.exit_code == 1
+    assert result.output == "Unexpected outline JSON: extra\n"
+
+
+def test_cli_check_reports_invalid_json_error_text(tmp_path: Path) -> None:
+    cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "sources"
+    output_dir = tmp_path / "out"
+    write_synthetic_board(source_dir / "board.png")
+    output_dir.mkdir()
+    (output_dir / "board.json").write_text("{not valid json", encoding="utf-8")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    )
+
+    assert result.exit_code == 1
+    assert result.output.startswith("board.json: Expecting")
+
+
+def test_cli_check_reports_schema_error_text(tmp_path: Path) -> None:
+    cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
+    runner = cli.CliRunner()
+    source_dir = tmp_path / "sources"
+    output_dir = tmp_path / "out"
+    write_synthetic_board(source_dir / "board.png")
+    payload = sample_document().to_json()
+    payload["sourceImage"] = "board.png"
+    output_dir.mkdir()
+    (output_dir / "board.json").write_text(json.dumps(payload), encoding="utf-8")
+
+    result = runner.invoke(
+        cli.main,
+        ["--source-dir", str(source_dir), "--output-dir", str(output_dir), "--check"],
+    )
+
+    assert result.exit_code == 1
+    assert "board.json: source_image must be a relative" in result.output
+
+
 def test_cli_check_reports_verified_count_for_relative_source_paths(tmp_path: Path) -> None:
     try:
         cli = importlib.import_module("hangboard_vectorizer.catalog_outline_cli")
