@@ -1,7 +1,6 @@
 # Repository Library Residual Remediation Implementation Plan
 
 > **Historical plan:** Superseded by `2026-08-07-unified-hangboard-repository.md`. Direct discovery and canonical `run.json` revision tokens are authoritative; persisted publication-operation identity and nested immutable versions below are preserved only as history.
-
 > **For agentic workers:** REQUIRED SUB-SKILL: Use a fresh subagent for every implementation or configuration task, with separate implementation and review checkpoints for each task. Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Resolve the four load-bearing residual findings from the repository-library final review without weakening repository confinement, optimistic conflicts, or job recovery.
