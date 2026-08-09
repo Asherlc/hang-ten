@@ -8,30 +8,27 @@ enum GripCueSide {
 struct GripDiagramView: View {
     let hold: BoardHold
     let gripType: GripType
+    let fingerConfiguration: FingerConfiguration?
 
-    init(hold: BoardHold, gripType: GripType? = nil) {
+    init(
+        hold: BoardHold,
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil
+    ) {
         self.hold = hold
         self.gripType = gripType ?? hold.gripType
+        self.fingerConfiguration = fingerConfiguration
     }
 
     private var gripLabel: String {
-        switch gripType {
-        case .openHand: "Open-hand grip"
-        case .halfCrimp: "Half crimp"
-        case .fullCrimp: "Full crimp"
-        case .fourFingerPocket: "Four-finger pocket"
-        case .threeFingerPocket: "Three-finger pocket"
-        case .twoFingerPocket: "Two-finger pocket"
-        case .sloper: "Open-hand sloper"
-        }
+        gripType.label
     }
 
-    private var fingerCountLabel: String {
-        switch gripType.activeFingers.count {
-        case 2: "Middle two fingers"
-        case 3: "Front three fingers"
-        default: "Four fingers"
-        }
+    private var fingerCue: FingerCue {
+        FingerCue(
+            fingerConfiguration: fingerConfiguration,
+            capacity: hold.fingerCapacity
+        )
     }
 
     var body: some View {
@@ -46,15 +43,15 @@ struct GripDiagramView: View {
                 .foregroundStyle(Color.hangInk)
 
             HStack(spacing: 10) {
-                GripHandCueCard(hold: hold, gripType: gripType, side: .left)
-                GripHandCueCard(hold: hold, gripType: gripType, side: .right)
+                GripHandCueCard(posture: gripType, fingerCue: fingerCue, side: .left)
+                GripHandCueCard(posture: gripType, fingerCue: fingerCue, side: .right)
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(cueLabel), \(gripLabel), \(fingerCountLabel), both hands")
+        .accessibilityLabel("\(cueLabel), \(gripLabel), \(fingerCue.accessibilityLabel), both hands")
     }
 
     private var cueLabel: String {
@@ -81,8 +78,8 @@ struct GripDiagramView: View {
 /// Grippy references: one symbol describes the grip pose and another describes
 /// the participating fingers. The ordering mirrors around the physical board.
 struct GripHandCueCard: View {
-    let hold: BoardHold
-    let gripType: GripType
+    let posture: GripType
+    let fingerCue: FingerCue
     let side: GripCueSide
 
     var body: some View {
@@ -106,6 +103,8 @@ struct GripHandCueCard: View {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(gripPoseLabel), \(fingerCue.accessibilityLabel)")
     }
 
     private var gripPoseCue: some View {
@@ -121,25 +120,8 @@ struct GripHandCueCard: View {
 
     private var fingerSetCue: some View {
         CueGlyph(label: fingerSetLabel) {
-            Group {
-                if gripType == .twoFingerPocket {
-                    Image("PhosphorHandTwo")
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                } else if gripType.activeFingers.contains(.pinky) {
-                    Image(systemName: "hand.raised.fill")
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    Image("PhosphorHandFrontThree")
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                }
-            }
+            FingerCueGlyph(fingerCue: fingerCue)
             .scaleEffect(x: mirrorScale, y: 1)
-            .foregroundStyle(Color.holdActive)
         }
     }
 
@@ -148,37 +130,119 @@ struct GripHandCueCard: View {
     }
 
     private var gripPoseAsset: String {
-        if hold.kind == .jug {
-            return "PhosphorHandGrabbing"
-        }
-
-        switch gripType {
+        switch posture {
         case .halfCrimp:
             return "PhosphorHandGrabbing"
         case .fullCrimp:
             return "PhosphorHandFist"
-        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper:
+        case .openHand:
             return "PhosphorHandPalm"
         }
     }
 
     private var gripPoseLabel: String {
-        if hold.kind == .jug {
-            return "Jug grip"
-        }
-
-        return switch gripType {
+        switch posture {
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
-        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper: "Open hand"
+        case .openHand: "Open hand"
         }
     }
 
     private var fingerSetLabel: String {
-        switch gripType.activeFingers.count {
-        case 2: "Middle 2"
-        case 3: "Front 3"
-        default: "4 fingers"
+        fingerCue.shortLabel
+    }
+}
+
+enum FingerCue {
+    case capacity(Int)
+    case exact(FingerConfiguration)
+
+    init(fingerConfiguration: FingerConfiguration?, capacity: Int) {
+        self = fingerConfiguration.map(Self.exact) ?? .capacity(capacity)
+    }
+
+    var shortLabel: String {
+        switch self {
+        case let .capacity(count): "Up to \(count)"
+        case let .exact(configuration): configuration.orderedFingers.map(\.shortLabel).joined(separator: "+")
+        }
+    }
+
+    var accessibilityLabel: String {
+        switch self {
+        case let .capacity(count): "Up to \(count) \(count == 1 ? "finger" : "fingers")"
+        case let .exact(configuration): "Exact fingers: \(configuration.orderedFingers.namedList)"
+        }
+    }
+}
+
+private struct FingerCueGlyph: View {
+    let fingerCue: FingerCue
+
+    var body: some View {
+        switch fingerCue {
+        case let .capacity(count):
+            ZStack(alignment: .bottomTrailing) {
+                Image(systemName: "hand.raised.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(Color.holdActive.opacity(0.68))
+                Text("≤\(count)")
+                    .font(.system(size: 11, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(Color.hangCream, in: Capsule())
+            }
+        case let .exact(configuration):
+            HStack(alignment: .bottom, spacing: 3) {
+                ForEach(FingerSlot.allCases) { finger in
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .fill(
+                            configuration.engagedFingers.contains(finger)
+                                ? Color.holdActive
+                                : Color.hangLine.opacity(0.45)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .stroke(Color.hangInk.opacity(0.25), lineWidth: 1)
+                        }
+                        .frame(width: 7, height: finger.height * 0.62)
+                }
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+        }
+    }
+}
+
+private extension FingerSlot {
+    var shortLabel: String {
+        switch self {
+        case .index: "I"
+        case .middle: "M"
+        case .ring: "R"
+        case .pinky: "P"
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .index: "index"
+        case .middle: "middle"
+        case .ring: "ring"
+        case .pinky: "pinky"
+        }
+    }
+}
+
+private extension Array where Element == FingerSlot {
+    var namedList: String {
+        let names = map(\.displayName)
+        switch names.count {
+        case 0: return "none"
+        case 1: return names[0]
+        case 2: return "\(names[0]) and \(names[1])"
+        default: return "\(names.dropLast().joined(separator: ", ")), and \(names[names.count - 1])"
         }
     }
 }
