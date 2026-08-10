@@ -2,7 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
-    func testCompactIIPocketsExposeCapacityWithoutChangingOpenHandPosture() throws {
+    func testCompactIICatalogPreservesDistinctPocketAndSloperGripTypesWithCapacity() throws {
         let twoFingerPocket = try XCTUnwrap(
             BoardCatalog.compactII.holds.first { $0.id == "pocket-29-two-left" }
         )
@@ -12,13 +12,20 @@ final class CustomRoutineStoreTests: XCTestCase {
         let fourFingerPocket = try XCTUnwrap(
             BoardCatalog.compactII.holds.first { $0.id == "pocket-29-four-center" }
         )
+        let flatSloper = try XCTUnwrap(
+            BoardCatalog.compactII.holds.first { $0.id == "sloper-flat-left" }
+        )
 
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
         XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(twoFingerPocket.gripType, .openHand)
-        XCTAssertEqual(threeFingerPocket.gripType, .openHand)
-        XCTAssertEqual(fourFingerPocket.gripType, .openHand)
+        XCTAssertEqual(twoFingerPocket.gripType, .twoFingerPocket)
+        XCTAssertEqual(threeFingerPocket.gripType, .threeFingerPocket)
+        XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
+        XCTAssertEqual(flatSloper.gripType, .sloper)
+        XCTAssertEqual(twoFingerPocket.features, [.pocket, .twoFingerPocket])
+        XCTAssertEqual(threeFingerPocket.features, [.pocket, .threeFingerPocket])
+        XCTAssertEqual(fourFingerPocket.features, [.pocket, .fourFingerPocket])
     }
 
     func testPocketDefaultFeaturesRespectCapacityBoundaries() {
@@ -93,7 +100,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(resolved.steps.map(\.fingerConfiguration), [expectedConfiguration])
     }
 
-    func testCustomRoutineSaveAndLoadPreservesNonContiguousExactFingers() throws {
+    func testCustomRoutineSaveAndLoadPreservesDistinctGripTypeAndNonContiguousExactFingers() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
@@ -115,7 +122,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     duration: 10,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket, fallbacks: [])],
-                    gripType: .openHand,
+                    gripType: .threeFingerPocket,
                     fingerConfiguration: expectedConfiguration,
                     activeDuration: 10
                 )
@@ -126,6 +133,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         try store.save(definition)
 
         let reloaded = CustomRoutineStore(defaults: defaults)
+        XCTAssertEqual(reloaded.routines.first?.steps.first?.gripType, .threeFingerPocket)
         XCTAssertEqual(reloaded.routines.first?.steps.first?.fingerConfiguration, expectedConfiguration)
     }
 

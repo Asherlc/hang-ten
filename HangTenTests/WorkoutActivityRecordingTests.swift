@@ -118,6 +118,52 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0].durationSeconds, 12)
     }
 
+    func testCompactIITwoFingerPocketFeatureStillResolvesCapacityDerivedPairs() throws {
+        let workout = TrainingPlan(
+            id: "compact-pocket-plan",
+            title: "Compact pocket plan",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/compact-pocket-plan")!,
+            provenance: .adapted,
+            boardID: BoardCatalog.compactII.id,
+            steps: [
+                WorkoutStep(
+                    id: "step",
+                    number: 1,
+                    title: "Pocket step",
+                    instruction: "Hang from the two-finger pockets.",
+                    accessory: "",
+                    duration: 60,
+                    phase: .hang,
+                    targets: [],
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            target: .feature(.twoFingerPocket),
+                            timing: .fixed,
+                            duration: 12
+                        )
+                    ]
+                )
+            ]
+        )
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: BoardCatalog.compactII)
+
+        XCTAssertEqual(records.count, 2)
+        XCTAssertEqual(Set(records.map(\.holdType)), ["pocket"])
+        XCTAssertEqual(Set(records.compactMap(\.sizeMillimeters)), [19, 29])
+        XCTAssertEqual(
+            Set(records.map { Set($0.holdIDs) }),
+            Set([
+                Set(["pocket-29-two-left", "pocket-29-two-right"]),
+                Set(["pocket-19-two-left", "pocket-19-two-right"])
+            ])
+        )
+    }
+
     func testMultiTargetWorkRecordsAllHoldsWithOneDuration() throws {
         let segment = WorkoutSegment(
             kind: .work,

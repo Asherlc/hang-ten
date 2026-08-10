@@ -43,7 +43,7 @@ final class WorkoutTimelineTests: XCTestCase {
             detail: "Pocket",
             kind: .pocket,
             frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
-            gripType: .openHand,
+            gripType: .threeFingerPocket,
             fingerCapacity: 3
         )
         let step = WorkoutStep(
@@ -59,8 +59,9 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
-        XCTAssertEqual(cue?.gripType, .openHand)
+        XCTAssertEqual(cue?.gripType, .threeFingerPocket)
         XCTAssertEqual(cue?.hold.fingerCapacity, 3)
+        XCTAssertNil(cue?.fingerConfiguration)
     }
 
     func testHoldCueAcceptsHighlightedFallbackFeatureHold() {

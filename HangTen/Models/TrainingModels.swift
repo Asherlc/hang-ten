@@ -166,6 +166,10 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case openHand
     case halfCrimp
     case fullCrimp
+    case fourFingerPocket
+    case threeFingerPocket
+    case twoFingerPocket
+    case sloper
 
     var id: String { rawValue }
 
@@ -174,6 +178,21 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         case .openHand: "Open hand"
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
+        case .fourFingerPocket: "Four-finger pocket"
+        case .threeFingerPocket: "Three-finger pocket"
+        case .twoFingerPocket: "Two-finger pocket"
+        case .sloper: "Open-hand sloper"
+        }
+    }
+
+    var activeFingers: Set<FingerSlot> {
+        switch self {
+        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
+            Set(FingerSlot.allCases)
+        case .threeFingerPocket:
+            [.index, .middle, .ring]
+        case .twoFingerPocket:
+            [.middle, .ring]
         }
     }
 
@@ -184,18 +203,13 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)
-        switch rawValue {
-        case "sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket":
-            self = .openHand
-        default:
-            guard let gripType = Self(rawValue: rawValue) else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Unknown grip posture: \(rawValue)."
-                )
-            }
-            self = gripType
+        guard let gripType = Self(rawValue: rawValue) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown grip posture: \(rawValue)."
+            )
         }
+        self = gripType
     }
 
     func encode(to encoder: Encoder) throws {
@@ -633,7 +647,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.158, y: 0.035, width: 0.190, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 features: [.largeSlope]
             ),
             BoardHold(
@@ -644,7 +658,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.652, y: 0.035, width: 0.190, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 features: [.largeSlope]
             ),
             BoardHold(
@@ -655,7 +669,7 @@ enum BoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 features: [.roundSloper]
             ),
             BoardHold(
@@ -686,6 +700,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3
             ),
             BoardHold(
@@ -696,6 +711,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.692, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3
             ),
             BoardHold(
@@ -706,6 +722,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.328, y: 0.370, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2
             ),
             BoardHold(
@@ -716,6 +733,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.595, y: 0.370, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2
             ),
             BoardHold(
@@ -726,6 +744,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.365, width: 0.150, height: 0.148),
                 sizeMillimeters: 29,
+                gripType: .fourFingerPocket,
                 fingerCapacity: 4
             ),
             BoardHold(
@@ -756,6 +775,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.216, y: 0.733, width: 0.104, height: 0.140),
                 sizeMillimeters: 19,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3
             ),
             BoardHold(
@@ -766,6 +786,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.680, y: 0.733, width: 0.104, height: 0.140),
                 sizeMillimeters: 19,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3
             ),
             BoardHold(
@@ -776,6 +797,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.336, y: 0.733, width: 0.073, height: 0.140),
                 sizeMillimeters: 19,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2
             ),
             BoardHold(
@@ -786,6 +808,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.591, y: 0.733, width: 0.073, height: 0.140),
                 sizeMillimeters: 19,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2
             ),
             BoardHold(
@@ -796,6 +819,7 @@ enum BoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.733, width: 0.150, height: 0.140),
                 sizeMillimeters: 19,
+                gripType: .fourFingerPocket,
                 fingerCapacity: 4
             )
         ],
