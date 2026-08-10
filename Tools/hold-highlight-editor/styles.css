@@ -161,6 +161,9 @@ button:disabled { opacity: .35; cursor: default; }
 .region-label { fill: #fff; stroke: #151515; stroke-width: 3px; paint-order: stroke; font-size: 11px; font-weight: 800; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
 .vertex-handle { fill: #fff9e9; stroke: #1b1c19; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: grab; }
 .vertex-handle:hover { fill: var(--accent); }
+.edge-curve-line { fill: none; stroke: #fff9e999; stroke-width: 1px; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; pointer-events: none; }
+.edge-curve-handle { fill: #32bbc1; stroke: #1b1c19; stroke-width: 1.5px; vector-effect: non-scaling-stroke; cursor: grab; }
+.edge-curve-handle:hover { fill: var(--accent); }
 .vertex-handle.selected-corner, .vector-endpoint-handle.selected-corner { fill: #ffd166; stroke: #4b2d12; stroke-width: 2.5px; }
 .transform-frame { fill: none; stroke: #fff9e9aa; stroke-width: 1px; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; pointer-events: none; }
 .transform-stem { stroke: #fff9e9cc; stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
@@ -192,6 +195,9 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
 .tension-field > span { display: flex; justify-content: space-between; align-items: center; }
 .tension-field output { color: #d8dbd3; font-variant-numeric: tabular-nums; }
 .tension-field input { padding: 0; accent-color: var(--accent); }
+.tension-field.overridden { color: #ffd174; }
+.tension-field.overridden input { cursor: not-allowed; }
+.curve-tension-feedback { color: #ffd174; font-size: 10px; font-weight: 500; letter-spacing: normal; line-height: 1.4; }
 .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .metric-grid div { padding: 10px; border: 1px solid var(--line-soft); border-radius: 7px; background: #161815; }
 .metric-grid span { display: block; color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
