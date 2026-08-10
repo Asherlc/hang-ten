@@ -12,6 +12,7 @@ from .review_lint import LintReport, _atomic_write_json, lint_review, write_lint
 
 _SCHEMA_VERSION = 1
 _TOOL_VERSION = "hangboard-review"
+_SHA256_LENGTH = 64
 
 
 @dataclass(frozen=True)
@@ -104,35 +105,9 @@ def validate_acceptance(run: ReviewRun) -> AcceptanceRecord:
 
 
 def _ensure_current_lint_pass(run: ReviewRun) -> LintReport:
-    current = _load_current_lint_report(run)
-    if current is not None and current.passed:
-        return current
     report = lint_review(run)
     write_lint_report(run, report)
     return report
-
-
-def _load_current_lint_report(run: ReviewRun) -> LintReport | None:
-    if run.lint_report is None or run.edited_regions is None:
-        return None
-    try:
-        document = load_json(run.lint_report, "lint report")
-    except ValueError:
-        return None
-    issues = document.get("issues")
-    if (
-        document.get("baselineSha256") != sha256_file(run.stage2_regions)
-        or document.get("editedSha256") != sha256_file(run.edited_regions)
-        or not isinstance(document.get("passed"), bool)
-        or not isinstance(issues, list)
-    ):
-        return None
-    return LintReport(
-        passed=bool(document["passed"]),
-        issues=(),
-        baseline_sha256=str(document["baselineSha256"]),
-        edited_sha256=str(document["editedSha256"]),
-    )
 
 
 def _source_hashes(run: ReviewRun) -> dict[str, str]:
@@ -152,10 +127,8 @@ def _source_hashes(run: ReviewRun) -> dict[str, str]:
 def _require_hash_match(
     source: dict[str, object], key: str, path: Path, message: str
 ) -> None:
-    expected = source.get(key)
-    if expected is None:
-        return
-    if not isinstance(expected, str) or sha256_file(path) != expected:
+    expected = _require_sha256_hash(source, key)
+    if sha256_file(path) != expected:
         raise ValueError(message)
 
 
@@ -166,6 +139,15 @@ def _require_optional_hash_match(
         raise ValueError(message)
     if path is not None:
         _require_hash_match(source, key, path, message)
+
+
+def _require_sha256_hash(source: dict[str, object], key: str) -> str:
+    expected = source.get(key)
+    if not isinstance(expected, str):
+        raise ValueError(f"missing required source hash: {key}")
+    if len(expected) != _SHA256_LENGTH or any(character not in "0123456789abcdef" for character in expected):
+        raise ValueError(f"invalid source hash format: {key}")
+    return expected
 
 
 def _stage2_dir(run: ReviewRun) -> Path:
