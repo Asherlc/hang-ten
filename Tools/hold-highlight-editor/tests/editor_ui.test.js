@@ -9,6 +9,7 @@ const {
   updateEdgeCurveSession,
   edgeCurveHistoryLabel,
   edgeCurveFeedback,
+  edgeCurveInspectorState,
   shouldRenderEdgeCurveHandle,
   canStartRegionDrag,
 } = require("../curve-gesture-model.js");
@@ -96,10 +97,35 @@ test("edge sessions reject invalid pointer, edge, and control inputs", () => {
   assert.throws(() => updateEdgeCurveSession(session, {}, [Infinity, 4]), /finite/i);
 });
 
-test("edge-curve handles avoid short projected edges while remaining available on longer edges", () => {
-  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [8, 0], 1), false);
-  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [12, 0], 1), true);
-  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [8, 0], 2), true);
+test("edge-curve handles avoid every nearby vertex while preserving clear controls", () => {
+  assert.equal(shouldRenderEdgeCurveHandle({
+    start: [0, 0],
+    end: [12, 0],
+    control: [6, 0],
+    vertices: [[0, 0], [12, 0]],
+    zoom: 1,
+  }), false);
+  assert.equal(shouldRenderEdgeCurveHandle({
+    start: [0, 0],
+    end: [12, 0],
+    control: [6, -12],
+    vertices: [[0, 0], [12, 0]],
+    zoom: 1,
+  }), true);
+  assert.equal(shouldRenderEdgeCurveHandle({
+    start: [0, 0],
+    end: [30, 0],
+    control: [15, 0],
+    vertices: [[0, 0], [30, 0], [15, 4]],
+    zoom: 1,
+  }), false);
+  assert.equal(shouldRenderEdgeCurveHandle({
+    start: [0, 0],
+    end: [30, 0],
+    control: [15, 0],
+    vertices: [[0, 0], [30, 0]],
+    zoom: 1,
+  }), true);
 });
 
 test("smooth edge curves explain their rendering override", () => {
@@ -115,6 +141,27 @@ test("smooth edge curves explain their rendering override", () => {
   assert.equal(edgeCurveFeedback({ metadata: { pathStyle: "straight", edgeCurves: {} } }), null);
 });
 
+test("inspector disables tension only when per-edge curves override smooth mode", () => {
+  assert.deepEqual(
+    edgeCurveInspectorState({
+      metadata: { pathStyle: "smooth", edgeCurves: { 0: { kind: "quadratic", control: [5, -4] } } },
+    }),
+    {
+      visible: true,
+      overridden: true,
+      feedback: "Per-edge curves override smooth rendering; uncurved edges are straight and tension is ignored.",
+    },
+  );
+  assert.deepEqual(
+    edgeCurveInspectorState({ metadata: { pathStyle: "smooth", curveTension: 1 } }),
+    { visible: true, overridden: false, feedback: null },
+  );
+  assert.deepEqual(
+    edgeCurveInspectorState({ metadata: { pathStyle: "straight", edgeCurves: { 0: {} } } }),
+    { visible: false, overridden: false, feedback: null },
+  );
+});
+
 test("editor exposes curve-editing affordances", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
@@ -123,12 +170,17 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(html, /Edit points/);
   assert.match(app, /edge-curve-handle/);
   assert.match(app, /startEdgeCurveDrag/);
+  assert.match(app, /edgeCurveInspectorState/);
+  assert.match(app, /curve-tension-slider\"\]\.disabled = tensionState\.overridden/);
   assert.match(app, /shouldRenderEdgeCurveHandle/);
   assert.match(app, /edgeCurveFeedback/);
   assert.match(css, /\.edge-curve-handle/);
+  assert.match(html, /id="curve-tension-feedback"/);
+  assert.match(html, /src="editor-model\.js"/);
   assert.match(html, /src="curve-gesture-model\.js"/);
   assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
+  assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
 });
 
 test("region edge-curve metadata renders a quadratic contour path", () => {

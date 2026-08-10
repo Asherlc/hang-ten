@@ -22,6 +22,7 @@
     updateEdgeCurveSession,
     edgeCurveHistoryLabel,
     edgeCurveFeedback,
+    edgeCurveInspectorState,
     shouldRenderEdgeCurveHandle,
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
@@ -85,7 +86,7 @@
     "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button", "simplify-curve-button",
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
-    "tension-field", "curve-tension-slider", "curve-tension-value",
+    "tension-field", "curve-tension-slider", "curve-tension-value", "curve-tension-feedback",
     "board-picker", "board-picker-separator", "board-select",
   ].map((id) => [id, document.getElementById(id)]));
 
@@ -230,11 +231,17 @@
             });
             region.contour.forEach((start, index) => {
               const end = region.contour[(index + 1) % region.contour.length];
-              if (!shouldRenderEdgeCurveHandle(start, end, state.zoom)) return;
               const [cx, cy] = region.metadata.edgeCurves?.[index]?.control || [
                 (start[0] + end[0]) / 2,
                 (start[1] + end[1]) / 2,
               ];
+              if (!shouldRenderEdgeCurveHandle({
+                start,
+                end,
+                control: [cx, cy],
+                vertices: region.contour,
+                zoom: state.zoom,
+              })) return;
               const handle = makeSvg("circle", {
                 cx,
                 cy,
@@ -291,10 +298,16 @@
     if (document.activeElement !== el["region-type-select"]) el["region-type-select"].value = region.type;
     if (document.activeElement !== el["region-shape-select"]) el["region-shape-select"].value = region.metadata.shapeKind || "freeform";
     if (document.activeElement !== el["region-path-style-select"]) el["region-path-style-select"].value = region.metadata.pathStyle || "straight";
+    const tensionState = edgeCurveInspectorState(region);
     const tensionPercent = Math.round((region.metadata.curveTension ?? 0.8) * 100);
     if (document.activeElement !== el["curve-tension-slider"]) el["curve-tension-slider"].value = tensionPercent;
-    el["curve-tension-value"].value = `${tensionPercent}%`;
-    el["tension-field"].classList.toggle("hidden", region.metadata.pathStyle !== "smooth");
+    el["curve-tension-value"].value = tensionState.overridden ? "Overridden" : `${tensionPercent}%`;
+    el["tension-field"].classList.toggle("hidden", !tensionState.visible);
+    el["tension-field"].classList.toggle("overridden", tensionState.overridden);
+    el["curve-tension-slider"].disabled = tensionState.overridden;
+    el["curve-tension-slider"].setAttribute("aria-disabled", String(tensionState.overridden));
+    el["curve-tension-feedback"].classList.toggle("hidden", !tensionState.feedback);
+    el["curve-tension-feedback"].textContent = tensionState.feedback || "";
     if (document.activeElement !== el["region-mode-select"]) el["region-mode-select"].value = region.metadata.mode || "surface";
     if (document.activeElement !== el["region-notes-input"]) el["region-notes-input"].value = region.metadata.humanNotes || "";
     el["point-count"].textContent = region.contour.length;
@@ -1440,6 +1453,7 @@
   el["curve-tension-slider"].addEventListener("input", (event) => {
     const region = selectedRegion();
     if (!region) return;
+    if (edgeCurveInspectorState(region).overridden) return;
     region.metadata.curveTension = Number(event.target.value) / 100;
     el["curve-tension-value"].value = `${event.target.value}%`;
     renderOverlay();

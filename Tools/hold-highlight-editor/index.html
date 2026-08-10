@@ -166,7 +166,8 @@
 
             <label class="tension-field hidden" id="tension-field">
               <span>Curve tension <output id="curve-tension-value">80%</output></span>
-              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" />
+              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" aria-describedby="curve-tension-feedback" />
+              <small id="curve-tension-feedback" class="curve-tension-feedback hidden" role="status"></small>
             </label>
 
             <label>
