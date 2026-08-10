@@ -3,10 +3,12 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
+from hangboard_vectorizer import ios_promotion
 from hangboard_vectorizer.ios_promotion import (
     build_promotion_preview,
     read_promotion_profile,
@@ -49,6 +51,7 @@ def test_complete_approved_run_renders_the_known_native_contract(tmp_path: Path)
     assert "BoardNormalizedPath" in preview.files[1].proposed_text
     assert "CGPoint(x: 0.001664, y: 0.097716)" in preview.files[1].proposed_text
     assert ".threeFingerPocket" in preview.files[0].proposed_text
+    _assert_valid_semantic_hold_initializer(preview.files[2].proposed_text)
 
 
 def test_preview_is_deterministic_and_can_be_saved_only_with_its_token(tmp_path: Path) -> None:
@@ -72,6 +75,60 @@ def test_preview_is_deterministic_and_can_be_saved_only_with_its_token(tmp_path:
     assert result.saved is True
     assert result.board_id == profile.board_id
     assert result.paths == tuple(item.path for item in first.files)
+
+
+def test_save_rejects_tampered_proposed_content_even_with_the_original_token(tmp_path: Path) -> None:
+    """The browser cannot alter a preview after its token has been issued."""
+    run_root = _copied_run(tmp_path)
+    repository_root = _repository_at_main(tmp_path)
+    preview = build_promotion_preview(run_root, repository_root, read_promotion_profile(run_root))
+    tampered_file = replace(preview.files[0], proposed_text=preview.files[0].proposed_text + "// tampered\n")
+    tampered = replace(preview, files=(tampered_file, *preview.files[1:]))
+
+    with pytest.raises(ValueError, match="preview token"):
+        save_promotion_preview(
+            tampered,
+            repository_root,
+            expected_preview_token=preview.preview_token,
+        )
+
+
+def test_save_rolls_back_every_target_when_a_later_replace_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A write failure after the first replacement leaves no partial promotion."""
+    run_root = _copied_run(tmp_path)
+    repository_root = _repository_at_main(tmp_path)
+    preview = build_promotion_preview(run_root, repository_root, read_promotion_profile(run_root))
+    originals = {
+        item.path: (repository_root / item.path).read_text(encoding="utf-8")
+        for item in preview.files
+    }
+    real_replace = ios_promotion.os.replace
+    staged_replacements = 0
+
+    def fail_on_second_staged_replace(source: str | Path, destination: str | Path) -> None:
+        nonlocal staged_replacements
+        if "/staged/" in str(source):
+            staged_replacements += 1
+            if staged_replacements == 2:
+                raise OSError("injected replacement failure")
+        real_replace(source, destination)
+
+    monkeypatch.setattr(ios_promotion.os, "replace", fail_on_second_staged_replace)
+
+    with pytest.raises(OSError, match="injected replacement failure"):
+        save_promotion_preview(
+            preview,
+            repository_root,
+            expected_preview_token=preview.preview_token,
+        )
+
+    assert {
+        path: (repository_root / path).read_text(encoding="utf-8")
+        for path in originals
+    } == originals
+    assert not list(repository_root.glob(".hangboard-promotion-*"))
 
 
 def test_generator_rejects_an_incomplete_run(tmp_path: Path) -> None:
@@ -175,3 +232,24 @@ def _read_json(path: Path) -> dict[str, object]:
 
 def _write_json(path: Path, document: dict[str, object]) -> None:
     path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
+
+
+def _assert_valid_semantic_hold_initializer(source: str) -> None:
+    anchor = "private static let semanticHoldIDs: [String: [String]] = ["
+    assert source.count(anchor) == 1
+    opening = source.index(anchor) + len(anchor) - 1
+    closing = _matching_delimiter(source, opening, "[", "]")
+    assert not source[closing + 1:].startswith(" = [")
+    assert source[closing + 1:].lstrip().startswith("static let document")
+
+
+def _matching_delimiter(source: str, opening: int, left: str, right: str) -> int:
+    depth = 0
+    for index in range(opening, len(source)):
+        if source[index] == left:
+            depth += 1
+        elif source[index] == right:
+            depth -= 1
+            if depth == 0:
+                return index
+    raise AssertionError("unterminated Swift collection")

@@ -6,9 +6,12 @@ from dataclasses import dataclass, field
 from difflib import unified_diff
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
+import tempfile
 from typing import Any, Iterable, Mapping
 
 
@@ -59,6 +62,7 @@ class PromotionPreview:
     files: tuple[PromotionFile, ...]
     issues: tuple[PromotionIssue, ...]
     preview_token: str
+    _profile_bytes: bytes = field(default=b"", repr=False, compare=False)
 
 
 @dataclass(frozen=True)
@@ -113,7 +117,10 @@ def build_promotion_preview(
     semantic_holds = _semantic_holds(regions)
     files = _render_files(repository_root, profile, artifacts, regions, semantic_holds)
     revision_token = _revision_token(artifacts)
-    preview_token = _preview_token(revision_token, expected_base_ref, profile, files)
+    profile_bytes = _profile_bytes(profile)
+    preview_token = _preview_token(
+        profile.board_id, revision_token, expected_base_ref, profile_bytes, files
+    )
     return PromotionPreview(
         board_id=profile.board_id,
         revision_token=revision_token,
@@ -121,6 +128,7 @@ def build_promotion_preview(
         files=files,
         issues=(),
         preview_token=preview_token,
+        _profile_bytes=profile_bytes,
     )
 
 
@@ -130,16 +138,25 @@ def save_promotion_preview(
     *,
     expected_preview_token: str,
 ) -> PromotionSaveResult:
-    """Save an unchanged preview atomically at the file level."""
-    if preview.preview_token != expected_preview_token:
+    """Save an authenticated preview as one rollback-safe file transaction."""
+    actual_preview_token = _preview_token(
+        preview.board_id,
+        preview.revision_token,
+        preview.base_ref,
+        preview._profile_bytes,
+        preview.files,
+    )
+    if (
+        preview.preview_token != expected_preview_token
+        or actual_preview_token != preview.preview_token
+    ):
         raise ValueError("preview token does not match the preview being saved")
     _assert_targets_at_base(repository_root, preview.base_ref)
     for item in preview.files:
         current = (repository_root / item.path).read_text(encoding="utf-8")
         if current != item.current_text:
             raise ValueError(f"target changed since preview: {item.path}")
-    for item in preview.files:
-        (repository_root / item.path).write_text(item.proposed_text, encoding="utf-8")
+    _replace_targets_transactionally(preview.files, repository_root)
     return PromotionSaveResult(
         board_id=preview.board_id,
         revision_id=preview.revision_token,
@@ -617,7 +634,7 @@ def _replace_swift_collection(source: str, anchor: str, replacement: str) -> str
     if source.count(anchor) != 1:
         raise ValueError(f"Swift anchor is absent or duplicated: {anchor}")
     start = source.index(anchor)
-    opening = source.index("[", start)
+    opening = start + len(anchor) - 1
     end = _matching_delimiter(source, opening, "[", "]")
     return source[:start] + replacement + source[end + 1:]
 
@@ -655,15 +672,64 @@ def _revision_token(artifacts: Mapping[str, Any]) -> str:
     return digest.hexdigest()
 
 
-def _preview_token(revision_token: str, base_ref: str, profile: IosPromotionProfile, files: Iterable[PromotionFile]) -> str:
-    digest = sha256()
-    digest.update(revision_token.encode())
-    digest.update(base_ref.encode())
-    digest.update(profile._source_bytes or _canonical_json({
+def _replace_targets_transactionally(
+    files: Iterable[PromotionFile], repository_root: Path
+) -> None:
+    transaction_root = Path(tempfile.mkdtemp(prefix=".hangboard-promotion-", dir=repository_root))
+    staged_root = transaction_root / "staged"
+    backup_root = transaction_root / "backup"
+    file_items = tuple(files)
+    backups: list[tuple[Path, Path]] = []
+    try:
+        for item in file_items:
+            staged = staged_root / item.path
+            staged.parent.mkdir(parents=True, exist_ok=True)
+            staged.write_text(item.proposed_text, encoding="utf-8")
+        for item in file_items:
+            target = repository_root / item.path
+            staged = staged_root / item.path
+            backup = backup_root / item.path
+            backup.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(target, backup)
+            backups.append((target, backup))
+            os.replace(staged, target)
+    except Exception:
+        rollback_error: Exception | None = None
+        for target, backup in reversed(backups):
+            if not backup.exists():
+                continue
+            try:
+                os.replace(backup, target)
+            except Exception as restore_error:  # pragma: no cover - catastrophic filesystem failure
+                rollback_error = restore_error
+                break
+        if rollback_error is not None:
+            raise RuntimeError("promotion save failed and rollback could not restore all targets") from rollback_error
+        raise
+    finally:
+        shutil.rmtree(transaction_root, ignore_errors=True)
+
+
+def _profile_bytes(profile: IosPromotionProfile) -> bytes:
+    return profile._source_bytes or _canonical_json({
         "schemaVersion": profile.schema_version, "boardID": profile.board_id,
         "manufacturer": profile.manufacturer, "name": profile.name, "subtitle": profile.subtitle,
         "dimensions": profile.dimensions, "aspectRatio": profile.aspect_ratio, "productURL": profile.product_url,
-    }))
+    })
+
+
+def _preview_token(
+    board_id: str,
+    revision_token: str,
+    base_ref: str,
+    profile_bytes: bytes,
+    files: Iterable[PromotionFile],
+) -> str:
+    digest = sha256()
+    digest.update(board_id.encode())
+    digest.update(revision_token.encode())
+    digest.update(base_ref.encode())
+    digest.update(profile_bytes)
     for item in files:
         digest.update(item.path.encode())
         digest.update(item.proposed_text.encode())
