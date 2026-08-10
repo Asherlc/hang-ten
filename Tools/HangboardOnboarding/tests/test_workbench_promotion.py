@@ -92,13 +92,12 @@ def test_preview_rejects_a_legacy_profile_alias_that_collides_in_repository(
     """Collapsing dotted repository IDs to hyphens must fail closed on ambiguity."""
     repository_root = _repository(tmp_path)
     source = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
-    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii-legacy"
+    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius.wood-grips.compact-ii"
     shutil.copytree(source, collision)
-    for path in collision.rglob("*.json"):
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(payload, dict) and payload.get("boardID") == "metolius-wood-grips-compact-ii":
-            payload["boardID"] = "metolius.wood-grips.compact-ii"
-            path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    run_path = collision / "run.json"
+    run = json.loads(run_path.read_text(encoding="utf-8"))
+    run["product"]["key"] = "metolius.wood-grips.compact-ii"
+    run_path.write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
     library = RepositoryBoardLibrary(repository_root)
     service = WorkbenchService(WorkbenchStore(tmp_path / "workspace"), library=library)
     view = service.open_library_board("metolius-wood-grips-compact-ii")
