@@ -1824,8 +1824,7 @@ struct WorkoutView: View {
 				if WorkoutHoldCueVisibilityPolicy.showsCue(
 					holdCue: holdCue,
 					countdown: countdown,
-					isComplete: isComplete,
-					isResting: isResting
+					isComplete: isComplete
 				), let holdCue {
 					GripDiagramView(
 						hold: holdCue.hold,
@@ -1944,8 +1943,7 @@ struct WorkoutView: View {
 			if WorkoutHoldCueVisibilityPolicy.showsCue(
 				holdCue: holdCue,
 				countdown: countdown,
-				isComplete: isComplete,
-				isResting: isResting
+				isComplete: isComplete
 			), let holdCue {
 				let fingerCue = FingerCue(
 					fingerConfiguration: holdCue.fingerConfiguration,

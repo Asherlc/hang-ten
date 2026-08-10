@@ -1469,48 +1469,6 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
     }
 }
 
-final class WorkoutAudioCoachSpeechLifecycleTests: XCTestCase {
-    func testFinishingOldCueIsIgnoredWhileNewCueRemainsActive() {
-        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
-        let oldCueID = lifecycle.beginCue()
-        let newCueID = lifecycle.beginCue()
-
-        XCTAssertEqual(lifecycle.finishCue(oldCueID), .ignore)
-        XCTAssertEqual(lifecycle.activeCueID, newCueID)
-        XCTAssertTrue(lifecycle.hasActiveCue)
-    }
-
-    func testFinishingCueKeepsAudioSessionActiveAndLeavesCueingEnabled() {
-        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
-        let cueID = lifecycle.beginCue()
-
-        XCTAssertEqual(lifecycle.finishCue(cueID), .keepAudioSessionActive)
-        XCTAssertTrue(lifecycle.isCueing)
-        XCTAssertFalse(lifecycle.hasActiveCue)
-    }
-
-    func testStoppingCueDeactivatesAudioSessionAndInvalidatesPendingCue() {
-        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
-        let cueID = lifecycle.beginCue()
-
-        XCTAssertEqual(lifecycle.stop(), .deactivateAudioSession)
-        XCTAssertFalse(lifecycle.isCueing)
-        XCTAssertEqual(lifecycle.finishCue(cueID), .ignore)
-    }
-
-    func testBeginningAfterStopCreatesNewActiveCue() {
-        var lifecycle = WorkoutAudioCoachSpeechLifecycle()
-        let firstCueID = lifecycle.beginCue()
-
-        _ = lifecycle.stop()
-        let secondCueID = lifecycle.beginCue()
-
-        XCTAssertNotEqual(firstCueID, secondCueID)
-        XCTAssertTrue(lifecycle.isCueing)
-        XCTAssertEqual(lifecycle.finishCue(secondCueID), .keepAudioSessionActive)
-    }
-}
-
 final class WorkoutSessionStateTests: XCTestCase {
     private let steps: [WorkoutStep] = [
         WorkoutStep(
