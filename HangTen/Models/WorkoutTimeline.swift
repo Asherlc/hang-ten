@@ -73,12 +73,12 @@ struct WorkoutBoardCue: Equatable {
 
 struct WorkoutHoldCue: Equatable {
     let hold: BoardHold
-    let gripType: GripType
+    let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
 
     init(
         hold: BoardHold,
-        gripType: GripType,
+        gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) {
         self.hold = hold
@@ -107,14 +107,15 @@ enum WorkoutHoldCuePolicy {
               step.targets.count == 1,
               let target = step.targets.first,
               let hold,
-              BoardTargetResolver.resolveHoldIDs(for: target, on: board).contains(hold.id)
+              BoardTargetResolver.resolveHoldIDs(for: target, on: board).contains(hold.id),
+              step.gripType != nil || step.fingerConfiguration != nil
         else {
             return nil
         }
 
         return WorkoutHoldCue(
             hold: hold,
-            gripType: step.gripType ?? hold.gripType,
+            gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration
         )
     }

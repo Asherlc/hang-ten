@@ -820,39 +820,13 @@ struct PlanDetailView: View {
         board.holds.first { firstStepHoldIDs.contains($0.id) }
     }
 
-    private var firstStepGripType: GripType? {
-        #if DEBUG
-        if let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP"],
-           let reviewGrip = GripType(rawValue: rawValue) {
-            return reviewGrip
-        }
-        #endif
-        return currentPlan.steps.first?.gripType
+    private var firstStepHoldCue: WorkoutHoldCue? {
+        WorkoutHoldCuePolicy.resolve(
+            step: currentPlan.steps.first,
+            hold: firstStepHold,
+            on: board
+        )
     }
-
-    private var firstStepFingerConfiguration: FingerConfiguration? {
-        #if DEBUG
-        if let reviewConfiguration = reviewFingerConfiguration {
-            return reviewConfiguration
-        }
-        #endif
-        return currentPlan.steps.first?.fingerConfiguration
-    }
-
-    #if DEBUG
-    private var reviewFingerConfiguration: FingerConfiguration? {
-        guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
-            return nil
-        }
-
-        let rawSlots = rawValue
-            .split(separator: ",", omittingEmptySubsequences: false)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-        let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
-        guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
-        return FingerConfiguration(engagedFingers: Set(slots))
-    }
-    #endif
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -961,11 +935,11 @@ struct PlanDetailView: View {
             }
             BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
                 .padding(.horizontal, 12)
-            if let firstStepHold {
+            if let firstStepHoldCue {
                 GripDiagramView(
-                    hold: firstStepHold,
-                    gripType: firstStepGripType,
-                    fingerConfiguration: firstStepFingerConfiguration
+                    hold: firstStepHoldCue.hold,
+                    gripType: firstStepHoldCue.gripType,
+                    fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
 			if store.usesFallbackMapping(currentPlan, on: board) {
@@ -1527,30 +1501,6 @@ struct WorkoutView: View {
 
 	private let timeline: WorkoutTimeline
 
-	private func resolvedFingerConfiguration(for step: WorkoutStep) -> FingerConfiguration? {
-		#if DEBUG
-		if let reviewConfiguration = reviewFingerConfiguration {
-			return reviewConfiguration
-		}
-		#endif
-		return step.fingerConfiguration
-	}
-
-	#if DEBUG
-	private var reviewFingerConfiguration: FingerConfiguration? {
-		guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
-			return nil
-		}
-
-		let rawSlots = rawValue
-			.split(separator: ",", omittingEmptySubsequences: false)
-			.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-		let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
-		guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
-		return FingerConfiguration(engagedFingers: Set(slots))
-	}
-	#endif
-
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
@@ -1576,13 +1526,7 @@ struct WorkoutView: View {
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
-				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board).map { cue in
-					WorkoutHoldCue(
-						hold: cue.hold,
-						gripType: cue.gripType,
-						fingerConfiguration: highlightedStep.flatMap { resolvedFingerConfiguration(for: $0) }
-					)
-				}
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1945,11 +1889,11 @@ struct WorkoutView: View {
 				countdown: countdown,
 				isComplete: isComplete
 			) {
-				let fingerCue = FingerCue(
+				GripHandCueCard(
+					posture: holdCue.gripType,
 					fingerConfiguration: holdCue.fingerConfiguration,
-					capacity: holdCue.hold.fingerCapacity
+					side: side
 				)
-				GripHandCueCard(posture: holdCue.gripType, fingerCue: fingerCue, side: side)
 			}
 		}
 		.frame(width: LandscapeLayout.sideCueSlotWidth)
