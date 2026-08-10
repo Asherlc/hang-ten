@@ -4456,7 +4456,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             },
@@ -4468,10 +4468,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 1"
+          "title" : "7\/3 · 56 mm flat slopers, rep 1"
         },
         {
           "accessory" : "7s hang · 3s rest · 6 reps",
@@ -4486,7 +4486,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             },
@@ -4498,10 +4498,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 2"
+          "title" : "7\/3 · 56 mm flat slopers, rep 2"
         },
         {
           "accessory" : "7s hang · 3s rest · 6 reps",
@@ -4516,7 +4516,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             },
@@ -4528,10 +4528,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 3"
+          "title" : "7\/3 · 56 mm flat slopers, rep 3"
         },
         {
           "accessory" : "7s hang · 3s rest · 6 reps",
@@ -4546,7 +4546,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             },
@@ -4558,10 +4558,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 4"
+          "title" : "7\/3 · 56 mm flat slopers, rep 4"
         },
         {
           "accessory" : "7s hang · 3s rest · 6 reps",
@@ -4576,7 +4576,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             },
@@ -4588,10 +4588,10 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 5"
+          "title" : "7\/3 · 56 mm flat slopers, rep 5"
         },
         {
           "accessory" : "7s hang · 3s rest · 6 reps",
@@ -4606,17 +4606,17 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "semantic" : "flat-slopers"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "semantic" : "flat-slopers"
             }
           ],
-          "title" : "7\/3 · Four-finger pocket, rep 6"
+          "title" : "7\/3 · 56 mm flat slopers, rep 6"
         },
         {
           "accessory" : "2m recovery · switch grip",

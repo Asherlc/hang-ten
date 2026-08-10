@@ -418,6 +418,46 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            userDefaults: makeDefaults()
+        )
+        let plan = PlanCatalog.repeaters
+        let board = BoardCatalog.compactII
+        let workSteps = plan.steps.filter { $0.id.hasPrefix("repeaters-grip-") && $0.phase == .hang }
+
+        XCTAssertEqual(
+            workSteps.map {
+                "\($0.title)|\(store.holdIDs(for: $0, on: board).sorted().joined(separator: ","))"
+            },
+            [
+                "7/3 · 29 mm open edge, rep 1|edge-29-left,edge-29-right",
+                "7/3 · 29 mm open edge, rep 2|edge-29-left,edge-29-right",
+                "7/3 · 29 mm open edge, rep 3|edge-29-left,edge-29-right",
+                "7/3 · 29 mm open edge, rep 4|edge-29-left,edge-29-right",
+                "7/3 · 29 mm open edge, rep 5|edge-29-left,edge-29-right",
+                "7/3 · 29 mm open edge, rep 6|edge-29-left,edge-29-right",
+                "7/3 · 56 mm flat slopers, rep 1|sloper-flat-left,sloper-flat-right",
+                "7/3 · 56 mm flat slopers, rep 2|sloper-flat-left,sloper-flat-right",
+                "7/3 · 56 mm flat slopers, rep 3|sloper-flat-left,sloper-flat-right",
+                "7/3 · 56 mm flat slopers, rep 4|sloper-flat-left,sloper-flat-right",
+                "7/3 · 56 mm flat slopers, rep 5|sloper-flat-left,sloper-flat-right",
+                "7/3 · 56 mm flat slopers, rep 6|sloper-flat-left,sloper-flat-right",
+                "7/3 · 19 mm half crimp, rep 1|edge-19-left,edge-19-right",
+                "7/3 · 19 mm half crimp, rep 2|edge-19-left,edge-19-right",
+                "7/3 · 19 mm half crimp, rep 3|edge-19-left,edge-19-right",
+                "7/3 · 19 mm half crimp, rep 4|edge-19-left,edge-19-right",
+                "7/3 · 19 mm half crimp, rep 5|edge-19-left,edge-19-right",
+                "7/3 · 19 mm half crimp, rep 6|edge-19-left,edge-19-right"
+            ]
+        )
+
+        let resolvedHoldIDs = workSteps.flatMap { store.holdIDs(for: $0, on: board) }
+        XCTAssertFalse(resolvedHoldIDs.contains("pocket-29-four-center"))
+        XCTAssertFalse(resolvedHoldIDs.contains("pocket-19-four-center"))
+    }
+
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
