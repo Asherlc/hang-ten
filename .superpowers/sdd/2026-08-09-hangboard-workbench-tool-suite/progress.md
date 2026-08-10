@@ -47,3 +47,13 @@ ratios, deterministic semantic-routine resolution validation, and manual-only
 release publication are implemented with focused regression coverage. See the
 Task 6 report's "Final-review fixes" section for verification and unchanged
 baseline blockers.
+
+Final verification (2026-08-10): full Python suite passed (744 passed, 7
+skipped); workbench-focused Python suite passed (162 passed); new workbench
+JavaScript suite passed (91 passed); `git diff --check` passed. The full
+JavaScript suite remains 154 passed / 10 failed because legacy
+`editor_ui.test.js` assertions still expect the pre-suite “Hold Editor” shell.
+`scripts/export-plan-library.sh --check` remains blocked by the unchanged
+baseline Swift error at `WorkoutStepNormalization.swift:69` (`WorkoutStep`
+lacks `fingerConfiguration`). No feature files are modified by either
+baseline failure.
