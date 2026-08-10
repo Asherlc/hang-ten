@@ -531,10 +531,14 @@ def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> lis
                 )
 
     if required_keys:
-        edited = load_json(run.edited_regions, "stage-2 edited regions") if run.edited_regions is not None else None
-        if edited is None:
+        if run.edited_regions is None:
             problems.append("edited regions artifact is missing")
         else:
+            try:
+                edited = load_json(run.edited_regions, "stage-2 edited regions")
+            except ValueError as error:
+                problems.append(_first_line(error))
+                return problems
             regions = edited.get("regions")
             if not isinstance(regions, list):
                 problems.append("stage-2 edited regions missing regions array")

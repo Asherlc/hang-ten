@@ -232,6 +232,39 @@ def test_release_check_cli_explain_returns_json_for_malformed_promotion_report(
     assert payload["checks"]
 
 
+def test_release_check_cli_explain_returns_json_for_malformed_edited_regions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    edited_path = run / "stages/02/attempt-0001/stage-2-regions.edited.json"
+    edited_path.write_text("{not-json}\n", encoding="utf-8")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    result = release_check_cli.main(
+        [
+            "release-check",
+            "--run",
+            str(run),
+            "--repository-root",
+            str(tmp_path),
+            "--json",
+            "--explain",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 3
+    assert captured.err == ""
+    payload = json.loads(captured.out)
+    assert payload["passed"] is False
+    assert any(blocker["check"] == "promotion-runtime" for blocker in payload["blockers"])
+    assert payload["checks"]
+
+
 def test_release_check_report_returns_checks_and_generated_timestamp(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
