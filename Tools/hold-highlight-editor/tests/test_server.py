@@ -230,10 +230,9 @@ def test_http_session_loads_only_explicit_artifacts(tmp_path):
 def test_http_serves_curve_gesture_model_asset(tmp_path):
     session = make_run(tmp_path)
 
-    with running_server(session) as base:
-        with urlopen(base + "/curve-gesture-model.js") as response:
-            assert response.status == 200
-            asset = response.read()
+    with running_server(session) as base, urlopen(base + "/curve-gesture-model.js") as response:
+        assert response.status == 200
+        asset = response.read()
 
     assert asset == (EDITOR_ROOT / "curve-gesture-model.js").read_bytes()
 
