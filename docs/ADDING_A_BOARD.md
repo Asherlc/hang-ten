@@ -34,7 +34,9 @@ Hang Ten vendors the reviewed onboarding tool under
 one batched semantic response supplies generic grip hints, while deterministic
 local processing owns masks, boundaries, normalized paths, previews, and hash
 validation. Exact semantic responses are cached by source pixels, prompt,
-schema, provider, model, and request kind.
+schema, provider, model, and request kind. The active repository contract is
+the
+[unified hangboard repository design](superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
 
 First prove that the accepted Compact II evidence still replays exactly with
 zero model calls:
@@ -114,7 +116,12 @@ Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
 symmetry. The accepted Compact II replay fixture is versioned at
-`Tools/HangboardOnboarding/reference/metolius-compact-ii/accepted-run`.
+`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`.
+
+Only complete runs with approved checkpoints through Stage 4 belong under
+`Tools/HangboardOnboarding/boards/<board-id>/`. Keep every unfinished run under
+the ignored `.context/` directory. Saving a complete run through the workbench
+publishes it to the canonical boards directory for normal Git review.
 
 ## 3. Keep metadata and artwork separate
 

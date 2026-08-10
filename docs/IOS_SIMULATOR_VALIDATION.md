@@ -358,12 +358,12 @@ routine change, preview every distinct hold target and finger cue.
   the pending local session syncs to HealthKit, the source copy changes to
   `History synced from Apple Health.`, and the same session is still counted
   exactly once. If a successful query has no accepted Hang Ten history, treat
-  the empty `.healthKit` result as ambiguous: preserve any local fallback,
-  keep Connect Apple Health available as a conservative recovery action, and
-  do not treat the empty result as proof of no history or denied access. When
-  accepted HealthKit history is visible, no action is shown; local fallback
-  maps to Open app settings, while denied and unavailable behavior remains
-  unchanged.
+  the empty `.healthKit` result as ambiguous: preserve any local fallback and
+  do not treat the empty result as proof of no history or denied access. Verify
+  that an authorized empty result shows the `Connected` status and no Connect
+  action. When accepted HealthKit history is visible, no action is shown; local
+  fallback maps to Open app settings, while denied and unavailable behavior
+  remains unchanged.
 - Relaunch the app on the same explicit simulator UUID, open Progress, and
   confirm the HealthKit-backed count and latest plan title persist. Refresh or
   relaunch again and verify migration does not double-count the session.

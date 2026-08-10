@@ -77,7 +77,7 @@ case "$command_name" in
         exec "$environment_root/bin/hangboard-release-check" release-check "$@"
         ;;
     benchmark)
-        accepted_run="$tool_root/reference/metolius-compact-ii/accepted-run"
+        accepted_run="$tool_root/boards/metolius-wood-grips-compact-ii"
         if [[ $# -eq 0 ]]; then
             set -- --output "$repository_root/.context/hangboard-onboarding/metolius-parity/report.json"
         fi

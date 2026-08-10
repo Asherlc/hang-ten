@@ -278,9 +278,19 @@ def _geometry(
 
     regions: list[_Region] = []
     seen_keys: set[str] = set()
-    for ordinal, value in enumerate(region_values, start=1):
-        if not isinstance(value, Mapping) or value.get("id") != ordinal:
-            raise ConversionError("Stage 3 region order is invalid")
+    seen_ids: set[int] = set()
+    previous_id = 0
+    for value in region_values:
+        if not isinstance(value, Mapping):
+            raise ConversionError("Stage 3 region identity is invalid")
+        region_id = value.get("id")
+        if (
+            type(region_id) is not int
+            or region_id <= 0
+            or region_id in seen_ids
+            or region_id <= previous_id
+        ):
+            raise ConversionError("Stage 3 region IDs must be positive and increasing")
         key, kind, piece_index = (
             value.get("key"),
             value.get("type"),
@@ -297,7 +307,7 @@ def _geometry(
             raise ConversionError("Stage 3 region identity is invalid")
         path = parse_display_path(
             value.get("displayPath"),
-            f"Stage 3 region {ordinal}",
+            f"Stage 3 region {region_id}",
             width,
             height,
             allow_linear_segments=True,
@@ -308,11 +318,13 @@ def _geometry(
         symmetry_pair = symmetry.get("pair") if isinstance(symmetry, Mapping) else None
         if symmetry_pair is not None and not isinstance(symmetry_pair, str):
             raise ConversionError("Stage 3 symmetry metadata is invalid")
+        seen_ids.add(region_id)
         seen_keys.add(key)
+        previous_id = region_id
         # Preserve the accepted string rather than serializing parsed tokens.
         immutable = DisplayPath(value["displayPath"], path.commands, path.coordinates)
         regions.append(
-            _Region(ordinal, key, kind, piece_index, immutable, symmetry_pair)
+            _Region(region_id, key, kind, piece_index, immutable, symmetry_pair)
         )
     return tuple(silhouettes), tuple(regions)
 
