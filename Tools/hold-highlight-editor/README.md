@@ -70,7 +70,8 @@ The persistent sidebar works on one active board revision at a time:
   or target changed relative to `main` is a conflict: no promotion file is
   written. **Save locally** regenerates and verifies the preview token, then
   writes all approved native targets atomically for normal local Git review.
-- **Validate** runs the local package, hold-ID parity, and plan-library checks.
+- **Validate** runs the local package, hold-ID parity,
+  semantic-routine-resolution, and plan-library checks.
   Its simulator field produces copyable commands only after the operator
   supplies the UUID of a dedicated simulator that has already been created,
   recorded, and made ready.

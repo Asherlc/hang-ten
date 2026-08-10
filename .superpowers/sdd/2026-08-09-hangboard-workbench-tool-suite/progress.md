@@ -1,7 +1,7 @@
-# SDD ledger — plan: /Users/asherlc/src/hang-ten/docs/superpowers/plans/2026-08-09-hangboard-workbench-tool-suite.md
+# SDD ledger — plan: docs/superpowers/plans/2026-08-09-hangboard-workbench-tool-suite.md
 
-Execution started from `main` at `ec8b0c0` in the isolated worktree
-`/Users/asherlc/src/hang-ten/.worktrees/hangboard-workbench-tool-suite`.
+Execution started from `main` at `ec8b0c0` in the isolated worktree at
+`$REPO_ROOT`.
 
 Baseline checks:
 

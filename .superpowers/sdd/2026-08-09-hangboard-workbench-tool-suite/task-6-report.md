@@ -47,7 +47,7 @@
   The same baseline incompatibility prevented the main-derived clean-worktree
   check; no unrelated Swift files were changed.
 - Local server verification used
-  `rtk .context/hangboard-suite-venv/bin/python Tools/hold-highlight-editor/server.py --repository-root /Users/asherlc/src/hang-ten/.worktrees/hangboard-workbench-tool-suite --workspace-root /Users/asherlc/src/hang-ten/.worktrees/hangboard-workbench-tool-suite/.context/hangboard-workbench-suite-verification`.
+  `rtk .context/hangboard-suite-venv/bin/python Tools/hold-highlight-editor/server.py --repository-root "$REPO_ROOT" --workspace-root "$REPO_ROOT/.context/hangboard-workbench-suite-verification"`.
   It opened `metolius-wood-grips-compact-ii` as `board-0001`/
   `revision-0001`, produced the expected four-file promotion preview and a
   preview token without saving, and returned package-readiness and hold-ID
@@ -57,8 +57,8 @@
 
 ## Resource cleanup
 
-- The main-derived temporary worktree
-  `/Users/asherlc/src/hang-ten/.worktrees/hangboard-workbench-task-6-main-20260809`
+- The main-derived temporary worktree named
+  `hangboard-workbench-task-6-main-20260809`
   was deleted after its unrelated merge conflict and baseline check failure.
 - The exact server process was stopped and its owned
   `.context/hangboard-workbench-suite-verification` workspace was deleted and
