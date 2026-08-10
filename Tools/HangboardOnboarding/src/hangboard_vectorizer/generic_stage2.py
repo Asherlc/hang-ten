@@ -228,6 +228,12 @@ _CANDIDATE_FILES = (
     "stage-2-review.png",
     "stage-2-candidate.json",
 )
+_GENERATED_ARTIFACT_NAMES = frozenset(
+    (
+        *(name for name in _CANDIDATE_FILES if name != "stage-2-semantic-capture.json"),
+        "candidate-hashes.json",
+    )
+)
 _TYPE_COLORS: Mapping[str, tuple[int, int, int]] = MappingProxyType(
     {
         "jug": (238, 105, 54),
@@ -261,57 +267,120 @@ def run_generic_stage2(
     if labels.tobytes() != labels_again.tobytes() or regions != regions_again:
         raise ConversionError("generic Stage 2 capture is not deterministic")
 
+    capture_document = {
+        "canvas": {"height": int(rgba.shape[0]), "width": int(rgba.shape[1])},
+        "inputAcceptance": input_evidence["acceptance"],
+        "inputRaster": input_evidence["registered"],
+        "profile": asdict(profile),
+        "proposal": dict(capture.identity),
+        "regionCount": len(regions),
+        "stage": 2,
+    }
+    semantic_response: dict[str, object] | None = None
+    semantic_evidence_response: dict[str, object] | None = None
+    candidate_files = list(_CANDIDATE_FILES)
+    preserved_files = {
+        "stage-2-semantic-capture.json": _json_bytes(capture_document),
+    }
+    if capture.records_response_evidence:
+        response_name = "stage-2-semantic-response.json"
+        semantic_response = {
+            "contentType": capture.content_type,
+            "fileSha256": proposal_hash,
+            "path": response_name,
+        }
+        semantic_evidence_response = {
+            "contentType": capture.content_type,
+            "path": response_name,
+            "sha256": proposal_hash,
+        }
+        candidate_files.append(response_name)
+        preserved_files[response_name] = capture.raw_bytes
+        preserved_files["stage-2-semantic-evidence.json"] = _json_bytes(
+            {
+                "cache": _cache_document(capture.cache),
+                "identity": dict(capture.identity),
+                "invocation": _invocation_document(capture.invocation),
+                "response": semantic_evidence_response,
+                "stage": 2,
+            }
+        )
+    region_document = {
+        "canvas": {"height": int(rgba.shape[0]), "width": int(rgba.shape[1])},
+        "labelEncoding": "uint16-region-id",
+        "regions": regions,
+        "stage": 2,
+    }
+    candidate = {
+        "inputAcceptance": input_evidence["acceptance"],
+        "inputRegistered": input_evidence["registered"],
+        "profile": asdict(profile),
+        "proposalSha256": proposal_hash,
+        "stage": 2,
+    }
+    if semantic_response is not None:
+        candidate["semanticResponse"] = semantic_response
+
     temporary_root: Path | None = None
     try:
         artifact_root.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(
             tempfile.mkdtemp(prefix=f".{artifact_root.name}.tmp-", dir=artifact_root.parent)
         )
-        capture_document = {
-            "canvas": {"height": int(rgba.shape[0]), "width": int(rgba.shape[1])},
-            "inputAcceptance": input_evidence["acceptance"],
-            "inputRaster": input_evidence["registered"],
-            "profile": asdict(profile),
-            "proposal": dict(capture.identity),
-            "regionCount": len(regions),
-            "stage": 2,
-        }
-        _write_json(temporary_root / "stage-2-semantic-capture.json", capture_document)
-        semantic_response: dict[str, object] | None = None
-        semantic_evidence_response: dict[str, object] | None = None
-        candidate_files = list(_CANDIDATE_FILES)
-        if capture.records_response_evidence:
-            response_path = temporary_root / "stage-2-semantic-response.json"
-            response_path.write_bytes(capture.raw_bytes)
-            semantic_response = {
-                "contentType": capture.content_type,
-                "fileSha256": proposal_hash,
-                "path": response_path.name,
-            }
-            semantic_evidence_response = {
-                "contentType": capture.content_type,
-                "path": response_path.name,
-                "sha256": proposal_hash,
-            }
-            candidate_files.append(response_path.name)
-        _write_label_png(temporary_root / "stage-2-labels.png", labels)
-        region_document = {
-            "canvas": {"height": int(rgba.shape[0]), "width": int(rgba.shape[1])},
-            "labelEncoding": "uint16-region-id",
-            "regions": regions,
-            "stage": 2,
-        }
-        _write_json(temporary_root / "stage-2-regions.json", region_document)
-        review = _review_image(rgba, labels, regions)
-        _write_png(temporary_root / "stage-2-review.png", review)
+        hashes = build_stage2_artifacts(
+            temporary_root,
+            rgba=rgba,
+            labels=labels,
+            region_document=region_document,
+            candidate=candidate,
+            preserved_files=preserved_files,
+            candidate_files=tuple(candidate_files),
+        )
+        temporary_root.replace(artifact_root)
+        return StageCheckpoint(
+            stage=2,
+            artifact_root=artifact_root,
+            candidate_hashes=MappingProxyType(hashes),
+            review_path=artifact_root / "stage-2-review.png",
+            machine_passed=True,
+        )
+    except Exception:
+        if temporary_root is not None:
+            shutil.rmtree(temporary_root, ignore_errors=True)
+        raise
 
-        label_path = temporary_root / "stage-2-labels.png"
-        regions_path = temporary_root / "stage-2-regions.json"
-        candidate = {
-            "inputAcceptance": input_evidence["acceptance"],
-            "inputRegistered": input_evidence["registered"],
-            "profile": asdict(profile),
-            "proposalSha256": proposal_hash,
+
+def build_stage2_artifacts(
+    artifact_root: Path,
+    *,
+    rgba: np.ndarray,
+    labels: np.ndarray,
+    region_document: Mapping[str, object],
+    candidate: Mapping[str, object],
+    preserved_files: Mapping[str, bytes],
+    candidate_files: tuple[str, ...],
+) -> dict[str, str]:
+    """Write one complete deterministic Stage 2 candidate into an empty directory."""
+    if any(artifact_root.iterdir()):
+        raise FileExistsError(f"Stage 2 artifact root is not empty: {artifact_root}")
+    regions = region_document["regions"]
+    if not isinstance(regions, list):
+        raise ConversionError("Stage 2 region document is invalid")
+    for name, content in preserved_files.items():
+        _validate_artifact_name(name)
+        if name in _GENERATED_ARTIFACT_NAMES:
+            raise ConversionError(f"Stage 2 preserved artifact name is reserved: {name}")
+        (artifact_root / name).write_bytes(content)
+
+    label_path = artifact_root / "stage-2-labels.png"
+    regions_path = artifact_root / "stage-2-regions.json"
+    _write_label_png(label_path, labels)
+    _write_json(regions_path, region_document)
+    _write_png(artifact_root / "stage-2-review.png", _review_image(rgba, labels, regions))
+
+    candidate_document = dict(candidate)
+    candidate_document.update(
+        {
             "regionCount": len(regions),
             "regions": {
                 "fileSha256": _hash_file(regions_path),
@@ -326,34 +395,12 @@ def run_generic_stage2(
             },
             "stage": 2,
         }
-        if semantic_response is not None:
-            candidate["semanticResponse"] = semantic_response
-        _write_json(temporary_root / "stage-2-candidate.json", candidate)
-        hashes = {name: _hash_file(temporary_root / name) for name in candidate_files}
-        _write_json(temporary_root / "candidate-hashes.json", hashes)
-        if semantic_evidence_response is not None:
-            _write_json(
-                temporary_root / "stage-2-semantic-evidence.json",
-                {
-                    "cache": _cache_document(capture.cache),
-                    "identity": dict(capture.identity),
-                    "invocation": _invocation_document(capture.invocation),
-                    "response": semantic_evidence_response,
-                    "stage": 2,
-                },
-            )
-        temporary_root.replace(artifact_root)
-        return StageCheckpoint(
-            stage=2,
-            artifact_root=artifact_root,
-            candidate_hashes=MappingProxyType(hashes),
-            review_path=artifact_root / "stage-2-review.png",
-            machine_passed=True,
-        )
-    except Exception:
-        if temporary_root is not None:
-            shutil.rmtree(temporary_root, ignore_errors=True)
-        raise
+    )
+    _write_json(artifact_root / "stage-2-candidate.json", candidate_document)
+    hashes = _candidate_hashes(artifact_root, candidate_files)
+    _write_json(artifact_root / "candidate-hashes.json", hashes)
+    _verify_candidate_hashes(artifact_root, hashes)
+    return hashes
 
 
 def _capture_geometry(
@@ -609,7 +656,12 @@ def _review_image(
     legend_y = height
     draw.rectangle((0, legend_y, width, height + legend_height), fill=(246, 245, 242, 255))
     draw.line((0, legend_y, width, legend_y), fill=(204, 201, 194, 255), width=1)
-    draw.text((18, legend_y + 10), "19 independently selectable grip regions", font=font, fill=(32, 32, 32, 255))
+    draw.text(
+        (18, legend_y + 10),
+        f"{len(regions)} independently selectable grip regions",
+        font=font,
+        fill=(32, 32, 32, 255),
+    )
     x = 18
     for kind in ("jug", "sloper", "edge", "pocket"):
         color = _TYPE_COLORS[kind]
@@ -758,7 +810,11 @@ def _write_png(path: Path, pixels: np.ndarray) -> None:
 
 
 def _write_json(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_bytes(_json_bytes(value))
+
+
+def _json_bytes(value: object) -> bytes:
+    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _hash_file(path: Path) -> str:
@@ -766,6 +822,30 @@ def _hash_file(path: Path) -> str:
         return sha256(path.read_bytes()).hexdigest()
     except OSError as error:
         raise ConversionError(f"could not read Stage 2 evidence: {path.name}") from error
+
+
+def _candidate_hashes(root: Path, names: tuple[str, ...]) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for name in names:
+        _validate_artifact_name(name)
+        if name == "candidate-hashes.json" or name in hashes:
+            raise ConversionError(f"invalid Stage 2 candidate artifact: {name}")
+        path = root / name
+        if not path.is_file():
+            raise ConversionError(f"missing Stage 2 candidate artifact: {name}")
+        hashes[name] = _hash_file(path)
+    return hashes
+
+
+def _verify_candidate_hashes(root: Path, hashes: Mapping[str, str]) -> None:
+    recorded = _read_json(root / "candidate-hashes.json")
+    if recorded != hashes or any(_hash_file(root / name) != expected for name, expected in hashes.items()):
+        raise ConversionError("Stage 2 candidate hash verification failed")
+
+
+def _validate_artifact_name(name: str) -> None:
+    if not isinstance(name, str) or not name or Path(name).name != name:
+        raise ConversionError("Stage 2 candidate artifact name is invalid")
 
 
 def _cache_document(cache: CacheTelemetry | None) -> dict[str, object] | None:

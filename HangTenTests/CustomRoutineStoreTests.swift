@@ -2,6 +2,133 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testCompactIIPocketsExposeCapacityWithoutChangingOpenHandPosture() throws {
+        let twoFingerPocket = try XCTUnwrap(
+            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-two-left" }
+        )
+        let threeFingerPocket = try XCTUnwrap(
+            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-three-left" }
+        )
+        let fourFingerPocket = try XCTUnwrap(
+            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-four-center" }
+        )
+
+        XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
+        XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
+        XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
+        XCTAssertEqual(twoFingerPocket.gripType, .openHand)
+        XCTAssertEqual(threeFingerPocket.gripType, .openHand)
+        XCTAssertEqual(fourFingerPocket.gripType, .openHand)
+    }
+
+    func testPocketDefaultFeaturesRespectCapacityBoundaries() {
+        let oneFingerPocket = BoardHold(
+            id: "one-finger",
+            name: "One finger",
+            shortLabel: "1",
+            detail: "One-finger pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            fingerCapacity: 1
+        )
+        let fourFingerPocket = BoardHold(
+            id: "four-finger",
+            name: "Four finger",
+            shortLabel: "4",
+            detail: "Four-finger pocket",
+            kind: .pocket,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            fingerCapacity: 4
+        )
+
+        XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
+        XCTAssertEqual(oneFingerPocket.features, [.pocket])
+        XCTAssertFalse(oneFingerPocket.features.contains(.fourFingerPocket))
+        XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
+        XCTAssertEqual(fourFingerPocket.features, [.pocket, .fourFingerPocket])
+    }
+
+    func testPlanResolutionRetainsExactFingerConfiguration() throws {
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index]))
+        let step = WorkoutStepDefinition(
+            id: "exact-finger-step",
+            title: "One-finger hang",
+            instruction: "Hang with the index finger.",
+            accessory: "10s",
+            duration: 10,
+            phase: .hang,
+            targets: [.feature(.threeFingerPocket, fallbacks: [])],
+            gripType: .openHand,
+            fingerConfiguration: expectedConfiguration,
+            activeDuration: 10
+        )
+        let library = PlanLibraryDefinition(
+            metadata: PlanLibraryMetadata(
+                id: "exact-finger-library",
+                version: "1",
+                title: "Exact fingers",
+                generatedAt: "2026-08-07"
+            ),
+            boardMappings: [],
+            blocks: [WorkoutBlockDefinition(id: "exact-finger-block", steps: [step])],
+            plans: [
+                PlanDefinition(
+                    id: "exact-finger-plan",
+                    metadata: PlanMetadata(
+                        title: "Exact fingers",
+                        subtitle: "",
+                        level: "Test",
+                        sourceLabel: "Created in Hang Ten",
+                        sourceURL: nil,
+                        provenance: .custom
+                    ),
+                    boardID: nil,
+                    blocks: [WorkoutBlockReference(blockID: "exact-finger-block")]
+                )
+            ]
+        )
+
+        let resolved = try PlanDefinitionResolver(library: library).resolve(library.plans[0])
+
+        XCTAssertEqual(resolved.steps.map(\.fingerConfiguration), [expectedConfiguration])
+    }
+
+    func testCustomRoutineSaveAndLoadPreservesNonContiguousExactFingers() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
+        let definition = CustomRoutineDefinition(
+            id: "custom.exact-fingers",
+            title: "Exact finger routine",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [
+                WorkoutStepDefinition(
+                    id: "exact-finger-step",
+                    title: "Exact finger hang",
+                    instruction: "Use index and ring fingers.",
+                    accessory: "10s",
+                    duration: 10,
+                    phase: .hang,
+                    targets: [.feature(.threeFingerPocket, fallbacks: [])],
+                    gripType: .openHand,
+                    fingerConfiguration: expectedConfiguration,
+                    activeDuration: 10
+                )
+            ]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(definition)
+
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        XCTAssertEqual(reloaded.routines.first?.steps.first?.fingerConfiguration, expectedConfiguration)
+    }
+
     func testBoardSpecificDefinitionRoundTripsAndResolvesToTrainingPlan() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))

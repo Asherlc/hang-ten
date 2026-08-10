@@ -2,6 +2,96 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testGripTypeDecodesLegacyHoldCombinedValuesAsOpenHand() throws {
+        for legacyValue in ["sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket"] {
+            let decoded = try JSONDecoder().decode(
+                GripType.self,
+                from: Data("\"\(legacyValue)\"".utf8)
+            )
+            let reencoded = try JSONEncoder().encode(decoded)
+            let reencodedRawValue = try JSONDecoder().decode(String.self, from: reencoded)
+
+            XCTAssertEqual(decoded, .openHand, "Expected \(legacyValue) to migrate to open-hand posture.")
+            XCTAssertEqual(reencodedRawValue, "openHand")
+        }
+    }
+
+    func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
+        XCTAssertNil(FingerConfiguration(engagedFingers: []))
+
+        let emptyPayload = Data(#"{ "engagedFingers": [] }"#.utf8)
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: emptyPayload))
+    }
+
+    func testFingerConfigurationRejectsDuplicateEngagedFingersInDecodedPayload() throws {
+        let duplicatePayload = Data(#"{ "engagedFingers": ["index", "index"] }"#.utf8)
+
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: duplicatePayload)) { error in
+            guard case let DecodingError.dataCorrupted(context) = error else {
+                return XCTFail("Expected duplicate fingers to produce a data-corrupted decoding error, got: \(error)")
+            }
+
+            XCTAssertEqual(context.codingPath.last?.stringValue, "engagedFingers")
+            XCTAssertEqual(context.debugDescription, "Finger configuration cannot include duplicate fingers.")
+        }
+    }
+
+    func testFingerCueCapacityAccessibilityLabelUsesSingularForOneFinger() {
+        XCTAssertEqual(FingerCue.capacity(1).accessibilityLabel, "Up to 1 finger")
+        XCTAssertEqual(FingerCue.capacity(2).accessibilityLabel, "Up to 2 fingers")
+    }
+
+    func testFingerConfigurationRoundTripsExactFingerSetsInSlotOrder() throws {
+        let configurations = [
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.pinky])),
+            try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
+        ]
+
+        let data = try JSONEncoder().encode(configurations)
+        let decoded = try JSONDecoder().decode([FingerConfiguration].self, from: data)
+
+        XCTAssertEqual(decoded, configurations)
+        XCTAssertEqual(decoded[0].count, 1)
+        XCTAssertEqual(decoded[0].orderedFingers, [.pinky])
+        XCTAssertEqual(decoded[1].count, 2)
+        XCTAssertEqual(decoded[1].orderedFingers, [.index, .ring])
+        XCTAssertEqual(
+            try JSONSerialization.jsonObject(with: data) as? [[String: [String]]],
+            [
+                ["engagedFingers": ["pinky"]],
+                ["engagedFingers": ["index", "ring"]]
+            ]
+        )
+    }
+
+    func testWorkoutStepDefinitionRoundTripsFingerConfigurationWithCurrentPostureVocabulary() throws {
+        let data = Data(
+            #"""
+            {
+              "id": "exact-fingers",
+              "title": "Exact fingers",
+              "instruction": "Use index and ring.",
+              "accessory": "Test fixture",
+              "duration": 10,
+              "phase": "hang",
+              "targets": [],
+              "gripType": "halfCrimp",
+              "fingerConfiguration": { "engagedFingers": ["index", "ring"] }
+            }
+            """#.utf8
+        )
+
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: data)
+        let encoded = try JSONEncoder().encode(decoded)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let fingerConfiguration = try XCTUnwrap(object["fingerConfiguration"] as? [String: [String]])
+
+        XCTAssertEqual(decoded.gripType, .halfCrimp)
+        XCTAssertEqual(decoded.fingerConfiguration?.orderedFingers, [.index, .ring])
+        XCTAssertEqual(object["gripType"] as? String, "halfCrimp")
+        XCTAssertEqual(fingerConfiguration["engagedFingers"], ["index", "ring"])
+    }
+
     func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
@@ -663,6 +753,22 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · 19 mm half crimp")
         XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
         XCTAssertEqual(step.gripType, .halfCrimp)
+    }
+
+    func testAbrahangsFourthGripUsesExactThreeFingerPocketConfiguration() throws {
+        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+        let step = try XCTUnwrap(
+            store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
+                $0.id == "abrahangs-grip-4.segment-1"
+            }
+        )
+
+        XCTAssertEqual(step.title, "Abrahang · Three-finger pocket")
+        XCTAssertEqual(
+            step.fingerConfiguration,
+            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+        )
+        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle, .ring])
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {

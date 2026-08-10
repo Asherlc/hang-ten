@@ -1,0 +1,1220 @@
+"""Shared guided orchestration over CLI-compatible onboarding runs."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from dataclasses import dataclass
+from hashlib import sha256
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import tempfile
+from threading import RLock
+from types import MappingProxyType
+from urllib.parse import urlparse
+
+from PIL import Image
+
+from .board_library import LibraryBoard, LibrarySnapshot, RepositoryBoardLibrary
+from .generic_stage0 import StageCheckpoint
+from .onboarding_run import (
+    DEFAULT_STAGE_RUNNERS,
+    RunContext,
+    StageRunner,
+    approve_stage,
+    cached_source_path,
+    read_status,
+    replace_pending_checkpoint,
+    resume_run,
+    start_run,
+)
+from .models import ConversionError
+from .review_edits import (
+    materialize_stage2_edit,
+    materialize_stage3_edit,
+    validate_stage_edit,
+)
+from .workbench_store import BoardRecord, RevisionRecord, WorkbenchStore
+
+
+_FINAL_STAGE = 4
+_DRAFT_FILE = re.compile(r"draft-(\d+)\.json\Z")
+_STATE_NAMES = {
+    "awaiting_approval": "awaiting_review",
+    "complete": "complete",
+    "failed": "failed",
+    "ready_for_next_stage": "ready",
+    "running": "running",
+}
+
+
+@dataclass(frozen=True, slots=True)
+class WorkbenchView:
+    board_id: str
+    revision_id: str
+    parent_revision_id: str | None
+    run_root: Path
+    product_name: str
+    stage: int
+    state: str
+    checkpoint_token: str | None
+    review_path: Path | None
+    editor_image_path: Path | None
+    editor_mode: str | None
+    saved: bool
+    stale_from_stage: int | None
+    repository_board_id: str | None
+    repository_revision_token: str | None
+
+
+class WorkbenchServiceError(ValueError):
+    """Raised when a guided workflow operation is inconsistent or unsupported."""
+
+
+class WorkbenchService:
+    """Coordinate persistent board metadata and the shared onboarding state machine."""
+
+    def __init__(
+        self,
+        store: WorkbenchStore,
+        *,
+        runners: Mapping[int, StageRunner] | None = None,
+        library: RepositoryBoardLibrary | None = None,
+    ) -> None:
+        self.store = store
+        self.__library = library
+        self.__library_open_locks_guard = RLock()
+        self.__library_open_locks: dict[str, RLock] = {}
+        self.__runners = MappingProxyType(
+            dict(DEFAULT_STAGE_RUNNERS if runners is None else runners)
+        )
+
+    def create_from_url(self, product_name: str, source_url: str) -> WorkbenchView:
+        """Create a board from one public HTTP(S) source URL."""
+        if not isinstance(source_url, str) or urlparse(source_url).scheme.lower() not in {
+            "http",
+            "https",
+        }:
+            raise WorkbenchServiceError("source URL must use HTTP(S)")
+        board, revision = self.store.reserve_initial_revision(product_name)
+        try:
+            self.__start(board, revision, source_url)
+            self.store.activate_revision(board.id, revision.id)
+            return self.__view(board.id, revision.id)
+        except Exception:
+            self.__record_failed_creation(board, revision)
+            raise
+
+    def create_from_upload(
+        self, product_name: str, content: bytes | bytearray | memoryview
+    ) -> WorkbenchView:
+        """Create a board from uploaded image bytes without retaining the upload."""
+        if not isinstance(content, (bytes, bytearray, memoryview)) or not content:
+            raise WorkbenchServiceError("upload content must not be empty")
+        board, revision = self.store.reserve_initial_revision(product_name)
+        descriptor = -1
+        upload: Path | None = None
+        try:
+            descriptor, temporary_name = tempfile.mkstemp(
+                prefix=".upload-",
+                suffix=".image",
+                dir=revision.run_root.parent,
+            )
+            upload = Path(temporary_name)
+            with os.fdopen(descriptor, "wb") as stream:
+                descriptor = -1
+                stream.write(bytes(content))
+                stream.flush()
+                os.fsync(stream.fileno())
+            self.__start(board, revision, str(upload))
+            cached_source_path(revision.run_root)
+            self.store.activate_revision(board.id, revision.id)
+            return self.__view(board.id, revision.id)
+        except Exception:
+            self.__record_failed_creation(board, revision)
+            raise
+        finally:
+            if descriptor >= 0:
+                os.close(descriptor)
+            if upload is not None:
+                upload.unlink(missing_ok=True)
+
+    def import_run(self, run_root: Path) -> WorkbenchView:
+        """Register a validated CLI run in place beneath the store workspace."""
+        run_root = self.store.resolve_import_run(run_root)
+        status = read_status(run_root)
+        manifest = self.__manifest(run_root)
+        product = manifest.get("product")
+        if not isinstance(product, Mapping):
+            raise WorkbenchServiceError("onboarding product identity is missing")
+        product_name = product.get("assertedName")
+        if not isinstance(product_name, str) or not product_name.strip():
+            raise WorkbenchServiceError("onboarding product name is invalid")
+        board, revision = self.store.register_run(product_name, run_root)
+        try:
+            if status["status"] == "complete":
+                self.store.mark_revision_complete(board.id, revision.id)
+            return self.__view(board.id, revision.id)
+        except Exception:
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id="",
+            )
+            raise
+
+    def list_boards(self) -> tuple[WorkbenchView, ...]:
+        """Return active revision views for all persisted boards."""
+        return tuple(
+            self.__view(board.id, board.active_revision_id)
+            for board in self.store.list_boards()
+            if board.active_revision_id
+        )
+
+    def library_snapshot(self) -> LibrarySnapshot:
+        """Return repository packages and diagnostics available to the workbench."""
+        if self.__library is None:
+            return LibrarySnapshot(boards=(), diagnostics=())
+        return self.__library.snapshot()
+
+    def open_library_board(self, board_id: str) -> WorkbenchView:
+        """Copy the current repository package into an active runtime revision."""
+        with self.__library_open_lock(board_id):
+            return self.__open_library_board(board_id)
+
+    def library_open_reservation_key(self, board_id: str) -> str:
+        """Return the stable job key shared by a repository open and linked edits."""
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        library_board = self.__library.get_board(board_id)
+        return f"repository-board:{library_board.board_id}"
+
+    def mutation_reservation_key(self, board_id: str) -> str:
+        """Return the stable job key for a runtime board mutation."""
+        board = self.store.read_board(board_id)
+        return (
+            f"repository-board:{board.repository_board_id}"
+            if board.repository_board_id is not None
+            else board.id
+        )
+
+    def __open_library_board(self, board_id: str) -> WorkbenchView:
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        library_board = self.__library.get_board(board_id)
+        boards = self.store.list_boards()
+        for board in boards:
+            if (
+                board.repository_board_id == library_board.board_id
+                and board.repository_revision_token == library_board.revision_token
+            ):
+                return self.__view(board.id, board.active_revision_id)
+
+        matching_board = next(
+            (
+                board
+                for board in boards
+                if board.repository_board_id == library_board.board_id
+            ),
+            None,
+        )
+        if matching_board is None:
+            board, revision = self.store.reserve_initial_revision(
+                library_board.display_name
+            )
+            previous_active_revision_id = ""
+        else:
+            board = matching_board
+            previous_active_revision_id = matching_board.active_revision_id
+            revision = self.store.create_revision(board.id)
+        try:
+            copied_library_board = self.__library.copy_current_run(
+                library_board.board_id, revision.run_root
+            )
+        except Exception:
+            self.__fail_library_open(
+                board,
+                revision,
+                matching_board=matching_board,
+                previous_active_revision_id=previous_active_revision_id,
+            )
+            raise
+        try:
+            self.store.finalize_repository_open(
+                board.id,
+                revision.id,
+                repository_board_id=copied_library_board.board_id,
+                repository_revision_token=copied_library_board.revision_token,
+            )
+        except Exception:
+            if self.__repository_open_is_finalized(
+                board.id, revision, copied_library_board
+            ):
+                return self.__view(board.id, revision.id)
+            self.__fail_library_open(
+                board,
+                revision,
+                matching_board=matching_board,
+                previous_active_revision_id=previous_active_revision_id,
+            )
+            raise
+        return self.__view(board.id, revision.id)
+
+    def __fail_library_open(
+        self,
+        board: BoardRecord,
+        revision: RevisionRecord,
+        *,
+        matching_board: BoardRecord | None,
+        previous_active_revision_id: str,
+    ) -> None:
+        if matching_board is None:
+            self.__record_failed_creation(board, revision)
+            return
+        self.store.mark_revision_failed(
+            board.id,
+            revision.id,
+            restore_active_revision_id=previous_active_revision_id,
+        )
+
+    def __repository_open_is_finalized(
+        self,
+        board_id: str,
+        reserved_revision: RevisionRecord,
+        copied_library_board: LibraryBoard,
+    ) -> bool:
+        try:
+            persisted = self.store.read_board(board_id)
+            revision = next(
+                candidate
+                for candidate in persisted.revisions
+                if candidate.id == reserved_revision.id
+            )
+        except (StopIteration, OSError, ValueError):
+            return False
+        return (
+            persisted.active_revision_id == reserved_revision.id
+            and persisted.repository_board_id == copied_library_board.board_id
+            and persisted.repository_revision_token
+            == copied_library_board.revision_token
+            and revision.run_root == reserved_revision.run_root
+            and revision.parent_revision_id
+            == reserved_revision.parent_revision_id
+            and revision.fork_stage == reserved_revision.fork_stage
+            and revision.current_stage == _FINAL_STAGE
+            and revision.state == "complete"
+            and revision.stale_from_stage
+            == reserved_revision.stale_from_stage
+        )
+
+    def get_board(
+        self, board_id: str, *, revision_id: str | None = None
+    ) -> WorkbenchView:
+        """Return one active or explicitly selected revision view."""
+        board = self.store.read_board(board_id)
+        selected = board.active_revision_id if revision_id is None else revision_id
+        if not selected:
+            raise WorkbenchServiceError(f"board {board.id} has no active revision")
+        revision = self.store.read_revision(board.id, selected)
+        if revision.state == "pending":
+            raise WorkbenchServiceError(
+                f"revision {revision.id} is pending activation"
+            )
+        return self.__view(board.id, selected)
+
+    def save_draft(
+        self,
+        board_id: str,
+        document: object,
+        *,
+        expected_stage: int,
+        expected_checkpoint_token: str | None = None,
+        expected_revision_id: str | None = None,
+    ) -> WorkbenchView:
+        """Validate and append an immutable draft for the pending editor stage."""
+        board, revision, status = self.__expected_checkpoint(
+            board_id,
+            expected_revision_id=expected_revision_id,
+            expected_stage=expected_stage,
+            expected_checkpoint_token=(
+                self.__required_checkpoint_token(expected_checkpoint_token)
+                if expected_checkpoint_token is not None
+                else None
+            ),
+        )
+        checkpoint_token = self.__checkpoint_token(revision, status)
+        if checkpoint_token is None:
+            raise WorkbenchServiceError("checkpoint identity is unavailable")
+        if status["status"] != "awaiting_approval":
+            raise WorkbenchServiceError(
+                f"stage {expected_stage} is not awaiting review"
+            )
+        if expected_stage not in (2, 3):
+            raise WorkbenchServiceError(
+                "review drafts are supported only for Stage 2 and Stage 3"
+            )
+        try:
+            validated = validate_stage_edit(expected_stage, document)
+        except ConversionError as error:
+            raise self.__public_geometry_error(error) from error
+        self.store.write_draft(
+            board.id,
+            revision.id,
+            expected_stage,
+            {
+                "checkpointToken": checkpoint_token,
+                "document": validated,
+            },
+        )
+        return self.__view(board.id, revision.id)
+
+    def approve_and_advance(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_checkpoint_token: str | None = None,
+        expected_revision_id: str | None = None,
+    ) -> WorkbenchView:
+        """Approve one selected checkpoint and stop at the next review."""
+        board, revision, status = self.__expected_checkpoint(
+            board_id,
+            expected_revision_id=expected_revision_id,
+            expected_stage=expected_stage,
+            expected_checkpoint_token=(
+                self.__required_checkpoint_token(expected_checkpoint_token)
+                if expected_checkpoint_token is not None
+                else None
+            ),
+        )
+        if status["status"] != "awaiting_approval":
+            raise WorkbenchServiceError(
+                f"stage {expected_stage} is not awaiting review"
+            )
+
+        checkpoint_token = self.__checkpoint_token(revision, status)
+        if checkpoint_token is None:
+            raise WorkbenchServiceError("checkpoint identity is unavailable")
+        self.__publish_latest_draft(
+            board.id, revision, expected_stage, checkpoint_token
+        )
+        approved = approve_stage(revision.run_root, expected_stage)
+        if approved["status"] == "complete":
+            self.store.mark_revision_complete(board.id, revision.id)
+            return self.__view(board.id, revision.id)
+
+        try:
+            if expected_stage == 1 and revision.parent_revision_id is not None:
+                parent = self.store.read_revision(
+                    board.id, revision.parent_revision_id
+                )
+                self.__carry_stage2_replay_input(parent, revision)
+            resume_run(revision.run_root, runners=self.__runners)
+        except Exception:
+            self.__synchronize_revision(board.id, revision.id)
+            raise
+        return self.__view(board.id, revision.id)
+
+    def revise_stage(
+        self,
+        board_id: str,
+        *,
+        stage: int,
+        expected_revision_id: str | None = None,
+    ) -> WorkbenchView:
+        """Fork an approved lineage and stop at a fresh upstream checkpoint."""
+        self.__validate_stage(stage)
+        board, parent = self.__active_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        manifest = self.__manifest(parent.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or stage >= len(stages):
+            raise WorkbenchServiceError(f"stage {stage} has not been generated")
+        selected = stages[stage]
+        if not isinstance(selected, dict) or selected.get("status") != "approved":
+            raise WorkbenchServiceError(f"stage {stage} has not been approved")
+
+        source = cached_source_path(parent.run_root)
+        revision = self.store.create_revision(
+            board.id, parent_revision_id=parent.id, fork_stage=stage
+        )
+        try:
+            self.__start(board, revision, str(source))
+            for accepted_stage in range(stage):
+                if accepted_stage in (2, 3):
+                    self.__replay_reviewed_edit(
+                        source_revision=parent,
+                        target_revision=revision,
+                        stage=accepted_stage,
+                    )
+                approve_stage(revision.run_root, accepted_stage)
+                if accepted_stage == 1:
+                    self.__carry_stage2_replay_input(parent, revision)
+                resume_run(revision.run_root, runners=self.__runners)
+            self.store.activate_revision(
+                board.id,
+                revision.id,
+                stale_parent_revision_id=parent.id,
+                stale_from_stage=stage,
+            )
+        except Exception:
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id=None,
+            )
+            raise
+        return self.__view(board.id, revision.id)
+
+    def retry(
+        self,
+        board_id: str,
+        *,
+        expected_stage: int,
+        expected_revision_id: str | None = None,
+    ) -> WorkbenchView:
+        """Regenerate the selected checkpoint as a new immutable attempt."""
+        _board, revision, status = self.__expected_checkpoint(
+            board_id,
+            expected_revision_id=expected_revision_id,
+            expected_stage=expected_stage,
+        )
+        if status["status"] in {"ready_for_next_stage", "failed"}:
+            try:
+                resume_run(revision.run_root, runners=self.__runners)
+            except Exception:
+                self.__synchronize_revision(board_id, revision.id)
+                raise
+            return self.__view(board_id, revision.id)
+        if status["status"] != "awaiting_approval":
+            raise WorkbenchServiceError(
+                f"stage {expected_stage} cannot be retried from {status['status']}"
+            )
+        runner = self.__runners.get(expected_stage)
+        if runner is None or runner.stage != expected_stage:
+            raise WorkbenchServiceError(
+                f"Stage {expected_stage} runner is not installed"
+            )
+        temporary_root = Path(
+            tempfile.mkdtemp(
+                prefix=f".stage-{expected_stage}-retry-",
+                dir=revision.run_root.parent,
+            )
+        )
+        try:
+            checkpoint = runner.run(
+                RunContext(
+                    revision.run_root,
+                    MappingProxyType(self.__manifest(revision.run_root)),
+                ),
+                temporary_root / "artifacts",
+            )
+            replace_pending_checkpoint(revision.run_root, checkpoint)
+        finally:
+            shutil.rmtree(temporary_root, ignore_errors=True)
+        return self.__view(board_id, revision.id)
+
+    def save(
+        self, board_id: str, *, expected_revision_id: str | None = None
+    ) -> WorkbenchView:
+        """Select a complete, non-stale revision in the local store."""
+        board, revision = self.__active_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        status = read_status(revision.run_root)
+        if status["status"] != "complete" or status["stage"] != _FINAL_STAGE:
+            raise WorkbenchServiceError(
+                f"revision {revision.id} does not have a complete lineage"
+            )
+        self.store.mark_revision_complete(board.id, revision.id)
+        if self.__library is not None:
+            self.store.preflight_repository_revision(board.id, revision.id)
+            published = self.__library.publish(
+                run_root=revision.run_root,
+                board_id=board.repository_board_id,
+                expected_revision_token=board.repository_revision_token,
+            )
+            self.store.publish_repository_revision(
+                board.id,
+                revision.id,
+                repository_board_id=published.board.board_id,
+                repository_revision_token=published.revision_token,
+            )
+        else:
+            self.store.save_revision(board.id, revision.id)
+        return self.__view(board.id, revision.id)
+
+    def __library_open_lock(self, board_id: str) -> RLock:
+        with self.__library_open_locks_guard:
+            return self.__library_open_locks.setdefault(board_id, RLock())
+
+    def __start(
+        self, board: BoardRecord, revision: RevisionRecord, source: str
+    ) -> None:
+        start_run(
+            board.product_name,
+            source,
+            revision.run_root,
+            runners=self.__runners,
+            workspace_root=revision.run_root.parent,
+        )
+
+    def __record_failed_creation(
+        self, board: BoardRecord, revision: RevisionRecord
+    ) -> None:
+        if revision.run_root.exists():
+            if read_status(revision.run_root)["status"] == "failed":
+                self.store.mark_revision_failed(
+                    board.id,
+                    revision.id,
+                    restore_active_revision_id=revision.id,
+                )
+                return
+            self.store.mark_revision_failed(
+                board.id,
+                revision.id,
+                restore_active_revision_id="",
+            )
+            return
+        self.store._discard_unstarted_board(board.id, revision.id)
+
+    def __expected_checkpoint(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str | None,
+        expected_stage: int,
+        expected_checkpoint_token: str | None = None,
+    ) -> tuple[BoardRecord, RevisionRecord, Mapping[str, object]]:
+        self.__validate_stage(expected_stage)
+        board, revision = self.__active_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        status = read_status(revision.run_root)
+        if status["stage"] != expected_stage:
+            raise WorkbenchServiceError(
+                f"expected stage {expected_stage}, found stage {status['stage']}"
+            )
+        if expected_checkpoint_token is not None:
+            current_token = self.__checkpoint_token(revision, status)
+            if expected_checkpoint_token != current_token:
+                raise WorkbenchServiceError(
+                    "expected checkpoint token does not match the active attempt"
+                )
+        return board, revision, status
+
+    @staticmethod
+    def __required_checkpoint_token(value: object) -> str:
+        if not isinstance(value, str) or not value.strip():
+            raise WorkbenchServiceError("expected checkpoint token is required")
+        return value.strip()
+
+    @staticmethod
+    def __validate_stage(stage: object) -> None:
+        if (
+            isinstance(stage, bool)
+            or not isinstance(stage, int)
+            or not 0 <= stage <= _FINAL_STAGE
+        ):
+            raise WorkbenchServiceError(
+                f"stage must be between 0 and {_FINAL_STAGE}"
+            )
+
+    def __active_revision(
+        self, board_id: str, *, expected_revision_id: str | None
+    ) -> tuple[BoardRecord, RevisionRecord]:
+        board = self.store.read_board(board_id)
+        if not board.active_revision_id:
+            raise WorkbenchServiceError(f"board {board.id} has no active revision")
+        if (
+            expected_revision_id is not None
+            and expected_revision_id != board.active_revision_id
+        ):
+            raise WorkbenchServiceError(
+                f"expected revision {expected_revision_id}, found revision "
+                f"{board.active_revision_id}"
+            )
+        revision = self.store.read_revision(board.id, board.active_revision_id)
+        return board, revision
+
+    def __view(self, board_id: str, revision_id: str) -> WorkbenchView:
+        board = self.store.read_board(board_id)
+        revision = self.store.read_revision(board.id, revision_id)
+        status = read_status(revision.run_root)
+        stage = status["stage"]
+        if isinstance(stage, bool) or not isinstance(stage, int):
+            raise WorkbenchServiceError("onboarding status stage is invalid")
+        raw_state = status["status"]
+        if not isinstance(raw_state, str) or raw_state not in _STATE_NAMES:
+            raise WorkbenchServiceError("onboarding status state is invalid")
+        revision = self.store.synchronize_revision(
+            board.id,
+            revision.id,
+            current_stage=stage,
+            state=self.__stored_state(raw_state),
+        )
+        board = self.store.read_board(board.id)
+        review_value = status.get("review")
+        editable = raw_state == "awaiting_approval" and stage in (2, 3)
+        editor_mode = (
+            "contour" if editable and stage == 2
+            else "vector" if editable and stage == 3
+            else None
+        )
+        if editable:
+            review_path, editor_image_path = self.__editable_artifacts(
+                revision, stage, review_value
+            )
+        else:
+            review_path = (
+                revision.run_root / review_value
+                if isinstance(review_value, str)
+                else None
+            )
+            editor_image_path = None
+        return WorkbenchView(
+            board_id=board.id,
+            revision_id=revision.id,
+            parent_revision_id=revision.parent_revision_id,
+            run_root=revision.run_root,
+            product_name=board.product_name,
+            stage=stage,
+            state=_STATE_NAMES[raw_state],
+            checkpoint_token=self.__checkpoint_token(revision, status),
+            review_path=review_path,
+            editor_image_path=editor_image_path,
+            editor_mode=editor_mode,
+            saved=board.saved_revision_id == revision.id,
+            stale_from_stage=revision.stale_from_stage,
+            repository_board_id=board.repository_board_id,
+            repository_revision_token=board.repository_revision_token,
+        )
+
+    def __checkpoint_token(
+        self, revision: RevisionRecord, status: Mapping[str, object]
+    ) -> str | None:
+        if status.get("status") != "awaiting_approval":
+            return None
+        stage = status.get("stage")
+        manifest = self.__manifest(revision.run_root)
+        stages = manifest.get("stages")
+        if isinstance(stage, bool) or not isinstance(stage, int) or not isinstance(stages, list):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        record = next(
+            (
+                candidate
+                for candidate in stages
+                if isinstance(candidate, Mapping) and candidate.get("stage") == stage
+            ),
+            None,
+        )
+        if not isinstance(record, Mapping):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        attempt = record.get("attempt")
+        candidate_hash = record.get("candidateHashesSha256")
+        if (
+            isinstance(attempt, bool)
+            or not isinstance(attempt, int)
+            or attempt < 1
+            or not isinstance(candidate_hash, str)
+            or not candidate_hash
+        ):
+            raise WorkbenchServiceError("checkpoint identity is invalid")
+        identity = json.dumps(
+            {
+                "attempt": attempt,
+                "candidateHashesSha256": candidate_hash,
+                "revisionId": revision.id,
+                "stage": stage,
+            },
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return sha256(identity).hexdigest()
+
+    def __synchronize_revision(
+        self, board_id: str, revision_id: str
+    ) -> RevisionRecord:
+        status = read_status(self.store.read_revision(board_id, revision_id).run_root)
+        stage = status.get("stage")
+        raw_state = status.get("status")
+        if isinstance(stage, bool) or not isinstance(stage, int):
+            raise WorkbenchServiceError("onboarding status stage is invalid")
+        if not isinstance(raw_state, str) or raw_state not in _STATE_NAMES:
+            raise WorkbenchServiceError("onboarding status state is invalid")
+        return self.store.synchronize_revision(
+            board_id,
+            revision_id,
+            current_stage=stage,
+            state=self.__stored_state(raw_state),
+        )
+
+    @staticmethod
+    def __stored_state(raw_state: str) -> str:
+        if raw_state == "complete":
+            return "complete"
+        if raw_state == "failed":
+            return "failed"
+        return "active"
+
+    def __editor_image_path(
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        manifest: Mapping[str, object],
+    ) -> Path | None:
+        if stage not in (2, 3):
+            return None
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= 1:
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        stage1 = stages[1]
+        if not isinstance(stage1, Mapping) or stage1.get("status") != "approved":
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        acceptance_path = self.__confined_run_path(
+            revision.run_root, stage1.get("acceptancePath")
+        )
+        acceptance = self.__read_object(
+            acceptance_path, "Stage 1 acceptance evidence"
+        )
+        registered = acceptance.get("registered")
+        if not isinstance(registered, Mapping):
+            raise WorkbenchServiceError("clean editor image evidence is missing")
+        image_path = self.__confined_run_path(
+            revision.run_root, registered.get("path")
+        )
+        expected_hash = registered.get("fileSha256")
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(image_path.read_bytes()).hexdigest() != expected_hash
+        ):
+            raise WorkbenchServiceError("clean editor image evidence changed")
+        return image_path
+
+    def __editable_artifacts(
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        review_value: object,
+    ) -> tuple[Path, Path]:
+        try:
+            manifest = self.__manifest(revision.run_root)
+            stages = manifest.get("stages")
+            if not isinstance(stages, list) or len(stages) <= stage:
+                raise ValueError("editable stage evidence is missing")
+            record = stages[stage]
+            # Validated status paths contain the immutable attempt root. A changed
+            # review path means replacement selected another checkpoint snapshot.
+            if (
+                not isinstance(record, Mapping)
+                or record.get("stage") != stage
+                or record.get("status") != "review_pending"
+                or record.get("reviewPath") != review_value
+            ):
+                raise ValueError("editable checkpoint identity changed")
+            editor_path = self.__editor_image_path(
+                revision, stage, manifest
+            )
+            if editor_path is None:
+                raise ValueError("editor image is missing")
+            review_path = self.__confined_run_path(
+                revision.run_root, record.get("reviewPath")
+            )
+            document = self.__editable_document(revision, stage, record)
+            canvas = document.get("canvas")
+            if not isinstance(canvas, Mapping):
+                raise ValueError("geometry canvas is missing")
+            width = canvas.get("width")
+            height = canvas.get("height")
+            if (
+                isinstance(width, bool)
+                or not isinstance(width, int)
+                or width <= 0
+                or isinstance(height, bool)
+                or not isinstance(height, int)
+                or height <= 0
+            ):
+                raise ValueError("geometry canvas is invalid")
+            with Image.open(editor_path) as editor_image:
+                editor_image.load()
+                image_size = editor_image.size
+            editor_hash = sha256(editor_path.read_bytes()).hexdigest()
+            review_hash = sha256(review_path.read_bytes()).hexdigest()
+            if (
+                image_size != (width, height)
+                or editor_path == review_path
+                or editor_hash == review_hash
+            ):
+                raise ValueError("editable artifacts do not align")
+            return review_path, editor_path
+        # WorkbenchServiceError derives from ValueError. Collapse every confined
+        # evidence failure to the same public message so paths and details stay private.
+        except (
+            Image.DecompressionBombError,
+            OSError,
+            RuntimeError,
+            SyntaxError,
+            TypeError,
+            ValueError,
+        ) as error:
+            raise WorkbenchServiceError(
+                "inconsistent editable evidence"
+            ) from error
+
+    def __editable_document(
+        self,
+        revision: RevisionRecord,
+        stage: int,
+        record: Mapping[str, object],
+    ) -> dict[str, object]:
+        filename = (
+            "stage-2-regions.json"
+            if stage == 2
+            else "stage-3-vector-regions.json"
+        )
+        artifact_root = record.get("artifactRoot")
+        if not isinstance(artifact_root, str):
+            raise ValueError("editable artifact root is invalid")
+        document_path = self.__confined_run_path(
+            revision.run_root, f"{artifact_root}/{filename}"
+        )
+        hashes_path = self.__confined_run_path(
+            revision.run_root, record.get("candidateHashesPath")
+        )
+        hashes = self.__read_object(hashes_path, "editable candidate hashes")
+        expected_hash = hashes.get(filename)
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(document_path.read_bytes()).hexdigest() != expected_hash
+        ):
+            raise ValueError("editable geometry is not hash-bound")
+        return self.__read_object(document_path, "editable geometry")
+
+    @staticmethod
+    def __confined_run_path(run_root: Path, relative: object) -> Path:
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+            raise WorkbenchServiceError("onboarding artifact path is invalid")
+        try:
+            root = run_root.resolve(strict=True)
+            path = (root / relative).resolve(strict=True)
+            path.relative_to(root)
+        except (OSError, RuntimeError, ValueError) as error:
+            raise WorkbenchServiceError("onboarding artifact path is invalid") from error
+        if not path.is_file():
+            raise WorkbenchServiceError("onboarding artifact is missing")
+        return path
+
+    @staticmethod
+    def __read_object(path: Path, label: str) -> dict[str, object]:
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+        if not isinstance(value, dict):
+            raise WorkbenchServiceError(f"{label} is invalid")
+        return value
+
+    def __publish_latest_draft(
+        self,
+        board_id: str,
+        revision: RevisionRecord,
+        stage: int,
+        checkpoint_token: str,
+    ) -> None:
+        document = self.__latest_draft(
+            board_id, revision, stage, checkpoint_token
+        )
+        if document is None:
+            return
+        temporary_root = Path(
+            tempfile.mkdtemp(
+                prefix=f".stage-{stage}-edit-", dir=revision.run_root.parent
+            )
+        )
+        try:
+            checkpoint = self.__materialize_edit(
+                revision, stage, document, temporary_root / "artifacts"
+            )
+            replace_pending_checkpoint(revision.run_root, checkpoint)
+        finally:
+            shutil.rmtree(temporary_root, ignore_errors=True)
+
+    def __latest_draft(
+        self,
+        board_id: str,
+        revision: RevisionRecord,
+        stage: int,
+        checkpoint_token: str,
+    ) -> object | None:
+        revision_root = self.store._revision_root(
+            board_id, revision.id
+        ).resolve(strict=True)
+        drafts_root = (
+            revision_root / "drafts" / f"stage-{stage}"
+        ).resolve(strict=False)
+        try:
+            drafts_root.relative_to(revision_root)
+        except ValueError as error:
+            raise WorkbenchServiceError("draft path escapes its revision") from error
+        if not drafts_root.is_dir():
+            return None
+        drafts = [
+            (int(match.group(1)), path)
+            for path in drafts_root.iterdir()
+            if path.is_file()
+            and (match := _DRAFT_FILE.fullmatch(path.name)) is not None
+        ]
+        for _identifier, path in sorted(drafts, reverse=True):
+            candidate = path.resolve(strict=True)
+            try:
+                candidate.relative_to(revision_root)
+            except ValueError as error:
+                raise WorkbenchServiceError("draft path escapes its revision") from error
+            try:
+                envelope = json.loads(candidate.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                raise WorkbenchServiceError("draft is invalid") from error
+            if (
+                isinstance(envelope, Mapping)
+                and envelope.get("checkpointToken") == checkpoint_token
+                and "document" in envelope
+            ):
+                return envelope["document"]
+        return None
+
+    def __replay_reviewed_edit(
+        self,
+        *,
+        source_revision: RevisionRecord,
+        target_revision: RevisionRecord,
+        stage: int,
+    ) -> None:
+        source_manifest = self.__manifest(source_revision.run_root)
+        stages = source_manifest["stages"]
+        assert isinstance(stages, list)
+        record = stages[stage]
+        assert isinstance(record, dict)
+        artifact_value = record.get("artifactRoot")
+        if not isinstance(artifact_value, str):
+            raise WorkbenchServiceError(
+                f"stage {stage} artifact root is invalid"
+            )
+        filename = (
+            "stage-2-regions.json"
+            if stage == 2
+            else "stage-3-vector-regions.json"
+        )
+        document_path = (source_revision.run_root / artifact_value / filename).resolve(
+            strict=True
+        )
+        try:
+            document_path.relative_to(source_revision.run_root.resolve(strict=True))
+        except ValueError as error:
+            raise WorkbenchServiceError(
+                f"stage {stage} replay document escapes its run"
+            ) from error
+        document = json.loads(document_path.read_text(encoding="utf-8"))
+        temporary_root = Path(
+            tempfile.mkdtemp(
+                prefix=f".stage-{stage}-replay-", dir=target_revision.run_root.parent
+            )
+        )
+        try:
+            checkpoint = self.__materialize_edit(
+                target_revision, stage, document, temporary_root / "artifacts"
+            )
+            replace_pending_checkpoint(target_revision.run_root, checkpoint)
+        finally:
+            shutil.rmtree(temporary_root, ignore_errors=True)
+
+    def __carry_stage2_replay_input(
+        self,
+        source_revision: RevisionRecord,
+        target_revision: RevisionRecord,
+    ) -> None:
+        manifest = self.__manifest(source_revision.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= 2:
+            return
+        record = stages[2]
+        if not isinstance(record, Mapping):
+            return
+        candidate_hashes_path = self.__confined_run_path(
+            source_revision.run_root, record.get("candidateHashesPath")
+        )
+        candidate_hashes_content = self.__read_bytes(
+            candidate_hashes_path, "Stage 2 candidate hashes"
+        )
+        expected_candidate_hashes_hash = record.get("candidateHashesSha256")
+        if (
+            not isinstance(expected_candidate_hashes_hash, str)
+            or sha256(candidate_hashes_content).hexdigest()
+            != expected_candidate_hashes_hash
+        ):
+            raise WorkbenchServiceError("Stage 2 candidate hashes changed")
+        candidate_hashes = self.__parse_object(
+            candidate_hashes_content, "Stage 2 candidate hashes"
+        )
+        capture_name = "stage-2-semantic-capture.json"
+        if capture_name not in candidate_hashes:
+            return
+        artifact_root = record.get("artifactRoot")
+        if not isinstance(artifact_root, str):
+            raise WorkbenchServiceError("Stage 2 artifact root is invalid")
+        capture_path = self.__confined_run_path(
+            source_revision.run_root, f"{artifact_root}/{capture_name}"
+        )
+        capture_content = self.__read_bytes(
+            capture_path, "Stage 2 semantic capture"
+        )
+        expected_capture_hash = candidate_hashes[capture_name]
+        if (
+            not isinstance(expected_capture_hash, str)
+            or sha256(capture_content).hexdigest() != expected_capture_hash
+        ):
+            raise WorkbenchServiceError("Stage 2 semantic capture changed")
+        capture = self.__parse_object(
+            capture_content, "Stage 2 semantic capture"
+        )
+        proposal = capture.get("proposal")
+        if not isinstance(proposal, Mapping) or "path" not in proposal:
+            return
+        relative_path = proposal.get("path")
+        expected_hash = proposal.get("sha256")
+        if not isinstance(relative_path, str):
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        source_path = self.__confined_run_path(
+            source_revision.run_root, relative_path
+        )
+        content = self.__read_bytes(
+            source_path, "accepted Stage 2 replay input"
+        )
+        if (
+            not isinstance(expected_hash, str)
+            or sha256(content).hexdigest() != expected_hash
+        ):
+            raise WorkbenchServiceError(
+                "accepted Stage 2 replay input changed"
+            )
+        document = self.__parse_object(
+            content, "accepted Stage 2 replay input"
+        )
+        target_manifest = self.__manifest(target_revision.run_root)
+        target_stages = target_manifest.get("stages")
+        if not isinstance(target_stages, list) or len(target_stages) <= 1:
+            raise WorkbenchServiceError("child Stage 1 acceptance is missing")
+        target_stage1 = target_stages[1]
+        if not isinstance(target_stage1, Mapping):
+            raise WorkbenchServiceError("child Stage 1 acceptance is invalid")
+        acceptance_path = self.__confined_run_path(
+            target_revision.run_root, target_stage1.get("acceptancePath")
+        )
+        acceptance = self.__read_object(
+            acceptance_path, "child Stage 1 acceptance"
+        )
+        registered = acceptance.get("registered")
+        acceptance_hash = target_stage1.get("acceptanceSha256")
+        if (
+            not isinstance(registered, Mapping)
+            or not isinstance(acceptance_hash, str)
+            or not isinstance(registered.get("fileSha256"), str)
+        ):
+            raise WorkbenchServiceError("child Stage 1 acceptance is invalid")
+        document["inputAcceptanceSha256"] = acceptance_hash
+        document["inputRasterSha256"] = registered["fileSha256"]
+        rebound_content = (
+            json.dumps(document, indent=2, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        self.__write_replay_input(
+            target_revision.run_root, relative_path, rebound_content
+        )
+
+    @staticmethod
+    def __write_replay_input(
+        run_root: Path, relative: object, content: bytes
+    ) -> None:
+        if not isinstance(relative, str) or not relative:
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        relative_path = Path(relative)
+        if relative_path.is_absolute() or ".." in relative_path.parts:
+            raise WorkbenchServiceError("Stage 2 replay input path is invalid")
+        try:
+            root = run_root.resolve(strict=True)
+            destination = root / relative_path
+            parent = destination.parent.resolve(strict=False)
+            parent.relative_to(root)
+            parent.mkdir(parents=True, exist_ok=True)
+            parent = parent.resolve(strict=True)
+            parent.relative_to(root)
+            destination = parent / destination.name
+            with destination.open("xb") as stream:
+                stream.write(content)
+        except (OSError, RuntimeError, ValueError) as error:
+            raise WorkbenchServiceError(
+                "could not carry accepted Stage 2 replay input"
+            ) from error
+
+    @staticmethod
+    def __read_bytes(path: Path, label: str) -> bytes:
+        try:
+            return path.read_bytes()
+        except OSError as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+
+    @staticmethod
+    def __parse_object(content: bytes, label: str) -> dict[str, object]:
+        try:
+            value = json.loads(content)
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise WorkbenchServiceError(f"{label} is invalid") from error
+        if not isinstance(value, dict):
+            raise WorkbenchServiceError(f"{label} is invalid")
+        return value
+
+    @staticmethod
+    def __manifest(run_root: Path) -> dict[str, object]:
+        value = json.loads((run_root / "run.json").read_text(encoding="utf-8"))
+        if not isinstance(value, dict):
+            raise WorkbenchServiceError("onboarding manifest must be an object")
+        return value
+
+    @staticmethod
+    def __materialize_edit(
+        revision: RevisionRecord,
+        stage: int,
+        document: object,
+        artifact_root: Path,
+    ) -> StageCheckpoint:
+        manifest = WorkbenchService.__manifest(revision.run_root)
+        context = RunContext(revision.run_root, MappingProxyType(manifest))
+        try:
+            if stage == 2:
+                if not isinstance(document, Mapping):
+                    raise WorkbenchServiceError("Stage 2 draft must be an object")
+                return materialize_stage2_edit(context, document, artifact_root)
+            if stage == 3:
+                if not isinstance(document, Mapping):
+                    raise WorkbenchServiceError("Stage 3 draft must be an object")
+                return materialize_stage3_edit(context, document, artifact_root)
+        except ConversionError as error:
+            raise WorkbenchService.__public_geometry_error(error) from error
+        raise WorkbenchServiceError(
+            "review drafts are supported only for Stage 2 and Stage 3"
+        )
+
+    @staticmethod
+    def __public_geometry_error(error: ConversionError) -> WorkbenchServiceError:
+        message = str(error).strip()
+        if (
+            re.match(r"^Stage [23] region \d+: ", message)
+            and len(message) <= 500
+            and "/" not in message
+            and "\\" not in message
+        ):
+            return WorkbenchServiceError(message)
+        return WorkbenchServiceError("review geometry is invalid")
+
+    __runners: Mapping[int, StageRunner]
