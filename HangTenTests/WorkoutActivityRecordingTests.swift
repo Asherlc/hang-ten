@@ -439,22 +439,34 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(repetitionsByPair.count, 3)
         XCTAssertTrue(repetitionsByPair.values.allSatisfy { $0.count == 6 })
 
-        struct HoldShape: Hashable {
+        struct PairDescriptor: Hashable {
             let kind: HoldKind
             let sizeMillimeters: Int?
+            let gripType: GripType?
         }
 
-        let resolvedPairShapes = Set(repetitionsByPair.keys.map { holdIDs in
-            board.holds
+        let resolvedPairDescriptors = Set(repetitionsByPair.keys.compactMap { holdIDs -> PairDescriptor? in
+            guard let step = workSteps.first(where: {
+                store.holdIDs(for: $0, on: board).sorted() == holdIDs
+            }) else { return nil }
+            let holdShapes = board.holds
                 .filter { holdIDs.contains($0.id) }
-                .map { HoldShape(kind: $0.kind, sizeMillimeters: $0.sizeMillimeters) }
+                .map { ($0.kind, $0.sizeMillimeters) }
+            guard let firstShape = holdShapes.first, holdShapes.allSatisfy({ $0 == firstShape }) else {
+                return nil
+            }
+            return PairDescriptor(
+                kind: firstShape.0,
+                sizeMillimeters: firstShape.1,
+                gripType: step.gripType
+            )
         })
         XCTAssertEqual(
-            resolvedPairShapes,
+            resolvedPairDescriptors,
             Set([
-                [HoldShape(kind: .edge, sizeMillimeters: 29), HoldShape(kind: .edge, sizeMillimeters: 29)],
-                [HoldShape(kind: .sloper, sizeMillimeters: 56), HoldShape(kind: .sloper, sizeMillimeters: 56)],
-                [HoldShape(kind: .edge, sizeMillimeters: 19), HoldShape(kind: .edge, sizeMillimeters: 19)]
+                PairDescriptor(kind: .edge, sizeMillimeters: 29, gripType: .openHand),
+                PairDescriptor(kind: .sloper, sizeMillimeters: 56, gripType: .openHand),
+                PairDescriptor(kind: .edge, sizeMillimeters: 19, gripType: .halfCrimp)
             ])
         )
 
