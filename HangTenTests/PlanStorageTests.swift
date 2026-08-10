@@ -859,6 +859,51 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(PlanCatalog.all, expectedPlans)
     }
 
+    func testRequestedSourcePlansAreSeededAndResolved() throws {
+        let expectedIDs = [
+            "lattice.lite-home-adaptations",
+            "hoopers-beta.introductory-home-hangboard",
+            "method.intermediate-hangboarding.repeaters",
+            "method.intermediate-hangboarding.emom",
+            "lattice.beginner-climbers-training-guide",
+            "rei.hangboard-sample-workout",
+            "trango.rock-prodigy-training-center.intermediate"
+        ]
+
+        XCTAssertTrue(expectedIDs.allSatisfy { id in
+            LegacyPlanSeedCatalog.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
+        })
+    }
+
+    func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
+        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let recruitment = steps.filter { $0.id.contains("hoopers-intro-round-2-set-") && $0.id.contains("-rep-") }
+        XCTAssertEqual(recruitment.count, 30)
+        XCTAssertEqual(recruitment.filter { $0.id.hasSuffix("-left") }.count, 15)
+        XCTAssertEqual(recruitment.filter { $0.id.hasSuffix("-right") }.count, 15)
+        XCTAssertEqual(steps.filter { $0.id.contains("round-2-set-") && $0.id.hasSuffix("-kicks") }.count, 3)
+    }
+
+    func testHoopersOptionalRoundFiveIsFourPossiblePairedSetsNotEightIndependentSets() throws {
+        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let pullUps = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-pull-ups") }
+        let hollow = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-hollow") }
+        XCTAssertEqual(pullUps.count, 4)
+        XCTAssertEqual(hollow.count, 4)
+        XCTAssertTrue(pullUps.allSatisfy { $0.instruction.contains("2–4 total") })
+        XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
+    }
+
+    func testRockProdigyIntermediateKeepsDeadHangOnlyAndSevenThenSixRepStructure() throws {
+        let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
+        XCTAssertTrue(plan.steps.dropFirst().filter { $0.phase == .hang }.allSatisfy {
+            $0.instruction.contains("Dead hang only") && $0.instruction.contains("no pull-ups or lock-offs")
+        })
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-1-rep-") }.count, 42)
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-2-rep-") }.count, 36)
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30

@@ -2618,6 +2618,8 @@ struct WorkoutView: View {
                 return "Hang"
             case .pull:
                 return "Pull"
+            case .conditioning:
+                return "Conditioning"
             default:
                 break
             }
