@@ -39,11 +39,16 @@ jobs:
       - name: Install workbench build dependencies
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          python -m venv "${python_bin%/bin/python}"
+          "$python_bin" -m pip install --upgrade pip
+          "$python_bin" -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
 
       - name: Run focused Python suite
-        run: python -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
+        run: |
+          set -euo pipefail
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          "$python_bin" -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
 
       - name: Run focused Node suite
         run: node --test Tools/hold-highlight-editor/tests/*.test.js
@@ -55,7 +60,8 @@ jobs:
           work_dir="$RUNNER_TEMP/hangboard-workbench-build"
           rm -rf "$release_dir" "$work_dir"
           mkdir -p "$release_dir" "$work_dir"
-          python Tools/hold-highlight-editor/packaging/build.py \
+          "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
+            Tools/hold-highlight-editor/packaging/build.py \
             --commit "$GITHUB_SHA" \
             --dist-dir "$release_dir" \
             --work-dir "$work_dir"
@@ -129,7 +135,7 @@ jobs:
             while IFS= read -r asset_path; do
               curl --fail --silent --show-error "http://127.0.0.1:${port}${asset_path}" >/dev/null
             done < <(
-              python - <<'PY'
+              "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" - <<'PY'
           import sys
 
           sys.path.insert(0, "Tools/hold-highlight-editor")
@@ -140,7 +146,7 @@ jobs:
           PY
             )
             curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-              | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+              | "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
 
             workbench_child_pid="$(pgrep -P "$workbench_pid" || true)"
             if [[ -z "$workbench_child_pid" || "$workbench_child_pid" == *$'\n'* ]]; then

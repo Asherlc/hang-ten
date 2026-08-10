@@ -322,7 +322,11 @@ def _validate_correction_entries(
         expected = _expected_correction_entry(
             kind, region_id, baseline_regions, edited_regions
         )
-        if region_id not in expected_ids or expected is None or entry != expected:
+        if (
+            region_id not in expected_ids
+            or expected is None
+            or not _correction_entry_matches(kind, entry, expected)
+        ):
             issues.append(
                 LintIssue(
                     "error",
@@ -341,6 +345,39 @@ def _validate_correction_entries(
                 f"{kind} correction is missing region id {region_id}",
             )
         )
+
+
+def _correction_entry_matches(
+    kind: Literal["modified", "added", "deleted"],
+    actual: Mapping[str, object],
+    expected: Mapping[str, object],
+) -> bool:
+    """Compare authored region semantics without requiring derived export fields.
+
+    The browser editor derives fields such as ``anchor``, ``areaPixels``, and
+    ``bounds`` when exporting. Those values are useful artifacts, but their
+    deterministic derivation is not the correction contract itself and may
+    differ from a compatible producer. The editable region semantics remain
+    the authoritative comparison.
+    """
+    if kind == "modified":
+        actual_before = actual.get("before")
+        actual_after = actual.get("after")
+        expected_before = expected.get("before")
+        expected_after = expected.get("after")
+        return (
+            isinstance(actual_before, Mapping)
+            and isinstance(actual_after, Mapping)
+            and isinstance(expected_before, Mapping)
+            and isinstance(expected_after, Mapping)
+            and _comparison_signature(actual_before)
+            == _comparison_signature(expected_before)
+            and _comparison_signature(actual_after)
+            == _comparison_signature(expected_after)
+        )
+    if kind == "added":
+        return _comparison_signature(actual) == _comparison_signature(expected)
+    return actual == expected
 
 
 def _expected_correction_entry(
@@ -511,7 +548,9 @@ def _comparison_signature(region: Mapping[str, object]) -> dict[str, object]:
         ),
         "rotation": _js_round(_js_number(metadata_mapping.get("rotation", 0))),
         "bend": _js_round(_js_number(metadata_mapping.get("bend", 0))),
+        "cornerTreatments": metadata_mapping.get("cornerTreatments") or {},
         "notes": metadata_mapping.get("humanNotes") or "",
+        "edgeCurves": metadata_mapping.get("edgeCurves") or {},
     }
 
 
