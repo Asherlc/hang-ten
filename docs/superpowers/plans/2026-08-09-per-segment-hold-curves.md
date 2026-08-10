@@ -92,7 +92,7 @@ Implement quadratic sampling with `remaining = 1 - progress` and the standard qu
 
 Update `normalizePipelineDocument` to preserve validated `metadata.edgeCurves` or omit it when absent. Update `regionForExport` to flatten the rendered contour before calculating `anchor`, `areaPixels`, and `bounds`, while retaining the editable metadata. Include normalized `edgeCurves` in `comparisonKey` so curve-only changes appear in corrections. Ensure malformed persisted metadata is rejected through the existing load error path rather than silently exported.
 
-Checkpoint: `regionForExport` also retains `metadata.editableContour` whenever flattening changes the contour topology. Smooth contours without `metadata.edgeCurves` preserve their editable topology after export and reload, and the regression test covers that case alongside existing edge-curve behavior.
+Checkpoint: `regionForExport` also retains `metadata.editableContour` whenever flattening changes the contour topology. Smooth contours without `metadata.edgeCurves` whose non-empty corner treatments cause flattening preserve their editable topology after export and reload, and the regression test covers that case alongside existing edge-curve behavior.
 
 - [x] **Step 6: Run the complete model suite and commit.**
 
