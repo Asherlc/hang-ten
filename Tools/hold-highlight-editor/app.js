@@ -217,10 +217,16 @@
     return isVectorMode() ? vectorPoints(region, includeHandles) : region.contour;
   }
 
-  function regionPath(region) {
+  function regionPath(region, edgeCurves = region.metadata.edgeCurves) {
     if (isVectorMode()) return region.displayPath || "";
     try {
-      return contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {});
+      return contourPath(
+        region.contour,
+        region.metadata.pathStyle,
+        region.metadata.curveTension,
+        region.metadata.cornerTreatments || {},
+        edgeCurves,
+      );
     } catch (_error) {
       try {
         return pathFor(region.contour);
@@ -291,6 +297,9 @@
 
   function renderToolState() {
     const editable = canEditGeometry();
+    const curveTensionOverridden = Boolean(
+      selectedRegion() && edgeCurveInspectorState(selectedRegion()).overridden,
+    );
     const hasExportableContours = state.regions.length > 0
       && state.regions.every((region) => isExportableContour(region.contour));
     el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
@@ -304,7 +313,7 @@
     el["simplify-curve-button"].disabled = !editable || isVectorMode() || (selectedRegion()?.contour?.length || 0) < 6;
     el["region-shape-select"].disabled = !editable || isVectorMode();
     el["region-path-style-select"].disabled = !editable || isVectorMode();
-    el["curve-tension-slider"].disabled = !editable || isVectorMode();
+    el["curve-tension-slider"].disabled = !editable || isVectorMode() || curveTensionOverridden;
     el["region-type-select"].disabled = !editable || isVectorMode();
     el["region-key-input"].disabled = !editable || state.guided;
     el["region-mode-select"].disabled = !editable;
@@ -398,7 +407,7 @@
         if (state.overlayMode === "selected" && region.id !== state.selectedId) return;
         const group = makeSvg("g", { "data-region-id": region.id });
         const path = makeSvg("path", {
-          d: regionPath(region),
+          d: regionPath(region, region.metadata.edgeCurves),
           fill: colorFor(region),
           "fill-opacity": region.id === state.selectedId ? Math.min(state.opacity + 0.14, 0.8) : state.opacity,
           stroke: colorFor(region),

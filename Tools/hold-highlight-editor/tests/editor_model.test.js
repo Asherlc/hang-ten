@@ -37,6 +37,39 @@ const baseline = {
   metadata: { mode: "surface", shapeKind: "freeform" },
 };
 
+function centroid(points) {
+  const [sumX, sumY] = points.reduce(
+    ([x, y], [pointX, pointY]) => [x + pointX, y + pointY],
+    [0, 0],
+  );
+  return [sumX / points.length, sumY / points.length];
+}
+
+function pointOnSegment([px, py], [x1, y1], [x2, y2]) {
+  const cross = (px - x1) * (y2 - y1) - (py - y1) * (x2 - x1);
+  if (Math.abs(cross) > 1e-9) return false;
+  return px >= Math.min(x1, x2) - 1e-9
+    && px <= Math.max(x1, x2) + 1e-9
+    && py >= Math.min(y1, y2) - 1e-9
+    && py <= Math.max(y1, y2) + 1e-9;
+}
+
+function pointInPolygon(point, points, includeBoundary = true) {
+  let inside = false;
+  for (let index = 0, previous = points.length - 1; index < points.length; previous = index, index += 1) {
+    const start = points[previous];
+    const end = points[index];
+    if (pointOnSegment(point, start, end)) return includeBoundary;
+    const crosses = (start[1] > point[1]) !== (end[1] > point[1]);
+    if (crosses) {
+      const intersectionX = start[0]
+        + (point[1] - start[1]) * (end[0] - start[0]) / (end[1] - start[1]);
+      if (point[0] < intersectionX) inside = !inside;
+    }
+  }
+  return inside;
+}
+
 test("buildEditedDocument returns a detached complete artifact", () => {
   const regions = [baseline];
   const result = buildEditedDocument({
@@ -117,6 +150,42 @@ test("buildEditedDocument preserves a valid anchor inside a concave contour", ()
   });
 
   assert.deepEqual(result.regions[0].anchor, [1, 6]);
+});
+
+test("buildEditedDocument keeps curved export anchors contained in a concave contour", () => {
+  const curved = {
+    ...baseline,
+    anchor: [1, 6],
+    contour: [[0, 0], [10, 0], [10, 10], [7, 10], [7, 3], [3, 3], [3, 10], [0, 10]],
+    metadata: {
+      ...baseline.metadata,
+      pathStyle: "straight",
+      curveTension: 0.8,
+      edgeCurves: {
+        1: { kind: "quadratic", control: [12, 5] },
+        5: { kind: "quadratic", control: [-2, 5] },
+      },
+    },
+  };
+  const authoritativeContour = flattenContour(
+    curved.contour,
+    curved.metadata.pathStyle,
+    curved.metadata.curveTension,
+    curved.metadata.edgeCurves,
+  );
+  const outsideCentroid = centroid(authoritativeContour).map((value) => Math.round(value * 100) / 100);
+
+  assert.equal(pointInPolygon(outsideCentroid, authoritativeContour), false);
+
+  const result = buildEditedDocument({
+    canvas: { width: 20, height: 20 },
+    regions: [curved],
+    imageName: "stage-1-auto-rgba.png",
+    regionsName: "stage-2-regions.json",
+  });
+
+  assert.equal(pointInPolygon(result.regions[0].anchor, authoritativeContour), true);
+  assert.notDeepEqual(result.regions[0].anchor, outsideCentroid);
 });
 
 test("buildEditedDocument replaces an invalid concave anchor with a deterministic interior pixel", () => {
@@ -913,7 +982,7 @@ test("buildEditedDocument exports flattened geometry and editable edge metadata"
   assert.equal(result.contour.length, 34);
   assert.deepEqual(result.contour.slice(0, 3), [[0, 0], [0.31, -0.61], [0.63, -1.17]]);
   assert.notDeepEqual(result.contour[0], result.contour.at(-1));
-  assert.deepEqual(result.anchor, [5.15, -2.84]);
+  assert.deepEqual(result.anchor, [5, 0]);
   assert.equal(result.areaPixels, 83);
   assert.deepEqual(result.bounds, [0, -5, 10, 10]);
   assert.deepEqual(result.metadata.edgeCurves, { 0: { kind: "quadratic", control: [5, -10] } });

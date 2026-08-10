@@ -317,9 +317,7 @@
 
     return {
       ...clone(region),
-      anchor: hasEdgeCurves
-        ? centroid(authoritativeContour).map((value) => round(value))
-        : exportAnchor(region, authoritativeContour),
+      anchor: exportAnchor(region, authoritativeContour),
       areaPixels: Math.round(polygonArea(authoritativeContour)),
       bounds: bounds(contour),
       contour,
