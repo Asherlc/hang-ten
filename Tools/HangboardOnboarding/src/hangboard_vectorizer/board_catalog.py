@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 import json
+import math
+import os
 import re
 from pathlib import Path
 import shutil
+import tempfile
 from typing import Any, Mapping
 
 
@@ -121,12 +124,23 @@ class BoardHoldFrame:
 
     @classmethod
     def from_json(cls, payload: Mapping[str, Any], source: str) -> "BoardHoldFrame":
-        return cls(
-            x=_required_float(payload, "x", f"{source}.x"),
-            y=_required_float(payload, "y", f"{source}.y"),
-            width=_required_float(payload, "width", f"{source}.width"),
-            height=_required_float(payload, "height", f"{source}.height"),
-        )
+        x = _required_float(payload, "x", f"{source}.x")
+        y = _required_float(payload, "y", f"{source}.y")
+        width = _required_float(payload, "width", f"{source}.width")
+        height = _required_float(payload, "height", f"{source}.height")
+        for axis, origin, extent in (("x", x, width), ("y", y, height)):
+            if extent <= 0:
+                raise ValueError(f"{source}.{axis} extent must be positive")
+            if (
+                not math.isfinite(origin)
+                or not math.isfinite(extent)
+                or origin < 0
+                or origin + extent > 1
+            ):
+                raise ValueError(
+                    f"{source}.{axis} must stay inside the normalized 0...1 range"
+                )
+        return cls(x=x, y=y, width=width, height=height)
 
     def to_json(self) -> dict[str, float]:
         return {
@@ -476,9 +490,6 @@ def register_run(
     derived_board_lifecycle = _max_lifecycle(board.lifecycle, derived_run_lifecycle)
 
     destination_root.parent.mkdir(parents=True, exist_ok=True)
-    _require_tree_without_symlinks(source_run_root)
-    shutil.copytree(source_run_root, destination_root)
-
     updated_run = OnboardingRun(
         id=registered_id,
         path=Path("onboarding") / "runs" / registered_id,
@@ -491,9 +502,6 @@ def register_run(
         lifecycle=derived_board_lifecycle,
         onboarding_runs=board.onboarding_runs + [updated_run],
     )
-    board_path.write_text(
-        json.dumps(board.to_json(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
     updated_catalog = CatalogDocument(
         boards=[
             replace(entry, lifecycle=derived_board_lifecycle) if entry.id == board_id else entry
@@ -501,10 +509,24 @@ def register_run(
         ],
         schema_version=catalog.schema_version,
     )
-    Path(catalog_path).write_text(
-        json.dumps(updated_catalog.to_json(), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    board_payload = json.dumps(board.to_json(), indent=2, sort_keys=True) + "\n"
+    catalog_payload = json.dumps(updated_catalog.to_json(), indent=2, sort_keys=True) + "\n"
+    previous_board_payload = board_path.read_text(encoding="utf-8")
+    board_write_started = False
+    try:
+        _require_tree_without_symlinks(source_run_root)
+        shutil.copytree(source_run_root, destination_root, symlinks=True)
+        board_write_started = True
+        _atomic_write_text(board_path, board_payload)
+        _atomic_write_text(Path(catalog_path), catalog_payload)
+    except BaseException:
+        if board_write_started:
+            _atomic_write_text(board_path, previous_board_payload)
+        if destination_root.is_symlink() or destination_root.is_file():
+            destination_root.unlink()
+        elif destination_root.exists():
+            shutil.rmtree(destination_root)
+        raise
     return board
 
 
@@ -568,8 +590,13 @@ def export_swift_catalog(catalog_path: Path, output_path: Path, check: bool = Fa
 def _render_swift_catalog_file(boards: list[BoardDocument]) -> str:
     if not boards:
         raise ValueError("catalog must contain at least one board")
-    declarations = [render_swift_catalog(board) for board in boards]
     static_names = [_swift_board_override(board)["staticName"] for board in boards]
+    duplicate_names = sorted(
+        {name for name in static_names if static_names.count(name) > 1}
+    )
+    if duplicate_names:
+        raise ValueError(f"duplicate Swift static names: {duplicate_names}")
+    declarations = [render_swift_catalog(board) for board in boards]
     lines = [
         _SWIFT_HEADER.rstrip(),
         "",
@@ -602,6 +629,28 @@ def _load_json_payload(path: Path, source: str) -> Mapping[str, Any]:
     if not isinstance(payload, Mapping):
         raise ValueError(f"{source} must be a JSON object")
     return payload
+
+
+def _atomic_write_text(path: Path, payload: str) -> None:
+    destination = Path(path)
+    file_descriptor, temporary_name = tempfile.mkstemp(
+        dir=destination.parent,
+        prefix=f".{destination.name}.",
+        suffix=".tmp",
+    )
+    descriptor_open = True
+    try:
+        with os.fdopen(file_descriptor, "w", encoding="utf-8") as stream:
+            descriptor_open = False
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary_name, destination)
+    except BaseException:
+        if descriptor_open:
+            os.close(file_descriptor)
+        Path(temporary_name).unlink(missing_ok=True)
+        raise
 
 
 def _required_str(payload: Mapping[str, Any], key: str, source: str) -> str:
@@ -780,7 +829,7 @@ def _stage4_manifest_path(run_root: Path, *, fallback_to_default: bool) -> Path:
     if not run_manifest_path.exists():
         if fallback_to_default:
             return default_manifest_path
-        _load_json_payload(run_manifest_path, str(run_manifest_path))
+        raise ValueError(f"{run_manifest_path} does not exist: {run_manifest_path}")
 
     run_manifest = _load_json_payload(run_manifest_path, str(run_manifest_path))
     stages = _required_list(run_manifest, "stages", str(run_manifest_path))

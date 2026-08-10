@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import importlib.util
 import json
 import subprocess
@@ -136,6 +137,16 @@ def test_render_swift_catalog_preserves_true_posture_grips_and_explicit_capacity
 
     assert "gripType: .halfCrimp" in pocket_block
     assert "fingerCapacity: 2" in pocket_block
+
+
+def test_render_swift_catalog_rejects_duplicate_static_names() -> None:
+    module = load_module()
+    board = module.load_board(BOARD_PATH)
+    first = replace(board, id="metolius.compact-ii")
+    second = replace(board, id="trango.compact-ii")
+
+    with pytest.raises(ValueError, match=r"duplicate Swift static names.*compactIi"):
+        module._render_swift_catalog_file([first, second])
 
 
 def test_export_swift_catalog_rejects_unsupported_swift_enums(tmp_path: Path) -> None:

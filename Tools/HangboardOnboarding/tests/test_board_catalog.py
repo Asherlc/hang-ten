@@ -6,6 +6,7 @@ import sys
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -135,6 +136,30 @@ class BoardCatalogTests(unittest.TestCase):
                 r"board\.holds\[0\]\.frame is missing",
             ):
                 module.validate_catalog(catalog_path)
+
+    def test_validate_catalog_rejects_non_normalized_hold_frames(self) -> None:
+        module = load_module()
+
+        invalid_frames = (
+            ({"x": -0.01}, r"board\.holds\[0\]\.frame\.x must stay inside"),
+            ({"y": 0.9, "height": 0.2}, r"board\.holds\[0\]\.frame\.y must stay inside"),
+            ({"width": 0}, r"board\.holds\[0\]\.frame\.x extent must be positive"),
+            ({"height": -0.1}, r"board\.holds\[0\]\.frame\.y extent must be positive"),
+        )
+
+        for updates, expected_error in invalid_frames:
+            with self.subTest(updates=updates), tempfile.TemporaryDirectory() as temp_dir:
+                workspace = Path(temp_dir)
+                catalog_path, board_root = copy_catalog_fixture(workspace)
+                board_path = board_root / "board.json"
+                board_payload = json.loads(board_path.read_text(encoding="utf-8"))
+                board_payload["holds"][0]["frame"].update(updates)
+                board_path.write_text(
+                    json.dumps(board_payload, indent=2) + "\n", encoding="utf-8"
+                )
+
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    module.validate_catalog(catalog_path)
 
     def test_register_run_copies_artifacts_and_derives_approved_lifecycle(self) -> None:
         module = load_module()
@@ -525,6 +550,84 @@ class BoardCatalogTests(unittest.TestCase):
                     context_run_root,
                     run_id="accepted-run",
                 )
+
+    def test_register_run_does_not_dereference_symlink_created_after_precheck(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_run_root = workspace / ".context" / "hangboard-onboarding" / "raced-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+            self._make_draft_board_and_catalog(catalog_path, board_path)
+
+            outside = workspace / "outside.txt"
+            outside.write_text("outside payload", encoding="utf-8")
+            original_check = module._require_tree_without_symlinks
+
+            def check_then_create_raced_link(root: Path) -> None:
+                original_check(root)
+                (root / "raced-link").symlink_to(outside)
+
+            with patch.object(
+                module,
+                "_require_tree_without_symlinks",
+                side_effect=check_then_create_raced_link,
+            ):
+                module.register_run(
+                    catalog_path,
+                    "metolius.wood-grips-compact-ii",
+                    context_run_root,
+                    run_id="raced-run",
+                )
+
+            copied_link = board_root / "onboarding" / "runs" / "raced-run" / "raced-link"
+            self.assertTrue(copied_link.is_symlink())
+            self.assertEqual(copied_link.readlink(), outside)
+
+    def test_register_run_rolls_back_files_and_copy_when_catalog_write_fails(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            context_run_root = workspace / ".context" / "hangboard-onboarding" / "rollback-run"
+            shutil.copytree(ACCEPTED_RUN_PATH, context_run_root)
+            self._make_draft_board_and_catalog(catalog_path, board_path)
+            previous_board = board_path.read_bytes()
+            previous_catalog = catalog_path.read_bytes()
+
+            real_atomic_write = module._atomic_write_text
+
+            def fail_catalog_write(path: Path, payload: str) -> None:
+                if Path(path) == catalog_path:
+                    raise OSError("simulated catalog write failure")
+                real_atomic_write(path, payload)
+
+            with patch.object(module, "_atomic_write_text", side_effect=fail_catalog_write):
+                with self.assertRaisesRegex(OSError, "simulated catalog write failure"):
+                    module.register_run(
+                        catalog_path,
+                        "metolius.wood-grips-compact-ii",
+                        context_run_root,
+                        run_id="rollback-run",
+                    )
+
+            self.assertEqual(board_path.read_bytes(), previous_board)
+            self.assertEqual(catalog_path.read_bytes(), previous_catalog)
+            self.assertFalse(
+                (board_root / "onboarding" / "runs" / "rollback-run").exists()
+            )
+
+    def test_stage4_manifest_path_reports_missing_run_manifest(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            run_root = Path(temp_dir) / "missing-run"
+            with self.assertRaisesRegex(ValueError, r"run\.json does not exist"):
+                module._stage4_manifest_path(run_root, fallback_to_default=False)
 
 
 def copy_catalog_fixture(destination_root: Path) -> tuple[Path, Path]:
