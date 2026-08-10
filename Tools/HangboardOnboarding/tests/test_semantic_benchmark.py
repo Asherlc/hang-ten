@@ -37,7 +37,7 @@ def test_cache_only_benchmark_refuses_unmeasured_token_reduction_and_proves_pari
     assert report["model"]["percentageTokenReduction"] is None
     assert "not measured" in report["model"]["percentageTokenReductionReason"]
     assert report["localProcessing"]["wallMilliseconds"] >= 0
-    assert report["parity"]["exact"] is True
+    assert report["parity"]["exact"] is True, repr(report["parity"])
     assert report["parity"]["stage2"]["labelsExact"] is True
     assert report["parity"]["stage2"]["regionsExact"] is True
     assert report["parity"]["stage3"]["geometryExact"] is True
