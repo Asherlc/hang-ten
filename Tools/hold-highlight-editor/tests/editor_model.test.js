@@ -377,6 +377,30 @@ test("edited quadratic contours preserve editable topology and rendering after e
   assert.equal(Object.hasOwn(reloaded.metadata, "editableContour"), false);
 });
 
+test("smooth contours preserve editable topology after export and reload without edge curves", () => {
+  const smooth = {
+    ...baseline,
+    contour: [[0.123, 0.456], [10.789, 0.234], [10.345, 10.678], [1.234, 9.876]],
+    metadata: {
+      ...baseline.metadata,
+      pathStyle: "smooth",
+      curveTension: 0.8,
+    },
+  };
+  const originalContour = [[0.12, 0.46], [10.79, 0.23], [10.35, 10.68], [1.23, 9.88]];
+  const exported = buildEditedDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [smooth],
+    imageName: "board.png",
+    regionsName: "regions.json",
+  });
+
+  const [reloaded] = normalizePipelineDocument(exported, { width: 10, height: 10 }).regions;
+
+  assert.deepEqual(reloaded.contour, originalContour);
+  assert.equal(reloaded.contour.length, originalContour.length);
+});
+
 test("normalizePipelineDocument rejects malformed editable contours", () => {
   const document = {
     canvas: { width: 100, height: 50 },

@@ -88,9 +88,11 @@ Implement quadratic sampling with `remaining = 1 - progress` and the standard qu
 
 `setEdgeCurveControl` must create a quadratic entry, `translateEdgeCurves` must add the delta to every control, `mapEdgeCurves` must apply a finite two-coordinate mapper to every control, and `mirrorEdgeCurves` must map an old edge `k` to new edge `(pointCount - 2 - k + pointCount) % pointCount` while reflecting its control across `canvasWidth`. `insertEdgeCurves` must preserve entries before the split and shift entries at or after the insertion boundary without leaving an index equal to the new point count.
 
-- [ ] **Step 5: Integrate export, normalization, comparison, and existing geometry operations.**
+- [x] **Step 5: Integrate export, normalization, comparison, and existing geometry operations.**
 
 Update `normalizePipelineDocument` to preserve validated `metadata.edgeCurves` or omit it when absent. Update `regionForExport` to flatten the rendered contour before calculating `anchor`, `areaPixels`, and `bounds`, while retaining the editable metadata. Include normalized `edgeCurves` in `comparisonKey` so curve-only changes appear in corrections. Ensure malformed persisted metadata is rejected through the existing load error path rather than silently exported.
+
+Checkpoint: `regionForExport` also retains `metadata.editableContour` whenever flattening changes the contour topology, including smooth regions without `metadata.edgeCurves`; the export/reload regression test covers that case while preserving existing edge-curve behavior.
 
 - [ ] **Step 6: Run the complete model suite and commit.**
 

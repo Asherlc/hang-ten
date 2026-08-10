@@ -219,16 +219,16 @@
       ? normalizeEdgeCurves(region.metadata.edgeCurves, region.contour.length)
       : undefined;
     delete metadata.editableContour;
-    if (hasEdgeCurves) {
-      metadata.edgeCurves = edgeCurves;
-      metadata.editableContour = region.contour.map(([x, y]) => [round(x), round(y)]);
-    }
+    if (hasEdgeCurves) metadata.edgeCurves = edgeCurves;
     const contour = flattenContour(
       region.contour,
       metadata.pathStyle || "straight",
       Number(metadata.curveTension ?? 0.8),
       edgeCurves,
     ).map(([x, y]) => [round(x), round(y)]);
+    if (hasEdgeCurves || contour.length !== region.contour.length) {
+      metadata.editableContour = region.contour.map(([x, y]) => [round(x), round(y)]);
+    }
     return {
       ...clone(region),
       anchor: centroid(contour).map((value) => round(value)),
