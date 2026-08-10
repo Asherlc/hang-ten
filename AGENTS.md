@@ -19,3 +19,14 @@ deletes each exact resource owned by this workspace, and verify deletion
 before reporting completion. Leave shared, standard, and unknown resources
 alone. The archive hook is a failsafe, not permission to skip an agent's own
 cleanup.
+
+## Training-plan Fidelity
+
+All plan instructions, grip and finger cues, and accessory or instruction-box
+text must be traceable to a specific real training-plan source. Faithful
+adaptations are allowed only when the source fact is identifiable and the
+adaptation is explicitly labeled. Never invent exercise names, counts,
+durations, grip prescriptions, accessory text, or coaching claims and present
+them as sourced. For any new or changed routine content, document the source
+URLs and audit mappings used to justify each field. Omit unsupported fields or
+UI text rather than filling gaps from board metadata or model assumptions.
