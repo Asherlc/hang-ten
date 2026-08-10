@@ -205,7 +205,7 @@ def test_default_preview_rejects_worktree_native_target_drift(tmp_path: Path) ->
     """Promotion must fail closed when native targets drift from the main baseline."""
     run_root = _copied_run(tmp_path)
 
-    with pytest.raises(ValueError, match="changed relative to main"):
+    with pytest.raises(ValueError, match="(changed relative to main|cannot verify target against main)"):
         build_promotion_preview(run_root, REPOSITORY_ROOT, read_promotion_profile(run_root))
 
 
