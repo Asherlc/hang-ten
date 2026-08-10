@@ -22,6 +22,7 @@ class PromotionReport:
     status: str
     profileId: str | None
     boardId: str | None
+    profile: dict[str, object] | None
     inputHashes: dict[str, str]
     outputHashes: dict[str, str]
     plannedWrites: tuple[dict[str, str], ...]
@@ -90,6 +91,7 @@ def promote_run(
             status=status,
             profileId=None,
             boardId=None,
+            profile=None,
             inputHashes=input_hashes,
             outputHashes=output_hashes,
             plannedWrites=planned_writes,
@@ -117,6 +119,7 @@ def promote_run(
         status=status,
         profileId=profile.profile_id,
         boardId=profile.board_id,
+        profile=_profile_payload(profile),
         inputHashes=input_hashes,
         outputHashes=output_hashes,
         plannedWrites=planned_writes,
@@ -140,9 +143,28 @@ def promotion_report_payload(report: PromotionReport) -> dict[str, object]:
         "warnings": list(report.warnings),
         "errors": list(report.errors),
     }
+    if report.profile is not None:
+        payload["profile"] = report.profile
     if report.handoffRequired:
         payload["handoffRequired"] = True
     return payload
+
+
+def _profile_payload(profile: PromotionProfile) -> dict[str, object]:
+    return {
+        "schemaVersion": profile.schema_version,
+        "requiredRegionKeys": list(profile.required_region_keys),
+        "runtimeMappings": [
+            {
+                "regionKey": mapping.region_key,
+                "runtimeHoldId": mapping.runtime_hold_id,
+                "gripType": mapping.grip_type,
+                "interactionMode": mapping.interaction_mode,
+                "notes": mapping.notes,
+            }
+            for mapping in profile.runtime_mappings
+        ],
+    }
 
 
 def _copy_edited_regions(

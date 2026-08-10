@@ -160,6 +160,24 @@ def test_main_promote_prints_compact_json_and_returns_zero(
     assert payload["plannedWrites"][0]["destination"] == "canonical/board.json"
 
 
+def test_promote_persists_profile_runtime_provenance_for_release_check(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    repository_root = tmp_path / "repo"
+    profile = load_promotion_profile(make_profile(tmp_path / "profile"))
+
+    promote_run(discover_review_run(run), profile, repository_root)
+
+    persisted = json.loads(
+        (
+            run / "stages/02/attempt-0001/promotion/board-promotion-report.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert persisted["profile"]["requiredRegionKeys"] == ["left"]
+    assert persisted["profile"]["runtimeMappings"][0]["regionKey"] == "left"
+
+
 def test_main_promote_apply_returns_zero_with_applied_status(
     tmp_path: Path, capsys
 ) -> None:

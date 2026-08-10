@@ -25,6 +25,12 @@ class ReleaseCheckResult:
     error: str | None
 
 
+@dataclass(frozen=True)
+class _PromotionReportState:
+    document: dict[str, object] | None
+    error: str | None
+
+
 def run_release_check(
     run: ReviewRun, repository_root: Path, *, run_xcode: bool = False
 ) -> tuple[ReleaseCheckResult, ...]:
@@ -35,14 +41,15 @@ def run_release_check(
 
     promotion_dir = run.stage2_regions.parent / "promotion"
     promotion_dir.mkdir(parents=True, exist_ok=True)
+    promotion_report = _promotion_report_state(run)
 
     results: list[ReleaseCheckResult] = []
-    results.append(_check_promotion_status(run))
+    results.append(_check_promotion_status(promotion_report))
     results.append(_check_acceptance_current(run))
-    results.append(_check_promotion_input_hashes(run))
-    results.append(_check_promotion_output_hashes(run, repository_root))
-    results.append(_check_runtime_integration(run))
-    results.append(_check_generated_artifacts_clean(run, repository_root))
+    results.append(_check_promotion_input_hashes(run, promotion_report))
+    results.append(_check_promotion_output_hashes(run, repository_root, promotion_report))
+    results.append(_check_runtime_integration(run, promotion_report))
+    results.append(_check_generated_artifacts_clean(repository_root, promotion_report))
     results.append(_run_export_plan_library(repository_root))
     if run_xcode:
         results.append(_run_xcode_tests(run, repository_root))
@@ -85,11 +92,12 @@ def release_check_blockers(results: tuple[ReleaseCheckResult, ...]) -> list[dict
     return blockers
 
 
-def _check_promotion_status(run: ReviewRun) -> ReleaseCheckResult:
+def _check_promotion_status(report_state: _PromotionReportState) -> ReleaseCheckResult:
     command = ("promotion-report",)
-    report = _promotion_report_document(run)
-    if report is None:
-        return _failed(command, "promotion-status", "promotion report is missing")
+    if report_state.error is not None:
+        return _failed(command, "promotion-status", report_state.error)
+    report = report_state.document
+    assert report is not None
 
     status = report.get("status")
     if status not in _PASSING_PROMOTION_STATUSES:
@@ -140,11 +148,14 @@ def _check_acceptance_current(run: ReviewRun) -> ReleaseCheckResult:
     )
 
 
-def _check_promotion_input_hashes(run: ReviewRun) -> ReleaseCheckResult:
+def _check_promotion_input_hashes(
+    run: ReviewRun, report_state: _PromotionReportState
+) -> ReleaseCheckResult:
     command = ("promotion-report", "input-hashes")
-    report = _promotion_report_document(run)
-    if report is None:
-        return _failed(command, "promotion-input-hashes", "promotion report is missing")
+    if report_state.error is not None:
+        return _failed(command, "promotion-input-hashes", report_state.error)
+    report = report_state.document
+    assert report is not None
     input_hashes = report.get("inputHashes")
     if not isinstance(input_hashes, dict):
         return _failed(
@@ -171,12 +182,13 @@ def _check_promotion_input_hashes(run: ReviewRun) -> ReleaseCheckResult:
 
 
 def _check_promotion_output_hashes(
-    run: ReviewRun, repository_root: Path
+    run: ReviewRun, repository_root: Path, report_state: _PromotionReportState
 ) -> ReleaseCheckResult:
     command = ("promotion-report", "output-hashes")
-    report = _promotion_report_document(run)
-    if report is None:
-        return _failed(command, "promotion-output-hashes", "promotion report is missing")
+    if report_state.error is not None:
+        return _failed(command, "promotion-output-hashes", report_state.error)
+    report = report_state.document
+    assert report is not None
     output_hashes = report.get("outputHashes")
     if not isinstance(output_hashes, dict):
         return _failed(
@@ -218,11 +230,14 @@ def _check_promotion_output_hashes(
     )
 
 
-def _check_runtime_integration(run: ReviewRun) -> ReleaseCheckResult:
+def _check_runtime_integration(
+    run: ReviewRun, report_state: _PromotionReportState
+) -> ReleaseCheckResult:
     command = ("promotion-report", "runtime-integration")
-    report = _promotion_report_document(run)
-    if report is None:
-        return _failed(command, "promotion-runtime", "promotion report is missing")
+    if report_state.error is not None:
+        return _failed(command, "promotion-runtime", report_state.error)
+    report = report_state.document
+    assert report is not None
 
     problems: list[str] = []
     if not isinstance(report.get("profileId"), str) or not report["profileId"].strip():
@@ -234,6 +249,7 @@ def _check_runtime_integration(run: ReviewRun) -> ReleaseCheckResult:
         problems.append("plannedWrites is empty")
     if report.get("status") not in _PASSING_PROMOTION_STATUSES:
         problems.append("promotion status is not release-ready")
+    problems.extend(_profile_provenance_issues(run, report))
 
     if problems:
         return _failed(command, "promotion-runtime", "; ".join(problems))
@@ -247,12 +263,13 @@ def _check_runtime_integration(run: ReviewRun) -> ReleaseCheckResult:
 
 
 def _check_generated_artifacts_clean(
-    run: ReviewRun, repository_root: Path
+    repository_root: Path, report_state: _PromotionReportState
 ) -> ReleaseCheckResult:
-    report = _promotion_report_document(run)
     command = ("git", "status", "--short", "--untracked-files=all")
-    if report is None:
-        return _failed(command, "generated-artifacts-clean", "promotion report is missing")
+    if report_state.error is not None:
+        return _failed(command, "generated-artifacts-clean", report_state.error)
+    report = report_state.document
+    assert report is not None
     if not (repository_root / ".git").exists():
         return ReleaseCheckResult(
             name="generated-artifacts-clean",
@@ -384,10 +401,14 @@ def _run_command(
     )
 
 
-def _promotion_report_document(run: ReviewRun) -> dict[str, object] | None:
+def _promotion_report_state(run: ReviewRun) -> _PromotionReportState:
     if run.promotion_report is None:
-        return None
-    return load_json(run.promotion_report, "promotion report")
+        return _PromotionReportState(None, "promotion report is missing")
+    try:
+        document = load_json(run.promotion_report, "promotion report")
+    except ValueError as error:
+        return _PromotionReportState(None, _first_line(error))
+    return _PromotionReportState(document, None)
 
 
 def _current_input_hashes(run: ReviewRun) -> dict[str, str]:
@@ -427,6 +448,109 @@ def _planned_writes(report: dict[str, object]) -> list[dict[str, str]]:
                 {"destination": destination, "sha256": sha256, "source": source}
             )
     return planned_writes
+
+
+def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> list[str]:
+    raw_profile = report.get("profile")
+    if not isinstance(raw_profile, dict):
+        return ["promotion report profile provenance is missing"]
+
+    required_region_keys = raw_profile.get("requiredRegionKeys")
+    runtime_mappings = raw_profile.get("runtimeMappings")
+
+    problems: list[str] = []
+    if not isinstance(required_region_keys, list) or not required_region_keys:
+        problems.append("profile.requiredRegionKeys must be a non-empty list")
+        required_keys: tuple[str, ...] = ()
+    else:
+        required_keys = tuple(
+            value for value in required_region_keys if isinstance(value, str) and value.strip()
+        )
+        if len(required_keys) != len(required_region_keys):
+            problems.append("profile.requiredRegionKeys must contain non-empty strings")
+        if len(set(required_keys)) != len(required_keys):
+            problems.append("profile.requiredRegionKeys must be unique")
+
+    if not isinstance(runtime_mappings, list) or not runtime_mappings:
+        problems.append("profile.runtimeMappings must be a non-empty list")
+        mappings: list[dict[str, str]] = []
+    else:
+        mappings = []
+        seen_region_keys: set[str] = set()
+        seen_runtime_ids: set[str] = set()
+        for index, entry in enumerate(runtime_mappings):
+            if not isinstance(entry, dict):
+                problems.append(f"profile.runtimeMappings[{index}] must be an object")
+                continue
+            region_key = entry.get("regionKey")
+            runtime_hold_id = entry.get("runtimeHoldId")
+            grip_type = entry.get("gripType")
+            interaction_mode = entry.get("interactionMode")
+            if not all(
+                isinstance(value, str) and value.strip()
+                for value in (region_key, runtime_hold_id, grip_type, interaction_mode)
+            ):
+                problems.append(
+                    f"profile.runtimeMappings[{index}] must define non-empty regionKey, runtimeHoldId, gripType, and interactionMode"
+                )
+                continue
+            if region_key in seen_region_keys:
+                problems.append(f"duplicate profile.runtimeMappings regionKey: {region_key}")
+            if runtime_hold_id in seen_runtime_ids:
+                problems.append(
+                    f"duplicate profile.runtimeMappings runtimeHoldId: {runtime_hold_id}"
+                )
+            seen_region_keys.add(region_key)
+            seen_runtime_ids.add(runtime_hold_id)
+            mappings.append(
+                {
+                    "regionKey": region_key,
+                    "runtimeHoldId": runtime_hold_id,
+                    "gripType": grip_type,
+                    "interactionMode": interaction_mode,
+                }
+            )
+
+        if required_keys:
+            unknown = sorted(
+                mapping["regionKey"]
+                for mapping in mappings
+                if mapping["regionKey"] not in set(required_keys)
+            )
+            if unknown:
+                problems.append(
+                    "profile.runtimeMappings reference unknown requiredRegionKeys: "
+                    + ", ".join(unknown)
+                )
+            mapped_keys = {mapping["regionKey"] for mapping in mappings}
+            missing = sorted(set(required_keys) - mapped_keys)
+            if missing:
+                problems.append(
+                    "profile.runtimeMappings missing requiredRegionKeys: "
+                    + ", ".join(missing)
+                )
+
+    if required_keys:
+        edited = load_json(run.edited_regions, "stage-2 edited regions") if run.edited_regions is not None else None
+        if edited is None:
+            problems.append("edited regions artifact is missing")
+        else:
+            regions = edited.get("regions")
+            if not isinstance(regions, list):
+                problems.append("stage-2 edited regions missing regions array")
+            else:
+                present = {
+                    region.get("key")
+                    for region in regions
+                    if isinstance(region, dict) and isinstance(region.get("key"), str)
+                }
+                missing_regions = sorted(set(required_keys) - present)
+                if missing_regions:
+                    problems.append(
+                        "profile.requiredRegionKeys missing reviewed geometry: "
+                        + ", ".join(missing_regions)
+                    )
+    return problems
 
 
 def _output_path(run: ReviewRun, repository_root: Path, relative_path: str) -> Path | None:

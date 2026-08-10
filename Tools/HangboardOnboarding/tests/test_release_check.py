@@ -108,6 +108,37 @@ def test_release_check_fails_when_destination_artifact_is_uncommitted(
     assert _result_named(results, "generated-artifacts-clean").passed is False
 
 
+def test_release_check_fails_when_profile_runtime_mappings_are_incomplete(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    report_path = run / "stages/02/attempt-0001/promotion/board-promotion-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["profile"] = {
+        "requiredRegionKeys": ["left", "right"],
+        "runtimeMappings": [
+            {
+                "regionKey": "left",
+                "runtimeHoldId": "runtime-left",
+                "gripType": "edge",
+                "interactionMode": "surface",
+            }
+        ],
+    }
+    report_path.write_text(json.dumps(report, sort_keys=True) + "\n", encoding="utf-8")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(discover_review_run(run), tmp_path, run_xcode=False)
+
+    profile_result = _result_named(results, "promotion-runtime")
+    assert profile_result.passed is False
+    assert "right" in (profile_result.error or "")
+
+
 def test_release_check_cli_explain_returns_machine_readable_blockers(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -140,6 +171,65 @@ def test_release_check_cli_explain_returns_machine_readable_blockers(
     report_path = run / "stages/02/attempt-0001/promotion/release-check.json"
     persisted = json.loads(report_path.read_text(encoding="utf-8"))
     assert len(persisted["checks"]) == len(payload["checks"])
+
+
+@pytest.mark.parametrize("target", ["run", "repository-root"])
+def test_release_check_cli_returns_two_for_invalid_inputs(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], target: str
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    arguments = [
+        "release-check",
+        "--run",
+        str(run),
+        "--repository-root",
+        str(tmp_path),
+        "--json",
+    ]
+    if target == "run":
+        arguments[2] = str(tmp_path / "missing-run")
+    else:
+        arguments[4] = str(tmp_path / "missing-repository-root")
+
+    result = release_check_cli.main(arguments)
+
+    captured = capsys.readouterr()
+    assert result == 2
+    assert captured.out == ""
+    assert "directory" in captured.err
+
+
+def test_release_check_cli_explain_returns_json_for_malformed_promotion_report(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    report_path = run / "stages/02/attempt-0001/promotion/board-promotion-report.json"
+    report_path.write_text("{not-json}\n", encoding="utf-8")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    result = release_check_cli.main(
+        [
+            "release-check",
+            "--run",
+            str(run),
+            "--repository-root",
+            str(tmp_path),
+            "--json",
+            "--explain",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 3
+    assert captured.err == ""
+    payload = json.loads(captured.out)
+    assert payload["passed"] is False
+    assert any(blocker["check"] == "promotion-status" for blocker in payload["blockers"])
+    assert payload["checks"]
 
 
 def test_release_check_report_returns_checks_and_generated_timestamp(

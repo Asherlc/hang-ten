@@ -26,7 +26,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return int(error.code or 0)
     except (OSError, ValueError) as error:
         print(f"error: {_first_line(error)}", file=sys.stderr)
-        return 3
+        return 2
 
     print(json.dumps(payload, sort_keys=True, separators=(",", ":")))
     return exit_code
@@ -71,6 +71,10 @@ def _run(arguments: argparse.Namespace) -> tuple[dict[str, object], int]:
     if arguments.command != "release-check":
         raise ValueError(f"unsupported command: {arguments.command}")
     run = discover_review_run(arguments.run)
+    if not arguments.repository_root.is_dir():
+        raise ValueError(
+            f"repository root must be a directory: {arguments.repository_root.resolve(strict=False)}"
+        )
     results = run_release_check(
         run,
         arguments.repository_root,
