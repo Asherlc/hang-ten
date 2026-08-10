@@ -599,6 +599,8 @@ struct TrainingPlan: Identifiable, Hashable {
 enum BoardCatalog {
     // Board geometry is data, not view code. Add new TrainingBoard values here
     // and plans can resolve their hold IDs without changing the workout UI.
+    static let compactIIFlatSloperHoldIDs = ["sloper-flat-left", "sloper-flat-right"]
+
     static let compactII = TrainingBoard(
         id: "metolius.wood-grips-compact-ii",
         manufacturer: "Metolius",
@@ -1561,7 +1563,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "repeaters-warm-up")]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("56 mm flat slopers", [.ids("sloper-flat-left", "sloper-flat-right")], .openHand),
+                ("56 mm flat slopers", [.ids(BoardCatalog.compactIIFlatSloperHoldIDs)], .openHand),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
             ]
 
