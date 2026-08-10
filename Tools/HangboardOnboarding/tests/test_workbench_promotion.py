@@ -95,12 +95,10 @@ def test_preview_rejects_a_legacy_profile_alias_that_collides_in_repository(
     collision = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii-legacy"
     shutil.copytree(source, collision)
     for path in collision.rglob("*.json"):
-        path.write_text(
-            path.read_text(encoding="utf-8").replace(
-                "metolius-wood-grips-compact-ii", "metolius.wood-grips.compact-ii"
-            ),
-            encoding="utf-8",
-        )
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict) and payload.get("boardID") == "metolius-wood-grips-compact-ii":
+            payload["boardID"] = "metolius.wood-grips.compact-ii"
+            path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     library = RepositoryBoardLibrary(repository_root)
     service = WorkbenchService(WorkbenchStore(tmp_path / "workspace"), library=library)
     view = service.open_library_board("metolius-wood-grips-compact-ii")

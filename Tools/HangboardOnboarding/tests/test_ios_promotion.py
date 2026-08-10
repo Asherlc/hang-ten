@@ -206,7 +206,7 @@ def test_default_preview_rejects_worktree_native_target_drift(tmp_path: Path) ->
     run_root = _copied_run(tmp_path)
 
     with pytest.raises(ValueError, match="changed relative to main"):
-        build_promotion_preview(run_root, REPOSITORY_ROOT, read_promotion_profile(run_root))
+        build_promotion_preview(run_root, _repository_at_main(tmp_path), read_promotion_profile(run_root))
 
 
 def test_render_plan_library_rewrites_only_the_exact_board_id_value() -> None:
