@@ -1,24 +1,29 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "hangboard-vectorizer"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.11.4"
 dependencies = [
-    "numpy>=2.0",
-    "opencv-python-headless>=4.10",
-    "Pillow>=10.0",
-    "requests>=2.32",
+    "numpy>=2.4.6",
+    "opencv-python-headless>=5.0.0.93",
+    "Pillow>=12.3.0",
+    "requests>=2.34.2",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=9.1.1"]
 
 [project.scripts]
+hangboard-catalog-flat = "hangboard_vectorizer.catalog_flat_illustrations:main"
 hangboard-catalog-outlines = "hangboard_vectorizer.catalog_outline_cli:main"
+hangboard-catalog = "hangboard_vectorizer.board_catalog_cli:main"
 hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
+hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
+hangboard-promote = "hangboard_vectorizer.promotion_cli:main"
+hangboard-review = "hangboard_vectorizer.review_cli:main"
 hangboard-semantic-benchmark = "hangboard_vectorizer.semantic_benchmark:main"
 hangboard-to-svg = "hangboard_vectorizer.cli:main"
 

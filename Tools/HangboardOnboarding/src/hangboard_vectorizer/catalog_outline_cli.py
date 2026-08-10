@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 import io
 import json
-import os
 from pathlib import Path
 from typing import Any
 from contextlib import redirect_stderr, redirect_stdout
@@ -15,6 +14,10 @@ from hangboard_vectorizer.catalog_outlines import (
     validate_catalog_document,
     vectorize_catalog_image,
     write_catalog_document,
+)
+
+_CONTACT_SHEET_NAMES = frozenset(
+    {"contact-sheet-primary.png", "flat-illustrations-contact-sheet.png"}
 )
 
 
@@ -59,9 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         args.review_dir.mkdir(parents=True, exist_ok=True)
     for source in sources:
         document = vectorize_catalog_image(source)
-        output_path = args.output_dir / f"{source.stem}.json"
-        document = replace(document, source_image=_source_image_reference(source, output_path))
-        write_catalog_document(document, output_path)
+        write_catalog_document(document, args.output_dir / f"{source.stem}.json")
         if args.review_dir is not None:
             render_catalog_review_overlay(source, document, args.review_dir / source.name)
     return 0
@@ -71,7 +72,7 @@ def _discover_sources(source_dir: Path, limit: int | None) -> list[Path]:
     sources = sorted(
         path
         for path in source_dir.glob("*.png")
-        if path.is_file() and path.name != "contact-sheet-primary.png"
+        if path.is_file() and path.name not in _CONTACT_SHEET_NAMES
     )
     if limit is not None:
         return sources[:limit]
@@ -80,27 +81,33 @@ def _discover_sources(source_dir: Path, limit: int | None) -> list[Path]:
 
 def _check_outputs(sources: list[Path], output_dir: Path) -> int:
     if not sources:
+        print("No source PNG files found")
         return 1
     expected = {source.stem for source in sources}
     actual = {path.stem for path in output_dir.glob("*.json")} if output_dir.exists() else set()
     if expected != actual:
+        missing = sorted(expected - actual)
+        unexpected = sorted(actual - expected)
+        if missing:
+            print(f"Missing outline JSON: {', '.join(missing)}")
+        if unexpected:
+            print(f"Unexpected outline JSON: {', '.join(unexpected)}")
         return 1
+    verified = 0
     for source in sources:
         output_path = output_dir / f"{source.stem}.json"
         try:
             payload = json.loads(output_path.read_text(encoding="utf-8"))
             document = CatalogOutlineDocument.from_json(payload)
-            source_image = Path(document.source_image)
-            if source_image.is_absolute():
-                return 1
-            resolved_source = (output_path.parent / source_image).resolve()
-            if resolved_source != source.resolve():
-                return 1
-            validate_catalog_document(document, source_path=resolved_source)
-        except (OSError, ValueError, json.JSONDecodeError):
+            validate_catalog_document(document, source_path=source)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            print(f"{output_path.name}: {error}")
             return 1
+        verified += 1
+    suffix = "" if verified == 1 else "s"
+    print(f"Verified {verified} catalog outline document{suffix}")
     return 0
 
 
-def _source_image_reference(source: Path, output_path: Path) -> str:
-    return Path(os.path.relpath(source.resolve(), output_path.parent.resolve())).as_posix()
+if __name__ == "__main__":
+    raise SystemExit(main())

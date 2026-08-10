@@ -315,6 +315,7 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
 .hidden { display: none !important; }
 .inspector-form { display: grid; gap: 14px; margin-top: 22px; }
 .inspector-form label { display: grid; gap: 7px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .02em; }
+.field-help { margin-top: -2px; color: var(--muted); font-size: 10px; font-weight: 500; line-height: 1.45; letter-spacing: 0; }
 .inspector-form input, .inspector-form select, .inspector-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #131512; color: var(--text); padding: 9px; resize: vertical; }
 .inspector-form input:focus, .inspector-form select:focus, .inspector-form textarea:focus { border-color: #7a4b3a; box-shadow: 0 0 0 2px #ff6b4a17; }
 .corner-treatment-field { display: grid; gap: 10px; margin: 0; padding: 11px; border: 1px solid var(--line); border-radius: 8px; }
