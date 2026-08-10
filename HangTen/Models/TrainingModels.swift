@@ -2313,7 +2313,7 @@ enum LegacyPlanSeedCatalog {
                 ("Jug", .feature(.jug), .openHand),
                 ("Three-finger pocket", .feature(.threeFingerPocket), .openHand),
                 ("Medium edge", .feature(.mediumEdge), .openHand),
-                ("Medium pinch", .feature(.mediumPinch), .openHand),
+                ("Medium pinch", .feature(.mediumPinch, fallback: .mediumEdge), .openHand),
                 ("Large sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)
             ]
             for (index, grip) in grips.enumerated() {

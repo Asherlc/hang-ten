@@ -9830,6 +9830,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9842,6 +9845,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],
@@ -9860,6 +9866,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9872,6 +9881,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],
@@ -9890,6 +9902,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9902,6 +9917,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],
@@ -9920,6 +9938,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9932,6 +9953,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],
@@ -9950,6 +9974,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9962,6 +9989,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],
@@ -9980,6 +10010,9 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge"
+                ],
                 "feature" : "mediumPinch"
               },
               "timing" : "fixed"
@@ -9987,6 +10020,9 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge"
+              ],
               "feature" : "mediumPinch"
             }
           ],

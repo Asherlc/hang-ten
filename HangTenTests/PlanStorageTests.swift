@@ -939,8 +939,8 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.targets)
                 .first { $0.feature == .mediumPinch }
         )
-        XCTAssertTrue(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: BoardCatalog.rockProdigyTrainingCenter).isEmpty == false)
-        XCTAssertTrue(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+        XCTAssertEqual(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: BoardCatalog.rockProdigyTrainingCenter), ["trango.rptc.left.medium-pinch", "trango.rptc.right.medium-pinch"])
+        XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
     }
 
     func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
