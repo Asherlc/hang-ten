@@ -14,6 +14,7 @@ Commands:
   onboard     Start, inspect, approve, or resume a staged onboarding run
   inspect     Summarize hold-region review artifacts for one run
   promote     Build a safe promotion package for an accepted review run
+  release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Replay the accepted Metolius run without a live model call
   convert     Convert a registered product photo to SVG and JSON
 EOF
@@ -40,6 +41,7 @@ fi
 if [[ ! -x "$environment_root/bin/hangboard-onboard" || \
       ! -x "$environment_root/bin/hangboard-review" || \
       ! -x "$environment_root/bin/hangboard-promote" || \
+      ! -x "$environment_root/bin/hangboard-release-check" || \
       "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-onboard" ]]; then
     "$python_command" -m venv "$environment_root"
     "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
@@ -54,6 +56,9 @@ case "$command_name" in
         ;;
     promote)
         exec "$environment_root/bin/hangboard-promote" promote "$@"
+        ;;
+    release-check)
+        exec "$environment_root/bin/hangboard-release-check" release-check "$@"
         ;;
     benchmark)
         accepted_run="$tool_root/reference/metolius-compact-ii/accepted-run"

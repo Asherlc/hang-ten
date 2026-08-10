@@ -159,11 +159,14 @@ def test_inspect_run_returns_relative_paths_hashes_state_and_next_action(
     }
 
 
-def test_pyproject_registers_review_and_promote_scripts_without_release_check() -> None:
+def test_pyproject_registers_review_promote_and_release_check_scripts() -> None:
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     project = tomllib.loads(pyproject.read_text(encoding="utf-8"))
 
     scripts = project["project"]["scripts"]
     assert scripts["hangboard-review"] == "hangboard_vectorizer.review_cli:main"
     assert scripts["hangboard-promote"] == "hangboard_vectorizer.promotion_cli:main"
-    assert "hangboard-release-check" not in scripts
+    assert (
+        scripts["hangboard-release-check"]
+        == "hangboard_vectorizer.release_check_cli:main"
+    )

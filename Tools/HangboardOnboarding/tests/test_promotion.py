@@ -210,22 +210,26 @@ def test_main_promote_returns_two_when_apply_lacks_profile(
     assert "--apply requires --profile" in captured.err
 
 
-def test_pyproject_registers_promote_script_without_release_check() -> None:
+def test_pyproject_registers_promote_and_release_check_scripts() -> None:
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     project = tomllib.loads(pyproject.read_text(encoding="utf-8"))
 
     scripts = project["project"]["scripts"]
     assert scripts["hangboard-promote"] == "hangboard_vectorizer.promotion_cli:main"
-    assert "hangboard-release-check" not in scripts
+    assert (
+        scripts["hangboard-release-check"]
+        == "hangboard_vectorizer.release_check_cli:main"
+    )
 
 
-def test_wrapper_exposes_promote_without_release_check() -> None:
+def test_wrapper_exposes_promote_and_release_check() -> None:
     script_path = Path(__file__).resolve().parents[3] / "scripts/hangboard-tools.sh"
     script = script_path.read_text(encoding="utf-8")
 
     assert "promote)" in script
     assert "hangboard-promote" in script
-    assert "release-check)" not in script
+    assert "release-check)" in script
+    assert "hangboard-release-check" in script
 
 
 def test_blocked_and_ready_promotion_fixtures_cover_task_four_states(
