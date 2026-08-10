@@ -183,11 +183,19 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
 });
 
-test("renders exactly one region interaction mode control", () => {
+test("renders exactly one region interaction mode control with its intended label and options", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  const modeControls = [...html.matchAll(/<select\b[^>]*\bid="region-mode-select"[^>]*>/g)];
+  const modeControlPattern = /<select\b(?=[^>]*\bid\s*=\s*["']region-mode-select["'])[^>]*>[\s\S]*?<\/select>/gi;
+  const modeControls = [...html.matchAll(modeControlPattern)];
 
   assert.equal(modeControls.length, 1, "region-mode-select must appear exactly once");
+
+  const modeLabelPattern = /<label\b[^>]*>\s*Hold\s+interaction\s+mode\s*<select\b(?=[^>]*\bid\s*=\s*["']region-mode-select["'])[^>]*>[\s\S]*?<\/select>\s*<\/label>/i;
+  assert.match(html, modeLabelPattern, "region-mode-select must use the Hold interaction mode label");
+
+  const modeControl = modeControls[0][0];
+  assert.match(modeControl, /<option\b[^>]*\bvalue\s*=\s*["']aperture["'][^>]*>\s*Aperture\s*<\/option>/i);
+  assert.match(modeControl, /<option\b[^>]*\bvalue\s*=\s*["']surface["'][^>]*>\s*Surface\s*<\/option>/i);
 });
 
 test("region edge-curve metadata renders a quadratic contour path", () => {
