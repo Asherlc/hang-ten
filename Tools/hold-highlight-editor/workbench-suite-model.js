@@ -17,6 +17,12 @@
     return typeof board?.revisionId === "string" && board.revisionId ? board.revisionId : null;
   }
 
+  function resultForActiveRevision(result, activeRevision) {
+    return typeof activeRevision === "string" && activeRevision && result?.revisionId === activeRevision
+      ? result
+      : null;
+  }
+
   function hasPromotionConflict(promotion) {
     return Array.isArray(promotion?.issues) && promotion.issues.length > 0;
   }
@@ -39,8 +45,8 @@
 
   function createSuiteState({ board = null, activeTool = DEFAULT_TOOL, promotion = null, validation = null } = {}) {
     const activeRevision = activeRevisionFor(board);
-    const currentPromotion = promotion?.revisionId && promotion.revisionId !== activeRevision ? null : promotion;
-    const currentValidation = validation?.revisionId && validation.revisionId !== activeRevision ? null : validation;
+    const currentPromotion = resultForActiveRevision(promotion, activeRevision);
+    const currentValidation = resultForActiveRevision(validation, activeRevision);
     return Object.freeze({
       activeTool: assertTool(activeTool),
       activeBoard: board,
@@ -73,8 +79,8 @@
 
   function withSuiteResults(state, { promotion = state.promotion, validation = state.validation } = {}) {
     const activeRevision = state.activeRevision;
-    const currentPromotion = promotion?.revisionId && promotion.revisionId !== activeRevision ? null : promotion;
-    const currentValidation = validation?.revisionId && validation.revisionId !== activeRevision ? null : validation;
+    const currentPromotion = resultForActiveRevision(promotion, activeRevision);
+    const currentValidation = resultForActiveRevision(validation, activeRevision);
     return Object.freeze({
       ...state,
       promotion: currentPromotion,

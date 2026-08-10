@@ -14,7 +14,7 @@
     if (typeof selectTool !== "function") throw new TypeError("selectTool must be a function");
     if (typeof loadBoard !== "function") throw new TypeError("loadBoard must be a function");
     if (typeof render !== "function") throw new TypeError("render must be a function");
-    if (!model?.replaceActiveBoard) throw new TypeError("workbench suite model is required");
+    if (!model?.replaceActiveBoard || !model?.withSuiteResults) throw new TypeError("workbench suite model is required");
 
     let state = initialState;
     let loadToken = 0;
@@ -43,11 +43,17 @@
       return renderCurrent();
     }
 
+    function setResults(results) {
+      state = model.withSuiteResults(state, results);
+      return renderCurrent();
+    }
+
     return Object.freeze({
       getState: () => state,
       selectTool: chooseTool,
       loadBoard: loadActiveBoard,
       setBoard,
+      setResults,
     });
   }
 

@@ -7,6 +7,7 @@ const {
   selectTool,
   replaceActiveBoard,
   readinessState,
+  withSuiteResults,
 } = require("../workbench-suite-model.js");
 
 const completeBoard = Object.freeze({
@@ -54,6 +55,22 @@ test("a revision change clears stale promotion and validation state", () => {
   assert.equal(updated.activeRevision, "revision-2");
   assert.equal(updated.promotion, null);
   assert.equal(updated.validation, null);
+});
+
+test("suite results require an explicit matching revision", () => {
+  const state = createSuiteState({ board: completeBoard });
+
+  const updated = withSuiteResults(state, {
+    promotion: { previewToken: "preview-1", revisionId: "revision-1" },
+    validation: { overallStatus: "passed" },
+  });
+
+  assert.deepEqual(updated.promotion, { previewToken: "preview-1", revisionId: "revision-1" });
+  assert.equal(updated.validation, null);
+  assert.equal(
+    createSuiteState({ promotion: { previewToken: "unbound", revisionId: null } }).promotion,
+    null,
+  );
 });
 
 test("readiness exposes stable labels for incomplete, stale, conflict, saved, and ready boards", () => {

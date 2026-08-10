@@ -77,3 +77,22 @@ test("a stale board request cannot overwrite a newer selected board", async () =
   assert.equal(current.activeBoard.boardId, "board-newer");
   assert.equal(rendered.length, 1);
 });
+
+test("a late promotion result cannot survive an active revision change", () => {
+  const rendered = [];
+  const controller = createToolSuiteController({
+    selectTool,
+    async loadBoard() { throw new Error("this test sets boards directly"); },
+    render(state) { rendered.push(state); },
+    initialState: createSuiteState({ board, activeTool: "inspect" }),
+  });
+
+  controller.setBoard({ ...board, revisionId: "revision-2" });
+  const state = controller.setResults({
+    promotion: { previewToken: "preview-1", revisionId: "revision-1" },
+  });
+
+  assert.equal(state.activeRevision, "revision-2");
+  assert.equal(state.promotion, null);
+  assert.equal(rendered.length, 2);
+});

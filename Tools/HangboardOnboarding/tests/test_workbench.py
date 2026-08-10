@@ -91,6 +91,18 @@ def test_editable_stages_expose_a_clean_canvas_aligned_image_separate_from_revie
         assert editor_image.size == (4, 4)
 
 
+def test_completed_stage4_view_exposes_accepted_normal_artifact_and_hold_count(
+    complete_board: WorkbenchView,
+) -> None:
+    """Inspect must use the immutable Stage 4 acceptance, not editor state."""
+    assert complete_board.stage == 4
+    assert complete_board.state == "complete"
+    assert complete_board.editor_image_path is None
+    assert complete_board.normal_artifact_path is not None
+    assert complete_board.normal_artifact_path.name == "stage-4-normal.png"
+    assert complete_board.hold_count == 0
+
+
 def test_get_board_rejects_editable_artifact_canvas_mismatched_to_clean_image(
     service: WorkbenchService, board_with_stage0: WorkbenchView
 ) -> None:

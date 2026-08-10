@@ -426,15 +426,50 @@ test("promotion and validation reads encode the board and active revision", asyn
   global.fetch = async (path) => {
     calls.push(path);
     if (path.includes("/promotion")) {
-      return response({ ok: true, boardId: "board 9", revisionId: "revision & 1", preview: { previewToken: "preview-1" } });
+      return response({
+        ok: true,
+        boardId: "board 9",
+        revisionId: "revision & 1",
+        preview: {
+          boardId: "example.board",
+          revisionToken: "repository-token",
+          baseRef: "main",
+          files: [],
+          issues: [],
+          previewToken: "preview-1",
+        },
+      });
     }
-    return response({ ok: true, boardId: "board 9", revisionId: "revision & 1", report: { overallStatus: "passed" } });
+    return response({
+      ok: true,
+      boardId: "board 9",
+      revisionId: "revision & 1",
+      report: {
+        boardId: "board 9",
+        revisionId: "revision & 1",
+        overallStatus: "passed",
+        checks: [],
+      },
+    });
   };
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
 
-  assert.deepEqual(await client.getPromotionPreview("board 9", "revision & 1"), { previewToken: "preview-1" });
-  assert.deepEqual(await client.getValidationReport("board 9", "revision & 1"), { overallStatus: "passed" });
+  assert.deepEqual(await client.getPromotionPreview("board 9", "revision & 1"), {
+    boardId: "example.board",
+    revisionToken: "repository-token",
+    revisionId: "revision & 1",
+    baseRef: "main",
+    files: [],
+    issues: [],
+    previewToken: "preview-1",
+  });
+  assert.deepEqual(await client.getValidationReport("board 9", "revision & 1"), {
+    boardId: "board 9",
+    revisionId: "revision & 1",
+    overallStatus: "passed",
+    checks: [],
+  });
   assert.deepEqual(calls, [
     "/api/boards/board%209/promotion?revisionId=revision+%26+1",
     "/api/boards/board%209/validation?revisionId=revision+%26+1",
@@ -457,7 +492,19 @@ test("promotion preview and validation run use checkpoint-bound jobs", async () 
         id: jobId,
         boardId: "board 9",
         state: "succeeded",
-        result: jobId === "job-1" ? { previewToken: "preview-2" } : { overallStatus: "passed" },
+        result: jobId === "job-1" ? {
+          boardId: "example.board",
+          revisionToken: "repository-token",
+          baseRef: "main",
+          files: [],
+          issues: [],
+          previewToken: "preview-2",
+        } : {
+          boardId: "board 9",
+          revisionId: "revision-2",
+          overallStatus: "passed",
+          checks: [],
+        },
         error: null,
       },
     });
@@ -470,11 +517,24 @@ test("promotion preview and validation run use checkpoint-bound jobs", async () 
     await client.previewPromotion("board 9", "revision-2", { boardID: "board 9" }, "main", {
       onAccepted(job) { accepted.push(job); },
     }),
-    { previewToken: "preview-2" },
+    {
+      boardId: "example.board",
+      revisionToken: "repository-token",
+      revisionId: "revision-2",
+      baseRef: "main",
+      files: [],
+      issues: [],
+      previewToken: "preview-2",
+    },
   );
   assert.deepEqual(
     await client.runValidation("board 9", "revision-2"),
-    { overallStatus: "passed" },
+    {
+      boardId: "board 9",
+      revisionId: "revision-2",
+      overallStatus: "passed",
+      checks: [],
+    },
   );
   assert.deepEqual(accepted, [{ jobId: "job-1", boardId: "board 9" }]);
   assert.equal(calls[0][0], "/api/boards/board%209/promotion/preview");

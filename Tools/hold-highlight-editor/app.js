@@ -302,7 +302,7 @@
       appendInspectText(el["inspect-hold-inventory"], "No board is active.");
       appendInspectText(el["inspect-approval-status"], "No active revision.");
     } else {
-      const previewUrl = board.editorImageUrl || board.reviewUrl;
+      const previewUrl = board.normalArtifactUrl || board.editorImageUrl || board.reviewUrl;
       if (previewUrl) {
         const image = document.createElement("img");
         image.src = previewUrl;
@@ -312,7 +312,7 @@
         appendInspectText(el["inspect-board-preview"], "A board preview is not available for this revision.");
       }
       [
-        [board.editorImageUrl, "Stage 4 normal artifact"],
+        [board.normalArtifactUrl, "Stage 4 normal artifact"],
         [board.reviewUrl, "Stage 4 highlighted artifact"],
       ].forEach(([url, label]) => {
         if (!url) return;
@@ -326,10 +326,10 @@
       if (!el["inspect-artifact-links"].childElementCount) {
         appendInspectText(el["inspect-artifact-links"], "Stage 4 artifacts are not available for this revision.");
       }
-      const count = Number.isInteger(board.holdCount) ? board.holdCount : state.regions.length;
+      const count = Number.isInteger(board.holdCount) ? board.holdCount : null;
       appendInspectText(
         el["inspect-hold-inventory"],
-        count ? `${String(count)} hold${count === 1 ? "" : "s"} in the loaded inventory.` : "Hold inventory is available in the Stage 4 artifacts.",
+        count != null ? `${String(count)} hold${count === 1 ? "" : "s"} in the loaded inventory.` : "Hold inventory is available in the Stage 4 artifacts.",
       );
       appendInspectText(el["inspect-approval-status"], `Revision ${board.revisionId} · ${String(board.state || "unknown").replaceAll("_", " ")}`);
     }

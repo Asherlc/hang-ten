@@ -271,6 +271,9 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
     editor_image_url = artifact_url(
         getattr(view, "editor_image_path", None), "editor image"
     )
+    normal_artifact_url = artifact_url(
+        getattr(view, "normal_artifact_path", None), "Stage 4 normal"
+    )
     return {
         "boardId": view.board_id,
         "revisionId": view.revision_id,
@@ -281,6 +284,8 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         "checkpointToken": view.checkpoint_token,
         "reviewUrl": review_url,
         "editorImageUrl": editor_image_url,
+        "normalArtifactUrl": normal_artifact_url,
+        "holdCount": getattr(view, "hold_count", None),
         "editorMode": view.editor_mode,
         "saved": view.saved,
         "staleFromStage": view.stale_from_stage,
@@ -739,7 +744,34 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         )
 
     def _get_validation(self, board_id: str, query: str) -> None:
-        self._get_revision_status(board_id, query)
+        try:
+            if not board_id:
+                raise RequestError(HTTPStatus.NOT_FOUND, "not found")
+            revision_id = self._required_query_string(parse_qs(query), "revisionId")
+            report = self._workbench_service().get_validation_report(
+                board_id, expected_revision_id=revision_id
+            )
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except self._public_error_types() as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+            return
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
+            return
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "boardId": board_id,
+                "revisionId": revision_id,
+                "report": None if report is None else _workbench_job_payload(report),
+            },
+        )
 
     def _get_revision_status(self, board_id: str, query: str) -> None:
         try:
@@ -965,6 +997,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.BAD_REQUEST, "boardId must match the validation route"
             )
         revision_id = self._required_string(payload, "expectedRevisionId")
+
         self._submit_job(
             board_id,
             lambda: service.validation_report(

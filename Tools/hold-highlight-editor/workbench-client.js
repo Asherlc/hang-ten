@@ -177,16 +177,17 @@
     const payload = await request(
       `/api/boards/${encodeURIComponent(boardId)}/promotion?${revisionQuery(revisionId)}`,
     );
-    return payload.preview;
+    return payload.preview ? { ...payload.preview, revisionId: payload.revisionId } : null;
   }
 
   async function previewPromotion(boardId, revisionId, profile, baseRef = "main", options = {}) {
-    return postJob(`/api/boards/${encodeURIComponent(boardId)}/promotion/preview`, {
+    const preview = await postJob(`/api/boards/${encodeURIComponent(boardId)}/promotion/preview`, {
       boardId,
       expectedRevisionId: revisionId,
       profile,
       baseRef,
     }, options);
+    return { ...preview, revisionId };
   }
 
   async function savePromotion(boardId, revisionId, profile, previewToken, options = {}) {
@@ -202,7 +203,7 @@
     const payload = await request(
       `/api/boards/${encodeURIComponent(boardId)}/validation?${revisionQuery(revisionId)}`,
     );
-    return payload.report || payload.validation || null;
+    return payload.report || null;
   }
 
   async function runValidation(boardId, revisionId, options = {}) {

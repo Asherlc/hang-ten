@@ -71,6 +71,8 @@ class FakeWorkbenchView:
     state: str
     review_path: Path | None
     editor_image_path: Path | None
+    normal_artifact_path: Path | None
+    hold_count: int | None
     editor_mode: str | None
     saved: bool
     stale_from_stage: int | None
@@ -143,6 +145,7 @@ class FakeWorkbenchService:
         self._boards: dict[str, FakeWorkbenchView] = {}
         self._drafts: dict[str, object] = {}
         self._promotion_previews: dict[tuple[str, str], FakePromotionPreview] = {}
+        self._validation_reports: dict[tuple[str, str], FakeValidationReport] = {}
         self._counter = 0
         self._lock = Lock()
         self.approve_started = Event()
@@ -379,7 +382,7 @@ class FakeWorkbenchService:
         view = self.get_board(board_id)
         if expected_revision_id != view.revision_id:
             raise FakeWorkbenchError("expected revision does not match")
-        return FakeValidationReport(
+        report = FakeValidationReport(
             board_id=board_id,
             revision_id=view.revision_id,
             overall_status="passed",
@@ -392,6 +395,16 @@ class FakeWorkbenchService:
                 ),
             ),
         )
+        self._validation_reports[(board_id, view.revision_id)] = report
+        return report
+
+    def get_validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport | None:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        return self._validation_reports.get((board_id, view.revision_id))
 
     def _create(self, product_name: str, content: bytes) -> FakeWorkbenchView:
         with self._lock:
@@ -412,6 +425,8 @@ class FakeWorkbenchService:
                 state="awaiting_review",
                 review_path=review_path,
                 editor_image_path=None,
+                normal_artifact_path=None,
+                hold_count=None,
                 editor_mode=None,
                 saved=False,
                 stale_from_stage=None,
@@ -451,6 +466,14 @@ class FakeWorkbenchService:
             editor_image.write_bytes(b"clean-canvas-image")
             changes["editor_image_path"] = editor_image
             changes.setdefault("editor_mode", "contour" if stage == 2 else "vector")
+        if stage == 4 and state == "complete":
+            normal = view.run_root / "stages/04/stage-4-normal.png"
+            normal.parent.mkdir(parents=True, exist_ok=True)
+            normal.write_bytes(b"stage-4-normal")
+            changes.setdefault("normal_artifact_path", normal)
+            changes.setdefault("hold_count", 4)
+            changes.setdefault("editor_image_path", None)
+            changes.setdefault("editor_mode", None)
         updated = replace(view, **changes)
         with self._lock:
             self._boards[view.board_id] = updated
@@ -1308,6 +1331,21 @@ def test_editable_board_api_exposes_clean_and_annotated_artifacts_separately(
         assert response.read() == b"clean-canvas-image"
 
 
+def test_completed_board_api_exposes_stage4_inspect_artifacts_and_hold_count(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    for _ in range(5):
+        view = _post_mutation(running_workbench_server, "/api/approve", view)
+
+    assert view["state"] == "complete"
+    assert view["editorImageUrl"] is None
+    assert view["normalArtifactUrl"] is not None
+    assert view["holdCount"] == 4
+    with urlopen(running_workbench_server + view["normalArtifactUrl"]) as response:
+        assert response.read() == b"stage-4-normal"
+
+
 def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
     running_workbench_server,
 ):
@@ -1404,6 +1442,7 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
         "ok": True,
         "boardId": view["boardId"],
         "revisionId": view["revisionId"],
+        "report": None,
     }
     assert preview_status == save_status == run_status == 202
     assert preview_submission["boardId"] == save_submission["boardId"] == run_submission["boardId"] == view["boardId"]
@@ -1427,6 +1466,17 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
     }
     assert report["result"]["overallStatus"] == "passed"
     assert report["result"]["checks"][0]["checkId"] == "package-readiness"
+    validation_after_run_status, validation_after_run = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
+    )
+    assert validation_after_run_status == 200
+    assert validation_after_run == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "report": report["result"],
+    }
 
 
 @pytest.mark.parametrize(

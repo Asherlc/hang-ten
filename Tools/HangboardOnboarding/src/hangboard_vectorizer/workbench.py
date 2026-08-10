@@ -65,6 +65,8 @@ class WorkbenchView:
     checkpoint_token: str | None
     review_path: Path | None
     editor_image_path: Path | None
+    normal_artifact_path: Path | None
+    hold_count: int | None
     editor_mode: str | None
     saved: bool
     stale_from_stage: int | None
@@ -102,6 +104,8 @@ class WorkbenchService:
         self.__library_open_locks: dict[str, RLock] = {}
         self.__promotion_previews_guard = RLock()
         self.__promotion_previews: dict[tuple[str, str], PromotionPreview] = {}
+        self.__validation_reports_guard = RLock()
+        self.__validation_reports: dict[tuple[str, str], ValidationReport] = {}
         self.__runners = MappingProxyType(
             dict(DEFAULT_STAGE_RUNNERS if runners is None else runners)
         )
@@ -634,7 +638,7 @@ class WorkbenchService:
         expected_revision_id: str,
     ) -> ValidationReport:
         """Return a read-only readiness report for the active approved revision."""
-        _board, revision = self.__promotion_revision(
+        board, revision = self.__promotion_revision(
             board_id, expected_revision_id=expected_revision_id
         )
         if self.__library is None:
@@ -645,12 +649,26 @@ class WorkbenchService:
             root = repository_root(self.__library)
         except ValueError as error:
             raise WorkbenchServiceError(str(error)) from error
-        return build_validation_report(
+        report = build_validation_report(
             revision.run_root,
             root,
             board_id=board_id,
             revision_id=revision.id,
         )
+        self.__promotion_revision(board.id, expected_revision_id=revision.id)
+        self.__cache_validation_report(board, revision, report)
+        return report
+
+    def get_validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> ValidationReport | None:
+        """Return the last successful validation report for the active revision."""
+        board, revision = self.__promotion_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        with self.__validation_reports_guard:
+            self.__discard_stale_validation_reports(board.id, revision.id)
+            return self.__validation_reports.get((board.id, revision.id))
 
     def __library_open_lock(self, board_id: str) -> RLock:
         with self.__library_open_locks_guard:
@@ -676,6 +694,27 @@ class WorkbenchService:
         )
         for key in stale_keys:
             del self.__promotion_previews[key]
+
+    def __cache_validation_report(
+        self,
+        board: BoardRecord,
+        revision: RevisionRecord,
+        report: ValidationReport,
+    ) -> None:
+        with self.__validation_reports_guard:
+            self.__discard_stale_validation_reports(board.id, revision.id)
+            self.__validation_reports[(board.id, revision.id)] = report
+
+    def __discard_stale_validation_reports(
+        self, board_id: str, active_revision_id: str
+    ) -> None:
+        stale_keys = tuple(
+            key
+            for key in self.__validation_reports
+            if key[0] == board_id and key[1] != active_revision_id
+        )
+        for key in stale_keys:
+            del self.__validation_reports[key]
 
     def __promotion_revision(
         self, board_id: str, *, expected_revision_id: str
@@ -835,6 +874,7 @@ class WorkbenchService:
             review_path, editor_image_path = self.__editable_artifacts(
                 revision, stage, review_value
             )
+            normal_artifact_path, hold_count = None, None
         else:
             review_path = (
                 revision.run_root / review_value
@@ -842,6 +882,11 @@ class WorkbenchService:
                 else None
             )
             editor_image_path = None
+            normal_artifact_path, hold_count = (
+                self.__stage4_inspect_artifacts(revision)
+                if raw_state == "complete" and stage == _FINAL_STAGE
+                else (None, None)
+            )
         return WorkbenchView(
             board_id=board.id,
             revision_id=revision.id,
@@ -853,12 +898,63 @@ class WorkbenchService:
             checkpoint_token=self.__checkpoint_token(revision, status),
             review_path=review_path,
             editor_image_path=editor_image_path,
+            normal_artifact_path=normal_artifact_path,
+            hold_count=hold_count,
             editor_mode=editor_mode,
             saved=board.saved_revision_id == revision.id,
             stale_from_stage=revision.stale_from_stage,
             repository_board_id=board.repository_board_id,
             repository_revision_token=board.repository_revision_token,
         )
+
+    def __stage4_inspect_artifacts(
+        self, revision: RevisionRecord
+    ) -> tuple[Path, int]:
+        """Return the hash-bound normal render and region count for Stage 4."""
+        try:
+            manifest = self.__manifest(revision.run_root)
+            stages = manifest.get("stages")
+            if not isinstance(stages, list) or len(stages) <= _FINAL_STAGE:
+                raise ValueError("Stage 4 acceptance is missing")
+            record = stages[_FINAL_STAGE]
+            if (
+                not isinstance(record, Mapping)
+                or record.get("stage") != _FINAL_STAGE
+                or record.get("status") != "approved"
+            ):
+                raise ValueError("Stage 4 acceptance is invalid")
+            acceptance_path = self.__confined_run_path(
+                revision.run_root, record.get("acceptancePath")
+            )
+            acceptance_hash = record.get("acceptanceSha256")
+            if (
+                not isinstance(acceptance_hash, str)
+                or sha256(acceptance_path.read_bytes()).hexdigest()
+                != acceptance_hash
+            ):
+                raise ValueError("Stage 4 acceptance changed")
+            acceptance = self.__read_object(acceptance_path, "Stage 4 acceptance")
+            normal = acceptance.get("normal")
+            hold_count = acceptance.get("regionCount")
+            if (
+                not isinstance(normal, Mapping)
+                or isinstance(hold_count, bool)
+                or not isinstance(hold_count, int)
+                or hold_count < 0
+            ):
+                raise ValueError("Stage 4 inspect evidence is invalid")
+            normal_path = self.__confined_run_path(
+                revision.run_root, normal.get("path")
+            )
+            expected_hash = normal.get("fileSha256")
+            if (
+                not isinstance(expected_hash, str)
+                or sha256(normal_path.read_bytes()).hexdigest() != expected_hash
+            ):
+                raise ValueError("Stage 4 normal artifact changed")
+            return normal_path, hold_count
+        except (OSError, RuntimeError, TypeError, ValueError) as error:
+            raise WorkbenchServiceError("inconsistent Stage 4 inspect evidence") from error
 
     def __checkpoint_token(
         self, revision: RevisionRecord, status: Mapping[str, object]

@@ -52,6 +52,9 @@ def test_validation_reports_package_parity_and_bounded_plan_library_check(
             30.0,
         )
     ]
+    assert service.get_validation_report(
+        board_id, expected_revision_id=revision_id
+    ) == report
 
 
 def test_validation_reports_invalid_package_without_changing_checkout(
