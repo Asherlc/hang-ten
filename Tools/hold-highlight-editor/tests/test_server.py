@@ -378,6 +378,8 @@ class FakeWorkbenchService:
                 board_id=board_id,
                 revision_id=revision_id,
                 parent_revision_id=None,
+                repository_board_id=None,
+                repository_revision_token=None,
                 run_root=run_root,
                 product_name=product_name,
                 stage=0,

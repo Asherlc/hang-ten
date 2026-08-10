@@ -96,7 +96,10 @@ def test_release_publication_requires_an_explicit_manual_dispatch():
     triggers = workflow["true"]
 
     assert set(triggers) == {"pull_request", "workflow_dispatch"}
-    assert workflow["jobs"]["release"]["if"] == "github.event_name == 'workflow_dispatch'"
+    assert workflow["jobs"]["release"]["if"] == (
+        "github.event_name == 'workflow_dispatch' && "
+        "github.ref == 'refs/heads/main'"
+    )
 
 
 def test_frozen_smoke_checks_all_assets_both_signals_and_owned_cleanup():
