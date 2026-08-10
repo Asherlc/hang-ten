@@ -12,6 +12,7 @@ Usage: scripts/hangboard-tools.sh <command> [arguments]
 
 Commands:
   onboard     Start, inspect, approve, or resume a staged onboarding run
+  inspect     Summarize hold-region review artifacts for one run
   benchmark   Replay the accepted Metolius run without a live model call
   convert     Convert a registered product photo to SVG and JSON
 EOF
@@ -36,6 +37,7 @@ if ! "$python_command" -c 'import sys; raise SystemExit(0 if sys.version_info >=
 fi
 
 if [[ ! -x "$environment_root/bin/hangboard-onboard" || \
+      ! -x "$environment_root/bin/hangboard-review" || \
       "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-onboard" ]]; then
     "$python_command" -m venv "$environment_root"
     "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
@@ -44,6 +46,9 @@ fi
 case "$command_name" in
     onboard)
         exec "$environment_root/bin/hangboard-onboard" "$@"
+        ;;
+    inspect)
+        exec "$environment_root/bin/hangboard-review" inspect "$@"
         ;;
     benchmark)
         accepted_run="$tool_root/reference/metolius-compact-ii/accepted-run"
