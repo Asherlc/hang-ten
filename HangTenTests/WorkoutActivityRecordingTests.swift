@@ -438,7 +438,25 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let repetitionsByPair = Dictionary(grouping: resolvedPairs, by: { $0 })
         XCTAssertEqual(repetitionsByPair.count, 3)
         XCTAssertTrue(repetitionsByPair.values.allSatisfy { $0.count == 6 })
-        XCTAssertEqual(repetitionsByPair[BoardCatalog.compactIIFlatSloperHoldIDs.sorted()]?.count, 6)
+
+        struct HoldShape: Hashable {
+            let kind: HoldKind
+            let sizeMillimeters: Int?
+        }
+
+        let resolvedPairShapes = Set(repetitionsByPair.keys.map { holdIDs in
+            board.holds
+                .filter { holdIDs.contains($0.id) }
+                .map { HoldShape(kind: $0.kind, sizeMillimeters: $0.sizeMillimeters) }
+        })
+        XCTAssertEqual(
+            resolvedPairShapes,
+            Set([
+                [HoldShape(kind: .edge, sizeMillimeters: 29), HoldShape(kind: .edge, sizeMillimeters: 29)],
+                [HoldShape(kind: .sloper, sizeMillimeters: 56), HoldShape(kind: .sloper, sizeMillimeters: 56)],
+                [HoldShape(kind: .edge, sizeMillimeters: 19), HoldShape(kind: .edge, sizeMillimeters: 19)]
+            ])
+        )
 
         for holdIDs in repetitionsByPair.keys {
             XCTAssertEqual(holdIDs.count, 2)
