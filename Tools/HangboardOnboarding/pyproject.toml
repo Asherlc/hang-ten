@@ -18,6 +18,7 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
+hangboard-promote = "hangboard_vectorizer.promotion_cli:main"
 hangboard-review = "hangboard_vectorizer.review_cli:main"
 hangboard-semantic-benchmark = "hangboard_vectorizer.semantic_benchmark:main"
 hangboard-to-svg = "hangboard_vectorizer.cli:main"

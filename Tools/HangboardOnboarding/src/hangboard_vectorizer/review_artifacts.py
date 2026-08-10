@@ -25,7 +25,6 @@ _OPTIONAL_ARTIFACTS = {
     "stage-2-human-corrections.json": "corrections",
     "lint-report.json": "lint_report",
     "stage-2-review-acceptance.json": "acceptance",
-    "board-promotion-report.json": "promotion_report",
 }
 
 _INSPECT_PATH_FIELDS = {
@@ -62,6 +61,9 @@ def discover_review_run(root: Path) -> ReviewRun:
         optional[field_name] = _discover_optional_in_directory(
             resolved_root, stage2_dir, artifact_name
         )
+    optional["promotion_report"] = _discover_optional_in_directory(
+        resolved_root, stage2_dir / "promotion", "board-promotion-report.json"
+    )
 
     return ReviewRun(
         root=resolved_root,

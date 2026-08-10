@@ -62,6 +62,63 @@ def make_review_run_with_edit_and_acceptance(root: Path) -> Path:
     return run
 
 
+def make_profile(
+    root: Path,
+    destination_relative: str = "canonical/board.json",
+    *,
+    required_region_keys: tuple[str, ...] = ("left",),
+    runtime_mappings: tuple[dict[str, object], ...] | None = None,
+) -> Path:
+    profile_root = root.resolve(strict=False)
+    profile_root.mkdir(parents=True, exist_ok=True)
+    if runtime_mappings is None:
+        runtime_mappings = (
+            {
+                "regionKey": "left",
+                "runtimeHoldId": "runtime-left",
+                "gripType": "edge",
+                "interactionMode": "surface",
+            },
+        )
+    profile_path = profile_root / "promotion-profile.json"
+    _write_json(
+        profile_path,
+        {
+            "schemaVersion": 1,
+            "profileId": "fixture-profile",
+            "boardId": "fixture-board",
+            "requiredRegionKeys": list(required_region_keys),
+            "runtimeMappings": list(runtime_mappings),
+            "destinations": [
+                {
+                    "sourceRelative": "edited-regions.json",
+                    "destinationRelative": destination_relative,
+                }
+            ],
+        },
+    )
+    return profile_path
+
+
+def make_review_run_with_blocked_promotion(root: Path) -> Path:
+    run = make_review_run_with_edit_and_acceptance(root)
+    edited = run / "stages/02/attempt-0001/stage-2-regions.edited.json"
+    edited.write_text(edited.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    return run
+
+
+def make_review_run_with_ready_promotion(root: Path) -> Path:
+    from hangboard_vectorizer.promotion import promote_run
+    from hangboard_vectorizer.promotion_profile import load_promotion_profile
+
+    run = make_review_run_with_edit_and_acceptance(root)
+    profile = load_promotion_profile(make_profile(run / ".context/profile"))
+    repository_root = run / ".context/repository-root"
+    repository_root.mkdir(parents=True, exist_ok=True)
+    promote_run(discover_review_run(run), profile, repository_root)
+    return run
+
+
 def _baseline_regions() -> dict[str, object]:
     return {
         "canvas": {"width": 32, "height": 16},
