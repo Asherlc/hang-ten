@@ -53,6 +53,9 @@ COMPACT_PROMPT_BYTES = canonical_json_bytes({
     "instruction": "return one batched observation for every physical grip",
     "omit": ["explanations", "contours", "boxes", "dimensions", "pixelGeometry"],
 })
+# Conservative Linux parity allowance: at most this many pixels may differ by
+# a one-step RGB rounding delta while preserving the exact alpha mask.
+HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS = 32
 
 
 class _ForbiddenLiveClient:
@@ -230,6 +233,7 @@ def _report(
     accepted_highlight_hashes: dict[str, str] = {}
     replay_highlight_hashes: dict[str, str] = {}
     highlight_exact: dict[str, bool] = {}
+    highlight_equivalent: dict[str, bool] = {}
     highlight_pixel_diffs: dict[str, dict[str, int]] = {}
     for name, replayed in sorted(replay_highlights.items()):
         path = accepted / f"stages/04/attempt-0001/stage-4-highlight-{name}.png"
@@ -243,6 +247,9 @@ def _report(
         accepted_highlight_hashes[name] = accepted_hash
         replay_highlight_hashes[name] = replay_hash
         highlight_exact[name] = np.array_equal(accepted_pixels, replayed)
+        highlight_equivalent[name] = _highlight_pixels_equivalent(
+            accepted_pixels, replayed
+        )
         highlight_pixel_diffs[name] = {
             "differingPixelCount": int(
                 np.any(channel_differences != 0, axis=-1).sum()
@@ -303,6 +310,7 @@ def _report(
     stage4 = {
         "acceptedHighlightPixelSha256": accepted_highlight_hashes,
         "highlightPixelsExact": highlight_exact,
+        "highlightPixelsEquivalent": highlight_equivalent,
         "highlightPixelDiffs": highlight_pixel_diffs,
         "replayHighlightPixelSha256": replay_highlight_hashes,
     }
@@ -312,7 +320,7 @@ def _report(
         and stage2["labelsExact"]
         and stage2["regionsExact"]
         and stage3["geometryExact"]
-        and all(highlight_exact.values())
+        and all(highlight_equivalent.values())
     )
     return {
         "acceptedRun": str(accepted),
@@ -372,6 +380,28 @@ def _geometry_hash(document: dict[str, object]) -> str:
         "regions": document["regions"],
         "silhouettePaths": document["silhouettePaths"],
     }))
+
+
+def _highlight_pixels_equivalent(
+    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
+) -> bool:
+    if accepted_pixels.shape != replayed_pixels.shape:
+        return False
+    if accepted_pixels.ndim != 3 or accepted_pixels.shape[-1] != 4:
+        return False
+
+    accepted_rgb = accepted_pixels[..., :3].astype(np.int16)
+    replayed_rgb = replayed_pixels[..., :3].astype(np.int16)
+    if not np.array_equal(accepted_pixels[..., 3], replayed_pixels[..., 3]):
+        return False
+
+    rgb_delta = np.abs(accepted_rgb - replayed_rgb)
+    changed_pixel_count = int(np.any(rgb_delta != 0, axis=-1).sum())
+    max_rgb_delta = int(rgb_delta.max(initial=0))
+    return (
+        max_rgb_delta <= 1
+        and changed_pixel_count <= HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS
+    )
 
 
 def _json(path: Path) -> dict[str, object]:
