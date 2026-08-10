@@ -83,7 +83,7 @@ def _parser() -> argparse.ArgumentParser:
     accept.add_argument("--run", type=Path, required=True, help="review run directory")
     accept.add_argument(
         "--decision",
-        choices=("accepted", "rejected"),
+        choices=("accepted", "rejected", "needs-changes"),
         required=True,
         help="acceptance decision to record",
     )

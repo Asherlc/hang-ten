@@ -114,6 +114,34 @@ def test_main_inspect_reports_accepted_state_after_acceptance(
     assert payload["nextAction"] == "promote"
 
 
+def test_main_inspect_does_not_advance_a_needs_changes_review(
+    tmp_path: Path, capsys
+) -> None:
+    run = make_review_run_with_edit(tmp_path / "run")
+    assert review_cli.main(["lint", "--run", str(run)]) == 0
+    capsys.readouterr()
+    assert review_cli.main(
+        [
+            "accept",
+            "--run",
+            str(run),
+            "--decision",
+            "needs-changes",
+            "--notes",
+            "Fix the right pocket",
+        ]
+    ) == 0
+    capsys.readouterr()
+
+    result = review_cli.main(["inspect", "--run", str(run)])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    payload = json.loads(captured.out)
+    assert payload["state"] == "lint-passed"
+    assert payload["nextAction"] == "accept"
+
+
 def test_main_preview_writes_bundle_and_prints_json(tmp_path: Path, capsys) -> None:
     run = make_review_run_with_edit(tmp_path / "run")
     output = tmp_path / "preview-output"

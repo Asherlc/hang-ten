@@ -10,9 +10,13 @@ from hangboard_vectorizer import release_check_cli
 from hangboard_vectorizer.release_check import release_check_report, run_release_check
 from hangboard_vectorizer.review_artifacts import discover_review_run
 from review_fixtures import (
+    make_profile,
     make_review_run_with_blocked_promotion,
+    make_review_run_with_edit_and_acceptance,
     make_review_run_with_ready_promotion,
 )
+from hangboard_vectorizer.promotion import promote_run
+from hangboard_vectorizer.promotion_profile import load_promotion_profile
 
 
 def test_release_check_fails_when_promotion_is_blocked(tmp_path: Path) -> None:
@@ -42,7 +46,55 @@ def test_release_check_runs_export_check_with_repository_root(
 
     assert any(command[-2:] == ("export-plan-library.sh", "--check") for command in calls)
     assert all(result.passed for result in results)
-    assert (tmp_path / "canonical/board.json").exists() is False
+    assert (tmp_path / "canonical/board.json").is_file()
+
+
+def test_release_check_fails_when_a_planned_destination_is_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile = load_promotion_profile(make_profile(tmp_path / "profile"))
+    repository_root = tmp_path / "repo"
+    repository_root.mkdir()
+    promote_run(discover_review_run(run), profile, repository_root)
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(
+        discover_review_run(run), repository_root, run_xcode=False
+    )
+
+    output_result = _result_named(results, "promotion-output-hashes")
+    assert output_result.passed is False
+    assert "canonical/board.json" in (output_result.error or "")
+
+
+def test_release_check_fails_when_a_planned_destination_is_stale(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile = load_promotion_profile(make_profile(tmp_path / "profile"))
+    repository_root = tmp_path / "repo"
+    repository_root.mkdir()
+    promote_run(discover_review_run(run), profile, repository_root, apply=True)
+    destination = repository_root / "canonical/board.json"
+    destination.write_text(destination.read_text(encoding="utf-8") + "\n")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(
+        discover_review_run(run), repository_root, run_xcode=False
+    )
+
+    output_result = _result_named(results, "promotion-output-hashes")
+    assert output_result.passed is False
+    assert "canonical/board.json" in (output_result.error or "")
 
 
 def test_release_check_fails_when_promotion_input_hashes_are_stale(
@@ -137,6 +189,60 @@ def test_release_check_fails_when_profile_runtime_mappings_are_incomplete(
     profile_result = _result_named(results, "promotion-runtime")
     assert profile_result.passed is False
     assert "right" in (profile_result.error or "")
+
+
+def test_release_check_fails_when_profile_source_hash_changes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    profile_path = run / ".context/profile/promotion-profile.json"
+    profile_path.write_text(
+        profile_path.read_text(encoding="utf-8") + "\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(discover_review_run(run), tmp_path, run_xcode=False)
+
+    runtime_result = _result_named(results, "promotion-runtime")
+    assert runtime_result.passed is False
+    assert "profile hash changed" in (runtime_result.error or "")
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("regionKey", "right"),
+        ("runtimeHoldId", "runtime-tampered"),
+        ("gripType", "pocket"),
+        ("interactionMode", "aperture"),
+    ],
+)
+def test_release_check_compares_every_runtime_mapping_field_to_profile_and_regions(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    replacement: str,
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+    report_path = run / "stages/02/attempt-0001/promotion/board-promotion-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["profile"]["runtimeMappings"][0][field] = replacement
+    report_path.write_text(json.dumps(report, sort_keys=True) + "\n", encoding="utf-8")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(discover_review_run(run), tmp_path, run_xcode=False)
+
+    runtime_result = _result_named(results, "promotion-runtime")
+    assert runtime_result.passed is False
+    assert field in (runtime_result.error or "")
 
 
 def test_release_check_cli_explain_returns_machine_readable_blockers(

@@ -89,11 +89,35 @@ def test_complete_solo_review_workflow_via_wrapper(tmp_path: Path) -> None:
         str(profile),
         "--repository-root",
         str(release_repo),
+        "--apply",
     )
     assert promote_result.returncode == 0, promote_result.stderr
     promote_payload = _parse_json_output(promote_result)
-    assert promote_payload["status"] == "ready"
+    assert promote_payload["status"] == "applied"
     assert promote_payload["plannedWrites"]
+    subprocess.run(
+        ["git", "add", "canonical/board.json"],
+        cwd=release_repo,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "-m",
+            "Add promoted board",
+        ],
+        cwd=release_repo,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
     release_check_result = _run_wrapper(
         repository_root,

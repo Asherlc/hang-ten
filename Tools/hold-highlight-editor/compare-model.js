@@ -11,7 +11,7 @@
     return JSON.stringify({
       key: region.key,
       type: region.type,
-      mode: region.mode,
+      mode: region.metadata?.mode ?? region.mode ?? region.visualMode,
       contour: (region.contour || []).map(([x, y]) => [Number(x), Number(y)]),
     });
   }
@@ -21,7 +21,10 @@
   }
 
   function correctionIds(corrections, key) {
-    return ordered(new Set((corrections?.[key] || []).map((entry) => Number(entry.id)).filter(Number.isFinite)));
+    return ordered(new Set((corrections?.[key] || []).map((entry) => {
+      const id = key === "modified" ? entry?.after?.id : entry?.id;
+      return Number(id);
+    }).filter(Number.isFinite)));
   }
 
   function buildSummary(baseline, edited, corrections = null) {

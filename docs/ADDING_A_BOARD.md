@@ -87,8 +87,9 @@ scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/exa
 
 Safety boundaries:
 
-- `inspect`, `compare`, `lint`, and `preview` are read-only for the reviewed
-  run.
+- `inspect`, `compare`, and `preview` are read-only for the reviewed run.
+- `lint` never changes Stage 1, Stage 2, or edited/correction inputs, but it
+  writes or replaces `lint-report.json` beside the edited regions.
 - `accept` writes the Stage 2 acceptance artifact and the current
   `lint-report.json` beside the edited regions.
 - `promote` is dry-run by default and does not touch repository destinations

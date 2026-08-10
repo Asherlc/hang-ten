@@ -203,7 +203,7 @@
         }
 
         function renderSummary() {
-          elements.summaryGrid.innerHTML = "";
+          elements.summaryGrid.replaceChildren();
           [
             ["Added", "added", summary.added.length],
             ["Modified", "modified", summary.modified.length],
@@ -212,7 +212,11 @@
           ].forEach(([label, key, count]) => {
             const block = document.createElement("div");
             block.className = key;
-            block.innerHTML = `<span>${label}</span><strong>${count}</strong>`;
+            const labelNode = document.createElement("span");
+            const countNode = document.createElement("strong");
+            labelNode.textContent = label;
+            countNode.textContent = String(count);
+            block.append(labelNode, countNode);
             elements.summaryGrid.appendChild(block);
           });
         }
@@ -224,7 +228,19 @@
             ["Edited regions", payload.edited.path, payload.edited.hash],
           ];
           if (payload.corrections) rows.push(["Corrections", payload.corrections.path, payload.corrections.hash]);
-          elements.metadataRows.innerHTML = rows.map(([label, path, hash]) => `<tr><th>${label}</th><td>${path}<br /><code>${hash}</code></td></tr>`).join("");
+          elements.metadataRows.replaceChildren();
+          rows.forEach(([label, artifactPath, hash]) => {
+            const row = document.createElement("tr");
+            const heading = document.createElement("th");
+            const value = document.createElement("td");
+            const digest = document.createElement("code");
+            heading.textContent = label;
+            value.append(document.createTextNode(artifactPath), document.createElement("br"));
+            digest.textContent = hash;
+            value.appendChild(digest);
+            row.append(heading, value);
+            elements.metadataRows.appendChild(row);
+          });
         }
 
         function renderFocus() {
@@ -233,7 +249,15 @@
             elements.focusMeta.textContent = "Showing all regions.";
             return;
           }
-          elements.focusMeta.innerHTML = `Region <strong>${region.id}</strong> · ${region.key} · ${region.type} · ${region.mode}<br />Status: ${regionStatus(Number(region.id))}`;
+          const id = document.createElement("strong");
+          id.textContent = String(region.id);
+          elements.focusMeta.replaceChildren(
+            document.createTextNode("Region "),
+            id,
+            document.createTextNode(` · ${region.key} · ${region.type} · ${region.metadata?.mode ?? region.mode ?? region.visualMode}`),
+            document.createElement("br"),
+            document.createTextNode(`Status: ${regionStatus(Number(region.id))}`),
+          );
         }
 
         function renderViewer() {
@@ -272,10 +296,16 @@
           renderViewer();
         }
 
-        elements.regionFocus.innerHTML = [
-          `<option value="all">All regions</option>`,
-          ...allIds.map((id) => `<option value="${id}">Region ${id} · ${regionStatus(id)}</option>`),
-        ].join("");
+        const allOption = document.createElement("option");
+        allOption.value = "all";
+        allOption.textContent = "All regions";
+        elements.regionFocus.appendChild(allOption);
+        allIds.forEach((id) => {
+          const option = document.createElement("option");
+          option.value = String(id);
+          option.textContent = `Region ${id} · ${regionStatus(id)}`;
+          elements.regionFocus.appendChild(option);
+        });
         elements.regionFocus.addEventListener("change", () => {
           state.selectedId = elements.regionFocus.value;
           render();

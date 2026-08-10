@@ -6,6 +6,7 @@ const {
   computeFitZoom,
   visibleLayers,
 } = require("../compare-model.js");
+const { buildCorrectionsDocument } = require("../editor-model.js");
 
 test("buildSummary separates added modified deleted and unchanged regions by numeric id", () => {
   const baseline = [
@@ -19,8 +20,8 @@ test("buildSummary separates added modified deleted and unchanged regions by num
     { id: 1, key: "changed", contour: [[4, 0], [6, 0], [5, 1]], type: "edge", mode: "surface" },
   ];
   const corrections = {
-    modified: [{ id: 1, key: "changed" }],
-    added: [{ id: 4, key: "added" }],
+    modified: [{ before: baseline[2], after: edited[2] }],
+    added: [edited[0]],
     deleted: [{ id: 3, key: "deleted" }],
   };
 
@@ -29,6 +30,28 @@ test("buildSummary separates added modified deleted and unchanged regions by num
     modified: [1],
     deleted: [3],
     unchanged: [2],
+  });
+});
+
+test("buildSummary consumes the editor correction contract without omitting modifications", () => {
+  const baseline = {
+    id: 1,
+    key: "left",
+    type: "edge",
+    contour: [[0, 0], [5, 0], [5, 5]],
+    metadata: { mode: "surface" },
+  };
+  const changed = { ...baseline, contour: [[0, 0], [6, 0], [5, 5]] };
+  const corrections = buildCorrectionsDocument({
+    baselineRegions: [baseline],
+    regions: [changed],
+  });
+
+  assert.deepEqual(buildSummary([baseline], [changed], corrections), {
+    added: [],
+    modified: [1],
+    deleted: [],
+    unchanged: [],
   });
 });
 

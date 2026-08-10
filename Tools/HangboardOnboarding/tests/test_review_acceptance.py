@@ -91,3 +91,14 @@ def test_validate_acceptance_rejects_invalid_mandatory_hash_format(
 
     with pytest.raises(ValueError, match=invalid_key):
         validate_acceptance(discover_review_run(run))
+
+
+def test_write_acceptance_records_needs_changes_decision(tmp_path: Path) -> None:
+    run = make_review_run_with_edit(tmp_path / "run")
+
+    path = write_acceptance(
+        discover_review_run(run), "needs-changes", "asher", "Correct the right pocket"
+    )
+
+    assert validate_acceptance(discover_review_run(run)).decision == "needs-changes"
+    assert json.loads(path.read_text(encoding="utf-8"))["decision"] == "needs-changes"

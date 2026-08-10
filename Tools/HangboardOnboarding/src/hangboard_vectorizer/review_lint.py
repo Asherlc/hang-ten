@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from copy import deepcopy
 from dataclasses import dataclass
 import json
 import math
@@ -50,7 +51,7 @@ def lint_review(
     issues: list[LintIssue] = []
     canvas = _validate_canvas(edited, issues)
     edited_regions = _validate_regions(edited, canvas, issues)
-    baseline_regions = _regions_by_id(baseline.get("regions"))
+    baseline_regions = _normalized_baseline_regions(baseline.get("regions"))
     _validate_corrections(corrections, baseline_regions, edited_regions, issues)
 
     ordered = tuple(
@@ -190,7 +191,7 @@ def _validate_regions(
                     "region type must be one of pocket, edge, sloper, or jug",
                 )
             )
-        if region.get("mode") not in _ALLOWED_MODES:
+        if _region_mode(region) not in _ALLOWED_MODES:
             issues.append(
                 LintIssue(
                     "error",
@@ -241,39 +242,48 @@ def _validate_corrections(
     edited_regions: Mapping[int, Mapping[str, object]],
     issues: list[LintIssue],
 ) -> None:
-    _validate_correction_entries(
-        corrections.get("modified"),
-        "modified",
-        baseline_regions,
-        edited_regions,
-        issues,
-    )
-    _validate_correction_entries(
-        corrections.get("added"),
-        "added",
-        {},
-        edited_regions,
-        issues,
-    )
-    _validate_correction_entries(
-        corrections.get("deleted"),
-        "deleted",
-        baseline_regions,
-        {},
-        issues,
-    )
+    if corrections.get("schemaVersion") != 1:
+        issues.append(
+            LintIssue(
+                "error",
+                "corrections.schema-version",
+                "corrections.schemaVersion",
+                "corrections schemaVersion must be 1",
+            )
+        )
+
+    baseline_ids = set(baseline_regions)
+    edited_ids = set(edited_regions)
+    expected_ids = {
+        "added": edited_ids - baseline_ids,
+        "deleted": baseline_ids - edited_ids,
+        "modified": {
+            region_id
+            for region_id in baseline_ids & edited_ids
+            if _comparison_signature(baseline_regions[region_id])
+            != _comparison_signature(edited_regions[region_id])
+        },
+    }
+    for kind in ("modified", "added", "deleted"):
+        _validate_correction_entries(
+            corrections.get(kind),
+            kind,
+            expected_ids[kind],
+            baseline_regions,
+            edited_regions,
+            issues,
+        )
 
 
 def _validate_correction_entries(
     raw_entries: object,
     kind: Literal["modified", "added", "deleted"],
+    expected_ids: set[int],
     baseline_regions: Mapping[int, Mapping[str, object]],
     edited_regions: Mapping[int, Mapping[str, object]],
     issues: list[LintIssue],
 ) -> None:
     path = f"corrections.{kind}"
-    if raw_entries is None:
-        return
     if not isinstance(raw_entries, list):
         issues.append(
             LintIssue(
@@ -285,22 +295,34 @@ def _validate_correction_entries(
         )
         return
 
+    found_ids: set[int] = set()
     for index, entry in enumerate(raw_entries):
         entry_path = f"{path}[{index}]"
-        if not isinstance(entry, Mapping) or not _is_int(entry.get("id")):
+        region_id = _correction_entry_id(entry, kind)
+        if region_id is None:
             issues.append(
                 LintIssue(
                     "error",
                     f"corrections.{kind}-entry",
                     entry_path,
-                    f"{kind} correction entries must include an integer id",
+                    _correction_entry_message(kind),
                 )
             )
             continue
+        if region_id in found_ids:
+            issues.append(
+                LintIssue(
+                    "error",
+                    f"corrections.{kind}-duplicate",
+                    entry_path,
+                    f"{kind} correction contains duplicate region id {region_id}",
+                )
+            )
+        found_ids.add(region_id)
         expected = _expected_correction_entry(
-            kind, int(entry["id"]), baseline_regions, edited_regions
+            kind, region_id, baseline_regions, edited_regions
         )
-        if expected is None or _canonical_json_bytes(entry) != _canonical_json_bytes(expected):
+        if region_id not in expected_ids or expected is None or entry != expected:
             issues.append(
                 LintIssue(
                     "error",
@@ -310,30 +332,67 @@ def _validate_correction_entries(
                 )
             )
 
+    for region_id in sorted(expected_ids - found_ids):
+        issues.append(
+            LintIssue(
+                "error",
+                f"corrections.{kind}-missing",
+                path,
+                f"{kind} correction is missing region id {region_id}",
+            )
+        )
+
 
 def _expected_correction_entry(
     kind: Literal["modified", "added", "deleted"],
     region_id: int,
     baseline_regions: Mapping[int, Mapping[str, object]],
     edited_regions: Mapping[int, Mapping[str, object]],
-) -> dict[str, object] | None:
+) -> Mapping[str, object] | None:
     if kind == "modified":
         baseline = baseline_regions.get(region_id)
         edited = edited_regions.get(region_id)
         if baseline is None or edited is None:
             return None
-        baseline_identity = _region_identity(baseline)
-        edited_identity = _region_identity(edited)
-        return edited_identity if baseline_identity == edited_identity else None
+        return {
+            "before": _editor_export_region(baseline),
+            "after": edited,
+        }
     if kind == "added":
         if region_id in baseline_regions:
             return None
-        edited = edited_regions.get(region_id)
-        return _region_identity(edited) if edited is not None else None
+        return edited_regions.get(region_id)
     if region_id in edited_regions:
         return None
     baseline = baseline_regions.get(region_id)
     return _region_identity(baseline) if baseline is not None else None
+
+
+def _correction_entry_id(
+    entry: object, kind: Literal["modified", "added", "deleted"]
+) -> int | None:
+    if not isinstance(entry, Mapping):
+        return None
+    if kind != "modified":
+        value = entry.get("id")
+        return int(value) if _is_int(value) else None
+    before = entry.get("before")
+    after = entry.get("after")
+    if not isinstance(before, Mapping) or not isinstance(after, Mapping):
+        return None
+    before_id = before.get("id")
+    after_id = after.get("id")
+    if not _is_int(before_id) or not _is_int(after_id) or before_id != after_id:
+        return None
+    return int(after_id)
+
+
+def _correction_entry_message(kind: str) -> str:
+    if kind == "modified":
+        return "modified correction entries must contain before and after regions with the same integer id"
+    if kind == "added":
+        return "added correction entries must contain the full added region with an integer id"
+    return "deleted correction entries must include an integer id"
 
 
 def _region_identity(region: Mapping[str, object] | None) -> dict[str, object] | None:
@@ -342,14 +401,155 @@ def _region_identity(region: Mapping[str, object] | None) -> dict[str, object] |
     return {"id": int(region["id"]), "key": region["key"]}
 
 
-def _regions_by_id(raw_regions: object) -> dict[int, Mapping[str, object]]:
+def _normalized_baseline_regions(
+    raw_regions: object,
+) -> dict[int, Mapping[str, object]]:
     if not isinstance(raw_regions, list):
         return {}
     indexed: dict[int, Mapping[str, object]] = {}
-    for region in raw_regions:
-        if isinstance(region, Mapping) and _is_int(region.get("id")):
-            indexed[int(region["id"])] = region
+    for index, region in enumerate(raw_regions):
+        if not isinstance(region, Mapping):
+            continue
+        normalized = _normalize_editor_region(region, index + 1)
+        indexed[int(normalized["id"])] = normalized
     return indexed
+
+
+def _normalize_editor_region(
+    region: Mapping[str, object], fallback_id: int
+) -> dict[str, object]:
+    normalized = deepcopy(dict(region))
+    source_id = region.get("id", fallback_id)
+    numeric_id = _numeric_id(source_id)
+    region_id = numeric_id if numeric_id is not None and numeric_id > 0 else fallback_id
+    key = region.get("key")
+    if not key:
+        key = (
+            source_id
+            if isinstance(source_id, str)
+            else f"grip-{region_id:03d}"
+        )
+    grip_type = region.get("type") or "edge"
+    raw_contour = region.get("contour") or region.get("points") or []
+    contour = [
+        [_js_number(point[0]), _js_number(point[1])]
+        for point in raw_contour
+        if isinstance(point, list | tuple) and len(point) == 2
+    ]
+    raw_metadata = region.get("metadata")
+    metadata_source = dict(raw_metadata) if isinstance(raw_metadata, Mapping) else {}
+    metadata = {
+        "mode": metadata_source.get("mode")
+        or region.get("mode")
+        or region.get("visualMode")
+        or ("aperture" if grip_type == "pocket" else "surface"),
+        "shapeKind": metadata_source.get("shapeKind") or "freeform",
+        "pathStyle": metadata_source.get("pathStyle") or "straight",
+        "curveTension": _js_number(metadata_source.get("curveTension", 0.8)),
+        "humanNotes": metadata_source.get("humanNotes") or "",
+        **metadata_source,
+    }
+    if isinstance(source_id, str) and not source_id.isdigit():
+        metadata["sourceRegionId"] = source_id
+    normalized.update(
+        id=region_id,
+        key=key,
+        type=grip_type,
+        contour=contour,
+        metadata=metadata,
+    )
+    return normalized
+
+
+def _editor_export_region(region: Mapping[str, object]) -> dict[str, object]:
+    exported = deepcopy(dict(region))
+    contour = [
+        [_js_round(_js_number(point[0])), _js_round(_js_number(point[1]))]
+        for point in region.get("contour", [])
+        if isinstance(point, list | tuple) and len(point) == 2
+    ]
+    xs = [point[0] for point in contour]
+    ys = [point[1] for point in contour]
+    metadata = region.get("metadata")
+    exported.update(
+        anchor=[
+            _js_round(sum(xs) / len(xs)),
+            _js_round(sum(ys) / len(ys)),
+        ],
+        areaPixels=int(math.floor(abs(_shoelace_area([(x, y) for x, y in contour])) + 0.5)),
+        bounds=[
+            _js_round(min(xs)),
+            _js_round(min(ys)),
+            _js_round(max(xs)),
+            _js_round(max(ys)),
+        ],
+        contour=contour,
+        metadata={
+            **(dict(metadata) if isinstance(metadata, Mapping) else {}),
+            "editedBy": "hold-highlight-editor",
+        },
+    )
+    return exported
+
+
+def _comparison_signature(region: Mapping[str, object]) -> dict[str, object]:
+    metadata = region.get("metadata")
+    metadata_mapping = metadata if isinstance(metadata, Mapping) else {}
+    return {
+        "key": region.get("key"),
+        "type": region.get("type"),
+        "contour": [
+            [_js_round(_js_number(point[0])), _js_round(_js_number(point[1]))]
+            for point in region.get("contour", [])
+            if isinstance(point, list | tuple) and len(point) == 2
+        ],
+        "mode": _region_mode(region),
+        "shapeKind": metadata_mapping.get("shapeKind") or "freeform",
+        "pathStyle": metadata_mapping.get("pathStyle") or "straight",
+        "curveTension": _js_round(
+            _js_number(metadata_mapping.get("curveTension", 0.8))
+        ),
+        "rotation": _js_round(_js_number(metadata_mapping.get("rotation", 0))),
+        "bend": _js_round(_js_number(metadata_mapping.get("bend", 0))),
+        "notes": metadata_mapping.get("humanNotes") or "",
+    }
+
+
+def _region_mode(region: Mapping[str, object]) -> object:
+    metadata = region.get("metadata")
+    if isinstance(metadata, Mapping) and metadata.get("mode") is not None:
+        return metadata.get("mode")
+    return region.get("mode", region.get("visualMode"))
+
+
+def _numeric_id(value: object) -> int | None:
+    if _is_int(value):
+        return int(value)
+    if isinstance(value, str):
+        try:
+            numeric = float(value)
+        except ValueError:
+            return None
+        if numeric.is_integer():
+            return int(numeric)
+    return None
+
+
+def _js_number(value: object) -> float | int:
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int | float):
+        return value
+    try:
+        return float(str(value))
+    except ValueError:
+        return math.nan
+
+
+def _js_round(value: float | int, digits: int = 2) -> float | int:
+    factor = 10**digits
+    rounded = math.floor(float(value) * factor + 0.5) / factor
+    return int(rounded) if rounded.is_integer() else rounded
 
 
 def _points(raw_contour: object) -> list[tuple[float, float]] | None:

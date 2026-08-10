@@ -13,12 +13,13 @@ from .review_lint import LintReport, _atomic_write_json, lint_review, write_lint
 _SCHEMA_VERSION = 1
 _TOOL_VERSION = "hangboard-review"
 _SHA256_LENGTH = 64
+ReviewDecision = Literal["accepted", "rejected", "needs-changes"]
 
 
 @dataclass(frozen=True)
 class AcceptanceRecord:
     schemaVersion: int
-    decision: Literal["accepted", "rejected"]
+    decision: ReviewDecision
     reviewer: str
     reviewedAt: str
     source: dict[str, str]
@@ -28,12 +29,14 @@ class AcceptanceRecord:
 
 def write_acceptance(
     run: ReviewRun,
-    decision: Literal["accepted", "rejected"],
+    decision: ReviewDecision,
     reviewer: str,
     notes: str,
     now: datetime | None = None,
 ) -> Path:
     """Persist one Stage 2 acceptance decision beside the edited artifact."""
+    if decision not in {"accepted", "rejected", "needs-changes"}:
+        raise ValueError("review acceptance decision is invalid")
     effective_run = run
     if decision == "accepted":
         report = _ensure_current_lint_pass(run)
@@ -78,7 +81,7 @@ def validate_acceptance(run: ReviewRun) -> AcceptanceRecord:
     )
 
     decision = document.get("decision")
-    if decision not in {"accepted", "rejected"}:
+    if decision not in {"accepted", "rejected", "needs-changes"}:
         raise ValueError("review acceptance decision is invalid")
     reviewer = document.get("reviewer")
     reviewed_at = document.get("reviewedAt")

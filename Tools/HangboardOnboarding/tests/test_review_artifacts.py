@@ -62,6 +62,26 @@ def test_discover_review_run_rejects_non_directory_root(tmp_path: Path) -> None:
         discover_review_run(tmp_path / "missing-run")
 
 
+@pytest.mark.parametrize(
+    ("artifact_name", "relative_parent"),
+    [
+        ("stage-1-auto-rgba.png", "stages/01/attempt-0001"),
+        ("stage-2-regions.json", "stages/02/attempt-0001"),
+    ],
+)
+def test_discover_review_run_rejects_stage_artifact_symlink_escape(
+    tmp_path: Path, artifact_name: str, relative_parent: str
+) -> None:
+    run = make_review_run(tmp_path / "run")
+    artifact = run / relative_parent / artifact_name
+    outside = tmp_path / f"outside-{artifact_name}"
+    artifact.replace(outside)
+    artifact.symlink_to(outside)
+
+    with pytest.raises(ValueError, match="resolves outside review run root"):
+        discover_review_run(run)
+
+
 def test_sha256_file_hashes_exact_bytes(tmp_path: Path) -> None:
     path = tmp_path / "artifact.json"
     path.write_bytes(b"artifact")

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .review_artifacts import load_json
+from .review_artifacts import load_json, sha256_file
 
 _SCHEMA_VERSION = 1
 
@@ -33,11 +33,14 @@ class PromotionProfile:
     required_region_keys: tuple[str, ...]
     runtime_mappings: tuple[RuntimeMapping, ...]
     destinations: tuple[Destination, ...]
+    source_path: Path
+    sha256: str
 
 
 def load_promotion_profile(path: Path) -> PromotionProfile:
     """Load one version-1 promotion profile from *path*."""
-    document = load_json(path, "promotion profile")
+    source_path = path.resolve(strict=False)
+    document = load_json(source_path, "promotion profile")
     schema_version = document.get("schemaVersion")
     if schema_version != _SCHEMA_VERSION:
         raise ValueError("promotion profile schemaVersion must be 1")
@@ -57,6 +60,8 @@ def load_promotion_profile(path: Path) -> PromotionProfile:
         required_region_keys=required_region_keys,
         runtime_mappings=runtime_mappings,
         destinations=destinations,
+        source_path=source_path,
+        sha256=sha256_file(source_path),
     )
 
 

@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import subprocess
 
+from .promotion_profile import PromotionProfile, load_promotion_profile
 from .review_acceptance import validate_acceptance
 from .review_artifacts import ReviewRun, load_json, sha256_file
 from .review_lint import _atomic_write_json
@@ -163,6 +164,11 @@ def _check_promotion_input_hashes(
         )
 
     expected = _current_input_hashes(run)
+    provenance = report.get("profileProvenance")
+    if isinstance(provenance, dict) and isinstance(provenance.get("path"), str):
+        profile_path = Path(provenance["path"])
+        if profile_path.is_file():
+            expected["promotion-profile.json"] = sha256_file(profile_path)
     missing = sorted(key for key in expected if input_hashes.get(key) != expected[key])
     extra = sorted(key for key in input_hashes if key not in expected)
     if missing or extra:
@@ -218,6 +224,14 @@ def _check_promotion_output_hashes(
             errors.append(
                 f"planned write hash does not match promotion outputHashes: {source_path}"
             )
+        destination = plan["destination"]
+        destination_path = _output_path(run, repository_root, destination)
+        if destination_path is None:
+            errors.append(f"planned destination resolves outside repository root: {destination}")
+        elif not destination_path.is_file():
+            errors.append(f"planned destination artifact is missing: {destination}")
+        elif sha256_file(destination_path) != expected_hash:
+            errors.append(f"planned destination artifact hash changed: {destination}")
 
     if errors:
         return _failed(command, "promotion-output-hashes", "; ".join(errors))
@@ -455,10 +469,33 @@ def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> lis
     if not isinstance(raw_profile, dict):
         return ["promotion report profile provenance is missing"]
 
+    provenance = report.get("profileProvenance")
+    current_profile: PromotionProfile | None = None
+    problems: list[str] = []
+    if not isinstance(provenance, dict):
+        problems.append("promotion report profileProvenance is missing")
+    else:
+        source_path = provenance.get("path")
+        expected_hash = provenance.get("sha256")
+        if not isinstance(source_path, str) or not source_path:
+            problems.append("profileProvenance.path is missing")
+        elif not isinstance(expected_hash, str) or len(expected_hash) != 64:
+            problems.append("profileProvenance.sha256 is invalid")
+        else:
+            profile_path = Path(source_path)
+            if not profile_path.is_file():
+                problems.append("profile provenance source is missing")
+            elif sha256_file(profile_path) != expected_hash:
+                problems.append("profile hash changed after promotion")
+            else:
+                try:
+                    current_profile = load_promotion_profile(profile_path)
+                except ValueError as error:
+                    problems.append(_first_line(error))
+
     required_region_keys = raw_profile.get("requiredRegionKeys")
     runtime_mappings = raw_profile.get("runtimeMappings")
 
-    problems: list[str] = []
     if not isinstance(required_region_keys, list) or not required_region_keys:
         problems.append("profile.requiredRegionKeys must be a non-empty list")
         required_keys: tuple[str, ...] = ()
@@ -530,6 +567,45 @@ def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> lis
                     + ", ".join(missing)
                 )
 
+    if current_profile is not None:
+        expected_required = list(current_profile.required_region_keys)
+        if required_region_keys != expected_required:
+            problems.append(
+                "profile.requiredRegionKeys does not match current profile: "
+                f"reported {required_region_keys!r}, current {expected_required!r}"
+            )
+        expected_mappings = [
+            {
+                "regionKey": mapping.region_key,
+                "runtimeHoldId": mapping.runtime_hold_id,
+                "gripType": mapping.grip_type,
+                "interactionMode": mapping.interaction_mode,
+            }
+            for mapping in current_profile.runtime_mappings
+        ]
+        for index, expected_mapping in enumerate(expected_mappings):
+            reported = mappings[index] if index < len(mappings) else None
+            if reported is None:
+                continue
+            for field, expected_value in expected_mapping.items():
+                if reported.get(field) != expected_value:
+                    problems.append(
+                        f"profile.runtimeMappings[{index}].{field} does not match current profile"
+                    )
+        expected_destinations = {
+            (destination.source_relative, destination.destination_relative)
+            for destination in current_profile.destinations
+        }
+        reported_destinations = {
+            (plan["source"].removeprefix("promotion/"), plan["destination"])
+            for plan in _planned_writes(report)
+        }
+        missing_destinations = expected_destinations - reported_destinations
+        for source, destination in sorted(missing_destinations):
+            problems.append(
+                f"configured profile destination is missing from plannedWrites: {source} -> {destination}"
+            )
+
     if required_keys:
         if run.edited_regions is None:
             problems.append("edited regions artifact is missing")
@@ -543,17 +619,35 @@ def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> lis
             if not isinstance(regions, list):
                 problems.append("stage-2 edited regions missing regions array")
             else:
-                present = {
-                    region.get("key")
+                by_key = {
+                    region.get("key"): region
                     for region in regions
                     if isinstance(region, dict) and isinstance(region.get("key"), str)
                 }
-                missing_regions = sorted(set(required_keys) - present)
+                missing_regions = sorted(set(required_keys) - set(by_key))
                 if missing_regions:
                     problems.append(
                         "profile.requiredRegionKeys missing reviewed geometry: "
                         + ", ".join(missing_regions)
                     )
+                for mapping in mappings:
+                    region = by_key.get(mapping["regionKey"])
+                    if region is None:
+                        continue
+                    if region.get("type") != mapping["gripType"]:
+                        problems.append(
+                            f"profile.runtimeMappings gripType disagrees with reviewed region {mapping['regionKey']}"
+                        )
+                    metadata = region.get("metadata")
+                    mode = (
+                        metadata.get("mode")
+                        if isinstance(metadata, dict) and metadata.get("mode") is not None
+                        else region.get("mode", region.get("visualMode"))
+                    )
+                    if mode != mapping["interactionMode"]:
+                        problems.append(
+                            f"profile.runtimeMappings interactionMode disagrees with reviewed region {mapping['regionKey']}"
+                        )
     return problems
 
 

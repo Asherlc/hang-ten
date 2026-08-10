@@ -23,6 +23,7 @@ class PromotionReport:
     profileId: str | None
     boardId: str | None
     profile: dict[str, object] | None
+    profileProvenance: dict[str, str] | None
     inputHashes: dict[str, str]
     outputHashes: dict[str, str]
     plannedWrites: tuple[dict[str, str], ...]
@@ -52,7 +53,12 @@ def promote_run(
     warnings: list[str] = []
 
     try:
-        validate_acceptance(current_run)
+        acceptance = validate_acceptance(current_run)
+        if acceptance.decision != "accepted":
+            errors.append(
+                "review acceptance decision must be accepted; "
+                f"found {acceptance.decision!r}"
+            )
     except ValueError as error:
         errors.append(_first_line(error))
 
@@ -92,6 +98,7 @@ def promote_run(
             profileId=None,
             boardId=None,
             profile=None,
+            profileProvenance=None,
             inputHashes=input_hashes,
             outputHashes=output_hashes,
             plannedWrites=planned_writes,
@@ -102,7 +109,10 @@ def promote_run(
         _write_report(promotion_dir / "board-promotion-report.json", report)
         return report
 
-    errors.extend(_missing_required_regions(current_run, profile))
+    if not profile.source_path.is_file() or sha256_file(profile.source_path) != profile.sha256:
+        errors.append("promotion profile hash changed since it was loaded")
+    errors.extend(_runtime_mapping_errors(current_run, profile))
+    input_hashes["promotion-profile.json"] = profile.sha256
     planned_write_details = _planned_writes(
         profile, repository_root, promotion_dir, package_sources
     )
@@ -120,6 +130,7 @@ def promote_run(
         profileId=profile.profile_id,
         boardId=profile.board_id,
         profile=_profile_payload(profile),
+        profileProvenance={"path": str(profile.source_path), "sha256": profile.sha256},
         inputHashes=input_hashes,
         outputHashes=output_hashes,
         plannedWrites=planned_writes,
@@ -145,6 +156,8 @@ def promotion_report_payload(report: PromotionReport) -> dict[str, object]:
     }
     if report.profile is not None:
         payload["profile"] = report.profile
+    if report.profileProvenance is not None:
+        payload["profileProvenance"] = report.profileProvenance
     if report.handoffRequired:
         payload["handoffRequired"] = True
     return payload
@@ -153,6 +166,8 @@ def promotion_report_payload(report: PromotionReport) -> dict[str, object]:
 def _profile_payload(profile: PromotionProfile) -> dict[str, object]:
     return {
         "schemaVersion": profile.schema_version,
+        "profileId": profile.profile_id,
+        "boardId": profile.board_id,
         "requiredRegionKeys": list(profile.required_region_keys),
         "runtimeMappings": [
             {
@@ -163,6 +178,13 @@ def _profile_payload(profile: PromotionProfile) -> dict[str, object]:
                 "notes": mapping.notes,
             }
             for mapping in profile.runtime_mappings
+        ],
+        "destinations": [
+            {
+                "sourceRelative": destination.source_relative,
+                "destinationRelative": destination.destination_relative,
+            }
+            for destination in profile.destinations
         ],
     }
 
@@ -194,23 +216,42 @@ def _input_hashes(run: ReviewRun) -> dict[str, str]:
     return hashes
 
 
-def _missing_required_regions(run: ReviewRun, profile: PromotionProfile) -> list[str]:
+def _runtime_mapping_errors(run: ReviewRun, profile: PromotionProfile) -> list[str]:
     if run.edited_regions is None:
         return ["edited regions artifact is missing"]
     edited = load_json(run.edited_regions, "stage-2 edited regions")
     regions = edited.get("regions")
     if not isinstance(regions, list):
         return ["stage-2 edited regions missing regions array"]
-    present = {
-        region.get("key")
+    by_key = {
+        region.get("key"): region
         for region in regions
         if isinstance(region, Mapping) and isinstance(region.get("key"), str)
     }
-    return [
-        f"required region mapping missing reviewed geometry: {region_key}"
-        for region_key in profile.required_region_keys
-        if region_key not in present
-    ]
+    errors: list[str] = []
+    for mapping in profile.runtime_mappings:
+        region = by_key.get(mapping.region_key)
+        if region is None:
+            errors.append(
+                f"required region mapping missing reviewed geometry: {mapping.region_key}"
+            )
+            continue
+        grip_type = region.get("type")
+        if grip_type != mapping.grip_type:
+            errors.append(
+                f"runtime mapping grip type for {mapping.region_key} is {mapping.grip_type!r}; reviewed region is {grip_type!r}"
+            )
+        metadata = region.get("metadata")
+        interaction_mode = (
+            metadata.get("mode")
+            if isinstance(metadata, Mapping) and metadata.get("mode") is not None
+            else region.get("mode", region.get("visualMode"))
+        )
+        if interaction_mode != mapping.interaction_mode:
+            errors.append(
+                f"runtime mapping interaction mode for {mapping.region_key} is {mapping.interaction_mode!r}; reviewed region is {interaction_mode!r}"
+            )
+    return errors
 
 
 def _planned_writes(

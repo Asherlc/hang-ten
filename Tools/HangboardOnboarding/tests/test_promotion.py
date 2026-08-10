@@ -9,10 +9,12 @@ import pytest
 from hangboard_vectorizer import promotion_cli
 from hangboard_vectorizer.promotion import promote_run
 from hangboard_vectorizer.promotion_profile import load_promotion_profile
+from hangboard_vectorizer.review_acceptance import write_acceptance
 from hangboard_vectorizer.review_artifacts import discover_review_run, inspect_run
 from review_fixtures import (
     make_profile,
     make_review_run_with_blocked_promotion,
+    make_review_run_with_edit,
     make_review_run_with_edit_and_acceptance,
     make_review_run_with_ready_promotion,
 )
@@ -167,7 +169,7 @@ def test_promote_persists_profile_runtime_provenance_for_release_check(
     repository_root = tmp_path / "repo"
     profile = load_promotion_profile(make_profile(tmp_path / "profile"))
 
-    promote_run(discover_review_run(run), profile, repository_root)
+    report = promote_run(discover_review_run(run), profile, repository_root)
 
     persisted = json.loads(
         (
@@ -176,6 +178,76 @@ def test_promote_persists_profile_runtime_provenance_for_release_check(
     )
     assert persisted["profile"]["requiredRegionKeys"] == ["left"]
     assert persisted["profile"]["runtimeMappings"][0]["regionKey"] == "left"
+    assert persisted["profileProvenance"] == {
+        "path": str((tmp_path / "profile/promotion-profile.json").resolve()),
+        "sha256": report.inputHashes["promotion-profile.json"],
+    }
+
+
+def test_promote_blocks_when_loaded_profile_bytes_change(tmp_path: Path) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile_path = make_profile(tmp_path / "profile")
+    profile = load_promotion_profile(profile_path)
+    profile_path.write_text(
+        profile_path.read_text(encoding="utf-8") + "\n", encoding="utf-8"
+    )
+
+    report = promote_run(discover_review_run(run), profile, tmp_path / "repo")
+
+    assert report.status == "blocked"
+    assert any("promotion profile hash changed" in error for error in report.errors)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "expected_error"),
+    [
+        ("gripType", "pocket", "grip type"),
+        ("interactionMode", "aperture", "interaction mode"),
+    ],
+)
+def test_promote_rejects_runtime_mapping_semantics_that_disagree_with_review(
+    tmp_path: Path, field: str, value: str, expected_error: str
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    mapping = {
+        "regionKey": "left",
+        "runtimeHoldId": "runtime-left",
+        "gripType": "edge",
+        "interactionMode": "surface",
+    }
+    mapping[field] = value
+    profile = load_promotion_profile(
+        make_profile(tmp_path / "profile", runtime_mappings=(mapping,))
+    )
+
+    report = promote_run(discover_review_run(run), profile, tmp_path / "repo")
+
+    assert report.status == "blocked"
+    assert any(expected_error in error for error in report.errors)
+
+
+@pytest.mark.parametrize("decision", ["rejected", "needs-changes"])
+@pytest.mark.parametrize("apply", [False, True])
+def test_promote_blocks_nonaccepted_review_decisions_without_destination_writes(
+    tmp_path: Path, decision: str, apply: bool
+) -> None:
+    run = make_review_run_with_edit(tmp_path / "run")
+    write_acceptance(
+        discover_review_run(run), decision, "reviewer", "Review is not accepted"
+    )
+    profile = load_promotion_profile(make_profile(tmp_path / "profile"))
+    repository_root = tmp_path / "repo"
+
+    report = promote_run(
+        discover_review_run(run), profile, repository_root, apply=apply
+    )
+
+    assert report.status == "blocked"
+    assert any(
+        f"review acceptance decision must be accepted; found '{decision}'" in error
+        for error in report.errors
+    )
+    assert (repository_root / "canonical/board.json").exists() is False
 
 
 def test_main_promote_apply_returns_zero_with_applied_status(
@@ -292,7 +364,7 @@ def test_inspect_run_keeps_blocked_promotion_at_accepted_state(
     assert inspected["nextAction"] == "promote"
 
 
-def test_inspect_run_uses_promoted_state_without_release_check_next_action(
+def test_inspect_run_advertises_release_check_after_successful_promotion(
     tmp_path: Path,
 ) -> None:
     run = make_review_run_with_ready_promotion(tmp_path / "run")
@@ -300,7 +372,7 @@ def test_inspect_run_uses_promoted_state_without_release_check_next_action(
     inspected = inspect_run(discover_review_run(run))
 
     assert inspected["state"] == "promoted"
-    assert inspected["nextAction"] == "promote"
+    assert inspected["nextAction"] == "release-check"
 
 
 def test_inspect_run_treats_successful_applied_promotion_as_promoted(
@@ -314,4 +386,4 @@ def test_inspect_run_treats_successful_applied_promotion_as_promoted(
     inspected = inspect_run(discover_review_run(run))
 
     assert inspected["state"] == "promoted"
-    assert inspected["nextAction"] == "promote"
+    assert inspected["nextAction"] == "release-check"

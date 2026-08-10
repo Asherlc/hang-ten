@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+import re
 
 import pytest
 
@@ -85,3 +87,26 @@ def test_build_comparison_document_requires_an_edited_artifact(tmp_path: Path) -
         assert str(error) == "edited regions artifact is missing"
     else:
         raise AssertionError("expected missing edited artifact to raise")
+
+
+def test_build_comparison_document_safely_serializes_script_like_metadata(
+    tmp_path: Path,
+) -> None:
+    attack = "</script><script>globalThis.compromised=true</script>"
+    run = discover_review_run(
+        make_review_run_with_edit(
+            tmp_path / "run",
+            mutate_edited=lambda document: document["regions"][0].update(key=attack),
+        )
+    )
+
+    document = build_comparison_document(run)
+    match = re.search(
+        r'<script id="comparison-data" type="application/json">(.*?)</script>',
+        document,
+        flags=re.DOTALL,
+    )
+
+    assert match is not None
+    assert attack not in document
+    assert json.loads(match.group(1))["edited"]["regions"][0]["key"] == attack

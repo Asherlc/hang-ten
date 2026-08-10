@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 import json
 from pathlib import Path
 
@@ -39,14 +40,26 @@ def make_review_run_with_edit(
         mutate_edited(edited)
     _write_json(stage2_dir / "stage-2-regions.edited.json", edited)
 
+    baseline_region = _baseline_regions()["regions"][0]
     corrections = {
         "schemaVersion": 1,
-        "modified": [{"id": 1, "key": "left"}],
-        "added": [],
+        "kind": "human-region-corrections",
+        "source": {
+            "image": "stage-1-auto-rgba.png",
+            "regions": "stage-2-regions.json",
+        },
+        "summary": {"added": 1, "modified": 1, "deleted": 0},
+        "modified": [
+            {
+                "before": _editor_export_region(baseline_region),
+                "after": deepcopy(edited["regions"][0]),
+            }
+        ],
+        "added": [deepcopy(edited["regions"][1])],
         "deleted": [],
     }
     if mutate_corrections:
-        corrections["modified"] = [{"id": 1, "key": "left", "notes": "mutated"}]
+        corrections["modified"][0]["before"]["key"] = "mutated"
     _write_json(stage2_dir / "stage-2-human-corrections.json", corrections)
     return run
 
@@ -113,9 +126,14 @@ def make_review_run_with_ready_promotion(root: Path) -> Path:
 
     run = make_review_run_with_edit_and_acceptance(root)
     profile = load_promotion_profile(make_profile(run / ".context/profile"))
-    repository_root = run / ".context/repository-root"
+    repository_root = run.parent
     repository_root.mkdir(parents=True, exist_ok=True)
-    promote_run(discover_review_run(run), profile, repository_root)
+    report = promote_run(discover_review_run(run), profile, repository_root)
+    source = run / "stages/02/attempt-0001/promotion/edited-regions.json"
+    for planned_write in report.plannedWrites:
+        destination = repository_root / planned_write["destination"]
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(source.read_bytes())
     return run
 
 
@@ -138,22 +156,53 @@ def _edited_regions() -> dict[str, object]:
     return {
         "canvas": {"width": 32, "height": 16},
         "regions": [
-            {
+            _editor_export_region({
                 "id": 1,
                 "key": "left",
                 "type": "edge",
                 "mode": "surface",
                 "contour": [[3, 3], [13, 3], [12, 8], [3, 8]],
-            },
-            {
+            }),
+            _editor_export_region({
                 "id": 2,
                 "key": "right",
                 "type": "pocket",
                 "mode": "aperture",
                 "contour": [[18, 3], [27, 3], [27, 8], [18, 8]],
-            },
+            }),
         ],
     }
+
+
+def _editor_export_region(region: dict[str, object]) -> dict[str, object]:
+    exported = deepcopy(region)
+    contour = exported["contour"]
+    xs = [point[0] for point in contour]
+    ys = [point[1] for point in contour]
+    area = abs(
+        sum(
+            x1 * y2 - x2 * y1
+            for (x1, y1), (x2, y2) in zip(
+                contour, contour[1:] + contour[:1], strict=True
+            )
+        )
+        / 2
+    )
+    exported["anchor"] = [
+        round(sum(xs) / len(xs), 2),
+        round(sum(ys) / len(ys), 2),
+    ]
+    exported["areaPixels"] = round(area)
+    exported["bounds"] = [min(xs), min(ys), max(xs), max(ys)]
+    exported["metadata"] = {
+        "mode": exported["mode"],
+        "shapeKind": "freeform",
+        "pathStyle": "straight",
+        "curveTension": 0.8,
+        "humanNotes": "",
+        "editedBy": "hold-highlight-editor",
+    }
+    return exported
 
 
 def _write_json(path: Path, document: dict[str, object]) -> None:

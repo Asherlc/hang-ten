@@ -42,7 +42,7 @@ _NEXT_ACTIONS = {
     "edited": "lint",
     "lint-passed": "accept",
     "accepted": "promote",
-    "promoted": "promote",
+    "promoted": "release-check",
 }
 
 
@@ -97,9 +97,9 @@ def load_json(path: Path, label: str) -> dict[str, object]:
 
 def review_state(run: ReviewRun) -> str:
     """Derive the current review lifecycle state from persisted artifacts."""
-    if _is_successful_promotion_report(run):
-        return "promoted"
-    if run.acceptance is not None:
+    if _acceptance_decision(run) == "accepted":
+        if _is_successful_promotion_report(run):
+            return "promoted"
         return "accepted"
     if run.lint_report is not None and load_json(run.lint_report, "lint report").get(
         "passed"
@@ -139,12 +139,20 @@ def _is_successful_promotion_report(run: ReviewRun) -> bool:
     }
 
 
+def _acceptance_decision(run: ReviewRun) -> object:
+    if run.acceptance is None:
+        return None
+    return load_json(run.acceptance, "review acceptance").get("decision")
+
+
 def _discover_optional_in_directory(root: Path, directory: Path, name: str) -> Path | None:
-    matches = [
-        path.resolve(strict=False)
-        for path in root.rglob(name)
-        if path.is_file() and path.resolve(strict=False).parent == directory
-    ]
+    matches = []
+    for path in root.rglob(name):
+        if not path.is_file():
+            continue
+        resolved = _confined_artifact(root, path)
+        if resolved.parent == directory:
+            matches.append(resolved)
     if len(matches) > 1:
         raise ValueError(f"expected at most one {name} beside {directory}")
     return matches[0] if matches else None
@@ -157,7 +165,22 @@ def _relative_path(root: Path, path: Path | None) -> str | None:
 
 
 def _require_one(root: Path, name: str) -> Path:
-    matches = [path.resolve(strict=False) for path in root.rglob(name) if path.is_file()]
+    matches = [
+        _confined_artifact(root, path)
+        for path in root.rglob(name)
+        if path.is_file()
+    ]
     if len(matches) != 1:
         raise ValueError(f"expected exactly one {name} under {root}")
     return matches[0]
+
+
+def _confined_artifact(root: Path, path: Path) -> Path:
+    resolved = path.resolve(strict=True)
+    try:
+        resolved.relative_to(root)
+    except ValueError as error:
+        raise ValueError(
+            f"artifact resolves outside review run root: {path} -> {resolved}"
+        ) from error
+    return resolved

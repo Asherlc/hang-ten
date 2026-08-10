@@ -130,7 +130,7 @@ def build_comparison_document(run: ReviewRun) -> str:
         .replace("__COMPARE_MODEL__", model)
         .replace(
             "__COMPARISON_DATA__",
-            json.dumps(payload, sort_keys=True, separators=(",", ":")),
+            _json_for_html(payload),
         )
     )
 
@@ -306,7 +306,7 @@ def _load_regions_document(path: Path, label: str) -> dict[str, object]:
         seen_ids.add(region_id)
         key = region.get("key")
         grip_type = region.get("type")
-        mode = region.get("mode")
+        mode = _region_mode(region)
         if not isinstance(key, str) or not key.strip():
             raise ValueError(f"{path_label}.key must be a non-empty string")
         if grip_type not in _TYPE_COLORS:
@@ -359,6 +359,24 @@ def _finite_number(value: object) -> float | None:
         return None
     number = float(value)
     return number if math.isfinite(number) else None
+
+
+def _region_mode(region: Mapping[str, object]) -> object:
+    metadata = region.get("metadata")
+    if isinstance(metadata, Mapping) and metadata.get("mode") is not None:
+        return metadata.get("mode")
+    return region.get("mode", region.get("visualMode"))
+
+
+def _json_for_html(payload: Mapping[str, object]) -> str:
+    serialized = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return (
+        serialized.replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("\u2028", "\\u2028")
+        .replace("\u2029", "\\u2029")
+    )
 
 
 def _shoelace_area(points: list[list[float]]) -> float:
