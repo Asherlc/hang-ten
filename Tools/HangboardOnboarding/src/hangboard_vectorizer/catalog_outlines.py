@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from functools import lru_cache
 import json
 import math
 import os
@@ -421,8 +422,18 @@ def write_catalog_document(document: CatalogOutlineDocument, output_path: Path) 
             temporary.unlink(missing_ok=True)
 
 
+@lru_cache(maxsize=1)
+def _load_default_catalog_source_hints() -> Mapping[str, object]:
+    return _load_catalog_source_hints(Path(__file__).with_name("catalog_outline_sources.json"))
+
+
 def load_catalog_source_hints(path: Path | None = None) -> Mapping[str, object]:
-    source_path = path or Path(__file__).with_name("catalog_outline_sources.json")
+    if path is None:
+        return _load_default_catalog_source_hints()
+    return _load_catalog_source_hints(path)
+
+
+def _load_catalog_source_hints(source_path: Path) -> Mapping[str, object]:
     payload = json.loads(source_path.read_text(encoding="utf-8"))
     root = _mapping(payload, "catalog outline sources")
     for product, entry in root.items():
@@ -670,13 +681,6 @@ def _fallback_horizontal_rail_candidates(
     return tuple((points, kind, note) for points, kind, note, _ in outlines)
 
 
-def detect_hold_candidates_with_fallback(image: np.ndarray, board_mask: np.ndarray) -> tuple[tuple[np.ndarray, str, str], ...]:
-    candidates = detect_hold_candidates(image, board_mask)
-    if candidates:
-        return candidates
-    return _fallback_hold_candidates(image)
-
-
 def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
     with Image.open(source_path) as image:
         rgba = image.convert("RGBA")
@@ -719,16 +723,11 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
         )
         if len(clipped) < 3 or _polygon_area(clipped) <= 0.0:
             continue
-        source_supported = is_manual and _manual_contour_is_supported(
-            clipped, kind, pixel_data, source_support
-        )
+        source_supported = is_manual
+        path = normalize_contour(clipped, canvas_width, canvas_height)
+        bounds = path_bounds(path)
         if not _candidate_is_plausible(clipped, kind, canvas_width, canvas_height):
-            normalized_width = path_bounds(normalize_contour(
-                clipped, canvas_width, canvas_height
-            ))[2]
-            normalized_height = path_bounds(normalize_contour(
-                clipped, canvas_width, canvas_height
-            ))[3]
+            _, _, normalized_width, normalized_height = bounds
             if not (
                 source_supported
                 and kind in {"edge", "rail"}
@@ -736,10 +735,6 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
                 and normalized_height >= 0.03
             ):
                 continue
-        if is_manual and not source_supported:
-            continue
-        path = normalize_contour(clipped, canvas_width, canvas_height)
-        bounds = path_bounds(path)
         if kind == "rail" and bounds[3] < 0.025:
             continue
         if (
@@ -1017,6 +1012,14 @@ def _fallback_hold_candidates(image: np.ndarray) -> tuple[tuple[np.ndarray, str,
 
 
 def _broad_board_mask(rgb: np.ndarray) -> np.ndarray:
+    candidate = _board_mask_candidate(rgb)
+    component = _largest_component(candidate)
+    if component is None:
+        raise ValueError("broad board mask could not be determined")
+    return component
+
+
+def _board_mask_candidate(rgb: np.ndarray) -> np.ndarray:
     border = np.concatenate((rgb[0, :, :], rgb[-1, :, :], rgb[:, 0, :], rgb[:, -1, :]), axis=0)
     background = np.median(border.astype(np.float32), axis=0)
     distance = np.linalg.norm(rgb.astype(np.float32) - background, axis=2)
@@ -1024,10 +1027,7 @@ def _broad_board_mask(rgb: np.ndarray) -> np.ndarray:
     candidate = np.where(distance >= threshold, 255, 0).astype(np.uint8)
     candidate = cv2.morphologyEx(candidate, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8), iterations=2)
     candidate = cv2.morphologyEx(candidate, cv2.MORPH_OPEN, np.ones((5, 5), dtype=np.uint8), iterations=1)
-    component = _largest_component(candidate)
-    if component is None:
-        raise ValueError("broad board mask could not be determined")
-    return component
+    return candidate
 
 
 def _collect_mask_candidates(
@@ -1160,19 +1160,7 @@ def _manual_source_board_mask(image: np.ndarray, board_mask: np.ndarray) -> np.n
     """Recover separated board pieces for source alignment without changing detection."""
 
     rgb = _rgb_image(image)
-    border = np.concatenate(
-        (rgb[0, :, :], rgb[-1, :, :], rgb[:, 0, :], rgb[:, -1, :]), axis=0
-    )
-    background = np.median(border.astype(np.float32), axis=0)
-    distance = np.linalg.norm(rgb.astype(np.float32) - background, axis=2)
-    threshold = max(12.0, float(np.percentile(distance, 60)))
-    candidate = np.where(distance >= threshold, 255, 0).astype(np.uint8)
-    candidate = cv2.morphologyEx(
-        candidate, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8), iterations=2
-    )
-    candidate = cv2.morphologyEx(
-        candidate, cv2.MORPH_OPEN, np.ones((5, 5), dtype=np.uint8), iterations=1
-    )
+    candidate = _board_mask_candidate(rgb)
     count, labels, stats, _ = cv2.connectedComponentsWithStats(candidate, 8)
     largest_area = max(
         (int(stats[index, cv2.CC_STAT_AREA]) for index in range(1, count)),

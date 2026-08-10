@@ -298,6 +298,56 @@ def test_manual_contour_source_guard_rejects_flat_board_and_accepts_recess() -> 
     assert _manual_contour_is_supported(contour, "edge", image, board_mask)
 
 
+def test_source_hints_cache_default_path_but_not_explicit_paths(tmp_path: Path) -> None:
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    outlines_module._load_default_catalog_source_hints.cache_clear()
+    assert load_catalog_source_hints() is load_catalog_source_hints()
+    custom_path = tmp_path / "catalog-outline-sources.json"
+    custom_path.write_text("{}\n", encoding="utf-8")
+    assert load_catalog_source_hints(custom_path) == {}
+    custom_path.write_text("[]\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="catalog outline sources must be an object"):
+        load_catalog_source_hints(custom_path)
+
+
+def test_manual_source_mask_reuses_shared_board_mask_candidate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    image, board_mask = synthetic_low_contrast_white_rail_board()
+    calls = 0
+    original = outlines_module._board_mask_candidate
+
+    def capture(rgb: np.ndarray) -> np.ndarray:
+        nonlocal calls
+        calls += 1
+        return original(rgb)
+
+    monkeypatch.setattr(outlines_module, "_board_mask_candidate", capture)
+    outlines_module._broad_board_mask(image[:, :, :3])
+    outlines_module._manual_source_board_mask(image, board_mask)
+    assert calls == 2
+
+
+def test_vectorize_validates_manual_contours_only_during_prefilter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    source = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog" / "beastmaker-1000.png"
+    raw_count = len(outlines_module._manual_candidates_for_stem(source.stem, 2048, 2048))
+    calls = 0
+    original = outlines_module._manual_contour_is_supported
+
+    def capture(*args: object, **kwargs: object) -> bool:
+        nonlocal calls
+        calls += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(outlines_module, "_manual_contour_is_supported", capture)
+    vectorize_catalog_image(source)
+    assert calls == raw_count
+
+
 def test_write_catalog_document_is_stable_and_atomic(tmp_path: Path) -> None:
     output_path = tmp_path / "catalog-outlines.json"
     document = sample_document()
