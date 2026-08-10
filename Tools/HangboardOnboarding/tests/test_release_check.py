@@ -97,6 +97,64 @@ def test_release_check_fails_when_a_planned_destination_is_stale(
     assert "canonical/board.json" in (output_result.error or "")
 
 
+def test_release_check_fails_when_a_promotion_destination_in_repository_is_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile = load_promotion_profile(
+        make_profile(
+            tmp_path / "profile",
+            destination_relative="promotion/edited-regions.json",
+        )
+    )
+    repository_root = tmp_path / "repo"
+    repository_root.mkdir()
+    promote_run(discover_review_run(run), profile, repository_root)
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(
+        discover_review_run(run), repository_root, run_xcode=False
+    )
+
+    output_result = _result_named(results, "promotion-output-hashes")
+    assert output_result.passed is False
+    assert "promotion/edited-regions.json" in (output_result.error or "")
+
+
+def test_release_check_fails_when_a_promotion_destination_in_repository_is_stale(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile = load_promotion_profile(
+        make_profile(
+            tmp_path / "profile",
+            destination_relative="promotion/edited-regions.json",
+        )
+    )
+    repository_root = tmp_path / "repo"
+    repository_root.mkdir()
+    promote_run(discover_review_run(run), profile, repository_root, apply=True)
+    destination = repository_root / "promotion/edited-regions.json"
+    destination.write_text(destination.read_text(encoding="utf-8") + "\n")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: subprocess.CompletedProcess(command, 0, "ok", ""),
+    )
+
+    results = run_release_check(
+        discover_review_run(run), repository_root, run_xcode=False
+    )
+
+    output_result = _result_named(results, "promotion-output-hashes")
+    assert output_result.passed is False
+    assert "promotion/edited-regions.json" in (output_result.error or "")
+
+
 def test_release_check_fails_when_promotion_input_hashes_are_stale(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

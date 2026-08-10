@@ -201,13 +201,16 @@ def _check_promotion_output_hashes(
             command, "promotion-output-hashes", "promotion report outputHashes must be a JSON object"
         )
     planned_writes = _planned_writes(report)
+    planned_destinations = {plan["destination"] for plan in planned_writes}
 
     errors: list[str] = []
     for relative_path, expected_hash in output_hashes.items():
         if not isinstance(relative_path, str) or not isinstance(expected_hash, str):
             errors.append("outputHashes entries must be string-to-string")
             continue
-        artifact_path = _output_path(run, repository_root, relative_path)
+        artifact_path = _package_output_path(run, relative_path)
+        if artifact_path is None and relative_path in planned_destinations:
+            continue
         if artifact_path is None:
             errors.append(f"unknown output hash path: {relative_path}")
             continue
@@ -225,7 +228,7 @@ def _check_promotion_output_hashes(
                 f"planned write hash does not match promotion outputHashes: {source_path}"
             )
         destination = plan["destination"]
-        destination_path = _output_path(run, repository_root, destination)
+        destination_path = _repository_destination_path(repository_root, destination)
         if destination_path is None:
             errors.append(f"planned destination resolves outside repository root: {destination}")
         elif not destination_path.is_file():
@@ -651,9 +654,25 @@ def _profile_provenance_issues(run: ReviewRun, report: dict[str, object]) -> lis
     return problems
 
 
-def _output_path(run: ReviewRun, repository_root: Path, relative_path: str) -> Path | None:
-    if relative_path.startswith("promotion/"):
-        return run.stage2_regions.parent / relative_path
+def _package_output_path(run: ReviewRun, relative_path: str) -> Path | None:
+    relative = Path(relative_path)
+    if (
+        relative.is_absolute()
+        or not relative.parts
+        or relative.parts[0] != "promotion"
+        or "." in relative.parts
+        or ".." in relative.parts
+    ):
+        return None
+    candidate = (run.stage2_regions.parent / relative).resolve(strict=False)
+    try:
+        candidate.relative_to(run.root)
+    except ValueError:
+        return None
+    return candidate
+
+
+def _repository_destination_path(repository_root: Path, relative_path: str) -> Path | None:
     candidate = (repository_root / relative_path).resolve(strict=False)
     try:
         candidate.relative_to(repository_root)
