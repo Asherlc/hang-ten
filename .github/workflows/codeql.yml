@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - HangTen/**
+      - HangTen.xcodeproj/**
+      - .github/workflows/codeql.yml
   push:
     branches:
       - main
+    paths:
+      - HangTen/**
+      - HangTen.xcodeproj/**
+      - .github/workflows/codeql.yml
   merge_group:
   workflow_dispatch:
   schedule:
@@ -52,6 +60,8 @@ jobs:
             -sdk iphonesimulator \
             -destination "generic/platform=iOS Simulator" \
             -derivedDataPath "$RUNNER_TEMP/codeql-derived-data" \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee "$RUNNER_TEMP/codeql-logs/xcodebuild.log"
