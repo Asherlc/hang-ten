@@ -51,7 +51,8 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
 });
 
 test("preserves the selected primitive shape when adding a highlight", () => {
-  assert.match(app, /shapeKind: state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /shapeKind:\s*primitiveShapeKind/);
 });
 
 test("documents the direct hold-highlight workflow", () => {
@@ -106,6 +107,47 @@ test("uses hold-highlight terminology in runtime messages", () => {
   assert.match(app, /Exported .* edited hold highlights/);
   assert.doesNotMatch(app, /"(?:Rotated|Bent|Resized|Moved|Renamed) region"/);
   assert.doesNotMatch(app, /edited regions\.`/);
+});
+
+test("prevents default draw Enter and Escape shortcuts before the focused-control guard", () => {
+  const keydown = app.slice(
+    app.indexOf('window.addEventListener("keydown"'),
+    app.indexOf('window.addEventListener("keyup"'),
+  );
+  const guardIndex = keydown.indexOf("if (editingText) return;");
+  const enterIndex = keydown.indexOf('event.key === "Enter" && state.drawing');
+  const escapeIndex = keydown.indexOf('event.key === "Escape" && state.drawing');
+  const enterBranch = keydown.slice(
+    enterIndex,
+    keydown.indexOf("}", enterIndex) + 1,
+  );
+  const escapeBranch = keydown.slice(
+    escapeIndex,
+    keydown.indexOf("}", escapeIndex) + 1,
+  );
+
+  assert.ok(enterIndex !== -1, "expected Enter draw handler");
+  assert.ok(escapeIndex !== -1, "expected Escape draw handler");
+  assert.ok(guardIndex !== -1, "expected focused-control guard");
+  assert.ok(enterIndex < guardIndex, "Enter draw handler should run before the focused-control guard");
+  assert.ok(escapeIndex < guardIndex, "Escape draw handler should run before the focused-control guard");
+  assert.match(
+    enterBranch,
+    /event\.preventDefault\(\);[\s\S]*finishDraw\(\);/,
+    "Enter draw handler should prevent default before finishing the draw",
+  );
+  assert.match(
+    escapeBranch,
+    /event\.preventDefault\(\);[\s\S]*cancelDraw\(\);/,
+    "Escape draw handler should prevent default before canceling the draw",
+  );
+});
+
+test("uses shared normalizeRegion and preserves primitive shape kinds while drawing", () => {
+  assert.match(app, /normalizeRegion,/);
+  assert.doesNotMatch(app, /function normalizeRegion\(/);
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /shapeKind:\s*primitiveShapeKind/);
 });
 
 test("documents hold-highlight operations without generic region prose", () => {

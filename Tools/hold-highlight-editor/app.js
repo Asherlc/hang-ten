@@ -10,6 +10,7 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
+    normalizeRegion,
     normalizePipelineDocument,
     nextStage2RegionId,
     contourPath,
@@ -967,6 +968,7 @@
     if (!canEditGeometry() || !state.drawing || state.draft.length < 3) return;
     const nextId = allocateRegionId();
     const isCurved = state.drawShape === "curved-freeform";
+    const primitiveShapeKind = state.drawShape === "curved-freeform" ? "freeform" : state.drawShape;
     const region = normalizeRegion({
       id: nextId,
       key: `grip-${String(nextId).padStart(3, "0")}`,
@@ -974,7 +976,7 @@
       contour: state.draft,
       metadata: {
         mode: "surface",
-        shapeKind: state.drawShape === "curved-freeform" ? "freeform" : state.drawShape,
+        shapeKind: primitiveShapeKind,
         pathStyle: isCurved ? "smooth" : "straight",
         curveTension: 0.8,
         humanNotes: "Added manually",
@@ -2377,10 +2379,6 @@
 
   function shapeLabel(kind) {
     return ({ freeform: "Freeform", "curved-freeform": "Curved freeform", rectangle: "Rectangle", "rounded-rectangle": "Rounded rectangle", "arced-rectangle": "Arced rectangle", ellipse: "Ellipse", capsule: "Capsule" })[kind] || "Freeform";
-  }
-
-  function normalizeRegion(region, fallbackId) {
-    return normalizePipelineDocument({ canvas: state.canvas, regions: [region] }, state.canvas, "contour").regions.map((item) => ({ ...item, id: fallbackId }))[0];
   }
 
   function shapeContour(kind, start, end) {
