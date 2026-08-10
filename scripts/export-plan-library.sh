@@ -9,6 +9,7 @@ trap 'rm -rf "$export_dir"' EXIT
 
 xcrun swiftc \
   "$repo_root/HangTen/Views/DesignSystem.swift" \
+  "$repo_root/HangTen/Models/GeneratedBoardCatalog.swift" \
   "$repo_root/HangTen/Models/TrainingModels.swift" \
   "$repo_root/HangTen/Models/WorkoutStepNormalization.swift" \
   "$repo_root/HangTen/Models/PlanStorage.swift" \
