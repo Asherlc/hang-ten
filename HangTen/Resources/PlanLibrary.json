@@ -10349,7 +10349,7 @@
           "accessory" : "App default 105s · source range 90–120s",
           "duration" : 105,
           "id" : "method-repeaters-round-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -10512,7 +10512,7 @@
           "accessory" : "App default 105s · source range 90–120s",
           "duration" : 105,
           "id" : "method-repeaters-round-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -10675,7 +10675,7 @@
           "accessory" : "App default 105s · source range 90–120s",
           "duration" : 105,
           "id" : "method-repeaters-round-3-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -10838,7 +10838,7 @@
           "accessory" : "App default 105s · source range 90–120s",
           "duration" : 105,
           "id" : "method-repeaters-round-4-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -11698,7 +11698,7 @@
           "accessory" : "3m recovery · rest a full day or two before hard finger training",
           "duration" : 180,
           "id" : "rei-sample-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -11891,7 +11891,7 @@
           "accessory" : "3m recovery · rest a full day or two before hard finger training",
           "duration" : 180,
           "id" : "rei-sample-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -12084,7 +12084,7 @@
           "accessory" : "3m recovery · rest a full day or two before hard finger training",
           "duration" : 180,
           "id" : "rei-sample-3-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -12313,7 +12313,7 @@
           "accessory" : "3m recovery · rest a full day or two before hard finger training",
           "duration" : 180,
           "id" : "rei-sample-4-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -12773,7 +12773,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-warmup-jug-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -12996,7 +12996,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-large-edge-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -13189,7 +13189,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-large-edge-set-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -13412,7 +13412,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-deep-two-finger-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -13605,7 +13605,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-deep-two-finger-set-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -13828,7 +13828,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-small-crimp-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -14021,7 +14021,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-small-crimp-set-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -14244,7 +14244,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-shallow-three-finger-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -14437,7 +14437,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-shallow-three-finger-set-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -14660,7 +14660,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-wide-pinch-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -14853,7 +14853,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-wide-pinch-set-2-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
@@ -15076,7 +15076,7 @@
           "accessory" : "3m rest between sets",
           "duration" : 180,
           "id" : "rock-prodigy-sloper-set-1-recovery",
-          "instruction" : "Step off the board, shake out, and breathe before the next effort.",
+          "instruction" : "",
           "phase" : "rest",
           "segments" : [
             {
