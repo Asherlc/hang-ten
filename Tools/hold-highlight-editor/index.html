@@ -99,7 +99,29 @@
         </div>
       </header>
 
-      <section class="workspace-grid">
+      <section class="suite-shell">
+        <aside class="tool-suite-sidebar" id="tool-suite-sidebar" aria-label="Workbench tools">
+          <div class="suite-heading">
+            <span class="eyebrow">Workbench</span>
+            <h2>Board tools</h2>
+          </div>
+          <nav class="tool-suite-nav" aria-label="Board tool navigation">
+            <button class="tool-suite-button active" id="tool-onboard" type="button" data-tool="onboard">Onboard</button>
+            <button class="tool-suite-button" id="tool-inspect" type="button" data-tool="inspect">Inspect</button>
+            <button class="tool-suite-button" id="tool-promote" type="button" data-tool="promote">Promote to iOS</button>
+            <button class="tool-suite-button" id="tool-validate" type="button" data-tool="validate">Validate</button>
+          </nav>
+          <section class="active-board-card" id="active-board-card" aria-live="polite">
+            <span class="eyebrow">Active board</span>
+            <strong id="active-board-name">No board selected</strong>
+            <span id="active-board-revision">Choose a board to begin.</span>
+            <span class="readiness-badge" id="active-board-readiness">Incomplete</span>
+          </section>
+        </aside>
+
+        <div class="suite-content">
+        <section class="tool-view onboard-view" id="onboard-view">
+        <section class="workspace-grid">
         <aside class="panel region-panel">
           <section class="workflow-block" id="workflow-block">
             <div class="panel-heading">
@@ -243,6 +265,49 @@
           </form>
           <div class="legend"><span class="eyebrow">Types</span><div><i class="dot jug"></i> Jug</div><div><i class="dot sloper"></i> Sloper</div><div><i class="dot edge"></i> Edge</div><div><i class="dot pocket"></i> Pocket</div></div>
         </aside>
+        </section>
+        </section>
+
+        <section class="tool-view inspect-view hidden" id="inspect-view" aria-labelledby="inspect-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Board review</span>
+            <h2 id="inspect-title">Inspect</h2>
+            <p>Review the active board package before generating a local iOS change.</p>
+          </header>
+          <div class="inspect-grid">
+            <section class="inspect-card" id="inspect-board-preview" aria-label="Board preview"></section>
+            <section class="inspect-card">
+              <span class="eyebrow">Artifacts</span>
+              <div class="inspect-artifact-links" id="inspect-artifact-links"></div>
+            </section>
+            <section class="inspect-card">
+              <span class="eyebrow">Hold inventory</span>
+              <div id="inspect-hold-inventory"></div>
+            </section>
+            <section class="inspect-card">
+              <span class="eyebrow">Approval and revision</span>
+              <div id="inspect-approval-status"></div>
+            </section>
+            <section class="inspect-card inspect-readiness-card">
+              <span class="eyebrow">Readiness</span>
+              <div id="inspect-readiness"></div>
+              <button class="tool-button accent" id="inspect-next-action" type="button">Open Onboard</button>
+            </section>
+          </div>
+        </section>
+
+        <section class="tool-view future-tool-view hidden" id="promote-view" aria-labelledby="promote-title">
+          <span class="eyebrow">Promotion</span>
+          <h2 id="promote-title">Promote to iOS</h2>
+          <p>Promotion preview and local-save controls will appear here after the board is ready.</p>
+        </section>
+
+        <section class="tool-view future-tool-view hidden" id="validate-view" aria-labelledby="validate-title">
+          <span class="eyebrow">Validation</span>
+          <h2 id="validate-title">Validate</h2>
+          <p>Package and simulator validation results will appear here after promotion review.</p>
+        </section>
+        </div>
       </section>
     </main>
 
@@ -253,6 +318,8 @@
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>
+    <script src="workbench-suite-model.js"></script>
+    <script src="workbench-suite-controller.js"></script>
     <script src="vector-path-model.js"></script>
     <script src="app.js"></script>
   </body>

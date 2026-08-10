@@ -32,6 +32,63 @@ button { color: inherit; }
 
 .app-shell { height: 100%; display: grid; grid-template-rows: 72px minmax(0, 1fr); }
 
+.suite-shell { min-height: 0; display: grid; grid-template-columns: 204px minmax(0, 1fr); }
+.suite-content { min-width: 0; min-height: 0; }
+.tool-view { height: 100%; min-height: 0; }
+.tool-suite-sidebar {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 14px;
+  border-right: 1px solid var(--line);
+  background: #171916;
+}
+.suite-heading h2 { margin: 3px 0 0; font-size: 14px; }
+.tool-suite-nav { display: grid; gap: 5px; }
+.tool-suite-button {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #c2c7bd;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: left;
+}
+.tool-suite-button:hover { background: #22251f; color: var(--text); }
+.tool-suite-button.active { border-color: #6b4738; background: #2a241f; color: var(--text); }
+.active-board-card {
+  display: grid;
+  gap: 6px;
+  margin-top: auto;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+}
+.active-board-card strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.active-board-card > span:not(.eyebrow):not(.readiness-badge) { color: var(--muted); font-size: 10px; }
+.readiness-badge { width: max-content; padding: 3px 7px; border-radius: 999px; background: #2d302b; color: #cfd4c9; font-size: 10px; font-weight: 800; }
+.readiness-badge.ready { background: #254635; color: #9be3ba; }
+.readiness-badge.saved { background: #213f45; color: #9adbe4; }
+.readiness-badge.stale, .readiness-badge.conflict { background: #4a282b; color: #ffb1b6; }
+
+.inspect-view, .future-tool-view { overflow: auto; padding: 34px; }
+.tool-view-header { margin-bottom: 24px; }
+.tool-view-header h2, .future-tool-view h2 { margin: 4px 0 7px; font-size: 24px; }
+.tool-view-header p, .future-tool-view p { max-width: 620px; margin: 0; color: var(--muted); line-height: 1.55; }
+.inspect-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 980px; }
+.inspect-card { display: grid; align-content: start; gap: 10px; min-height: 116px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.inspect-card p { margin: 0; color: #c2c7bd; line-height: 1.5; }
+.inspect-card img { display: block; width: 100%; max-height: 270px; border: 1px solid var(--line-soft); border-radius: 7px; object-fit: contain; }
+.inspect-card a { color: var(--accent-strong); text-underline-offset: 2px; }
+.inspect-artifact-links { display: grid; gap: 8px; }
+.inspect-readiness-card { grid-column: 1 / -1; }
+.inspect-readiness-card .tool-button { width: max-content; margin-top: 4px; }
+.future-tool-view { display: grid; align-content: center; justify-items: start; max-width: 720px; }
+
 .topbar {
   display: flex;
   align-items: center;
@@ -87,7 +144,7 @@ button { color: inherit; }
 .tool-button.danger { color: #ff8b92; }
 button:disabled { opacity: .35; cursor: default; }
 
-.workspace-grid { min-height: 0; display: grid; grid-template-columns: 230px minmax(420px, 1fr) 238px; }
+.workspace-grid { height: 100%; min-height: 0; display: grid; grid-template-columns: 230px minmax(420px, 1fr) 238px; }
 .panel { min-height: 0; background: var(--panel); padding: 18px 14px; }
 .region-panel { border-right: 1px solid var(--line); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 14px; }
 .inspector-panel { border-left: 1px solid var(--line); overflow-y: auto; }
@@ -330,12 +387,16 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
 .static-checkpoint .region-shape, .static-checkpoint .vertex-handle, .static-checkpoint .transform-handle, .static-checkpoint .resize-handle { pointer-events: none; }
 
 @media (max-width: 1250px) {
+  .suite-shell { grid-template-columns: 180px minmax(0, 1fr); }
   .workspace-grid { grid-template-columns: 250px minmax(400px, 1fr) 238px; }
   .brand-block p, .shortcut-hints, .toolbar #snap-button, .toolbar #retry-button { display: none; }
   .toolbar .tool-button { padding: 0 9px; }
 }
 
 @media (max-width: 980px) {
+  .suite-shell { grid-template-columns: 150px minmax(0, 1fr); }
+  .tool-suite-sidebar { padding: 16px 10px; }
+  .tool-suite-button { padding: 0 8px; }
   .workspace-grid { grid-template-columns: 220px minmax(360px, 1fr); }
   .inspector-panel { display: none; }
   .brand-block { min-width: 180px; }

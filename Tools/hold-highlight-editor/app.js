@@ -23,6 +23,12 @@
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { timelineFor, canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
+    TOOL_IDS,
+    createSuiteState,
+    selectTool: selectSuiteTool,
+  } = globalThis.HoldWorkbenchSuiteModel;
+  const { createToolSuiteController } = globalThis.HoldWorkbenchSuiteController;
+  const {
     parseDisplayPath,
     serializeDisplayPath,
     transformPath,
@@ -86,6 +92,7 @@
     onSuccess: handleAutosaveSuccess,
     onError: handleAutosaveError,
   });
+  let suiteController = null;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -147,6 +154,7 @@
     autosaveTimer: null,
     draftStatus: "clean",
     nextRegionId: 1,
+    suiteState: createSuiteState(),
   };
 
   const el = Object.fromEntries([
@@ -169,6 +177,10 @@
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "legacy-controls",
+    "onboard-view", "inspect-view", "promote-view", "validate-view", "tool-suite-sidebar",
+    "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
+    "active-board-card", "active-board-name", "active-board-revision", "active-board-readiness",
+    "inspect-board-preview", "inspect-artifact-links", "inspect-hold-inventory", "inspect-approval-status", "inspect-readiness", "inspect-next-action",
   ].map((id) => [id, document.getElementById(id)]));
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -257,6 +269,7 @@
   }
 
   function render() {
+    renderSuite();
     renderComparisonView();
     renderOverlay();
     renderRegionList();
@@ -266,6 +279,81 @@
     renderSaveState();
     renderToolState();
     renderValidation();
+  }
+
+  function appendInspectText(container, text, className = "") {
+    const item = document.createElement("p");
+    if (className) item.className = className;
+    item.textContent = text;
+    container.appendChild(item);
+    return item;
+  }
+
+  function renderInspectView(suite) {
+    const board = suite.activeBoard;
+    el["inspect-board-preview"].replaceChildren();
+    el["inspect-artifact-links"].replaceChildren();
+    el["inspect-hold-inventory"].replaceChildren();
+    el["inspect-approval-status"].replaceChildren();
+    el["inspect-readiness"].replaceChildren();
+    if (!board) {
+      appendInspectText(el["inspect-board-preview"], "Choose a board to inspect its package.");
+      appendInspectText(el["inspect-artifact-links"], "Stage 4 artifacts will appear for the selected revision.");
+      appendInspectText(el["inspect-hold-inventory"], "No board is active.");
+      appendInspectText(el["inspect-approval-status"], "No active revision.");
+    } else {
+      const previewUrl = board.editorImageUrl || board.reviewUrl;
+      if (previewUrl) {
+        const image = document.createElement("img");
+        image.src = previewUrl;
+        image.alt = `Board preview for ${board.productName || board.boardId}`;
+        el["inspect-board-preview"].appendChild(image);
+      } else {
+        appendInspectText(el["inspect-board-preview"], "A board preview is not available for this revision.");
+      }
+      [
+        [board.editorImageUrl, "Stage 4 normal artifact"],
+        [board.reviewUrl, "Stage 4 highlighted artifact"],
+      ].forEach(([url, label]) => {
+        if (!url) return;
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        link.textContent = label;
+        el["inspect-artifact-links"].appendChild(link);
+      });
+      if (!el["inspect-artifact-links"].childElementCount) {
+        appendInspectText(el["inspect-artifact-links"], "Stage 4 artifacts are not available for this revision.");
+      }
+      const count = Number.isInteger(board.holdCount) ? board.holdCount : state.regions.length;
+      appendInspectText(
+        el["inspect-hold-inventory"],
+        count ? `${String(count)} hold${count === 1 ? "" : "s"} in the loaded inventory.` : "Hold inventory is available in the Stage 4 artifacts.",
+      );
+      appendInspectText(el["inspect-approval-status"], `Revision ${board.revisionId} · ${String(board.state || "unknown").replaceAll("_", " ")}`);
+    }
+    appendInspectText(el["inspect-readiness"], `${suite.readiness.label}: continue with ${suite.readiness.nextTool}.`);
+    el["inspect-next-action"].textContent = `Open ${suite.readiness.nextTool[0].toUpperCase()}${suite.readiness.nextTool.slice(1)}`;
+    el["inspect-next-action"].disabled = !board;
+  }
+
+  function renderSuite() {
+    const suite = state.suiteState;
+    if (!suite) return;
+    TOOL_IDS.forEach((toolId) => {
+      const button = el[`tool-${toolId}`];
+      const active = suite.activeTool === toolId;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-current", active ? "page" : "false");
+      el[`${toolId}-view`].classList.toggle("hidden", !active);
+    });
+    const board = suite.activeBoard;
+    el["active-board-name"].textContent = board?.productName || board?.boardId || "No board selected";
+    el["active-board-revision"].textContent = board ? `Revision ${suite.activeRevision}` : "Choose a board to begin.";
+    el["active-board-readiness"].textContent = suite.readiness.label;
+    el["active-board-readiness"].className = `readiness-badge ${suite.readiness.status}`;
+    renderInspectView(suite);
   }
 
   function renderToolState() {
@@ -1600,6 +1688,7 @@
       if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
       state.autosaveTimer = null;
       state.board = view;
+      suiteController?.setBoard(view);
       state.editorMode = view.editorMode || "contour";
       state.checkpointDocument = null;
       state.validationErrors = [];
@@ -2605,6 +2694,22 @@
     markDraftSaved,
     focusRegion,
     setCompareEnabled,
+  });
+
+  suiteController = createToolSuiteController({
+    selectTool: selectSuiteTool,
+    loadBoard: (boardId, revisionId) => workbenchClient.getBoard(boardId, revisionId),
+    render(nextState) {
+      state.suiteState = nextState;
+      renderSuite();
+    },
+    initialState: state.suiteState,
+  });
+  document.querySelectorAll("[data-tool]").forEach((button) => {
+    button.addEventListener("click", () => suiteController.selectTool(button.dataset.tool));
+  });
+  el["inspect-next-action"].addEventListener("click", () => {
+    suiteController.selectTool(state.suiteState.readiness.nextTool);
   });
 
   configureSvg();

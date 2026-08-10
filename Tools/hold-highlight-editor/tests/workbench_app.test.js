@@ -30,6 +30,32 @@ test("the guided opening screen offers repository and in-progress board pickers"
   assert.doesNotMatch(markup, /setup-import-path|Existing CLI run|Import run/);
 });
 
+test("the workbench has a persistent single-board tool suite shell", () => {
+  const ids = actualElementIds(markup);
+  for (const id of [
+    "tool-suite-sidebar",
+    "active-board-card",
+    "tool-onboard",
+    "tool-inspect",
+    "tool-promote",
+    "tool-validate",
+    "inspect-view",
+    "inspect-board-preview",
+    "inspect-artifact-links",
+    "inspect-hold-inventory",
+    "inspect-readiness",
+    "inspect-next-action",
+    "promote-view",
+    "validate-view",
+  ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
+  assert.match(markup, /data-tool="onboard"/);
+  assert.match(markup, /data-tool="inspect"/);
+  assert.match(markup, /data-tool="promote"/);
+  assert.match(markup, /data-tool="validate"/);
+  assert.match(markup, /workbench-suite-model\.js/);
+  assert.match(markup, /workbench-suite-controller\.js/);
+});
+
 test("setup preserves a recovered terminal job error after refreshing boards", async () => {
   const classes = new Set(["hidden"]);
   const setupError = {
