@@ -8,7 +8,11 @@ from pathlib import Path
 
 import pytest
 
-from hangboard_vectorizer.board_library import RepositoryBoardLibrary
+from hangboard_vectorizer.board_library import (
+    LibraryBoard,
+    LibrarySnapshot,
+    RepositoryBoardLibrary,
+)
 from hangboard_vectorizer.ios_promotion import read_promotion_profile
 from hangboard_vectorizer.workbench_promotion import profile_from_payload
 import hangboard_vectorizer.workbench as workbench_module
@@ -91,18 +95,33 @@ def test_preview_rejects_a_legacy_profile_alias_that_collides_in_repository(
 ) -> None:
     """Collapsing dotted repository IDs to hyphens must fail closed on ambiguity."""
     repository_root = _repository(tmp_path)
-    source = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
-    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius.wood-grips.compact-ii"
-    shutil.copytree(source, collision)
-    run_path = collision / "run.json"
-    run = json.loads(run_path.read_text(encoding="utf-8"))
-    run["product"]["key"] = "metolius.wood-grips.compact-ii"
-    run_path.write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
     library = RepositoryBoardLibrary(repository_root)
     service = WorkbenchService(WorkbenchStore(tmp_path / "workspace"), library=library)
     view = service.open_library_board("metolius-wood-grips-compact-ii")
     shutil.copy2(PROFILE_SOURCE, view.run_root / "ios-promotion-profile.json")
     profile = read_promotion_profile(view.run_root)
+    canonical_snapshot = library.snapshot()
+    canonical_board = next(
+        board
+        for board in canonical_snapshot.boards
+        if board.board_id == "metolius-wood-grips-compact-ii"
+    )
+    monkeypatch.setattr(
+        library,
+        "snapshot",
+        lambda: LibrarySnapshot(
+            boards=canonical_snapshot.boards
+            + (
+                LibraryBoard(
+                    board_id="metolius.wood-grips.compact-ii",
+                    display_name=canonical_board.display_name,
+                    run_path=canonical_board.run_path,
+                    revision_token=canonical_board.revision_token,
+                ),
+            ),
+            diagnostics=canonical_snapshot.diagnostics,
+        ),
+    )
 
     def generation_must_not_run(*_args: object, **_kwargs: object) -> object:
         raise AssertionError("promotion generation must not run")
