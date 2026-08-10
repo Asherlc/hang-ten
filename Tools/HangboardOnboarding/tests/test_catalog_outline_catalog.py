@@ -95,9 +95,13 @@ def test_catalog_source_discovery_excludes_flat_contact_sheet() -> None:
 
 def test_every_catalog_output_has_plausible_internal_outline_geometry() -> None:
     outputs = _catalog_outputs()
+    source_hints = load_catalog_source_hints()
     assert len(outputs) == 32
 
     for output_path in outputs:
+        allows_long_rails = source_hints[output_path.stem]["outlineGuidance"][
+            "allowsLongRails"
+        ]
         document = CatalogOutlineDocument.from_json(
             json.loads(output_path.read_text(encoding="utf-8"))
         )
@@ -115,8 +119,9 @@ def test_every_catalog_output_has_plausible_internal_outline_geometry() -> None:
                 outline.id,
                 outline.bounds,
             )
-            assert not (width > 0.88 and height < 0.18), (
-                output_path.name,
-                outline.id,
-                outline.bounds,
-            )
+            if not allows_long_rails:
+                assert not (width > 0.88 and height < 0.18), (
+                    output_path.name,
+                    outline.id,
+                    outline.bounds,
+                )

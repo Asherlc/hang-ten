@@ -31,11 +31,10 @@ struct WorkoutSpeechOwnership {
     }
 
     mutating func requestStop() {
+        guard activeSpeech != nil else { return }
         generation += 1
         if let activeSpeech {
             pendingStop = SpeechIdentity(utterance: activeSpeech.utterance, generation: generation)
-        } else {
-            pendingStop = nil
         }
         activeSpeech = nil
     }

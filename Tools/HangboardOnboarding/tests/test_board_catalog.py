@@ -16,9 +16,8 @@ ACCEPTED_RUN_PATH = (
     REPO_ROOT
     / "Tools"
     / "HangboardOnboarding"
-    / "reference"
-    / "metolius-compact-ii"
-    / "accepted-run"
+    / "boards"
+    / "metolius-wood-grips-compact-ii"
 )
 
 COMPACT_II_HOLD_IDS = {

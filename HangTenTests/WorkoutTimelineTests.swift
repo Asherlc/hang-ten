@@ -631,6 +631,19 @@ final class WorkoutClockTests: XCTestCase {
 
 @MainActor
 final class WorkoutSpeechOwnershipTests: XCTestCase {
+    func testRepeatedStopPreservesPendingStopOwnershipUntilCallback() {
+        var ownership = WorkoutSpeechOwnership()
+        let utterance = AVSpeechUtterance(string: "3")
+
+        ownership.begin(utterance)
+        ownership.requestStop()
+        ownership.requestStop()
+
+        XCTAssertTrue(ownership.ownsPendingStop(utterance))
+        ownership.finishPendingStop(utterance)
+        XCTAssertFalse(ownership.ownsPendingStop(utterance))
+    }
+
     func testGenerationAndUtteranceIdentityProtectActiveAndPendingStopOwnership() {
         var ownership = WorkoutSpeechOwnership()
         let firstUtterance = AVSpeechUtterance(string: "3")

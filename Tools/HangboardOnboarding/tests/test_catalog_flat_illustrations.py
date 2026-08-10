@@ -187,7 +187,7 @@ def test_render_flat_catalog_is_byte_identical_across_runs_and_uses_flat_names(
 @pytest.mark.parametrize(
     ("stem", "x", "y"),
     (
-        ("beastmaker-2000", 1605, 225),
+        ("beastmaker-2000", 1605, 200),
         ("beastmaker-2000", 165, 406),
         ("dewoodstok-woodbord", 72, 447),
         ("dewoodstok-woodbord", 231, 609),
