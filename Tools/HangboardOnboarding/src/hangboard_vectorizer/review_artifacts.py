@@ -42,7 +42,7 @@ _NEXT_ACTIONS = {
     "edited": "lint",
     "lint-passed": "accept",
     "accepted": "promote",
-    "promoted": "release-check",
+    "promoted": "promote",
 }
 
 
@@ -97,7 +97,7 @@ def load_json(path: Path, label: str) -> dict[str, object]:
 
 def review_state(run: ReviewRun) -> str:
     """Derive the current review lifecycle state from persisted artifacts."""
-    if run.promotion_report is not None:
+    if _is_successful_promotion_report(run):
         return "promoted"
     if run.acceptance is not None:
         return "accepted"
@@ -128,6 +128,12 @@ def inspect_run(run: ReviewRun) -> dict[str, object]:
         "artifacts": artifacts,
         "hashes": hashes,
     }
+
+
+def _is_successful_promotion_report(run: ReviewRun) -> bool:
+    if run.promotion_report is None:
+        return False
+    return load_json(run.promotion_report, "promotion report").get("status") == "ready"
 
 
 def _discover_optional_in_directory(root: Path, directory: Path, name: str) -> Path | None:

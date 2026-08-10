@@ -17,7 +17,10 @@ from hangboard_vectorizer.review_artifacts import (
 from review_fixtures import (
     make_review_run,
     make_review_run_with_edit,
+    make_review_run_with_edit_and_acceptance,
+    make_review_run_with_ready_promotion,
 )
+from hangboard_vectorizer.promotion import promote_run
 
 
 def test_discover_review_run_requires_one_stage_image_and_region_document(
@@ -97,6 +100,19 @@ def test_review_state_tracks_review_artifact_progression(tmp_path: Path) -> None
     lint_report.write_text(json.dumps({"passed": True}, sort_keys=True), encoding="utf-8")
     linted = discover_review_run(linted_root)
     assert review_state(linted) == "lint-passed"
+
+    accepted = discover_review_run(
+        make_review_run_with_edit_and_acceptance(tmp_path / "accepted")
+    )
+    assert review_state(accepted) == "accepted"
+
+    handoff_root = make_review_run_with_edit_and_acceptance(tmp_path / "handoff")
+    promote_run(discover_review_run(handoff_root), None, tmp_path / "repo")
+    handoff = discover_review_run(handoff_root)
+    assert review_state(handoff) == "accepted"
+
+    promoted = discover_review_run(make_review_run_with_ready_promotion(tmp_path / "ready"))
+    assert review_state(promoted) == "promoted"
 
 
 def test_inspect_run_returns_relative_paths_hashes_state_and_next_action(

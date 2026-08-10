@@ -100,8 +100,6 @@ def promote_run(
         _write_report(promotion_dir / "board-promotion-report.json", report)
         return report
 
-    input_hashes["profileId"] = profile.profile_id
-
     errors.extend(_missing_required_regions(current_run, profile))
     planned_write_details = _planned_writes(
         profile, repository_root, promotion_dir, package_sources

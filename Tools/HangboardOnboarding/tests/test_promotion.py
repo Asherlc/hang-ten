@@ -9,7 +9,7 @@ import pytest
 from hangboard_vectorizer import promotion_cli
 from hangboard_vectorizer.promotion import promote_run
 from hangboard_vectorizer.promotion_profile import load_promotion_profile
-from hangboard_vectorizer.review_artifacts import discover_review_run
+from hangboard_vectorizer.review_artifacts import discover_review_run, inspect_run
 from review_fixtures import (
     make_profile,
     make_review_run_with_blocked_promotion,
@@ -63,6 +63,7 @@ def test_promote_with_profile_returns_ready_dry_run_and_planned_writes(
     assert report.profileId == "fixture-profile"
     assert report.boardId == "fixture-board"
     assert report.errors == ()
+    assert "profileId" not in report.inputHashes
     assert report.plannedWrites == (
         {
             "destination": "canonical/board.json",
@@ -206,3 +207,41 @@ def test_blocked_and_ready_promotion_fixtures_cover_task_four_states(
     )
     payload = json.loads(report_path.read_text(encoding="utf-8"))
     assert payload["status"] == "ready"
+
+
+def test_inspect_run_keeps_handoff_required_promotion_at_accepted_state(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    promote_run(discover_review_run(run), None, tmp_path / "repo")
+
+    inspected = inspect_run(discover_review_run(run))
+
+    assert inspected["state"] == "accepted"
+    assert inspected["nextAction"] == "promote"
+    assert inspected["artifacts"]["promotionReport"] == (
+        "stages/02/attempt-0001/promotion/board-promotion-report.json"
+    )
+
+
+def test_inspect_run_keeps_blocked_promotion_at_accepted_state(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_blocked_promotion(tmp_path / "run")
+    promote_run(discover_review_run(run), None, tmp_path / "repo")
+
+    inspected = inspect_run(discover_review_run(run))
+
+    assert inspected["state"] == "accepted"
+    assert inspected["nextAction"] == "promote"
+
+
+def test_inspect_run_uses_promoted_state_without_release_check_next_action(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_ready_promotion(tmp_path / "run")
+
+    inspected = inspect_run(discover_review_run(run))
+
+    assert inspected["state"] == "promoted"
+    assert inspected["nextAction"] == "promote"
