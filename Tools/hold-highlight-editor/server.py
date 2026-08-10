@@ -296,9 +296,16 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
 
 def _workbench_job_payload(result: object) -> object:
     """Serialize the small set of workbench result contracts exposed to browsers."""
-    if hasattr(result, "product_name") and hasattr(result, "run_root"):
+    from hangboard_vectorizer.ios_promotion import (
+        PromotionPreview,
+        PromotionSaveResult,
+    )
+    from hangboard_vectorizer.workbench import WorkbenchView
+    from hangboard_vectorizer.workbench_validation import ValidationReport
+
+    if isinstance(result, WorkbenchView):
         return _workbench_view_payload(result)
-    if hasattr(result, "preview_token") and hasattr(result, "revision_token"):
+    if isinstance(result, PromotionPreview):
         return {
             "boardId": result.board_id,
             "revisionToken": result.revision_token,
@@ -318,14 +325,14 @@ def _workbench_job_payload(result: object) -> object:
             ],
             "previewToken": result.preview_token,
         }
-    if hasattr(result, "saved") and hasattr(result, "paths"):
+    if isinstance(result, PromotionSaveResult):
         return {
             "boardId": result.board_id,
             "revisionId": result.revision_id,
             "saved": result.saved,
             "paths": list(result.paths),
         }
-    if hasattr(result, "overall_status") and hasattr(result, "checks"):
+    if isinstance(result, ValidationReport):
         return {
             "boardId": result.board_id,
             "revisionId": result.revision_id,
@@ -771,31 +778,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 "revisionId": revision_id,
                 "report": None if report is None else _workbench_job_payload(report),
             },
-        )
-
-    def _get_revision_status(self, board_id: str, query: str) -> None:
-        try:
-            if not board_id:
-                raise RequestError(HTTPStatus.NOT_FOUND, "not found")
-            revision_id = self._required_query_string(parse_qs(query), "revisionId")
-            view = self._workbench_service().get_board(
-                board_id, revision_id=revision_id
-            )
-        except RequestError as error:
-            self._send_json(error.status, {"ok": False, "error": str(error)})
-            return
-        except self._public_error_types() as error:
-            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
-            return
-        except Exception:
-            self._send_json(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                {"ok": False, "error": "request failed"},
-            )
-            return
-        self._send_json(
-            HTTPStatus.OK,
-            {"ok": True, "boardId": view.board_id, "revisionId": view.revision_id},
         )
 
     def _get_job(self, job_id: str) -> None:

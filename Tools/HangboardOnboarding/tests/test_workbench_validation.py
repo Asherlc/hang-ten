@@ -67,7 +67,10 @@ def test_validation_fails_closed_when_an_approved_semantic_group_cannot_resolve(
     view = service.get_board(board_id, revision_id=revision_id)
     stage2_path = view.run_root / "stages/02/attempt-0001/stage-2-regions.json"
     stage2 = json.loads(stage2_path.read_text(encoding="utf-8"))
-    del stage2["regions"][5]["metadata"]["depthMm"]
+    target = next(
+        region for region in stage2["regions"] if region["key"] == "edge-29-left"
+    )
+    del target["metadata"]["depthMm"]
     stage2_path.write_text(json.dumps(stage2, indent=2) + "\n", encoding="utf-8")
 
     monkeypatch.setattr(

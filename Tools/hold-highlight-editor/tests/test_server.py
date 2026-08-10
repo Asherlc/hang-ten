@@ -21,8 +21,20 @@ import pytest
 
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
+sys.path.insert(
+    0, str(EDITOR_ROOT.parent / "HangboardOnboarding" / "src")
+)
 
 import server as server_module  # noqa: E402
+from hangboard_vectorizer.ios_promotion import (  # noqa: E402
+    PromotionPreview as FakePromotionPreview,
+    PromotionSaveResult as FakePromotionSaveResult,
+)
+from hangboard_vectorizer.workbench import WorkbenchView as FakeWorkbenchView  # noqa: E402
+from hangboard_vectorizer.workbench_validation import (  # noqa: E402
+    ValidationCheck as FakeValidationCheck,
+    ValidationReport as FakeValidationReport,
+)
 from workbench_assets import STATIC_ASSETS  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
@@ -61,27 +73,6 @@ REPOSITORY_REVISION_TOKEN = "a" * 64
 
 
 @dataclass(frozen=True)
-class FakeWorkbenchView:
-    board_id: str
-    revision_id: str
-    parent_revision_id: str | None
-    run_root: Path
-    product_name: str
-    stage: int
-    state: str
-    review_path: Path | None
-    editor_image_path: Path | None
-    normal_artifact_path: Path | None
-    hold_count: int | None
-    editor_mode: str | None
-    saved: bool
-    stale_from_stage: int | None
-    checkpoint_token: str | None
-    repository_board_id: str | None = None
-    repository_revision_token: str | None = None
-
-
-@dataclass(frozen=True)
 class FakeLibraryBoard:
     board_id: str
     display_name: str
@@ -99,40 +90,6 @@ class FakeLibraryDiagnostic:
 class FakeLibrarySnapshot:
     boards: tuple[FakeLibraryBoard, ...]
     diagnostics: tuple[FakeLibraryDiagnostic, ...]
-
-
-@dataclass(frozen=True)
-class FakePromotionPreview:
-    board_id: str
-    revision_token: str
-    base_ref: str
-    files: tuple[object, ...]
-    issues: tuple[object, ...]
-    preview_token: str
-
-
-@dataclass(frozen=True)
-class FakePromotionSaveResult:
-    board_id: str
-    revision_id: str
-    saved: bool
-    paths: tuple[str, ...]
-
-
-@dataclass(frozen=True)
-class FakeValidationCheck:
-    check_id: str
-    status: str
-    message: str
-    details: tuple[str, ...]
-
-
-@dataclass(frozen=True)
-class FakeValidationReport:
-    board_id: str
-    revision_id: str
-    overall_status: str
-    checks: tuple[FakeValidationCheck, ...]
 
 
 class FakeWorkbenchError(ValueError):
@@ -367,7 +324,9 @@ class FakeWorkbenchService:
         view = self.get_board(board_id)
         if expected_revision_id != view.revision_id:
             raise FakeWorkbenchError("expected revision does not match")
-        if not hasattr(profile, "board_id") or preview_token != "preview-token":
+        if not hasattr(profile, "board_id"):
+            raise FakeWorkbenchError("profile must be an object")
+        if preview_token != "preview-token":
             raise FakeWorkbenchError("preview token does not match")
         return FakePromotionSaveResult(
             board_id="example.board",
@@ -1516,6 +1475,62 @@ def test_promotion_save_rejects_a_missing_token_before_submitting_a_write_job(
     assert body["ok"] is False
     assert "previewToken" in body["error"]
     assert calls == []
+
+
+def test_promotion_save_rejects_an_invalid_profile_with_a_distinct_error(
+    tmp_path: Path,
+) -> None:
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        with pytest.raises(HTTPError) as error:
+            _post_json(
+                base + f"/api/boards/{view['boardId']}/promotion/save",
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "profile": "not-an-object",
+                    "previewToken": "preview-token",
+                },
+            )
+
+    assert error.value.code == 400
+    assert json.load(error.value)["error"] == "profile must be an object"
+
+
+def test_promotion_save_reports_a_preview_token_mismatch_distinctly(
+    running_workbench_server,
+) -> None:
+    view = _create_board(running_workbench_server)
+    status, submission = _post_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion/save",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": {
+                "schemaVersion": 1,
+                "boardID": "example.board",
+                "manufacturer": "Example",
+                "name": "Example Board",
+                "subtitle": "An explicit test profile.",
+                "dimensions": "24\" × 6\"",
+                "aspectRatio": 4.0,
+                "productURL": "https://example.test/board",
+            },
+            "previewToken": "wrong-token",
+        },
+    )
+
+    job = _poll_job(running_workbench_server, submission["jobId"])
+    assert status == 202
+    assert job["state"] == "failed"
+    assert job["error"] == "preview token does not match"
+
+
+def test_workbench_job_payload_rejects_an_unsupported_result_type() -> None:
+    with pytest.raises(TypeError, match="workbench job result is unsupported"):
+        server_module._workbench_job_payload(object())
 
 
 @pytest.mark.parametrize(
