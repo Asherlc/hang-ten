@@ -296,10 +296,86 @@
           </div>
         </section>
 
-        <section class="tool-view future-tool-view hidden" id="promote-view" aria-labelledby="promote-title">
-          <span class="eyebrow">Promotion</span>
-          <h2 id="promote-title">Promote to iOS</h2>
-          <p>Promotion preview and local-save controls will appear here after the board is ready.</p>
+        <section class="tool-view promote-view hidden" id="promote-view" aria-labelledby="promote-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Promotion</span>
+            <h2 id="promote-title">Promote to iOS</h2>
+            <p id="promotion-identity">Choose one active board revision to begin promotion.</p>
+          </header>
+
+          <section class="promotion-summary" aria-live="polite">
+            <p id="promotion-readiness"></p>
+            <p class="promotion-status empty" id="promotion-status">No preview</p>
+            <p class="promotion-error hidden" id="promotion-error" role="alert"></p>
+          </section>
+
+          <section class="promotion-card" aria-labelledby="promotion-profile-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Explicit profile</span>
+                <h3 id="promotion-profile-title">iOS promotion profile</h3>
+              </div>
+              <p>These fields cannot be inferred from board artwork. Record the evidence used for each value.</p>
+            </div>
+            <div class="promotion-profile-grid">
+              <label>iOS board ID
+                <input data-promotion-field="boardID" type="text" autocomplete="off" required />
+                <small>Canonical iOS identifier; confirm it against the approved board package.</small>
+              </label>
+              <label>Manufacturer
+                <input data-promotion-field="manufacturer" type="text" autocomplete="organization" required />
+                <small>Use the manufacturer product page or packaging as evidence.</small>
+              </label>
+              <label>Display name
+                <input data-promotion-field="name" type="text" autocomplete="off" required />
+                <small>Use the exact product name from the evidence source.</small>
+              </label>
+              <label>Subtitle
+                <input data-promotion-field="subtitle" type="text" autocomplete="off" required />
+                <small>Write only evidence-backed product context; do not infer features from the photo.</small>
+              </label>
+              <label>Dimensions
+                <input data-promotion-field="dimensions" type="text" autocomplete="off" required />
+                <small>Transcribe the manufacturer’s published dimensions.</small>
+              </label>
+              <label>Aspect ratio
+                <input data-promotion-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" required />
+                <small>Use the measured or published board aspect ratio.</small>
+              </label>
+              <label class="promotion-profile-wide">Product URL
+                <input data-promotion-field="productURL" type="url" autocomplete="url" required />
+                <small>Link the manufacturer evidence used for this profile.</small>
+              </label>
+            </div>
+          </section>
+
+          <section class="promotion-card promotion-actions" aria-label="Promotion actions">
+            <button class="tool-button accent" id="promotion-preview-button" type="button">Generate preview</button>
+            <button class="tool-button" id="promotion-refresh-button" type="button">Refresh preview</button>
+            <button class="tool-button" id="promotion-save-button" type="button">Save locally</button>
+            <p>Save locally never commits, pushes, or synchronizes remote changes.</p>
+          </section>
+
+          <section class="promotion-card" aria-labelledby="promotion-issues-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Checks</span>
+                <h3 id="promotion-issues-title">Conflicts and validation issues</h3>
+              </div>
+            </div>
+            <div id="promotion-issues"></div>
+          </section>
+
+          <section class="promotion-card promotion-diffs" aria-labelledby="promotion-diffs-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Review</span>
+                <h3 id="promotion-diffs-title">Grouped native diff</h3>
+              </div>
+              <p>Review metadata, exact geometry, and plan changes before saving them into this checkout.</p>
+            </div>
+            <div id="promotion-diff-groups"></div>
+          </section>
         </section>
 
         <section class="tool-view future-tool-view hidden" id="validate-view" aria-labelledby="validate-title">
@@ -320,6 +396,7 @@
     <script src="workbench-model.js"></script>
     <script src="workbench-suite-model.js"></script>
     <script src="workbench-suite-controller.js"></script>
+    <script src="promotion-view.js"></script>
     <script src="vector-path-model.js"></script>
     <script src="app.js"></script>
   </body>

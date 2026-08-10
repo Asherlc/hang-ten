@@ -28,6 +28,7 @@
     selectTool: selectSuiteTool,
   } = globalThis.HoldWorkbenchSuiteModel;
   const { createToolSuiteController } = globalThis.HoldWorkbenchSuiteController;
+  const { createPromotionController, renderPromotionView } = globalThis.HoldPromotionView;
   const {
     parseDisplayPath,
     serializeDisplayPath,
@@ -93,6 +94,7 @@
     onError: handleAutosaveError,
   });
   let suiteController = null;
+  let promotionController = null;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -354,6 +356,12 @@
     el["active-board-readiness"].textContent = suite.readiness.label;
     el["active-board-readiness"].className = `readiness-badge ${suite.readiness.status}`;
     renderInspectView(suite);
+    if (promotionController) {
+      renderPromotionView(el["promote-view"], {
+        suite,
+        promotion: promotionController.getState(),
+      });
+    }
   }
 
   function renderToolState() {
@@ -2705,11 +2713,39 @@
     },
     initialState: state.suiteState,
   });
+  promotionController = createPromotionController({
+    client: workbenchClient,
+    getSuiteState: () => suiteController.getState(),
+    onPromotion(promotion) {
+      suiteController.setResults({ promotion });
+    },
+    render(promotion) {
+      renderPromotionView(el["promote-view"], {
+        suite: state.suiteState,
+        promotion,
+      });
+    },
+  });
   document.querySelectorAll("[data-tool]").forEach((button) => {
     button.addEventListener("click", () => suiteController.selectTool(button.dataset.tool));
   });
   el["inspect-next-action"].addEventListener("click", () => {
     suiteController.selectTool(state.suiteState.readiness.nextTool);
+  });
+  document.querySelectorAll("[data-promotion-field]").forEach((input) => {
+    input.addEventListener("input", () => promotionController.setProfileField(
+      input.dataset.promotionField,
+      input.value,
+    ));
+  });
+  document.getElementById("promotion-preview-button").addEventListener("click", () => {
+    void promotionController.generatePreview();
+  });
+  document.getElementById("promotion-refresh-button").addEventListener("click", () => {
+    void promotionController.refreshPreview();
+  });
+  document.getElementById("promotion-save-button").addEventListener("click", () => {
+    void promotionController.saveLocally();
   });
 
   configureSvg();
