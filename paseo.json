@@ -1,6 +1,6 @@
 {
   "worktree": {
-    "setup": "mkdir -p .context",
+    "setup": "set -euo pipefail; mkdir -p .context; command -v codegraph >/dev/null || { echo 'codegraph is required for worktree setup' >&2; exit 1; }; if [ -d .codegraph ]; then codegraph sync .; else codegraph init .; fi",
     "teardown": "scripts/conductor-archive.sh"
   },
   "scripts": {
