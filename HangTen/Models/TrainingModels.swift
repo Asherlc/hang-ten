@@ -927,7 +927,7 @@ enum MetoliusCycleBuilder {
         task(
             title: title,
             instruction: instruction,
-            accessory: "Maximum effort · up to 60s",
+            accessory: "Maximum effort",
             duration: cycleDuration,
             phase: phase,
             targets: targets,
@@ -978,8 +978,8 @@ enum MetoliusCycleBuilder {
                     id: "\(planID).minute-\(minute).rest",
                     number: tasks.count + 1,
                     title: "Minute \(minute) rest",
-                    instruction: "Step off the board, shake out, and breathe until the minute ends.",
-                    accessory: "\(Int(remaining))s rest",
+                    instruction: "Rest for the remainder of the minute.",
+                    accessory: "App timer · \(Int(remaining))s rest",
                     duration: remaining,
                     phase: .rest,
                     targets: [],
@@ -1060,18 +1060,18 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: expanded(planID: "entry", [
             [MetoliusCycleBuilder.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
-            [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .openHand)],
+            [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
             [MetoliusCycleBuilder.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
             [
-                MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand),
+                MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)]),
                 MetoliusCycleBuilder.repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
             ],
             [MetoliusCycleBuilder.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
             [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
-            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)])]
         ])
     )
 
@@ -1090,14 +1090,14 @@ enum LegacyPlanSeedCatalog {
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Large-edge pull-ups", instruction: "Do 3 pull-ups on the large edge.", phase: .pull, targets: [.feature(.largeEdge)])
             ],
             [
-                MetoliusCycleBuilder.pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)], gripType: .openHand),
+                MetoliusCycleBuilder.pullUps(count: 2, title: "Round sloper pull-ups", instruction: "Do 2 pull-ups on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)]),
                 MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.mediumEdge)])
             ],
             [
                 MetoliusCycleBuilder.fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
                 MetoliusCycleBuilder.fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
             ],
-            [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)],
+            [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)])],
             [
                 MetoliusCycleBuilder.fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
                 MetoliusCycleBuilder.pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
@@ -1112,10 +1112,10 @@ enum LegacyPlanSeedCatalog {
             ],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
             [
-                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)], gripType: .openHand),
+                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)]),
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
             ],
-            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)], gripType: .openHand)]
+            [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)])]
         ])
     )
 
@@ -1136,7 +1136,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .openHand
+                    gripType: nil
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 3,
@@ -1153,7 +1153,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .openHand
+                    gripType: nil
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "L-sit or hanging knee curls",
@@ -1161,7 +1161,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .openHand
+                    gripType: nil
                 )
             ],
             [
@@ -1171,7 +1171,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Do 5 pull-ups on a three-finger pocket.",
                     phase: .pull,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .openHand
+                    gripType: nil
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
@@ -1179,7 +1179,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 25,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .openHand
+                    gripType: nil
                 )
             ],
             [
@@ -1237,7 +1237,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 15,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .openHand
+                    gripType: nil
                 )
             ],
             [
@@ -1255,7 +1255,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 15,
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .openHand
+                    gripType: nil
                 )
             ],
             [
@@ -1265,7 +1265,7 @@ enum LegacyPlanSeedCatalog {
                     duration: 20,
                     phase: .hang,
                     targets: [.feature(.threeFingerPocket)],
-                    gripType: .openHand
+                    gripType: nil
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 3,
@@ -1281,7 +1281,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
                     phase: .hang,
                     targets: [.feature(.largeSlope)],
-                    gripType: .openHand
+                    gripType: nil
                 )
             ]
         ])
@@ -1295,26 +1295,7 @@ enum LegacyPlanSeedCatalog {
         WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: duration)
     }
 
-    static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
     static let sharedWarmUpDuration: TimeInterval = 60
-
-    private static func warmUpStep(
-        id: String,
-        duration: TimeInterval = sharedWarmUpDuration
-    ) -> WorkoutStep {
-        WorkoutStep(
-            id: id,
-            number: 0,
-            title: "Progressive warm-up",
-            instruction: "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training.",
-            accessory: "Board primer · warm up generally first",
-            duration: duration,
-            phase: .warmUp,
-            targets: [.ids("jug-left", "jug-right")],
-            segments: [fixedWork(.ids("jug-left", "jug-right"), duration)],
-            gripType: .openHand
-        )
-    }
 
     private static func hangStep(
         id: String,
@@ -1324,7 +1305,7 @@ enum LegacyPlanSeedCatalog {
         active: TimeInterval,
         rest: TimeInterval,
         targets: [HoldTarget],
-        gripType: GripType,
+        gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil
     ) -> WorkoutStep {
         WorkoutStep(
@@ -1348,7 +1329,7 @@ enum LegacyPlanSeedCatalog {
             id: id,
             number: 0,
             title: title,
-            instruction: "Step off the board, shake out, and breathe before the next effort.",
+            instruction: "",
             accessory: accessory,
             duration: duration,
             phase: .rest,
@@ -1366,19 +1347,18 @@ enum LegacyPlanSeedCatalog {
     static let maxHangs = TrainingPlan(
         id: "research.max-hangs",
         title: "Max Hangs",
-        subtitle: "Heavy 7-second hangs for peak finger strength.",
+        subtitle: "Seven-second half-crimp hangs on a 20 mm edge; Compact II targeting and the five-set timer structure are app-guided.",
         level: "Advanced",
         sourceLabel: "Lattice max hang protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered([
-            warmUpStep(id: "max-hangs-warm-up"),
             hangStep(
                 id: "max-hangs-1",
                 title: "Max hang · set 1",
-                instruction: "Use added weight or assistance so seven seconds is near-max without losing shoulder position or grip shape.",
-                accessory: "7s hang · 3m recovery · half crimp",
+                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+                accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
                 targets: [.ids("edge-19-left", "edge-19-right")],
@@ -1387,8 +1367,8 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-2",
                 title: "Max hang · set 2",
-                instruction: "Repeat the same load or make a small adjustment. Stop before form breaks.",
-                accessory: "7s hang · 3m recovery · half crimp",
+                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+                accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
                 targets: [.ids("edge-19-left", "edge-19-right")],
@@ -1397,8 +1377,8 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-3",
                 title: "Max hang · set 3",
-                instruction: "Keep the effort high and the movement quiet. Do not turn this into a full-crimp test.",
-                accessory: "7s hang · 3m recovery · half crimp",
+                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+                accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
                 targets: [.ids("edge-19-left", "edge-19-right")],
@@ -1407,8 +1387,8 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-4",
                 title: "Max hang · set 4",
-                instruction: "Take the full recovery and reproduce your best controlled effort.",
-                accessory: "7s hang · 3m recovery · half crimp",
+                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+                accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
                 targets: [.ids("edge-19-left", "edge-19-right")],
@@ -1417,8 +1397,8 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-5",
                 title: "Max hang · set 5",
-                instruction: "Finish with one high-quality effort. Log the load or assistance used today.",
-                accessory: "7s hang · final effort",
+                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+                accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
                 targets: [.ids("edge-19-left", "edge-19-right")],
@@ -1430,26 +1410,26 @@ enum LegacyPlanSeedCatalog {
     static let forceF80 = TrainingPlan(
         id: "research.force-feedback-f80",
         title: "F80 Force Board",
-        subtitle: "80% force-feedback repeaters for strength and endurance.",
+        subtitle: "80% MFSi repeaters on the study hold; Compact II targeting is adapted.",
         level: "Advanced",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "f80-warm-up")]
+            var steps: [WorkoutStep] = []
             for set in 1...3 {
                 for rep in 1...12 {
                     steps.append(
                         hangStep(
                             id: "f80-set-\(set)-rep-\(rep)",
                             title: "F80 · set \(set), rep \(rep)",
-                            instruction: "Hang at roughly 80% of your tested maximum finger force. Keep both hands even and reduce load if force or shape drops.",
-                            accessory: "10s hang · 6s rest · 80% target",
+                            instruction: "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+                            accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: 6,
                             targets: [.ids("edge-19-left", "edge-19-right")],
-                            gripType: .halfCrimp
+                            gripType: nil
                         )
                     )
                 }
@@ -1459,7 +1439,7 @@ enum LegacyPlanSeedCatalog {
                             id: "f80-set-\(set)-recovery",
                             title: "Eight-minute set recovery",
                             duration: 480,
-                            accessory: "8m recovery · step off the board"
+                            accessory: "8m recovery"
                         )
                     )
                 }
@@ -1471,38 +1451,38 @@ enum LegacyPlanSeedCatalog {
     static let forceF100 = TrainingPlan(
         id: "research.force-feedback-f100",
         title: "F100 Force Board",
-        subtitle: "Maximal force-feedback hangs with full recovery.",
+        subtitle: "Six-second maximal alternating-hand hangs; Compact II targeting and timer structure are app adaptations.",
         level: "Expert",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "f100-warm-up")]
+            var steps: [WorkoutStep] = []
             for set in 1...2 {
                 for round in 1...6 {
                     steps.append(
                         hangStep(
-                            id: "f100-set-\(set)-round-\(round)-left",
-                            title: "F100 · left hand",
-                            instruction: "On a force board, take one maximal six-second effort with the left hand. Use assistance if you cannot keep the intended edge position.",
-                            accessory: "6s max · alternate hands",
+                            id: "f100-set-\(set)-round-\(round)-right",
+                            title: "F100 · right hand",
+                            instruction: "Apply maximal force with the right hand for 6 seconds.",
+                            accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [.ids("edge-19-left")],
-                            gripType: .halfCrimp
+                            targets: [.ids("edge-19-right")],
+                            gripType: nil
                         )
                     )
                     steps.append(
                         hangStep(
-                            id: "f100-set-\(set)-round-\(round)-right",
-                            title: "F100 · right hand",
-                            instruction: "Repeat the maximal six-second effort on the right hand. Keep the shoulder packed and stop if pain appears.",
-                            accessory: "6s max · alternate hands",
+                            id: "f100-set-\(set)-round-\(round)-left",
+                            title: "F100 · left hand",
+                            instruction: "Apply maximal force with the left hand for 6 seconds.",
+                            accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [.ids("edge-19-right")],
-                            gripType: .halfCrimp
+                            targets: [.ids("edge-19-left")],
+                            gripType: nil
                         )
                     )
                 }
@@ -1513,27 +1493,27 @@ enum LegacyPlanSeedCatalog {
 
     static let evaIntHangs = TrainingPlan(
         id: "research.eva-int-hangs",
-        title: "Eva IntHangs",
-        subtitle: "Intermittent 10/5 hangs for finger endurance.",
+        title: "Eva Intermittent Dead-Hangs",
+        subtitle: "Intermittent dead-hangs from the Eva López comparison study; exact timer structure and Compact II targeting are app adaptations.",
         level: "Intermediate+",
         sourceLabel: "Eva López hangboard comparison",
         sourceURL: URL(string: "https://pubmed.ncbi.nlm.nih.gov/30988852/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "int-hangs-warm-up")]
+            var steps: [WorkoutStep] = []
             for set in 1...3 {
                 for rep in 1...5 {
                     steps.append(
                         hangStep(
                             id: "int-hangs-set-\(set)-rep-\(rep)",
                             title: "IntHang · set \(set), rep \(rep)",
-                            instruction: "Hang for ten seconds, then relax for five. Choose assistance or an edge where the final rep remains controlled but challenging.",
-                            accessory: "10s hang · 5s rest · 5 reps",
+                            instruction: "Intermittent dead-hang interval from the study comparison, guided here by an app timer adaptation.",
+                            accessory: "App timer adaptation",
                             active: 10,
                             rest: rep < 5 ? 5 : 0,
                             targets: [.ids("edge-19-left", "edge-19-right")],
-                            gripType: .halfCrimp
+                            gripType: nil
                         )
                     )
                 }
@@ -1543,7 +1523,7 @@ enum LegacyPlanSeedCatalog {
                             id: "int-hangs-set-\(set)-recovery",
                             title: "One-minute set recovery",
                             duration: 60,
-                            accessory: "1m recovery · shake out"
+                            accessory: "App recovery"
                         )
                     )
                 }
@@ -1555,42 +1535,63 @@ enum LegacyPlanSeedCatalog {
     static let repeaters = TrainingPlan(
         id: "research.seven-three-repeaters",
         title: "7/3 Repeaters",
-        subtitle: "The classic repeater format across three board positions.",
+        subtitle: "Two identical 7/3 sets with six progressive series; Compact II hold mapping is adapted.",
         level: "Intermediate",
         sourceLabel: "Beastmaker 7/3 study protocol",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "repeaters-warm-up")]
-            let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("56 mm flat slopers", [.ids(BoardCatalog.compactIIFlatSloperHoldIDs)], .openHand),
-                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
+            var steps: [WorkoutStep] = []
+            let grips: [(
+                title: String,
+                targets: [HoldTarget],
+                grip: GripType?,
+                fingerConfiguration: FingerConfiguration?
+            )] = [
+                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand, nil),
+                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, nil),
+                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
+                ("Front-three open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
-            for (index, grip) in grips.enumerated() {
-                for rep in 1...6 {
-                    steps.append(
-                        hangStep(
-                            id: "\(repeaterStepIDPrefix)\(index + 1)-rep-\(rep)",
-                            title: "7/3 · \(grip.title), rep \(rep)",
-                            instruction: "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
-                            accessory: "7s hang · 3s rest · 6 reps",
-                            active: 7,
-                            rest: rep < 6 ? 3 : 0,
-                            targets: grip.targets,
-                            gripType: grip.grip
+            for set in 1...2 {
+                for (index, grip) in grips.enumerated() {
+                    for rep in 1...7 {
+                        steps.append(
+                            hangStep(
+                                id: "\(repeaterStepIDPrefix)set-\(set)-series-\(index + 1)-rep-\(rep)",
+                                title: "7/3 · set \(set) · \(grip.title) · rep \(rep)",
+                                instruction: "Hang for 7 seconds, then rest for 3 seconds.",
+                                accessory: "7s hang · 3s rest · 7 reps",
+                                active: 7,
+                                rest: rep < 7 ? 3 : 0,
+                                targets: grip.targets,
+                                gripType: grip.grip,
+                                fingerConfiguration: grip.fingerConfiguration
+                            )
                         )
-                    )
+                    }
+                    if index < grips.count - 1 {
+                        steps.append(
+                            recoveryStep(
+                                id: "\(repeaterStepIDPrefix)set-\(set)-series-\(index + 1)-recovery",
+                                title: "Series recovery",
+                                duration: 150,
+                                accessory: "2m 30s recovery"
+                            )
+                        )
+                    }
                 }
-                if index < grips.count - 1 {
+                if set < 2 {
                     steps.append(
                         recoveryStep(
-                            id: "\(repeaterStepIDPrefix)\(index + 1)-recovery",
-                            title: "Two-minute grip recovery",
-                            duration: 120,
-                            accessory: "2m recovery · switch grip"
+                            id: "\(repeaterStepIDPrefix)set-\(set)-recovery",
+                            title: "Set recovery",
+                            duration: 360,
+                            accessory: "6m recovery"
                         )
                     )
                 }
@@ -1602,21 +1603,21 @@ enum LegacyPlanSeedCatalog {
     static let abrahangs = TrainingPlan(
         id: "research.abrahangs",
         title: "Abrahangs",
-        subtitle: "Low-intensity, feet-supported hangs across varied grips.",
+        subtitle: "Low-intensity feet-supported hangs; 10/50 timing and Compact II grip mapping are app adaptations.",
         level: "Supplemental",
         sourceLabel: "Lattice Abrahangs protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "abrahangs-warm-up", duration: 120)]
+            var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand, nil),
-                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
-                ("Center sloper", [.ids("sloper-round-center")], .openHand, nil),
-                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, nil),
-                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp, nil)
+                ("Half 4 Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
+                ("F3 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1624,8 +1625,8 @@ enum LegacyPlanSeedCatalog {
                     hangStep(
                         id: "abrahangs-grip-\(index + 1)",
                         title: "Abrahang · \(grip.title)",
-                        instruction: "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
-                        accessory: "10s hang · 50s rest · feet supported",
+                        instruction: "Keep both feet supported and the intensity low throughout.",
+                        accessory: "Feet supported · app timer",
                         active: 10,
                         rest: 50,
                         targets: grip.targets,
@@ -1641,18 +1642,18 @@ enum LegacyPlanSeedCatalog {
     static let horst753 = TrainingPlan(
         id: "coach.horst-seven-fifty-three",
         title: "7–53 Max Hangs",
-        subtitle: "Short maximal hangs with long, complete recoveries.",
+        subtitle: "Seven-second maximal hangs with exact 53-second rests; Compact II holds and three-minute set recovery are app choices.",
         level: "Advanced",
         sourceLabel: "Eric Hörst fingerboard protocols",
         sourceURL: URL(string: "https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "horst-753-warm-up")]
+            var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp),
-                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
+                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),
+                ("Two-finger pocket", [.feature(.twoFingerPocket)], .openHand)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1661,7 +1662,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "horst-753-grip-\(index + 1)-rep-\(rep)",
                             title: "7–53 · \(grip.title), rep \(rep)",
-                            instruction: "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
+                            instruction: "Take a near-maximal 7-second hang, then rest for 53 seconds.",
                             accessory: "7s hang · 53s rest · 3 reps",
                             active: 7,
                             rest: rep < 3 ? 53 : 0,
@@ -1676,7 +1677,7 @@ enum LegacyPlanSeedCatalog {
                             id: "horst-753-grip-\(index + 1)-recovery",
                             title: "Three-minute grip recovery",
                             duration: 180,
-                            accessory: "3m recovery · switch grip"
+                            accessory: "App recovery · 3m"
                         )
                     )
                 }
@@ -1688,26 +1689,26 @@ enum LegacyPlanSeedCatalog {
     static let ladders = TrainingPlan(
         id: "coach.bechtel-three-six-nine",
         title: "3–6–9 Ladders",
-        subtitle: "A progressive volume ladder for controlled finger strength.",
+        subtitle: "The 3–6–9 sequence; three rounds, Compact II targeting, and exact rests are app choices within the source ranges.",
         level: "Intermediate+",
         sourceLabel: "Steve Bechtel 3–6–9 ladder protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "ladders-warm-up")]
+            var steps: [WorkoutStep] = []
             for round in 1...3 {
                 for (index, hangSeconds) in [3, 6, 9].enumerated() {
                     steps.append(
                         hangStep(
                             id: "ladders-round-\(round)-\(hangSeconds)",
                             title: "Ladder \(round) · \(hangSeconds) seconds",
-                            instruction: "Use a load that would allow roughly twelve seconds at most. Stay smooth as the hold time increases.",
-                            accessory: "\(hangSeconds)s hang · 30s rest",
+                            instruction: "Use a load that allows about 12 seconds at maximum.",
+                            accessory: "App timer · \(hangSeconds)s hang · 30s rest",
                             active: TimeInterval(hangSeconds),
                             rest: index < 2 ? 30 : 0,
                             targets: [.ids("edge-29-left", "edge-29-right")],
-                            gripType: .halfCrimp
+                            gripType: nil
                         )
                     )
                 }
@@ -1717,7 +1718,7 @@ enum LegacyPlanSeedCatalog {
                             id: "ladders-round-\(round)-recovery",
                             title: "Three-minute ladder recovery",
                             duration: 180,
-                            accessory: "3m recovery · repeat the ladder"
+                            accessory: "App recovery · 3m"
                         )
                     )
                 }
@@ -1729,14 +1730,14 @@ enum LegacyPlanSeedCatalog {
     static let densityHangs = TrainingPlan(
         id: "coach.density-hangs",
         title: "Density Hangs",
-        subtitle: "Longer submaximal hangs for finger capacity.",
+        subtitle: "Density hangs within the source ranges; exact timers, set count, and Compact II holds are app adaptations.",
         level: "Intermediate+",
         sourceLabel: "Tyler Nelson density hang protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "density-warm-up")]
+            var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
                 ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
@@ -1746,26 +1747,26 @@ enum LegacyPlanSeedCatalog {
                 for set in 1...2 {
                     for rep in 1...3 {
                         steps.append(
-                            hangStep(
-                                id: "density-hold-\(holdIndex + 1)-set-\(set)-rep-\(rep)",
-                                title: "Density · \(grip.title), set \(set), rep \(rep)",
-                                instruction: "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
-                                accessory: "30s hang · 15s rest · 2:1 density",
-                                active: 30,
-                                rest: rep < 3 ? 15 : 0,
-                                targets: grip.targets,
-                                gripType: grip.grip
-                            )
+                        hangStep(
+                            id: "density-hold-\(holdIndex + 1)-set-\(set)-rep-\(rep)",
+                            title: "Density · \(grip.title), set \(set), rep \(rep)",
+                            instruction: "Density hang guided by an app timer inside the source's 20–40 second work and 10–20 second rest ranges.",
+                            accessory: "App timer · 30s hang · 15s rest",
+                            active: 30,
+                            rest: rep < 3 ? 15 : 0,
+                            targets: grip.targets,
+                            gripType: nil
+                        )
                         )
                     }
                     if set < 2 {
                         steps.append(
-                            recoveryStep(
-                                id: "density-hold-\(holdIndex + 1)-set-\(set)-recovery",
-                                title: "Three-minute set recovery",
-                                duration: 180,
-                                accessory: "3m recovery · repeat the hold"
-                            )
+                        recoveryStep(
+                            id: "density-hold-\(holdIndex + 1)-set-\(set)-recovery",
+                            title: "Three-minute set recovery",
+                            duration: 180,
+                            accessory: "App recovery · 3m"
+                        )
                         )
                     }
                 }
@@ -1775,7 +1776,7 @@ enum LegacyPlanSeedCatalog {
                             id: "density-hold-\(holdIndex + 1)-recovery",
                             title: "Three-minute hold recovery",
                             duration: 180,
-                            accessory: "3m recovery · change hold"
+                            accessory: "App recovery · 3m"
                         )
                     )
                 }
@@ -1787,25 +1788,25 @@ enum LegacyPlanSeedCatalog {
     static let zlagboardEndurance = TrainingPlan(
         id: "device.zlagboard-sixty-sixty",
         title: "Zlagboard 60/60 Endurance",
-        subtitle: "Ten long intervals with foot-supported scaling.",
+        subtitle: "Ten 60-second hangs with 60-second rests; Compact II targeting is adapted.",
         level: "Intermediate",
         sourceLabel: "Zlagboard endurance protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/zlagboard-forearm-endurance-workout/")!,
         provenance: .adapted,
         boardID: BoardCatalog.compactII.id,
         steps: numbered({
-            var steps = [warmUpStep(id: "zlagboard-warm-up")]
+            var steps: [WorkoutStep] = []
             for interval in 1...10 {
                 steps.append(
                     hangStep(
                         id: "zlagboard-interval-\(interval)",
                         title: "60/60 · interval \(interval)",
-                        instruction: "Keep your feet supported and hold for sixty seconds. Adjust assistance before your shoulders or fingers lose position.",
-                        accessory: "60s hang · 60s rest · feet supported",
+                        instruction: "Hang for 60 seconds, then rest for 60 seconds.",
+                        accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
                         targets: [.ids("edge-29-left", "edge-29-right")],
-                        gripType: .openHand
+                        gripType: nil
                     )
                 )
             }

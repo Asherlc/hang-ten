@@ -723,34 +723,17 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSharedWarmUpIsSixtySecondBoardPrimer() throws {
-        let seedPlan = LegacyPlanSeedCatalog.maxHangs
-        let seedStep = try XCTUnwrap(seedPlan.steps.first)
+    func testUnsupportedSharedWarmUpsAndCooldownsAreAbsent() {
+        let unsupportedPhases: Set<WorkoutPhase> = [.warmUp, .cooldown]
 
-        XCTAssertEqual(seedStep.title, "Progressive warm-up")
-        XCTAssertEqual(seedStep.duration, 60)
-        XCTAssertEqual(
-            seedStep.instruction,
-            "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training."
+        XCTAssertTrue(
+            LegacyPlanSeedCatalog.all
+                .flatMap(\.steps)
+                .allSatisfy { !unsupportedPhases.contains($0.phase) }
         )
-        XCTAssertEqual(seedStep.accessory, "Board primer · warm up generally first")
-        XCTAssertEqual(seedStep.gripType, .openHand)
-        XCTAssertEqual(seedStep.targets, [.ids("jug-left", "jug-right")])
-
-        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
-        let resolvedStep = try XCTUnwrap(
-            store.plan(id: seedPlan.id)?.steps.first
-        )
-        XCTAssertEqual(resolvedStep.duration, 60)
-        XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
     }
 
-    func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
-        let abrahangsWarmUp = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
-        )
-        XCTAssertEqual(abrahangsWarmUp.duration, 120)
-
+    func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
             "ladders-round-1-recovery",
@@ -765,17 +748,21 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
     }
 
-    func testAbrahangsSecondGripUsesMatchedNineteenMillimeterHalfCrimpEdges() throws {
+    func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · 19 mm half crimp")
+        XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
-        XCTAssertEqual(step.gripType, .halfCrimp)
+        XCTAssertEqual(step.gripType, .openHand)
+        XCTAssertEqual(
+            step.fingerConfiguration,
+            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+        )
     }
 
-    func testAbrahangsFourthGripUsesExactThreeFingerPocketConfiguration() throws {
+    func testAbrahangsFourthGripKeepsSourceBackedFrontTwoOpenCue() throws {
         let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
         let step = try XCTUnwrap(
             store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
@@ -783,12 +770,37 @@ final class PlanStorageTests: XCTestCase {
             }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · Three-finger pocket")
+        XCTAssertEqual(step.title, "Abrahang · F2 Open Hang")
+        XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
-            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+            FingerConfiguration(engagedFingers: [.index, .middle])
         )
-        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle, .ring])
+        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
+    }
+
+    func testUnsupportedBuiltInGripAndFingerOverridesAreAbsent() throws {
+        let plansWithoutSourceBackedCues = [
+            LegacyPlanSeedCatalog.metoliusEntry,
+            LegacyPlanSeedCatalog.metoliusIntermediate,
+            LegacyPlanSeedCatalog.metoliusAdvanced,
+            LegacyPlanSeedCatalog.forceF80,
+            LegacyPlanSeedCatalog.forceF100,
+            LegacyPlanSeedCatalog.evaIntHangs,
+            LegacyPlanSeedCatalog.ladders,
+            LegacyPlanSeedCatalog.densityHangs,
+            LegacyPlanSeedCatalog.zlagboardEndurance
+        ]
+
+        XCTAssertTrue(
+            plansWithoutSourceBackedCues
+                .flatMap(\.steps)
+                .allSatisfy { $0.gripType == nil && $0.fingerConfiguration == nil }
+        )
+
+        let zlagboardStep = try XCTUnwrap(LegacyPlanSeedCatalog.zlagboardEndurance.steps.first)
+        XCTAssertEqual(zlagboardStep.instruction, "Hang for 60 seconds, then rest for 60 seconds.")
+        XCTAssertEqual(zlagboardStep.accessory, "60s hang · 60s rest")
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
