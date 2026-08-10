@@ -20,6 +20,11 @@ allowed.
   timing defaults, invented warm-ups/cooldowns, and unsupported grip/finger
   overrides. The audit must identify the source passage or mark the field for
   removal.
+- Apply the same audit to the small instruction/accessory card: display a task
+  instruction, count, duration, rest label, or coaching phrase only when it is
+  source-backed or a faithful adaptation of source text. If a field has no
+  source basis, omit it from the card rather than replacing it with invented
+  copy.
 - Keep the cue timeline policy/model and hand cue assets where they render
   source-backed cue data; remove only dead or unsupported cue branches.
 - Keep persisted source-backed fields only when they are still needed for plan
@@ -52,9 +57,9 @@ representable.
 The implementation may adapt source content for a timer or concise UI copy when
 the source fact remains identifiable. It must not invent an exercise, count,
 duration, interval, hold/finger requirement, safety prescription, warm-up,
-cool-down, or coaching claim. A chosen value from a source range must be
-identified as an app adaptation; it must not be presented as the source's exact
-prescription.
+cool-down, instruction-card text, accessory label, or coaching claim. A chosen
+value from a source range must be identified as an app adaptation; it must not
+be presented as the source's exact prescription.
 
 The research set includes the [Metolius 10-minute guide], [Lattice Max Hangs],
 [Lattice Abrahangs], the [F80/F100 Frontiers study], the [Eva López study],
