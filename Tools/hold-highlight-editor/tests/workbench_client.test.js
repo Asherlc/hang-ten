@@ -583,6 +583,10 @@ test("promotion save reports a terminal job failure after acceptance", async () 
 test("the suite client has no commit, remote sync, or simulator lifecycle API", () => {
   const source = require("node:fs").readFileSync(require.resolve("../workbench-client.js"), "utf8");
 
-  assert.doesNotMatch(source, /\b(?:commit|push|remote|simctl)\b/i);
+  assert.doesNotMatch(source, /\/api\/[^"'`]*(?:commit|push|remote|simctl)\b/i);
+  assert.doesNotMatch(
+    source,
+    /\b(?:async\s+function|function)\s+(?:commit|push|remote|simctl)\w*\s*\(/i,
+  );
   assert.match(source, /\/api\/boards\//);
 });

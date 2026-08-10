@@ -69,9 +69,9 @@ class PromotionPreview:
 @dataclass(frozen=True)
 class PromotionSaveResult:
     board_id: str
-    revision_id: str
     saved: bool
     paths: tuple[str, ...]
+    revision_id: str | None = None
 
 
 def read_promotion_profile(run_root: Path) -> IosPromotionProfile:
@@ -165,9 +165,9 @@ def save_promotion_preview(
     _replace_targets_transactionally(preview.files, repository_root)
     return PromotionSaveResult(
         board_id=preview.board_id,
-        revision_id=preview.revision_token,
         saved=True,
         paths=tuple(item.path for item in preview.files),
+        revision_id=None,
     )
 
 
