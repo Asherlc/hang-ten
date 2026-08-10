@@ -133,7 +133,10 @@ def inspect_run(run: ReviewRun) -> dict[str, object]:
 def _is_successful_promotion_report(run: ReviewRun) -> bool:
     if run.promotion_report is None:
         return False
-    return load_json(run.promotion_report, "promotion report").get("status") == "ready"
+    return load_json(run.promotion_report, "promotion report").get("status") in {
+        "ready",
+        "applied",
+    }
 
 
 def _discover_optional_in_directory(root: Path, directory: Path, name: str) -> Path | None:

@@ -15,12 +15,14 @@ from hangboard_vectorizer.review_artifacts import (
     sha256_file,
 )
 from review_fixtures import (
+    make_profile,
     make_review_run,
     make_review_run_with_edit,
     make_review_run_with_edit_and_acceptance,
     make_review_run_with_ready_promotion,
 )
 from hangboard_vectorizer.promotion import promote_run
+from hangboard_vectorizer.promotion_profile import load_promotion_profile
 
 
 def test_discover_review_run_requires_one_stage_image_and_region_document(
@@ -113,6 +115,16 @@ def test_review_state_tracks_review_artifact_progression(tmp_path: Path) -> None
 
     promoted = discover_review_run(make_review_run_with_ready_promotion(tmp_path / "ready"))
     assert review_state(promoted) == "promoted"
+
+    applied_root = make_review_run_with_edit_and_acceptance(tmp_path / "applied")
+    promote_run(
+        discover_review_run(applied_root),
+        load_promotion_profile(make_profile(tmp_path / "profile")),
+        tmp_path / "repo-applied",
+        apply=True,
+    )
+    applied = discover_review_run(applied_root)
+    assert review_state(applied) == "promoted"
 
 
 def test_inspect_run_returns_relative_paths_hashes_state_and_next_action(

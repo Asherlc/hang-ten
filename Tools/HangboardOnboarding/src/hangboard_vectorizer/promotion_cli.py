@@ -74,7 +74,7 @@ def _run(arguments: argparse.Namespace) -> tuple[dict[str, object], int]:
         arguments.repository_root,
         apply=arguments.apply,
     )
-    exit_code = 0 if report.status in {"ready", "handoff-required"} else 3
+    exit_code = 0 if report.status in {"ready", "applied", "handoff-required"} else 3
     return promotion_report_payload(report), exit_code
 
 

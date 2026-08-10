@@ -117,13 +117,19 @@ def test_promote_apply_copies_profile_destinations_atomically(tmp_path: Path) ->
 
     destination = repository_root / "canonical/board.json"
     package_copy = run / "stages/02/attempt-0001/promotion/edited-regions.json"
-    assert report.status == "ready"
+    assert report.status == "applied"
     assert destination.read_text(encoding="utf-8") == package_copy.read_text(
         encoding="utf-8"
     )
     assert report.outputHashes["canonical/board.json"] == report.outputHashes[
         "promotion/edited-regions.json"
     ]
+    persisted = json.loads(
+        (
+            run / "stages/02/attempt-0001/promotion/board-promotion-report.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert persisted["status"] == "applied"
 
 
 def test_main_promote_prints_compact_json_and_returns_zero(
@@ -152,6 +158,34 @@ def test_main_promote_prints_compact_json_and_returns_zero(
     payload = json.loads(captured.out)
     assert payload["status"] == "ready"
     assert payload["plannedWrites"][0]["destination"] == "canonical/board.json"
+
+
+def test_main_promote_apply_returns_zero_with_applied_status(
+    tmp_path: Path, capsys
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    profile = make_profile(tmp_path / "profile")
+    repository_root = tmp_path / "repo"
+
+    result = promotion_cli.main(
+        [
+            "promote",
+            "--run",
+            str(run),
+            "--profile",
+            str(profile),
+            "--repository-root",
+            str(repository_root),
+            "--apply",
+            "--json",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert captured.err == ""
+    payload = json.loads(captured.out)
+    assert payload["status"] == "applied"
 
 
 def test_main_promote_returns_two_when_apply_lacks_profile(
@@ -240,6 +274,20 @@ def test_inspect_run_uses_promoted_state_without_release_check_next_action(
     tmp_path: Path,
 ) -> None:
     run = make_review_run_with_ready_promotion(tmp_path / "run")
+
+    inspected = inspect_run(discover_review_run(run))
+
+    assert inspected["state"] == "promoted"
+    assert inspected["nextAction"] == "promote"
+
+
+def test_inspect_run_treats_successful_applied_promotion_as_promoted(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_edit_and_acceptance(tmp_path / "run")
+    repository_root = tmp_path / "repo"
+    profile = load_promotion_profile(make_profile(tmp_path / "profile"))
+    promote_run(discover_review_run(run), profile, repository_root, apply=True)
 
     inspected = inspect_run(discover_review_run(run))
 

@@ -111,7 +111,7 @@ def promote_run(
             _atomic_copy(plan["source_path"], plan["destination_path"])
             output_hashes[plan["destination"]] = sha256_file(plan["destination_path"])
 
-    status = "blocked" if errors else "ready"
+    status = "blocked" if errors else ("applied" if apply else "ready")
     report = PromotionReport(
         schemaVersion=_SCHEMA_VERSION,
         status=status,
