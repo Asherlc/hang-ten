@@ -455,11 +455,11 @@
     const minimumSize = 6;
     const minimumScaleX = minimumSize / localWidth;
     const minimumScaleY = minimumSize / localHeight;
-    scaleX = scalesX ? Math.max(0.05, minimumScaleX, scaleX) : 1;
-    scaleY = scalesY ? Math.max(0.05, minimumScaleY, scaleY) : 1;
+    scaleX = scalesX ? Math.max(minimumScaleX, scaleX) : 1;
+    scaleY = scalesY ? Math.max(minimumScaleY, scaleY) : 1;
     if (preserveAspect && scalesX && scalesY) {
       const dominant = Math.abs(scaleX - 1) >= Math.abs(scaleY - 1) ? scaleX : scaleY;
-      const minimumScale = Math.max(0.05, minimumScaleX, minimumScaleY);
+      const minimumScale = Math.max(minimumScaleX, minimumScaleY);
       scaleX = Math.max(minimumScale, dominant);
       scaleY = Math.max(minimumScale, dominant);
     }
