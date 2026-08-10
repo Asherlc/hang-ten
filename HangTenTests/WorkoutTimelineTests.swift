@@ -658,7 +658,7 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 
 @MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
-    func testSpeakDoesNotCallStopBeforeEachCueAfterFix() {
+    func testSpeakDoesNotCallStopBeforeEachCue() {
         let audioSession = RecordingWorkoutAudioSession()
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
@@ -675,6 +675,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             "WorkoutAudioCoach should not stop the synthesizer before each successive cue."
         )
         XCTAssertEqual(synthesizer.utterances.count, 2)
+        XCTAssertEqual(synthesizer.utterances.map(\.speechString), ["3", "2"])
     }
 
     func testStopStillStopsSynthesizerImmediately() {
