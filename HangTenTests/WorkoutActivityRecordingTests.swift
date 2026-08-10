@@ -501,7 +501,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     $0.id.contains("series-\(seriesIndex + 1)-")
                 }
                 XCTAssertEqual(seriesSteps.count, 7)
-                XCTAssertTrue(seriesSteps.allSatisfy { $0.duration == 7 })
+                XCTAssertTrue(seriesSteps.allSatisfy { $0.activeDuration == 7 })
                 XCTAssertTrue(seriesSteps.allSatisfy {
                     store.holdIDs(for: $0, on: board).sorted() == cue.targetIDs.sorted()
                 })
