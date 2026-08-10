@@ -1,6 +1,6 @@
 # Task 1 report: flat hangboard illustration pilot
 
-Scope completed
+## Scope completed
 
 - Read the task brief, approved design spec, imagegen skill, and repo RTK instructions.
 - Inspected the local reference image at `docs/hangboard-generative-catalog/metolius-project.png` before generation.
@@ -9,12 +9,12 @@ Scope completed
 - Wrote the workspace-owned review note to `.context/flat-hangboard-illustrations/pilot-review.md`.
 - Left Swift code, source catalog images, and outline JSON unchanged.
 
-Accepted asset
+## Accepted asset
 
 - Output path: `docs/hangboard-generative-catalog/flat-illustrations/metolius-project-flat.png`
 - Source reference: `docs/hangboard-generative-catalog/metolius-project.png`
 
-Generation summary
+## Generation summary
 
 Initial prompt goals:
 - centered front-facing flattened symbolic product diagram
@@ -28,13 +28,13 @@ Observed first-pass issue:
 Single adjustment applied:
 - tightened the prompt to require a perfectly plain warm background and almost no lighting model, with only minimal darker warm recess shapes
 
-Accepted outcome
+## Accepted outcome
 
 - The regenerated pilot remains recognizable to the Metolius Project reference.
 - The side pocket groupings, two center pockets, and stacked long center rails remain visually distinct.
 - The warm flattened treatment and generous padding make the image suitable as a tracing reference.
 
-Verification performed
+## Verification performed
 
 - Confirmed the output PNG exists and is readable.
 - Inspected the saved pilot image locally after copying it into the workspace.
@@ -42,28 +42,28 @@ Verification performed
 - Confirmed the outline file `docs/hangboard-generative-catalog/outlines/metolius-project.json` was not modified.
 - Confirmed only the scoped task artifacts were staged for commit.
 
-Files created
+## Files created
 
 - `docs/hangboard-generative-catalog/flat-illustrations/metolius-project-flat.png`
 - `.context/flat-hangboard-illustrations/pilot-review.md`
 
-Files intentionally not changed
+## Files intentionally not changed
 
 - `docs/hangboard-generative-catalog/metolius-project.png`
 - `docs/hangboard-generative-catalog/outlines/metolius-project.json`
 - all Swift sources and source catalog assets
 
-Notes / concerns
+## Notes / concerns
 
 - Superseded by fix round below.
 
-Fix round after task review
+## Fix round after task review
 
 - Review feedback required a perfectly uniform solid warm parchment background with no halo, vignette, glow, gradient, cast shadow, or localized variation.
 - I regenerated `docs/hangboard-generative-catalog/flat-illustrations/metolius-project-flat.png` with a stricter prompt that preserved the board silhouette and flat cavity shapes while requiring an exact solid `#F2E7D6` background.
 - The model continued to introduce visible background variation, so I applied a narrow local cleanup to the regenerated pilot only: edge-connected background pixels were flattened to the exact parchment color while leaving the board silhouette and cavity shapes intact.
 
-Focused verification for fix round
+## Focused verification for fix round
 
 - Re-opened the saved pilot image locally after the regeneration and cleanup.
 - Confirmed the board silhouette, side pocket groups, center pockets, and stacked long center rails remained intact.
