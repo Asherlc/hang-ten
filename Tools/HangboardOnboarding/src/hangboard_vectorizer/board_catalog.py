@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import tempfile
 from typing import Any, Mapping
+from urllib.parse import urlparse
 
 
 _CATALOG_SCHEMA_VERSION = 1
@@ -535,7 +536,7 @@ def render_swift_catalog(board: BoardDocument) -> str:
     manufacturer = _required_board_metadata(board.manufacturer, board.id, "manufacturer")
     name = _required_board_metadata(board.name, board.id, "name")
     dimensions = _required_board_metadata(board.dimensions, board.id, "dimensions")
-    product_url = _required_board_metadata(board.product_url, board.id, "productURL")
+    product_url = _required_board_http_url(board.product_url, board.id, "productURL")
     aspect_ratio = _required_board_number(board.aspect_ratio, board.id, "aspectRatio")
     subtitle = override["subtitle"] or f"{manufacturer} {name}"
     photo_asset_name = override["photoAssetName"]
@@ -763,6 +764,16 @@ def _required_board_metadata(value: str | None, board_id: str, field_name: str) 
     if value is None or not value:
         raise ValueError(f"board {board_id!r} is missing required Swift field {field_name}")
     return value
+
+
+def _required_board_http_url(value: str | None, board_id: str, field_name: str) -> str:
+    url = _required_board_metadata(value, board_id, field_name)
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError(
+            f"board {board_id!r} has invalid {field_name}; expected absolute http(s) URL"
+        )
+    return url
 
 
 def _required_board_number(value: float | None, board_id: str, field_name: str) -> float:

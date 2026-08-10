@@ -725,15 +725,16 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
     }
 
-    func testBuiltInPlansDoNotEndWithCooldownSteps() {
-        XCTAssertTrue(
-            LegacyPlanSeedCatalog.all.allSatisfy { $0.steps.last?.phase != .coolDown }
-        )
+    func testBuiltInPlansDoNotEndWithCooldownSteps() throws {
+        let data = try bundledPlanLibraryData()
+        let definition = try JSONDecoder().decode(PlanLibraryDefinition.self, from: data)
+        let store = try PlanLibraryStore(data: data)
+
         XCTAssertFalse(
-            BuiltInPlanLibraryDefinition.document.blocks.contains { $0.id == "shared.cool-down" }
+            definition.blocks.contains { $0.id == "shared.cool-down" }
         )
         XCTAssertTrue(
-            PlanLibraryStore.builtIn.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+            store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
         )
     }
 
@@ -933,5 +934,14 @@ final class PlanStorageTests: XCTestCase {
                 )
             ]
         )
+    }
+
+    private func bundledPlanLibraryData() throws -> Data {
+        let bundle = Bundle(for: PlanStorageTests.self)
+        let url = try XCTUnwrap(
+            bundle.url(forResource: "PlanLibrary", withExtension: "json"),
+            "Expected PlanLibrary.json in the HangTenTests bundle."
+        )
+        return try Data(contentsOf: url)
     }
 }

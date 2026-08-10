@@ -139,6 +139,18 @@ def test_render_swift_catalog_preserves_true_posture_grips_and_explicit_capacity
     assert "fingerCapacity: 2" in pocket_block
 
 
+def test_render_swift_catalog_rejects_non_http_product_urls(tmp_path: Path) -> None:
+    module = load_module()
+    board_payload = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
+    board_payload["productURL"] = "ftp://example.com/board"
+    board_path = tmp_path / "board.json"
+    board_path.write_text(json.dumps(board_payload, indent=2) + "\n", encoding="utf-8")
+    board = module.load_board(board_path)
+
+    with pytest.raises(ValueError, match=r"productURL.*http"):
+        module.render_swift_catalog(board)
+
+
 def test_render_swift_catalog_rejects_duplicate_static_names() -> None:
     module = load_module()
     board = module.load_board(BOARD_PATH)

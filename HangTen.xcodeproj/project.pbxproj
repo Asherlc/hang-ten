@@ -18,6 +18,7 @@
 		AA0000000000000000000009 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000009 /* HealthKitService.swift */; };
 		AA0000000000000000000014 /* PlanStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000016 /* PlanStorage.swift */; };
 		AA0000000000000000000015 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
+		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
@@ -390,6 +391,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
