@@ -41,6 +41,9 @@
     if (hasPromotionConflict(promotion) || validation?.overallStatus === "failed") {
       return { status: "conflict", label: "Conflict", nextTool: "promote" };
     }
+    if (validation?.overallStatus === "passed") {
+      return { status: "ready", label: "Ready", nextTool: "promote" };
+    }
     if (promotion?.saved === true) {
       return { status: "saved", label: "Saved", nextTool: "validate" };
     }
@@ -68,9 +71,8 @@
 
   function replaceActiveBoard(state, board) {
     const activeRevision = activeRevisionFor(board);
-    const revisionChanged = state.activeRevision !== activeRevision;
-    const promotion = revisionChanged ? null : state.promotion;
-    const validation = revisionChanged ? null : state.validation;
+    const promotion = resultForActiveRevision(state.promotion, board, activeRevision);
+    const validation = resultForActiveRevision(state.validation, board, activeRevision);
     return Object.freeze({
       ...state,
       activeBoard: board,

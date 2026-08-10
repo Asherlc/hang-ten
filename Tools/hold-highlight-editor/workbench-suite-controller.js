@@ -1,6 +1,9 @@
 (function exposeWorkbenchSuiteController(root, factory) {
-  const api = factory(root.HoldWorkbenchSuiteModel);
-  if (typeof module === "object" && module.exports) module.exports = factory(require("./workbench-suite-model.js"));
+  const model = typeof module === "object" && module.exports
+    ? require("./workbench-suite-model.js")
+    : root.HoldWorkbenchSuiteModel;
+  const api = factory(model);
+  if (typeof module === "object" && module.exports) module.exports = api;
   else root.HoldWorkbenchSuiteController = api;
 }(typeof globalThis === "object" ? globalThis : this, (model) => {
   "use strict";

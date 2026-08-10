@@ -4,6 +4,11 @@ const assert = require("node:assert/strict");
 const { createSuiteState, selectTool } = require("../workbench-suite-model.js");
 const { createToolSuiteController } = require("../workbench-suite-controller.js");
 
+test("the CommonJS UMD wrapper invokes its factory only once", () => {
+  const source = require("node:fs").readFileSync(require.resolve("../workbench-suite-controller.js"), "utf8");
+  assert.equal([...source.matchAll(/factory\(/g)].length, 1);
+});
+
 const board = Object.freeze({
   boardId: "board-7",
   revisionId: "revision-1",

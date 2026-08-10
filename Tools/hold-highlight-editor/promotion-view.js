@@ -41,7 +41,11 @@
       next[key] = typeof next[key] === "string" ? next[key].trim() : "";
     }
     const ratio = typeof next.aspectRatio === "string" ? next.aspectRatio.trim() : next.aspectRatio;
-    next.aspectRatio = ratio === "" ? "" : Number(ratio);
+    if (ratio === "") next.aspectRatio = "";
+    else {
+      const numericRatio = Number(ratio);
+      next.aspectRatio = Number.isFinite(numericRatio) ? numericRatio : ratio;
+    }
     return next;
   }
 
@@ -134,7 +138,8 @@
     if (!value || typeof value !== "object") return null;
     return {
       ...value,
-      boardId: value.boardId || context.board?.boardId,
+      boardID: value.boardID || value.boardId,
+      boardId: context.board?.boardId,
       revisionId: value.revisionId || context.revisionId,
     };
   }

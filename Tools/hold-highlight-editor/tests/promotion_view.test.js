@@ -118,6 +118,14 @@ test("preview generation blocks a missing explicit profile before a job is start
   assert.match(controller.getState().error, /explicit iOS promotion profile/i);
 });
 
+test("aspect ratio keeps trimmed non-numeric text while empty input stays empty", () => {
+  const { controller } = controllerHarness();
+  controller.setProfile({ ...profile, aspectRatio: "  unavailable  " });
+  assert.equal(controller.getState().profile.aspectRatio, "unavailable");
+  controller.setProfile({ ...profile, aspectRatio: "   " });
+  assert.equal(controller.getState().profile.aspectRatio, "");
+});
+
 test("preview result from a stale board context is discarded without repopulating state", async () => {
   let resolvePreview;
   const { controller, setSuite } = controllerHarness({
@@ -133,6 +141,15 @@ test("preview result from a stale board context is discarded without repopulatin
   assert.equal(controller.getState().saved, false);
   assert.equal(controller.getState().error, "");
   assert.equal(controller.getState().profile.boardID, "");
+});
+
+test("promotion results use the active workbench board identity and preserve the iOS board ID", async () => {
+  const promotions = [];
+  const { controller } = controllerHarness({ onPromotion: (result) => promotions.push(result) });
+  controller.setProfile(profile);
+  await controller.generatePreview();
+  assert.equal(promotions[0].boardId, "board-7");
+  assert.equal(promotions[0].boardID, "metolius.wood-grips.compact-ii");
 });
 
 test("switching boards after a local save clears the saved promotion state", () => {

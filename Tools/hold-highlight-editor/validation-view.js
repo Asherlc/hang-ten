@@ -21,7 +21,7 @@
   const SIMULATOR_UUID_PATTERN = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
 
   function checkStatus(status) {
-    return STATUS_LABELS[status] ? status : "not_run";
+    return Object.hasOwn(STATUS_LABELS, status) ? status : "not_run";
   }
 
   function promotionCheck(promotion, revisionId) {

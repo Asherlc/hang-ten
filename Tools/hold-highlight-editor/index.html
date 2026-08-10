@@ -330,33 +330,33 @@
               <p>These fields cannot be inferred from board artwork. Record the evidence used for each value.</p>
             </div>
             <div class="promotion-profile-grid">
-              <label>iOS board ID
-                <input data-promotion-field="boardID" type="text" autocomplete="off" required />
-                <small>Canonical iOS identifier; confirm it against the approved board package.</small>
+              <label for="promotion-board-id">iOS board ID
+                <input id="promotion-board-id" data-promotion-field="boardID" type="text" autocomplete="off" required aria-describedby="promotion-board-id-hint" />
+                <small id="promotion-board-id-hint">Canonical iOS identifier; confirm it against the approved board package.</small>
               </label>
-              <label>Manufacturer
-                <input data-promotion-field="manufacturer" type="text" autocomplete="organization" required />
-                <small>Use the manufacturer product page or packaging as evidence.</small>
+              <label for="promotion-manufacturer">Manufacturer
+                <input id="promotion-manufacturer" data-promotion-field="manufacturer" type="text" autocomplete="organization" required aria-describedby="promotion-manufacturer-hint" />
+                <small id="promotion-manufacturer-hint">Use the manufacturer product page or packaging as evidence.</small>
               </label>
-              <label>Display name
-                <input data-promotion-field="name" type="text" autocomplete="off" required />
-                <small>Use the exact product name from the evidence source.</small>
+              <label for="promotion-name">Display name
+                <input id="promotion-name" data-promotion-field="name" type="text" autocomplete="off" required aria-describedby="promotion-name-hint" />
+                <small id="promotion-name-hint">Use the exact product name from the evidence source.</small>
               </label>
-              <label>Subtitle
-                <input data-promotion-field="subtitle" type="text" autocomplete="off" required />
-                <small>Write only evidence-backed product context; do not infer features from the photo.</small>
+              <label for="promotion-subtitle">Subtitle
+                <input id="promotion-subtitle" data-promotion-field="subtitle" type="text" autocomplete="off" required aria-describedby="promotion-subtitle-hint" />
+                <small id="promotion-subtitle-hint">Write only evidence-backed product context; do not infer features from the photo.</small>
               </label>
-              <label>Dimensions
-                <input data-promotion-field="dimensions" type="text" autocomplete="off" required />
-                <small>Transcribe the manufacturer’s published dimensions.</small>
+              <label for="promotion-dimensions">Dimensions
+                <input id="promotion-dimensions" data-promotion-field="dimensions" type="text" autocomplete="off" required aria-describedby="promotion-dimensions-hint" />
+                <small id="promotion-dimensions-hint">Transcribe the manufacturer’s published dimensions.</small>
               </label>
-              <label>Aspect ratio
-                <input data-promotion-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" required />
-                <small>Use the measured or published board aspect ratio.</small>
+              <label for="promotion-aspect-ratio">Aspect ratio
+                <input id="promotion-aspect-ratio" data-promotion-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" required aria-describedby="promotion-aspect-ratio-hint" />
+                <small id="promotion-aspect-ratio-hint">Use the measured or published board aspect ratio.</small>
               </label>
-              <label class="promotion-profile-wide">Product URL
-                <input data-promotion-field="productURL" type="url" autocomplete="url" required />
-                <small>Link the manufacturer evidence used for this profile.</small>
+              <label class="promotion-profile-wide" for="promotion-product-url">Product URL
+                <input id="promotion-product-url" data-promotion-field="productURL" type="url" autocomplete="url" required aria-describedby="promotion-product-url-hint" />
+                <small id="promotion-product-url-hint">Link the manufacturer evidence used for this profile.</small>
               </label>
             </div>
           </section>
@@ -430,7 +430,7 @@
             <label class="validation-uuid-label" for="validation-simulator-uuid">Simulator UUID
               <input id="validation-simulator-uuid" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 12345678-1234-1234-1234-123456789ABC" />
             </label>
-            <p class="validation-simulator-note" id="validation-simulator-error"></p>
+            <p class="validation-simulator-note" id="validation-simulator-error" role="alert"></p>
             <textarea class="validation-command-output" id="validation-simulator-commands" rows="8" readonly aria-label="Simulator review commands"></textarea>
             <button class="tool-button" id="validation-copy-commands-button" type="button">Copy commands</button>
           </section>

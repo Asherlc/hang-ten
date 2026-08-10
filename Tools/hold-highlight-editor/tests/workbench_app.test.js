@@ -68,6 +68,25 @@ test("the suite surfaces only local save and explicit simulator handoff boundari
   assert.match(markup, /already-owned simulator/);
 });
 
+test("suite navigation and promotion inputs expose their active state and hints accessibly", () => {
+  for (const field of ["board-id", "manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
+    assert.match(markup, new RegExp(`<label[^>]*for="promotion-${field}"`));
+    assert.match(markup, new RegExp(`<input[^>]*id="promotion-${field}"[^>]*aria-describedby="promotion-${field}-hint"`));
+    assert.match(markup, new RegExp(`<small id="promotion-${field}-hint"`));
+  }
+  assert.match(markup, /id="validation-simulator-error" role="alert"/);
+  const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
+  assert.match(appSource, /if \(active\) button\.setAttribute\("aria-current", "page"\)/);
+  assert.match(appSource, /else button\.removeAttribute\("aria-current"\)/);
+});
+
+test("clipboard write rejection reaches the existing status channel", () => {
+  const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
+  const handler = appSource.slice(appSource.lastIndexOf('el["validation-copy-commands-button"]'), appSource.lastIndexOf("configureSvg();"));
+  assert.match(handler, /await navigator\.clipboard\.writeText\(commands\)/);
+  assert.match(handler, /catch \(error\)[\s\S]*setStatus\(error\?\.message/);
+});
+
 test("setup preserves a recovered terminal job error after refreshing boards", async () => {
   const classes = new Set(["hidden"]);
   const setupError = {

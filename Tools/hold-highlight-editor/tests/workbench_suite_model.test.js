@@ -57,6 +57,16 @@ test("a revision change clears stale promotion and validation state", () => {
   assert.equal(updated.validation, null);
 });
 
+test("a board change with the same revision clears results for both tools", () => {
+  const initial = withSuiteResults(createSuiteState({ board: completeBoard }), {
+    promotion: { boardId: completeBoard.boardId, revisionId: "revision-1", saved: true },
+    validation: { boardId: completeBoard.boardId, revisionId: "revision-1", overallStatus: "passed" },
+  });
+  const updated = replaceActiveBoard(initial, { ...completeBoard, boardId: "other.board" });
+  assert.equal(updated.promotion, null);
+  assert.equal(updated.validation, null);
+});
+
 test("suite results require an explicit matching revision", () => {
   const state = createSuiteState({ board: completeBoard });
 
@@ -107,6 +117,13 @@ test("readiness exposes stable labels for incomplete, stale, conflict, saved, an
   );
   assert.deepEqual(
     readinessState({ board: completeBoard, validation: { overallStatus: "passed" } }),
+    { status: "ready", label: "Ready", nextTool: "promote" },
+  );
+});
+
+test("a passed validation advances saved promotion readiness from Saved to Ready", () => {
+  assert.deepEqual(
+    readinessState({ board: completeBoard, promotion: { saved: true }, validation: { overallStatus: "passed" } }),
     { status: "ready", label: "Ready", nextTool: "promote" },
   );
 });

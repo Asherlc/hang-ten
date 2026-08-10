@@ -375,7 +375,8 @@
       const button = el[`tool-${toolId}`];
       const active = suite.activeTool === toolId;
       button.classList.toggle("active", active);
-      button.setAttribute("aria-current", active ? "page" : "false");
+      if (active) button.setAttribute("aria-current", "page");
+      else button.removeAttribute("aria-current");
       el[`${toolId}-view`].classList.toggle("hidden", !active);
     });
     const board = suite.activeBoard;
@@ -3016,14 +3017,20 @@
   el["validation-simulator-uuid"].addEventListener("input", (event) => {
     validationController.setSimulatorUUID(event.target.value);
   });
-  el["validation-copy-commands-button"].addEventListener("click", () => {
+  el["validation-copy-commands-button"].addEventListener("click", async () => {
     let commands;
     try {
       commands = simulatorCommands(validationController.getState().simulatorUUID);
     } catch (_error) {
       return;
     }
-    if (navigator.clipboard?.writeText) void navigator.clipboard.writeText(commands);
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard access is unavailable.");
+      await navigator.clipboard.writeText(commands);
+      setStatus("Simulator commands copied.");
+    } catch (error) {
+      setStatus(error?.message || "Could not copy simulator commands.");
+    }
   });
 
   configureSvg();
