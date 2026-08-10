@@ -431,7 +431,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             $0.kind == .rest && $0.duration == 3
         }
         let seriesRecoverySteps = repeaterSteps.filter {
-            $0.id.range(of: #"series-\\d+-recovery$"#, options: .regularExpression) != nil
+            $0.id.range(of: #"series-\d+-recovery$"#, options: .regularExpression) != nil
         }
         let setRecoverySteps = repeaterSteps.filter {
             $0.id.hasSuffix("set-1-recovery")
