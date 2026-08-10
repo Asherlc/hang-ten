@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 import importlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -10,6 +11,8 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw
 import pytest
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 from hangboard_vectorizer.catalog_outlines import (
     CatalogOutlineDocument,
@@ -601,6 +604,10 @@ def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
         ],
         capture_output=True,
         text=True,
+        env={
+            **os.environ,
+            "PYTHONPATH": str(REPO_ROOT / "Tools" / "HangboardOnboarding" / "src"),
+        },
         check=False,
     )
 
