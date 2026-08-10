@@ -56,6 +56,7 @@ COMPACT_PROMPT_BYTES = canonical_json_bytes({
 # Conservative Linux parity allowance: at most this many pixels may differ by
 # a one-step RGB rounding delta while preserving the exact alpha mask.
 HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS = 32
+HIGHLIGHT_PIXEL_DIFF_SENTINEL = -1
 
 
 class _ForbiddenLiveClient:
@@ -239,9 +240,6 @@ def _report(
         path = accepted / f"stages/04/attempt-0001/stage-4-highlight-{name}.png"
         with Image.open(path) as image:
             accepted_pixels = np.asarray(image.convert("RGBA"), dtype=np.uint8)
-        channel_differences = np.abs(
-            accepted_pixels.astype(np.int16) - replayed.astype(np.int16)
-        )
         accepted_hash = _hash_bytes(accepted_pixels.tobytes())
         replay_hash = _hash_bytes(replayed.tobytes())
         accepted_highlight_hashes[name] = accepted_hash
@@ -250,12 +248,9 @@ def _report(
         highlight_equivalent[name] = _highlight_pixels_equivalent(
             accepted_pixels, replayed
         )
-        highlight_pixel_diffs[name] = {
-            "differingPixelCount": int(
-                np.any(channel_differences != 0, axis=-1).sum()
-            ),
-            "maxAbsChannelDifference": int(channel_differences.max()),
-        }
+        highlight_pixel_diffs[name] = _highlight_pixel_diff_metrics(
+            accepted_pixels, replayed
+        )
 
     baseline = SemanticRunMetrics(
         model=(ModelProcessingMetrics(
@@ -399,6 +394,30 @@ def _highlight_pixels_equivalent(
         max_rgba_delta <= 1
         and changed_pixel_count <= HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS
     )
+
+
+def _highlight_pixel_diff_metrics(
+    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
+) -> dict[str, int]:
+    if (
+        accepted_pixels.shape != replayed_pixels.shape
+        or accepted_pixels.ndim != 3
+        or accepted_pixels.shape[-1] != 4
+    ):
+        return {
+            "differingPixelCount": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
+            "maxAbsChannelDifference": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
+        }
+
+    channel_differences = np.abs(
+        accepted_pixels.astype(np.int16) - replayed_pixels.astype(np.int16)
+    )
+    return {
+        "differingPixelCount": int(
+            np.any(channel_differences != 0, axis=-1).sum()
+        ),
+        "maxAbsChannelDifference": int(channel_differences.max(initial=0)),
+    }
 
 
 def _json(path: Path) -> dict[str, object]:
