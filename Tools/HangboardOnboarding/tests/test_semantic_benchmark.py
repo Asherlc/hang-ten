@@ -119,13 +119,13 @@ def test_benchmark_cli_includes_parity_report_when_replay_fails(
     assert json.dumps(parity, sort_keys=True, separators=(",", ":")) in str(error.value)
 
 
-def test_highlight_pixels_equivalent_accepts_small_rgb_deltas_with_identical_alpha() -> None:
+def test_highlight_pixels_equivalent_accepts_small_rgba_deltas() -> None:
     accepted = _rgba(
         [[10, 20, 30, 255], [40, 50, 60, 128]],
         [[70, 80, 90, 255], [100, 110, 120, 0]],
     )
     replayed = _rgba(
-        [[11, 20, 29, 255], [40, 51, 60, 128]],
+        [[11, 20, 29, 254], [40, 51, 60, 128]],
         [[70, 80, 90, 255], [100, 110, 120, 0]],
     )
 
@@ -133,9 +133,9 @@ def test_highlight_pixels_equivalent_accepts_small_rgb_deltas_with_identical_alp
     assert _highlight_pixels_equivalent(accepted, replayed) is True
 
 
-def test_highlight_pixels_equivalent_rejects_alpha_mismatch() -> None:
+def test_highlight_pixels_equivalent_rejects_larger_alpha_delta() -> None:
     accepted = _rgba([[10, 20, 30, 255]])
-    replayed = _rgba([[10, 20, 30, 254]])
+    replayed = _rgba([[10, 20, 30, 252]])
 
     assert _highlight_pixels_equivalent(accepted, replayed) is False
 

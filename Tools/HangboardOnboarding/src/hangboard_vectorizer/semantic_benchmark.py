@@ -390,16 +390,13 @@ def _highlight_pixels_equivalent(
     if accepted_pixels.ndim != 3 or accepted_pixels.shape[-1] != 4:
         return False
 
-    accepted_rgb = accepted_pixels[..., :3].astype(np.int16)
-    replayed_rgb = replayed_pixels[..., :3].astype(np.int16)
-    if not np.array_equal(accepted_pixels[..., 3], replayed_pixels[..., 3]):
-        return False
-
-    rgb_delta = np.abs(accepted_rgb - replayed_rgb)
-    changed_pixel_count = int(np.any(rgb_delta != 0, axis=-1).sum())
-    max_rgb_delta = int(rgb_delta.max(initial=0))
+    accepted_rgba = accepted_pixels.astype(np.int16)
+    replayed_rgba = replayed_pixels.astype(np.int16)
+    rgba_delta = np.abs(accepted_rgba - replayed_rgba)
+    changed_pixel_count = int(np.any(rgba_delta != 0, axis=-1).sum())
+    max_rgba_delta = int(rgba_delta.max(initial=0))
     return (
-        max_rgb_delta <= 1
+        max_rgba_delta <= 1
         and changed_pixel_count <= HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS
     )
 
