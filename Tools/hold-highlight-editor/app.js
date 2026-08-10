@@ -9,7 +9,6 @@
     resizeContour,
     simplifyClosedContour,
     mirrorContour,
-    setEdgeCurveControl,
     translateEdgeCurves,
     mapEdgeCurves,
     mirrorEdgeCurves,
@@ -18,6 +17,12 @@
     resolveHistorySelection,
     normalizePipelineDocument,
   } = globalThis.HoldEditorModel;
+  const {
+    beginEdgeCurveSession,
+    updateEdgeCurveSession,
+    edgeCurveHistoryLabel,
+    canStartRegionDrag,
+  } = globalThis.HoldCurveGestureModel;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -419,7 +424,7 @@
   function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
 
   function startRegionDrag(event, id) {
-    if (state.drawing || state.spacePressed || event.button !== 0) return;
+    if (!canStartRegionDrag({ drawing: state.drawing, spacePressed: state.spacePressed, button: event.button })) return;
     event.stopPropagation();
     selectRegion(id);
     const region = selectedRegion();
@@ -446,7 +451,13 @@
     if (event.button !== 0) return;
     event.stopPropagation();
     selectRegion(id);
-    state.edgeSession = { pointerId: event.pointerId, index, changed: false };
+    const region = selectedRegion();
+    state.edgeSession = beginEdgeCurveSession({
+      pointerId: event.pointerId,
+      index,
+      edgeCurves: region.metadata.edgeCurves,
+      pointCount: region.contour.length,
+    });
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -559,13 +570,13 @@
       const region = selectedRegion();
       const pointer = clientToSvg(event.clientX, event.clientY);
       const control = state.snapEnabled ? snapPoint(pointer, event.altKey) : pointer;
-      region.metadata.edgeCurves = setEdgeCurveControl(
+      const update = updateEdgeCurveSession(
+        state.edgeSession,
         region.metadata.edgeCurves,
-        state.edgeSession.index,
         control,
-        region.contour.length,
       );
-      state.edgeSession.changed = true;
+      region.metadata.edgeCurves = update.edgeCurves;
+      state.edgeSession = { ...state.edgeSession, changed: update.changed };
       renderOverlay();
       renderInspector();
       return;
@@ -614,8 +625,9 @@
       render();
     }
     if (state.edgeSession?.pointerId === event.pointerId) {
-      if (state.edgeSession.changed) commitHistory("Moved edge curve");
+      const label = edgeCurveHistoryLabel(state.edgeSession);
       state.edgeSession = null;
+      if (label) commitHistory(label);
       render();
     }
     if (state.dragSession?.pointerId === event.pointerId) {

@@ -196,13 +196,33 @@
     return normalizeEdgeCurves(inserted, pointCount + 1);
   }
 
+  function normalizeEditableContour(editableContour) {
+    if (!Array.isArray(editableContour) || editableContour.length < 3) {
+      throw new Error("Editable contour must contain at least three finite points.");
+    }
+    return editableContour.map((point) => {
+      if (!Array.isArray(point) || point.length !== 2) {
+        throw new Error("Editable contour must contain at least three finite points.");
+      }
+      const normalized = point.map(Number);
+      if (!normalized.every(Number.isFinite)) {
+        throw new Error("Editable contour must contain at least three finite points.");
+      }
+      return normalized;
+    });
+  }
+
   function regionForExport(region) {
     const metadata = clone(region.metadata || {});
     const hasEdgeCurves = Object.hasOwn(region.metadata || {}, "edgeCurves");
     const edgeCurves = hasEdgeCurves
       ? normalizeEdgeCurves(region.metadata.edgeCurves, region.contour.length)
       : undefined;
-    if (hasEdgeCurves) metadata.edgeCurves = edgeCurves;
+    delete metadata.editableContour;
+    if (hasEdgeCurves) {
+      metadata.edgeCurves = edgeCurves;
+      metadata.editableContour = region.contour.map(([x, y]) => [round(x), round(y)]);
+    }
     const contour = flattenContour(
       region.contour,
       metadata.pathStyle || "straight",
@@ -248,7 +268,9 @@
       const sourceId = region.id ?? fallbackId;
       const numericId = Number(sourceId);
       const id = Number.isInteger(numericId) && numericId > 0 ? numericId : fallbackId;
-      const contour = (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]);
+      const contour = Object.hasOwn(region.metadata || {}, "editableContour")
+        ? normalizeEditableContour(region.metadata.editableContour)
+        : (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]);
       const metadata = {
         mode: region.metadata?.mode || region.mode || region.visualMode || (region.type === "pocket" ? "aperture" : "surface"),
         shapeKind: region.metadata?.shapeKind || "freeform",
@@ -258,6 +280,7 @@
         ...clone(region.metadata || {}),
         ...(typeof sourceId === "string" && !/^\d+$/.test(sourceId) ? { sourceRegionId: sourceId } : {}),
       };
+      delete metadata.editableContour;
       if (Object.hasOwn(region.metadata || {}, "edgeCurves")) {
         metadata.edgeCurves = normalizeEdgeCurves(region.metadata.edgeCurves, contour.length);
       }

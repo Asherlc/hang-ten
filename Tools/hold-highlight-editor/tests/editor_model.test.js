@@ -345,6 +345,56 @@ test("normalizePipelineDocument rejects malformed persisted edge curves", () => 
   assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /edge/i);
 });
 
+test("edited quadratic contours preserve editable topology and rendering after export and reload", () => {
+  const curved = {
+    ...baseline,
+    contour: [[0.123, 0.456], [10.789, 0.234], [10.345, 10.678]],
+    metadata: {
+      ...baseline.metadata,
+      pathStyle: "straight",
+      curveTension: 0.8,
+      edgeCurves: { 0: { kind: "quadratic", control: [5.432, -10.987] } },
+    },
+  };
+  const originalContour = [[0.12, 0.46], [10.79, 0.23], [10.35, 10.68]];
+  const originalPath = contourPath(originalContour, "straight", 0.8, curved.metadata.edgeCurves);
+  const exported = buildEditedDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [curved],
+    imageName: "board.png",
+    regionsName: "regions.json",
+  });
+
+  const [reloaded] = normalizePipelineDocument(exported, { width: 10, height: 10 }).regions;
+
+  assert.deepEqual(reloaded.contour, originalContour);
+  assert.equal(contourPath(
+    reloaded.contour,
+    reloaded.metadata.pathStyle,
+    reloaded.metadata.curveTension,
+    reloaded.metadata.edgeCurves,
+  ), originalPath);
+  assert.equal(Object.hasOwn(reloaded.metadata, "editableContour"), false);
+});
+
+test("normalizePipelineDocument rejects malformed editable contours", () => {
+  const document = {
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      ...baseline,
+      metadata: {
+        ...baseline.metadata,
+        edgeCurves: { 0: { kind: "quadratic", control: [5, -10] } },
+        editableContour: [[0, 0], [10, Infinity], [10, 10]],
+      },
+    }],
+  };
+
+  assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /editable contour/i);
+  document.regions[0].metadata.editableContour = [[0, 0], [10, 0]];
+  assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /editable contour/i);
+});
+
 test("buildEditedDocument exports flattened geometry and editable edge metadata", () => {
   const curved = {
     ...baseline,
@@ -365,6 +415,7 @@ test("buildEditedDocument exports flattened geometry and editable edge metadata"
   assert.equal(result.areaPixels, 83);
   assert.deepEqual(result.bounds, [0, -5, 10, 10]);
   assert.deepEqual(result.metadata.edgeCurves, { 0: { kind: "quadratic", control: [5, -10] } });
+  assert.deepEqual(result.metadata.editableContour, curved.contour);
 });
 
 test("buildCorrectionsDocument detects curve-only changes", () => {
