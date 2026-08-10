@@ -92,7 +92,7 @@ def test_preview_rejects_a_legacy_profile_alias_that_collides_in_repository(
     """Collapsing dotted repository IDs to hyphens must fail closed on ambiguity."""
     repository_root = _repository(tmp_path)
     source = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
-    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius.wood-grips.compact-ii"
+    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii-legacy"
     shutil.copytree(source, collision)
     for path in collision.rglob("*.json"):
         path.write_text(
