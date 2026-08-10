@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from hangboard_vectorizer.semantic_benchmark import (
@@ -111,7 +112,7 @@ def test_benchmark_cli_includes_parity_report_when_replay_fails(
     }
     monkeypatch.setattr(
         "hangboard_vectorizer.semantic_benchmark.build_metolius_benchmark_report",
-        lambda *args, **kwargs: {"parity": parity},
+        lambda *_args, **_kwargs: {"parity": parity},
     )
 
     with pytest.raises(SystemExit, match="semantic replay parity failed") as error:
@@ -161,7 +162,5 @@ def _accepted_run() -> Path:
     )
 
 
-def _rgba(*rows: list[int]) -> object:
-    import numpy as np
-
+def _rgba(*rows: list[int]) -> np.ndarray:
     return np.asarray(rows, dtype=np.uint8)

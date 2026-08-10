@@ -2291,7 +2291,7 @@
       if (!regionsResponse.ok) throw new Error("Could not load hold highlights from the run");
       const regions = await regionsResponse.json();
       await setImageHref(session.imageUrl, session.imagePath || "stage-1-auto-rgba.png");
-      state.serverSession = session;
+      state.serverSession = { ...session, catalogRevisionToken: regions.catalogRevisionToken || null };
       state.selectedRunId = session.id;
       showStaticLoadControls(false);
       state.drawing = false;
@@ -2522,13 +2522,22 @@
       const response = await fetch(state.serverSession.saveUrl || "/api/save", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ regions: editedDocument(), corrections: correctionsDocument() }),
+        body: JSON.stringify({
+          regions: editedDocument(),
+          corrections: correctionsDocument(),
+          ...(state.serverSession.catalogRevisionToken
+            ? { catalogRevisionToken: state.serverSession.catalogRevisionToken }
+            : {}),
+        }),
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || `Save failed (${response.status})`);
       state.savedSnapshot = JSON.stringify(state.regions);
       state.dirty = false;
       state.hasSaved = true;
+      if (result.catalogRevisionToken) {
+        state.serverSession.catalogRevisionToken = result.catalogRevisionToken;
+      }
       setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
       state.saveError = error.message || "Save failed";

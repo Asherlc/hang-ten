@@ -689,18 +689,21 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
     board_mask = detect_board_mask(pixel_data)
     source_support = _manual_source_board_mask(pixel_data, board_mask)
     raw_manual = _manual_candidates_for_stem(source_path.stem, canvas_width, canvas_height)
+    supported_manual = tuple(
+        candidate
+        for candidate in raw_manual
+        if _manual_contour_is_supported(candidate[0], candidate[1], pixel_data, source_support)
+    )
     manual_candidates = tuple(
         candidate
         for candidate in raw_manual
-        if _manual_contour_is_supported(
-            candidate[0], candidate[1], pixel_data, source_support
-        )
+        if any(candidate is supported for supported in supported_manual)
+        or any(_manual_candidates_are_mirrors(candidate, supported) for supported in supported_manual)
     )
-    minimum_contours = _minimum_contours_for_stem(source_path.stem)
     candidates: list[tuple[np.ndarray, str, str, bool]] = [
         (*candidate, True) for candidate in manual_candidates
     ]
-    if len(candidates) < minimum_contours:
+    if not candidates:
         candidates.extend(
             (*candidate, False)
             for candidate in detect_hold_candidates(pixel_data, board_mask)
@@ -747,12 +750,16 @@ def vectorize_catalog_image(source_path: Path) -> CatalogOutlineDocument:
         outlines.append(
             HoldOutline(
                 id=f"hold-{index:02d}",
-                label=f"Approximate {kind} {index}",
+                label=(f"Manual {kind} {index}" if is_manual else f"Approximate {kind} {index}"),
                 kind=kind,
                 confidence=_APPROXIMATE_CONFIDENCE,
                 bounds=bounds,
                 path=path,
-                notes=note,
+                notes=(
+                    "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette."
+                    if is_manual
+                    else note
+                ),
             )
         )
     if not outlines:
@@ -1172,6 +1179,28 @@ def _manual_source_board_mask(image: np.ndarray, board_mask: np.ndarray) -> np.n
         if int(stats[index, cv2.CC_STAT_AREA]) >= minimum_area:
             separated_boards[labels == index] = 255
     return cv2.bitwise_or(board_mask, separated_boards)
+
+
+def _manual_candidates_are_mirrors(
+    first: tuple[np.ndarray, str, str], second: tuple[np.ndarray, str, str]
+) -> bool:
+    if first[1] != second[1]:
+        return False
+    first_points, second_points = first[0], second[0]
+    first_min = np.min(first_points, axis=0)
+    first_max = np.max(first_points, axis=0)
+    second_min = np.min(second_points, axis=0)
+    second_max = np.max(second_points, axis=0)
+    width = max(float(first_max[0]), float(second_max[0])) + min(
+        float(first_min[0]), float(second_min[0])
+    )
+    return (
+        not np.array_equal(first_points, second_points)
+        and np.isclose(first_min[1], second_min[1])
+        and np.isclose(first_max[1], second_max[1])
+        and np.isclose(first_min[0] + second_max[0], width)
+        and np.isclose(first_max[0] + second_min[0], width)
+    )
 
 
 def _manual_contour_is_supported(

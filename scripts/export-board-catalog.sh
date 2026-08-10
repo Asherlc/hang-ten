@@ -9,8 +9,8 @@ if ! command -v "$python_command" >/dev/null 2>&1; then
     exit 69
 fi
 
-if ! "$python_command" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)'; then
-    echo "Board catalog export requires Python 3.11 or newer." >&2
+if ! "$python_command" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11, 4) else 1)'; then
+    echo "Board catalog export requires Python 3.11.4 or newer." >&2
     exit 69
 fi
 

@@ -15,8 +15,8 @@
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "edge",
-      "label": "Approximate edge 1",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 1",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -102,8 +102,8 @@
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "pocket",
-      "label": "Approximate pocket 2",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 2",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -189,8 +189,8 @@
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "pocket",
-      "label": "Approximate pocket 3",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 3",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -293,8 +293,8 @@
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "pocket",
-      "label": "Approximate pocket 4",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 4",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -397,8 +397,8 @@
       "confidence": "approximate",
       "id": "hold-05",
       "kind": "edge",
-      "label": "Approximate edge 5",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 5",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -484,8 +484,8 @@
       "confidence": "approximate",
       "id": "hold-06",
       "kind": "edge",
-      "label": "Approximate edge 6",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 6",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -571,8 +571,8 @@
       "confidence": "approximate",
       "id": "hold-07",
       "kind": "pocket",
-      "label": "Approximate pocket 7",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 7",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -658,8 +658,8 @@
       "confidence": "approximate",
       "id": "hold-08",
       "kind": "pocket",
-      "label": "Approximate pocket 8",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 8",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -762,8 +762,8 @@
       "confidence": "approximate",
       "id": "hold-09",
       "kind": "pocket",
-      "label": "Approximate pocket 9",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 9",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -866,8 +866,8 @@
       "confidence": "approximate",
       "id": "hold-10",
       "kind": "edge",
-      "label": "Approximate edge 10",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 10",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -953,8 +953,8 @@
       "confidence": "approximate",
       "id": "hold-11",
       "kind": "edge",
-      "label": "Approximate edge 11",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 11",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -1040,8 +1040,8 @@
       "confidence": "approximate",
       "id": "hold-12",
       "kind": "pocket",
-      "label": "Approximate pocket 12",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 12",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -1127,8 +1127,8 @@
       "confidence": "approximate",
       "id": "hold-13",
       "kind": "pocket",
-      "label": "Approximate pocket 13",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 13",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -1214,8 +1214,8 @@
       "confidence": "approximate",
       "id": "hold-14",
       "kind": "pocket",
-      "label": "Approximate pocket 14",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 14",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -1301,8 +1301,8 @@
       "confidence": "approximate",
       "id": "hold-15",
       "kind": "edge",
-      "label": "Approximate edge 15",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 15",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [

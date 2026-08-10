@@ -51,7 +51,7 @@ def render_flat_illustration(
     rendered[contour] = CONTOUR_COLOR
 
     for hold_mask in outline_masks:
-        hold_mask &= board_mask
+        hold_mask = hold_mask & board_mask
         rendered[hold_mask] = CAVITY_COLOR
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

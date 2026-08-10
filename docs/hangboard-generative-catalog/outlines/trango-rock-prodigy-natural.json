@@ -15,8 +15,8 @@
       "confidence": "approximate",
       "id": "hold-01",
       "kind": "rail",
-      "label": "Approximate rail 1",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual rail 1",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -119,8 +119,8 @@
       "confidence": "approximate",
       "id": "hold-02",
       "kind": "rail",
-      "label": "Approximate rail 2",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual rail 2",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -153,13 +153,6 @@
             "to": [
               0.9,
               0.3532
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.9,
-              0.38680000000000003
             ]
           },
           {
@@ -213,8 +206,8 @@
       "confidence": "approximate",
       "id": "hold-03",
       "kind": "rail",
-      "label": "Approximate rail 3",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual rail 3",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -317,8 +310,8 @@
       "confidence": "approximate",
       "id": "hold-04",
       "kind": "rail",
-      "label": "Approximate rail 4",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual rail 4",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -404,8 +397,8 @@
       "confidence": "approximate",
       "id": "hold-05",
       "kind": "edge",
-      "label": "Approximate edge 5",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 5",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -508,8 +501,8 @@
       "confidence": "approximate",
       "id": "hold-06",
       "kind": "pocket",
-      "label": "Approximate pocket 6",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 6",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -612,8 +605,8 @@
       "confidence": "approximate",
       "id": "hold-07",
       "kind": "pocket",
-      "label": "Approximate pocket 7",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 7",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -646,13 +639,6 @@
             "to": [
               0.6999999999999998,
               0.5732
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.6999999999999998,
-              0.6068000000000001
             ]
           },
           {
@@ -698,16 +684,120 @@
     },
     {
       "bounds": {
+        "height": 0.06000000000000005,
+        "width": 0.17999999999999983,
+        "x": 0.7200000000000001,
+        "y": 0.56
+      },
+      "confidence": "approximate",
+      "id": "hold-08",
+      "kind": "edge",
+      "label": "Manual edge 8",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.7332,
+              0.56
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.7843999999999999,
+                0.56
+              ],
+              [
+                0.8911999999999999,
+                0.5644
+              ]
+            ],
+            "to": [
+              0.8867999999999999,
+              0.56
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.8999999999999999,
+              0.5732
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.8999999999999999,
+              0.6068000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.8443999999999999,
+                0.6112000000000001
+              ],
+              [
+                0.7288,
+                0.6156000000000001
+              ]
+            ],
+            "to": [
+              0.7332,
+              0.6200000000000001
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.7200000000000001,
+              0.6068000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.7200000000000001,
+                0.5956000000000001
+              ],
+              [
+                0.7244,
+                0.5688000000000001
+              ]
+            ],
+            "to": [
+              0.7200000000000001,
+              0.5732
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.7332,
+              0.56
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
         "height": 0.05999999999999994,
         "width": 0.13999999999999999,
         "x": 0.18000000000000002,
         "y": 0.68
       },
       "confidence": "approximate",
-      "id": "hold-08",
+      "id": "hold-09",
       "kind": "pocket",
-      "label": "Approximate pocket 8",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 9",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -808,10 +898,10 @@
         "y": 0.68
       },
       "confidence": "approximate",
-      "id": "hold-09",
+      "id": "hold-10",
       "kind": "edge",
-      "label": "Approximate edge 9",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 10",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -912,10 +1002,10 @@
         "y": 0.68
       },
       "confidence": "approximate",
-      "id": "hold-10",
+      "id": "hold-11",
       "kind": "edge",
-      "label": "Approximate edge 10",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual edge 11",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -948,13 +1038,6 @@
             "to": [
               0.6599999999999999,
               0.6932
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.6599999999999999,
-              0.7268
             ]
           },
           {
@@ -1006,10 +1089,10 @@
         "y": 0.68
       },
       "confidence": "approximate",
-      "id": "hold-11",
+      "id": "hold-12",
       "kind": "pocket",
-      "label": "Approximate pocket 11",
-      "notes": "hand-edited approximate internal contour guided by visible source layout",
+      "label": "Manual pocket 12",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
@@ -1042,13 +1125,6 @@
             "to": [
               0.82,
               0.6932
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.82,
-              0.7268
             ]
           },
           {

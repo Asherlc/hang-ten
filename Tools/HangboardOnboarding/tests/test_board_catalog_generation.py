@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import replace
-import importlib.util
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
+from conftest import load_board_catalog_module
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -39,21 +38,7 @@ COMPACT_II_HOLD_IDS = [
 
 
 def load_module():
-    module_path = (
-        REPO_ROOT
-        / "Tools"
-        / "HangboardOnboarding"
-        / "src"
-        / "hangboard_vectorizer"
-        / "board_catalog.py"
-    )
-    spec = importlib.util.spec_from_file_location("board_catalog_under_test", module_path)
-    if spec is None or spec.loader is None:  # pragma: no cover - defensive
-        raise AssertionError("unable to load hangboard_vectorizer.board_catalog")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    return load_board_catalog_module()
 
 
 def test_render_swift_catalog_contains_compact_ii_and_all_stable_hold_ids() -> None:
@@ -195,22 +180,17 @@ def test_export_board_catalog_shell_check_succeeds_for_checked_in_tree() -> None
     assert result.returncode == 0, result.stderr
 
 
-def test_export_board_catalog_shell_check_fails_for_stale_catalog_without_modifying_checkout() -> None:
-    original_catalog = GENERATED_CATALOG_PATH.read_bytes()
-    try:
-        GENERATED_CATALOG_PATH.write_bytes(original_catalog + b"\n// drift\n")
+def test_export_board_catalog_shell_check_fails_for_stale_temporary_output(tmp_path: Path) -> None:
+    output_path = tmp_path / "GeneratedBoardCatalog.swift"
+    output_path.write_bytes(GENERATED_CATALOG_PATH.read_bytes() + b"\n// drift\n")
 
-        result = subprocess.run(
-            [str(EXPORT_SCRIPT_PATH), "--check"],
-            cwd=REPO_ROOT,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
+    result = subprocess.run(
+        [str(EXPORT_SCRIPT_PATH), "--check", "--output", str(output_path)],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
 
-        assert result.returncode == 1
-        assert "drift detected" in result.stderr
-    finally:
-        GENERATED_CATALOG_PATH.write_bytes(original_catalog)
-
-    assert GENERATED_CATALOG_PATH.read_bytes() == original_catalog
+    assert result.returncode == 1
+    assert "drift detected" in result.stderr

@@ -61,3 +61,19 @@ packages under `boards/<board-id>/` must be complete and approved through Stage
 directory. See the
 [unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md);
 it supersedes the prior repository library design.
+
+## Catalog flat illustration checks
+
+Regenerate the catalog flat illustrations and contact sheet with:
+
+```bash
+.context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_flat_illustrations \
+  --source-dir docs/hangboard-generative-catalog \
+  --outline-dir docs/hangboard-generative-catalog/outlines \
+  --output-dir docs/hangboard-generative-catalog/flat-illustrations \
+  --contact-sheet docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png
+```
+
+Run `python -m pytest -q tests/test_catalog_flat_illustrations.py` from
+`Tools/HangboardOnboarding`. Review the regenerated contact sheet visually: every
+physical hold must remain a separate cavity, with no merged neighboring contours.

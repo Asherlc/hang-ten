@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import importlib.util
 import json
-import sys
 import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
 from pathlib import Path
+
+from conftest import load_board_catalog_module
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -45,23 +45,7 @@ COMPACT_II_HOLD_IDS = {
 
 
 def load_module():
-    module_path = (
-        REPO_ROOT
-        / "Tools"
-        / "HangboardOnboarding"
-        / "src"
-        / "hangboard_vectorizer"
-        / "board_catalog.py"
-    )
-    if not module_path.is_file():  # pragma: no cover - verified in red phase
-        raise AssertionError("hangboard_vectorizer.board_catalog is missing")
-    spec = importlib.util.spec_from_file_location("board_catalog_under_test", module_path)
-    if spec is None or spec.loader is None:  # pragma: no cover - defensive
-        raise AssertionError("unable to load hangboard_vectorizer.board_catalog")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    return load_board_catalog_module()
 
 
 class BoardCatalogTests(unittest.TestCase):
@@ -575,16 +559,53 @@ class BoardCatalogTests(unittest.TestCase):
                 "_require_tree_without_symlinks",
                 side_effect=check_then_create_raced_link,
             ):
-                module.register_run(
-                    catalog_path,
-                    "metolius.wood-grips-compact-ii",
-                    context_run_root,
-                    run_id="raced-run",
-                )
+                with self.assertRaisesRegex(ValueError, "symlink"):
+                    module.register_run(
+                        catalog_path,
+                        "metolius.wood-grips-compact-ii",
+                        context_run_root,
+                        run_id="raced-run",
+                    )
 
-            copied_link = board_root / "onboarding" / "runs" / "raced-run" / "raced-link"
-            self.assertTrue(copied_link.is_symlink())
-            self.assertEqual(copied_link.readlink(), outside)
+            self.assertFalse((board_root / "onboarding" / "runs" / "raced-run").exists())
+
+    def test_load_catalog_recovers_interrupted_registration_after_board_replacement(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            board_path = board_root / "board.json"
+            self._make_draft_board_and_catalog(catalog_path, board_path)
+            previous_catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+            updated_catalog = json.loads(json.dumps(previous_catalog))
+            updated_catalog["boards"][0]["lifecycle"] = "onboarding"
+            previous_board = json.loads(board_path.read_text(encoding="utf-8"))
+            updated_board = json.loads(json.dumps(previous_board))
+            updated_board["lifecycle"] = "onboarding"
+            updated_board["onboardingRuns"] = [
+                {
+                    "id": "interrupted-run",
+                    "path": "onboarding/runs/interrupted-run",
+                    "regionCount": 1,
+                    "lifecycle": "onboarding",
+                    "status": "awaiting_approval",
+                }
+            ]
+            board_payload = json.dumps(updated_board, indent=2, sort_keys=True) + "\n"
+            catalog_payload = json.dumps(updated_catalog, indent=2, sort_keys=True) + "\n"
+
+            # This is the on-disk state left by termination after the first replacement.
+            module._write_pending_catalog_transaction(
+                catalog_path, board_path, board_payload, catalog_payload
+            )
+            module._atomic_write_text(board_path, board_payload)
+
+            recovered = module.load_catalog(catalog_path)
+
+            self.assertEqual(recovered.boards[0].lifecycle, "onboarding")
+            self.assertEqual(module.load_board(board_path).lifecycle, "onboarding")
+            self.assertFalse(module._catalog_transaction_path(catalog_path).exists())
 
     def test_register_run_rolls_back_files_and_copy_when_catalog_write_fails(self) -> None:
         module = load_module()

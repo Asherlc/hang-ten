@@ -16,6 +16,7 @@ from urllib.parse import urlparse
 
 _CATALOG_SCHEMA_VERSION = 1
 _BOARD_SCHEMA_VERSION = 1
+_CATALOG_TRANSACTION_SCHEMA_VERSION = 1
 _LIFECYCLES = ("draft", "onboarding", "approved", "shipped")
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _FINGER_WORDS = {"1": "one", "2": "two", "3": "three", "4": "four"}
@@ -411,7 +412,9 @@ class BoardDocument:
 
 
 def load_catalog(path: Path) -> CatalogDocument:
-    payload = _load_json_payload(Path(path), "catalog")
+    catalog_path = Path(path)
+    _recover_pending_catalog_transaction(catalog_path)
+    payload = _load_json_payload(catalog_path, "catalog")
     return CatalogDocument.from_json(payload, "catalog")
 
 
@@ -453,6 +456,7 @@ def register_run(
     run_path: Path,
     run_id: str | None = None,
 ) -> BoardDocument:
+    _recover_pending_catalog_transaction(catalog_path)
     catalog = validate_catalog(catalog_path)
     catalog_root = Path(catalog_path).parent.resolve(strict=False)
     board_entry = _find_board_entry(catalog, board_id)
@@ -514,15 +518,24 @@ def register_run(
     catalog_payload = json.dumps(updated_catalog.to_json(), indent=2, sort_keys=True) + "\n"
     previous_board_payload = board_path.read_text(encoding="utf-8")
     board_write_started = False
+    journal_written = False
     try:
         _require_tree_without_symlinks(source_run_root)
         shutil.copytree(source_run_root, destination_root, symlinks=True)
+        _require_tree_without_symlinks(destination_root)
+        _write_pending_catalog_transaction(
+            catalog_path, board_path, board_payload, catalog_payload
+        )
+        journal_written = True
         board_write_started = True
         _atomic_write_text(board_path, board_payload)
         _atomic_write_text(Path(catalog_path), catalog_payload)
+        _catalog_transaction_path(catalog_path).unlink(missing_ok=True)
     except BaseException:
         if board_write_started:
             _atomic_write_text(board_path, previous_board_payload)
+        if journal_written:
+            _catalog_transaction_path(catalog_path).unlink(missing_ok=True)
         if destination_root.is_symlink() or destination_root.is_file():
             destination_root.unlink()
         elif destination_root.exists():
@@ -652,6 +665,65 @@ def _atomic_write_text(path: Path, payload: str) -> None:
             os.close(file_descriptor)
         Path(temporary_name).unlink(missing_ok=True)
         raise
+
+
+def _catalog_transaction_path(catalog_path: Path) -> Path:
+    return Path(catalog_path).with_name(".board-catalog-transaction.json")
+
+
+def _write_pending_catalog_transaction(
+    catalog_path: Path, board_path: Path, board_payload: str, catalog_payload: str
+) -> None:
+    catalog = Path(catalog_path)
+    root = catalog.parent.resolve(strict=False)
+    resolved_board = Path(board_path).resolve(strict=False)
+    try:
+        board_relative_path = resolved_board.relative_to(root)
+    except ValueError as error:
+        raise ValueError("board transaction path must stay inside catalog") from error
+    transaction = {
+        "schemaVersion": _CATALOG_TRANSACTION_SCHEMA_VERSION,
+        "boardPath": board_relative_path.as_posix(),
+        "boardPayload": board_payload,
+        "catalogPayload": catalog_payload,
+    }
+    _atomic_write_text(
+        _catalog_transaction_path(catalog),
+        json.dumps(transaction, indent=2, sort_keys=True) + "\n",
+    )
+
+
+def _recover_pending_catalog_transaction(catalog_path: Path) -> None:
+    catalog = Path(catalog_path)
+    journal_path = _catalog_transaction_path(catalog)
+    if not journal_path.exists():
+        return
+    transaction = _load_json_payload(journal_path, "catalog transaction")
+    schema_version = _required_int(
+        transaction, "schemaVersion", "catalog transaction.schemaVersion"
+    )
+    if schema_version != _CATALOG_TRANSACTION_SCHEMA_VERSION:
+        raise ValueError(
+            "catalog transaction.schemaVersion must be "
+            f"{_CATALOG_TRANSACTION_SCHEMA_VERSION}, got {schema_version!r}"
+        )
+    board_relative_path = _required_str(
+        transaction, "boardPath", "catalog transaction.boardPath"
+    )
+    board_payload = _required_str(
+        transaction, "boardPayload", "catalog transaction.boardPayload"
+    )
+    catalog_payload = _required_str(
+        transaction, "catalogPayload", "catalog transaction.catalogPayload"
+    )
+    catalog_root = catalog.parent.resolve(strict=False)
+    _require_relative_subpath(
+        catalog_root, Path(board_relative_path), "catalog transaction.boardPath"
+    )
+    board_path = catalog_root / board_relative_path
+    _atomic_write_text(board_path, board_payload)
+    _atomic_write_text(catalog, catalog_payload)
+    journal_path.unlink(missing_ok=True)
 
 
 def _required_str(payload: Mapping[str, Any], key: str, source: str) -> str:

@@ -28,12 +28,14 @@ def load_board_catalog_module(repo_root: Path):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate the checked-in Swift board catalog.")
     parser.add_argument("--check", action="store_true", help="fail if the generated Swift is stale")
+    parser.add_argument("--catalog", type=Path, help="catalog JSON to export")
+    parser.add_argument("--output", type=Path, help="Swift output path")
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[1]
     module = load_board_catalog_module(repo_root)
-    catalog_path = repo_root / "Hangboards" / "catalog.json"
-    output_path = repo_root / "HangTen" / "Models" / "GeneratedBoardCatalog.swift"
+    catalog_path = args.catalog or repo_root / "Hangboards" / "catalog.json"
+    output_path = args.output or repo_root / "HangTen" / "Models" / "GeneratedBoardCatalog.swift"
 
     try:
         module.export_swift_catalog(catalog_path, output_path, check=args.check)

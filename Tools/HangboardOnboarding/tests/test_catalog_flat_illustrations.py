@@ -86,6 +86,11 @@ def _extract_head_outlines(destination: Path) -> Path:
     return destination / OUTLINE_TREE
 
 
+@pytest.fixture(scope="session")
+def head_outline_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    return _extract_head_outlines(tmp_path_factory.mktemp("head-outlines"))
+
+
 def _load_document(path: Path) -> CatalogOutlineDocument:
     return CatalogOutlineDocument.from_json(json.loads(path.read_text(encoding="utf-8")))
 
@@ -194,11 +199,10 @@ def test_render_flat_catalog_is_byte_identical_across_runs_and_uses_flat_names(
     ),
 )
 def test_render_flat_illustration_preserves_representative_low_contrast_board_planes(
-    tmp_path: Path, stem: str, x: int, y: int
+    tmp_path: Path, head_outline_dir: Path, stem: str, x: int, y: int
 ) -> None:
-    outline_dir = _extract_head_outlines(tmp_path)
     source_path = SOURCE_DIR / f"{stem}.png"
-    document = _load_document(outline_dir / f"{stem}.json")
+    document = _load_document(head_outline_dir / f"{stem}.json")
     output_path = tmp_path / f"{stem}-flat.png"
 
     render_flat_illustration(source_path, document, output_path)
@@ -208,20 +212,19 @@ def test_render_flat_illustration_preserves_representative_low_contrast_board_pl
 
 
 def test_render_flat_catalog_gives_every_committed_outline_visible_cavity_pixels(
-    tmp_path: Path,
+    tmp_path: Path, head_outline_dir: Path,
 ) -> None:
-    outline_dir = _extract_head_outlines(tmp_path / "snapshot")
     output_dir = tmp_path / "flat-illustrations"
     contact_sheet_path = tmp_path / "flat-illustrations-contact-sheet.png"
 
-    outputs = render_flat_catalog(SOURCE_DIR, outline_dir, output_dir, contact_sheet_path)
+    outputs = render_flat_catalog(SOURCE_DIR, head_outline_dir, output_dir, contact_sheet_path)
     rendered_by_stem = {
         path.stem.removesuffix("-flat"): np.array(Image.open(path).convert("RGB"))
         for path in outputs
     }
 
     missing: list[tuple[str, str]] = []
-    for outline_path in sorted(outline_dir.glob("*.json")):
+    for outline_path in sorted(head_outline_dir.glob("*.json")):
         document = _load_document(outline_path)
         rendered = rendered_by_stem[outline_path.stem]
         for outline in document.outlines:

@@ -33,18 +33,20 @@
 
 - [ ] **Step 1: Write the failing regression test**
 
-Add a focused XCTest beside the existing catalog tests. It should inspect every
-plan in `LegacyPlanSeedCatalog.all` and assert that its last step is not
-`.coolDown`, assert that `BuiltInPlanLibraryDefinition.document.blocks` has no
-block with ID `shared.cool-down`, and assert that the bundled
-`PlanLibraryStore.builtIn.plans` also has no final `.coolDown` step. Keep the
-existing recovery-duration test unchanged so the regression suite continues to
-prove that recovery intervals survive the change.
+Extend the existing `testBuiltInPlansDoNotEndWithCooldownSteps()` in
+`PlanStorageTests.swift`; do not declare a duplicate test. Preserve its
+`bundledPlanLibraryData()` / `PlanLibraryStore(data:)` setup, then add assertions
+that every `LegacyPlanSeedCatalog.all` plan and every
+`BuiltInPlanLibraryDefinition.document.blocks` reference sequence has no final
+`.coolDown`, alongside the bundled-library assertion. Keep the existing
+recovery-duration test unchanged so the regression suite continues to prove
+that recovery intervals survive the change.
 
 Use the project’s existing XCTest style, for example:
 
 ```swift
 func testBuiltInPlansDoNotEndWithCooldownSteps() {
+    let store = PlanLibraryStore(data: bundledPlanLibraryData())
     XCTAssertTrue(
         LegacyPlanSeedCatalog.all.allSatisfy { $0.steps.last?.phase != .coolDown }
     )
@@ -52,7 +54,7 @@ func testBuiltInPlansDoNotEndWithCooldownSteps() {
         BuiltInPlanLibraryDefinition.document.blocks.contains { $0.id == "shared.cool-down" }
     )
     XCTAssertTrue(
-        PlanLibraryStore.builtIn.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+        store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
     )
 }
 ```

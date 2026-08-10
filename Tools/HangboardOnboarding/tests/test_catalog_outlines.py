@@ -452,6 +452,43 @@ def test_vectorize_catalog_image_avoids_board_shelf_strip_false_positives() -> N
         )
 
 
+def test_manual_catalog_guidance_is_authoritative_over_detector_artifacts() -> None:
+    root = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog"
+
+    document = vectorize_catalog_image(root / "soill-iron-palm-2.png")
+
+    assert len(document.outlines) == 3
+    assert all(outline.label.startswith("Manual ") for outline in document.outlines)
+    assert all(
+        outline.notes
+        == "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette."
+        for outline in document.outlines
+    )
+
+
+def test_manual_contours_do_not_overlap_for_separate_physical_holds() -> None:
+    root = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog"
+    stems = (
+        "metolius-simulator-3d",
+        "yy-verticalboard-evo",
+        "yy-verticalboard-light",
+        "trango-rock-prodigy-training-center",
+        "frictitious-doormount-pro-7",
+    )
+
+    for stem in stems:
+        document = vectorize_catalog_image(root / f"{stem}.png")
+        for index, first in enumerate(document.outlines):
+            first_x, first_y, first_width, first_height = first.bounds
+            for second in document.outlines[index + 1 :]:
+                second_x, second_y, second_width, second_height = second.bounds
+                overlaps = (
+                    max(first_x, second_x) < min(first_x + first_width, second_x + second_width)
+                    and max(first_y, second_y) < min(first_y + first_height, second_y + second_height)
+                )
+                assert not overlaps, (stem, first.id, second.id)
+
+
 def test_representative_board_families_have_internal_plausible_contours() -> None:
     root = Path(__file__).resolve().parents[3] / "docs" / "hangboard-generative-catalog"
     representatives = (

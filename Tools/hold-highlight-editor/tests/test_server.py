@@ -2257,6 +2257,40 @@ def test_catalog_save_clamps_out_of_range_contour_coordinates(tmp_path):
     }
 
 
+def test_catalog_save_normalizes_duplicate_contour_vertices(tmp_path):
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "deduplicated-board",
+        [catalog_outline("hold-01")],
+    )
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+    regions = catalog_regions_document(session)
+    regions["regions"][0]["contour"] = [
+        [10, 10], [10, 10], [40, 10], [40, 10], [40, 30], [40, 30], [10, 10],
+    ]
+
+    save_catalog_outline(session, regions)
+
+    commands = json.loads(outline_path.read_text())["outlines"][0]["path"]["commands"]
+    assert [command["to"] for command in commands] == [
+        [0.1, 0.2], [0.4, 0.2], [0.4, 0.6],
+    ]
+
+
+def test_catalog_save_rejects_contour_collapsed_by_normalization(tmp_path):
+    source_dir, outline_dir, _, _ = make_catalog_board(
+        tmp_path,
+        "collapsed-board",
+        [catalog_outline("hold-01")],
+    )
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+    regions = catalog_regions_document(session)
+    regions["regions"][0]["contour"] = [[0, 0], [100, 0], [0, 0], [100, 0]]
+
+    with pytest.raises(EditorError, match="at least three distinct points"):
+        save_catalog_outline(session, regions)
+
+
 def test_flatten_outline_rejects_multiple_subpaths():
     with pytest.raises(EditorError, match="multiple M"):
         server_module._flatten_outline([
@@ -2318,7 +2352,10 @@ def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(t
         ]
         request = Request(
             base + selected["saveUrl"],
-            data=json.dumps({"regions": {"canvas": editor_regions["canvas"], "regions": edited}}).encode(),
+            data=json.dumps({
+                "regions": {"canvas": editor_regions["canvas"], "regions": edited},
+                "catalogRevisionToken": editor_regions["catalogRevisionToken"],
+            }).encode(),
             method="PUT",
             headers={"Content-Type": "application/json"},
         )
@@ -2352,6 +2389,56 @@ def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(t
     assert second_image.read_bytes() == original_second_image
     assert json.loads(second_outline.read_text())["outlines"][0]["id"] == "hold-01"
     assert not list(outline_dir.glob(".first-board.json.*.tmp"))
+
+
+def test_catalog_http_save_rejects_a_stale_outline_revision(tmp_path):
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "revision-board",
+        [catalog_outline("hold-01")],
+    )
+    catalog = catalog_from_inputs([], None, source_dir, outline_dir)
+
+    with running_server(catalog) as base:
+        status, session = read_json(base + "/api/session?run=run-1")
+        assert status == 200
+        with urlopen(base + session["regionsUrl"]) as response:
+            original_regions = json.load(response)
+        revision_token = original_regions["catalogRevisionToken"]
+        first_regions = json.loads(json.dumps(original_regions))
+        first_regions["regions"][0]["contour"] = [[15, 15], [35, 15], [35, 25], [15, 25]]
+        second_regions = json.loads(json.dumps(original_regions))
+        second_regions["regions"][0]["contour"] = [[45, 15], [65, 15], [65, 25], [45, 25]]
+
+        first_request = Request(
+            base + session["saveUrl"],
+            data=json.dumps({
+                "regions": first_regions,
+                "catalogRevisionToken": revision_token,
+            }).encode(),
+            method="PUT",
+            headers={"Content-Type": "application/json"},
+        )
+        with urlopen(first_request) as response:
+            first_saved = json.load(response)
+
+        second_request = Request(
+            base + session["saveUrl"],
+            data=json.dumps({
+                "regions": second_regions,
+                "catalogRevisionToken": revision_token,
+            }).encode(),
+            method="PUT",
+            headers={"Content-Type": "application/json"},
+        )
+        with pytest.raises(HTTPError) as error:
+            urlopen(second_request)
+
+    saved_document = json.loads(outline_path.read_text())
+    assert first_saved["catalogRevisionToken"] != revision_token
+    assert error.value.code == 409
+    assert json.load(error.value)["error"] == "catalog outline changed; reload before saving"
+    assert saved_document["outlines"][0]["path"]["commands"][0]["to"] == [0.15, 0.3]
 
 
 def test_catalog_regions_route_returns_json_error_for_invalid_outline(tmp_path):

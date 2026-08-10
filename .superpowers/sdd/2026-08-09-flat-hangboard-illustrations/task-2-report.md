@@ -11,7 +11,7 @@ Generated the remaining 31 `*-flat.png` files under `docs/hangboard-generative-c
 - `.superpowers/sdd/2026-08-09-flat-hangboard-illustrations/task-2-brief.md`
 - `docs/superpowers/specs/2026-08-09-flat-hangboard-illustrations-design.md`
 - `.context/flat-hangboard-illustrations/pilot-review.md`
-- `/Users/asherlc/.codex/skills/.system/imagegen/SKILL.md`
+- the repository’s `imagegen` skill guidance
 
 ## Implementation notes
 

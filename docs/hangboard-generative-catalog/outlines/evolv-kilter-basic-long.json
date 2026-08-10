@@ -6,367 +6,299 @@
   "coordinateSpace": "normalized",
   "outlines": [
     {
+      "bounds": {
+        "height": 0.04290000000000005,
+        "width": 0.76,
+        "x": 0.12,
+        "y": 0.48
+      },
+      "confidence": "approximate",
       "id": "hold-01",
+      "kind": "edge",
       "label": "Manual edge 1",
-      "kind": "edge",
-      "confidence": "approximate",
-      "bounds": {
-        "x": 0.056,
-        "y": 0.535,
-        "width": 0.888,
-        "height": 0.04700000000000004
-      },
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
           {
             "command": "M",
             "to": [
-              0.39344,
-              0.535
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.60656,
-              0.535
+              0.1321,
+              0.48
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.79292296604,
-                0.535
+                0.3773666666666667,
+                0.48
               ],
               [
-                0.9440000000000001,
-                0.542996194365
+                0.8719333333333332,
+                0.4840333333333333
               ]
             ],
             "to": [
-              0.9440000000000001,
-              0.55286
+              0.8678999999999999,
+              0.48
             ]
           },
           {
             "command": "L",
             "to": [
-              0.9440000000000001,
-              0.5641400000000001
+              0.88,
+              0.4921
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.88,
+              0.5229
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.9440000000000001,
-                0.5740038056350001
+                0.6266666666666667,
+                0.5229
               ],
               [
-                0.79292296604,
-                0.5820000000000001
+                0.12,
+                0.5126333333333334
               ]
             ],
             "to": [
-              0.60656,
-              0.5820000000000001
+              0.12,
+              0.5229
             ]
           },
           {
             "command": "L",
             "to": [
-              0.39344,
-              0.5820000000000001
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.20707703396000002,
-                0.5820000000000001
-              ],
-              [
-                0.056,
-                0.5740038056350001
-              ]
-            ],
-            "to": [
-              0.056,
-              0.5641400000000001
+              0.12,
+              0.4921
             ]
           },
           {
             "command": "L",
             "to": [
-              0.056,
-              0.55286
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.056,
-                0.542996194365
-              ],
-              [
-                0.20707703396000002,
-                0.535
-              ]
-            ],
-            "to": [
-              0.39344,
-              0.535
+              0.1321,
+              0.48
             ]
           }
         ]
-      },
-      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette."
+      }
     },
     {
+      "bounds": {
+        "height": 0.05500000000000005,
+        "width": 0.76,
+        "x": 0.12,
+        "y": 0.57
+      },
+      "confidence": "approximate",
       "id": "hold-02",
-      "label": "Manual edge 2",
       "kind": "edge",
-      "confidence": "approximate",
-      "bounds": {
-        "x": 0.056,
-        "y": 0.595,
-        "width": 0.888,
-        "height": 0.04700000000000004
-      },
+      "label": "Manual edge 2",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
           {
             "command": "M",
             "to": [
-              0.39344,
-              0.595
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.60656,
-              0.595
+              0.1321,
+              0.57
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.79292296604,
-                0.595
+                0.3773666666666667,
+                0.57
               ],
               [
-                0.9440000000000001,
-                0.602996194365
+                0.8719333333333332,
+                0.5740333333333333
               ]
             ],
             "to": [
-              0.9440000000000001,
-              0.61286
+              0.8678999999999999,
+              0.57
             ]
           },
           {
             "command": "L",
             "to": [
-              0.9440000000000001,
-              0.62414
+              0.88,
+              0.5821
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.88,
+              0.6129
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.9440000000000001,
-                0.634003805635
+                0.6307,
+                0.6169333333333333
               ],
               [
-                0.79292296604,
-                0.642
+                0.12806666666666666,
+                0.6209666666666667
               ]
             ],
             "to": [
-              0.60656,
-              0.642
+              0.1321,
+              0.625
             ]
           },
           {
             "command": "L",
             "to": [
-              0.39344,
-              0.642
+              0.12,
+              0.6129
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.20707703396000002,
-                0.642
+                0.12,
+                0.6026333333333334
               ],
               [
-                0.056,
-                0.634003805635
+                0.12403333333333333,
+                0.5780666666666666
               ]
             ],
             "to": [
-              0.056,
-              0.62414
+              0.12,
+              0.5821
             ]
           },
           {
             "command": "L",
             "to": [
-              0.056,
-              0.61286
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.056,
-                0.602996194365
-              ],
-              [
-                0.20707703396000002,
-                0.595
-              ]
-            ],
-            "to": [
-              0.39344,
-              0.595
+              0.1321,
+              0.57
             ]
           }
         ]
-      },
-      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette."
+      }
     },
     {
-      "id": "hold-03",
-      "label": "Manual edge 3",
-      "kind": "edge",
-      "confidence": "approximate",
       "bounds": {
-        "x": 0.056,
-        "y": 0.655,
-        "width": 0.888,
-        "height": 0.04700000000000004
+        "height": 0.05500000000000005,
+        "width": 0.76,
+        "x": 0.12,
+        "y": 0.66
       },
+      "confidence": "approximate",
+      "id": "hold-03",
+      "kind": "edge",
+      "label": "Manual edge 3",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
       "path": {
         "closed": true,
         "commands": [
           {
             "command": "M",
             "to": [
-              0.39344,
-              0.655
-            ]
-          },
-          {
-            "command": "L",
-            "to": [
-              0.60656,
-              0.655
+              0.1321,
+              0.66
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.79292296604,
-                0.655
+                0.3773666666666667,
+                0.66
               ],
               [
-                0.9440000000000001,
-                0.662996194365
+                0.8719333333333332,
+                0.6640333333333334
               ]
             ],
             "to": [
-              0.9440000000000001,
-              0.67286
+              0.8678999999999999,
+              0.66
             ]
           },
           {
             "command": "L",
             "to": [
-              0.9440000000000001,
-              0.6841400000000001
+              0.88,
+              0.6721
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.88,
+              0.7029000000000001
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.9440000000000001,
-                0.6940038056350001
+                0.6307,
+                0.7069333333333334
               ],
               [
-                0.79292296604,
-                0.7020000000000001
+                0.12806666666666666,
+                0.7109666666666667
               ]
             ],
             "to": [
-              0.60656,
-              0.7020000000000001
+              0.1321,
+              0.7150000000000001
             ]
           },
           {
             "command": "L",
             "to": [
-              0.39344,
-              0.7020000000000001
+              0.12,
+              0.7029000000000001
             ]
           },
           {
             "command": "C",
             "controls": [
               [
-                0.20707703396000002,
-                0.7020000000000001
+                0.12,
+                0.6926333333333334
               ],
               [
-                0.056,
-                0.6940038056350001
+                0.12403333333333333,
+                0.6680666666666667
               ]
             ],
             "to": [
-              0.056,
-              0.6841400000000001
+              0.12,
+              0.6721
             ]
           },
           {
             "command": "L",
             "to": [
-              0.056,
-              0.67286
-            ]
-          },
-          {
-            "command": "C",
-            "controls": [
-              [
-                0.056,
-                0.662996194365
-              ],
-              [
-                0.20707703396000002,
-                0.655
-              ]
-            ],
-            "to": [
-              0.39344,
-              0.655
+              0.1321,
+              0.66
             ]
           }
         ]
-      },
-      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette."
+      }
     }
   ],
   "references": [

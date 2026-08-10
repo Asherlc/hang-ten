@@ -80,13 +80,13 @@ def test_catalog_sources_include_conservative_outline_guidance() -> None:
     assert set(hints) == {path.stem for path in _catalog_sources()}
     for stem, entry in hints.items():
         guidance = entry["outlineGuidance"]
-        assert isinstance(guidance["approximateHoldCount"], int)
-        assert guidance["approximateHoldCount"] > 0
-        assert isinstance(guidance["minimumContours"], int)
-        assert guidance["minimumContours"] > 0
-        assert isinstance(guidance["layout"], str) and guidance["layout"]
-        assert isinstance(guidance["symmetric"], bool)
-        assert isinstance(guidance["allowsLongRails"], bool)
+        assert isinstance(guidance["approximateHoldCount"], int), stem
+        assert guidance["approximateHoldCount"] > 0, stem
+        assert isinstance(guidance["minimumContours"], int), stem
+        assert guidance["minimumContours"] > 0, stem
+        assert isinstance(guidance["layout"], str) and guidance["layout"], stem
+        assert isinstance(guidance["symmetric"], bool), stem
+        assert isinstance(guidance["allowsLongRails"], bool), stem
 
 
 def test_catalog_source_discovery_excludes_flat_contact_sheet() -> None:

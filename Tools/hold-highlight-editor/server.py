@@ -19,6 +19,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
+from threading import RLock
 from typing import Any, Iterable
 from urllib.parse import parse_qs, unquote, urlencode, urlsplit
 from uuid import uuid4
@@ -39,6 +40,7 @@ _ABSOLUTE_PATH_IN_TEXT = re.compile(
 )
 CUBIC_SEGMENTS = 12
 HOLD_IDENTIFIER = re.compile(r"hold-(\d+)$")
+_CATALOG_OUTLINE_SAVE_LOCK = RLock()
 
 
 def _new_board_reservation_key() -> str:
@@ -57,6 +59,10 @@ def _public_job_error_message(error: Exception) -> str:
 
 class EditorError(ValueError):
     """A safe, user-facing editor session or payload error."""
+
+
+class CatalogRevisionConflict(EditorError):
+    """A catalog edit was based on content that has since changed."""
 
 
 class RequestError(EditorError):
@@ -235,88 +241,104 @@ def catalog_from_inputs(
 
 
 def catalog_regions_document(session: EditorSession) -> dict[str, Any]:
-    document = _load_catalog_outline(session)
-    canvas = document["canvas"]
-    outlines = document["outlines"]
-    editor_ids = _editor_ids_for_outlines(outlines)
-    regions = []
-    for outline in outlines:
-        source_id = outline["id"]
-        outline_type = outline.get("kind", "edge")
-        regions.append(
-            {
-                "id": editor_ids[source_id],
-                "key": source_id,
-                "type": outline_type,
-                "contour": [
-                    [point[0] * canvas["width"], point[1] * canvas["height"]]
-                    for point in _flatten_outline(outline["path"].get("commands", []))
-                ],
-                "metadata": {
-                    "sourceRegionId": source_id,
-                    "mode": "aperture" if outline_type == "pocket" else "surface",
-                    "shapeKind": "freeform",
-                    "pathStyle": "straight",
-                    "curveTension": 0.8,
-                },
-            }
-        )
-    return {"canvas": deepcopy(canvas), "regions": regions}
+    with _CATALOG_OUTLINE_SAVE_LOCK:
+        document = _load_catalog_outline(session)
+        canvas = document["canvas"]
+        outlines = document["outlines"]
+        editor_ids = _editor_ids_for_outlines(outlines)
+        regions = []
+        for outline in outlines:
+            source_id = outline["id"]
+            outline_type = outline.get("kind", "edge")
+            regions.append(
+                {
+                    "id": editor_ids[source_id],
+                    "key": source_id,
+                    "type": outline_type,
+                    "contour": [
+                        [point[0] * canvas["width"], point[1] * canvas["height"]]
+                        for point in _flatten_outline(outline["path"].get("commands", []))
+                    ],
+                    "metadata": {
+                        "sourceRegionId": source_id,
+                        "mode": "aperture" if outline_type == "pocket" else "surface",
+                        "shapeKind": "freeform",
+                        "pathStyle": "straight",
+                        "curveTension": 0.8,
+                    },
+                }
+            )
+        return {
+            "canvas": deepcopy(canvas),
+            "regions": regions,
+            "catalogRevisionToken": _catalog_outline_revision(session),
+        }
 
 
-def save_catalog_outline(session: EditorSession, regions: object) -> dict[str, str]:
+def save_catalog_outline(
+    session: EditorSession,
+    regions: object,
+    expected_revision_token: str | None = None,
+) -> dict[str, str]:
     region_document = validate_regions_document(regions)
-    source_document = _load_catalog_outline(session)
-    outlines = source_document["outlines"]
-    existing_by_id = {outline["id"]: outline for outline in outlines}
-    editor_ids = _editor_ids_for_outlines(outlines)
-    source_by_editor_id = {editor_id: source_id for source_id, editor_id in editor_ids.items()}
-    incoming_ids: set[str] = set()
-    updated_outlines: list[dict[str, Any]] = []
-    next_hold_number = _next_hold_number(existing_by_id)
-    for region in region_document["regions"]:
-        metadata = region.get("metadata", {})
-        source_id = metadata.get("sourceRegionId") if isinstance(metadata, dict) else None
-        if not isinstance(source_id, str) or source_id not in existing_by_id:
-            source_id = source_by_editor_id.get(region["id"])
-        if not isinstance(source_id, str) or source_id not in existing_by_id:
-            key = region.get("key")
-            source_id = key if isinstance(key, str) and key in existing_by_id else None
-        is_existing_outline = source_id is not None
-        if source_id is None:
-            source_id = _next_hold_id(existing_by_id, next_hold_number)
-            next_hold_number = int(source_id.removeprefix("hold-")) + 1
-            outline = _new_catalog_outline(region, source_id)
-            existing_by_id[source_id] = outline
-        else:
-            if source_id in incoming_ids:
-                raise EditorError(f"catalog region {source_id} appears more than once")
-            outline = deepcopy(existing_by_id[source_id])
-        incoming_ids.add(source_id)
-        normalized_contour = _normalized_contour(
-            region_document["canvas"], region["contour"]
-        )
-        existing_contour = (
-            _flatten_outline(outline["path"].get("commands", []))
-            if is_existing_outline
-            else None
-        )
-        if not is_existing_outline or not _contours_match(normalized_contour, existing_contour):
-            outline["path"] = _closed_line_path(
+    with _CATALOG_OUTLINE_SAVE_LOCK:
+        if (
+            expected_revision_token is not None
+            and expected_revision_token != _catalog_outline_revision(session)
+        ):
+            raise CatalogRevisionConflict("catalog outline changed; reload before saving")
+        source_document = _load_catalog_outline(session)
+        outlines = source_document["outlines"]
+        existing_by_id = {outline["id"]: outline for outline in outlines}
+        editor_ids = _editor_ids_for_outlines(outlines)
+        source_by_editor_id = {editor_id: source_id for source_id, editor_id in editor_ids.items()}
+        incoming_ids: set[str] = set()
+        updated_outlines: list[dict[str, Any]] = []
+        next_hold_number = _next_hold_number(existing_by_id)
+        for region in region_document["regions"]:
+            metadata = region.get("metadata", {})
+            source_id = metadata.get("sourceRegionId") if isinstance(metadata, dict) else None
+            if not isinstance(source_id, str) or source_id not in existing_by_id:
+                source_id = source_by_editor_id.get(region["id"])
+            if not isinstance(source_id, str) or source_id not in existing_by_id:
+                key = region.get("key")
+                source_id = key if isinstance(key, str) and key in existing_by_id else None
+            is_existing_outline = source_id is not None
+            if source_id is None:
+                source_id = _next_hold_id(existing_by_id, next_hold_number)
+                next_hold_number = int(source_id.removeprefix("hold-")) + 1
+                outline = _new_catalog_outline(region, source_id)
+                existing_by_id[source_id] = outline
+            else:
+                if source_id in incoming_ids:
+                    raise EditorError(f"catalog region {source_id} appears more than once")
+                outline = deepcopy(existing_by_id[source_id])
+            incoming_ids.add(source_id)
+            normalized_contour = _normalized_contour(
                 region_document["canvas"], region["contour"]
             )
-            outline["bounds"] = _normalized_bounds(
-                region_document["canvas"], region["contour"]
+            existing_contour = (
+                _flatten_outline(outline["path"].get("commands", []))
+                if is_existing_outline
+                else None
             )
-        updated_outlines.append(outline)
-    source_document["outlines"] = updated_outlines
-    outline_dir = session.catalog_outline_dir or session.regions_path.parent
-    outline_path = _confined_file(outline_dir, session.catalog_outline_path or session.regions_path)
-    _atomic_write_json(outline_path, source_document)
-    return {
-        "catalogPath": str(outline_path.relative_to(outline_dir)),
-        "savedAt": datetime.now(timezone.utc).isoformat(),
-    }
+            if not is_existing_outline or not _contours_match(normalized_contour, existing_contour):
+                outline["path"] = _closed_line_path(
+                    region_document["canvas"], region["contour"]
+                )
+                outline["bounds"] = _normalized_bounds(
+                    region_document["canvas"], region["contour"]
+                )
+            updated_outlines.append(outline)
+        source_document["outlines"] = updated_outlines
+        outline_dir = session.catalog_outline_dir or session.regions_path.parent
+        outline_path = _confined_file(outline_dir, session.catalog_outline_path or session.regions_path)
+        _atomic_write_json(outline_path, source_document)
+        return {
+            "catalogPath": str(outline_path.relative_to(outline_dir)),
+            "catalogRevisionToken": _catalog_outline_revision(session),
+            "savedAt": datetime.now(timezone.utc).isoformat(),
+        }
 
 
 def validate_regions_document(value: object) -> dict[str, Any]:
@@ -367,9 +389,10 @@ def save_review(
     session: EditorSession,
     regions: object,
     corrections: object,
+    expected_catalog_revision_token: str | None = None,
 ) -> dict[str, str]:
     if session.catalog_outline_path is not None:
-        return save_catalog_outline(session, regions)
+        return save_catalog_outline(session, regions, expected_catalog_revision_token)
     region_document = validate_regions_document(regions)
     correction_document = validate_corrections_document(corrections)
     destination = _confined_directory(session.run_dir, session.regions_path.parent)
@@ -694,7 +717,23 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length))
             if not isinstance(payload, dict):
                 raise EditorError("save payload must be a JSON object")
-            result = save_review(session, payload.get("regions"), payload.get("corrections"))
+            expected_revision_token = payload.get("catalogRevisionToken")
+            if session.catalog_outline_path is not None:
+                if not isinstance(expected_revision_token, str) or not expected_revision_token:
+                    raise EditorError("catalogRevisionToken is required for catalog saves")
+            result = save_review(
+                session,
+                payload.get("regions"),
+                payload.get("corrections"),
+                expected_catalog_revision_token=(
+                    expected_revision_token
+                    if isinstance(expected_revision_token, str)
+                    else None
+                ),
+            )
+        except CatalogRevisionConflict as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+            return
         except (EditorError, json.JSONDecodeError, UnicodeDecodeError) as error:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
@@ -1124,6 +1163,16 @@ def _load_catalog_outline(session: EditorSession) -> dict[str, Any]:
     return document
 
 
+def _catalog_outline_revision(session: EditorSession) -> str:
+    path = session.catalog_outline_path or session.regions_path
+    if session.catalog_outline_dir is not None:
+        path = _confined_file(session.catalog_outline_dir, path)
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError as error:
+        raise EditorError(f"could not read catalog outline: {error}") from error
+
+
 def _editor_ids_for_outlines(outlines: list[dict[str, Any]]) -> dict[str, int]:
     source_ids = [outline["id"] for outline in outlines]
     if len(set(source_ids)) != len(source_ids):
@@ -1240,8 +1289,9 @@ def _next_hold_id(existing_by_id: dict[str, Any], candidate: int) -> str:
 
 
 def _normalized_contour(canvas: dict[str, Any], contour: list[list[object]]) -> list[list[float]]:
-    points = [
-        [
+    points: list[list[float]] = []
+    for point in contour:
+        normalized = [
             _normalized_number(
                 min(max(float(point[0]) / canvas["width"], 0.0), 1.0)
             ),
@@ -1249,11 +1299,11 @@ def _normalized_contour(canvas: dict[str, Any], contour: list[list[object]]) -> 
                 min(max(float(point[1]) / canvas["height"], 0.0), 1.0)
             ),
         ]
-        for point in contour
-    ]
+        if not points or normalized != points[-1]:
+            points.append(normalized)
     while len(points) > 1 and points[-1] == points[0]:
         points.pop()
-    if len(points) < 3:
+    if len({tuple(point) for point in points}) < 3:
         raise EditorError("catalog region contour must contain at least three distinct points")
     return points
 
