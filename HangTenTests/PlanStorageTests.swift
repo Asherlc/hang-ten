@@ -895,6 +895,24 @@ final class PlanStorageTests: XCTestCase {
         let audit = try loadPlanCueAudit()
         let library = BuiltInPlanLibraryDefinition.document
 
+        let sourcesByPlanID = Dictionary(grouping: audit.planSources, by: \.planID)
+        let builtInPlanIDs = Set(library.plans.map(\.id))
+
+        XCTAssertEqual(
+            Set(audit.planSources.map(\.planID)),
+            builtInPlanIDs,
+            "The source manifest must cover exactly the built-in plans."
+        )
+        for plan in library.plans {
+            let source = try XCTUnwrap(
+                sourcesByPlanID[plan.id]?.only,
+                "Expected exactly one source-manifest entry for \(plan.id)."
+            )
+            XCTAssertEqual(source.sourceType, plan.metadata.category)
+            XCTAssertEqual(source.sourceLabel, plan.metadata.sourceLabel)
+            XCTAssertEqual(source.sourceURL, plan.metadata.sourceURL.absoluteString)
+        }
+
         let expectedPlanFieldKeys = Set(
             library.plans.flatMap { plan in
                 auditedPlanFields.map { field in
@@ -902,21 +920,52 @@ final class PlanStorageTests: XCTestCase {
                 }
             }
         )
-        let missingPlanFields = expectedPlanFieldKeys.filter { key in
-            audit.planFieldRules.contains { rule in
-                rule.matches(key)
-            } == false
+        let planRulesByKey = Dictionary(grouping: audit.planFieldRules.flatMap { rule in
+            rule.fields.map { field in
+                (CueAuditKey(planID: rule.planID, stepID: nil, field: field), rule)
+            }
+        }, by: { $0.0 })
+        let missingPlanFields = expectedPlanFieldKeys.filter { planRulesByKey[$0] == nil }
+        let multiplyCoveredPlanFields = expectedPlanFieldKeys.filter {
+            planRulesByKey[$0, default: []].count != 1
         }
 
         XCTAssertTrue(
             missingPlanFields.isEmpty,
             "Missing plan-level cue audit coverage:\n\(missingPlanFields.sorted().map(\.description).joined(separator: "\n"))"
         )
+        XCTAssertTrue(
+            multiplyCoveredPlanFields.isEmpty,
+            "Plan-level fields must have exactly one audit decision:\n\(multiplyCoveredPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+
+        let retainedPlanFieldKeys = Set(planRulesByKey.compactMap { key, entries in
+            guard let entry = entries.only else { return nil }
+            return entry.1.isRetained ? key : nil
+        })
+        let removedPlanFieldKeys = Set(planRulesByKey.compactMap { key, entries in
+            guard let entry = entries.only else { return nil }
+            return entry.1.decision == "remove" ? key : nil
+        })
+        XCTAssertTrue(
+            retainedPlanFieldKeys.isDisjoint(with: removedPlanFieldKeys),
+            "Removed plan fields must not be represented as retained."
+        )
+        XCTAssertEqual(
+            retainedPlanFieldKeys.union(removedPlanFieldKeys),
+            expectedPlanFieldKeys,
+            "Every plan field must be classified as retained (keep/adapt) or removed."
+        )
 
         let expectedStepFieldKeys = try expectedStepCueAuditKeys(in: library)
         let missingStepFields = expectedStepFieldKeys.filter { key in
             !audit.stepFieldRules.contains { rule in
-                rule.matches(key)
+                rule.matches(key) && rule.isRetained
+            }
+        }
+        let retainedStepFieldsWithRemoveRules = expectedStepFieldKeys.filter { key in
+            audit.stepFieldRules.contains { rule in
+                rule.matches(key) && rule.decision == "remove"
             }
         }
 
@@ -924,20 +973,38 @@ final class PlanStorageTests: XCTestCase {
             missingStepFields.isEmpty,
             "Missing step-level cue audit coverage:\n\(missingStepFields.sorted().map(\.description).joined(separator: "\n"))"
         )
+        XCTAssertTrue(
+            retainedStepFieldsWithRemoveRules.isEmpty,
+            "Retained step fields must not have remove rules:\n\(retainedStepFieldsWithRemoveRules.sorted().map(\.description).joined(separator: "\n"))"
+        )
 
-        let timerAdaptations = audit.planFieldRules.map(AnyCueAuditDecision.init) +
+        let auditedAdaptations = audit.planFieldRules.map(AnyCueAuditDecision.init) +
             audit.stepFieldRules.map(AnyCueAuditDecision.init)
-        let timerAdaptationDecisions = timerAdaptations.filter { $0.adaptationType == "timer" }
+        let timerOrRangeAdaptationDecisions = auditedAdaptations.filter {
+            $0.adaptationType == "timer" || $0.adaptationType == "range"
+        }
 
         XCTAssertFalse(
-            timerAdaptationDecisions.isEmpty,
-            "Expected the cue audit to label app timing adaptations explicitly."
+            timerOrRangeAdaptationDecisions.isEmpty,
+            "Expected the cue audit to label app timer/range adaptations explicitly."
         )
         XCTAssertTrue(
-            timerAdaptationDecisions.allSatisfy { decision in
+            timerOrRangeAdaptationDecisions.allSatisfy { decision in
                 decision.decision == "adapt" && decision.sourcePrescription == false
             },
-            "Timer adaptations must be marked as adapt and not source-prescribed."
+            "Timer/range adaptations must be marked as adapt and not source-prescribed."
+        )
+
+        let retainedTimerOrRangeStepRules = expectedStepFieldKeys.flatMap { key in
+            audit.stepFieldRules.filter { rule in
+                rule.matches(key) && (rule.adaptationType == "timer" || rule.adaptationType == "range")
+            }
+        }
+        XCTAssertTrue(
+            retainedTimerOrRangeStepRules.allSatisfy {
+                $0.decision == "adapt" && $0.sourcePrescription == false
+            },
+            "Retained step timer/range adaptations must be adapt rules and not source-prescribed."
         )
 
         for planID in [
@@ -1137,6 +1204,12 @@ private protocol CueAuditDecision {
     var adaptationType: String? { get }
 }
 
+private extension CueAuditDecision {
+    var isRetained: Bool {
+        decision == "keep" || decision == "adapt"
+    }
+}
+
 private struct AnyCueAuditDecision: CueAuditDecision {
     let planID: String
     let field: String
@@ -1154,8 +1227,22 @@ private struct AnyCueAuditDecision: CueAuditDecision {
 }
 
 private struct CueAuditDocument: Decodable {
+    let planSources: [PlanSourceManifestEntry]
     let planFieldRules: [PlanFieldRule]
     let stepFieldRules: [StepFieldRule]
+}
+
+private struct PlanSourceManifestEntry: Decodable {
+    let planID: String
+    let sourceType: String
+    let sourceLabel: String
+    let sourceURL: String
+}
+
+private extension Collection {
+    var only: Element? {
+        count == 1 ? first : nil
+    }
 }
 
 private struct PlanFieldRule: Decodable, CueAuditDecision {
