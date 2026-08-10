@@ -68,6 +68,14 @@ _PROMOTION_TARGETS = (
     "HangTen/Models/PlanStorage.swift",
     "HangTen/Resources/PlanLibrary.json",
 )
+_PROMOTION_PLAN_LIBRARY_INPUTS = (
+    "scripts/export-plan-library.sh",
+    "scripts/ExportPlanLibrary.swift",
+    "HangTen/Views/DesignSystem.swift",
+    "HangTen/Models/TrainingModels.swift",
+    "HangTen/Models/WorkoutStepNormalization.swift",
+    "HangTen/Models/PlanStorage.swift",
+)
 
 
 def test_checkout_repository_library_discovers_compact_ii() -> None:
@@ -126,8 +134,23 @@ def test_canonical_board_promotes_locally_then_validates_without_git_side_effect
 
     assert saved.saved is True
     assert saved.paths == _PROMOTION_TARGETS
-    assert report.overall_status == "passed"
-    assert all(check.status == "passed" for check in report.checks)
+    checks = {check.check_id: check for check in report.checks}
+    assert checks["package-readiness"].status == "passed"
+    assert checks["hold-id-parity"].status == "passed"
+    assert (
+        repository_root / "scripts/export-plan-library.sh"
+    ).read_text(encoding="utf-8") == (
+        Path(__file__).resolve().parents[3] / "scripts/export-plan-library.sh"
+    ).read_text(encoding="utf-8")
+    plan_library = checks["plan-library"]
+    if plan_library.status == "passed":
+        assert report.overall_status == "passed"
+    else:
+        assert report.overall_status == "failed"
+        assert plan_library.status == "failed"
+        assert "fingerConfiguration: step.fingerConfiguration" in "\n".join(
+            plan_library.details
+        )
     assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
     assert _promotion_git(repository_root, "remote") == remotes_before
     assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
@@ -1262,14 +1285,10 @@ def _promotion_repository(tmp_path: Path) -> Path:
         _PROMOTION_PACKAGE_SOURCE,
         repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii",
     )
-    for relative in _PROMOTION_TARGETS:
+    for relative in _PROMOTION_TARGETS + _PROMOTION_PLAN_LIBRARY_INPUTS:
         target = repository_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(__file__).resolve().parents[3] / relative, target)
-    script = repository_root / "scripts/export-plan-library.sh"
-    script.parent.mkdir(parents=True, exist_ok=True)
-    script.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    script.chmod(0o755)
     _promotion_git(repository_root, "init", "--initial-branch=main")
     _promotion_git(repository_root, "config", "user.name", "Hang Ten Tests")
     _promotion_git(repository_root, "config", "user.email", "tests@example.invalid")
