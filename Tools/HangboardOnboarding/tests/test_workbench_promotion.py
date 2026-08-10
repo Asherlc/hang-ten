@@ -86,6 +86,40 @@ def test_preview_accepts_the_canonical_ios_profile_without_rewriting_its_board_i
     assert _target_contents(repository_root) == before
 
 
+def test_preview_rejects_a_legacy_profile_alias_that_collides_in_repository(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Collapsing dotted repository IDs to hyphens must fail closed on ambiguity."""
+    repository_root = _repository(tmp_path)
+    source = repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
+    collision = repository_root / "Tools/HangboardOnboarding/boards/metolius.wood-grips.compact-ii"
+    shutil.copytree(source, collision)
+    for path in collision.rglob("*.json"):
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "metolius-wood-grips-compact-ii", "metolius.wood-grips.compact-ii"
+            ),
+            encoding="utf-8",
+        )
+    library = RepositoryBoardLibrary(repository_root)
+    service = WorkbenchService(WorkbenchStore(tmp_path / "workspace"), library=library)
+    view = service.open_library_board("metolius-wood-grips-compact-ii")
+    shutil.copy2(PROFILE_SOURCE, view.run_root / "ios-promotion-profile.json")
+    profile = read_promotion_profile(view.run_root)
+
+    def generation_must_not_run(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("promotion generation must not run")
+
+    monkeypatch.setattr(workbench_module, "preview_for_revision", generation_must_not_run)
+
+    with pytest.raises(WorkbenchServiceError, match="profile board ID"):
+        service.preview_promotion(
+            view.board_id,
+            expected_revision_id=view.revision_id,
+            profile=profile,
+        )
+
+
 def test_save_rejects_a_stale_preview_token_without_writing_checkout(
     tmp_path: Path,
 ) -> None:

@@ -78,14 +78,23 @@ class WorkbenchServiceError(ValueError):
     """Raised when a guided workflow operation is inconsistent or unsupported."""
 
 
-def _repository_board_id_from_ios_profile_id(profile_board_id: str) -> str:
-    """Map the native iOS board-ID namespace to the repository path namespace.
-
-    iOS profiles use dots between manufacturer/name segments while repository
-    package IDs use hyphens. This intentionally changes only dot separators so
-    the promotion identity check remains deterministic and fail-closed.
-    """
-    return profile_board_id.replace(".", "-")
+def _ios_profile_matches_repository_board(
+    profile_board_id: str,
+    repository_board_id: str,
+    repository_board_ids: tuple[str, ...],
+) -> bool:
+    """Match an exact native ID or one unambiguous legacy dotted alias."""
+    if profile_board_id == repository_board_id:
+        return True
+    legacy_alias = profile_board_id.replace(".", "-")
+    if legacy_alias == profile_board_id:
+        return False
+    alias_matches = {
+        candidate
+        for candidate in repository_board_ids
+        if candidate.replace(".", "-") == legacy_alias
+    }
+    return alias_matches == {repository_board_id}
 
 
 class WorkbenchService:
@@ -748,9 +757,13 @@ class WorkbenchService:
             raise WorkbenchServiceError(
                 "active board does not have a repository board identity"
             )
-        if (
-            _repository_board_id_from_ios_profile_id(profile.board_id)
-            != board.repository_board_id
+        repository_board_ids = tuple(
+            item.board_id for item in self.__library.snapshot().boards
+        ) if self.__library is not None else ()
+        if not _ios_profile_matches_repository_board(
+            profile.board_id,
+            board.repository_board_id,
+            repository_board_ids,
         ):
             raise WorkbenchServiceError(
                 "promotion profile board ID does not match the active repository board"
