@@ -85,4 +85,3 @@
 - [ ] **Step 4: Update the guides with the Compact II package layout and draft-to-shipped workflow.**
 - [ ] **Step 5: Run the full onboarding test suite and the generated-catalog check.**
 - [ ] **Step 6: Commit the task with `docs: document canonical hangboard workflow`.**
-

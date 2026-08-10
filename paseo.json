@@ -31,7 +31,7 @@
       "instructions": "Use a Conventional Commit message that states the durable change."
     },
     "pullRequest": {
-      "instructions": "Always push new commits to the remote automatically\nMonitor CI until it is green, fix failures at the root, and address actionable review comments before considering the PR complete."
+      "instructions": "Always push new commits to the remote automatically"
     }
   }
 }
