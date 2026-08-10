@@ -30,9 +30,10 @@ edge editing. When enabled:
 
 1. Stage 2 renders the existing vertex handles plus one curve handle at the
    midpoint of every edge. A straight edge has a small neutral handle; dragging
-   it normal to the edge creates a bowed quadratic curve. The handle is clamped
-   to the canvas and remains associated with its edge when neighboring vertices
-   move.
+   it normal to the edge creates a bowed quadratic curve. Pointer coordinates
+   pass through `clientToSvg`, which clamps them to the canvas bounds before
+   editing; curve handles therefore remain in the canvas and associated with
+   their edge when neighboring vertices move.
 2. The selected corner behavior remains unchanged. Clicking or dragging a
    vertex edits the vertex; clicking or dragging a curve handle edits only its
    segment. Object-level drag, resize, rotate, and bend remain available when

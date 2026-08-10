@@ -34,7 +34,7 @@
 - Produces `setEdgeCurveControl(edgeCurves, edgeIndex, control, pointCount) -> object`, `translateEdgeCurves(edgeCurves, dx, dy, pointCount) -> object`, `mapEdgeCurves(edgeCurves, pointCount, mapper) -> object`, and `mirrorEdgeCurves(edgeCurves, pointCount, canvasWidth) -> object` as detached pure helpers.
 - Produces `insertEdgeCurves(edgeCurves, insertionIndex, pointCount) -> object` to shift unaffected edge indexes and discard the split edge's stale control.
 
-- [ ] **Step 1: Write failing model tests for normalization and path output.**
+- [x] **Step 1: Write failing model tests for normalization and path output.**
 
 Add tests with these exact behaviors:
 
@@ -70,7 +70,7 @@ test("normalizeEdgeCurves rejects invalid edge indexes, kinds, and coordinates",
 });
 ```
 
-- [ ] **Step 2: Run the model tests and verify the new tests fail for missing APIs.**
+- [x] **Step 2: Run the model tests and verify the new tests fail for missing APIs.**
 
 Run:
 
@@ -80,11 +80,11 @@ rtk node --test Tools/hold-highlight-editor/tests/editor_model.test.js
 
 Expected: the existing tests pass and the new tests fail because the curve helpers are not exported yet.
 
-- [ ] **Step 3: Implement validated command construction and flattening.**
+- [x] **Step 3: Implement validated command construction and flattening.**
 
 Implement quadratic sampling with `remaining = 1 - progress` and the standard quadratic Bézier equation. Preserve the current smooth tangent algorithm when `edgeCurves` is empty. When any edge curve exists, emit one closed command per edge and use straight `L` commands for uncurved edges. Round only at export boundaries; keep in-memory controls finite numbers.
 
-- [ ] **Step 4: Implement pure edge-map mutation and mirror/index helpers.**
+- [x] **Step 4: Implement pure edge-map mutation and mirror/index helpers.**
 
 `setEdgeCurveControl` must create a quadratic entry, `translateEdgeCurves` must add the delta to every control, `mapEdgeCurves` must apply a finite two-coordinate mapper to every control, and `mirrorEdgeCurves` must map an old edge `k` to new edge `(pointCount - 2 - k + pointCount) % pointCount` while reflecting its control across `canvasWidth`. `insertEdgeCurves` must preserve entries before the split and shift entries at or after the insertion boundary without leaving an index equal to the new point count.
 
@@ -92,9 +92,9 @@ Implement quadratic sampling with `remaining = 1 - progress` and the standard qu
 
 Update `normalizePipelineDocument` to preserve validated `metadata.edgeCurves` or omit it when absent. Update `regionForExport` to flatten the rendered contour before calculating `anchor`, `areaPixels`, and `bounds`, while retaining the editable metadata. Include normalized `edgeCurves` in `comparisonKey` so curve-only changes appear in corrections. Ensure malformed persisted metadata is rejected through the existing load error path rather than silently exported.
 
-Checkpoint: `regionForExport` also retains `metadata.editableContour` whenever flattening changes the contour topology, including smooth regions without `metadata.edgeCurves`; the export/reload regression test covers that case while preserving existing edge-curve behavior.
+Checkpoint: `regionForExport` also retains `metadata.editableContour` whenever flattening changes the contour topology. Smooth contours without `metadata.edgeCurves` preserve their editable topology after export and reload, and the regression test covers that case alongside existing edge-curve behavior.
 
-- [ ] **Step 6: Run the complete model suite and commit.**
+- [x] **Step 6: Run the complete model suite and commit.**
 
 Run:
 
@@ -125,7 +125,7 @@ rtk git commit -m "feat: add per-edge curve geometry"
 - Produces `state.edgeSession` with `{ pointerId, index, changed }` and renders `.edge-curve-handle` plus `.edge-curve-line` controls only for the selected region while edit mode is enabled.
 - Keeps `startRegionDrag`, `startHandleDrag`, `onSvgPointerMove`, and `onSvgPointerUp` behavior unchanged for object and vertex sessions.
 
-- [ ] **Step 1: Write failing UI contract tests.**
+- [x] **Step 1: Write failing UI contract tests.**
 
 Create a dependency-free contract test that reads the HTML, CSS, and app source and asserts:
 
@@ -143,7 +143,7 @@ test("editor exposes curve-editing affordances", () => {
 
 Also add a model-backed test that a region with `metadata.edgeCurves` renders a `Q` path through the exported `contourPath` helper.
 
-- [ ] **Step 2: Run the UI contract test and verify it fails.**
+- [x] **Step 2: Run the UI contract test and verify it fails.**
 
 Run:
 
@@ -153,23 +153,23 @@ rtk node --test Tools/hold-highlight-editor/tests/editor_ui.test.js
 
 Expected: failure because the new handle class and drag function do not exist.
 
-- [ ] **Step 3: Render per-edge handles and control lines.**
+- [x] **Step 3: Render per-edge handles and control lines.**
 
 Replace the local `pathFor` implementation with the model's `contourPath` call. In the selected region's `state.editPoints` branch, render existing vertex circles and then one edge handle for each segment. Use the stored control when present; otherwise use the segment midpoint. Render a control line from the first endpoint to the control and from the control to the second endpoint, with `aria-label="Curve edge N"` on the handle. Use inverse zoom sizing so controls remain usable at every zoom.
 
-- [ ] **Step 4: Implement curve-handle pointer capture and one-entry history.**
+- [x] **Step 4: Implement curve-handle pointer capture and one-entry history.**
 
 Add `startEdgeCurveDrag(event, id, index)` with the same left-button guard and pointer capture as vertex editing. During `onSvgPointerMove`, snap the pointer only when edge snapping is enabled and call `setEdgeCurveControl` on the selected region's metadata. During `onSvgPointerUp`, commit `Moved edge curve` once when `changed` is true and clear the session. Do not let a curve-handle event fall through to object dragging.
 
-- [ ] **Step 5: Keep edge metadata correct during existing editor mutations.**
+- [x] **Step 5: Keep edge metadata correct during existing editor mutations.**
 
 Translate controls during whole-region drag and duplicate operations. Map controls through rotate, bend, and resize operations using the same local-to-world transforms applied to contour points. Mirror controls with `mirrorEdgeCurves` for Mirror copy and Mirror onto. Call `insertEdgeCurves` when double-clicking an edge to add a contour point. Clear edge curves when Simplify curve replaces the contour with a new topology. Keep deleting a region naturally discarding its metadata.
 
-- [ ] **Step 6: Update controls, status copy, and operator documentation.**
+- [x] **Step 6: Update controls, status copy, and operator documentation.**
 
 Change the Edit points status text to mention vertices and edges, update the footer shortcut hint to say `Edit points` includes curves, and add a concise README section: enable Edit points, drag an edge handle to bow it, use the existing image snap behavior when useful, and undo if the curve is too aggressive. Do not add a new persistent form field.
 
-- [ ] **Step 7: Run syntax, model, and UI tests and commit.**
+- [x] **Step 7: Run syntax, model, and UI tests and commit.**
 
 Run:
 
@@ -197,7 +197,7 @@ rtk git commit -m "feat: edit individual hold edges"
 - Consumes the completed Stage 2 editor and existing Python server tests.
 - Produces fresh verification evidence for model behavior, UI wiring, server compatibility, and the user-visible quarter-circle workflow.
 
-- [ ] **Step 1: Run all JavaScript editor tests.**
+- [x] **Step 1: Run all JavaScript editor tests.**
 
 Run:
 
@@ -207,7 +207,7 @@ rtk node --test Tools/hold-highlight-editor/tests/*.test.js
 
 Expected: zero failures, including the new geometry and UI contract tests.
 
-- [ ] **Step 2: Run editor server tests and source checks.**
+- [x] **Step 2: Run editor server tests and source checks.**
 
 Run:
 
@@ -228,6 +228,6 @@ Start the local server against the existing demo, select a region, enable **Edit
 5. Object drag, rotate, resize, bend, mirror copy, and export preserve the curve metadata.
 6. Reloading the exported JSON restores the visible curve.
 
-- [ ] **Step 4: Perform final whole-branch review before handoff.**
+- [x] **Step 4: Perform final whole-branch review before handoff.**
 
 Review the complete diff against `main`, confirm no Stage 3 feature-branch files were imported, verify the design requirements line by line, and only then report the exact test commands and results.
