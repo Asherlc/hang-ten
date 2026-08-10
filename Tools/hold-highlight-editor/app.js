@@ -10,6 +10,7 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
+    normalizeRegion,
     normalizePipelineDocument,
     nextStage2RegionId,
     contourPath,
@@ -967,6 +968,7 @@
     if (!canEditGeometry() || !state.drawing || state.draft.length < 3) return;
     const nextId = allocateRegionId();
     const isCurved = state.drawShape === "curved-freeform";
+    const primitiveShapeKind = state.drawShape === "curved-freeform" ? "freeform" : state.drawShape;
     const region = normalizeRegion({
       id: nextId,
       key: `grip-${String(nextId).padStart(3, "0")}`,
@@ -974,7 +976,7 @@
       contour: state.draft,
       metadata: {
         mode: "surface",
-        shapeKind: "freeform",
+        shapeKind: primitiveShapeKind,
         pathStyle: isCurved ? "smooth" : "straight",
         curveTension: 0.8,
         humanNotes: "Added manually",
@@ -2379,10 +2381,6 @@
     return ({ freeform: "Freeform", "curved-freeform": "Curved freeform", rectangle: "Rectangle", "rounded-rectangle": "Rounded rectangle", "arced-rectangle": "Arced rectangle", ellipse: "Ellipse", capsule: "Capsule" })[kind] || "Freeform";
   }
 
-  function normalizeRegion(region, fallbackId) {
-    return normalizePipelineDocument({ canvas: state.canvas, regions: [region] }, state.canvas, "contour").regions.map((item) => ({ ...item, id: fallbackId }))[0];
-  }
-
   function shapeContour(kind, start, end) {
     let [x1, y1] = start;
     let [x2, y2] = end;
@@ -2592,6 +2590,16 @@
   window.addEventListener("keydown", (event) => {
     const editingText = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName);
     if (event.code === "Space" && !editingText) { state.spacePressed = true; event.preventDefault(); }
+    if (event.key === "Enter" && state.drawing) {
+      event.preventDefault();
+      finishDraw();
+      return;
+    }
+    if (event.key === "Escape" && state.drawing) {
+      event.preventDefault();
+      cancelDraw();
+      return;
+    }
     if (editingText) return;
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
       event.preventDefault();
@@ -2599,10 +2607,6 @@
     } else if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
       deleteSelected();
-    } else if (event.key === "Enter" && state.drawing) {
-      finishDraw();
-    } else if (event.key === "Escape" && state.drawing) {
-      cancelDraw();
     } else if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
       state.mirrorOntoSourceId = null;
       setStatus("Mirror replacement cancelled.");
