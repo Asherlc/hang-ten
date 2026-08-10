@@ -81,6 +81,8 @@ jobs:
       - name: Smoke test executable and clean up
         run: |
           set -euo pipefail
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          export PATH="$(dirname "$python_bin"):$PATH"
           executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
           smoke_log=""
           workbench_pid=""
@@ -135,7 +137,7 @@ jobs:
             while IFS= read -r asset_path; do
               curl --fail --silent --show-error "http://127.0.0.1:${port}${asset_path}" >/dev/null
             done < <(
-              "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" - <<'PY'
+              python - <<'PY'
           import sys
 
           sys.path.insert(0, "Tools/hold-highlight-editor")
@@ -146,7 +148,7 @@ jobs:
           PY
             )
             curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-              | "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+              | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
 
             workbench_child_pid="$(pgrep -P "$workbench_pid" || true)"
             if [[ -z "$workbench_child_pid" || "$workbench_child_pid" == *$'\n'* ]]; then

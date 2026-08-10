@@ -366,6 +366,8 @@ def _correction_entry_matches(
         expected_before = expected.get("before")
         expected_after = expected.get("after")
         return (
+            set(actual) == set(expected)
+            and
             isinstance(actual_before, Mapping)
             and isinstance(actual_after, Mapping)
             and isinstance(expected_before, Mapping)
