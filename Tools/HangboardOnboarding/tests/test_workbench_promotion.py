@@ -107,6 +107,29 @@ def test_save_rejects_a_stale_preview_token_without_writing_checkout(
     assert _target_contents(repository_root) == before
 
 
+def test_save_promotion_keeps_preview_revision_token_as_the_content_hash(
+    tmp_path: Path,
+) -> None:
+    """The saved result may override revision_id, but the preview token stays hashed."""
+    service, board_id, revision_id, _repository_root, profile = _promotion_service(tmp_path)
+    preview = service.preview_promotion(
+        board_id, expected_revision_id=revision_id, profile=profile
+    )
+
+    int(preview.revision_token, 16)
+    assert preview.revision_token != revision_id
+
+    saved = service.save_promotion(
+        board_id,
+        expected_revision_id=revision_id,
+        profile=profile,
+        preview_token=preview.preview_token,
+    )
+
+    assert saved.revision_id == revision_id
+    assert preview.revision_token != saved.revision_id
+
+
 def test_preview_rejects_a_profile_for_another_repository_board_before_generation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
