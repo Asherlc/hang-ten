@@ -31,36 +31,6 @@
       "title" : "Progressive warm-up"
     },
     {
-      "id" : "shared.cool-down",
-      "steps" : [
-        {
-          "accessory" : "Easy movement · gentle release",
-          "duration" : 60,
-          "gripType" : "openHand",
-          "id" : "cool-down",
-          "instruction" : "Stay on the easy jugs and let your breathing settle before you step away.",
-          "phase" : "coolDown",
-          "segments" : [
-            {
-              "duration" : 60,
-              "kind" : "work",
-              "target" : {
-                "semantic" : "outer-jugs"
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "targets" : [
-            {
-              "semantic" : "outer-jugs"
-            }
-          ],
-          "title" : "Cool down"
-        }
-      ],
-      "title" : "Cool down"
-    },
-    {
       "id" : "metolius.generic-ten-minute.entry.warm-up",
       "steps" : [
         {
@@ -6546,12 +6516,6 @@
         },
         {
           "blockID" : "research.max-hangs.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "max-hangs-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6587,12 +6551,6 @@
         },
         {
           "blockID" : "research.force-feedback-f80.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "f80-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6628,12 +6586,6 @@
         },
         {
           "blockID" : "research.force-feedback-f100.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "f100-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6669,12 +6621,6 @@
         },
         {
           "blockID" : "research.eva-int-hangs.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "int-hangs-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6710,12 +6656,6 @@
         },
         {
           "blockID" : "research.seven-three-repeaters.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "repeaters-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6748,12 +6688,6 @@
         },
         {
           "blockID" : "research.abrahangs.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "abrahangs-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6789,12 +6723,6 @@
         },
         {
           "blockID" : "coach.horst-seven-fifty-three.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "horst-753-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6830,12 +6758,6 @@
         },
         {
           "blockID" : "coach.bechtel-three-six-nine.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "ladders-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6871,12 +6793,6 @@
         },
         {
           "blockID" : "coach.density-hangs.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "density-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6912,12 +6828,6 @@
         },
         {
           "blockID" : "device.zlagboard-sixty-sixty.main"
-        },
-        {
-          "blockID" : "shared.cool-down",
-          "stepIDs" : [
-            "zlagboard-cool-down"
-          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
