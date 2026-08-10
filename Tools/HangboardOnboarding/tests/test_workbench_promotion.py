@@ -55,6 +55,26 @@ def test_preview_is_bound_to_the_active_revision_without_writing_checkout(
     assert _target_contents(repository_root) == before
 
 
+def test_preview_accepts_the_canonical_ios_profile_without_rewriting_its_board_id(
+    tmp_path: Path,
+) -> None:
+    """Using direct namespace equality would reject the canonical iOS profile."""
+    service, board_id, revision_id, repository_root, profile = _promotion_service(
+        tmp_path, use_fixture_profile=True
+    )
+    before = _target_contents(repository_root)
+
+    preview = service.preview_promotion(
+        board_id,
+        expected_revision_id=revision_id,
+        profile=profile,
+    )
+
+    assert profile.board_id == "metolius.wood-grips.compact-ii"
+    assert preview.board_id == profile.board_id
+    assert _target_contents(repository_root) == before
+
+
 def test_save_rejects_a_stale_preview_token_without_writing_checkout(
     tmp_path: Path,
 ) -> None:
@@ -170,22 +190,22 @@ def test_preview_rejects_dirty_native_targets_without_writing_other_targets(
 
 
 def _promotion_service(
-    tmp_path: Path,
+    tmp_path: Path, *, use_fixture_profile: bool = False
 ) -> tuple[WorkbenchService, str, str, Path, object]:
     repository_root = _repository(tmp_path)
     library = RepositoryBoardLibrary(repository_root)
     service = WorkbenchService(WorkbenchStore(tmp_path / "workspace"), library=library)
     view = service.open_library_board("metolius-wood-grips-compact-ii")
     shutil.copy2(PROFILE_SOURCE, view.run_root / "ios-promotion-profile.json")
+    profile = read_promotion_profile(view.run_root)
+    if not use_fixture_profile:
+        profile = replace(profile, board_id="metolius-wood-grips-compact-ii")
     return (
         service,
         view.board_id,
         view.revision_id,
         repository_root,
-        replace(
-            read_promotion_profile(view.run_root),
-            board_id="metolius-wood-grips-compact-ii",
-        ),
+        profile,
     )
 
 

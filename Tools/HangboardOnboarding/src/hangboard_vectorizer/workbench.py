@@ -76,6 +76,16 @@ class WorkbenchServiceError(ValueError):
     """Raised when a guided workflow operation is inconsistent or unsupported."""
 
 
+def _repository_board_id_from_ios_profile_id(profile_board_id: str) -> str:
+    """Map the native iOS board-ID namespace to the repository path namespace.
+
+    iOS profiles use dots between manufacturer/name segments while repository
+    package IDs use hyphens. This intentionally changes only dot separators so
+    the promotion identity check remains deterministic and fail-closed.
+    """
+    return profile_board_id.replace(".", "-")
+
+
 class WorkbenchService:
     """Coordinate persistent board metadata and the shared onboarding state machine."""
 
@@ -699,7 +709,10 @@ class WorkbenchService:
             raise WorkbenchServiceError(
                 "active board does not have a repository board identity"
             )
-        if profile.board_id != board.repository_board_id:
+        if (
+            _repository_board_id_from_ios_profile_id(profile.board_id)
+            != board.repository_board_id
+        ):
             raise WorkbenchServiceError(
                 "promotion profile board ID does not match the active repository board"
             )
