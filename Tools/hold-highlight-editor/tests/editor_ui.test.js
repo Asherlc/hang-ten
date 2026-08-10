@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const vm = require("node:vm");
 
 const root = path.join(__dirname, "..");
 const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
@@ -42,12 +43,59 @@ test("keeps internal region controls while presenting hold highlights", () => {
 });
 
 test("handles drawing Enter and Escape before the focused-control guard", () => {
-  const drawingShortcut = app.indexOf('event.key === "Enter" && state.drawing');
-  const focusedControlGuard = app.indexOf('if (editingText) return;');
-  assert.notEqual(drawingShortcut, -1);
-  assert.notEqual(focusedControlGuard, -1);
-  assert.ok(drawingShortcut < focusedControlGuard);
-  assert.match(app, /event\.key === "Escape" && state\.drawing/);
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  assert.notEqual(handlerStart, -1);
+  const bodyStart = app.indexOf("{", handlerStart);
+  let depth = 0;
+  let bodyEnd = -1;
+  for (let index = bodyStart; index < app.length; index += 1) {
+    if (app[index] === "{") depth += 1;
+    if (app[index] === "}") depth -= 1;
+    if (depth === 0) {
+      bodyEnd = index + 1;
+      break;
+    }
+  }
+  assert.notEqual(bodyEnd, -1);
+
+  const listeners = {};
+  const state = { drawing: true, spacePressed: false, mirrorOntoSourceId: null };
+  let finished = 0;
+  let canceled = 0;
+  const context = {
+    document: { activeElement: { tagName: "INPUT" } },
+    finishDraw: () => { finished += 1; },
+    cancelDraw: () => { canceled += 1; },
+    renderToolState: () => {},
+    setStatus: () => {},
+    state,
+    window: {
+      addEventListener: (name, callback) => { listeners[name] = callback; },
+    },
+  };
+  vm.runInNewContext(app.slice(handlerStart, bodyEnd) + ");", context);
+
+  const dispatch = (key) => {
+    let prevented = false;
+    listeners.keydown({
+      key,
+      code: key,
+      preventDefault: () => { prevented = true; },
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+    });
+    return prevented;
+  };
+
+  assert.equal(dispatch("Enter"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 0);
+
+  state.drawing = true;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 1);
 });
 
 test("preserves the selected primitive shape when adding a highlight", () => {

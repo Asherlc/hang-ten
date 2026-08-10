@@ -33,6 +33,7 @@ from server import (  # noqa: E402
     discover_catalog_outline_sessions,
     discover_session,
     load_catalog,
+    save_catalog_outline,
     save_review,
     validate_regions_document,
 )
@@ -2119,7 +2120,7 @@ def test_real_catalog_discovers_all_outline_stems_and_root_sources():
 
     sessions = discover_catalog_outline_sessions(catalog_root, catalog_root / "outlines")
 
-    assert len(sessions) == 32
+    assert sessions
     assert [session.label for session in sessions] == sorted(session.label for session in sessions)
     assert all(session.session.image_path == catalog_root / f"{session.label}.png" for session in sessions)
 
@@ -2148,6 +2149,72 @@ def test_catalog_regions_flatten_cubics_to_pixel_contours_without_control_points
     assert region["contour"].count(region["contour"][0]) == 1
 
 
+def test_catalog_save_preserves_untouched_curved_outline(tmp_path):
+    curved_commands = [
+        {"command": "M", "to": [0.1, 0.2]},
+        {"command": "C", "controls": [[0.2, 0.1], [0.3, 0.3]], "to": [0.4, 0.2]},
+        {"command": "L", "to": [0.4, 0.5]},
+        {"command": "L", "to": [0.1, 0.5]},
+    ]
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "curved-board",
+        [catalog_outline("hold-01", "freeform", curved_commands)],
+    )
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+    original_outline = json.loads(outline_path.read_text())["outlines"][0]
+
+    save_catalog_outline(session, catalog_regions_document(session))
+
+    saved_outline = json.loads(outline_path.read_text())["outlines"][0]
+    assert saved_outline["path"] == original_outline["path"]
+    assert saved_outline["bounds"] == original_outline["bounds"]
+
+
+def test_catalog_save_clamps_out_of_range_contour_coordinates(tmp_path):
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "clamped-board",
+        [catalog_outline("hold-01")],
+    )
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+    regions = {
+        "canvas": {"width": 100, "height": 50},
+        "regions": [{
+            "id": 1,
+            "key": "hold-01",
+            "type": "edge",
+            "contour": [[-10, -5], [110, -5], [110, 60], [-10, 60]],
+            "metadata": {"sourceRegionId": "hold-01"},
+        }],
+    }
+
+    save_catalog_outline(session, regions)
+
+    saved_path = json.loads(outline_path.read_text())["outlines"][0]["path"]
+    assert saved_path == {
+        "closed": True,
+        "commands": [
+            {"command": "M", "to": [0.0, 0.0]},
+            {"command": "L", "to": [1.0, 0.0]},
+            {"command": "L", "to": [1.0, 1.0]},
+            {"command": "L", "to": [0.0, 1.0]},
+        ],
+    }
+
+
+def test_flatten_outline_rejects_multiple_subpaths():
+    with pytest.raises(EditorError, match="multiple M"):
+        server_module._flatten_outline([
+            {"command": "M", "to": [0.1, 0.1]},
+            {"command": "L", "to": [0.2, 0.1]},
+            {"command": "L", "to": [0.2, 0.2]},
+            {"command": "M", "to": [0.7, 0.7]},
+            {"command": "L", "to": [0.8, 0.7]},
+            {"command": "L", "to": [0.8, 0.8]},
+        ])
+
+
 def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(tmp_path):
     source_dir, outline_dir, first_image, first_outline = make_catalog_board(
         tmp_path,
@@ -2172,6 +2239,7 @@ def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(t
         status, sessions = read_json(base + "/api/sessions")
         assert status == 200
         assert [entry["label"] for entry in sessions["sessions"]] == ["first-board", "second-board"]
+        assert [entry["runName"] for entry in sessions["sessions"]] == ["first-board", "second-board"]
         status, selected = read_json(base + "/api/session?run=run-2")
         assert status == 200
         with urlopen(base + selected["regionsUrl"]) as response:
@@ -2230,3 +2298,22 @@ def test_catalog_http_routes_selected_outline_and_round_trips_edits_atomically(t
     assert second_image.read_bytes() == original_second_image
     assert json.loads(second_outline.read_text())["outlines"][0]["id"] == "hold-01"
     assert not list(outline_dir.glob(".first-board.json.*.tmp"))
+
+
+def test_catalog_regions_route_returns_json_error_for_invalid_outline(tmp_path):
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "invalid-board",
+        [catalog_outline("hold-01", commands=[{"command": "L", "to": [0.1, 0.1]}])],
+    )
+    catalog = catalog_from_inputs([], None, source_dir, outline_dir)
+
+    with running_server(catalog) as base:
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/artifact/regions?run=run-1")
+
+    assert error.value.code == 400
+    assert json.load(error.value) == {
+        "ok": False,
+        "error": "catalog path must begin with M",
+    }

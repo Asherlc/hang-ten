@@ -282,6 +282,7 @@ def save_catalog_outline(session: EditorSession, regions: object) -> dict[str, s
         if not isinstance(source_id, str) or source_id not in existing_by_id:
             key = region.get("key")
             source_id = key if isinstance(key, str) and key in existing_by_id else None
+        is_existing_outline = source_id is not None
         if source_id is None:
             source_id = _next_hold_id(existing_by_id, next_hold_number)
             next_hold_number = int(source_id.removeprefix("hold-")) + 1
@@ -292,8 +293,21 @@ def save_catalog_outline(session: EditorSession, regions: object) -> dict[str, s
                 raise EditorError(f"catalog region {source_id} appears more than once")
             outline = deepcopy(existing_by_id[source_id])
         incoming_ids.add(source_id)
-        outline["path"] = _closed_line_path(region_document["canvas"], region["contour"])
-        outline["bounds"] = _normalized_bounds(region_document["canvas"], region["contour"])
+        normalized_contour = _normalized_contour(
+            region_document["canvas"], region["contour"]
+        )
+        existing_contour = (
+            _flatten_outline(outline["path"].get("commands", []))
+            if is_existing_outline
+            else None
+        )
+        if not is_existing_outline or not _contours_match(normalized_contour, existing_contour):
+            outline["path"] = _closed_line_path(
+                region_document["canvas"], region["contour"]
+            )
+            outline["bounds"] = _normalized_bounds(
+                region_document["canvas"], region["contour"]
+            )
         updated_outlines.append(outline)
     source_document["outlines"] = updated_outlines
     outline_dir = session.catalog_outline_dir or session.regions_path.parent
@@ -529,7 +543,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {
                     "ok": True,
                     "sessions": [
-                        {"id": entry.id, "label": entry.label, "runName": entry.session.run_dir.name}
+                        {"id": entry.id, "label": entry.label, "runName": entry.run_name}
                         for entry in (
                             self.editor_catalog.sessions
                             if self.editor_catalog is not None
@@ -570,7 +584,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         if path == "/api/artifact/regions":
             if session.catalog_outline_path is not None:
-                self._send_json(HTTPStatus.OK, catalog_regions_document(session))
+                try:
+                    document = catalog_regions_document(session)
+                except EditorError as error:
+                    self._send_json(
+                        HTTPStatus.BAD_REQUEST,
+                        {"ok": False, "error": str(error)},
+                    )
+                    return
+                self._send_json(HTTPStatus.OK, document)
                 return
             self._send_file(session.regions_path)
             return
@@ -1074,13 +1096,6 @@ def _common_parent(*paths: Path) -> Path:
     return Path(os.path.commonpath([str(path) for path in paths]))
 
 
-def _relative_display_path(root: Path, path: Path) -> str:
-    try:
-        return str(path.relative_to(root))
-    except ValueError:
-        return path.name
-
-
 def _load_catalog_outline(session: EditorSession) -> dict[str, Any]:
     path = session.catalog_outline_path or session.regions_path
     if session.catalog_outline_dir is not None:
@@ -1140,8 +1155,8 @@ def _flatten_outline(commands: list[dict[str, Any]]) -> list[list[float]]:
         if operation in {"M", "L"}:
             target = _path_point(command.get("to"), index)
             if operation == "M":
-                if points and start is not None and points[-1] == start:
-                    points.pop()
+                if start is not None:
+                    raise EditorError("catalog path must not contain multiple M commands")
                 start = target
             elif current is None:
                 raise EditorError("catalog path must begin with M")
@@ -1183,6 +1198,18 @@ def _flatten_outline(commands: list[dict[str, Any]]) -> list[list[float]]:
     return points
 
 
+def _contours_match(
+    first: list[list[float]], second: list[list[float]] | None
+) -> bool:
+    if second is None or len(first) != len(second):
+        return False
+    return all(
+        math.isclose(left, right, rel_tol=0.0, abs_tol=1e-9)
+        for first_point, second_point in zip(first, second)
+        for left, right in zip(first_point, second_point)
+    )
+
+
 def _path_point(value: object, index: int) -> list[float]:
     if not isinstance(value, list) or len(value) != 2 or not all(_finite_number(item) for item in value):
         raise EditorError(f"catalog path command {index} has an invalid point")
@@ -1214,7 +1241,14 @@ def _next_hold_id(existing_by_id: dict[str, Any], candidate: int) -> str:
 
 def _normalized_contour(canvas: dict[str, Any], contour: list[list[object]]) -> list[list[float]]:
     points = [
-        [_normalized_number(float(point[0]) / canvas["width"]), _normalized_number(float(point[1]) / canvas["height"])]
+        [
+            _normalized_number(
+                min(max(float(point[0]) / canvas["width"], 0.0), 1.0)
+            ),
+            _normalized_number(
+                min(max(float(point[1]) / canvas["height"], 0.0), 1.0)
+            ),
+        ]
         for point in contour
     ]
     while len(points) > 1 and points[-1] == points[0]:
