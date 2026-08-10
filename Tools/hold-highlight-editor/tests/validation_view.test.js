@@ -62,17 +62,25 @@ test("validation report renders package, parity, semantic, plan, and promotion c
   assert.match(text, /stage 3 is missing hold-4/);
 });
 
-test("simulator handoff commands require a caller-supplied explicit UUID", () => {
-  assert.equal(simulatorCommand("1234-UUID"), "platform=iOS Simulator,id=1234-UUID");
+test("simulator handoff commands require a caller-supplied canonical UUID", () => {
+  const simulatorUUID = "12345678-1234-ABCD-1234-123456789ABC";
+  assert.equal(simulatorCommand(simulatorUUID), `platform=iOS Simulator,id=${simulatorUUID}`);
+  assert.equal(
+    simulatorCommand(simulatorUUID.toLowerCase()),
+    `platform=iOS Simulator,id=${simulatorUUID.toLowerCase()}`,
+  );
   assert.throws(() => simulatorCommand("booted"), /explicit simulator UUID/);
   assert.throws(() => simulatorCommand("unknown"), /explicit simulator UUID/);
   assert.throws(() => simulatorCommand(""), /explicit simulator UUID/);
+  assert.throws(() => simulatorCommand("not-a-uuid"), /explicit simulator UUID/);
+  assert.throws(() => simulatorCommand("12345678-1234-1234-1234-123456789ABC; rm -rf /"), /explicit simulator UUID/);
+  assert.throws(() => simulatorCommands("not-a-uuid"), /explicit simulator UUID/);
 
-  const commands = simulatorCommands("1234-UUID");
-  assert.match(commands, /platform=iOS Simulator,id=1234-UUID/);
-  assert.match(commands, /xcrun simctl install 1234-UUID/);
+  const commands = simulatorCommands(simulatorUUID);
+  assert.match(commands, new RegExp(`platform=iOS Simulator,id=${simulatorUUID}`));
+  assert.match(commands, new RegExp(`xcrun simctl install ${simulatorUUID}`));
   assert.match(commands, /SIMCTL_CHILD_HANGTEN_REVIEW_PORTRAIT=1/);
   assert.match(commands, /SIMCTL_CHILD_HANGTEN_REVIEW_LANDSCAPE=1/);
-  assert.match(commands, /xcrun simctl io 1234-UUID screenshot/);
+  assert.match(commands, new RegExp(`xcrun simctl io ${simulatorUUID} screenshot`));
   assert.doesNotMatch(commands, /simctl\s+(?:create|delete|boot|erase)\b/);
 });

@@ -18,6 +18,7 @@
     stale: "Stale",
     not_run: "Not run",
   });
+  const SIMULATOR_UUID_PATTERN = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
 
   function checkStatus(status) {
     return STATUS_LABELS[status] ? status : "not_run";
@@ -87,8 +88,8 @@
 
   function simulatorCommand(simulatorUUID) {
     const uuid = typeof simulatorUUID === "string" ? simulatorUUID.trim() : "";
-    if (!uuid || /\s/.test(uuid) || /^(booted|unknown|default|all)$/i.test(uuid)) {
-      throw new RangeError("An explicit simulator UUID is required; booted or unknown simulator status is not allowed.");
+    if (!SIMULATOR_UUID_PATTERN.test(uuid)) {
+      throw new RangeError("An explicit simulator UUID in canonical 8-4-4-4-12 hexadecimal format is required; booted or unknown simulator status is not allowed.");
     }
     return `platform=iOS Simulator,id=${uuid}`;
   }
