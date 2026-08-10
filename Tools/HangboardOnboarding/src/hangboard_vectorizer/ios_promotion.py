@@ -437,36 +437,71 @@ def _render_semantic_holds(semantic_holds: Mapping[str, tuple[str, ...]]) -> str
 def _render_plan_library(current: str, board_id: str, semantic_holds: Mapping[str, tuple[str, ...]]) -> str:
     document = json.loads(current)
     mappings = _list(document.get("boardMappings"), "PlanLibrary boardMappings")
-    if len(mappings) != 1:
-        raise ValueError("PlanLibrary must contain exactly one known board mapping anchor")
-    mapping = dict(_object(mappings[0], "PlanLibrary board mapping"))
+    identity = board_id.replace(".", "-")
+    matching_mappings: list[tuple[int, dict[str, Any]]] = []
+    for index, value in enumerate(mappings):
+        candidate = dict(_object(value, f"PlanLibrary board mapping {index}"))
+        candidate_board_id = _string(
+            candidate.get("boardID"), f"PlanLibrary board mapping {index} board ID"
+        )
+        if candidate_board_id.replace(".", "-") == identity:
+            matching_mappings.append((index, candidate))
+    if len(matching_mappings) != 1:
+        raise ValueError("PlanLibrary must contain exactly one board mapping for the active board identity")
+    mapping_index, mapping = matching_mappings[0]
     previous_board_id = _string(mapping.get("boardID"), "PlanLibrary board ID")
     if mapping.get("semanticHolds") is None:
         raise ValueError("PlanLibrary board mapping anchor is missing semanticHolds")
-    if previous_board_id not in current:
+    mapping_spans = _json_board_mapping_spans(current)
+    if len(mapping_spans) != len(mappings):
+        raise ValueError("PlanLibrary board mapping anchors do not match parsed mappings")
+    anchor_start, anchor_end = mapping_spans[mapping_index]
+    if json.dumps(previous_board_id) not in current[anchor_start:anchor_end]:
         raise ValueError("PlanLibrary board ID anchor is absent")
-    anchor_start, anchor_end = _json_board_mapping_span(current)
     mapping["boardID"] = board_id
     mapping["semanticHolds"] = {key: {"holdIDs": list(value)} for key, value in semantic_holds.items()}
     replacement = _indent_json(mapping, 4)
     return current[:anchor_start] + replacement + current[anchor_end:]
 
 
-def _json_board_mapping_span(source: str) -> tuple[int, int]:
-    match = re.search(r'"boardMappings"\s*:\s*\[\s*', source)
-    if match is None:
+def _json_board_mapping_spans(source: str) -> list[tuple[int, int]]:
+    matches = list(re.finditer(r'"boardMappings"\s*:\s*\[', source))
+    if len(matches) != 1:
         raise ValueError("PlanLibrary board mapping anchor is absent")
-    start = match.end()
+    cursor = matches[0].end()
     decoder = json.JSONDecoder()
-    try:
-        value, end = decoder.raw_decode(source[start:])
-    except json.JSONDecodeError as error:
-        raise ValueError("PlanLibrary board mapping anchor is invalid") from error
-    if not isinstance(value, dict):
-        raise ValueError("PlanLibrary board mapping anchor is invalid")
-    if source[start + end:].lstrip().startswith(","):
-        raise ValueError("PlanLibrary board mapping anchor is duplicated")
-    return start, start + end
+    spans: list[tuple[int, int]] = []
+    expect_mapping = True
+    while True:
+        while cursor < len(source) and source[cursor].isspace():
+            cursor += 1
+        if cursor >= len(source):
+            raise ValueError("PlanLibrary board mapping anchor is invalid")
+        if source[cursor] == "]":
+            if expect_mapping and spans:
+                raise ValueError("PlanLibrary board mapping anchor is invalid")
+            return spans
+        if not expect_mapping or source[cursor] != "{":
+            raise ValueError("PlanLibrary board mapping anchor is invalid")
+        start = cursor
+        try:
+            value, end = decoder.raw_decode(source[start:])
+        except json.JSONDecodeError as error:
+            raise ValueError("PlanLibrary board mapping anchor is invalid") from error
+        if not isinstance(value, dict):
+            raise ValueError("PlanLibrary board mapping anchor is invalid")
+        cursor = start + end
+        spans.append((start, cursor))
+        while cursor < len(source) and source[cursor].isspace():
+            cursor += 1
+        if cursor >= len(source):
+            raise ValueError("PlanLibrary board mapping anchor is invalid")
+        if source[cursor] == "]":
+            return spans
+        if source[cursor] != ",":
+            raise ValueError("PlanLibrary board mapping anchor is invalid")
+        cursor += 1
+        expect_mapping = True
 
 
 def _semantic_holds(regions: Iterable[Mapping[str, Any]]) -> dict[str, tuple[str, ...]]:

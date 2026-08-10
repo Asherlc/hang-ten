@@ -215,7 +215,7 @@ def test_render_plan_library_rewrites_only_the_exact_board_id_value() -> None:
         {
             "boardMappings": [
                 {
-                    "boardID": "metolius.wood-grips-compact-ii",
+                    "boardID": "metolius-wood-grips-compact-ii",
                     "identifier": "board-metolius.wood-grips-compact-ii-bundle",
                     "notes": [
                         "keep metolius.wood-grips-compact-ii-beta",
@@ -236,13 +236,13 @@ def test_render_plan_library_rewrites_only_the_exact_board_id_value() -> None:
 
     proposed = ios_promotion._render_plan_library(
         current,
-        "metolius.wood-grips-compact-iii",
+        "metolius.wood-grips-compact-ii",
         {"outer-jugs": ("jug-left", "jug-right")},
     )
     document = json.loads(proposed)
     mapping = document["boardMappings"][0]
 
-    assert mapping["boardID"] == "metolius.wood-grips-compact-iii"
+    assert mapping["boardID"] == "metolius.wood-grips-compact-ii"
     assert mapping["identifier"] == "board-metolius.wood-grips-compact-ii-bundle"
     assert mapping["notes"] == [
         "keep metolius.wood-grips-compact-ii-beta",
@@ -260,7 +260,7 @@ def test_render_plan_library_does_not_require_the_old_board_id_elsewhere_in_docu
         {
             "boardMappings": [
                 {
-                    "boardID": "metolius.wood-grips-compact-ii",
+                    "boardID": "metolius-wood-grips-compact-ii",
                     "semanticHolds": {
                         "outer-jugs": {"holdIDs": ["jug-left", "jug-right"]},
                     },
@@ -272,11 +272,78 @@ def test_render_plan_library_does_not_require_the_old_board_id_elsewhere_in_docu
 
     proposed = ios_promotion._render_plan_library(
         current,
-        "metolius.wood-grips-compact-iii",
+        "metolius.wood-grips-compact-ii",
         {"outer-jugs": ("jug-left", "jug-right")},
     )
 
-    assert json.loads(proposed)["boardMappings"][0]["boardID"] == "metolius.wood-grips-compact-iii"
+    assert json.loads(proposed)["boardMappings"][0]["boardID"] == "metolius.wood-grips-compact-ii"
+
+
+def test_render_plan_library_preserves_unselected_board_mapping_bytes() -> None:
+    """Updating one board must not reformat or rewrite another board's mapping."""
+    untouched_mapping = """{
+      "boardID":"trango.rock-prodigy-training-center",
+      "semanticHolds":{"sloper":{"holdIDs":["left", "right"]}},
+      "marker" : "preserve this exact formatting"
+    }"""
+    current = """{
+  "boardMappings": [
+    {
+      "boardID": "metolius.wood-grips-compact-ii",
+      "semanticHolds": {"outer-jugs": {"holdIDs": ["old"]}},
+      "marker": "keep selected fields too"
+    },
+    %s
+  ]
+}
+""" % untouched_mapping
+
+    proposed = ios_promotion._render_plan_library(
+        current,
+        "metolius-wood-grips-compact-ii",
+        {"outer-jugs": ("jug-left", "jug-right")},
+    )
+
+    assert untouched_mapping in proposed
+    mappings = json.loads(proposed)["boardMappings"]
+    assert mappings[0]["marker"] == "keep selected fields too"
+    assert mappings[0]["boardID"] == "metolius-wood-grips-compact-ii"
+    assert mappings[1]["marker"] == "preserve this exact formatting"
+
+
+def test_render_plan_library_rejects_missing_board_identity() -> None:
+    current = json.dumps(
+        {
+            "boardMappings": [
+                {"boardID": "trango.rock-prodigy-training-center", "semanticHolds": {}}
+            ]
+        }
+    )
+
+    with pytest.raises(ValueError, match="exactly one board mapping"):
+        ios_promotion._render_plan_library(
+            current,
+            "metolius.wood-grips-compact-ii",
+            {"outer-jugs": ("jug-left", "jug-right")},
+        )
+
+
+def test_render_plan_library_rejects_ambiguous_legacy_board_identity() -> None:
+    current = json.dumps(
+        {
+            "boardMappings": [
+                {"boardID": "metolius.wood-grips-compact-ii", "semanticHolds": {}},
+                {"boardID": "metolius-wood-grips-compact-ii", "semanticHolds": {}},
+            ]
+        }
+    )
+
+    with pytest.raises(ValueError, match="exactly one board mapping"):
+        ios_promotion._render_plan_library(
+            current,
+            "metolius.wood-grips-compact-ii",
+            {"outer-jugs": ("jug-left", "jug-right")},
+        )
 
 
 @pytest.mark.parametrize("expected_base_ref", ["", "-bad", "bad ref", "bad..ref"])
@@ -361,7 +428,11 @@ def _assert_valid_semantic_hold_initializer(source: str) -> None:
     opening = source.index(anchor) + len(anchor) - 1
     closing = _matching_delimiter(source, opening, "[", "]")
     assert not source[closing + 1:].startswith(" = [")
-    assert source[closing + 1:].lstrip().startswith("static let document")
+    rock_prodigy_anchor = "private static let rockProdigySemanticHoldIDs: [String: [String]] = ["
+    assert source[closing + 1:].lstrip().startswith(rock_prodigy_anchor)
+    rock_prodigy_opening = source.index(rock_prodigy_anchor) + len(rock_prodigy_anchor) - 1
+    rock_prodigy_closing = _matching_delimiter(source, rock_prodigy_opening, "[", "]")
+    assert source[rock_prodigy_closing + 1:].lstrip().startswith("static let document")
 
 
 def _matching_delimiter(source: str, opening: int, left: str, right: str) -> int:

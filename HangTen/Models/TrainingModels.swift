@@ -1623,7 +1623,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "repeaters-warm-up")]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("56 mm flat slopers", [.ids(BoardCatalog.compactIIFlatSloperHoldIDs)], .fourFingerPocket),
+                ("56 mm flat slopers", [.ids(BoardCatalog.compactIIFlatSloperHoldIDs)], .sloper),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
             ]
 
@@ -1672,7 +1672,12 @@ enum LegacyPlanSeedCatalog {
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand, nil),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
                 ("Center sloper", [.ids("sloper-round-center")], .sloper, nil),
-                ("Three-finger pocket", [.ids("pocket-19-three-left", "pocket-19-three-right")], .threeFingerPocket, nil),
+                (
+                    "Three-finger pocket",
+                    [.ids("pocket-19-three-left", "pocket-19-three-right")],
+                    .threeFingerPocket,
+                    FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+                ),
                 ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, nil),
                 ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp, nil)
             ]

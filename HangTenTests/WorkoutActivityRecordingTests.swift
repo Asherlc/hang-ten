@@ -531,7 +531,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             resolvedPairDescriptors,
             Set([
                 PairDescriptor(kind: .edge, sizeMillimeters: 29, gripType: .openHand),
-                PairDescriptor(kind: .sloper, sizeMillimeters: 56, gripType: .openHand),
+                PairDescriptor(kind: .sloper, sizeMillimeters: 56, gripType: .sloper),
                 PairDescriptor(kind: .edge, sizeMillimeters: 19, gripType: .halfCrimp)
             ])
         )

@@ -892,7 +892,7 @@ def _swift_grip_posture_and_capacity(hold: BoardHold) -> tuple[str | None, int |
         return None, hold.finger_capacity
     legacy_capacity = _LEGACY_GRIP_TYPE_FINGER_CAPACITY.get(hold.grip_type)
     if legacy_capacity is not None:
-        return "openHand", legacy_capacity
+        return hold.grip_type, legacy_capacity
     return hold.grip_type, hold.finger_capacity
 
 
