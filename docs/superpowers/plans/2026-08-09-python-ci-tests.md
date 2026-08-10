@@ -1,10 +1,10 @@
 # Python CI Tests Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add the existing Hangboard Onboarding pytest suite to the repository's required GitHub Actions CI workflow.
 
-**Architecture:** Extend `.github/workflows/ci.yml` with one independent `python` job. The job uses Ubuntu, Python 3.11, the package's editable development install, and the full pytest suite; it uploads a JUnit report only when the test job fails.
+**Architecture:** Extend `.github/workflows/ci.yml` with one independent `python` job. A fresh implementation subagent performs the workflow change, followed by a separate review checkpoint before commit. The job uses Ubuntu, Python 3.11, the package's editable development install, and the full pytest suite; it uploads a JUnit report only when the test job fails.
 
 **Tech Stack:** GitHub Actions, `actions/checkout` v4.2.2, `actions/setup-python` v5.6.0, `actions/upload-artifact` v4.6.2, Python 3.11, pytest.
 

@@ -1,10 +1,10 @@
 # Remove Built-in Cooldown Steps Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Remove explicit final cooldown timer steps from all built-in Hang Ten routines while preserving warm-ups, recovery intervals, and backward-compatible cooldown decoding.
 
-**Architecture:** Keep `WorkoutPhase.coolDown` in the runtime/persistence model, but stop creating cooldown steps in `LegacyPlanSeedCatalog`. Simplify `BuiltInPlanLibraryDefinition` so generated built-in libraries contain no shared cooldown block, then regenerate the checked-in JSON resource from the source definition.
+**Architecture:** Keep `WorkoutPhase.coolDown` in the runtime/persistence model, but stop creating cooldown steps in `LegacyPlanSeedCatalog`. A fresh implementation subagent performs each implementation task, followed by a separate review checkpoint before commit. Simplify `BuiltInPlanLibraryDefinition` so generated built-in libraries contain no shared cooldown block, then regenerate the checked-in JSON resource from the source definition.
 
 **Tech Stack:** Swift, XCTest, Xcode project, generated JSON resource, repository export script.
 

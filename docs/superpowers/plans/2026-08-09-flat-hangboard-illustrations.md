@@ -1,6 +1,6 @@
 # Flat Hangboard Illustrations Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate a preview-only set of 32 warm, flattened, symbolic hangboard illustrations that are easier to trace than the current semi-realistic renders.
 

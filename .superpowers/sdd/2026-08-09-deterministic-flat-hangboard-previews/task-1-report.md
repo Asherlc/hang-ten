@@ -22,7 +22,7 @@ Output:
 ```text
 ==================================== ERRORS ====================================
 __________ ERROR collecting tests/test_catalog_flat_illustrations.py ___________
-ImportError while importing test module '/Users/asherlc/src/hang-ten/Tools/HangboardOnboarding/tests/test_catalog_flat_illustrations.py'.
+ImportError while importing test module '<repo-root>/Tools/HangboardOnboarding/tests/test_catalog_flat_illustrations.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
@@ -295,13 +295,13 @@ Implementation changes in this wave:
 Committed outline snapshot creation:
 
 ```text
-/Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5
+<repo-root>/.context/task1-clean-head-snapshot
 ```
 
 Combined outline tests against clean committed inputs:
 
 ```sh
-HANGBOARD_CATALOG_OUTLINE_DIR=/Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/docs/hangboard-generative-catalog/outlines TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m pytest Tools/HangboardOnboarding/tests/test_catalog_flat_illustrations.py Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py -q
+HANGBOARD_CATALOG_OUTLINE_DIR=<repo-root>/.context/task1-clean-head-snapshot/docs/hangboard-generative-catalog/outlines TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m pytest Tools/HangboardOnboarding/tests/test_catalog_flat_illustrations.py Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py -q
 ```
 
 Output:
@@ -314,7 +314,7 @@ Output:
 Clean committed outline CLI check:
 
 ```sh
-TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_outline_cli --source-dir docs/hangboard-generative-catalog --output-dir /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/docs/hangboard-generative-catalog/outlines --check
+TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_outline_cli --source-dir docs/hangboard-generative-catalog --output-dir <repo-root>/.context/task1-clean-head-snapshot/docs/hangboard-generative-catalog/outlines --check
 ```
 
 Output:
@@ -328,7 +328,7 @@ Verified 32 catalog outline documents
 First clean rerender into checked-in PNG paths:
 
 ```sh
-TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_flat_illustrations --source-dir docs/hangboard-generative-catalog --outline-dir /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/docs/hangboard-generative-catalog/outlines --output-dir docs/hangboard-generative-catalog/flat-illustrations --contact-sheet docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png
+TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_flat_illustrations --source-dir docs/hangboard-generative-catalog --outline-dir <repo-root>/.context/task1-clean-head-snapshot/docs/hangboard-generative-catalog/outlines --output-dir docs/hangboard-generative-catalog/flat-illustrations --contact-sheet docs/hangboard-generative-catalog/flat-illustrations-contact-sheet.png
 ```
 
 Output:
@@ -340,7 +340,7 @@ Rendered 32 flat illustration(s)
 Second clean rerender into the workspace-owned temp area:
 
 ```sh
-TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_flat_illustrations --source-dir docs/hangboard-generative-catalog --outline-dir /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/docs/hangboard-generative-catalog/outlines --output-dir /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/rerender/flat-illustrations --contact-sheet /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5/rerender/flat-illustrations-contact-sheet.png
+TASK_PYTHONPATH=Tools/HangboardOnboarding/src PYTHONPATH="$TASK_PYTHONPATH" rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_flat_illustrations --source-dir docs/hangboard-generative-catalog --outline-dir <repo-root>/.context/task1-clean-head-snapshot/docs/hangboard-generative-catalog/outlines --output-dir <repo-root>/.context/task1-clean-head-snapshot/rerender/flat-illustrations --contact-sheet <repo-root>/.context/task1-clean-head-snapshot/rerender/flat-illustrations-contact-sheet.png
 ```
 
 Output:
@@ -406,7 +406,7 @@ Observed follow-up results:
 Cleanup command result:
 
 ```text
-removed /Users/asherlc/src/hang-ten/.context/task1-clean-head-snapshot.7xurbia5
+removed <repo-root>/.context/task1-clean-head-snapshot
 exists_after False
 ```
 

@@ -157,8 +157,8 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/hold-highlight-editor/server.py
 ```
 
-This discovers the checkout, reads complete approved boards from
-`Tools/HangboardOnboarding/boards/<board-id>/`, and writes in-progress work
+This discovers the checkout, reads complete approved board packages from
+`Hangboards/<board-folder>/board.json`, and writes in-progress work
 under `.context/hangboard-workbench/`. Automation can select different roots
 explicitly:
 
@@ -215,13 +215,12 @@ rtk hangboard-onboard \
 
 CLI-compatible runs are programmatic producers: once a run is complete and all
 five checkpoints are approved, its caller passes it to
-`RepositoryBoardLibrary.publish()` to update
-`Tools/HangboardOnboarding/boards/<board-id>/`. The browser never asks for a
-CLI run directory. Only complete approved runs belong in the canonical boards
-directory; all unfinished runs belong under the ignored `.context/` directory.
-Final **Save locally** writes the canonical package for normal Git review; it
-never commits, pushes, updates the Hang Ten app catalog, or synchronizes
-remotely.
+`RepositoryBoardLibrary.publish()` to update the canonical
+`Hangboards/<board-folder>/board.json` package. The browser never asks for a
+CLI run directory. Only complete approved runs belong in that package; all
+unfinished runs belong under the ignored `.context/` directory. Final **Save
+locally** writes the canonical package for normal Git review; it never commits,
+pushes, updates the Hang Ten app catalog, or synchronizes remotely.
 
 The lower-level CLI remains useful for scripted operation. Start a persisted
 run from one local image or HTTP(S) source:

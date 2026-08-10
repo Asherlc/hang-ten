@@ -1,4 +1,4 @@
-Task 2 report — flat hangboard illustration batch
+# Task 2 report — flat hangboard illustration batch
 
 Date: August 9, 2026
 

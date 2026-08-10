@@ -1,6 +1,6 @@
 # Generated Hardboard Hold Outlines Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate hand-editable normalized vector hold outlines as JSON for the 32 individual PNGs in `docs/hangboard-generative-catalog/`.
 
@@ -345,18 +345,6 @@ Add README/TESTING documentation showing the full `hangboard_vectorizer.catalog_
 
 Run: `rtk git add docs/hangboard-generative-catalog/outlines Tools/HangboardOnboarding/tests/test_catalog_outline_catalog.py Tools/HangboardOnboarding/README.md Tools/HangboardOnboarding/TESTING.md && rtk git commit -m "feat: add generated hardboard hold outlines"`
 
-## Final verification
-
-After all task reviews are clean, run:
-
-```bash
-rtk .context/hangboard-onboarding-venv/bin/python -m pytest Tools/HangboardOnboarding/tests -q
-rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_outline_cli --source-dir docs/hangboard-generative-catalog --output-dir docs/hangboard-generative-catalog/outlines --check
-rtk git status --short
-```
-
-Expected: the full suite passes, the check reports 32 valid documents, and only the intended spec, tool, test, documentation, and outline JSON files are present in the worktree.
-
 ### Task 4: Repair the approved JSON contract and review renderer
 
 **Files:**
@@ -371,12 +359,13 @@ Expected: the full suite passes, the check reports 32 valid documents, and only 
 
 **Requirements:**
 
-- Serialize `sourceImage` as `../<source-basename>.png` so it resolves relative to each JSON file.
-- Serialize `bounds` as `{ "x", "y", "width", "height" }` and `notes` as a string while accepting only that approved shape on read.
-- Validate `x + width <= 1` and `y + height <= 1`.
-- Flatten cubic commands deterministically for review overlays, including both control points, rather than drawing only command endpoints.
-- Make `--check` print a successful count and actionable failure details.
-- Add tests for path resolution, object bounds, string notes, overflow rejection, cubic overlay flattening, and check output.
+- [ ] **Step 1:** Serialize `sourceImage` as `../<source-basename>.png` so it resolves relative to each JSON file.
+- [ ] **Step 2:** Serialize `bounds` as `{ "x", "y", "width", "height" }` and `notes` as a string while accepting only that approved shape on read.
+- [ ] **Step 3:** Validate `x + width <= 1` and `y + height <= 1`.
+- [ ] **Step 4:** Flatten cubic commands deterministically for review overlays, including both control points, rather than drawing only command endpoints.
+- [ ] **Step 5:** Make `--check` print a successful count and actionable failure details.
+- [ ] **Step 6:** Add tests for path resolution, object bounds, string notes, overflow rejection, cubic overlay flattening, and check output.
+- [ ] **Step 7:** Run focused validation, review the diff, and commit only the approved contract/tool/docs/artifacts.
 
 ### Task 5: Improve catalog outline quality and visual regression coverage
 
@@ -390,8 +379,21 @@ Expected: the full suite passes, the check reports 32 valid documents, and only 
 
 **Requirements:**
 
-- Reject board silhouette fragments, boundary-touching slivers, tiny end caps, and large triangles crossing unrelated geometry.
-- Prefer closed internal shadow/recess contours and long rail bands; use symmetry only when the visible/source evidence supports it.
-- Add board-family regression checks for Beastmaker, Metolius, Tension, Trango two-piece, Lattice, So iLL, and Zlagboard representatives.
-- Require every output to have at least one plausible hold contour, no contour spanning an unrelated board silhouette, and no obvious one-sided omission on a visibly symmetric board where a mirrored candidate is stable.
-- Re-run and visually inspect all 32 overlays before committing regenerated artifacts.
+- [ ] **Step 1:** Reject board silhouette fragments, boundary-touching slivers, tiny end caps, and large triangles crossing unrelated geometry.
+- [ ] **Step 2:** Prefer closed internal shadow/recess contours and long rail bands; use symmetry only when the visible/source evidence supports it.
+- [ ] **Step 3:** Add board-family regression checks for Beastmaker, Metolius, Tension, Trango two-piece, Lattice, So iLL, and Zlagboard representatives.
+- [ ] **Step 4:** Require every output to have at least one plausible hold contour, no contour spanning an unrelated board silhouette, and no obvious one-sided omission on a visibly symmetric board where a mirrored candidate is stable.
+- [ ] **Step 5:** Re-run and visually inspect all 32 overlays before committing regenerated artifacts.
+- [ ] **Step 6:** Run focused validation, review the diff, and commit only the approved quality-pass artifacts.
+
+## Final verification
+
+After all task reviews are clean, run:
+
+```bash
+rtk .context/hangboard-onboarding-venv/bin/python -m pytest Tools/HangboardOnboarding/tests -q
+rtk .context/hangboard-onboarding-venv/bin/python -m hangboard_vectorizer.catalog_outline_cli --source-dir docs/hangboard-generative-catalog --output-dir docs/hangboard-generative-catalog/outlines --check
+rtk git status --short
+```
+
+Expected: the full suite passes, the check reports 32 valid documents, and only the intended spec, tool, test, documentation, and outline JSON files are present in the worktree.

@@ -1,6 +1,6 @@
 # AI Hangboard Illustrations V2 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate a separate 32-board AI illustration V2 set with better polish and deterministic-reference geometry fidelity.
 
@@ -12,7 +12,7 @@
 
 - Keep the deterministic preview set unchanged.
 - Save exactly 32 `<stem>-ai-v2.png` files under `docs/hangboard-generative-catalog/ai-illustrations-v2/`.
-- Use one built-in image-generation call per distinct board; do not use CLI fallback.
+- Use one built-in image-generation call per distinct board; allow at most one explicitly reported targeted regeneration for a material failure, with no unreported extra calls.
 - Preserve outer silhouette, disconnected pieces, center gaps, and major hold count and placement.
 - Use a warm editorial illustration style with crisp contours, simple color-blocked planes, restrained depth, and a uniform parchment background.
 - Add no text, logos, bolts, hands, wall scene, photographic texture, or dramatic shadow.

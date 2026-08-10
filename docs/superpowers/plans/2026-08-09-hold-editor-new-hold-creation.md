@@ -1,6 +1,6 @@
 # Hold Editor New Hold Creation Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development for every implementation task, with a fresh subagent and a review checkpoint before commit. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ensure Enter/Escape work while drawing regardless of focused controls and preserve the selected primitive shape when creating a new hold highlight.
 
@@ -43,7 +43,7 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
 });
 
 test("preserves the selected primitive shape when adding a highlight", () => {
-  assert.match(app, /shapeKind: state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
 });
 ```
 
@@ -79,7 +79,8 @@ if (editingText) return;
 Preserve the existing non-drawing shortcut branches after the guard. In `finishDraw()`, replace the hard-coded `shapeKind: "freeform"` with:
 
 ```js
-shapeKind: state.drawShape === "curved-freeform" ? "freeform" : state.drawShape,
+const primitiveShapeKind = state.drawShape === "curved-freeform" ? "freeform" : state.drawShape;
+shapeKind: primitiveShapeKind,
 ```
 
 Keep the existing `pathStyle` mapping so curved freeform remains smooth and all other draw modes remain straight.

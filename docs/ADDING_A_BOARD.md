@@ -120,12 +120,13 @@ Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
 symmetry. The accepted Compact II replay fixture is versioned at
-`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`.
+`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`; it is a
+test fixture, not the canonical board package.
 
-Only complete runs with approved checkpoints through Stage 4 belong under
-`Tools/HangboardOnboarding/boards/<board-id>/`. Keep every unfinished run under
-the ignored `.context/` directory. Saving a complete run through the workbench
-publishes it to the canonical boards directory for normal Git review.
+Only complete runs with approved checkpoints through Stage 4 may be published
+into the canonical `Hangboards/<board-folder>/board.json` package. Keep every
+unfinished run under the ignored `.context/` directory; the accepted run under
+`Tools/HangboardOnboarding/boards/` remains a replay fixture for tests.
 
 ## 3. Keep metadata and artwork separate
 
