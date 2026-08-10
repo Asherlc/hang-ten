@@ -515,7 +515,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 CustomRoutineValidator.idIssues(for: routine.id).isEmpty &&
                     loadedRoutineIDs.insert(routine.id).inserted
             }
-            routines = validRoutines
+            routines = validRoutines.map(Self.normalize)
             if validRoutines.count != library.routines.count {
                 persistenceError = "Some custom routines could not be loaded."
             }
@@ -544,7 +544,9 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 category: definition.category,
                 tags: definition.tags,
                 targetMode: definition.targetMode,
-                steps: plan.steps.map { WorkoutStepDefinition.from($0) }
+                steps: plan.steps.map {
+                    WorkoutStepDefinition.from($0).strippingUnsupportedCustomCueFields()
+                }
             )
         )
         let issues = CustomRoutineValidator.issues(
@@ -566,7 +568,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
             category: normalizedOptional(definition.category),
             tags: normalizedTags(definition.tags),
             targetMode: definition.targetMode,
-            steps: definition.steps
+            steps: definition.steps.map { $0.strippingUnsupportedCustomCueFields() }
         )
     }
 

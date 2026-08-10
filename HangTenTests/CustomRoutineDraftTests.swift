@@ -23,8 +23,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             duration: 10,
             phase: .rest,
             targets: [],
-            timing: .fixed,
-            gripType: nil
+            timing: .fixed
         )
         let stopwatch = CustomRoutineStepDraft(
             id: "stopwatch",
@@ -34,8 +33,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             duration: 60,
             phase: .hang,
             targets: [.kind(.jug)],
-            timing: .stopwatch,
-            gripType: nil
+            timing: .stopwatch
         )
 
         XCTAssertTrue(rest.isRest)
@@ -73,9 +71,9 @@ final class CustomRoutineDraftTests: XCTestCase {
     func testMoveStepsChangesOnlyTheirOrder() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
-            .init(id: "one", title: "One", instruction: "", accessory: "", duration: 1, phase: .hang, targets: [.kind(.jug)], timing: .fixed, gripType: nil),
-            .init(id: "two", title: "Two", instruction: "", accessory: "", duration: 2, phase: .rest, targets: [], timing: .fixed, gripType: nil),
-            .init(id: "three", title: "Three", instruction: "", accessory: "", duration: 3, phase: .hang, targets: [.kind(.edge)], timing: .fixed, gripType: nil)
+            .init(id: "one", title: "One", instruction: "", accessory: "", duration: 1, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
+            .init(id: "two", title: "Two", instruction: "", accessory: "", duration: 2, phase: .rest, targets: [], timing: .fixed),
+            .init(id: "three", title: "Three", instruction: "", accessory: "", duration: 3, phase: .hang, targets: [.kind(.edge)], timing: .fixed)
         ]
 
         draft.moveSteps(from: IndexSet(integer: 0), to: 3)
@@ -147,8 +145,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 10,
                 phase: .hang,
                 targets: [.holdIDs(["edge-19-left"])],
-                timing: .stopwatch,
-                gripType: .halfCrimp
+                timing: .stopwatch
             ),
             .init(
                 id: "rest",
@@ -158,8 +155,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 5,
                 phase: .rest,
                 targets: [],
-                timing: .fixed,
-                gripType: nil
+                timing: .fixed
             )
         ]
 
@@ -175,7 +171,6 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(retargeted.steps.map(\.title), ["Exact hang", "Rest"])
         XCTAssertEqual(retargeted.steps.map(\.timing), [.stopwatch, .fixed])
         XCTAssertEqual(retargeted.steps.map(\.targets), [[], []])
-        XCTAssertEqual(retargeted.steps[0].gripType, .halfCrimp)
     }
 
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
@@ -201,8 +196,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 10,
                 phase: .hang,
                 targets: [.holdIDs([retainedHold.id, "not-on-new-board"])],
-                timing: .fixed,
-                gripType: nil
+                timing: .fixed
             )
         ]
 
@@ -249,8 +243,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 15,
                 phase: .rest,
                 targets: [.kind(.jug)],
-                timing: .stopwatch,
-                gripType: .halfCrimp
+                timing: .stopwatch
             )
         ]
 
@@ -286,8 +279,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 10,
                 phase: .hang,
                 targets: [.holdIDs(["edge-19-left", "edge-19-right"])],
-                timing: .fixed,
-                gripType: .halfCrimp
+                timing: .fixed
             )
         ]
 
@@ -303,28 +295,42 @@ final class CustomRoutineDraftTests: XCTestCase {
     func testGenericDraftCanStoreKindAndFeatureTargets() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
-            .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed, gripType: .openHand),
-            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge, fallbacks: [])], timing: .fixed, gripType: nil)
+            .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge, fallbacks: [])], timing: .fixed)
         ]
 
         XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge, fallbacks: [])]])
     }
 
-    func testTogglingLastExactFingerOffOmitsFingerConfigurationFromDefinitionEncoding() throws {
-        var draft = CustomRoutineDraft(createWith: .generic)
-        draft.addStep()
+    func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
+        let source = CustomRoutineDefinition(
+            id: "custom.legacy-cues",
+            title: "Legacy cues",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "legacy-step",
+                title: "Legacy step",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.jug)],
+                gripType: .openHand,
+                fingerConfiguration: FingerConfiguration(
+                    engagedFingers: [.index, .ring]
+                ),
+                activeDuration: 10
+            )]
+        )
 
-        draft.steps[0].toggleFinger(.index)
-        XCTAssertEqual(draft.steps[0].fingerConfiguration?.orderedFingers, [.index])
+        let definition = CustomRoutineDraft(editing: source).definition()
 
-        draft.steps[0].toggleFinger(.index)
-        XCTAssertNil(draft.steps[0].fingerConfiguration)
-
-        let encoded = try JSONEncoder().encode(draft.definition())
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-        let steps = try XCTUnwrap(object["steps"] as? [[String: Any]])
-
-        XCTAssertNil(steps[0]["fingerConfiguration"])
+        XCTAssertNil(definition.steps[0].gripType)
+        XCTAssertNil(definition.steps[0].fingerConfiguration)
     }
 
     func testEditingDraftRoundTripsNormalizedOneSegmentDefinition() {
@@ -357,7 +363,15 @@ final class CustomRoutineDraftTests: XCTestCase {
             )]
         )
 
-        XCTAssertEqual(CustomRoutineDraft(editing: source).definition(), source)
+        let definition = CustomRoutineDraft(editing: source).definition()
+
+        XCTAssertEqual(definition.id, source.id)
+        XCTAssertEqual(definition.title, source.title)
+        XCTAssertEqual(definition.subtitle, source.subtitle)
+        XCTAssertEqual(definition.targetMode, source.targetMode)
+        XCTAssertEqual(definition.steps[0].segments, source.steps[0].segments)
+        XCTAssertNil(definition.steps[0].gripType)
+        XCTAssertNil(definition.steps[0].fingerConfiguration)
     }
 
     func testDuplicateDraftCreatesOneStableFreshCustomDefinition() {
@@ -408,8 +422,6 @@ final class CustomRoutineDraftTests: XCTestCase {
                 timing: .fixed,
                 duration: 10
             )],
-            gripType: sourceStep.gripType,
-            fingerConfiguration: sourceStep.fingerConfiguration,
             activeDuration: 10
         )
         XCTAssertEqual(duplicate.definition().steps, [expectedStep])
@@ -570,8 +582,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             duration: duration,
             phase: .hang,
             targets: [.kind(.jug)],
-            timing: .fixed,
-            gripType: .openHand
+            timing: .fixed
         )
     }
 

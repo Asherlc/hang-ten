@@ -407,6 +407,20 @@ extension WorkoutStepDefinition {
             activeDuration: step.timedWorkDuration
         )
     }
+
+    func strippingUnsupportedCustomCueFields() -> WorkoutStepDefinition {
+        WorkoutStepDefinition(
+            id: id,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets,
+            segments: segments,
+            activeDuration: activeDuration
+        )
+    }
 }
 
 /// A block is deliberately independent of a plan. Common warm-ups and

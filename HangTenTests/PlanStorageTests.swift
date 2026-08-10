@@ -92,6 +92,26 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(fingerConfiguration["engagedFingers"], ["index", "ring"])
     }
 
+    func testInstructionAccessoryCardRowsOmitTrimmedEmptyFieldsWithoutChangingSourceText() {
+        XCTAssertEqual(
+            InstructionAccessoryCardContent.rows(
+                instruction: " \n\t ",
+                accessory: "  "
+            ),
+            []
+        )
+        XCTAssertEqual(
+            InstructionAccessoryCardContent.rows(
+                instruction: "Keep shoulders engaged.",
+                accessory: "7 seconds on / 3 seconds off"
+            ),
+            [
+                .init(kind: .instruction, text: "Keep shoulders engaged."),
+                .init(kind: .accessory, text: "7 seconds on / 3 seconds off")
+            ]
+        )
+    }
+
     func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
@@ -859,6 +879,73 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(PlanCatalog.all, expectedPlans)
     }
 
+    func testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage() throws {
+        let audit = try loadPlanCueAudit()
+        let library = BuiltInPlanLibraryDefinition.document
+
+        let expectedPlanFieldKeys = Set(
+            library.plans.flatMap { plan in
+                auditedPlanFields.map { field in
+                    CueAuditKey(planID: plan.id, stepID: nil, field: field)
+                }
+            }
+        )
+        let missingPlanFields = expectedPlanFieldKeys.filter { key in
+            audit.planFieldRules.contains { rule in
+                rule.matches(key)
+            } == false
+        }
+
+        XCTAssertTrue(
+            missingPlanFields.isEmpty,
+            "Missing plan-level cue audit coverage:\n\(missingPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+
+        let expectedStepFieldKeys = try expectedStepCueAuditKeys(in: library)
+        let missingStepFields = expectedStepFieldKeys.filter { key in
+            !audit.stepFieldRules.contains { rule in
+                rule.matches(key)
+            }
+        }
+
+        XCTAssertTrue(
+            missingStepFields.isEmpty,
+            "Missing step-level cue audit coverage:\n\(missingStepFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+
+        let timerAdaptations = audit.planFieldRules.map(AnyCueAuditDecision.init) +
+            audit.stepFieldRules.map(AnyCueAuditDecision.init)
+        let timerAdaptationDecisions = timerAdaptations.filter { $0.adaptationType == "timer" }
+
+        XCTAssertFalse(
+            timerAdaptationDecisions.isEmpty,
+            "Expected the cue audit to label app timing adaptations explicitly."
+        )
+        XCTAssertTrue(
+            timerAdaptationDecisions.allSatisfy { decision in
+                decision.decision == "adapt" && decision.sourcePrescription == false
+            },
+            "Timer adaptations must be marked as adapt and not source-prescribed."
+        )
+
+        for planID in [
+            LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id
+        ] {
+            XCTAssertTrue(
+                audit.planFieldRules.contains {
+                    $0.planID == planID &&
+                        $0.fields.contains("interval") &&
+                        $0.decision == "adapt" &&
+                        $0.adaptationType == "timer" &&
+                        $0.sourcePrescription == false
+                },
+                "Expected \(planID) to record its app-guided interval expansion as a timer adaptation."
+            )
+        }
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30
@@ -921,5 +1008,179 @@ final class PlanStorageTests: XCTestCase {
                 )
             ]
         )
+    }
+
+    private var auditedPlanFields: [String] {
+        [
+            "title",
+            "subtitle",
+            "instruction",
+            "accessory",
+            "target",
+            "count",
+            "duration",
+            "interval",
+            "warmUp",
+            "cooldown",
+            "gripType",
+            "fingerConfiguration"
+        ]
+    }
+
+    private func expectedStepCueAuditKeys(in library: PlanLibraryDefinition) throws -> Set<CueAuditKey> {
+        let blocksByID = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
+
+        return try Set(library.plans.flatMap { plan in
+            try plan.blocks.flatMap { reference in
+                let block = try XCTUnwrap(
+                    blocksByID[reference.blockID],
+                    "Missing block \(reference.blockID) while building source-audit expectations."
+                )
+
+                return block.steps.flatMap { step in
+                    var keys: [CueAuditKey] = []
+                    if !step.instruction.isEmpty {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "instruction"))
+                    }
+                    if !step.accessory.isEmpty {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "accessory"))
+                    }
+                    if step.gripType != nil {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "gripType"))
+                    }
+                    if step.fingerConfiguration != nil {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "fingerConfiguration"))
+                    }
+                    return keys
+                }
+            }
+        })
+    }
+
+    private func loadPlanCueAudit() throws -> CueAuditDocument {
+        let fileURL = try planCueAuditURL()
+        let markdown = try String(contentsOf: fileURL, encoding: .utf8)
+        let jsonFence = try XCTUnwrap(
+            markdown.range(
+                of: #"```json\s*(\{[\s\S]*?\})\s*```"#,
+                options: .regularExpression
+            ),
+            "Expected a fenced JSON audit block in \(fileURL.path)."
+        )
+        let fencedText = String(markdown[jsonFence])
+        let jsonText = fencedText
+            .replacingOccurrences(
+                of: #"^```json\s*"#,
+                with: "",
+                options: .regularExpression
+            )
+            .replacingOccurrences(
+                of: #"\s*```$"#,
+                with: "",
+                options: .regularExpression
+            )
+
+        return try JSONDecoder().decode(CueAuditDocument.self, from: Data(jsonText.utf8))
+    }
+
+    private func planCueAuditURL() throws -> URL {
+        let testsDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let repoRoot = testsDirectory.deletingLastPathComponent()
+        let auditURL = repoRoot
+            .appendingPathComponent("docs", isDirectory: true)
+            .appendingPathComponent("source-audits", isDirectory: true)
+            .appendingPathComponent("2026-08-10-plan-cue-provenance.md")
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: auditURL.path),
+            "Expected cue audit at \(auditURL.path)."
+        )
+
+        return auditURL
+    }
+}
+
+private struct CueAuditKey: Hashable, Comparable, CustomStringConvertible {
+    let planID: String
+    let stepID: String?
+    let field: String
+
+    var description: String {
+        if let stepID {
+            return "\(planID) :: \(stepID) :: \(field)"
+        }
+        return "\(planID) :: \(field)"
+    }
+
+    static func < (lhs: CueAuditKey, rhs: CueAuditKey) -> Bool {
+        lhs.description < rhs.description
+    }
+}
+
+private protocol CueAuditDecision {
+    var planID: String { get }
+    var field: String { get }
+    var decision: String { get }
+    var sourcePrescription: Bool { get }
+    var adaptationType: String? { get }
+}
+
+private struct AnyCueAuditDecision: CueAuditDecision {
+    let planID: String
+    let field: String
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    init(_ base: some CueAuditDecision) {
+        planID = base.planID
+        field = base.field
+        decision = base.decision
+        sourcePrescription = base.sourcePrescription
+        adaptationType = base.adaptationType
+    }
+}
+
+private struct CueAuditDocument: Decodable {
+    let planFieldRules: [PlanFieldRule]
+    let stepFieldRules: [StepFieldRule]
+}
+
+private struct PlanFieldRule: Decodable, CueAuditDecision {
+    let planID: String
+    let fields: [String]
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    var field: String {
+        fields.first ?? ""
+    }
+
+    func matches(_ key: CueAuditKey) -> Bool {
+        key.planID == planID && key.stepID == nil && fields.contains(key.field)
+    }
+}
+
+private struct StepFieldRule: Decodable, CueAuditDecision {
+    let planID: String
+    let stepID: String?
+    let stepIDPattern: String?
+    let field: String
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    func matches(_ key: CueAuditKey) -> Bool {
+        guard key.planID == planID, key.field == field else {
+            return false
+        }
+        if let stepID {
+            return key.stepID == stepID
+        }
+        guard let stepIDPattern, let actualStepID = key.stepID else {
+            return false
+        }
+        return actualStepID.range(of: stepIDPattern, options: .regularExpression) != nil
     }
 }
