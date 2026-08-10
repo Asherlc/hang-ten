@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   buildSummary,
+  computeFitZoom,
   visibleLayers,
 } = require("../compare-model.js");
 
@@ -36,4 +37,15 @@ test("visibleLayers returns the exact layer sets for each comparison mode", () =
   assert.deepEqual(visibleLayers("automatic"), ["image", "automatic"]);
   assert.deepEqual(visibleLayers("edited"), ["image", "edited"]);
   assert.deepEqual(visibleLayers("difference"), ["image", "automatic", "edited", "difference"]);
+});
+
+test("computeFitZoom scales oversized images to the viewport without enlarging smaller ones", () => {
+  assert.equal(
+    computeFitZoom({ imageWidth: 2000, imageHeight: 1000, viewportWidth: 800, viewportHeight: 300 }),
+    0.3,
+  );
+  assert.equal(
+    computeFitZoom({ imageWidth: 400, imageHeight: 200, viewportWidth: 800, viewportHeight: 300 }),
+    1,
+  );
 });

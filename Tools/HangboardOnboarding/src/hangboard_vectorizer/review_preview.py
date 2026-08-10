@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import shutil
 import tempfile
+from uuid import uuid4
 
 from PIL import Image, ImageDraw
 
@@ -61,15 +62,9 @@ def render_preview_bundle(run: ReviewRun, output: Path) -> dict[str, object]:
         gallery = _build_gallery_document(
             run=run,
             present_types=present_types,
-            output_root=root,
         )
         _write_text(bundle / "review-gallery.html", gallery)
-
-        if target.exists():
-            if not target.is_dir():
-                raise ValueError(f"preview target must be a directory: {target}")
-            shutil.rmtree(target)
-        bundle.replace(target)
+        _publish_preview_bundle(bundle, target)
     finally:
         shutil.rmtree(temporary_root, ignore_errors=True)
 
@@ -160,9 +155,7 @@ def write_comparison_document(run: ReviewRun, output: Path) -> Path:
     return target
 
 
-def _build_gallery_document(
-    *, run: ReviewRun, present_types: Iterable[str], output_root: Path
-) -> str:
+def _build_gallery_document(*, run: ReviewRun, present_types: Iterable[str]) -> str:
     rows = [
         ("Stage 1 image", str(run.stage1_image.relative_to(run.root)), sha256_file(run.stage1_image)),
         ("Automatic regions", str(run.stage2_regions.relative_to(run.root)), sha256_file(run.stage2_regions)),
@@ -227,7 +220,7 @@ def _build_gallery_document(
   <body>
     <main>
       <h1>Hold Region Review Preview</h1>
-      <p>Deterministic preview bundle rendered from immutable review artifacts under {escape(str(output_root))}.</p>
+      <p>Deterministic preview bundle rendered from immutable review artifacts with relative asset references only.</p>
       <section class="gallery">
         {preview_cards}
       </section>
@@ -243,6 +236,26 @@ def _build_gallery_document(
   </body>
 </html>
 """
+
+
+def _publish_preview_bundle(bundle: Path, target: Path) -> None:
+    if target.exists() and not target.is_dir():
+        raise ValueError(f"preview target must be a directory: {target}")
+
+    backup: Path | None = None
+    if target.exists():
+        backup = target.parent / f".{target.name}.backup-{uuid4().hex}"
+        target.replace(backup)
+
+    try:
+        bundle.replace(target)
+    except Exception:
+        if backup is not None and backup.exists() and not target.exists():
+            backup.replace(target)
+        raise
+    else:
+        if backup is not None:
+            shutil.rmtree(backup, ignore_errors=True)
 
 
 def _editor_root() -> Path:

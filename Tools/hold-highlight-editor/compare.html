@@ -32,11 +32,11 @@
           <div class="viewer-grid" id="viewer-grid">
             <div>
               <div class="panel-title" id="primary-title">Difference view</div>
-              <div class="canvas-shell"><canvas id="primary-canvas"></canvas></div>
+              <div class="canvas-shell" id="primary-shell"><canvas id="primary-canvas"></canvas></div>
             </div>
             <div id="secondary-panel" hidden>
               <div class="panel-title" id="secondary-title">Edited overlay</div>
-              <div class="canvas-shell"><canvas id="secondary-canvas"></canvas></div>
+              <div class="canvas-shell" id="secondary-shell"><canvas id="secondary-canvas"></canvas></div>
             </div>
           </div>
         </section>
@@ -65,7 +65,7 @@
       (() => {
         "use strict";
 
-        const { buildSummary, visibleLayers } = globalThis.HoldComparisonModel;
+        const { buildSummary, computeFitZoom, visibleLayers } = globalThis.HoldComparisonModel;
         const payload = JSON.parse(document.getElementById("comparison-data").textContent);
         const image = new Image();
         image.src = payload.stage1.dataUrl;
@@ -83,6 +83,8 @@
           primaryTitle: document.getElementById("primary-title"),
           secondaryPanel: document.getElementById("secondary-panel"),
           secondaryTitle: document.getElementById("secondary-title"),
+          primaryShell: document.getElementById("primary-shell"),
+          secondaryShell: document.getElementById("secondary-shell"),
           primaryCanvas: document.getElementById("primary-canvas"),
           secondaryCanvas: document.getElementById("secondary-canvas"),
           summaryGrid: document.getElementById("summary-grid"),
@@ -244,6 +246,22 @@
           if (sideBySide) renderCanvas(elements.secondaryCanvas, "edited");
         }
 
+        function visibleShells() {
+          return state.sideBySide
+            ? [elements.primaryShell, elements.secondaryShell]
+            : [elements.primaryShell];
+        }
+
+        function fitZoomForVisibleShells() {
+          const fits = visibleShells().map((shell) => computeFitZoom({
+            imageWidth: image.naturalWidth || 1,
+            imageHeight: image.naturalHeight || 1,
+            viewportWidth: Math.max(shell.clientWidth - 28, 1),
+            viewportHeight: Math.max(shell.clientHeight - 28, 1),
+          }));
+          return Math.min(...fits);
+        }
+
         function render() {
           elements.modeButtons.forEach((button) => {
             button.classList.toggle("active", button.dataset.mode === state.mode);
@@ -279,7 +297,7 @@
           render();
         });
         elements.fit.addEventListener("click", () => {
-          state.zoom = 1;
+          state.zoom = fitZoomForVisibleShells();
           render();
         });
         elements.modeButtons.forEach((button) => {
@@ -289,7 +307,10 @@
           });
         });
 
-        image.addEventListener("load", render, { once: true });
+        image.addEventListener("load", () => {
+          state.zoom = fitZoomForVisibleShells();
+          render();
+        }, { once: true });
       })();
     </script>
   </body>

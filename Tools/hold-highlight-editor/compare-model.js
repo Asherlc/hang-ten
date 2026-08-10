@@ -55,8 +55,27 @@
     return layers.slice();
   }
 
+  function computeFitZoom({
+    imageWidth,
+    imageHeight,
+    viewportWidth,
+    viewportHeight,
+    maxZoom = 1,
+  }) {
+    const sourceWidth = Number(imageWidth);
+    const sourceHeight = Number(imageHeight);
+    const targetWidth = Number(viewportWidth);
+    const targetHeight = Number(viewportHeight);
+    const maximum = Number(maxZoom);
+    if (![sourceWidth, sourceHeight, targetWidth, targetHeight, maximum].every(Number.isFinite)) return 1;
+    if (sourceWidth <= 0 || sourceHeight <= 0 || targetWidth <= 0 || targetHeight <= 0 || maximum <= 0) return 1;
+    const ratio = Math.min(targetWidth / sourceWidth, targetHeight / sourceHeight);
+    return Math.min(maximum, Number(ratio.toFixed(4)));
+  }
+
   return {
     buildSummary,
+    computeFitZoom,
     visibleLayers,
   };
 }));
