@@ -31,6 +31,36 @@
       "title" : "Progressive warm-up"
     },
     {
+      "id" : "shared.cool-down",
+      "steps" : [
+        {
+          "accessory" : "Easy movement · gentle release",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "cool-down",
+          "instruction" : "Stay on the easy jugs and let your breathing settle before you step away.",
+          "phase" : "coolDown",
+          "segments" : [
+            {
+              "duration" : 60,
+              "kind" : "work",
+              "target" : {
+                "semantic" : "outer-jugs"
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "targets" : [
+            {
+              "semantic" : "outer-jugs"
+            }
+          ],
+          "title" : "Cool down"
+        }
+      ],
+      "title" : "Cool down"
+    },
+    {
       "id" : "metolius.generic-ten-minute.entry.warm-up",
       "steps" : [
         {
@@ -85,7 +115,7 @@
           "accessory" : "1 pull-up",
           "activeDuration" : 5,
           "duration" : 5,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "entry.minute-2.task-1",
           "instruction" : "Do 1 pull-up on a round sloper.",
           "phase" : "pull",
@@ -254,7 +284,7 @@
           "accessory" : "10s hang",
           "activeDuration" : 10,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "entry.minute-6.task-1",
           "instruction" : "Hang from a round sloper for 10 seconds.",
           "phase" : "hang",
@@ -446,7 +476,7 @@
         {
           "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "entry.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
@@ -548,7 +578,7 @@
           "accessory" : "2 pull-ups",
           "activeDuration" : 10,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "intermediate.minute-2.task-1",
           "instruction" : "Do 2 pull-ups on a round sloper.",
           "phase" : "pull",
@@ -681,7 +711,7 @@
           "accessory" : "30s hang",
           "activeDuration" : 30,
           "duration" : 30,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "intermediate.minute-4.task-1",
           "instruction" : "Hang from a round sloper for 30 seconds.",
           "phase" : "hang",
@@ -980,7 +1010,7 @@
           "accessory" : "15s hang",
           "activeDuration" : 15,
           "duration" : 15,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "intermediate.minute-9.task-1",
           "instruction" : "Hang from a slope for 15 seconds.",
           "phase" : "hang",
@@ -1046,7 +1076,7 @@
         {
           "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "intermediate.minute-10.task-1",
           "instruction" : "Hang from a round sloper for as long as you can.",
           "phase" : "hang",
@@ -1076,7 +1106,7 @@
           "accessory" : "20s hang",
           "activeDuration" : 20,
           "duration" : 20,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "advanced.minute-1.task-1",
           "instruction" : "Hold a straight-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
@@ -1155,7 +1185,7 @@
           "accessory" : "20s hang",
           "activeDuration" : 20,
           "duration" : 20,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "advanced.minute-2.task-1",
           "instruction" : "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
           "phase" : "hang",
@@ -1180,7 +1210,7 @@
           "accessory" : "20s hang",
           "activeDuration" : 20,
           "duration" : 20,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "advanced.minute-2.task-2",
           "instruction" : "Stay on for a 20-second L-sit or 20 hanging knee curls.",
           "phase" : "hang",
@@ -1223,7 +1253,7 @@
           "accessory" : "5 pull-ups",
           "activeDuration" : 25,
           "duration" : 25,
-          "gripType" : "openHand",
+          "gripType" : "threeFingerPocket",
           "id" : "advanced.minute-3.task-1",
           "instruction" : "Do 5 pull-ups on a three-finger pocket.",
           "phase" : "pull",
@@ -1248,7 +1278,7 @@
           "accessory" : "25s hang",
           "activeDuration" : 25,
           "duration" : 25,
-          "gripType" : "openHand",
+          "gripType" : "threeFingerPocket",
           "id" : "advanced.minute-3.task-2",
           "instruction" : "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
           "phase" : "hang",
@@ -1543,7 +1573,7 @@
           "accessory" : "15s hang",
           "activeDuration" : 15,
           "duration" : 15,
-          "gripType" : "openHand",
+          "gripType" : "threeFingerPocket",
           "id" : "advanced.minute-7.task-2",
           "instruction" : "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
           "phase" : "hang",
@@ -1609,7 +1639,7 @@
         {
           "accessory" : "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
           "duration" : 15,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "advanced.minute-8.task-2",
           "instruction" : "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
           "phase" : "hang",
@@ -1651,7 +1681,7 @@
           "accessory" : "20s hang",
           "activeDuration" : 20,
           "duration" : 20,
-          "gripType" : "openHand",
+          "gripType" : "twoFingerPocket",
           "id" : "advanced.minute-9.task-1",
           "instruction" : "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
           "phase" : "hang",
@@ -1717,7 +1747,7 @@
         {
           "accessory" : "Maximum effort · up to 60s",
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "advanced.minute-10.task-1",
           "instruction" : "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
           "phase" : "hang",
@@ -4447,7 +4477,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-1",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4477,7 +4507,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-2",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4507,7 +4537,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-3",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4537,7 +4567,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-4",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4567,7 +4597,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 10,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-5",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4597,7 +4627,7 @@
           "accessory" : "7s hang · 3s rest · 6 reps",
           "activeDuration" : 7,
           "duration" : 7,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "repeaters-grip-2-rep-6",
           "instruction" : "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
           "phase" : "hang",
@@ -4911,7 +4941,7 @@
           "accessory" : "10s hang · 50s rest · feet supported",
           "activeDuration" : 10,
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "sloper",
           "id" : "abrahangs-grip-3",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
@@ -4941,14 +4971,7 @@
           "accessory" : "10s hang · 50s rest · feet supported",
           "activeDuration" : 10,
           "duration" : 60,
-          "fingerConfiguration" : {
-            "engagedFingers" : [
-              "index",
-              "middle",
-              "ring"
-            ]
-          },
-          "gripType" : "openHand",
+          "gripType" : "threeFingerPocket",
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported. Apply only a small strain and stop if your fingers shift, pinch, or become painful.",
           "phase" : "hang",
@@ -5250,7 +5273,7 @@
           "accessory" : "7s hang · 53s rest · 3 reps",
           "activeDuration" : 7,
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "horst-753-grip-3-rep-1",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
@@ -5280,7 +5303,7 @@
           "accessory" : "7s hang · 53s rest · 3 reps",
           "activeDuration" : 7,
           "duration" : 60,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "horst-753-grip-3-rep-2",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
@@ -5310,7 +5333,7 @@
           "accessory" : "7s hang · 53s rest · 3 reps",
           "activeDuration" : 7,
           "duration" : 7,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "horst-753-grip-3-rep-3",
           "instruction" : "Take a near-maximal seven-second effort, then step off completely for fifty-three seconds. Keep the grip controlled.",
           "phase" : "hang",
@@ -5844,7 +5867,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 45,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-1-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -5874,7 +5897,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 45,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-1-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -5904,7 +5927,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 30,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-1-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -5947,7 +5970,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 45,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-2-rep-1",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -5977,7 +6000,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 45,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-2-rep-2",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -6007,7 +6030,7 @@
           "accessory" : "30s hang · 15s rest · 2:1 density",
           "activeDuration" : 30,
           "duration" : 30,
-          "gripType" : "openHand",
+          "gripType" : "fourFingerPocket",
           "id" : "density-hold-2-set-2-rep-3",
           "instruction" : "Hang for thirty seconds at a load you can control, then rest for fifteen. Use foot assistance before your grip shape changes.",
           "phase" : "hang",
@@ -6523,6 +6546,12 @@
         },
         {
           "blockID" : "research.max-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "max-hangs-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6558,6 +6587,12 @@
         },
         {
           "blockID" : "research.force-feedback-f80.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "f80-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6593,6 +6628,12 @@
         },
         {
           "blockID" : "research.force-feedback-f100.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "f100-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6628,6 +6669,12 @@
         },
         {
           "blockID" : "research.eva-int-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "int-hangs-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6663,6 +6710,12 @@
         },
         {
           "blockID" : "research.seven-three-repeaters.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "repeaters-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6695,6 +6748,12 @@
         },
         {
           "blockID" : "research.abrahangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "abrahangs-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6730,6 +6789,12 @@
         },
         {
           "blockID" : "coach.horst-seven-fifty-three.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "horst-753-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6765,6 +6830,12 @@
         },
         {
           "blockID" : "coach.bechtel-three-six-nine.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "ladders-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6800,6 +6871,12 @@
         },
         {
           "blockID" : "coach.density-hangs.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "density-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",
@@ -6835,6 +6912,12 @@
         },
         {
           "blockID" : "device.zlagboard-sixty-sixty.main"
+        },
+        {
+          "blockID" : "shared.cool-down",
+          "stepIDs" : [
+            "zlagboard-cool-down"
+          ]
         }
       ],
       "boardID" : "metolius.wood-grips-compact-ii",

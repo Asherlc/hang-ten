@@ -19,7 +19,7 @@ from hangboard_vectorizer.ios_promotion import (
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 ACCEPTED_RUN = (
     REPOSITORY_ROOT
-    / "Tools/HangboardOnboarding/reference/metolius-compact-ii/accepted-run"
+    / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
 )
 PROFILE_FIXTURE = Path(__file__).parent / "data/ios-promotion-profile.json"
 
@@ -187,6 +187,16 @@ def test_generator_rejects_a_target_changed_relative_to_the_expected_base(tmp_pa
 
     with pytest.raises(ValueError, match="changed relative to main"):
         build_promotion_preview(run_root, repository_root, read_promotion_profile(run_root))
+
+
+def test_default_preview_accepts_the_worktree_main_baseline(tmp_path: Path) -> None:
+    """Merged foundation work must leave promotion targets owned by main."""
+    run_root = _copied_run(tmp_path)
+
+    preview = build_promotion_preview(run_root, REPOSITORY_ROOT, read_promotion_profile(run_root))
+
+    assert preview.base_ref == "main"
+    assert preview.issues == ()
 
 
 def _copied_run(tmp_path: Path) -> Path:
