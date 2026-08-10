@@ -4,9 +4,16 @@
   const {
     buildEditedDocument,
     buildCorrectionsDocument,
+    contourPath,
+    flattenContour,
     resizeContour,
     simplifyClosedContour,
     mirrorContour,
+    setEdgeCurveControl,
+    translateEdgeCurves,
+    mapEdgeCurves,
+    mirrorEdgeCurves,
+    insertEdgeCurves,
     findStrongestEdge,
     resolveHistorySelection,
     normalizePipelineDocument,
@@ -40,6 +47,7 @@
     panSession: null,
     dragSession: null,
     handleSession: null,
+    edgeSession: null,
     transformSession: null,
     editPoints: false,
     history: [],
@@ -82,28 +90,6 @@
 
   function colorFor(region) { return TYPE_COLORS[region.type] || TYPE_COLORS.edge; }
 
-  function pathFor(points, style = "straight", tension = 0.8) {
-    if (!points?.length) return "";
-    if (style === "smooth" && points.length >= 3) return smoothClosedPath(points, tension);
-    return `M ${points.map(([x, y]) => `${round(x)} ${round(y)}`).join(" L ")} Z`;
-  }
-
-  function smoothClosedPath(points, tension = 0.8) {
-    const count = points.length;
-    const tangentScale = clamp(Number(tension) || 0.8, 0.1, 1.4) / 6;
-    let result = `M ${round(points[0][0])} ${round(points[0][1])}`;
-    for (let index = 0; index < count; index += 1) {
-      const previous = points[(index - 1 + count) % count];
-      const current = points[index];
-      const next = points[(index + 1) % count];
-      const afterNext = points[(index + 2) % count];
-      const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
-      const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
-      result += ` C ${round(controlOne[0])} ${round(controlOne[1])}, ${round(controlTwo[0])} ${round(controlTwo[1])}, ${round(next[0])} ${round(next[1])}`;
-    }
-    return `${result} Z`;
-  }
-
   function round(value, digits = 2) {
     const factor = 10 ** digits;
     return Math.round(value * factor) / factor;
@@ -134,6 +120,10 @@
 
   function selectedRegion() {
     return state.regions.find((region) => region.id === state.selectedId) || null;
+  }
+
+  function edgeCurvesSnapshot(region) {
+    return Object.hasOwn(region.metadata, "edgeCurves") ? clone(region.metadata.edgeCurves) : undefined;
   }
 
   function makeSvg(tag, attributes = {}) {
@@ -196,7 +186,7 @@
         if (state.overlayMode === "selected" && region.id !== state.selectedId) return;
         const group = makeSvg("g", { "data-region-id": region.id });
         const path = makeSvg("path", {
-          d: pathFor(region.contour, region.metadata.pathStyle, region.metadata.curveTension),
+          d: contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.edgeCurves),
           fill: colorFor(region),
           "fill-opacity": region.id === state.selectedId ? Math.min(state.opacity + 0.14, 0.8) : state.opacity,
           stroke: colorFor(region),
@@ -215,9 +205,36 @@
         if (region.id === state.selectedId) {
           renderObjectControls(group, region);
           if (state.editPoints) {
+            region.contour.forEach((start, index) => {
+              const end = region.contour[(index + 1) % region.contour.length];
+              const control = region.metadata.edgeCurves?.[index]?.control || [
+                (start[0] + end[0]) / 2,
+                (start[1] + end[1]) / 2,
+              ];
+              group.appendChild(makeSvg("polyline", {
+                points: `${start[0]},${start[1]} ${control[0]},${control[1]} ${end[0]},${end[1]}`,
+                class: "edge-curve-line",
+              }));
+            });
             region.contour.forEach(([x, y], index) => {
               const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" });
               handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
+              group.appendChild(handle);
+            });
+            region.contour.forEach((start, index) => {
+              const end = region.contour[(index + 1) % region.contour.length];
+              const [cx, cy] = region.metadata.edgeCurves?.[index]?.control || [
+                (start[0] + end[0]) / 2,
+                (start[1] + end[1]) / 2,
+              ];
+              const handle = makeSvg("circle", {
+                cx,
+                cy,
+                r: 3.75 / Math.max(state.zoom, 0.3),
+                class: "edge-curve-handle",
+                "aria-label": `Curve edge ${index + 1}`,
+              });
+              handle.addEventListener("pointerdown", (event) => startEdgeCurveDrag(event, region.id, index));
               group.appendChild(handle);
             });
           }
@@ -228,7 +245,7 @@
 
     if (state.drawing && state.draft.length) {
       const draftStyle = state.drawShape === "curved-freeform" ? "smooth" : "straight";
-      const draft = makeSvg("path", { d: pathFor(state.draft, draftStyle, 0.8), class: "draft-line" });
+      const draft = makeSvg("path", { d: contourPath(state.draft, draftStyle, 0.8), class: "draft-line" });
       el["draft-overlay"].appendChild(draft);
       state.draft.forEach(([x, y]) => {
         el["draft-overlay"].appendChild(makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: "vertex-handle" }));
@@ -273,7 +290,13 @@
     if (document.activeElement !== el["region-mode-select"]) el["region-mode-select"].value = region.metadata.mode || "surface";
     if (document.activeElement !== el["region-notes-input"]) el["region-notes-input"].value = region.metadata.humanNotes || "";
     el["point-count"].textContent = region.contour.length;
-    el["area-value"].textContent = `${Math.round(polygonArea(region.contour)).toLocaleString()} px²`;
+    const renderedContour = flattenContour(
+      region.contour,
+      region.metadata.pathStyle,
+      region.metadata.curveTension,
+      region.metadata.edgeCurves,
+    );
+    el["area-value"].textContent = `${Math.round(polygonArea(renderedContour)).toLocaleString()} px²`;
     el["edit-points-button"].classList.toggle("edit-points-active", state.editPoints);
     el["edit-points-button"].textContent = state.editPoints ? "Finish points" : "Edit points";
     el["simplify-curve-button"].disabled = region.contour.length < 6;
@@ -401,7 +424,13 @@
     selectRegion(id);
     const region = selectedRegion();
     const start = clientToSvg(event.clientX, event.clientY);
-    state.dragSession = { pointerId: event.pointerId, start, original: clone(region.contour), changed: false };
+    state.dragSession = {
+      pointerId: event.pointerId,
+      start,
+      original: clone(region.contour),
+      originalEdgeCurves: edgeCurvesSnapshot(region),
+      changed: false,
+    };
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -410,6 +439,14 @@
     event.stopPropagation();
     selectRegion(id);
     state.handleSession = { pointerId: event.pointerId, index, changed: false };
+    el["editor-svg"].setPointerCapture(event.pointerId);
+  }
+
+  function startEdgeCurveDrag(event, id, index) {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    selectRegion(id);
+    state.edgeSession = { pointerId: event.pointerId, index, changed: false };
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -427,6 +464,7 @@
       start,
       center,
       original: clone(region.contour),
+      originalEdgeCurves: edgeCurvesSnapshot(region),
       rotation: Number(region.metadata.rotation || 0),
       bend: Number(region.metadata.bend || 0),
       changed: false,
@@ -445,6 +483,7 @@
       kind: "resize",
       resizeHandle: handle,
       original: clone(region.contour),
+      originalEdgeCurves: edgeCurvesSnapshot(region),
       rotation: Number(region.metadata.rotation || 0),
       changed: false,
     };
@@ -465,11 +504,25 @@
           pointer,
           preserveAspect: event.shiftKey,
         });
+        if (session.originalEdgeCurves !== undefined) {
+          region.metadata.edgeCurves = mapEdgeCurves(
+            session.originalEdgeCurves,
+            session.original.length,
+            (control) => mapResizedPoint(control, session.original, region.contour, session.rotation),
+          );
+        }
       } else if (session.kind === "rotate") {
         const startAngle = Math.atan2(session.start[1] - session.center[1], session.start[0] - session.center[0]);
         const currentAngle = Math.atan2(current[1] - session.center[1], current[0] - session.center[0]);
         const delta = currentAngle - startAngle;
         region.contour = session.original.map((point) => rotatePoint(point, session.center, delta));
+        if (session.originalEdgeCurves !== undefined) {
+          region.metadata.edgeCurves = mapEdgeCurves(
+            session.originalEdgeCurves,
+            session.original.length,
+            (control) => rotatePoint(control, session.center, delta),
+          );
+        }
         region.metadata.rotation = session.rotation + delta;
       } else {
         const dx = current[0] - session.start[0];
@@ -483,9 +536,36 @@
           const influence = 4 * progress * (1 - progress);
           return localToWorld([x, y + localDeltaY * influence], session.center, session.rotation);
         });
+        if (session.originalEdgeCurves !== undefined) {
+          region.metadata.edgeCurves = mapEdgeCurves(
+            session.originalEdgeCurves,
+            session.original.length,
+            (control) => {
+              const [x, y] = worldToLocal(control, session.center, session.rotation);
+              const progress = clamp((x - minX) / width, 0, 1);
+              const influence = 4 * progress * (1 - progress);
+              return localToWorld([x, y + localDeltaY * influence], session.center, session.rotation);
+            },
+          );
+        }
         region.metadata.bend = session.bend + localDeltaY;
       }
       session.changed = true;
+      renderOverlay();
+      renderInspector();
+      return;
+    }
+    if (state.edgeSession?.pointerId === event.pointerId) {
+      const region = selectedRegion();
+      const pointer = clientToSvg(event.clientX, event.clientY);
+      const control = state.snapEnabled ? snapPoint(pointer, event.altKey) : pointer;
+      region.metadata.edgeCurves = setEdgeCurveControl(
+        region.metadata.edgeCurves,
+        state.edgeSession.index,
+        control,
+        region.contour.length,
+      );
+      state.edgeSession.changed = true;
       renderOverlay();
       renderInspector();
       return;
@@ -497,6 +577,18 @@
       const dy = current[1] - sy;
       const region = selectedRegion();
       region.contour = state.dragSession.original.map(([x, y]) => [clamp(x + dx, 0, state.canvas.width), clamp(y + dy, 0, state.canvas.height)]);
+      if (state.dragSession.originalEdgeCurves !== undefined) {
+        const translated = translateEdgeCurves(
+          state.dragSession.originalEdgeCurves,
+          dx,
+          dy,
+          state.dragSession.original.length,
+        );
+        region.metadata.edgeCurves = mapEdgeCurves(translated, region.contour.length, ([x, y]) => [
+          clamp(x, 0, state.canvas.width),
+          clamp(y, 0, state.canvas.height),
+        ]);
+      }
       state.dragSession.changed = true;
       renderOverlay();
       renderInspector();
@@ -521,6 +613,11 @@
       state.transformSession = null;
       render();
     }
+    if (state.edgeSession?.pointerId === event.pointerId) {
+      if (state.edgeSession.changed) commitHistory("Moved edge curve");
+      state.edgeSession = null;
+      render();
+    }
     if (state.dragSession?.pointerId === event.pointerId) {
       if (state.dragSession.changed) commitHistory("Moved region");
       state.dragSession = null;
@@ -541,6 +638,30 @@
     return [cx + dx * cosine - dy * sine, cy + dx * sine + dy * cosine];
   }
 
+  function mapResizedPoint(point, originalContour, resizedContour, rotation) {
+    const center = centroid(originalContour);
+    const originalLocal = originalContour.map((candidate) => worldToLocal(candidate, center, rotation));
+    const resizedLocal = resizedContour.map((candidate) => worldToLocal(candidate, center, rotation));
+    const [sourceMinX, sourceMinY, sourceMaxX, sourceMaxY] = numericBounds(originalLocal);
+    const [targetMinX, targetMinY, targetMaxX, targetMaxY] = numericBounds(resizedLocal);
+    const [x, y] = worldToLocal(point, center, rotation);
+    const mapCoordinate = (value, sourceMin, sourceMax, targetMin, targetMax) => {
+      const sourceSize = sourceMax - sourceMin;
+      if (Math.abs(sourceSize) < 1e-6) return value + targetMin - sourceMin;
+      return targetMin + ((value - sourceMin) / sourceSize) * (targetMax - targetMin);
+    };
+    return localToWorld([
+      mapCoordinate(x, sourceMinX, sourceMaxX, targetMinX, targetMaxX),
+      mapCoordinate(y, sourceMinY, sourceMaxY, targetMinY, targetMaxY),
+    ], center, rotation);
+  }
+
+  function numericBounds(points) {
+    const xs = points.map(([x]) => x);
+    const ys = points.map(([, y]) => y);
+    return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  }
+
   function insertPointOnNearestEdge(event, id) {
     event.preventDefault();
     event.stopPropagation();
@@ -555,6 +676,9 @@
         bestDistance = distance;
         bestIndex = i + 1;
       }
+    }
+    if (Object.hasOwn(region.metadata, "edgeCurves")) {
+      region.metadata.edgeCurves = insertEdgeCurves(region.metadata.edgeCurves, bestIndex, region.contour.length);
     }
     region.contour.splice(bestIndex, 0, point);
     commitHistory("Added control point");
@@ -638,6 +762,13 @@
     copy.id = nextId;
     copy.key = `grip-${String(nextId).padStart(3, "0")}`;
     copy.contour = copy.contour.map(([x, y]) => [clamp(x + 10, 0, state.canvas.width), clamp(y + 10, 0, state.canvas.height)]);
+    if (Object.hasOwn(source.metadata, "edgeCurves")) {
+      const translated = translateEdgeCurves(source.metadata.edgeCurves, 10, 10, source.contour.length);
+      copy.metadata.edgeCurves = mapEdgeCurves(translated, source.contour.length, ([x, y]) => [
+        clamp(x, 0, state.canvas.width),
+        clamp(y, 0, state.canvas.height),
+      ]);
+    }
     copy.metadata.humanNotes = "Duplicated manually";
     state.regions.push(copy);
     state.selectedId = nextId;
@@ -656,6 +787,7 @@
       return;
     }
     region.contour = simplified;
+    delete region.metadata.edgeCurves;
     region.metadata.shapeKind = "freeform";
     region.metadata.pathStyle = "smooth";
     commitHistory("Simplified curve");
@@ -671,6 +803,9 @@
     copy.id = nextId;
     copy.key = `grip-${String(nextId).padStart(3, "0")}`;
     copy.contour = mirrorContour(source.contour, state.canvas.width);
+    if (Object.hasOwn(source.metadata, "edgeCurves")) {
+      copy.metadata.edgeCurves = mirrorEdgeCurves(source.metadata.edgeCurves, source.contour.length, state.canvas.width);
+    }
     copy.metadata.rotation = -Number(source.metadata.rotation || 0);
     copy.metadata.humanNotes = `Mirrored from ${source.key}`;
     state.regions.push(copy);
@@ -704,6 +839,11 @@
     geometryKeys.forEach((key) => { target.metadata[key] = source.metadata[key]; });
     target.metadata.rotation = -Number(source.metadata.rotation || 0);
     target.contour = mirrorContour(source.contour, state.canvas.width);
+    if (Object.hasOwn(source.metadata, "edgeCurves")) {
+      target.metadata.edgeCurves = mirrorEdgeCurves(source.metadata.edgeCurves, source.contour.length, state.canvas.width);
+    } else {
+      delete target.metadata.edgeCurves;
+    }
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
     commitHistory("Mirrored geometry onto region");
@@ -721,7 +861,7 @@
 
   function togglePointEditing() {
     state.editPoints = !state.editPoints;
-    setStatus(state.editPoints ? "Point editing enabled." : "Object controls enabled.");
+    setStatus(state.editPoints ? "Point editing enabled. Drag vertices or edge handles." : "Object controls enabled.");
     render();
   }
 
@@ -1239,6 +1379,7 @@
     if (kind !== "freeform") {
       const [x1, y1, x2, y2] = bounds(region.contour);
       region.contour = shapeContour(kind, [x1, y1], [x2, y2]);
+      delete region.metadata.edgeCurves;
     }
     region.metadata.shapeKind = kind;
     region.metadata.rotation = 0;
