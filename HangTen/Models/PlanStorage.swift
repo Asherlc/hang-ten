@@ -1346,7 +1346,7 @@ enum BuiltInPlanLibraryDefinition {
         "outer-jugs": ["jug-left", "jug-right"],
         "edge-29": ["edge-29-left", "edge-29-right"],
         "edge-19": ["edge-19-left", "edge-19-right"],
-        "flat-slopers": ["sloper-flat-left", "sloper-flat-right"],
+        "flat-slopers": BoardCatalog.compactIIFlatSloperHoldIDs,
         "round-sloper": ["sloper-round-center"],
         "pocket-29-three": ["pocket-29-three-left", "pocket-29-three-right"],
         "pocket-29-two": ["pocket-29-two-left", "pocket-29-two-right"],
