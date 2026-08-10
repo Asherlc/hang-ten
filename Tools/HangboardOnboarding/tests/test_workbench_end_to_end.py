@@ -117,8 +117,6 @@ def test_canonical_board_promotes_locally_then_validates_without_git_side_effect
 
     assert preview.preview_token
     assert [item.path for item in preview.files] == list(_PROMOTION_TARGETS)
-    assert [item.path for item in preview.files[:2]] == list(_PROMOTION_TARGETS[:2])
-    assert [item.path for item in preview.files[2:]] == list(_PROMOTION_TARGETS[2:])
     assert preview.issues == ()
     assert _promotion_target_contents(repository_root) == before_targets
 
@@ -144,18 +142,18 @@ def test_canonical_board_promotes_locally_then_validates_without_git_side_effect
     ).read_text(encoding="utf-8")
     plan_library = checks["plan-library"]
     if plan_library.status == "passed":
-        assert report.overall_status == "passed"
-    else:
-        assert report.overall_status == "failed"
-        assert plan_library.status == "failed"
-        assert "fingerConfiguration: step.fingerConfiguration" in "\n".join(
-            plan_library.details
-        )
+        pytest.fail("plan-library unexpectedly passed; remove the known-failure marker")
+    assert report.overall_status == "failed"
+    assert plan_library.status == "failed"
+    assert "fingerConfiguration: step.fingerConfiguration" in "\n".join(
+        plan_library.details
+    )
     assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
     assert _promotion_git(repository_root, "remote") == remotes_before
     assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
         _PROMOTION_TARGETS
     )
+    pytest.xfail("plan-library validation has a known Swift compilation failure")
 
 
 def test_promotion_conflict_leaves_every_target_at_its_preexisting_contents(
@@ -1289,7 +1287,8 @@ def _promotion_repository(tmp_path: Path) -> Path:
         target = repository_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(Path(__file__).resolve().parents[3] / relative, target)
-    _promotion_git(repository_root, "init", "--initial-branch=main")
+    _promotion_git(repository_root, "init")
+    _promotion_git(repository_root, "checkout", "-b", "main")
     _promotion_git(repository_root, "config", "user.name", "Hang Ten Tests")
     _promotion_git(repository_root, "config", "user.email", "tests@example.invalid")
     _promotion_git(repository_root, "add", ".")
@@ -1308,8 +1307,7 @@ def _promotion_git(repository_root: Path, *args: str) -> str:
     return subprocess.run(
         ["git", "-C", str(repository_root), *args],
         check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         text=True,
     ).stdout.strip()
 
