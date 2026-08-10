@@ -54,6 +54,18 @@ def test_complete_approved_run_renders_the_known_native_contract(tmp_path: Path)
     _assert_valid_semantic_hold_initializer(preview.files[2].proposed_text)
 
 
+@pytest.mark.parametrize("ratio", (float("nan"), float("inf"), float("-inf")))
+def test_profile_reader_rejects_non_finite_aspect_ratios(tmp_path: Path, ratio: float) -> None:
+    """Non-finite ratios must not reach native layout generation."""
+    run_root = _copied_run(tmp_path)
+    profile = _read_json(run_root / "ios-promotion-profile.json")
+    profile["aspectRatio"] = ratio
+    _write_json(run_root / "ios-promotion-profile.json", profile)
+
+    with pytest.raises(ValueError, match="finite positive"):
+        read_promotion_profile(run_root)
+
+
 def test_preview_is_deterministic_and_can_be_saved_only_with_its_token(tmp_path: Path) -> None:
     """Changing proposed content or its token must prevent an accidental write."""
     run_root = _copied_run(tmp_path)

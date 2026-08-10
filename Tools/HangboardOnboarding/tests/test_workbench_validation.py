@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 from subprocess import CompletedProcess
@@ -42,9 +43,10 @@ def test_validation_reports_package_parity_and_bounded_plan_library_check(
     assert [check.check_id for check in report.checks] == [
         "package-readiness",
         "hold-id-parity",
+        "semantic-routine-resolution",
         "plan-library",
     ]
-    assert [check.status for check in report.checks] == ["passed", "passed", "passed"]
+    assert [check.status for check in report.checks] == ["passed", "passed", "passed", "passed"]
     assert calls == [
         (
             [str(repository_root / "scripts/export-plan-library.sh"), "--check"],
@@ -55,6 +57,41 @@ def test_validation_reports_package_parity_and_bounded_plan_library_check(
     assert service.get_validation_report(
         board_id, expected_revision_id=revision_id
     ) == report
+
+
+def test_validation_fails_closed_when_an_approved_semantic_group_cannot_resolve(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A semantic group without a deterministic Stage 4 hold mapping blocks readiness."""
+    service, board_id, revision_id, repository_root = _validation_service(tmp_path)
+    view = service.get_board(board_id, revision_id=revision_id)
+    stage2_path = view.run_root / "stages/02/attempt-0001/stage-2-regions.json"
+    stage2 = json.loads(stage2_path.read_text(encoding="utf-8"))
+    del stage2["regions"][5]["metadata"]["depthMm"]
+    stage2_path.write_text(json.dumps(stage2, indent=2) + "\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        workbench_validation.subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("plan-library check must not run after semantic resolution fails"),
+    )
+
+    report = workbench_validation.build_validation_report(
+        view.run_root,
+        repository_root,
+        board_id=board_id,
+        revision_id=revision_id,
+    )
+
+    assert report.overall_status == "failed"
+    assert [check.check_id for check in report.checks] == [
+        "package-readiness",
+        "hold-id-parity",
+        "semantic-routine-resolution",
+        "plan-library",
+    ]
+    assert [check.status for check in report.checks] == ["passed", "passed", "failed", "not_run"]
+    assert "cannot derive a semantic mapping for edge-29-left" in report.checks[2].details
 
 
 def test_validation_reports_invalid_package_without_changing_checkout(

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -52,9 +53,10 @@ def profile_from_payload(value: object) -> IosPromotionProfile:
     if (
         isinstance(aspect_ratio, bool)
         or not isinstance(aspect_ratio, (int, float))
+        or not math.isfinite(aspect_ratio)
         or aspect_ratio <= 0
     ):
-        raise ValueError("profile aspectRatio must be positive")
+        raise ValueError("profile aspectRatio must be finite positive")
     decoded["aspect_ratio"] = float(aspect_ratio)
     decoded["_source_bytes"] = json.dumps(
         dict(value), sort_keys=True, separators=(",", ":"), ensure_ascii=False

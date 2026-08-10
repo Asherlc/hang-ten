@@ -10,6 +10,7 @@ import pytest
 
 from hangboard_vectorizer.board_library import RepositoryBoardLibrary
 from hangboard_vectorizer.ios_promotion import read_promotion_profile
+from hangboard_vectorizer.workbench_promotion import profile_from_payload
 import hangboard_vectorizer.workbench as workbench_module
 from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
 from hangboard_vectorizer.workbench_store import WorkbenchStore
@@ -27,6 +28,16 @@ TARGETS = (
     "HangTen/Models/PlanStorage.swift",
     "HangTen/Resources/PlanLibrary.json",
 )
+
+
+@pytest.mark.parametrize("ratio", (float("nan"), float("inf"), float("-inf")))
+def test_profile_payload_rejects_non_finite_aspect_ratios(ratio: float) -> None:
+    """The browser adapter must not admit ratios that JSON decoders can represent."""
+    payload = json.loads(PROFILE_SOURCE.read_text(encoding="utf-8"))
+    payload["aspectRatio"] = ratio
+
+    with pytest.raises(ValueError, match="finite positive"):
+        profile_from_payload(payload)
 
 
 def test_preview_is_bound_to_the_active_revision_without_writing_checkout(

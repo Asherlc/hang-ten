@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from difflib import unified_diff
 from hashlib import sha256
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -97,8 +98,13 @@ def read_promotion_profile(run_root: Path) -> IosPromotionProfile:
             raise ValueError(f"iOS promotion profile {source} must be a non-empty string")
         values[destination] = value
     ratio = document["aspectRatio"]
-    if not isinstance(ratio, (int, float)) or isinstance(ratio, bool) or ratio <= 0:
-        raise ValueError("iOS promotion profile aspectRatio must be positive")
+    if (
+        not isinstance(ratio, (int, float))
+        or isinstance(ratio, bool)
+        or not math.isfinite(ratio)
+        or ratio <= 0
+    ):
+        raise ValueError("iOS promotion profile aspectRatio must be finite positive")
     values["aspect_ratio"] = float(ratio)
     return IosPromotionProfile(**values)
 
