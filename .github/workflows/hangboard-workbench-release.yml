@@ -14,8 +14,7 @@ permissions:
 
 concurrency:
   group: hangboard-workbench-release-${{ github.ref }}
-  cancel-in-progress: false
-  queue: max
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -35,6 +34,8 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
 
       - name: Install workbench build dependencies
         run: |
