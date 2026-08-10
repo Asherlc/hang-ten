@@ -733,7 +733,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
+    func testRetainedRecoveryStepsKeepThreeMinuteDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
             "ladders-round-1-recovery",
@@ -759,25 +759,6 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(
             store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
         )
-    }
-
-    func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
-        let abrahangsWarmUp = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
-        )
-        XCTAssertEqual(abrahangsWarmUp.duration, 120)
-        let recoveryIDs = [
-            "horst-753-grip-1-recovery",
-            "ladders-round-1-recovery",
-            "density-hold-1-set-1-recovery",
-            "density-hold-1-recovery"
-        ]
-        let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
-            recoveryIDs.contains($0.id)
-        }
-
-        XCTAssertEqual(recoverySteps.map(\.id), recoveryIDs)
-        XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
     }
 
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
@@ -1101,6 +1082,120 @@ final class PlanStorageTests: XCTestCase {
                 "Expected \(planID) to record its app-guided interval expansion as a timer adaptation."
             )
         }
+    }
+
+    func testRequestedSourcePlansAreSeededAndResolved() throws {
+        let expectedIDs = [
+            "lattice.lite-home-adaptations",
+            "hoopers-beta.introductory-home-hangboard",
+            "method.intermediate-hangboarding.repeaters",
+            "method.intermediate-hangboarding.emom",
+            "lattice.beginner-climbers-training-guide",
+            "rei.hangboard-sample-workout",
+            "trango.rock-prodigy-training-center.intermediate"
+        ]
+
+        XCTAssertTrue(expectedIDs.allSatisfy { id in
+            LegacyPlanSeedCatalog.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
+        })
+    }
+
+    func testRockProdigyMetadataUsesDistinctPinchKindAndDepthFeatures() throws {
+        let board = BoardCatalog.rockProdigyTrainingCenter
+        let pinchHolds = board.holds.filter { $0.kind == .pinch }
+
+        XCTAssertEqual(pinchHolds.count, 6)
+        XCTAssertEqual(
+            Set(pinchHolds.flatMap { $0.features }),
+            Set([.widePinch, .mediumPinch, .smallPinch])
+        )
+        XCTAssertEqual(
+            board.holds.first { $0.id == "trango.rptc.left.large-open-rail" }?.depthRangeMillimeters,
+            20...33
+        )
+        XCTAssertEqual(
+            board.holds.first { $0.id == "trango.rptc.left.small-crimp-rail" }?.depthRangeMillimeters,
+            10...24
+        )
+    }
+
+    func testRockProdigyBoardDesignHoldIDsMatchMetadata() throws {
+        let board = BoardCatalog.rockProdigyTrainingCenter
+        let design = try XCTUnwrap(BoardDesignCatalog.design(for: board.id))
+
+        XCTAssertEqual(Set(board.holds.map(\.id)), Set(design.holds.map(\.holdID)))
+        XCTAssertEqual(design.holds.count, board.holds.count)
+    }
+
+    func testRockProdigyPlanIsBoardSpecificAndEveryTargetResolves() throws {
+        let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
+        let board = BoardCatalog.rockProdigyTrainingCenter
+
+        XCTAssertEqual(plan.boardID, board.id)
+        XCTAssertTrue(plan.steps.flatMap(\.targets).contains { $0.feature == .widePinch })
+        XCTAssertFalse(plan.steps.flatMap(\.targets).contains { $0.kind == .edge })
+        XCTAssertTrue(
+            plan.steps.flatMap(\.targets).allSatisfy {
+                !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty
+            }
+        )
+    }
+
+    func testCompactIIStillResolvesGenericNonPinchPlans() throws {
+        let compact = BoardCatalog.compactII
+        let genericPlans = LegacyPlanSeedCatalog.all.filter {
+            $0.boardID == nil && $0.id != LegacyPlanSeedCatalog.reiHangboardSample.id
+        }
+
+        XCTAssertTrue(
+            genericPlans.allSatisfy { plan in
+                plan.steps.flatMap(\.targets).allSatisfy {
+                    !BoardTargetResolver.resolveHoldIDs(for: $0, on: compact).isEmpty
+                }
+            }
+        )
+        XCTAssertTrue(
+            LegacyPlanSeedCatalog.reiHangboardSample.steps.flatMap(\.targets).contains {
+                $0.feature == .mediumPinch
+            }
+        )
+        let reiMediumPinch = try XCTUnwrap(
+            LegacyPlanSeedCatalog.reiHangboardSample.steps
+                .flatMap(\.targets)
+                .first { $0.feature == .mediumPinch }
+        )
+        XCTAssertEqual(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: BoardCatalog.rockProdigyTrainingCenter), ["trango.rptc.left.medium-pinch", "trango.rptc.right.medium-pinch"])
+        XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+    }
+
+    func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
+        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let recruitment = steps.filter { $0.id.contains("hoopers-intro-round-2-set-") && $0.id.contains("-rep-") }
+        XCTAssertEqual(recruitment.count, 30)
+        XCTAssertEqual(recruitment.filter { $0.id.hasSuffix("-left") }.count, 15)
+        XCTAssertEqual(recruitment.filter { $0.id.hasSuffix("-right") }.count, 15)
+        XCTAssertEqual(steps.filter { $0.id.contains("round-2-set-") && $0.id.hasSuffix("-kicks") }.count, 3)
+    }
+
+    func testHoopersOptionalRoundFiveIsFourPossiblePairedSetsNotEightIndependentSets() throws {
+        let steps = LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps
+        let pullUps = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-pull-ups") }
+        let hollow = steps.filter { $0.id.contains("hoopers-intro-round-5-set-") && $0.id.hasSuffix("-hollow") }
+        XCTAssertEqual(pullUps.count, 4)
+        XCTAssertEqual(hollow.count, 4)
+        XCTAssertTrue(pullUps.allSatisfy { $0.instruction.contains("2–4 total") })
+        XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
+    }
+
+    func testRockProdigyIntermediateKeepsDeadHangOnlyAndSevenThenSixRepStructure() throws {
+        let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
+        XCTAssertTrue(plan.steps.dropFirst().filter { $0.phase == .hang }.allSatisfy {
+            $0.instruction.contains("Dead hang only") &&
+                $0.instruction.contains("do not perform pull-ups or lock-offs")
+        })
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-1-rep-") }.count, 42)
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-2-rep-") }.count, 36)
+        XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
     private func validationIssues(

@@ -73,4 +73,3 @@ from the JSON package.
 - The iOS unit test suite and simulator Debug build validate that routines and
   board selection still resolve the Compact II board.
 - Existing onboarding tests and the accepted replay fixture remain unchanged.
-
