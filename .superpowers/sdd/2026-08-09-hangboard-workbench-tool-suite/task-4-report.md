@@ -32,3 +32,8 @@ Warnings:
 - Made late preview, refresh, and save responses discard themselves after a context switch, so they cannot repopulate the newly active board’s promotion state.
 - Tightened promotion rendering to require a matching board ID and revision before displaying a preview or the `Saved locally` state.
 - Added regression coverage for a board switch after save, profile reset, and a late preview result after a board-only switch with the same revision ID.
+
+## Final review fix
+
+- Synchronized the active board/revision context before `setProfileField()` merges a field patch, so the first edit after a board switch starts from a blank profile instead of carrying fields from the previous board.
+- Added regression coverage for that immediate first-field edit and for late refresh and save completions after a context switch; all leave the new context empty and unmodified.

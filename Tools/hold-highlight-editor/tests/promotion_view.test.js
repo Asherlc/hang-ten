@@ -167,6 +167,69 @@ test("switching boards resets the explicit promotion profile", () => {
   });
 });
 
+test("the first profile field edit after a board switch starts from a blank profile", () => {
+  const { controller, setSuite } = controllerHarness();
+  controller.setProfile(profile);
+
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
+  controller.setProfileField("boardID", "metolius.wood-grips.deluxe");
+
+  assert.deepEqual(controller.getState().profile, {
+    schemaVersion: 1,
+    boardID: "metolius.wood-grips.deluxe",
+    manufacturer: "",
+    name: "",
+    subtitle: "",
+    dimensions: "",
+    aspectRatio: "",
+    productURL: "",
+  });
+});
+
+test("a late refresh completion after a board switch leaves the new context empty", async () => {
+  let resolveRefresh;
+  const { controller, setSuite } = controllerHarness({
+    client: { getPromotionPreview: () => new Promise((resolve) => { resolveRefresh = resolve; }) },
+  });
+
+  const pending = controller.refreshPreview();
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
+  resolveRefresh(preview());
+  await pending;
+
+  const state = controller.getState();
+  assert.equal(state.preview, null);
+  assert.equal(state.busy, false);
+  assert.equal(state.error, "");
+  assert.equal(state.profile.boardID, "");
+});
+
+test("a late save completion after a board switch leaves the new context empty", async () => {
+  let resolveSave;
+  const fresh = preview();
+  const { controller, setSuite } = controllerHarness({
+    client: {
+      async getPromotionPreview() { return fresh; },
+      savePromotion() { return new Promise((resolve) => { resolveSave = resolve; }); },
+    },
+  });
+  controller.setProfile(profile);
+  controller.replacePreview(fresh);
+
+  const pending = controller.saveLocally();
+  await new Promise((resolve) => setImmediate(resolve));
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
+  resolveSave({ saved: true, paths: fresh.files.map((file) => file.path) });
+  await pending;
+
+  const state = controller.getState();
+  assert.equal(state.preview, null);
+  assert.equal(state.busy, false);
+  assert.equal(state.saved, false);
+  assert.equal(state.error, "");
+  assert.equal(state.profile.boardID, "");
+});
+
 test("a dirty target returned by preview keeps save disabled", async () => {
   const dirty = preview({ issues: [{ path: "HangTen/Models/TrainingModels.swift", code: "target_changed", message: "Target changed since main." }] });
   const { controller } = controllerHarness({ client: { async previewPromotion() { return dirty; } } });

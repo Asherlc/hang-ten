@@ -210,6 +210,7 @@
 
     function setProfileField(field, value) {
       if (!PROFILE_FIELDS.some(({ key }) => key === field)) throw new RangeError(`Unknown promotion profile field: ${String(field)}`);
+      synchronizeContext();
       return setProfile({ ...state.profile, [field]: value });
     }
 
