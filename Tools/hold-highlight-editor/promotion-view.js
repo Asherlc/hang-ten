@@ -122,13 +122,21 @@
     return { suite, board, revisionId };
   }
 
+  function contextKey({ board, revisionId }) {
+    return board?.boardId && revisionId ? JSON.stringify([board.boardId, revisionId]) : null;
+  }
+
   function boardIsReady(board) {
     return board?.state === "complete" && board?.staleFromStage == null;
   }
 
-  function boundPreview(value, revisionId) {
+  function boundPreview(value, context) {
     if (!value || typeof value !== "object") return null;
-    return { ...value, revisionId: value.revisionId || revisionId };
+    return {
+      ...value,
+      boardId: value.boardId || context.board?.boardId,
+      revisionId: value.revisionId || context.revisionId,
+    };
   }
 
   function createPromotionController({ client, getSuiteState, onPromotion = () => {}, render = () => {} } = {}) {
@@ -137,7 +145,9 @@
     }
     if (typeof getSuiteState !== "function") throw new TypeError("getSuiteState must be a function");
 
+    let operation = 0;
     let state = {
+      contextKey: contextKey(activeContext(getSuiteState)),
       profile: blankProfile(),
       preview: null,
       previewProfileSignature: null,
@@ -145,21 +155,42 @@
       saved: false,
       error: "",
     };
-    let operation = 0;
 
     function emit() { render(getState()); }
 
-    function getState() { return Object.freeze({ ...state, profile: { ...state.profile } }); }
+    function resetContext(context) {
+      operation += 1;
+      state = {
+        contextKey: contextKey(context),
+        profile: blankProfile(),
+        preview: null,
+        previewProfileSignature: null,
+        busy: false,
+        saved: false,
+        error: "",
+      };
+    }
+
+    function synchronizeContext() {
+      const context = activeContext(getSuiteState);
+      if (state.contextKey !== contextKey(context)) resetContext(context);
+      return context;
+    }
+
+    function getState() {
+      synchronizeContext();
+      return Object.freeze({ ...state, profile: { ...state.profile } });
+    }
 
     function contextIsCurrent(context, token) {
       const current = activeContext(getSuiteState);
       return token === operation
-        && current.board?.boardId === context.board?.boardId
-        && current.revisionId === context.revisionId;
+        && contextKey(current) === contextKey(context)
+        && state.contextKey === contextKey(context);
     }
 
     function saveState() {
-      const { board, revisionId } = activeContext(getSuiteState);
+      const { board, revisionId } = synchronizeContext();
       return saveActionState({
         preview: state.preview,
         busy: state.busy,
@@ -171,6 +202,7 @@
     }
 
     function setProfile(profile) {
+      synchronizeContext();
       state = { ...state, profile: normalizedProfile(profile), saved: false, error: "" };
       emit();
       return getState();
@@ -182,8 +214,8 @@
     }
 
     function replacePreview(value) {
-      const { revisionId } = activeContext(getSuiteState);
-      const preview = boundPreview(value, revisionId);
+      const context = synchronizeContext();
+      const preview = boundPreview(value, context);
       state = {
         ...state,
         preview,
@@ -196,20 +228,21 @@
     }
 
     function setError(message) {
+      synchronizeContext();
       state = { ...state, error: message, busy: false };
       emit();
       return getState();
     }
 
     async function refreshPreview() {
-      const context = activeContext(getSuiteState);
+      const context = synchronizeContext();
       if (!context.board || !context.revisionId) return setError("Choose an active board revision before refreshing promotion preview.");
       const token = ++operation;
       state = { ...state, busy: true, error: "" };
       emit();
       try {
-        const refreshed = boundPreview(await client.getPromotionPreview(context.board.boardId, context.revisionId), context.revisionId);
-        if (!contextIsCurrent(context, token)) return setError("The active board revision changed; refresh promotion preview.");
+        const refreshed = boundPreview(await client.getPromotionPreview(context.board.boardId, context.revisionId), context);
+        if (!contextIsCurrent(context, token)) return getState();
         if (!refreshed) {
           state = { ...state, busy: false, error: "No saved preview exists for this active revision." };
           emit();
@@ -227,12 +260,13 @@
         emit();
         return getState();
       } catch (error) {
+        if (!contextIsCurrent(context, token)) return getState();
         return setError(error?.message || "Could not refresh promotion preview.");
       }
     }
 
     async function generatePreview() {
-      const context = activeContext(getSuiteState);
+      const context = synchronizeContext();
       if (!boardIsReady(context.board)) return setError("The active board must be complete and approved before promotion.");
       if (!isPromotionProfileComplete(state.profile)) return setError("Complete the explicit iOS promotion profile before generating a preview.");
       const token = ++operation;
@@ -242,9 +276,9 @@
       try {
         const preview = boundPreview(
           await client.previewPromotion(context.board.boardId, context.revisionId, profile, "main"),
-          context.revisionId,
+          context,
         );
-        if (!contextIsCurrent(context, token)) return setError("The active board revision changed; refresh promotion preview.");
+        if (!contextIsCurrent(context, token)) return getState();
         state = {
           ...state,
           busy: false,
@@ -257,6 +291,7 @@
         emit();
         return getState();
       } catch (error) {
+        if (!contextIsCurrent(context, token)) return getState();
         return setError(error?.message || "Could not generate promotion preview.");
       }
     }
@@ -264,14 +299,14 @@
     async function saveLocally() {
       const action = saveState();
       if (action.disabled) return setError(action.reason);
-      const context = activeContext(getSuiteState);
+      const context = synchronizeContext();
       const token = ++operation;
       const profile = normalizedProfile(state.profile);
       state = { ...state, busy: true, error: "" };
       emit();
       try {
-        const refreshed = boundPreview(await client.getPromotionPreview(context.board.boardId, context.revisionId), context.revisionId);
-        if (!contextIsCurrent(context, token)) return setError("The active board revision changed; refresh promotion preview.");
+        const refreshed = boundPreview(await client.getPromotionPreview(context.board.boardId, context.revisionId), context);
+        if (!contextIsCurrent(context, token)) return getState();
         if (refreshed?.previewToken !== state.preview?.previewToken) {
           state = {
             ...state,
@@ -299,7 +334,7 @@
         state = { ...state, preview: refreshed, busy: true };
         emit();
         const result = await client.savePromotion(context.board.boardId, context.revisionId, profile, refreshed.previewToken);
-        if (!contextIsCurrent(context, token)) return setError("The active board revision changed; refresh promotion preview.");
+        if (!contextIsCurrent(context, token)) return getState();
         const saved = result?.saved === true;
         const promoted = saved ? { ...refreshed, saved: true } : refreshed;
         state = { ...state, preview: promoted, busy: false, saved, error: saved ? "" : "The server did not confirm the local save." };
@@ -307,6 +342,7 @@
         emit();
         return getState();
       } catch (error) {
+        if (!contextIsCurrent(context, token)) return getState();
         state = { ...state, busy: false, error: error?.message || "Could not save promotion locally." };
         emit();
         return getState();
@@ -338,7 +374,13 @@
     const board = suite?.activeBoard || null;
     const expectedRevisionId = suite?.activeRevision || board?.revisionId || null;
     const view = promotion || {};
-    const preview = view.preview?.revisionId === expectedRevisionId ? view.preview : null;
+    const matchesContext = view.contextKey === contextKey({ board, revisionId: expectedRevisionId });
+    const preview = matchesContext
+      && view.preview?.boardId === board?.boardId
+      && view.preview?.revisionId === expectedRevisionId
+      ? view.preview
+      : null;
+    const saved = matchesContext && preview && view.saved;
     const profile = normalizedProfile(view.profile);
     const ready = boardIsReady(board);
     const profileReady = isPromotionProfileComplete(profile);
@@ -353,8 +395,8 @@
     if (identity) identity.textContent = board ? `${board.productName || board.boardId} · Revision ${expectedRevisionId} · baseline main` : "Choose one active board revision to begin promotion.";
     if (readiness) readiness.textContent = ready ? "Ready: Stage 4 is complete and approved." : "Blocked: complete and approve Stage 4 in Onboard before promotion.";
     if (statusNode) {
-      statusNode.textContent = view.saved ? "Saved locally" : status.label;
-      statusNode.className = `promotion-status ${view.saved ? "saved" : status.status}`;
+      statusNode.textContent = saved ? "Saved locally" : status.label;
+      statusNode.className = `promotion-status ${saved ? "saved" : status.status}`;
     }
     if (error) {
       error.textContent = view.error || "";
@@ -374,7 +416,7 @@
     if (saveButton) {
       saveButton.disabled = action.disabled;
       saveButton.title = action.reason;
-      saveButton.textContent = view.busy ? "Working…" : view.saved ? "Saved locally" : "Save locally";
+      saveButton.textContent = view.busy ? "Working…" : saved ? "Saved locally" : "Save locally";
     }
 
     const issueList = root.querySelector("#promotion-issues");

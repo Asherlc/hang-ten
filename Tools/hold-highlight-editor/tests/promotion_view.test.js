@@ -118,19 +118,53 @@ test("preview generation blocks a missing explicit profile before a job is start
   assert.match(controller.getState().error, /explicit iOS promotion profile/i);
 });
 
-test("preview result from a stale board revision is ignored", async () => {
+test("preview result from a stale board context is discarded without repopulating state", async () => {
   let resolvePreview;
   const { controller, setSuite } = controllerHarness({
     client: { previewPromotion: () => new Promise((resolve) => { resolvePreview = resolve; }) },
   });
   controller.setProfile(profile);
   const pending = controller.generatePreview();
-  setSuite(suite({ state: "complete", boardId: "board-7", revisionId: "revision-2" }));
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
   resolvePreview(preview());
   await pending;
 
   assert.equal(controller.getState().preview, null);
-  assert.match(controller.getState().error, /revision changed/i);
+  assert.equal(controller.getState().saved, false);
+  assert.equal(controller.getState().error, "");
+  assert.equal(controller.getState().profile.boardID, "");
+});
+
+test("switching boards after a local save clears the saved promotion state", () => {
+  const { controller, setSuite } = controllerHarness();
+  controller.setProfile(profile);
+  controller.replacePreview(preview({ saved: true }));
+
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
+  const state = controller.getState();
+
+  assert.equal(state.preview, null);
+  assert.equal(state.saved, false);
+  assert.equal(state.error, "");
+});
+
+test("switching boards resets the explicit promotion profile", () => {
+  const { controller, setSuite } = controllerHarness();
+  controller.setProfile(profile);
+
+  setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
+  const state = controller.getState();
+
+  assert.deepEqual(state.profile, {
+    schemaVersion: 1,
+    boardID: "",
+    manufacturer: "",
+    name: "",
+    subtitle: "",
+    dimensions: "",
+    aspectRatio: "",
+    productURL: "",
+  });
 });
 
 test("a dirty target returned by preview keeps save disabled", async () => {
