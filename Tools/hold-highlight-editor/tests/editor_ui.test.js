@@ -8,6 +8,8 @@ const {
   beginEdgeCurveSession,
   updateEdgeCurveSession,
   edgeCurveHistoryLabel,
+  edgeCurveFeedback,
+  shouldRenderEdgeCurveHandle,
   canStartRegionDrag,
 } = require("../curve-gesture-model.js");
 
@@ -88,10 +90,29 @@ test("edge sessions reject invalid pointer, edge, and control inputs", () => {
   );
   assert.throws(
     () => beginEdgeCurveSession({ pointerId: 17, index: 3, edgeCurves: {}, pointCount: 3 }),
-    /edge/i,
+    { message: "Invalid edge curve index: 3." },
   );
   const session = beginEdgeCurveSession({ pointerId: 17, index: 0, edgeCurves: {}, pointCount: 3 });
   assert.throws(() => updateEdgeCurveSession(session, {}, [Infinity, 4]), /finite/i);
+});
+
+test("edge-curve handles avoid short projected edges while remaining available on longer edges", () => {
+  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [8, 0], 1), false);
+  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [12, 0], 1), true);
+  assert.equal(shouldRenderEdgeCurveHandle([0, 0], [8, 0], 2), true);
+});
+
+test("smooth edge curves explain their rendering override", () => {
+  const curvedSmoothRegion = {
+    metadata: { pathStyle: "smooth", edgeCurves: { 0: { kind: "quadratic", control: [5, -4] } } },
+  };
+
+  assert.equal(
+    edgeCurveFeedback(curvedSmoothRegion),
+    "Per-edge curves override smooth rendering; uncurved edges are straight and tension is ignored.",
+  );
+  assert.equal(edgeCurveFeedback({ metadata: { pathStyle: "smooth" } }), null);
+  assert.equal(edgeCurveFeedback({ metadata: { pathStyle: "straight", edgeCurves: {} } }), null);
 });
 
 test("editor exposes curve-editing affordances", () => {
@@ -102,8 +123,11 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(html, /Edit points/);
   assert.match(app, /edge-curve-handle/);
   assert.match(app, /startEdgeCurveDrag/);
+  assert.match(app, /shouldRenderEdgeCurveHandle/);
+  assert.match(app, /edgeCurveFeedback/);
   assert.match(css, /\.edge-curve-handle/);
   assert.match(html, /src="curve-gesture-model\.js"/);
+  assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
 });
 

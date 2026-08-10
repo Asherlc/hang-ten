@@ -200,13 +200,13 @@
     if (!Array.isArray(editableContour) || editableContour.length < 3) {
       throw new Error("Editable contour must contain at least three finite points.");
     }
-    return editableContour.map((point) => {
+    return editableContour.map((point, index) => {
       if (!Array.isArray(point) || point.length !== 2) {
-        throw new Error("Editable contour must contain at least three finite points.");
+        throw new Error(`Editable contour point ${index} must contain exactly two coordinates.`);
       }
       const normalized = point.map(Number);
       if (!normalized.every(Number.isFinite)) {
-        throw new Error("Editable contour must contain at least three finite points.");
+        throw new Error(`Editable contour point ${index} must contain two finite coordinates.`);
       }
       return normalized;
     });

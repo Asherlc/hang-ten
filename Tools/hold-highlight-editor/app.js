@@ -21,6 +21,8 @@
     beginEdgeCurveSession,
     updateEdgeCurveSession,
     edgeCurveHistoryLabel,
+    edgeCurveFeedback,
+    shouldRenderEdgeCurveHandle,
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
 
@@ -228,6 +230,7 @@
             });
             region.contour.forEach((start, index) => {
               const end = region.contour[(index + 1) % region.contour.length];
+              if (!shouldRenderEdgeCurveHandle(start, end, state.zoom)) return;
               const [cx, cy] = region.metadata.edgeCurves?.[index]?.control || [
                 (start[0] + end[0]) / 2,
                 (start[1] + end[1]) / 2,
@@ -458,6 +461,8 @@
       edgeCurves: region.metadata.edgeCurves,
       pointCount: region.contour.length,
     });
+    const feedback = edgeCurveFeedback(region);
+    if (feedback) setStatus(feedback);
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -577,6 +582,8 @@
       );
       region.metadata.edgeCurves = update.edgeCurves;
       state.edgeSession = { ...state.edgeSession, changed: update.changed };
+      const feedback = edgeCurveFeedback(region);
+      if (feedback) setStatus(feedback);
       renderOverlay();
       renderInspector();
       return;

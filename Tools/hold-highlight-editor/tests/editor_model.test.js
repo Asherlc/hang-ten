@@ -414,9 +414,20 @@ test("normalizePipelineDocument rejects malformed editable contours", () => {
     }],
   };
 
-  assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /editable contour/i);
+  assert.throws(
+    () => normalizePipelineDocument(document, { width: 10, height: 10 }),
+    { message: "Editable contour point 1 must contain two finite coordinates." },
+  );
   document.regions[0].metadata.editableContour = [[0, 0], [10, 0]];
-  assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /editable contour/i);
+  assert.throws(
+    () => normalizePipelineDocument(document, { width: 10, height: 10 }),
+    { message: "Editable contour must contain at least three finite points." },
+  );
+  document.regions[0].metadata.editableContour = [[0, 0], [10, 0, 4], [10, 10]];
+  assert.throws(
+    () => normalizePipelineDocument(document, { width: 10, height: 10 }),
+    { message: "Editable contour point 1 must contain exactly two coordinates." },
+  );
 });
 
 test("buildEditedDocument exports flattened geometry and editable edge metadata", () => {
