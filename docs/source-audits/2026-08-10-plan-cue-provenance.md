@@ -10,7 +10,7 @@ timer structure, a value from a published range, or a Compact II target; the
 catalog labels that choice as an app adaptation. `remove` means the field is
 absent because the linked source did not support it.
 
-## Field decisions for all 13 built-in plans
+## Field decisions for all 20 built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
@@ -27,6 +27,13 @@ absent because the linked source did not support it.
 | `coach.bechtel-three-six-nine` | coach | [Steve Bechtel 3–6–9 ladder protocol](https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/) | title, instruction, duration: 3/6/9 sequence and source loading cue | subtitle, accessory, target, count, interval: three rounds and exact rest values selected from source ranges, plus Compact II targeting | warmUp, cooldown, gripType, fingerConfiguration |
 | `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, target, count, duration, interval: 30/15, three reps, three-minute recoveries, set count, and Compact II holds are labeled app choices within the published ranges | warmUp, cooldown, gripType, fingerConfiguration |
 | `device.zlagboard-sixty-sixty` | device | [Zlagboard endurance protocol](https://strengthclimbing.com/zlagboard-forearm-endurance-workout/) | title, instruction, accessory, count, duration, interval: ten 60/60 sets | subtitle, target: Compact II edge mapping | warmUp, cooldown, gripType, fingerConfiguration; unsupported feet-supported copy was removed |
+| `lattice.lite-home-adaptations` | manufacturer | [Lattice Training · Lite Guide to Home Adaptations](https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf) | title and the source sample week's named tasks and frequencies | subtitle, instruction, accessory, target, count, duration, interval, gripType: app rows, preview durations, semantic board targets, and structured grip cues are not presented as source prescriptions | warmUp, cooldown, fingerConfiguration |
+| `hoopers-beta.introductory-home-hangboard` | manufacturer | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, target, count, duration, interval, gripType: the app splits the source routine into guided rows and semantic targets | warmUp, cooldown, fingerConfiguration |
+| `method.intermediate-hangboarding.repeaters` | manufacturer | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+| `method.intermediate-hangboarding.emom` | manufacturer | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+| `lattice.beginner-climbers-training-guide` | manufacturer | [Lattice Training · The Beginner Climber's Training Guide](https://latticetraining.com/blog/the-beginners-guide) | title and identifiable foundational task names/priorities | subtitle, instruction, accessory, target, count, duration, interval, gripType: reference rows and preview timing are app representations, not a fabricated source protocol | warmUp, cooldown, fingerConfiguration |
+| `rei.hangboard-sample-workout` | manufacturer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+| `trango.rock-prodigy-training-center.intermediate` | manufacturer | [Trango Rock Prodigy Training Center · Rock Prodigy method](https://trango.com/products/rock-prodigy-training-center) | title, instruction, accessory, target, count, duration, interval, gripType: manual 7/3 dead hangs, two-hand restriction, grip order, 7-rep/6-rep sets, and three-minute recoveries | subtitle: concise app wording for the manual's progression and recovery context | warmUp, cooldown, fingerConfiguration |
 
 ## Removed catalog content
 
@@ -63,7 +70,14 @@ grip/finger cue.
     {"planID":"coach.horst-seven-fifty-three","sourceType":"coach","sourceLabel":"Eric Hörst fingerboard protocols","sourceURL":"https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/"},
     {"planID":"coach.bechtel-three-six-nine","sourceType":"coach","sourceLabel":"Steve Bechtel 3–6–9 ladder protocol","sourceURL":"https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/"},
     {"planID":"coach.density-hangs","sourceType":"coach","sourceLabel":"Tyler Nelson density hang protocol","sourceURL":"https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/"},
-    {"planID":"device.zlagboard-sixty-sixty","sourceType":"device","sourceLabel":"Zlagboard endurance protocol","sourceURL":"https://strengthclimbing.com/zlagboard-forearm-endurance-workout/"}
+    {"planID":"device.zlagboard-sixty-sixty","sourceType":"device","sourceLabel":"Zlagboard endurance protocol","sourceURL":"https://strengthclimbing.com/zlagboard-forearm-endurance-workout/"},
+    {"planID":"lattice.lite-home-adaptations","sourceType":"manufacturer","sourceLabel":"Lattice Training · Lite Guide to Home Adaptations","sourceURL":"https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","sourceType":"manufacturer","sourceLabel":"Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS","sourceURL":"https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine"},
+    {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"manufacturer","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
+    {"planID":"method.intermediate-hangboarding.emom","sourceType":"manufacturer","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
+    {"planID":"lattice.beginner-climbers-training-guide","sourceType":"manufacturer","sourceLabel":"Lattice Training · The Beginner Climber's Training Guide","sourceURL":"https://latticetraining.com/blog/the-beginners-guide"},
+    {"planID":"rei.hangboard-sample-workout","sourceType":"manufacturer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","sourceType":"manufacturer","sourceLabel":"Trango Rock Prodigy Training Center · Rock Prodigy method","sourceURL":"https://trango.com/products/rock-prodigy-training-center"}
   ],
   "planFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
@@ -121,7 +135,47 @@ grip/finger cue.
 
     {"planID":"device.zlagboard-sixty-sixty","fields":["title","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
     {"planID":"device.zlagboard-sixty-sixty","fields":["subtitle","target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
-    {"planID":"device.zlagboard-sixty-sixty","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
+    {"planID":"device.zlagboard-sixty-sixty","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"lattice.lite-home-adaptations","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"lattice.lite-home-adaptations","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"lattice.lite-home-adaptations","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"lattice.lite-home-adaptations","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"lattice.lite-home-adaptations","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"method.intermediate-hangboarding.repeaters","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"method.intermediate-hangboarding.emom","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"method.intermediate-hangboarding.emom","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"method.intermediate-hangboarding.emom","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"method.intermediate-hangboarding.emom","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"method.intermediate-hangboarding.emom","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"lattice.beginner-climbers-training-guide","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"lattice.beginner-climbers-training-guide","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"lattice.beginner-climbers-training-guide","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"lattice.beginner-climbers-training-guide","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"lattice.beginner-climbers-training-guide","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"rei.hangboard-sample-workout","fields":["title"],"decision":"keep","sourcePrescription":true},
+    {"planID":"rei.hangboard-sample-workout","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
+    {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
+    {"planID":"rei.hangboard-sample-workout","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+
+    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["title","instruction","accessory","target","count","duration","interval","gripType"],"decision":"keep","sourcePrescription":true},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["subtitle"],"decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
   ],
   "stepFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","stepIDPattern":".*task-.*","field":"instruction","decision":"keep","sourcePrescription":true},
@@ -162,7 +216,29 @@ grip/finger cue.
     {"planID":"coach.density-hangs","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
     {"planID":"coach.density-hangs","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"range"},
     {"planID":"device.zlagboard-sixty-sixty","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
-    {"planID":"device.zlagboard-sixty-sixty","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true}
+    {"planID":"device.zlagboard-sixty-sixty","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true},
+
+    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"method.intermediate-hangboarding.repeaters","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"method.intermediate-hangboarding.repeaters","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"method.intermediate-hangboarding.repeaters","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
+    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true},
+    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"gripType","decision":"keep","sourcePrescription":true}
   ]
 }
 ```

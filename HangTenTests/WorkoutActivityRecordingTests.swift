@@ -423,7 +423,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             healthKitService: HealthWorkoutSavingSpy(),
             userDefaults: makeDefaults()
         )
-        let plan = PlanCatalog.repeaters
+        let plan = LegacyPlanSeedCatalog.repeaters
         let board = BoardCatalog.compactII
         let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
         let workSteps = repeaterSteps.filter { $0.phase == .hang }
