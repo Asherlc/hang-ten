@@ -6,6 +6,9 @@ from pathlib import Path
 
 from PIL import Image
 
+from hangboard_vectorizer.review_acceptance import write_acceptance
+from hangboard_vectorizer.review_artifacts import discover_review_run
+
 
 def make_review_run(root: Path) -> Path:
     run = root.resolve(strict=False)
@@ -46,6 +49,19 @@ def make_review_run_with_edit(
         corrections["modified"] = [{"id": 1, "key": "left", "notes": "mutated"}]
     _write_json(stage2_dir / "stage-2-human-corrections.json", corrections)
     return run
+
+
+def make_review_run_with_edit_and_acceptance(root: Path) -> Path:
+    run = make_review_run_with_edit(root)
+    write_acceptance(
+        discover_review_run(run),
+        "accepted",
+        "fixture-reviewer",
+        "Fixture acceptance",
+    )
+    return run
+
+
 def _baseline_regions() -> dict[str, object]:
     return {
         "canvas": {"width": 32, "height": 16},
