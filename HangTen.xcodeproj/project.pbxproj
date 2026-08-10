@@ -18,6 +18,7 @@
 		AA0000000000000000000009 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000009 /* HealthKitService.swift */; };
 		AA0000000000000000000014 /* PlanStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000016 /* PlanStorage.swift */; };
 		AA0000000000000000000015 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
+		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
@@ -70,10 +71,11 @@
 		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
 		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
 		AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000066 /* CustomRoutineEditorView.swift */; };
-		AA0000000000000000000067 /* BoardStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000067 /* BoardStorageTests.swift */; };
-		AA0000000000000000000068 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000068 /* BoardStorage.swift */; };
-		AA0000000000000000000069 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000069 /* BoardLibrary.json */; };
-		AA0000000000000000000070 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000069 /* BoardLibrary.json */; };
+		AA0000000000000000000067 /* GeneratedBoardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000067 /* GeneratedBoardCatalog.swift */; };
+		AA0000000000000000000069 /* BoardStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000069 /* BoardStorageTests.swift */; };
+		AA0000000000000000000070 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000070 /* BoardStorage.swift */; };
+		AA0000000000000000000071 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardLibrary.json */; };
+		AA0000000000000000000072 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardLibrary.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -143,9 +145,10 @@
 		BB0000000000000000000064 /* CustomRoutineDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraft.swift; sourceTree = "<group>"; };
 		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000066 /* CustomRoutineEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineEditorView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000067 /* BoardStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorageTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000068 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
-		BB0000000000000000000069 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
+		BB0000000000000000000067 /* GeneratedBoardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedBoardCatalog.swift; sourceTree = "<group>"; };
+		BB0000000000000000000069 /* BoardStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorageTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000070 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
+		BB0000000000000000000071 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +207,7 @@
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
+				BB0000000000000000000067 /* GeneratedBoardCatalog.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000022 /* MotherboardModels.swift */,
@@ -223,7 +227,7 @@
 				BB0000000000000000000059 /* WorkoutStepNormalization.swift */,
 				BB0000000000000000000062 /* CustomRoutineStore.swift */,
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
-				BB0000000000000000000068 /* BoardStorage.swift */,
+				BB0000000000000000000070 /* BoardStorage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -251,7 +255,7 @@
 			children = (
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
-				BB0000000000000000000069 /* BoardLibrary.json */,
+				BB0000000000000000000071 /* BoardLibrary.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -284,7 +288,7 @@
 				BB0000000000000000000061 /* CustomRoutineStoreTests.swift */,
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
-				BB0000000000000000000067 /* BoardStorageTests.swift */,
+				BB0000000000000000000069 /* BoardStorageTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -390,7 +394,7 @@
 			files = (
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,
-				AA0000000000000000000069 /* BoardLibrary.json in Resources */,
+				AA0000000000000000000071 /* BoardLibrary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +402,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0000000000000000000070 /* BoardLibrary.json in Resources */,
+				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
+				AA0000000000000000000072 /* BoardLibrary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,7 +423,7 @@
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
-				AA0000000000000000000068 /* BoardStorage.swift in Sources */,
+				AA0000000000000000000070 /* BoardStorage.swift in Sources */,
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
@@ -444,6 +449,7 @@
 				AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */,
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
+				AA0000000000000000000067 /* GeneratedBoardCatalog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +482,7 @@
 				AA0000000000000000000061 /* CustomRoutineStoreTests.swift in Sources */,
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
-				AA0000000000000000000067 /* BoardStorageTests.swift in Sources */,
+				AA0000000000000000000069 /* BoardStorageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

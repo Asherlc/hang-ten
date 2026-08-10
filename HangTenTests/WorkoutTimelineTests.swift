@@ -160,6 +160,30 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHoldCueVisibilityShowsAvailableCueDuringSkipCountdown() {
+        let holdCue = WorkoutHoldCue(
+            hold: BoardHold(
+                id: "cue-edge",
+                name: "Cue edge",
+                shortLabel: "E",
+                detail: "Edge",
+                kind: .edge,
+                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            ),
+            gripType: .openHand,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
+        )
+
+        XCTAssertTrue(
+            WorkoutHoldCueVisibilityPolicy.showsCue(
+                holdCue: holdCue,
+                countdown: 3,
+                isComplete: false,
+                isSkipCountdown: true
+            )
+        )
+    }
+
     func testHoldCueVisibilityStillSuppressesCountdownCompletionAndMissingCue() {
         let holdCue = WorkoutHoldCue(
             hold: BoardHold(
@@ -631,6 +655,19 @@ final class WorkoutClockTests: XCTestCase {
 
 @MainActor
 final class WorkoutSpeechOwnershipTests: XCTestCase {
+    func testRepeatedStopPreservesPendingStopOwnershipUntilCallback() {
+        var ownership = WorkoutSpeechOwnership()
+        let utterance = AVSpeechUtterance(string: "3")
+
+        ownership.begin(utterance)
+        ownership.requestStop()
+        ownership.requestStop()
+
+        XCTAssertTrue(ownership.ownsPendingStop(utterance))
+        ownership.finishPendingStop(utterance)
+        XCTAssertFalse(ownership.ownsPendingStop(utterance))
+    }
+
     func testGenerationAndUtteranceIdentityProtectActiveAndPendingStopOwnership() {
         var ownership = WorkoutSpeechOwnership()
         let firstUtterance = AVSpeechUtterance(string: "3")

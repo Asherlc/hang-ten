@@ -21,6 +21,7 @@ Commands:
   release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Replay the accepted Metolius run without a live model call
   convert     Convert a registered product photo to SVG and JSON
+  catalog     Validate, inspect, or register hangboard package catalog artifacts
 EOF
 }
 
@@ -86,6 +87,9 @@ case "$command_name" in
         ;;
     convert)
         exec "$environment_root/bin/hangboard-to-svg" "$@"
+        ;;
+    catalog)
+        exec "$environment_root/bin/hangboard-catalog" "$@"
         ;;
     -h|--help|help)
         usage

@@ -194,6 +194,20 @@ rtk python3 Tools/hold-highlight-editor/server.py --catalog /absolute/path/to/ca
 
 `image` and `regions` are optional for standard run layouts and must be relative to `runDir`. Catalog and repeated `--run-dir` inputs can be combined. The selector changes only the active browser document; every load and save request names its run explicitly, so separate tabs cannot redirect each other's saves.
 
+## Edit the generative catalog outlines
+
+Catalog-outline mode serves every `*.json` stem in the outline directory whose matching root PNG is in the source directory:
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py \
+  --catalog-source-dir /absolute/path/to/docs/hangboard-generative-catalog \
+  --catalog-outline-dir /absolute/path/to/docs/hangboard-generative-catalog/outlines
+```
+
+The board selector switches the active catalog document; the selected JSON is the only catalog file changed by Save. Recessed or dark cavities are traced along the inner usable boundary. Raised holds are traced along the outer silhouette. The server adapts normalized catalog paths to the editor's pixel contours, including sampled cubic curves, and maps each source outline ID to a stable positive editor ID.
+
+Catalog Save writes edited or new outlines as closed `M`/`L` paths in normalized coordinates and recomputes their bounds. Outlines whose sampled editor contour is unchanged retain their original path commands—including cubic curves—and bounds exactly. Save preserves the catalog schema, source image, references, and untouched outline metadata, and never writes PNGs. Replacement is atomic through a same-directory temporary file; failed writes clean up that temporary file. The editor's **Export edited regions** and **Export corrections** buttons remain available as browser-download recovery backups if a save is unavailable or an additional local copy is needed.
+
 ## Static mode
 
 To use the editor without filesystem Save support:
