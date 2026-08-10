@@ -183,6 +183,22 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
 });
 
+test("declares each board picker element once in the element map", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const initBlock = app.match(
+    /const el = Object\.fromEntries\(\[(?<list>[\s\S]*?)\]\.map\(\(id\) => \[id, document\.getElementById\(id\)\]\)\);/,
+  );
+
+  assert.ok(initBlock, "expected the element initialization list in app.js");
+
+  const list = initBlock.groups.list;
+
+  for (const id of ["board-picker", "board-picker-separator", "board-select"]) {
+    const matches = list.match(new RegExp(`"${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g")) ?? [];
+    assert.equal(matches.length, 1, `${id} must appear exactly once in the element initialization list`);
+  }
+});
+
 test("renders exactly one region interaction mode control with its intended label and options", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const modeControlPattern = /<select\b(?=[^>]*\bid\s*=\s*["']region-mode-select["'])[^>]*>[\s\S]*?<\/select>/gi;

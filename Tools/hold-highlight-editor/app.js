@@ -181,7 +181,7 @@
     "tension-field", "curve-tension-slider", "curve-tension-value", "curve-tension-feedback",
     "board-picker", "board-picker-separator", "board-select",
     "corner-treatment-field", "corner-number", "corner-treatment-select", "corner-amount-input",
-    "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
+    "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
