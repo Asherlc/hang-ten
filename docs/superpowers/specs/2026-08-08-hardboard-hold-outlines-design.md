@@ -35,7 +35,7 @@ Each board document will contain:
       "label": "upper-left-edge",
       "kind": "edge",
       "confidence": "approximate",
-      "bounds": [0.12, 0.21, 0.19, 0.06],
+      "bounds": { "x": 0.12, "y": 0.21, "width": 0.19, "height": 0.06 },
       "path": {
         "closed": true,
         "commands": [
@@ -44,7 +44,7 @@ Each board document will contain:
           { "command": "C", "controls": [[0.30, 0.26], [0.14, 0.27]], "to": [0.12, 0.21] }
         ]
       },
-      "notes": ["Visual estimate from generated raster; review before runtime use."]
+      "notes": "Visual estimate from generated raster; review before runtime use."
     }
   ]
 }

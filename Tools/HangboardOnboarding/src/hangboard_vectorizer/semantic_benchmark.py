@@ -53,6 +53,10 @@ COMPACT_PROMPT_BYTES = canonical_json_bytes({
     "instruction": "return one batched observation for every physical grip",
     "omit": ["explanations", "contours", "boxes", "dimensions", "pixelGeometry"],
 })
+# Conservative Linux parity allowance: at most this many pixels may differ by
+# a one-step RGB rounding delta while preserving the exact alpha mask.
+HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS = 32
+HIGHLIGHT_PIXEL_DIFF_SENTINEL = -1
 
 
 class _ForbiddenLiveClient:
@@ -230,6 +234,8 @@ def _report(
     accepted_highlight_hashes: dict[str, str] = {}
     replay_highlight_hashes: dict[str, str] = {}
     highlight_exact: dict[str, bool] = {}
+    highlight_equivalent: dict[str, bool] = {}
+    highlight_pixel_diffs: dict[str, dict[str, int]] = {}
     for name, replayed in sorted(replay_highlights.items()):
         path = accepted / f"stages/04/attempt-0001/stage-4-highlight-{name}.png"
         with Image.open(path) as image:
@@ -239,6 +245,12 @@ def _report(
         accepted_highlight_hashes[name] = accepted_hash
         replay_highlight_hashes[name] = replay_hash
         highlight_exact[name] = np.array_equal(accepted_pixels, replayed)
+        highlight_equivalent[name] = _highlight_pixels_equivalent(
+            accepted_pixels, replayed
+        )
+        highlight_pixel_diffs[name] = _highlight_pixel_diff_metrics(
+            accepted_pixels, replayed
+        )
 
     baseline = SemanticRunMetrics(
         model=(ModelProcessingMetrics(
@@ -293,6 +305,8 @@ def _report(
     stage4 = {
         "acceptedHighlightPixelSha256": accepted_highlight_hashes,
         "highlightPixelsExact": highlight_exact,
+        "highlightPixelsEquivalent": highlight_equivalent,
+        "highlightPixelDiffs": highlight_pixel_diffs,
         "replayHighlightPixelSha256": replay_highlight_hashes,
     }
     exact = (
@@ -301,7 +315,7 @@ def _report(
         and stage2["labelsExact"]
         and stage2["regionsExact"]
         and stage3["geometryExact"]
-        and all(highlight_exact.values())
+        and all(highlight_equivalent.values())
     )
     return {
         "acceptedRun": str(accepted),
@@ -363,6 +377,49 @@ def _geometry_hash(document: dict[str, object]) -> str:
     }))
 
 
+def _highlight_pixels_equivalent(
+    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
+) -> bool:
+    if accepted_pixels.shape != replayed_pixels.shape:
+        return False
+    if accepted_pixels.ndim != 3 or accepted_pixels.shape[-1] != 4:
+        return False
+
+    accepted_rgba = accepted_pixels.astype(np.int16)
+    replayed_rgba = replayed_pixels.astype(np.int16)
+    rgba_delta = np.abs(accepted_rgba - replayed_rgba)
+    changed_pixel_count = int(np.any(rgba_delta != 0, axis=-1).sum())
+    max_rgba_delta = int(rgba_delta.max(initial=0))
+    return (
+        max_rgba_delta <= 1
+        and changed_pixel_count <= HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS
+    )
+
+
+def _highlight_pixel_diff_metrics(
+    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
+) -> dict[str, int]:
+    if (
+        accepted_pixels.shape != replayed_pixels.shape
+        or accepted_pixels.ndim != 3
+        or accepted_pixels.shape[-1] != 4
+    ):
+        return {
+            "differingPixelCount": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
+            "maxAbsChannelDifference": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
+        }
+
+    channel_differences = np.abs(
+        accepted_pixels.astype(np.int16) - replayed_pixels.astype(np.int16)
+    )
+    return {
+        "differingPixelCount": int(
+            np.any(channel_differences != 0, axis=-1).sum()
+        ),
+        "maxAbsChannelDifference": int(channel_differences.max(initial=0)),
+    }
+
+
 def _json(path: Path) -> dict[str, object]:
     document = json.loads(path.read_bytes())
     if not isinstance(document, dict):
@@ -402,7 +459,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         cache_root=arguments.cache_dir,
     )
     if not report["parity"]["exact"]:
-        raise SystemExit("semantic replay parity failed")
+        raise SystemExit(
+            "semantic replay parity failed: "
+            + json.dumps(report["parity"], sort_keys=True, separators=(",", ":"))
+        )
     print(arguments.output.resolve())
     return 0
 

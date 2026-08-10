@@ -125,6 +125,31 @@ the template are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
+The canonical package for each board lives under `Hangboards/`:
+
+- `Hangboards/catalog.json` is the package registry.
+- `Hangboards/<board-folder>/board.json` is that board’s current source of
+  truth.
+- Lifecycle values progress as `draft` → `onboarding` → `approved` →
+  `shipped`.
+
+Stage output is still written to temporary, ignored run folders first (for
+example under `.context/hangboard-onboarding/...`). Registration only accepts
+symlink-free `.context` runs, advances lifecycle when appropriate, and never
+downgrades a shipped board. Register once a run is intended to be permanent:
+
+```bash
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/metolius-onboarding-run \
+  --run-id metolius-onboarding-run
+```
+
+Start a persisted onboarding run from one local image or HTTP(S) source:
+
 For the complete guided local workflow, start the server from the repository
 root with its repository and transient-workspace defaults:
 
@@ -132,8 +157,8 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/hold-highlight-editor/server.py
 ```
 
-This discovers the checkout, reads complete approved boards from
-`Tools/HangboardOnboarding/boards/<board-id>/`, and writes in-progress work
+This discovers the checkout, reads complete approved board packages from
+`Hangboards/<board-folder>/board.json`, and writes in-progress work
 under `.context/hangboard-workbench/`. Automation can select different roots
 explicitly:
 
@@ -190,13 +215,12 @@ rtk hangboard-onboard \
 
 CLI-compatible runs are programmatic producers: once a run is complete and all
 five checkpoints are approved, its caller passes it to
-`RepositoryBoardLibrary.publish()` to update
-`Tools/HangboardOnboarding/boards/<board-id>/`. The browser never asks for a
-CLI run directory. Only complete approved runs belong in the canonical boards
-directory; all unfinished runs belong under the ignored `.context/` directory.
-Final **Save locally** writes the canonical package for normal Git review; it
-never commits, pushes, updates the Hang Ten app catalog, or synchronizes
-remotely.
+`RepositoryBoardLibrary.publish()` to update the canonical
+`Hangboards/<board-folder>/board.json` package. The browser never asks for a
+CLI run directory. Only complete approved runs belong in that package; all
+unfinished runs belong under the ignored `.context/` directory. Final **Save
+locally** writes the canonical package for normal Git review; it never commits,
+pushes, updates the Hang Ten app catalog, or synchronizes remotely.
 
 The lower-level CLI remains useful for scripted operation. Start a persisted
 run from one local image or HTTP(S) source:
@@ -271,6 +295,68 @@ and grip-highlight previews from those paths. Publication validates the full
 Stage 1 → Stage 2 → Stage 3 hash chain, finalizes candidate hashes before any
 manual comparison evidence is read, and writes an acceptance record with a
 six-panel review image.
+
+## Generate catalog hold outlines
+
+Use the catalog CLI to emit editable hold-outline JSON for every product image
+in `docs/hangboard-generative-catalog`:
+
+```bash
+python -m hangboard_vectorizer.catalog_outline_cli \
+  --source-dir docs/hangboard-generative-catalog \
+  --output-dir docs/hangboard-generative-catalog/outlines \
+  --review-dir .context/hardboard-outlines/reviews
+```
+
+The command discovers only top-level `*.png` sources, skips the exact contact
+sheet name `contact-sheet-primary.png`, sorts the remaining 32 board images
+lexicographically, and writes one `<stem>.json` document per source plus an
+optional overlay PNG for review. `--check` validates the source/output set,
+JSON schema, normalized geometry, relative source-image wiring, and source
+canvas dimensions without writing files. A successful run prints how many
+catalog outline documents were verified; failures name the missing or invalid
+JSON file.
+
+Each outline document uses normalized coordinates in a source-sized canvas:
+
+```json
+{
+  "schemaVersion": 1,
+  "sourceImage": "../escape-unlimited.png",
+  "canvas": {"width": 1774, "height": 887},
+  "coordinateSpace": "normalized",
+  "references": [
+    {
+      "title": "Unlimited Board",
+      "url": "https://escapeclimbing.com/products/ec72000",
+      "hints": ["simplified full-width edge design"]
+    }
+  ],
+  "outlines": [
+    {
+      "id": "hold-01",
+      "label": "Approximate rail 1",
+      "kind": "rail",
+      "confidence": "approximate",
+      "bounds": {"x": 0.06, "y": 0.25, "width": 0.10, "height": 0.06},
+      "path": {"closed": true, "commands": [{"command": "M", "to": [0.06, 0.25]}]},
+      "notes": "approximate dark recess candidate; verify against visible board geometry"
+    }
+  ]
+}
+```
+
+`path` coordinates are always normalized to `0..1` in the source image's own
+canvas. `sourceImage` resolves from each JSON file back to its sibling catalog
+PNG via `../<basename>.png`. `bounds` is the normalized axis-aligned box
+enclosing the path and is used as a coarse edit/review aid rather than an
+authoritative hold semantic.
+
+The `references` field is advisory only: it preserves manufacturer URLs and
+coarse source hints for human review, but those hints must not be treated as
+measured geometry or exact finger-depth claims. Generated hold kinds, labels,
+and regions remain approximate. Review the overlay PNGs and the JSON before
+using these catalog outlines at runtime.
 
 ## Override regions
 

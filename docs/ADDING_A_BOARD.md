@@ -29,6 +29,47 @@ The Compact II audit used these official sources (checked August 1, 2026):
 
 ## 2. Run the staged onboarding pipeline
 
+The canonical package is the source of truth for Compact II:
+
+```text
+Hangboards/
+  catalog.json
+  metolius-wood-grips-compact-ii/
+    board.json
+    onboarding/runs/<run-id>/...
+```
+
+Lifecycle states for `board.json` are `draft`, `onboarding`, `approved`, and
+`shipped`.
+
+While onboarding, keep temporary runs under `.context/...` and validate the
+registry without mutating the repository:
+
+```sh
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+```
+
+After a run is approved, copy it into the canonical package. Registration only
+accepts symlink-free `.context` runs, advances the board lifecycle when
+appropriate, and never downgrades a shipped board:
+
+```sh
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/manufacturer-model \
+  --run-id manufacturer-model
+```
+
+After the canonical `board.json` is marked `shipped`, regenerate the checked-in
+Swift catalog from JSON before shipping app updates:
+
+```sh
+scripts/export-board-catalog.sh
+scripts/export-board-catalog.sh --check
+```
+
 Hang Ten vendors the reviewed onboarding tool under
 `Tools/HangboardOnboarding`. Its model-facing contract is deliberately small:
 one batched semantic response supplies generic grip hints, while deterministic
@@ -116,12 +157,13 @@ Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
 symmetry. The accepted Compact II replay fixture is versioned at
-`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`.
+`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`; it is a
+test fixture, not the canonical board package.
 
-Only complete runs with approved checkpoints through Stage 4 belong under
-`Tools/HangboardOnboarding/boards/<board-id>/`. Keep every unfinished run under
-the ignored `.context/` directory. Saving a complete run through the workbench
-publishes it to the canonical boards directory for normal Git review.
+Only complete runs with approved checkpoints through Stage 4 may be published
+into the canonical `Hangboards/<board-folder>/board.json` package. Keep every
+unfinished run under the ignored `.context/` directory; the accepted run under
+`Tools/HangboardOnboarding/boards/` remains a replay fixture for tests.
 
 ## 3. Keep metadata and artwork separate
 
