@@ -19,3 +19,14 @@ deletes each exact resource owned by this workspace, and verify deletion
 before reporting completion. Leave shared, standard, and unknown resources
 alone. The archive hook is a failsafe, not permission to skip an agent's own
 cleanup.
+
+## CodeGraph
+
+When `.codegraph/` exists, use CodeGraph before grep/find to understand or
+locate code. The primary shell workflow is `codegraph explore "<query>"`; the
+equivalent project-aware MCP tool may be used when available. When
+`.codegraph/` is absent, initialize from the repository root with
+`codegraph init .` only when indexing is desired, then verify with
+`codegraph status`. Generated `.codegraph/` state is local and ignored, and
+should not be committed. Use `codegraph sync` after source changes when
+maintaining an existing index.
