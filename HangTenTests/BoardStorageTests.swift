@@ -130,6 +130,22 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertTrue(issues.contains { $0.path == "boards[0].semanticHolds.fixture-edge.holdIDs[0]" && $0.message.contains("Unknown hold ID") })
     }
 
+    func testBoardLibraryDecodesKindOnlySemanticMappings() throws {
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            board["semanticHolds"] = ["fixture-edge": ["kind": "edge"]]
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        let store = try BoardLibraryStore(data: data)
+        let mapping = try XCTUnwrap(store.definition.boards.first?.semanticHolds["fixture-edge"])
+
+        XCTAssertEqual(mapping.holdIDs, [])
+        XCTAssertEqual(mapping.kind, .edge)
+    }
+
     func testBoardLibraryRejectsSemanticMappingsWithBothIDsAndKinds() throws {
         let issues = validationIssues(for: try fixtureData { document in
             var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])

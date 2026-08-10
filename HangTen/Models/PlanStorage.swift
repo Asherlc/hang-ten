@@ -81,9 +81,20 @@ struct SemanticHoldMappingDefinition: Codable, Hashable {
     let holdIDs: [String]
     let kind: HoldKind?
 
+    private enum CodingKeys: String, CodingKey {
+        case holdIDs
+        case kind
+    }
+
     init(holdIDs: [String] = [], kind: HoldKind? = nil) {
         self.holdIDs = holdIDs
         self.kind = kind
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        holdIDs = try container.decodeIfPresent([String].self, forKey: .holdIDs) ?? []
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
     }
 
     var isResolvable: Bool {
