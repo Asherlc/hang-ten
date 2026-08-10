@@ -63,7 +63,7 @@ _PROMOTION_PACKAGE_SOURCE = (
 )
 _PROMOTION_PROFILE_SOURCE = Path(__file__).parent / "data/ios-promotion-profile.json"
 _PROMOTION_TARGETS = (
-    "HangTen/Models/TrainingModels.swift",
+    "HangTen/Models/GeneratedBoardCatalog.swift",
     "HangTen/Views/MetoliusCompactIIDesign.swift",
     "HangTen/Models/PlanStorage.swift",
     "HangTen/Resources/PlanLibrary.json",

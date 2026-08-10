@@ -27,7 +27,7 @@ PACKAGE_SOURCE = (
 )
 PROFILE_SOURCE = Path(__file__).parent / "data/ios-promotion-profile.json"
 TARGETS = (
-    "HangTen/Models/TrainingModels.swift",
+    "HangTen/Models/GeneratedBoardCatalog.swift",
     "HangTen/Views/MetoliusCompactIIDesign.swift",
     "HangTen/Models/PlanStorage.swift",
     "HangTen/Resources/PlanLibrary.json",

@@ -40,7 +40,7 @@ def test_complete_approved_run_renders_the_known_native_contract(tmp_path: Path)
     )
 
     assert [item.path for item in preview.files] == [
-        "HangTen/Models/TrainingModels.swift",
+        "HangTen/Models/GeneratedBoardCatalog.swift",
         "HangTen/Views/MetoliusCompactIIDesign.swift",
         "HangTen/Models/PlanStorage.swift",
         "HangTen/Resources/PlanLibrary.json",
@@ -194,7 +194,7 @@ def test_generator_rejects_a_target_changed_relative_to_the_expected_base(tmp_pa
     """Promotion must not overwrite a native file changed since its base revision."""
     run_root = _copied_run(tmp_path)
     repository_root = _repository_at_main(tmp_path)
-    target = repository_root / "HangTen/Models/TrainingModels.swift"
+    target = repository_root / "HangTen/Models/GeneratedBoardCatalog.swift"
     target.write_text(target.read_text(encoding="utf-8") + "\n// local change\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="changed relative to main"):
@@ -320,7 +320,7 @@ def _copied_run(tmp_path: Path) -> Path:
 def _repository_at_main(tmp_path: Path) -> Path:
     repository_root = tmp_path / "repository"
     for relative_path in (
-        "HangTen/Models/TrainingModels.swift",
+        "HangTen/Models/GeneratedBoardCatalog.swift",
         "HangTen/Views/MetoliusCompactIIDesign.swift",
         "HangTen/Models/PlanStorage.swift",
         "HangTen/Resources/PlanLibrary.json",

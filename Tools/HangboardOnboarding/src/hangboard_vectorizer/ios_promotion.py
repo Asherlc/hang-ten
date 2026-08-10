@@ -18,7 +18,7 @@ from typing import Any, Iterable, Mapping
 
 _PROFILE_NAME = "ios-promotion-profile.json"
 _TARGET_PATHS = (
-    "HangTen/Models/TrainingModels.swift",
+    "HangTen/Models/GeneratedBoardCatalog.swift",
     "HangTen/Views/MetoliusCompactIIDesign.swift",
     "HangTen/Models/PlanStorage.swift",
     "HangTen/Resources/PlanLibrary.json",
