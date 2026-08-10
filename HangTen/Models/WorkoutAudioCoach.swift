@@ -136,7 +136,6 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         utterance.volume = 1.0
         speechOwnership.begin(utterance)
         isSpeaking = true
-        synthesizer.stopSpeaking(at: .immediate)
         logger.notice("Speaking cue: \(phrase, privacy: .public)")
         synthesizer.speak(utterance)
     }

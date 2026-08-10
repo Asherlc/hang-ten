@@ -671,6 +671,43 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 
 @MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
+    func testSpeakDoesNotCallStopBeforeEachCue() {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.speak("3")
+        coach.speak("2")
+
+        XCTAssertEqual(
+            synthesizer.stopCallCount,
+            0,
+            "WorkoutAudioCoach should not stop the synthesizer before each successive cue."
+        )
+        XCTAssertEqual(synthesizer.utterances.count, 2)
+        XCTAssertEqual(synthesizer.utterances.map(\.speechString), ["3", "2"])
+    }
+
+    func testStopStillStopsSynthesizerImmediately() {
+        let audioSession = RecordingWorkoutAudioSession()
+        let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let coach = WorkoutAudioCoach(
+            synthesizer: synthesizer,
+            audioSession: audioSession
+        )
+
+        coach.stop()
+
+        XCTAssertEqual(
+            synthesizer.stopCallCount,
+            1,
+            "WorkoutAudioCoach.stop() must still stop speech immediately."
+        )
+    }
+
     func testStopWaitsForSpeechCancellationBeforeDeactivatingAudioSession() async {
         let audioSession = RecordingWorkoutAudioSession()
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
@@ -863,9 +900,11 @@ private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing
     var delegate: AVSpeechSynthesizerDelegate?
     var isSpeaking = false
     private(set) var utterances: [AVSpeechUtterance] = []
+    private(set) var stopCallCount = 0
 
     func stopSpeaking(at boundary: AVSpeechBoundary) -> Bool {
         // Cancellation remains in progress until a test delivers its delegate callback.
+        stopCallCount += 1
         return true
     }
 
