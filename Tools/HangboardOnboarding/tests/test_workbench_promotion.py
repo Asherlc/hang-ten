@@ -3,12 +3,14 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
 from hangboard_vectorizer.board_library import RepositoryBoardLibrary
 from hangboard_vectorizer.ios_promotion import read_promotion_profile
+import hangboard_vectorizer.workbench as workbench_module
 from hangboard_vectorizer.workbench import WorkbenchService, WorkbenchServiceError
 from hangboard_vectorizer.workbench_store import WorkbenchStore
 
@@ -74,6 +76,82 @@ def test_save_rejects_a_stale_preview_token_without_writing_checkout(
     assert _target_contents(repository_root) == before
 
 
+def test_preview_rejects_a_profile_for_another_repository_board_before_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Removing the identity gate would generate native output for another board."""
+    service, board_id, revision_id, repository_root, profile = _promotion_service(tmp_path)
+    before = _target_contents(repository_root)
+    other_board_profile = replace(profile, board_id="another-board")
+
+    def generation_must_not_run(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("promotion generation must not run")
+
+    monkeypatch.setattr(workbench_module, "preview_for_revision", generation_must_not_run)
+
+    with pytest.raises(WorkbenchServiceError, match="profile board ID"):
+        service.preview_promotion(
+            board_id,
+            expected_revision_id=revision_id,
+            profile=other_board_profile,
+        )
+
+    assert _target_contents(repository_root) == before
+
+
+def test_save_rejects_a_profile_for_another_repository_board_before_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Removing the identity gate would save active geometry under another identity."""
+    service, board_id, revision_id, repository_root, profile = _promotion_service(tmp_path)
+    before = _target_contents(repository_root)
+    other_board_profile = replace(profile, board_id="another-board")
+
+    def generation_must_not_run(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("promotion generation must not run")
+
+    monkeypatch.setattr(workbench_module, "preview_for_revision", generation_must_not_run)
+
+    with pytest.raises(WorkbenchServiceError, match="profile board ID"):
+        service.save_promotion(
+            board_id,
+            expected_revision_id=revision_id,
+            profile=other_board_profile,
+            preview_token="preview-token",
+        )
+
+    assert _target_contents(repository_root) == before
+
+
+def test_promotion_preview_cache_is_scoped_to_the_active_revision(tmp_path: Path) -> None:
+    """Returning a cache entry after a revision change would expose stale geometry."""
+    service, board_id, revision_id, _repository_root, profile = _promotion_service(tmp_path)
+
+    assert (
+        service.get_promotion_preview(
+            board_id, expected_revision_id=revision_id
+        )
+        is None
+    )
+    preview = service.preview_promotion(
+        board_id, expected_revision_id=revision_id, profile=profile
+    )
+    assert service.get_promotion_preview(
+        board_id, expected_revision_id=revision_id
+    ) == preview
+
+    next_revision = service.store.create_revision(board_id)
+    service.store.activate_revision(board_id, next_revision.id)
+
+    assert service.get_promotion_preview(
+        board_id, expected_revision_id=next_revision.id
+    ) is None
+    with pytest.raises(WorkbenchServiceError, match="expected revision"):
+        service.get_promotion_preview(
+            board_id, expected_revision_id=revision_id
+        )
+
+
 def test_preview_rejects_dirty_native_targets_without_writing_other_targets(
     tmp_path: Path,
 ) -> None:
@@ -104,7 +182,10 @@ def _promotion_service(
         view.board_id,
         view.revision_id,
         repository_root,
-        read_promotion_profile(view.run_root),
+        replace(
+            read_promotion_profile(view.run_root),
+            board_id="metolius-wood-grips-compact-ii",
+        ),
     )
 
 

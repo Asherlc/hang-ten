@@ -707,7 +707,36 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, {"ok": True, "board": board})
 
     def _get_promotion(self, board_id: str, query: str) -> None:
-        self._get_revision_status(board_id, query)
+        try:
+            if not board_id:
+                raise RequestError(HTTPStatus.NOT_FOUND, "not found")
+            revision_id = self._required_query_string(parse_qs(query), "revisionId")
+            preview = self._workbench_service().get_promotion_preview(
+                board_id, expected_revision_id=revision_id
+            )
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+            return
+        except self._public_error_types() as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+            return
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
+            return
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "boardId": board_id,
+                "revisionId": revision_id,
+                "preview": (
+                    None if preview is None else _workbench_job_payload(preview)
+                ),
+            },
+        )
 
     def _get_validation(self, board_id: str, query: str) -> None:
         self._get_revision_status(board_id, query)

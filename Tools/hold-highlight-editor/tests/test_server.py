@@ -142,6 +142,7 @@ class FakeWorkbenchService:
         self._root = root
         self._boards: dict[str, FakeWorkbenchView] = {}
         self._drafts: dict[str, object] = {}
+        self._promotion_previews: dict[tuple[str, str], FakePromotionPreview] = {}
         self._counter = 0
         self._lock = Lock()
         self.approve_started = Event()
@@ -333,7 +334,7 @@ class FakeWorkbenchService:
             raise FakeWorkbenchError("expected revision does not match")
         if not hasattr(profile, "board_id"):
             raise FakeWorkbenchError("profile must be an object")
-        return FakePromotionPreview(
+        preview = FakePromotionPreview(
             board_id="example.board",
             revision_token=view.revision_id,
             base_ref=base_ref,
@@ -341,6 +342,16 @@ class FakeWorkbenchService:
             issues=(),
             preview_token="preview-token",
         )
+        self._promotion_previews[(board_id, view.revision_id)] = preview
+        return preview
+
+    def get_promotion_preview(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakePromotionPreview | None:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        return self._promotion_previews.get((board_id, view.revision_id))
 
     def save_promotion(
         self,
@@ -1387,11 +1398,27 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
         "ok": True,
         "boardId": view["boardId"],
         "revisionId": view["revisionId"],
+        "preview": None,
     }
-    assert validation == promotion
+    assert validation == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+    }
     assert preview_status == save_status == run_status == 202
     assert preview_submission["boardId"] == save_submission["boardId"] == run_submission["boardId"] == view["boardId"]
     assert preview["result"]["previewToken"] == "preview-token"
+    promotion_after_preview_status, promotion_after_preview = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
+    )
+    assert promotion_after_preview_status == 200
+    assert promotion_after_preview == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "preview": preview["result"],
+    }
     assert saved["result"] == {
         "boardId": "example.board",
         "revisionId": view["revisionId"],
