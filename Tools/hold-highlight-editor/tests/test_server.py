@@ -99,6 +99,40 @@ class FakeLibrarySnapshot:
     diagnostics: tuple[FakeLibraryDiagnostic, ...]
 
 
+@dataclass(frozen=True)
+class FakePromotionPreview:
+    board_id: str
+    revision_token: str
+    base_ref: str
+    files: tuple[object, ...]
+    issues: tuple[object, ...]
+    preview_token: str
+
+
+@dataclass(frozen=True)
+class FakePromotionSaveResult:
+    board_id: str
+    revision_id: str
+    saved: bool
+    paths: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class FakeValidationCheck:
+    check_id: str
+    status: str
+    message: str
+    details: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class FakeValidationReport:
+    board_id: str
+    revision_id: str
+    overall_status: str
+    checks: tuple[FakeValidationCheck, ...]
+
+
 class FakeWorkbenchError(ValueError):
     """Explicitly safe public error contract for deterministic API tests."""
 
@@ -285,6 +319,68 @@ class FakeWorkbenchService:
         if expected_revision_id != view.revision_id:
             raise FakeWorkbenchError("expected revision does not match")
         return self._update(view, saved=True)
+
+    def preview_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: object,
+        base_ref: str = "main",
+    ) -> FakePromotionPreview:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        if not hasattr(profile, "board_id"):
+            raise FakeWorkbenchError("profile must be an object")
+        return FakePromotionPreview(
+            board_id="example.board",
+            revision_token=view.revision_id,
+            base_ref=base_ref,
+            files=(),
+            issues=(),
+            preview_token="preview-token",
+        )
+
+    def save_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: object,
+        preview_token: str,
+    ) -> FakePromotionSaveResult:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        if not hasattr(profile, "board_id") or preview_token != "preview-token":
+            raise FakeWorkbenchError("preview token does not match")
+        return FakePromotionSaveResult(
+            board_id="example.board",
+            revision_id=view.revision_id,
+            saved=True,
+            paths=("HangTen/Models/TrainingModels.swift",),
+        )
+
+    def validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        return FakeValidationReport(
+            board_id=board_id,
+            revision_id=view.revision_id,
+            overall_status="passed",
+            checks=(
+                FakeValidationCheck(
+                    check_id="package-readiness",
+                    status="passed",
+                    message="package is ready",
+                    details=(),
+                ),
+            ),
+        )
 
     def _create(self, product_name: str, content: bytes) -> FakeWorkbenchView:
         with self._lock:
@@ -1233,6 +1329,77 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
 
     assert view["state"] == "complete"
     assert saved["saved"] is True
+
+
+def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    profile = {
+        "schemaVersion": 1,
+        "boardID": "example.board",
+        "manufacturer": "Example",
+        "name": "Example Board",
+        "subtitle": "An explicit test profile.",
+        "dimensions": "24\" × 6\"",
+        "aspectRatio": 4.0,
+        "productURL": "https://example.test/board",
+    }
+
+    promotion_status, promotion = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
+    )
+    validation_status, validation = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
+    )
+    preview_status, preview_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/preview",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": profile,
+        },
+    )
+    preview = _poll_job(running_workbench_server, preview_submission["jobId"])
+    save_status, save_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/save",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": profile,
+            "previewToken": "preview-token",
+        },
+    )
+    saved = _poll_job(running_workbench_server, save_submission["jobId"])
+    run_status, run_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/validation/run",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+        },
+    )
+    report = _poll_job(running_workbench_server, run_submission["jobId"])
+
+    assert promotion_status == validation_status == 200
+    assert promotion == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+    }
+    assert validation == promotion
+    assert preview_status == save_status == run_status == 202
+    assert preview_submission["boardId"] == save_submission["boardId"] == run_submission["boardId"] == view["boardId"]
+    assert preview["result"]["previewToken"] == "preview-token"
+    assert saved["result"] == {
+        "boardId": "example.board",
+        "revisionId": view["revisionId"],
+        "saved": True,
+        "paths": ["HangTen/Models/TrainingModels.swift"],
+    }
+    assert report["result"]["overallStatus"] == "passed"
+    assert report["result"]["checks"][0]["checkId"] == "package-readiness"
 
 
 @pytest.mark.parametrize(

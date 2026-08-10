@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from hashlib import sha256
 import json
 import os
@@ -31,12 +31,15 @@ from .onboarding_run import (
     start_run,
 )
 from .models import ConversionError
+from .ios_promotion import IosPromotionProfile, PromotionPreview, PromotionSaveResult
 from .review_edits import (
     materialize_stage2_edit,
     materialize_stage3_edit,
     validate_stage_edit,
 )
 from .workbench_store import BoardRecord, RevisionRecord, WorkbenchStore
+from .workbench_promotion import preview_for_revision, save_for_revision
+from .workbench_validation import ValidationReport, build_validation_report
 
 
 _FINAL_STAGE = 4
@@ -547,9 +550,98 @@ class WorkbenchService:
             self.store.save_revision(board.id, revision.id)
         return self.__view(board.id, revision.id)
 
+    def preview_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: IosPromotionProfile,
+        base_ref: str = "main",
+    ) -> PromotionPreview:
+        """Generate an in-memory native diff for the selected approved revision."""
+        _board, revision = self.__promotion_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        try:
+            return preview_for_revision(
+                self.__library, revision.run_root, profile, base_ref=base_ref
+            )
+        except (OSError, ValueError) as error:
+            raise WorkbenchServiceError(str(error)) from error
+
+    def save_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: IosPromotionProfile,
+        preview_token: str,
+    ) -> PromotionSaveResult:
+        """Regenerate and atomically save a preview bound to this active revision."""
+        _board, revision = self.__promotion_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        try:
+            preview = preview_for_revision(
+                self.__library, revision.run_root, profile, base_ref="main"
+            )
+            saved = save_for_revision(
+                self.__library, preview, expected_preview_token=preview_token
+            )
+        except (OSError, ValueError) as error:
+            raise WorkbenchServiceError(str(error)) from error
+        return replace(saved, revision_id=revision.id)
+
+    def validation_report(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+    ) -> ValidationReport:
+        """Return a read-only readiness report for the active approved revision."""
+        _board, revision = self.__promotion_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        try:
+            from .workbench_promotion import repository_root
+
+            root = repository_root(self.__library)
+        except ValueError as error:
+            raise WorkbenchServiceError(str(error)) from error
+        return build_validation_report(
+            revision.run_root,
+            root,
+            board_id=board_id,
+            revision_id=revision.id,
+        )
+
     def __library_open_lock(self, board_id: str) -> RLock:
         with self.__library_open_locks_guard:
             return self.__library_open_locks.setdefault(board_id, RLock())
+
+    def __promotion_revision(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> tuple[BoardRecord, RevisionRecord]:
+        board, revision = self.__active_revision(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        try:
+            status = read_status(revision.run_root)
+        except (OSError, ValueError) as error:
+            raise WorkbenchServiceError(
+                f"revision {revision.id} does not have a complete approved run"
+            ) from error
+        if status.get("status") != "complete" or status.get("stage") != _FINAL_STAGE:
+            raise WorkbenchServiceError(
+                f"revision {revision.id} does not have a complete approved run"
+            )
+        return board, revision
 
     def __start(
         self, board: BoardRecord, revision: RevisionRecord, source: str
