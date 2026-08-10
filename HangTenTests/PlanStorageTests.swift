@@ -894,6 +894,7 @@ final class PlanStorageTests: XCTestCase {
     func testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage() throws {
         let audit = try loadPlanCueAudit()
         let library = BuiltInPlanLibraryDefinition.document
+        let store = try PlanLibraryStore(definition: library)
 
         let sourcesByPlanID = Dictionary(grouping: audit.planSources, by: \.planID)
         let builtInPlanIDs = Set(library.plans.map(\.id))
@@ -908,9 +909,13 @@ final class PlanStorageTests: XCTestCase {
                 sourcesByPlanID[plan.id]?.only,
                 "Expected exactly one source-manifest entry for \(plan.id)."
             )
+            let sourceURL = try XCTUnwrap(
+                plan.metadata.sourceURL,
+                "Expected a source URL for \(plan.id)."
+            )
             XCTAssertEqual(source.sourceType, plan.metadata.category)
             XCTAssertEqual(source.sourceLabel, plan.metadata.sourceLabel)
-            XCTAssertEqual(source.sourceURL, plan.metadata.sourceURL.absoluteString)
+            XCTAssertEqual(source.sourceURL, sourceURL.absoluteString)
         }
 
         let expectedPlanFieldKeys = Set(
@@ -920,19 +925,38 @@ final class PlanStorageTests: XCTestCase {
                 }
             }
         )
+        let expectedRetainedPlanFieldKeys = expectedPlanCueAuditKeys(in: store)
         let planRulesByKey = Dictionary(grouping: audit.planFieldRules.flatMap { rule in
             rule.fields.map { field in
                 (CueAuditKey(planID: rule.planID, stepID: nil, field: field), rule)
             }
         }, by: { $0.0 })
-        let missingPlanFields = expectedPlanFieldKeys.filter { planRulesByKey[$0] == nil }
+        let missingPlanFields = expectedRetainedPlanFieldKeys.filter { key in
+            !audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.isRetained
+            }
+        }
+        let retainedPlanFieldsWithRemoveRules = expectedRetainedPlanFieldKeys.filter { key in
+            audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.decision == "remove"
+            }
+        }
+        let uncategorizedPlanFields = expectedPlanFieldKeys.filter { planRulesByKey[$0] == nil }
         let multiplyCoveredPlanFields = expectedPlanFieldKeys.filter {
             planRulesByKey[$0, default: []].count != 1
         }
 
         XCTAssertTrue(
             missingPlanFields.isEmpty,
-            "Missing plan-level cue audit coverage:\n\(missingPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+            "Missing retained plan-level cue audit coverage:\n\(missingPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            retainedPlanFieldsWithRemoveRules.isEmpty,
+            "Retained plan-level fields must not have remove rules:\n\(retainedPlanFieldsWithRemoveRules.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            uncategorizedPlanFields.isEmpty,
+            "Missing plan-level cue audit decisions:\n\(uncategorizedPlanFields.sorted().map(\.description).joined(separator: "\n"))"
         )
         XCTAssertTrue(
             multiplyCoveredPlanFields.isEmpty,
@@ -1005,6 +1029,28 @@ final class PlanStorageTests: XCTestCase {
                 $0.decision == "adapt" && $0.sourcePrescription == false
             },
             "Retained step timer/range adaptations must be adapt rules and not source-prescribed."
+        )
+
+        let actualTimerOrRangePlanKeys = expectedRetainedPlanFieldKeys.filter { key in
+            audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.isTimerOrRangeAdaptation
+            }
+        }
+        XCTAssertEqual(
+            actualTimerOrRangePlanKeys,
+            expectedTimerOrRangePlanCueAuditKeys(in: store),
+            "Timer/range plan adaptations must match the built-in library's actual retained adaptations."
+        )
+
+        let actualTimerOrRangeStepKeys = expectedStepFieldKeys.filter { key in
+            audit.stepFieldRules.contains { rule in
+                rule.matches(key) && rule.isTimerOrRangeAdaptation
+            }
+        }
+        XCTAssertEqual(
+            actualTimerOrRangeStepKeys,
+            try expectedTimerOrRangeStepCueAuditKeys(in: library),
+            "Timer/range step adaptations must match the built-in library's actual retained adaptations."
         )
 
         for planID in [
@@ -1106,6 +1152,140 @@ final class PlanStorageTests: XCTestCase {
         ]
     }
 
+    private func expectedPlanCueAuditKeys(in store: PlanLibraryStore) -> Set<CueAuditKey> {
+        Set(store.plans.flatMap { plan in
+            var keys: [CueAuditKey] = []
+            if plan.title.hasVisibleText {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "title"))
+            }
+            if plan.subtitle.hasVisibleText {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "subtitle"))
+            }
+            if plan.steps.contains(where: { $0.instruction.hasVisibleText }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "instruction"))
+            }
+            if plan.steps.contains(where: { $0.accessory.hasVisibleText }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "accessory"))
+            }
+            if plan.steps.contains(where: { !$0.targets.isEmpty }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "target"))
+            }
+            if !plan.steps.isEmpty {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "count"))
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "interval"))
+            }
+            if plan.duration > 0 {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "duration"))
+            }
+            if plan.steps.contains(where: { $0.phase == .warmUp }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "warmUp"))
+            }
+            if plan.steps.contains(where: { $0.phase == .cooldown }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "cooldown"))
+            }
+            if plan.steps.contains(where: { $0.gripType != nil }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "gripType"))
+            }
+            if plan.steps.contains(where: { $0.fingerConfiguration != nil }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "fingerConfiguration"))
+            }
+            return keys
+        })
+    }
+
+    private func expectedTimerOrRangePlanCueAuditKeys(in store: PlanLibraryStore) -> Set<CueAuditKey> {
+        Set(store.plans.flatMap { plan in
+            timerOrRangePlanFields(for: plan.id).map {
+                CueAuditKey(planID: plan.id, stepID: nil, field: $0)
+            }
+        })
+    }
+
+    private func expectedTimerOrRangeStepCueAuditKeys(in library: PlanLibraryDefinition) throws -> Set<CueAuditKey> {
+        let blocksByID = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
+
+        return try Set(library.plans.flatMap { plan in
+            try plan.blocks.flatMap { reference in
+                let block = try XCTUnwrap(
+                    blocksByID[reference.blockID],
+                    "Missing block \(reference.blockID) while building timer/range audit expectations."
+                )
+
+                return block.steps.flatMap { step in
+                    timerOrRangeStepFields(for: plan.id, step: step).map {
+                        CueAuditKey(planID: plan.id, stepID: step.id, field: $0)
+                    }
+                }
+            }
+        })
+    }
+
+    private func timerOrRangePlanFields(for planID: String) -> [String] {
+        switch planID {
+        case LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+            return ["subtitle", "accessory", "duration", "interval"]
+        case "research.max-hangs":
+            return ["subtitle", "accessory", "count", "duration", "interval"]
+        case "research.force-feedback-f100":
+            return ["subtitle", "instruction", "count", "interval"]
+        case "research.eva-int-hangs":
+            return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
+        case "research.abrahangs":
+            return ["subtitle", "accessory", "duration", "interval"]
+        case "coach.horst-seven-fifty-three":
+            return ["subtitle", "count", "interval"]
+        case "coach.bechtel-three-six-nine":
+            return ["subtitle", "accessory", "count", "interval"]
+        case "coach.density-hangs":
+            return ["subtitle", "accessory", "count", "duration", "interval"]
+        default:
+            return []
+        }
+    }
+
+    private func timerOrRangeStepFields(for planID: String, step: WorkoutStepDefinition) -> [String] {
+        switch planID {
+        case LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+            guard step.phase == .rest else { return [] }
+            return visibleCueFields(
+                instruction: step.instruction,
+                accessory: step.accessory
+            )
+        case "research.max-hangs":
+            return visibleCueFields(accessory: step.accessory)
+        case "research.eva-int-hangs":
+            return visibleCueFields(
+                instruction: step.instruction,
+                accessory: step.accessory
+            )
+        case "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs":
+            return visibleCueFields(accessory: step.accessory)
+        default:
+            return []
+        }
+    }
+
+    private func visibleCueFields(
+        instruction: String? = nil,
+        accessory: String? = nil
+    ) -> [String] {
+        var fields: [String] = []
+        if instruction?.hasVisibleText == true {
+            fields.append("instruction")
+        }
+        if accessory?.hasVisibleText == true {
+            fields.append("accessory")
+        }
+        return fields
+    }
+
     private func expectedStepCueAuditKeys(in library: PlanLibraryDefinition) throws -> Set<CueAuditKey> {
         let blocksByID = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
 
@@ -1118,10 +1298,10 @@ final class PlanStorageTests: XCTestCase {
 
                 return block.steps.flatMap { step in
                     var keys: [CueAuditKey] = []
-                    if !step.instruction.isEmpty {
+                    if step.instruction.hasVisibleText {
                         keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "instruction"))
                     }
-                    if !step.accessory.isEmpty {
+                    if step.accessory.hasVisibleText {
                         keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "accessory"))
                     }
                     if step.gripType != nil {
@@ -1208,6 +1388,10 @@ private extension CueAuditDecision {
     var isRetained: Bool {
         decision == "keep" || decision == "adapt"
     }
+
+    var isTimerOrRangeAdaptation: Bool {
+        adaptationType == "timer" || adaptationType == "range"
+    }
 }
 
 private struct AnyCueAuditDecision: CueAuditDecision {
@@ -1242,6 +1426,12 @@ private struct PlanSourceManifestEntry: Decodable {
 private extension Collection {
     var only: Element? {
         count == 1 ? first : nil
+    }
+}
+
+private extension String {
+    var hasVisibleText: Bool {
+        !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
