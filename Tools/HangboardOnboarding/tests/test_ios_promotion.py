@@ -211,6 +211,107 @@ def test_default_preview_accepts_the_worktree_main_baseline(tmp_path: Path) -> N
     assert preview.issues == ()
 
 
+def test_render_plan_library_rewrites_only_the_exact_board_id_value() -> None:
+    """Substring matches in notes, URLs, or identifiers must stay untouched."""
+    current = json.dumps(
+        {
+            "boardMappings": [
+                {
+                    "boardID": "metolius.wood-grips-compact-ii",
+                    "identifier": "board-metolius.wood-grips-compact-ii-bundle",
+                    "notes": [
+                        "keep metolius.wood-grips-compact-ii-beta",
+                        "legacy metolius.wood-grips-compact-ii note",
+                    ],
+                    "semanticHolds": {
+                        "outer-jugs": {"holdIDs": ["jug-left", "jug-right"]},
+                    },
+                    "sourceURL": (
+                        "https://example.com/boards/"
+                        "metolius.wood-grips-compact-ii?boardID=metolius.wood-grips-compact-ii"
+                    ),
+                }
+            ]
+        },
+        indent=2,
+    )
+
+    proposed = ios_promotion._render_plan_library(
+        current,
+        "metolius.wood-grips-compact-iii",
+        {"outer-jugs": ("jug-left", "jug-right")},
+    )
+    document = json.loads(proposed)
+    mapping = document["boardMappings"][0]
+
+    assert mapping["boardID"] == "metolius.wood-grips-compact-iii"
+    assert mapping["identifier"] == "board-metolius.wood-grips-compact-ii-bundle"
+    assert mapping["notes"] == [
+        "keep metolius.wood-grips-compact-ii-beta",
+        "legacy metolius.wood-grips-compact-ii note",
+    ]
+    assert (
+        mapping["sourceURL"]
+        == "https://example.com/boards/metolius.wood-grips-compact-ii?boardID=metolius.wood-grips-compact-ii"
+    )
+
+
+def test_render_plan_library_does_not_require_the_old_board_id_elsewhere_in_document() -> None:
+    """The mapping's exact boardID value is the only old-ID reference that must matter."""
+    current = json.dumps(
+        {
+            "boardMappings": [
+                {
+                    "boardID": "metolius.wood-grips-compact-ii",
+                    "semanticHolds": {
+                        "outer-jugs": {"holdIDs": ["jug-left", "jug-right"]},
+                    },
+                }
+            ]
+        },
+        indent=2,
+    )
+
+    proposed = ios_promotion._render_plan_library(
+        current,
+        "metolius.wood-grips-compact-iii",
+        {"outer-jugs": ("jug-left", "jug-right")},
+    )
+
+    assert json.loads(proposed)["boardMappings"][0]["boardID"] == "metolius.wood-grips-compact-iii"
+
+
+@pytest.mark.parametrize("expected_base_ref", ["", "-bad", "bad ref", "bad..ref"])
+def test_assert_targets_at_base_rejects_invalid_git_refs_before_diff(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, expected_base_ref: str
+) -> None:
+    """Invalid refs must fail before any git diff invocation is attempted."""
+    repository_root = _repository_at_main(tmp_path)
+    real_run = ios_promotion.subprocess.run
+    diff_calls: list[list[str]] = []
+
+    def run_spy(*args: object, **kwargs: object):
+        command = args[0]
+        assert isinstance(command, list)
+        if len(command) >= 4 and command[2] == "diff":
+            diff_calls.append(command)
+        return real_run(*args, **kwargs)
+
+    monkeypatch.setattr(ios_promotion.subprocess, "run", run_spy)
+
+    with pytest.raises(ValueError):
+        ios_promotion._assert_targets_at_base(repository_root, expected_base_ref)
+
+    assert diff_calls == []
+
+
+def test_assert_targets_at_base_accepts_a_valid_git_ref(tmp_path: Path) -> None:
+    """A valid base ref should preserve the existing diff-based verification path."""
+    repository_root = _repository_at_main(tmp_path)
+
+    ios_promotion._assert_targets_at_base(repository_root, "main")
+
+
 def _copied_run(tmp_path: Path) -> Path:
     run_root = tmp_path / "accepted-run"
     shutil.copytree(ACCEPTED_RUN, run_root)

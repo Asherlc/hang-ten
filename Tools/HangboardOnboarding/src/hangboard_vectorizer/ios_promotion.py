@@ -443,14 +443,13 @@ def _render_plan_library(current: str, board_id: str, semantic_holds: Mapping[st
     previous_board_id = _string(mapping.get("boardID"), "PlanLibrary board ID")
     if mapping.get("semanticHolds") is None:
         raise ValueError("PlanLibrary board mapping anchor is missing semanticHolds")
+    if previous_board_id not in current:
+        raise ValueError("PlanLibrary board ID anchor is absent")
     anchor_start, anchor_end = _json_board_mapping_span(current)
     mapping["boardID"] = board_id
     mapping["semanticHolds"] = {key: {"holdIDs": list(value)} for key, value in semantic_holds.items()}
     replacement = _indent_json(mapping, 4)
-    proposed = current[:anchor_start] + replacement + current[anchor_end:]
-    if proposed.count(previous_board_id) == 0:
-        raise ValueError("PlanLibrary board ID anchor is absent")
-    return proposed.replace(previous_board_id, board_id)
+    return current[:anchor_start] + replacement + current[anchor_end:]
 
 
 def _json_board_mapping_span(source: str) -> tuple[int, int]:
@@ -659,6 +658,12 @@ def _matching_delimiter(source: str, opening: int, left: str, right: str) -> int
 
 
 def _assert_targets_at_base(repository_root: Path, expected_base_ref: str) -> None:
+    validation = subprocess.run(
+        ["git", "-C", str(repository_root), "check-ref-format", "--allow-onelevel", expected_base_ref],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+    if validation.returncode != 0:
+        raise ValueError(f"invalid base ref: {expected_base_ref}")
     for path in _TARGET_PATHS:
         result = subprocess.run(
             ["git", "-C", str(repository_root), "diff", "--quiet", expected_base_ref, "--", path],
