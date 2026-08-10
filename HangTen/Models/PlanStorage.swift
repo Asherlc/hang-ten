@@ -1384,7 +1384,8 @@ enum BuiltInPlanLibraryDefinition {
             )
         }
         let sharedCoolDown = legacyPlans.first {
-            $0.steps.last?.phase == .coolDown && $0.steps.last?.duration == 60
+            $0.steps.last?.phase == .coolDown
+                && $0.steps.last?.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration
         }?.steps.last.map {
             WorkoutBlockDefinition(
                 id: "shared.cool-down",
@@ -1503,7 +1504,7 @@ enum BuiltInPlanLibraryDefinition {
         if let last = plan.steps.last,
            let sharedCoolDown,
            last.phase == .coolDown,
-           last.duration == 60,
+           last.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration,
            last.title == sharedCoolDown.title,
            last.instruction == sharedCoolDown.steps[0].instruction {
             lastIndex -= 1

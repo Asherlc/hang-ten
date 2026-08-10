@@ -1321,6 +1321,7 @@ enum LegacyPlanSeedCatalog {
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
     static let sharedWarmUpDuration: TimeInterval = 60
+    static let sharedCoolDownDuration: TimeInterval = 60
 
     private static func warmUpStep(
         id: String,
