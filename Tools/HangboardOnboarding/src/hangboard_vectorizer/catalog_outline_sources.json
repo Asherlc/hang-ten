@@ -10,7 +10,106 @@
           "two- through four-finger pockets"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 16,
+      "minimumContours": 10,
+      "layout": "symmetric rows of jugs, pockets, and rails",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.4,
+            0.15,
+            0.055
+          ],
+          "kind": "jug",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.73,
+            0.4,
+            0.15,
+            0.055
+          ],
+          "kind": "jug",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.33,
+            0.4,
+            0.08,
+            0.045
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.49,
+            0.18,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.49,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.45,
+            0.49,
+            0.07,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.59,
+            0.16,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.59,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.43,
+            0.59,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
   },
   "beastmaker-2000": {
     "references": [
@@ -22,170 +121,486 @@
           "no beginner jugs claimed without visual confirmation"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric three-row pocket and rail layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.36,
+            0.27,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.36,
+            0.43,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.49,
+            0.43,
+            0.08,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.09,
+            0.48,
+            0.16,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.3,
+            0.48,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.42,
+            0.48,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.09,
+            0.64,
+            0.16,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.3,
+            0.64,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.42,
+            0.64,
+            0.09,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
   },
-  "tension-whetstone": {
+  "dewoodstok-woodbord": {
     "references": [
       {
-        "title": "Tension Hangboards",
-        "url": "https://tensionclimbing.com/pages/hangboards",
+        "title": "deWoodstok Woodbord",
+        "url": "https://dewoodstok.com/",
         "hints": [
-          "top jug with ergo bumps",
-          "40mm center edge",
-          "40mm two-finger pockets",
-          "40/30/25/20mm edges"
+          "training hangboard from solid bamboo",
+          "compact one-piece layout",
+          "symmetric edge-focused profile"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 16,
+      "minimumContours": 10,
+      "layout": "symmetric three-row pocket and edge layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.13,
+            0.31,
+            0.14,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.31,
+            0.09,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.48,
+            0.31,
+            0.07,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.13,
+            0.44,
+            0.14,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.44,
+            0.09,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.48,
+            0.44,
+            0.07,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.13,
+            0.57,
+            0.14,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.57,
+            0.09,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.48,
+            0.57,
+            0.07,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": false
+        }
+      ]
+    }
   },
-  "tension-grindstone": {
+  "escape-beta": {
     "references": [
       {
-        "title": "Tension Hangboards",
-        "url": "https://tensionclimbing.com/pages/hangboards",
+        "title": "Beta Board",
+        "url": "https://escapeclimbing.com/products/ec72100",
         "hints": [
-          "full-width bar jug",
-          "50mm center edge",
-          "30/25/20/15/10/8mm edges"
+          "dual texture surface",
+          "ergonomic edge-and-pocket layout",
+          "skin-friendly training profile"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric staggered edge and pocket rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.19,
+            0.43,
+            0.16,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.43,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.18,
+            0.52,
+            0.18,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.52,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.2,
+            0.61,
+            0.14,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.61,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
   },
-  "tension-honestone": {
+  "escape-unlimited": {
     "references": [
       {
-        "title": "Tension Hangboards",
-        "url": "https://tensionclimbing.com/pages/hangboards",
+        "title": "Unlimited Board",
+        "url": "https://escapeclimbing.com/products/ec72000",
         "hints": [
-          "35- and 45-degree top slopers",
-          "25mm center edge",
-          "one-finger pockets",
-          "20/15/10/8mm edges"
+          "simplified full-width edge design",
+          "open-ended grip positions",
+          "wide training span"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 6,
+      "minimumContours": 6,
+      "layout": "three full-width open-ended edge rails",
+      "symmetric": true,
+      "allowsLongRails": true,
+      "manualContours": [
+        {
+          "bounds": [
+            0.1,
+            0.49,
+            0.36,
+            0.05
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.58,
+            0.36,
+            0.05
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.67,
+            0.36,
+            0.05
+          ],
+          "kind": "rail",
+          "mirror": true
+        }
+      ]
+    }
   },
-  "metolius-project": {
+  "evolv-kilter-basic-long": {
     "references": [
       {
-        "title": "Project Training Board",
-        "url": "https://www.metoliusclimbing.com/products/project-training-board",
+        "title": "Basic Training Board (Long)",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
         "hints": [
-          "broad arc",
-          "outward and downward taper",
-          "perfectly symmetric CAD/CAM layout"
+          "rounded jug",
+          "20mm, 15mm, and 10mm rounded edges",
+          "simple full-width board"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 3,
+      "minimumContours": 3,
+      "layout": "three continuous full-width rounded edge rails",
+      "symmetric": false,
+      "allowsLongRails": true,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.48,
+            0.76,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.12,
+            0.57,
+            0.76,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.12,
+            0.66,
+            0.76,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": false
+        }
+      ]
+    }
   },
-  "metolius-climbers-edge": {
+  "frictitious-doormount-pro-7": {
     "references": [
       {
-        "title": "Climbers Edge Board",
-        "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+        "title": "DoorMount Pro 7",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
         "hints": [
-          "7.5/10/12.5/15/17.5/20mm edges",
-          "40mm radius round sloper",
-          "20-degree flat sloper",
-          "jugs"
+          "seven-hold layout",
+          "35mm to 10mm edges",
+          "pull-up jug and pockets"
         ]
       }
-    ]
-  },
-  "metolius-simulator-3d": {
-    "references": [
-      {
-        "title": "Simulator 3D Training Guide",
-        "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
-        "hints": [
-          "outer jugs",
-          "flat and round slopers",
-          "deep/medium/shallow edges",
-          "numbered pocket rows"
-        ]
-      }
-    ]
-  },
-  "metolius-contact": {
-    "references": [
-      {
-        "title": "Metolius Climbing Hold Catalog",
-        "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
-        "hints": [
-          "11 pockets",
-          "four central edges",
-          "top pull-up jugs",
-          "rounded and flat slopers"
-        ]
-      }
-    ]
-  },
-  "trango-rock-prodigy-natural": {
-    "references": [
-      {
-        "title": "Rock Prodigy Natural",
-        "url": "https://trango.com/products/rock-prodigy-natural",
-        "hints": [
-          "two variable-depth rails",
-          "three pockets",
-          "closed crimp",
-          "small and large pinches"
-        ]
-      }
-    ]
-  },
-  "trango-rock-prodigy-forge": {
-    "references": [
-      {
-        "title": "Rock Prodigy Forge",
-        "url": "https://trango.com/products/rock-prodigy-forge",
-        "hints": [
-          "closed-crimp grip with thumb support",
-          "drafted pockets",
-          "steeper slopers",
-          "different holds from Training Center"
-        ]
-      }
-    ]
-  },
-  "trango-rock-prodigy-pivot": {
-    "references": [
-      {
-        "title": "Rock Prodigy Pivot",
-        "url": "https://trango.com/products/rock-prodigy-pivot",
-        "hints": [
-          "22 distinct grip positions",
-          "rotatable four-orientation system",
-          "adjustable shoulder width"
-        ]
-      }
-    ]
-  },
-  "trango-rock-prodigy-training-center": {
-    "references": [
-      {
-        "title": "Rock Prodigy Training Center",
-        "url": "https://trango.com/products/rock-prodigy-training-center",
-        "hints": [
-          "two-piece adjustable layout",
-          "index bumps along variable edge rails",
-          "symmetric hold design"
-        ]
-      }
-    ]
-  },
-  "lattice-triple-rung": {
-    "references": [
-      {
-        "title": "Triple Rung",
-        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
-        "hints": [
-          "continuous 45mm, 20mm, and 10mm edges",
-          "no pockets",
-          "wide-radius extruded design"
-        ]
-      }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 8,
+      "minimumContours": 7,
+      "layout": "symmetric seven-position edge and pocket layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.13,
+            0.43,
+            0.17,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.43,
+            0.13,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.18,
+            0.54,
+            0.2,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.41,
+            0.54,
+            0.08,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.25,
+            0.64,
+            0.14,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.41,
+            0.64,
+            0.08,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
   },
   "frictitious-megalith": {
     "references": [
@@ -199,7 +614,775 @@
           "8mm to 40mm edges"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 8,
+      "minimumContours": 6,
+      "layout": "symmetric full-width jug and long edge layout",
+      "symmetric": true,
+      "allowsLongRails": true,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.43,
+            0.32,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.52,
+            0.3,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.37,
+            0.52,
+            0.1,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.14,
+            0.64,
+            0.27,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "lattice-triple-rung": {
+    "references": [
+      {
+        "title": "Triple Rung",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "hints": [
+          "continuous 45mm, 20mm, and 10mm edges",
+          "no pockets",
+          "wide-radius extruded design"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 3,
+      "minimumContours": 3,
+      "layout": "three continuous long-radius full-width rails",
+      "symmetric": false,
+      "allowsLongRails": true,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.43,
+            0.84,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.52,
+            0.84,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.61,
+            0.84,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": false
+        }
+      ]
+    }
+  },
+  "metolius-climbers-edge": {
+    "references": [
+      {
+        "title": "Climbers Edge Board",
+        "url": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+        "hints": [
+          "7.5/10/12.5/15/17.5/20mm edges",
+          "40mm radius round sloper",
+          "20-degree flat sloper",
+          "jugs"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric outer jugs, slopers, and edge rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.34,
+            0.14,
+            0.07
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.34,
+            0.1,
+            0.07
+          ],
+          "kind": "sloper",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.13,
+            0.46,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.46,
+            0.1,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.13,
+            0.57,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.57,
+            0.1,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.13,
+            0.68,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.68,
+            0.1,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "metolius-contact": {
+    "references": [
+      {
+        "title": "Metolius Climbing Hold Catalog",
+        "url": "https://www.metoliusclimbing.com/pdf/Climbing-Hold-Catalog.pdf",
+        "hints": [
+          "11 pockets",
+          "four central edges",
+          "top pull-up jugs",
+          "rounded and flat slopers"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 16,
+      "minimumContours": 12,
+      "layout": "symmetric outer pocket grid with central edge rails",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.14,
+            0.38,
+            0.09,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.38,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.38,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.14,
+            0.49,
+            0.09,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.49,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.49,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.14,
+            0.6,
+            0.09,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.6,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.6,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.22,
+            0.71,
+            0.16,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.71,
+            0.08,
+            0.055
+          ],
+          "kind": "pocket",
+          "mirror": false
+        }
+      ]
+    }
+  },
+  "metolius-project": {
+    "references": [
+      {
+        "title": "Project Training Board",
+        "url": "https://www.metoliusclimbing.com/products/project-training-board",
+        "hints": [
+          "broad arc",
+          "outward and downward taper",
+          "perfectly symmetric CAD/CAM layout"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 8,
+      "minimumContours": 6,
+      "layout": "symmetric central rails with outer jug pockets",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.16,
+            0.37,
+            0.12,
+            0.07
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.37,
+            0.16,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.48,
+            0.18,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.59,
+            0.18,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.7,
+            0.14,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "metolius-simulator-3d": {
+    "references": [
+      {
+        "title": "Simulator 3D Training Guide",
+        "url": "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide",
+        "hints": [
+          "outer jugs",
+          "flat and round slopers",
+          "deep/medium/shallow edges",
+          "numbered pocket rows"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric pocket rows, central slopers, and outer jugs",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.11,
+            0.35,
+            0.12,
+            0.06
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.35,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.35,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.11,
+            0.47,
+            0.12,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.47,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.47,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.11,
+            0.59,
+            0.12,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.59,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.59,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.67,
+            0.1,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "moon-armstrong": {
+    "references": [
+      {
+        "title": "Moon Armstrong Fingerboard",
+        "url": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
+        "hints": [
+          "22mm and 18mm central one-arm edges",
+          "shoulder-width two-arm layout",
+          "jug and slopers"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 16,
+      "minimumContours": 12,
+      "layout": "symmetric stacked pocket and central edge columns",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.1,
+            0.35,
+            0.15,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.35,
+            0.12,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.43,
+            0.35,
+            0.07,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.1,
+            0.46,
+            0.15,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.46,
+            0.12,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.57,
+            0.15,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.57,
+            0.12,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.68,
+            0.15,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.68,
+            0.12,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "nature-stoak-board-iii": {
+    "references": [
+      {
+        "title": "Nature Climbing Stoak Board III",
+        "url": "https://natureclimbing.com/products/stoak-board-iii",
+        "hints": [
+          "recycled granite center edge",
+          "22mm one-arm edge",
+          "comfortable top jug"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 5,
+      "minimumContours": 4,
+      "layout": "symmetric side edges around a central top jug and edge",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.14,
+            0.48,
+            0.18,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.48,
+            0.3,
+            0.065
+          ],
+          "kind": "jug",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.18,
+            0.6,
+            0.15,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.36,
+            0.6,
+            0.12,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": false
+        }
+      ]
+    }
+  },
+  "soill-iron-palm-2": {
+    "references": [
+      {
+        "title": "Iron Palm 2.0",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "hints": [
+          "slopey slopers",
+          "thicker incut top rung",
+          "thumb-catch pinches and edges"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 4,
+      "minimumContours": 4,
+      "layout": "symmetric sloper spheres with central rails and lower catches",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.34,
+            0.37,
+            0.12,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.26,
+            0.48,
+            0.24,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.27,
+            0.61,
+            0.16,
+            0.065
+          ],
+          "kind": "sloper",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.68,
+            0.08,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
   },
   "soill-split-palm": {
     "references": [
@@ -212,6 +1395,1409 @@
           "multiple crimp sizes and angles"
         ]
       }
-    ]
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 8,
+      "minimumContours": 6,
+      "layout": "symmetric two-piece slopers, pinches, and edge bars",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.04,
+            0.34,
+            0.2,
+            0.055
+          ],
+          "kind": "sloper",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.04,
+            0.45,
+            0.18,
+            0.055
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.14,
+            0.56,
+            0.14,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.18,
+            0.66,
+            0.1,
+            0.055
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "soill-training-tiles": {
+    "references": [
+      {
+        "title": "Training Tiles • So iLL x Meagan Martin",
+        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
+        "hints": [
+          "two-piece training tile layout",
+          "beginner-to-advanced versatility",
+          "wide mirrored spacing"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric two-piece training tiles with internal bars",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.07,
+            0.35,
+            0.13,
+            0.08
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.22,
+            0.39,
+            0.14,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.51,
+            0.18,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.26,
+            0.53,
+            0.12,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.64,
+            0.17,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "target10a-linebreaker-base": {
+    "references": [
+      {
+        "title": "Linebreaker BASE Trainingsboard",
+        "url": "https://www.target10a.com/en/linebreaker-boards/515-linebreaker-base-trainingsboard-airbase.html",
+        "hints": [
+          "many relatively deep grips",
+          "four-, three-, and two-finger pockets",
+          "large pull-up jugs"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric dense three-row pocket and jug layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.39,
+            0.13,
+            0.06
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.39,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.39,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.49,
+            0.16,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.49,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.49,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.6,
+            0.16,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.6,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.6,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "tension-grindstone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "full-width bar jug",
+          "50mm center edge",
+          "30/25/20/15/10/8mm edges"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 8,
+      "minimumContours": 6,
+      "layout": "symmetric three-row split rail layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.1,
+            0.38,
+            0.31,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.49,
+            0.31,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.61,
+            0.31,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "tension-honestone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "35- and 45-degree top slopers",
+          "25mm center edge",
+          "one-finger pockets",
+          "20/15/10/8mm edges"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric side jugs with split sloper and edge rails",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.42,
+            0.06,
+            0.12
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.17,
+            0.39,
+            0.24,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.17,
+            0.51,
+            0.22,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.17,
+            0.63,
+            0.22,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.36,
+            0.43,
+            0.1,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "tension-whetstone": {
+    "references": [
+      {
+        "title": "Tension Hangboards",
+        "url": "https://tensionclimbing.com/pages/hangboards",
+        "hints": [
+          "top jug with ergo bumps",
+          "40mm center edge",
+          "40mm two-finger pockets",
+          "40/30/25/20mm edges"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric two-piece jug, pocket, and edge rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.04,
+            0.4,
+            0.08,
+            0.1
+          ],
+          "kind": "jug",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.14,
+            0.39,
+            0.22,
+            0.065
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.39,
+            0.08,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.14,
+            0.51,
+            0.22,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.51,
+            0.08,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.14,
+            0.63,
+            0.22,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "trango-rock-prodigy-forge": {
+    "references": [
+      {
+        "title": "Rock Prodigy Forge",
+        "url": "https://trango.com/products/rock-prodigy-forge",
+        "hints": [
+          "closed-crimp grip with thumb support",
+          "drafted pockets",
+          "steeper slopers",
+          "different holds from Training Center"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric two-piece rails, pockets, and thumb-supported edges",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.12,
+            0.38,
+            0.21,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.38,
+            0.1,
+            0.07
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.12,
+            0.5,
+            0.21,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.5,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.2,
+            0.56,
+            0.14,
+            0.065
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.36,
+            0.56,
+            0.08,
+            0.065
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "trango-rock-prodigy-natural": {
+    "references": [
+      {
+        "title": "Rock Prodigy Natural",
+        "url": "https://trango.com/products/rock-prodigy-natural",
+        "hints": [
+          "two variable-depth rails",
+          "three pockets",
+          "closed crimp",
+          "small and large pinches"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 12,
+      "minimumContours": 10,
+      "layout": "symmetric two-piece stacked rails with pockets",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.1,
+            0.34,
+            0.3,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.45,
+            0.3,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.1,
+            0.56,
+            0.18,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.3,
+            0.56,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.18,
+            0.68,
+            0.14,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.68,
+            0.08,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "trango-rock-prodigy-pivot": {
+    "references": [
+      {
+        "title": "Rock Prodigy Pivot",
+        "url": "https://trango.com/products/rock-prodigy-pivot",
+        "hints": [
+          "22 distinct grip positions",
+          "rotatable four-orientation system",
+          "adjustable shoulder width"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 12,
+      "minimumContours": 10,
+      "layout": "symmetric two-piece adjustable rails and pocket clusters",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.11,
+            0.37,
+            0.24,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.37,
+            0.37,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.11,
+            0.49,
+            0.22,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.35,
+            0.49,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.18,
+            0.61,
+            0.16,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.34,
+            0.61,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "trango-rock-prodigy-training-center": {
+    "references": [
+      {
+        "title": "Rock Prodigy Training Center",
+        "url": "https://trango.com/products/rock-prodigy-training-center",
+        "hints": [
+          "two-piece adjustable layout",
+          "index bumps along variable edge rails",
+          "symmetric hold design"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 12,
+      "minimumContours": 10,
+      "layout": "symmetric two-piece central rails and lower pocket rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.19,
+            0.37,
+            0.18,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.37,
+            0.07,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.19,
+            0.48,
+            0.18,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.48,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.24,
+            0.59,
+            0.12,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.59,
+            0.07,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.67,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "yy-verticalboard-evo": {
+    "references": [
+      {
+        "title": "VerticalBoard Evo",
+        "url": "https://www.yyvertical.com/en/collections/poutres-escalade",
+        "hints": [
+          "43°, 38°, and 35° dishes",
+          "20mm and 18mm edges",
+          "one- and two-finger pockets"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric dishes, pocket clusters, and edge rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.35,
+            0.13,
+            0.07
+          ],
+          "kind": "sloper",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.25,
+            0.35,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.36,
+            0.35,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.47,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.47,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.37,
+            0.47,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.59,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.28,
+            0.59,
+            0.11,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.17,
+            0.66,
+            0.16,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "yy-verticalboard-first": {
+    "references": [
+      {
+        "title": "VerticalBoard First",
+        "url": "https://www.yyvertical.com/en/blogs/news/la-nouvelle-gamme-de-poutres-d-escalade-verticalboard",
+        "hints": [
+          "progressive beginner-to-intermediate layout",
+          "simple symmetric training board",
+          "large holds and edges"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric beginner edge and pocket rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.38,
+            0.14,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.38,
+            0.14,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.5,
+            0.18,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.5,
+            0.08,
+            0.07
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.62,
+            0.18,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.62,
+            0.08,
+            0.07
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "yy-verticalboard-light": {
+    "references": [
+      {
+        "title": "VerticalBoard Light",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "hints": [
+          "beginner-focused simple layout",
+          "large accessible holds",
+          "intuitive symmetric spacing"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 10,
+      "minimumContours": 8,
+      "layout": "symmetric large accessible edge rows",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.38,
+            0.16,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.38,
+            0.16,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.51,
+            0.16,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.29,
+            0.51,
+            0.16,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.08,
+            0.61,
+            0.18,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.31,
+            0.61,
+            0.14,
+            0.08
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "yy-verticalboard-one": {
+    "references": [
+      {
+        "title": "VerticalBoard One",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "hints": [
+          "5 sizes of rulers",
+          "two types of bidoigts",
+          "multifunction central handle"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric five-size edge rows with center handle",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.37,
+            0.14,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.37,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.37,
+            0.08,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.49,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.27,
+            0.49,
+            0.12,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.39,
+            0.49,
+            0.08,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.61,
+            0.17,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.28,
+            0.61,
+            0.12,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
+  },
+  "zlagboard-evo": {
+    "references": [
+      {
+        "title": "Zlagboard.Evo",
+        "url": "https://zlagboard.com/hangboards",
+        "hints": [
+          "compact light design",
+          "crimps, pockets, slopers, and jugs",
+          "beginner-to-intermediate board"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 14,
+      "minimumContours": 10,
+      "layout": "symmetric compact three-row pocket and rail layout",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.36,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.28,
+            0.36,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.36,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.48,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.28,
+            0.48,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.48,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.6,
+            0.15,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.28,
+            0.6,
+            0.1,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.4,
+            0.6,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        }
+      ]
+    }
+  },
+  "zlagboard-pro": {
+    "references": [
+      {
+        "title": "Zlagboard.Pro",
+        "url": "https://zlagboard.com/hangboards",
+        "hints": [
+          "ergonomical hold shapes and sizes",
+          "crimps, pockets, slopers, and jugs",
+          "full-size training board"
+        ]
+      }
+    ],
+    "outlineGuidance": {
+      "approximateHoldCount": 22,
+      "minimumContours": 16,
+      "layout": "symmetric dense three-row pocket grid and outer rails",
+      "symmetric": true,
+      "allowsLongRails": false,
+      "manualContours": [
+        {
+          "bounds": [
+            0.08,
+            0.32,
+            0.14,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.26,
+            0.32,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.32,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.44,
+            0.14,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.26,
+            0.44,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.44,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.56,
+            0.14,
+            0.06
+          ],
+          "kind": "rail",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.26,
+            0.56,
+            0.09,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.38,
+            0.56,
+            0.07,
+            0.06
+          ],
+          "kind": "pocket",
+          "mirror": false
+        },
+        {
+          "bounds": [
+            0.08,
+            0.68,
+            0.14,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        },
+        {
+          "bounds": [
+            0.26,
+            0.68,
+            0.09,
+            0.06
+          ],
+          "kind": "edge",
+          "mirror": true
+        }
+      ]
+    }
   }
 }

@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const vm = require("node:vm");
 
 const { contourPath } = require("../editor-model.js");
 const {
@@ -292,6 +293,77 @@ test("keeps full hold editing controls", () => {
   assert.match(index, /id="add-region-button"/);
   assert.match(index, />\s*<span>＋<\/span>\s*Add highlight\s*</);
   assert.match(index, /id="delete-button"/);
+});
+
+test("keeps internal region controls while presenting hold highlights", () => {
+  assert.match(index, /id="region-list"[^>]*aria-label="Hold highlights"/);
+  assert.match(index, /id="new-shape-select"[^>]*aria-label="New highlight shape"/);
+  assert.match(index, /id="add-region-button"[\s\S]*?Add highlight/);
+  assert.match(index, /id="delete-button">Delete highlight<\/button>/);
+  assert.match(index, /id="region-mode-select"/);
+  assert.match(index, /id="region-key-input"/);
+  assert.match(index, /Select a hold highlight to edit its exact geometry and details\./);
+});
+
+test("handles drawing Enter and Escape before the focused-control guard", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  assert.notEqual(handlerStart, -1);
+  const bodyStart = app.indexOf("{", handlerStart);
+  let depth = 0;
+  let bodyEnd = -1;
+  for (let index = bodyStart; index < app.length; index += 1) {
+    if (app[index] === "{") depth += 1;
+    if (app[index] === "}") depth -= 1;
+    if (depth === 0) {
+      bodyEnd = index + 1;
+      break;
+    }
+  }
+  assert.notEqual(bodyEnd, -1);
+
+  const listeners = {};
+  const state = { drawing: true, spacePressed: false, mirrorOntoSourceId: null };
+  let finished = 0;
+  let canceled = 0;
+  const context = {
+    document: { activeElement: { tagName: "INPUT" } },
+    finishDraw: () => { finished += 1; },
+    cancelDraw: () => { canceled += 1; },
+    renderToolState: () => {},
+    setStatus: () => {},
+    state,
+    window: {
+      addEventListener: (name, callback) => { listeners[name] = callback; },
+    },
+  };
+  vm.runInNewContext(app.slice(handlerStart, bodyEnd) + ");", context);
+
+  const dispatch = (key) => {
+    let prevented = false;
+    listeners.keydown({
+      key,
+      code: key,
+      preventDefault: () => { prevented = true; },
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+    });
+    return prevented;
+  };
+
+  assert.equal(dispatch("Enter"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 0);
+
+  state.drawing = true;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 1);
+});
+
+test("preserves the selected primitive shape when adding a highlight", () => {
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /shapeKind:\s*primitiveShapeKind/);
 });
 
 test("documents the direct hold-highlight workflow", () => {

@@ -39,7 +39,10 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in `BoardCatalog` in `TrainingModels.swift`.
+and hold metadata lives in `Hangboards/catalog.json` and each
+`Hangboards/<board-folder>/board.json` package, with the generated
+`HangTen/Models/GeneratedBoardCatalog.swift`, not in hand-authored
+`TrainingModels.swift`.
 
 ## Run
 
@@ -108,6 +111,22 @@ scripts/hangboard-tools.sh benchmark
 
 The report is written under `.context/hangboard-onboarding/`; Python packages,
 caches, and generated board runs remain local and are not part of the app.
+
+Canonical hangboard package and onboarding workflow commands:
+
+```sh
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/manufacturer-model \
+  --run-id manufacturer-model
+
+# Regenerate and validate generated Swift catalog artifacts
+scripts/export-board-catalog.sh
+scripts/export-board-catalog.sh --check
+```
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
