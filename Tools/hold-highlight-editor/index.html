@@ -378,10 +378,50 @@
           </section>
         </section>
 
-        <section class="tool-view future-tool-view hidden" id="validate-view" aria-labelledby="validate-title">
-          <span class="eyebrow">Validation</span>
-          <h2 id="validate-title">Validate</h2>
-          <p>Package and simulator validation results will appear here after promotion review.</p>
+        <section class="tool-view validate-view hidden" id="validate-view" aria-labelledby="validate-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Validation</span>
+            <h2 id="validate-title">Validate</h2>
+            <p id="validation-identity">Choose one active board revision to begin validation.</p>
+          </header>
+
+          <section class="validation-summary" aria-live="polite">
+            <p class="validation-status not_run" id="validation-status">Not run</p>
+            <p class="validation-error hidden" id="validation-error" role="alert"></p>
+          </section>
+
+          <section class="validation-card validation-actions" aria-label="Validation actions">
+            <button class="tool-button" id="validation-refresh-button" type="button">Load cached report</button>
+            <button class="tool-button accent" id="validation-run-button" type="button">Run validation</button>
+            <p>These checks cover the local package and native plan library only. They do not create, delete, boot, or archive simulators.</p>
+          </section>
+
+          <section class="validation-card" aria-labelledby="validation-checks-title">
+            <div class="validation-card-heading">
+              <div>
+                <span class="eyebrow">Local checks</span>
+                <h3 id="validation-checks-title">Package and parity report</h3>
+              </div>
+              <p>Run validation after saving a promotion, or load the cached revision-bound report.</p>
+            </div>
+            <div id="validation-checks"></div>
+          </section>
+
+          <section class="validation-card" aria-labelledby="validation-simulator-title">
+            <div class="validation-card-heading">
+              <div>
+                <span class="eyebrow">Simulator handoff</span>
+                <h3 id="validation-simulator-title">Dedicated simulator review</h3>
+              </div>
+              <p>Provide the explicit UUID of a dedicated, already-owned simulator. Follow <code>docs/IOS_SIMULATOR_VALIDATION.md</code> for creation, ownership, readiness, and cleanup.</p>
+            </div>
+            <label class="validation-uuid-label" for="validation-simulator-uuid">Simulator UUID
+              <input id="validation-simulator-uuid" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 12345678-1234-1234-1234-123456789ABC" />
+            </label>
+            <p class="validation-simulator-note" id="validation-simulator-error"></p>
+            <textarea class="validation-command-output" id="validation-simulator-commands" rows="8" readonly aria-label="Simulator review commands"></textarea>
+            <button class="tool-button" id="validation-copy-commands-button" type="button">Copy commands</button>
+          </section>
         </section>
         </div>
       </section>
@@ -397,6 +437,7 @@
     <script src="workbench-suite-model.js"></script>
     <script src="workbench-suite-controller.js"></script>
     <script src="promotion-view.js"></script>
+    <script src="validation-view.js"></script>
     <script src="vector-path-model.js"></script>
     <script src="app.js"></script>
   </body>

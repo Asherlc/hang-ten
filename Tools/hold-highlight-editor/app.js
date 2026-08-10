@@ -30,6 +30,11 @@
   const { createToolSuiteController } = globalThis.HoldWorkbenchSuiteController;
   const { createPromotionController, renderPromotionView } = globalThis.HoldPromotionView;
   const {
+    createValidationController,
+    renderValidationView,
+    simulatorCommands,
+  } = globalThis.HoldValidationView;
+  const {
     parseDisplayPath,
     serializeDisplayPath,
     transformPath,
@@ -95,6 +100,7 @@
   });
   let suiteController = null;
   let promotionController = null;
+  let validationController = null;
 
   const TYPE_COLORS = {
     jug: "#ff754f",
@@ -183,6 +189,7 @@
     "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
     "active-board-card", "active-board-name", "active-board-revision", "active-board-readiness",
     "inspect-board-preview", "inspect-artifact-links", "inspect-hold-inventory", "inspect-approval-status", "inspect-readiness", "inspect-next-action",
+    "validation-refresh-button", "validation-run-button", "validation-simulator-uuid", "validation-copy-commands-button",
   ].map((id) => [id, document.getElementById(id)]));
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -360,6 +367,12 @@
       renderPromotionView(el["promote-view"], {
         suite,
         promotion: promotionController.getState(),
+      });
+    }
+    if (validationController) {
+      renderValidationView(el["validate-view"], {
+        suite,
+        validation: validationController.getState(),
       });
     }
   }
@@ -2726,6 +2739,19 @@
       });
     },
   });
+  validationController = createValidationController({
+    client: workbenchClient,
+    getSuiteState: () => suiteController.getState(),
+    onValidation(validation) {
+      suiteController.setResults({ validation });
+    },
+    render(validation) {
+      renderValidationView(el["validate-view"], {
+        suite: state.suiteState,
+        validation,
+      });
+    },
+  });
   document.querySelectorAll("[data-tool]").forEach((button) => {
     button.addEventListener("click", () => suiteController.selectTool(button.dataset.tool));
   });
@@ -2746,6 +2772,24 @@
   });
   document.getElementById("promotion-save-button").addEventListener("click", () => {
     void promotionController.saveLocally();
+  });
+  el["validation-refresh-button"].addEventListener("click", () => {
+    void validationController.loadCachedReport();
+  });
+  el["validation-run-button"].addEventListener("click", () => {
+    void validationController.runReport();
+  });
+  el["validation-simulator-uuid"].addEventListener("input", (event) => {
+    validationController.setSimulatorUUID(event.target.value);
+  });
+  el["validation-copy-commands-button"].addEventListener("click", () => {
+    let commands;
+    try {
+      commands = simulatorCommands(validationController.getState().simulatorUUID);
+    } catch (_error) {
+      return;
+    }
+    if (navigator.clipboard?.writeText) void navigator.clipboard.writeText(commands);
   });
 
   configureSvg();
