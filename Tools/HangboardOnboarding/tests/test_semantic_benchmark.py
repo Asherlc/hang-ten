@@ -42,6 +42,16 @@ def test_cache_only_benchmark_refuses_unmeasured_token_reduction_and_proves_pari
     assert report["parity"]["stage2"]["regionsExact"] is True
     assert report["parity"]["stage3"]["geometryExact"] is True
     assert all(report["parity"]["stage4"]["highlightPixelsExact"].values())
+    highlight_diffs = report["parity"]["stage4"]["highlightPixelDiffs"]
+    assert highlight_diffs
+    assert all(
+        set(diff) == {"differingPixelCount", "maxAbsChannelDifference"}
+        for diff in highlight_diffs.values()
+    )
+    assert all(
+        diff == {"differingPixelCount": 0, "maxAbsChannelDifference": 0}
+        for diff in highlight_diffs.values()
+    )
     assert report["nonTokenByteProxy"]["compactResponseBytes"] < report["nonTokenByteProxy"]["fullProposalBytes"]
     assert "not token" in report["nonTokenByteProxy"]["label"].lower()
 
@@ -78,6 +88,26 @@ def test_benchmark_cli_rejects_outputs_outside_workspace_root(
         ])
 
     assert not outside.exists()
+
+
+def test_benchmark_cli_includes_parity_report_when_replay_fails(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    parity = {"exact": False, "stage4": {"highlightPixelDiffs": {"all": {"differingPixelCount": 3}}}}
+    monkeypatch.setattr(
+        "hangboard_vectorizer.semantic_benchmark.build_metolius_benchmark_report",
+        lambda *args, **kwargs: {"parity": parity},
+    )
+
+    with pytest.raises(SystemExit, match="semantic replay parity failed") as error:
+        main([
+            "--accepted-run", str(_accepted_run()),
+            "--output", str(tmp_path / "failed-report.json"),
+            "--workspace-root", str(tmp_path),
+        ])
+
+    assert json.dumps(parity, sort_keys=True, separators=(",", ":")) in str(error.value)
 
 
 def _accepted_run() -> Path:

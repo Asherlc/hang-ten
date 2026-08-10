@@ -230,15 +230,25 @@ def _report(
     accepted_highlight_hashes: dict[str, str] = {}
     replay_highlight_hashes: dict[str, str] = {}
     highlight_exact: dict[str, bool] = {}
+    highlight_pixel_diffs: dict[str, dict[str, int]] = {}
     for name, replayed in sorted(replay_highlights.items()):
         path = accepted / f"stages/04/attempt-0001/stage-4-highlight-{name}.png"
         with Image.open(path) as image:
             accepted_pixels = np.asarray(image.convert("RGBA"), dtype=np.uint8)
+        channel_differences = np.abs(
+            accepted_pixels.astype(np.int16) - replayed.astype(np.int16)
+        )
         accepted_hash = _hash_bytes(accepted_pixels.tobytes())
         replay_hash = _hash_bytes(replayed.tobytes())
         accepted_highlight_hashes[name] = accepted_hash
         replay_highlight_hashes[name] = replay_hash
         highlight_exact[name] = np.array_equal(accepted_pixels, replayed)
+        highlight_pixel_diffs[name] = {
+            "differingPixelCount": int(
+                np.any(channel_differences != 0, axis=-1).sum()
+            ),
+            "maxAbsChannelDifference": int(channel_differences.max()),
+        }
 
     baseline = SemanticRunMetrics(
         model=(ModelProcessingMetrics(
@@ -293,6 +303,7 @@ def _report(
     stage4 = {
         "acceptedHighlightPixelSha256": accepted_highlight_hashes,
         "highlightPixelsExact": highlight_exact,
+        "highlightPixelDiffs": highlight_pixel_diffs,
         "replayHighlightPixelSha256": replay_highlight_hashes,
     }
     exact = (
@@ -402,7 +413,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         cache_root=arguments.cache_dir,
     )
     if not report["parity"]["exact"]:
-        raise SystemExit("semantic replay parity failed")
+        raise SystemExit(
+            "semantic replay parity failed: "
+            + json.dumps(report["parity"], sort_keys=True, separators=(",", ":"))
+        )
     print(arguments.output.resolve())
     return 0
 
