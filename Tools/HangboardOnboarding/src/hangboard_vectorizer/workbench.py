@@ -44,6 +44,7 @@ from .workbench_validation import ValidationReport, build_validation_report
 
 _FINAL_STAGE = 4
 _DRAFT_FILE = re.compile(r"draft-(\d+)\.json\Z")
+_REPOSITORY_BOARD_ID = re.compile(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
 _STATE_NAMES = {
     "awaiting_approval": "awaiting_review",
     "complete": "complete",
@@ -91,6 +92,19 @@ def _ios_profile_matches_repository_board(
         return False
     matching_candidates = {candidate for candidate in repository_board_ids if candidate.replace(".", "-") == legacy_alias}
     return matching_candidates == {repository_board_id}
+
+
+def _repository_board_ids(snapshot: LibrarySnapshot) -> tuple[str, ...]:
+    candidates = [item.board_id for item in snapshot.boards]
+    for diagnostic in snapshot.diagnostics:
+        if "/" in diagnostic.path:
+            continue
+        if not _REPOSITORY_BOARD_ID.fullmatch(diagnostic.path):
+            continue
+        if diagnostic.path in candidates:
+            continue
+        candidates.append(diagnostic.path)
+    return tuple(candidates)
 
 
 class WorkbenchService:
@@ -753,9 +767,11 @@ class WorkbenchService:
             raise WorkbenchServiceError(
                 "active board does not have a repository board identity"
             )
-        repository_board_ids = tuple(
-            item.board_id for item in self.__library.snapshot().boards
-        ) if self.__library is not None else ()
+        repository_board_ids = (
+            _repository_board_ids(self.__library.snapshot())
+            if self.__library is not None
+            else ()
+        )
         if not _ios_profile_matches_repository_board(
             profile.board_id,
             board.repository_board_id,
