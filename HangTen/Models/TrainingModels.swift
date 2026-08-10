@@ -599,6 +599,9 @@ struct TrainingPlan: Identifiable, Hashable {
 enum BoardCatalog {
     static let compactII = GeneratedBoardCatalog.compactII
     static let all: [TrainingBoard] = GeneratedBoardCatalog.all
+    static let compactIIFlatSloperHoldIDs = GeneratedBoardCatalog.compactII.holds
+        .filter { $0.kind == .sloper && $0.features.contains(.largeSlope) }
+        .map(\.id)
 
     static func board(for id: String?) -> TrainingBoard {
         all.first { $0.id == id } ?? compactII
@@ -812,6 +815,8 @@ enum MetoliusCycleBuilder {
 }
 
 enum LegacyPlanSeedCatalog {
+    static let repeaterStepIDPrefix = "repeaters-grip-"
+
     private static let sourceURL = URL(
         string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
     )!
@@ -1358,7 +1363,7 @@ enum LegacyPlanSeedCatalog {
             var steps = [warmUpStep(id: "repeaters-warm-up")]
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
-                ("56 mm flat slopers", [.ids("sloper-flat-left", "sloper-flat-right")], .openHand),
+                ("56 mm flat slopers", [.ids(BoardCatalog.compactIIFlatSloperHoldIDs)], .openHand),
                 ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp)
             ]
 
@@ -1366,7 +1371,7 @@ enum LegacyPlanSeedCatalog {
                 for rep in 1...6 {
                     steps.append(
                         hangStep(
-                            id: "repeaters-grip-\(index + 1)-rep-\(rep)",
+                            id: "\(repeaterStepIDPrefix)\(index + 1)-rep-\(rep)",
                             title: "7/3 · \(grip.title), rep \(rep)",
                             instruction: "Hang for seven seconds and rest for three. Use foot assistance or reduce load so the last repetition stays technically clean.",
                             accessory: "7s hang · 3s rest · 6 reps",
@@ -1380,7 +1385,7 @@ enum LegacyPlanSeedCatalog {
                 if index < grips.count - 1 {
                     steps.append(
                         recoveryStep(
-                            id: "repeaters-grip-\(index + 1)-recovery",
+                            id: "\(repeaterStepIDPrefix)\(index + 1)-recovery",
                             title: "Two-minute grip recovery",
                             duration: 120,
                             accessory: "2m recovery · switch grip"
