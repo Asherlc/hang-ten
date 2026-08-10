@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import tomllib
 
 import pytest
 
@@ -16,7 +17,6 @@ from hangboard_vectorizer.review_artifacts import (
 from review_fixtures import (
     make_review_run,
     make_review_run_with_edit,
-    make_review_run_with_edit_and_acceptance,
 )
 
 
@@ -28,6 +28,17 @@ def test_discover_review_run_requires_one_stage_image_and_region_document(
     assert discovered.stage1_image.name == "stage-1-auto-rgba.png"
     assert discovered.stage2_regions.name == "stage-2-regions.json"
     assert discovered.edited_regions is None
+
+
+def test_make_review_run_with_edit_is_discoverable_and_reports_edited_state(
+    tmp_path: Path,
+) -> None:
+    run = make_review_run_with_edit(tmp_path)
+    discovered = discover_review_run(run)
+
+    assert discovered.edited_regions is not None
+    assert discovered.corrections is not None
+    assert review_state(discovered) == "edited"
 
 
 def test_discover_review_run_rejects_ambiguous_stage_two_documents(
@@ -87,21 +98,6 @@ def test_review_state_tracks_review_artifact_progression(tmp_path: Path) -> None
     linted = discover_review_run(linted_root)
     assert review_state(linted) == "lint-passed"
 
-    accepted = discover_review_run(
-        make_review_run_with_edit_and_acceptance(tmp_path / "accepted")
-    )
-    assert review_state(accepted) == "accepted"
-
-    promoted_root = make_review_run_with_edit_and_acceptance(tmp_path / "promoted")
-    promotion_report = (
-        promoted_root / "stages/02/attempt-0001/board-promotion-report.json"
-    )
-    promotion_report.write_text(
-        json.dumps({"ready": True}, sort_keys=True), encoding="utf-8"
-    )
-    promoted = discover_review_run(promoted_root)
-    assert review_state(promoted) == "promoted"
-
 
 def test_inspect_run_returns_relative_paths_hashes_state_and_next_action(
     tmp_path: Path,
@@ -133,3 +129,13 @@ def test_inspect_run_returns_relative_paths_hashes_state_and_next_action(
         "corrections": sha256_file(run.corrections),
         "lintReport": sha256_file(run.lint_report),
     }
+
+
+def test_pyproject_registers_only_review_script_for_task_one() -> None:
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    project = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+
+    scripts = project["project"]["scripts"]
+    assert scripts["hangboard-review"] == "hangboard_vectorizer.review_cli:main"
+    assert "hangboard-promote" not in scripts
+    assert "hangboard-release-check" not in scripts
