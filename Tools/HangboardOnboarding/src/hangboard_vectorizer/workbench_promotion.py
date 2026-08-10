@@ -100,7 +100,7 @@ def repository_root(library: RepositoryBoardLibrary) -> Path:
 
 
 def _repository_root(library: RepositoryBoardLibrary) -> Path:
-    root = getattr(library, "_repository_root", None)
+    root = library.repository_root
     if not isinstance(root, Path) or not root.is_dir():
         raise ValueError("repository board library is not configured")
     return root

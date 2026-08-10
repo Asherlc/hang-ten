@@ -152,6 +152,10 @@ class RepositoryBoardLibrary:
         with self._locks_guard:
             self._in_process_lock = self._locks.setdefault(self._boards_root, RLock())
 
+    @property
+    def repository_root(self) -> Path:
+        return self._repository_root
+
     def snapshot(self) -> LibrarySnapshot:
         """Return all independently valid board runs and diagnostics for the rest."""
         root_problem = self._boards_root_problem()
