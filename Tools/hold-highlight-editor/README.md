@@ -167,7 +167,7 @@ rtk python3 Tools/hold-highlight-editor/server.py \
 
 The board selector switches the active catalog document; the selected JSON is the only catalog file changed by Save. Recessed or dark cavities are traced along the inner usable boundary. Raised holds are traced along the outer silhouette. The server adapts normalized catalog paths to the editor's pixel contours, including sampled cubic curves, and maps each source outline ID to a stable positive editor ID.
 
-Catalog Save writes closed `M`/`L` paths back to normalized coordinates, recomputes bounds, preserves the catalog schema, source image, references, and untouched outline metadata, and never writes PNGs. Replacement is atomic through a same-directory temporary file; failed writes clean up that temporary file. The editor's **Export edited regions** and **Export corrections** buttons remain available as browser-download recovery backups if a save is unavailable or an additional local copy is needed.
+Catalog Save writes edited or new outlines as closed `M`/`L` paths in normalized coordinates and recomputes their bounds. Outlines whose sampled editor contour is unchanged retain their original path commands—including cubic curves—and bounds exactly. Save preserves the catalog schema, source image, references, and untouched outline metadata, and never writes PNGs. Replacement is atomic through a same-directory temporary file; failed writes clean up that temporary file. The editor's **Export edited regions** and **Export corrections** buttons remain available as browser-download recovery backups if a save is unavailable or an additional local copy is needed.
 
 ## Static mode
 

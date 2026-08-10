@@ -2171,6 +2171,50 @@ def test_catalog_save_preserves_untouched_curved_outline(tmp_path):
     assert saved_outline["bounds"] == original_outline["bounds"]
 
 
+def test_catalog_save_preserves_curves_while_serializing_edited_contours(tmp_path):
+    curved_commands = [
+        {"command": "M", "to": [0.1, 0.2]},
+        {"command": "C", "controls": [[0.2, 0.1], [0.3, 0.3]], "to": [0.4, 0.2]},
+        {"command": "L", "to": [0.4, 0.5]},
+        {"command": "L", "to": [0.1, 0.5]},
+    ]
+    source_dir, outline_dir, _, outline_path = make_catalog_board(
+        tmp_path,
+        "mixed-board",
+        [
+            catalog_outline("hold-01", "freeform", curved_commands),
+            catalog_outline("hold-02"),
+        ],
+    )
+    session = discover_catalog_outline_sessions(source_dir, outline_dir)[0].session
+    original_document = json.loads(outline_path.read_text())
+    original_curved = original_document["outlines"][0]
+    regions = catalog_regions_document(session)
+    regions["regions"][1]["contour"] = [[15, 15], [35, 15], [35, 25], [15, 25]]
+
+    save_catalog_outline(session, regions)
+
+    saved = json.loads(outline_path.read_text())
+    saved_by_id = {outline["id"]: outline for outline in saved["outlines"]}
+    assert saved_by_id["hold-01"]["path"] == original_curved["path"]
+    assert saved_by_id["hold-01"]["bounds"] == original_curved["bounds"]
+    assert saved_by_id["hold-02"]["path"] == {
+        "closed": True,
+        "commands": [
+            {"command": "M", "to": [0.15, 0.3]},
+            {"command": "L", "to": [0.35, 0.3]},
+            {"command": "L", "to": [0.35, 0.5]},
+            {"command": "L", "to": [0.15, 0.5]},
+        ],
+    }
+    assert saved_by_id["hold-02"]["bounds"] == {
+        "x": 0.15,
+        "y": 0.3,
+        "width": 0.2,
+        "height": 0.2,
+    }
+
+
 def test_catalog_save_clamps_out_of_range_contour_coordinates(tmp_path):
     source_dir, outline_dir, _, outline_path = make_catalog_board(
         tmp_path,
