@@ -84,10 +84,6 @@ The existing `Tools/hold-highlight-editor/server.py` and editor save contract re
 - `review_cli.main(argv: Sequence[str] | None = None) -> int` supports `inspect --run PATH --json` and prints a compact JSON object on success.
 - `review_fixtures.make_review_run(root: Path) -> Path` creates a valid fixture with a real 32×16 RGBA PNG, one baseline region document, and no edited artifact.
 - `review_fixtures.make_review_run_with_edit(root: Path, mutate_edited: Callable[[dict[str, object]], None] | None = None, mutate_corrections: bool = False) -> Path` creates the fixture plus edited and correction documents, applying the optional mutation before serialization.
-- `review_fixtures.make_review_run_with_edit_and_acceptance(root: Path) -> Path` creates the edited fixture and writes a current accepted record through the public acceptance function.
-- `review_fixtures.make_profile(root: Path, destination_relative: str = "canonical/board.json") -> Path` writes a valid version-1 profile fixture with one required region mapping and one confined destination.
-- `review_fixtures.make_review_run_with_blocked_promotion(root: Path) -> Path` creates an accepted fixture and then changes its edited JSON so promotion is blocked.
-- `review_fixtures.make_review_run_with_ready_promotion(root: Path) -> Path` creates an accepted fixture, writes a valid profile, and applies a ready dry-run report for release-check tests.
 
 - [ ] **Step 1: Write failing artifact-discovery and hashing tests.**
 
@@ -123,7 +119,7 @@ Expected: FAIL because `review_artifacts.py` and the fixture builders do not exi
 
 - [ ] **Step 3: Add the shared test fixture builders and implement confined discovery and derived state.**
 
-In `review_fixtures.py`, use Pillow to write the 32×16 RGBA PNG and use these exact region documents: canvas `{width: 32, height: 16}`; baseline region ID `1`, key `left`, type `edge`, mode `surface`, and contour `[[3, 3], [12, 3], [12, 8], [3, 8]]`; edited region ID `1` with contour `[[3, 3], [13, 3], [12, 8], [3, 8]]`; added region ID `2`, key `right`, type `pocket`, mode `aperture`, and contour `[[18, 3], [27, 3], [27, 8], [18, 8]]`. Serialize corrections with `schemaVersion: 1`, a one-item `modified` list, and empty `added`/`deleted` lists. The helper must return the run root rather than a mutable global.
+In `review_fixtures.py`, implement only `make_review_run` and `make_review_run_with_edit` in this task. Use Pillow to write the 32×16 RGBA PNG and use these exact region documents: canvas `{width: 32, height: 16}`; baseline region ID `1`, key `left`, type `edge`, mode `surface`, and contour `[[3, 3], [12, 3], [12, 8], [3, 8]]`; edited region ID `1` with contour `[[3, 3], [13, 3], [12, 8], [3, 8]]`; added region ID `2`, key `right`, type `pocket`, mode `aperture`, and contour `[[18, 3], [27, 3], [27, 8], [18, 8]]`. Serialize corrections with `schemaVersion: 1`, a one-item `modified` list, and empty `added`/`deleted` lists. Each helper must return the run root rather than a mutable global.
 
 In `review_artifacts.py`, use `Path.rglob`, require exactly one generated image/document, resolve every discovered path, and only accept optional review files in the same Stage 2 artifact directory. Recognize these exact optional names: `stage-2-regions.edited.json`, `stage-2-human-corrections.json`, `lint-report.json`, `stage-2-review-acceptance.json`, and `board-promotion-report.json`. Reject a run root that is not a directory.
 
@@ -133,11 +129,9 @@ Register:
 
 ```toml
 hangboard-review = "hangboard_vectorizer.review_cli:main"
-hangboard-promote = "hangboard_vectorizer.promotion_cli:main"
-hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
 ```
 
-Make `review_cli.main(["inspect", "--run", str(run)])` return `0` and print an object containing `state`, `nextAction`, relative artifact paths, and hashes. Return `2` for invalid arguments and `3` for filesystem or artifact errors, matching `onboard_cli.py`.
+Make `review_cli.main(["inspect", "--run", str(run)])` return `0` and print an object containing `state`, `nextAction`, relative artifact paths, and hashes. Add only the `inspect` dispatch to `scripts/hangboard-tools.sh` in this task; later tasks add their own commands. Return `2` for invalid arguments and `3` for filesystem or artifact errors, matching `onboard_cli.py`.
 
 - [ ] **Step 5: Run the focused tests and commit the task.**
 
@@ -159,6 +153,7 @@ git commit -m "feat: inspect hold-region review artifacts"
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/review_acceptance.py`
 - Create: `Tools/HangboardOnboarding/tests/test_review_lint.py`
 - Create: `Tools/HangboardOnboarding/tests/test_review_acceptance.py`
+- Modify: `Tools/HangboardOnboarding/tests/review_fixtures.py`
 - Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/review_cli.py`
 
 **Interfaces:**
@@ -169,6 +164,7 @@ git commit -m "feat: inspect hold-region review artifacts"
 - `AcceptanceRecord` is a frozen dataclass serializing `schemaVersion`, `decision`, `reviewer`, `reviewedAt`, `source`, `toolVersion`, and `notes`.
 - `write_acceptance(run: ReviewRun, decision: Literal["accepted", "rejected"], reviewer: str, notes: str, now: datetime | None = None) -> Path` requires a current lint pass for acceptance and atomically writes `stage-2-review-acceptance.json` beside the edited artifact.
 - `validate_acceptance(run: ReviewRun) -> AcceptanceRecord` verifies every recorded source hash before returning the record.
+- `review_fixtures.make_review_run_with_edit_and_acceptance(root: Path) -> Path` creates the edited fixture and writes a current accepted record through `write_acceptance`.
 
 - [ ] **Step 1: Write failing geometry and correction-reconciliation tests.**
 
@@ -232,7 +228,7 @@ def test_validate_acceptance_rejects_changed_edited_artifact(tmp_path):
 
 - [ ] **Step 5: Implement acceptance, wire CLI commands, test, and commit.**
 
-Use UTC ISO-8601 timestamps, default the CLI reviewer to `local-user`, require `accept` to run lint first, and write through a temporary file in the Stage 2 directory followed by `Path.replace`. Every `lint` invocation writes `lint-report.json` before returning, including failing reports. `reject` may record a rejected decision without a lint pass but still records all present artifact hashes. Add `lint --run PATH --json` and `accept --run PATH --decision accepted|rejected --reviewer NAME --notes TEXT` to `review_cli.py`.
+Use UTC ISO-8601 timestamps, default the CLI reviewer to `local-user`, require `accept` to run lint first, and write through a temporary file in the Stage 2 directory followed by `Path.replace`. Every `lint` invocation writes `lint-report.json` before returning, including failing reports. `reject` may record a rejected decision without a lint pass but still records all present artifact hashes. Extend `review_fixtures.py` with `make_review_run_with_edit_and_acceptance` and route it through `write_acceptance`; do not hand-write acceptance JSON in a fixture. Add `lint --run PATH --json` and `accept --run PATH --decision accepted|rejected --reviewer NAME --notes TEXT` to `review_cli.py`.
 
 Run: `cd Tools/HangboardOnboarding && python3 -m pytest tests/test_review_lint.py tests/test_review_acceptance.py tests/test_review_cli.py -q`
 
@@ -331,6 +327,7 @@ git commit -m "feat: add hold-region previews and comparison viewer"
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/promotion.py`
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/promotion_cli.py`
 - Create: `Tools/HangboardOnboarding/tests/test_promotion.py`
+- Modify: `Tools/HangboardOnboarding/tests/review_fixtures.py`
 - Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/review_artifacts.py`
 
 **Interfaces:**
@@ -340,6 +337,9 @@ git commit -m "feat: add hold-region previews and comparison viewer"
 - `load_promotion_profile(path: Path) -> PromotionProfile` requires JSON `schemaVersion: 1`, non-empty IDs, unique region/runtime IDs, and normalized relative destination paths.
 - `PromotionReport` serializes `schemaVersion`, `status`, `profileId`, `boardId`, `inputHashes`, `outputHashes`, `plannedWrites`, `warnings`, and `errors`.
 - `promote_run(run: ReviewRun, profile: PromotionProfile | None, repository_root: Path, *, apply: bool = False) -> PromotionReport` requires current acceptance, reruns lint, creates `promotion/` outputs under the run, and returns `handoff-required` when `profile is None`.
+- `review_fixtures.make_profile(root: Path, destination_relative: str = "canonical/board.json") -> Path` writes a valid version-1 profile fixture with one required region mapping and one confined destination.
+- `review_fixtures.make_review_run_with_blocked_promotion(root: Path) -> Path` creates an accepted fixture and then changes its edited JSON so promotion is blocked.
+- `review_fixtures.make_review_run_with_ready_promotion(root: Path) -> Path` creates an accepted fixture, writes a valid profile, and applies a ready dry-run report for release-check tests.
 
 - [ ] **Step 1: Write failing profile and promotion-state tests.**
 
@@ -388,6 +388,8 @@ Run: `cd Tools/HangboardOnboarding && python3 -m pytest tests/test_promotion.py 
 
 Expected: PASS.
 
+Register `hangboard-promote = "hangboard_vectorizer.promotion_cli:main"` in `pyproject.toml` and add only the `promote` dispatch to `scripts/hangboard-tools.sh` in this task. The wrapper must not advertise `release-check` until Task 5 creates that entry point.
+
 Commit:
 
 ```bash
@@ -401,6 +403,8 @@ git commit -m "feat: add safe hold-region promotion"
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/release_check.py`
 - Create: `Tools/HangboardOnboarding/src/hangboard_vectorizer/release_check_cli.py`
 - Create: `Tools/HangboardOnboarding/tests/test_release_check.py`
+- Modify: `Tools/HangboardOnboarding/pyproject.toml`
+- Modify: `scripts/hangboard-tools.sh`
 - Modify: `Tools/HangboardOnboarding/src/hangboard_vectorizer/promotion.py`
 
 **Interfaces:**
@@ -438,9 +442,9 @@ Expected: FAIL because the release-check module is not implemented.
 
 Run the export check with `cwd=repository_root`, `check=True` behavior represented in the result, and captured text output. When `--xcode` is present, run the exact existing simulator test command with `CODE_SIGNING_ALLOWED=NO`, `CODE_SIGNING_REQUIRED=NO`, a run-local `.context/release-check-derived-data` path, and a unique simulator destination chosen by the existing isolated validation guide. Do not create or delete a simulator unless `--xcode` is requested.
 
-- [ ] **Step 4: Wire the CLI, test, and commit.**
+- [ ] **Step 4: Wire the CLI, wrapper, test, and commit.**
 
-Return `0` only when every check passes; return `3` when a check fails; return `2` for invalid arguments. Write `release-check.json` under the run's `promotion/` directory only after all checks have been collected.
+Register `hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"` in `pyproject.toml` and add the `release-check` dispatch to `scripts/hangboard-tools.sh`. Return `0` only when every check passes; return `3` when a check fails; return `2` for invalid arguments. Write `release-check.json` under the run's `promotion/` directory only after all checks have been collected.
 
 Run: `cd Tools/HangboardOnboarding && python3 -m pytest tests/test_release_check.py tests/test_promotion.py -q`
 
