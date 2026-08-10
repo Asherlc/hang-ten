@@ -29,6 +29,47 @@ The Compact II audit used these official sources (checked August 1, 2026):
 
 ## 2. Run the staged onboarding pipeline
 
+The canonical package is the source of truth for Compact II:
+
+```text
+Hangboards/
+  catalog.json
+  metolius-wood-grips-compact-ii/
+    board.json
+    onboarding/runs/<run-id>/...
+```
+
+Lifecycle states for `board.json` are `draft`, `onboarding`, `approved`, and
+`shipped`.
+
+While onboarding, keep temporary runs under `.context/...` and validate the
+registry without mutating the repository:
+
+```sh
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
+```
+
+After a run is approved, copy it into the canonical package. Registration only
+accepts symlink-free `.context` runs, advances the board lifecycle when
+appropriate, and never downgrades a shipped board:
+
+```sh
+scripts/hangboard-tools.sh catalog register \
+  --catalog Hangboards/catalog.json \
+  --board metolius.wood-grips-compact-ii \
+  --run .context/hangboard-onboarding/manufacturer-model \
+  --run-id manufacturer-model
+```
+
+After the canonical `board.json` is marked `shipped`, regenerate the checked-in
+Swift catalog from JSON before shipping app updates:
+
+```sh
+scripts/export-board-catalog.sh
+scripts/export-board-catalog.sh --check
+```
+
 Hang Ten vendors the reviewed onboarding tool under
 `Tools/HangboardOnboarding`. Its model-facing contract is deliberately small:
 one batched semantic response supplies generic grip hints, while deterministic
@@ -75,16 +116,54 @@ Repeat approval and resume through Stage 4. The visual checkpoints are:
 5. Stage 4: normal product, all-highlight, per-type, mixed, and symmetric-pair
    interaction previews.
 
+For a single reviewed Stage 2 run, the local wrapper commands are:
+
+```sh
+scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh compare --run .context/hangboard-onboarding/example --output .context/compare.html
+scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
+scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
+scripts/hangboard-tools.sh promote --run .context/hangboard-onboarding/example --repository-root "$PWD"
+scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/example --repository-root "$PWD"
+```
+
+Safety boundaries:
+
+- `inspect`, `compare`, and `preview` are read-only for the reviewed run.
+- `lint` never changes Stage 1, Stage 2, or edited/correction inputs, but it
+  writes or replaces `lint-report.json` beside the edited regions.
+- `accept` writes the Stage 2 acceptance artifact and the current
+  `lint-report.json` beside the edited regions.
+- `promote` is dry-run by default and does not touch repository destinations
+  unless `--apply` is combined with an explicit runtime integration profile.
+- `handoff-required` is the expected result when runtime Swift integration has
+  not been configured yet.
+- `release-check` validates the promotion package and repository-facing
+  readiness; fix blockers before any manual runtime handoff.
+
+Rollback guidance:
+
+- Start with dry-run `promote` and confirm the reported `plannedWrites` and
+  hashes before attempting `--apply`.
+- Before `--apply`, ensure the destination can be restored from git or save a
+  pre-apply backup copy yourself.
+- If an apply is wrong, restore from version control or that backup instead of
+  deleting files blindly.
+- After restoring, rerun dry-run `promote` and `release-check` to confirm the
+  reviewed run and destination are aligned before applying again.
+
 Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
 symmetry. The accepted Compact II replay fixture is versioned at
-`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`.
+`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`; it is a
+test fixture, not the canonical board package.
 
-Only complete runs with approved checkpoints through Stage 4 belong under
-`Tools/HangboardOnboarding/boards/<board-id>/`. Keep every unfinished run under
-the ignored `.context/` directory. Saving a complete run through the workbench
-publishes it to the canonical boards directory for normal Git review.
+Only complete runs with approved checkpoints through Stage 4 may be published
+into the canonical `Hangboards/<board-folder>/board.json` package. Keep every
+unfinished run under the ignored `.context/` directory; the accepted run under
+`Tools/HangboardOnboarding/boards/` remains a replay fixture for tests.
 
 ## 3. Keep metadata and artwork separate
 

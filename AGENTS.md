@@ -30,3 +30,14 @@ durations, grip prescriptions, accessory text, or coaching claims and present
 them as sourced. For any new or changed routine content, document the source
 URLs and audit mappings used to justify each field. Omit unsupported fields or
 UI text rather than filling gaps from board metadata or model assumptions.
+
+## CodeGraph
+
+When `.codegraph/` exists, use CodeGraph before grep/find to understand or
+locate code. The primary shell workflow is `codegraph explore "<query>"`; the
+equivalent project-aware MCP tool may be used when available. When
+`.codegraph/` is absent, initialize from the repository root with
+`codegraph init .` only when indexing is desired, then verify with
+`codegraph status`. Generated `.codegraph/` state is local and ignored, and
+should not be committed. Use `codegraph sync` after source changes when
+maintaining an existing index.

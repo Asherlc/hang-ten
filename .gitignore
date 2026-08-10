@@ -18,5 +18,8 @@ xcuserdata/
 # Conductor workspace-local state
 .context/
 
+# CodeGraph local index and runtime state
+.codegraph/
+
 # Local implementation/git worktrees
 .worktrees/

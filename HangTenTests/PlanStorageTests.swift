@@ -748,6 +748,38 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
     }
 
+    func testBuiltInPlansDoNotEndWithCooldownSteps() throws {
+        let data = try bundledPlanLibraryData()
+        let definition = try JSONDecoder().decode(PlanLibraryDefinition.self, from: data)
+        let store = try PlanLibraryStore(data: data)
+
+        XCTAssertFalse(
+            definition.blocks.contains { $0.id == "shared.cool-down" }
+        )
+        XCTAssertTrue(
+            store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+        )
+    }
+
+    func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
+        let abrahangsWarmUp = try XCTUnwrap(
+            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
+        )
+        XCTAssertEqual(abrahangsWarmUp.duration, 120)
+        let recoveryIDs = [
+            "horst-753-grip-1-recovery",
+            "ladders-round-1-recovery",
+            "density-hold-1-set-1-recovery",
+            "density-hold-1-recovery"
+        ]
+        let recoverySteps = LegacyPlanSeedCatalog.all.flatMap(\.steps).filter {
+            recoveryIDs.contains($0.id)
+        }
+
+        XCTAssertEqual(recoverySteps.map(\.id), recoveryIDs)
+        XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
+    }
+
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
@@ -1357,6 +1389,15 @@ final class PlanStorageTests: XCTestCase {
 
         return auditURL
     }
+
+    private func bundledPlanLibraryData() throws -> Data {
+        let bundle = Bundle(for: PlanStorageTests.self)
+        let url = try XCTUnwrap(
+            bundle.url(forResource: "PlanLibrary", withExtension: "json"),
+            "Expected PlanLibrary.json in the HangTenTests bundle."
+        )
+        return try Data(contentsOf: url)
+    }
 }
 
 private struct CueAuditKey: Hashable, Comparable, CustomStringConvertible {
@@ -1472,4 +1513,5 @@ private struct StepFieldRule: Decodable, CueAuditDecision {
         }
         return actualStepID.range(of: stepIDPattern, options: .regularExpression) != nil
     }
+
 }

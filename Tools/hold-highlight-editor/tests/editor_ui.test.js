@@ -2,6 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const vm = require("node:vm");
 
 const { contourPath } = require("../editor-model.js");
 const {
@@ -162,6 +163,28 @@ test("inspector disables tension only when per-edge curves override smooth mode"
   );
 });
 
+test("renderToolState keeps overridden curve tension disabled after a full render", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const renderToolStateBlock = app.match(/function renderToolState\(\) \{[\s\S]*?\n  \}/);
+
+  assert.ok(renderToolStateBlock, "expected renderToolState() to be present in app.js");
+  assert.match(
+    renderToolStateBlock[0],
+    /edgeCurveInspectorState\(selectedRegion\(\)\)\.overridden/,
+    "renderToolState() must account for edge-curve inspector overrides",
+  );
+  assert.match(
+    renderToolStateBlock[0],
+    /const curveTensionOverridden = Boolean\(\s*selectedRegion\(\) && edgeCurveInspectorState\(selectedRegion\(\)\)\.overridden,\s*\)/,
+    "renderToolState() must derive curveTensionOverridden from the selected region override state",
+  );
+  assert.match(
+    renderToolStateBlock[0],
+    /curve-tension-slider\"\]\.disabled = [^;\n]*curveTensionOverridden/,
+    "renderToolState() must keep the curve-tension slider disabled when the selected region is overridden",
+  );
+});
+
 test("editor exposes curve-editing affordances", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
@@ -181,6 +204,22 @@ test("editor exposes curve-editing affordances", () => {
   assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
+});
+
+test("declares each board picker element once in the element map", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const initBlock = app.match(
+    /const el = Object\.fromEntries\(\[(?<list>[\s\S]*?)\]\.map\(\(id\) => \[id, document\.getElementById\(id\)\]\)\);/,
+  );
+
+  assert.ok(initBlock, "expected the element initialization list in app.js");
+
+  const list = initBlock.groups.list;
+
+  for (const id of ["board-picker", "board-picker-separator", "board-select"]) {
+    const matches = list.match(new RegExp(`"${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g")) ?? [];
+    assert.equal(matches.length, 1, `${id} must appear exactly once in the element initialization list`);
+  }
 });
 
 test("renders exactly one region interaction mode control with its intended label and options", () => {
@@ -219,6 +258,15 @@ test("region edge-curve metadata renders a quadratic contour path", () => {
   );
 });
 
+test("live region rendering forwards edge curves into regionPath", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const liveRegionPathCall = app.match(
+    /const path = makeSvg\("path", \{\s*d:\s*regionPath\(\s*region\s*,\s*region\.metadata\.edgeCurves\s*\),[\s\S]*?fill:\s*colorFor\(region\)[\s\S]*?\}\);/,
+  );
+
+  assert.ok(liveRegionPathCall, "expected the live region path render call to forward region.metadata.edgeCurves");
+});
+
 const root = path.join(__dirname, "..");
 const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
@@ -245,6 +293,77 @@ test("keeps full hold editing controls", () => {
   assert.match(index, /id="add-region-button"/);
   assert.match(index, />\s*<span>＋<\/span>\s*Add highlight\s*</);
   assert.match(index, /id="delete-button"/);
+});
+
+test("keeps internal region controls while presenting hold highlights", () => {
+  assert.match(index, /id="region-list"[^>]*aria-label="Hold highlights"/);
+  assert.match(index, /id="new-shape-select"[^>]*aria-label="New highlight shape"/);
+  assert.match(index, /id="add-region-button"[\s\S]*?Add highlight/);
+  assert.match(index, /id="delete-button">Delete highlight<\/button>/);
+  assert.match(index, /id="region-mode-select"/);
+  assert.match(index, /id="region-key-input"/);
+  assert.match(index, /Select a hold highlight to edit its exact geometry and details\./);
+});
+
+test("handles drawing Enter and Escape before the focused-control guard", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  assert.notEqual(handlerStart, -1);
+  const bodyStart = app.indexOf("{", handlerStart);
+  let depth = 0;
+  let bodyEnd = -1;
+  for (let index = bodyStart; index < app.length; index += 1) {
+    if (app[index] === "{") depth += 1;
+    if (app[index] === "}") depth -= 1;
+    if (depth === 0) {
+      bodyEnd = index + 1;
+      break;
+    }
+  }
+  assert.notEqual(bodyEnd, -1);
+
+  const listeners = {};
+  const state = { drawing: true, spacePressed: false, mirrorOntoSourceId: null };
+  let finished = 0;
+  let canceled = 0;
+  const context = {
+    document: { activeElement: { tagName: "INPUT" } },
+    finishDraw: () => { finished += 1; },
+    cancelDraw: () => { canceled += 1; },
+    renderToolState: () => {},
+    setStatus: () => {},
+    state,
+    window: {
+      addEventListener: (name, callback) => { listeners[name] = callback; },
+    },
+  };
+  vm.runInNewContext(app.slice(handlerStart, bodyEnd) + ");", context);
+
+  const dispatch = (key) => {
+    let prevented = false;
+    listeners.keydown({
+      key,
+      code: key,
+      preventDefault: () => { prevented = true; },
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+    });
+    return prevented;
+  };
+
+  assert.equal(dispatch("Enter"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 0);
+
+  state.drawing = true;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(finished, 1);
+  assert.equal(canceled, 1);
+});
+
+test("preserves the selected primitive shape when adding a highlight", () => {
+  assert.match(app, /const primitiveShapeKind = state\.drawShape === "curved-freeform" \? "freeform" : state\.drawShape/);
+  assert.match(app, /shapeKind:\s*primitiveShapeKind/);
 });
 
 test("documents the direct hold-highlight workflow", () => {

@@ -124,6 +124,45 @@ The generated `stage-2-regions.json` is never overwritten.
 
 The server binds to `127.0.0.1` by default and serves files only from the supplied run. Stop it with `Ctrl-C`.
 
+After saving a reviewed run, generate a read-only comparison artifact without
+starting the editor again:
+
+```bash
+scripts/hangboard-tools.sh compare \
+  --run .context/hangboard-onboarding/example \
+  --output .context/compare.html
+```
+
+Use the wrapper review flow around that comparison when you are validating a
+single run locally:
+
+```bash
+scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
+scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
+scripts/hangboard-tools.sh promote --run .context/hangboard-onboarding/example --repository-root "$PWD"
+scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/example --repository-root "$PWD"
+```
+
+`promote` stays in dry-run mode unless you add `--apply` with an explicit
+runtime integration profile. If no profile is configured yet, the expected
+result is `handoff-required`.
+
+For accepted decisions, `accept` records both the acceptance artifact and the
+current `lint-report.json`; the generated Stage 1 image and baseline Stage 2
+proposal stay unchanged.
+
+Apply cautiously:
+
+- Run the dry-run `promote` command first and inspect the planned destination.
+- Before `--apply`, rely on version control or make your own backup copy of
+  the destination file.
+- If the applied output is wrong, restore from git or that saved backup; never
+  delete blindly.
+- After restoring, rerun dry-run `promote` and `release-check` before trying
+  `--apply` again.
+
 ## Choose among generated runs
 
 Repeat `--run-dir` to put standard pipeline runs in the board selector:
@@ -154,6 +193,20 @@ rtk python3 Tools/hold-highlight-editor/server.py --catalog /absolute/path/to/ca
 ```
 
 `image` and `regions` are optional for standard run layouts and must be relative to `runDir`. Catalog and repeated `--run-dir` inputs can be combined. The selector changes only the active browser document; every load and save request names its run explicitly, so separate tabs cannot redirect each other's saves.
+
+## Edit the generative catalog outlines
+
+Catalog-outline mode serves every `*.json` stem in the outline directory whose matching root PNG is in the source directory:
+
+```bash
+rtk python3 Tools/hold-highlight-editor/server.py \
+  --catalog-source-dir /absolute/path/to/docs/hangboard-generative-catalog \
+  --catalog-outline-dir /absolute/path/to/docs/hangboard-generative-catalog/outlines
+```
+
+The board selector switches the active catalog document; the selected JSON is the only catalog file changed by Save. Recessed or dark cavities are traced along the inner usable boundary. Raised holds are traced along the outer silhouette. The server adapts normalized catalog paths to the editor's pixel contours, including sampled cubic curves, and maps each source outline ID to a stable positive editor ID.
+
+Catalog Save writes edited or new outlines as closed `M`/`L` paths in normalized coordinates and recomputes their bounds. Outlines whose sampled editor contour is unchanged retain their original path commands—including cubic curves—and bounds exactly. Save preserves the catalog schema, source image, references, and untouched outline metadata, and never writes PNGs. Replacement is atomic through a same-directory temporary file; failed writes clean up that temporary file. The editor's **Export edited regions** and **Export corrections** buttons remain available as browser-download recovery backups if a save is unavailable or an additional local copy is needed.
 
 ## Static mode
 
