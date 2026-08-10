@@ -10,6 +10,14 @@ const {
   findStrongestEdge,
   resolveHistorySelection,
   normalizePipelineDocument,
+  normalizeEdgeCurves,
+  contourPath,
+  flattenContour,
+  setEdgeCurveControl,
+  translateEdgeCurves,
+  mapEdgeCurves,
+  mirrorEdgeCurves,
+  insertEdgeCurves,
 } = require("../editor-model.js");
 
 const baseline = {
@@ -184,4 +192,189 @@ test("normalizePipelineDocument adapts historical generated region artifacts", (
   assert.equal(result.regions[0].key, "piece-01-hold-01");
   assert.equal(result.regions[0].metadata.mode, "surface");
   assert.equal(result.regions[0].metadata.sourceRegionId, "piece-01-hold-01");
+});
+
+test("contourPath emits a quadratic only for the selected edge", () => {
+  assert.equal(
+    contourPath(
+      [[0, 0], [10, 0], [10, 10]],
+      "straight",
+      0.8,
+      { 0: { kind: "quadratic", control: [5, -4] } },
+    ),
+    "M 0 0 Q 5 -4 10 0 L 10 10 L 0 0 Z",
+  );
+});
+
+test("flattenContour samples a quadratic edge without duplicating the ring endpoint", () => {
+  const result = flattenContour(
+    [[0, 0], [10, 0], [10, 10]],
+    "straight",
+    0.8,
+    { 0: { kind: "quadratic", control: [5, -10] } },
+    4,
+  );
+  assert.deepEqual(result.slice(0, 5), [[0, 0], [2.5, -3.75], [5, -5], [7.5, -3.75], [10, 0]]);
+  assert.notDeepEqual(result[0], result.at(-1));
+});
+
+test("normalizeEdgeCurves rejects invalid edge indexes, kinds, and coordinates", () => {
+  assert.throws(() => normalizeEdgeCurves({ 3: { kind: "quadratic", control: [1, 1] } }, 3), /edge/i);
+  assert.throws(() => normalizeEdgeCurves({ 0: { kind: "cubic", control: [1, 1] } }, 3), /kind/i);
+  assert.throws(() => normalizeEdgeCurves({ 0: { kind: "quadratic", control: [Infinity, 1] } }, 3), /finite/i);
+});
+
+test("normalizeEdgeCurves returns a detached normalized map", () => {
+  const source = { 1: { kind: "quadratic", control: [7, 8] } };
+
+  const result = normalizeEdgeCurves(source, 3);
+
+  assert.deepEqual(result, source);
+  assert.notEqual(result, source);
+  assert.notEqual(result[1], source[1]);
+  assert.notEqual(result[1].control, source[1].control);
+});
+
+test("contourPath preserves existing straight and smooth path output without edge curves", () => {
+  const points = [[0, 0], [12, 0], [12, 12], [0, 12]];
+
+  assert.equal(contourPath(points, "straight", 1), "M 0 0 L 12 0 L 12 12 L 0 12 Z");
+  assert.equal(
+    contourPath(points, "smooth", 1),
+    "M 0 0 C 2 -2, 10 -2, 12 0 C 14 2, 14 10, 12 12 C 10 14, 2 14, 0 12 C -2 10, -2 2, 0 0 Z",
+  );
+});
+
+test("flattenContour deterministically samples the existing smooth contour", () => {
+  assert.deepEqual(
+    flattenContour([[0, 0], [12, 0], [12, 12], [0, 12]], "smooth", 1, undefined, 2),
+    [[0, 0], [6, -1.5], [12, 0], [13.5, 6], [12, 12], [6, 13.5], [0, 12], [-1.5, 6]],
+  );
+});
+
+test("setEdgeCurveControl promotes one edge without mutating the source map", () => {
+  const source = { 0: { kind: "quadratic", control: [1, 2] } };
+
+  const result = setEdgeCurveControl(source, 2, [8, 9], 3);
+
+  assert.deepEqual(result, {
+    0: { kind: "quadratic", control: [1, 2] },
+    2: { kind: "quadratic", control: [8, 9] },
+  });
+  assert.deepEqual(source, { 0: { kind: "quadratic", control: [1, 2] } });
+});
+
+test("translateEdgeCurves moves every control without mutating the source map", () => {
+  const source = {
+    0: { kind: "quadratic", control: [1, 2] },
+    2: { kind: "quadratic", control: [-3, 4] },
+  };
+
+  const result = translateEdgeCurves(source, 5, -2, 3);
+
+  assert.deepEqual(result, {
+    0: { kind: "quadratic", control: [6, 0] },
+    2: { kind: "quadratic", control: [2, 2] },
+  });
+  assert.deepEqual(source[0].control, [1, 2]);
+});
+
+test("mapEdgeCurves validates mapper output coordinates", () => {
+  const source = { 1: { kind: "quadratic", control: [3, 4] } };
+
+  assert.deepEqual(
+    mapEdgeCurves(source, 3, ([x, y], index) => [x * 2 + index, y * 3]),
+    { 1: { kind: "quadratic", control: [7, 12] } },
+  );
+  assert.throws(() => mapEdgeCurves(source, 3, () => [Infinity, 0]), /finite/i);
+});
+
+test("mirrorEdgeCurves reflects controls and reverses their edge associations", () => {
+  const source = {
+    0: { kind: "quadratic", control: [10, 5] },
+    3: { kind: "quadratic", control: [20, 6] },
+  };
+
+  const result = mirrorEdgeCurves(source, 4, 100);
+
+  assert.deepEqual(result, {
+    2: { kind: "quadratic", control: [90, 5] },
+    3: { kind: "quadratic", control: [80, 6] },
+  });
+  assert.deepEqual(source[0].control, [10, 5]);
+});
+
+test("insertEdgeCurves discards the split edge and shifts following edge indexes", () => {
+  const source = Object.fromEntries([0, 1, 2, 3].map((index) => [
+    index,
+    { kind: "quadratic", control: [index, index + 0.5] },
+  ]));
+
+  const result = insertEdgeCurves(source, 2, 4);
+
+  assert.deepEqual(result, {
+    0: { kind: "quadratic", control: [0, 0.5] },
+    3: { kind: "quadratic", control: [2, 2.5] },
+    4: { kind: "quadratic", control: [3, 3.5] },
+  });
+  assert.equal(Object.hasOwn(result, 5), false);
+});
+
+test("normalizePipelineDocument preserves validated edge curves and omits absent metadata", () => {
+  const document = {
+    canvas: { width: 100, height: 50 },
+    regions: [
+      { ...baseline, metadata: { ...baseline.metadata, edgeCurves: { 0: { kind: "quadratic", control: [5, -10] } } } },
+      { ...baseline, id: 2, key: "grip-002" },
+    ],
+  };
+
+  const result = normalizePipelineDocument(document, { width: 10, height: 10 });
+
+  assert.deepEqual(result.regions[0].metadata.edgeCurves, { 0: { kind: "quadratic", control: [5, -10] } });
+  assert.notEqual(result.regions[0].metadata.edgeCurves, document.regions[0].metadata.edgeCurves);
+  assert.equal(Object.hasOwn(result.regions[1].metadata, "edgeCurves"), false);
+});
+
+test("normalizePipelineDocument rejects malformed persisted edge curves", () => {
+  const document = {
+    canvas: { width: 100, height: 50 },
+    regions: [{ ...baseline, metadata: { ...baseline.metadata, edgeCurves: { 3: { kind: "quadratic", control: [1, 1] } } } }],
+  };
+
+  assert.throws(() => normalizePipelineDocument(document, { width: 10, height: 10 }), /edge/i);
+});
+
+test("buildEditedDocument exports flattened geometry and editable edge metadata", () => {
+  const curved = {
+    ...baseline,
+    metadata: { ...baseline.metadata, edgeCurves: { 0: { kind: "quadratic", control: [5, -10] } } },
+  };
+
+  const [result] = buildEditedDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [curved],
+    imageName: "board.png",
+    regionsName: "regions.json",
+  }).regions;
+
+  assert.equal(result.contour.length, 34);
+  assert.deepEqual(result.contour.slice(0, 3), [[0, 0], [0.31, -0.61], [0.63, -1.17]]);
+  assert.notDeepEqual(result.contour[0], result.contour.at(-1));
+  assert.deepEqual(result.anchor, [5.15, -2.84]);
+  assert.equal(result.areaPixels, 83);
+  assert.deepEqual(result.bounds, [0, -5, 10, 10]);
+  assert.deepEqual(result.metadata.edgeCurves, { 0: { kind: "quadratic", control: [5, -10] } });
+});
+
+test("buildCorrectionsDocument detects curve-only changes", () => {
+  const changed = {
+    ...baseline,
+    metadata: { ...baseline.metadata, edgeCurves: { 0: { kind: "quadratic", control: [5, -10] } } },
+  };
+
+  const result = buildCorrectionsDocument({ baselineRegions: [baseline], regions: [changed] });
+
+  assert.equal(result.summary.modified, 1);
+  assert.deepEqual(result.modified[0].after.metadata.edgeCurves, changed.metadata.edgeCurves);
 });
