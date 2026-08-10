@@ -89,12 +89,8 @@ def _ios_profile_matches_repository_board(
     legacy_alias = profile_board_id.replace(".", "-")
     if legacy_alias == profile_board_id:
         return False
-    alias_matches = {
-        candidate
-        for candidate in repository_board_ids
-        if candidate.replace(".", "-") == legacy_alias
-    }
-    return alias_matches == {repository_board_id}
+    matching_candidates = {candidate for candidate in repository_board_ids if candidate.replace(".", "-") == legacy_alias}
+    return matching_candidates == {repository_board_id}
 
 
 class WorkbenchService:
