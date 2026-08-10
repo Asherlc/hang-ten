@@ -167,7 +167,11 @@ Any Stage 1 image and compatible `stage-2-regions.json` can be loaded through th
 
 Hold highlights can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
-Selected regions expose object-level rotate and bend handles. Individual contour points remain available behind the **Edit points** toggle for fine correction.
+Selected regions expose object-level rotate and bend handles. Individual contour points and per-edge curve handles remain available behind the **Edit points** toggle for fine correction.
+
+## Edit individual edges
+
+Enable **Edit points**, then drag an edge handle to bow that segment without moving its vertices. Turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
 
 ## Fast tracing workflow
 
@@ -175,7 +179,7 @@ Selected regions expose object-level rotate and bend handles. Individual contour
 2. Use the eight frame handles to resize, the circular handle to rotate, and the diamond handle to bend. Hold Shift while resizing a corner to preserve aspect ratio.
 3. Use **Simplify curve** when a smooth outline has too many controls; undo immediately if the reduction is too aggressive.
 4. Use **Mirror copy** to create a new symmetric hold highlight, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
-5. Enable **Snap edges** when direct point or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
+5. Enable **Snap edges** when direct point, curve-handle, or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
 6. Save the reviewed run.
 
 Shortcuts outside text fields:
@@ -186,7 +190,7 @@ Shortcuts outside text fields:
 - `S`: toggle edge snapping
 - `Space`: pan
 
-Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
+Edge snapping is a local contrast aid, not automatic segmentation. It affects only point, curve-handle, and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
 
 Both export buttons remain available in server and static modes as recovery
 paths. In legacy/static mode, unsaved browser edits are lost when the page

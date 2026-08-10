@@ -217,7 +217,11 @@
             <label>Path style
               <select id="region-path-style-select"><option value="straight">Straight segments</option><option value="smooth">Smooth curve</option></select>
             </label>
-            <label class="tension-field hidden" id="tension-field"><span>Curve tension <output id="curve-tension-value">80%</output></span><input id="curve-tension-slider" type="range" min="10" max="140" value="80" /></label>
+            <label class="tension-field hidden" id="tension-field">
+              <span>Curve tension <output id="curve-tension-value">80%</output></span>
+              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" aria-describedby="curve-tension-feedback" />
+              <small id="curve-tension-feedback" class="curve-tension-feedback hidden" role="status"></small>
+            </label>
             <fieldset class="corner-treatment-field hidden" id="corner-treatment-field">
               <legend>Corner <span id="corner-number">—</span></legend>
               <label>Treatment
@@ -228,8 +232,16 @@
             <label>Hold interaction mode
               <select id="region-mode-select"><option value="aperture">Aperture</option><option value="surface">Surface</option></select>
             </label>
-            <label>Hold notes <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea></label>
-            <div class="metric-grid"><div><span>Points</span><strong id="point-count">—</strong></div><div><span>Area</span><strong id="area-value">—</strong></div></div>
+
+            <label>
+              Review notes
+              <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
+            </label>
+
+            <div class="metric-grid">
+              <div><span>Points</span><strong id="point-count">—</strong></div>
+              <div><span>Area</span><strong id="area-value">—</strong></div>
+            </div>
             <div class="inspector-actions">
               <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
               <button type="button" class="tool-button" id="next-region-button">Next →</button>
@@ -250,6 +262,7 @@
     <input id="regions-file-input" type="file" accept="application/json,.json" hidden />
 
     <script src="editor-model.js"></script>
+    <script src="curve-gesture-model.js"></script>
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>
