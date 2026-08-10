@@ -89,14 +89,25 @@ Safety boundaries:
 
 - `inspect`, `compare`, `lint`, and `preview` are read-only for the reviewed
   run.
-- `accept` writes only the Stage 2 acceptance artifact beside the edited
-  regions.
+- `accept` writes the Stage 2 acceptance artifact and the current
+  `lint-report.json` beside the edited regions.
 - `promote` is dry-run by default and does not touch repository destinations
   unless `--apply` is combined with an explicit runtime integration profile.
 - `handoff-required` is the expected result when runtime Swift integration has
   not been configured yet.
 - `release-check` validates the promotion package and repository-facing
   readiness; fix blockers before any manual runtime handoff.
+
+Rollback guidance:
+
+- Start with dry-run `promote` and confirm the reported `plannedWrites` and
+  hashes before attempting `--apply`.
+- Before `--apply`, ensure the destination can be restored from git or save a
+  pre-apply backup copy yourself.
+- If an apply is wrong, restore from version control or that backup instead of
+  deleting files blindly.
+- After restoring, rerun dry-run `promote` and `release-check` to confirm the
+  reviewed run and destination are aligned before applying again.
 
 Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower

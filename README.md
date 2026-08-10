@@ -130,6 +130,21 @@ integration profile, and expect `handoff-required` when that profile has not
 been configured yet; that result is the intentional stop before Swift/runtime
 integration work.
 
+For accepted decisions, `accept` persists the Stage 2 acceptance artifact and
+the current `lint-report.json`; it does not rewrite the automatic Stage 1 image
+or baseline Stage 2 JSON.
+
+For apply safety:
+
+- Run `promote` without `--apply` first and inspect `plannedWrites`,
+  `inputHashes`, and `outputHashes`.
+- Before `--apply`, make sure the destination file is recoverable from version
+  control or save a pre-apply backup copy yourself.
+- If an apply is wrong, restore the destination from git or your saved backup;
+  never delete files blindly to “start over.”
+- After restoring, rerun `promote` in dry-run mode and `release-check` until
+  the planned writes and hashes match the reviewed run.
+
 Regenerate the bundled routine document after an audited plan change:
 
 ```sh

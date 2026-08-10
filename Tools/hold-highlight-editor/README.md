@@ -43,6 +43,20 @@ scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/exa
 runtime integration profile. If no profile is configured yet, the expected
 result is `handoff-required`.
 
+For accepted decisions, `accept` records both the acceptance artifact and the
+current `lint-report.json`; the generated Stage 1 image and baseline Stage 2
+proposal stay unchanged.
+
+Apply cautiously:
+
+- Run the dry-run `promote` command first and inspect the planned destination.
+- Before `--apply`, rely on version control or make your own backup copy of
+  the destination file.
+- If the applied output is wrong, restore from git or that saved backup; never
+  delete blindly.
+- After restoring, rerun dry-run `promote` and `release-check` before trying
+  `--apply` again.
+
 ## Choose among generated runs
 
 Repeat `--run-dir` to put standard pipeline runs in the board selector:
