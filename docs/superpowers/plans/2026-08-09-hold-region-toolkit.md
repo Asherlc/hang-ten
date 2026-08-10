@@ -75,11 +75,11 @@ The existing `Tools/hold-highlight-editor/server.py` and editor save contract re
 - Modify: `scripts/hangboard-tools.sh`
 
 **Interfaces:**
-- `ReviewRun` is a frozen dataclass containing `root`, `stage1_image`, `stage2_regions`, `edited_regions`, `corrections`, `acceptance`, and `promotion_report` paths; optional paths are `None` when absent.
+- `ReviewRun` is a frozen dataclass containing `root`, `stage1_image`, `stage2_regions`, `edited_regions`, `corrections`, `lint_report`, `acceptance`, and `promotion_report` paths; optional paths are `None` when absent.
 - `discover_review_run(root: Path) -> ReviewRun` requires exactly one `stage-1-auto-rgba.png` and one `stage-2-regions.json` under `root`, and rejects missing/ambiguous files.
 - `sha256_file(path: Path) -> str` returns the lowercase 64-character SHA-256 digest of the exact file bytes.
 - `load_json(path: Path, label: str) -> dict[str, object]` rejects missing, invalid, non-object JSON with a path-specific `ValueError`.
-- `review_state(run: ReviewRun) -> str` returns one of `automatic`, `edited`, `lint-passed`, `accepted`, or `promoted` based only on present artifacts; hash validity is checked by later commands.
+- `review_state(run: ReviewRun) -> str` returns one of `automatic`, `edited`, `lint-passed`, `accepted`, or `promoted` based on present artifacts; `lint-passed` requires a persisted report whose `passed` field is true, and hash validity is checked by later commands.
 - `inspect_run(run: ReviewRun) -> dict[str, object]` returns JSON-safe paths relative to `run.root`, file hashes for present artifacts, the derived state, and the next action.
 - `review_cli.main(argv: Sequence[str] | None = None) -> int` supports `inspect --run PATH --json` and prints a compact JSON object on success.
 - `review_fixtures.make_review_run(root: Path) -> Path` creates a valid fixture with a real 32×16 RGBA PNG, one baseline region document, and no edited artifact.
@@ -125,7 +125,7 @@ Expected: FAIL because `review_artifacts.py` and the fixture builders do not exi
 
 In `review_fixtures.py`, use Pillow to write the 32×16 RGBA PNG and use these exact region documents: canvas `{width: 32, height: 16}`; baseline region ID `1`, key `left`, type `edge`, mode `surface`, and contour `[[3, 3], [12, 3], [12, 8], [3, 8]]`; edited region ID `1` with contour `[[3, 3], [13, 3], [12, 8], [3, 8]]`; added region ID `2`, key `right`, type `pocket`, mode `aperture`, and contour `[[18, 3], [27, 3], [27, 8], [18, 8]]`. Serialize corrections with `schemaVersion: 1`, a one-item `modified` list, and empty `added`/`deleted` lists. The helper must return the run root rather than a mutable global.
 
-In `review_artifacts.py`, use `Path.rglob`, require exactly one generated image/document, resolve every discovered path, and only accept optional review files in the same Stage 2 artifact directory. Recognize these exact optional names: `stage-2-regions.edited.json`, `stage-2-human-corrections.json`, `stage-2-review-acceptance.json`, and `board-promotion-report.json`. Reject a run root that is not a directory.
+In `review_artifacts.py`, use `Path.rglob`, require exactly one generated image/document, resolve every discovered path, and only accept optional review files in the same Stage 2 artifact directory. Recognize these exact optional names: `stage-2-regions.edited.json`, `stage-2-human-corrections.json`, `lint-report.json`, `stage-2-review-acceptance.json`, and `board-promotion-report.json`. Reject a run root that is not a directory.
 
 - [ ] **Step 4: Add the inspect CLI and wrapper entry point.**
 
@@ -165,6 +165,7 @@ git commit -m "feat: inspect hold-region review artifacts"
 - `LintIssue` is a frozen dataclass with `severity: Literal["error", "warning"]`, `code: str`, `path: str`, and `message: str`.
 - `LintReport` is a frozen dataclass with `passed: bool`, `issues: tuple[LintIssue, ...]`, `baseline_sha256: str`, and `edited_sha256: str`.
 - `lint_review(run: ReviewRun, profile: Mapping[str, object] | None = None) -> LintReport` validates the edited document and correction delta against the generated baseline.
+- `write_lint_report(run: ReviewRun, report: LintReport) -> Path` atomically writes `lint-report.json` beside the edited artifact and returns its path.
 - `AcceptanceRecord` is a frozen dataclass serializing `schemaVersion`, `decision`, `reviewer`, `reviewedAt`, `source`, `toolVersion`, and `notes`.
 - `write_acceptance(run: ReviewRun, decision: Literal["accepted", "rejected"], reviewer: str, notes: str, now: datetime | None = None) -> Path` requires a current lint pass for acceptance and atomically writes `stage-2-review-acceptance.json` beside the edited artifact.
 - `validate_acceptance(run: ReviewRun) -> AcceptanceRecord` verifies every recorded source hash before returning the record.
@@ -231,7 +232,7 @@ def test_validate_acceptance_rejects_changed_edited_artifact(tmp_path):
 
 - [ ] **Step 5: Implement acceptance, wire CLI commands, test, and commit.**
 
-Use UTC ISO-8601 timestamps, default the CLI reviewer to `local-user`, require `accept` to run lint first, and write through a temporary file in the Stage 2 directory followed by `Path.replace`. `reject` may record a rejected decision without a lint pass but still records all present artifact hashes. Add `lint --run PATH --json` and `accept --run PATH --decision accepted|rejected --reviewer NAME --notes TEXT` to `review_cli.py`.
+Use UTC ISO-8601 timestamps, default the CLI reviewer to `local-user`, require `accept` to run lint first, and write through a temporary file in the Stage 2 directory followed by `Path.replace`. Every `lint` invocation writes `lint-report.json` before returning, including failing reports. `reject` may record a rejected decision without a lint pass but still records all present artifact hashes. Add `lint --run PATH --json` and `accept --run PATH --decision accepted|rejected --reviewer NAME --notes TEXT` to `review_cli.py`.
 
 Run: `cd Tools/HangboardOnboarding && python3 -m pytest tests/test_review_lint.py tests/test_review_acceptance.py tests/test_review_cli.py -q`
 
