@@ -2591,10 +2591,12 @@
     const editingText = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName);
     if (event.code === "Space" && !editingText) { state.spacePressed = true; event.preventDefault(); }
     if (event.key === "Enter" && state.drawing) {
+      event.preventDefault();
       finishDraw();
       return;
     }
     if (event.key === "Escape" && state.drawing) {
+      event.preventDefault();
       cancelDraw();
       return;
     }
