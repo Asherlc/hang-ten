@@ -29,6 +29,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         XCTAssertEqual(result[0].targets, [.kind(.edge)])
         XCTAssertEqual(result[0].timedWorkDuration, 20)
         XCTAssertTrue(result[1].targets.isEmpty)
+        XCTAssertTrue(result[1].instruction.isEmpty)
     }
 
     func testExpandedWorkRowUsesRetainedSegmentTargetAndGripSemantics() throws {
