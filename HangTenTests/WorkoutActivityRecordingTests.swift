@@ -425,14 +425,30 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         let plan = PlanCatalog.repeaters
         let board = BoardCatalog.compactII
-        let workSteps = plan.steps.filter { $0.id.hasPrefix("repeaters-grip-") && $0.phase == .hang }
+        let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
+        let workSteps = repeaterSteps.filter { $0.phase == .hang }
         let interRepRestSteps = plan.steps.filter {
-            $0.id.hasPrefix("repeaters-grip-") && $0.phase == .rest && $0.duration == 3
+            $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) && $0.phase == .rest && $0.duration == 3
         }
 
         XCTAssertEqual(workSteps.count, 18)
-        XCTAssertTrue(workSteps.allSatisfy { $0.duration == 7 })
         XCTAssertEqual(interRepRestSteps.count, 15)
+
+        let expectedBlockPhases = Array(repeating: [WorkoutPhase.hang, .rest], count: 5)
+            .flatMap { $0 } + [.hang]
+        let expectedBlockDurations = Array(repeating: [7.0, 3.0], count: 5)
+            .flatMap { $0 } + [7.0]
+        let expectedPhases = expectedBlockPhases + [.rest] + expectedBlockPhases + [.rest] + expectedBlockPhases
+        let expectedDurations = expectedBlockDurations + [120] + expectedBlockDurations + [120] + expectedBlockDurations
+        XCTAssertEqual(repeaterSteps.count, expectedPhases.count)
+        XCTAssertEqual(repeaterSteps.map(\.phase), expectedPhases)
+        XCTAssertEqual(repeaterSteps.map(\.duration), expectedDurations)
+
+        for blockStart in [0, 12, 24] {
+            let block = Array(repeaterSteps[blockStart..<(blockStart + expectedBlockPhases.count)])
+            XCTAssertEqual(block.map(\.phase), expectedBlockPhases)
+            XCTAssertEqual(block.map(\.duration), expectedBlockDurations)
+        }
 
         let resolvedPairs = workSteps.map { store.holdIDs(for: $0, on: board).sorted() }
         let repetitionsByPair = Dictionary(grouping: resolvedPairs, by: { $0 })
@@ -446,9 +462,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
 
         let resolvedPairDescriptors = Set(repetitionsByPair.keys.compactMap { holdIDs -> PairDescriptor? in
-            guard let step = workSteps.first(where: {
+            guard let firstStep = workSteps.first(where: {
                 store.holdIDs(for: $0, on: board).sorted() == holdIDs
             }) else { return nil }
+            let matchingSteps = workSteps.filter {
+                store.holdIDs(for: $0, on: board).sorted() == holdIDs
+            }
+            XCTAssertTrue(matchingSteps.allSatisfy { $0.gripType == firstStep.gripType })
             let holdShapes = board.holds
                 .filter { holdIDs.contains($0.id) }
                 .map { ($0.kind, $0.sizeMillimeters) }
@@ -458,7 +478,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             return PairDescriptor(
                 kind: firstShape.0,
                 sizeMillimeters: firstShape.1,
-                gripType: step.gripType
+                gripType: firstStep.gripType
             )
         })
         XCTAssertEqual(
