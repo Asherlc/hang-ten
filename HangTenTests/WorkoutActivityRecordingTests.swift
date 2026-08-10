@@ -418,6 +418,107 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            userDefaults: makeDefaults()
+        )
+        let plan = PlanCatalog.repeaters
+        let board = BoardCatalog.compactII
+        let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
+        let workSteps = repeaterSteps.filter { $0.phase == .hang }
+        let interRepRestSteps = plan.steps.filter {
+            $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) && $0.phase == .rest && $0.duration == 3
+        }
+
+        XCTAssertEqual(workSteps.count, 18)
+        XCTAssertEqual(interRepRestSteps.count, 15)
+
+        let expectedBlockPhases = Array(repeating: [WorkoutPhase.hang, .rest], count: 5)
+            .flatMap { $0 } + [.hang]
+        let expectedBlockDurations = Array(repeating: [7.0, 3.0], count: 5)
+            .flatMap { $0 } + [7.0]
+        let expectedPhases = expectedBlockPhases + [.rest] + expectedBlockPhases + [.rest] + expectedBlockPhases
+        let expectedDurations = expectedBlockDurations + [120] + expectedBlockDurations + [120] + expectedBlockDurations
+        XCTAssertEqual(repeaterSteps.count, expectedPhases.count)
+        XCTAssertEqual(repeaterSteps.map(\.phase), expectedPhases)
+        XCTAssertEqual(repeaterSteps.map(\.duration), expectedDurations)
+
+        for blockStart in [0, 12, 24] {
+            let block = Array(repeaterSteps[blockStart..<(blockStart + expectedBlockPhases.count)])
+            XCTAssertEqual(block.map(\.phase), expectedBlockPhases)
+            XCTAssertEqual(block.map(\.duration), expectedBlockDurations)
+        }
+
+        let resolvedPairs = workSteps.map { store.holdIDs(for: $0, on: board).sorted() }
+        let repetitionsByPair = Dictionary(grouping: resolvedPairs, by: { $0 })
+        XCTAssertEqual(repetitionsByPair.count, 3)
+        XCTAssertTrue(repetitionsByPair.values.allSatisfy { $0.count == 6 })
+
+        struct PairDescriptor: Hashable {
+            let kind: HoldKind
+            let sizeMillimeters: Int?
+            let gripType: GripType?
+        }
+
+        let resolvedPairDescriptors = Set(repetitionsByPair.keys.compactMap { holdIDs -> PairDescriptor? in
+            guard let firstStep = workSteps.first(where: {
+                store.holdIDs(for: $0, on: board).sorted() == holdIDs
+            }) else { return nil }
+            let matchingSteps = workSteps.filter {
+                store.holdIDs(for: $0, on: board).sorted() == holdIDs
+            }
+            XCTAssertTrue(matchingSteps.allSatisfy { $0.gripType == firstStep.gripType })
+            let holdShapes = board.holds
+                .filter { holdIDs.contains($0.id) }
+                .map { ($0.kind, $0.sizeMillimeters) }
+            guard let firstShape = holdShapes.first, holdShapes.allSatisfy({ $0 == firstShape }) else {
+                return nil
+            }
+            return PairDescriptor(
+                kind: firstShape.0,
+                sizeMillimeters: firstShape.1,
+                gripType: firstStep.gripType
+            )
+        })
+        XCTAssertEqual(
+            resolvedPairDescriptors,
+            Set([
+                PairDescriptor(kind: .edge, sizeMillimeters: 29, gripType: .openHand),
+                PairDescriptor(kind: .sloper, sizeMillimeters: 56, gripType: .openHand),
+                PairDescriptor(kind: .edge, sizeMillimeters: 19, gripType: .halfCrimp)
+            ])
+        )
+
+        for holdIDs in repetitionsByPair.keys {
+            XCTAssertEqual(holdIDs.count, 2)
+
+            let holds = board.holds.filter { holdIDs.contains($0.id) }
+            XCTAssertEqual(holds.count, 2)
+            guard holds.count == 2 else { continue }
+
+            let holdsByX = holds.sorted { $0.frame.x < $1.frame.x }
+            let leftHold = holdsByX[0]
+            let rightHold = holdsByX[1]
+            XCTAssertLessThan(leftHold.frame.x, rightHold.frame.x)
+            XCTAssertEqual(leftHold.frame.y, rightHold.frame.y, accuracy: 0.0001)
+            XCTAssertEqual(leftHold.frame.width, rightHold.frame.width, accuracy: 0.0001)
+            XCTAssertEqual(leftHold.frame.height, rightHold.frame.height, accuracy: 0.0001)
+            XCTAssertEqual(leftHold.frame.x, 1 - rightHold.frame.x - rightHold.frame.width, accuracy: 0.0001)
+        }
+
+        let centeredFourFingerPocketIDs = Set(
+            board.holds
+                .filter {
+                    $0.kind == .pocket &&
+                    $0.fingerCapacity == 4 &&
+                    abs(($0.frame.x + ($0.frame.width / 2)) - 0.5) < 0.0001
+                }
+                .map(\.id)
+        )
+        XCTAssertTrue(Set(resolvedPairs.flatMap { $0 }).isDisjoint(with: centeredFourFingerPocketIDs))
+    }
+
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()

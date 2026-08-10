@@ -272,6 +272,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let targets: [WorkoutTargetDefinition]
     let segments: [WorkoutSegmentDefinition]
     let gripType: GripType?
+    let fingerConfiguration: FingerConfiguration?
     let activeDuration: TimeInterval?
 
     init(
@@ -284,6 +285,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         targets: [WorkoutTargetDefinition],
         segments: [WorkoutSegmentDefinition] = [],
         gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil,
         activeDuration: TimeInterval? = nil
     ) {
         self.id = id
@@ -295,6 +297,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.targets = targets
         self.segments = segments
         self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
         self.activeDuration = activeDuration
     }
 
@@ -308,6 +311,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case targets
         case segments
         case gripType
+        case fingerConfiguration
         case activeDuration
     }
 
@@ -325,6 +329,10 @@ struct WorkoutStepDefinition: Codable, Hashable {
             forKey: .segments
         ) ?? []
         gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
+        fingerConfiguration = try container.decodeIfPresent(
+            FingerConfiguration.self,
+            forKey: .fingerConfiguration
+        )
         activeDuration = try container.decodeIfPresent(
             TimeInterval.self,
             forKey: .activeDuration
@@ -342,6 +350,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encode(targets, forKey: .targets)
         try container.encode(segments, forKey: .segments)
         try container.encodeIfPresent(gripType, forKey: .gripType)
+        try container.encodeIfPresent(fingerConfiguration, forKey: .fingerConfiguration)
         try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
     }
 }
@@ -394,6 +403,7 @@ extension WorkoutStepDefinition {
                 )
             },
             gripType: step.gripType,
+            fingerConfiguration: step.fingerConfiguration,
             activeDuration: step.timedWorkDuration
         )
     }
@@ -1072,6 +1082,7 @@ struct PlanDefinitionResolver {
                         targets: targets,
                         segments: segments,
                         gripType: stepDefinition.gripType,
+                        fingerConfiguration: stepDefinition.fingerConfiguration,
                         timedWorkDuration: stepDefinition.activeDuration
                     )
                     for normalizedStep in try WorkoutStepNormalizer.expand(resolvedStep) {
@@ -1335,7 +1346,7 @@ enum BuiltInPlanLibraryDefinition {
         "outer-jugs": ["jug-left", "jug-right"],
         "edge-29": ["edge-29-left", "edge-29-right"],
         "edge-19": ["edge-19-left", "edge-19-right"],
-        "flat-slopers": ["sloper-flat-left", "sloper-flat-right"],
+        "flat-slopers": BoardCatalog.compactIIFlatSloperHoldIDs,
         "round-sloper": ["sloper-round-center"],
         "pocket-29-three": ["pocket-29-three-left", "pocket-29-three-right"],
         "pocket-29-two": ["pocket-29-two-left", "pocket-29-two-right"],

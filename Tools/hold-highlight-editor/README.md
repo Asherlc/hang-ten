@@ -47,8 +47,9 @@ rtk python3 Tools/hold-highlight-editor/server.py \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
-Open `http://localhost:4173`. Enter the exact commercial product name, choose
-an HTTP(S) image URL or local image upload, and select **Create board**. The
+Open `http://localhost:4173`. Choose a board, edit its hold highlights, add or
+delete highlights, choose each hold type, and save the review. For a new board, enter the exact
+commercial product name, choose an HTTP(S) image URL or local image upload, and select **Create board**. The
 image bytes, run manifests, approvals, drafts, and revisions stay under the
 workspace root. The opening screen separately lists validated **Boards in this
 repository**; selecting one opens its current committed version. The exact
@@ -85,7 +86,7 @@ the displayed checkpoint to its hashes, runs the next installed stage, and
 stops at the next review automatically. **Retry** publishes a new immutable
 attempt for the current stage without overwriting its earlier evidence.
 
-Stage 2 edits the pixel-aligned contour inventory that produces the label map.
+Stage 2 edits the pixel-aligned hold-highlight inventory that produces the label map.
 Stage 3 edits the vector display paths that become the final interactive grip
 geometry. Both editors autosave validated drafts bound to the active checkpoint
 attempt; approval materializes only the newest draft for that exact attempt.
@@ -141,8 +142,8 @@ Then open `http://localhost:4173`. The server loads the run's unique
 `stage-1-auto-rgba.png` and `stage-2-regions.json`. **Save** atomically writes
 these review artifacts beside the Stage 2 proposal:
 
-- `stage-2-regions.edited.json`: complete edited region artifact.
-- `stage-2-human-corrections.json`: added, modified, and deleted regions relative to the automatic proposal.
+- `stage-2-regions.edited.json`: complete edited hold-highlight artifact.
+- `stage-2-human-corrections.json`: added, modified, and deleted hold highlights relative to the automatic proposal.
 
 The generated `stage-2-regions.json` is never overwritten.
 
@@ -189,28 +190,32 @@ rtk python3 -m http.server 4173 --directory Tools/hold-highlight-editor
 
 Any Stage 1 image and compatible `stage-2-regions.json` can be loaded through the toolbar or by dropping both files onto the canvas. If a `demo/` directory is supplied, the editor loads it automatically.
 
-Regions can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
+Hold highlights can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
-Selected regions expose object-level rotate and bend handles. Individual contour points remain available behind the **Edit points** toggle for fine correction.
+Selected regions expose object-level rotate and bend handles. Individual contour points and per-edge curve handles remain available behind the **Edit points** toggle for fine correction.
+
+## Edit individual edges
+
+Enable **Edit points**, then drag an edge handle to bow that segment without moving its vertices. Turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
 
 ## Fast tracing workflow
 
 1. Draw one side of a repeated or symmetric hold layout.
 2. Use the eight frame handles to resize, the circular handle to rotate, and the diamond handle to bend. Hold Shift while resizing a corner to preserve aspect ratio.
 3. Use **Simplify curve** when a smooth outline has too many controls; undo immediately if the reduction is too aggressive.
-4. Use **Mirror copy** to create a new symmetric region, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
-5. Enable **Snap edges** when direct point or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
+4. Use **Mirror copy** to create a new symmetric hold highlight, or **Mirror onto…** and select an existing counterpart to replace only its geometry.
+5. Enable **Snap edges** when direct point, curve-handle, or resize placement benefits from the image boundary. Hold Alt during a drag to bypass snapping.
 6. Save the reviewed run.
 
 Shortcuts outside text fields:
 
-- `[` / `]`: previous or next region
+- `[` / `]`: previous or next hold highlight
 - `M`: mirror copy
 - `E`: toggle detailed point editing
 - `S`: toggle edge snapping
 - `Space`: pan
 
-Edge snapping is a local contrast aid, not automatic segmentation. It affects only point and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
+Edge snapping is a local contrast aid, not automatic segmentation. It affects only point, curve-handle, and resize drags and never changes a region during load, move, rotate, bend, mirror, or save.
 
 Both export buttons remain available in server and static modes as recovery
 paths. In legacy/static mode, unsaved browser edits are lost when the page

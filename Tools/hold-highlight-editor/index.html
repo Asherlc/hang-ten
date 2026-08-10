@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
-    <title>Hangboard Workbench</title>
+    <title>Hold Editor</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -70,8 +70,8 @@
         <div class="brand-block">
           <div class="brand-mark">H</div>
           <div>
-            <h1 id="board-title">Hangboard Workbench</h1>
-            <p id="board-state">Review each checkpoint, then continue the pipeline.</p>
+            <h1>Hold Editor</h1>
+            <p id="board-state">Edit and save hold highlights.</p>
           </div>
         </div>
 
@@ -81,9 +81,9 @@
             <select id="board-select" aria-label="Board to edit"></select>
           </label>
           <span class="toolbar-separator board-picker-separator hidden" id="board-picker-separator"></span>
-          <div class="legacy-controls" id="legacy-controls">
+          <div class="hidden" id="static-load-controls">
             <button class="tool-button" id="load-image-button">Load image</button>
-            <button class="tool-button" id="load-regions-button">Load regions</button>
+            <button class="tool-button" id="load-regions-button">Load highlights</button>
           </div>
           <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
@@ -94,7 +94,7 @@
           <button class="tool-button" id="revise-button" disabled>Revise upstream</button>
           <span class="save-state" id="save-state">Checking workspace…</span>
           <button class="tool-button accent" id="save-button" disabled>Approve &amp; continue</button>
-          <button class="tool-button export-action" id="export-button">Export edited regions</button>
+          <button class="tool-button export-action" id="export-button">Export edited highlights</button>
           <button class="tool-button export-action" id="corrections-button">Export corrections</button>
         </div>
       </header>
@@ -144,18 +144,18 @@
           <section class="inventory-block" id="inventory-block">
             <div class="panel-heading">
               <div>
-                <span class="eyebrow">Inventory</span>
-                <h2>Grip regions</h2>
+                <span class="eyebrow">Hold highlights</span>
+                <h2>Hold highlights</h2>
               </div>
               <span class="count-badge" id="region-count">0</span>
             </div>
             <label class="search-field">
               <span>⌕</span>
-              <input id="region-search" type="search" placeholder="Filter grips" />
+              <input id="region-search" type="search" placeholder="Filter highlights" />
             </label>
-            <div class="region-list" id="region-list" role="listbox" aria-label="Grip regions"></div>
+            <div class="region-list" id="region-list" role="listbox" aria-label="Hold highlights"></div>
             <div class="shape-create-row">
-              <select id="new-shape-select" aria-label="New region shape">
+              <select id="new-shape-select" aria-label="New highlight shape">
                 <option value="freeform">Freeform</option>
                 <option value="curved-freeform">Curved freeform</option>
                 <option value="rectangle">Rectangle</option>
@@ -164,7 +164,7 @@
                 <option value="ellipse">Ellipse</option>
                 <option value="capsule">Capsule</option>
               </select>
-              <button class="add-region-button" id="add-region-button"><span>＋</span> Add</button>
+              <button class="add-region-button" id="add-region-button" aria-label="Add highlight"><span>＋</span> Add highlight</button>
             </div>
           </section>
         </aside>
@@ -172,7 +172,7 @@
         <section class="canvas-column">
           <div class="canvas-header">
             <div class="segmented-control" aria-label="Overlay visibility">
-              <button class="active" data-overlay="all">All regions</button>
+              <button class="active" data-overlay="all">All highlights</button>
               <button data-overlay="selected">Selected only</button>
               <button data-overlay="none">Image only</button>
             </div>
@@ -192,7 +192,7 @@
           <div class="checkpoint-views">
             <div class="canvas-viewport" id="canvas-viewport" tabindex="0">
               <div class="canvas-stage" id="canvas-stage">
-                <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard checkpoint editor">
+                <svg id="editor-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Hangboard hold highlight editor">
                   <image id="board-image" x="0" y="0" width="1000" height="358" preserveAspectRatio="none" />
                   <g id="compare-overlay"></g>
                   <g id="region-overlay"></g>
@@ -200,7 +200,7 @@
                 </svg>
               </div>
               <div class="empty-state" id="empty-state">
-                <strong>No checkpoint selected</strong>
+                <strong>Drop a board image and hold-highlight JSON here</strong>
                 <span>Create or choose a recent board to begin.</span>
               </div>
               <div class="draw-instruction" id="draw-instruction">Click around the hold. Press Enter to finish or Escape to cancel.</div>
@@ -227,10 +227,10 @@
               <h2 id="inspector-title">No selection</h2>
             </div>
           </div>
-          <div class="inspector-empty" id="inspector-empty">Select a region to edit its exact geometry and metadata.</div>
+          <div class="inspector-empty" id="inspector-empty">Select a hold highlight to edit its exact geometry and details.</div>
           <form class="inspector-form hidden" id="inspector-form">
-            <label>Region key <input id="region-key-input" type="text" autocomplete="off" /></label>
-            <label>Grip type
+            <label>Hold key <input id="region-key-input" type="text" autocomplete="off" /></label>
+            <label>Hold type
               <select id="region-type-select"><option value="pocket">Pocket</option><option value="edge">Edge</option><option value="sloper">Sloper</option><option value="jug">Jug</option></select>
             </label>
             <label>Shape
@@ -239,7 +239,11 @@
             <label>Path style
               <select id="region-path-style-select"><option value="straight">Straight segments</option><option value="smooth">Smooth curve</option></select>
             </label>
-            <label class="tension-field hidden" id="tension-field"><span>Curve tension <output id="curve-tension-value">80%</output></span><input id="curve-tension-slider" type="range" min="10" max="140" value="80" /></label>
+            <label class="tension-field hidden" id="tension-field">
+              <span>Curve tension <output id="curve-tension-value">80%</output></span>
+              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" aria-describedby="curve-tension-feedback" />
+              <small id="curve-tension-feedback" class="curve-tension-feedback hidden" role="status"></small>
+            </label>
             <fieldset class="corner-treatment-field hidden" id="corner-treatment-field">
               <legend>Corner <span id="corner-number">—</span></legend>
               <label>Treatment
@@ -247,11 +251,19 @@
               </label>
               <label>Radius / amount (px) <input id="corner-amount-input" type="number" min="0.5" max="100" step="0.5" value="12" disabled /></label>
             </fieldset>
-            <label>Interaction mode
+            <label>Hold interaction mode
               <select id="region-mode-select"><option value="aperture">Aperture</option><option value="surface">Surface</option></select>
             </label>
-            <label>Review notes <textarea id="region-notes-input" rows="4" placeholder="Why was this region changed?"></textarea></label>
-            <div class="metric-grid"><div><span>Points</span><strong id="point-count">—</strong></div><div><span>Area</span><strong id="area-value">—</strong></div></div>
+
+            <label>
+              Review notes
+              <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
+            </label>
+
+            <div class="metric-grid">
+              <div><span>Points</span><strong id="point-count">—</strong></div>
+              <div><span>Area</span><strong id="area-value">—</strong></div>
+            </div>
             <div class="inspector-actions">
               <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
               <button type="button" class="tool-button" id="next-region-button">Next →</button>
@@ -260,7 +272,7 @@
               <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
               <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
               <button type="button" class="tool-button" id="mirror-onto-button">Mirror onto…</button>
-              <button type="button" class="tool-button danger" id="delete-button">Delete region</button>
+              <button type="button" class="tool-button danger" id="delete-button">Delete highlight</button>
             </div>
           </form>
           <div class="legend"><span class="eyebrow">Types</span><div><i class="dot jug"></i> Jug</div><div><i class="dot sloper"></i> Sloper</div><div><i class="dot edge"></i> Edge</div><div><i class="dot pocket"></i> Pocket</div></div>
@@ -431,6 +443,7 @@
     <input id="regions-file-input" type="file" accept="application/json,.json" hidden />
 
     <script src="editor-model.js"></script>
+    <script src="curve-gesture-model.js"></script>
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>

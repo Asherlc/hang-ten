@@ -37,6 +37,212 @@
     return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)].map((value) => round(value));
   }
 
+  function normalizeEdgeCurves(edgeCurves, pointCount) {
+    if (!Number.isInteger(pointCount) || pointCount < 0) throw new Error("Edge curve point count must be a non-negative integer.");
+    if (edgeCurves === undefined) return {};
+    if (!edgeCurves || typeof edgeCurves !== "object" || Array.isArray(edgeCurves)) {
+      throw new Error("Edge curves must be an object keyed by edge index.");
+    }
+    const normalized = {};
+    Object.entries(edgeCurves).forEach(([key, entry]) => {
+      if (!/^(0|[1-9]\d*)$/.test(key) || Number(key) >= pointCount) {
+        throw new Error(`Invalid edge curve index: ${key}.`);
+      }
+      if (!entry || typeof entry !== "object" || Array.isArray(entry) || entry.kind !== "quadratic") {
+        throw new Error(`Invalid edge curve kind at edge ${key}.`);
+      }
+      if (!Array.isArray(entry.control) || entry.control.length !== 2 || !entry.control.every(Number.isFinite)) {
+        throw new Error(`Edge curve control at edge ${key} must contain two finite coordinates.`);
+      }
+      normalized[Number(key)] = { kind: "quadratic", control: [entry.control[0], entry.control[1]] };
+    });
+    return normalized;
+  }
+
+  function smoothControls(points, index, tension) {
+    const count = points.length;
+    const tangentScale = Math.max(0.1, Math.min(1.4, Number(tension) || 0.8)) / 6;
+    const previous = points[(index - 1 + count) % count];
+    const current = points[index];
+    const next = points[(index + 1) % count];
+    const afterNext = points[(index + 2) % count];
+    return [
+      [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale],
+      [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale],
+    ];
+  }
+
+  function edgeCurvePath(points, style = "straight", tension = 0.8, edgeCurves) {
+    if (!points?.length) return "";
+    const curves = normalizeEdgeCurves(edgeCurves, points.length);
+    const curveIndexes = Object.keys(curves);
+    const pointText = ([x, y]) => `${round(x)} ${round(y)}`;
+    if (!curveIndexes.length) {
+      if (style !== "smooth" || points.length < 3) {
+        return `M ${points.map(pointText).join(" L ")} Z`;
+      }
+      let result = `M ${pointText(points[0])}`;
+      for (let index = 0; index < points.length; index += 1) {
+        const [controlOne, controlTwo] = smoothControls(points, index, tension);
+        const endpoint = points[(index + 1) % points.length];
+        result += ` C ${pointText(controlOne)}, ${pointText(controlTwo)}, ${pointText(endpoint)}`;
+      }
+      return `${result} Z`;
+    }
+    let result = `M ${pointText(points[0])}`;
+    for (let index = 0; index < points.length; index += 1) {
+      const endpoint = points[(index + 1) % points.length];
+      const curve = curves[index];
+      result += curve
+        ? ` Q ${pointText(curve.control)} ${pointText(endpoint)}`
+        : ` L ${pointText(endpoint)}`;
+    }
+    return `${result} Z`;
+  }
+
+  function flattenContour(points, style = "straight", tension = 0.8, edgeCurves, curveSteps = 32) {
+    if (!points?.length) return [];
+    if (!Number.isInteger(curveSteps) || curveSteps < 1) throw new Error("curveSteps must be a positive integer.");
+    const curves = normalizeEdgeCurves(edgeCurves, points.length);
+    const hasEdgeCurves = Object.keys(curves).length > 0;
+    const usesSmoothPath = !hasEdgeCurves && style === "smooth" && points.length >= 3;
+    if (!hasEdgeCurves && !usesSmoothPath) return points.map(([x, y]) => [x, y]);
+
+    const flattened = [[points[0][0], points[0][1]]];
+    for (let index = 0; index < points.length; index += 1) {
+      const start = points[index];
+      const endpoint = points[(index + 1) % points.length];
+      const curve = curves[index];
+      if (!curve && !usesSmoothPath) {
+        if (index < points.length - 1) flattened.push([endpoint[0], endpoint[1]]);
+        continue;
+      }
+      const controls = usesSmoothPath ? smoothControls(points, index, tension) : null;
+      for (let step = 1; step <= curveSteps; step += 1) {
+        if (index === points.length - 1 && step === curveSteps) continue;
+        const progress = step / curveSteps;
+        const remaining = 1 - progress;
+        if (curve) {
+          flattened.push([
+            remaining ** 2 * start[0] + 2 * remaining * progress * curve.control[0] + progress ** 2 * endpoint[0],
+            remaining ** 2 * start[1] + 2 * remaining * progress * curve.control[1] + progress ** 2 * endpoint[1],
+          ]);
+        } else {
+          const [controlOne, controlTwo] = controls;
+          flattened.push([
+            remaining ** 3 * start[0] + 3 * remaining ** 2 * progress * controlOne[0]
+              + 3 * remaining * progress ** 2 * controlTwo[0] + progress ** 3 * endpoint[0],
+            remaining ** 3 * start[1] + 3 * remaining ** 2 * progress * controlOne[1]
+              + 3 * remaining * progress ** 2 * controlTwo[1] + progress ** 3 * endpoint[1],
+          ]);
+        }
+      }
+    }
+    return flattened;
+  }
+
+  function mapEdgeCurves(edgeCurves, pointCount, mapper) {
+    if (typeof mapper !== "function") throw new Error("Edge curve mapper must be a function.");
+    const curves = normalizeEdgeCurves(edgeCurves, pointCount);
+    const mapped = {};
+    Object.entries(curves).forEach(([key, entry]) => {
+      const index = Number(key);
+      const control = mapper([entry.control[0], entry.control[1]], index);
+      if (!Array.isArray(control) || control.length !== 2 || !control.every(Number.isFinite)) {
+        throw new Error(`Mapped edge curve control at edge ${key} must contain two finite coordinates.`);
+      }
+      mapped[index] = { kind: "quadratic", control: [control[0], control[1]] };
+    });
+    return mapped;
+  }
+
+  function setEdgeCurveControl(edgeCurves, edgeIndex, control, pointCount) {
+    const curves = normalizeEdgeCurves(edgeCurves, pointCount);
+    return normalizeEdgeCurves({
+      ...curves,
+      [edgeIndex]: { kind: "quadratic", control },
+    }, pointCount);
+  }
+
+  function translateEdgeCurves(edgeCurves, dx, dy, pointCount) {
+    if (!Number.isFinite(dx) || !Number.isFinite(dy)) throw new Error("Edge curve translation must use finite coordinates.");
+    return mapEdgeCurves(edgeCurves, pointCount, ([x, y]) => [x + dx, y + dy]);
+  }
+
+  function mirrorEdgeCurves(edgeCurves, pointCount, canvasWidth) {
+    if (!Number.isFinite(canvasWidth)) throw new Error("Edge curve mirror width must be finite.");
+    const curves = normalizeEdgeCurves(edgeCurves, pointCount);
+    const mirrored = {};
+    Object.entries(curves).forEach(([key, entry]) => {
+      const oldIndex = Number(key);
+      const newIndex = (pointCount - 2 - oldIndex + pointCount) % pointCount;
+      mirrored[newIndex] = {
+        kind: "quadratic",
+        control: [canvasWidth - entry.control[0], entry.control[1]],
+      };
+    });
+    return mirrored;
+  }
+
+  function insertEdgeCurves(edgeCurves, insertionIndex, pointCount) {
+    const curves = normalizeEdgeCurves(edgeCurves, pointCount);
+    if (!Number.isInteger(insertionIndex) || insertionIndex < 0 || insertionIndex > pointCount) {
+      throw new Error("Edge curve insertion index is outside the contour.");
+    }
+    if (pointCount === 0) return curves;
+    const splitEdge = (insertionIndex - 1 + pointCount) % pointCount;
+    const inserted = {};
+    Object.entries(curves).forEach(([key, entry]) => {
+      const oldIndex = Number(key);
+      if (oldIndex === splitEdge) return;
+      const newIndex = oldIndex >= insertionIndex ? oldIndex + 1 : oldIndex;
+      inserted[newIndex] = { kind: "quadratic", control: [entry.control[0], entry.control[1]] };
+    });
+    return normalizeEdgeCurves(inserted, pointCount + 1);
+  }
+
+  function normalizeEditableContour(editableContour) {
+    if (!Array.isArray(editableContour) || editableContour.length < 3) {
+      throw new Error("Editable contour must contain at least three finite points.");
+    }
+    return editableContour.map((point, index) => {
+      if (!Array.isArray(point) || point.length !== 2) {
+        throw new Error(`Editable contour point ${index} must contain exactly two coordinates.`);
+      }
+      const normalized = point.map(Number);
+      if (!normalized.every(Number.isFinite)) {
+        throw new Error(`Editable contour point ${index} must contain two finite coordinates.`);
+      }
+      return normalized;
+    });
+  }
+
+  function regionForExport(region) {
+    validateContour(region?.contour);
+    const metadata = clone(region.metadata || {});
+    const hasEdgeCurves = Object.hasOwn(region.metadata || {}, "edgeCurves");
+    const edgeCurves = hasEdgeCurves
+      ? normalizeEdgeCurves(region.metadata.edgeCurves, region.contour.length)
+      : undefined;
+    delete metadata.editableContour;
+    if (hasEdgeCurves) metadata.edgeCurves = edgeCurves;
+    const authoritativeContour = hasEdgeCurves
+      ? flattenContour(
+        region.contour,
+        metadata.pathStyle || "straight",
+        Number(metadata.curveTension ?? 0.8),
+        edgeCurves,
+      )
+      : stage2AuthoritativeContour(
+        region.contour,
+        metadata.pathStyle || "straight",
+        metadata.curveTension ?? 0.8,
+        metadata.cornerTreatments,
+      );
+    const contour = authoritativeContour.map(([x, y]) => [round(x), round(y)]);
+    if (hasEdgeCurves) {
+      metadata.editableContour = region.contour.map(([x, y]) => [round(x), round(y)]);
+    }
   function pointOnSegment([px, py], [x1, y1], [x2, y2]) {
     const cross = (px - x1) * (y2 - y1) - (py - y1) * (x2 - x1);
     if (Math.abs(cross) > 1e-9) return false;
@@ -108,23 +314,16 @@
     return contour[0].map(roundRasterCoordinate);
   }
 
-  function regionForExport(region) {
-    validateContour(region?.contour);
-    const contour = region.contour.map(([x, y]) => [round(x), round(y)]);
-    const authoritativeContour = stage2AuthoritativeContour(
-      contour,
-      region.metadata?.pathStyle || "straight",
-      region.metadata?.curveTension ?? 0.8,
-      region.metadata?.cornerTreatments,
-    );
     return {
       ...clone(region),
-      anchor: exportAnchor(region, authoritativeContour),
-      areaPixels: Math.round(polygonArea(contour)),
+      anchor: hasEdgeCurves
+        ? centroid(authoritativeContour).map((value) => round(value))
+        : exportAnchor(region, authoritativeContour),
+      areaPixels: Math.round(polygonArea(authoritativeContour)),
       bounds: bounds(contour),
       contour,
       metadata: {
-        ...clone(region.metadata || {}),
+        ...metadata,
         editedBy: "hold-highlight-editor",
       },
     };
@@ -143,12 +342,44 @@
       bend: round(region.metadata?.bend ?? 0),
       cornerTreatments: clone(region.metadata?.cornerTreatments || {}),
       notes: region.metadata?.humanNotes || "",
+      edgeCurves: normalizeEdgeCurves(region.metadata?.edgeCurves, region.contour.length),
     });
   }
 
-  function contourPath(points, style = "straight", tension = 0.8, cornerTreatments = {}) {
+  function normalizeRegion(region, fallbackId) {
+    const sourceId = region.id ?? fallbackId;
+    const numericId = Number(sourceId);
+    const id = Number.isInteger(numericId) && numericId > 0 ? numericId : fallbackId;
+    return {
+      ...clone(region),
+      id,
+      key: region.key || (typeof sourceId === "string" ? sourceId : `grip-${String(id).padStart(3, "0")}`),
+      type: region.type || "edge",
+      contour: (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]),
+      metadata: {
+        mode: region.metadata?.mode || region.mode || region.visualMode || (region.type === "pocket" ? "aperture" : "surface"),
+        shapeKind: region.metadata?.shapeKind || "freeform",
+        pathStyle: region.metadata?.pathStyle || "straight",
+        curveTension: Number(region.metadata?.curveTension ?? 0.8),
+        humanNotes: region.metadata?.humanNotes || "",
+        ...clone(region.metadata || {}),
+        ...(typeof sourceId === "string" && !/^\d+$/.test(sourceId) ? { sourceRegionId: sourceId } : {}),
+      },
+    };
+  }
+
+  function contourPath(points, style = "straight", tension = 0.8, cornerTreatments = {}, edgeCurves) {
     validateContour(points);
-    const treatments = normalizeCornerTreatments(cornerTreatments, points.length);
+    let treatments = cornerTreatments;
+    let curves = edgeCurves;
+    if (curves === undefined && treatments && Object.values(treatments).some((entry) => entry?.kind === "quadratic")) {
+      curves = treatments;
+      treatments = {};
+    }
+    if (curves !== undefined && Object.keys(normalizeEdgeCurves(curves, points.length)).length > 0) {
+      return edgeCurvePath(points, style, tension, curves);
+    }
+    treatments = normalizeCornerTreatments(treatments, points.length);
     if (Object.keys(treatments).length === 0) {
       return style === "smooth" ? smoothClosedPath(points, tension) : straightClosedPath(points);
     }
@@ -193,7 +424,7 @@
       const afterNext = points[(index + 2) % points.length];
       const controlOne = [current[0] + (next[0] - previous[0]) * tangentScale, current[1] + (next[1] - previous[1]) * tangentScale];
       const controlTwo = [next[0] - (afterNext[0] - current[0]) * tangentScale, next[1] - (afterNext[1] - current[1]) * tangentScale];
-      result += ` C ${formatPoint(controlOne)} ${formatPoint(controlTwo)} ${formatPoint(next)}`;
+      result += ` C ${formatPoint(controlOne)}, ${formatPoint(controlTwo)}, ${formatPoint(next)}`;
     }
     return `${result} Z`;
   }
@@ -324,26 +555,16 @@
       height: Number(document.canvas?.height || document.height || fallbackCanvas.height),
     };
     const regions = (document.regions || []).map((region, index) => {
-      const fallbackId = index + 1;
-      const sourceId = region.id ?? fallbackId;
-      const numericId = Number(sourceId);
-      const id = Number.isInteger(numericId) && numericId > 0 ? numericId : fallbackId;
-      return {
-        ...clone(region),
-        id,
-        key: region.key || (typeof sourceId === "string" ? sourceId : `grip-${String(id).padStart(3, "0")}`),
-        type: region.type || "edge",
-        contour: (region.contour || region.points || []).map(([x, y]) => [Number(x), Number(y)]),
-        metadata: {
-          mode: region.metadata?.mode || region.mode || region.visualMode || (region.type === "pocket" ? "aperture" : "surface"),
-          shapeKind: region.metadata?.shapeKind || "freeform",
-          pathStyle: region.metadata?.pathStyle || "straight",
-          curveTension: Number(region.metadata?.curveTension ?? 0.8),
-          humanNotes: region.metadata?.humanNotes || "",
-          ...clone(region.metadata || {}),
-          ...(typeof sourceId === "string" && !/^\d+$/.test(sourceId) ? { sourceRegionId: sourceId } : {}),
-        },
-      };
+      const normalized = normalizeRegion(region, index + 1);
+      const contour = Object.hasOwn(region.metadata || {}, "editableContour")
+        ? normalizeEditableContour(region.metadata.editableContour)
+        : normalized.contour;
+      const metadata = { ...normalized.metadata };
+      delete metadata.editableContour;
+      if (Object.hasOwn(region.metadata || {}, "edgeCurves")) {
+        metadata.edgeCurves = normalizeEdgeCurves(region.metadata.edgeCurves, contour.length);
+      }
+      return { ...normalized, contour, metadata };
     });
     return { canvas, regions, editorMode };
   }
@@ -453,8 +674,8 @@
     const localWidth = Math.max(maxX - minX, 1e-6);
     const localHeight = Math.max(maxY - minY, 1e-6);
     const minimumSize = 6;
-    const minimumScaleX = Math.max(0.05, minimumSize / localWidth);
-    const minimumScaleY = Math.max(0.05, minimumSize / localHeight);
+    const minimumScaleX = minimumSize / localWidth;
+    const minimumScaleY = minimumSize / localHeight;
     scaleX = scalesX ? Math.max(minimumScaleX, scaleX) : 1;
     scaleY = scalesY ? Math.max(minimumScaleY, scaleY) : 1;
     if (preserveAspect && scalesX && scalesY) {
@@ -598,9 +819,17 @@
     mirrorContour,
     findStrongestEdge,
     resolveHistorySelection,
+    normalizeRegion,
     normalizePipelineDocument,
-    nextStage2RegionId,
+    normalizeEdgeCurves,
     contourPath,
+    flattenContour,
+    setEdgeCurveControl,
+    translateEdgeCurves,
+    mapEdgeCurves,
+    mirrorEdgeCurves,
+    insertEdgeCurves,
+    nextStage2RegionId,
     isExportableContour,
     shiftCornerTreatmentsForInsertion,
     mirrorCornerTreatments,

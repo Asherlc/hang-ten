@@ -8,6 +8,7 @@ STATIC_ASSET_ROUTES = (
     ("/index.html", "index.html"),
     ("/styles.css", "styles.css"),
     ("/editor-model.js", "editor-model.js"),
+    ("/curve-gesture-model.js", "curve-gesture-model.js"),
     ("/workbench-client.js", "workbench-client.js"),
     ("/workbench-controller.js", "workbench-controller.js"),
     ("/workbench-model.js", "workbench-model.js"),
