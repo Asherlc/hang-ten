@@ -181,7 +181,7 @@
     "tension-field", "curve-tension-slider", "curve-tension-value", "curve-tension-feedback",
     "board-picker", "board-picker-separator", "board-select",
     "corner-treatment-field", "corner-number", "corner-treatment-select", "corner-amount-input",
-    "board-picker", "board-picker-separator", "board-select", "compare-button", "retry-button", "revise-button",
+    "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
@@ -217,10 +217,16 @@
     return isVectorMode() ? vectorPoints(region, includeHandles) : region.contour;
   }
 
-  function regionPath(region) {
+  function regionPath(region, edgeCurves = region.metadata.edgeCurves) {
     if (isVectorMode()) return region.displayPath || "";
     try {
-      return contourPath(region.contour, region.metadata.pathStyle, region.metadata.curveTension, region.metadata.cornerTreatments || {});
+      return contourPath(
+        region.contour,
+        region.metadata.pathStyle,
+        region.metadata.curveTension,
+        region.metadata.cornerTreatments || {},
+        edgeCurves,
+      );
     } catch (_error) {
       try {
         return pathFor(region.contour);
@@ -291,6 +297,9 @@
 
   function renderToolState() {
     const editable = canEditGeometry();
+    const curveTensionOverridden = Boolean(
+      selectedRegion() && edgeCurveInspectorState(selectedRegion()).overridden,
+    );
     const hasExportableContours = state.regions.length > 0
       && state.regions.every((region) => isExportableContour(region.contour));
     el["snap-button"].disabled = !state.imagePixels || isVectorMode() || !editable;
@@ -304,7 +313,7 @@
     el["simplify-curve-button"].disabled = !editable || isVectorMode() || (selectedRegion()?.contour?.length || 0) < 6;
     el["region-shape-select"].disabled = !editable || isVectorMode();
     el["region-path-style-select"].disabled = !editable || isVectorMode();
-    el["curve-tension-slider"].disabled = !editable || isVectorMode();
+    el["curve-tension-slider"].disabled = !editable || isVectorMode() || curveTensionOverridden;
     el["region-type-select"].disabled = !editable || isVectorMode();
     el["region-key-input"].disabled = !editable || state.guided;
     el["region-mode-select"].disabled = !editable;
@@ -398,7 +407,7 @@
         if (state.overlayMode === "selected" && region.id !== state.selectedId) return;
         const group = makeSvg("g", { "data-region-id": region.id });
         const path = makeSvg("path", {
-          d: regionPath(region),
+          d: regionPath(region, region.metadata.edgeCurves),
           fill: colorFor(region),
           "fill-opacity": region.id === state.selectedId ? Math.min(state.opacity + 0.14, 0.8) : state.opacity,
           stroke: colorFor(region),

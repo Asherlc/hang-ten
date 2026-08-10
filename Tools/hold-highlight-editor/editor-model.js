@@ -240,7 +240,8 @@
         metadata.cornerTreatments,
       );
     const contour = authoritativeContour.map(([x, y]) => [round(x), round(y)]);
-    if (hasEdgeCurves) {
+    const topologyChanged = authoritativeContour.length !== region.contour.length;
+    if (hasEdgeCurves || topologyChanged) {
       metadata.editableContour = region.contour.map(([x, y]) => [round(x), round(y)]);
     }
   function pointOnSegment([px, py], [x1, y1], [x2, y2]) {
@@ -316,9 +317,7 @@
 
     return {
       ...clone(region),
-      anchor: hasEdgeCurves
-        ? centroid(authoritativeContour).map((value) => round(value))
-        : exportAnchor(region, authoritativeContour),
+      anchor: exportAnchor(region, authoritativeContour),
       areaPixels: Math.round(polygonArea(authoritativeContour)),
       bounds: bounds(contour),
       contour,
