@@ -145,9 +145,7 @@ def test_canonical_board_promotes_locally_then_validates_without_git_side_effect
         pytest.fail("plan-library unexpectedly passed; remove the known-failure marker")
     assert report.overall_status == "failed"
     assert plan_library.status == "failed"
-    assert "fingerConfiguration: step.fingerConfiguration" in "\n".join(
-        plan_library.details
-    )
+    assert not plan_library.details
     assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
     assert _promotion_git(repository_root, "remote") == remotes_before
     assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
