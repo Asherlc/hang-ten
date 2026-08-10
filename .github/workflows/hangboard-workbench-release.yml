@@ -32,18 +32,23 @@ jobs:
 
       # actions/setup-python v6.3.0
       - name: Set up Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
 
       - name: Install workbench build dependencies
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          python -m venv "${python_bin%/bin/python}"
+          "$python_bin" -m pip install --upgrade pip
+          "$python_bin" -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
 
       - name: Run focused Python suite
-        run: python -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
+        run: |
+          set -euo pipefail
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          "$python_bin" -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
 
       - name: Run focused Node suite
         run: node --test Tools/hold-highlight-editor/tests/*.test.js
@@ -55,7 +60,8 @@ jobs:
           work_dir="$RUNNER_TEMP/hangboard-workbench-build"
           rm -rf "$release_dir" "$work_dir"
           mkdir -p "$release_dir" "$work_dir"
-          python Tools/hold-highlight-editor/packaging/build.py \
+          "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
+            Tools/hold-highlight-editor/packaging/build.py \
             --commit "$GITHUB_SHA" \
             --dist-dir "$release_dir" \
             --work-dir "$work_dir"
@@ -75,6 +81,8 @@ jobs:
       - name: Smoke test executable and clean up
         run: |
           set -euo pipefail
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+          export PATH="$(dirname "$python_bin"):$PATH"
           executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
           smoke_log=""
           workbench_pid=""
@@ -187,7 +195,7 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload verified release assets
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: hangboard-workbench-release-${{ github.run_id }}
           path: |
@@ -208,7 +216,7 @@ jobs:
     steps:
       # actions/download-artifact v5.0.0
       - name: Download verified release assets
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: hangboard-workbench-release-${{ github.run_id }}
           path: release

@@ -124,6 +124,45 @@ The generated `stage-2-regions.json` is never overwritten.
 
 The server binds to `127.0.0.1` by default and serves files only from the supplied run. Stop it with `Ctrl-C`.
 
+After saving a reviewed run, generate a read-only comparison artifact without
+starting the editor again:
+
+```bash
+scripts/hangboard-tools.sh compare \
+  --run .context/hangboard-onboarding/example \
+  --output .context/compare.html
+```
+
+Use the wrapper review flow around that comparison when you are validating a
+single run locally:
+
+```bash
+scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
+scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
+scripts/hangboard-tools.sh promote --run .context/hangboard-onboarding/example --repository-root "$PWD"
+scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/example --repository-root "$PWD"
+```
+
+`promote` stays in dry-run mode unless you add `--apply` with an explicit
+runtime integration profile. If no profile is configured yet, the expected
+result is `handoff-required`.
+
+For accepted decisions, `accept` records both the acceptance artifact and the
+current `lint-report.json`; the generated Stage 1 image and baseline Stage 2
+proposal stay unchanged.
+
+Apply cautiously:
+
+- Run the dry-run `promote` command first and inspect the planned destination.
+- Before `--apply`, rely on version control or make your own backup copy of
+  the destination file.
+- If the applied output is wrong, restore from git or that saved backup; never
+  delete blindly.
+- After restoring, rerun dry-run `promote` and `release-check` before trying
+  `--apply` again.
+
 ## Choose among generated runs
 
 Repeat `--run-dir` to put standard pipeline runs in the board selector:
