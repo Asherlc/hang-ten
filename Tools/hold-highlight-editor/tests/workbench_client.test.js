@@ -579,3 +579,10 @@ test("promotion save reports a terminal job failure after acceptance", async () 
   );
   assert.deepEqual(accepted, [{ jobId: "job-save-promotion", boardId: "board 9" }]);
 });
+
+test("the suite client has no commit, remote sync, or simulator lifecycle API", () => {
+  const source = require("node:fs").readFileSync(require.resolve("../workbench-client.js"), "utf8");
+
+  assert.doesNotMatch(source, /\b(?:commit|push|remote|simctl)\b/i);
+  assert.match(source, /\/api\/boards\//);
+});

@@ -7,6 +7,8 @@ from hashlib import sha256
 from io import BytesIO
 import json
 from pathlib import Path
+import shutil
+import subprocess
 from threading import Event, Lock
 
 from PIL import Image
@@ -19,6 +21,7 @@ from hangboard_vectorizer.board_library import (
     LibraryBoard,
     RepositoryBoardLibrary,
 )
+from hangboard_vectorizer.ios_promotion import read_promotion_profile
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.generic_stage2 import GenericStage2Runner
 from hangboard_vectorizer.onboard_cli import main
@@ -54,6 +57,18 @@ _BOARD_FIXTURES = (
     ),
 )
 
+_PROMOTION_PACKAGE_SOURCE = (
+    Path(__file__).resolve().parents[3]
+    / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii"
+)
+_PROMOTION_PROFILE_SOURCE = Path(__file__).parent / "data/ios-promotion-profile.json"
+_PROMOTION_TARGETS = (
+    "HangTen/Models/TrainingModels.swift",
+    "HangTen/Views/MetoliusCompactIIDesign.swift",
+    "HangTen/Models/PlanStorage.swift",
+    "HangTen/Resources/PlanLibrary.json",
+)
+
 
 def test_checkout_repository_library_discovers_compact_ii() -> None:
     repository_root = Path(__file__).resolve().parents[3]
@@ -64,6 +79,92 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
         board.board_id for board in snapshot.boards
     }
     assert snapshot.diagnostics == ()
+
+
+def test_canonical_board_promotes_locally_then_validates_without_git_side_effects(
+    tmp_path: Path,
+) -> None:
+    """The single-board suite may write reviewed targets, but never Git history or remotes."""
+    repository_root = _promotion_repository(tmp_path)
+    service = WorkbenchService(
+        WorkbenchStore(tmp_path / "workbench"),
+        library=RepositoryBoardLibrary(repository_root),
+    )
+    opened = service.open_library_board("metolius-wood-grips-compact-ii")
+    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
+    profile = read_promotion_profile(opened.run_root)
+    before_targets = _promotion_target_contents(repository_root)
+    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
+    remotes_before = _promotion_git(repository_root, "remote")
+
+    assert opened.state == "complete"
+    assert opened.repository_board_id == "metolius-wood-grips-compact-ii"
+    assert service.get_board(opened.board_id, revision_id=opened.revision_id) == opened
+
+    preview = service.preview_promotion(
+        opened.board_id,
+        expected_revision_id=opened.revision_id,
+        profile=profile,
+    )
+
+    assert preview.preview_token
+    assert [item.path for item in preview.files] == list(_PROMOTION_TARGETS)
+    assert [item.path for item in preview.files[:2]] == list(_PROMOTION_TARGETS[:2])
+    assert [item.path for item in preview.files[2:]] == list(_PROMOTION_TARGETS[2:])
+    assert preview.issues == ()
+    assert _promotion_target_contents(repository_root) == before_targets
+
+    saved = service.save_promotion(
+        opened.board_id,
+        expected_revision_id=opened.revision_id,
+        profile=profile,
+        preview_token=preview.preview_token,
+    )
+    report = service.validation_report(
+        opened.board_id, expected_revision_id=opened.revision_id
+    )
+
+    assert saved.saved is True
+    assert saved.paths == _PROMOTION_TARGETS
+    assert report.overall_status == "passed"
+    assert all(check.status == "passed" for check in report.checks)
+    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
+    assert _promotion_git(repository_root, "remote") == remotes_before
+    assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
+        _PROMOTION_TARGETS
+    )
+
+
+def test_promotion_conflict_leaves_every_target_at_its_preexisting_contents(
+    tmp_path: Path,
+) -> None:
+    """A changed target fails before generation can partially replace another target."""
+    repository_root = _promotion_repository(tmp_path)
+    service = WorkbenchService(
+        WorkbenchStore(tmp_path / "workbench"),
+        library=RepositoryBoardLibrary(repository_root),
+    )
+    opened = service.open_library_board("metolius-wood-grips-compact-ii")
+    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
+    profile = read_promotion_profile(opened.run_root)
+    changed_target = repository_root / _PROMOTION_TARGETS[-1]
+    changed_target.write_text(
+        changed_target.read_text(encoding="utf-8") + "\n// unrelated local edit\n",
+        encoding="utf-8",
+    )
+    before = _promotion_target_contents(repository_root)
+    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
+
+    with pytest.raises(WorkbenchServiceError, match="changed relative to main"):
+        service.preview_promotion(
+            opened.board_id,
+            expected_revision_id=opened.revision_id,
+            profile=profile,
+        )
+
+    assert _promotion_target_contents(repository_root) == before
+    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
+    assert not list(repository_root.glob(".hangboard-promotion-*"))
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
@@ -1153,6 +1254,45 @@ def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
     library_root = root / "Tools" / "HangboardOnboarding" / "boards"
     library_root.mkdir(parents=True)
     return RepositoryBoardLibrary(root)
+
+
+def _promotion_repository(tmp_path: Path) -> Path:
+    repository_root = tmp_path / "repository"
+    shutil.copytree(
+        _PROMOTION_PACKAGE_SOURCE,
+        repository_root / "Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii",
+    )
+    for relative in _PROMOTION_TARGETS:
+        target = repository_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(Path(__file__).resolve().parents[3] / relative, target)
+    script = repository_root / "scripts/export-plan-library.sh"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    script.chmod(0o755)
+    _promotion_git(repository_root, "init", "--initial-branch=main")
+    _promotion_git(repository_root, "config", "user.name", "Hang Ten Tests")
+    _promotion_git(repository_root, "config", "user.email", "tests@example.invalid")
+    _promotion_git(repository_root, "add", ".")
+    _promotion_git(repository_root, "commit", "-m", "baseline")
+    return repository_root
+
+
+def _promotion_target_contents(repository_root: Path) -> dict[str, str]:
+    return {
+        relative: (repository_root / relative).read_text(encoding="utf-8")
+        for relative in _PROMOTION_TARGETS
+    }
+
+
+def _promotion_git(repository_root: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(repository_root), *args],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ).stdout.strip()
 
 
 def _repository_library(

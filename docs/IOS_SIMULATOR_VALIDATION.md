@@ -6,6 +6,16 @@ install a different build under the same bundle ID while a review is in
 progress. Hang Ten validation must use a dedicated device and its explicit
 UUID for every command.
 
+## Workbench handoff boundary
+
+The browser suite's **Validate** tool accepts only an explicit UUID from the
+caller and formats copyable build, install, launch, and screenshot commands.
+It does not create, delete, boot, erase, or archive simulators, and it never
+commits, pushes, or synchronizes remotely. Before entering a UUID in the
+browser, create and record the dedicated simulator under this ownership
+contract. The caller is responsible for booting, reviewing, and cleaning up
+that exact UUID; never substitute `booted` or another workspace's device.
+
 ## Create and identify a dedicated device
 
 Inspect available identifiers:

@@ -1479,6 +1479,45 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
     }
 
 
+def test_promotion_save_rejects_a_missing_token_before_submitting_a_write_job(
+    tmp_path: Path,
+) -> None:
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    calls: list[object] = []
+
+    def save_must_not_run(*args: object, **kwargs: object) -> object:
+        calls.append((args, kwargs))
+        raise AssertionError("save promotion must not run for malformed input")
+
+    service.save_promotion = save_must_not_run  # type: ignore[method-assign]
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        with pytest.raises(HTTPError) as error:
+            _post_json(
+                base + f"/api/boards/{view['boardId']}/promotion/save",
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "profile": {
+                        "schemaVersion": 1,
+                        "boardID": "example.board",
+                        "manufacturer": "Example",
+                        "name": "Example Board",
+                        "subtitle": "An explicit test profile.",
+                        "dimensions": "24\" × 6\"",
+                        "aspectRatio": 4.0,
+                        "productURL": "https://example.test/board",
+                    },
+                },
+            )
+
+    assert error.value.code == 400
+    body = json.load(error.value)
+    assert body["ok"] is False
+    assert "previewToken" in body["error"]
+    assert calls == []
+
+
 @pytest.mark.parametrize(
     ("route", "extra"),
     [

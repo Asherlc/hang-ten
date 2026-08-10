@@ -56,6 +56,18 @@ test("the workbench has a persistent single-board tool suite shell", () => {
   assert.match(markup, /workbench-suite-controller\.js/);
 });
 
+test("the suite surfaces only local save and explicit simulator handoff boundaries", () => {
+  const ids = actualElementIds(markup);
+  for (const id of [
+    "promotion-save-button",
+    "validation-simulator-uuid",
+    "validation-simulator-commands",
+  ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
+  assert.match(markup, /Save locally never commits, pushes, or synchronizes remote changes\./);
+  assert.match(markup, /do not create, delete, boot, or archive simulators\./);
+  assert.match(markup, /already-owned simulator/);
+});
+
 test("setup preserves a recovered terminal job error after refreshing boards", async () => {
   const classes = new Set(["hidden"]);
   const setupError = {

@@ -155,6 +155,27 @@ pushes them.
 CLI and other programmatic workflows are producers of the same contract: pass
 a completed run to `RepositoryBoardLibrary.publish()`. The browser never asks
 the user to provide a CLI run directory.
+
+## Single-board suite workflow
+
+Select one complete canonical board from the repository list and use the suite
+sidebar in order: **Onboard** for Stage 0–4 review, **Inspect** to confirm the
+active revision and accepted artifacts, **Promote to iOS** to complete an
+explicit evidence-backed profile and review grouped metadata, geometry, and
+plan diffs, then **Validate** for package, hold-ID parity, and plan-library
+checks. Promotion preview is read-only. A stale revision or preview token,
+incomplete approval, invalid profile, or target changed relative to `main`
+returns a conflict and leaves the checkout untouched. **Save locally** writes
+only the verified, grouped-diff native targets atomically for local Git review;
+it never commits, pushes, updates a remote, or synchronizes the app catalog.
+
+The Validate tool accepts only a caller-supplied UUID and formats review
+commands for it. The browser does not create, delete, boot, erase, or archive
+simulators. Create, record, boot, review, and clean up the dedicated simulator
+outside the browser according to
+[`docs/IOS_SIMULATOR_VALIDATION.md`](../../docs/IOS_SIMULATOR_VALIDATION.md);
+never use `booted` or another workspace's device.
+
 The workbench runs Stage 0 immediately, then stops at every checkpoint for
 review. **Approve & continue** records the approval and advances to the next
 checkpoint; **Retry** regenerates the current checkpoint as a new attempt while
