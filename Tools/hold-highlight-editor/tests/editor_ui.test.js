@@ -183,6 +183,13 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
 });
 
+test("renders exactly one region interaction mode control", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const modeControls = [...html.matchAll(/<select\b[^>]*\bid="region-mode-select"[^>]*>/g)];
+
+  assert.equal(modeControls.length, 1, "region-mode-select must appear exactly once");
+});
+
 test("region edge-curve metadata renders a quadratic contour path", () => {
   const region = {
     contour: [[0, 0], [10, 0], [10, 10]],
