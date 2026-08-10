@@ -1341,6 +1341,7 @@ private final class PlanLibraryBundleToken {}
 /// format is introduced, and avoids silently changing any routine timing.
 enum BuiltInPlanLibraryDefinition {
     private static let compactBoardID = BoardCatalog.compactII.id
+    private static let rockProdigyBoardID = BoardCatalog.rockProdigyTrainingCenter.id
 
     private static let semanticHoldIDs: [String: [String]] = [
         "outer-jugs": ["jug-left", "jug-right"],
@@ -1356,6 +1357,16 @@ enum BuiltInPlanLibraryDefinition {
         "pocket-19-four": ["pocket-19-four-center"]
     ]
 
+    private static let rockProdigySemanticHoldIDs: [String: [String]] = [
+        "warmup-jug": ["trango.rptc.left.top-jug", "trango.rptc.right.top-jug"],
+        "large-open-hand-rail": ["trango.rptc.left.large-open-rail", "trango.rptc.right.large-open-rail"],
+        "deep-two-finger-pocket": ["trango.rptc.left.deep-mr-pocket", "trango.rptc.right.deep-mr-pocket"],
+        "thin-crimp": ["trango.rptc.left.thin-crimp", "trango.rptc.right.thin-crimp"],
+        "shallow-three-finger-slot": ["trango.rptc.left.three-finger-slot", "trango.rptc.right.three-finger-slot"],
+        "wide-pinch": ["trango.rptc.left.wide-pinch", "trango.rptc.right.wide-pinch"],
+        "sloper": ["trango.rptc.left.sloper", "trango.rptc.right.sloper"]
+    ]
+
     static let document: PlanLibraryDefinition = makeDocument()
 
     private static func makeDocument() -> PlanLibraryDefinition {
@@ -1363,6 +1374,12 @@ enum BuiltInPlanLibraryDefinition {
         let boardMapping = BoardMappingDefinition(
             boardID: compactBoardID,
             semanticHolds: semanticHoldIDs.reduce(into: [:]) { result, entry in
+                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
+            }
+        )
+        let rockProdigyBoardMapping = BoardMappingDefinition(
+            boardID: rockProdigyBoardID,
+            semanticHolds: rockProdigySemanticHoldIDs.reduce(into: [:]) { result, entry in
                 result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
             }
         )
@@ -1414,7 +1431,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
             ),
-            boardMappings: [boardMapping],
+            boardMappings: [boardMapping, rockProdigyBoardMapping],
             blocks: blocks,
             plans: definitions
         )
@@ -1471,7 +1488,7 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Trango's official manual URL: https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
                 "The exact intermediate 7-rep then 6-rep sequence, 7s/3s intervals, 3-minute set rests, two-hand dead-hang-only rule, and no pull-ups/no lock-offs are retained.",
-                "The current catalog has no Rock Prodigy board geometry or pinch feature; wide pinch is therefore represented by the broad semantic edge-kind fallback and called out in the source audit."
+                "This plan is board-specific to the Trango Rock Prodigy Training Center; its warm-up jug, variable large rail, deep MR pocket, thin crimp, shallow 3-finger slot, wide pinch, and sloper resolve to the RPTC feature inventory."
             ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]

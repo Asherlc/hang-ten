@@ -9830,7 +9830,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             },
@@ -9842,7 +9842,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 1"
@@ -9860,7 +9860,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             },
@@ -9872,7 +9872,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 2"
@@ -9890,7 +9890,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             },
@@ -9902,7 +9902,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 3"
@@ -9920,7 +9920,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             },
@@ -9932,7 +9932,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 4"
@@ -9950,7 +9950,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             },
@@ -9962,7 +9962,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 5"
@@ -9980,14 +9980,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "mediumPinch"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "mediumPinch"
             }
           ],
           "title" : "Medium pinch · rep 6"
@@ -10483,7 +10483,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10495,7 +10495,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 1"
@@ -10513,7 +10513,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10525,7 +10525,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 2"
@@ -10543,7 +10543,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10555,7 +10555,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 3"
@@ -10573,7 +10573,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10585,7 +10585,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 4"
@@ -10603,7 +10603,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10615,7 +10615,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 5"
@@ -10633,7 +10633,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10645,7 +10645,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 6"
@@ -10663,14 +10663,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 1, rep 7"
@@ -10706,7 +10706,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10718,7 +10718,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 1"
@@ -10736,7 +10736,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10748,7 +10748,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 2"
@@ -10766,7 +10766,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10778,7 +10778,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 3"
@@ -10796,7 +10796,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10808,7 +10808,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 4"
@@ -10826,7 +10826,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             },
@@ -10838,7 +10838,7 @@
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 5"
@@ -10856,14 +10856,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "largeEdge"
+                "feature" : "largeOpenHandRail"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "largeEdge"
+              "feature" : "largeOpenHandRail"
             }
           ],
           "title" : "Rock Prodigy · large open-hand edge · set 2, rep 6"
@@ -10899,7 +10899,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -10911,7 +10911,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 1"
@@ -10929,7 +10929,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -10941,7 +10941,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 2"
@@ -10959,7 +10959,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -10971,7 +10971,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 3"
@@ -10989,7 +10989,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11001,7 +11001,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 4"
@@ -11019,7 +11019,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11031,7 +11031,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 5"
@@ -11049,7 +11049,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11061,7 +11061,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 6"
@@ -11079,14 +11079,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 1, rep 7"
@@ -11122,7 +11122,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11134,7 +11134,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 1"
@@ -11152,7 +11152,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11164,7 +11164,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 2"
@@ -11182,7 +11182,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11194,7 +11194,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 3"
@@ -11212,7 +11212,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11224,7 +11224,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 4"
@@ -11242,7 +11242,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             },
@@ -11254,7 +11254,7 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 5"
@@ -11272,14 +11272,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "deepTwoFingerPocket"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "deepTwoFingerPocket"
             }
           ],
           "title" : "Rock Prodigy · deep 2-finger pocket · set 2, rep 6"
@@ -11315,7 +11315,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11327,7 +11327,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 1"
@@ -11345,7 +11345,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11357,7 +11357,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 2"
@@ -11375,7 +11375,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11387,7 +11387,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 3"
@@ -11405,7 +11405,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11417,7 +11417,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 4"
@@ -11435,7 +11435,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11447,7 +11447,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 5"
@@ -11465,7 +11465,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11477,7 +11477,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 6"
@@ -11495,14 +11495,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 1, rep 7"
@@ -11538,7 +11538,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11550,7 +11550,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 1"
@@ -11568,7 +11568,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11580,7 +11580,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 2"
@@ -11598,7 +11598,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11610,7 +11610,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 3"
@@ -11628,7 +11628,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11640,7 +11640,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 4"
@@ -11658,7 +11658,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             },
@@ -11670,7 +11670,7 @@
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 5"
@@ -11688,14 +11688,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "smallEdge"
+                "feature" : "thinCrimp"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "smallEdge"
+              "feature" : "thinCrimp"
             }
           ],
           "title" : "Rock Prodigy · small semi-closed crimp · set 2, rep 6"
@@ -11731,7 +11731,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11743,7 +11743,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 1"
@@ -11761,7 +11761,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11773,7 +11773,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 2"
@@ -11791,7 +11791,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11803,7 +11803,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 3"
@@ -11821,7 +11821,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11833,7 +11833,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 4"
@@ -11851,7 +11851,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11863,7 +11863,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 5"
@@ -11881,7 +11881,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11893,7 +11893,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 6"
@@ -11911,14 +11911,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 1, rep 7"
@@ -11954,7 +11954,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11966,7 +11966,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 1"
@@ -11984,7 +11984,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -11996,7 +11996,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 2"
@@ -12014,7 +12014,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -12026,7 +12026,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 3"
@@ -12044,7 +12044,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -12056,7 +12056,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 4"
@@ -12074,7 +12074,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             },
@@ -12086,7 +12086,7 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 5"
@@ -12104,14 +12104,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "shallowThreeFingerSlot"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "shallowThreeFingerSlot"
             }
           ],
           "title" : "Rock Prodigy · shallow 3-finger pocket · set 2, rep 6"
@@ -12147,7 +12147,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12159,7 +12159,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 1"
@@ -12177,7 +12177,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12189,7 +12189,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 2"
@@ -12207,7 +12207,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12219,7 +12219,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 3"
@@ -12237,7 +12237,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12249,7 +12249,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 4"
@@ -12267,7 +12267,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12279,7 +12279,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 5"
@@ -12297,7 +12297,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12309,7 +12309,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 6"
@@ -12327,14 +12327,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 1, rep 7"
@@ -12370,7 +12370,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12382,7 +12382,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 1"
@@ -12400,7 +12400,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12412,7 +12412,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 2"
@@ -12430,7 +12430,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12442,7 +12442,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 3"
@@ -12460,7 +12460,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12472,7 +12472,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 4"
@@ -12490,7 +12490,7 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             },
@@ -12502,7 +12502,7 @@
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 5"
@@ -12520,14 +12520,14 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "kind" : "edge"
+                "feature" : "widePinch"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "kind" : "edge"
+              "feature" : "widePinch"
             }
           ],
           "title" : "Rock Prodigy · wide pinch · set 2, rep 6"
@@ -12563,9 +12563,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12578,9 +12575,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12599,9 +12593,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12614,9 +12605,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12635,9 +12623,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12650,9 +12635,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12671,9 +12653,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12686,9 +12665,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12707,9 +12683,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12722,9 +12695,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12743,9 +12713,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12758,9 +12725,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12779,9 +12743,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12789,9 +12750,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12828,9 +12786,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12843,9 +12798,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12864,9 +12816,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12879,9 +12828,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12900,9 +12846,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12915,9 +12858,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12936,9 +12876,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12951,9 +12888,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -12972,9 +12906,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -12987,9 +12918,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -13008,9 +12936,6 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "fallbackFeatures" : [
-                  "roundSloper"
-                ],
                 "feature" : "largeSlope"
               },
               "timing" : "fixed"
@@ -13018,9 +12943,6 @@
           ],
           "targets" : [
             {
-              "fallbackFeatures" : [
-                "roundSloper"
-              ],
               "feature" : "largeSlope"
             }
           ],
@@ -13095,6 +13017,53 @@
         "round-sloper" : {
           "holdIDs" : [
             "sloper-round-center"
+          ]
+        }
+      }
+    },
+    {
+      "boardID" : "trango.rock-prodigy-training-center",
+      "semanticHolds" : {
+        "deep-two-finger-pocket" : {
+          "holdIDs" : [
+            "trango.rptc.left.deep-mr-pocket",
+            "trango.rptc.right.deep-mr-pocket"
+          ]
+        },
+        "large-open-hand-rail" : {
+          "holdIDs" : [
+            "trango.rptc.left.large-open-rail",
+            "trango.rptc.right.large-open-rail"
+          ]
+        },
+        "shallow-three-finger-slot" : {
+          "holdIDs" : [
+            "trango.rptc.left.three-finger-slot",
+            "trango.rptc.right.three-finger-slot"
+          ]
+        },
+        "sloper" : {
+          "holdIDs" : [
+            "trango.rptc.left.sloper",
+            "trango.rptc.right.sloper"
+          ]
+        },
+        "thin-crimp" : {
+          "holdIDs" : [
+            "trango.rptc.left.thin-crimp",
+            "trango.rptc.right.thin-crimp"
+          ]
+        },
+        "warmup-jug" : {
+          "holdIDs" : [
+            "trango.rptc.left.top-jug",
+            "trango.rptc.right.top-jug"
+          ]
+        },
+        "wide-pinch" : {
+          "holdIDs" : [
+            "trango.rptc.left.wide-pinch",
+            "trango.rptc.right.wide-pinch"
           ]
         }
       }
@@ -13758,6 +13727,7 @@
           "blockID" : "trango.rock-prodigy-training-center.intermediate.main"
         }
       ],
+      "boardID" : "trango.rock-prodigy-training-center",
       "id" : "trango.rock-prodigy-training-center.intermediate",
       "metadata" : {
         "category" : "manufacturer",
@@ -13769,7 +13739,7 @@
         "notes" : [
           "Trango's official manual URL: https:\/\/cdn.shopify.com\/s\/files\/1\/0282\/7557\/2841\/files\/RPTC_Use_Instructions.pdf?v=1588608155",
           "The exact intermediate 7-rep then 6-rep sequence, 7s\/3s intervals, 3-minute set rests, two-hand dead-hang-only rule, and no pull-ups\/no lock-offs are retained.",
-          "The current catalog has no Rock Prodigy board geometry or pinch feature; wide pinch is therefore represented by the broad semantic edge-kind fallback and called out in the source audit."
+          "This plan is board-specific to the Trango Rock Prodigy Training Center; its warm-up jug, variable large rail, deep MR pocket, thin crimp, shallow 3-finger slot, wide pinch, and sloper resolve to the RPTC feature inventory."
         ],
         "provenance" : "adapted",
         "sourceLabel" : "Trango Rock Prodigy Training Center · Rock Prodigy method",

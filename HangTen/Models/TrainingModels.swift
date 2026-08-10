@@ -16,6 +16,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case edge
     case pocket
+    case pinch
     case sloper
 
     var id: String { rawValue }
@@ -25,6 +26,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .jug: "Jugs"
         case .edge: "Edges"
         case .pocket: "Pockets"
+        case .pinch: "Pinches"
         case .sloper: "Sloper"
         }
     }
@@ -34,6 +36,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .jug: .holdBlue
         case .edge: .holdOrange
         case .pocket: .holdPurple
+        case .pinch: .holdRed
         case .sloper: .holdTeal
         }
     }
@@ -42,6 +45,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
 enum HoldCueStyle: String, Hashable {
     case outerJug
     case slot
+    case pinch
     case rounded
 }
 
@@ -61,6 +65,13 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case fourFingerPocket
     case fourFingerFlatEdge
     case fourFingerIncutEdge
+    case largeOpenHandRail
+    case deepTwoFingerPocket
+    case thinCrimp
+    case shallowThreeFingerSlot
+    case widePinch
+    case mediumPinch
+    case smallPinch
 
     var id: String { rawValue }
 
@@ -78,6 +89,13 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         case .fourFingerPocket: "Four-finger pocket"
         case .fourFingerFlatEdge: "Four-finger flat edge"
         case .fourFingerIncutEdge: "Four-finger incut edge"
+        case .largeOpenHandRail: "Large open-hand rail"
+        case .deepTwoFingerPocket: "Deep two-finger pocket"
+        case .thinCrimp: "Thin crimp"
+        case .shallowThreeFingerSlot: "Shallow three-finger slot"
+        case .widePinch: "Wide pinch"
+        case .mediumPinch: "Medium pinch"
+        case .smallPinch: "Small pinch"
         }
     }
 }
@@ -215,6 +233,7 @@ struct BoardHold: Identifiable, Hashable {
     let cueStyle: HoldCueStyle
     let frame: HoldFrame
     let sizeMillimeters: Int?
+    let depthRangeMillimeters: ClosedRange<Int>?
     let features: Set<HoldFeature>
 
     static let validFingerCapacityRange = 1...4
@@ -230,6 +249,7 @@ struct BoardHold: Identifiable, Hashable {
         gripType: GripType = .openHand,
         fingerCapacity: Int = 4,
         cueStyle: HoldCueStyle? = nil,
+        depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
         precondition(
@@ -244,9 +264,10 @@ struct BoardHold: Identifiable, Hashable {
         self.kind = kind
         self.gripType = gripType
         self.fingerCapacity = fingerCapacity
-        self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : .slot))
+        self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : (kind == .pinch ? .pinch : .slot)))
         self.frame = frame
         self.sizeMillimeters = sizeMillimeters
+        self.depthRangeMillimeters = depthRangeMillimeters
         self.features = features ?? Self.defaultFeatures(kind: kind, fingerCapacity: fingerCapacity)
     }
 
@@ -267,6 +288,8 @@ struct BoardHold: Identifiable, Hashable {
             default:
                 return [.pocket, .fourFingerPocket]
             }
+        case .pinch:
+            return []
         case .sloper:
             return []
         }
@@ -807,7 +830,224 @@ enum BoardCatalog {
         photoAssetName: "CompactBoardIllustration"
     )
 
-    static let all: [TrainingBoard] = [compactII]
+    static let rockProdigyTrainingCenter = TrainingBoard(
+        id: "trango.rock-prodigy-training-center",
+        manufacturer: "Trango",
+        name: "Rock Prodigy Training Center",
+        subtitle: "Two-piece adjustable training board with variable rails, pockets, crimps, pinches, and slopers.",
+        dimensions: "18.2\" × 12.1\" assembled (two 9.1\" × 12.1\" pieces)",
+        aspectRatio: 18.2 / 12.1,
+        holds: {
+            var holds: [BoardHold] = []
+
+            func mirrored(_ frame: HoldFrame) -> HoldFrame {
+                HoldFrame(
+                    x: 1 - frame.x - frame.width,
+                    y: frame.y,
+                    width: frame.width,
+                    height: frame.height
+                )
+            }
+
+            func addPair(
+                slug: String,
+                name: String,
+                shortLabel: String,
+                detail: String,
+                kind: HoldKind,
+                frame: HoldFrame,
+                sizeMillimeters: Int? = nil,
+                depthRangeMillimeters: ClosedRange<Int>? = nil,
+                gripType: GripType = .openHand,
+                fingerCapacity: Int = 4,
+                cueStyle: HoldCueStyle? = nil,
+                features: Set<HoldFeature> = []
+            ) {
+                holds.append(
+                    BoardHold(
+                        id: "trango.rptc.left.\(slug)",
+                        name: "Left \(name)",
+                        shortLabel: shortLabel,
+                        detail: detail,
+                        kind: kind,
+                        frame: frame,
+                        sizeMillimeters: sizeMillimeters,
+                        gripType: gripType,
+                        fingerCapacity: fingerCapacity,
+                        cueStyle: cueStyle,
+                        depthRangeMillimeters: depthRangeMillimeters,
+                        features: features
+                    )
+                )
+                holds.append(
+                    BoardHold(
+                        id: "trango.rptc.right.\(slug)",
+                        name: "Right \(name)",
+                        shortLabel: shortLabel,
+                        detail: detail,
+                        kind: kind,
+                        frame: mirrored(frame),
+                        sizeMillimeters: sizeMillimeters,
+                        gripType: gripType,
+                        fingerCapacity: fingerCapacity,
+                        cueStyle: cueStyle,
+                        depthRangeMillimeters: depthRangeMillimeters,
+                        features: features
+                    )
+                )
+            }
+
+            addPair(
+                slug: "top-jug",
+                name: "top jug",
+                shortLabel: "J",
+                detail: "Open-hand warm-up jug",
+                kind: .jug,
+                frame: HoldFrame(x: 0.270, y: 0.100, width: 0.145, height: 0.105),
+                features: [.jug]
+            )
+            addPair(
+                slug: "large-open-rail",
+                name: "20–33 mm variable-depth rail",
+                shortLabel: "20–33",
+                detail: "Large open-hand rail; variable depth 20–33 mm",
+                kind: .edge,
+                frame: HoldFrame(x: 0.205, y: 0.275, width: 0.235, height: 0.060),
+                depthRangeMillimeters: 20...33,
+                features: [.largeEdge, .largeOpenHandRail]
+            )
+            addPair(
+                slug: "small-crimp-rail",
+                name: "10–24 mm variable-depth rail",
+                shortLabel: "10–24",
+                detail: "Small/crimp rail; variable depth 10–24 mm",
+                kind: .edge,
+                frame: HoldFrame(x: 0.205, y: 0.365, width: 0.235, height: 0.055),
+                depthRangeMillimeters: 10...24,
+                gripType: .halfCrimp,
+                features: [.smallEdge]
+            )
+            addPair(
+                slug: "three-finger-slot",
+                name: "38 mm three-finger slot",
+                shortLabel: "3F",
+                detail: "Three-finger slot, 38 mm",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.235, y: 0.465, width: 0.135, height: 0.080),
+                sizeMillimeters: 38,
+                fingerCapacity: 3,
+                features: [.pocket, .threeFingerPocket, .shallowThreeFingerSlot]
+            )
+            addPair(
+                slug: "thin-crimp",
+                name: "7.5 mm thin crimp",
+                shortLabel: "7.5",
+                detail: "Thin crimp, 7.5 mm",
+                kind: .edge,
+                frame: HoldFrame(x: 0.315, y: 0.605, width: 0.105, height: 0.040),
+                gripType: .halfCrimp,
+                features: [.smallEdge, .thinCrimp]
+            )
+            addPair(
+                slug: "deep-mr-pocket",
+                name: "29 mm deep MR pocket",
+                shortLabel: "MR",
+                detail: "Deep middle+ring pocket, 29 mm",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.195, y: 0.705, width: 0.095, height: 0.055),
+                sizeMillimeters: 29,
+                fingerCapacity: 2,
+                features: [.pocket, .twoFingerPocket, .deepTwoFingerPocket]
+            )
+            addPair(
+                slug: "shallow-mr-pocket",
+                name: "19 mm shallow MR pocket",
+                shortLabel: "MR",
+                detail: "Shallow middle+ring pocket, 19 mm",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.225, y: 0.835, width: 0.095, height: 0.055),
+                sizeMillimeters: 19,
+                fingerCapacity: 2,
+                features: [.pocket, .twoFingerPocket]
+            )
+            addPair(
+                slug: "medium-im-pocket",
+                name: "26–36 mm medium IM pocket",
+                shortLabel: "IM",
+                detail: "Medium index+middle pocket, variable depth 26–36 mm",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.320, y: 0.705, width: 0.095, height: 0.055),
+                depthRangeMillimeters: 26...36,
+                fingerCapacity: 2,
+                features: [.pocket, .twoFingerPocket]
+            )
+            addPair(
+                slug: "shallow-im-pocket",
+                name: "19–24 mm shallow IM pocket",
+                shortLabel: "IM",
+                detail: "Shallow index+middle pocket, variable depth 19–24 mm",
+                kind: .pocket,
+                frame: HoldFrame(x: 0.320, y: 0.835, width: 0.095, height: 0.055),
+                depthRangeMillimeters: 19...24,
+                fingerCapacity: 2,
+                features: [.pocket, .twoFingerPocket]
+            )
+
+            // The depth guide identifies three pinch depths on the same
+            // outer angled block. They remain distinct logical contacts so a
+            // routine can name the manufacturer size without inventing a
+            // second physical surface.
+            let outerPinchFrame = HoldFrame(x: 0.025, y: 0.245, width: 0.160, height: 0.245)
+            addPair(
+                slug: "wide-pinch",
+                name: "87 mm wide pinch",
+                shortLabel: "W",
+                detail: "Wide pinch contact on the outer angled block, 87 mm",
+                kind: .pinch,
+                frame: outerPinchFrame,
+                sizeMillimeters: 87,
+                cueStyle: .pinch,
+                features: [.widePinch]
+            )
+            addPair(
+                slug: "medium-pinch",
+                name: "44 mm medium pinch",
+                shortLabel: "M",
+                detail: "Medium pinch contact on the outer angled block, 44 mm",
+                kind: .pinch,
+                frame: outerPinchFrame,
+                sizeMillimeters: 44,
+                cueStyle: .pinch,
+                features: [.mediumPinch]
+            )
+            addPair(
+                slug: "small-pinch",
+                name: "18 mm small pinch",
+                shortLabel: "S",
+                detail: "Small pinch contact on the outer angled block, 18 mm",
+                kind: .pinch,
+                frame: outerPinchFrame,
+                sizeMillimeters: 18,
+                cueStyle: .pinch,
+                features: [.smallPinch]
+            )
+            addPair(
+                slug: "sloper",
+                name: "outer sloper",
+                shortLabel: "SLO",
+                detail: "Open-hand sloper contact on the outer angled block",
+                kind: .sloper,
+                frame: outerPinchFrame,
+                features: [.largeSlope]
+            )
+
+            return holds
+        }(),
+        productURL: URL(string: "https://trango.com/products/rock-prodigy-training-center")!,
+        photoAssetName: nil
+    )
+
+    static let all: [TrainingBoard] = [compactII, rockProdigyTrainingCenter]
 
     static func board(for id: String?) -> TrainingBoard {
         all.first { $0.id == id } ?? compactII
@@ -2073,7 +2313,7 @@ enum LegacyPlanSeedCatalog {
                 ("Jug", .feature(.jug), .openHand),
                 ("Three-finger pocket", .feature(.threeFingerPocket), .openHand),
                 ("Medium edge", .feature(.mediumEdge), .openHand),
-                ("Medium pinch", .kind(.edge), .openHand),
+                ("Medium pinch", .feature(.mediumPinch), .openHand),
                 ("Large sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)
             ]
             for (index, grip) in grips.enumerated() {
@@ -2124,16 +2364,16 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Trango Rock Prodigy Training Center · Rock Prodigy method",
         sourceURL: URL(string: "https://trango.com/products/rock-prodigy-training-center")!,
         provenance: .adapted,
-        boardID: nil,
+        boardID: BoardCatalog.rockProdigyTrainingCenter.id,
         steps: numbered({
             var steps = rockProdigySet(prefix: "rock-prodigy-warmup-jug", title: "warm-up jug", target: .feature(.jug), gripType: .openHand, count: 7, setLabel: "warm-up", recoveryAfter: true)
             let grips: [(prefix: String, title: String, target: HoldTarget, grip: GripType)] = [
-                ("rock-prodigy-large-edge", "large open-hand edge", .feature(.largeEdge), .openHand),
-                ("rock-prodigy-deep-two-finger", "deep 2-finger pocket", .feature(.twoFingerPocket), .openHand),
-                ("rock-prodigy-small-crimp", "small semi-closed crimp", .feature(.smallEdge), .halfCrimp),
-                ("rock-prodigy-shallow-three-finger", "shallow 3-finger pocket", .feature(.threeFingerPocket), .openHand),
-                ("rock-prodigy-wide-pinch", "wide pinch", .kind(.edge), .openHand),
-                ("rock-prodigy-sloper", "sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)
+                ("rock-prodigy-large-edge", "large open-hand edge", .feature(.largeOpenHandRail), .openHand),
+                ("rock-prodigy-deep-two-finger", "deep 2-finger pocket", .feature(.deepTwoFingerPocket), .openHand),
+                ("rock-prodigy-small-crimp", "small semi-closed crimp", .feature(.thinCrimp), .halfCrimp),
+                ("rock-prodigy-shallow-three-finger", "shallow 3-finger pocket", .feature(.shallowThreeFingerSlot), .openHand),
+                ("rock-prodigy-wide-pinch", "wide pinch", .feature(.widePinch), .openHand),
+                ("rock-prodigy-sloper", "sloper", .feature(.largeSlope), .openHand)
             ]
             for (index, grip) in grips.enumerated() {
                 steps += rockProdigySet(prefix: "\(grip.prefix)-set-1", title: grip.title, target: grip.target, gripType: grip.grip, count: 7, setLabel: "set 1", recoveryAfter: true)

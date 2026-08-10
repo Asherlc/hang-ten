@@ -7,7 +7,8 @@ enum BoardDesignCatalog {
 
     private static let designs: [String: BoardDesign] = {
         let result: [String: BoardDesign] = [
-            BoardCatalog.compactII.id: .metoliusCompactII
+            BoardCatalog.compactII.id: .metoliusCompactII,
+            BoardCatalog.rockProdigyTrainingCenter.id: .trangoRockProdigyTrainingCenter
         ]
 
         #if DEBUG

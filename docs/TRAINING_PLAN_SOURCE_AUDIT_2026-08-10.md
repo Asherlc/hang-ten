@@ -97,7 +97,7 @@ Product source: <https://trango.com/products/rock-prodigy-training-center>
 Manual audit source: <https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155>
 
 Classification: manufacturer/device-specific prescription adapted to the
-current board catalog. The manual's intermediate sequence is modeled as a
+Trango Rock Prodigy Training Center board. The manual's intermediate sequence is modeled as a
 warm-up jug set of 7 reps, followed by two sets per grip with 7 reps then 6
 reps across large open-hand edge, deep 2-finger pocket, small semi-closed
 crimp, shallow 3-finger pocket, wide pinch, and sloper. Every rep is 7s hang
@@ -105,8 +105,33 @@ and 3s rest; set recovery is 3m. Instructions explicitly preserve two hands,
 dead hangs only, no pull-ups, and no lock-offs, plus the manual's 48h recovery
 and 6–10 workouts before progressing guidance.
 
-The current Hang Ten catalog has only the Metolius Compact II geometry and no
-Rock Prodigy board or pinch hold feature. The plan therefore remains
-board-compatible through semantic targets, using the closest factual
-edge-kind target for the source's wide pinch. This is a disclosed limitation,
-not an official Rock Prodigy board mapping.
+Board geometry evidence checked 2026-08-10:
+
+- Product page: <https://trango.com/products/rock-prodigy-training-center>
+  identifies two adjustable/symmetric pieces, each 9.1 × 12.1 inches, with
+  variable edge rails and index bumps.
+- Trango depth guide: <https://www.mountainexperience.it/risorse/Rock_Prodigy_Training_Center_Depth_Guide.pdf>
+  identifies wide/medium/small pinch contacts at 87/44/18 mm on the outer
+  angled block; variable rails at 20–33 mm and 10–24 mm; a 38 mm 3-finger
+  slot; 29/19 mm MR pockets; a 7.5 mm thin crimp; and 26–36 mm / 19–24 mm IM
+  pockets.
+- Product image: <https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946>
+  establishes the two-piece silhouette and mirrored placement.
+
+Hang Ten registers the assembled board as
+`trango.rock-prodigy-training-center` at 18.2 × 12.1 inches, with paired
+namespaced hold IDs and a deterministic mirrored vector design. Exact plan
+target resolution is: warm-up jug → paired top jugs; large open-hand edge →
+20–33 mm rail; deep 2-finger pocket → deep 29 mm MR pockets; small
+semi-closed crimp → 7.5 mm thin crimp; shallow 3-finger pocket → 38 mm slot;
+wide pinch → 87 mm pinch contact; and sloper → paired outer sloper contacts.
+The plan is board-specific and no longer uses an edge-kind pinch fallback.
+
+The depth guide documents three pinch sizes on one physical outer angled block,
+not three separate cavities. Hang Ten therefore gives the wide, medium, and
+small pinch semantics distinct stable IDs while sharing one factual contact
+path per side. The sloper target is likewise represented on that same outer
+angled surface because the product/use sources name the surface as usable for
+sloping but do not provide a separate sloper contour. This is the only
+source-limited geometry assumption; it does not affect the exact wide-pinch
+feature resolution used by the imported plan.
