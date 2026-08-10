@@ -11,6 +11,7 @@ import sys
 from .review_acceptance import validate_acceptance, write_acceptance
 from .review_artifacts import discover_review_run, inspect_run
 from .review_lint import lint_report_payload, lint_review, write_lint_report
+from .review_preview import render_preview_bundle, write_comparison_document
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -52,6 +53,32 @@ def _parser() -> argparse.ArgumentParser:
         help="print compact JSON output (default behavior)",
     )
 
+    preview = subcommands.add_parser(
+        "preview", help="render deterministic review preview artifacts"
+    )
+    preview.add_argument("--run", type=Path, required=True, help="review run directory")
+    preview.add_argument(
+        "--output", type=Path, required=True, help="workspace-owned preview output root"
+    )
+    preview.add_argument(
+        "--json",
+        action="store_true",
+        help="print compact JSON output (default behavior)",
+    )
+
+    compare = subcommands.add_parser(
+        "compare", help="write a self-contained read-only comparison document"
+    )
+    compare.add_argument("--run", type=Path, required=True, help="review run directory")
+    compare.add_argument(
+        "--output", type=Path, required=True, help="generated comparison HTML path"
+    )
+    compare.add_argument(
+        "--json",
+        action="store_true",
+        help="print compact JSON output (default behavior)",
+    )
+
     accept = subcommands.add_parser("accept", help="record an acceptance decision")
     accept.add_argument("--run", type=Path, required=True, help="review run directory")
     accept.add_argument(
@@ -77,6 +104,17 @@ def _run(arguments: argparse.Namespace) -> tuple[dict[str, object], int]:
         report = lint_review(run)
         write_lint_report(run, report)
         return lint_report_payload(report), (0 if report.passed else 1)
+    if arguments.command == "preview":
+        return render_preview_bundle(run, arguments.output), 0
+    if arguments.command == "compare":
+        output = arguments.output.resolve(strict=False)
+        if run.edited_regions is None:
+            return {
+                "output": str(output),
+                "reason": "edited regions artifact is missing",
+            }, 2
+        path = write_comparison_document(run, output)
+        return {"output": str(path)}, 0
     if arguments.command == "accept":
         if arguments.decision == "accepted":
             report = lint_review(run)

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Hold Region Comparison</title>
+    <style>__COMPARE_CSS__</style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Hold Region Comparison</h1>
+          <p>Read-only review of automatic versus edited hold regions with no save or mutation controls.</p>
+        </div>
+        <div class="toolbar" aria-label="Comparison controls">
+          <button type="button" data-mode="image">Image</button>
+          <button type="button" data-mode="automatic">Automatic</button>
+          <button type="button" data-mode="edited">Edited</button>
+          <button type="button" data-mode="difference" class="active">Difference</button>
+          <label class="inline">Opacity <input id="opacity" type="range" min="10" max="80" value="38" /></label>
+          <label class="inline"><input id="side-by-side" type="checkbox" /> Side by side</label>
+          <button type="button" id="zoom-out">−</button>
+          <button type="button" id="fit">Fit</button>
+          <button type="button" id="zoom-in">+</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <section class="viewer">
+          <div class="viewer-grid" id="viewer-grid">
+            <div>
+              <div class="panel-title" id="primary-title">Difference view</div>
+              <div class="canvas-shell"><canvas id="primary-canvas"></canvas></div>
+            </div>
+            <div id="secondary-panel" hidden>
+              <div class="panel-title" id="secondary-title">Edited overlay</div>
+              <div class="canvas-shell"><canvas id="secondary-canvas"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="card">
+            <h2>Correction summary</h2>
+            <div class="summary-grid" id="summary-grid"></div>
+            <select id="region-focus" aria-label="Focus one region"></select>
+            <div class="focus-meta" id="focus-meta"></div>
+          </section>
+
+          <section class="card">
+            <h2>Artifact metadata</h2>
+            <table>
+              <tbody id="metadata-rows"></tbody>
+            </table>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <script>__COMPARE_MODEL__</script>
+    <script id="comparison-data" type="application/json">__COMPARISON_DATA__</script>
+    <script>
+      (() => {
+        "use strict";
+
+        const { buildSummary, visibleLayers } = globalThis.HoldComparisonModel;
+        const payload = JSON.parse(document.getElementById("comparison-data").textContent);
+        const image = new Image();
+        image.src = payload.stage1.dataUrl;
+
+        const state = {
+          mode: "difference",
+          opacity: 0.38,
+          sideBySide: false,
+          zoom: 1,
+          selectedId: "all",
+        };
+
+        const elements = {
+          viewerGrid: document.getElementById("viewer-grid"),
+          primaryTitle: document.getElementById("primary-title"),
+          secondaryPanel: document.getElementById("secondary-panel"),
+          secondaryTitle: document.getElementById("secondary-title"),
+          primaryCanvas: document.getElementById("primary-canvas"),
+          secondaryCanvas: document.getElementById("secondary-canvas"),
+          summaryGrid: document.getElementById("summary-grid"),
+          metadataRows: document.getElementById("metadata-rows"),
+          regionFocus: document.getElementById("region-focus"),
+          focusMeta: document.getElementById("focus-meta"),
+          opacity: document.getElementById("opacity"),
+          sideBySide: document.getElementById("side-by-side"),
+          zoomOut: document.getElementById("zoom-out"),
+          zoomIn: document.getElementById("zoom-in"),
+          fit: document.getElementById("fit"),
+          modeButtons: [...document.querySelectorAll("[data-mode]")],
+        };
+
+        const summary = buildSummary(
+          payload.automatic.regions,
+          payload.edited.regions,
+          payload.corrections,
+        );
+        const automaticById = new Map(payload.automatic.regions.map((region) => [Number(region.id), region]));
+        const editedById = new Map(payload.edited.regions.map((region) => [Number(region.id), region]));
+        const allIds = [...new Set([...automaticById.keys(), ...editedById.keys()])].sort((left, right) => left - right);
+
+        function colorFor(type) {
+          return {
+            jug: "#ff754f",
+            sloper: "#32bbc1",
+            edge: "#9a6cf2",
+            pocket: "#ee4d97",
+          }[type] || "#9a6cf2";
+        }
+
+        function fillWithAlpha(hex, alpha) {
+          const value = hex.replace("#", "");
+          return `rgba(${parseInt(value.slice(0, 2), 16)}, ${parseInt(value.slice(2, 4), 16)}, ${parseInt(value.slice(4, 6), 16)}, ${alpha})`;
+        }
+
+        function regionStatus(id) {
+          if (summary.added.includes(id)) return "added";
+          if (summary.deleted.includes(id)) return "deleted";
+          if (summary.modified.includes(id)) return "modified";
+          if (summary.unchanged.includes(id)) return "unchanged";
+          return "unknown";
+        }
+
+        function focusedRegion() {
+          return state.selectedId === "all"
+            ? null
+            : editedById.get(Number(state.selectedId)) || automaticById.get(Number(state.selectedId)) || null;
+        }
+
+        function path(ctx, contour) {
+          if (!contour.length) return;
+          ctx.beginPath();
+          ctx.moveTo(contour[0][0], contour[0][1]);
+          for (let index = 1; index < contour.length; index += 1) ctx.lineTo(contour[index][0], contour[index][1]);
+          ctx.closePath();
+        }
+
+        function drawRegions(ctx, regions, tone, selectedId) {
+          regions.forEach((region) => {
+            const id = Number(region.id);
+            const active = selectedId === "all" || id === Number(selectedId);
+            const baseColor = colorFor(region.type);
+            const alpha = active ? state.opacity : Math.max(0.08, state.opacity * 0.32);
+            path(ctx, region.contour);
+            ctx.fillStyle = fillWithAlpha(baseColor, alpha);
+            ctx.strokeStyle = active ? baseColor : fillWithAlpha(baseColor, 0.45);
+            ctx.lineWidth = active ? 2.5 : 1.2;
+            ctx.fill();
+            ctx.stroke();
+            if (tone === "difference") {
+              const status = regionStatus(id);
+              if (status !== "unchanged") {
+                path(ctx, region.contour);
+                ctx.strokeStyle = {
+                  added: "#79d7a3",
+                  deleted: "#ff8b92",
+                  modified: "#ffd174",
+                }[status] || baseColor;
+                ctx.lineWidth = active ? 4 : 2.2;
+                ctx.stroke();
+              }
+            }
+          });
+        }
+
+        function renderCanvas(canvas, mode) {
+          const context = canvas.getContext("2d");
+          const width = image.naturalWidth || 1;
+          const height = image.naturalHeight || 1;
+          canvas.width = width;
+          canvas.height = height;
+          canvas.style.width = `${width * state.zoom}px`;
+          canvas.style.height = `${height * state.zoom}px`;
+          context.clearRect(0, 0, width, height);
+
+          const layers = visibleLayers(mode);
+          if (layers.includes("image")) context.drawImage(image, 0, 0, width, height);
+          if (layers.includes("automatic")) drawRegions(context, payload.automatic.regions, mode, state.selectedId);
+          if (layers.includes("edited")) drawRegions(context, payload.edited.regions, mode, state.selectedId);
+          if (layers.includes("difference")) {
+            drawRegions(
+              context,
+              payload.automatic.regions.filter((region) => summary.deleted.includes(Number(region.id))),
+              "difference",
+              state.selectedId,
+            );
+            drawRegions(
+              context,
+              payload.edited.regions.filter((region) => summary.added.includes(Number(region.id)) || summary.modified.includes(Number(region.id))),
+              "difference",
+              state.selectedId,
+            );
+          }
+        }
+
+        function renderSummary() {
+          elements.summaryGrid.innerHTML = "";
+          [
+            ["Added", "added", summary.added.length],
+            ["Modified", "modified", summary.modified.length],
+            ["Deleted", "deleted", summary.deleted.length],
+            ["Unchanged", "unchanged", summary.unchanged.length],
+          ].forEach(([label, key, count]) => {
+            const block = document.createElement("div");
+            block.className = key;
+            block.innerHTML = `<span>${label}</span><strong>${count}</strong>`;
+            elements.summaryGrid.appendChild(block);
+          });
+        }
+
+        function renderMetadata() {
+          const rows = [
+            ["Stage 1 image", payload.stage1.path, payload.stage1.hash],
+            ["Automatic regions", payload.automatic.path, payload.automatic.hash],
+            ["Edited regions", payload.edited.path, payload.edited.hash],
+          ];
+          if (payload.corrections) rows.push(["Corrections", payload.corrections.path, payload.corrections.hash]);
+          elements.metadataRows.innerHTML = rows.map(([label, path, hash]) => `<tr><th>${label}</th><td>${path}<br /><code>${hash}</code></td></tr>`).join("");
+        }
+
+        function renderFocus() {
+          const region = focusedRegion();
+          if (!region) {
+            elements.focusMeta.textContent = "Showing all regions.";
+            return;
+          }
+          elements.focusMeta.innerHTML = `Region <strong>${region.id}</strong> · ${region.key} · ${region.type} · ${region.mode}<br />Status: ${regionStatus(Number(region.id))}`;
+        }
+
+        function renderViewer() {
+          const sideBySide = state.sideBySide;
+          elements.viewerGrid.classList.toggle("side-by-side", sideBySide);
+          elements.secondaryPanel.hidden = !sideBySide;
+          elements.primaryTitle.textContent = sideBySide ? "Automatic overlay" : `${state.mode[0].toUpperCase()}${state.mode.slice(1)} view`;
+          if (sideBySide) elements.secondaryTitle.textContent = "Edited overlay";
+          renderCanvas(elements.primaryCanvas, sideBySide ? "automatic" : state.mode);
+          if (sideBySide) renderCanvas(elements.secondaryCanvas, "edited");
+        }
+
+        function render() {
+          elements.modeButtons.forEach((button) => {
+            button.classList.toggle("active", button.dataset.mode === state.mode);
+          });
+          renderSummary();
+          renderMetadata();
+          renderFocus();
+          renderViewer();
+        }
+
+        elements.regionFocus.innerHTML = [
+          `<option value="all">All regions</option>`,
+          ...allIds.map((id) => `<option value="${id}">Region ${id} · ${regionStatus(id)}</option>`),
+        ].join("");
+        elements.regionFocus.addEventListener("change", () => {
+          state.selectedId = elements.regionFocus.value;
+          render();
+        });
+        elements.opacity.addEventListener("input", () => {
+          state.opacity = Number(elements.opacity.value) / 100;
+          render();
+        });
+        elements.sideBySide.addEventListener("change", () => {
+          state.sideBySide = elements.sideBySide.checked;
+          render();
+        });
+        elements.zoomOut.addEventListener("click", () => {
+          state.zoom = Math.max(0.35, Number((state.zoom - 0.15).toFixed(2)));
+          render();
+        });
+        elements.zoomIn.addEventListener("click", () => {
+          state.zoom = Math.min(4, Number((state.zoom + 0.15).toFixed(2)));
+          render();
+        });
+        elements.fit.addEventListener("click", () => {
+          state.zoom = 1;
+          render();
+        });
+        elements.modeButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            state.mode = button.dataset.mode;
+            render();
+          });
+        });
+
+        image.addEventListener("load", render, { once: true });
+      })();
+    </script>
+  </body>
+</html>
