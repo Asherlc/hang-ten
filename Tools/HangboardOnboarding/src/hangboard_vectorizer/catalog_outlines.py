@@ -873,7 +873,86 @@ def normalize_contour(contour: np.ndarray, width: int, height: int) -> OutlinePa
             )
         )
         commands.append(OutlineCommand("L", _tuple_point(corner_point / scale)))
+    path = OutlinePath(commands=tuple(commands), closed=True)
+    rounded_rectangle_path = _rounded_rectangle_path(points, scale)
+    if rounded_rectangle_path is not None and not _has_all_rounded_rectangle_edges(
+        path, points, scale
+    ):
+        return rounded_rectangle_path
+    return path
+
+
+def _rounded_rectangle_path(points: np.ndarray, scale: np.ndarray) -> OutlinePath | None:
+    """Emit every tangent-to-tangent edge for our manual rounded rectangles."""
+
+    if len(points) != 8:
+        return None
+    if not (
+        np.isclose(points[0, 1], points[1, 1])
+        and np.isclose(points[2, 0], points[3, 0])
+        and np.isclose(points[4, 1], points[5, 1])
+        and np.isclose(points[6, 0], points[7, 0])
+        and np.isclose(points[0, 0], points[5, 0])
+        and np.isclose(points[1, 0], points[4, 0])
+        and np.isclose(points[2, 1], points[7, 1])
+        and np.isclose(points[3, 1], points[6, 1])
+    ):
+        return None
+
+    commands: list[OutlineCommand] = [OutlineCommand("M", _tuple_point(points[0] / scale))]
+    for edge_start in range(0, 8, 2):
+        straight_end = points[edge_start + 1]
+        corner_end = points[(edge_start + 2) % len(points)]
+        control_1, control_2 = _rounded_corner_controls(points, edge_start + 1)
+        commands.append(OutlineCommand("L", _tuple_point(straight_end / scale)))
+        commands.append(
+            OutlineCommand(
+                "C",
+                _tuple_point(corner_end / scale),
+                controls=(
+                    _tuple_point(control_1 / scale),
+                    _tuple_point(control_2 / scale),
+                ),
+            )
+        )
     return OutlinePath(commands=tuple(commands), closed=True)
+
+
+def _has_all_rounded_rectangle_edges(
+    path: OutlinePath, points: np.ndarray, scale: np.ndarray
+) -> bool:
+    straight_ends = (points[index] / scale for index in range(1, len(points), 2))
+    line_ends = tuple(command.to for command in path.commands if command.command == "L")
+    return all(
+        any(np.allclose(line_end, straight_end) for line_end in line_ends)
+        for straight_end in straight_ends
+    )
+
+
+def _rounded_corner_controls(
+    points: np.ndarray, corner_start_index: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Approximate an axis-aligned rounded corner from its adjacent straight edges."""
+
+    start = points[corner_start_index]
+    end = points[(corner_start_index + 1) % len(points)]
+    incoming = start - points[corner_start_index - 1]
+    outgoing = points[(corner_start_index + 2) % len(points)] - end
+    incoming_axis = int(np.argmax(np.abs(incoming)))
+    outgoing_axis = int(np.argmax(np.abs(outgoing)))
+    if incoming_axis == outgoing_axis or incoming[incoming_axis] == 0 or outgoing[outgoing_axis] == 0:
+        raise ValueError("rounded rectangle corner must join perpendicular straight edges")
+    corner_delta = end - start
+    kappa = 0.5522847498
+    control_1 = start.copy()
+    control_2 = end.copy()
+    control_1[incoming_axis] += math.copysign(
+        abs(corner_delta[incoming_axis]) * kappa, incoming[incoming_axis]
+    )
+    control_2[outgoing_axis] -= math.copysign(
+        abs(corner_delta[outgoing_axis]) * kappa, outgoing[outgoing_axis]
+    )
+    return control_1, control_2
 
 
 def _persistent_corner_indices(points: np.ndarray, tolerance: float) -> list[int]:

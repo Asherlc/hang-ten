@@ -161,6 +161,25 @@ def test_round_trip_preserves_explicit_commands_and_bounds() -> None:
     assert path_bounds(restored.outlines[0].path) == pytest.approx((0.1, 0.1, 0.9, 0.8))
 
 
+def test_normalize_contour_preserves_all_rounded_rectangle_edge_segments() -> None:
+    outlines_module = importlib.import_module("hangboard_vectorizer.catalog_outlines")
+    contour = outlines_module._rounded_rectangle_contour(
+        (0.6, 0.34, 0.3, 0.06), 1000, 1000
+    )
+
+    path = normalize_contour(contour, 1000, 1000)
+
+    np.testing.assert_allclose(
+        [command.to for command in path.commands if command.command == "L"],
+        [
+            (0.8868000000000001, 0.34),
+            (0.9, 0.38680000000000003),
+            (0.6132000000000001, 0.4),
+            (0.6000000000000001, 0.3532),
+        ],
+    )
+
+
 def test_outline_reader_rejects_legacy_bounds_and_notes_shapes() -> None:
     payload = sample_document().to_json()
     payload["outlines"][0]["bounds"] = [0.1, 0.1, 0.9, 0.8]
@@ -703,7 +722,6 @@ def test_module_mode_executes_main_and_writes_outputs(tmp_path: Path) -> None:
     assert not (output_dir / "contact-sheet-primary.json").exists()
     assert not (output_dir / "flat-illustrations-contact-sheet.json").exists()
     assert (review_dir / "board.png").exists()
-    assert (tmp_path / "review" / "board.png").exists()
 
 
 def test_review_overlay_labels_with_outline_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
