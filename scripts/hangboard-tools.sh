@@ -13,6 +13,10 @@ Usage: scripts/hangboard-tools.sh <command> [arguments]
 Commands:
   onboard     Start, inspect, approve, or resume a staged onboarding run
   inspect     Summarize hold-region review artifacts for one run
+  compare     Build a read-only comparison HTML document for one review run
+  lint        Validate edited hold-region review artifacts
+  preview     Render deterministic review preview artifacts
+  accept      Record an acceptance decision for reviewed hold regions
   promote     Build a safe promotion package for an accepted review run
   release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Replay the accepted Metolius run without a live model call
@@ -53,6 +57,18 @@ case "$command_name" in
         ;;
     inspect)
         exec "$environment_root/bin/hangboard-review" inspect "$@"
+        ;;
+    compare)
+        exec "$environment_root/bin/hangboard-review" compare "$@"
+        ;;
+    lint)
+        exec "$environment_root/bin/hangboard-review" lint "$@"
+        ;;
+    preview)
+        exec "$environment_root/bin/hangboard-review" preview "$@"
+        ;;
+    accept)
+        exec "$environment_root/bin/hangboard-review" accept "$@"
         ;;
     promote)
         exec "$environment_root/bin/hangboard-promote" promote "$@"

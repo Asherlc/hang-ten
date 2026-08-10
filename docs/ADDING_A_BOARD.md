@@ -73,6 +73,31 @@ Repeat approval and resume through Stage 4. The visual checkpoints are:
 5. Stage 4: normal product, all-highlight, per-type, mixed, and symmetric-pair
    interaction previews.
 
+For a single reviewed Stage 2 run, the local wrapper commands are:
+
+```sh
+scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh compare --run .context/hangboard-onboarding/example --output .context/compare.html
+scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
+scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
+scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
+scripts/hangboard-tools.sh promote --run .context/hangboard-onboarding/example --repository-root "$PWD"
+scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/example --repository-root "$PWD"
+```
+
+Safety boundaries:
+
+- `inspect`, `compare`, `lint`, and `preview` are read-only for the reviewed
+  run.
+- `accept` writes only the Stage 2 acceptance artifact beside the edited
+  regions.
+- `promote` is dry-run by default and does not touch repository destinations
+  unless `--apply` is combined with an explicit runtime integration profile.
+- `handoff-required` is the expected result when runtime Swift integration has
+  not been configured yet.
+- `release-check` validates the promotion package and repository-facing
+  readiness; fix blockers before any manual runtime handoff.
+
 Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
