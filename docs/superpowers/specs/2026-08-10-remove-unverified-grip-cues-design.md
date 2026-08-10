@@ -2,23 +2,26 @@
 
 ## Goal
 
-Remove Hang Ten's grip/finger cue UI and remove plan content that cannot be
-traced to the linked routine, while allowing faithful paraphrases and
-necessary app formatting of source-prescribed content.
+Keep Hang Ten's grip/finger cue UI when the cue is backed by the linked routine,
+and remove only plan content that cannot be traced to that source. Faithful
+paraphrases and necessary app formatting of source-prescribed content are
+allowed.
 
 ## Scope
 
-- Remove the grip diagram and hand/finger cue cards from plan detail and active
-  workout layouts in portrait and landscape, regardless of whether a source
-  happens to mention a grip.
-- Remove grip and finger controls from the custom-routine editor.
+- Keep the grip diagram and hand/finger cue cards in plan detail and active
+  workout layouts when the current source-backed plan step supplies the cue;
+  hide them when the source does not specify the relevant grip or fingers.
+- Remove grip and finger controls from custom routines because they have no
+  linked source provenance; custom routines retain their source-neutral task
+  and hold-target editing only.
 - Audit every built-in plan field against its linked source. Preserve source
   facts and faithful paraphrases; remove unsupported coaching prose, arbitrary
   timing defaults, invented warm-ups/cooldowns, and unsupported grip/finger
   overrides. The audit must identify the source passage or mark the field for
   removal.
-- Remove cue-only timeline policy/model code and hand cue assets that no longer
-  have consumers.
+- Keep the cue timeline policy/model and hand cue assets where they render
+  source-backed cue data; remove only dead or unsupported cue branches.
 - Keep persisted source-backed fields only when they are still needed for plan
   fidelity; old unsupported cue keys must decode safely and must not be
   re-emitted.
@@ -30,16 +33,19 @@ necessary app formatting of source-prescribed content.
 
 ## Architecture
 
-The visible workout model becomes cue-agnostic: cue views and hold-cue policy
-are removed, while source-backed routine fields remain only where the audit
-shows that they represent the original prescription. The board map remains the
-sole hold visualization, and the workout timeline continues to resolve
-highlight IDs without producing a hold cue object.
+The workout model remains cue-aware, but cue values are provenance-audited at
+the plan-step level. The timeline resolves source-backed grip/finger cues when
+present and suppresses them when absent. The board map continues to resolve
+hold highlights independently of the cue card.
 
-Persistence remains backward-compatible for old custom-routine JSON by decoding
-and ignoring removed or unsupported keys. Encoding and the generated plan
-library omit unsupported data, preventing invented cues from surviving or being
-recreated.
+The resolver must not fall back from an absent source-backed step cue to
+`BoardHold.gripType` or `fingerCapacity`; board metadata may describe the
+physical hold, but it does not establish what the linked routine prescribed.
+
+Persistence remains backward-compatible for old custom-routine JSON by ignoring
+legacy cue keys on decode. Encoding and the generated built-in plan library
+omit unsupported cue data, while source-backed built-in cues remain
+representable.
 
 ## Source-grounding standard
 
@@ -73,12 +79,12 @@ secondary protocol summaries.
 - Add a source audit covering every visible plan title, subtitle, instruction,
   accessory, target, count, duration, interval, warm-up/cool-down, and cue
   field, with an explicit keep/adapt/remove decision.
-- Add/update model and persistence tests proving removed cue keys are ignored
-  on decode and unsupported fields are absent on encode/export.
-- Update custom-routine tests to prove custom steps no longer expose or persist
-  cue fields.
-- Update timeline/UI-facing tests to prove hold highlighting still resolves and
-  no hold-cue policy remains.
+- Add/update model and persistence tests proving source-backed cue fields survive
+  and unsupported built-in cue fields are absent on export.
+- Update custom-routine tests to prove legacy cue fields are ignored and are not
+  re-emitted.
+- Update timeline/UI-facing tests to prove source-backed cues render, absent
+  cues are hidden, and hold highlighting still resolves independently.
 - Search the source, generated JSON, and Xcode project for cue UI/data symbols.
 - Run the plan-library exporter in check mode, the focused XCTest suite, and a
   Debug simulator build.
