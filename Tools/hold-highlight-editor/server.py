@@ -267,6 +267,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             "/index.html": "index.html",
             "/styles.css": "styles.css",
             "/editor-model.js": "editor-model.js",
+            "/curve-gesture-model.js": "curve-gesture-model.js",
             "/app.js": "app.js",
         }
         filename = static_files.get(path)
