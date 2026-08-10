@@ -897,7 +897,8 @@ final class PlanStorageTests: XCTestCase {
     func testRockProdigyIntermediateKeepsDeadHangOnlyAndSevenThenSixRepStructure() throws {
         let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
         XCTAssertTrue(plan.steps.dropFirst().filter { $0.phase == .hang }.allSatisfy {
-            $0.instruction.contains("Dead hang only") && $0.instruction.contains("no pull-ups or lock-offs")
+            $0.instruction.contains("Dead hang only") &&
+                $0.instruction.contains("do not perform pull-ups or lock-offs")
         })
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-1-rep-") }.count, 42)
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-2-rep-") }.count, 36)
