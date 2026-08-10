@@ -724,7 +724,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testUnsupportedSharedWarmUpsAndCooldownsAreAbsent() {
-        let unsupportedPhases: Set<WorkoutPhase> = [.warmUp, .cooldown]
+        let unsupportedPhases: Set<WorkoutPhase> = [.warmUp, .coolDown]
 
         XCTAssertTrue(
             LegacyPlanSeedCatalog.all
@@ -963,11 +963,11 @@ final class PlanStorageTests: XCTestCase {
             "Plan-level fields must have exactly one audit decision:\n\(multiplyCoveredPlanFields.sorted().map(\.description).joined(separator: "\n"))"
         )
 
-        let retainedPlanFieldKeys = Set(planRulesByKey.compactMap { key, entries in
+        let retainedPlanFieldKeys: Set<CueAuditKey> = Set(planRulesByKey.compactMap { key, entries in
             guard let entry = entries.only else { return nil }
             return entry.1.isRetained ? key : nil
         })
-        let removedPlanFieldKeys = Set(planRulesByKey.compactMap { key, entries in
+        let removedPlanFieldKeys: Set<CueAuditKey> = Set(planRulesByKey.compactMap { key, entries in
             guard let entry = entries.only else { return nil }
             return entry.1.decision == "remove" ? key : nil
         })
@@ -1180,7 +1180,7 @@ final class PlanStorageTests: XCTestCase {
             if plan.steps.contains(where: { $0.phase == .warmUp }) {
                 keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "warmUp"))
             }
-            if plan.steps.contains(where: { $0.phase == .cooldown }) {
+            if plan.steps.contains(where: { $0.phase == .coolDown }) {
                 keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "cooldown"))
             }
             if plan.steps.contains(where: { $0.gripType != nil }) {
