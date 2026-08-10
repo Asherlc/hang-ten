@@ -427,7 +427,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let board = BoardCatalog.compactII
         let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
         let workSteps = repeaterSteps.filter { $0.phase == .hang }
-        let interRepRestWorkSteps = workSteps.filter { $0.restDuration == 3 }
+        let interRepRestSteps = workSteps.filter { $0.restDuration == 3 }
         let seriesRecoverySteps = repeaterSteps.filter {
             $0.phase == .rest &&
                 $0.id.contains("-series-") &&
@@ -438,9 +438,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
 
         XCTAssertEqual(workSteps.count, 84)
-        XCTAssertEqual(interRepRestWorkSteps.count, 72)
-        XCTAssertTrue(interRepRestWorkSteps.allSatisfy { $0.activeDuration == 7 })
-        XCTAssertTrue(interRepRestWorkSteps.allSatisfy { $0.restDuration == 3 })
+        XCTAssertEqual(interRepRestSteps.count, 72)
+        XCTAssertTrue(interRepRestSteps.allSatisfy { $0.activeDuration == 7 })
+        XCTAssertTrue(interRepRestSteps.allSatisfy { $0.restDuration == 3 })
         XCTAssertEqual(seriesRecoverySteps.count, 10)
         XCTAssertEqual(seriesRecoverySteps.map(\.duration), Array(repeating: 150, count: 10))
         XCTAssertEqual(setRecoverySteps.count, 1)

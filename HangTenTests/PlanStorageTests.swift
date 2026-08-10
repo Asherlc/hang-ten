@@ -733,7 +733,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testRetainedRecoveryStepsKeepThreeMinuteDurations() {
+    func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
             "ladders-round-1-recovery",
