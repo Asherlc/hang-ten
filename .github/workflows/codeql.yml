@@ -74,7 +74,6 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             COMPILER_INDEX_STORE_ENABLE=NO \
             ENABLE_PREVIEWS=NO \
-            SWIFT_COMPILATION_MODE=wholemodule \
             build 2>&1 | tee "$RUNNER_TEMP/codeql-logs/xcodebuild.log"
 
       # github/codeql-action v4.37.6
