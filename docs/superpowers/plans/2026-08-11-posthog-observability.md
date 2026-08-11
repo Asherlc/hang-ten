@@ -34,9 +34,11 @@
 | HangTen/Config/PostHog.local.xcconfig.example | Copyable token/host template; real sibling is ignored. |
 | HangTen/HangTenApp.swift | Compose telemetry once and inject it into AppStore. |
 | HangTen/Models/AppStore.swift | Emit approved events at business-operation boundaries. |
+| HangTen/Models/MotherboardBluetoothService.swift | Emit categorical Motherboard connection outcomes through the portable contract. |
 | HangTen/Views/RootView.swift | Emit navigation/workout lifecycle through AppStore and pause replay. |
 | HangTenTests/TelemetryTests.swift | Contract, redaction, no-op, bucketing, and adapter tests. |
 | HangTenTests/AppStoreTests.swift | App operation telemetry tests. |
+| HangTenTests/MotherboardBluetoothServiceTests.swift | Connection outcome telemetry tests. |
 | HangTen.xcodeproj/project.pbxproj | Target membership, SPM packages, config refs, and generated plist keys. |
 | .gitignore and README.md | Token protection and operator instructions. |
 
@@ -207,13 +209,16 @@ git commit -m "feat: configure PostHog telemetry adapters"
 
 **Files:**
 - Modify: HangTen/Models/AppStore.swift
+- Modify: HangTen/Models/MotherboardBluetoothService.swift
 - Modify: HangTen/Views/RootView.swift
 - Modify: HangTenTests/AppStoreTests.swift
+- Modify: HangTenTests/MotherboardBluetoothServiceTests.swift
 - Modify: HangTenTests/TelemetryTests.swift
 
 **Interfaces:**
 - Consumes TelemetryDependencies via AppStore(telemetry:).
-- Produces AppStore.selectBoard(_:), recordTabSelection(_:), recordPlanBrowse(_:), and replay-safe workout/HealthKit lifecycle methods.
+- Produces AppStore.selectBoard(_:), recordTabSelection(_:), recordPlanBrowse(_:), recordWorkoutStarted(source:), recordWorkoutFinished(outcome:elapsed:), and replay-safe HealthKit lifecycle methods.
+- Produces MotherboardBluetoothService(telemetry:) with a no-op default and only categorical connection outcomes.
 - Views call only AppStore methods; no view imports a telemetry dependency.
 
 - [ ] **Step 1: Write failing operation-boundary tests with a recording fake**
@@ -245,7 +250,7 @@ Expected: tests fail because AppStore does not accept or use telemetry.
 
 - [ ] **Step 3: Inject contracts and emit events at boundaries**
 
-Inject a no-op-default telemetry dependency into AppStore. Replace the sole direct board assignment in RootView with store.selectBoard(_:). Record tabs on selection change, plan browsing on navigation entry, custom-routine saves only after persistence succeeds, and workout completion in markSessionComplete with only source/outcome/coarse bucket values. Stop replay before workout presentation and HealthKit authorization, and restart after the sensitive flow ends.
+Inject a no-op-default telemetry dependency into AppStore and MotherboardBluetoothService. Compose telemetry before creating the Bluetooth service in HangTenApp, then pass telemetry.tracking into the service. Replace the sole direct board assignment in RootView with store.selectBoard(_:). Record tabs on selection change, plan browsing on navigation entry, custom-routine saves only after persistence succeeds, workout start at the first active session transition, completed workout after saved-session completion, and abandoned workout when an active session ends without completion. Use only source/outcome/coarse bucket values. Stop replay before workout presentation and HealthKit authorization, and restart after the sensitive flow ends.
 
 Record categorical diagnostics at existing persistence, HealthKit, and Motherboard failures using error types only. Do not send localized descriptions or model objects.
 
@@ -258,7 +263,7 @@ Expected: all unit tests pass; event tests prove prohibited properties are absen
 - [ ] **Step 5: Commit**
 
 ~~~bash
-git add HangTen/Models/AppStore.swift HangTen/Views/RootView.swift HangTenTests/AppStoreTests.swift HangTenTests/TelemetryTests.swift
+git add HangTen/Models/AppStore.swift HangTen/Models/MotherboardBluetoothService.swift HangTen/Views/RootView.swift HangTenTests/AppStoreTests.swift HangTenTests/MotherboardBluetoothServiceTests.swift HangTenTests/TelemetryTests.swift
 git commit -m "feat: instrument anonymous app lifecycle events"
 ~~~
 
