@@ -585,12 +585,14 @@ enum PlanLibraryValidator {
         validateLibraryMetadata(library.metadata, issues: &issues)
 
         var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var planMappingPathByBoardID: [String: String] = [:]
         for (index, mapping) in library.boardMappings.enumerated() {
             let path = "boardMappings[\(index)]"
             if planMappingByBoardID[mapping.boardID] != nil {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
             }
             planMappingByBoardID[mapping.boardID] = mapping
+            planMappingPathByBoardID[mapping.boardID] = path
 
             if !boardIDs.contains(mapping.boardID) {
                 issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
@@ -628,6 +630,11 @@ enum PlanLibraryValidator {
                 }
             }
         )
+        var mappingPathByBoardID = Dictionary(
+            uniqueKeysWithValues: boardByID.keys.map {
+                ($0, "boards[\($0)].semanticHolds")
+            }
+        )
         for (boardID, mapping) in planMappingByBoardID {
             var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
             semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
@@ -635,6 +642,24 @@ enum PlanLibraryValidator {
                 boardID: boardID,
                 semanticHolds: semanticHolds
             )
+            mappingPathByBoardID[boardID] = planMappingPathByBoardID[boardID]
+        }
+
+        for (boardID, mapping) in mappingByBoardID {
+            guard let board = boardByID[boardID]?.first else { continue }
+            let mappingPath = mappingPathByBoardID[boardID] ?? "boards[\(boardID)].semanticHolds"
+            for (semanticID, target) in mapping.semanticHolds {
+                guard let kind = target.kind,
+                      !board.holds.contains(where: { $0.kind == kind }) else {
+                    continue
+                }
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(mappingPath).\(semanticID)",
+                        message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(boardID)\"."
+                    )
+                )
+            }
         }
 
         var blockByID: [String: WorkoutBlockDefinition] = [:]

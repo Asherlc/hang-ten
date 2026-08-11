@@ -986,6 +986,64 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
+    func testEffectiveSemanticMappingsRejectKindsMissingFromSelectedBoard() {
+        let edgeOnlyBoard = TrainingBoard(
+            id: "fixture.edge-only",
+            manufacturer: "Fixture Maker",
+            name: "Edge Only",
+            subtitle: "A test board with only an edge.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.edge",
+                    name: "Fixture edge",
+                    shortLabel: "E",
+                    detail: "A fixture edge.",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+                )
+            ],
+            productURL: URL(string: "https://example.com/edge-only")!,
+            photoAssetName: nil
+        )
+        let step = makeStep(
+            id: "semantic-target",
+            duration: 10,
+            targets: [.semantic("fixture-target")],
+            segments: []
+        )
+
+        let validLibrary = makeLibrary(
+            steps: [step],
+            boardID: edgeOnlyBoard.id,
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: edgeOnlyBoard.id,
+                    semanticHolds: ["fixture-target": SemanticHoldMappingDefinition(kind: .edge)]
+                )
+            ]
+        )
+        XCTAssertEqual(validLibrary.validationIssues(availableBoards: [edgeOnlyBoard]), [])
+
+        let pinchLibrary = makeLibrary(
+            steps: [step],
+            boardID: edgeOnlyBoard.id,
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: edgeOnlyBoard.id,
+                    semanticHolds: ["fixture-target": SemanticHoldMappingDefinition(kind: .pinch)]
+                )
+            ]
+        )
+        let issues = pinchLibrary.validationIssues(availableBoards: [edgeOnlyBoard])
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "boardMappings[0].semanticHolds.fixture-target" &&
+                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+    }
+
     func testBoardLoadedSemanticMappingsResolveWithPlanMappingsTakingPrecedence() throws {
         let boardStore = try BoardLibraryStore(data: Data(
             #"""
@@ -995,7 +1053,8 @@ final class PlanStorageTests: XCTestCase {
                 "id": "fixture.board-library",
                 "version": "1.0.0",
                 "title": "Fixture board library",
-                "generatedAt": "2026-08-10"
+                "generatedAt": "2026-08-10",
+                "notes": []
               },
               "boards": [{
                 "id": "fixture.board",

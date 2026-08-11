@@ -138,6 +138,7 @@ Tests will establish a red-green migration boundary before production changes:
 - decode the checked-in board document and assert the Compact II board and hold inventory;
 - round-trip board definitions through `JSONEncoder` and `JSONDecoder`;
 - reject duplicate board IDs, duplicate hold IDs, invalid frames, invalid aspect ratios, invalid finger capacities, and unknown semantic hold IDs;
+- include validation fixtures for invalid `cueStyle`, unknown board feature values, and plan feature references unavailable on the selected board, with actionable paths `boards[0].holds[0].cueStyle`, `boards[0].holds[0].features[0]`, and `blocks[0].steps[0].targets[0]`;
 - resolve the existing plan library using JSON-loaded boards;
 - compare resolved plan IDs, step IDs, step numbers, timing, targets, and board hold IDs with the pre-migration behavior;
 - verify that the existing bespoke `BoardDesign` still covers every loaded Compact II hold ID;
