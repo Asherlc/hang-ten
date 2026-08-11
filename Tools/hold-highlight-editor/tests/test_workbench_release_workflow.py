@@ -84,6 +84,9 @@ def test_release_readmes_document_the_native_checkout_workflow():
             "http://localhost",
             "default browser",
             "from inside a Hang Ten checkout",
+            "run the app from a Hang Ten checkout",
+            "launch this from your checkout",
+            "--repository-root",
             "xattr",
             "quarantine",
         ):
