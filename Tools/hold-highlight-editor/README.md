@@ -5,14 +5,14 @@ A dependency-free local browser editor for hangboard hold-highlight artifacts.
 ## Run the Apple Silicon macOS release
 
 From a Hang Ten checkout, download both assets from a release directory, verify
-the archive, extract it, and launch the executable:
+the ZIP, extract it, and launch the app with Finder or `open`:
 
 ```bash
-curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.tar.gz
+curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.zip
 curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.sha256
 shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
-tar -xzf hangboard-workbench-macos-arm64.tar.gz
-./hangboard-workbench
+unzip hangboard-workbench-macos-arm64.zip
+open hangboard-workbench.app
 ```
 
 The executable opens the workbench in the default browser automatically. It
@@ -23,8 +23,8 @@ not disable repository discovery or replace `--repository-root`. Use
 `--version` to print the embedded source commit. Repository-free startup is
 reserved for explicit legacy `--run-dir` or `--catalog` inputs.
 
-The release is unsigned. If Gatekeeper blocks its first launch, use Finder's
-**Open** context-menu action to approve that executable.
+The release is Developer ID signed and notarized, so it is accepted by
+Gatekeeper without a Finder override.
 
 For source development, use the Python command below instead.
 

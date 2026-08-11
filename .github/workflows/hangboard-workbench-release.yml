@@ -225,6 +225,92 @@ jobs:
           cd release
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
+      # Apple-Actions/import-codesign-certs v7.0.0
+      - name: Import Developer ID Application certificate
+        uses: Apple-Actions/import-codesign-certs@5142e029c445c10ffc7149d172e540235a065466
+        with:
+          keychain: signing_temp
+          p12-file-base64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_FILE_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+
+      - name: Sign, notarize, and validate workbench app
+        env:
+          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/release"
+          executable="$release_dir/hangboard-workbench"
+          app_bundle="$release_dir/hangboard-workbench.app"
+          archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
+          trap 'rm -f "$api_key_path"' EXIT
+
+          cd "$release_dir"
+          tar -xzf hangboard-workbench-macos-arm64.tar.gz
+          test -x "$executable"
+
+          signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
+            | awk -F '\"' '/Developer ID Application:/{print $2}')"
+          identity_count="$(printf '%s\n' "$signing_identities" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [[ "$identity_count" -ne 1 ]]; then
+            echo "Expected exactly one Developer ID Application identity, found $identity_count." >&2
+            exit 1
+          fi
+          signing_identity="$signing_identities"
+          if [[ "$signing_identity" != *"($APPLE_TEAM_ID)" ]]; then
+            echo "Developer ID Application identity does not match APPLE_TEAM_ID." >&2
+            exit 1
+          fi
+
+          mkdir -p "$app_bundle/Contents/MacOS"
+          install -m 755 "$executable" "$app_bundle/Contents/MacOS/hangboard-workbench"
+          cat > "$app_bundle/Contents/Info.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleIdentifier</key>
+            <string>com.hangten.hangboard-workbench</string>
+            <key>CFBundleName</key>
+            <string>Hangboard Workbench</string>
+            <key>CFBundleExecutable</key>
+            <string>hangboard-workbench</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>$GITHUB_RUN_NUMBER</string>
+            <key>CFBundleVersion</key>
+            <string>$GITHUB_RUN_NUMBER</string>
+          </dict>
+          </plist>
+          EOF
+          plutil -lint "$app_bundle/Contents/Info.plist"
+
+          codesign --force --sign "$signing_identity" --options runtime --timestamp \
+            "$app_bundle/Contents/MacOS/hangboard-workbench"
+          codesign --force --sign "$signing_identity" --options runtime --timestamp \
+            "$app_bundle"
+          codesign --verify --deep --strict --verbose=2 "$app_bundle"
+
+          ditto --keepParent "$app_bundle" "$archive"
+          printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
+          xcrun notarytool submit "$archive" \
+            --key "$api_key_path" \
+            --key-id "$APPSTORE_API_KEY_ID" \
+            --issuer "$APPSTORE_ISSUER_ID" \
+            --wait
+          xcrun stapler staple "$app_bundle"
+          xcrun stapler validate "$app_bundle"
+          spctl --assess --type execute --verbose=4 "$app_bundle"
+
+          rm -f "$archive"
+          ditto --keepParent "$app_bundle" "$archive"
+          shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256
+          shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
       - name: Publish immutable GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -281,7 +367,7 @@ jobs:
           asset_names = sorted(asset["name"] for asset in release["assets"])
           required_asset_names = sorted([
               "hangboard-workbench-macos-arm64.sha256",
-              "hangboard-workbench-macos-arm64.tar.gz",
+              "hangboard-workbench-macos-arm64.zip",
           ])
           if asset_names != required_asset_names:
               raise SystemExit(
@@ -301,10 +387,10 @@ jobs:
           latest_flag="$(select_latest_flag "$main_sha" "$GITHUB_SHA")"
           cd "$release_dir"
           gh release create "$tag" \
-            hangboard-workbench-macos-arm64.tar.gz \
+            hangboard-workbench-macos-arm64.zip \
             hangboard-workbench-macos-arm64.sha256 \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "Hangboard Workbench ${short_sha}" \
-            --notes "Dependency-free Apple Silicon workbench built from ${GITHUB_SHA}." \
+            --notes "Developer ID signed and notarized Apple Silicon workbench built from ${GITHUB_SHA}." \
             "$latest_flag"
