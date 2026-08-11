@@ -12,6 +12,7 @@ import pytest
 
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
+PACKAGING_BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
 )
@@ -100,6 +101,84 @@ def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
     assert 'test "$architecture" = "arm64"' in identity_script
 
 
+def test_build_tests_and_assembles_the_unsigned_native_app():
+    build = _workflow()["jobs"]["build"]
+
+    swift_test = _step(build, "Run native shell tests")["run"]
+    assert "swift test --package-path Tools/hold-highlight-editor/macos" in swift_test
+
+    app_build = _step(build, "Build unsigned native app")["run"]
+    for required_fragment in (
+        "Tools/hold-highlight-editor/packaging/build.py",
+        "swift build -c release --arch arm64",
+        "--package-path Tools/hold-highlight-editor/macos",
+        "Tools/hold-highlight-editor/packaging/macos_app.py",
+        '--shell "$shell_executable"',
+        '--runtime-dir "$runtime_dir"',
+        '--output "$app_bundle"',
+    ):
+        assert required_fragment in app_build
+    assert "--codesign-identity" not in app_build
+
+    packaging_build = PACKAGING_BUILD_PATH.read_text(encoding="utf-8")
+    assert '"--onedir"' in packaging_build
+    assert '"--onefile"' not in packaging_build
+
+
+def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
+    build = _workflow()["jobs"]["build"]
+    script = _step(build, "Smoke test unsigned app and clean up")["run"]
+
+    for required_fragment in (
+        'Contents/MacOS/HangboardWorkbench',
+        '"$app_executable" --headless',
+        '--repository-root "$GITHUB_WORKSPACE"',
+        "--port 41739",
+    ):
+        assert required_fragment in script
+    assert "http://127.0.0.1:${port}/api/health" in script
+    assert "http://127.0.0.1:${port}/" in script
+    assert "http://127.0.0.1:${port}/api/library" in script
+    assert 'payload == {"ok": True}' in script
+    assert 'app_child_pid="$(pgrep -P "$app_pid" || true)"' in script
+    assert 'kill -TERM "$app_pid"' in script
+    assert 'wait "$app_pid"' in script
+    assert 'kill -0 "$app_child_pid"' in script
+
+    manifest_program = re.search(
+        r"python - <<'PY'\n(?P<program>.*?)\nPY",
+        script,
+        re.DOTALL,
+    )
+    assert manifest_program is not None
+    result = subprocess.run(
+        [sys.executable, "-c", manifest_program.group("program")],
+        cwd=REPOSITORY_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == [f"/{asset}" for asset in STATIC_ASSETS]
+
+
+def test_pull_request_build_has_no_apple_credentials_or_notarization():
+    build_text = json.dumps(_workflow()["jobs"]["build"], sort_keys=True)
+
+    for forbidden_fragment in (
+        "${{ secrets.",
+        "APPSTORE_ISSUER_ID",
+        "APPSTORE_API_KEY_ID",
+        "APPSTORE_API_PRIVATE_KEY",
+        "APPLE_TEAM_ID",
+        "DEVELOPER_ID_CERTIFICATE_FILE_BASE64",
+        "DEVELOPER_ID_CERTIFICATE_PASSWORD",
+        "--codesign-identity",
+        "notarytool",
+    ):
+        assert forbidden_fragment not in build_text
+
+
 def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
     workflow = _workflow()
     build = workflow["jobs"]["build"]
@@ -127,8 +206,9 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "signing_temp.keychain",
         "hangboard-workbench",
         "Tools/hold-highlight-editor/packaging/macos_app.py",
-        'python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py"',
-        '--executable "$executable"',
+        '"$python_bin" "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py"',
+        '--shell "$built_shell"',
+        '--runtime-dir "$runtime_dir"',
         '--output "$app_bundle"',
         '--version "$GITHUB_RUN_NUMBER"',
         "GITHUB_RUN_NUMBER",
@@ -183,6 +263,53 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         assert credential not in json.dumps(build, sort_keys=True)
 
     assert "hangboard-workbench-macos-arm64.tar.gz" in workflow_text
+
+
+def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
+    release = _workflow()["jobs"]["release"]
+
+    setup_python = _step(release, "Set up Python")
+    assert setup_python["uses"].startswith("actions/setup-python@")
+    dependencies = _step(release, "Install workbench release dependencies")["run"]
+    assert "pyinstaller==6.22.0" in dependencies
+
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")[
+        "run"
+    ]
+    for required_fragment in (
+        'grep -F "($APPLE_TEAM_ID)"',
+        'if [[ "$identity_count" -ne 1 ]]',
+        "Tools/hold-highlight-editor/packaging/build.py",
+        '--codesign-identity "$signing_identity"',
+        "swift build -c release --arch arm64",
+        "Tools/hold-highlight-editor/packaging/macos_app.py",
+        'find "$runtime_root" -type f -print0',
+        "file -b \"$candidate\"",
+        "Mach-O",
+    ):
+        assert required_fragment in signing_script
+
+    runtime_sign = (
+        'codesign --force --sign "$signing_identity" --options runtime --timestamp '
+        '"$candidate"'
+    )
+    shell_sign = (
+        'codesign --force --sign "$signing_identity" --options runtime --timestamp '
+        '"$shell_executable"'
+    )
+    app_sign = (
+        'codesign --force --sign "$signing_identity" --options runtime --timestamp '
+        '"$app_bundle"'
+    )
+    assert signing_script.index(runtime_sign) < signing_script.index(
+        shell_sign
+    ) < signing_script.index(app_sign)
+
+    assert signing_script.index("xcrun stapler validate") < signing_script.index(
+        '"$app_executable" --headless'
+    )
+    assert "spctl --assess --type execute --verbose=4" in signing_script
+    assert "xcrun notarytool submit" in signing_script
 
 
 def test_release_signing_protects_api_key_and_allows_notarization_to_finish():
@@ -242,37 +369,6 @@ def test_release_publication_runs_for_main_pushes_and_manual_dispatches():
         "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && "
         "github.ref == 'refs/heads/main'"
     )
-
-
-def test_frozen_smoke_checks_all_assets_both_signals_and_owned_cleanup():
-    build = _workflow()["jobs"]["build"]
-    script = _step(build, "Smoke test executable and clean up")["run"]
-
-    assert "smoke_signal INT 41739" in script
-    assert "smoke_signal TERM 41740" in script
-    assert 'kill -"$shutdown_signal" "$workbench_pid"' in script
-    assert "trap cleanup EXIT" in script
-    assert 'wait "$workbench_pid"' in script
-    assert 'kill -0 "$workbench_child_pid"' in script
-    assert "Traceback|Exception ignored in atexit callback|could not start" in script
-    assert "http://127.0.0.1:${port}/" in script
-    assert "http://127.0.0.1:${port}/api/library" in script
-
-    manifest_program = re.search(
-        r"python - <<'PY'\n(?P<program>.*?)\nPY",
-        script,
-        re.DOTALL,
-    )
-    assert manifest_program is not None
-    result = subprocess.run(
-        [sys.executable, "-c", manifest_program.group("program")],
-        cwd=REPOSITORY_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.splitlines() == [f"/{asset}" for asset in STATIC_ASSETS]
 
 
 def _latest_function() -> str:
