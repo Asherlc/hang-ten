@@ -986,6 +986,78 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
+    func testBoardLoadedSemanticMappingsResolveWithPlanMappingsTakingPrecedence() throws {
+        let boardStore = try BoardLibraryStore(
+            definition: BoardLibraryDefinition(
+                schemaVersion: 1,
+                metadata: BoardLibraryMetadata(
+                    id: "fixture.board-library",
+                    version: "1.0.0",
+                    title: "Fixture board library",
+                    generatedAt: "2026-08-10"
+                ),
+                boards: [
+                    BoardDefinition(
+                        id: "fixture.board",
+                        manufacturer: "Fixture Maker",
+                        name: "Fixture Board",
+                        subtitle: "A test board.",
+                        dimensions: "10 × 5",
+                        aspectRatio: 2,
+                        holds: [
+                            BoardHoldDefinition(
+                                id: "fixture.edge",
+                                name: "Fixture edge",
+                                shortLabel: "F",
+                                detail: "A fixture edge.",
+                                kind: .edge,
+                                frame: .init(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
+                            )
+                        ],
+                        semanticHolds: [
+                            "fixture-target": SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"])
+                        ],
+                        productURL: URL(string: "https://example.com/fixture-board")!
+                    )
+                ]
+            )
+        )
+        let step = makeStep(
+            id: "semantic-target",
+            duration: 10,
+            targets: [.semantic("fixture-target")],
+            segments: []
+        )
+        let boardOnlyStore = try PlanLibraryStore(
+            definition: makeLibrary(steps: [step], boardID: "fixture.board"),
+            availableBoards: boardStore.boards
+        )
+        let planMappingStore = try PlanLibraryStore(
+            definition: makeLibrary(
+                steps: [step],
+                boardID: "fixture.board",
+                boardMappings: [
+                    BoardMappingDefinition(
+                        boardID: "fixture.board",
+                        semanticHolds: [
+                            "fixture-target": SemanticHoldMappingDefinition(kind: .jug)
+                        ]
+                    )
+                ]
+            ),
+            availableBoards: boardStore.boards
+        )
+
+        XCTAssertEqual(
+            try XCTUnwrap(boardOnlyStore.plan(id: "test.plan")).steps.first?.targets,
+            [.ids("fixture.edge")]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(planMappingStore.plan(id: "test.plan")).steps.first?.targets,
+            [.kind(.jug)]
+        )
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30
@@ -1021,7 +1093,11 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    private func makeLibrary(steps: [WorkoutStepDefinition]) -> PlanLibraryDefinition {
+    private func makeLibrary(
+        steps: [WorkoutStepDefinition],
+        boardID: String? = nil,
+        boardMappings: [BoardMappingDefinition] = []
+    ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             schemaVersion: 3,
             metadata: PlanLibraryMetadata(
@@ -1030,7 +1106,7 @@ final class PlanStorageTests: XCTestCase {
                 title: "Test library",
                 generatedAt: "2026-08-02"
             ),
-            boardMappings: [],
+            boardMappings: boardMappings,
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: steps)],
             plans: [
                 PlanDefinition(
@@ -1043,7 +1119,7 @@ final class PlanStorageTests: XCTestCase {
                         sourceURL: URL(string: "https://example.com/test")!,
                         provenance: .adapted
                     ),
-                    boardID: nil,
+                    boardID: boardID,
                     blocks: [WorkoutBlockReference(blockID: "test.block")]
                 )
             ]

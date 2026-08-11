@@ -584,13 +584,13 @@ enum PlanLibraryValidator {
 
         validateLibraryMetadata(library.metadata, issues: &issues)
 
-        var mappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
         for (index, mapping) in library.boardMappings.enumerated() {
             let path = "boardMappings[\(index)]"
-            if mappingByBoardID[mapping.boardID] != nil {
+            if planMappingByBoardID[mapping.boardID] != nil {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
             }
-            mappingByBoardID[mapping.boardID] = mapping
+            planMappingByBoardID[mapping.boardID] = mapping
 
             if !boardIDs.contains(mapping.boardID) {
                 issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
@@ -616,6 +616,20 @@ enum PlanLibraryValidator {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
                 }
             }
+        }
+
+        var mappingByBoardID = Dictionary(
+            uniqueKeysWithValues: boardByID.compactMap { boardID, boards in
+                boards.first.map {
+                    (
+                        boardID,
+                        BoardMappingDefinition(boardID: boardID, semanticHolds: $0.semanticHolds)
+                    )
+                }
+            }
+        )
+        for (boardID, mapping) in planMappingByBoardID {
+            mappingByBoardID[boardID] = mapping
         }
 
         var blockByID: [String: WorkoutBlockDefinition] = [:]
@@ -1066,6 +1080,7 @@ struct PlanDefinitionResolver {
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
         let mapping = library.boardMappings.first { $0.boardID == board.id }
+            ?? BoardMappingDefinition(boardID: board.id, semanticHolds: board.semanticHolds)
 
         for reference in definition.blocks {
             guard let block = blocks[reference.blockID] else {

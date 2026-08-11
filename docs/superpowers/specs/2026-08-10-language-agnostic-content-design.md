@@ -31,7 +31,7 @@ Board metadata is different: `BoardCatalog` constructs `TrainingBoard` and `Boar
 The content layer will be split into two independently versioned documents:
 
 ```text
-Boards.json
+HangTen/Resources/BoardLibrary.json
   board metadata, holds, normalized fallback frames, semantic features
 
 PlanLibrary.json
@@ -109,7 +109,7 @@ The migration will not change the runtime `WorkoutStep`, `WorkoutSegment`, or ta
 
 Introduce a `BoardLibraryStore` parallel to `PlanLibraryStore`:
 
-1. Decode `Boards.json` into Codable definitions.
+1. Decode `HangTen/Resources/BoardLibrary.json` into Codable definitions.
 2. Validate schema version, required metadata, unique board IDs, unique hold IDs per board, finite normalized frames, valid aspect ratios, valid finger capacities, and valid references in semantic mappings.
 3. Resolve definitions into `[TrainingBoard]`.
 4. Make `PlanLibraryStore` and `CustomRoutineStore` receive the available boards explicitly.

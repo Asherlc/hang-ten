@@ -304,6 +304,9 @@ struct TrainingBoard: Identifiable, Hashable {
     let dimensions: String
     let aspectRatio: CGFloat
     let holds: [BoardHold]
+    /// Board-owned semantic targets loaded alongside the physical hold data.
+    /// The empty default preserves hand-built board fixtures and catalog entries.
+    let semanticHolds: [String: SemanticHoldMappingDefinition] = [:]
     let productURL: URL
     /// Optional board-specific reference art. Boards without a photo use the
     /// vector fallback, so adding another board does not require an image.

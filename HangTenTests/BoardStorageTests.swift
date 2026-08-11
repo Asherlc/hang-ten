@@ -32,6 +32,18 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertEqual(roundTripped.boards, store.boards)
     }
 
+    func testBoardLibraryStoreDistinguishesUnreadableURLs() {
+        let unreadableURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("json")
+
+        XCTAssertThrowsError(try BoardLibraryStore(contentsOf: unreadableURL)) { error in
+            guard case BoardLibraryStoreError.reading = error else {
+                return XCTFail("Expected a reading error, got: \(error)")
+            }
+        }
+    }
+
     func testBundledCompactIIFixtureDecodesEveryBoardHold() throws {
         let resourceURL = try XCTUnwrap(
             Bundle(for: Self.self).url(forResource: "BoardLibrary", withExtension: "json")

@@ -153,6 +153,7 @@ struct BoardDefinition: Codable, Hashable {
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
             holds: holds.map { $0.trainingBoardHold() },
+            semanticHolds: semanticHolds,
             productURL: productURL,
             photoAssetName: photoAssetName
         )
@@ -185,11 +186,14 @@ struct BoardLibraryValidationIssue: Codable, Hashable, CustomStringConvertible {
 }
 
 enum BoardLibraryStoreError: LocalizedError {
+    case reading(Error)
     case decoding(Error)
     case validationFailed([BoardLibraryValidationIssue])
 
     var errorDescription: String? {
         switch self {
+        case .reading(let error):
+            return "The board library could not be read: \(error.localizedDescription)"
         case .decoding(let error):
             return "The board library could not be decoded: \(error.localizedDescription)"
         case .validationFailed(let issues):
@@ -409,20 +413,18 @@ struct BoardLibraryStore {
     }
 
     init(contentsOf url: URL, decoder: JSONDecoder = JSONDecoder()) throws {
+        let data: Data
         do {
-            try self.init(data: Data(contentsOf: url), decoder: decoder)
-        } catch let error as BoardLibraryStoreError {
-            throw error
+            data = try Data(contentsOf: url)
         } catch {
-            throw BoardLibraryStoreError.decoding(error)
+            throw BoardLibraryStoreError.reading(error)
         }
+        try self.init(data: data, decoder: decoder)
     }
 
     func encodedData(prettyPrinted: Bool = false) throws -> Data {
         let encoder = JSONEncoder()
-        if prettyPrinted {
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        }
+        encoder.outputFormatting = prettyPrinted ? [.prettyPrinted, .sortedKeys] : [.sortedKeys]
         return try encoder.encode(definition)
     }
 }
