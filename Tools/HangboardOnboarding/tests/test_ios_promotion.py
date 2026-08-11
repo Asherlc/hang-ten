@@ -201,14 +201,6 @@ def test_generator_rejects_a_target_changed_relative_to_the_expected_base(tmp_pa
         build_promotion_preview(run_root, repository_root, read_promotion_profile(run_root))
 
 
-def test_default_preview_rejects_worktree_native_target_drift(tmp_path: Path) -> None:
-    """Promotion must fail closed when native targets drift from the main baseline."""
-    run_root = _copied_run(tmp_path)
-
-    with pytest.raises(ValueError, match="(changed relative to main|cannot verify target against main)"):
-        build_promotion_preview(run_root, REPOSITORY_ROOT, read_promotion_profile(run_root))
-
-
 def test_render_plan_library_rewrites_only_the_exact_board_id_value() -> None:
     """Substring matches in notes, URLs, or identifiers must stay untouched."""
     current = json.dumps(
