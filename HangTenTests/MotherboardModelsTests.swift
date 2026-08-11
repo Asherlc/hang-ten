@@ -191,6 +191,67 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(second.thresholdKGF, 4.25, accuracy: 0.0001)
     }
 
+    func testForceSensorProfileDefaultsToAutomaticAndRoundTripsThroughUserDefaults() {
+        let suite = "MotherboardModelsForceSensorProfileTests"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+
+        let first = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(first.forceSensorProfile, .automatic)
+
+        first.forceSensorProfile = .genericProgressor
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).forceSensorProfile, .genericProgressor)
+
+        defaults.set("unsupported-profile", forKey: "motherboard.forceSensorProfile")
+        XCTAssertEqual(MotherboardSettingsStore(defaults: defaults).forceSensorProfile, .automatic)
+    }
+
+    func testLegacySessionRecordDecodesMissingForceSensorProfileAsMotherboard() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "legacy-plan",
+            planTitle: "Legacy plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 60),
+            motherboardIdentifier: "Motherboard-1",
+            batteryValue: 80,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "forceSensorProfile")
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.forceSensorProfile, .motherboard)
+    }
+
+    func testSessionRecordRoundTripsForceSensorProfileThroughCodable() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 60),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [],
+            forceSensorProfile: .genericWHC06
+        )
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONEncoder().encode(record)
+        )
+
+        XCTAssertEqual(decoded.forceSensorProfile, .genericWHC06)
+    }
+
     func testThresholdNormalizesPersistedAndAssignedValuesToUIRange() {
         let suite = "MotherboardModelsThresholdTests"
         let defaults = UserDefaults(suiteName: suite)!

@@ -27,6 +27,8 @@
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
+		AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000074 /* ForceSensorModelsTests.swift */; };
+		AA0000000000000000000075 /* ForceSensorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000075 /* ForceSensorModels.swift */; };
 		AA0000000000000000000019 /* MotherboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* MotherboardModels.swift */; };
 		AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* MotherboardProtocolTests.swift */; };
 		AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* MotherboardProtocol.swift */; };
@@ -102,6 +104,8 @@
 		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000022 /* MotherboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000023 /* MotherboardProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocolTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000024 /* MotherboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocol.swift; sourceTree = "<group>"; };
@@ -212,6 +216,7 @@
 				BB0000000000000000000069 /* GeneratedBoardCatalog.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
+				BB0000000000000000000075 /* ForceSensorModels.swift */,
 				BB0000000000000000000022 /* MotherboardModels.swift */,
 				BB0000000000000000000024 /* MotherboardProtocol.swift */,
 				BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */,
@@ -268,6 +273,7 @@
 			children = (
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
+				BB0000000000000000000074 /* ForceSensorModelsTests.swift */,
 				BB0000000000000000000023 /* MotherboardProtocolTests.swift */,
 				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
 				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
@@ -431,6 +437,7 @@
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
+				AA0000000000000000000075 /* ForceSensorModels.swift in Sources */,
 				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
 				AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */,
@@ -463,6 +470,7 @@
 			files = (
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
+				AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */,
 				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
 				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
 				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
