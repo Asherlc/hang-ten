@@ -1353,6 +1353,7 @@ enum LegacyPlanSeedCatalog {
     }
 
     static let sharedWarmUpDuration: TimeInterval = 60
+    static let sharedCoolDownDuration: TimeInterval = 60
 
     private static func hangStep(
         id: String,
