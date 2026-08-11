@@ -108,6 +108,35 @@ def app_hold(hold: Any, existing_hold: Mapping[str, Any] | None) -> dict[str, An
     return payload
 
 
+def validate_semantic_holds(
+    board_id: str,
+    semantic_holds: Any,
+    generated_hold_ids: set[str],
+) -> None:
+    if not isinstance(semantic_holds, Mapping):
+        raise ValueError(f"board library board {board_id!r} semanticHolds must be an object")
+    for semantic_name, semantic_hold in semantic_holds.items():
+        if not isinstance(semantic_hold, Mapping):
+            raise ValueError(
+                f"board library board {board_id!r} semanticHolds.{semantic_name}."
+                "holdIDs must be a list of strings"
+            )
+        hold_ids = semantic_hold.get("holdIDs")
+        if not isinstance(hold_ids, list) or any(
+            not isinstance(hold_id, str) for hold_id in hold_ids
+        ):
+            raise ValueError(
+                f"board library board {board_id!r} semanticHolds.{semantic_name}."
+                "holdIDs must be a list of strings"
+            )
+        missing_hold_ids = sorted(set(hold_ids) - generated_hold_ids)
+        if missing_hold_ids:
+            raise ValueError(
+                f"board library board {board_id!r} semanticHolds.{semantic_name}."
+                f"holdIDs references missing generated holds: {missing_hold_ids}"
+            )
+
+
 def app_board(board: Any, existing_board: Mapping[str, Any]) -> dict[str, Any]:
     existing_holds = existing_holds_by_id(existing_board)
     canonical_fields = {
@@ -128,6 +157,12 @@ def app_board(board: Any, existing_board: Mapping[str, Any]) -> dict[str, Any]:
         app_hold(hold, existing_holds.get(hold.id))
         for hold in board.holds
     ]
+    if "semanticHolds" in payload:
+        validate_semantic_holds(
+            board.id,
+            payload["semanticHolds"],
+            {hold["id"] for hold in payload["holds"]},
+        )
     return payload
 
 

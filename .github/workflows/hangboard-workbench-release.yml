@@ -206,7 +206,7 @@ jobs:
     needs: build
     name: Publish immutable workbench release
     runs-on: macos-15
-    timeout-minutes: 15
+    timeout-minutes: 30
     permissions:
       # Required to create the immutable GitHub release and upload its assets.
       contents: write
@@ -282,7 +282,9 @@ jobs:
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
           ditto -c -k --keepParent "$app_bundle" "$archive"
+          umask 077
           printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
+          chmod 600 "$api_key_path"
           xcrun notarytool submit "$archive" \
             --key "$api_key_path" \
             --key-id "$APPSTORE_API_KEY_ID" \
@@ -360,6 +362,28 @@ jobs:
                   f"Existing release assets must exactly match required assets: {asset_names}"
               )
           PY
+            existing_release_dir="$RUNNER_TEMP/hangboard-workbench-existing-release"
+            rm -rf "$existing_release_dir"
+            mkdir -p "$existing_release_dir"
+            gh release download "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --pattern "hangboard-workbench-macos-arm64.zip" \
+              --pattern "hangboard-workbench-macos-arm64.sha256" \
+              --dir "$existing_release_dir"
+            for asset_name in \
+              hangboard-workbench-macos-arm64.zip \
+              hangboard-workbench-macos-arm64.sha256; do
+              existing_asset="$existing_release_dir/$asset_name"
+              current_asset="$release_dir/$asset_name"
+              if [[ ! -f "$existing_asset" ]]; then
+                echo "Existing release asset is missing after download: $asset_name" >&2
+                exit 1
+              fi
+              if ! cmp -s "$existing_asset" "$current_asset"; then
+                echo "Existing release asset differs from the current build: $asset_name" >&2
+                exit 1
+              fi
+            done
             exit 0
           elif ! grep -q 'HTTP 404' "$release_error"; then
             cat "$release_error" >&2

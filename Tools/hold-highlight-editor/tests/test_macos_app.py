@@ -123,3 +123,34 @@ def test_valid_bundle_replaces_existing_output_after_staging(tmp_path):
 
     assert not stale_file.exists()
     assert (output / "Contents" / "MacOS" / "hangboard-workbench").is_file()
+
+
+def test_failed_bundle_install_restores_existing_output(tmp_path, monkeypatch):
+    app = _load_app_module()
+    executable = _arm64_executable(tmp_path / "hangboard-workbench")
+    output = tmp_path / "hangboard-workbench.app"
+    marker = output / "existing-marker"
+    marker.parent.mkdir()
+    marker.write_text("keep", encoding="utf-8")
+
+    original_replace = app.os.replace
+    installation_failed = False
+
+    def fail_install_once(source, destination):
+        nonlocal installation_failed
+        if (
+            not installation_failed
+            and destination == output
+            and ".backup-" not in Path(source).parent.name
+        ):
+            installation_failed = True
+            raise OSError("simulated installation failure")
+        return original_replace(source, destination)
+
+    monkeypatch.setattr(app.os, "replace", fail_install_once)
+
+    with pytest.raises(OSError, match="simulated installation failure"):
+        app._build_bundle(executable, output, "2")
+
+    assert marker.read_text(encoding="utf-8") == "keep"
+    assert not list(tmp_path.glob(f".{output.name}.backup-*"))

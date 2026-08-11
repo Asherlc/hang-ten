@@ -176,6 +176,34 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
     assert "hangboard-workbench-macos-arm64.tar.gz" in workflow_text
 
 
+def test_release_signing_protects_api_key_and_allows_notarization_to_finish():
+    release = _workflow()["jobs"]["release"]
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+
+    assert release["timeout-minutes"] == 30
+    write_key = "printf '%s' \"$APPSTORE_API_PRIVATE_KEY\" > \"$api_key_path\""
+    assert "umask 077" in signing_script
+    assert "chmod 600 \"$api_key_path\"" in signing_script
+    assert signing_script.index("umask 077") < signing_script.index(write_key)
+    assert signing_script.index(write_key) < signing_script.index(
+        'chmod 600 "$api_key_path"'
+    )
+
+
+def test_existing_release_validation_compares_downloaded_assets_to_current_build():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    assert "asset_names = sorted(asset[\"name\"] for asset in release[\"assets\"])" in script
+    assert "required_asset_names = sorted([" in script
+    assert 'existing_release_dir="$RUNNER_TEMP/hangboard-workbench-existing-release"' in script
+    assert 'gh release download "$tag"' in script
+    assert 'current_asset="$release_dir/$asset_name"' in script
+    assert 'cmp -s' in script
+    assert script.index("asset_names = sorted") < script.index("gh release download")
+    assert script.index("gh release download") < script.index("exit 0")
+
+
 def test_final_release_checksum_uses_the_downloadable_zip_basename():
     release = _workflow()["jobs"]["release"]
     signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]

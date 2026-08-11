@@ -91,6 +91,9 @@ def _build_bundle(executable: Path, output: Path, version: str) -> Path:
 
     staging_root = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
     staged_bundle = staging_root / output.name
+    backup_root: Path | None = None
+    backup_path: Path | None = None
+    backup_can_be_removed = True
     try:
         macos_directory = staged_bundle / "Contents" / "MacOS"
         macos_directory.mkdir(parents=True)
@@ -99,10 +102,24 @@ def _build_bundle(executable: Path, output: Path, version: str) -> Path:
             plistlib.dump(_metadata(version), destination, fmt=plistlib.FMT_XML, sort_keys=False)
 
         if output.exists():
-            shutil.rmtree(output)
-        os.replace(staged_bundle, output)
+            backup_root = Path(
+                tempfile.mkdtemp(prefix=f".{output.name}.backup-", dir=output.parent)
+            )
+            backup_path = backup_root / output.name
+            os.replace(output, backup_path)
+            backup_can_be_removed = False
+        try:
+            os.replace(staged_bundle, output)
+        except OSError:
+            if backup_path is not None:
+                os.replace(backup_path, output)
+            backup_can_be_removed = True
+            raise
+        backup_can_be_removed = True
     finally:
         shutil.rmtree(staging_root, ignore_errors=True)
+        if backup_root is not None and backup_can_be_removed:
+            shutil.rmtree(backup_root, ignore_errors=True)
     return output
 
 

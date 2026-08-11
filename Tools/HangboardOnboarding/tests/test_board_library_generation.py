@@ -70,3 +70,21 @@ def test_export_board_library_check_detects_resource_drift(tmp_path: Path) -> No
 
     assert checked.returncode == 1
     assert "drift detected" in checked.stderr
+
+
+def test_export_rejects_semantic_hold_reference_missing_from_generated_holds(
+    tmp_path: Path,
+) -> None:
+    output_path = tmp_path / "BoardLibrary.json"
+    shutil.copy2(GENERATED_LIBRARY_PATH, output_path)
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    payload["boards"][0]["semanticHolds"]["outer-jugs"]["holdIDs"][0] = (
+        "missing-hold"
+    )
+    output_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = run_export(output_path)
+
+    assert result.returncode == 1
+    assert "semanticHolds.outer-jugs.holdIDs" in result.stderr
+    assert "missing-hold" in result.stderr
