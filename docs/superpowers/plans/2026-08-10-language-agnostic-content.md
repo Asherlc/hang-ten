@@ -26,6 +26,8 @@
 - Create: `HangTen/Models/BoardStorage.swift`
 - Create: `HangTen/Resources/BoardLibrary.json`
 - Create: `HangTenTests/BoardStorageTests.swift`
+- Create: `HangTenTests/Fixtures/CompactIIMigrationManifest.json`
+- Create: `HangTenTests/Fixtures/CompactIIBoardLibrary.expected.json`
 - Modify: `HangTen.xcodeproj/project.pbxproj`
 
 **Interfaces:**
@@ -37,7 +39,7 @@
 
 - [ ] **Step 1: Write failing tests for board decoding and validation**
 
-Add tests that decode a minimal board fixture, assert conversion of normalized numeric frames to `HoldFrame`, and assert that the store rejects duplicate board IDs, duplicate hold IDs, out-of-range frame values, non-positive aspect ratios, invalid finger capacities, and unknown hold IDs in `semanticHolds`.
+Add tests that decode a minimal board fixture, assert conversion of normalized numeric frames to `HoldFrame`, and assert that the store rejects duplicate board IDs, duplicate hold IDs, out-of-range frame values, non-positive aspect ratios, invalid finger capacities, and unknown hold IDs in `semanticHolds`. Cover a kind-only semantic mapping by resolving it to `.kind`; reject an empty mapping with neither `holdIDs` nor `kind`, and reject an unsupported `kind` during decoding. Export the same definition twice with `prettyPrinted: false` and twice with `prettyPrinted: true`, asserting byte-for-byte equality in each mode and sorted object keys in both modes.
 
 ```swift
 func testBoardLibraryDecodesCompactBoardMetadataAndHoldFrame() throws {
@@ -65,11 +67,13 @@ Expected: compilation failure because `BoardLibraryStore` and its definitions do
 
 Use `Double` in JSON-facing frame definitions and convert to `CGFloat` only when constructing `HoldFrame`. Preserve the existing `BoardHold` initializer defaults for omitted optional fields. Define board-owned semantic mappings using the existing mapping shape (`holdIDs` or `kind`, never both), and produce actionable validation paths such as `boards[0].holds[1].frame.x`.
 
-`BoardLibraryStore` must expose only validated boards. `encodedData` must use `.prettyPrinted` and `.sortedKeys` when requested, matching the plan-store export behavior.
+`BoardLibraryStore` must expose only validated boards. Its deterministic encoding contract always includes `.sortedKeys`: compact output uses `[.sortedKeys]`; pretty output uses `[.prettyPrinted, .sortedKeys]`. Tests must prove byte-for-byte stability for both output modes rather than only round-tripping decoded values.
 
 - [ ] **Step 4: Add the canonical Compact II JSON fixture and Xcode resource entry**
 
-Copy every current Compact II value from `BoardCatalog.compactII` into `BoardLibrary.json`, including all hold IDs, frames, sizes, features, product URL, and photo asset name. Add the resource to the HangTen target and test target resource handling as needed.
+Before authoring `BoardLibrary.json`, snapshot the pre-migration Swift `BoardCatalog.all` and the rendered hold IDs registered by `BoardDesignCatalog` into an independent, checked-in Compact II migration baseline. `CompactIIMigrationManifest.json` must capture every board's complete metadata, semantic mappings, artwork hold IDs, ordered hold inventory, and every hold field: ID, name, short label, detail, kind, frame, size, grip type, finger capacity, cue style, and features. Freeze and review that manifest while the Swift literals are still the source of truth; then independently author `CompactIIBoardLibrary.expected.json` as the expected canonical pretty JSON and copy the audited values into `HangTen/Resources/BoardLibrary.json`.
+
+Compare the decoded production document and resolved runtime `BoardCatalog.all` against the migration manifest, compare the design catalog's rendered hold IDs against the manifest's artwork IDs, and compare pretty `encodedData` bytes against the expected JSON. Neither expected artifact may be generated from `HangTen/Resources/BoardLibrary.json`, derived by decoding or re-encoding it, or refreshed from the post-migration JSON-backed catalog; otherwise a source-data regression would self-confirm. Add the production resource to the HangTen target and test target resource handling as needed.
 
 - [ ] **Step 5: Run the focused tests and verify they pass**
 
@@ -94,11 +98,11 @@ git push
 **Interfaces:**
 - `BoardCatalog.all` remains `[TrainingBoard]` for compatibility.
 - `BoardCatalog.board(for:)` keeps its current fallback behavior.
-- `BoardLibraryStore.builtIn` loads `BoardLibrary.json` from `Bundle.main` or the model test bundle, with a narrowly scoped legacy fallback for resource-less command-line tools until Task 5 removes it.
+- `BoardLibraryStore.builtIn` loads `BoardLibrary.json` from `Bundle.main` or the model test bundle, with a narrowly scoped resource-less fallback that reads the same checked-in `HangTen/Resources/BoardLibrary.json` until Task 5 removes it.
 
 - [ ] **Step 1: Write failing tests proving the production catalog comes from the JSON document**
 
-Add a test that loads the checked-in board document and compares `BoardCatalog.all` against it by board ID, hold ID, frame, size, features, and metadata. Add a test that the Compact II design's rendered hold IDs equal the loaded board's hold IDs.
+Add a test that loads the checked-in board document and compares `BoardCatalog.all` against it by board ID, hold ID, frame, size, features, and metadata. Add an equality test that the resource-less fallback loads `HangTen/Resources/BoardLibrary.json` and produces the identical `BoardLibraryDefinition` and resolved boards as the bundled resource. Add a test that the Compact II design's rendered hold IDs equal the loaded board's hold IDs.
 
 - [ ] **Step 2: Run the focused tests and verify the current hard-coded catalog is detected**
 
@@ -140,13 +144,15 @@ git push
 - Modify: `HangTenTests/BoardStorageTests.swift`
 
 **Interfaces:**
-- `TrainingBoard` gains a defaulted runtime semantic mapping property so existing test initializers remain source-compatible.
+- `TrainingBoard` gains a defaulted runtime semantic mapping property so existing test initializers remain source-compatible; `BoardDefinition.trainingBoard()` forwards `semanticHolds` unchanged.
 - `PlanLibraryStore.init(definition:availableBoards:)` remains source-compatible.
 - `PlanLibraryStore` merges board-owned mappings when a plan document lacks a mapping for a selected board, while explicit legacy `boardMappings` retain precedence during migration.
 
 - [ ] **Step 1: Write failing tests for board-owned semantic resolution**
 
-Create a board fixture whose JSON defines `semanticHolds["fixture-edge"]`, create a plan targeting `{ "semantic": "fixture-edge" }` without a plan-level `boardMappings` entry, and assert that the resolved `WorkoutStep.targets` contains the expected physical hold IDs. Add a precedence test showing an explicit legacy plan mapping wins over a board-owned mapping.
+Load a board fixture through `BoardLibraryStore(data:)` whose JSON defines both a physical-ID mapping such as `semanticHolds["fixture-edge"]` and a kind-only board-owned mapping. With no plan-level `boardMappings` entry, assert that `PlanLibraryValidator` accepts the board-owned fallback, the loaded `TrainingBoard` retains both mappings, the physical mapping resolves to the exact expected hold IDs, and the kind-only mapping produces a `HoldTarget` that `BoardTargetResolver` resolves to the expected physical IDs. Add negative board-fixture coverage rejecting an empty mapping with neither `holdIDs` nor `kind` and rejecting an unsupported `kind` string.
+
+Preserve the physical-ID case and add a precedence test in which an explicit legacy plan mapping overrides the same board-owned semantic ID while board-owned semantic IDs absent from that plan mapping remain available as fallbacks. Assert both the resolved `HoldTarget` values and their physical IDs so validation, definition resolution, and runtime board targeting are all exercised.
 
 - [ ] **Step 2: Run the focused tests and verify missing mapping failures**
 
@@ -158,7 +164,7 @@ Avoid duplicate Codable shapes. Reuse one definition for board JSON and plan-lib
 
 - [ ] **Step 4: Update plan validation and resolution**
 
-When validating a plan library, use explicit `library.boardMappings` first and board-owned mappings second. Validate board-owned mappings against the loaded board's hold IDs. When resolving `.semantic` or `.semantics`, query the selected board's effective mapping before throwing `missingSemanticTarget`.
+When validating a plan library, merge the selected board's `semanticHolds` with an explicit `library.boardMappings` entry, using explicit plan mappings for duplicate semantic IDs and board-owned mappings as per-key fallbacks. Validate the effective mappings against the loaded board's hold IDs. Use the same precedence when resolving `.semantic` or `.semantics` before throwing `missingSemanticTarget`.
 
 - [ ] **Step 5: Run focused regression tests**
 
@@ -245,7 +251,7 @@ Add a test or source-level check that the bundled board document is the source u
 Run the board and plan-storage tests, then:
 
 ```sh
-rtk rg -n "BoardCatalog\.compactII|BoardCatalog\.all|BuiltInBoard|BoardLibrary" HangTen scripts docs
+rg -n "BoardCatalog\.compactII|BoardCatalog\.all|BuiltInBoard|BoardLibrary" HangTen scripts docs
 ```
 
 Use the results to distinguish compatibility API references from production data literals.
@@ -256,7 +262,7 @@ Remove the hard-coded hold array and metadata construction from `TrainingModels.
 
 - [ ] **Step 4: Add deterministic board export/check support**
 
-Make the checked-in JSON reproducible from the migration fixture or store encoder, use sorted keys and stable array ordering, and fail `--check` when the committed `BoardLibrary.json` differs from the generated document. The check must not overwrite the working tree.
+Make the checked-in JSON reproducible from the independent Compact II migration manifest and expected JSON baseline, use sorted keys and stable array ordering in both compact and pretty output, and fail `--check` when the committed `BoardLibrary.json` differs from the expected document. The check must not overwrite the working tree or regenerate expected values from production `BoardLibrary.json`.
 
 - [ ] **Step 5: Update authoring documentation**
 

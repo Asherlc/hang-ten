@@ -22,14 +22,29 @@ final class BoardStorageTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: fixtureURL) }
 
         let store = try BoardLibraryStore(contentsOf: fixtureURL)
-        let firstExport = try store.encodedData(prettyPrinted: true)
-        let secondExport = try store.encodedData(prettyPrinted: true)
-        let roundTripped = try BoardLibraryStore(data: firstExport)
+        let firstCompactExport = try store.encodedData(prettyPrinted: false)
+        let secondCompactExport = try store.encodedData(prettyPrinted: false)
+        let firstPrettyExport = try store.encodedData(prettyPrinted: true)
+        let secondPrettyExport = try store.encodedData(prettyPrinted: true)
 
-        XCTAssertEqual(firstExport, secondExport)
-        XCTAssertEqual(firstExport.first, UInt8(ascii: "{"))
-        XCTAssertTrue(String(decoding: firstExport, as: UTF8.self).contains("\n"))
-        XCTAssertEqual(roundTripped.boards, store.boards)
+        XCTAssertEqual(firstCompactExport, secondCompactExport)
+        XCTAssertEqual(firstPrettyExport, secondPrettyExport)
+        XCTAssertEqual(firstCompactExport.first, UInt8(ascii: "{"))
+        XCTAssertFalse(String(decoding: firstCompactExport, as: UTF8.self).contains("\n"))
+        XCTAssertTrue(String(decoding: firstPrettyExport, as: UTF8.self).contains("\n"))
+
+        for export in [firstCompactExport, firstPrettyExport] {
+            let json = String(decoding: export, as: UTF8.self)
+            let boards = try XCTUnwrap(json.range(of: "\"boards\""))
+            let metadata = try XCTUnwrap(json.range(of: "\"metadata\""))
+            let schemaVersion = try XCTUnwrap(json.range(of: "\"schemaVersion\""))
+
+            XCTAssertLessThan(boards.lowerBound, metadata.lowerBound)
+            XCTAssertLessThan(metadata.lowerBound, schemaVersion.lowerBound)
+        }
+
+        XCTAssertEqual(try BoardLibraryStore(data: firstCompactExport).boards, store.boards)
+        XCTAssertEqual(try BoardLibraryStore(data: firstPrettyExport).boards, store.boards)
     }
 
     func testBoardLibraryStoreDistinguishesUnreadableURLs() {
@@ -176,10 +191,42 @@ final class BoardStorageTests: XCTestCase {
         }
 
         let store = try BoardLibraryStore(data: data)
-        let mapping = try XCTUnwrap(store.definition.boards.first?.semanticHolds["fixture-edge"])
+        let definitionMapping = try XCTUnwrap(store.definition.boards.first?.semanticHolds["fixture-edge"])
+        let runtimeMapping = try XCTUnwrap(store.boards.first?.semanticHolds["fixture-edge"])
 
-        XCTAssertEqual(mapping.holdIDs, [])
-        XCTAssertEqual(mapping.kind, .edge)
+        XCTAssertEqual(definitionMapping, SemanticHoldMappingDefinition(kind: .edge))
+        XCTAssertEqual(runtimeMapping, SemanticHoldMappingDefinition(kind: .edge))
+    }
+
+    func testBoardLibraryRejectsEmptySemanticMappings() throws {
+        let issues = validationIssues(for: try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            board["semanticHolds"] = ["fixture-edge": [:]]
+            boards[0] = board
+            document["boards"] = boards
+        })
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "boards[0].semanticHolds.fixture-edge" &&
+                $0.message.contains("needs hold IDs or a hold kind")
+        })
+    }
+
+    func testBoardLibraryRejectsUnsupportedSemanticKindsDuringDecoding() throws {
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            board["semanticHolds"] = ["fixture-edge": ["kind": "unsupported"]]
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        XCTAssertThrowsError(try BoardLibraryStore(data: data)) { error in
+            guard case BoardLibraryStoreError.decoding = error else {
+                return XCTFail("Expected a decoding error, got: \(error)")
+            }
+        }
     }
 
     func testBoardLibraryRejectsSemanticMappingsWithBothIDsAndKinds() throws {
