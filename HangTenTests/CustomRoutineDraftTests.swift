@@ -359,7 +359,8 @@ final class CustomRoutineDraftTests: XCTestCase {
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(
                     engagedFingers: [.index, .ring]
-                )
+                ),
+                activeDuration: 10
             )]
         )
 
