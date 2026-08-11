@@ -144,7 +144,7 @@ struct GripHandCueCard: View {
             return "PhosphorHandGrabbing"
         case .fullCrimp:
             return "PhosphorHandFist"
-        case .openHand:
+        case .openHand, .fourFingerPocket, .threeFingerPocket, .twoFingerPocket, .sloper:
             return "PhosphorHandPalm"
         }
     }
@@ -154,6 +154,10 @@ struct GripHandCueCard: View {
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
         case .openHand: "Open hand"
+        case .fourFingerPocket: "Four-finger pocket"
+        case .threeFingerPocket: "Three-finger pocket"
+        case .twoFingerPocket: "Two-finger pocket"
+        case .sloper: "Open-hand sloper"
         }
     }
 

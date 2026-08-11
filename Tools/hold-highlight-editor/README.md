@@ -56,6 +56,32 @@ repository**; selecting one opens its current committed version. The exact
 [package and publication contract is in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
 The browser never asks for a CLI run directory.
 
+## Run the single-board tool suite
+
+The persistent sidebar works on one active board revision at a time:
+
+- **Onboard** retains the guided Stage 0–4 review workflow described below.
+- **Inspect** shows the active revision, approval/readiness state, Stage 4
+  normal and highlight artifacts, and the hold inventory before any native
+  generation is requested.
+- **Promote to iOS** requires an explicit, evidence-backed promotion profile.
+  Generate a preview first and review its grouped **Metadata**, **Geometry**,
+  and **Plans** diffs. A stale revision, changed profile, incomplete package,
+  or target changed relative to `main` is a conflict: no promotion file is
+  written. **Save locally** regenerates and verifies the preview token, then
+  writes all approved native targets atomically for normal local Git review.
+- **Validate** runs the local package, hold-ID parity,
+  semantic-routine-resolution, and plan-library checks.
+  Its simulator field produces copyable commands only after the operator
+  supplies the UUID of a dedicated simulator that has already been created,
+  recorded, and made ready.
+
+The browser never creates, deletes, boots, erases, or archives a simulator.
+It never commits, pushes, or synchronizes remotely. Simulator creation,
+ownership, readiness, review, and cleanup stay with the caller under
+[`docs/IOS_SIMULATOR_VALIDATION.md`](../../docs/IOS_SIMULATOR_VALIDATION.md);
+do not use `booted` or a device owned by another workspace.
+
 Creation publishes Stage 0 and stops for review. **Approve & continue** binds
 the displayed checkpoint to its hashes, runs the next installed stage, and
 stops at the next review automatically. **Retry** publishes a new immutable

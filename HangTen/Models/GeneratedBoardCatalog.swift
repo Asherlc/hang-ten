@@ -30,7 +30,7 @@ enum GeneratedBoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.158, y: 0.035, width: 0.19, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 fingerCapacity: 4,
                 features: [.largeSlope]
             ),
@@ -42,7 +42,7 @@ enum GeneratedBoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.352, y: 0.035, width: 0.296, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 fingerCapacity: 4,
                 features: [.roundSloper]
             ),
@@ -54,7 +54,7 @@ enum GeneratedBoardCatalog {
                 kind: .sloper,
                 frame: HoldFrame(x: 0.652, y: 0.035, width: 0.19, height: 0.128),
                 sizeMillimeters: 56,
-                gripType: .openHand,
+                gripType: .sloper,
                 fingerCapacity: 4,
                 features: [.largeSlope]
             ),
@@ -85,7 +85,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.199, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .openHand,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3,
                 features: [.pocket, .threeFingerPocket]
             ),
@@ -97,7 +97,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.328, y: 0.37, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
-                gripType: .openHand,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2,
                 features: [.pocket, .twoFingerPocket]
             ),
@@ -109,7 +109,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.365, width: 0.15, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .openHand,
+                gripType: .fourFingerPocket,
                 fingerCapacity: 4,
                 features: [.pocket, .fourFingerPocket]
             ),
@@ -121,7 +121,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.595, y: 0.37, width: 0.077, height: 0.147),
                 sizeMillimeters: 29,
-                gripType: .openHand,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2,
                 features: [.pocket, .twoFingerPocket]
             ),
@@ -133,7 +133,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.692, y: 0.365, width: 0.109, height: 0.148),
                 sizeMillimeters: 29,
-                gripType: .openHand,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3,
                 features: [.pocket, .threeFingerPocket]
             ),
@@ -165,7 +165,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.216, y: 0.733, width: 0.104, height: 0.14),
                 sizeMillimeters: 19,
-                gripType: .openHand,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3,
                 features: [.pocket, .threeFingerPocket]
             ),
@@ -177,7 +177,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.68, y: 0.733, width: 0.104, height: 0.14),
                 sizeMillimeters: 19,
-                gripType: .openHand,
+                gripType: .threeFingerPocket,
                 fingerCapacity: 3,
                 features: [.pocket, .threeFingerPocket]
             ),
@@ -189,7 +189,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.336, y: 0.733, width: 0.073, height: 0.14),
                 sizeMillimeters: 19,
-                gripType: .openHand,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2,
                 features: [.pocket, .twoFingerPocket]
             ),
@@ -201,7 +201,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.591, y: 0.733, width: 0.073, height: 0.14),
                 sizeMillimeters: 19,
-                gripType: .openHand,
+                gripType: .twoFingerPocket,
                 fingerCapacity: 2,
                 features: [.pocket, .twoFingerPocket]
             ),
@@ -213,7 +213,7 @@ enum GeneratedBoardCatalog {
                 kind: .pocket,
                 frame: HoldFrame(x: 0.425, y: 0.733, width: 0.15, height: 0.14),
                 sizeMillimeters: 19,
-                gripType: .openHand,
+                gripType: .fourFingerPocket,
                 fingerCapacity: 4,
                 features: [.pocket, .fourFingerPocket]
             ),

@@ -99,7 +99,29 @@
         </div>
       </header>
 
-      <section class="workspace-grid">
+      <section class="suite-shell">
+        <aside class="tool-suite-sidebar" id="tool-suite-sidebar" aria-label="Workbench tools">
+          <div class="suite-heading">
+            <span class="eyebrow">Workbench</span>
+            <h2>Board tools</h2>
+          </div>
+          <nav class="tool-suite-nav" aria-label="Board tool navigation">
+            <button class="tool-suite-button active" id="tool-onboard" type="button" data-tool="onboard">Onboard</button>
+            <button class="tool-suite-button" id="tool-inspect" type="button" data-tool="inspect">Inspect</button>
+            <button class="tool-suite-button" id="tool-promote" type="button" data-tool="promote">Promote to iOS</button>
+            <button class="tool-suite-button" id="tool-validate" type="button" data-tool="validate">Validate</button>
+          </nav>
+          <section class="active-board-card" id="active-board-card" aria-live="polite">
+            <span class="eyebrow">Active board</span>
+            <strong id="active-board-name">No board selected</strong>
+            <span id="active-board-revision">Choose a board to begin.</span>
+            <span class="readiness-badge" id="active-board-readiness">Incomplete</span>
+          </section>
+        </aside>
+
+        <div class="suite-content">
+        <section class="tool-view onboard-view" id="onboard-view">
+        <section class="workspace-grid">
         <aside class="panel region-panel">
           <section class="workflow-block" id="workflow-block">
             <div class="panel-heading">
@@ -255,6 +277,165 @@
           </form>
           <div class="legend"><span class="eyebrow">Types</span><div><i class="dot jug"></i> Jug</div><div><i class="dot sloper"></i> Sloper</div><div><i class="dot edge"></i> Edge</div><div><i class="dot pocket"></i> Pocket</div></div>
         </aside>
+        </section>
+        </section>
+
+        <section class="tool-view inspect-view hidden" id="inspect-view" aria-labelledby="inspect-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Board review</span>
+            <h2 id="inspect-title">Inspect</h2>
+            <p>Review the active board package before generating a local iOS change.</p>
+          </header>
+          <div class="inspect-grid">
+            <section class="inspect-card" id="inspect-board-preview" aria-label="Board preview"></section>
+            <section class="inspect-card">
+              <span class="eyebrow">Artifacts</span>
+              <div class="inspect-artifact-links" id="inspect-artifact-links"></div>
+            </section>
+            <section class="inspect-card">
+              <span class="eyebrow">Hold inventory</span>
+              <div id="inspect-hold-inventory"></div>
+            </section>
+            <section class="inspect-card">
+              <span class="eyebrow">Approval and revision</span>
+              <div id="inspect-approval-status"></div>
+            </section>
+            <section class="inspect-card inspect-readiness-card">
+              <span class="eyebrow">Readiness</span>
+              <div id="inspect-readiness"></div>
+              <button class="tool-button accent" id="inspect-next-action" type="button">Open Onboard</button>
+            </section>
+          </div>
+        </section>
+
+        <section class="tool-view promote-view hidden" id="promote-view" aria-labelledby="promote-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Promotion</span>
+            <h2 id="promote-title">Promote to iOS</h2>
+            <p id="promotion-identity">Choose one active board revision to begin promotion.</p>
+          </header>
+
+          <section class="promotion-summary" aria-live="polite">
+            <p id="promotion-readiness"></p>
+            <p class="promotion-status empty" id="promotion-status">No preview</p>
+            <p class="promotion-error hidden" id="promotion-error" role="alert"></p>
+          </section>
+
+          <section class="promotion-card" aria-labelledby="promotion-profile-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Explicit profile</span>
+                <h3 id="promotion-profile-title">iOS promotion profile</h3>
+              </div>
+              <p>These fields cannot be inferred from board artwork. Record the evidence used for each value.</p>
+            </div>
+            <div class="promotion-profile-grid">
+              <label for="promotion-board-id">iOS board ID
+                <input id="promotion-board-id" data-promotion-field="boardID" type="text" autocomplete="off" required aria-describedby="promotion-board-id-hint" />
+                <small id="promotion-board-id-hint">Canonical iOS identifier; confirm it against the approved board package.</small>
+              </label>
+              <label for="promotion-manufacturer">Manufacturer
+                <input id="promotion-manufacturer" data-promotion-field="manufacturer" type="text" autocomplete="organization" required aria-describedby="promotion-manufacturer-hint" />
+                <small id="promotion-manufacturer-hint">Use the manufacturer product page or packaging as evidence.</small>
+              </label>
+              <label for="promotion-name">Display name
+                <input id="promotion-name" data-promotion-field="name" type="text" autocomplete="off" required aria-describedby="promotion-name-hint" />
+                <small id="promotion-name-hint">Use the exact product name from the evidence source.</small>
+              </label>
+              <label for="promotion-subtitle">Subtitle
+                <input id="promotion-subtitle" data-promotion-field="subtitle" type="text" autocomplete="off" required aria-describedby="promotion-subtitle-hint" />
+                <small id="promotion-subtitle-hint">Write only evidence-backed product context; do not infer features from the photo.</small>
+              </label>
+              <label for="promotion-dimensions">Dimensions
+                <input id="promotion-dimensions" data-promotion-field="dimensions" type="text" autocomplete="off" required aria-describedby="promotion-dimensions-hint" />
+                <small id="promotion-dimensions-hint">Transcribe the manufacturer’s published dimensions.</small>
+              </label>
+              <label for="promotion-aspect-ratio">Aspect ratio
+                <input id="promotion-aspect-ratio" data-promotion-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" required aria-describedby="promotion-aspect-ratio-hint" />
+                <small id="promotion-aspect-ratio-hint">Use the measured or published board aspect ratio.</small>
+              </label>
+              <label class="promotion-profile-wide" for="promotion-product-url">Product URL
+                <input id="promotion-product-url" data-promotion-field="productURL" type="url" autocomplete="url" required aria-describedby="promotion-product-url-hint" />
+                <small id="promotion-product-url-hint">Link the manufacturer evidence used for this profile.</small>
+              </label>
+            </div>
+          </section>
+
+          <section class="promotion-card promotion-actions" aria-label="Promotion actions">
+            <button class="tool-button accent" id="promotion-preview-button" type="button">Generate preview</button>
+            <button class="tool-button" id="promotion-refresh-button" type="button">Refresh preview</button>
+            <button class="tool-button" id="promotion-save-button" type="button">Save locally</button>
+            <p>Save locally never commits, pushes, or synchronizes remote changes.</p>
+          </section>
+
+          <section class="promotion-card" aria-labelledby="promotion-issues-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Checks</span>
+                <h3 id="promotion-issues-title">Conflicts and validation issues</h3>
+              </div>
+            </div>
+            <div id="promotion-issues"></div>
+          </section>
+
+          <section class="promotion-card promotion-diffs" aria-labelledby="promotion-diffs-title">
+            <div class="promotion-card-heading">
+              <div>
+                <span class="eyebrow">Review</span>
+                <h3 id="promotion-diffs-title">Grouped native diff</h3>
+              </div>
+              <p>Review metadata, exact geometry, and plan changes before saving them into this checkout.</p>
+            </div>
+            <div id="promotion-diff-groups"></div>
+          </section>
+        </section>
+
+        <section class="tool-view validate-view hidden" id="validate-view" aria-labelledby="validate-title">
+          <header class="tool-view-header">
+            <span class="eyebrow">Validation</span>
+            <h2 id="validate-title">Validate</h2>
+            <p id="validation-identity">Choose one active board revision to begin validation.</p>
+          </header>
+
+          <section class="validation-summary" aria-live="polite">
+            <p class="validation-status not_run" id="validation-status">Not run</p>
+            <p class="validation-error hidden" id="validation-error" role="alert"></p>
+          </section>
+
+          <section class="validation-card validation-actions" aria-label="Validation actions">
+            <button class="tool-button" id="validation-refresh-button" type="button">Load cached report</button>
+            <button class="tool-button accent" id="validation-run-button" type="button">Run validation</button>
+            <p>These checks cover the local package and native plan library only. They do not create, delete, boot, or archive simulators.</p>
+          </section>
+
+          <section class="validation-card" aria-labelledby="validation-checks-title">
+            <div class="validation-card-heading">
+              <div>
+                <span class="eyebrow">Local checks</span>
+                <h3 id="validation-checks-title">Package and parity report</h3>
+              </div>
+              <p>Run validation after saving a promotion, or load the cached revision-bound report.</p>
+            </div>
+            <div id="validation-checks"></div>
+          </section>
+
+          <section class="validation-card" aria-labelledby="validation-simulator-title">
+            <div class="validation-card-heading">
+              <div>
+                <span class="eyebrow">Simulator handoff</span>
+                <h3 id="validation-simulator-title">Dedicated simulator review</h3>
+              </div>
+              <p>Provide the explicit UUID of a dedicated, already-owned simulator. Follow <code>docs/IOS_SIMULATOR_VALIDATION.md</code> for creation, ownership, readiness, and cleanup.</p>
+            </div>
+            <label class="validation-uuid-label" for="validation-simulator-uuid">Simulator UUID
+              <input id="validation-simulator-uuid" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 12345678-1234-1234-1234-123456789ABC" />
+            </label>
+            <p class="validation-simulator-note" id="validation-simulator-error" role="alert"></p>
+            <textarea class="validation-command-output" id="validation-simulator-commands" rows="8" readonly aria-label="Simulator review commands"></textarea>
+            <button class="tool-button" id="validation-copy-commands-button" type="button">Copy commands</button>
+          </section>
+        </section>
+        </div>
       </section>
     </main>
 
@@ -266,6 +447,10 @@
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>
+    <script src="workbench-suite-model.js"></script>
+    <script src="workbench-suite-controller.js"></script>
+    <script src="promotion-view.js"></script>
+    <script src="validation-view.js"></script>
     <script src="vector-path-model.js"></script>
     <script src="app.js"></script>
   </body>

@@ -21,8 +21,20 @@ import pytest
 
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EDITOR_ROOT))
+sys.path.insert(
+    0, str(EDITOR_ROOT.parent / "HangboardOnboarding" / "src")
+)
 
 import server as server_module  # noqa: E402
+from hangboard_vectorizer.ios_promotion import (  # noqa: E402
+    PromotionPreview as FakePromotionPreview,
+    PromotionSaveResult as FakePromotionSaveResult,
+)
+from hangboard_vectorizer.workbench import WorkbenchView as FakeWorkbenchView  # noqa: E402
+from hangboard_vectorizer.workbench_validation import (  # noqa: E402
+    ValidationCheck as FakeValidationCheck,
+    ValidationReport as FakeValidationReport,
+)
 from workbench_assets import STATIC_ASSETS  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
@@ -64,25 +76,6 @@ REPOSITORY_REVISION_TOKEN = "a" * 64
 
 
 @dataclass(frozen=True)
-class FakeWorkbenchView:
-    board_id: str
-    revision_id: str
-    parent_revision_id: str | None
-    run_root: Path
-    product_name: str
-    stage: int
-    state: str
-    review_path: Path | None
-    editor_image_path: Path | None
-    editor_mode: str | None
-    saved: bool
-    stale_from_stage: int | None
-    checkpoint_token: str | None
-    repository_board_id: str | None = None
-    repository_revision_token: str | None = None
-
-
-@dataclass(frozen=True)
 class FakeLibraryBoard:
     board_id: str
     display_name: str
@@ -111,6 +104,8 @@ class FakeWorkbenchService:
         self._root = root
         self._boards: dict[str, FakeWorkbenchView] = {}
         self._drafts: dict[str, object] = {}
+        self._promotion_previews: dict[tuple[str, str], FakePromotionPreview] = {}
+        self._validation_reports: dict[tuple[str, str], FakeValidationReport] = {}
         self._counter = 0
         self._lock = Lock()
         self.approve_started = Event()
@@ -289,6 +284,90 @@ class FakeWorkbenchService:
             raise FakeWorkbenchError("expected revision does not match")
         return self._update(view, saved=True)
 
+    def preview_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: object,
+        base_ref: str = "main",
+    ) -> FakePromotionPreview:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        if not hasattr(profile, "board_id"):
+            raise FakeWorkbenchError("profile must be an object")
+        preview = FakePromotionPreview(
+            board_id="example.board",
+            revision_token=view.revision_id,
+            base_ref=base_ref,
+            files=(),
+            issues=(),
+            preview_token="preview-token",
+        )
+        self._promotion_previews[(board_id, view.revision_id)] = preview
+        return preview
+
+    def get_promotion_preview(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakePromotionPreview | None:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        return self._promotion_previews.get((board_id, view.revision_id))
+
+    def save_promotion(
+        self,
+        board_id: str,
+        *,
+        expected_revision_id: str,
+        profile: object,
+        preview_token: str,
+    ) -> FakePromotionSaveResult:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        if not hasattr(profile, "board_id"):
+            raise FakeWorkbenchError("profile must be an object")
+        if preview_token != "preview-token":
+            raise FakeWorkbenchError("preview token does not match")
+        return FakePromotionSaveResult(
+            board_id="example.board",
+            revision_id=view.revision_id,
+            saved=True,
+            paths=("HangTen/Models/TrainingModels.swift",),
+        )
+
+    def validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        report = FakeValidationReport(
+            board_id=board_id,
+            revision_id=view.revision_id,
+            overall_status="passed",
+            checks=(
+                FakeValidationCheck(
+                    check_id="package-readiness",
+                    status="passed",
+                    message="package is ready",
+                    details=(),
+                ),
+            ),
+        )
+        self._validation_reports[(board_id, view.revision_id)] = report
+        return report
+
+    def get_validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport | None:
+        view = self.get_board(board_id)
+        if expected_revision_id != view.revision_id:
+            raise FakeWorkbenchError("expected revision does not match")
+        return self._validation_reports.get((board_id, view.revision_id))
+
     def _create(self, product_name: str, content: bytes) -> FakeWorkbenchView:
         with self._lock:
             self._counter += 1
@@ -302,12 +381,16 @@ class FakeWorkbenchService:
                 board_id=board_id,
                 revision_id=revision_id,
                 parent_revision_id=None,
+                repository_board_id=None,
+                repository_revision_token=None,
                 run_root=run_root,
                 product_name=product_name,
                 stage=0,
                 state="awaiting_review",
                 review_path=review_path,
                 editor_image_path=None,
+                normal_artifact_path=None,
+                hold_count=None,
                 editor_mode=None,
                 saved=False,
                 stale_from_stage=None,
@@ -347,6 +430,14 @@ class FakeWorkbenchService:
             editor_image.write_bytes(b"clean-canvas-image")
             changes["editor_image_path"] = editor_image
             changes.setdefault("editor_mode", "contour" if stage == 2 else "vector")
+        if stage == 4 and state == "complete":
+            normal = view.run_root / "stages/04/stage-4-normal.png"
+            normal.parent.mkdir(parents=True, exist_ok=True)
+            normal.write_bytes(b"stage-4-normal")
+            changes.setdefault("normal_artifact_path", normal)
+            changes.setdefault("hold_count", 4)
+            changes.setdefault("editor_image_path", None)
+            changes.setdefault("editor_mode", None)
         updated = replace(view, **changes)
         with self._lock:
             self._boards[view.board_id] = updated
@@ -1204,6 +1295,21 @@ def test_editable_board_api_exposes_clean_and_annotated_artifacts_separately(
         assert response.read() == b"clean-canvas-image"
 
 
+def test_completed_board_api_exposes_stage4_inspect_artifacts_and_hold_count(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    for _ in range(5):
+        view = _post_mutation(running_workbench_server, "/api/approve", view)
+
+    assert view["state"] == "complete"
+    assert view["editorImageUrl"] is None
+    assert view["normalArtifactUrl"] is not None
+    assert view["holdCount"] == 4
+    with urlopen(running_workbench_server + view["normalArtifactUrl"]) as response:
+        assert response.read() == b"stage-4-normal"
+
+
 def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
     running_workbench_server,
 ):
@@ -1236,6 +1342,200 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
 
     assert view["state"] == "complete"
     assert saved["saved"] is True
+
+
+def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    profile = {
+        "schemaVersion": 1,
+        "boardID": "example.board",
+        "manufacturer": "Example",
+        "name": "Example Board",
+        "subtitle": "An explicit test profile.",
+        "dimensions": "24\" × 6\"",
+        "aspectRatio": 4.0,
+        "productURL": "https://example.test/board",
+    }
+
+    promotion_status, promotion = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
+    )
+    validation_status, validation = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
+    )
+    preview_status, preview_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/preview",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": profile,
+        },
+    )
+    preview = _poll_job(running_workbench_server, preview_submission["jobId"])
+    save_status, save_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/save",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": profile,
+            "previewToken": "preview-token",
+        },
+    )
+    saved = _poll_job(running_workbench_server, save_submission["jobId"])
+    run_status, run_submission = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/validation/run",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+        },
+    )
+    report = _poll_job(running_workbench_server, run_submission["jobId"])
+
+    assert promotion_status == validation_status == 200
+    assert promotion == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "preview": None,
+    }
+    assert validation == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "report": None,
+    }
+    assert preview_status == save_status == run_status == 202
+    assert preview_submission["boardId"] == save_submission["boardId"] == run_submission["boardId"] == view["boardId"]
+    assert preview["result"]["previewToken"] == "preview-token"
+    promotion_after_preview_status, promotion_after_preview = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
+    )
+    assert promotion_after_preview_status == 200
+    assert promotion_after_preview == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "preview": preview["result"],
+    }
+    assert saved["result"] == {
+        "boardId": "example.board",
+        "revisionId": view["revisionId"],
+        "saved": True,
+        "paths": ["HangTen/Models/TrainingModels.swift"],
+    }
+    assert report["result"]["overallStatus"] == "passed"
+    assert report["result"]["checks"][0]["checkId"] == "package-readiness"
+    validation_after_run_status, validation_after_run = read_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
+    )
+    assert validation_after_run_status == 200
+    assert validation_after_run == {
+        "ok": True,
+        "boardId": view["boardId"],
+        "revisionId": view["revisionId"],
+        "report": report["result"],
+    }
+
+
+def test_promotion_save_rejects_a_missing_token_before_submitting_a_write_job(
+    tmp_path: Path,
+) -> None:
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    calls: list[object] = []
+
+    def save_must_not_run(*args: object, **kwargs: object) -> object:
+        calls.append((args, kwargs))
+        raise AssertionError("save promotion must not run for malformed input")
+
+    service.save_promotion = save_must_not_run  # type: ignore[method-assign]
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        with pytest.raises(HTTPError) as error:
+            _post_json(
+                base + f"/api/boards/{view['boardId']}/promotion/save",
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "profile": {
+                        "schemaVersion": 1,
+                        "boardID": "example.board",
+                        "manufacturer": "Example",
+                        "name": "Example Board",
+                        "subtitle": "An explicit test profile.",
+                        "dimensions": "24\" × 6\"",
+                        "aspectRatio": 4.0,
+                        "productURL": "https://example.test/board",
+                    },
+                },
+            )
+
+    assert error.value.code == 400
+    body = json.load(error.value)
+    assert body["ok"] is False
+    assert "previewToken" in body["error"]
+    assert calls == []
+
+
+def test_promotion_save_rejects_an_invalid_profile_with_a_distinct_error(
+    tmp_path: Path,
+) -> None:
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        view = _create_board(base)
+        with pytest.raises(HTTPError) as error:
+            _post_json(
+                base + f"/api/boards/{view['boardId']}/promotion/save",
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "profile": "not-an-object",
+                    "previewToken": "preview-token",
+                },
+            )
+
+    assert error.value.code == 400
+    assert json.load(error.value)["error"] == "profile must be an object"
+
+
+def test_promotion_save_reports_a_preview_token_mismatch_distinctly(
+    running_workbench_server,
+) -> None:
+    view = _create_board(running_workbench_server)
+    status, submission = _post_json(
+        running_workbench_server
+        + f"/api/boards/{view['boardId']}/promotion/save",
+        {
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+            "profile": {
+                "schemaVersion": 1,
+                "boardID": "example.board",
+                "manufacturer": "Example",
+                "name": "Example Board",
+                "subtitle": "An explicit test profile.",
+                "dimensions": "24\" × 6\"",
+                "aspectRatio": 4.0,
+                "productURL": "https://example.test/board",
+            },
+            "previewToken": "wrong-token",
+        },
+    )
+
+    job = _poll_job(running_workbench_server, submission["jobId"])
+    assert status == 202
+    assert job["state"] == "failed"
+    assert job["error"] == "preview token does not match"
+
+
+def test_workbench_job_payload_rejects_an_unsupported_result_type() -> None:
+    with pytest.raises(TypeError, match="workbench job result is unsupported"):
+        server_module._workbench_job_payload(object())
 
 
 @pytest.mark.parametrize(

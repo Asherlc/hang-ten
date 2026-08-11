@@ -1414,15 +1414,31 @@ enum BuiltInPlanLibraryDefinition {
                 steps: [WorkoutStepDefinition.from(step, id: "warm-up", semanticHoldID: semanticID(for:))]
             )
         }
+        let sharedCoolDown = legacyPlans.first {
+            $0.steps.last?.phase == .coolDown
+                && $0.steps.last?.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration
+        }?.steps.last.map {
+            WorkoutBlockDefinition(
+                id: "shared.cool-down",
+                title: "Cool down",
+                steps: [WorkoutStepDefinition.from($0, id: "cool-down", semanticHoldID: semanticID(for:))]
+            )
+        }
+
         if let sharedWarmUp {
             blocks.append(sharedWarmUp)
             blockIDs.insert(sharedWarmUp.id)
+        }
+        if let sharedCoolDown {
+            blocks.append(sharedCoolDown)
+            blockIDs.insert(sharedCoolDown.id)
         }
 
         for plan in legacyPlans {
             let (definition, planBlocks) = makeDefinition(
                 from: plan,
                 sharedWarmUp: sharedWarmUp,
+                sharedCoolDown: sharedCoolDown,
                 existingBlockIDs: blockIDs
             )
             definitions.append(definition)
@@ -1454,6 +1470,7 @@ enum BuiltInPlanLibraryDefinition {
     private static func makeDefinition(
         from plan: TrainingPlan,
         sharedWarmUp: WorkoutBlockDefinition?,
+        sharedCoolDown: WorkoutBlockDefinition?,
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
         let category: String
@@ -1535,7 +1552,7 @@ enum BuiltInPlanLibraryDefinition {
         var references: [WorkoutBlockReference] = []
         var blocks: [WorkoutBlockDefinition] = []
         var firstIndex = 0
-        let lastIndex = plan.steps.count
+        var lastIndex = plan.steps.count
 
         if let first = plan.steps.first,
            let sharedWarmUp,
@@ -1556,6 +1573,15 @@ enum BuiltInPlanLibraryDefinition {
             firstIndex = 1
         }
 
+        if let last = plan.steps.last,
+           let sharedCoolDown,
+           last.phase == .coolDown,
+           last.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration,
+           last.title == sharedCoolDown.title,
+           last.instruction == sharedCoolDown.steps[0].instruction {
+            lastIndex -= 1
+        }
+
         if firstIndex < lastIndex {
             let middleBlock = WorkoutBlockDefinition(
                 id: "\(plan.id).main",
@@ -1566,6 +1592,10 @@ enum BuiltInPlanLibraryDefinition {
             )
             blocks.append(middleBlock)
             references.append(WorkoutBlockReference(blockID: middleBlock.id))
+        }
+
+        if lastIndex < plan.steps.count, let sharedCoolDown {
+            references.append(WorkoutBlockReference(blockID: sharedCoolDown.id, stepIDs: [plan.steps[lastIndex].id]))
         }
 
         // This guard makes the generated block IDs stable even if a future

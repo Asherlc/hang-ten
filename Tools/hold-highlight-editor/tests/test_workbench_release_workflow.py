@@ -91,6 +91,17 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
+def test_release_publication_requires_an_explicit_manual_dispatch():
+    workflow = _workflow()
+    triggers = workflow["true"]
+
+    assert set(triggers) == {"pull_request", "workflow_dispatch"}
+    assert workflow["jobs"]["release"]["if"] == (
+        "github.event_name == 'workflow_dispatch' && "
+        "github.ref == 'refs/heads/main'"
+    )
+
+
 def test_frozen_smoke_checks_all_assets_both_signals_and_owned_cleanup():
     build = _workflow()["jobs"]["build"]
     script = _step(build, "Smoke test executable and clean up")["run"]

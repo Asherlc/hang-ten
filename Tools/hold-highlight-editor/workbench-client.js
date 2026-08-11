@@ -169,6 +169,50 @@
     return (await request(`/api/boards/${encodeURIComponent(boardId)}${query}`)).board;
   }
 
+  function revisionQuery(revisionId) {
+    return new URLSearchParams({ revisionId }).toString();
+  }
+
+  async function getPromotionPreview(boardId, revisionId) {
+    const payload = await request(
+      `/api/boards/${encodeURIComponent(boardId)}/promotion?${revisionQuery(revisionId)}`,
+    );
+    return payload.preview ? { ...payload.preview, revisionId: payload.revisionId } : null;
+  }
+
+  async function previewPromotion(boardId, revisionId, profile, baseRef = "main", options = {}) {
+    const preview = await postJob(`/api/boards/${encodeURIComponent(boardId)}/promotion/preview`, {
+      boardId,
+      expectedRevisionId: revisionId,
+      profile,
+      baseRef,
+    }, options);
+    return { ...preview, revisionId };
+  }
+
+  async function savePromotion(boardId, revisionId, profile, previewToken, options = {}) {
+    return postJob(`/api/boards/${encodeURIComponent(boardId)}/promotion/save`, {
+      boardId,
+      expectedRevisionId: revisionId,
+      profile,
+      previewToken,
+    }, options);
+  }
+
+  async function getValidationReport(boardId, revisionId) {
+    const payload = await request(
+      `/api/boards/${encodeURIComponent(boardId)}/validation?${revisionQuery(revisionId)}`,
+    );
+    return payload.report || null;
+  }
+
+  async function runValidation(boardId, revisionId, options = {}) {
+    return postJob(`/api/boards/${encodeURIComponent(boardId)}/validation/run`, {
+      boardId,
+      expectedRevisionId: revisionId,
+    }, options);
+  }
+
   function optimisticPayload(view) {
     return {
       boardId: view.boardId,
@@ -213,6 +257,11 @@
     importRun,
     openLibraryBoard,
     getBoard,
+    getPromotionPreview,
+    previewPromotion,
+    savePromotion,
+    getValidationReport,
+    runValidation,
     getJob,
     pollJob,
     saveDraft,

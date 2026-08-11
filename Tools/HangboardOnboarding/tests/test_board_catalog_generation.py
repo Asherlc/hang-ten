@@ -83,18 +83,13 @@ def test_render_swift_catalog_maps_legacy_manifest_grips_to_posture_and_capacity
     three_finger_block = hold_block("pocket-29-three-left")
     four_finger_block = hold_block("pocket-29-four-center")
 
-    assert "gripType: .sloper" not in rendered
-    assert "gripType: .twoFingerPocket" not in rendered
-    assert "gripType: .threeFingerPocket" not in rendered
-    assert "gripType: .fourFingerPocket" not in rendered
-
-    assert "gripType: .openHand" in sloper_block
+    assert "gripType: .sloper" in sloper_block
     assert "fingerCapacity: 4" in sloper_block
-    assert "gripType: .openHand" in two_finger_block
+    assert "gripType: .twoFingerPocket" in two_finger_block
     assert "fingerCapacity: 2" in two_finger_block
-    assert "gripType: .openHand" in three_finger_block
+    assert "gripType: .threeFingerPocket" in three_finger_block
     assert "fingerCapacity: 3" in three_finger_block
-    assert "gripType: .openHand" in four_finger_block
+    assert "gripType: .fourFingerPocket" in four_finger_block
     assert "fingerCapacity: 4" in four_finger_block
     assert "features: [.pocket, .fourFingerPocket]" in four_finger_block
 

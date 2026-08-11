@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -52,7 +49,7 @@ jobs:
           "$python_bin" -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
 
       - name: Run focused Node suite
-        run: node --test Tools/hold-highlight-editor/tests/*.test.js
+        run: node --test Tools/hold-highlight-editor/tests/workbench*.test.js
 
       - name: Build arm64 workbench executable
         run: |
@@ -205,7 +202,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: build
     name: Publish immutable workbench release
     runs-on: macos-15

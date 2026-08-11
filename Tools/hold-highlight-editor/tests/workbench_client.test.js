@@ -420,3 +420,173 @@ test("finalSave posts to the encoded board-scoped save route", async () => {
     expectedRevisionId: "revision-1",
   });
 });
+
+test("promotion and validation reads encode the board and active revision", async () => {
+  const calls = [];
+  global.fetch = async (path) => {
+    calls.push(path);
+    if (path.includes("/promotion")) {
+      return response({
+        ok: true,
+        boardId: "board 9",
+        revisionId: "revision & 1",
+        preview: {
+          boardId: "example.board",
+          revisionToken: "repository-token",
+          baseRef: "main",
+          files: [],
+          issues: [],
+          previewToken: "preview-1",
+        },
+      });
+    }
+    return response({
+      ok: true,
+      boardId: "board 9",
+      revisionId: "revision & 1",
+      report: {
+        boardId: "board 9",
+        revisionId: "revision & 1",
+        overallStatus: "passed",
+        checks: [],
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  assert.deepEqual(await client.getPromotionPreview("board 9", "revision & 1"), {
+    boardId: "example.board",
+    revisionToken: "repository-token",
+    revisionId: "revision & 1",
+    baseRef: "main",
+    files: [],
+    issues: [],
+    previewToken: "preview-1",
+  });
+  assert.deepEqual(await client.getValidationReport("board 9", "revision & 1"), {
+    boardId: "board 9",
+    revisionId: "revision & 1",
+    overallStatus: "passed",
+    checks: [],
+  });
+  assert.deepEqual(calls, [
+    "/api/boards/board%209/promotion?revisionId=revision+%26+1",
+    "/api/boards/board%209/validation?revisionId=revision+%26+1",
+  ]);
+});
+
+test("promotion preview and validation run use checkpoint-bound jobs", async () => {
+  const calls = [];
+  let jobCount = 0;
+  global.fetch = async (path, options = {}) => {
+    calls.push([path, options]);
+    if (!path.startsWith("/api/jobs/")) {
+      jobCount += 1;
+      return response({ ok: true, jobId: `job-${String(jobCount)}`, boardId: "board 9" });
+    }
+    const jobId = path.split("/").at(-1);
+    return response({
+      ok: true,
+      job: {
+        id: jobId,
+        boardId: "board 9",
+        state: "succeeded",
+        result: jobId === "job-1" ? {
+          boardId: "example.board",
+          revisionToken: "repository-token",
+          baseRef: "main",
+          files: [],
+          issues: [],
+          previewToken: "preview-2",
+        } : {
+          boardId: "board 9",
+          revisionId: "revision-2",
+          overallStatus: "passed",
+          checks: [],
+        },
+        error: null,
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+  const accepted = [];
+
+  assert.deepEqual(
+    await client.previewPromotion("board 9", "revision-2", { boardID: "board 9" }, "main", {
+      onAccepted(job) { accepted.push(job); },
+    }),
+    {
+      boardId: "example.board",
+      revisionToken: "repository-token",
+      revisionId: "revision-2",
+      baseRef: "main",
+      files: [],
+      issues: [],
+      previewToken: "preview-2",
+    },
+  );
+  assert.deepEqual(
+    await client.runValidation("board 9", "revision-2"),
+    {
+      boardId: "board 9",
+      revisionId: "revision-2",
+      overallStatus: "passed",
+      checks: [],
+    },
+  );
+  assert.deepEqual(accepted, [{ jobId: "job-1", boardId: "board 9" }]);
+  assert.equal(calls[0][0], "/api/boards/board%209/promotion/preview");
+  assert.deepEqual(JSON.parse(calls[0][1].body), {
+    boardId: "board 9",
+    expectedRevisionId: "revision-2",
+    profile: { boardID: "board 9" },
+    baseRef: "main",
+  });
+  assert.equal(calls[2][0], "/api/boards/board%209/validation/run");
+  assert.deepEqual(JSON.parse(calls[2][1].body), {
+    boardId: "board 9",
+    expectedRevisionId: "revision-2",
+  });
+});
+
+test("promotion save reports a terminal job failure after acceptance", async () => {
+  const accepted = [];
+  global.fetch = async (path) => {
+    if (path === "/api/boards/board%209/promotion/save") {
+      return response({ ok: true, jobId: "job-save-promotion", boardId: "board 9" });
+    }
+    return response({
+      ok: true,
+      job: {
+        id: "job-save-promotion",
+        boardId: "board 9",
+        state: "failed",
+        result: null,
+        error: "Promotion preview is stale",
+      },
+    });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  await assert.rejects(
+    client.savePromotion("board 9", "revision-2", { boardID: "board 9" }, "preview-2", {
+      onAccepted(job) { accepted.push(job); },
+    }),
+    (error) => error.terminal === true && error.jobId === "job-save-promotion",
+  );
+  assert.deepEqual(accepted, [{ jobId: "job-save-promotion", boardId: "board 9" }]);
+});
+
+test("the suite client has no commit, remote sync, or simulator lifecycle API", () => {
+  const source = require("node:fs").readFileSync(require.resolve("../workbench-client.js"), "utf8");
+
+  assert.doesNotMatch(source, /\/api\/[^"'`]*(?:commit|push|remote|simctl)\b/i);
+  assert.doesNotMatch(
+    source,
+    /\b(?:async\s+function|function)\s+(?:commit|push|remote|simctl)\w*\s*\(/i,
+  );
+  assert.match(source, /\/api\/boards\//);
+});

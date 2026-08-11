@@ -2,7 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
-    func testCompactIIPocketsExposeCapacityWithoutChangingOpenHandPosture() throws {
+    func testCompactIIPocketsExposeCapacityWithDistinctGripSemantics() throws {
         let twoFingerPocket = try XCTUnwrap(
             BoardCatalog.compactII.holds.first { $0.id == "pocket-29-two-left" }
         )
@@ -16,9 +16,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
         XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(twoFingerPocket.gripType, .openHand)
-        XCTAssertEqual(threeFingerPocket.gripType, .openHand)
-        XCTAssertEqual(fourFingerPocket.gripType, .openHand)
+        XCTAssertEqual(twoFingerPocket.gripType, .twoFingerPocket)
+        XCTAssertEqual(threeFingerPocket.gripType, .threeFingerPocket)
+        XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
     }
 
     func testPocketDefaultFeaturesRespectCapacityBoundaries() {

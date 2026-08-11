@@ -2,18 +2,35 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
-    func testGripTypeDecodesLegacyHoldCombinedValuesAsOpenHand() throws {
-        for legacyValue in ["sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket"] {
-            let decoded = try JSONDecoder().decode(
-                GripType.self,
-                from: Data("\"\(legacyValue)\"".utf8)
-            )
-            let reencoded = try JSONEncoder().encode(decoded)
-            let reencodedRawValue = try JSONDecoder().decode(String.self, from: reencoded)
+    func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
+        for gripType in GripType.allCases {
+            let encoded = try JSONEncoder().encode(gripType)
+            let encodedRawValue = try JSONDecoder().decode(String.self, from: encoded)
+            let decoded = try JSONDecoder().decode(GripType.self, from: encoded)
 
-            XCTAssertEqual(decoded, .openHand, "Expected \(legacyValue) to migrate to open-hand posture.")
-            XCTAssertEqual(reencodedRawValue, "openHand")
+            XCTAssertEqual(encodedRawValue, gripType.rawValue)
+            XCTAssertEqual(decoded, gripType)
         }
+    }
+
+    func testGripTypeRejectsUnknownRawValues() {
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(GripType.self, from: Data(#""campusing""#.utf8))
+        )
+    }
+
+    func testGripTypeUsesExpectedActiveFingersAndThumbState() {
+        XCTAssertEqual(GripType.openHand.activeFingers, Set(FingerSlot.allCases))
+        XCTAssertEqual(GripType.halfCrimp.activeFingers, Set(FingerSlot.allCases))
+        XCTAssertEqual(GripType.fullCrimp.activeFingers, Set(FingerSlot.allCases))
+        XCTAssertEqual(GripType.fourFingerPocket.activeFingers, Set(FingerSlot.allCases))
+        XCTAssertEqual(GripType.sloper.activeFingers, Set(FingerSlot.allCases))
+        XCTAssertEqual(GripType.threeFingerPocket.activeFingers, [.index, .middle, .ring])
+        XCTAssertEqual(GripType.twoFingerPocket.activeFingers, [.middle, .ring])
+
+        XCTAssertFalse(GripType.openHand.thumbEngaged)
+        XCTAssertFalse(GripType.sloper.thumbEngaged)
+        XCTAssertTrue(GripType.fullCrimp.thumbEngaged)
     }
 
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
@@ -64,7 +81,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testWorkoutStepDefinitionRoundTripsFingerConfigurationWithCurrentPostureVocabulary() throws {
+    func testWorkoutStepDefinitionRoundTripsFingerConfigurationWithDistinctPocketGripVocabulary() throws {
         let data = Data(
             #"""
             {
@@ -75,7 +92,7 @@ final class PlanStorageTests: XCTestCase {
               "duration": 10,
               "phase": "hang",
               "targets": [],
-              "gripType": "halfCrimp",
+              "gripType": "threeFingerPocket",
               "fingerConfiguration": { "engagedFingers": ["index", "ring"] }
             }
             """#.utf8
@@ -86,9 +103,9 @@ final class PlanStorageTests: XCTestCase {
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
         let fingerConfiguration = try XCTUnwrap(object["fingerConfiguration"] as? [String: [String]])
 
-        XCTAssertEqual(decoded.gripType, .halfCrimp)
+        XCTAssertEqual(decoded.gripType, .threeFingerPocket)
         XCTAssertEqual(decoded.fingerConfiguration?.orderedFingers, [.index, .ring])
-        XCTAssertEqual(object["gripType"] as? String, "halfCrimp")
+        XCTAssertEqual(object["gripType"] as? String, "threeFingerPocket")
         XCTAssertEqual(fingerConfiguration["engagedFingers"], ["index", "ring"])
     }
 
