@@ -61,6 +61,10 @@ jobs:
           cache: pip
           cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
 
+      - name: Verify generated board library
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/export-board-library.py --check
+
       - name: Install wheel-build prerequisites
         run: python -m pip install 'setuptools>=68' wheel
 
