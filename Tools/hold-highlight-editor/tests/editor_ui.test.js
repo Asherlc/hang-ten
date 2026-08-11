@@ -163,6 +163,28 @@ test("inspector disables tension only when per-edge curves override smooth mode"
   );
 });
 
+test("renderToolState keeps overridden curve tension disabled after a full render", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const renderToolStateBlock = app.match(/function renderToolState\(\) \{[\s\S]*?\n  \}/);
+
+  assert.ok(renderToolStateBlock, "expected renderToolState() to be present in app.js");
+  assert.match(
+    renderToolStateBlock[0],
+    /edgeCurveInspectorState\(selectedRegion\(\)\)\.overridden/,
+    "renderToolState() must account for edge-curve inspector overrides",
+  );
+  assert.match(
+    renderToolStateBlock[0],
+    /const curveTensionOverridden = Boolean\(\s*selectedRegion\(\) && edgeCurveInspectorState\(selectedRegion\(\)\)\.overridden,\s*\)/,
+    "renderToolState() must derive curveTensionOverridden from the selected region override state",
+  );
+  assert.match(
+    renderToolStateBlock[0],
+    /curve-tension-slider\"\]\.disabled = [^;\n]*curveTensionOverridden/,
+    "renderToolState() must keep the curve-tension slider disabled when the selected region is overridden",
+  );
+});
+
 test("editor exposes curve-editing affordances", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
   const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
@@ -182,6 +204,22 @@ test("editor exposes curve-editing affordances", () => {
   assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
+});
+
+test("declares each board picker element once in the element map", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const initBlock = app.match(
+    /const el = Object\.fromEntries\(\[(?<list>[\s\S]*?)\]\.map\(\(id\) => \[id, document\.getElementById\(id\)\]\)\);/,
+  );
+
+  assert.ok(initBlock, "expected the element initialization list in app.js");
+
+  const list = initBlock.groups.list;
+
+  for (const id of ["board-picker", "board-picker-separator", "board-select"]) {
+    const matches = list.match(new RegExp(`"${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g")) ?? [];
+    assert.equal(matches.length, 1, `${id} must appear exactly once in the element initialization list`);
+  }
 });
 
 test("renders exactly one region interaction mode control with its intended label and options", () => {
@@ -218,6 +256,15 @@ test("region edge-curve metadata renders a quadratic contour path", () => {
     ),
     "M 0 0 Q 5 -4 10 0 L 10 10 L 0 0 Z",
   );
+});
+
+test("live region rendering forwards edge curves into regionPath", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+  const liveRegionPathCall = app.match(
+    /const path = makeSvg\("path", \{\s*d:\s*regionPath\(\s*region\s*,\s*region\.metadata\.edgeCurves\s*\),[\s\S]*?fill:\s*colorFor\(region\)[\s\S]*?\}\);/,
+  );
+
+  assert.ok(liveRegionPathCall, "expected the live region path render call to forward region.metadata.edgeCurves");
 });
 
 const root = path.join(__dirname, "..");

@@ -22,6 +22,7 @@
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
 		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
+		AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
@@ -71,7 +72,7 @@
 		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
 		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
 		AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000066 /* CustomRoutineEditorView.swift */; };
-		AA0000000000000000000067 /* GeneratedBoardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000067 /* GeneratedBoardCatalog.swift */; };
+		AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000069 /* GeneratedBoardCatalog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,7 @@
 		BB0000000000000000000012 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000013 /* BoardDesignLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDesignLanguage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetoliusCompactIIDesign.swift; sourceTree = "<group>"; };
+		BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockProdigyTrainingCenterDesign.swift; sourceTree = "<group>"; };
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
@@ -141,7 +143,7 @@
 		BB0000000000000000000064 /* CustomRoutineDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraft.swift; sourceTree = "<group>"; };
 		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000066 /* CustomRoutineEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineEditorView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000067 /* GeneratedBoardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedBoardCatalog.swift; sourceTree = "<group>"; };
+		BB0000000000000000000069 /* GeneratedBoardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedBoardCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,7 +202,7 @@
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
-				BB0000000000000000000067 /* GeneratedBoardCatalog.swift */,
+				BB0000000000000000000069 /* GeneratedBoardCatalog.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000022 /* MotherboardModels.swift */,
@@ -230,6 +232,7 @@
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000013 /* BoardDesignLanguage.swift */,
 				BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */,
+				BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
@@ -413,6 +416,7 @@
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
+				AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
 				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
@@ -436,7 +440,7 @@
 				AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */,
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
-				AA0000000000000000000067 /* GeneratedBoardCatalog.swift in Sources */,
+				AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

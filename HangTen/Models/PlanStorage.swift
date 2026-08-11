@@ -701,7 +701,7 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
         }
-        if step.phase != .rest && step.targets.isEmpty {
+        if step.phase != .rest && step.phase != .conditioning && step.targets.isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
         let isCompoundStep = step.segments.count > 1
@@ -1341,6 +1341,7 @@ private final class PlanLibraryBundleToken {}
 /// format is introduced, and avoids silently changing any routine timing.
 enum BuiltInPlanLibraryDefinition {
     private static let compactBoardID = BoardCatalog.compactII.id
+    private static let rockProdigyBoardID = BoardCatalog.rockProdigyTrainingCenter.id
 
     private static let semanticHoldIDs: [String: [String]] = [
         "outer-jugs": ["jug-left", "jug-right"],
@@ -1356,6 +1357,16 @@ enum BuiltInPlanLibraryDefinition {
         "pocket-19-four": ["pocket-19-four-center"]
     ]
 
+    private static let rockProdigySemanticHoldIDs: [String: [String]] = [
+        "warmup-jug": ["trango.rptc.left.top-jug", "trango.rptc.right.top-jug"],
+        "large-open-hand-rail": ["trango.rptc.left.large-open-rail", "trango.rptc.right.large-open-rail"],
+        "deep-two-finger-pocket": ["trango.rptc.left.deep-mr-pocket", "trango.rptc.right.deep-mr-pocket"],
+        "thin-crimp": ["trango.rptc.left.thin-crimp", "trango.rptc.right.thin-crimp"],
+        "shallow-three-finger-slot": ["trango.rptc.left.three-finger-slot", "trango.rptc.right.three-finger-slot"],
+        "wide-pinch": ["trango.rptc.left.wide-pinch", "trango.rptc.right.wide-pinch"],
+        "sloper": ["trango.rptc.left.sloper", "trango.rptc.right.sloper"]
+    ]
+
     static let document: PlanLibraryDefinition = makeDocument()
 
     private static func makeDocument() -> PlanLibraryDefinition {
@@ -1363,6 +1374,12 @@ enum BuiltInPlanLibraryDefinition {
         let boardMapping = BoardMappingDefinition(
             boardID: compactBoardID,
             semanticHolds: semanticHoldIDs.reduce(into: [:]) { result, entry in
+                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
+            }
+        )
+        let rockProdigyBoardMapping = BoardMappingDefinition(
+            boardID: rockProdigyBoardID,
+            semanticHolds: rockProdigySemanticHoldIDs.reduce(into: [:]) { result, entry in
                 result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
             }
         )
@@ -1414,7 +1431,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
             ),
-            boardMappings: [boardMapping],
+            boardMappings: [boardMapping, rockProdigyBoardMapping],
             blocks: blocks,
             plans: definitions
         )
@@ -1441,6 +1458,37 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id {
+            notes = [
+                "Weekly-template frequencies are preserved exactly from the source sample week.",
+                "The app uses 60-second manual/coach-guided preview rows because the source template does not prescribe task durations or counts."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
+            notes = [
+                "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
+                "The app uses manual 60-second conditioning rows where Hooper's Beta gives a rep range or coach-guided movement rather than a standalone timer."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.methodRepeaters.id || plan.id == LegacyPlanSeedCatalog.methodEMOM.id {
+            notes = [
+                "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
+                "The app defaults repeater ranges to 7s/7s and 105s recovery, and uses 5 seconds per pull-up or 1 second per knee raise where the source gives no movement duration."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.latticeBeginnerGuide.id {
+            notes = [
+                "Reference-plan guidance is preserved without inventing counts or a weekly schedule.",
+                "The app uses coach-guided preview rows; the 20-second foot-supported hang remains explicitly an example, not a universal prescription."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
+            notes = [
+                "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
+                "The app defaults the source ranges to 7 seconds and uses a manual 25-minute warm-up preview."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.rockProdigyIntermediate.id {
+            notes = [
+                "Trango's official manual URL: https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
+                "The exact intermediate 7-rep then 6-rep sequence, 7s/3s intervals, 3-minute set rests, two-hand dead-hang-only rule, and no pull-ups/no lock-offs are retained.",
+                "This plan is board-specific to the Trango Rock Prodigy Training Center; its warm-up jug, variable large rail, deep MR pocket, thin crimp, shallow 3-finger slot, wide pinch, and sloper resolve to the RPTC feature inventory."
             ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]
@@ -1593,6 +1641,13 @@ enum PlanCatalog {
     static let ladders = required("coach.bechtel-three-six-nine")
     static let densityHangs = required("coach.density-hangs")
     static let zlagboardEndurance = required("device.zlagboard-sixty-sixty")
+    static let latticeLiteHomeAdaptations = required("lattice.lite-home-adaptations")
+    static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
+    static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
+    static let methodEMOM = required("method.intermediate-hangboarding.emom")
+    static let latticeBeginnerGuide = required("lattice.beginner-climbers-training-guide")
+    static let reiHangboardSample = required("rei.hangboard-sample-workout")
+    static let rockProdigyIntermediate = required("trango.rock-prodigy-training-center.intermediate")
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
 

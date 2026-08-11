@@ -91,10 +91,6 @@ jobs:
             configuration: Debug
             sdk: iphonesimulator
             destination: generic/platform=iOS Simulator
-          - name: Release device
-            configuration: Release
-            sdk: iphoneos
-            destination: generic/platform=iOS
 
     steps:
       # actions/checkout v4.2.2
@@ -134,9 +130,53 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-logs/
           if-no-files-found: ignore
 
+  build-release-device:
+    name: Build (Release device)
+    if: github.event_name != 'pull_request'
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Build Release device
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/hang-ten-logs" "$RUNNER_TEMP/hang-ten-derived-data"
+          xcodebuild \
+            -project HangTen.xcodeproj \
+            -scheme HangTen \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination generic/platform=iOS \
+            -derivedDataPath "$RUNNER_TEMP/hang-ten-derived-data/Release-iphoneos" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build 2>&1 | tee "$RUNNER_TEMP/hang-ten-logs/Release-iphoneos.log"
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-build-logs-Release-iphoneos-${{ github.run_id }}
+          path: ${{ runner.temp }}/hang-ten-logs/
+          if-no-files-found: ignore
+
   test:
     name: Test (iOS Simulator)
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
 
     steps:

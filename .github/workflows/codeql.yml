@@ -4,9 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - HangTen/**
+      - HangTen.xcodeproj/**
+      - .github/workflows/codeql.yml
   push:
     branches:
       - main
+    paths:
+      - HangTen/**
+      - HangTen.xcodeproj/**
+      - .github/workflows/codeql.yml
   merge_group:
   workflow_dispatch:
   schedule:
@@ -34,9 +42,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # github/codeql-action v4.37.5
+      # github/codeql-action v4.37.6
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@d1ba80a13dd99fba24a470575428917156a28b43
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3
         with:
           languages: swift
           build-mode: manual
@@ -52,12 +60,14 @@ jobs:
             -sdk iphonesimulator \
             -destination "generic/platform=iOS Simulator" \
             -derivedDataPath "$RUNNER_TEMP/codeql-derived-data" \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee "$RUNNER_TEMP/codeql-logs/xcodebuild.log"
 
-      # github/codeql-action v4.37.5
+      # github/codeql-action v4.37.6
       - name: Analyze with CodeQL
-        uses: github/codeql-action/analyze@d1ba80a13dd99fba24a470575428917156a28b43
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
         with:
           category: "/language:swift"

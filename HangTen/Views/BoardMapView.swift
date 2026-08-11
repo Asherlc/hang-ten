@@ -181,6 +181,8 @@ private struct GenericHoldVisual: View {
             AnyShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
         case .pocket:
             AnyShape(Capsule())
+        case .pinch:
+            AnyShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         case .sloper:
             AnyShape(Ellipse())
         }
