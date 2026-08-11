@@ -629,7 +629,12 @@ enum PlanLibraryValidator {
             }
         )
         for (boardID, mapping) in planMappingByBoardID {
-            mappingByBoardID[boardID] = mapping
+            var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
+            semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
+            mappingByBoardID[boardID] = BoardMappingDefinition(
+                boardID: boardID,
+                semanticHolds: semanticHolds
+            )
         }
 
         var blockByID: [String: WorkoutBlockDefinition] = [:]
@@ -1079,8 +1084,13 @@ struct PlanDefinitionResolver {
 
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
-        let mapping = library.boardMappings.first { $0.boardID == board.id }
-            ?? BoardMappingDefinition(boardID: board.id, semanticHolds: board.semanticHolds)
+        let planMapping = library.boardMappings.first { $0.boardID == board.id }
+        let mapping = BoardMappingDefinition(
+            boardID: board.id,
+            semanticHolds: board.semanticHolds.merging(planMapping?.semanticHolds ?? [:]) {
+                _, planMapping in planMapping
+            }
+        )
 
         for reference in definition.blocks {
             guard let block = blocks[reference.blockID] else {

@@ -44,6 +44,17 @@ final class BoardStorageTests: XCTestCase {
         }
     }
 
+    func testBoardLibraryStoreDistinguishesMalformedReadableJSON() throws {
+        let malformedURL = try writeTemporaryFixture(Data("{ malformed".utf8))
+        defer { try? FileManager.default.removeItem(at: malformedURL) }
+
+        XCTAssertThrowsError(try BoardLibraryStore(contentsOf: malformedURL)) { error in
+            guard case BoardLibraryStoreError.decoding = error else {
+                return XCTFail("Expected a decoding error, got: \(error)")
+            }
+        }
+    }
+
     func testBundledCompactIIFixtureDecodesEveryBoardHold() throws {
         let resourceURL = try XCTUnwrap(
             Bundle(for: Self.self).url(forResource: "BoardLibrary", withExtension: "json")

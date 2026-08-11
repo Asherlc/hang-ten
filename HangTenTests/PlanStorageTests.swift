@@ -1058,6 +1058,36 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testPlanMappingOverridesMatchingBoardSemanticKeyWithoutReplacingOtherBoardKeys() throws {
+        let boardStore = try BoardLibraryStore(data: Data("""
+        {"schemaVersion":1,"metadata":{"id":"fixture.board-library","version":"1.0.0","title":"Fixture board library","generatedAt":"2026-08-10"},"boards":[{"id":"fixture.board","manufacturer":"Fixture Maker","name":"Fixture Board","subtitle":"A test board.","dimensions":"10 × 5","aspectRatio":2,"holds":[{"id":"fixture.edge","name":"Fixture edge","shortLabel":"E","detail":"A fixture edge.","kind":"edge","frame":{"x":0.1,"y":0.2,"width":0.2,"height":0.4}},{"id":"fixture.pinch","name":"Fixture pinch","shortLabel":"P","detail":"A fixture pinch.","kind":"pinch","frame":{"x":0.5,"y":0.2,"width":0.2,"height":0.4}}],"semanticHolds":{"fixture-target":{"holdIDs":["fixture.edge"]},"fixture-fallback":{"holdIDs":["fixture.pinch"]}},"productURL":"https://example.com/fixture-board"}]}
+        """.utf8))
+        let step = makeStep(
+            id: "semantic-target",
+            duration: 10,
+            targets: [.semantics(["fixture-target", "fixture-fallback"])],
+            segments: []
+        )
+        let store = try PlanLibraryStore(
+            definition: makeLibrary(
+                steps: [step],
+                boardID: "fixture.board",
+                boardMappings: [
+                    BoardMappingDefinition(
+                        boardID: "fixture.board",
+                        semanticHolds: ["fixture-target": SemanticHoldMappingDefinition(kind: .jug)]
+                    )
+                ]
+            ),
+            availableBoards: boardStore.boards
+        )
+
+        XCTAssertEqual(
+            try XCTUnwrap(store.plan(id: "test.plan")).steps.first?.targets,
+            [.kind(.jug), .ids("fixture.pinch")]
+        )
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30
