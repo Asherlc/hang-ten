@@ -7,6 +7,10 @@ on:
     paths:
       - HangTen/**
       - HangTen.xcodeproj/**
+      - scripts/export-board-catalog.py
+      - scripts/export-board-library.py
+      - Tools/HangboardOnboarding/**
+      - Tools/hold-highlight-editor/**
       - .github/workflows/codeql.yml
   push:
     branches:
@@ -14,6 +18,10 @@ on:
     paths:
       - HangTen/**
       - HangTen.xcodeproj/**
+      - scripts/export-board-catalog.py
+      - scripts/export-board-library.py
+      - Tools/HangboardOnboarding/**
+      - Tools/hold-highlight-editor/**
       - .github/workflows/codeql.yml
   merge_group:
   workflow_dispatch:
@@ -30,7 +38,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  analyze:
+  analyze-swift:
     name: Analyze (Swift)
     runs-on: macos-26
     timeout-minutes: 30
@@ -71,3 +79,35 @@ jobs:
         uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
         with:
           category: "/language:swift"
+
+  analyze-interpreted:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - javascript-typescript
+          - python
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # github/codeql-action v4.37.6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+
+      # github/codeql-action v4.37.6
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          category: "/language:${{ matrix.language }}"
