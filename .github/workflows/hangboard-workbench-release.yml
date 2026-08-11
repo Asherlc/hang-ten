@@ -16,9 +16,9 @@ concurrency:
 jobs:
   build:
     name: Build verified arm64 workbench
-    # GitHub's macos-15 label is Intel. The xlarge image is the Apple Silicon
-    # runner required to produce and execute the verified arm64 artifact.
-    runs-on: macos-15-xlarge
+    # Keep the workbench on the same explicit Apple Silicon macOS image as the
+    # app workflows while producing and executing the verified arm64 artifact.
+    runs-on: macos-26
     timeout-minutes: 45
 
     steps:
@@ -207,7 +207,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: build
     name: Publish immutable workbench release
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
     permissions:
       # Required to create the immutable GitHub release and upload its assets.
