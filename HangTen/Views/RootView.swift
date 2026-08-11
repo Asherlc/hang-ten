@@ -1188,6 +1188,7 @@ struct WorkoutAudioMoment: Hashable {
 }
 
 enum WorkoutAudioCueAction: Equatable {
+	case none
 	case speak(WorkoutAudioMoment)
 	case stop
 }
@@ -1260,7 +1261,7 @@ enum WorkoutAudioCuePolicy {
 	}
 
 	static func action(for moment: WorkoutAudioMoment?) -> WorkoutAudioCueAction {
-		guard let moment else { return .stop }
+		guard let moment else { return .none }
 		return .speak(moment)
 	}
 }
@@ -1642,6 +1643,8 @@ struct WorkoutView: View {
 					}
 
 					switch WorkoutAudioCuePolicy.action(for: moment) {
+					case .none:
+						break
 					case .speak(let moment):
 						audioCoach.speak(moment.phrase)
 					case .stop:

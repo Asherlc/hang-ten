@@ -1417,8 +1417,8 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 final class WorkoutAudioCuePolicyTests: XCTestCase {
     private let stepID = "f80-set-2-rep-3"
 
-    func testMissingAudioMomentRequestsImmediateStop() {
-        XCTAssertEqual(WorkoutAudioCuePolicy.action(for: nil), .stop)
+    func testMissingAudioMomentLeavesInFlightCueUntouched() {
+        XCTAssertEqual(WorkoutAudioCuePolicy.action(for: nil), .none)
     }
 
     func testNumericAudioMomentRequestsSpeechWithoutAStageLabel() {
@@ -1509,7 +1509,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
         )
     }
 
-    func testCompletionDuringInitialCountdownRequestsStop() {
+    func testCompletionDuringInitialCountdownLeavesInFlightCueUntouched() {
         XCTAssertEqual(
             WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
                 stepID: stepID,
@@ -1518,11 +1518,11 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 intervalSecondsRemaining: 60,
                 isComplete: true
             )),
-            .stop
+            .none
         )
     }
 
-    func testCompletionDuringSkipCountdownRequestsStop() {
+    func testCompletionDuringSkipCountdownLeavesInFlightCueUntouched() {
         XCTAssertEqual(
             WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
                 stepID: stepID,
@@ -1532,7 +1532,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 isComplete: true,
                 countdownKind: .skip
             )),
-            .stop
+            .none
         )
     }
 
