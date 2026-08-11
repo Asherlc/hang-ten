@@ -54,11 +54,11 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
 
     var capabilities: Set<ForceSensorCapability> {
         switch self {
-        case .progressor, .pitchSix:
+        case .progressor, .genericProgressor, .pitchSix:
             [.hardwareTare, .explicitStartStop]
         case .entralpi, .climbro:
             [.batteryLevel]
-        case .automatic, .motherboard, .whC06, .genericProgressor, .genericWHC06:
+        case .automatic, .motherboard, .whC06, .genericWHC06:
             []
         }
     }
@@ -132,6 +132,7 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
 enum ForceSensorSourceUnit: Equatable {
     case kilogramsForce
     case poundsForce
+    case batteryPercent
 }
 
 struct ForceSensorDecodedSample: Equatable {
@@ -157,6 +158,15 @@ struct ForceSensorDecoder {
         return try decoder.decode(data, profile: profile, receivedAt: receivedAt)
     }
 
+    static func decode(
+        _ data: Data,
+        profile: ForceSensorProfile,
+        receivedAt: Date,
+        using decoder: inout ForceSensorDecoder
+    ) throws -> [ForceSensorDecodedSample] {
+        try decoder.decode(data, profile: profile, receivedAt: receivedAt)
+    }
+
     mutating func decode(_ data: Data, profile: ForceSensorProfile, receivedAt: Date) throws -> [ForceSensorDecodedSample] {
         switch profile {
         case .progressor, .genericProgressor:
@@ -179,12 +189,14 @@ struct ForceSensorDecoder {
         let payloadLength = Int(data[1])
         guard payloadLength % 8 == 0, data.count == payloadLength + 2 else { throw ForceSensorDecoderError.malformedPacket }
 
-        return stride(from: 2, to: data.count, by: 8).map { index in
+        return try stride(from: 2, to: data.count, by: 8).map { index in
             let bits = UInt32(data[index])
                 | UInt32(data[index + 1]) << 8
                 | UInt32(data[index + 2]) << 16
                 | UInt32(data[index + 3]) << 24
-            return ForceSensorDecodedSample(value: Double(Float32(bitPattern: bits)), unit: .kilogramsForce, receivedAt: receivedAt)
+            let value = Double(Float32(bitPattern: bits))
+            guard value.isFinite, value >= 0 else { throw ForceSensorDecoderError.malformedPacket }
+            return ForceSensorDecodedSample(value: value, unit: .kilogramsForce, receivedAt: receivedAt)
         }
     }
 
@@ -219,9 +231,16 @@ struct ForceSensorDecoder {
             case 0xF5:
                 climbroMarker = .force
             default:
-                guard climbroMarker == .force else { return }
-                let value = byte == 0xF6 ? 36 : Double(byte)
-                samples.append(ForceSensorDecodedSample(value: value, unit: .kilogramsForce, receivedAt: receivedAt))
+                switch climbroMarker {
+                case .force:
+                    let value = byte == 0xF6 ? 36 : Double(byte)
+                    samples.append(ForceSensorDecodedSample(value: value, unit: .kilogramsForce, receivedAt: receivedAt))
+                case .battery:
+                    let value = min(max((Double(byte) - 112) * 100 / 118, 0), 100)
+                    samples.append(ForceSensorDecodedSample(value: value, unit: .batteryPercent, receivedAt: receivedAt))
+                case nil:
+                    return
+                }
             }
         }
     }
