@@ -190,7 +190,7 @@ def test_release_signing_protects_api_key_and_allows_notarization_to_finish():
     )
 
 
-def test_existing_release_validation_compares_downloaded_assets_to_current_build():
+def test_existing_release_validation_checks_downloaded_zip_checksum():
     release = _workflow()["jobs"]["release"]
     script = _step(release, "Publish immutable GitHub release")["run"]
 
@@ -198,10 +198,14 @@ def test_existing_release_validation_compares_downloaded_assets_to_current_build
     assert "required_asset_names = sorted([" in script
     assert 'existing_release_dir="$RUNNER_TEMP/hangboard-workbench-existing-release"' in script
     assert 'gh release download "$tag"' in script
-    assert 'current_asset="$release_dir/$asset_name"' in script
-    assert 'cmp -s' in script
+    assert 'cd "$existing_release_dir"' in script
+    assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in script
+    assert 'current_asset="$release_dir/$asset_name"' not in script
+    assert "cmp -s" not in script
     assert script.index("asset_names = sorted") < script.index("gh release download")
-    assert script.index("gh release download") < script.index("exit 0")
+    assert script.index("gh release download") < script.index(
+        "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256"
+    ) < script.index("exit 0")
 
 
 def test_final_release_checksum_uses_the_downloadable_zip_basename():

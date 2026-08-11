@@ -374,16 +374,18 @@ jobs:
               hangboard-workbench-macos-arm64.zip \
               hangboard-workbench-macos-arm64.sha256; do
               existing_asset="$existing_release_dir/$asset_name"
-              current_asset="$release_dir/$asset_name"
               if [[ ! -f "$existing_asset" ]]; then
                 echo "Existing release asset is missing after download: $asset_name" >&2
                 exit 1
               fi
-              if ! cmp -s "$existing_asset" "$current_asset"; then
-                echo "Existing release asset differs from the current build: $asset_name" >&2
-                exit 1
-              fi
             done
+            if ! (
+              cd "$existing_release_dir"
+              shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+            ); then
+              echo "Existing release ZIP failed its downloaded SHA-256 checksum." >&2
+              exit 1
+            fi
             exit 0
           elif ! grep -q 'HTTP 404' "$release_error"; then
             cat "$release_error" >&2
