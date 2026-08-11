@@ -1463,6 +1463,16 @@ enum BuiltInPlanLibraryDefinition {
             category = "coach"
         } else if plan.id.hasPrefix("device.") {
             category = "device"
+        } else if [
+            LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id,
+            LegacyPlanSeedCatalog.hoopersBetaIntroductory.id,
+            LegacyPlanSeedCatalog.methodRepeaters.id,
+            LegacyPlanSeedCatalog.methodEMOM.id,
+            LegacyPlanSeedCatalog.latticeBeginnerGuide.id
+        ].contains(plan.id) {
+            category = "coach"
+        } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
+            category = "retailer"
         } else {
             category = "manufacturer"
         }

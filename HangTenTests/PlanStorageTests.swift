@@ -756,6 +756,12 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertFalse(
             definition.blocks.contains { $0.id == "shared.cool-down" }
         )
+        XCTAssertFalse(
+            definition.blocks.contains { $0.id == "shared.progressive-warm-up" }
+        )
+        XCTAssertTrue(
+            store.plans.flatMap(\.steps).allSatisfy { $0.phase != .warmUp }
+        )
         XCTAssertTrue(
             store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
         )
@@ -1098,6 +1104,10 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(expectedIDs.allSatisfy { id in
             LegacyPlanSeedCatalog.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
         })
+        XCTAssertEqual(
+            expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
+            ["coach", "coach", "coach", "coach", "coach", "retailer", "manufacturer"]
+        )
     }
 
     func testRockProdigyMetadataUsesDistinctPinchKindAndDepthFeatures() throws {

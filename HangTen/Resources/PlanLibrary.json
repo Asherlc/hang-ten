@@ -15827,7 +15827,7 @@
       ],
       "id" : "lattice.lite-home-adaptations",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "coach",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -15843,7 +15843,7 @@
         "subtitle" : "Faithful weekly template with app-guided rows where the PDF gives no task timer.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "coach"
         ],
         "title" : "Lattice Lite Guide · Home Adaptations"
       }
@@ -15859,7 +15859,7 @@
       ],
       "id" : "hoopers-beta.introductory-home-hangboard",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "coach",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -15875,7 +15875,7 @@
         "subtitle" : "45+ minute routine with exact round order, optionality, and coach-guided qualifiers retained.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "coach"
         ],
         "title" : "Hooper's Beta · Introductory Home Hangboard"
       }
@@ -15891,7 +15891,7 @@
       ],
       "id" : "method.intermediate-hangboarding.repeaters",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "coach",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -15907,7 +15907,7 @@
         "subtitle" : "Five-round repeater workout; app uses the top of each source range as its guided default.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "coach"
         ],
         "title" : "Method Climbing · Intermediate Repeaters"
       }
@@ -15923,7 +15923,7 @@
       ],
       "id" : "method.intermediate-hangboarding.emom",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "coach",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -15939,7 +15939,7 @@
         "subtitle" : "Exact ten-minute task order with app defaults for un-timed pull-up\/knee-raise work.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "coach"
         ],
         "title" : "Method Climbing · Intermediate 10-minute EMOM"
       }
@@ -15955,7 +15955,7 @@
       ],
       "id" : "lattice.beginner-climbers-training-guide",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "coach",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -15971,7 +15971,7 @@
         "subtitle" : "Reference plan, not a fabricated timed protocol; source guidance prioritizes climbing and basic strength first.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "coach"
         ],
         "title" : "Lattice Beginner Climber's Foundational Guide"
       }
@@ -15987,7 +15987,7 @@
       ],
       "id" : "rei.hangboard-sample-workout",
       "metadata" : {
-        "category" : "manufacturer",
+        "category" : "retailer",
         "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
@@ -16003,7 +16003,7 @@
         "subtitle" : "Simple five-grip sample with source alternatives, recovery warning, and pain stop retained.",
         "tags" : [
           "built-in",
-          "manufacturer"
+          "retailer"
         ],
         "title" : "REI · Hangboard Sample Workout"
       }
