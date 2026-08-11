@@ -986,7 +986,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
-    func testEffectiveSemanticMappingsRejectKindsMissingFromSelectedBoard() {
+    func testEffectiveSemanticMappingsPreserveSourcePathsAndPlanMappingsTakePrecedence() {
         let edgeOnlyBoard = TrainingBoard(
             id: "fixture.edge-only",
             manufacturer: "Fixture Maker",
@@ -1004,43 +1004,45 @@ final class PlanStorageTests: XCTestCase {
                     frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
                 )
             ],
+            semanticHolds: [
+                "fixture-board-owned": SemanticHoldMappingDefinition(kind: .pinch),
+                "fixture-overridden": SemanticHoldMappingDefinition(kind: .pinch)
+            ],
             productURL: URL(string: "https://example.com/edge-only")!,
             photoAssetName: nil
         )
         let step = makeStep(
             id: "semantic-target",
             duration: 10,
-            targets: [.semantic("fixture-target")],
+            targets: [.semantic("fixture-overridden")],
             segments: []
         )
 
-        let validLibrary = makeLibrary(
+        let library = makeLibrary(
             steps: [step],
             boardID: edgeOnlyBoard.id,
             boardMappings: [
                 BoardMappingDefinition(
                     boardID: edgeOnlyBoard.id,
-                    semanticHolds: ["fixture-target": SemanticHoldMappingDefinition(kind: .edge)]
+                    semanticHolds: [
+                        "fixture-plan": SemanticHoldMappingDefinition(kind: .pinch),
+                        "fixture-overridden": SemanticHoldMappingDefinition(kind: .edge)
+                    ]
                 )
             ]
         )
-        XCTAssertEqual(validLibrary.validationIssues(availableBoards: [edgeOnlyBoard]), [])
-
-        let pinchLibrary = makeLibrary(
-            steps: [step],
-            boardID: edgeOnlyBoard.id,
-            boardMappings: [
-                BoardMappingDefinition(
-                    boardID: edgeOnlyBoard.id,
-                    semanticHolds: ["fixture-target": SemanticHoldMappingDefinition(kind: .pinch)]
-                )
-            ]
-        )
-        let issues = pinchLibrary.validationIssues(availableBoards: [edgeOnlyBoard])
+        let issues = library.validationIssues(availableBoards: [edgeOnlyBoard])
 
         XCTAssertTrue(issues.contains {
-            $0.path == "boardMappings[0].semanticHolds.fixture-target" &&
+            $0.path == "boards[0].semanticHolds.fixture-board-owned" &&
                 $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+        XCTAssertTrue(issues.contains {
+            $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
+                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+        XCTAssertFalse(issues.contains {
+            $0.path == "boards[0].semanticHolds.fixture-overridden"
         })
     }
 

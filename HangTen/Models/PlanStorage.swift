@@ -620,34 +620,35 @@ enum PlanLibraryValidator {
             }
         }
 
-        var mappingByBoardID = Dictionary(
-            uniqueKeysWithValues: boardByID.compactMap { boardID, boards in
-                boards.first.map {
-                    (
-                        boardID,
-                        BoardMappingDefinition(boardID: boardID, semanticHolds: $0.semanticHolds)
-                    )
+        var mappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var semanticMappingPathByBoardID: [String: [String: String]] = [:]
+        for (index, board) in availableBoards.enumerated() where mappingByBoardID[board.id] == nil {
+            mappingByBoardID[board.id] = BoardMappingDefinition(
+                boardID: board.id,
+                semanticHolds: board.semanticHolds
+            )
+            semanticMappingPathByBoardID[board.id] = Dictionary(
+                uniqueKeysWithValues: board.semanticHolds.keys.map {
+                    ($0, "boards[\(index)].semanticHolds.\($0)")
                 }
-            }
-        )
-        var mappingPathByBoardID = Dictionary(
-            uniqueKeysWithValues: boardByID.keys.map {
-                ($0, "boards[\($0)].semanticHolds")
-            }
-        )
+            )
+        }
         for (boardID, mapping) in planMappingByBoardID {
             var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
             semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
+            var semanticPaths = semanticMappingPathByBoardID[boardID] ?? [:]
+            for semanticID in mapping.semanticHolds.keys {
+                semanticPaths[semanticID] = "\(planMappingPathByBoardID[boardID]!).semanticHolds.\(semanticID)"
+            }
             mappingByBoardID[boardID] = BoardMappingDefinition(
                 boardID: boardID,
                 semanticHolds: semanticHolds
             )
-            mappingPathByBoardID[boardID] = planMappingPathByBoardID[boardID]
+            semanticMappingPathByBoardID[boardID] = semanticPaths
         }
 
         for (boardID, mapping) in mappingByBoardID {
             guard let board = boardByID[boardID]?.first else { continue }
-            let mappingPath = mappingPathByBoardID[boardID] ?? "boards[\(boardID)].semanticHolds"
             for (semanticID, target) in mapping.semanticHolds {
                 guard let kind = target.kind,
                       !board.holds.contains(where: { $0.kind == kind }) else {
@@ -655,7 +656,7 @@ enum PlanLibraryValidator {
                 }
                 issues.append(
                     PlanValidationIssue(
-                        path: "\(mappingPath).\(semanticID)",
+                        path: semanticMappingPathByBoardID[boardID]?[semanticID] ?? "semanticHolds.\(semanticID)",
                         message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(boardID)\"."
                     )
                 )
