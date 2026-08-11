@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 import signal
 import sys
-import webbrowser
 from argparse import ArgumentParser
 from collections.abc import Callable
 from pathlib import Path
@@ -56,9 +55,8 @@ def _run(
     arguments: list[str],
     *,
     server_factory: Callable[..., tuple[WorkbenchHTTPServer, EditorCatalog | None]],
-    browser_open: Callable[[str], bool],
 ) -> int:
-    no_open, show_version, forwarded = _packaged_arguments(arguments)
+    _no_open, show_version, forwarded = _packaged_arguments(arguments)
     root = _resource_root()
     if show_version:
         print(_build_commit(root), flush=True)
@@ -85,11 +83,6 @@ def _run(
     }
     try:
         print(f"Hangboard Workbench: {url}", flush=True)
-        if not no_open:
-            try:
-                browser_open(url)
-            except OSError:
-                pass
         server.serve_forever()
     except KeyboardInterrupt:
         pass
@@ -107,7 +100,6 @@ def main(arguments: list[str] | None = None) -> int:
         return _run(
             list(sys.argv[1:] if arguments is None else arguments),
             server_factory=_server_from_cli,
-            browser_open=webbrowser.open,
         )
     except (PackagedWorkbenchError, ServerBindError, StaticAssetError) as error:
         print(f"Hangboard Workbench: {error}", file=sys.stderr)
