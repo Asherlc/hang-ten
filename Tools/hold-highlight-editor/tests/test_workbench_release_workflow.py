@@ -176,6 +176,21 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
     assert "hangboard-workbench-macos-arm64.tar.gz" in workflow_text
 
 
+def test_final_release_checksum_uses_the_downloadable_zip_basename():
+    release = _workflow()["jobs"]["release"]
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+
+    assert (
+        "shasum -a 256 hangboard-workbench-macos-arm64.zip "
+        "> hangboard-workbench-macos-arm64.sha256"
+    ) in signing_script
+    assert (
+        'shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256'
+        not in signing_script
+    )
+    assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in signing_script
+
+
 def test_release_publication_requires_an_explicit_manual_dispatch():
     workflow = _workflow()
     triggers = workflow["true"]

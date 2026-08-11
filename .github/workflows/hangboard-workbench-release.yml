@@ -294,7 +294,7 @@ jobs:
 
           rm -f "$archive"
           ditto -c -k --keepParent "$app_bundle" "$archive"
-          shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256
+          shasum -a 256 hangboard-workbench-macos-arm64.zip > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
       - name: Publish immutable GitHub release
