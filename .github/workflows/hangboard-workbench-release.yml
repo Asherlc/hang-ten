@@ -206,12 +206,18 @@ jobs:
     needs: build
     name: Publish immutable workbench release
     runs-on: macos-15
-    timeout-minutes: 15
+    timeout-minutes: 30
     permissions:
       # Required to create the immutable GitHub release and upload its assets.
       contents: write
 
     steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
       # actions/download-artifact v5.0.0
       - name: Download verified release assets
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
@@ -223,6 +229,74 @@ jobs:
         run: |
           set -euo pipefail
           cd release
+          shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
+      # Apple-Actions/import-codesign-certs v7.0.0
+      - name: Import Developer ID Application certificate
+        uses: Apple-Actions/import-codesign-certs@5142e029c445c10ffc7149d172e540235a065466
+        with:
+          keychain: signing_temp
+          p12-file-base64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_FILE_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+
+      - name: Sign, notarize, and validate workbench app
+        env:
+          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/release"
+          executable="$release_dir/hangboard-workbench"
+          app_bundle="$release_dir/hangboard-workbench.app"
+          archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
+          trap 'rm -f "$api_key_path"' EXIT
+
+          cd "$release_dir"
+          tar -xzf hangboard-workbench-macos-arm64.tar.gz
+          test -x "$executable"
+          python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py" \
+            --executable "$executable" \
+            --output "$app_bundle" \
+            --version "$GITHUB_RUN_NUMBER"
+
+          signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
+            | awk -F '\"' '/Developer ID Application:/{print $2}')"
+          identity_count="$(printf '%s\n' "$signing_identities" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [[ "$identity_count" -ne 1 ]]; then
+            echo "Expected exactly one Developer ID Application identity, found $identity_count." >&2
+            exit 1
+          fi
+          signing_identity="$signing_identities"
+          if [[ "$signing_identity" != *"($APPLE_TEAM_ID)" ]]; then
+            echo "Developer ID Application identity does not match APPLE_TEAM_ID." >&2
+            exit 1
+          fi
+
+          codesign --force --sign "$signing_identity" --options runtime --timestamp \
+            "$app_bundle/Contents/MacOS/hangboard-workbench"
+          codesign --force --sign "$signing_identity" --options runtime --timestamp \
+            "$app_bundle"
+          codesign --verify --deep --strict --verbose=2 "$app_bundle"
+
+          ditto -c -k --keepParent "$app_bundle" "$archive"
+          umask 077
+          printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
+          chmod 600 "$api_key_path"
+          xcrun notarytool submit "$archive" \
+            --key "$api_key_path" \
+            --key-id "$APPSTORE_API_KEY_ID" \
+            --issuer "$APPSTORE_ISSUER_ID" \
+            --wait
+          xcrun stapler staple "$app_bundle"
+          xcrun stapler validate "$app_bundle"
+          spctl --assess --type execute --verbose=4 "$app_bundle"
+
+          rm -f "$archive"
+          ditto -c -k --keepParent "$app_bundle" "$archive"
+          shasum -a 256 hangboard-workbench-macos-arm64.zip > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
       - name: Publish immutable GitHub release
@@ -281,13 +355,37 @@ jobs:
           asset_names = sorted(asset["name"] for asset in release["assets"])
           required_asset_names = sorted([
               "hangboard-workbench-macos-arm64.sha256",
-              "hangboard-workbench-macos-arm64.tar.gz",
+              "hangboard-workbench-macos-arm64.zip",
           ])
           if asset_names != required_asset_names:
               raise SystemExit(
                   f"Existing release assets must exactly match required assets: {asset_names}"
               )
           PY
+            existing_release_dir="$RUNNER_TEMP/hangboard-workbench-existing-release"
+            rm -rf "$existing_release_dir"
+            mkdir -p "$existing_release_dir"
+            gh release download "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --pattern "hangboard-workbench-macos-arm64.zip" \
+              --pattern "hangboard-workbench-macos-arm64.sha256" \
+              --dir "$existing_release_dir"
+            for asset_name in \
+              hangboard-workbench-macos-arm64.zip \
+              hangboard-workbench-macos-arm64.sha256; do
+              existing_asset="$existing_release_dir/$asset_name"
+              if [[ ! -f "$existing_asset" ]]; then
+                echo "Existing release asset is missing after download: $asset_name" >&2
+                exit 1
+              fi
+            done
+            if ! (
+              cd "$existing_release_dir"
+              shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+            ); then
+              echo "Existing release ZIP failed its downloaded SHA-256 checksum." >&2
+              exit 1
+            fi
             exit 0
           elif ! grep -q 'HTTP 404' "$release_error"; then
             cat "$release_error" >&2
@@ -301,10 +399,10 @@ jobs:
           latest_flag="$(select_latest_flag "$main_sha" "$GITHUB_SHA")"
           cd "$release_dir"
           gh release create "$tag" \
-            hangboard-workbench-macos-arm64.tar.gz \
+            hangboard-workbench-macos-arm64.zip \
             hangboard-workbench-macos-arm64.sha256 \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "Hangboard Workbench ${short_sha}" \
-            --notes "Dependency-free Apple Silicon workbench built from ${GITHUB_SHA}." \
+            --notes "Developer ID signed and notarized Apple Silicon workbench built from ${GITHUB_SHA}." \
             "$latest_flag"

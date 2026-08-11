@@ -91,6 +91,138 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
+def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
+    workflow = _workflow()
+    build = workflow["jobs"]["build"]
+    release = workflow["jobs"]["release"]
+    workflow_text = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    certificate_step = _step(release, "Import Developer ID Application certificate")
+    assert certificate_step["uses"].startswith("Apple-Actions/import-codesign-certs@")
+    assert certificate_step["with"] == {
+        "keychain": "signing_temp",
+        "p12-file-base64": "${{ secrets.DEVELOPER_ID_CERTIFICATE_FILE_BASE64 }}",
+        "p12-password": "${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}",
+    }
+
+    signing_step = _step(release, "Sign, notarize, and validate workbench app")
+    assert signing_step["env"] == {
+        "APPSTORE_ISSUER_ID": "${{ vars.APPSTORE_ISSUER_ID }}",
+        "APPSTORE_API_KEY_ID": "${{ vars.APPSTORE_API_KEY_ID }}",
+        "APPSTORE_API_PRIVATE_KEY": "${{ secrets.APPSTORE_API_PRIVATE_KEY }}",
+        "APPLE_TEAM_ID": "${{ vars.APPLE_TEAM_ID }}",
+    }
+    signing_script = signing_step["run"]
+    for required_fragment in (
+        "Developer ID Application:",
+        "signing_temp.keychain",
+        "hangboard-workbench",
+        "Tools/hold-highlight-editor/packaging/macos_app.py",
+        'python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py"',
+        '--executable "$executable"',
+        '--output "$app_bundle"',
+        '--version "$GITHUB_RUN_NUMBER"',
+        "GITHUB_RUN_NUMBER",
+        "codesign --force --sign",
+        "--options runtime",
+        "--timestamp",
+        "codesign --verify --deep --strict --verbose=2",
+        "xcrun notarytool submit",
+        "--wait",
+        "xcrun stapler staple",
+        "xcrun stapler validate",
+        "spctl --assess --type execute --verbose=4",
+        "hangboard-workbench-macos-arm64.zip",
+        "hangboard-workbench-macos-arm64.sha256",
+        "RUNNER_TEMP",
+    ):
+        assert required_fragment in signing_script
+    archive_command = 'ditto -c -k --keepParent "$app_bundle" "$archive"'
+    assert signing_script.count(archive_command) == 2
+    assert 'ditto --keepParent "$app_bundle" "$archive"' not in signing_script
+    for inline_packaging_fragment in (
+        "mkdir -p \"$app_bundle/Contents/MacOS\"",
+        "install -m 755",
+        "CFBundleExecutable",
+        "CFBundleIdentifier",
+        "CFBundlePackageType",
+        "<plist",
+    ):
+        assert inline_packaging_fragment not in signing_script
+
+    release_checkout = _step(release, "Check out source")
+    assert release_checkout["uses"].startswith("actions/checkout@")
+    assert release_checkout["with"] == {"persist-credentials": False}
+
+    release_script = _step(release, "Publish immutable GitHub release")["run"]
+    assert "hangboard-workbench-macos-arm64.zip" in release_script
+    assert "hangboard-workbench-macos-arm64.sha256" in release_script
+    assert "hangboard-workbench-macos-arm64.tar.gz" not in release_script
+
+    release_text = "\n".join(
+        json.dumps(step, sort_keys=True) for step in release["steps"]
+    )
+    for credential in (
+        "APPSTORE_ISSUER_ID",
+        "APPSTORE_API_KEY_ID",
+        "APPSTORE_API_PRIVATE_KEY",
+        "APPLE_TEAM_ID",
+        "DEVELOPER_ID_CERTIFICATE_FILE_BASE64",
+        "DEVELOPER_ID_CERTIFICATE_PASSWORD",
+    ):
+        assert credential in release_text
+        assert credential not in json.dumps(build, sort_keys=True)
+
+    assert "hangboard-workbench-macos-arm64.tar.gz" in workflow_text
+
+
+def test_release_signing_protects_api_key_and_allows_notarization_to_finish():
+    release = _workflow()["jobs"]["release"]
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+
+    assert release["timeout-minutes"] == 30
+    write_key = "printf '%s' \"$APPSTORE_API_PRIVATE_KEY\" > \"$api_key_path\""
+    assert "umask 077" in signing_script
+    assert "chmod 600 \"$api_key_path\"" in signing_script
+    assert signing_script.index("umask 077") < signing_script.index(write_key)
+    assert signing_script.index(write_key) < signing_script.index(
+        'chmod 600 "$api_key_path"'
+    )
+
+
+def test_existing_release_validation_checks_downloaded_zip_checksum():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    assert "asset_names = sorted(asset[\"name\"] for asset in release[\"assets\"])" in script
+    assert "required_asset_names = sorted([" in script
+    assert 'existing_release_dir="$RUNNER_TEMP/hangboard-workbench-existing-release"' in script
+    assert 'gh release download "$tag"' in script
+    assert 'cd "$existing_release_dir"' in script
+    assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in script
+    assert 'current_asset="$release_dir/$asset_name"' not in script
+    assert "cmp -s" not in script
+    assert script.index("asset_names = sorted") < script.index("gh release download")
+    assert script.index("gh release download") < script.index(
+        "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256"
+    ) < script.index("exit 0")
+
+
+def test_final_release_checksum_uses_the_downloadable_zip_basename():
+    release = _workflow()["jobs"]["release"]
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+
+    assert (
+        "shasum -a 256 hangboard-workbench-macos-arm64.zip "
+        "> hangboard-workbench-macos-arm64.sha256"
+    ) in signing_script
+    assert (
+        'shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256'
+        not in signing_script
+    )
+    assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in signing_script
+
+
 def test_release_publication_requires_an_explicit_manual_dispatch():
     workflow = _workflow()
     triggers = workflow["true"]
