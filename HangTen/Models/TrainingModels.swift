@@ -184,6 +184,10 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     case openHand
     case halfCrimp
     case fullCrimp
+    case fourFingerPocket
+    case threeFingerPocket
+    case twoFingerPocket
+    case sloper
 
     var id: String { rawValue }
 
@@ -192,6 +196,21 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         case .openHand: "Open hand"
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
+        case .fourFingerPocket: "Four-finger pocket"
+        case .threeFingerPocket: "Three-finger pocket"
+        case .twoFingerPocket: "Two-finger pocket"
+        case .sloper: "Open-hand sloper"
+        }
+    }
+
+    var activeFingers: Set<FingerSlot> {
+        switch self {
+        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
+            Set(FingerSlot.allCases)
+        case .threeFingerPocket:
+            [.index, .middle, .ring]
+        case .twoFingerPocket:
+            [.middle, .ring]
         }
     }
 
@@ -202,18 +221,13 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)
-        switch rawValue {
-        case "sloper", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket":
-            self = .openHand
-        default:
-            guard let gripType = Self(rawValue: rawValue) else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Unknown grip posture: \(rawValue)."
-                )
-            }
-            self = gripType
+        guard let gripType = Self(rawValue: rawValue) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown grip posture: \(rawValue)."
+            )
         }
+        self = gripType
     }
 
     func encode(to encoder: Encoder) throws {
