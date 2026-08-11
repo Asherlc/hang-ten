@@ -140,6 +140,61 @@ final class BackendControllerTests: XCTestCase {
         XCTAssertEqual(process.waitCount, 1)
     }
 
+    func testCancelledStartCannotStopReplacementInstalledWhileItsProbeIsSuspended() async throws {
+        let processA = FakeBackendProcess()
+        let processB = FakeBackendProcess()
+        let processes = LockedBox<[FakeBackendProcess]>([processA, processB])
+        let probeA = ControlledHealthProbe()
+        let didReturnA = LockedBox(false)
+        let controller = BackendController(
+            executableURL: URL(fileURLWithPath: "/private/tmp/hangboard-workbench"),
+            processFactory: { processes.withValue { $0.removeFirst() } },
+            healthProbe: { url in
+                if url.port == 4317 {
+                    return await probeA.waitForSuccessIgnoringCancellation()
+                }
+                return true
+            },
+            sleep: { _ in },
+            portSelector: { 4317 }
+        )
+        let rootA = try makeCheckout()
+        let rootB = try makeCheckout()
+        let startA = Task {
+            let session = try await controller.startSession(repositoryRoot: rootA, port: 4317)
+            didReturnA.withValue { $0 = true }
+            guard !Task.isCancelled else {
+                await controller.stop(session: session)
+                throw CancellationError()
+            }
+            return session.url
+        }
+
+        await probeA.waitUntilSuspended()
+        startA.cancel()
+        await controller.stop()
+        let urlB = try await controller.start(repositoryRoot: rootB, port: 4318)
+        await probeA.succeed()
+
+        do {
+            _ = try await startA.value
+            XCTFail("Expected checkout A startup to remain cancelled")
+        } catch is CancellationError {
+            // Expected.
+        }
+        XCTAssertFalse(didReturnA.value, "Checkout A returned success after cancellation and replacement")
+        XCTAssertEqual(processA.terminateCount, 1)
+        XCTAssertEqual(processA.waitCount, 1, "Checkout A cleanup ran more than once")
+        XCTAssertEqual(urlB.absoluteString, "http://127.0.0.1:4318/")
+        XCTAssertTrue(processB.isRunning, "Checkout A cleanup terminated checkout B")
+        XCTAssertEqual(processB.terminateCount, 0)
+
+        await controller.stop()
+        XCTAssertFalse(processB.isRunning)
+        XCTAssertEqual(processB.terminateCount, 1, "Checkout B was not the active backend")
+        XCTAssertEqual(processB.waitCount, 1)
+    }
+
     func testHeadlessArgumentsRequireRepositoryRootAndPort() throws {
         let configuration = try XCTUnwrap(
             HeadlessConfiguration.parse([
@@ -228,6 +283,36 @@ private actor FakeBackendController: BackendControlling {
 
     func recordTerminationWait() {
         events.append("wait")
+    }
+}
+
+private actor ControlledHealthProbe {
+    private var isSuspended = false
+    private var suspensionWaiters: [CheckedContinuation<Void, Never>] = []
+    private var resultContinuation: CheckedContinuation<Bool, Never>?
+
+    func waitForSuccessIgnoringCancellation() async -> Bool {
+        isSuspended = true
+        let waiters = suspensionWaiters
+        suspensionWaiters.removeAll()
+        for waiter in waiters {
+            waiter.resume()
+        }
+        return await withCheckedContinuation { continuation in
+            resultContinuation = continuation
+        }
+    }
+
+    func waitUntilSuspended() async {
+        guard !isSuspended else { return }
+        await withCheckedContinuation { continuation in
+            suspensionWaiters.append(continuation)
+        }
+    }
+
+    func succeed() {
+        resultContinuation?.resume(returning: true)
+        resultContinuation = nil
     }
 }
 

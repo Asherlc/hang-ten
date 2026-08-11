@@ -17,6 +17,11 @@ protocol BackendControlling: Sendable {
 }
 
 actor BackendController: BackendControlling {
+    struct Session: Sendable {
+        let url: URL
+        fileprivate let childID: UUID
+    }
+
     enum Error: Swift.Error, LocalizedError, Equatable {
         case alreadyRunning
         case launchFailed(String)
@@ -61,7 +66,17 @@ actor BackendController: BackendControlling {
     private let startupTimeout: Duration
     private let pollingInterval: Duration
 
-    private var child: (any BackendProcess)?
+    private final class Child: @unchecked Sendable {
+        let id = UUID()
+        let process: any BackendProcess
+        var cleanup: Task<String, Never>?
+
+        init(process: any BackendProcess) {
+            self.process = process
+        }
+    }
+
+    private var child: Child?
 
     init(
         executableURL: URL? = nil,
@@ -84,6 +99,17 @@ actor BackendController: BackendControlling {
     }
 
     func start(repositoryRoot: URL, port requestedPort: UInt16 = 0) async throws -> URL {
+        let session = try await startSession(repositoryRoot: repositoryRoot, port: requestedPort)
+        do {
+            try Task.checkCancellation()
+        } catch {
+            await stop(session: session)
+            throw error
+        }
+        return session.url
+    }
+
+    func startSession(repositoryRoot: URL, port requestedPort: UInt16 = 0) async throws -> Session {
         try Task.checkCancellation()
         guard child == nil else {
             throw Error.alreadyRunning
@@ -107,64 +133,84 @@ actor BackendController: BackendControlling {
         } catch {
             throw Error.launchFailed(error.localizedDescription)
         }
-        child = process
+        let launchedChild = Child(process: process)
+        child = launchedChild
 
         let clock = ContinuousClock()
         let deadline = clock.now.advanced(by: startupTimeout)
         while true {
-            do {
-                try Task.checkCancellation()
-            } catch {
-                _ = await removeAndStop(process)
-                throw error
-            }
+            try await requireCurrent(launchedChild)
 
             guard process.isRunning else {
-                await waitForExit(process)
-                child = nil
-                throw Error.childExited(process.terminationStatus, process.stderrText)
+                let status = process.terminationStatus
+                let stderr = await removeAndStop(launchedChild)
+                throw Error.childExited(status, stderr)
             }
 
-            if (try? await healthProbe(healthURL)) == true {
-                return editorURL
+            let isHealthy = (try? await healthProbe(healthURL)) == true
+            try await requireCurrent(launchedChild)
+            if isHealthy {
+                return Session(url: editorURL, childID: launchedChild.id)
             }
 
             if clock.now >= deadline {
-                let stderr = await removeAndStop(process)
+                let stderr = await removeAndStop(launchedChild)
                 throw Error.startupTimedOut(stderr)
             }
 
             do {
                 try await sleep(pollingInterval)
             } catch {
-                _ = await removeAndStop(process)
+                _ = await removeAndStop(launchedChild)
                 throw error
             }
         }
     }
 
     func stop() async {
-        guard let process = child else {
+        guard let child else {
             return
         }
-        _ = await removeAndStop(process)
+        _ = await removeAndStop(child)
     }
 
-    private func removeAndStop(_ process: any BackendProcess) async -> String {
-        if child === process {
+    func stop(session: Session) async {
+        guard let child, child.id == session.childID else {
+            return
+        }
+        _ = await removeAndStop(child)
+    }
+
+    private func requireCurrent(_ launchedChild: Child) async throws {
+        do {
+            try Task.checkCancellation()
+        } catch {
+            _ = await removeAndStop(launchedChild)
+            throw error
+        }
+        guard child === launchedChild else {
+            throw CancellationError()
+        }
+    }
+
+    private func removeAndStop(_ launchedChild: Child) async -> String {
+        if child === launchedChild {
             child = nil
         }
+        if let cleanup = launchedChild.cleanup {
+            return await cleanup.value
+        }
+
+        let process = launchedChild.process
         if process.isRunning {
             process.terminate()
         }
-        await waitForExit(process)
-        return process.stderrText
-    }
-
-    private func waitForExit(_ process: any BackendProcess) async {
-        await Task.detached(priority: .utility) {
+        let cleanup = Task.detached(priority: .utility) {
             process.waitUntilExit()
-        }.value
+            return process.stderrText
+        }
+        launchedChild.cleanup = cleanup
+        return await cleanup.value
     }
 
     private static func editorURL(port: UInt16) throws -> URL {

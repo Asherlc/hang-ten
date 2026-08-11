@@ -243,13 +243,13 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             await self.backend.stop()
             guard !Task.isCancelled else { return }
             do {
-                let editorURL = try await self.backend.start(repositoryRoot: checkout)
+                let session = try await self.backend.startSession(repositoryRoot: checkout)
                 guard !Task.isCancelled else {
-                    await self.backend.stop()
+                    await self.backend.stop(session: session)
                     return
                 }
                 self.selection.remember(checkout)
-                self.showWebView(editorURL)
+                self.showWebView(session.url)
             } catch is CancellationError {
                 // A replacement checkout or app shutdown owns cleanup.
             } catch {
