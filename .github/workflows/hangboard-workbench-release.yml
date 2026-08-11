@@ -16,7 +16,9 @@ concurrency:
 jobs:
   build:
     name: Build verified arm64 workbench
-    runs-on: macos-15
+    # GitHub's macos-15 label is Intel. The xlarge image is the Apple Silicon
+    # runner required to produce and execute the verified arm64 artifact.
+    runs-on: macos-15-xlarge
     timeout-minutes: 45
 
     steps:
