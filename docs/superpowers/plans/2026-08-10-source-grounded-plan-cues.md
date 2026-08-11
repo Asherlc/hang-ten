@@ -55,7 +55,7 @@
 
 - [ ] **Step 3: Write the field-level source audit**
 
-For all 20 built-in plans, record plan ID, source URL, source type, and a
+  For all 20 built-in plans, record plan ID, source URL, source type, and a
   keep/adapt/remove decision for title, subtitle, instruction, accessory,
   target, count, duration, interval, warm-up, cooldown, `gripType`, and
   `fingerConfiguration`. Use these source facts as the baseline:
