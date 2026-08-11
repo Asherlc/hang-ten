@@ -105,13 +105,15 @@ must remain readable.
 | Weiheng WH-C06 and generic WH-C06-compatible | [Grip Connect device support](https://jsr.io/@hangtime/grip-connect) and upstream [WH-C06 adapter listing](https://app.unpkg.com/@hangtime/grip-connect@0.10.9/files/src/models/device) | Device-family adapter and generic fallback. Exact advertisement and packet formats must be recorded from the upstream source before implementation. |
 | Entralpi | [Grip Connect device support](https://jsr.io/@hangtime/grip-connect) and upstream [Entralpi adapter listing](https://app.unpkg.com/@hangtime/grip-connect@0.10.9/files/src/models/device) | Device-family adapter. Exact GATT and packet mappings must be recorded before implementation. |
 | Climbro | [Grip Connect device support and acknowledgements](https://jsr.io/@hangtime/grip-connect) and upstream [Climbro adapter listing](https://app.unpkg.com/@hangtime/grip-connect@0.10.9/files/src/models/device) | Device-family adapter and externally verified protocol-testing provenance. Exact GATT and packet mappings must be recorded before implementation. |
-| mySmartBoard | [Grip Connect device support](https://jsr.io/@hangtime/grip-connect) and upstream [mySmartBoard adapter listing](https://app.unpkg.com/@hangtime/grip-connect@0.10.9/files/src/models/device) | Device-family adapter and capability boundary. Exact GATT and packet mappings must be recorded before implementation. |
+| mySmartBoard | [Upstream mySmartBoard adapter](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/main/packages/core/src/models/device/mysmartboard.model.ts) | **No usable protocol source is currently available.** The adapter declares no GATT services and explicitly requests device-protocol help. A physical-device GATT capture or manufacturer protocol reference is required before implementation; Hang Ten must not claim mySmartBoard streaming support without it. |
 
 The non-Tindeq protocols are not presented as manufacturer-sourced facts.
 Their implementations must carry a field-level audit under
 `docs/source-audits/` that records the exact upstream file URL, revision,
 byte layout, unit conversion, service UUID, characteristic UUID, and command
-mapping used for each adapter. Unsupported fields remain omitted.
+mapping used for each implemented adapter. Unsupported fields remain omitted.
+mySmartBoard is blocked from implementation until its required protocol
+evidence is provided.
 
 ## Out of Scope
 
