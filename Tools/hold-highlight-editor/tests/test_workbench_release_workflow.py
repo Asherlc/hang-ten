@@ -13,6 +13,10 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 PACKAGING_BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
+RELEASE_README_PATHS = (
+    EDITOR_ROOT / "README.md",
+    REPOSITORY_ROOT / "Tools" / "HangboardOnboarding" / "README.md",
+)
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
 )
@@ -49,6 +53,41 @@ def _workflow() -> dict[str, object]:
 
 def _step(job: dict[str, object], name: str) -> dict[str, object]:
     return next(step for step in job["steps"] if step.get("name") == name)
+
+
+def _native_release_quick_start(path: Path) -> str:
+    readme = path.read_text(encoding="utf-8")
+    _, marker, remainder = readme.partition("## Run the Apple Silicon macOS")
+    assert marker
+    quick_start, _, _ = remainder.partition("\n## ")
+    return " ".join(quick_start.split())
+
+
+def test_release_readmes_document_the_native_checkout_workflow():
+    for path in RELEASE_README_PATHS:
+        quick_start = _native_release_quick_start(path)
+
+        for required_fragment in (
+            'open "Hangboard Workbench.app"',
+            "native window",
+            "first launch",
+            "last valid checkout",
+            "Choose Hang Ten Checkout…",
+            "selected checkout",
+            "normal Git review",
+            "**Choose Another Checkout…**",
+            "Remote hosting is not yet shipped",
+        ):
+            assert required_fragment in quick_start, path
+
+        for forbidden_fragment in (
+            "http://localhost",
+            "default browser",
+            "from inside a Hang Ten checkout",
+            "xattr",
+            "quarantine",
+        ):
+            assert forbidden_fragment not in quick_start, path
 
 
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
