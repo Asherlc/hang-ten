@@ -127,7 +127,6 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "--options runtime",
         "--timestamp",
         "codesign --verify --deep --strict --verbose=2",
-        "ditto --keepParent",
         "xcrun notarytool submit",
         "--wait",
         "xcrun stapler staple",
@@ -138,6 +137,9 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "RUNNER_TEMP",
     ):
         assert required_fragment in signing_script
+    archive_command = 'ditto -c -k --keepParent "$app_bundle" "$archive"'
+    assert signing_script.count(archive_command) == 2
+    assert 'ditto --keepParent "$app_bundle" "$archive"' not in signing_script
     for inline_packaging_fragment in (
         "mkdir -p \"$app_bundle/Contents/MacOS\"",
         "install -m 755",

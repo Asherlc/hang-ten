@@ -281,7 +281,7 @@ jobs:
             "$app_bundle"
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
-          ditto --keepParent "$app_bundle" "$archive"
+          ditto -c -k --keepParent "$app_bundle" "$archive"
           printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
           xcrun notarytool submit "$archive" \
             --key "$api_key_path" \
@@ -293,7 +293,7 @@ jobs:
           spctl --assess --type execute --verbose=4 "$app_bundle"
 
           rm -f "$archive"
-          ditto --keepParent "$app_bundle" "$archive"
+          ditto -c -k --keepParent "$app_bundle" "$archive"
           shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
