@@ -232,13 +232,14 @@ def test_final_release_checksum_uses_the_downloadable_zip_basename():
     assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in signing_script
 
 
-def test_release_publication_requires_an_explicit_manual_dispatch():
+def test_release_publication_runs_for_main_pushes_and_manual_dispatches():
     workflow = _workflow()
     triggers = workflow["true"]
 
-    assert set(triggers) == {"pull_request", "workflow_dispatch"}
+    assert set(triggers) == {"pull_request", "push", "workflow_dispatch"}
+    assert triggers["push"] == {"branches": ["main"]}
     assert workflow["jobs"]["release"]["if"] == (
-        "github.event_name == 'workflow_dispatch' && "
+        "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && "
         "github.ref == 'refs/heads/main'"
     )
 
