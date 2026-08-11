@@ -81,9 +81,20 @@ struct SemanticHoldMappingDefinition: Codable, Hashable {
     let holdIDs: [String]
     let kind: HoldKind?
 
+    private enum CodingKeys: String, CodingKey {
+        case holdIDs
+        case kind
+    }
+
     init(holdIDs: [String] = [], kind: HoldKind? = nil) {
         self.holdIDs = holdIDs
         self.kind = kind
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        holdIDs = try container.decodeIfPresent([String].self, forKey: .holdIDs) ?? []
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
     }
 
     var isResolvable: Bool {
@@ -587,13 +598,15 @@ enum PlanLibraryValidator {
 
         validateLibraryMetadata(library.metadata, issues: &issues)
 
-        var mappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var planMappingPathByBoardID: [String: String] = [:]
         for (index, mapping) in library.boardMappings.enumerated() {
             let path = "boardMappings[\(index)]"
-            if mappingByBoardID[mapping.boardID] != nil {
+            if planMappingByBoardID[mapping.boardID] != nil {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
             }
-            mappingByBoardID[mapping.boardID] = mapping
+            planMappingByBoardID[mapping.boardID] = mapping
+            planMappingPathByBoardID[mapping.boardID] = path
 
             if !boardIDs.contains(mapping.boardID) {
                 issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
@@ -618,6 +631,49 @@ enum PlanLibraryValidator {
                 for holdID in target.holdIDs where !knownHoldIDs.contains(holdID) {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
                 }
+            }
+        }
+
+        var mappingByBoardID: [String: BoardMappingDefinition] = [:]
+        var semanticMappingPathByBoardID: [String: [String: String]] = [:]
+        for (index, board) in availableBoards.enumerated() where mappingByBoardID[board.id] == nil {
+            mappingByBoardID[board.id] = BoardMappingDefinition(
+                boardID: board.id,
+                semanticHolds: board.semanticHolds
+            )
+            semanticMappingPathByBoardID[board.id] = Dictionary(
+                uniqueKeysWithValues: board.semanticHolds.keys.map {
+                    ($0, "boards[\(index)].semanticHolds.\($0)")
+                }
+            )
+        }
+        for (boardID, mapping) in planMappingByBoardID {
+            var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
+            semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
+            var semanticPaths = semanticMappingPathByBoardID[boardID] ?? [:]
+            for semanticID in mapping.semanticHolds.keys {
+                semanticPaths[semanticID] = "\(planMappingPathByBoardID[boardID]!).semanticHolds.\(semanticID)"
+            }
+            mappingByBoardID[boardID] = BoardMappingDefinition(
+                boardID: boardID,
+                semanticHolds: semanticHolds
+            )
+            semanticMappingPathByBoardID[boardID] = semanticPaths
+        }
+
+        for (boardID, mapping) in mappingByBoardID {
+            guard let board = boardByID[boardID]?.first else { continue }
+            for (semanticID, target) in mapping.semanticHolds {
+                guard let kind = target.kind,
+                      !board.holds.contains(where: { $0.kind == kind }) else {
+                    continue
+                }
+                issues.append(
+                    PlanValidationIssue(
+                        path: semanticMappingPathByBoardID[boardID]?[semanticID] ?? "semanticHolds.\(semanticID)",
+                        message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(boardID)\"."
+                    )
+                )
             }
         }
 
@@ -1068,7 +1124,13 @@ struct PlanDefinitionResolver {
 
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
-        let mapping = library.boardMappings.first { $0.boardID == board.id }
+        let planMapping = library.boardMappings.first { $0.boardID == board.id }
+        let mapping = BoardMappingDefinition(
+            boardID: board.id,
+            semanticHolds: board.semanticHolds.merging(planMapping?.semanticHolds ?? [:]) {
+                _, planMapping in planMapping
+            }
+        )
 
         for reference in definition.blocks {
             guard let block = blocks[reference.blockID] else {

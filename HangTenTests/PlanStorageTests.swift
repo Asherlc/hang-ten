@@ -1225,6 +1225,191 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
+    func testEffectiveSemanticMappingsPreserveSourcePathsAndPlanMappingsTakePrecedence() {
+        let edgeOnlyBoard = TrainingBoard(
+            id: "fixture.edge-only",
+            manufacturer: "Fixture Maker",
+            name: "Edge Only",
+            subtitle: "A test board with only an edge.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.edge",
+                    name: "Fixture edge",
+                    shortLabel: "E",
+                    detail: "A fixture edge.",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+                )
+            ],
+            semanticHolds: [
+                "fixture-board-owned": SemanticHoldMappingDefinition(kind: .pinch),
+                "fixture-overridden": SemanticHoldMappingDefinition(kind: .pinch)
+            ],
+            productURL: URL(string: "https://example.com/edge-only")!,
+            photoAssetName: nil
+        )
+        let step = makeStep(
+            id: "semantic-target",
+            duration: 10,
+            targets: [.semantic("fixture-overridden")],
+            segments: []
+        )
+
+        let library = makeLibrary(
+            steps: [step],
+            boardID: edgeOnlyBoard.id,
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: edgeOnlyBoard.id,
+                    semanticHolds: [
+                        "fixture-plan": SemanticHoldMappingDefinition(kind: .pinch),
+                        "fixture-overridden": SemanticHoldMappingDefinition(kind: .edge)
+                    ]
+                )
+            ]
+        )
+        let issues = library.validationIssues(availableBoards: [edgeOnlyBoard])
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "boards[0].semanticHolds.fixture-board-owned" &&
+                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+        XCTAssertTrue(issues.contains {
+            $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
+                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+        XCTAssertFalse(issues.contains {
+            $0.path == "boards[0].semanticHolds.fixture-overridden"
+        })
+    }
+
+    func testBoardLoadedSemanticMappingsResolveWithPlanMappingsTakingPrecedence() throws {
+        let boardStore = try BoardLibraryStore(data: Data(
+            #"""
+            {
+              "schemaVersion": 1,
+              "metadata": {
+                "id": "fixture.board-library",
+                "version": "1.0.0",
+                "title": "Fixture board library",
+                "generatedAt": "2026-08-10",
+                "notes": []
+              },
+              "boards": [{
+                "id": "fixture.board",
+                "manufacturer": "Fixture Maker",
+                "name": "Fixture Board",
+                "subtitle": "A test board.",
+                "dimensions": "10 × 5",
+                "aspectRatio": 2,
+                "holds": [
+                  {
+                    "id": "fixture.edge",
+                    "name": "Fixture edge",
+                    "shortLabel": "E",
+                    "detail": "A fixture edge.",
+                    "kind": "edge",
+                    "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 }
+                  },
+                  {
+                    "id": "fixture.pinch",
+                    "name": "Fixture pinch",
+                    "shortLabel": "P",
+                    "detail": "A fixture pinch.",
+                    "kind": "pinch",
+                    "frame": { "x": 0.4, "y": 0.2, "width": 0.2, "height": 0.4 }
+                  },
+                  {
+                    "id": "fixture.jug",
+                    "name": "Fixture jug",
+                    "shortLabel": "J",
+                    "detail": "A fixture jug.",
+                    "kind": "jug",
+                    "frame": { "x": 0.7, "y": 0.2, "width": 0.2, "height": 0.4 }
+                  }
+                ],
+                "semanticHolds": {
+                  "fixture-target": { "holdIDs": ["fixture.edge"] },
+                  "fixture-fallback": { "kind": "pinch" }
+                },
+                "productURL": "https://example.com/fixture-board"
+              }]
+            }
+            """#.utf8
+        ))
+        let board = try XCTUnwrap(boardStore.boards.first)
+        let step = makeStep(
+            id: "semantic-target",
+            duration: 10,
+            targets: [.semantics(["fixture-target", "fixture-fallback"])],
+            segments: []
+        )
+        let boardOnlyLibrary = makeLibrary(steps: [step], boardID: "fixture.board")
+
+        XCTAssertEqual(
+            board.semanticHolds["fixture-target"],
+            SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"])
+        )
+        XCTAssertEqual(
+            board.semanticHolds["fixture-fallback"],
+            SemanticHoldMappingDefinition(kind: .pinch)
+        )
+        XCTAssertEqual(boardOnlyLibrary.validationIssues(availableBoards: boardStore.boards), [])
+
+        let boardOnlyStore = try PlanLibraryStore(
+            definition: boardOnlyLibrary,
+            availableBoards: boardStore.boards
+        )
+        let boardOnlyTargets = try XCTUnwrap(
+            boardOnlyStore.plan(id: "test.plan")?.steps.first?.targets
+        )
+
+        XCTAssertEqual(boardOnlyTargets, [.ids("fixture.edge"), .kind(.pinch)])
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: boardOnlyTargets[0], on: board),
+            ["fixture.edge"]
+        )
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: boardOnlyTargets[1], on: board),
+            ["fixture.pinch"]
+        )
+
+        let planMappingLibrary = makeLibrary(
+            steps: [step],
+            boardID: "fixture.board",
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: "fixture.board",
+                    semanticHolds: [
+                        "fixture-target": SemanticHoldMappingDefinition(kind: .jug)
+                    ]
+                )
+            ]
+        )
+
+        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: boardStore.boards), [])
+
+        let planMappingStore = try PlanLibraryStore(
+            definition: planMappingLibrary,
+            availableBoards: boardStore.boards
+        )
+        let planMappingTargets = try XCTUnwrap(
+            planMappingStore.plan(id: "test.plan")?.steps.first?.targets
+        )
+
+        XCTAssertEqual(planMappingTargets, [.kind(.jug), .kind(.pinch)])
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[0], on: board),
+            ["fixture.jug"]
+        )
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[1], on: board),
+            ["fixture.pinch"]
+        )
+    }
+
     private func validationIssues(
         for segment: WorkoutSegmentDefinition,
         stepDuration: TimeInterval = 30
@@ -1260,7 +1445,11 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    private func makeLibrary(steps: [WorkoutStepDefinition]) -> PlanLibraryDefinition {
+    private func makeLibrary(
+        steps: [WorkoutStepDefinition],
+        boardID: String? = nil,
+        boardMappings: [BoardMappingDefinition] = []
+    ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             schemaVersion: 3,
             metadata: PlanLibraryMetadata(
@@ -1269,7 +1458,7 @@ final class PlanStorageTests: XCTestCase {
                 title: "Test library",
                 generatedAt: "2026-08-02"
             ),
-            boardMappings: [],
+            boardMappings: boardMappings,
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: steps)],
             plans: [
                 PlanDefinition(
@@ -1282,7 +1471,7 @@ final class PlanStorageTests: XCTestCase {
                         sourceURL: URL(string: "https://example.com/test")!,
                         provenance: .adapted
                     ),
-                    boardID: nil,
+                    boardID: boardID,
                     blocks: [WorkoutBlockReference(blockID: "test.block")]
                 )
             ]
