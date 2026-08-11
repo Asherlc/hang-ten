@@ -6,8 +6,8 @@ import re
 import signal
 import sys
 from argparse import ArgumentParser
-from collections.abc import Callable
 from pathlib import Path
+from typing import Protocol
 
 from server import (
     EditorCatalog,
@@ -21,6 +21,17 @@ from server import (
 
 class PackagedWorkbenchError(ValueError):
     """A safe startup error for the packaged workbench."""
+
+
+class WorkbenchServerFactory(Protocol):
+    """Build a packaged server with its embedded editor assets."""
+
+    def __call__(
+        self,
+        arguments: list[str],
+        *,
+        editor_root: Path,
+    ) -> tuple[WorkbenchHTTPServer, EditorCatalog | None]: ...
 
 
 def _resource_root() -> Path:
@@ -54,7 +65,7 @@ def _packaged_arguments(arguments: list[str]) -> tuple[bool, bool, list[str]]:
 def _run(
     arguments: list[str],
     *,
-    server_factory: Callable[..., tuple[WorkbenchHTTPServer, EditorCatalog | None]],
+    server_factory: WorkbenchServerFactory,
 ) -> int:
     _no_open, show_version, forwarded = _packaged_arguments(arguments)
     root = _resource_root()

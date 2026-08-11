@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import builtins
 import signal
 import socket
 import sys
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -52,7 +54,24 @@ def test_run_starts_and_closes_backend_without_browser(monkeypatch, tmp_path, ca
         return server, None
 
     monkeypatch.setattr(workbench_binary, "_resource_root", lambda: tmp_path)
-    arguments = ["--no-open", "--repository-root", str(tmp_path), "--port", "4317"]
+    arguments = ["--repository-root", str(tmp_path), "--port", "4317"]
+    original_import = builtins.__import__
+
+    def reject_browser_import(name, *args, **kwargs):
+        if name == "webbrowser":
+            raise AssertionError("packaged startup must not reach a browser launcher")
+        return original_import(name, *args, **kwargs)
+
+    def fail_browser_launch(_url):
+        raise AssertionError("packaged startup must not launch a browser")
+
+    monkeypatch.setattr(builtins, "__import__", reject_browser_import)
+    monkeypatch.setattr(
+        workbench_binary,
+        "webbrowser",
+        SimpleNamespace(open=fail_browser_launch),
+        raising=False,
+    )
 
     result = workbench_binary._run(
         arguments,
@@ -60,7 +79,7 @@ def test_run_starts_and_closes_backend_without_browser(monkeypatch, tmp_path, ca
     )
 
     assert result == 0
-    assert forwarded == arguments[1:]
+    assert forwarded == arguments
     assert roots == [tmp_path]
     assert server.served and server.closed
     assert capsys.readouterr().out == "Hangboard Workbench: http://127.0.0.1:4317/\n"

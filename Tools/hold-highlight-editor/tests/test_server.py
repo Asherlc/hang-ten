@@ -730,20 +730,56 @@ def test_health_is_available_before_library_loading(tmp_path):
     assert payload == {"ok": True}
 
 
-def test_checkout_validation_requires_hang_ten_markers(tmp_path):
+def _make_hang_ten_checkout(root: Path, missing: str | None = None) -> None:
+    for marker in (
+        ".git",
+        "Tools/HangboardOnboarding/boards",
+        "Tools/hold-highlight-editor",
+    ):
+        if marker != missing:
+            (root / marker).mkdir(parents=True)
+
+
+def test_checkout_validation_accepts_all_hang_ten_markers(tmp_path):
     root = tmp_path / "hang-ten"
-    (root / ".git").mkdir(parents=True)
-    (root / "Tools/HangboardOnboarding/boards").mkdir(parents=True)
-    (root / "Tools/hold-highlight-editor").mkdir(parents=True)
+    _make_hang_ten_checkout(root)
 
     assert validate_hang_ten_checkout(root) == root.resolve()
 
+
+@pytest.mark.parametrize(
+    "missing",
+    [
+        ".git",
+        "Tools/HangboardOnboarding/boards",
+        "Tools/hold-highlight-editor",
+    ],
+)
+def test_checkout_validation_rejects_each_missing_hang_ten_marker(tmp_path, missing):
     invalid = tmp_path / "not-hang-ten"
-    (invalid / ".git").mkdir(parents=True)
+    _make_hang_ten_checkout(invalid, missing=missing)
+
     with pytest.raises(EditorError) as error:
         validate_hang_ten_checkout(invalid)
 
     assert str(invalid) not in str(error.value)
+
+
+def test_configured_and_discovered_roots_require_hang_ten_checkout(tmp_path):
+    root = tmp_path / "hang-ten"
+    _make_hang_ten_checkout(root)
+    nested = root / "nested" / "launch"
+    nested.mkdir(parents=True)
+
+    assert server_module._configured_repository_root(root) == root.resolve()
+    assert server_module._discover_repository_root(nested) == root.resolve()
+
+    invalid = tmp_path / "not-hang-ten"
+    _make_hang_ten_checkout(invalid, missing="Tools/hold-highlight-editor")
+    with pytest.raises(EditorError):
+        server_module._configured_repository_root(invalid)
+    with pytest.raises(EditorError):
+        server_module._discover_repository_root(invalid)
 
 
 def test_server_uses_configured_editor_root(tmp_path):
