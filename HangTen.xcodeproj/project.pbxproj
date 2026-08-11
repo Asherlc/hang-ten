@@ -77,6 +77,8 @@
 		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
 		AA0000000000000000000072 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
 		AA0000000000000000000073 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
+		AA0000000000000000000074 /* ForceSensorProtocolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000074 /* ForceSensorProtocolsTests.swift */; };
+		AA0000000000000000000075 /* ForceSensorProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000075 /* ForceSensorProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +152,8 @@
 		BB0000000000000000000069 /* GeneratedBoardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedBoardCatalog.swift; sourceTree = "<group>"; };
 		BB0000000000000000000070 /* BoardStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorageTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000071 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
+		BB0000000000000000000074 /* ForceSensorProtocolsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorProtocolsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000075 /* ForceSensorProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorProtocols.swift; sourceTree = "<group>"; };
 		BB0000000000000000000072 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -230,6 +234,7 @@
 				BB0000000000000000000062 /* CustomRoutineStore.swift */,
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 				BB0000000000000000000071 /* BoardStorage.swift */,
+				BB0000000000000000000075 /* ForceSensorProtocols.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -292,6 +297,7 @@
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
 				BB0000000000000000000070 /* BoardStorageTests.swift */,
+				BB0000000000000000000074 /* ForceSensorProtocolsTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -427,6 +433,7 @@
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
+				AA0000000000000000000075 /* ForceSensorProtocols.swift in Sources */,
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
 				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
 				AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */,
@@ -487,6 +494,7 @@
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
 				AA0000000000000000000070 /* BoardStorageTests.swift in Sources */,
+				AA0000000000000000000074 /* ForceSensorProtocolsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
