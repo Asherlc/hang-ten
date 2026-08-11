@@ -91,6 +91,15 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
+def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
+    jobs = _workflow()["jobs"]
+    build = jobs["build"]
+
+    assert build["runs-on"] == "macos-latest"
+    identity_script = _step(build, "Verify executable identity")["run"]
+    assert 'test "$architecture" = "arm64"' in identity_script
+
+
 def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
     workflow = _workflow()
     build = workflow["jobs"]["build"]
