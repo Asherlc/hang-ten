@@ -16,9 +16,7 @@ concurrency:
 jobs:
   build:
     name: Build verified arm64 workbench
-    # Follow GitHub's latest supported macOS image while continuing to verify
-    # that the produced and executed artifact is arm64.
-    runs-on: macos-latest
+    runs-on: macos-15-xlarge
     timeout-minutes: 45
 
     steps:
@@ -207,7 +205,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: build
     name: Publish immutable workbench release
-    runs-on: macos-latest
+    runs-on: macos-15-xlarge
     timeout-minutes: 30
     permissions:
       # Required to create the immutable GitHub release and upload its assets.
