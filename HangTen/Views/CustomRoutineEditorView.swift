@@ -283,8 +283,6 @@ private struct CustomRoutineStepEditor: View {
             .onChange(of: step.phase) { _, phase in
                 if phase == .rest {
                     step.targets = []
-                    step.gripType = nil
-                    step.fingerConfiguration = nil
                     step.timing = .fixed
                 }
             }
@@ -309,25 +307,6 @@ private struct CustomRoutineStepEditor: View {
 
             if !step.isRest {
                 targetEditor
-
-                Picker("Grip", selection: $step.gripType) {
-                    Text("No grip cue").tag(GripType?.none)
-                    ForEach(GripType.allCases) { grip in
-                        Text(grip.label).tag(Optional(grip))
-                    }
-                }
-                .accessibilityIdentifier("customRoutine.stepGrip")
-
-                Menu("Fingers") {
-                    Button("Use hold capacity") {
-                        step.fingerConfiguration = nil
-                    }
-                    Divider()
-                    ForEach(FingerSlot.allCases) { finger in
-                        Toggle(finger.label, isOn: fingerBinding(finger))
-                    }
-                }
-                .accessibilityIdentifier("customRoutine.stepFingers")
             }
         }
     }
@@ -390,28 +369,6 @@ private struct CustomRoutineStepEditor: View {
         step.targets = holdIDs.isEmpty
             ? []
             : [.holdIDs(board.holds.compactMap { holdIDs.contains($0.id) ? $0.id : nil })]
-    }
-
-    private func fingerBinding(_ finger: FingerSlot) -> Binding<Bool> {
-        Binding(
-            get: { step.fingerConfiguration?.engagedFingers.contains(finger) ?? false },
-            set: { isEngaged in
-                let isCurrentlyEngaged = step.fingerConfiguration?.engagedFingers.contains(finger) ?? false
-                guard isEngaged != isCurrentlyEngaged else { return }
-                step.toggleFinger(finger)
-            }
-        )
-    }
-}
-
-private extension FingerSlot {
-    var label: String {
-        switch self {
-        case .index: "Index"
-        case .middle: "Middle"
-        case .ring: "Ring"
-        case .pinky: "Pinky"
-        }
     }
 }
 
