@@ -3,15 +3,16 @@
 ## Goal
 
 Allow Hang Ten to connect to and stream force measurements from Tindeq
-Progressor, PitchSix Force Board, Weiheng WH-C06, Entralpi, Climbro, and
-mySmartBoard hardware, plus user-selected generic Progressor-compatible and
-WH-C06-compatible devices.
+Progressor, PitchSix Force Board, Weiheng WH-C06, Entralpi, and Climbro
+hardware, plus user-selected generic Progressor-compatible and
+WH-C06-compatible devices. Defer mySmartBoard until a protocol source is
+available.
 
 ## Approved Product Behavior
 
 - Rename the existing user-facing "Training sensor" surface to "Force sensor".
 - Present a profile picker: Automatic, Tindeq/Progressor, PitchSix Force
-  Board, WH-C06, Entralpi, Climbro, mySmartBoard, Generic
+  Board, WH-C06, Entralpi, Climbro, Generic
   Progressor-compatible, and Generic WH-C06-compatible.
 - In Automatic mode, scan for recognized advertisements and use the matching
   adapter. A generic profile scans broadly and only completes connection once
@@ -114,6 +115,14 @@ byte layout, unit conversion, service UUID, characteristic UUID, and command
 mapping used for each implemented adapter. Unsupported fields remain omitted.
 mySmartBoard is blocked from implementation until its required protocol
 evidence is provided.
+
+## Deferred Protocol
+
+The user approved delivery of the auditable device profiles first. mySmartBoard
+must remain absent from the force-sensor picker and cannot be described as
+supported until a manufacturer protocol reference or physical-device GATT
+capture supplies its advertisement identity, services, characteristics, packet
+layout, and units.
 
 ## Out of Scope
 
