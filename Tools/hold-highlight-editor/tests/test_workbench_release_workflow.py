@@ -91,12 +91,12 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
-def test_jobs_use_the_current_macos_runner_and_build_verifies_arm64():
+def test_jobs_use_the_latest_macos_runner_and_build_verifies_arm64():
     jobs = _workflow()["jobs"]
     build = jobs["build"]
 
-    assert build["runs-on"] == "macos-26"
-    assert jobs["release"]["runs-on"] == "macos-26"
+    assert build["runs-on"] == "macos-latest"
+    assert jobs["release"]["runs-on"] == "macos-latest"
     identity_script = _step(build, "Verify executable identity")["run"]
     assert 'test "$architecture" = "arm64"' in identity_script
 
