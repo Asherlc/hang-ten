@@ -424,7 +424,9 @@ struct BoardLibraryStore {
 
     func encodedData(prettyPrinted: Bool = false) throws -> Data {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = prettyPrinted ? [.prettyPrinted, .sortedKeys] : [.sortedKeys]
+        if prettyPrinted {
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        }
         return try encoder.encode(definition)
     }
 }
