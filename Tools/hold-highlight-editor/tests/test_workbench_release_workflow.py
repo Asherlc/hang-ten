@@ -116,12 +116,12 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
     for required_fragment in (
         "Developer ID Application:",
         "signing_temp.keychain",
-        "CFBundleExecutable",
         "hangboard-workbench",
-        "CFBundleIdentifier",
-        "com.hangten.hangboard-workbench",
-        "CFBundlePackageType",
-        "APPL",
+        "Tools/hold-highlight-editor/packaging/macos_app.py",
+        'python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py"',
+        '--executable "$executable"',
+        '--output "$app_bundle"',
+        '--version "$GITHUB_RUN_NUMBER"',
         "GITHUB_RUN_NUMBER",
         "codesign --force --sign",
         "--options runtime",
@@ -138,6 +138,19 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "RUNNER_TEMP",
     ):
         assert required_fragment in signing_script
+    for inline_packaging_fragment in (
+        "mkdir -p \"$app_bundle/Contents/MacOS\"",
+        "install -m 755",
+        "CFBundleExecutable",
+        "CFBundleIdentifier",
+        "CFBundlePackageType",
+        "<plist",
+    ):
+        assert inline_packaging_fragment not in signing_script
+
+    release_checkout = _step(release, "Check out source")
+    assert release_checkout["uses"].startswith("actions/checkout@")
+    assert release_checkout["with"] == {"persist-credentials": False}
 
     release_script = _step(release, "Publish immutable GitHub release")["run"]
     assert "hangboard-workbench-macos-arm64.zip" in release_script

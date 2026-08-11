@@ -212,6 +212,12 @@ jobs:
       contents: write
 
     steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
       # actions/download-artifact v5.0.0
       - name: Download verified release assets
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
@@ -251,6 +257,10 @@ jobs:
           cd "$release_dir"
           tar -xzf hangboard-workbench-macos-arm64.tar.gz
           test -x "$executable"
+          python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py" \
+            --executable "$executable" \
+            --output "$app_bundle" \
+            --version "$GITHUB_RUN_NUMBER"
 
           signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
             | awk -F '\"' '/Developer ID Application:/{print $2}')"
@@ -264,30 +274,6 @@ jobs:
             echo "Developer ID Application identity does not match APPLE_TEAM_ID." >&2
             exit 1
           fi
-
-          mkdir -p "$app_bundle/Contents/MacOS"
-          install -m 755 "$executable" "$app_bundle/Contents/MacOS/hangboard-workbench"
-          cat > "$app_bundle/Contents/Info.plist" <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>CFBundleIdentifier</key>
-            <string>com.hangten.hangboard-workbench</string>
-            <key>CFBundleName</key>
-            <string>Hangboard Workbench</string>
-            <key>CFBundleExecutable</key>
-            <string>hangboard-workbench</string>
-            <key>CFBundlePackageType</key>
-            <string>APPL</string>
-            <key>CFBundleShortVersionString</key>
-            <string>$GITHUB_RUN_NUMBER</string>
-            <key>CFBundleVersion</key>
-            <string>$GITHUB_RUN_NUMBER</string>
-          </dict>
-          </plist>
-          EOF
-          plutil -lint "$app_bundle/Contents/Info.plist"
 
           codesign --force --sign "$signing_identity" --options runtime --timestamp \
             "$app_bundle/Contents/MacOS/hangboard-workbench"

@@ -21,7 +21,9 @@
 
 ## File Structure
 
-- Modify `.github/workflows/hangboard-workbench-release.yml`: import Developer ID credentials, create the app bundle, sign, notarize, staple, validate, archive, and publish the trusted app ZIP.
+- Create `Tools/hold-highlight-editor/packaging/macos_app.py`: source-controlled app-bundle metadata and deterministic wrapping of the already-built executable.
+- Create `Tools/hold-highlight-editor/tests/test_macos_app.py`: verify bundle layout, Info.plist metadata, version propagation, and safe replacement behavior.
+- Modify `.github/workflows/hangboard-workbench-release.yml`: invoke the source-controlled bundler, import Developer ID credentials, sign, notarize, staple, validate, archive, and publish the trusted app ZIP.
 - Modify `Tools/hold-highlight-editor/tests/test_workbench_release_workflow.py`: enforce the signing/notarization/stapling steps, narrow secret use, and exact trusted artifact names.
 - Modify `Tools/hold-highlight-editor/README.md`: document the signed app ZIP launch flow and remove the unsigned Gatekeeper workaround.
 - Modify `Tools/HangboardOnboarding/README.md`: keep the release quick start aligned with the signed app bundle and source fallback.
@@ -31,6 +33,8 @@
 ### Task 1: Sign, notarize, staple, and publish the workbench app
 
 **Files:**
+- Create: `Tools/hold-highlight-editor/packaging/macos_app.py`
+- Create: `Tools/hold-highlight-editor/tests/test_macos_app.py`
 - Modify: `.github/workflows/hangboard-workbench-release.yml`
 - Modify: `Tools/hold-highlight-editor/tests/test_workbench_release_workflow.py`
 - Modify: `Tools/hold-highlight-editor/README.md`
@@ -54,9 +58,13 @@ rtk python -m pytest Tools/hold-highlight-editor/tests/test_workbench_release_wo
 
 Expected: FAIL because the release workflow currently publishes an unsigned tarball and has no signing or notarization steps.
 
-- [ ] **Step 3: Add protected release signing and notarization**
+- [ ] **Step 3: Add the source-controlled app bundler**
 
-In the release job, import the Developer ID certificate with `Apple-Actions/import-codesign-certs`, extract the exact `Developer ID Application` identity from the temporary keychain, extract the verified executable from the build artifact, and create:
+Create `packaging/macos_app.py` with a CLI that takes `--executable`, `--output`, and `--version`, validates that the input is a regular arm64 executable, creates `Contents/MacOS`, writes the committed Info.plist contract, copies the executable with its mode preserved, and fails without deleting an existing output until all inputs are validated. The script must not sign, notarize, or read secrets. Unit-test it with temporary files and `plistlib`.
+
+- [ ] **Step 4: Add protected release signing and notarization**
+
+In the release job, extract the verified executable from the build artifact, invoke the source-controlled `packaging/macos_app.py`, import the Developer ID certificate with `Apple-Actions/import-codesign-certs`, and extract the exact `Developer ID Application` identity from the temporary keychain. The source script creates:
 
 ```text
 hangboard-workbench.app/
@@ -69,25 +77,28 @@ Use bundle identifier `com.hangten.hangboard-workbench`, package type `APPL`, th
 
 Replace the release assets with the notarized app ZIP and its checksum. Keep the existing immutable tag/release checks, updating the exact required asset names and release notes.
 
-- [ ] **Step 4: Update documentation**
+- [ ] **Step 5: Update documentation**
 
 Change both workbench quick starts to download `hangboard-workbench-macos-arm64.zip`, verify its checksum, extract it, and launch `hangboard-workbench.app` with Finder or `open`. State that the release is Developer ID signed and notarized; retain source-development instructions separately. Do not tell users to remove quarantine or disable Gatekeeper.
 
-- [ ] **Step 5: Run focused validation**
+- [ ] **Step 6: Run focused validation**
 
 Run:
 
 ```bash
 rtk python -m pytest Tools/hold-highlight-editor/tests/test_workbench_release_workflow.py -q
+rtk python -m pytest Tools/hold-highlight-editor/tests/test_macos_app.py -q
 rtk python -m pytest Tools/hold-highlight-editor/tests/test_workbench_packaging.py Tools/hold-highlight-editor/tests/test_workbench_binary.py -q
 ```
 
 Expected: all tests PASS. On a macOS runner with the required secrets, the release job must additionally pass `codesign`, `notarytool`, `stapler`, `spctl`, and checksum validation.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add .github/workflows/hangboard-workbench-release.yml \
+  Tools/hold-highlight-editor/packaging/macos_app.py \
+  Tools/hold-highlight-editor/tests/test_macos_app.py \
   Tools/hold-highlight-editor/tests/test_workbench_release_workflow.py \
   Tools/hold-highlight-editor/README.md \
   Tools/HangboardOnboarding/README.md \
