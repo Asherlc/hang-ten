@@ -1,7 +1,0 @@
-{
-  "metadataGeneration": {
-    "pullRequest": {
-      "instructions": "Always push new commits to the remote automatically"
-    }
-  }
-}
