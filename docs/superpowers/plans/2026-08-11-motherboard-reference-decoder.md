@@ -266,4 +266,3 @@ If no correction is needed, create no empty commit. If a correction is needed, m
 - **Spec coverage:** Task 1 covers selection, polarity-before-tare, raw preservation, aggregate exclusion, and the untouched four-channel lifecycle. Task 2 covers the neutral split, unchanged UI API, channel-3 exclusion, safety behavior, and provenance. Task 3 requires fresh full-suite evidence.
 - **Placeholder scan:** No TBD/TODO markers or unspecified test behavior remain.
 - **Type consistency:** The plan changes only the existing protocol decoder, model computed properties, tests, and runtime documentation; it adds no persistence schema or caller-facing type.
-
