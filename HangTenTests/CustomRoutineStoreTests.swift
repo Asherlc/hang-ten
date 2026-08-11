@@ -2,7 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
-    func testCompactIICatalogPreservesDistinctPocketAndSloperGripTypesWithCapacity() throws {
+    func testCompactIIPocketsExposeCapacityWithoutChangingOpenHandPosture() throws {
         let twoFingerPocket = try XCTUnwrap(
             BoardCatalog.compactII.holds.first { $0.id == "pocket-29-two-left" }
         )
@@ -12,20 +12,13 @@ final class CustomRoutineStoreTests: XCTestCase {
         let fourFingerPocket = try XCTUnwrap(
             BoardCatalog.compactII.holds.first { $0.id == "pocket-29-four-center" }
         )
-        let flatSloper = try XCTUnwrap(
-            BoardCatalog.compactII.holds.first { $0.id == "sloper-flat-left" }
-        )
 
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
         XCTAssertEqual(threeFingerPocket.fingerCapacity, 3)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(twoFingerPocket.gripType, .twoFingerPocket)
-        XCTAssertEqual(threeFingerPocket.gripType, .threeFingerPocket)
-        XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
-        XCTAssertEqual(flatSloper.gripType, .sloper)
-        XCTAssertEqual(twoFingerPocket.features, [.pocket, .twoFingerPocket])
-        XCTAssertEqual(threeFingerPocket.features, [.pocket, .threeFingerPocket])
-        XCTAssertEqual(fourFingerPocket.features, [.pocket, .fourFingerPocket])
+        XCTAssertEqual(twoFingerPocket.gripType, .openHand)
+        XCTAssertEqual(threeFingerPocket.gripType, .openHand)
+        XCTAssertEqual(fourFingerPocket.gripType, .openHand)
     }
 
     func testPocketDefaultFeaturesRespectCapacityBoundaries() {
@@ -100,41 +93,62 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(resolved.steps.map(\.fingerConfiguration), [expectedConfiguration])
     }
 
-    func testCustomRoutineSaveAndLoadPreservesDistinctGripTypeAndNonContiguousExactFingers() throws {
+    func testCustomRoutineLoadAndSaveStripLegacyGripAndFingerCueFields() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
-        let expectedConfiguration = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
-        let definition = CustomRoutineDefinition(
-            id: "custom.exact-fingers",
-            title: "Exact finger routine",
-            subtitle: "",
-            difficulty: nil,
-            category: nil,
-            tags: [],
-            targetMode: .generic,
-            steps: [
-                WorkoutStepDefinition(
-                    id: "exact-finger-step",
-                    title: "Exact finger hang",
-                    instruction: "Use index and ring fingers.",
-                    accessory: "10s",
-                    duration: 10,
-                    phase: .hang,
-                    targets: [.feature(.threeFingerPocket, fallbacks: [])],
-                    gripType: .threeFingerPocket,
-                    fingerConfiguration: expectedConfiguration,
-                    activeDuration: 10
-                )
-            ]
+        defaults.set(
+            Data(
+                #"""
+                {
+                  "schemaVersion": 1,
+                  "routines": [{
+                    "id": "custom.legacy-cues",
+                    "title": "Legacy cues",
+                    "subtitle": "",
+                    "tags": [],
+                    "targetMode": { "kind": "generic" },
+                    "steps": [{
+                      "id": "legacy-step",
+                      "title": "Legacy hang",
+                      "instruction": "Use index and ring fingers.",
+                      "accessory": "10s",
+                      "duration": 10,
+                      "phase": "hang",
+                      "targets": [{ "feature": "threeFingerPocket" }],
+                      "segments": [{
+                        "kind": "work",
+                        "targets": [{ "feature": "threeFingerPocket" }],
+                        "timing": "fixed",
+                        "duration": 10
+                      }],
+                      "gripType": "openHand",
+                      "fingerConfiguration": { "engagedFingers": ["index", "ring"] },
+                      "activeDuration": 10
+                    }]
+                  }]
+                }
+                """#.utf8
+            ),
+            forKey: CustomRoutineStore.defaultKey
         )
         let store = CustomRoutineStore(defaults: defaults)
 
-        try store.save(definition)
+        let loaded = try XCTUnwrap(store.routines.first)
+        XCTAssertNil(loaded.steps.first?.gripType)
+        XCTAssertNil(loaded.steps.first?.fingerConfiguration)
 
-        let reloaded = CustomRoutineStore(defaults: defaults)
-        XCTAssertEqual(reloaded.routines.first?.steps.first?.gripType, .threeFingerPocket)
-        XCTAssertEqual(reloaded.routines.first?.steps.first?.fingerConfiguration, expectedConfiguration)
+        try store.save(loaded)
+
+        let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
+        let persistedJSON = try XCTUnwrap(
+            try JSONSerialization.jsonObject(with: persistedData) as? [String: Any]
+        )
+        let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
+        let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
+
+        XCTAssertNil(persistedSteps.first?["gripType"])
+        XCTAssertNil(persistedSteps.first?["fingerConfiguration"])
     }
 
     func testBoardSpecificDefinitionRoundTripsAndResolvesToTrainingPlan() throws {
@@ -494,6 +508,8 @@ final class CustomRoutineStoreTests: XCTestCase {
         let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
         let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
         XCTAssertEqual(persistedSteps.first?["activeDuration"] as? Double, 8)
+        XCTAssertNil(persistedSteps.first?["gripType"])
+        XCTAssertNil(persistedSteps.first?["fingerConfiguration"])
         XCTAssertEqual(stored.steps[2].segments[0].timing, .undefined)
         XCTAssertEqual(stored.steps[3].segments[0].timing, .stopwatch)
         XCTAssertEqual(CustomRoutineDraft(editing: stored).definition(), stored)

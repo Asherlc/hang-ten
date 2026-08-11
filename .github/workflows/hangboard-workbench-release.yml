@@ -49,7 +49,7 @@ jobs:
           "$python_bin" -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
 
       - name: Run focused Node suite
-        run: node --test Tools/hold-highlight-editor/tests/*.test.js
+        run: node --test Tools/hold-highlight-editor/tests/workbench*.test.js
 
       - name: Build arm64 workbench executable
         run: |

@@ -74,7 +74,7 @@ enum WorkoutStepNormalizer {
                     id: id,
                     number: step.number,
                     title: "Rest",
-                    instruction: "Step off the board, shake out, and breathe.",
+                    instruction: "",
                     accessory: "\(Int(duration))s rest",
                     duration: duration,
                     phase: .rest,

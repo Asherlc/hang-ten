@@ -108,16 +108,26 @@ test("readiness exposes stable labels for incomplete, stale, conflict, saved, an
     { status: "stale", label: "Stale", nextTool: "onboard" },
   );
   assert.deepEqual(
-    readinessState({ board: completeBoard, promotion: { issues: [{ code: "target_changed" }] } }),
-    { status: "conflict", label: "Conflict", nextTool: "promote" },
-  );
-  assert.deepEqual(
     readinessState({ board: completeBoard, promotion: { saved: true } }),
     { status: "saved", label: "Saved", nextTool: "validate" },
   );
   assert.deepEqual(
     readinessState({ board: completeBoard, validation: { overallStatus: "passed" } }),
     { status: "ready", label: "Ready", nextTool: "promote" },
+  );
+});
+
+test("promotion issues direct readiness to promote", () => {
+  assert.deepEqual(
+    readinessState({ board: completeBoard, promotion: { issues: [{ code: "target_changed" }] } }),
+    { status: "conflict", label: "Conflict", nextTool: "promote" },
+  );
+});
+
+test("failed validation directs readiness to validate", () => {
+  assert.deepEqual(
+    readinessState({ board: completeBoard, validation: { overallStatus: "failed" } }),
+    { status: "conflict", label: "Conflict", nextTool: "validate" },
   );
 });
 

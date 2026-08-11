@@ -38,8 +38,11 @@
     if (board.staleFromStage != null || validation?.overallStatus === "stale") {
       return { status: "stale", label: "Stale", nextTool: "onboard" };
     }
-    if (hasPromotionConflict(promotion) || validation?.overallStatus === "failed") {
+    if (hasPromotionConflict(promotion)) {
       return { status: "conflict", label: "Conflict", nextTool: "promote" };
+    }
+    if (validation?.overallStatus === "failed") {
+      return { status: "conflict", label: "Conflict", nextTool: "validate" };
     }
     if (validation?.overallStatus === "passed") {
       return { status: "ready", label: "Ready", nextTool: "promote" };

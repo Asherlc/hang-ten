@@ -7,28 +7,17 @@ enum GripCueSide {
 
 struct GripDiagramView: View {
     let hold: BoardHold
-    let gripType: GripType
+    let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
 
     init(
         hold: BoardHold,
-        gripType: GripType? = nil,
+        gripType: GripType?,
         fingerConfiguration: FingerConfiguration? = nil
     ) {
         self.hold = hold
-        self.gripType = gripType ?? hold.gripType
+        self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
-    }
-
-    private var gripLabel: String {
-        gripType.label
-    }
-
-    private var fingerCue: FingerCue {
-        FingerCue(
-            fingerConfiguration: fingerConfiguration,
-            capacity: hold.fingerCapacity
-        )
     }
 
     var body: some View {
@@ -38,20 +27,30 @@ struct GripDiagramView: View {
                 .tracking(1.35)
                 .foregroundStyle(Color.hangMuted)
 
-            Text(gripLabel)
-                .font(.system(size: 18, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
+            if let gripType {
+                Text(gripType.label)
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            }
 
             HStack(spacing: 10) {
-                GripHandCueCard(posture: gripType, fingerCue: fingerCue, side: .left)
-                GripHandCueCard(posture: gripType, fingerCue: fingerCue, side: .right)
+                GripHandCueCard(
+                    posture: gripType,
+                    fingerConfiguration: fingerConfiguration,
+                    side: .left
+                )
+                GripHandCueCard(
+                    posture: gripType,
+                    fingerConfiguration: fingerConfiguration,
+                    side: .right
+                )
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(cueLabel), \(gripLabel), \(fingerCue.accessibilityLabel), both hands")
+        .accessibilityLabel("\(cueLabel), \(accessibilityCueLabel), both hands")
     }
 
     private var cueLabel: String {
@@ -72,14 +71,20 @@ struct GripDiagramView: View {
         }
         return undirected
     }
+
+    private var accessibilityCueLabel: String {
+        [gripType?.label, fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }]
+            .compactMap { $0 }
+            .joined(separator: ", ")
+    }
 }
 
 /// A per-hand cue follows the same information hierarchy as the supplied
 /// Grippy references: one symbol describes the grip pose and another describes
 /// the participating fingers. The ordering mirrors around the physical board.
 struct GripHandCueCard: View {
-    let posture: GripType
-    let fingerCue: FingerCue
+    let posture: GripType?
+    let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
 
     var body: some View {
@@ -104,24 +109,28 @@ struct GripHandCueCard: View {
                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(gripPoseLabel), \(fingerCue.accessibilityLabel)")
+        .accessibilityLabel(accessibilityLabel)
     }
 
-    private var gripPoseCue: some View {
-        CueGlyph(label: gripPoseLabel) {
-            Image(gripPoseAsset)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .scaleEffect(x: mirrorScale, y: 1)
-                .foregroundStyle(Color.hangInk.opacity(0.82))
+    @ViewBuilder private var gripPoseCue: some View {
+        if let posture {
+            CueGlyph(label: gripPoseLabel(for: posture)) {
+                Image(gripPoseAsset(for: posture))
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .scaleEffect(x: mirrorScale, y: 1)
+                    .foregroundStyle(Color.hangInk.opacity(0.82))
+            }
         }
     }
 
-    private var fingerSetCue: some View {
-        CueGlyph(label: fingerSetLabel) {
-            FingerCueGlyph(fingerCue: fingerCue)
-            .scaleEffect(x: mirrorScale, y: 1)
+    @ViewBuilder private var fingerSetCue: some View {
+        if let fingerConfiguration {
+            CueGlyph(label: fingerConfiguration.orderedFingers.map(\.shortLabel).joined(separator: "+")) {
+                FingerCueGlyph(fingerConfiguration: fingerConfiguration)
+                    .scaleEffect(x: mirrorScale, y: 1)
+            }
         }
     }
 
@@ -129,7 +138,7 @@ struct GripHandCueCard: View {
         side == .right ? -1 : 1
     }
 
-    private var gripPoseAsset: String {
+    private func gripPoseAsset(for posture: GripType) -> String {
         switch posture {
         case .halfCrimp:
             return "PhosphorHandGrabbing"
@@ -140,7 +149,7 @@ struct GripHandCueCard: View {
         }
     }
 
-    private var gripPoseLabel: String {
+    private func gripPoseLabel(for posture: GripType) -> String {
         switch posture {
         case .halfCrimp: "Half crimp"
         case .fullCrimp: "Full crimp"
@@ -152,18 +161,19 @@ struct GripHandCueCard: View {
         }
     }
 
-    private var fingerSetLabel: String {
-        fingerCue.shortLabel
+    private var accessibilityLabel: String {
+        [
+            posture.map(gripPoseLabel),
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }
+        ]
+        .compactMap { $0 }
+        .joined(separator: ", ")
     }
 }
 
 enum FingerCue {
     case capacity(Int)
     case exact(FingerConfiguration)
-
-    init(fingerConfiguration: FingerConfiguration?, capacity: Int) {
-        self = fingerConfiguration.map(Self.exact) ?? .capacity(capacity)
-    }
 
     var shortLabel: String {
         switch self {
@@ -181,41 +191,25 @@ enum FingerCue {
 }
 
 private struct FingerCueGlyph: View {
-    let fingerCue: FingerCue
+    let fingerConfiguration: FingerConfiguration
 
     var body: some View {
-        switch fingerCue {
-        case let .capacity(count):
-            ZStack(alignment: .bottomTrailing) {
-                Image(systemName: "hand.raised.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(Color.holdActive.opacity(0.68))
-                Text("≤\(count)")
-                    .font(.system(size: 11, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 2)
-                    .background(Color.hangCream, in: Capsule())
+        HStack(alignment: .bottom, spacing: 3) {
+            ForEach(FingerSlot.allCases) { finger in
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .fill(
+                        fingerConfiguration.engagedFingers.contains(finger)
+                            ? Color.holdActive
+                            : Color.hangLine.opacity(0.45)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .stroke(Color.hangInk.opacity(0.25), lineWidth: 1)
+                    }
+                    .frame(width: 7, height: finger.height * 0.62)
             }
-        case let .exact(configuration):
-            HStack(alignment: .bottom, spacing: 3) {
-                ForEach(FingerSlot.allCases) { finger in
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(
-                            configuration.engagedFingers.contains(finger)
-                                ? Color.holdActive
-                                : Color.hangLine.opacity(0.45)
-                        )
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                .stroke(Color.hangInk.opacity(0.25), lineWidth: 1)
-                        }
-                        .frame(width: 7, height: finger.height * 0.62)
-                }
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
         }
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 }
 

@@ -109,6 +109,26 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(fingerConfiguration["engagedFingers"], ["index", "ring"])
     }
 
+    func testInstructionAccessoryCardRowsOmitTrimmedEmptyFieldsWithoutChangingSourceText() {
+        XCTAssertEqual(
+            InstructionAccessoryCardContent.rows(
+                instruction: " \n\t ",
+                accessory: "  "
+            ),
+            []
+        )
+        XCTAssertEqual(
+            InstructionAccessoryCardContent.rows(
+                instruction: "Keep shoulders engaged.",
+                accessory: "7 seconds on / 3 seconds off"
+            ),
+            [
+                .init(kind: .instruction, text: "Keep shoulders engaged."),
+                .init(kind: .accessory, text: "7 seconds on / 3 seconds off")
+            ]
+        )
+    }
+
     func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
@@ -720,47 +740,17 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSharedWarmUpIsSixtySecondBoardPrimer() throws {
-        let seedPlan = LegacyPlanSeedCatalog.maxHangs
-        let seedStep = try XCTUnwrap(seedPlan.steps.first)
+    func testUnsupportedSharedWarmUpsAndCooldownsAreAbsent() {
+        let unsupportedPhases: Set<WorkoutPhase> = [.warmUp, .coolDown]
 
-        XCTAssertEqual(seedStep.title, "Progressive warm-up")
-        XCTAssertEqual(seedStep.duration, 60)
-        XCTAssertEqual(
-            seedStep.instruction,
-            "Start with easy 5-, 10-, and 20-second hangs on the outer jugs. Step off between hangs, keep an open grip, and stop if anything hurts. Do a broader warm-up before training."
-        )
-        XCTAssertEqual(seedStep.accessory, "Board primer · warm up generally first")
-        XCTAssertEqual(seedStep.gripType, .openHand)
-        XCTAssertEqual(seedStep.targets, [.ids("jug-left", "jug-right")])
-
-        let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
-        let resolvedStep = try XCTUnwrap(
-            store.plan(id: seedPlan.id)?.steps.first
-        )
-        XCTAssertEqual(resolvedStep.duration, 60)
-        XCTAssertEqual(resolvedStep.instruction, seedStep.instruction)
-    }
-
-    func testBuiltInPlansDoNotEndWithCooldownSteps() throws {
-        let data = try bundledPlanLibraryData()
-        let definition = try JSONDecoder().decode(PlanLibraryDefinition.self, from: data)
-        let store = try PlanLibraryStore(data: data)
-
-        XCTAssertFalse(
-            definition.blocks.contains { $0.id == "shared.cool-down" }
-        )
         XCTAssertTrue(
-            store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+            LegacyPlanSeedCatalog.all
+                .flatMap(\.steps)
+                .allSatisfy { !unsupportedPhases.contains($0.phase) }
         )
     }
 
-    func testAbrahangsWarmUpAndThreeMinuteRecoveriesKeepTheirDurations() throws {
-        let abrahangsWarmUp = try XCTUnwrap(
-            LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-warm-up" }
-        )
-        XCTAssertEqual(abrahangsWarmUp.duration, 120)
-
+    func testSourceBackedAndExplicitlyAdaptedRecoveriesKeepTheirDurations() {
         let recoveryIDs = [
             "horst-753-grip-1-recovery",
             "ladders-round-1-recovery",
@@ -775,17 +765,40 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(recoverySteps.map(\.duration), Array(repeating: 180, count: recoveryIDs.count))
     }
 
-    func testAbrahangsSecondGripUsesMatchedNineteenMillimeterHalfCrimpEdges() throws {
+    func testBuiltInPlansDoNotEndWithCooldownSteps() throws {
+        let data = try bundledPlanLibraryData()
+        let definition = try JSONDecoder().decode(PlanLibraryDefinition.self, from: data)
+        let store = try PlanLibraryStore(data: data)
+
+        XCTAssertFalse(
+            definition.blocks.contains { $0.id == "shared.cool-down" }
+        )
+        XCTAssertFalse(
+            definition.blocks.contains { $0.id == "shared.progressive-warm-up" }
+        )
+        XCTAssertTrue(
+            store.plans.flatMap(\.steps).allSatisfy { $0.phase != .warmUp }
+        )
+        XCTAssertTrue(
+            store.plans.allSatisfy { $0.steps.last?.phase != .coolDown }
+        )
+    }
+
+    func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · 19 mm half crimp")
+        XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
-        XCTAssertEqual(step.gripType, .halfCrimp)
+        XCTAssertEqual(step.gripType, .openHand)
+        XCTAssertEqual(
+            step.fingerConfiguration,
+            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+        )
     }
 
-    func testAbrahangsFourthGripUsesExactThreeFingerPocketConfiguration() throws {
+    func testAbrahangsFourthGripKeepsSourceBackedFrontTwoOpenCue() throws {
         let store = try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
         let step = try XCTUnwrap(
             store.plan(id: LegacyPlanSeedCatalog.abrahangs.id)?.steps.first {
@@ -793,12 +806,37 @@ final class PlanStorageTests: XCTestCase {
             }
         )
 
-        XCTAssertEqual(step.title, "Abrahang · Three-finger pocket")
+        XCTAssertEqual(step.title, "Abrahang · F2 Open Hang")
+        XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
-            FingerConfiguration(engagedFingers: [.index, .middle, .ring])
+            FingerConfiguration(engagedFingers: [.index, .middle])
         )
-        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle, .ring])
+        XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
+    }
+
+    func testUnsupportedBuiltInGripAndFingerOverridesAreAbsent() throws {
+        let plansWithoutSourceBackedCues = [
+            LegacyPlanSeedCatalog.metoliusEntry,
+            LegacyPlanSeedCatalog.metoliusIntermediate,
+            LegacyPlanSeedCatalog.metoliusAdvanced,
+            LegacyPlanSeedCatalog.forceF80,
+            LegacyPlanSeedCatalog.forceF100,
+            LegacyPlanSeedCatalog.evaIntHangs,
+            LegacyPlanSeedCatalog.ladders,
+            LegacyPlanSeedCatalog.densityHangs,
+            LegacyPlanSeedCatalog.zlagboardEndurance
+        ]
+
+        XCTAssertTrue(
+            plansWithoutSourceBackedCues
+                .flatMap(\.steps)
+                .allSatisfy { $0.gripType == nil && $0.fingerConfiguration == nil }
+        )
+
+        let zlagboardStep = try XCTUnwrap(LegacyPlanSeedCatalog.zlagboardEndurance.steps.first)
+        XCTAssertEqual(zlagboardStep.instruction, "Hang for 60 seconds, then rest for 60 seconds.")
+        XCTAssertEqual(zlagboardStep.accessory, "60s hang · 60s rest")
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
@@ -889,6 +927,186 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(PlanCatalog.all, expectedPlans)
     }
 
+    func testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage() throws {
+        let audit = try loadPlanCueAudit()
+        let library = BuiltInPlanLibraryDefinition.document
+        let store = try PlanLibraryStore(definition: library)
+
+        let sourcesByPlanID = Dictionary(grouping: audit.planSources, by: \.planID)
+        let builtInPlanIDs = Set(library.plans.map(\.id))
+
+        XCTAssertEqual(
+            Set(audit.planSources.map(\.planID)),
+            builtInPlanIDs,
+            "The source manifest must cover exactly the built-in plans."
+        )
+        for plan in library.plans {
+            let source = try XCTUnwrap(
+                sourcesByPlanID[plan.id]?.only,
+                "Expected exactly one source-manifest entry for \(plan.id)."
+            )
+            let sourceURL = try XCTUnwrap(
+                plan.metadata.sourceURL,
+                "Expected a source URL for \(plan.id)."
+            )
+            XCTAssertEqual(source.sourceType, plan.metadata.category)
+            XCTAssertEqual(source.sourceLabel, plan.metadata.sourceLabel)
+            XCTAssertEqual(source.sourceURL, sourceURL.absoluteString)
+        }
+
+        let expectedPlanFieldKeys = Set(
+            library.plans.flatMap { plan in
+                auditedPlanFields.map { field in
+                    CueAuditKey(planID: plan.id, stepID: nil, field: field)
+                }
+            }
+        )
+        let expectedRetainedPlanFieldKeys = expectedPlanCueAuditKeys(in: store)
+        let planRulesByKey = Dictionary(grouping: audit.planFieldRules.flatMap { rule in
+            rule.fields.map { field in
+                (CueAuditKey(planID: rule.planID, stepID: nil, field: field), rule)
+            }
+        }, by: { $0.0 })
+        let missingPlanFields = expectedRetainedPlanFieldKeys.filter { key in
+            !audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.isRetained
+            }
+        }
+        let retainedPlanFieldsWithRemoveRules = expectedRetainedPlanFieldKeys.filter { key in
+            audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.decision == "remove"
+            }
+        }
+        let uncategorizedPlanFields = expectedPlanFieldKeys.filter { planRulesByKey[$0] == nil }
+        let multiplyCoveredPlanFields = expectedPlanFieldKeys.filter {
+            planRulesByKey[$0, default: []].count != 1
+        }
+
+        XCTAssertTrue(
+            missingPlanFields.isEmpty,
+            "Missing retained plan-level cue audit coverage:\n\(missingPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            retainedPlanFieldsWithRemoveRules.isEmpty,
+            "Retained plan-level fields must not have remove rules:\n\(retainedPlanFieldsWithRemoveRules.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            uncategorizedPlanFields.isEmpty,
+            "Missing plan-level cue audit decisions:\n\(uncategorizedPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            multiplyCoveredPlanFields.isEmpty,
+            "Plan-level fields must have exactly one audit decision:\n\(multiplyCoveredPlanFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+
+        let retainedPlanFieldKeys: Set<CueAuditKey> = Set(planRulesByKey.compactMap { key, entries in
+            guard let entry = entries.only else { return nil }
+            return entry.1.isRetained ? key : nil
+        })
+        let removedPlanFieldKeys: Set<CueAuditKey> = Set(planRulesByKey.compactMap { key, entries in
+            guard let entry = entries.only else { return nil }
+            return entry.1.decision == "remove" ? key : nil
+        })
+        XCTAssertTrue(
+            retainedPlanFieldKeys.isDisjoint(with: removedPlanFieldKeys),
+            "Removed plan fields must not be represented as retained."
+        )
+        XCTAssertEqual(
+            retainedPlanFieldKeys.union(removedPlanFieldKeys),
+            expectedPlanFieldKeys,
+            "Every plan field must be classified as retained (keep/adapt) or removed."
+        )
+
+        let expectedStepFieldKeys = try expectedStepCueAuditKeys(in: library)
+        let missingStepFields = expectedStepFieldKeys.filter { key in
+            !audit.stepFieldRules.contains { rule in
+                rule.matches(key) && rule.isRetained
+            }
+        }
+        let retainedStepFieldsWithRemoveRules = expectedStepFieldKeys.filter { key in
+            audit.stepFieldRules.contains { rule in
+                rule.matches(key) && rule.decision == "remove"
+            }
+        }
+
+        XCTAssertTrue(
+            missingStepFields.isEmpty,
+            "Missing step-level cue audit coverage:\n\(missingStepFields.sorted().map(\.description).joined(separator: "\n"))"
+        )
+        XCTAssertTrue(
+            retainedStepFieldsWithRemoveRules.isEmpty,
+            "Retained step fields must not have remove rules:\n\(retainedStepFieldsWithRemoveRules.sorted().map(\.description).joined(separator: "\n"))"
+        )
+
+        let auditedAdaptations = audit.planFieldRules.map(AnyCueAuditDecision.init) +
+            audit.stepFieldRules.map(AnyCueAuditDecision.init)
+        let timerOrRangeAdaptationDecisions = auditedAdaptations.filter {
+            $0.adaptationType == "timer" || $0.adaptationType == "range"
+        }
+
+        XCTAssertFalse(
+            timerOrRangeAdaptationDecisions.isEmpty,
+            "Expected the cue audit to label app timer/range adaptations explicitly."
+        )
+        XCTAssertTrue(
+            timerOrRangeAdaptationDecisions.allSatisfy { decision in
+                decision.decision == "adapt" && decision.sourcePrescription == false
+            },
+            "Timer/range adaptations must be marked as adapt and not source-prescribed."
+        )
+
+        let retainedTimerOrRangeStepRules = expectedStepFieldKeys.flatMap { key in
+            audit.stepFieldRules.filter { rule in
+                rule.matches(key) && (rule.adaptationType == "timer" || rule.adaptationType == "range")
+            }
+        }
+        XCTAssertTrue(
+            retainedTimerOrRangeStepRules.allSatisfy {
+                $0.decision == "adapt" && $0.sourcePrescription == false
+            },
+            "Retained step timer/range adaptations must be adapt rules and not source-prescribed."
+        )
+
+        let actualTimerOrRangePlanKeys = expectedRetainedPlanFieldKeys.filter { key in
+            audit.planFieldRules.contains { rule in
+                rule.matches(key) && rule.isTimerOrRangeAdaptation
+            }
+        }
+        XCTAssertEqual(
+            actualTimerOrRangePlanKeys,
+            expectedTimerOrRangePlanCueAuditKeys(in: store),
+            "Timer/range plan adaptations must match the built-in library's actual retained adaptations."
+        )
+
+        let actualTimerOrRangeStepKeys = expectedStepFieldKeys.filter { key in
+            audit.stepFieldRules.contains { rule in
+                rule.matches(key) && rule.isTimerOrRangeAdaptation
+            }
+        }
+        XCTAssertEqual(
+            actualTimerOrRangeStepKeys,
+            try expectedTimerOrRangeStepCueAuditKeys(in: library),
+            "Timer/range step adaptations must match the built-in library's actual retained adaptations."
+        )
+
+        for planID in [
+            LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id
+        ] {
+            XCTAssertTrue(
+                audit.planFieldRules.contains {
+                    $0.planID == planID &&
+                        $0.fields.contains("interval") &&
+                        $0.decision == "adapt" &&
+                        $0.adaptationType == "timer" &&
+                        $0.sourcePrescription == false
+                },
+                "Expected \(planID) to record its app-guided interval expansion as a timer adaptation."
+            )
+        }
+    }
+
     func testRequestedSourcePlansAreSeededAndResolved() throws {
         let expectedIDs = [
             "lattice.lite-home-adaptations",
@@ -903,6 +1121,10 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(expectedIDs.allSatisfy { id in
             LegacyPlanSeedCatalog.all.contains { $0.id == id } && PlanCatalog.plan(id: id) != nil
         })
+        XCTAssertEqual(
+            expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
+            ["coach", "coach", "coach", "coach", "coach", "retailer", "manufacturer"]
+        )
     }
 
     func testRockProdigyMetadataUsesDistinctPinchKindAndDepthFeatures() throws {
@@ -1067,6 +1289,229 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    private var auditedPlanFields: [String] {
+        [
+            "title",
+            "subtitle",
+            "instruction",
+            "accessory",
+            "target",
+            "count",
+            "duration",
+            "interval",
+            "warmUp",
+            "cooldown",
+            "gripType",
+            "fingerConfiguration"
+        ]
+    }
+
+    private func expectedPlanCueAuditKeys(in store: PlanLibraryStore) -> Set<CueAuditKey> {
+        Set(store.plans.flatMap { plan in
+            var keys: [CueAuditKey] = []
+            if plan.title.hasVisibleText {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "title"))
+            }
+            if plan.subtitle.hasVisibleText {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "subtitle"))
+            }
+            if plan.steps.contains(where: { $0.instruction.hasVisibleText }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "instruction"))
+            }
+            if plan.steps.contains(where: { $0.accessory.hasVisibleText }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "accessory"))
+            }
+            if plan.steps.contains(where: { !$0.targets.isEmpty }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "target"))
+            }
+            if !plan.steps.isEmpty {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "count"))
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "interval"))
+            }
+            if plan.duration > 0 {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "duration"))
+            }
+            if plan.steps.contains(where: { $0.phase == .warmUp }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "warmUp"))
+            }
+            if plan.steps.contains(where: { $0.phase == .coolDown }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "cooldown"))
+            }
+            if plan.steps.contains(where: { $0.gripType != nil }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "gripType"))
+            }
+            if plan.steps.contains(where: { $0.fingerConfiguration != nil }) {
+                keys.append(CueAuditKey(planID: plan.id, stepID: nil, field: "fingerConfiguration"))
+            }
+            return keys
+        })
+    }
+
+    private func expectedTimerOrRangePlanCueAuditKeys(in store: PlanLibraryStore) -> Set<CueAuditKey> {
+        Set(store.plans.flatMap { plan in
+            timerOrRangePlanFields(for: plan.id).map {
+                CueAuditKey(planID: plan.id, stepID: nil, field: $0)
+            }
+        })
+    }
+
+    private func expectedTimerOrRangeStepCueAuditKeys(in library: PlanLibraryDefinition) throws -> Set<CueAuditKey> {
+        let blocksByID = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
+
+        return try Set(library.plans.flatMap { plan in
+            try plan.blocks.flatMap { reference in
+                let block = try XCTUnwrap(
+                    blocksByID[reference.blockID],
+                    "Missing block \(reference.blockID) while building timer/range audit expectations."
+                )
+
+                return block.steps.flatMap { step in
+                    timerOrRangeStepFields(for: plan.id, step: step).map {
+                        CueAuditKey(planID: plan.id, stepID: step.id, field: $0)
+                    }
+                }
+            }
+        })
+    }
+
+    private func timerOrRangePlanFields(for planID: String) -> [String] {
+        switch planID {
+        case LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+            return ["subtitle", "accessory", "duration", "interval"]
+        case "research.max-hangs":
+            return ["subtitle", "accessory", "count", "duration", "interval"]
+        case "research.force-feedback-f100":
+            return ["subtitle", "instruction", "count", "interval"]
+        case "research.eva-int-hangs":
+            return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
+        case "research.abrahangs":
+            return ["subtitle", "accessory", "duration", "interval"]
+        case "coach.horst-seven-fifty-three":
+            return ["subtitle", "count", "interval"]
+        case "coach.bechtel-three-six-nine":
+            return ["subtitle", "accessory", "count", "interval"]
+        case "coach.density-hangs":
+            return ["subtitle", "accessory", "count", "duration", "interval"]
+        default:
+            return []
+        }
+    }
+
+    private func timerOrRangeStepFields(for planID: String, step: WorkoutStepDefinition) -> [String] {
+        switch planID {
+        case LegacyPlanSeedCatalog.metoliusEntry.id,
+            LegacyPlanSeedCatalog.metoliusIntermediate.id,
+            LegacyPlanSeedCatalog.metoliusAdvanced.id:
+            guard step.phase == .rest else { return [] }
+            return visibleCueFields(
+                instruction: step.instruction,
+                accessory: step.accessory
+            )
+        case "research.max-hangs":
+            return visibleCueFields(accessory: step.accessory)
+        case "research.eva-int-hangs":
+            return visibleCueFields(
+                instruction: step.instruction,
+                accessory: step.accessory
+            )
+        case "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs":
+            return visibleCueFields(accessory: step.accessory)
+        default:
+            return []
+        }
+    }
+
+    private func visibleCueFields(
+        instruction: String? = nil,
+        accessory: String? = nil
+    ) -> [String] {
+        var fields: [String] = []
+        if instruction?.hasVisibleText == true {
+            fields.append("instruction")
+        }
+        if accessory?.hasVisibleText == true {
+            fields.append("accessory")
+        }
+        return fields
+    }
+
+    private func expectedStepCueAuditKeys(in library: PlanLibraryDefinition) throws -> Set<CueAuditKey> {
+        let blocksByID = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
+
+        return try Set(library.plans.flatMap { plan in
+            try plan.blocks.flatMap { reference in
+                let block = try XCTUnwrap(
+                    blocksByID[reference.blockID],
+                    "Missing block \(reference.blockID) while building source-audit expectations."
+                )
+
+                return block.steps.flatMap { step in
+                    var keys: [CueAuditKey] = []
+                    if step.instruction.hasVisibleText {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "instruction"))
+                    }
+                    if step.accessory.hasVisibleText {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "accessory"))
+                    }
+                    if step.gripType != nil {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "gripType"))
+                    }
+                    if step.fingerConfiguration != nil {
+                        keys.append(CueAuditKey(planID: plan.id, stepID: step.id, field: "fingerConfiguration"))
+                    }
+                    return keys
+                }
+            }
+        })
+    }
+
+    private func loadPlanCueAudit() throws -> CueAuditDocument {
+        let fileURL = try planCueAuditURL()
+        let markdown = try String(contentsOf: fileURL, encoding: .utf8)
+        let jsonFence = try XCTUnwrap(
+            markdown.range(
+                of: #"```json\s*(\{[\s\S]*?\})\s*```"#,
+                options: .regularExpression
+            ),
+            "Expected a fenced JSON audit block in \(fileURL.path)."
+        )
+        let fencedText = String(markdown[jsonFence])
+        let jsonText = fencedText
+            .replacingOccurrences(
+                of: #"^```json\s*"#,
+                with: "",
+                options: .regularExpression
+            )
+            .replacingOccurrences(
+                of: #"\s*```$"#,
+                with: "",
+                options: .regularExpression
+            )
+
+        return try JSONDecoder().decode(CueAuditDocument.self, from: Data(jsonText.utf8))
+    }
+
+    private func planCueAuditURL() throws -> URL {
+        let testsDirectory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let repoRoot = testsDirectory.deletingLastPathComponent()
+        let auditURL = repoRoot
+            .appendingPathComponent("docs", isDirectory: true)
+            .appendingPathComponent("source-audits", isDirectory: true)
+            .appendingPathComponent("2026-08-10-plan-cue-provenance.md")
+
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: auditURL.path),
+            "Expected cue audit at \(auditURL.path)."
+        )
+
+        return auditURL
+    }
+
     private func bundledPlanLibraryData() throws -> Data {
         let bundle = Bundle(for: PlanStorageTests.self)
         let url = try XCTUnwrap(
@@ -1075,4 +1520,120 @@ final class PlanStorageTests: XCTestCase {
         )
         return try Data(contentsOf: url)
     }
+}
+
+private struct CueAuditKey: Hashable, Comparable, CustomStringConvertible {
+    let planID: String
+    let stepID: String?
+    let field: String
+
+    var description: String {
+        if let stepID {
+            return "\(planID) :: \(stepID) :: \(field)"
+        }
+        return "\(planID) :: \(field)"
+    }
+
+    static func < (lhs: CueAuditKey, rhs: CueAuditKey) -> Bool {
+        lhs.description < rhs.description
+    }
+}
+
+private protocol CueAuditDecision {
+    var planID: String { get }
+    var field: String { get }
+    var decision: String { get }
+    var sourcePrescription: Bool { get }
+    var adaptationType: String? { get }
+}
+
+private extension CueAuditDecision {
+    var isRetained: Bool {
+        decision == "keep" || decision == "adapt"
+    }
+
+    var isTimerOrRangeAdaptation: Bool {
+        adaptationType == "timer" || adaptationType == "range"
+    }
+}
+
+private struct AnyCueAuditDecision: CueAuditDecision {
+    let planID: String
+    let field: String
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    init(_ base: some CueAuditDecision) {
+        planID = base.planID
+        field = base.field
+        decision = base.decision
+        sourcePrescription = base.sourcePrescription
+        adaptationType = base.adaptationType
+    }
+}
+
+private struct CueAuditDocument: Decodable {
+    let planSources: [PlanSourceManifestEntry]
+    let planFieldRules: [PlanFieldRule]
+    let stepFieldRules: [StepFieldRule]
+}
+
+private struct PlanSourceManifestEntry: Decodable {
+    let planID: String
+    let sourceType: String
+    let sourceLabel: String
+    let sourceURL: String
+}
+
+private extension Collection {
+    var only: Element? {
+        count == 1 ? first : nil
+    }
+}
+
+private extension String {
+    var hasVisibleText: Bool {
+        !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+}
+
+private struct PlanFieldRule: Decodable, CueAuditDecision {
+    let planID: String
+    let fields: [String]
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    var field: String {
+        fields.first ?? ""
+    }
+
+    func matches(_ key: CueAuditKey) -> Bool {
+        key.planID == planID && key.stepID == nil && fields.contains(key.field)
+    }
+}
+
+private struct StepFieldRule: Decodable, CueAuditDecision {
+    let planID: String
+    let stepID: String?
+    let stepIDPattern: String?
+    let field: String
+    let decision: String
+    let sourcePrescription: Bool
+    let adaptationType: String?
+
+    func matches(_ key: CueAuditKey) -> Bool {
+        guard key.planID == planID, key.field == field else {
+            return false
+        }
+        if let stepID {
+            return key.stepID == stepID
+        }
+        guard let stepIDPattern, let actualStepID = key.stepID else {
+            return false
+        }
+        return actualStepID.range(of: stepIDPattern, options: .regularExpression) != nil
+    }
+
 }

@@ -48,6 +48,43 @@ final class RootViewSessionPersistenceCoordinator {
 	}
 }
 
+struct InstructionAccessoryCardRow: Equatable {
+    enum Kind: Equatable {
+        case instruction
+        case accessory
+    }
+
+    let kind: Kind
+    let text: String
+}
+
+enum InstructionAccessoryCardContent {
+    static func rows(instruction: String, accessory: String) -> [InstructionAccessoryCardRow] {
+        [
+            row(kind: .instruction, text: instruction),
+            row(kind: .accessory, text: accessory)
+        ].compactMap { $0 }
+    }
+
+    static func instructionText(_ text: String) -> String? {
+        row(kind: .instruction, text: text)?.text
+    }
+
+    static func accessoryText(_ text: String) -> String? {
+        row(kind: .accessory, text: text)?.text
+    }
+
+    private static func row(
+        kind: InstructionAccessoryCardRow.Kind,
+        text: String
+    ) -> InstructionAccessoryCardRow? {
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        return InstructionAccessoryCardRow(kind: kind, text: text)
+    }
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
     @State private var selectedTab: Int = {
@@ -820,39 +857,13 @@ struct PlanDetailView: View {
         board.holds.first { firstStepHoldIDs.contains($0.id) }
     }
 
-    private var firstStepGripType: GripType? {
-        #if DEBUG
-        if let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP"],
-           let reviewGrip = GripType(rawValue: rawValue) {
-            return reviewGrip
-        }
-        #endif
-        return currentPlan.steps.first?.gripType
+    private var firstStepHoldCue: WorkoutHoldCue? {
+        WorkoutHoldCuePolicy.resolve(
+            step: currentPlan.steps.first,
+            hold: firstStepHold,
+            on: board
+        )
     }
-
-    private var firstStepFingerConfiguration: FingerConfiguration? {
-        #if DEBUG
-        if let reviewConfiguration = reviewFingerConfiguration {
-            return reviewConfiguration
-        }
-        #endif
-        return currentPlan.steps.first?.fingerConfiguration
-    }
-
-    #if DEBUG
-    private var reviewFingerConfiguration: FingerConfiguration? {
-        guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
-            return nil
-        }
-
-        let rawSlots = rawValue
-            .split(separator: ",", omittingEmptySubsequences: false)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-        let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
-        guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
-        return FingerConfiguration(engagedFingers: Set(slots))
-    }
-    #endif
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -961,11 +972,11 @@ struct PlanDetailView: View {
             }
             BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
                 .padding(.horizontal, 12)
-            if let firstStepHold {
+            if let firstStepHoldCue {
                 GripDiagramView(
-                    hold: firstStepHold,
-                    gripType: firstStepGripType,
-                    fingerConfiguration: firstStepFingerConfiguration
+                    hold: firstStepHoldCue.hold,
+                    gripType: firstStepHoldCue.gripType,
+                    fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
 			if store.usesFallbackMapping(currentPlan, on: board) {
@@ -1144,13 +1155,27 @@ private struct StepRow: View {
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                 }
-                Text(step.instruction)
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-                Text(step.accessory)
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(step.phase.textTint)
+                ForEach(
+                    Array(
+                        InstructionAccessoryCardContent.rows(
+                            instruction: step.instruction,
+                            accessory: step.accessory
+                        ).enumerated()
+                    ),
+                    id: \.offset
+                ) { _, row in
+                    switch row.kind {
+                    case .instruction:
+                        Text(row.text)
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    case .accessory:
+                        Text(row.text)
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundStyle(step.phase.textTint)
+                    }
+                }
             }
             .padding(.bottom, isLast ? 0 : 12)
         }
@@ -1527,30 +1552,6 @@ struct WorkoutView: View {
 
 	private let timeline: WorkoutTimeline
 
-	private func resolvedFingerConfiguration(for step: WorkoutStep) -> FingerConfiguration? {
-		#if DEBUG
-		if let reviewConfiguration = reviewFingerConfiguration {
-			return reviewConfiguration
-		}
-		#endif
-		return step.fingerConfiguration
-	}
-
-	#if DEBUG
-	private var reviewFingerConfiguration: FingerConfiguration? {
-		guard let rawValue = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FINGERS"] else {
-			return nil
-		}
-
-		let rawSlots = rawValue
-			.split(separator: ",", omittingEmptySubsequences: false)
-			.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-		let slots = rawSlots.compactMap(FingerSlot.init(rawValue:))
-		guard !slots.isEmpty, slots.count == rawSlots.count else { return nil }
-		return FingerConfiguration(engagedFingers: Set(slots))
-	}
-	#endif
-
     var body: some View {
 		GeometryReader { geometry in
 			TimelineView(.periodic(from: .now, by: 0.25)) { context in
@@ -1576,13 +1577,7 @@ struct WorkoutView: View {
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let activeHold = board.holds.first { highlightedHoldIDs.contains($0.id) }
-				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board).map { cue in
-					WorkoutHoldCue(
-						hold: cue.hold,
-						gripType: cue.gripType,
-						fingerConfiguration: highlightedStep.flatMap { resolvedFingerConfiguration(for: $0) }
-					)
-				}
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1954,11 +1949,11 @@ struct WorkoutView: View {
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown
 			) {
-				let fingerCue = FingerCue(
+				GripHandCueCard(
+					posture: holdCue.gripType,
 					fingerConfiguration: holdCue.fingerConfiguration,
-					capacity: holdCue.hold.fingerCapacity
+					side: side
 				)
-				GripHandCueCard(posture: holdCue.gripType, fingerCue: fingerCue, side: side)
 			}
 		}
 		.frame(width: LandscapeLayout.sideCueSlotWidth)
@@ -2026,31 +2021,29 @@ struct WorkoutView: View {
 		isComplete: Bool,
 		showsHoldPreview: Bool
 	) -> some View {
-		VStack(alignment: .leading, spacing: 5) {
+        let instructionText = InstructionAccessoryCardContent.instructionText(step.instruction)
+        let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
+		return VStack(alignment: .leading, spacing: 5) {
 			SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
-			Text(
-				isComplete
-					? "Cool down, then log how your fingers feel."
-					: countdown > 0
-						? "Get into position for \(step.title.lowercased())."
-						: isResting
-							? showsHoldPreview
-								? "Step off the board, shake out, and breathe. The blue board preview shows what’s next; wait for the timer before loading it."
-								: "Step off, shake out, and breathe."
-							: step.instruction
-			)
-			.font(.system(size: 14, weight: .semibold, design: .rounded))
-			.foregroundStyle(Color.hangInk)
-			.lineLimit(2)
-			.minimumScaleFactor(0.82)
+            if let text = isComplete
+                ? "Cool down, then log how your fingers feel."
+                : countdown > 0
+                    ? "Get into position for \(step.title.lowercased())."
+                    : instructionText {
+                Text(text)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.82)
+            }
 
-			if !isComplete, countdown == 0, !isResting {
-				Text(step.accessory)
-					.font(.system(size: 11, weight: .bold, design: .rounded))
-					.foregroundStyle(step.phase.textTint)
-					.lineLimit(1)
-					.minimumScaleFactor(0.78)
-			}
+            if !isComplete, countdown == 0, let accessoryText {
+                Text(accessoryText)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(step.phase.textTint)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.78)
+            }
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.hangCard(padding: 12)
@@ -2131,7 +2124,9 @@ struct WorkoutView: View {
 		isComplete: Bool,
 		showsHoldPreview: Bool
     ) -> some View {
-        VStack(alignment: .leading, spacing: 11) {
+        let instructionText = InstructionAccessoryCardContent.instructionText(step.instruction)
+        let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
+        return VStack(alignment: .leading, spacing: 11) {
             HStack {
                 SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
                 Spacer()
@@ -2142,29 +2137,19 @@ struct WorkoutView: View {
                 }
             }
 
-            Text(
-                isComplete
-                    ? "Take a few easy minutes to cool down, then log how your fingers feel."
-					: countdown > 0
-						? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
-						: isResting
-							? showsHoldPreview
-								? "Step off the board, shake out, and breathe. The blue board preview shows what’s next; wait for the timer before loading it."
-								: "Step off, shake out, and breathe."
-                            : step.instruction
-            )
-                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-                .fixedSize(horizontal: false, vertical: true)
+            if let text = isComplete
+                ? "Take a few easy minutes to cool down, then log how your fingers feel."
+                : countdown > 0
+                    ? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
+                    : instructionText {
+                Text(text)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
-			if !isComplete, countdown == 0 {
-				Text(
-					isResting
-						? showsHoldPreview
-							? "Blue preview · wait for the timer"
-							: "Rest interval · recover before the timer ends"
-						: step.accessory
-				)
+			if !isComplete, countdown == 0, let text = accessoryText {
+				Text(text)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
             }

@@ -35,7 +35,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(cue?.fingerConfiguration?.orderedFingers, [.index, .ring])
     }
 
-    func testHoldCueFallsBackToBoardHoldGrip() {
+    func testHoldCueDoesNotInferGripFromBoardMetadata() {
         let hold = BoardHold(
             id: "cue-pocket",
             name: "Cue pocket",
@@ -43,7 +43,7 @@ final class WorkoutTimelineTests: XCTestCase {
             detail: "Pocket",
             kind: .pocket,
             frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
-            gripType: .threeFingerPocket,
+            gripType: .openHand,
             fingerCapacity: 3
         )
         let step = WorkoutStep(
@@ -59,9 +59,7 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
-        XCTAssertEqual(cue?.gripType, .threeFingerPocket)
-        XCTAssertEqual(cue?.hold.fingerCapacity, 3)
-        XCTAssertNil(cue?.fingerConfiguration)
+        XCTAssertNil(cue)
     }
 
     func testHoldCueAcceptsHighlightedFallbackFeatureHold() {
@@ -82,7 +80,8 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.feature(.smallEdge, fallbacks: [.largeEdge])]
+            targets: [.feature(.smallEdge, fallbacks: [.largeEdge])],
+            gripType: .halfCrimp
         )
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
@@ -130,7 +129,8 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.ids(hold.id)]
+            targets: [.ids(hold.id)],
+            gripType: .halfCrimp
         )
 
         XCTAssertNotNil(
@@ -138,19 +138,28 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
-    func testHoldCueVisibilityShowsAvailableRestPreviewCue() {
-        let holdCue = WorkoutHoldCue(
-            hold: BoardHold(
-                id: "cue-edge",
-                name: "Cue edge",
-                shortLabel: "E",
-                detail: "Edge",
-                kind: .edge,
-                frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
-            ),
-            gripType: .openHand,
+    func testSourceBackedHoldCueRemainsVisibleAtCountdownZero() {
+        let hold = BoardHold(
+            id: "cue-edge",
+            name: "Cue edge",
+            shortLabel: "E",
+            detail: "Edge",
+            kind: .edge,
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+        )
+        let step = WorkoutStep(
+            id: "cue-step",
+            number: 1,
+            title: "Cue step",
+            instruction: "Cue instruction",
+            accessory: "Cue accessory",
+            duration: 10,
+            phase: .hang,
+            targets: [.ids(hold.id)],
+            gripType: .halfCrimp,
             fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
         )
+        let holdCue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
 
         XCTAssertTrue(
             WorkoutHoldCueVisibilityPolicy.showsCue(
