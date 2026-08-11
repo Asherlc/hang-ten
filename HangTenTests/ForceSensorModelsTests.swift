@@ -68,34 +68,25 @@ final class ForceSensorModelsTests: XCTestCase {
         XCTAssertNil(ForceSensorSample(value: .infinity, unit: .kilogramsForce, receivedAt: timestamp))
     }
 
-    func testBLEContractAndAdvertisementCarryNeutralDiscoveryMetadata() throws {
+    func testBLEContractAndAdvertisementCarryServiceMetadata() throws {
         let service = try XCTUnwrap(UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"))
         let notify = try XCTUnwrap(UUID(uuidString: "11111111-2222-3333-4444-555555555555"))
-        let write = try XCTUnwrap(UUID(uuidString: "66666666-7777-8888-9999-AAAAAAAAAAAA"))
         let notification = ForceSensorBLECharacteristic(
             serviceUUID: service,
             characteristicUUID: notify
         )
-        let command = ForceSensorBLECommand(
-            characteristic: .init(serviceUUID: service, characteristicUUID: write),
-            payload: Data([0x01, 0x02])
-        )
         let contract = ForceSensorBLEContract(
             serviceUUIDs: [service],
-            notificationCharacteristics: [notification],
-            commands: [.tare: command]
+            notificationCharacteristics: [notification]
         )
         let advertisement = ForceSensorAdvertisement(
             name: "Synthetic sensor",
-            serviceUUIDs: [service],
-            manufacturerData: Data([0x03, 0x04])
+            serviceUUIDs: [service]
         )
 
         XCTAssertEqual(contract.serviceUUIDs, [service])
         XCTAssertEqual(contract.notificationCharacteristics, [notification])
-        XCTAssertEqual(contract.commands[.tare], command)
         XCTAssertEqual(advertisement.name, "Synthetic sensor")
         XCTAssertEqual(advertisement.serviceUUIDs, [service])
-        XCTAssertEqual(advertisement.manufacturerData, Data([0x03, 0x04]))
     }
 }

@@ -95,30 +95,17 @@ struct ForceSensorSample: Equatable {
     }
 }
 
-enum ForceSensorCommand: String, CaseIterable, Codable, Hashable {
-    case tare
-    case start
-    case stop
-}
-
 struct ForceSensorBLECharacteristic: Equatable, Hashable {
     let serviceUUID: UUID
     let characteristicUUID: UUID
 }
 
-struct ForceSensorBLECommand: Equatable {
-    let characteristic: ForceSensorBLECharacteristic
-    let payload: Data
-}
-
 struct ForceSensorBLEContract: Equatable {
     let serviceUUIDs: Set<UUID>
     let notificationCharacteristics: Set<ForceSensorBLECharacteristic>
-    let commands: [ForceSensorCommand: ForceSensorBLECommand]
 }
 
 struct ForceSensorAdvertisement: Equatable {
     let name: String?
     let serviceUUIDs: Set<UUID>
-    let manufacturerData: Data?
 }
