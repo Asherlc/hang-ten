@@ -423,3 +423,209 @@ extension CGRect {
         CGRect(x: 1 - maxX, y: minY, width: width, height: height)
     }
 }
+
+// MARK: - Package artwork adaptation
+
+enum BoardArtworkAdaptationError: Error, CustomStringConvertible {
+    case invalid(String)
+
+    var description: String {
+        switch self {
+        case .invalid(let reason):
+            reason
+        }
+    }
+}
+
+extension BoardArtworkDocument {
+    func boardDesign() throws -> BoardDesign {
+        guard canvasFrame.isNormalized else {
+            throw BoardArtworkAdaptationError.invalid("canvas frame must stay inside normalized bounds")
+        }
+        guard palette == "sculptedWood" else {
+            throw BoardArtworkAdaptationError.invalid("unsupported palette \(palette)")
+        }
+        guard Set(layers.map(\.id)).count == layers.count else {
+            throw BoardArtworkAdaptationError.invalid("artwork layer IDs must be unique")
+        }
+        guard Set(holdPieces.map(\.id)).count == holdPieces.count else {
+            throw BoardArtworkAdaptationError.invalid("artwork hold-piece IDs must be unique")
+        }
+
+        return try BoardDesign(
+            id: boardID,
+            canvasFrame: canvasFrame.cgRect,
+            silhouette: silhouette.boardShape(),
+            layers: layers.map { try $0.boardLayer() },
+            holds: holdPieces.map { try $0.boardHoldPiece() },
+            palette: .sculptedWood
+        )
+    }
+}
+
+private extension BoardArtworkLayerDocument {
+    func boardLayer() throws -> BoardLayer {
+        guard frame.isNormalized else {
+            throw BoardArtworkAdaptationError.invalid("layer \(id) has an invalid frame")
+        }
+        return try BoardLayer(
+            frame: frame.cgRect,
+            shape: shape.boardShape(),
+            role: boardSurfaceRole()
+        )
+    }
+
+    func boardSurfaceRole() throws -> BoardSurfaceRole {
+        switch role {
+        case "topPlane": .topPlane
+        case "faceLight": .faceLight
+        case "separator": .separator
+        case "bottomPlane": .bottomPlane
+        case "topSeam": .topSeam
+        case "shelf": .shelf
+        default:
+            throw BoardArtworkAdaptationError.invalid("layer \(id) has unsupported role \(role)")
+        }
+    }
+}
+
+private extension BoardArtworkHoldPieceDocument {
+    func boardHoldPiece() throws -> BoardHoldPiece {
+        guard frame.isNormalized else {
+            throw BoardArtworkAdaptationError.invalid("hold piece \(id) has an invalid frame")
+        }
+        return try BoardHoldPiece(
+            id: id,
+            holdID: holdID,
+            frame: frame.cgRect,
+            shape: shape.boardShape(),
+            treatment: treatment.boardHoldTreatment(pieceID: id)
+        )
+    }
+}
+
+private extension BoardArtworkShapeDocument {
+    func boardShape() throws -> BoardShape {
+        switch type {
+        case "roundedRect":
+            guard commands == nil,
+                  let cornerRadiusFraction,
+                  cornerRadiusFraction.isFinite,
+                  (0...0.5).contains(cornerRadiusFraction) else {
+                throw BoardArtworkAdaptationError.invalid("rounded rectangle shape is invalid")
+            }
+            return .roundedRect(cornerRadiusFraction: CGFloat(cornerRadiusFraction))
+
+        case "path":
+            guard cornerRadiusFraction == nil,
+                  let commands,
+                  !commands.isEmpty,
+                  commands.first?.command == "move",
+                  commands.last?.command == "close" else {
+                throw BoardArtworkAdaptationError.invalid("path must begin with move and end with close")
+            }
+            return .path(
+                BoardNormalizedPath(
+                    commands: try commands.map { try $0.boardPathCommand() }
+                )
+            )
+
+        default:
+            throw BoardArtworkAdaptationError.invalid("unsupported shape type \(type)")
+        }
+    }
+}
+
+private extension BoardArtworkPathCommandDocument {
+    func boardPathCommand() throws -> BoardPathCommand {
+        switch command {
+        case "move":
+            guard control == nil, control1 == nil, control2 == nil else {
+                throw invalidCommand()
+            }
+            return .move(try point(to))
+        case "line":
+            guard control == nil, control1 == nil, control2 == nil else {
+                throw invalidCommand()
+            }
+            return .line(try point(to))
+        case "quad":
+            guard control1 == nil, control2 == nil else { throw invalidCommand() }
+            return .quad(to: try point(to), control: try point(control))
+        case "curve":
+            guard control == nil else { throw invalidCommand() }
+            return .curve(
+                to: try point(to),
+                control1: try point(control1),
+                control2: try point(control2)
+            )
+        case "close":
+            guard to == nil, control == nil, control1 == nil, control2 == nil else {
+                throw invalidCommand()
+            }
+            return .close
+        default:
+            throw invalidCommand()
+        }
+    }
+
+    func point(_ coordinates: [Double]?) throws -> CGPoint {
+        guard let coordinates,
+              coordinates.count == 2,
+              coordinates.allSatisfy({ $0.isFinite && (0...1).contains($0) }) else {
+            throw invalidCommand()
+        }
+        return CGPoint(x: coordinates[0], y: coordinates[1])
+    }
+
+    func invalidCommand() -> BoardArtworkAdaptationError {
+        .invalid("invalid \(command) path command")
+    }
+}
+
+private extension BoardArtworkTreatmentDocument {
+    func boardHoldTreatment(pieceID: String) throws -> BoardHoldTreatment {
+        switch type {
+        case "surface":
+            guard rimInsetFraction == nil, depth == nil else {
+                throw invalidTreatment(pieceID: pieceID)
+            }
+            return .surface
+
+        case "shelf":
+            guard depth == nil, let inset = try validatedInset(pieceID: pieceID) else {
+                throw invalidTreatment(pieceID: pieceID)
+            }
+            return .shelf(BoardShelfProfile(rimInsetFraction: inset))
+
+        case "recess":
+            guard let inset = try validatedInset(pieceID: pieceID) else {
+                throw invalidTreatment(pieceID: pieceID)
+            }
+            let recessDepth: BoardRecessDepth
+            switch depth {
+            case "deep": recessDepth = .deep
+            case "shallow": recessDepth = .shallow
+            default: throw invalidTreatment(pieceID: pieceID)
+            }
+            return .recess(
+                BoardRecessProfile(rimInsetFraction: inset, depth: recessDepth)
+            )
+
+        default:
+            throw invalidTreatment(pieceID: pieceID)
+        }
+    }
+
+    func validatedInset(pieceID: String) throws -> CGFloat? {
+        guard let rimInsetFraction else { return nil }
+        guard rimInsetFraction.isFinite, (0...0.5).contains(rimInsetFraction) else {
+            throw invalidTreatment(pieceID: pieceID)
+        }
+        return CGFloat(rimInsetFraction)
+    }
+
+    func invalidTreatment(pieceID: String) -> BoardArtworkAdaptationError {
+        .invalid("hold piece \(pieceID) has an invalid \(type) treatment")
+    }
+}

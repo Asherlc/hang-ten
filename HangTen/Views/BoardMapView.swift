@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct BoardMapView: View {
     let board: TrainingBoard
@@ -9,7 +10,7 @@ struct BoardMapView: View {
 
     var body: some View {
         Group {
-            if let design = BoardDesignCatalog.design(for: board.id) {
+            if let design = BoardCatalog.packageStore.design(for: board.id) {
                 DesignedBoardMap(
                     board: board,
                     design: design,
@@ -28,6 +29,21 @@ struct BoardMapView: View {
             }
         }
         .aspectRatio(board.aspectRatio, contentMode: .fit)
+    }
+}
+
+/// Loads only a package-declared presentation file. A board without one has
+/// no image view and never falls back to an asset-catalog name.
+struct BoardPresentationImage: View {
+    let board: TrainingBoard
+
+    @ViewBuilder
+    var body: some View {
+        if let url = BoardCatalog.packageStore.presentationImageURL(for: board),
+           let image = UIImage(contentsOfFile: url.path) {
+            Image(uiImage: image)
+                .resizable()
+        }
     }
 }
 

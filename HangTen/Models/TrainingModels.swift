@@ -42,7 +42,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-enum HoldCueStyle: String, Hashable {
+enum HoldCueStyle: String, Codable, Hashable {
     case outerJug
     case slot
     case pinch
@@ -665,6 +665,7 @@ struct TrainingPlan: Identifiable, Hashable {
 }
 
 enum BoardCatalog {
+    #if LEGACY_HANDWRITTEN_BOARD_CATALOG
     // Board geometry is data, not view code. Add new TrainingBoard values here
     // and plans can resolve their hold IDs without changing the workout UI.
     static let compactII = GeneratedBoardCatalog.compactII
@@ -891,6 +892,45 @@ enum BoardCatalog {
 
     static func board(for id: String?) -> TrainingBoard {
         all.first { $0.id == id } ?? compactII
+    }
+    #endif
+
+    static let packageStore: BoardPackageStore = {
+        do {
+            return try BoardPackageStore()
+        } catch {
+            fatalError("Bundled approved board packages could not be loaded: \(error.localizedDescription)")
+        }
+    }()
+
+    static let all = packageStore.boards
+
+    static let defaultBoard: TrainingBoard = {
+        guard let board = all.first else {
+            fatalError("The bundled board catalog contains no approved boards.")
+        }
+        return board
+    }()
+
+    static func board(for id: String?) -> TrainingBoard {
+        guard let id else { return defaultBoard }
+        return packageStore.board(id: id) ?? defaultBoard
+    }
+
+    // Temporary compatibility aliases for callers removed in Task 6. Their
+    // values still come exclusively from the decoded package store.
+    static var compactII: TrainingBoard {
+        packageStore.board(id: "metolius.wood-grips-compact-ii") ?? defaultBoard
+    }
+
+    static var rockProdigyTrainingCenter: TrainingBoard {
+        packageStore.board(id: "trango.rock-prodigy-training-center") ?? defaultBoard
+    }
+
+    static var compactIIFlatSloperHoldIDs: [String] {
+        compactII.holds
+            .filter { $0.kind == .sloper && $0.features.contains(.largeSlope) }
+            .map(\.id)
     }
 }
 

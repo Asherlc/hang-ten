@@ -89,7 +89,7 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertEqual(board.dimensions, expectedBoard.dimensions)
         XCTAssertEqual(board.aspectRatio, expectedBoard.aspectRatio)
         XCTAssertEqual(board.productURL, expectedBoard.productURL)
-        XCTAssertEqual(board.photoAssetName, expectedBoard.photoAssetName)
+        XCTAssertNil(expectedBoard.photoAssetName)
         XCTAssertEqual(expectedBoard.holds.count, 19)
         XCTAssertEqual(
             Dictionary(uniqueKeysWithValues: board.holds.map { ($0.id, $0) }),
