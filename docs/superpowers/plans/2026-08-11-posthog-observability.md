@@ -330,16 +330,17 @@ git commit -m "docs: document PostHog observability setup"
 
 For each CI build and test `xcodebuild` command, set its environment from
 `secrets.POSTHOG_CLIENT_TOKEN` and `vars.POSTHOG_HOST`, defaulting the host to
-`https://us.i.posthog.com`. Pass both values as exact Xcode build-setting
-overrides, `POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN"` and
-`POSTHOG_HOST="$POSTHOG_HOST"`. Do not print either value. An absent secret,
-including on a fork pull request, must yield the app's existing no-op telemetry
-composition rather than a workflow failure.
+`https://us.i.posthog.com`. Write both values into a mode-`0600` temporary
+xcconfig under `RUNNER_TEMP`, pass only that file path through `-xcconfig`, and
+remove it with an exit trap. Do not interpolate or print either value in a
+captured command or log. An absent secret, including on a fork pull request,
+must yield the app's existing no-op telemetry composition rather than a workflow
+failure.
 
 - [ ] **Step 2: Inject environment-scoped configuration into the signed archive**
 
 In the existing `app-store-connect` environment, read the same secret and
-variable names and pass the same build-setting overrides to the archive
+variable names and pass them through the same temporary xcconfig to the archive
 `xcodebuild` command. Leave CodeQL unconfigured because it does not produce a
 distributable telemetry-enabled app.
 

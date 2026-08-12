@@ -117,8 +117,15 @@ jobs:
           POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/hang-ten-logs" "$RUNNER_TEMP/hang-ten-derived-data"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'POSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = %s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$POSTHOG_HOST" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
@@ -126,10 +133,9 @@ jobs:
             -sdk "${{ matrix.sdk }}" \
             -destination "${{ matrix.destination }}" \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-derived-data/${{ matrix.configuration }}-${{ matrix.sdk }}" \
+            -xcconfig "$telemetry_xcconfig" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN" \
-            POSTHOG_HOST="$POSTHOG_HOST" \
             build 2>&1 | tee "$RUNNER_TEMP/hang-ten-logs/${{ matrix.configuration }}-${{ matrix.sdk }}.log"
 
       # actions/upload-artifact v4.6.2
@@ -166,8 +172,15 @@ jobs:
           POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/hang-ten-logs" "$RUNNER_TEMP/hang-ten-derived-data"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'POSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = %s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$POSTHOG_HOST" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
@@ -175,10 +188,9 @@ jobs:
             -sdk iphoneos \
             -destination generic/platform=iOS \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-derived-data/Release-iphoneos" \
+            -xcconfig "$telemetry_xcconfig" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN" \
-            POSTHOG_HOST="$POSTHOG_HOST" \
             build 2>&1 | tee "$RUNNER_TEMP/hang-ten-logs/Release-iphoneos.log"
 
       # actions/upload-artifact v4.6.2
@@ -266,8 +278,15 @@ jobs:
           POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/hang-ten-test-logs" "$RUNNER_TEMP/hang-ten-test-derived-data"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'POSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = %s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$POSTHOG_HOST" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
@@ -277,11 +296,10 @@ jobs:
             -maximum-parallel-testing-workers 1 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
+            -xcconfig "$telemetry_xcconfig" \
             CODE_SIGNING_ALLOWED=YES \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGN_IDENTITY="-" \
-            POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN" \
-            POSTHOG_HOST="$POSTHOG_HOST" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
 
       # actions/upload-artifact v4.6.2

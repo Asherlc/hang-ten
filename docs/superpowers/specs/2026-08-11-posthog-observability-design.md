@@ -47,9 +47,10 @@ exporter change without feature-code changes.
 
 1. `HangTenApp` builds the telemetry composition from build settings. Local
    builds use a token-free tracked default plus an ignored override; trusted CI
-   injects the token as an Xcode build-setting override. Missing configuration
-   installs no-op implementations, allowing tests, forks, and local builds to
-   run without external telemetry.
+   writes the token to a mode-`0600` temporary xcconfig, passes only its path to
+   Xcode, and removes it when the job step exits. Missing configuration installs
+   no-op implementations, allowing tests, forks, and local builds to run
+   without external telemetry.
 2. UI and services emit typed events or diagnostics through the interfaces.
 3. The PostHog adapter sends only the approved product event and redacted error
    properties. The OpenTelemetry adapter exports diagnostics through OTLP.

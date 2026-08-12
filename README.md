@@ -85,8 +85,10 @@ Add these environment variables:
 ## PostHog CI configuration
 
 The app runs without telemetry when its PostHog client token is absent. This is
-intentional for local builds and untrusted fork pull requests. To enable
-anonymous telemetry in trusted GitHub Actions builds, configure:
+intentional for local builds and untrusted fork pull requests. PostHog
+credentials are not provisioned by this repository: after creating the new
+Hang Ten PostHog project, an authorized maintainer must configure the following
+to enable anonymous telemetry in trusted GitHub Actions builds:
 
 - Repository secret `POSTHOG_CLIENT_TOKEN`: the Hang Ten PostHog public client
   project key (`phc_...`). Although it is a client-side key, retain it as a
@@ -95,11 +97,14 @@ anonymous telemetry in trusted GitHub Actions builds, configure:
   `https://us.i.posthog.com` unless the project is in another region.
 
 The release workflow runs in the `app-store-connect` environment, whose
-secrets and variables are scoped separately from the repository. Define the
-same `POSTHOG_CLIENT_TOKEN` environment secret and `POSTHOG_HOST` environment
-variable there so the signed TestFlight archive includes telemetry. The host
-defaults to `https://us.i.posthog.com` when the variable is omitted; a missing
-token remains a safe no-op rather than failing CI.
+secrets and variables are scoped separately from the repository. After the
+project exists, define the same `POSTHOG_CLIENT_TOKEN` environment secret and
+`POSTHOG_HOST` environment variable there so the signed TestFlight archive
+includes telemetry. The host defaults to `https://us.i.posthog.com` when the
+variable is omitted; a missing token remains a safe no-op rather than failing
+CI. The workflows place these values in a mode-`0600` temporary xcconfig, pass
+only that file path to Xcode, and remove it when the job step exits so token
+values are not interpolated into captured build logs.
 
 The API key needs the Admin role for provisioning-profile access, and App Store
 Connect must already contain an app record for `com.hangten.training` plus an

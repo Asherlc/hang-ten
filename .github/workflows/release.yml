@@ -97,6 +97,13 @@ jobs:
           set -euo pipefail
           archive_path="$PWD/build/HangTen.xcarchive"
           mkdir -p "$PWD/build"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'POSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = %s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$POSTHOG_HOST" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
@@ -108,8 +115,7 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution" \
             PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
-            POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN" \
-            POSTHOG_HOST="$POSTHOG_HOST" \
+            -xcconfig "$telemetry_xcconfig" \
             clean archive
 
       - name: Verify archived bundle
