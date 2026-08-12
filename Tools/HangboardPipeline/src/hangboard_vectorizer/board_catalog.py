@@ -188,7 +188,13 @@ class BoardPackage:
 
 
 def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
-    _closed(value, {"schemaVersion", "id", "manufacturer", "name", "productURL", "dimensions", "aspectRatio", "presentation", "holds"}, "board.json")
+    required_keys = {"schemaVersion", "id", "manufacturer", "name", "productURL", "dimensions", "aspectRatio", "holds"}
+    allowed_keys = required_keys | {"presentation"}
+    unknown, missing = set(value) - allowed_keys, required_keys - set(value)
+    if unknown:
+        raise ValueError(f"board.json has unknown keys: {sorted(unknown)}")
+    if missing:
+        raise ValueError(f"board.json is missing keys: {sorted(missing)}")
     if isinstance(value["schemaVersion"], bool) or value["schemaVersion"] != 1:
         raise ValueError("board.json.schemaVersion must be 1")
     board_id = _identifier(value["id"], "board.json.id")
@@ -199,17 +205,19 @@ def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
             facts[key] = _number(value[key], f"board.json.{key}")
         else:
             facts[key] = _string(value[key], f"board.json.{key}")
-    presentation = _mapping(value["presentation"], "board.json.presentation")
-    if set(presentation) == {"assetPath"}:
-        asset_path = presentation["assetPath"]
-    elif set(presentation) == {"photoAsset"}:
-        photo_asset = _mapping(presentation["photoAsset"], "board.json.presentation.photoAsset")
-        _closed(photo_asset, {"name", "path"}, "board.json.presentation.photoAsset")
-        _string(photo_asset["name"], "board.json.presentation.photoAsset.name")
-        asset_path = photo_asset["path"]
-    else:
-        raise ValueError("board.json.presentation must declare assetPath or photoAsset")
-    presentation_asset_path = _relative_path(asset_path, root, "board.json.presentation asset path", container="package").as_posix()
+    presentation_asset_path: str | None = None
+    if "presentation" in value:
+        presentation = _mapping(value["presentation"], "board.json.presentation")
+        if set(presentation) == {"assetPath"}:
+            asset_path = presentation["assetPath"]
+        elif set(presentation) == {"photoAsset"}:
+            photo_asset = _mapping(presentation["photoAsset"], "board.json.presentation.photoAsset")
+            _closed(photo_asset, {"name", "path"}, "board.json.presentation.photoAsset")
+            _string(photo_asset["name"], "board.json.presentation.photoAsset.name")
+            asset_path = photo_asset["path"]
+        else:
+            raise ValueError("board.json.presentation must declare assetPath or photoAsset")
+        presentation_asset_path = _relative_path(asset_path, root, "board.json.presentation asset path", container="package").as_posix()
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
@@ -349,7 +357,7 @@ def load_approved_package(package_root: Path) -> BoardPackage:
     _exact_keys(evidence.artwork_evidence, artwork_keys, "artworkEvidence keys must equal artwork elements")
     assets = _package_assets(root)
     _exact_keys(evidence.asset_evidence, assets, "assetEvidence keys must equal package assets")
-    if board.presentation_asset_path not in assets:
+    if board.presentation_asset_path is not None and board.presentation_asset_path not in assets:
         raise ValueError("board presentation asset must resolve to a package asset")
     return BoardPackage(root.resolve(), board, evidence, semantics, artwork)
 

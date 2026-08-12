@@ -124,6 +124,42 @@ def test_approved_package_accepts_a_named_photo_asset_without_treating_it_as_a_f
     assert package.board.presentation_asset_path == "assets/presentation.png"
 
 
+def test_approved_package_allows_no_presentation_asset_or_assets_directory(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    root = _write_approved_package(tmp_path / "package")
+    board_path = root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board.pop("presentation")
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+    evidence_path = root / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["assetEvidence"] = {}
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+    (root / "assets" / "presentation.png").unlink()
+    (root / "assets").rmdir()
+
+    package = module.load_approved_package(root)
+
+    assert package.board.presentation_asset_path is None
+    assert package.evidence.asset_evidence == {}
+
+
+def test_approved_package_requires_evidence_for_actual_assets_without_presentation(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    root = _write_approved_package(tmp_path / "package")
+    board_path = root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board.pop("presentation")
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+    evidence_path = root / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["assetEvidence"] = {}
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
+        module.load_approved_package(root)
+
+
 @pytest.mark.parametrize("missing", ["evidence.json", "semantics.json", "artwork.json"])
 def test_approved_package_requires_each_sidecar(tmp_path: Path, missing: str) -> None:
     module = load_board_catalog_module()
