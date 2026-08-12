@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+import shutil
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def load_staging_module():
+    module_path = REPO_ROOT / "scripts" / "stage-approved-board-packages.py"
+    spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
+    if spec is None or spec.loader is None:  # pragma: no cover - defensive
+        raise AssertionError("unable to load board package staging script")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def build_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    vectorizer_source = REPO_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    vectorizer_destination = (
+        repository_root
+        / "Tools"
+        / "HangboardPipeline"
+        / "src"
+        / "hangboard_vectorizer"
+    )
+    shutil.copytree(vectorizer_source, vectorizer_destination)
+    approved_source = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+    approved_package = hangboards / "approved-board"
+    shutil.copytree(approved_source, approved_package)
+    draft_package = hangboards / "draft-board"
+    draft_package.mkdir()
+    (draft_package / "draft-only.txt").write_bytes(b"draft package bytes")
+    catalog = hangboards / "catalog.json"
+    catalog.write_bytes(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "approved-board",
+                        "status": "approved",
+                    },
+                    {
+                        "id": "draft.board",
+                        "path": "draft-board",
+                        "status": "draft",
+                    },
+                ],
+            },
+            indent=2,
+        ).encode("utf-8"),
+    )
+    return repository_root, catalog, approved_package
+
+
+def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destination(
+    tmp_path: Path,
+) -> None:
+    module = load_staging_module()
+    repository_root, catalog, approved_package = build_repository(tmp_path)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    (destination / "stale").mkdir(parents=True)
+    (destination / "stale" / "previous-build.txt").write_bytes(b"stale")
+    sibling_marker = destination.parent / "keep-this-sibling.txt"
+    sibling_marker.write_bytes(b"must remain")
+
+    staged = module.stage_approved_packages(repository_root, destination)
+
+    assert staged == (destination / "catalog.json", destination / "approved-board")
+    assert destination.joinpath("catalog.json").read_bytes() == catalog.read_bytes()
+    assert not destination.joinpath("draft-board").exists()
+    assert not destination.joinpath("stale").exists()
+    assert sibling_marker.read_bytes() == b"must remain"
+    for source_path in approved_package.rglob("*"):
+        if source_path.is_file():
+            relative_path = source_path.relative_to(approved_package)
+            assert destination.joinpath("approved-board", relative_path).read_bytes() == source_path.read_bytes()

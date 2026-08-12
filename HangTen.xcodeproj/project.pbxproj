@@ -347,6 +347,7 @@
 			buildPhases = (
 				CC0000000000000000000002 /* Sources */,
 				CC0000000000000000000001 /* Frameworks */,
+				CC0000000000000000000007 /* Stage Approved Board Packages */,
 				CC0000000000000000000003 /* Resources */,
 			);
 			buildRules = (
@@ -435,6 +436,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CC0000000000000000000007 /* Stage Approved Board Packages */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Hangboards",
+			);
+			name = "Stage Approved Board Packages";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards/catalog.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/stage-approved-board-packages.py\" \\\n  --repository-root \"${SRCROOT}\" \\\n  --destination \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CC0000000000000000000002 /* Sources */ = {
