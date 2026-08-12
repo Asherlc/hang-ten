@@ -35,3 +35,15 @@ def test_codeql_workflow_is_not_filtered_before_it_can_report_its_gate() -> None
 
     assert "paths:" not in trigger_section
     assert "paths-ignore:" not in trigger_section
+
+
+def test_codeql_change_detector_checks_out_history_before_filtering() -> None:
+    workflow = CODEQL_WORKFLOW_PATH.read_text(encoding="utf-8")
+    changes_job = workflow.split("  changes:", 1)[1].split("  analyze-actions:", 1)[0]
+    checkout = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    paths_filter = "dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d"
+
+    assert checkout in changes_job
+    assert "persist-credentials: false" in changes_job
+    assert "fetch-depth: 0" in changes_job
+    assert changes_job.index(checkout) < changes_job.index(paths_filter)
