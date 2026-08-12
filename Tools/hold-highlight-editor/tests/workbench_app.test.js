@@ -42,6 +42,7 @@ test("the workbench has a persistent single-board tool suite shell", () => {
     "inspect-view",
     "inspect-board-preview",
     "inspect-artifact-links",
+    "inspect-board-info",
     "inspect-hold-inventory",
     "inspect-readiness",
     "inspect-next-action",
@@ -56,6 +57,29 @@ test("the workbench has a persistent single-board tool suite shell", () => {
   assert.match(markup, /workbench-suite-controller\.js/);
 });
 
+test("the Onboard editor presents one direct hold-editing task", () => {
+  const onboard = markup.match(/<section class="tool-view onboard-view"[\s\S]*?<\/section>\s*<\/section>\s*<section class="tool-view inspect-view/);
+
+  assert.ok(onboard, "expected the Onboard view markup");
+  assert.match(onboard[0], />Edit holds</);
+  assert.doesNotMatch(onboard[0], /Hold-contour refinement|Smoothing|Vector refinement/);
+});
+
+test("the workbench uses one accessible inspector panel and drawer controls", () => {
+  const count = (id) => (markup.match(new RegExp(`\\bid=["']${id}["']`, "g")) ?? []).length;
+  for (const id of [
+    "inspector-panel",
+    "inspector-drawer-toggle",
+    "inspector-drawer-close",
+    "inspector-drawer-backdrop",
+  ]) assert.equal(count(id), 1, `${id} must appear exactly once`);
+
+  assert.match(markup, /<aside[^>]*id="inspector-panel"[^>]*aria-labelledby="inspector-title"/);
+  assert.doesNotMatch(markup, /<aside[^>]*id="inspector-panel"[^>]*\brole=/);
+  assert.doesNotMatch(markup, /<aside[^>]*id="inspector-panel"[^>]*aria-modal=/);
+  assert.match(markup, /<button[^>]*id="inspector-drawer-toggle"[^>]*aria-expanded="false"[^>]*aria-controls="inspector-panel"/);
+});
+
 test("the suite surfaces only local save and explicit simulator handoff boundaries", () => {
   const ids = actualElementIds(markup);
   for (const id of [
@@ -68,14 +92,16 @@ test("the suite surfaces only local save and explicit simulator handoff boundari
   assert.match(markup, /already-owned simulator/);
 });
 
-test("suite navigation and promotion inputs expose their active state and hints accessibly", () => {
-  for (const field of ["board-id", "manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
-    assert.match(markup, new RegExp(`<label[^>]*for="promotion-${field}"`));
-    assert.match(markup, new RegExp(`<input[^>]*id="promotion-${field}"[^>]*aria-describedby="promotion-${field}-hint"`));
-    assert.match(markup, new RegExp(`<small id="promotion-${field}-hint"`));
+test("suite navigation keeps editable Board info in Inspect, not Promote", () => {
+  for (const field of ["manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
+    assert.match(markup, new RegExp(`<label[^>]*for="board-info-${field}"`));
+    assert.match(markup, new RegExp(`<input[^>]*id="board-info-${field}"[^>]*data-board-info-field`));
+    assert.match(markup, new RegExp(`<small id="board-info-${field}-hint"`));
   }
+  assert.doesNotMatch(markup, /promotion-board-id|data-promotion-field|iOS board ID/);
   assert.match(markup, /id="validation-simulator-error" role="alert"/);
   const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
+  assert.match(appSource, /data-board-info-field/);
   assert.match(appSource, /if \(active\) button\.setAttribute\("aria-current", "page"\)/);
   assert.match(appSource, /else button\.removeAttribute\("aria-current"\)/);
 });

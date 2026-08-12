@@ -27,7 +27,7 @@ struct MotherboardWorkoutPreparationView: View {
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color.hangBackground)
-            .navigationTitle("Prepare Motherboard")
+            .navigationTitle("Prepare \(sensorName)")
             .navigationBarTitleDisplayMode(.inline)
         }
         .interactiveDismissDisabled()
@@ -57,10 +57,10 @@ struct MotherboardWorkoutPreparationView: View {
     private var tareContent: some View {
         VStack(alignment: .leading, spacing: 16) {
             SectionLabel(title: "Step 1 of 2")
-            Text("Tare board")
+            Text("Tare sensor")
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-            Text("Remove your hands and all weight from the board while it establishes zero load.")
+            Text(tareInstruction)
                 .font(.system(size: 16, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
 
@@ -105,7 +105,7 @@ struct MotherboardWorkoutPreparationView: View {
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
             Text(preparation.isBodyweightCaptureInProgress
-                 ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the board averages your load."
+                 ? "Hang relaxed on the jugs for \(durationText(bodyweightCaptureDuration)). Keep still while the sensor averages your load."
                  : "Get onto the relaxed jugs, then start the timed bodyweight measurement when you are settled.")
                 .font(.system(size: 16, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
@@ -265,5 +265,17 @@ struct MotherboardWorkoutPreparationView: View {
 
     private func durationText(_ duration: TimeInterval) -> String {
         MotherboardUserVisibleFormatting.duration(duration) ?? "—"
+    }
+
+    private var sensorName: String {
+        service.connectedProfile?.label ?? "sensor"
+    }
+
+    private var tareInstruction: String {
+        if let profile = service.connectedProfile,
+           ForceSensorAdapterRegistry.adapter(for: profile)?.capabilities.contains(.hardwareTare) == true {
+            return "Remove your hands and all weight from the sensor before sending its tare command."
+        }
+        return "Remove your hands and all weight from the sensor while it establishes zero load."
     }
 }

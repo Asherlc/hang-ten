@@ -6,7 +6,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         sample(
             timestamp: Double(index) * 0.3,
             number: UInt16(index + 1),
-            sensorLoadsKGF: [0.02, 0.02, 0.02, 0.02]
+            sensorLoadsKGF: [0.03, 0.02, 0.03, 0.02]
         )
     }
 
@@ -14,15 +14,15 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         sample(
             timestamp: Double(index + 15) * 0.3,
             number: UInt16(index + 16),
-            sensorLoadsKGF: [19.2, 12.8, 19.2, 12.8]
+            sensorLoadsKGF: [25.6, 12.8, 25.6, 12.8]
         )
     }
 
     nonisolated static let activeWorkoutSamples: [MotherboardMeasurement] = [
-        sample(timestamp: 9.9, number: 34, sensorLoadsKGF: [24, 16, 24, 16]),
-        sample(timestamp: 10.2, number: 35, sensorLoadsKGF: [14.4, 21.6, 14.4, 21.6]),
-        sample(timestamp: 10.5, number: 36, sensorLoadsKGF: [27, 18, 27, 18]),
-        sample(timestamp: 10.8, number: 37, sensorLoadsKGF: [13.3, 24.7, 13.3, 24.7])
+        sample(timestamp: 9.9, number: 34, sensorLoadsKGF: [40, 16, 24, 16]),
+        sample(timestamp: 10.2, number: 35, sensorLoadsKGF: [18, 21.6, 32.4, 21.6]),
+        sample(timestamp: 10.5, number: 36, sensorLoadsKGF: [45, 18, 27, 18]),
+        sample(timestamp: 10.8, number: 37, sensorLoadsKGF: [14.25, 24.7, 37.05, 24.7])
     ]
 
     nonisolated static let defaultSamples = tareSamples + bodyweightSamples + activeWorkoutSamples
@@ -110,7 +110,8 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
     private func emitCalibration() {
         for sensor in 0..<4 {
             for point in 0..<4 {
-                let line = "\(sensor),\(point),\(point * 10),\(point * 10_000)\r\n"
+                let massKGF = (sensor == 1 || sensor == 2) ? -(point * 10) : point * 10
+                let line = "\(sensor),\(point),\(massKGF),\(point * 10_000)\r\n"
                 eventHandler?(.notification(Data(line.utf8), Date(timeIntervalSince1970: 0)))
             }
         }
@@ -181,7 +182,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
             sampleNumber: number,
             batteryValue: 88,
             sensorLoadsKGF: sensorLoadsKGF,
-            aggregateLoadKGF: sensorLoadsKGF.reduce(0, +)
+            aggregateLoadKGF: sensorLoadsKGF.prefix(3).reduce(0, +)
         )
     }
 }

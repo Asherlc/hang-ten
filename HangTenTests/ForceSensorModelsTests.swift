@@ -24,6 +24,28 @@ final class ForceSensorModelsTests: XCTestCase {
         }
     }
 
+    func testConnectableProfilesIncludeOnlyImplementedBLEAdapters() {
+        XCTAssertEqual(
+            ForceSensorProfile.connectableCases,
+            [.automatic, .motherboard, .progressor, .pitchSix, .genericProgressor]
+        )
+    }
+
+    func testRegistryResolvesBLEAdaptersAndKeepsAdvertisementOnlyProfilesOutOfConnectionFlow() throws {
+        let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
+        let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))
+        let genericProgressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .genericProgressor))
+
+        XCTAssertEqual(progressor.profile, .progressor)
+        XCTAssertEqual(pitchSix.profile, .pitchSix)
+        XCTAssertEqual(genericProgressor.profile, .genericProgressor)
+        XCTAssertNil(ForceSensorAdapterRegistry.adapter(for: .whC06))
+        XCTAssertNil(ForceSensorAdapterRegistry.adapter(for: .genericWHC06))
+        XCTAssertEqual(
+            ForceSensorAdapterRegistry.automaticProfiles,
+            [.motherboard, .progressor, .pitchSix]
+        )
+    }
     func testMatchingPolicyKeepsGenericAndAdvertisementOnlyProfilesOutOfAutomaticSelection() {
         XCTAssertEqual(ForceSensorProfile.automatic.matchingPolicy, .automatic)
 

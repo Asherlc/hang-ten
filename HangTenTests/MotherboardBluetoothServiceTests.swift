@@ -90,6 +90,32 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertIdentical(manager.connectedPeripherals.first, peripheral)
     }
 
+    func testCoreBluetoothTransportScansAndMatchesTheSelectedProgressorProfile() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeMotherboardPeripheral(name: "Progressor 123")
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
+
+        transport.configure(profile: .progressor)
+        transport.startScan()
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [CBAdvertisementDataServiceUUIDsKey: [
+                CBUUID(nsuuid: ProgressorProtocolAdapter.serviceUUID)
+            ]]
+        )
+
+        XCTAssertEqual(manager.scannedServiceUUIDs, [CBUUID(nsuuid: ProgressorProtocolAdapter.serviceUUID)])
+        XCTAssertEqual(try XCTUnwrap(discoveredDevices.first).profile, .progressor)
+        transport.connect(to: try XCTUnwrap(discoveredDevices.first))
+        XCTAssertIdentical(manager.connectedPeripherals.first, peripheral)
+    }
+
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
@@ -112,6 +138,60 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         transport.emit(.notification(Data("Stream:30\r\n".utf8), Date()))
         XCTAssertEqual(service.state, .streaming)
+    }
+
+    func testProgressorConnectStartsAfterNotificationsAndRoutesEveryDecodedSample() throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+
+        service.connect(profile: .progressor)
+        transport.emit(.powerChanged(.poweredOn))
+        transport.emit(.discovered(MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Progressor 123",
+            profile: .progressor
+        )))
+        transport.emit(.connected)
+        transport.emit(.characteristicsReady)
+        transport.emit(.notificationsReady)
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedProfile, .progressor)
+        XCTAssertEqual(transport.commands, [Data([0x65])])
+
+        transport.emit(.notification(Data([
+            0x01, 0x10,
+            0x00, 0x00, 0x48, 0x41, 0x40, 0x42, 0x0F, 0x00,
+            0x00, 0x00, 0x00, 0x3F, 0xD0, 0x12, 0x13, 0x00
+        ]), Date(timeIntervalSince1970: 1_234)))
+
+        let measurement = try XCTUnwrap(service.latestMeasurement)
+        XCTAssertEqual(measurement.aggregateLoadKGF, 0.5, accuracy: 0.000_001)
+        XCTAssertEqual(measurement.sensorLoadsKGF, [])
+        XCTAssertNil(service.batteryValue)
+    }
+
+    func testUnsupportedProfileFailsBeforeScanning() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+
+        service.connect(profile: .whC06)
+
+        XCTAssertEqual(service.state, .failed)
+        XCTAssertEqual(service.lastError, "WH-C06 is not available yet.")
+        XCTAssertEqual(transport.startScanCount, 0)
+    }
+
+    func testProgressorTareUsesTheAuditedHardwareCommandWithoutStartingSoftwareTare() {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectProgressor(service, with: transport)
+
+        service.tare()
+
+        XCTAssertEqual(transport.commands, [Data([0x65]), Data([0x64])])
+        XCTAssertFalse(service.isTaring)
+        XCTAssertEqual(service.tareCompletionCount, 1)
     }
 
     func testCalibrationRequiresEverySensorAndValidPointBeforeStartingStream() {
@@ -221,6 +301,29 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         XCTAssertEqual(service.state, .streaming)
         XCTAssertEqual(transport.disconnectCount, 0)
+    }
+
+    func testFourthRawChannelDoesNotAffectAggregateOrBalanceButRemainsAvailable() throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        emitRawPacket(on: transport, sampleNumber: 1, adcValues: [800, 400, 400, 100])
+        let baseline = try XCTUnwrap(service.latestMeasurement)
+
+        emitRawPacket(on: transport, sampleNumber: 2, adcValues: [800, 400, 400, 900])
+        let changedFourthChannel = try XCTUnwrap(service.latestMeasurement)
+
+        XCTAssertEqual(baseline.aggregateLoadKGF, 16, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.aggregateLoadKGF, 16, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightLoadKGF, 6, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.rightLoadKGF, 6, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftShare, changedFourthChannel.leftShare, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightShare, changedFourthChannel.rightShare, accuracy: 0.0001)
+        XCTAssertEqual(baseline.sensorLoadsKGF[3], 1, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.sensorLoadsKGF[3], 9, accuracy: 0.0001)
     }
 
     func testFragmentedRawPacketPublishesMeasurementAndBatteryAfterCalibration() {
@@ -948,14 +1051,39 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         transport.emit(.notificationsReady)
     }
 
+    private func connectProgressor(
+        _ service: MotherboardBluetoothService,
+        with transport: FakeMotherboardTransport
+    ) {
+        service.connect(profile: .progressor)
+        transport.emit(.powerChanged(.poweredOn))
+        transport.emit(.discovered(MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Progressor 123",
+            profile: .progressor
+        )))
+        transport.emit(.connected)
+        transport.emit(.characteristicsReady)
+        transport.emit(.notificationsReady)
+    }
+
     private func emitCompleteCalibration(
         on transport: FakeMotherboardTransport,
-        massKGF: (Int, Int) -> String = { _, point in String(point) }
+        massKGF: ((Int, Int) -> String)? = nil
     ) {
         for sensor in 0..<4 {
             for point in 0..<4 {
+                let defaultMass = Double(point * 10)
+                let requestedMass = massKGF?(sensor, point) ?? defaultMass.description
+                let calibratedMass: String
+                if let parsedMass = Double(requestedMass), parsedMass.isFinite {
+                    let sign = (sensor == 1 || sensor == 2) ? -1.0 : 1.0
+                    calibratedMass = (parsedMass * sign).description
+                } else {
+                    calibratedMass = requestedMass
+                }
                 transport.emit(.notification(
-                    Data("\(sensor),\(point),\(massKGF(sensor, point)),\(point * 100)\r\n".utf8),
+                    Data("\(sensor),\(point),\(calibratedMass),\(point * 1_000)\r\n".utf8),
                     Date(timeIntervalSince1970: Double(sensor * 4 + point))
                 ))
             }
@@ -981,13 +1109,26 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         sampleNumber: UInt16,
         adc: Int32
     ) {
+        emitRawPacket(
+            on: transport,
+            sampleNumber: sampleNumber,
+            adcValues: [adc * 2, adc, adc, adc]
+        )
+    }
+
+    private func emitRawPacket(
+        on transport: FakeMotherboardTransport,
+        sampleNumber: UInt16,
+        adcValues: [Int32]
+    ) {
+        precondition(adcValues.count == 4)
         var bytes = [
             UInt8(sampleNumber & 0x00FF),
             UInt8(sampleNumber >> 8),
             UInt8(90),
             UInt8(0)
         ]
-        for _ in 0..<4 {
+        for adc in adcValues {
             bytes.append(UInt8(truncatingIfNeeded: adc))
             bytes.append(UInt8(truncatingIfNeeded: adc >> 8))
             bytes.append(UInt8(truncatingIfNeeded: adc >> 16))
@@ -1084,10 +1225,12 @@ private actor ManualSleepGate {
 private final class FakeCentralManager: MotherboardCentralManaging {
     var state: CBManagerState = .poweredOn
     var scanCount = 0
+    var scannedServiceUUIDs: [CBUUID]?
     var connectedPeripherals: [MotherboardPeripheralManaging] = []
 
     func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
         scanCount += 1
+        scannedServiceUUIDs = serviceUUIDs
     }
 
     func stopScan() {}
@@ -1133,14 +1276,14 @@ private struct DeterministicSimulationFrames {
         expectedLeftShare: 0.5
     )
     let bodyweight = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [20_000, 20_000, 20_000, 20_000]),
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 30_000, 20_000]),
         expectedAggregateLoadKGF: 80,
         expectedLeftShare: 0.5
     )
     let active = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [30_000, 20_000, 30_000, 20_000]),
-        expectedAggregateLoadKGF: 100,
-        expectedLeftShare: 0.6
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 10_000, 20_000]),
+        expectedAggregateLoadKGF: 60,
+        expectedLeftShare: 2.0 / 3.0
     )
 
     @MainActor

@@ -34,8 +34,40 @@ final class MotherboardProtocolTests: XCTestCase {
         ])
     }
 
-    func testCalibrationInterpolatesAndSubtractsPerSensorTare() {
-        let calibration = MotherboardCalibration(rows: [
+    func testDecodeUsesReferencePolarityBeforeApplyingPerSensorTare() {
+        let result = MotherboardProtocol.decode(
+            MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [90, 60, 70, 100]),
+            timestamp: Date(timeIntervalSince1970: 1),
+            calibration: linearCalibration(),
+            tareKGF: [1, -8, -9, 4]
+        )
+
+        XCTAssertEqual(result.rawADCValues, [90, 60, 70, 100])
+        XCTAssertEqual(result.sensorLoadsKGF, [8, 2, 2, 6])
+        XCTAssertEqual(result.aggregateLoadKGF, 12, accuracy: 0.0001)
+    }
+
+    func testDecodeExcludesFourthChannelFromAggregateForce() {
+        let baseline = MotherboardProtocol.decode(
+            MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [90, 60, 70, 0]),
+            timestamp: Date(timeIntervalSince1970: 1),
+            calibration: linearCalibration(),
+            tareKGF: [1, -8, -9, 0]
+        )
+        let fourthChannelChanged = MotherboardProtocol.decode(
+            MotherboardRawPacket(sampleNumber: 2, batteryValue: 2, adcValues: [90, 60, 70, 100]),
+            timestamp: Date(timeIntervalSince1970: 2),
+            calibration: linearCalibration(),
+            tareKGF: [1, -8, -9, 0]
+        )
+
+        XCTAssertEqual(baseline.aggregateLoadKGF, 12, accuracy: 0.0001)
+        XCTAssertEqual(fourthChannelChanged.aggregateLoadKGF, 12, accuracy: 0.0001)
+        XCTAssertNotEqual(baseline.sensorLoadsKGF[3], fourthChannelChanged.sensorLoadsKGF[3])
+    }
+
+    private func linearCalibration() -> MotherboardCalibration {
+        MotherboardCalibration(rows: [
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 0, massKGF: 0, adc: 0),
             MotherboardCalibrationRow(sensor: 0, calibrationPoint: 1, massKGF: 10, adc: 100),
             MotherboardCalibrationRow(sensor: 1, calibrationPoint: 0, massKGF: 0, adc: 0),
@@ -45,20 +77,6 @@ final class MotherboardProtocolTests: XCTestCase {
             MotherboardCalibrationRow(sensor: 3, calibrationPoint: 0, massKGF: 0, adc: 0),
             MotherboardCalibrationRow(sensor: 3, calibrationPoint: 1, massKGF: 10, adc: 100)
         ])
-        let timestamp = Date(timeIntervalSince1970: 1)
-        let packet = MotherboardRawPacket(sampleNumber: 1, batteryValue: 2, adcValues: [50, -12, 100, 0])
-        let result = MotherboardProtocol.decode(
-            packet,
-            timestamp: timestamp,
-            calibration: calibration,
-            tareKGF: [1, 0, 0, 0]
-        )
-        XCTAssertEqual(result.timestamp, timestamp)
-        XCTAssertEqual(result.sampleNumber, packet.sampleNumber)
-        XCTAssertEqual(result.batteryValue, packet.batteryValue)
-        XCTAssertEqual(result.rawADCValues, packet.adcValues)
-        XCTAssertEqual(result.sensorLoadsKGF, [4, 0, 10, 0])
-        XCTAssertEqual(result.aggregateLoadKGF, 14, accuracy: 0.0001)
     }
 
     func testCalibrationSortsPointsAndClampsAtBothEndpoints() {
