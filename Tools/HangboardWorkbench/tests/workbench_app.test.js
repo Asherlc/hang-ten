@@ -225,6 +225,10 @@ test("opening repository diagnostics are translated at the app boundary before v
           holdId: "hold-17",
           reason: "contour overlaps itself",
           message: "Stage 2 region 17 failed validation: contour overlaps itself",
+        }, {
+          path: "broken-board/metadata.json",
+          code: "missing_message",
+          message: {},
         }],
         runtime: [],
         errors: {},
@@ -255,9 +259,14 @@ test("opening repository diagnostics are translated at the app boundary before v
     container.children[1].children[0].children[1].textContent,
     "Hold 17 failed outline check: outline overlaps itself",
   );
+  assert.equal(
+    container.children[1].children[1].children[1].textContent,
+    "Repository package is invalid",
+  );
   assert.equal(state.libraryDiagnostics[0].path, "broken-board/stage-2-regions.json");
   assert.equal(state.libraryDiagnostics[0].holdId, "hold-17");
   assert.equal(state.libraryDiagnostics[0].reason, "contour overlaps itself");
+  assert.equal(state.libraryDiagnostics[1].message, "Repository package is invalid");
 });
 
 test("the workbench uses one accessible inspector panel and drawer controls", () => {

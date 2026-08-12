@@ -2107,7 +2107,9 @@
   async function refreshBoards() {
     const opening = await openingBoardController.refresh();
     state.libraryBoards = opening.library;
-    state.libraryDiagnostics = (opening.diagnostics || []).map(formatFocusedEditorDiagnostic);
+    state.libraryDiagnostics = (opening.diagnostics || []).map(
+      (diagnostic) => formatFocusedEditorDiagnostic(diagnostic),
+    );
     state.boards = opening.runtime;
     state.openingErrors = Object.fromEntries(Object.entries(opening.errors || {}).map(([key, message]) => [
       key,
