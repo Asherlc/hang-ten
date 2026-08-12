@@ -53,6 +53,58 @@ def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
         assert "tests" not in source.parts, operand
 
 
+def test_pyinstaller_uses_onedir_and_includes_supplied_codesign_identity(tmp_path):
+    metadata = tmp_path / "metadata"
+    metadata.mkdir()
+    (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
+
+    arguments = build._pyinstaller_arguments(
+        REPOSITORY_ROOT,
+        metadata,
+        tmp_path / "dist",
+        tmp_path / "work",
+        codesign_identity="Developer ID Application: Test (TEAM)",
+    )
+
+    assert "--onedir" in arguments
+    assert "--onefile" not in arguments
+    identity_index = arguments.index("--codesign-identity")
+    assert arguments[identity_index + 1] == "Developer ID Application: Test (TEAM)"
+    for asset in workbench_assets.STATIC_ASSETS:
+        assert asset in "\n".join(arguments)
+
+
+def test_pyinstaller_omits_codesign_identity_when_not_supplied(tmp_path):
+    metadata = tmp_path / "metadata"
+    metadata.mkdir()
+    (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
+
+    arguments = build._pyinstaller_arguments(
+        REPOSITORY_ROOT,
+        metadata,
+        tmp_path / "dist",
+        tmp_path / "work",
+    )
+
+    assert "--codesign-identity" not in arguments
+
+
+@pytest.mark.parametrize("identity", ["", " ", "\t"])
+def test_pyinstaller_rejects_empty_codesign_identity(identity, tmp_path):
+    metadata = tmp_path / "metadata"
+    metadata.mkdir()
+    (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
+
+    with pytest.raises(build.BuildError, match="codesign identity"):
+        build._pyinstaller_arguments(
+            REPOSITORY_ROOT,
+            metadata,
+            tmp_path / "dist",
+            tmp_path / "work",
+            codesign_identity=identity,
+        )
+
+
 def test_pyinstaller_arguments_follow_the_shared_static_asset_manifest(
     tmp_path, monkeypatch
 ):
@@ -116,3 +168,26 @@ def test_build_metadata_contains_the_requested_commit_only(tmp_path):
 
     assert metadata_path == tmp_path / "build-commit.txt"
     assert metadata_path.read_bytes() == (commit + "\n").encode("ascii")
+
+
+def test_expected_output_is_the_onedir_runtime_with_its_executable(tmp_path):
+    runtime = tmp_path / "hangboard-workbench"
+    runtime.mkdir()
+    executable = runtime / "hangboard-workbench"
+    executable.write_bytes(b"runtime")
+    executable.chmod(0o751)
+
+    assert build._require_expected_output(tmp_path) == runtime
+
+
+@pytest.mark.parametrize("layout", ["flat", "missing-child"])
+def test_expected_output_rejects_incomplete_onedir_runtime(layout, tmp_path):
+    runtime = tmp_path / "hangboard-workbench"
+    if layout == "flat":
+        runtime.write_bytes(b"runtime")
+        runtime.chmod(0o751)
+    else:
+        runtime.mkdir()
+
+    with pytest.raises(build.BuildError, match="onedir runtime"):
+        build._require_expected_output(tmp_path)

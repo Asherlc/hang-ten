@@ -589,6 +589,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         request = urlsplit(self.path)
         path = request.path
+        if path == "/api/health":
+            self._send_json(HTTPStatus.OK, {"ok": True})
+            return
         if path == "/api/library":
             self._get_library()
             return
@@ -1737,11 +1740,31 @@ def _create_workbench_service(
     )
 
 
+def validate_hang_ten_checkout(root: Path) -> Path:
+    """Resolve a repository root only when it has the Hang Ten source layout."""
+    resolved_root = Path(root).expanduser().resolve(strict=False)
+    markers = (
+        resolved_root / ".git",
+        resolved_root / "Tools" / "HangboardOnboarding" / "boards",
+        resolved_root / "Tools" / "hold-highlight-editor",
+    )
+    if (
+        not resolved_root.is_dir()
+        or not markers[0].exists()
+        or not markers[1].is_dir()
+        or not markers[2].is_dir()
+    ):
+        raise EditorError("repository root must be a Hang Ten checkout")
+    return resolved_root
+
+
 def _discover_repository_root(start: Path) -> Path:
     candidate = Path(start).expanduser().resolve(strict=False)
     while True:
-        if (candidate / ".git").exists():
-            return candidate
+        try:
+            return validate_hang_ten_checkout(candidate)
+        except EditorError:
+            pass
         if candidate.parent == candidate:
             raise EditorError("could not find a repository root from the current directory")
         candidate = candidate.parent
@@ -1750,10 +1773,7 @@ def _discover_repository_root(start: Path) -> Path:
 def _configured_repository_root(value: Path | None) -> Path:
     if value is None:
         return _discover_repository_root(Path.cwd())
-    root = Path(value).expanduser().resolve(strict=False)
-    if not root.is_dir() or not (root / ".git").exists():
-        raise EditorError("repository root must be a checkout containing .git")
-    return root
+    return validate_hang_ten_checkout(value)
 
 
 def _configured_workspace_root(value: Path, repository_root: Path) -> Path:
