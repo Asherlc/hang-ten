@@ -134,7 +134,7 @@ jobs:
           unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
-            -scheme HangTen \
+            -target HangTen \
             -configuration "${{ matrix.configuration }}" \
             -sdk "${{ matrix.sdk }}" \
             -destination "${{ matrix.destination }}" \
