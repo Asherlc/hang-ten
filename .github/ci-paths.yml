@@ -26,6 +26,8 @@ shared_board_content:
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'
+  - 'HangTen.xcodeproj/**'
+  - 'HangTen/Resources/Assets.xcassets/AppIcon.appiconset/**'
 workflow:
   - '.github/workflows/**'
   - '.github/ci-paths.yml'

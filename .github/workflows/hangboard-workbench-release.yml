@@ -90,6 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
+          python -m pip install 'setuptools>=84.0.0' wheel
           python -m pip install -e 'Tools/HangboardPipeline[dev]'
 
       - name: Run focused Python suite

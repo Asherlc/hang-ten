@@ -197,9 +197,9 @@ def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
 
     assert python["runs-on"] == "ubuntu-latest"
     assert _step(python, "Set up Python")["with"]["python-version"] == "3.12"
-    assert "Tools/HangboardPipeline[dev]" in _step(
-        python, "Install workbench test dependencies"
-    )["run"]
+    install_dependencies = _step(python, "Install workbench test dependencies")["run"]
+    assert "python -m pip install 'setuptools>=84.0.0' wheel" in install_dependencies
+    assert "python -m pip install -e 'Tools/HangboardPipeline[dev]'" in install_dependencies
     assert _step(python, "Run focused Python suite")["run"] == (
         "python -m pytest Tools/HangboardPipeline/tests "
         "Tools/HangboardWorkbench/tests -q"

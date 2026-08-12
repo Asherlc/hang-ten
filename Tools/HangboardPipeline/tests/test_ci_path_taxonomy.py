@@ -59,4 +59,9 @@ def test_taxonomy_assigns_editor_python_ios_and_shared_paths_conservatively() ->
     assert "HangTen/**" in filters["ios"]
     assert "Hangboards/**" in filters["shared_board_content"]
     assert "scripts/export-board-library.py" in filters["shared_board_content"]
+    assert "HangTen.xcodeproj/**" in filters["metadata"]
+    assert (
+        "HangTen/Resources/Assets.xcassets/AppIcon.appiconset/**"
+        in filters["metadata"]
+    )
     assert ".github/workflows/**" in filters["workflow"]
