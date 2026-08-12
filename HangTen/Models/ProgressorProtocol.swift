@@ -69,7 +69,7 @@ struct ProgressorProtocolAdapter {
         guard frame.count >= 2, frame[frame.startIndex] == 0x01 else { return nil }
 
         let payloadLength = Int(frame[frame.index(after: frame.startIndex)])
-        let payload = frame.dropFirst(2)
+        let payload = Data(frame.dropFirst(2))
         guard payload.count == payloadLength else { return nil }
         guard payload.count.isMultiple(of: 8) else { return nil }
 
