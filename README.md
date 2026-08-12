@@ -102,7 +102,7 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
 The hangboard guide uses the repository-local staged onboarding tool in
-`Tools/HangboardOnboarding`. Run its accepted Compact II parity fixture without
+`Tools/HangboardPipeline`. Run its accepted Compact II parity fixture without
 a model call before onboarding a new product:
 
 ```sh

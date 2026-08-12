@@ -9,8 +9,8 @@ on:
       - HangTen.xcodeproj/**
       - scripts/export-board-catalog.py
       - scripts/export-board-library.py
-      - Tools/HangboardOnboarding/**
-      - Tools/hold-highlight-editor/**
+- Tools/HangboardPipeline/**
+- Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml
   push:
     branches:
@@ -20,8 +20,8 @@ on:
       - HangTen.xcodeproj/**
       - scripts/export-board-catalog.py
       - scripts/export-board-library.py
-      - Tools/HangboardOnboarding/**
-      - Tools/hold-highlight-editor/**
+- Tools/HangboardPipeline/**
+- Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml
   merge_group:
   workflow_dispatch:

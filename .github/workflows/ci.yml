@@ -44,7 +44,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Tools/HangboardOnboarding
+working-directory: Tools/HangboardPipeline
 
     steps:
       # actions/checkout v4.2.2
@@ -59,7 +59,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-          cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
+cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
 
       - name: Verify generated board library
         working-directory: ${{ github.workspace }}
@@ -80,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: python-test-results-${{ github.run_id }}
-          path: Tools/HangboardOnboarding/pytest-results.xml
+path: Tools/HangboardPipeline/pytest-results.xml
           if-no-files-found: ignore
 
   build:
