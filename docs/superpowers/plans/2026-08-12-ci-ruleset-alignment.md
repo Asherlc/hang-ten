@@ -275,3 +275,49 @@
   ```
 
   Expected: the CI-only PR is merged; its remote branch and exact temporary worktree are absent; main contains the new `edited` and `workflow_dispatch` triggers and retains the push-only Release-device guard.
+
+### Task 5: Make CodeQL cover CI workflow changes
+
+**Files:**
+- Modify: `.github/workflows/codeql.yml:4-28`
+- External state: existing PR #118, `agent/relieved-peacock-climbro-ci-ruleset-recovery`
+
+**Interfaces:**
+- Consumes: active `Main` ruleset CodeQL and code-quality requirements, plus CodeQL's existing application and workflow path filters.
+- Produces: CodeQL pull-request and main-push runs whenever `.github/workflows/ci.yml` changes, allowing the security policy to evaluate the CI-only recovery PR.
+
+- [ ] **Step 1: Add the CI workflow to both CodeQL path filters**
+
+  In both `pull_request.paths` and `push.paths`, insert the exact entry:
+
+  ```yaml
+      - .github/workflows/ci.yml
+  ```
+
+  Keep the existing `.github/workflows/codeql.yml` filter and every other path unchanged.
+
+- [ ] **Step 2: Verify exact scope and push the update to PR #118's branch**
+
+  From an isolated worktree for `agent/relieved-peacock-climbro-ci-ruleset-recovery`, run:
+
+  ```bash
+  git diff --check
+  git diff -- .github/workflows/codeql.yml
+  git add .github/workflows/codeql.yml
+  git commit -m 'ci: analyze CI workflow changes with CodeQL'
+  git push origin agent/relieved-peacock-climbro-ci-ruleset-recovery
+  ```
+
+  Expected: only two identical path-filter lines are added; PR #118 receives a fresh CodeQL run.
+
+- [ ] **Step 3: Verify CodeQL, merge normally, and clean up**
+
+  Run:
+
+  ```bash
+  gh pr checks 118 --repo Asherlc/hang-ten --watch
+  gh run list --repo Asherlc/hang-ten --workflow codeql.yml --branch agent/relieved-peacock-climbro-ci-ruleset-recovery --limit 1
+  gh pr merge 118 --repo Asherlc/hang-ten --squash --delete-branch
+  ```
+
+  Expected: a CodeQL run is attached to PR #118, all policy checks pass, and the PR merges without an administrator bypass.
