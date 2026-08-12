@@ -41,6 +41,7 @@
 | HangTenTests/MotherboardBluetoothServiceTests.swift | Connection outcome telemetry tests. |
 | HangTen.xcodeproj/project.pbxproj | Target membership, SPM packages, config refs, and generated plist keys. |
 | .gitignore and README.md | Token protection and operator instructions. |
+| .github/workflows/ci.yml and .github/workflows/release.yml | Secure CI/release build-setting injection. |
 
 ### Task 1: Establish the portable telemetry contract
 
@@ -312,8 +313,55 @@ git add README.md
 git commit -m "docs: document PostHog observability setup"
 ~~~
 
+### Task 5: Supply PostHog build settings in CI and release
+
+**Files:**
+- Modify: .github/workflows/ci.yml
+- Modify: .github/workflows/release.yml
+- Modify: README.md
+- Modify: docs/superpowers/specs/2026-08-11-posthog-observability-design.md
+
+**Interfaces:**
+- Consumes GitHub `POSTHOG_CLIENT_TOKEN` secrets and `POSTHOG_HOST` variables.
+- Produces token-aware trusted CI and release archives without embedding a
+  credential in the repository.
+
+- [ ] **Step 1: Inject repository configuration into CI Xcode commands**
+
+For each CI build and test `xcodebuild` command, set its environment from
+`secrets.POSTHOG_CLIENT_TOKEN` and `vars.POSTHOG_HOST`, defaulting the host to
+`https://us.i.posthog.com`. Pass both values as exact Xcode build-setting
+overrides, `POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN"` and
+`POSTHOG_HOST="$POSTHOG_HOST"`. Do not print either value. An absent secret,
+including on a fork pull request, must yield the app's existing no-op telemetry
+composition rather than a workflow failure.
+
+- [ ] **Step 2: Inject environment-scoped configuration into the signed archive**
+
+In the existing `app-store-connect` environment, read the same secret and
+variable names and pass the same build-setting overrides to the archive
+`xcodebuild` command. Leave CodeQL unconfigured because it does not produce a
+distributable telemetry-enabled app.
+
+- [ ] **Step 3: Document the required GitHub configuration**
+
+Document the repository secret `POSTHOG_CLIENT_TOKEN` (the PostHog public
+client key), repository variable `POSTHOG_HOST`, and matching secret/variable
+in `app-store-connect` for release. Explain the host default and intentional
+no-op behavior when a token is unavailable.
+
+- [ ] **Step 4: Validate workflow syntax and commit**
+
+Parse both workflow YAML files, inspect the final diff, and confirm no token
+value is present.
+
+~~~bash
+git add .github/workflows/ci.yml .github/workflows/release.yml README.md docs/superpowers/specs/2026-08-11-posthog-observability-design.md docs/superpowers/plans/2026-08-11-posthog-observability.md
+git commit -m "ci: inject PostHog settings into trusted builds"
+~~~
+
 ## Plan Self-Review
 
-- **Spec coverage:** Task 1 enforces portable redaction; Task 2 adds PostHog, OTel, safe configuration, replay, flags, and errors; Task 3 integrates approved events and sensitive replay decisions; Task 4 creates/configures the live project, verifies it, and documents operation.
+- **Spec coverage:** Task 1 enforces portable redaction; Task 2 adds PostHog, OTel, safe configuration, replay, flags, and errors; Task 3 integrates approved events and sensitive replay decisions; Task 4 creates/configures the live project and verifies it; Task 5 injects the token safely for trusted CI and release builds.
 - **Placeholder scan:** No implementation placeholders remain. The live token is deliberately external and ignored, rather than an unresolved source value.
 - **Type consistency:** Tasks 2–3 consume Task 1 protocols and HangTenTelemetryEvent only. TelemetryComposition.make(bundle:) is the single composition API and AppStore(telemetry:) is the app feature injection point.

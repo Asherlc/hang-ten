@@ -11,9 +11,10 @@ without coupling app features to PostHog APIs.
 Create a new `Hang Ten` project in the connected PostHog organization's default
 region. The PostHog connector currently exposes no project-creation operation,
 so creation will be performed in the authenticated PostHog web interface during
-implementation. Its public client project token will be supplied only through
-a local, ignored Xcode configuration file; the repository will contain a
-token-free example configuration.
+implementation. Its public client project token will be supplied locally
+through an ignored Xcode configuration file and in trusted CI through GitHub
+repository/environment secrets; the repository will contain a token-free
+example configuration.
 
 The integration includes PostHog product events, iOS exception autocapture,
 protected session replay, a small feature-flag boundary, and diagnostic
@@ -44,9 +45,11 @@ exporter change without feature-code changes.
 
 ## Data Flow
 
-1. `HangTenApp` builds the telemetry composition from token-free build settings.
-   Missing configuration installs no-op implementations, allowing tests and
-   local builds to run without external telemetry.
+1. `HangTenApp` builds the telemetry composition from build settings. Local
+   builds use a token-free tracked default plus an ignored override; trusted CI
+   injects the token as an Xcode build-setting override. Missing configuration
+   installs no-op implementations, allowing tests, forks, and local builds to
+   run without external telemetry.
 2. UI and services emit typed events or diagnostics through the interfaces.
 3. The PostHog adapter sends only the approved product event and redacted error
    properties. The OpenTelemetry adapter exports diagnostics through OTLP.

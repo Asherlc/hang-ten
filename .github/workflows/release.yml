@@ -91,6 +91,8 @@ jobs:
       - name: Archive signed release
         env:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
+          POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
         run: |
           set -euo pipefail
           archive_path="$PWD/build/HangTen.xcarchive"
@@ -106,6 +108,8 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution" \
             PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            POSTHOG_CLIENT_TOKEN="$POSTHOG_CLIENT_TOKEN" \
+            POSTHOG_HOST="$POSTHOG_HOST" \
             clean archive
 
       - name: Verify archived bundle
