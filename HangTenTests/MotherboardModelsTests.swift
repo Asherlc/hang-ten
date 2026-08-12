@@ -25,16 +25,23 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardForceUnit.newtons.value(fromKilogramsForce: 2), 19.6133, accuracy: 0.0001)
     }
 
-    func testMeasurementDistributesCalibratedChannelsAcrossBoardSides() {
-        let balanced = measurement(sensorLoads: [2, 1, 3, 4], aggregate: 10)
-        XCTAssertEqual(balanced.leftLoadKGF, 5, accuracy: 0.0001)
-        XCTAssertEqual(balanced.rightLoadKGF, 5, accuracy: 0.0001)
-        XCTAssertEqual(balanced.leftShare, 0.5, accuracy: 0.0001)
-        XCTAssertEqual(balanced.rightShare, 0.5, accuracy: 0.0001)
+    func testMeasurementSplitsCenterLoadNeutrallyAcrossDisplayedSides() {
+        let measurement = measurement(sensorLoads: [3, 4, 5, 100], aggregate: 12)
 
-        let uneven = measurement(sensorLoads: [3, 1, 1, 5], aggregate: 10)
-        XCTAssertEqual(uneven.leftShare, 0.4, accuracy: 0.0001)
-        XCTAssertEqual(uneven.rightShare, 0.6, accuracy: 0.0001)
+        XCTAssertEqual(measurement.leftLoadKGF, 5, accuracy: 0.0001)
+        XCTAssertEqual(measurement.rightLoadKGF, 7, accuracy: 0.0001)
+        XCTAssertEqual(measurement.leftShare, 5.0 / 12.0, accuracy: 0.0001)
+        XCTAssertEqual(measurement.rightShare, 7.0 / 12.0, accuracy: 0.0001)
+    }
+
+    func testMeasurementIgnoresFourthChannelWhenCalculatingBalance() {
+        let baseline = measurement(sensorLoads: [3, 4, 5, 0], aggregate: 12)
+        let changed = measurement(sensorLoads: [3, 4, 5, 100], aggregate: 12)
+
+        XCTAssertEqual(baseline.leftLoadKGF, changed.leftLoadKGF, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightLoadKGF, changed.rightLoadKGF, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftShare, changed.leftShare, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightShare, changed.rightShare, accuracy: 0.0001)
     }
 
     func testMeasurementBodyweightPercentageUsesAggregateLoad() {
@@ -42,8 +49,8 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(measurement.bodyweightPercentage(for: 20), 50, accuracy: 0.0001)
     }
 
-    func testMeasurementIgnoresNonFiniteAndNegativeSensorLoads() {
-        let measurement = measurement(sensorLoads: [.nan, -1, .infinity, 2], aggregate: 10)
+    func testMeasurementIgnoresNonFiniteAndNegativeReferenceZoneLoads() {
+        let measurement = measurement(sensorLoads: [.nan, -1, 2, .infinity], aggregate: 2)
 
         XCTAssertEqual(measurement.leftLoadKGF, 0, accuracy: 0.0001)
         XCTAssertEqual(measurement.rightLoadKGF, 2, accuracy: 0.0001)
