@@ -37,7 +37,7 @@
   } = globalThis.HoldCurveGestureModel;
   const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
-  const { timelineFor, canApprove, openingSections } = globalThis.HoldWorkbenchModel;
+  const { canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
     TOOL_IDS,
     createSuiteState,
@@ -85,16 +85,6 @@
     runFrozenApproval,
   } = globalThis.HoldWorkbenchController;
 
-  const STAGE_LABELS = [
-    "Input",
-    "Source review",
-    "Cleanup review",
-    "Hold-contour refinement",
-    "Smoothing",
-    "Vector refinement",
-    "Save",
-  ];
-  const PIPELINE_TO_TIMELINE_STAGE = [1, 2, 3, 5, 6];
   const EDITOR_STAGES = new Set([2, 3]);
   const AUTOSAVE_DELAY_MS = 500;
   const loadCoordinator = createLatestLoadCoordinator();
@@ -149,7 +139,6 @@
     handleSession: null,
     edgeSession: null,
     transformSession: null,
-    editPoints: false,
     history: [],
     historyIndex: -1,
     serverSession: null,
@@ -195,7 +184,7 @@
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
     "load-image-button", "load-regions-button", "snap-button", "undo-button", "redo-button", "save-button", "save-state",
-    "export-button", "corrections-button", "delete-button", "duplicate-button", "edit-points-button", "simplify-curve-button",
+    "export-button", "corrections-button", "delete-button", "duplicate-button", "simplify-curve-button",
     "mirror-copy-button", "mirror-onto-button", "previous-region-button", "next-region-button",
     "zoom-out-button", "zoom-in-button", "fit-button", "new-shape-select",
     "tension-field", "curve-tension-slider", "curve-tension-value", "curve-tension-feedback",
@@ -204,7 +193,7 @@
     "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
-    "workflow-block", "recent-block", "inventory-block", "stage-timeline", "recent-runs", "new-board-button",
+    "workflow-block", "recent-block", "inventory-block", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "static-load-controls",
     "onboard-view", "inspect-view", "promote-view", "validate-view", "tool-suite-sidebar",
     "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
@@ -362,6 +351,10 @@
     return state.regions.find((region) => region.id === state.selectedId) || null;
   }
 
+  function isFreeformRegion(region) {
+    return region?.metadata?.shapeKind === "freeform";
+  }
+
   function edgeCurvesSnapshot(region) {
     return Object.hasOwn(region.metadata, "edgeCurves") ? clone(region.metadata.edgeCurves) : undefined;
   }
@@ -496,7 +489,6 @@
     el["region-key-input"].disabled = !editable || state.guided;
     el["region-mode-select"].disabled = !editable;
     el["region-notes-input"].disabled = !editable;
-    el["edit-points-button"].disabled = !editable;
     el["mirror-onto-button"].disabled = !editable;
     el["compare-button"].classList.toggle("active", state.compareEnabled);
     el["compare-button"].setAttribute("aria-pressed", state.compareEnabled ? "true" : "false");
@@ -531,7 +523,7 @@
       if (state.saveError) el["save-state"].classList.add("error");
       else if (state.draftStatus === "dirty") el["save-state"].classList.add("dirty");
       else if (state.draftStatus === "saved" || view?.saved) el["save-state"].classList.add("saved");
-      el["save-button"].textContent = complete ? (view.saved ? "Saved locally" : "Save locally") : "Approve & continue";
+      el["save-button"].textContent = complete ? (view.saved ? "Saved locally" : "Save locally") : "Save changes";
       el["save-button"].disabled = state.busy || !view || (complete ? view.saved : !approving);
       el["retry-button"].disabled = state.busy || !view || !["failed", "awaiting_review", "ready"].includes(view.state);
       el["revise-button"].disabled = state.busy || !view || view.stage < 1;
@@ -602,51 +594,10 @@
         group.appendChild(label);
 
         if (region.id === state.selectedId) {
-          renderObjectControls(group, region);
-          if (state.editPoints) {
-            if (isVectorMode()) renderVectorHandles(group, region);
-            else {
-              region.contour.forEach((start, index) => {
-              const end = region.contour[(index + 1) % region.contour.length];
-              const control = region.metadata.edgeCurves?.[index]?.control || [
-                (start[0] + end[0]) / 2,
-                (start[1] + end[1]) / 2,
-              ];
-              group.appendChild(makeSvg("polyline", {
-                points: `${start[0]},${start[1]} ${control[0]},${control[1]} ${end[0]},${end[1]}`,
-                class: "edge-curve-line",
-              }));
-            });
-            region.contour.forEach((start, index) => {
-              const end = region.contour[(index + 1) % region.contour.length];
-              const [cx, cy] = region.metadata.edgeCurves?.[index]?.control || [
-                (start[0] + end[0]) / 2,
-                (start[1] + end[1]) / 2,
-              ];
-              if (!shouldRenderEdgeCurveHandle({
-                start,
-                end,
-                control: [cx, cy],
-                vertices: region.contour,
-                zoom: state.zoom,
-              })) return;
-              const handle = makeSvg("circle", {
-                cx,
-                cy,
-                r: 3.75 / Math.max(state.zoom, 0.3),
-                class: "edge-curve-handle",
-                "aria-label": `Curve edge ${index + 1}`,
-              });
-              handle.addEventListener("pointerdown", (event) => startEdgeCurveDrag(event, region.id, index));
-              group.appendChild(handle);
-              });
-            }
-            if (!isVectorMode()) region.contour.forEach(([x, y], index) => {
-                const selected = state.selectedCornerIndex === index;
-                const handle = makeSvg("circle", { cx: x, cy: y, r: 4.5 / Math.max(state.zoom, 0.3), class: `vertex-handle${selected ? " selected-corner" : ""}` });
-                handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
-                group.appendChild(handle);
-              });
+          if (isVectorMode()) renderVectorHandles(group, region);
+          else {
+            if (isFreeformRegion(region)) renderFreeformVertexHandles(group, region);
+            if (!isFreeformRegion(region)) renderObjectControls(group, region);
           }
         }
         el["region-overlay"].appendChild(group);
@@ -701,6 +652,47 @@
         group.appendChild(handle);
       }
       previous = endpoint;
+    });
+  }
+
+  function renderFreeformVertexHandles(group, region) {
+    region.contour.forEach((start, index) => {
+      const end = region.contour[(index + 1) % region.contour.length];
+      const [cx, cy] = region.metadata.edgeCurves?.[index]?.control || [
+        (start[0] + end[0]) / 2,
+        (start[1] + end[1]) / 2,
+      ];
+      if (!shouldRenderEdgeCurveHandle({
+        start,
+        end,
+        control: [cx, cy],
+        vertices: region.contour,
+        zoom: state.zoom,
+      })) return;
+      group.appendChild(makeSvg("polyline", {
+        points: `${start[0]},${start[1]} ${cx},${cy} ${end[0]},${end[1]}`,
+        class: "edge-curve-line",
+      }));
+      const handle = makeSvg("circle", {
+        cx,
+        cy,
+        r: 3.75 / Math.max(state.zoom, 0.3),
+        class: "edge-curve-handle",
+        "aria-label": `Curve edge ${index + 1}`,
+      });
+      handle.addEventListener("pointerdown", (event) => startEdgeCurveDrag(event, region.id, index));
+      group.appendChild(handle);
+    });
+    region.contour.forEach(([x, y], index) => {
+      const selected = state.selectedCornerIndex === index;
+      const handle = makeSvg("circle", {
+        cx: x,
+        cy: y,
+        r: 4.5 / Math.max(state.zoom, 0.3),
+        class: `vertex-handle${selected ? " selected-corner" : ""}`,
+      });
+      handle.addEventListener("pointerdown", (event) => startHandleDrag(event, region.id, index));
+      group.appendChild(handle);
     });
   }
 
@@ -805,8 +797,6 @@
     el["area-value"].textContent = isVectorMode()
       ? `${Math.round(Math.max(0, (pointBounds[2] - pointBounds[0]) * (pointBounds[3] - pointBounds[1]))).toLocaleString()} px² bounds`
       : `${Math.round(polygonArea(renderedContour)).toLocaleString()} px²`;
-    el["edit-points-button"].classList.toggle("edit-points-active", state.editPoints);
-    el["edit-points-button"].textContent = state.editPoints ? "Finish points" : "Edit points";
     el["simplify-curve-button"].disabled = isVectorMode() || region.contour.length < 6;
     el["previous-region-button"].disabled = state.regions.length < 2;
     el["next-region-button"].disabled = state.regions.length < 2;
@@ -910,15 +900,17 @@
       completeMirrorOnto(id);
       return;
     }
-    if (id !== state.selectedId) {
-      state.editPoints = false;
-      state.selectedCornerIndex = null;
-    }
+    if (id !== state.selectedId) state.selectedCornerIndex = null;
     state.selectedId = id;
     render();
     const region = selectedRegion();
     if (region) setStatus(`Selected ${region.key} hold highlight. Drag the shape or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
+  }
+
+  function clearSelection() {
+    selectRegion(null);
+    setStatus("Selection cleared.");
   }
 
   function clientToSvg(clientX, clientY) {
@@ -1386,6 +1378,19 @@
     render();
   }
 
+  function deleteSelectedFreeformVertex() {
+    const region = selectedRegion();
+    const index = state.selectedCornerIndex;
+    if (!canEditGeometry() || !isFreeformRegion(region) || !Number.isInteger(index) || index < 0 || index >= region.contour.length || region.contour.length <= 3) {
+      return false;
+    }
+    region.contour.splice(index, 1);
+    state.selectedCornerIndex = null;
+    commitHistory("Deleted control point");
+    render();
+    return true;
+  }
+
   function duplicateSelected() {
     if (!canEditGeometry()) return;
     const source = selectedRegion();
@@ -1509,13 +1514,6 @@
     const currentIndex = ordered.findIndex((region) => region.id === state.selectedId);
     const nextIndex = currentIndex < 0 ? 0 : (currentIndex + direction + ordered.length) % ordered.length;
     selectRegion(ordered[nextIndex].id);
-  }
-
-  function togglePointEditing() {
-    if (!canEditGeometry()) return;
-    state.editPoints = !state.editPoints;
-    setStatus(state.editPoints ? "Point editing enabled. Drag vertices or edge handles." : "Object controls enabled.");
-    render();
   }
 
   function commitHistory(label) {
@@ -1912,7 +1910,7 @@
     state.editingFrozen = true;
     state.saveError = "";
     setStatus("Reconnecting to the active workbench job…");
-    renderGuidedShell();
+    renderEditorShell();
     render();
     return true;
   }
@@ -1927,7 +1925,6 @@
     if (!state.regions.some((region) => region.id === numericId)) return false;
     if (state.selectedId !== numericId) state.selectedCornerIndex = null;
     state.selectedId = numericId;
-    state.editPoints = true;
     render();
     el["canvas-viewport"].focus({ preventScroll: true });
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${String(numericId)}"]`)?.scrollIntoView({ block: "nearest" }));
@@ -2010,7 +2007,6 @@
       state.editingFrozen = false;
       state.draftStatus = "clean";
       state.drawing = false;
-      state.editPoints = false;
       state.mirrorOntoSourceId = null;
       state.regions = [];
       state.baselineRegions = [];
@@ -2047,47 +2043,26 @@
         render();
         requestAnimationFrame(fitCanvas);
       }
-        renderGuidedShell();
+        renderEditorShell();
       });
     } finally {
       if (ownsLoad && load.isCurrent()) {
         state.busy = false;
-        renderGuidedShell();
+        renderEditorShell();
         render();
       }
     }
   }
 
-  function timelineView(view) {
-    const mappedStage = PIPELINE_TO_TIMELINE_STAGE[view.stage] ?? Math.min(view.stage, 6);
-    const mappedStale = view.staleFromStage == null ? null : (PIPELINE_TO_TIMELINE_STAGE[view.staleFromStage] ?? view.staleFromStage);
-    return { ...view, stage: mappedStage, staleFromStage: mappedStale };
-  }
-
-  function renderGuidedShell() {
+  function renderEditorShell() {
     if (!state.guided) return;
     const view = state.board;
-    el["stage-timeline"].replaceChildren();
-    const timeline = timelineFor(view ? timelineView(view) : {});
-    timeline.forEach((row, index) => {
-      const item = document.createElement("li");
-      item.className = `stage-row ${row.state}`;
-      const stageDot = document.createElement("span");
-      stageDot.className = "stage-dot";
-      stageDot.textContent = row.state === "complete" ? "✓" : String(index + 1);
-      const stageLabel = document.createElement("span");
-      stageLabel.textContent = STAGE_LABELS[index];
-      item.append(stageDot, stageLabel);
-      el["stage-timeline"].appendChild(item);
-    });
     renderRecentRuns();
     el["board-title"].textContent = view?.productName || "Hangboard Workbench";
     el["board-state"].textContent = view
       ? `Revision ${view.revisionId} · ${view.state.replaceAll("_", " ")}`
       : "Create or choose a board to begin.";
-    el["checkpoint-title"].textContent = view
-      ? `${view.editorMode === "vector" ? "Exact vector" : view.editorMode === "contour" ? "Contour" : "Visual"} · Stage ${String(view.stage)}`
-      : "Waiting for a board";
+    el["checkpoint-title"].textContent = "Edit holds";
     el["inventory-block"].classList.toggle("hidden", !view || !EDITOR_STAGES.has(view.stage));
     renderSaveState();
   }
@@ -2101,9 +2076,9 @@
       button.disabled = openingActionsDisabled(state);
       const productName = document.createElement("span");
       productName.textContent = board.productName;
-      const stage = document.createElement("small");
-      stage.textContent = `Stage ${String(board.stage)}`;
-      button.append(productName, stage);
+      const status = document.createElement("small");
+      status.textContent = board.saved ? "Saved locally" : "Unsaved changes";
+      button.append(productName, status);
       button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
       el["recent-runs"].appendChild(button);
     });
@@ -2128,7 +2103,7 @@
     });
     renderOpeningBoardList(el["in-progress-board-list"], screen.inProgress, {
       label: (board) => board.productName || board.boardId,
-      detail: (board) => board.saved ? "Saved locally" : `Stage ${String(board.stage ?? 0)} · Unsaved`,
+      detail: (board) => board.saved ? "Saved locally" : "Unsaved changes",
       onSelect: selectGuidedBoard,
       disabled: openingActionsDisabled(state),
     });
@@ -2181,7 +2156,7 @@
     } finally {
       if (load.isCurrent()) {
         if (!state.editingFrozen) state.busy = false;
-        renderGuidedShell();
+        renderEditorShell();
         render();
       }
     }
@@ -2207,7 +2182,7 @@
     } finally {
       if (load.isCurrent()) {
         state.busy = false;
-        renderGuidedShell();
+        renderEditorShell();
         render();
       }
     }
@@ -2295,7 +2270,7 @@
     } finally {
       if (load.isCurrent()) {
         if (!state.editingFrozen) state.busy = false;
-        renderGuidedShell();
+        renderEditorShell();
         render();
       }
     }
@@ -2306,6 +2281,7 @@
       [state.transformSession, el["editor-svg"]],
       [state.dragSession, el["editor-svg"]],
       [state.handleSession, el["editor-svg"]],
+      [state.edgeSession, el["editor-svg"]],
       [state.primitiveSession, el["canvas-viewport"]],
       [state.panSession, el["canvas-viewport"]],
     ];
@@ -2313,12 +2289,13 @@
       if (session?.pointerId == null || typeof target?.hasPointerCapture !== "function") return;
       if (target.hasPointerCapture(session.pointerId)) target.releasePointerCapture(session.pointerId);
     });
-    if ([state.transformSession, state.dragSession, state.handleSession].some((session) => session?.changed)) {
+    if ([state.transformSession, state.dragSession, state.handleSession, state.edgeSession].some((session) => session?.changed)) {
       commitHistory("Completed active edit before approval");
     }
     state.transformSession = null;
     state.dragSession = null;
     state.handleSession = null;
+    state.edgeSession = null;
     state.primitiveSession = null;
     state.panSession = null;
     state.drawing = false;
@@ -2364,7 +2341,7 @@
     } finally {
       if (load.isCurrent()) {
         if (!state.editingFrozen) state.busy = false;
-        renderGuidedShell();
+        renderEditorShell();
         render();
       }
     }
@@ -2485,7 +2462,6 @@
       state.drawing = false;
       state.draft = [];
       state.primitiveSession = null;
-      state.editPoints = false;
       state.mirrorOntoSourceId = null;
       setRegions(regions, session.regionsPath || "stage-2-regions.json");
       el["board-select"].value = session.id;
@@ -2895,7 +2871,6 @@
   el["redo-button"].addEventListener("click", redo);
   el["delete-button"].addEventListener("click", deleteSelected);
   el["duplicate-button"].addEventListener("click", duplicateSelected);
-  el["edit-points-button"].addEventListener("click", togglePointEditing);
   el["simplify-curve-button"].addEventListener("click", simplifySelectedCurve);
   el["mirror-copy-button"].addEventListener("click", mirrorSelectedCopy);
   el["mirror-onto-button"].addEventListener("click", beginMirrorOnto);
@@ -3016,9 +2991,23 @@
       cancelDraw();
       return;
     }
+    if (event.key === "Escape" && (
+      state.panSession || state.primitiveSession || state.dragSession || state.handleSession || state.edgeSession || state.transformSession
+    )) {
+      event.preventDefault();
+      cancelPointerSessions();
+      setStatus("Active edit cancelled.");
+      render();
+      return;
+    }
     if (event.key === "Escape" && state.inspectorDrawerOpen) {
       event.preventDefault();
       closeInspectorDrawer();
+      return;
+    }
+    if (event.key === "Escape" && state.selectedId != null) {
+      event.preventDefault();
+      clearSelection();
       return;
     }
     if (editingText) return;
@@ -3027,7 +3016,7 @@
       event.shiftKey ? redo() : undo();
     } else if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
-      deleteSelected();
+      if (!deleteSelectedFreeformVertex()) deleteSelected();
     } else if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
       state.mirrorOntoSourceId = null;
       setStatus("Mirror replacement cancelled.");
@@ -3038,8 +3027,6 @@
       navigateRegion(1);
     } else if (event.key.toLowerCase() === "m") {
       mirrorSelectedCopy();
-    } else if (event.key.toLowerCase() === "e") {
-      togglePointEditing();
     } else if (event.key.toLowerCase() === "s") {
       toggleEdgeSnapping();
     }

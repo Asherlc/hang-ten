@@ -190,7 +190,7 @@ test("editor exposes curve-editing affordances", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
 
-  assert.match(html, /Edit points/);
+  assert.doesNotMatch(html, /Edit points/);
   assert.match(app, /edge-curve-handle/);
   assert.match(app, /startEdgeCurveDrag/);
   assert.match(app, /edgeCurveInspectorState/);
@@ -204,6 +204,148 @@ test("editor exposes curve-editing affordances", () => {
   assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
+});
+
+function extractFunction(source, name) {
+  const start = source.indexOf(`function ${name}(`);
+  assert.notEqual(start, -1, `expected ${name}() to be present`);
+  const bodyStart = source.indexOf("{", start);
+  let depth = 0;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  assert.fail(`could not extract ${name}()`);
+}
+
+test("freeform holds expose independently draggable vertices instead of object resizing", () => {
+  assert.match(app, /function isFreeformRegion\(region\)/);
+  assert.match(app, /if \(isFreeformRegion\(region\)\) renderFreeformVertexHandles\(group, region\);/);
+  assert.match(app, /if \(!isFreeformRegion\(region\)\) renderObjectControls\(group, region\);/);
+  assert.match(app, /function clearSelection\(\) \{[\s\S]*selectRegion\(null\);/);
+});
+
+test("deleting a selected freeform vertex preserves the three-point minimum", () => {
+  assert.match(app, /function deleteSelectedFreeformVertex\(\)/);
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    regions: [{
+      id: 7,
+      contour: [[1, 1], [9, 1], [9, 9], [1, 9]],
+      metadata: { shapeKind: "freeform" },
+    }],
+  };
+  const history = [];
+  let renders = 0;
+  let editable = true;
+  const context = {
+    state,
+    selectedRegion: () => state.regions.find((region) => region.id === state.selectedId) || null,
+    canEditGeometry: () => editable,
+    commitHistory: (label) => history.push(label),
+    render: () => { renders += 1; },
+  };
+  vm.runInNewContext(`${extractFunction(app, "isFreeformRegion")}\n${extractFunction(app, "deleteSelectedFreeformVertex")}`, context);
+
+  assert.equal(context.deleteSelectedFreeformVertex(), true);
+  assert.deepEqual(state.regions[0].contour, [[1, 1], [9, 1], [1, 9]]);
+  assert.equal(state.selectedCornerIndex, null);
+  assert.deepEqual(history, ["Deleted control point"]);
+  assert.equal(renders, 1);
+
+  const before = JSON.stringify(state.regions);
+  state.selectedCornerIndex = 0;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  assert.equal(JSON.stringify(state.regions), before);
+
+  state.regions[0].metadata.shapeKind = "rectangle";
+  state.regions[0].contour.push([1, 1]);
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  state.regions[0].metadata.shapeKind = "freeform";
+  const frozenContour = JSON.stringify(state.regions[0].contour);
+  editable = false;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  assert.equal(JSON.stringify(state.regions[0].contour), frozenContour);
+  state.selectedId = null;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+});
+
+test("Escape deselects an idle hold but cancels drawing first", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const handlerEnd = app.indexOf('window.addEventListener("keyup"', handlerStart);
+  assert.notEqual(handlerStart, -1);
+  assert.notEqual(handlerEnd, -1);
+  const listeners = {};
+  const state = {
+    drawing: false,
+    spacePressed: false,
+    mirrorOntoSourceId: null,
+    inspectorDrawerOpen: false,
+    selectedId: 4,
+    panSession: null,
+    primitiveSession: null,
+    dragSession: null,
+    handleSession: null,
+    edgeSession: null,
+    transformSession: null,
+  };
+  let cleared = 0;
+  let canceled = 0;
+  const context = {
+    document: { activeElement: { tagName: "DIV" } },
+    state,
+    window: { addEventListener: (name, callback) => { listeners[name] = callback; } },
+    trapInspectorDrawerFocus: () => {},
+    clearSelection: () => { cleared += 1; },
+    cancelDraw: () => { canceled += 1; },
+    cancelPointerSessions: () => {},
+    closeInspectorDrawer: () => {},
+    deleteSelectedFreeformVertex: () => false,
+    deleteSelected: () => {},
+    finishDraw: () => {},
+    redo: () => {},
+    undo: () => {},
+    navigateRegion: () => {},
+    mirrorSelectedCopy: () => {},
+    toggleEdgeSnapping: () => {},
+    renderToolState: () => {},
+    setStatus: () => {},
+  };
+  vm.runInNewContext(app.slice(handlerStart, handlerEnd), context);
+  const dispatch = (key) => {
+    let prevented = false;
+    listeners.keydown({
+      key,
+      code: key,
+      preventDefault: () => { prevented = true; },
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+    });
+    return prevented;
+  };
+
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(cleared, 1);
+  assert.equal(canceled, 0);
+
+  state.drawing = true;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(canceled, 1);
+  assert.equal(cleared, 1);
+});
+
+test("Delete and Backspace remove a selected freeform vertex before deleting its hold", () => {
+  const keydown = app.slice(
+    app.indexOf('window.addEventListener("keydown"'),
+    app.indexOf('window.addEventListener("keyup"'),
+  );
+  assert.match(
+    keydown,
+    /event\.key === "Delete" \|\| event\.key === "Backspace"[\s\S]*if \(!deleteSelectedFreeformVertex\(\)\) deleteSelected\(\);/,
+  );
 });
 
 test("viewport wheel listener pans or cursor-anchored zooms by interaction intent", () => {

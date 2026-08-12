@@ -56,6 +56,14 @@ test("the workbench has a persistent single-board tool suite shell", () => {
   assert.match(markup, /workbench-suite-controller\.js/);
 });
 
+test("the Onboard editor presents one direct hold-editing task", () => {
+  const onboard = markup.match(/<section class="tool-view onboard-view"[\s\S]*?<\/section>\s*<\/section>\s*<section class="tool-view inspect-view/);
+
+  assert.ok(onboard, "expected the Onboard view markup");
+  assert.match(onboard[0], />Edit holds</);
+  assert.doesNotMatch(onboard[0], /Hold-contour refinement|Smoothing|Vector refinement/);
+});
+
 test("the workbench uses one accessible inspector panel and drawer controls", () => {
   const count = (id) => (markup.match(new RegExp(`\\bid=["']${id}["']`, "g")) ?? []).length;
   for (const id of [
