@@ -57,6 +57,18 @@ def test_catalog_requires_unique_ids_and_confined_relative_package_paths(tmp_pat
         module.validate_catalog(catalog_path)
 
 
+def test_catalog_rejects_nested_package_paths_that_encode_lifecycle(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog["boards"][0]["path"] = "draft/example-board"
+    (tmp_path / "draft" / "example-board").mkdir(parents=True)
+    catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="single board-slug directory"):
+        module.validate_catalog(catalog_path)
+
+
 def test_approved_package_requires_board_manifest_while_the_same_draft_does_not(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     catalog_path = _write_catalog(tmp_path, status="approved")

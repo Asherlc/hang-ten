@@ -28,6 +28,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
+_PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _STATUSES = frozenset({"draft", "approved"})
 _SIDECARS = ("board.json", "evidence.json", "semantics.json", "artwork.json")
 _EVIDENCE_METHODS = frozenset({"manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation"})
@@ -76,6 +77,13 @@ def _relative_path(value: Any, root: Path, source: str, *, container: str) -> Pa
         candidate.resolve(strict=False).relative_to(root.resolve(strict=False))
     except ValueError as error:
         raise ValueError(f"{source} must be a relative path inside the {container}") from error
+    return path
+
+
+def _package_slug_path(value: Any, root: Path, source: str) -> Path:
+    path = _relative_path(value, root, source, container="catalog")
+    if len(path.parts) != 1 or not _PACKAGE_SLUG.fullmatch(path.name):
+        raise ValueError(f"{source} must be a single board-slug directory")
     return path
 
 
@@ -360,7 +368,7 @@ def validate_catalog(catalog_path: Path) -> CatalogDocument:
         if entry.id in identifiers:
             raise ValueError(f"duplicate board id: {entry.id}")
         identifiers.add(entry.id)
-        relative = _relative_path(entry.path, root, f"catalog.boards[{index}].path", container="catalog")
+        relative = _package_slug_path(entry.path, root, f"catalog.boards[{index}].path")
         package_root = root / relative
         if package_root in paths:
             raise ValueError(f"duplicate board package path: {entry.path}")
