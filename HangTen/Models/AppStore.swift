@@ -25,6 +25,7 @@ final class AppStore: ObservableObject {
     private let motherboardSettingsStore: MotherboardSettingsStore
     private let workoutSessionStore: WorkoutSessionStoring
     private let customRoutineStore: CustomRoutineStoring
+    private let telemetry: TelemetryDependencies
     private var customDefinitions: [CustomRoutineDefinition]
     private var preservesCompletionError = false
     private var healthAuthorizationErrorKind: HealthErrorKind?
@@ -36,7 +37,8 @@ final class AppStore: ObservableObject {
         workoutSessionStore: WorkoutSessionStoring? = nil,
         workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
         customRoutineStore: CustomRoutineStoring? = nil,
-        defaults: UserDefaults = .standard
+        defaults: UserDefaults = .standard,
+        telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
         self.healthKitService = healthKitService
@@ -46,6 +48,7 @@ final class AppStore: ObservableObject {
         self.motherboardSettingsStore = motherboardSettingsStore ?? MotherboardSettingsStore(
             defaults: defaults
         )
+        self.telemetry = telemetry
 
         let resolvedCustomRoutineStore = customRoutineStore ?? CustomRoutineStore(defaults: defaults)
         self.customRoutineStore = resolvedCustomRoutineStore
@@ -120,6 +123,18 @@ final class AppStore: ObservableObject {
         )
     }
 
+    convenience init(
+        healthKitService: any HealthWorkoutSaving,
+        workoutSessionStore: any WorkoutSessionStoring,
+        userDefaults: UserDefaults
+    ) {
+        self.init(
+            healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+            workoutSessionStore: workoutSessionStore,
+            defaults: userDefaults
+        )
+    }
+
     convenience init(userDefaults: UserDefaults) {
         self.init(defaults: userDefaults)
     }
@@ -157,6 +172,12 @@ final class AppStore: ObservableObject {
         customDefinition(for: plan.id) != nil
     }
 
+    func selectBoard(_ board: TrainingBoard) {
+        selectedBoard = board
+        guard let family = telemetryBoardFamily(for: board) else { return }
+        telemetry.tracking.track(.boardSelected(family: family))
+    }
+
     func customDefinition(for id: String) -> CustomRoutineDefinition? {
         customDefinitions.first { $0.id == id }
     }
@@ -165,8 +186,12 @@ final class AppStore: ObservableObject {
         do {
             try customRoutineStore.save(definition)
             reloadCustomRoutines()
+            telemetry.tracking.track(.customRoutineSaved)
         } catch {
             customRoutinePersistenceError = error.localizedDescription
+            telemetry.diagnostics.record(
+                .init(category: .persistence, operation: .save, error: error)
+            )
             throw error
         }
     }
@@ -419,6 +444,7 @@ final class AppStore: ObservableObject {
         hasRequestedHealthAuthorization = true
         defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
         workoutHistoryService.enableHealthKitSync()
+        telemetry.replay.stop()
         healthKitService.requestAuthorization { [weak self] state, error in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -427,7 +453,11 @@ final class AppStore: ObservableObject {
                     error?.localizedDescription,
                     kind: error == nil ? nil : .authorization
                 )
+                if let outcome = self.telemetryHealthAuthorizationOutcome(state: state, error: error) {
+                    self.telemetry.tracking.track(.healthAuthorizationFinished(outcome: outcome))
+                }
                 self.refreshWorkoutHistory()
+                self.telemetry.replay.start()
             }
         }
     }
@@ -476,6 +506,43 @@ final class AppStore: ObservableObject {
     private func setHealthAuthorizationError(_ message: String?, kind: HealthErrorKind?) {
         healthAuthorizationError = message
         healthAuthorizationErrorKind = kind
+    }
+
+    private func telemetryBoardFamily(
+        for board: TrainingBoard
+    ) -> HangTenTelemetryEvent.BoardFamily? {
+        switch board.id {
+        case BoardCatalog.compactII.id:
+            return .compactII
+        case BoardCatalog.rockProdigyTrainingCenter.id:
+            return .rockProdigyTrainingCenter
+        default:
+            return nil
+        }
+    }
+
+    private func telemetryHealthAuthorizationOutcome(
+        state: HealthAuthorizationState,
+        error: Error?
+    ) -> HangTenTelemetryEvent.HealthAuthorizationOutcome? {
+        guard state != .notDetermined else {
+            return nil
+        }
+
+        if error != nil {
+            return .error
+        }
+
+        switch state {
+        case .authorized:
+            return .granted
+        case .denied:
+            return .denied
+        case .unavailable:
+            return .unavailable
+        case .notDetermined:
+            return nil
+        }
     }
 
     private static let completionSyncError = "Session was saved locally and will retry Apple Health sync."
