@@ -385,6 +385,14 @@ test("keeps the inspector available as a responsive accessible drawer", () => {
   assert.match(app, /function trapInspectorDrawerFocus\(event\)/);
   assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "true"\)/);
   assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "false"\)/);
+  assert.match(app, /function syncInspectorDrawerAccessibility\(\)/);
+  assert.match(app, /const drawerIsModal = inspectorDrawerMedia\.matches && state\.inspectorDrawerOpen;/);
+  assert.match(app, /panel\.setAttribute\("role", "dialog"\)/);
+  assert.match(app, /panel\.setAttribute\("aria-modal", "true"\)/);
+  assert.match(app, /panel\.inert = true;/);
+  assert.match(app, /panel\.setAttribute\("aria-hidden", "true"\)/);
+  assert.match(app, /panel\.inert = false;/);
+  assert.match(app, /panel\.removeAttribute\("aria-modal"\)/);
 
   const keydownStart = app.indexOf('window.addEventListener("keydown", (event) => {');
   const closeDrawerStart = app.indexOf("closeInspectorDrawer", keydownStart);

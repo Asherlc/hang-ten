@@ -65,7 +65,9 @@ test("the workbench uses one accessible inspector panel and drawer controls", ()
     "inspector-drawer-backdrop",
   ]) assert.equal(count(id), 1, `${id} must appear exactly once`);
 
-  assert.match(markup, /<aside[^>]*id="inspector-panel"[^>]*role="dialog"[^>]*aria-modal="true"[^>]*aria-labelledby="inspector-title"/);
+  assert.match(markup, /<aside[^>]*id="inspector-panel"[^>]*aria-labelledby="inspector-title"/);
+  assert.doesNotMatch(markup, /<aside[^>]*id="inspector-panel"[^>]*\brole=/);
+  assert.doesNotMatch(markup, /<aside[^>]*id="inspector-panel"[^>]*aria-modal=/);
   assert.match(markup, /<button[^>]*id="inspector-drawer-toggle"[^>]*aria-expanded="false"[^>]*aria-controls="inspector-panel"/);
 });
 

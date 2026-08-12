@@ -221,6 +221,27 @@
 
   function setStatus(message) { el["status-text"].textContent = message; }
 
+  function syncInspectorDrawerAccessibility() {
+    const panel = el["inspector-panel"];
+    const drawerIsModal = inspectorDrawerMedia.matches && state.inspectorDrawerOpen;
+    if (drawerIsModal) {
+      panel.inert = false;
+      panel.removeAttribute("aria-hidden");
+      panel.setAttribute("role", "dialog");
+      panel.setAttribute("aria-modal", "true");
+      return;
+    }
+    panel.removeAttribute("role");
+    panel.removeAttribute("aria-modal");
+    if (inspectorDrawerMedia.matches) {
+      panel.inert = true;
+      panel.setAttribute("aria-hidden", "true");
+      return;
+    }
+    panel.inert = false;
+    panel.removeAttribute("aria-hidden");
+  }
+
   function openInspectorDrawer() {
     if (!inspectorDrawerMedia.matches) return;
     state.inspectorDrawerOpener = document.activeElement || el["inspector-drawer-toggle"];
@@ -228,6 +249,7 @@
     el["inspector-panel"].classList.add("drawer-open");
     el["inspector-drawer-backdrop"].classList.add("drawer-open");
     el["inspector-drawer-toggle"].setAttribute("aria-expanded", "true");
+    syncInspectorDrawerAccessibility();
     el["inspector-drawer-close"].focus({ preventScroll: true });
   }
 
@@ -236,6 +258,7 @@
     el["inspector-panel"].classList.remove("drawer-open");
     el["inspector-drawer-backdrop"].classList.remove("drawer-open");
     el["inspector-drawer-toggle"].setAttribute("aria-expanded", "false");
+    syncInspectorDrawerAccessibility();
     const opener = state.inspectorDrawerOpener;
     state.inspectorDrawerOpener = null;
     if (restoreFocus && opener?.isConnected) opener.focus({ preventScroll: true });
@@ -2975,7 +2998,9 @@
 
   inspectorDrawerMedia.addEventListener("change", (event) => {
     if (!event.matches) closeInspectorDrawer({ restoreFocus: false });
+    else syncInspectorDrawerAccessibility();
   });
+  syncInspectorDrawerAccessibility();
   window.addEventListener("resize", () => state.imageHref && fitCanvas());
   window.addEventListener("keydown", (event) => {
     trapInspectorDrawerFocus(event);
