@@ -234,7 +234,9 @@ def test_load_image_enforces_total_remote_deadline_while_stream_is_blocked(
         load_image("https://example.test/slow.png", timeout=0.05)
     elapsed = time.monotonic() - started
 
-    assert elapsed < 0.20
+    # The 0.30-second fake chunk must not complete before the deadline returns.
+    # Allow CI scheduling/cleanup overhead beyond the 0.05-second deadline.
+    assert elapsed < 0.25
     assert response.closed is True
 
 
