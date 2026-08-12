@@ -70,7 +70,42 @@ struct PendingWorkoutRecord: Codable, Equatable, Identifiable {
 struct PendingWorkoutActivityContext: Codable, Equatable {
     let boardID: String
     let boardName: String
-    let activitySegments: [RecordedActivitySegment]
+    let activityMetadata: WorkoutActivityMetadata
+
+    var activitySegments: [RecordedActivitySegment] { activityMetadata.segments }
+
+    private enum CodingKeys: String, CodingKey {
+        case boardID, boardName, activityMetadata, activitySegments
+    }
+
+    init(
+        boardID: String,
+        boardName: String,
+        activityMetadata: WorkoutActivityMetadata
+    ) {
+        self.boardID = boardID
+        self.boardName = boardName
+        self.activityMetadata = activityMetadata
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        boardName = try container.decode(String.self, forKey: .boardName)
+        activityMetadata = try container.decodeIfPresent(
+            WorkoutActivityMetadata.self,
+            forKey: .activityMetadata
+        ) ?? WorkoutActivityMetadata(
+            segments: try container.decode([RecordedActivitySegment].self, forKey: .activitySegments)
+        )
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(boardID, forKey: .boardID)
+        try container.encode(boardName, forKey: .boardName)
+        try container.encode(activityMetadata, forKey: .activityMetadata)
+    }
 }
 
 struct HealthWorkoutRecord: Equatable, Identifiable {
