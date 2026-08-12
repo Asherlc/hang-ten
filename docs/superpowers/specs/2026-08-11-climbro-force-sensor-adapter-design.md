@@ -2,25 +2,27 @@
 
 ## Goal
 
-Add a source-faithful, protocol-level Climbro adapter that identifies a Climbro peripheral, exposes its BLE notification contract, and converts its stateful byte stream into normalized kilogram-force samples. This scope does not connect the adapter to the app's runtime Bluetooth flow.
+Add a source-faithful, protocol-level Climbro adapter that identifies a Climbro peripheral, exposes only its evidenced UART notification contract, and decodes its stateful byte stream into Hang Ten `ForceSensorSample` values. Runtime Bluetooth integration, shared transport, UI, history, and session routing are deferred.
 
 ## Sources and evidence boundary
 
-- Primary implementation: [`climbro.model.ts` at upstream commit `02dd6ff227ffb0fc521fd547a83e85453351eb3b`](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/02dd6ff227ffb0fc521fd547a83e85453351eb3b/packages/core/src/models/device/climbro.model.ts). Its blob SHA is `4257b024609ebf545f6131319d65fd61e2cadd3e`.
-- Upstream parser tests: [`device-parsers.test.mjs` at the same commit](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/02dd6ff227ffb0fc521fd547a83e85453351eb3b/packages/core/test/device-parsers.test.mjs).
-- UART characteristic properties: [Microchip Transparent UART specification](https://onlinedocs.microchip.com/oxy/GUID-26457D23-798C-47B0-9F40-C5DA6E995C6F-en-US-2/GUID-4346AC32-EFE5-4C3D-9D47-59BDC6EF7B7C.html).
+- Primary implementation: [`climbro.model.ts` at upstream commit `1cf3d4f7a00ffd5de6000e4aa77f86819765ee43`](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/1cf3d4f7a00ffd5de6000e4aa77f86819765ee43/packages/core/src/models/device/climbro.model.ts), verified blob `4257b024609ebf545f6131319d65fd61e2cadd3e`.
+- Device docs: [`climbro.md` at the same commit](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/1cf3d4f7a00ffd5de6000e4aa77f86819765ee43/packages/docs/src/devices/climbro.md).
+- Shared behavior: [`device.model.ts` at the same commit](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/1cf3d4f7a00ffd5de6000e4aa77f86819765ee43/packages/core/src/models/device.model.ts).
 
-The source demonstrates notification parsing and GATT identifiers. It does not provide Climbro-specific write payloads, a hardware-tare command, stream start/stop commands, physical packet captures, MTU limits, or a valid battery-byte range. The adapter must not add behavior for those missing facts.
+The source demonstrates name-prefix discovery, GATT identifiers, automatic notification streaming, marker-based parsing, and battery conversion. It does not evidence Climbro command payloads, writes, hardware tare, start/stop control, battery clamping, packet-size limits, or timeout/resynchronization behavior.
 
 ## Architecture
 
-`ClimbroProtocolAdapter` follows the existing Progressor and PitchSix adapter shape. It accepts only `.climbro`, matches an advertised local name with the `Climbro` prefix, declares the UART and Device Information services, and identifies the UART notification characteristic. Its capability set is `[.batteryLevel]`; it has no write characteristic or command-payload API.
+`ClimbroProtocolAdapter` accepts only `.climbro`, matches a case-sensitive advertised name prefix `Climbro`, and declares only the UART service plus RX notification characteristic used for streamed notifications. It records the declared TX and Transparent Control Point UUIDs as constants, but exposes no write characteristic and no command payloads. Capabilities are empty because Hang Ten capabilities represent actionable device behavior, and the audited write/control protocols are absent.
 
-`ClimbroProtocolParser` owns the stream state that cannot live in a stateless `decode` function. Its `append(_:receivedAt:)` method receives exactly one BLE `Data` value and returns every force sample decoded from it. A single `receivedAt` applies to every returned sample because the upstream implementation uses one timestamp per notification.
+`ClimbroProtocolParser` owns explicit stream state that persists across `decode(_:receivedAt:)` calls:
 
-The parser has three modes: uninitialized, battery, and sensor. Byte `0xF0` changes mode to battery and emits nothing; byte `0xF5` changes mode to sensor and emits nothing. In battery mode, each subsequent non-marker byte updates `batteryPercentage` to `100 * (byte - 112) / 118` and emits no sample. In sensor mode, each subsequent non-marker byte is a kilogram-force sample, except `0xF6`, which represents 36 kg. Modes persist across `append` calls until another marker arrives. Bytes in uninitialized mode emit nothing.
+- `.waitingForMarker`: pre-marker bytes emit no samples.
+- `.battery`: bytes after `0xF0` update `batteryPercentage` using `100 * (byte - 112) / 118`, unclamped.
+- `.sensor`: bytes after `0xF5` emit direct unsigned kg samples, except `0xF6`, which emits exactly 36 kg.
 
-The parser preserves the source's unbounded battery conversion and sentinel ordering: `0xF6` is transformed to 36 before mode-specific handling. The adapter does not claim that a `0xF6` battery byte is valid; the test suite only covers source-supported sensor behavior.
+Hang Ten stores force as kgf. Mapping the upstream kg values to `.kilogramsForce` is a documented adaptation pending vendor proof. Every emitted value passes through `ForceSensorSample` validation; invalid conversions cannot emit samples.
 
 ## BLE contract
 
@@ -28,25 +30,18 @@ The parser preserves the source's unbounded battery conversion and sentinel orde
 | --- | --- |
 | UART Transparent Service | `49535343-fe7d-4ae5-8fa9-9fafd205e455` |
 | Notification characteristic | `49535343-1e4d-4bd9-ba61-23c647249616` |
-| UART client-write characteristic (known but unused) | `49535343-8841-43f4-a8d4-ecbe34729bb3` |
-| Transparent Control Point (known but unused) | `49535343-4c8a-39b3-2f49-511cff073b7e` |
-| Device Information Service | `0000180a-0000-1000-8000-00805f9b34fb` |
+| TX characteristic, recorded only | `49535343-8841-43f4-a8d4-ecbe34729bb3` |
+| Transparent Control Point, recorded only | `49535343-4c8a-39b3-2f49-511cff073b7e` |
 
-The notification UUID is the Microchip UART TX characteristic despite the upstream adapter's internal `rx` label. Hang Ten will name it by behavior, not by that label.
-
-## Error handling and limits
-
-The input is a byte stream with marker-based framing, so there is no packet length or endianness validation to invent. `ForceSensorSample` remains the normalization boundary and rejects values it cannot represent. The parser is intentionally source-faithful rather than adding timeout, automatic resynchronization, battery clamping, or write-side recovery policy.
+Device Information reads are documented upstream but are outside this adapter-only Hang Ten BLE contract.
 
 ## Testing
 
-The test target will include the upstream fixture `F0 70 F5 0A F6 14`, expecting battery 0% and samples 10, 36, and 20 kg. It will also cover prefix-only discovery, BLE contract values, split sensor notifications, marker transitions, pre-marker suppression, and the absence of hardware-tare/start-stop capabilities and command payloads.
+Focused XCTest coverage verifies name prefix matching, UUID contract, no capabilities, no writes/commands, state transitions split across notifications, `0xF6 -> 36 kgf`, direct byte samples, raw unclamped battery conversion, and pre-marker suppression.
 
 ## File scope
 
-- Create `HangTen/Models/ClimbroProtocol.swift`.
-- Create `HangTenTests/ClimbroProtocolTests.swift`.
-- Create `docs/source-audits/2026-08-11-climbro-protocol.md`.
-- Modify `HangTen.xcodeproj/project.pbxproj` only to register the two Swift files in their existing groups and source build phases.
-
-`ForceSensorModels.swift` and `ForceSensorModelsTests.swift` already contain the Climbro profile, label, and named matching policy. They remain unchanged.
+- `HangTen/Models/ClimbroProtocol.swift`
+- `HangTenTests/ClimbroProtocolTests.swift`
+- `docs/source-audits/2026-08-11-climbro-protocol.md`
+- `HangTen.xcodeproj/project.pbxproj` registration only
