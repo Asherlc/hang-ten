@@ -759,6 +759,7 @@ private final class FakeHealthWorkoutSaving: HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Error?) -> Void
     ) {
         withLock {
@@ -907,6 +908,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         let (result, shouldDefer) = withLock {

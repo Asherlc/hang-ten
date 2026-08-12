@@ -37,13 +37,25 @@ struct RecordedActivitySegment: Codable, Hashable {
     }
 }
 
+struct RecordedActivityStepMeasurement: Codable, Hashable {
+    let stepID: String
+    let peakLoadKGF: Double?
+    let actualLoadedDurationSeconds: TimeInterval?
+}
+
 struct WorkoutActivityMetadata: Codable, Hashable {
     let version: Int
     let segments: [RecordedActivitySegment]
+    let measurements: [RecordedActivityStepMeasurement]?
 
-    init(version: Int = 1, segments: [RecordedActivitySegment]) {
+    init(
+        version: Int = 1,
+        segments: [RecordedActivitySegment],
+        measurements: [RecordedActivityStepMeasurement]? = nil
+    ) {
         self.version = version
         self.segments = segments
+        self.measurements = measurements
     }
 }
 
@@ -148,11 +160,57 @@ struct WorkoutActivityRecorder {
                     else { groups.append((hold.kind, hold.sizeMillimeters, [hold.id])) }
                 }
                 result += groups.map { kind, size, ids in
-                    RecordedActivitySegment(stepID: step.id, stepNumber: step.number, kind: .work, holdIDs: ids, holdType: kind.rawValue, sizeMillimeters: size, durationSeconds: duration)
+                    RecordedActivitySegment(
+                        stepID: step.id,
+                        stepNumber: step.number,
+                        kind: .work,
+                        holdIDs: ids,
+                        holdType: kind.rawValue,
+                        sizeMillimeters: size,
+                        durationSeconds: duration
+                    )
                 }
             }
         }
         return result
+    }
+
+    func metadata(
+        for plan: TrainingPlan,
+        on board: TrainingBoard,
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
+        stepMeasurements: [WorkoutStepMeasurement] = []
+    ) throws -> WorkoutActivityMetadata {
+        WorkoutActivityMetadata(
+            segments: try segments(
+                for: plan,
+                on: board,
+                stopwatchDurations: stopwatchDurations
+            ),
+            measurements: measuredSteps(from: stepMeasurements)
+        )
+    }
+
+    private func measuredSteps(
+        from measurements: [WorkoutStepMeasurement]
+    ) -> [RecordedActivityStepMeasurement]? {
+        let result = measurements.compactMap { measurement -> RecordedActivityStepMeasurement? in
+            guard measurement.sampleCount > 0 else { return nil }
+            let peakLoadKGF = measurement.peakLoadKGF.flatMap {
+                $0.isFinite && $0 >= 0 ? $0 : nil
+            }
+            let loadedDuration = measurement.actualLoadedDuration
+            let actualLoadedDurationSeconds = loadedDuration.isFinite && loadedDuration >= 0
+                ? loadedDuration
+                : nil
+            guard peakLoadKGF != nil || actualLoadedDurationSeconds != nil else { return nil }
+            return RecordedActivityStepMeasurement(
+                stepID: measurement.stepID,
+                peakLoadKGF: peakLoadKGF,
+                actualLoadedDurationSeconds: actualLoadedDurationSeconds
+            )
+        }
+        return result.isEmpty ? nil : result
     }
 
     func json(for metadata: WorkoutActivityMetadata) throws -> String {
