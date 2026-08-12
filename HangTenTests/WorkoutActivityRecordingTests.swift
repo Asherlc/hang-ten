@@ -6,6 +6,7 @@ import Combine
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
     private var sessionStoreDirectory: URL!
+    private var sessionStores: [WorkoutSessionStore] = []
 
     override func setUp() {
         super.setUp()
@@ -17,8 +18,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     override func tearDown() {
-        try? FileManager.default.removeItem(at: sessionStoreDirectory)
-        sessionStoreDirectory = nil
+        cleanUpSessionStores()
         super.tearDown()
     }
 
@@ -86,8 +86,55 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         return defaults
     }
 
-    private func makeSessionStore(defaults: UserDefaults) -> WorkoutSessionStore {
-        WorkoutSessionStore(defaults: defaults, directory: sessionStoreDirectory)
+    private func makeSessionStore(
+        defaults: UserDefaults,
+        fileManager: FileManager = .default
+    ) -> WorkoutSessionStore {
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: sessionStoreDirectory,
+            fileManager: fileManager
+        )
+        sessionStores.append(store)
+        return store
+    }
+
+    private func cleanUpSessionStores() {
+        sessionStores.forEach { $0.flush() }
+        sessionStores.removeAll()
+        if let sessionStoreDirectory {
+            try? FileManager.default.removeItem(at: sessionStoreDirectory)
+        }
+        sessionStoreDirectory = nil
+    }
+
+    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() {
+        let directory = sessionStoreDirectory!
+        let fileManager = BlockingWorkoutActivityFileManager()
+        let store = makeSessionStore(defaults: makeDefaults(), fileManager: fileManager)
+        let record = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Plan",
+            recordedAt: Date(timeIntervalSinceReferenceDate: 1_010),
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+
+        store.append(record)
+        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        let allowWrite = fileManager.allowWrite
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            allowWrite.signal()
+        }
+
+        cleanUpSessionStores()
+
+        XCTAssertEqual(fileManager.writeFinished.wait(timeout: .now() + 1), .success)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
     private func plan(
@@ -1094,5 +1141,26 @@ private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         completion(.success(UUID()))
+    }
+}
+
+private final class BlockingWorkoutActivityFileManager: FileManager {
+    let writeStarted = DispatchSemaphore(value: 0)
+    let allowWrite = DispatchSemaphore(value: 0)
+    let writeFinished = DispatchSemaphore(value: 0)
+
+    override func createDirectory(
+        at url: URL,
+        withIntermediateDirectories createIntermediates: Bool,
+        attributes: [FileAttributeKey: Any]? = nil
+    ) throws {
+        writeStarted.signal()
+        allowWrite.wait()
+        defer { writeFinished.signal() }
+        try super.createDirectory(
+            at: url,
+            withIntermediateDirectories: createIntermediates,
+            attributes: attributes
+        )
     }
 }
