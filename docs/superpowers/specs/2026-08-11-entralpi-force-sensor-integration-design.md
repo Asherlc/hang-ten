@@ -19,8 +19,10 @@ UART protocol.
   force conversion.
 - Add unit and lifecycle tests before implementation code.
 
-This work does not add undocumented Entralpi commands, subscribe to its UART
-`FFF4` characteristic, or change unrelated sensor profiles.
+This design records the audited Entralpi adapter contract: Entralpi subscribes
+to service-scoped UART characteristic `FFF4` and Weight Scale characteristic
+`FFF1`. Transport integration remains deferred, and this work does not add
+undocumented Entralpi commands or change unrelated sensor profiles.
 
 ## Protocol evidence
 
@@ -31,8 +33,9 @@ The immutable upstream adapter blob is
 
 Entralpi's public versioned web-app bundle and source map provide primary
 protocol evidence. Their exposed `utils/WebBluetooth.ts` selects a device with
-the `ENTRALPI` name prefix, discovers Weight Scale service `0x181D`, and
-subscribes only to characteristic `0000FFF1-0000-1000-8000-00805F9B34FB`.
+the exact, case-sensitive local/device name `ENTRALPI`, with no advertised-service
+requirement. It discovers Weight Scale service `0x181D` and subscribes to
+characteristic `0000FFF1-0000-1000-8000-00805F9B34FB`.
 It rejects payloads shorter than two bytes and reads `getUint16(0) / 100`.
 Because `getUint16` omits the little-endian parameter, it is big-endian.
 
@@ -59,7 +62,7 @@ write characteristics and commands, and a raw-frame decoder.
 The Motherboard profile retains its current UART UUIDs, `C` calibration command,
 `S30` stream command, line parser, and measurements. The Entralpi profile has:
 
-- name-prefix matcher: `ENTRALPI`;
+- exact, case-sensitive local/device name matcher: `ENTRALPI`;
 - Weight Scale service `0000181D-0000-1000-8000-00805F9B34FB`;
 - notification characteristic
   `0000FFF1-0000-1000-8000-00805F9B34FB`;
