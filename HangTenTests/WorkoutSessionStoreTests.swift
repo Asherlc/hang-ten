@@ -231,7 +231,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
 
-        let flushReturned = DispatchSemaphore(value: 0)
+        let flushReturned = expectation(description: "flush returned")
         let completion = expectation(description: "flush completion")
         DispatchQueue.global().async {
             store.flush { result in
@@ -240,14 +240,10 @@ final class WorkoutSessionStoreTests: XCTestCase {
                 }
                 completion.fulfill()
             }
-            flushReturned.signal()
+            flushReturned.fulfill()
         }
 
-        XCTAssertEqual(
-            flushReturned.wait(timeout: .now() + 1),
-            .success,
-            "Asynchronous flush should return before pending persistence finishes"
-        )
+        wait(for: [flushReturned], timeout: 1)
         fileManager.allowWrite.signal()
         wait(for: [completion], timeout: 2)
     }
