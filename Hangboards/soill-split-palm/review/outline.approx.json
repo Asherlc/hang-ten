@@ -1,0 +1,748 @@
+{
+  "canvas": {
+    "height": 1254,
+    "width": 1254
+  },
+  "coordinateSpace": "normalized",
+  "outlines": [
+    {
+      "bounds": {
+        "height": 0.05499999999999999,
+        "width": 0.2,
+        "x": 0.04,
+        "y": 0.34
+      },
+      "confidence": "approximate",
+      "id": "hold-01",
+      "kind": "sloper",
+      "label": "Manual sloper 1",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.0521,
+              0.34
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.22790000000000002,
+              0.34
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.23458264547258,
+                0.34
+              ],
+              [
+                0.24000000000000002,
+                0.34541735452742
+              ]
+            ],
+            "to": [
+              0.24000000000000002,
+              0.3521
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.24000000000000002,
+              0.3829
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.24000000000000002,
+                0.38958264547258004
+              ],
+              [
+                0.23458264547258,
+                0.395
+              ]
+            ],
+            "to": [
+              0.22790000000000002,
+              0.395
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.0521,
+              0.395
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.045417354527420004,
+                0.395
+              ],
+              [
+                0.04,
+                0.38958264547258004
+              ]
+            ],
+            "to": [
+              0.04,
+              0.3829
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.04,
+              0.3521
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.04,
+                0.34541735452742
+              ],
+              [
+                0.045417354527420004,
+                0.34
+              ]
+            ],
+            "to": [
+              0.0521,
+              0.34
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
+        "height": 0.05499999999999999,
+        "width": 0.19999999999999996,
+        "x": 0.76,
+        "y": 0.34
+      },
+      "confidence": "approximate",
+      "id": "hold-02",
+      "kind": "sloper",
+      "label": "Manual sloper 2",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.7721,
+              0.34
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.9479,
+              0.34
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.95458264547258,
+                0.34
+              ],
+              [
+                0.96,
+                0.34541735452742
+              ]
+            ],
+            "to": [
+              0.96,
+              0.3521
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.96,
+              0.3829
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.96,
+                0.38958264547258004
+              ],
+              [
+                0.95458264547258,
+                0.395
+              ]
+            ],
+            "to": [
+              0.9479,
+              0.395
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.7721,
+              0.395
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.76541735452742,
+                0.395
+              ],
+              [
+                0.76,
+                0.38958264547258004
+              ]
+            ],
+            "to": [
+              0.76,
+              0.3829
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.76,
+              0.3521
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.76,
+                0.34541735452742
+              ],
+              [
+                0.76541735452742,
+                0.34
+              ]
+            ],
+            "to": [
+              0.7721,
+              0.34
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
+        "height": 0.05499999999999994,
+        "width": 0.18,
+        "x": 0.04,
+        "y": 0.45000000000000007
+      },
+      "confidence": "approximate",
+      "id": "hold-03",
+      "kind": "rail",
+      "label": "Manual rail 3",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.0521,
+              0.45000000000000007
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.20789999999999997,
+              0.45000000000000007
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.21458264547258,
+                0.45000000000000007
+              ],
+              [
+                0.22,
+                0.45541735452742005
+              ]
+            ],
+            "to": [
+              0.22,
+              0.46209999999999996
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.22,
+              0.49289999999999995
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.22,
+                0.49958264547258
+              ],
+              [
+                0.21458264547258,
+                0.505
+              ]
+            ],
+            "to": [
+              0.20789999999999997,
+              0.505
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.0521,
+              0.505
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.045417354527420004,
+                0.505
+              ],
+              [
+                0.04,
+                0.49958264547258
+              ]
+            ],
+            "to": [
+              0.04,
+              0.49289999999999995
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.04,
+              0.46209999999999996
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.04,
+                0.45541735452742005
+              ],
+              [
+                0.045417354527420004,
+                0.45000000000000007
+              ]
+            ],
+            "to": [
+              0.0521,
+              0.45000000000000007
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
+        "height": 0.05499999999999994,
+        "width": 0.17999999999999994,
+        "x": 0.78,
+        "y": 0.45000000000000007
+      },
+      "confidence": "approximate",
+      "id": "hold-04",
+      "kind": "rail",
+      "label": "Manual rail 4",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.7921,
+              0.45000000000000007
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.9479,
+              0.45000000000000007
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.95458264547258,
+                0.45000000000000007
+              ],
+              [
+                0.96,
+                0.45541735452742005
+              ]
+            ],
+            "to": [
+              0.96,
+              0.46209999999999996
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.96,
+              0.49289999999999995
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.96,
+                0.49958264547258
+              ],
+              [
+                0.95458264547258,
+                0.505
+              ]
+            ],
+            "to": [
+              0.9479,
+              0.505
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.7921,
+              0.505
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.78541735452742,
+                0.505
+              ],
+              [
+                0.78,
+                0.49958264547258
+              ]
+            ],
+            "to": [
+              0.78,
+              0.49289999999999995
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.78,
+              0.46209999999999996
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.78,
+                0.45541735452742005
+              ],
+              [
+                0.78541735452742,
+                0.45000000000000007
+              ]
+            ],
+            "to": [
+              0.7921,
+              0.45000000000000007
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
+        "height": 0.05500000000000005,
+        "width": 0.14,
+        "x": 0.14,
+        "y": 0.56
+      },
+      "confidence": "approximate",
+      "id": "hold-05",
+      "kind": "edge",
+      "label": "Manual edge 5",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.1521,
+              0.56
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.2679,
+              0.56
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.27458264547258004,
+                0.56
+              ],
+              [
+                0.28,
+                0.56541735452742
+              ]
+            ],
+            "to": [
+              0.28,
+              0.5721
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.28,
+              0.6029000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.28,
+                0.6095826454725801
+              ],
+              [
+                0.27458264547258004,
+                0.6150000000000001
+              ]
+            ],
+            "to": [
+              0.2679,
+              0.6150000000000001
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.1521,
+              0.6150000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.14541735452742002,
+                0.6150000000000001
+              ],
+              [
+                0.14,
+                0.6095826454725801
+              ]
+            ],
+            "to": [
+              0.14,
+              0.6029000000000001
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.14,
+              0.5721
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.14,
+                0.56541735452742
+              ],
+              [
+                0.14541735452742002,
+                0.56
+              ]
+            ],
+            "to": [
+              0.1521,
+              0.56
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "bounds": {
+        "height": 0.05500000000000005,
+        "width": 0.14000000000000012,
+        "x": 0.72,
+        "y": 0.56
+      },
+      "confidence": "approximate",
+      "id": "hold-06",
+      "kind": "edge",
+      "label": "Manual edge 6",
+      "notes": "Manually traced from the source PNG; cavity paths follow the inner usable boundary and raised paths follow the full outer silhouette.",
+      "path": {
+        "closed": true,
+        "commands": [
+          {
+            "command": "M",
+            "to": [
+              0.7321,
+              0.56
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.8479,
+              0.56
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.8545826454725801,
+                0.56
+              ],
+              [
+                0.8600000000000001,
+                0.56541735452742
+              ]
+            ],
+            "to": [
+              0.8600000000000001,
+              0.5721
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.8600000000000001,
+              0.6029000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.8600000000000001,
+                0.6095826454725801
+              ],
+              [
+                0.8545826454725801,
+                0.6150000000000001
+              ]
+            ],
+            "to": [
+              0.8479,
+              0.6150000000000001
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.7321,
+              0.6150000000000001
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.72541735452742,
+                0.6150000000000001
+              ],
+              [
+                0.72,
+                0.6095826454725801
+              ]
+            ],
+            "to": [
+              0.72,
+              0.6029000000000001
+            ]
+          },
+          {
+            "command": "L",
+            "to": [
+              0.72,
+              0.5721
+            ]
+          },
+          {
+            "command": "C",
+            "controls": [
+              [
+                0.72,
+                0.56541735452742
+              ],
+              [
+                0.72541735452742,
+                0.56
+              ]
+            ],
+            "to": [
+              0.7321,
+              0.56
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "references": [
+    {
+      "hints": [
+        "two slopers",
+        "pinch",
+        "multiple crimp sizes and angles"
+      ],
+      "title": "Split Palm",
+      "url": "https://soillholds.com/products/split-palm"
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceImage": "../soill-split-palm.png"
+}
