@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "boardID": "trango.rock-prodigy-training-center",
+  "semanticHolds": {
+    "deep-two-finger-pocket": {
+      "holdIDs": [
+        "trango.rptc.left.deep-mr-pocket",
+        "trango.rptc.right.deep-mr-pocket"
+      ]
+    },
+    "large-open-hand-rail": {
+      "holdIDs": [
+        "trango.rptc.left.large-open-rail",
+        "trango.rptc.right.large-open-rail"
+      ]
+    },
+    "shallow-three-finger-slot": {
+      "holdIDs": [
+        "trango.rptc.left.three-finger-slot",
+        "trango.rptc.right.three-finger-slot"
+      ]
+    },
+    "sloper": {
+      "holdIDs": [
+        "trango.rptc.left.sloper",
+        "trango.rptc.right.sloper"
+      ]
+    },
+    "thin-crimp": {
+      "holdIDs": [
+        "trango.rptc.left.thin-crimp",
+        "trango.rptc.right.thin-crimp"
+      ]
+    },
+    "warmup-jug": {
+      "holdIDs": [
+        "trango.rptc.left.top-jug",
+        "trango.rptc.right.top-jug"
+      ]
+    },
+    "wide-pinch": {
+      "holdIDs": [
+        "trango.rptc.left.wide-pinch",
+        "trango.rptc.right.wide-pinch"
+      ]
+    }
+  }
+}

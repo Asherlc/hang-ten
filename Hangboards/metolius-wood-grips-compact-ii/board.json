@@ -6,373 +6,85 @@
   "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards",
   "dimensions": "24\" × 6.2\"",
   "aspectRatio": 3.88,
-  "lifecycle": "shipped",
+  "presentation": {
+    "assetPath": "assets/CompactBoardIllustration.png"
+  },
   "holds": [
     {
       "id": "jug-left",
-      "name": "Left outer jug",
-      "shortLabel": "J",
-      "detail": "Open-hand jug",
-      "kind": "jug",
-      "frame": {
-        "x": 0.000,
-        "y": 0.000,
-        "width": 0.165,
-        "height": 0.255
-      },
-      "features": [
-        "jug"
-      ],
-      "regionId": 1
+      "name": "Left outer jug"
     },
     {
       "id": "sloper-flat-left",
-      "name": "Left 56 mm flat sloper",
-      "shortLabel": "56F",
-      "detail": "Flat open-hand sloper",
-      "kind": "sloper",
-      "frame": {
-        "x": 0.158,
-        "y": 0.035,
-        "width": 0.190,
-        "height": 0.128
-      },
-      "features": [
-        "largeSlope"
-      ],
-      "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "regionId": 2
+      "name": "Left 56 mm flat sloper"
     },
     {
       "id": "sloper-round-center",
-      "name": "Center 56 mm round sloper",
-      "shortLabel": "56R",
-      "detail": "Round open-hand sloper",
-      "kind": "sloper",
-      "frame": {
-        "x": 0.352,
-        "y": 0.035,
-        "width": 0.296,
-        "height": 0.128
-      },
-      "features": [
-        "roundSloper"
-      ],
-      "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "regionId": 3
+      "name": "Center 56 mm round sloper"
     },
     {
       "id": "sloper-flat-right",
-      "name": "Right 56 mm flat sloper",
-      "shortLabel": "56F",
-      "detail": "Flat open-hand sloper",
-      "kind": "sloper",
-      "frame": {
-        "x": 0.652,
-        "y": 0.035,
-        "width": 0.190,
-        "height": 0.128
-      },
-      "features": [
-        "largeSlope"
-      ],
-      "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "regionId": 4
+      "name": "Right 56 mm flat sloper"
     },
     {
       "id": "jug-right",
-      "name": "Right outer jug",
-      "shortLabel": "J",
-      "detail": "Open-hand jug",
-      "kind": "jug",
-      "frame": {
-        "x": 0.835,
-        "y": 0.000,
-        "width": 0.165,
-        "height": 0.255
-      },
-      "features": [
-        "jug"
-      ],
-      "regionId": 5
+      "name": "Right outer jug"
     },
     {
       "id": "edge-29-left",
-      "name": "Left 29 mm edge",
-      "shortLabel": "29E",
-      "detail": "Large edge",
-      "kind": "edge",
-      "frame": {
-        "x": 0.021,
-        "y": 0.245,
-        "width": 0.165,
-        "height": 0.270
-      },
-      "features": [
-        "largeEdge"
-      ],
-      "sizeMillimeters": 29,
-      "regionId": 6
+      "name": "Left 29 mm edge"
     },
     {
       "id": "pocket-29-three-left",
-      "name": "Left 29 mm three-finger pocket",
-      "shortLabel": "29·3",
-      "detail": "Three-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.199,
-        "y": 0.365,
-        "width": 0.109,
-        "height": 0.148
-      },
-      "features": [
-        "pocket",
-        "threeFingerPocket"
-      ],
-      "sizeMillimeters": 29,
-      "gripType": "threeFingerPocket",
-      "regionId": 7
+      "name": "Left 29 mm three-finger pocket"
     },
     {
       "id": "pocket-29-two-left",
-      "name": "Left 29 mm two-finger pocket",
-      "shortLabel": "29·2",
-      "detail": "Two-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.328,
-        "y": 0.370,
-        "width": 0.077,
-        "height": 0.147
-      },
-      "features": [
-        "pocket",
-        "twoFingerPocket"
-      ],
-      "sizeMillimeters": 29,
-      "gripType": "twoFingerPocket",
-      "regionId": 8
+      "name": "Left 29 mm two-finger pocket"
     },
     {
       "id": "pocket-29-four-center",
-      "name": "Center 29 mm four-finger pocket",
-      "shortLabel": "29·4",
-      "detail": "Four-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.425,
-        "y": 0.365,
-        "width": 0.150,
-        "height": 0.148
-      },
-      "features": [
-        "pocket",
-        "fourFingerPocket"
-      ],
-      "sizeMillimeters": 29,
-      "gripType": "fourFingerPocket",
-      "regionId": 9
+      "name": "Center 29 mm four-finger pocket"
     },
     {
       "id": "pocket-29-two-right",
-      "name": "Right 29 mm two-finger pocket",
-      "shortLabel": "29·2",
-      "detail": "Two-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.595,
-        "y": 0.370,
-        "width": 0.077,
-        "height": 0.147
-      },
-      "features": [
-        "pocket",
-        "twoFingerPocket"
-      ],
-      "sizeMillimeters": 29,
-      "gripType": "twoFingerPocket",
-      "regionId": 10
+      "name": "Right 29 mm two-finger pocket"
     },
     {
       "id": "pocket-29-three-right",
-      "name": "Right 29 mm three-finger pocket",
-      "shortLabel": "29·3",
-      "detail": "Three-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.692,
-        "y": 0.365,
-        "width": 0.109,
-        "height": 0.148
-      },
-      "features": [
-        "pocket",
-        "threeFingerPocket"
-      ],
-      "sizeMillimeters": 29,
-      "gripType": "threeFingerPocket",
-      "regionId": 11
+      "name": "Right 29 mm three-finger pocket"
     },
     {
       "id": "edge-29-right",
-      "name": "Right 29 mm edge",
-      "shortLabel": "29E",
-      "detail": "Large edge",
-      "kind": "edge",
-      "frame": {
-        "x": 0.814,
-        "y": 0.245,
-        "width": 0.165,
-        "height": 0.270
-      },
-      "features": [
-        "largeEdge"
-      ],
-      "sizeMillimeters": 29,
-      "regionId": 12
+      "name": "Right 29 mm edge"
     },
     {
       "id": "edge-19-left",
-      "name": "Left 19 mm edge",
-      "shortLabel": "19E",
-      "detail": "Small edge",
-      "kind": "edge",
-      "frame": {
-        "x": 0.035,
-        "y": 0.620,
-        "width": 0.160,
-        "height": 0.245
-      },
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ],
-      "sizeMillimeters": 19,
-      "regionId": 13
+      "name": "Left 19 mm edge"
     },
     {
       "id": "pocket-19-three-left",
-      "name": "Left 19 mm three-finger pocket",
-      "shortLabel": "19·3",
-      "detail": "Three-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.216,
-        "y": 0.733,
-        "width": 0.104,
-        "height": 0.140
-      },
-      "features": [
-        "pocket",
-        "threeFingerPocket"
-      ],
-      "sizeMillimeters": 19,
-      "gripType": "threeFingerPocket",
-      "regionId": 14
+      "name": "Left 19 mm three-finger pocket"
     },
     {
       "id": "pocket-19-three-right",
-      "name": "Right 19 mm three-finger pocket",
-      "shortLabel": "19·3",
-      "detail": "Three-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.680,
-        "y": 0.733,
-        "width": 0.104,
-        "height": 0.140
-      },
-      "features": [
-        "pocket",
-        "threeFingerPocket"
-      ],
-      "sizeMillimeters": 19,
-      "gripType": "threeFingerPocket",
-      "regionId": 18
+      "name": "Right 19 mm three-finger pocket"
     },
     {
       "id": "pocket-19-two-left",
-      "name": "Left 19 mm two-finger pocket",
-      "shortLabel": "19·2",
-      "detail": "Two-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.336,
-        "y": 0.733,
-        "width": 0.073,
-        "height": 0.140
-      },
-      "features": [
-        "pocket",
-        "twoFingerPocket"
-      ],
-      "sizeMillimeters": 19,
-      "gripType": "twoFingerPocket",
-      "regionId": 15
+      "name": "Left 19 mm two-finger pocket"
     },
     {
       "id": "pocket-19-two-right",
-      "name": "Right 19 mm two-finger pocket",
-      "shortLabel": "19·2",
-      "detail": "Two-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.591,
-        "y": 0.733,
-        "width": 0.073,
-        "height": 0.140
-      },
-      "features": [
-        "pocket",
-        "twoFingerPocket"
-      ],
-      "sizeMillimeters": 19,
-      "gripType": "twoFingerPocket",
-      "regionId": 17
+      "name": "Right 19 mm two-finger pocket"
     },
     {
       "id": "pocket-19-four-center",
-      "name": "Center 19 mm four-finger pocket",
-      "shortLabel": "19·4",
-      "detail": "Four-finger pocket",
-      "kind": "pocket",
-      "frame": {
-        "x": 0.425,
-        "y": 0.733,
-        "width": 0.150,
-        "height": 0.140
-      },
-      "features": [
-        "pocket",
-        "fourFingerPocket"
-      ],
-      "sizeMillimeters": 19,
-      "gripType": "fourFingerPocket",
-      "regionId": 16
+      "name": "Center 19 mm four-finger pocket"
     },
     {
       "id": "edge-19-right",
-      "name": "Right 19 mm edge",
-      "shortLabel": "19E",
-      "detail": "Small edge",
-      "kind": "edge",
-      "frame": {
-        "x": 0.805,
-        "y": 0.620,
-        "width": 0.160,
-        "height": 0.245
-      },
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ],
-      "sizeMillimeters": 19,
-      "regionId": 19
+      "name": "Right 19 mm edge"
     }
-  ],
-  "onboardingRuns": []
+  ]
 }

@@ -67,6 +67,11 @@
       "status": "draft"
     },
     {
+      "id": "metolius.wood-grips-compact-ii",
+      "path": "metolius-wood-grips-compact-ii",
+      "status": "approved"
+    },
+    {
       "id": "moon-armstrong",
       "path": "moon-armstrong",
       "status": "draft"
@@ -127,9 +132,9 @@
       "status": "draft"
     },
     {
-      "id": "trango-rock-prodigy-training-center",
+      "id": "trango.rock-prodigy-training-center",
       "path": "trango-rock-prodigy-training-center",
-      "status": "draft"
+      "status": "approved"
     },
     {
       "id": "yy-verticalboard-evo",

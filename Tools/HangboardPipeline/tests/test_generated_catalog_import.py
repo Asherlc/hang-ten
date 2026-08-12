@@ -18,10 +18,10 @@ MOVED_DRAFT_SLUGS = {
     "soill-training-tiles", "target10a-linebreaker-base", "tension-grindstone",
     "tension-honestone", "tension-whetstone", "trango-rock-prodigy-forge",
     "trango-rock-prodigy-natural", "trango-rock-prodigy-pivot",
-    "trango-rock-prodigy-training-center", "yy-verticalboard-evo",
-    "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one",
-    "zlagboard-evo", "zlagboard-pro",
+    "yy-verticalboard-evo", "yy-verticalboard-first", "yy-verticalboard-light",
+    "yy-verticalboard-one", "zlagboard-evo", "zlagboard-pro",
 }
+APPROVED_IMPORTED_SLUG = "trango-rock-prodigy-training-center"
 
 
 def _primary_images(source_root: Path) -> dict[str, Path]:
@@ -111,7 +111,9 @@ def test_repository_retains_the_moved_generated_catalog_as_draft_packages() -> N
     assert not relevant_source_files
 
     catalog = json.loads((REPO_ROOT / "Hangboards" / "catalog.json").read_text(encoding="utf-8"))
-    assert len(catalog["boards"]) == len(MOVED_DRAFT_SLUGS)
+    # The 32 imported products now comprise 31 standalone drafts plus the
+    # approved Rock Prodigy package; Compact II is the other approved runtime board.
+    assert len(catalog["boards"]) == len(MOVED_DRAFT_SLUGS) + 2
     for slug in MOVED_DRAFT_SLUGS:
         package_root = REPO_ROOT / "Hangboards" / slug
         matching_entries = [entry for entry in catalog["boards"] if entry["path"] == slug]
@@ -122,10 +124,31 @@ def test_repository_retains_the_moved_generated_catalog_as_draft_packages() -> N
         assert "unreviewed-generated-catalog" in (package_root / "README.md").read_text(encoding="utf-8")
         for forbidden in ("board.json", "evidence.json", "semantics.json", "artwork.json"):
             assert not (package_root / forbidden).exists()
-    assert not [
-        entry
-        for entry in catalog["boards"]
-        if entry["path"] == "metolius-wood-grips-compact-ii"
+
+    approved_import = [entry for entry in catalog["boards"] if entry["path"] == APPROVED_IMPORTED_SLUG]
+    assert approved_import == [
+        {
+            "id": "trango.rock-prodigy-training-center",
+            "path": APPROVED_IMPORTED_SLUG,
+            "status": "approved",
+        }
+    ]
+    approved_root = REPO_ROOT / "Hangboards" / APPROVED_IMPORTED_SLUG
+    quarantine = approved_root / "review" / "unreviewed-generated-catalog"
+    assert (quarantine / "assets" / "primary.png").is_file()
+    assert (quarantine / "assets" / "flat.png").is_file()
+    assert (quarantine / "review" / "outline.approx.json").is_file()
+    assert not (approved_root / "assets").exists()
+
+    compact_entries = [
+        entry for entry in catalog["boards"] if entry["path"] == "metolius-wood-grips-compact-ii"
+    ]
+    assert compact_entries == [
+        {
+            "id": "metolius.wood-grips-compact-ii",
+            "path": "metolius-wood-grips-compact-ii",
+            "status": "approved",
+        }
     ]
 
 

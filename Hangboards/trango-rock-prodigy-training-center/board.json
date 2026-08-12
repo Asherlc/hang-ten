@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "id": "trango.rock-prodigy-training-center",
+  "manufacturer": "Trango",
+  "name": "Rock Prodigy Training Center",
+  "productURL": "https://trango.com/products/rock-prodigy-training-center",
+  "dimensions": "18.2\" × 12.1\" assembled (two 9.1\" × 12.1\" pieces)",
+  "aspectRatio": 1.5041322314049586,
+  "holds": [
+    {
+      "id": "trango.rptc.left.top-jug",
+      "name": "Left top jug"
+    },
+    {
+      "id": "trango.rptc.right.top-jug",
+      "name": "Right top jug"
+    },
+    {
+      "id": "trango.rptc.left.large-open-rail",
+      "name": "Left 20–33 mm variable-depth rail"
+    },
+    {
+      "id": "trango.rptc.right.large-open-rail",
+      "name": "Right 20–33 mm variable-depth rail"
+    },
+    {
+      "id": "trango.rptc.left.small-crimp-rail",
+      "name": "Left 10–24 mm variable-depth rail"
+    },
+    {
+      "id": "trango.rptc.right.small-crimp-rail",
+      "name": "Right 10–24 mm variable-depth rail"
+    },
+    {
+      "id": "trango.rptc.left.three-finger-slot",
+      "name": "Left 38 mm three-finger slot"
+    },
+    {
+      "id": "trango.rptc.right.three-finger-slot",
+      "name": "Right 38 mm three-finger slot"
+    },
+    {
+      "id": "trango.rptc.left.thin-crimp",
+      "name": "Left 7.5 mm thin crimp"
+    },
+    {
+      "id": "trango.rptc.right.thin-crimp",
+      "name": "Right 7.5 mm thin crimp"
+    },
+    {
+      "id": "trango.rptc.left.deep-mr-pocket",
+      "name": "Left 29 mm deep MR pocket"
+    },
+    {
+      "id": "trango.rptc.right.deep-mr-pocket",
+      "name": "Right 29 mm deep MR pocket"
+    },
+    {
+      "id": "trango.rptc.left.shallow-mr-pocket",
+      "name": "Left 19 mm shallow MR pocket"
+    },
+    {
+      "id": "trango.rptc.right.shallow-mr-pocket",
+      "name": "Right 19 mm shallow MR pocket"
+    },
+    {
+      "id": "trango.rptc.left.medium-im-pocket",
+      "name": "Left 26–36 mm medium IM pocket"
+    },
+    {
+      "id": "trango.rptc.right.medium-im-pocket",
+      "name": "Right 26–36 mm medium IM pocket"
+    },
+    {
+      "id": "trango.rptc.left.shallow-im-pocket",
+      "name": "Left 19–24 mm shallow IM pocket"
+    },
+    {
+      "id": "trango.rptc.right.shallow-im-pocket",
+      "name": "Right 19–24 mm shallow IM pocket"
+    },
+    {
+      "id": "trango.rptc.left.wide-pinch",
+      "name": "Left 87 mm wide pinch"
+    },
+    {
+      "id": "trango.rptc.right.wide-pinch",
+      "name": "Right 87 mm wide pinch"
+    },
+    {
+      "id": "trango.rptc.left.medium-pinch",
+      "name": "Left 44 mm medium pinch"
+    },
+    {
+      "id": "trango.rptc.right.medium-pinch",
+      "name": "Right 44 mm medium pinch"
+    },
+    {
+      "id": "trango.rptc.left.small-pinch",
+      "name": "Left 18 mm small pinch"
+    },
+    {
+      "id": "trango.rptc.right.small-pinch",
+      "name": "Right 18 mm small pinch"
+    },
+    {
+      "id": "trango.rptc.left.sloper",
+      "name": "Left outer sloper"
+    },
+    {
+      "id": "trango.rptc.right.sloper",
+      "name": "Right outer sloper"
+    }
+  ]
+}

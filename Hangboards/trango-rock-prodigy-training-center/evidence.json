@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 1,
+  "boardID": "trango.rock-prodigy-training-center",
+  "checkedAt": "2026-08-10",
+  "sources": [
+    {
+      "id": "product-page",
+      "title": "Trango Rock Prodigy Training Center",
+      "url": "https://trango.com/products/rock-prodigy-training-center"
+    },
+    {
+      "id": "use-instructions",
+      "title": "Rock Prodigy Training Center Use Instructions",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"
+    },
+    {
+      "id": "depth-guide",
+      "title": "Rock Prodigy Training Center Depth Guide",
+      "url": "https://www.mountainexperience.it/risorse/Rock_Prodigy_Training_Center_Depth_Guide.pdf"
+    },
+    {
+      "id": "product-image",
+      "title": "Rock Prodigy Training Center main product image",
+      "url": "https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946"
+    }
+  ],
+  "fieldEvidence": {
+    "manufacturer": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "name": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "productURL": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "dimensions": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "aspectRatio": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "holdEvidence": {
+    "trango.rptc.left.top-jug": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.top-jug": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.large-open-rail": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.large-open-rail": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.small-crimp-rail": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.small-crimp-rail": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.three-finger-slot": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.three-finger-slot": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.thin-crimp": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.thin-crimp": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.deep-mr-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.deep-mr-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.shallow-mr-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.shallow-mr-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.medium-im-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.medium-im-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.shallow-im-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.shallow-im-pocket": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.wide-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.wide-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.medium-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.medium-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.small-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.small-pinch": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.left.sloper": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "trango.rptc.right.sloper": {
+      "sourceIDs": [
+        "depth-guide",
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "semanticEvidence": {
+    "deep-two-finger-pocket": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "large-open-hand-rail": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "shallow-three-finger-slot": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "thin-crimp": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "warmup-jug": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "wide-pinch": {
+      "sourceIDs": [
+        "use-instructions",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "artworkEvidence": {
+    "silhouette": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-main-face": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-upper-tab": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-lower-tab": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-outer-block": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-top-jug": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.center-separator": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-main-face": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-upper-tab": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-lower-tab": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-outer-block": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-top-jug": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.top-jug.surface": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.top-jug.surface": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.large-open-rail.rail": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.large-open-rail.rail": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.small-crimp-rail.rail": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.small-crimp-rail.rail": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.three-finger-slot.slot": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.three-finger-slot.slot": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.thin-crimp.crimp": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.thin-crimp.crimp": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.deep-mr-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.deep-mr-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.shallow-mr-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.shallow-mr-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.medium-im-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.medium-im-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.shallow-im-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.shallow-im-pocket.pocket": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.wide-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.wide-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.medium-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.medium-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.small-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.small-pinch.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.left.sloper.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.trango.rptc.right.sloper.outer-contact": {
+      "sourceIDs": [
+        "product-image",
+        "depth-guide"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "assetEvidence": {}
+}

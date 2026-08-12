@@ -6,41 +6,422 @@
     {
       "id": "product-page",
       "title": "Metolius Wood Grips II Training Boards",
-      "url": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards",
-      "supports": ["identity", "dimensions", "front-geometry"]
+      "url": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards"
     },
     {
       "id": "hold-depth-diagram",
       "title": "Metolius Wood Grips board depths",
-      "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
-      "supports": ["hold-depths", "hold-types", "hold-finger-capacity"]
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428"
     },
     {
       "id": "training-board-manual",
       "title": "Metolius Training Board Instructions",
-      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826",
-      "supports": ["installation", "training-guidance"]
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826"
     }
   ],
+  "fieldEvidence": {
+    "manufacturer": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "name": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "productURL": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "dimensions": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "aspectRatio": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
   "holdEvidence": {
-    "jug-left": ["hold-depth-diagram"],
-    "jug-right": ["hold-depth-diagram"],
-    "sloper-flat-left": ["hold-depth-diagram"],
-    "sloper-round-center": ["hold-depth-diagram"],
-    "sloper-flat-right": ["hold-depth-diagram"],
-    "edge-29-left": ["hold-depth-diagram"],
-    "pocket-29-three-left": ["hold-depth-diagram"],
-    "pocket-29-two-left": ["hold-depth-diagram"],
-    "pocket-29-four-center": ["hold-depth-diagram"],
-    "pocket-29-two-right": ["hold-depth-diagram"],
-    "pocket-29-three-right": ["hold-depth-diagram"],
-    "edge-29-right": ["hold-depth-diagram"],
-    "edge-19-left": ["hold-depth-diagram"],
-    "pocket-19-three-left": ["hold-depth-diagram"],
-    "pocket-19-two-left": ["hold-depth-diagram"],
-    "pocket-19-four-center": ["hold-depth-diagram"],
-    "pocket-19-two-right": ["hold-depth-diagram"],
-    "pocket-19-three-right": ["hold-depth-diagram"],
-    "edge-19-right": ["hold-depth-diagram"]
+    "jug-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "semanticEvidence": {
+    "edge-19": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "flat-slopers": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "outer-jugs": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "round-sloper": {
+      "sourceIDs": [
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "artworkEvidence": {
+    "silhouette": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.top-plane": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.middle-separator": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.bottom-plane": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-top-seam": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-top-seam": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.jug-left-top-cap": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.jug-right-top-cap": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-flat-left-top-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-flat-right-top-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-round-center-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-29-left-upper-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-29-right-upper-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-three-left-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-three-right-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-two-left-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-two-right-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-four-center-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-19-left-lower-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-19-right-lower-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-three-left-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-three-right-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-two-left-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-two-right-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-four-center-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "assetEvidence": {
+    "assets/CompactBoardIllustration.png": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "external-generative-adaptation"
+    },
+    "assets/WoodGripsCompactII.jpg": [
+      "product-page"
+    ]
   }
 }
