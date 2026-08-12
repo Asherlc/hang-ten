@@ -431,6 +431,7 @@ final class AppStore: ObservableObject {
         hasRequestedHealthAuthorization = true
         defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
         workoutHistoryService.enableHealthKitSync()
+        telemetry.replay.stop()
         healthKitService.requestAuthorization { [weak self] state, error in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -443,6 +444,7 @@ final class AppStore: ObservableObject {
                     self.telemetry.tracking.track(.healthAuthorizationFinished(outcome: outcome))
                 }
                 self.refreshWorkoutHistory()
+                self.telemetry.replay.start()
             }
         }
     }

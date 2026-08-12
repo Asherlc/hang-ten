@@ -73,6 +73,28 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(telemetry.events, [.healthAuthorizationFinished(outcome: .denied)])
     }
 
+    func testHealthAuthorizationPausesReplayUntilTheAuthorizationResultIsHandled() {
+        let telemetry = RecordingTelemetry()
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .denied
+        let store = AppStore(
+            healthKitService: healthStore,
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.requestHealthAuthorization()
+
+        XCTAssertEqual(telemetry.actions, [.replayStopped])
+        waitUntil {
+            telemetry.actions == [
+                .replayStopped,
+                .healthAuthorizationFinished(outcome: .denied),
+                .replayStarted
+            ]
+        }
+    }
+
     func testHealthAuthorizationNotDeterminedDoesNotEmitOutcome() {
         let telemetry = RecordingTelemetry()
         let healthStore = FakeWorkoutHealthStore()
@@ -1150,24 +1172,44 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
 }
 
 @MainActor
-private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting {
+private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting, SessionReplayControlling {
+    enum Action: Equatable {
+        case healthAuthorizationFinished(outcome: HangTenTelemetryEvent.HealthAuthorizationOutcome)
+        case replayStarted
+        case replayStopped
+    }
+
     private(set) var events: [HangTenTelemetryEvent] = []
     private(set) var diagnostics: [HangTenDiagnostic] = []
+    private(set) var actions: [Action] = []
 
     lazy var dependencies = TelemetryDependencies(
             tracking: self,
             diagnostics: self,
             flags: NoOpTelemetry(),
-            replay: NoOpTelemetry(),
+            replay: self,
             isNoOp: false
         )
 
+    deinit {}
+
     func track(_ event: HangTenTelemetryEvent) {
         events.append(event)
+        if case let .healthAuthorizationFinished(outcome) = event {
+            actions.append(.healthAuthorizationFinished(outcome: outcome))
+        }
     }
 
     func record(_ diagnostic: HangTenDiagnostic) {
         diagnostics.append(diagnostic)
+    }
+
+    func start() {
+        actions.append(.replayStarted)
+    }
+
+    func stop() {
+        actions.append(.replayStopped)
     }
 }
 
@@ -1176,6 +1218,8 @@ private final class FailingCustomRoutineStore: CustomRoutineStoring {
 
     let routines: [CustomRoutineDefinition] = []
     let persistenceError: String? = nil
+
+    deinit {}
 
     func save(_ routine: CustomRoutineDefinition) throws {
         throw Failure()
