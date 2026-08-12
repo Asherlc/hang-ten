@@ -278,9 +278,10 @@ jobs:
           python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-release-venv/bin/python"
           runtime_dist_dir="$release_dir/signed-runtime-dist"
           runtime_work_dir="$RUNNER_TEMP/hangboard-workbench-signed-runtime-build"
-          app_bundle="$release_dir/hangboard-workbench.app"
+          app_bundle="$release_dir/Hangboard Workbench.app"
           app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
           archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
           api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
           smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
           app_pid=""
@@ -413,6 +414,8 @@ jobs:
           rm -f "$archive"
           cd "$release_dir"
           ditto -c -k --keepParent "$app_bundle" "$archive"
+          unzip -Z1 "$archive" | awk -F/ 'NF {print $1}' | sort -u > "$zip_top_levels"
+          test "$(cat "$zip_top_levels")" = "Hangboard Workbench.app"
           shasum -a 256 hangboard-workbench-macos-arm64.zip > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 

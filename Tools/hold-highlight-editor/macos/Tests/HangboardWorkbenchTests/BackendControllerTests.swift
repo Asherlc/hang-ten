@@ -90,6 +90,121 @@ final class BackendControllerTests: XCTestCase {
         XCTAssertEqual(process.waitCount, 1)
     }
 
+    func testUnexpectedPostStartExitIsDeliveredWithItsSessionGeneration() async throws {
+        let process = FakeBackendProcess()
+        let controller = BackendController(
+            executableURL: URL(fileURLWithPath: "/private/tmp/hangboard-workbench"),
+            processFactory: { process },
+            healthProbe: { _ in true },
+            sleep: { _ in },
+            portSelector: { 4317 }
+        )
+        let session = try await controller.startSession(repositoryRoot: try makeCheckout())
+        let exitTask = Task { await firstExit(in: session.unexpectedExits) }
+
+        process.exitUnexpectedly(status: 17, stderr: "backend crashed")
+
+        let receivedExit = await exitTask.value
+        let exit = try XCTUnwrap(receivedExit)
+        XCTAssertEqual(exit.sessionID, session.id)
+        XCTAssertEqual(exit.status, 17)
+        XCTAssertEqual(exit.stderrText, "backend crashed")
+        XCTAssertTrue(exit.localizedDescription.contains("exited unexpectedly"))
+        XCTAssertTrue(exit.localizedDescription.contains("backend crashed"))
+    }
+
+    func testIntentionalStopFinishesSessionWithoutUnexpectedExit() async throws {
+        let process = FakeBackendProcess()
+        let controller = BackendController(
+            executableURL: URL(fileURLWithPath: "/private/tmp/hangboard-workbench"),
+            processFactory: { process },
+            healthProbe: { _ in true },
+            sleep: { _ in },
+            portSelector: { 4317 }
+        )
+        let session = try await controller.startSession(repositoryRoot: try makeCheckout())
+        let exitTask = Task { await firstExit(in: session.unexpectedExits) }
+
+        await controller.stop(session: session)
+
+        let receivedExit = await exitTask.value
+        XCTAssertNil(receivedExit)
+    }
+
+    @MainActor
+    func testCheckoutReplacementCancellationPreservesTheActiveSessionSurfaceAndSelection() {
+        let coordinator = WorkbenchSessionCoordinator()
+        var events: [String] = []
+        var backendGeneration = "active-backend"
+        var webViewLocation = "http://127.0.0.1:4317/"
+        var rememberedCheckout = "/checkouts/active"
+
+        coordinator.requestCheckoutReplacement(
+            confirmDiscarding: { completion in
+                events.append("confirm")
+                completion(false)
+            },
+            performReplacement: {
+                events.append("stop")
+                backendGeneration = "replacement-backend"
+                webViewLocation = "http://127.0.0.1:4318/"
+                rememberedCheckout = "/checkouts/replacement"
+            }
+        )
+
+        XCTAssertEqual(events, ["confirm"])
+        XCTAssertEqual(backendGeneration, "active-backend")
+        XCTAssertEqual(webViewLocation, "http://127.0.0.1:4317/")
+        XCTAssertEqual(rememberedCheckout, "/checkouts/active")
+    }
+
+    @MainActor
+    func testCheckoutReplacementConfirmationPrecedesBackendReplacement() {
+        let coordinator = WorkbenchSessionCoordinator()
+        var events: [String] = []
+
+        coordinator.requestCheckoutReplacement(
+            confirmDiscarding: { completion in
+                events.append("confirm")
+                completion(true)
+            },
+            performReplacement: {
+                events.append("stop-and-replace")
+            }
+        )
+
+        XCTAssertEqual(events, ["confirm", "stop-and-replace"])
+    }
+
+    @MainActor
+    func testStaleBackendExitCannotOverwriteTheActiveSessionErrorSurface() {
+        let coordinator = WorkbenchSessionCoordinator()
+        let staleSessionID = UUID()
+        let activeSessionID = UUID()
+        var displayedStatuses: [Int32] = []
+
+        coordinator.activateSession(id: activeSessionID) { exit in
+            displayedStatuses.append(exit.status)
+        }
+        coordinator.receiveUnexpectedExit(
+            BackendUnexpectedExit(
+                sessionID: staleSessionID,
+                status: 11,
+                stderrText: "stale crash"
+            )
+        )
+        coordinator.receiveUnexpectedExit(
+            BackendUnexpectedExit(
+                sessionID: activeSessionID,
+                status: 12,
+                stderrText: "active crash"
+            )
+        )
+
+        XCTAssertEqual(displayedStatuses, [12])
+        XCTAssertNil(coordinator.activeSessionID)
+    }
+
     func testCancelledStartDoesNotCreateOrLaunchAProcess() async throws {
         let process = FakeBackendProcess()
         let factoryCount = LockedBox(0)
@@ -239,6 +354,15 @@ final class BackendControllerTests: XCTestCase {
         return root
     }
 
+    private func firstExit(
+        in exits: AsyncStream<BackendUnexpectedExit>
+    ) async -> BackendUnexpectedExit? {
+        for await exit in exits {
+            return exit
+        }
+        return nil
+    }
+
 }
 
 private final class FakeBackendProcess: BackendProcess, @unchecked Sendable {
@@ -250,6 +374,7 @@ private final class FakeBackendProcess: BackendProcess, @unchecked Sendable {
     var runCount = 0
     var terminateCount = 0
     var waitCount = 0
+    var terminationHandler: (@Sendable () -> Void)?
 
     func run(executableURL: URL, arguments: [String]) throws {
         self.executableURL = executableURL
@@ -261,11 +386,23 @@ private final class FakeBackendProcess: BackendProcess, @unchecked Sendable {
     func terminate() {
         terminateCount += 1
         isRunning = false
+        terminationHandler?()
     }
 
     func waitUntilExit() {
         waitCount += 1
         isRunning = false
+    }
+
+    func setTerminationHandler(_ handler: @escaping @Sendable () -> Void) {
+        terminationHandler = handler
+    }
+
+    func exitUnexpectedly(status: Int32, stderr: String) {
+        terminationStatus = status
+        stderrText = stderr
+        isRunning = false
+        terminationHandler?()
     }
 }
 

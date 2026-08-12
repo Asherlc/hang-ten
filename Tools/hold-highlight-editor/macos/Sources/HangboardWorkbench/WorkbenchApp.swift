@@ -127,6 +127,60 @@ enum HeadlessRunner {
     }
 }
 
+@MainActor
+final class WorkbenchSessionCoordinator {
+    private(set) var activeSessionID: UUID?
+    private var unexpectedExitHandler: ((BackendUnexpectedExit) -> Void)?
+    private var exitObservationTask: Task<Void, Never>?
+
+    func requestCheckoutReplacement(
+        confirmDiscarding: (@escaping @MainActor (Bool) -> Void) -> Void,
+        performReplacement: @escaping @MainActor () -> Void
+    ) {
+        confirmDiscarding { confirmed in
+            guard confirmed else { return }
+            performReplacement()
+        }
+    }
+
+    func activateSession(
+        _ session: BackendController.Session,
+        onUnexpectedExit: @escaping (BackendUnexpectedExit) -> Void
+    ) {
+        activateSession(id: session.id, onUnexpectedExit: onUnexpectedExit)
+        exitObservationTask = Task { [weak self] in
+            for await exit in session.unexpectedExits {
+                guard !Task.isCancelled else { return }
+                self?.receiveUnexpectedExit(exit)
+            }
+        }
+    }
+
+    func activateSession(
+        id: UUID,
+        onUnexpectedExit: @escaping (BackendUnexpectedExit) -> Void
+    ) {
+        exitObservationTask?.cancel()
+        exitObservationTask = nil
+        activeSessionID = id
+        unexpectedExitHandler = onUnexpectedExit
+    }
+
+    func deactivateSession() {
+        exitObservationTask?.cancel()
+        exitObservationTask = nil
+        activeSessionID = nil
+        unexpectedExitHandler = nil
+    }
+
+    func receiveUnexpectedExit(_ exit: BackendUnexpectedExit) {
+        guard activeSessionID == exit.sessionID else { return }
+        let handler = unexpectedExitHandler
+        deactivateSession()
+        handler?(exit)
+    }
+}
+
 @main
 enum WorkbenchMain {
     @MainActor
@@ -155,6 +209,7 @@ enum WorkbenchMain {
 private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private let backend = BackendController()
     private let selection = CheckoutSelection()
+    private let sessionCoordinator = WorkbenchSessionCoordinator()
     private let webView = WKWebView(frame: .zero)
 
     private var window: NSWindow?
@@ -230,7 +285,18 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         }
 
         do {
-            load(try CheckoutSelection.validatedURL(url))
+            let checkout = try CheckoutSelection.validatedURL(url)
+            sessionCoordinator.requestCheckoutReplacement(
+                confirmDiscarding: { [weak self] completion in
+                    self?.confirmDiscardingUnsavedChanges(
+                        discardTitle: "Discard and Switch",
+                        completion: completion
+                    )
+                },
+                performReplacement: { [weak self] in
+                    self?.load(checkout)
+                }
+            )
         } catch {
             showMessage(title: "That Folder Is Not a Hang Ten Checkout", detail: error.localizedDescription)
         }
@@ -238,6 +304,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
 
     private func load(_ checkout: URL) {
         startupTask?.cancel()
+        sessionCoordinator.deactivateSession()
         startupTask = Task { [weak self] in
             guard let self else { return }
             await self.backend.stop()
@@ -247,6 +314,12 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                 guard !Task.isCancelled else {
                     await self.backend.stop(session: session)
                     return
+                }
+                self.sessionCoordinator.activateSession(session) { [weak self] exit in
+                    self?.showMessage(
+                        title: "Hangboard Workbench Backend Stopped",
+                        detail: exit.localizedDescription
+                    )
                 }
                 self.selection.remember(checkout)
                 self.showWebView(session.url)
@@ -332,7 +405,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         shutdownInProgress = true
         startupTask?.cancel()
 
-        confirmDiscardingUnsavedChanges { [weak self] confirmed in
+        confirmDiscardingUnsavedChanges(discardTitle: "Discard and Quit") { [weak self] confirmed in
             guard let self else { return }
             guard confirmed else {
                 self.shutdownInProgress = false
@@ -340,6 +413,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                 return
             }
             Task {
+                self.sessionCoordinator.deactivateSession()
                 await self.backend.stop()
                 self.shutdownComplete = true
                 self.shutdownInProgress = false
@@ -348,7 +422,10 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         }
     }
 
-    private func confirmDiscardingUnsavedChanges(completion: @escaping @MainActor (Bool) -> Void) {
+    private func confirmDiscardingUnsavedChanges(
+        discardTitle: String,
+        completion: @escaping @MainActor (Bool) -> Void
+    ) {
         guard window?.contentView === webView, webView.url != nil else {
             completion(true)
             return
@@ -372,7 +449,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             alert.alertStyle = .warning
             alert.messageText = "Discard unsaved work?"
             alert.informativeText = "Hangboard Workbench has unsaved editor changes."
-            alert.addButton(withTitle: "Discard and Quit")
+            alert.addButton(withTitle: discardTitle)
             alert.addButton(withTitle: "Cancel")
             completion(alert.runModal() == .alertFirstButtonReturn)
         }

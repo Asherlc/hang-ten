@@ -401,6 +401,17 @@ def test_final_release_checksum_uses_the_downloadable_zip_basename():
     assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in signing_script
 
 
+def test_signed_release_zip_uses_the_documented_top_level_app_basename():
+    release = _workflow()["jobs"]["release"]
+    signing_script = _step(release, "Sign, notarize, and validate workbench app")[
+        "run"
+    ]
+
+    assert 'app_bundle="$release_dir/Hangboard Workbench.app"' in signing_script
+    assert 'test "$(cat "$zip_top_levels")" = "Hangboard Workbench.app"' in signing_script
+    assert 'app_bundle="$release_dir/hangboard-workbench.app"' not in signing_script
+
+
 def test_release_publication_runs_for_main_pushes_and_manual_dispatches():
     workflow = _workflow()
     triggers = workflow["true"]
