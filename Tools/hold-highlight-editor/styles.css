@@ -84,6 +84,16 @@ button { color: inherit; }
 .inspect-card p { margin: 0; color: #c2c7bd; line-height: 1.5; }
 .inspect-card img { display: block; width: 100%; max-height: 270px; border: 1px solid var(--line-soft); border-radius: 7px; object-fit: contain; }
 .inspect-card a { color: var(--accent-strong); text-underline-offset: 2px; }
+.inspect-board-info-card { grid-column: 1 / -1; }
+.inspect-card-heading { display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+.inspect-card-heading h3 { margin: 4px 0 0; font-size: 15px; }
+.inspect-card-heading p { max-width: 450px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.board-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.board-info-grid label { display: grid; gap: 6px; color: #c8ccc3; font-size: 11px; font-weight: 700; }
+.board-info-grid input { width: 100%; min-height: 38px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; outline: 0; background: #10120f; color: var(--text); }
+.board-info-grid input:focus { border-color: #815240; box-shadow: 0 0 0 3px #ff6b4a18; }
+.board-info-grid small { color: var(--muted); font-size: 10px; font-weight: 500; line-height: 1.4; }
+.board-info-wide { grid-column: 1 / -1; }
 .inspect-artifact-links { display: grid; gap: 8px; }
 .inspect-readiness-card { grid-column: 1 / -1; }
 .inspect-readiness-card .tool-button { width: max-content; margin-top: 4px; }
@@ -149,6 +159,9 @@ button { color: inherit; }
 .validation-command-output { min-height: 180px; padding: 11px; resize: vertical; font: 11px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre; }
 @media (max-width: 760px) {
   .promote-view { padding: 22px 16px; }
+  .inspect-card-heading { display: grid; }
+  .board-info-grid { grid-template-columns: minmax(0, 1fr); }
+  .board-info-wide { grid-column: auto; }
   .promotion-card-heading { display: grid; }
   .promotion-profile-grid { grid-template-columns: minmax(0, 1fr); }
   .promotion-profile-wide { grid-column: auto; }

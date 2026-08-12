@@ -392,7 +392,7 @@
     return item;
   }
 
-  function renderInspectView(suite) {
+  function renderInspectView(suite, promotion = null) {
     const board = suite.activeBoard;
     el["inspect-board-preview"].replaceChildren();
     el["inspect-artifact-links"].replaceChildren();
@@ -436,6 +436,12 @@
       );
       appendInspectText(el["inspect-approval-status"], `Revision ${board.revisionId} · ${String(board.state || "unknown").replaceAll("_", " ")}`);
     }
+    const profile = promotion?.profile || {};
+    document.querySelectorAll("[data-board-info-field]").forEach((input) => {
+      const field = input.dataset.boardInfoField;
+      if (document.activeElement !== input) input.value = String(profile[field] ?? "");
+      input.disabled = !board || Boolean(promotion?.busy);
+    });
     appendInspectText(el["inspect-readiness"], `${suite.readiness.label}: continue with ${suite.readiness.nextTool}.`);
     el["inspect-next-action"].textContent = `Open ${suite.readiness.nextTool[0].toUpperCase()}${suite.readiness.nextTool.slice(1)}`;
     el["inspect-next-action"].disabled = !board;
@@ -457,11 +463,12 @@
     el["active-board-revision"].textContent = board ? `Revision ${suite.activeRevision}` : "Choose a board to begin.";
     el["active-board-readiness"].textContent = suite.readiness.label;
     el["active-board-readiness"].className = `readiness-badge ${suite.readiness.status}`;
-    renderInspectView(suite);
+    const promotion = promotionController ? promotionController.getState() : null;
+    renderInspectView(suite, promotion);
     if (promotionController) {
       renderPromotionView(el["promote-view"], {
         suite,
-        promotion: promotionController.getState(),
+        promotion,
       });
     }
     if (validationController) {
@@ -3109,6 +3116,7 @@
       suiteController.setResults({ promotion });
     },
     render(promotion) {
+      renderInspectView(state.suiteState, promotion);
       renderPromotionView(el["promote-view"], {
         suite: state.suiteState,
         promotion,
@@ -3134,9 +3142,9 @@
   el["inspect-next-action"].addEventListener("click", () => {
     suiteController.selectTool(state.suiteState.readiness.nextTool);
   });
-  document.querySelectorAll("[data-promotion-field]").forEach((input) => {
+  document.querySelectorAll("[data-board-info-field]").forEach((input) => {
     input.addEventListener("input", () => promotionController.setProfileField(
-      input.dataset.promotionField,
+      input.dataset.boardInfoField,
       input.value,
     ));
   });

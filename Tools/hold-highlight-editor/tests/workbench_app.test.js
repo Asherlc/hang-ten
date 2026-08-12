@@ -42,6 +42,7 @@ test("the workbench has a persistent single-board tool suite shell", () => {
     "inspect-view",
     "inspect-board-preview",
     "inspect-artifact-links",
+    "inspect-board-info",
     "inspect-hold-inventory",
     "inspect-readiness",
     "inspect-next-action",
@@ -91,14 +92,16 @@ test("the suite surfaces only local save and explicit simulator handoff boundari
   assert.match(markup, /already-owned simulator/);
 });
 
-test("suite navigation and promotion inputs expose their active state and hints accessibly", () => {
-  for (const field of ["board-id", "manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
-    assert.match(markup, new RegExp(`<label[^>]*for="promotion-${field}"`));
-    assert.match(markup, new RegExp(`<input[^>]*id="promotion-${field}"[^>]*aria-describedby="promotion-${field}-hint"`));
-    assert.match(markup, new RegExp(`<small id="promotion-${field}-hint"`));
+test("suite navigation keeps editable Board info in Inspect, not Promote", () => {
+  for (const field of ["manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
+    assert.match(markup, new RegExp(`<label[^>]*for="board-info-${field}"`));
+    assert.match(markup, new RegExp(`<input[^>]*id="board-info-${field}"[^>]*data-board-info-field`));
+    assert.match(markup, new RegExp(`<small id="board-info-${field}-hint"`));
   }
+  assert.doesNotMatch(markup, /promotion-board-id|data-promotion-field|iOS board ID/);
   assert.match(markup, /id="validation-simulator-error" role="alert"/);
   const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
+  assert.match(appSource, /data-board-info-field/);
   assert.match(appSource, /if \(active\) button\.setAttribute\("aria-current", "page"\)/);
   assert.match(appSource, /else button\.removeAttribute\("aria-current"\)/);
 });
