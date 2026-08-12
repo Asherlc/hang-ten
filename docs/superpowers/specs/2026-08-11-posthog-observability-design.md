@@ -2,8 +2,8 @@
 
 ## Goal
 
-Add anonymous, privacy-protected product analytics, session replay, error
-tracking, feature-flag access, and OpenTelemetry diagnostics to Hang Ten
+Add anonymous, privacy-protected product analytics, session replay, feature-flag
+access, and handled-error OpenTelemetry diagnostics to Hang Ten
 without coupling app features to PostHog APIs.
 
 ## Scope
@@ -16,8 +16,8 @@ through an ignored Xcode configuration file and in trusted CI through GitHub
 repository/environment secrets; the repository will contain a token-free
 example configuration.
 
-The integration includes PostHog product events, iOS exception autocapture,
-protected session replay, a small feature-flag boundary, and diagnostic
+The integration includes PostHog product events, protected session replay, a
+small feature-flag boundary, and diagnostic
 OpenTelemetry logs and spans. It intentionally excludes user identification,
 remote-configured product changes, experiments, surveys, and metrics collection.
 
@@ -25,14 +25,14 @@ remote-configured product changes, experiments, surveys, and metrics collection.
 
 App views and domain services depend on focused, vendor-neutral interfaces:
 
-- `AnalyticsTracking` captures typed, allow-listed product events.
+- `TelemetryTracking` captures typed, allow-listed product events.
 - `DiagnosticReporting` records handled failures using redacted error metadata.
 - `FeatureFlagProviding` reads a flag by key with an explicit local fallback.
 - `SessionReplayControlling` starts and stops replay around sensitive flows.
 
 `PostHogTelemetry` is the only adapter importing the PostHog SDK. It translates
-the typed events into PostHog captures, configures replay and error autocapture,
-and implements the feature-flag and replay interfaces. A separate
+the typed events into PostHog captures, configures protected replay, and
+implements the feature-flag and replay interfaces. A separate
 `OpenTelemetryDiagnostics` adapter emits diagnostic logs and spans over OTLP.
 Composition occurs in `HangTenApp`, so no view or existing domain model imports
 PostHog or OpenTelemetry directly.
@@ -54,8 +54,8 @@ exporter change without feature-code changes.
 2. UI and services emit typed events or diagnostics through the interfaces.
 3. The PostHog adapter sends only the approved product event and redacted error
    properties. The OpenTelemetry adapter exports diagnostics through OTLP.
-4. PostHog links anonymous events, replay, exceptions, logs, and traces by its
-   anonymous device/session identifiers. The app never calls `identify`.
+4. PostHog links anonymous events, replay, and traces by its anonymous
+   device/session identifiers. The app never calls `identify`.
 
 ## Privacy and Replay
 
@@ -97,8 +97,9 @@ device identifier. Event names follow PostHog's object-verb convention.
 
 ## PostHog Project Configuration
 
-The new project will enable session recording and iOS error tracking with
-exception autocapture. Replay uses the privacy settings described above. The
+The new project will enable session recording. Native iOS exception autocapture
+is disabled so handled diagnostics are sent only through `DiagnosticReporting`.
+Replay uses the privacy settings described above. The
 initial project has no targeting rules, surveys, experiments, or product flags.
 The adapter will nevertheless support flags through `FeatureFlagProviding` so
 future flags do not leak PostHog types into app features.
@@ -107,7 +108,7 @@ The project will contain a small `Hang Ten App Health` dashboard with:
 
 - anonymous application opens;
 - the `workout started` to completed `workout finished` funnel;
-- error-tracking issues and `app diagnostic recorded` volume.
+- `app diagnostic recorded` volume.
 
 ## Error Handling and Testing
 

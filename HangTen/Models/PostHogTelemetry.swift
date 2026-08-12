@@ -25,7 +25,7 @@ struct PostHogConfiguration {
         guard
             let hostURL = URL(string: host),
             let scheme = hostURL.scheme?.lowercased(),
-            ["https", "http"].contains(scheme),
+            scheme == "https",
             hostURL.host != nil
         else {
             return nil
@@ -117,12 +117,8 @@ final class PostHogTelemetry: TelemetryTracking, FeatureFlagProviding, SessionRe
     }
 }
 
-private final class PostHogSDKClient: PostHogCapturing {
-    private let sdk: PostHogSDK
-
-    init(configuration: PostHogConfiguration, sdk: PostHogSDK = .shared) {
-        self.sdk = sdk
-
+enum PostHogSDKConfiguration {
+    static func make(configuration: PostHogConfiguration) -> PostHogConfig {
         let config = PostHogConfig(
             projectToken: configuration.projectToken,
             host: configuration.host
@@ -134,8 +130,17 @@ private final class PostHogSDKClient: PostHogCapturing {
         config.sessionReplayConfig.screenshotMode = false
         config.sessionReplayConfig.captureLogs = false
         config.sessionReplayConfig.captureNetworkTelemetry = false
-        config.errorTrackingConfig.autoCapture = true
-        sdk.setup(config)
+        config.errorTrackingConfig.autoCapture = false
+        return config
+    }
+}
+
+private final class PostHogSDKClient: PostHogCapturing {
+    private let sdk: PostHogSDK
+
+    init(configuration: PostHogConfiguration, sdk: PostHogSDK = .shared) {
+        self.sdk = sdk
+        sdk.setup(PostHogSDKConfiguration.make(configuration: configuration))
     }
 
     func capture(event: String, properties: [String: String]) {

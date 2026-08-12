@@ -177,6 +177,9 @@ final class AppStore: ObservableObject {
             telemetry.tracking.track(.customRoutineSaved)
         } catch {
             customRoutinePersistenceError = error.localizedDescription
+            telemetry.diagnostics.record(
+                .init(category: .persistence, operation: .save, error: error)
+            )
             throw error
         }
     }
@@ -436,11 +439,9 @@ final class AppStore: ObservableObject {
                     error?.localizedDescription,
                     kind: error == nil ? nil : .authorization
                 )
-                self.telemetry.tracking.track(
-                    .healthAuthorizationFinished(
-                        outcome: self.telemetryHealthAuthorizationOutcome(state: state, error: error)
-                    )
-                )
+                if let outcome = self.telemetryHealthAuthorizationOutcome(state: state, error: error) {
+                    self.telemetry.tracking.track(.healthAuthorizationFinished(outcome: outcome))
+                }
                 self.refreshWorkoutHistory()
             }
         }
@@ -508,7 +509,11 @@ final class AppStore: ObservableObject {
     private func telemetryHealthAuthorizationOutcome(
         state: HealthAuthorizationState,
         error: Error?
-    ) -> HangTenTelemetryEvent.HealthAuthorizationOutcome {
+    ) -> HangTenTelemetryEvent.HealthAuthorizationOutcome? {
+        guard state != .notDetermined else {
+            return nil
+        }
+
         if error != nil {
             return .error
         }
@@ -516,10 +521,12 @@ final class AppStore: ObservableObject {
         switch state {
         case .authorized:
             return .granted
-        case .denied, .notDetermined:
+        case .denied:
             return .denied
         case .unavailable:
             return .unavailable
+        case .notDetermined:
+            return nil
         }
     }
 

@@ -1,4 +1,5 @@
 import XCTest
+import PostHog
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
@@ -22,6 +23,27 @@ final class TelemetryTests: XCTestCase {
 
         XCTAssertEqual(endpoint.absoluteString, "https://us.i.posthog.com/i/v1/traces")
         XCTAssertFalse(endpoint.absoluteString.contains("phc_test_token"))
+    }
+
+    func testConfigurationRejectsInsecureHTTPHost() {
+        let configuration = PostHogConfiguration(
+            projectToken: "phc_test_token",
+            host: "http://us.i.posthog.com"
+        )
+
+        XCTAssertNil(configuration.traceEndpoint)
+        XCTAssertFalse(configuration.isConfigured)
+    }
+
+    func testSDKConfigurationDisablesAutomaticExceptionCapture() {
+        let configuration = PostHogConfiguration(
+            projectToken: "phc_test_token",
+            host: "https://us.i.posthog.com"
+        )
+
+        let sdkConfiguration = PostHogSDKConfiguration.make(configuration: configuration)
+
+        XCTAssertFalse(sdkConfiguration.errorTrackingConfig.autoCapture)
     }
 
     func testPostHogAdapterTranslatesOnlyTypedProperties() {

@@ -75,7 +75,7 @@ func testWorkoutFinishedUsesOnlyOutcomeAndCoarseDurationBucket() {
 func testNoOpTelemetryHasNoRecordedSideEffects() {
     let telemetry = NoOpTelemetry()
     telemetry.track(.customRoutineSaved)
-    telemetry.record(.init(category: .persistence, operation: "save", error: TestError()))
+    telemetry.record(.init(category: .persistence, operation: .save, error: TestError()))
     XCTAssertFalse(telemetry.isEnabled("future-flag", default: false))
 }
 ~~~
