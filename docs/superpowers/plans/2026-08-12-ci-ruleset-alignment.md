@@ -217,3 +217,61 @@
   ```
 
   Expected: auto-merge can proceed once the two required checks pass. If the PR remains open, report the precise GitHub field or check that blocks it; do not bypass it silently.
+
+### Task 4: Land the CI recovery trigger on main
+
+**Files:**
+- Modify: `.github/workflows/ci.yml:4-15,141`
+- External state: a clean, workspace-scoped GitHub branch and pull request targeting `main`
+
+**Interfaces:**
+- Consumes: reviewed commits `544a51d` and `d3c5615`, which contain only the CI trigger and Release-device guard changes.
+- Produces: the approved CI workflow on `main`, making `workflow_dispatch` available for PR #104 without merging unrelated force-sensor commits.
+
+- [ ] **Step 1: Create an isolated clean branch from the current remote main**
+
+  Use an exact workspace-scoped branch name and temporary worktree:
+
+  ```bash
+  git fetch origin
+  git worktree add .context/relieved-peacock-climbro-ci-ruleset-recovery \
+    -b agent/relieved-peacock-climbro-ci-ruleset-recovery origin/main
+  cd .context/relieved-peacock-climbro-ci-ruleset-recovery
+  ```
+
+  Expected: the branch starts at `origin/main` and contains no sensor-adapter or planning changes.
+
+- [ ] **Step 2: Cherry-pick only the two reviewed workflow commits**
+
+  ```bash
+  git cherry-pick 544a51da383440e84ead2cd1f4f745b454fda931
+  git cherry-pick d3c5615c949f6c0e9514949f0fb6def7fd85be25
+  git diff --check origin/main...HEAD
+  git diff --name-only origin/main...HEAD
+  ```
+
+  Expected: no whitespace errors; the only changed file is `.github/workflows/ci.yml`.
+
+- [ ] **Step 3: Push and open a CI-only pull request**
+
+  ```bash
+  git push -u origin agent/relieved-peacock-climbro-ci-ruleset-recovery
+  gh pr create --repo Asherlc/hang-ten --base main \
+    --head agent/relieved-peacock-climbro-ci-ruleset-recovery \
+    --title 'ci: recover required checks (relieved-peacock-climbro)' \
+    --body 'Adds PR-base-update and manual CI triggers while keeping the Release-device build push-only. This is the minimal deployment of the approved CI ruleset alignment.'
+  ```
+
+  Expected: the PR contains only the three workflow-line changes and normal PR CI starts.
+
+- [ ] **Step 4: Verify, merge, and clean up the exact workspace-owned branch/worktree**
+
+  ```bash
+  gh pr checks <PR_NUMBER> --repo Asherlc/hang-ten --watch
+  gh pr merge <PR_NUMBER> --repo Asherlc/hang-ten --squash --delete-branch
+  git worktree remove .context/relieved-peacock-climbro-ci-ruleset-recovery
+  test ! -e .context/relieved-peacock-climbro-ci-ruleset-recovery
+  git ls-remote --exit-code --heads origin agent/relieved-peacock-climbro-ci-ruleset-recovery && exit 1 || true
+  ```
+
+  Expected: the CI-only PR is merged; its remote branch and exact temporary worktree are absent; main contains the new `edited` and `workflow_dispatch` triggers and retains the push-only Release-device guard.
