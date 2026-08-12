@@ -11,8 +11,25 @@ from conftest import load_board_catalog_module
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
+FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "approved_board_packages"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
 ROCK_PRODIGY_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-training-center"
+RUNTIME_HOLD_FIELDS = frozenset(
+    {
+        "id",
+        "name",
+        "shortLabel",
+        "detail",
+        "kind",
+        "frame",
+        "sizeMillimeters",
+        "depthRangeMillimeters",
+        "gripType",
+        "fingerCapacity",
+        "cueStyle",
+        "features",
+    }
+)
 
 COMPACT_HOLDS = (
     ("jug-left", "Left outer jug"),
@@ -98,13 +115,6 @@ ROCK_PRODIGY_SEMANTICS = {
     ),
 }
 
-# Canonical JSON digests freeze every expanded frame, path command, layer,
-# hold-piece ID, and treatment after migration from the reviewed Swift designs.
-EXPECTED_ARTWORK_DIGESTS = {
-    "metolius.wood-grips-compact-ii": "525f7b9978a3b0a03f5ffb917ebe0c2a71809f3f34dcaa9c90bb46c73153e882",
-    "trango.rock-prodigy-training-center": "055132a318df51d9427563701f06ed4b78449c8737133a9ac22093191a1a32cb",
-}
-
 COMPACT_REPAIR_MASKS = (
     (374, 148, 18),
     (743, 148, 18),
@@ -115,14 +125,75 @@ COMPACT_REPAIR_MASKS = (
 )
 
 
-def _canonical_digest(path: Path) -> str:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-
-
 def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
     return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
+
+
+def _load_preservation_fixture(name: str) -> dict[str, object]:
+    return json.loads(
+        (FIXTURE_ROOT / f"{name}.pre-migration.json").read_text(encoding="utf-8")
+    )
+
+
+def _assert_runtime_metadata_preserved(package: object, expected: dict[str, object]) -> None:
+    board = package.board  # type: ignore[attr-defined]
+    assert board.id == expected["id"]
+    assert board.facts["manufacturer"] == expected["manufacturer"]
+    assert board.facts["name"] == expected["name"]
+    assert board.facts["subtitle"] == expected["subtitle"]
+    assert board.facts["productURL"] == expected["productURL"]
+    assert board.facts["dimensions"] == expected["dimensions"]
+    assert board.facts["aspectRatio"] == expected["aspectRatio"]
+
+    expected_holds = expected["holds"]
+    assert isinstance(expected_holds, list)
+    assert len(board.holds) == len(expected_holds)
+    for actual, raw in zip(board.holds, expected_holds, strict=True):
+        assert isinstance(raw, dict)
+        assert actual.id == raw["id"]
+        assert actual.name == raw["name"]
+        assert actual.short_label == raw["shortLabel"]
+        assert actual.detail == raw["detail"]
+        assert actual.kind == raw["kind"]
+        assert _frame_tuple(actual.frame) == tuple(raw["frame"][key] for key in ("x", "y", "width", "height"))
+        assert actual.size_millimeters == raw["sizeMillimeters"]
+        expected_range = raw["depthRangeMillimeters"]
+        if expected_range is None:
+            assert actual.depth_range_millimeters is None
+        else:
+            assert actual.depth_range_millimeters is not None
+            assert actual.depth_range_millimeters.lower_bound == expected_range["lowerBound"]
+            assert actual.depth_range_millimeters.upper_bound == expected_range["upperBound"]
+        assert actual.grip_type == raw["gripType"]
+        assert actual.finger_capacity == raw["fingerCapacity"]
+        assert actual.cue_style == raw["cueStyle"]
+        assert actual.features == tuple(raw["features"])
+
+    expected_evidence_keys = {
+        f"{raw['id']}.{field}"
+        for raw in expected_holds
+        for field in RUNTIME_HOLD_FIELDS
+    }
+    assert set(package.evidence.hold_evidence) == expected_evidence_keys  # type: ignore[attr-defined]
+    for mapping in package.evidence.hold_evidence.values():  # type: ignore[attr-defined]
+        assert mapping.method == "reviewed-human-authored-normalization"
+        assert "pre-migration-runtime" in mapping.source_ids
+    subtitle_evidence = package.evidence.field_evidence["subtitle"]  # type: ignore[attr-defined]
+    assert subtitle_evidence.method == "reviewed-human-authored-normalization"
+    assert "pre-migration-runtime" in subtitle_evidence.source_ids
+
+
+def _assert_artwork_preserved(package_root: Path, expected: dict[str, object]) -> None:
+    actual = json.loads((package_root / "artwork.json").read_text(encoding="utf-8"))
+    assert actual["schemaVersion"] == expected["schemaVersion"]
+    assert actual["boardID"] == expected["boardID"]
+    assert actual["canvasFrame"] == expected["canvasFrame"]
+    assert actual["palette"] == expected["palette"]
+    # These deep comparisons independently freeze every path command, role,
+    # frame, shape, piece association, and hold treatment from the Swift design.
+    assert actual["silhouette"] == expected["silhouette"]
+    assert actual["layers"] == expected["layers"]
+    assert actual["holdPieces"] == expected["holdPieces"]
 
 
 def test_registry_approves_only_the_two_reviewed_runtime_boards() -> None:
@@ -139,8 +210,17 @@ def test_registry_approves_only_the_two_reviewed_runtime_boards() -> None:
 def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> None:
     module = load_board_catalog_module()
     package = module.load_approved_package(COMPACT_ROOT)
+    fixture = _load_preservation_fixture("metolius-wood-grips-compact-ii")
+    assert fixture["sourceRevision"] == "f1761e7"
+    assert fixture["runtimeMetadataSource"] == "HangTen/Models/GeneratedBoardCatalog.swift"
+    assert fixture["artworkSource"] == "HangTen/Views/MetoliusCompactIIDesign.swift"
+    expected_board = fixture["board"]
+    expected_artwork = fixture["artwork"]
+    assert isinstance(expected_board, dict)
+    assert isinstance(expected_artwork, dict)
 
     assert tuple((hold.id, hold.name) for hold in package.board.holds) == COMPACT_HOLDS
+    _assert_runtime_metadata_preserved(package, expected_board)
     assert dict(package.semantics.semantic_holds) == COMPACT_SEMANTICS
     assert _frame_tuple(package.artwork.canvas_frame) == (0.025, 0.005, 0.950, 0.965)
     assert tuple(layer.id for layer in package.artwork.layers) == (
@@ -165,14 +245,23 @@ def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> 
     )
     assert package.artwork.hold_ids == {hold_id for hold_id, _ in COMPACT_HOLDS}
     assert package.board.presentation_asset_path == "assets/CompactBoardIllustration.png"
-    assert _canonical_digest(COMPACT_ROOT / "artwork.json") == EXPECTED_ARTWORK_DIGESTS[package.board.id]
+    _assert_artwork_preserved(COMPACT_ROOT, expected_artwork)
 
 
 def test_rock_prodigy_package_preserves_runtime_inventory_semantics_and_artwork() -> None:
     module = load_board_catalog_module()
     package = module.load_approved_package(ROCK_PRODIGY_ROOT)
+    fixture = _load_preservation_fixture("trango-rock-prodigy-training-center")
+    assert fixture["sourceRevision"] == "f1761e7"
+    assert fixture["runtimeMetadataSource"] == "HangTen/Models/TrainingModels.swift"
+    assert fixture["artworkSource"] == "HangTen/Views/RockProdigyTrainingCenterDesign.swift"
+    expected_board = fixture["board"]
+    expected_artwork = fixture["artwork"]
+    assert isinstance(expected_board, dict)
+    assert isinstance(expected_artwork, dict)
 
     assert tuple((hold.id, hold.name) for hold in package.board.holds) == ROCK_PRODIGY_HOLDS
+    _assert_runtime_metadata_preserved(package, expected_board)
     assert dict(package.semantics.semantic_holds) == ROCK_PRODIGY_SEMANTICS
     assert _frame_tuple(package.artwork.canvas_frame) == (0.015, 0.020, 0.970, 0.960)
     assert tuple(layer.id for layer in package.artwork.layers) == (
@@ -191,7 +280,7 @@ def test_rock_prodigy_package_preserves_runtime_inventory_semantics_and_artwork(
     assert tuple(piece.id for piece in package.artwork.hold_pieces) == expected_piece_ids
     assert package.artwork.hold_ids == {hold_id for hold_id, _ in ROCK_PRODIGY_HOLDS}
     assert package.board.presentation_asset_path is None
-    assert _canonical_digest(ROCK_PRODIGY_ROOT / "artwork.json") == EXPECTED_ARTWORK_DIGESTS[package.board.id]
+    _assert_artwork_preserved(ROCK_PRODIGY_ROOT, expected_artwork)
 
 
 def test_compact_screwless_asset_is_a_six_mask_pixel_local_repair() -> None:

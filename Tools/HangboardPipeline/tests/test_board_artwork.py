@@ -8,6 +8,22 @@ import pytest
 from conftest import load_board_catalog_module
 
 
+BOARD_HOLD_FIELDS = (
+    "id",
+    "name",
+    "shortLabel",
+    "detail",
+    "kind",
+    "frame",
+    "sizeMillimeters",
+    "depthRangeMillimeters",
+    "gripType",
+    "fingerCapacity",
+    "cueStyle",
+    "features",
+)
+
+
 def _evidence_map() -> dict[str, object]:
     return {"sourceIDs": ["source"], "method": "reviewed-human-authored-normalization"}
 
@@ -20,11 +36,27 @@ def _approved_payloads() -> dict[str, dict[str, object]]:
             "id": "approved.board",
             "manufacturer": "Example",
             "name": "Approved Board",
+            "subtitle": "A complete approved test board.",
             "productURL": "https://example.com/board",
             "dimensions": "100 mm",
             "aspectRatio": 2.0,
             "presentation": {"assetPath": "assets/presentation.png"},
-            "holds": [{"id": "hold-left", "name": "Left hold"}],
+            "holds": [
+                {
+                    "id": "hold-left",
+                    "name": "Left hold",
+                    "shortLabel": "L",
+                    "detail": "Left test edge",
+                    "kind": "edge",
+                    "frame": {"x": 0.2, "y": 0.2, "width": 0.2, "height": 0.2},
+                    "sizeMillimeters": None,
+                    "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 20},
+                    "gripType": "halfCrimp",
+                    "fingerCapacity": 4,
+                    "cueStyle": "slot",
+                    "features": ["mediumEdge"],
+                }
+            ],
         },
         "semantics": {
             "schemaVersion": 1,
@@ -70,11 +102,14 @@ def _approved_payloads() -> dict[str, dict[str, object]]:
             "fieldEvidence": {
                 "manufacturer": evidence,
                 "name": evidence,
+                "subtitle": evidence,
                 "productURL": evidence,
                 "dimensions": evidence,
                 "aspectRatio": evidence,
             },
-            "holdEvidence": {"hold-left": evidence},
+            "holdEvidence": {
+                f"hold-left.{field}": evidence for field in BOARD_HOLD_FIELDS
+            },
             "semanticEvidence": {"outer-holds": evidence},
             "artworkEvidence": {
                 "silhouette": evidence,
@@ -102,6 +137,19 @@ def test_load_approved_package_validates_complete_cross_file_contract(tmp_path: 
     package = module.load_approved_package(_write_approved_package(tmp_path / "package"))
 
     assert package.board.id == "approved.board"
+    assert package.board.facts["subtitle"] == "A complete approved test board."
+    hold = package.board.holds[0]
+    assert hold.short_label == "L"
+    assert hold.detail == "Left test edge"
+    assert hold.kind == "edge"
+    assert (hold.frame.x, hold.frame.y, hold.frame.width, hold.frame.height) == (0.2, 0.2, 0.2, 0.2)
+    assert hold.size_millimeters is None
+    assert hold.depth_range_millimeters is not None
+    assert (hold.depth_range_millimeters.lower_bound, hold.depth_range_millimeters.upper_bound) == (10, 20)
+    assert hold.grip_type == "halfCrimp"
+    assert hold.finger_capacity == 4
+    assert hold.cue_style == "slot"
+    assert hold.features == ("mediumEdge",)
     assert package.semantics.semantic_holds["outer-holds"] == ("hold-left",)
     assert package.artwork.hold_ids == frozenset({"hold-left"})
 
@@ -234,4 +282,61 @@ def test_approved_package_requires_exact_physical_artwork_and_evidence_keys(tmp_
     evidence["semanticEvidence"] = {}
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
     with pytest.raises(ValueError, match="semanticEvidence keys must equal semantic IDs"):
+        module.load_approved_package(root)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("gripType", None, "missing keys"),
+        ("kind", "unknown", "kind must be one of"),
+        ("fingerCapacity", 0, "fingerCapacity must be in 1...4"),
+        ("fingerCapacity", 5, "fingerCapacity must be in 1...4"),
+        ("features", ["unknown"], r"features\[0\] must be one of"),
+    ],
+)
+def test_approved_package_rejects_missing_or_invalid_runtime_hold_metadata(
+    tmp_path: Path,
+    field: str,
+    value: object,
+    message: str,
+) -> None:
+    module = load_board_catalog_module()
+    root = _write_approved_package(tmp_path / "package")
+    board_path = root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    if value is None:
+        board["holds"][0].pop(field)
+    else:
+        board["holds"][0][field] = value
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        module.load_approved_package(root)
+
+
+def test_approved_package_rejects_invalid_runtime_hold_depth_range(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    root = _write_approved_package(tmp_path / "package")
+    board_path = root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["holds"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 20,
+        "upperBound": 10,
+    }
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="lowerBound must not exceed upperBound"):
+        module.load_approved_package(root)
+
+
+def test_approved_package_requires_evidence_for_every_runtime_hold_field(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    root = _write_approved_package(tmp_path / "package")
+    evidence_path = root / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["holdEvidence"].pop("hold-left.detail")
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="holdEvidence keys must equal physical hold field paths"):
         module.load_approved_package(root)

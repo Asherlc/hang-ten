@@ -1,0 +1,2763 @@
+{
+  "sourceRevision": "f1761e7",
+  "runtimeMetadataSource": "HangTen/Models/TrainingModels.swift",
+  "artworkSource": "HangTen/Views/RockProdigyTrainingCenterDesign.swift",
+  "board": {
+    "schemaVersion": 1,
+    "id": "trango.rock-prodigy-training-center",
+    "manufacturer": "Trango",
+    "name": "Rock Prodigy Training Center",
+    "subtitle": "Two-piece adjustable training board with variable rails, pockets, crimps, pinches, and slopers.",
+    "productURL": "https://trango.com/products/rock-prodigy-training-center",
+    "dimensions": "18.2\" × 12.1\" assembled (two 9.1\" × 12.1\" pieces)",
+    "aspectRatio": 1.5041322314049586,
+    "holds": [
+      {
+        "id": "trango.rptc.left.top-jug",
+        "name": "Left top jug",
+        "shortLabel": "J",
+        "detail": "Open-hand warm-up jug",
+        "kind": "jug",
+        "frame": {
+          "x": 0.27,
+          "y": 0.1,
+          "width": 0.145,
+          "height": 0.105
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "outerJug",
+        "features": [
+          "jug"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.top-jug",
+        "name": "Right top jug",
+        "shortLabel": "J",
+        "detail": "Open-hand warm-up jug",
+        "kind": "jug",
+        "frame": {
+          "x": 0.585,
+          "y": 0.1,
+          "width": 0.145,
+          "height": 0.105
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "outerJug",
+        "features": [
+          "jug"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.large-open-rail",
+        "name": "Left 20–33 mm variable-depth rail",
+        "shortLabel": "20–33",
+        "detail": "Large open-hand rail; variable depth 20–33 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.205,
+          "y": 0.275,
+          "width": 0.235,
+          "height": 0.06
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 20,
+          "upperBound": 33
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "largeEdge",
+          "largeOpenHandRail"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.large-open-rail",
+        "name": "Right 20–33 mm variable-depth rail",
+        "shortLabel": "20–33",
+        "detail": "Large open-hand rail; variable depth 20–33 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.56,
+          "y": 0.275,
+          "width": 0.235,
+          "height": 0.06
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 20,
+          "upperBound": 33
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "largeEdge",
+          "largeOpenHandRail"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.small-crimp-rail",
+        "name": "Left 10–24 mm variable-depth rail",
+        "shortLabel": "10–24",
+        "detail": "Small/crimp rail; variable depth 10–24 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.205,
+          "y": 0.365,
+          "width": 0.235,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 10,
+          "upperBound": 24
+        },
+        "gripType": "halfCrimp",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "smallEdge"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.small-crimp-rail",
+        "name": "Right 10–24 mm variable-depth rail",
+        "shortLabel": "10–24",
+        "detail": "Small/crimp rail; variable depth 10–24 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.56,
+          "y": 0.365,
+          "width": 0.235,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 10,
+          "upperBound": 24
+        },
+        "gripType": "halfCrimp",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "smallEdge"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.three-finger-slot",
+        "name": "Left 38 mm three-finger slot",
+        "shortLabel": "3F",
+        "detail": "Three-finger slot, 38 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.235,
+          "y": 0.465,
+          "width": 0.135,
+          "height": 0.08
+        },
+        "sizeMillimeters": 38,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 3,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "threeFingerPocket",
+          "shallowThreeFingerSlot"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.three-finger-slot",
+        "name": "Right 38 mm three-finger slot",
+        "shortLabel": "3F",
+        "detail": "Three-finger slot, 38 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.63,
+          "y": 0.465,
+          "width": 0.135,
+          "height": 0.08
+        },
+        "sizeMillimeters": 38,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 3,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "threeFingerPocket",
+          "shallowThreeFingerSlot"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.thin-crimp",
+        "name": "Left 7.5 mm thin crimp",
+        "shortLabel": "7.5",
+        "detail": "Thin crimp, 7.5 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.315,
+          "y": 0.605,
+          "width": 0.105,
+          "height": 0.04
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "halfCrimp",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "smallEdge",
+          "thinCrimp"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.thin-crimp",
+        "name": "Right 7.5 mm thin crimp",
+        "shortLabel": "7.5",
+        "detail": "Thin crimp, 7.5 mm",
+        "kind": "edge",
+        "frame": {
+          "x": 0.5800000000000001,
+          "y": 0.605,
+          "width": 0.105,
+          "height": 0.04
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "halfCrimp",
+        "fingerCapacity": 4,
+        "cueStyle": "slot",
+        "features": [
+          "smallEdge",
+          "thinCrimp"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.deep-mr-pocket",
+        "name": "Left 29 mm deep MR pocket",
+        "shortLabel": "MR",
+        "detail": "Deep middle+ring pocket, 29 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.195,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": 29,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket",
+          "deepTwoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.deep-mr-pocket",
+        "name": "Right 29 mm deep MR pocket",
+        "shortLabel": "MR",
+        "detail": "Deep middle+ring pocket, 29 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.71,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": 29,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket",
+          "deepTwoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.shallow-mr-pocket",
+        "name": "Left 19 mm shallow MR pocket",
+        "shortLabel": "MR",
+        "detail": "Shallow middle+ring pocket, 19 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.225,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": 19,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.shallow-mr-pocket",
+        "name": "Right 19 mm shallow MR pocket",
+        "shortLabel": "MR",
+        "detail": "Shallow middle+ring pocket, 19 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.68,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": 19,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.medium-im-pocket",
+        "name": "Left 26–36 mm medium IM pocket",
+        "shortLabel": "IM",
+        "detail": "Medium index+middle pocket, variable depth 26–36 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.32,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 26,
+          "upperBound": 36
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.medium-im-pocket",
+        "name": "Right 26–36 mm medium IM pocket",
+        "shortLabel": "IM",
+        "detail": "Medium index+middle pocket, variable depth 26–36 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.585,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 26,
+          "upperBound": 36
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.shallow-im-pocket",
+        "name": "Left 19–24 mm shallow IM pocket",
+        "shortLabel": "IM",
+        "detail": "Shallow index+middle pocket, variable depth 19–24 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.32,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 19,
+          "upperBound": 24
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.shallow-im-pocket",
+        "name": "Right 19–24 mm shallow IM pocket",
+        "shortLabel": "IM",
+        "detail": "Shallow index+middle pocket, variable depth 19–24 mm",
+        "kind": "pocket",
+        "frame": {
+          "x": 0.585,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": {
+          "lowerBound": 19,
+          "upperBound": 24
+        },
+        "gripType": "openHand",
+        "fingerCapacity": 2,
+        "cueStyle": "slot",
+        "features": [
+          "pocket",
+          "twoFingerPocket"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.wide-pinch",
+        "name": "Left 87 mm wide pinch",
+        "shortLabel": "W",
+        "detail": "Wide pinch contact on the outer angled block, 87 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 87,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "widePinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.wide-pinch",
+        "name": "Right 87 mm wide pinch",
+        "shortLabel": "W",
+        "detail": "Wide pinch contact on the outer angled block, 87 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 87,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "widePinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.medium-pinch",
+        "name": "Left 44 mm medium pinch",
+        "shortLabel": "M",
+        "detail": "Medium pinch contact on the outer angled block, 44 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 44,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "mediumPinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.medium-pinch",
+        "name": "Right 44 mm medium pinch",
+        "shortLabel": "M",
+        "detail": "Medium pinch contact on the outer angled block, 44 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 44,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "mediumPinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.small-pinch",
+        "name": "Left 18 mm small pinch",
+        "shortLabel": "S",
+        "detail": "Small pinch contact on the outer angled block, 18 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 18,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "smallPinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.small-pinch",
+        "name": "Right 18 mm small pinch",
+        "shortLabel": "S",
+        "detail": "Small pinch contact on the outer angled block, 18 mm",
+        "kind": "pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": 18,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "pinch",
+        "features": [
+          "smallPinch"
+        ]
+      },
+      {
+        "id": "trango.rptc.left.sloper",
+        "name": "Left outer sloper",
+        "shortLabel": "SLO",
+        "detail": "Open-hand sloper contact on the outer angled block",
+        "kind": "sloper",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "rounded",
+        "features": [
+          "largeSlope"
+        ]
+      },
+      {
+        "id": "trango.rptc.right.sloper",
+        "name": "Right outer sloper",
+        "shortLabel": "SLO",
+        "detail": "Open-hand sloper contact on the outer angled block",
+        "kind": "sloper",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "sizeMillimeters": null,
+        "depthRangeMillimeters": null,
+        "gripType": "openHand",
+        "fingerCapacity": 4,
+        "cueStyle": "rounded",
+        "features": [
+          "largeSlope"
+        ]
+      }
+    ]
+  },
+  "artwork": {
+    "schemaVersion": 1,
+    "boardID": "trango.rock-prodigy-training-center",
+    "canvasFrame": {
+      "x": 0.015,
+      "y": 0.02,
+      "width": 0.97,
+      "height": 0.96
+    },
+    "palette": "sculptedWood",
+    "silhouette": {
+      "type": "path",
+      "commands": [
+        {
+          "command": "move",
+          "to": [
+            0.18,
+            0.19
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.405,
+            0.19
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.465,
+            0.245
+          ],
+          "control": [
+            0.45,
+            0.195
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.465,
+            0.675
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.41,
+            0.72
+          ],
+          "control": [
+            0.46,
+            0.71
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.185,
+            0.72
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.145,
+            0.675
+          ],
+          "control": [
+            0.15,
+            0.71
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.145,
+            0.3
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.18,
+            0.19
+          ],
+          "control": [
+            0.15,
+            0.235
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.265,
+            0.1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.405,
+            0.1
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.415,
+            0.125
+          ],
+          "control": [
+            0.415,
+            0.105
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.415,
+            0.205
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.265,
+            0.205
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.19,
+            0.675
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.385,
+            0.675
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.385,
+            0.815
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.355,
+            0.845
+          ],
+          "control": [
+            0.38,
+            0.84
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.215,
+            0.845
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.19,
+            0.815
+          ],
+          "control": [
+            0.195,
+            0.84
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.225,
+            0.805
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.37,
+            0.805
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.37,
+            0.94
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.34,
+            0.97
+          ],
+          "control": [
+            0.365,
+            0.965
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.25,
+            0.97
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.225,
+            0.94
+          ],
+          "control": [
+            0.23,
+            0.965
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.025,
+            0.29
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.135,
+            0.235
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.185,
+            0.285
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.185,
+            0.445
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.135,
+            0.505
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.045,
+            0.485
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.025,
+            0.29
+          ],
+          "control": [
+            0.025,
+            0.45
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.8200000000000001,
+            0.19
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.595,
+            0.19
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.5349999999999999,
+            0.245
+          ],
+          "control": [
+            0.55,
+            0.195
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.5349999999999999,
+            0.675
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.5900000000000001,
+            0.72
+          ],
+          "control": [
+            0.54,
+            0.71
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.815,
+            0.72
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.855,
+            0.675
+          ],
+          "control": [
+            0.85,
+            0.71
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.855,
+            0.3
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.8200000000000001,
+            0.19
+          ],
+          "control": [
+            0.85,
+            0.235
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.735,
+            0.1
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.595,
+            0.1
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.585,
+            0.125
+          ],
+          "control": [
+            0.585,
+            0.105
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.585,
+            0.205
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.735,
+            0.205
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.81,
+            0.675
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.615,
+            0.675
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.615,
+            0.815
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.645,
+            0.845
+          ],
+          "control": [
+            0.62,
+            0.84
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.785,
+            0.845
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.81,
+            0.815
+          ],
+          "control": [
+            0.8049999999999999,
+            0.84
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.775,
+            0.805
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.63,
+            0.805
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.63,
+            0.94
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.6599999999999999,
+            0.97
+          ],
+          "control": [
+            0.635,
+            0.965
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.75,
+            0.97
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.775,
+            0.94
+          ],
+          "control": [
+            0.77,
+            0.965
+          ]
+        },
+        {
+          "command": "close"
+        },
+        {
+          "command": "move",
+          "to": [
+            0.975,
+            0.29
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.865,
+            0.235
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.815,
+            0.285
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.815,
+            0.445
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.865,
+            0.505
+          ]
+        },
+        {
+          "command": "line",
+          "to": [
+            0.955,
+            0.485
+          ]
+        },
+        {
+          "command": "quad",
+          "to": [
+            0.975,
+            0.29
+          ],
+          "control": [
+            0.975,
+            0.45
+          ]
+        },
+        {
+          "command": "close"
+        }
+      ]
+    },
+    "layers": [
+      {
+        "id": "left-main-face",
+        "role": "faceLight",
+        "frame": {
+          "x": 0.145,
+          "y": 0.185,
+          "width": 0.32,
+          "height": 0.535
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.025,
+                0.04
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.93,
+                0.04
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                1.0,
+                0.18
+              ],
+              "control": [
+                0.975,
+                0.055
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.985,
+                0.82
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.85,
+                0.975
+              ],
+              "control": [
+                0.975,
+                0.96
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.12,
+                0.975
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.0,
+                0.82
+              ],
+              "control": [
+                0.025,
+                0.96
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.015,
+                0.18
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.025,
+                0.04
+              ],
+              "control": [
+                0.015,
+                0.06
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        }
+      },
+      {
+        "id": "left-upper-tab",
+        "role": "faceLight",
+        "frame": {
+          "x": 0.19,
+          "y": 0.675,
+          "width": 0.195,
+          "height": 0.17
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.15
+        }
+      },
+      {
+        "id": "left-lower-tab",
+        "role": "bottomPlane",
+        "frame": {
+          "x": 0.225,
+          "y": 0.805,
+          "width": 0.145,
+          "height": 0.165
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.18
+        }
+      },
+      {
+        "id": "left-outer-block",
+        "role": "shelf",
+        "frame": {
+          "x": 0.025,
+          "y": 0.235,
+          "width": 0.16,
+          "height": 0.27
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.27,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.7,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.98,
+                0.43
+              ],
+              "control1": [
+                0.92,
+                0.07
+              ],
+              "control2": [
+                0.98,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.68,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.22,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.0,
+                0.38
+              ],
+              "control1": [
+                0.04,
+                0.84
+              ],
+              "control2": [
+                0.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.27,
+                0.0
+              ],
+              "control1": [
+                0.0,
+                0.15
+              ],
+              "control2": [
+                0.12,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        }
+      },
+      {
+        "id": "left-top-jug",
+        "role": "shelf",
+        "frame": {
+          "x": 0.265,
+          "y": 0.1,
+          "width": 0.15,
+          "height": 0.105
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.1
+        }
+      },
+      {
+        "id": "center-separator",
+        "role": "separator",
+        "frame": {
+          "x": 0.495,
+          "y": 0.18,
+          "width": 0.01,
+          "height": 0.79
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.5
+        }
+      },
+      {
+        "id": "right-main-face",
+        "role": "faceLight",
+        "frame": {
+          "x": 0.535,
+          "y": 0.185,
+          "width": 0.32,
+          "height": 0.535
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.975,
+                0.04
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.06999999999999995,
+                0.04
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.0,
+                0.18
+              ],
+              "control": [
+                0.025000000000000022,
+                0.055
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.015000000000000013,
+                0.82
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.15000000000000002,
+                0.975
+              ],
+              "control": [
+                0.025000000000000022,
+                0.96
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.88,
+                0.975
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                1.0,
+                0.82
+              ],
+              "control": [
+                0.975,
+                0.96
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.985,
+                0.18
+              ]
+            },
+            {
+              "command": "quad",
+              "to": [
+                0.975,
+                0.04
+              ],
+              "control": [
+                0.985,
+                0.06
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        }
+      },
+      {
+        "id": "right-upper-tab",
+        "role": "faceLight",
+        "frame": {
+          "x": 0.615,
+          "y": 0.675,
+          "width": 0.195,
+          "height": 0.17
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.15
+        }
+      },
+      {
+        "id": "right-lower-tab",
+        "role": "bottomPlane",
+        "frame": {
+          "x": 0.63,
+          "y": 0.805,
+          "width": 0.145,
+          "height": 0.165
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.18
+        }
+      },
+      {
+        "id": "right-outer-block",
+        "role": "shelf",
+        "frame": {
+          "x": 0.815,
+          "y": 0.235,
+          "width": 0.16,
+          "height": 0.27
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.73,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.30000000000000004,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.020000000000000018,
+                0.43
+              ],
+              "control1": [
+                0.07999999999999996,
+                0.07
+              ],
+              "control2": [
+                0.020000000000000018,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.31999999999999995,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.78,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                1.0,
+                0.38
+              ],
+              "control1": [
+                0.96,
+                0.84
+              ],
+              "control2": [
+                1.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.73,
+                0.0
+              ],
+              "control1": [
+                1.0,
+                0.15
+              ],
+              "control2": [
+                0.88,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        }
+      },
+      {
+        "id": "right-top-jug",
+        "role": "shelf",
+        "frame": {
+          "x": 0.585,
+          "y": 0.1,
+          "width": 0.15,
+          "height": 0.105
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.1
+        }
+      }
+    ],
+    "holdPieces": [
+      {
+        "id": "trango.rptc.left.top-jug.surface",
+        "holdID": "trango.rptc.left.top-jug",
+        "frame": {
+          "x": 0.27,
+          "y": 0.1,
+          "width": 0.145,
+          "height": 0.105
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.1
+        },
+        "treatment": {
+          "type": "shelf",
+          "rimInsetFraction": 0.06
+        }
+      },
+      {
+        "id": "trango.rptc.right.top-jug.surface",
+        "holdID": "trango.rptc.right.top-jug",
+        "frame": {
+          "x": 0.585,
+          "y": 0.1,
+          "width": 0.145,
+          "height": 0.105
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.1
+        },
+        "treatment": {
+          "type": "shelf",
+          "rimInsetFraction": 0.06
+        }
+      },
+      {
+        "id": "trango.rptc.left.large-open-rail.rail",
+        "holdID": "trango.rptc.left.large-open-rail",
+        "frame": {
+          "x": 0.205,
+          "y": 0.275,
+          "width": 0.235,
+          "height": 0.06
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.32
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.right.large-open-rail.rail",
+        "holdID": "trango.rptc.right.large-open-rail",
+        "frame": {
+          "x": 0.56,
+          "y": 0.275,
+          "width": 0.235,
+          "height": 0.06
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.32
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.left.small-crimp-rail.rail",
+        "holdID": "trango.rptc.left.small-crimp-rail",
+        "frame": {
+          "x": 0.205,
+          "y": 0.365,
+          "width": 0.235,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.32
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.right.small-crimp-rail.rail",
+        "holdID": "trango.rptc.right.small-crimp-rail",
+        "frame": {
+          "x": 0.56,
+          "y": 0.365,
+          "width": 0.235,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.32
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.left.three-finger-slot.slot",
+        "holdID": "trango.rptc.left.three-finger-slot",
+        "frame": {
+          "x": 0.235,
+          "y": 0.465,
+          "width": 0.135,
+          "height": 0.08
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.38
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.right.three-finger-slot.slot",
+        "holdID": "trango.rptc.right.three-finger-slot",
+        "frame": {
+          "x": 0.63,
+          "y": 0.465,
+          "width": 0.135,
+          "height": 0.08
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.38
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.left.thin-crimp.crimp",
+        "holdID": "trango.rptc.left.thin-crimp",
+        "frame": {
+          "x": 0.315,
+          "y": 0.605,
+          "width": 0.105,
+          "height": 0.04
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.2
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.right.thin-crimp.crimp",
+        "holdID": "trango.rptc.right.thin-crimp",
+        "frame": {
+          "x": 0.5800000000000001,
+          "y": 0.605,
+          "width": 0.105,
+          "height": 0.04
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.2
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.left.deep-mr-pocket.pocket",
+        "holdID": "trango.rptc.left.deep-mr-pocket",
+        "frame": {
+          "x": 0.195,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.right.deep-mr-pocket.pocket",
+        "holdID": "trango.rptc.right.deep-mr-pocket",
+        "frame": {
+          "x": 0.71,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.left.shallow-mr-pocket.pocket",
+        "holdID": "trango.rptc.left.shallow-mr-pocket",
+        "frame": {
+          "x": 0.225,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.right.shallow-mr-pocket.pocket",
+        "holdID": "trango.rptc.right.shallow-mr-pocket",
+        "frame": {
+          "x": 0.68,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.left.medium-im-pocket.pocket",
+        "holdID": "trango.rptc.left.medium-im-pocket",
+        "frame": {
+          "x": 0.32,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.right.medium-im-pocket.pocket",
+        "holdID": "trango.rptc.right.medium-im-pocket",
+        "frame": {
+          "x": 0.585,
+          "y": 0.705,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "deep"
+        }
+      },
+      {
+        "id": "trango.rptc.left.shallow-im-pocket.pocket",
+        "holdID": "trango.rptc.left.shallow-im-pocket",
+        "frame": {
+          "x": 0.32,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.right.shallow-im-pocket.pocket",
+        "holdID": "trango.rptc.right.shallow-im-pocket",
+        "frame": {
+          "x": 0.585,
+          "y": 0.835,
+          "width": 0.095,
+          "height": 0.055
+        },
+        "shape": {
+          "type": "roundedRect",
+          "cornerRadiusFraction": 0.45
+        },
+        "treatment": {
+          "type": "recess",
+          "rimInsetFraction": 0.09,
+          "depth": "shallow"
+        }
+      },
+      {
+        "id": "trango.rptc.left.wide-pinch.outer-contact",
+        "holdID": "trango.rptc.left.wide-pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.27,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.7,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.98,
+                0.43
+              ],
+              "control1": [
+                0.92,
+                0.07
+              ],
+              "control2": [
+                0.98,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.68,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.22,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.0,
+                0.38
+              ],
+              "control1": [
+                0.04,
+                0.84
+              ],
+              "control2": [
+                0.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.27,
+                0.0
+              ],
+              "control1": [
+                0.0,
+                0.15
+              ],
+              "control2": [
+                0.12,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.right.wide-pinch.outer-contact",
+        "holdID": "trango.rptc.right.wide-pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.73,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.30000000000000004,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.020000000000000018,
+                0.43
+              ],
+              "control1": [
+                0.07999999999999996,
+                0.07
+              ],
+              "control2": [
+                0.020000000000000018,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.31999999999999995,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.78,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                1.0,
+                0.38
+              ],
+              "control1": [
+                0.96,
+                0.84
+              ],
+              "control2": [
+                1.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.73,
+                0.0
+              ],
+              "control1": [
+                1.0,
+                0.15
+              ],
+              "control2": [
+                0.88,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.left.medium-pinch.outer-contact",
+        "holdID": "trango.rptc.left.medium-pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.27,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.7,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.98,
+                0.43
+              ],
+              "control1": [
+                0.92,
+                0.07
+              ],
+              "control2": [
+                0.98,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.68,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.22,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.0,
+                0.38
+              ],
+              "control1": [
+                0.04,
+                0.84
+              ],
+              "control2": [
+                0.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.27,
+                0.0
+              ],
+              "control1": [
+                0.0,
+                0.15
+              ],
+              "control2": [
+                0.12,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.right.medium-pinch.outer-contact",
+        "holdID": "trango.rptc.right.medium-pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.73,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.30000000000000004,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.020000000000000018,
+                0.43
+              ],
+              "control1": [
+                0.07999999999999996,
+                0.07
+              ],
+              "control2": [
+                0.020000000000000018,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.31999999999999995,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.78,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                1.0,
+                0.38
+              ],
+              "control1": [
+                0.96,
+                0.84
+              ],
+              "control2": [
+                1.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.73,
+                0.0
+              ],
+              "control1": [
+                1.0,
+                0.15
+              ],
+              "control2": [
+                0.88,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.left.small-pinch.outer-contact",
+        "holdID": "trango.rptc.left.small-pinch",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.27,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.7,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.98,
+                0.43
+              ],
+              "control1": [
+                0.92,
+                0.07
+              ],
+              "control2": [
+                0.98,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.68,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.22,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.0,
+                0.38
+              ],
+              "control1": [
+                0.04,
+                0.84
+              ],
+              "control2": [
+                0.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.27,
+                0.0
+              ],
+              "control1": [
+                0.0,
+                0.15
+              ],
+              "control2": [
+                0.12,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.right.small-pinch.outer-contact",
+        "holdID": "trango.rptc.right.small-pinch",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.73,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.30000000000000004,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.020000000000000018,
+                0.43
+              ],
+              "control1": [
+                0.07999999999999996,
+                0.07
+              ],
+              "control2": [
+                0.020000000000000018,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.31999999999999995,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.78,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                1.0,
+                0.38
+              ],
+              "control1": [
+                0.96,
+                0.84
+              ],
+              "control2": [
+                1.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.73,
+                0.0
+              ],
+              "control1": [
+                1.0,
+                0.15
+              ],
+              "control2": [
+                0.88,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.left.sloper.outer-contact",
+        "holdID": "trango.rptc.left.sloper",
+        "frame": {
+          "x": 0.025,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.27,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.7,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.98,
+                0.43
+              ],
+              "control1": [
+                0.92,
+                0.07
+              ],
+              "control2": [
+                0.98,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.68,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.22,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.0,
+                0.38
+              ],
+              "control1": [
+                0.04,
+                0.84
+              ],
+              "control2": [
+                0.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.27,
+                0.0
+              ],
+              "control1": [
+                0.0,
+                0.15
+              ],
+              "control2": [
+                0.12,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      },
+      {
+        "id": "trango.rptc.right.sloper.outer-contact",
+        "holdID": "trango.rptc.right.sloper",
+        "frame": {
+          "x": 0.815,
+          "y": 0.245,
+          "width": 0.16,
+          "height": 0.245
+        },
+        "shape": {
+          "type": "path",
+          "commands": [
+            {
+              "command": "move",
+              "to": [
+                0.73,
+                0.0
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.30000000000000004,
+                0.07
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.020000000000000018,
+                0.43
+              ],
+              "control1": [
+                0.07999999999999996,
+                0.07
+              ],
+              "control2": [
+                0.020000000000000018,
+                0.23
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.31999999999999995,
+                0.94
+              ]
+            },
+            {
+              "command": "line",
+              "to": [
+                0.78,
+                1.0
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                1.0,
+                0.38
+              ],
+              "control1": [
+                0.96,
+                0.84
+              ],
+              "control2": [
+                1.0,
+                0.62
+              ]
+            },
+            {
+              "command": "curve",
+              "to": [
+                0.73,
+                0.0
+              ],
+              "control1": [
+                1.0,
+                0.15
+              ],
+              "control2": [
+                0.88,
+                0.03
+              ]
+            },
+            {
+              "command": "close"
+            }
+          ]
+        },
+        "treatment": {
+          "type": "surface"
+        }
+      }
+    ]
+  }
+}

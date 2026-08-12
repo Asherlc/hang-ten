@@ -17,152 +17,1651 @@
       "id": "training-board-manual",
       "title": "Metolius Training Board Instructions",
       "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826"
+    },
+    {
+      "id": "pre-migration-runtime",
+      "title": "Hang Ten pre-migration runtime: HangTen/Models/GeneratedBoardCatalog.swift",
+      "url": "https://github.com/Asherlc/hang-ten/blob/f1761e7/HangTen/Models/GeneratedBoardCatalog.swift"
     }
   ],
   "fieldEvidence": {
     "manufacturer": {
       "sourceIDs": [
-        "product-page"
+        "product-page",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
     "name": {
       "sourceIDs": [
-        "product-page"
+        "product-page",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
     "productURL": {
       "sourceIDs": [
-        "product-page"
+        "product-page",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
     "dimensions": {
       "sourceIDs": [
-        "product-page"
+        "product-page",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
     "aspectRatio": {
       "sourceIDs": [
-        "product-page"
+        "product-page",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "subtitle": {
+      "sourceIDs": [
+        "product-page",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     }
   },
   "holdEvidence": {
-    "jug-left": {
+    "jug-left.id": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "sloper-flat-left": {
+    "jug-left.name": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "sloper-round-center": {
+    "jug-left.shortLabel": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "sloper-flat-right": {
+    "jug-left.detail": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "jug-right": {
+    "jug-left.kind": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "edge-29-left": {
+    "jug-left.frame": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-29-three-left": {
+    "jug-left.sizeMillimeters": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-29-two-left": {
+    "jug-left.depthRangeMillimeters": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-29-four-center": {
+    "jug-left.gripType": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-29-two-right": {
+    "jug-left.fingerCapacity": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-29-three-right": {
+    "jug-left.cueStyle": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "edge-29-right": {
+    "jug-left.features": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "edge-19-left": {
+    "sloper-flat-left.id": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-19-three-left": {
+    "sloper-flat-left.name": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-19-three-right": {
+    "sloper-flat-left.shortLabel": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-19-two-left": {
+    "sloper-flat-left.detail": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-19-two-right": {
+    "sloper-flat-left.kind": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "pocket-19-four-center": {
+    "sloper-flat-left.frame": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     },
-    "edge-19-right": {
+    "sloper-flat-left.sizeMillimeters": {
       "sourceIDs": [
-        "hold-depth-diagram"
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-round-center.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "sloper-flat-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "jug-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-four-center.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-two-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-29-three-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-29-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-three-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-left.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-two-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "pocket-19-four-center.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.id": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.name": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.shortLabel": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.detail": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.kind": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.frame": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.sizeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.depthRangeMillimeters": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.gripType": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.fingerCapacity": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.cueStyle": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "edge-19-right.features": {
+      "sourceIDs": [
+        "hold-depth-diagram",
+        "pre-migration-runtime"
       ],
       "method": "reviewed-human-authored-normalization"
     }

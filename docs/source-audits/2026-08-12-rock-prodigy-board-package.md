@@ -25,6 +25,7 @@ physical metadata, semantic input, or runtime artwork.
 | --- | --- | --- |
 | ID | `trango.rock-prodigy-training-center` | Existing reviewed runtime identity; product page |
 | Manufacturer / name / URL | Trango / Rock Prodigy Training Center / product URL | Product page |
+| Subtitle | `Two-piece adjustable training board with variable rails, pockets, crimps, pinches, and slopers.` | Exact pre-migration runtime value; product-page normalization |
 | Dimensions | 18.2 × 12.1 inches assembled; two 9.1 × 12.1 inch pieces | Product page |
 | Aspect ratio | `18.2 / 12.1` | Reviewed normalization of product-page dimensions |
 | Presentation | absent | Preserves existing runtime behavior; no new asset introduced |
@@ -53,6 +54,16 @@ three pinch IDs therefore preserve one shared path per side. The logical
 sloper target preserves that same source-limited outer-surface path. This is a
 migration of the reviewed runtime behavior, not a new geometry claim.
 
+Every hold now records the complete resolved pre-migration runtime value:
+`id`, `name`, `shortLabel`, `detail`, `kind`, normalized `frame`, nullable
+`sizeMillimeters`, nullable `depthRangeMillimeters`, `gripType`,
+`fingerCapacity`, `cueStyle`, and `features`. Constructor defaults from the
+Swift implementation were resolved into explicit JSON values so a later
+runtime loader does not need to infer or default any of these fields. The
+`holdEvidence` map addresses each value as `<hold-id>.<field>` and links it to
+both the applicable manufacturer evidence and the exact pre-migration runtime
+source at revision `f1761e7`.
+
 ## Semantic mapping
 
 The use instructions and depth guide support the seven preserved routine
@@ -72,3 +83,9 @@ result. The product image supports silhouette and placement; the depth guide
 supports the contact identities represented by the hold paths. Artwork is a
 reviewed human-authored normalization and does not use the quarantined catalog
 outline.
+
+Preservation tests compare the complete expanded artwork structure—not a
+digest of the migrated output—with a checked-in fixture audited against
+`HangTen/Views/RockProdigyTrainingCenterDesign.swift` at revision `f1761e7`.
+The comparison covers the canvas, palette, silhouette commands, layer and hold
+piece identities, frames, shapes, roles, and treatments.

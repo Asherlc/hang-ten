@@ -14,7 +14,7 @@ from typing import Any, Mapping
 from urllib.parse import urlparse
 
 try:  # Standard package import, plus direct-file loading used by pipeline tests.
-    from .board_artwork import BoardArtworkDocument, load_artwork
+    from .board_artwork import BoardArtworkDocument, NormalizedFrame, load_artwork
 except ImportError:  # pragma: no cover - exercised by direct module consumers
     _artwork_path = Path(__file__).with_name("board_artwork.py")
     _spec = importlib.util.spec_from_file_location("hangboard_board_artwork", _artwork_path)
@@ -24,6 +24,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     sys.modules[_spec.name] = _module
     _spec.loader.exec_module(_module)
     BoardArtworkDocument = _module.BoardArtworkDocument
+    NormalizedFrame = _module.NormalizedFrame
     load_artwork = _module.load_artwork
 
 
@@ -32,6 +33,20 @@ _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _STATUSES = frozenset({"draft", "approved"})
 _SIDECARS = ("board.json", "evidence.json", "semantics.json", "artwork.json")
 _EVIDENCE_METHODS = frozenset({"manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation"})
+_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_GRIP_TYPES = frozenset({"openHand", "halfCrimp", "fullCrimp", "fourFingerPocket", "threeFingerPocket", "twoFingerPocket", "sloper"})
+_CUE_STYLES = frozenset({"outerJug", "slot", "pinch", "rounded"})
+_HOLD_FEATURES = frozenset({
+    "jug", "roundSloper", "largeSlope", "largeEdge", "mediumEdge", "smallEdge",
+    "pocket", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket",
+    "fourFingerFlatEdge", "fourFingerIncutEdge", "largeOpenHandRail",
+    "deepTwoFingerPocket", "thinCrimp", "shallowThreeFingerSlot", "widePinch",
+    "mediumPinch", "smallPinch",
+})
+_HOLD_FIELD_KEYS = frozenset({
+    "id", "name", "shortLabel", "detail", "kind", "frame", "sizeMillimeters",
+    "depthRangeMillimeters", "gripType", "fingerCapacity", "cueStyle", "features",
+})
 
 
 def _closed(payload: Mapping[str, Any], keys: set[str], source: str) -> None:
@@ -65,6 +80,25 @@ def _number(value: Any, source: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
         raise ValueError(f"{source} must be finite")
     return float(value)
+
+
+def _positive_integer(value: Any, source: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{source} must be a positive integer")
+    return value
+
+
+def _finger_capacity(value: Any, source: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value not in range(1, 5):
+        raise ValueError(f"{source} must be in 1...4")
+    return value
+
+
+def _enum_string(value: Any, allowed: frozenset[str], source: str) -> str:
+    result = _string(value, source)
+    if result not in allowed:
+        raise ValueError(f"{source} must be one of {sorted(allowed)}")
+    return result
 
 
 def _relative_path(value: Any, root: Path, source: str, *, container: str) -> Path:
@@ -143,9 +177,35 @@ class CatalogDocument:
 
 
 @dataclass(frozen=True)
+class MillimeterRange:
+    lower_bound: int
+    upper_bound: int
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "MillimeterRange":
+        payload = _mapping(value, source)
+        _closed(payload, {"lowerBound", "upperBound"}, source)
+        lower = _positive_integer(payload["lowerBound"], f"{source}.lowerBound")
+        upper = _positive_integer(payload["upperBound"], f"{source}.upperBound")
+        if lower > upper:
+            raise ValueError(f"{source}.lowerBound must not exceed upperBound")
+        return cls(lower, upper)
+
+
+@dataclass(frozen=True)
 class BoardHold:
     id: str
     name: str
+    short_label: str
+    detail: str
+    kind: str
+    frame: NormalizedFrame
+    size_millimeters: int | None
+    depth_range_millimeters: MillimeterRange | None
+    grip_type: str
+    finger_capacity: int
+    cue_style: str
+    features: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -188,7 +248,7 @@ class BoardPackage:
 
 
 def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
-    required_keys = {"schemaVersion", "id", "manufacturer", "name", "productURL", "dimensions", "aspectRatio", "holds"}
+    required_keys = {"schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio", "holds"}
     allowed_keys = required_keys | {"presentation"}
     unknown, missing = set(value) - allowed_keys, required_keys - set(value)
     if unknown:
@@ -198,7 +258,7 @@ def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
     if isinstance(value["schemaVersion"], bool) or value["schemaVersion"] != 1:
         raise ValueError("board.json.schemaVersion must be 1")
     board_id = _identifier(value["id"], "board.json.id")
-    fact_keys = {"manufacturer", "name", "productURL", "dimensions", "aspectRatio"}
+    fact_keys = {"manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio"}
     facts: dict[str, Any] = {}
     for key in fact_keys:
         if key == "aspectRatio":
@@ -223,9 +283,38 @@ def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
         raise ValueError("board.json.holds must be a non-empty array")
     holds: list[BoardHold] = []
     for index, raw in enumerate(raw_holds):
-        item = _mapping(raw, f"board.json.holds[{index}]")
-        _closed(item, {"id", "name"}, f"board.json.holds[{index}]")
-        holds.append(BoardHold(_identifier(item["id"], f"board.json.holds[{index}].id"), _string(item["name"], f"board.json.holds[{index}].name")))
+        source = f"board.json.holds[{index}]"
+        item = _mapping(raw, source)
+        _closed(item, set(_HOLD_FIELD_KEYS), source)
+        raw_size = item["sizeMillimeters"]
+        size = None if raw_size is None else _positive_integer(raw_size, f"{source}.sizeMillimeters")
+        raw_range = item["depthRangeMillimeters"]
+        depth_range = None if raw_range is None else MillimeterRange.from_json(raw_range, f"{source}.depthRangeMillimeters")
+        raw_features = item["features"]
+        if not isinstance(raw_features, list):
+            raise ValueError(f"{source}.features must be an array")
+        features = tuple(
+            _enum_string(feature, _HOLD_FEATURES, f"{source}.features[{feature_index}]")
+            for feature_index, feature in enumerate(raw_features)
+        )
+        if len(features) != len(set(features)):
+            raise ValueError(f"{source}.features must be unique")
+        holds.append(
+            BoardHold(
+                id=_identifier(item["id"], f"{source}.id"),
+                name=_string(item["name"], f"{source}.name"),
+                short_label=_string(item["shortLabel"], f"{source}.shortLabel"),
+                detail=_string(item["detail"], f"{source}.detail"),
+                kind=_enum_string(item["kind"], _HOLD_KINDS, f"{source}.kind"),
+                frame=NormalizedFrame.from_json(item["frame"], f"{source}.frame"),
+                size_millimeters=size,
+                depth_range_millimeters=depth_range,
+                grip_type=_enum_string(item["gripType"], _GRIP_TYPES, f"{source}.gripType"),
+                finger_capacity=_finger_capacity(item["fingerCapacity"], f"{source}.fingerCapacity"),
+                cue_style=_enum_string(item["cueStyle"], _CUE_STYLES, f"{source}.cueStyle"),
+                features=features,
+            )
+        )
     if len({hold.id for hold in holds}) != len(holds):
         raise ValueError("duplicate physical hold id")
     return BoardDocument(board_id, MappingProxyType(facts), tuple(holds), presentation_asset_path)
@@ -351,7 +440,12 @@ def load_approved_package(package_root: Path) -> BoardPackage:
         if piece.hold_id not in hold_ids:
             raise ValueError(f"artwork piece references unknown physical hold {piece.hold_id!r}")
     _exact_keys(evidence.field_evidence, set(board.facts), "fieldEvidence keys must equal board factual fields")
-    _exact_keys(evidence.hold_evidence, hold_ids, "holdEvidence keys must equal physical hold IDs")
+    hold_evidence_keys = {
+        f"{hold.id}.{field}"
+        for hold in board.holds
+        for field in _HOLD_FIELD_KEYS
+    }
+    _exact_keys(evidence.hold_evidence, hold_evidence_keys, "holdEvidence keys must equal physical hold field paths")
     _exact_keys(evidence.semantic_evidence, set(semantics.semantic_holds), "semanticEvidence keys must equal semantic IDs")
     artwork_keys = {"silhouette", *(f"layers.{layer.id}" for layer in artwork.layers), *(f"holdPieces.{piece.id}" for piece in artwork.hold_pieces)}
     _exact_keys(evidence.artwork_evidence, artwork_keys, "artworkEvidence keys must equal artwork elements")
