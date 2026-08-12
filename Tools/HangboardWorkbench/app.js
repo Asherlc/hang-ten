@@ -38,7 +38,11 @@
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
   const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
-  const { advancedToolVisibility, formatFocusedEditorError } = globalThis.HoldEditorUIModel;
+  const {
+    advancedToolVisibility,
+    formatFocusedEditorDiagnostic,
+    formatFocusedEditorError,
+  } = globalThis.HoldEditorUIModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
@@ -2103,7 +2107,7 @@
   async function refreshBoards() {
     const opening = await openingBoardController.refresh();
     state.libraryBoards = opening.library;
-    state.libraryDiagnostics = opening.diagnostics;
+    state.libraryDiagnostics = (opening.diagnostics || []).map(formatFocusedEditorDiagnostic);
     state.boards = opening.runtime;
     state.openingErrors = Object.fromEntries(Object.entries(opening.errors || {}).map(([key, message]) => [
       key,

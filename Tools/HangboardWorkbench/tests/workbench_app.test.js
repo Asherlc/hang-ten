@@ -2,7 +2,11 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { restoreOpeningAfterJobRecovery } = require("../workbench-controller.js");
+const {
+  renderRepositoryDiagnostics,
+  restoreOpeningAfterJobRecovery,
+} = require("../workbench-controller.js");
+const { formatFocusedEditorDiagnostic } = require("../editor-ui-model.js");
 
 const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
 const readme = fs.readFileSync(path.join(__dirname, "../README.md"), "utf8");
@@ -199,6 +203,61 @@ test("focused editor error sinks format external messages before rendering", () 
     /(?:state\.saveError|\.textContent)\s*=\s*(?:error|failure)\.message\b/,
     "external messages must not be assigned directly to visible editor state",
   );
+});
+
+test("opening repository diagnostics are translated at the app boundary before visible rendering", async () => {
+  const state = {};
+  const refreshBoards = new Function(
+    "openingBoardController",
+    "state",
+    "formatFocusedEditorDiagnostic",
+    "formatFocusedEditorError",
+    "renderRecentRuns",
+    "renderOpeningSections",
+    `return (async ${extractFunction(appSource, "refreshBoards")});`,
+  )(
+    { async refresh() {
+      return {
+        library: [{ boardId: "alpha" }],
+        diagnostics: [{
+          path: "broken-board/stage-2-regions.json",
+          code: "invalid_run",
+          holdId: "hold-17",
+          reason: "contour overlaps itself",
+          message: "Stage 2 region 17 failed validation: contour overlaps itself",
+        }],
+        runtime: [],
+        errors: {},
+      };
+    } },
+    state,
+    formatFocusedEditorDiagnostic,
+    require("../editor-ui-model.js").formatFocusedEditorError,
+    () => {},
+    () => {},
+  );
+
+  await refreshBoards();
+
+  const makeNode = (tagName) => ({
+    tagName,
+    children: [],
+    textContent: "",
+    className: "",
+    classList: { toggle() {} },
+    append(...children) { this.children.push(...children); },
+    replaceChildren(...children) { this.children = [...children]; },
+  });
+  const container = { ...makeNode("div"), ownerDocument: { createElement: makeNode } };
+  renderRepositoryDiagnostics(container, state.libraryDiagnostics);
+
+  assert.equal(
+    container.children[1].children[0].children[1].textContent,
+    "Hold 17 failed outline check: outline overlaps itself",
+  );
+  assert.equal(state.libraryDiagnostics[0].path, "broken-board/stage-2-regions.json");
+  assert.equal(state.libraryDiagnostics[0].holdId, "hold-17");
+  assert.equal(state.libraryDiagnostics[0].reason, "contour overlaps itself");
 });
 
 test("the workbench uses one accessible inspector panel and drawer controls", () => {

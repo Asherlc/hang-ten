@@ -126,3 +126,90 @@ The translation is intentionally lexical and narrow. A future backend error
 that introduces a new pipeline synonym will pass through unchanged until that
 term is added to the focused formatter and its behavioral table. Existing
 diagnostic details are otherwise preserved verbatim.
+
+## Hardening follow-up: protected diagnostics and opening-screen boundary
+
+### Scope and audit
+
+The hardening review found one additional visible external-diagnostic path:
+`openingBoardController.refresh()` returned repository diagnostics whose
+messages were stored unchanged in `state.libraryDiagnostics`, passed through
+`openingScreenState()`, and rendered by the source-neutral
+`renderRepositoryDiagnostics()` aria-live warning. The controller remains
+unchanged. All other focused-editor external message paths continue to use
+`formatFocusedEditorError()` or `focusedEditorErrorMessage()`; geometry focus
+continues to parse the original backend message before any display formatting.
+
+Backend/data/API contracts, Stage 2/Stage 3 documents, CLI behavior,
+save/autosave, approval, and history were not changed.
+
+### Files and changes
+
+- `Tools/HangboardWorkbench/editor-ui-model.js`
+  - Protects filenames, slash-prefixed routes/URLs, camelCase fields, and
+    snake_case fields with temporary spans before applying the existing
+    human-language workflow translations, then restores every protected value
+    exactly.
+  - Adds `formatFocusedEditorDiagnostic()`, which returns a new diagnostic with
+    only `message` formatted and preserves path, code, severity, hold ID,
+    reason, and any other properties.
+- `Tools/HangboardWorkbench/app.js`
+  - Formats every opening repository diagnostic before assigning
+    `state.libraryDiagnostics`, closing the remaining visible bypass at the app
+    boundary without making the controller source-specific.
+- `Tools/HangboardWorkbench/tests/workbench_editor_ui_model.test.js`
+  - Proves workflow prose is translated while `stage-2-regions.json`,
+    `/promotion`, and `checkpointToken` remain exact.
+  - Proves repository diagnostic metadata, hold ID, and reason remain exact
+    while only its visible message changes.
+- `Tools/HangboardWorkbench/tests/workbench_app.test.js`
+  - Executes the real `refreshBoards()` body with a repository diagnostic and
+    then renders it through the real controller renderer, proving Stage wording
+    cannot reach the visible warning.
+
+### TDD evidence
+
+- RED, UI model: the new tests failed because the old formatter changed
+  `checkpointToken`, `stage-2-regions.json`, and `/promotion`, and because
+  `formatFocusedEditorDiagnostic` did not exist.
+- RED, opening-screen behavior: after correcting the test harness to preserve
+  the source function's `async` modifier, the renderer visibly received
+  `Stage 2 region 17 failed validation: contour overlaps itself` unchanged.
+- GREEN:
+  `node --test Tools/HangboardWorkbench/tests/workbench_editor_ui_model.test.js Tools/HangboardWorkbench/tests/workbench_app.test.js`
+  — 21 passed, 0 failed.
+
+### Verification
+
+- Focused Node suite above — 21 passed, 0 failed.
+- Full Node suite:
+  `node --test Tools/HangboardWorkbench/tests/*.test.js`
+  — 249 passed, 0 failed.
+- Python Workbench suite in a fresh isolated uv environment:
+  `python -m pytest Tools/HangboardWorkbench/tests -q`
+  — 180 passed in 54.32 seconds.
+- `git diff --check` — clean before report generation.
+
+### Cleanup
+
+The successful Python run used
+`.context/pipeline-error-translation-hardening.8zKp8I`; its exact-path cleanup
+trap removed the environment and the command verified it absent. An earlier
+verification-harness attempt accidentally overlapped two pytest processes;
+its exact temporary environment
+`.context/pipeline-error-translation-hardening.6fM2ZR` was also removed before
+the clean single-process rerun. No persistent `.venv` or `uv.lock` was
+created, and shared `.context` resources were left untouched.
+
+### Self-review and concerns
+
+- Removing the opening diagnostic mapping makes the end-to-end visible-render
+  test fail; removing any protected-span category makes the literal identifier
+  test fail; changing or dropping diagnostic metadata makes the diagnostic
+  equality test fail.
+- The production diff is limited to the focused-editor app/UI-model boundary;
+  `workbench-controller.js`, backend code, payloads, and documents are
+  unchanged.
+- No known functional concerns remain. Future technical identifier syntaxes
+  outside filenames, routes/URLs, camelCase, and snake_case should receive a
+  focused regression before expanding the protected-span recognizer.

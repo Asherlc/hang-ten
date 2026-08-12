@@ -22,7 +22,15 @@
   function formatFocusedEditorError(message, fallback = "Could not complete this editor action") {
     const source = typeof message === "string" ? message.trim() : "";
     if (!source) return fallback;
-    return source
+    const protectedSpans = [];
+    const protectedSource = source.replace(
+      /(?:https?:\/\/|\/)[^\s"'`<>),;]+|\b[A-Za-z0-9_][A-Za-z0-9_.-]*\.[A-Za-z0-9][A-Za-z0-9_-]*\b|\b[A-Za-z_$][A-Za-z0-9_$]*[a-z][A-Z][A-Za-z0-9_$]*\b|\b[A-Za-z_$][A-Za-z0-9$]*_[A-Za-z0-9_$]+\b/g,
+      (span) => {
+        const index = protectedSpans.push(span) - 1;
+        return `\uE000${index}\uE001`;
+      },
+    );
+    return protectedSource
       .replace(/\bStage[\s_-]*[23]\s+regions?\s+(\d+)\b/gi, (_match, regionId) => `Hold ${regionId}`)
       .replace(/\bStage[\s_-]*2\b/gi, "Detected hold outlines")
       .replace(/\bStage[\s_-]*3\b/gi, "Editable hold outlines")
@@ -53,10 +61,25 @@
       .replace(/\bregions\b/gi, "holds")
       .replace(/\bregion\b/gi, "hold")
       .replace(/\bcontours\b/gi, "outlines")
-      .replace(/\bcontour\b/gi, "outline");
+      .replace(/\bcontour\b/gi, "outline")
+      .replace(/\uE000(\d+)\uE001/g, (_placeholder, index) => protectedSpans[Number(index)]);
   }
 
-  const api = Object.freeze({ advancedToolVisibility, formatFocusedEditorError });
+  function formatFocusedEditorDiagnostic(
+    diagnostic,
+    fallback = "Repository package is invalid",
+  ) {
+    return {
+      ...diagnostic,
+      message: formatFocusedEditorError(diagnostic?.message, fallback),
+    };
+  }
+
+  const api = Object.freeze({
+    advancedToolVisibility,
+    formatFocusedEditorDiagnostic,
+    formatFocusedEditorError,
+  });
   globalThis.HoldEditorUIModel = api;
   if (typeof module !== "undefined") module.exports = api;
 })();
