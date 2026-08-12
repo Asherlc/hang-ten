@@ -620,7 +620,15 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             workoutSaved.fulfill()
         }
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, defaults: defaults)
+        let sessionDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("WorkoutActivityRecordingTests-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: sessionDirectory) }
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: sessionDirectory)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: sessionStore,
+            defaults: defaults
+        )
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
             .map(\.sessionCount)
