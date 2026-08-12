@@ -6,6 +6,8 @@ import shutil
 import sys
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -63,12 +65,18 @@ def build_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
     return repository_root, catalog, approved_package
 
 
+def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
+    monkeypatch.setenv("TARGET_BUILD_DIR", str(destination.parent.parent))
+    monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
+
+
 def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destination(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
     repository_root, catalog, approved_package = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
     (destination / "stale").mkdir(parents=True)
     (destination / "stale" / "previous-build.txt").write_bytes(b"stale")
     sibling_marker = destination.parent / "keep-this-sibling.txt"
@@ -85,3 +93,71 @@ def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destinati
         if source_path.is_file():
             relative_path = source_path.relative_to(approved_package)
             assert destination.joinpath("approved-board", relative_path).read_bytes() == source_path.read_bytes()
+
+
+def test_staging_rejects_symlinked_destination_and_leaves_its_target_untouched(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, _, _ = build_repository(tmp_path)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    destination.parent.mkdir(parents=True)
+    external_destination = tmp_path / "external-destination"
+    external_destination.mkdir()
+    marker = external_destination / "must-not-change.txt"
+    marker.write_bytes(b"protected")
+    destination.symlink_to(external_destination, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.stage_approved_packages(repository_root, destination)
+
+    assert marker.read_bytes() == b"protected"
+
+
+def test_staging_rejects_symlinked_destination_ancestor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, _, _ = build_repository(tmp_path)
+    linked_build = tmp_path / "linked-build"
+    linked_build.symlink_to(tmp_path / "external-build", target_is_directory=True)
+    destination = linked_build / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.stage_approved_packages(repository_root, destination)
+
+
+def test_staging_rejects_symlinked_hangboards_source_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, _, _ = build_repository(tmp_path)
+    hangboards = repository_root / "Hangboards"
+    external_hangboards = tmp_path / "external-hangboards"
+    hangboards.rename(external_hangboards)
+    hangboards.symlink_to(external_hangboards, target_is_directory=True)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.stage_approved_packages(repository_root, destination)
+
+
+def test_staging_rejects_checkout_and_non_xcode_destinations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root, _, _ = build_repository(tmp_path)
+    checkout_destination = repository_root / "HangTen" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, checkout_destination)
+
+    with pytest.raises(ValueError, match="checkout"):
+        module.stage_approved_packages(repository_root, checkout_destination)
+
+    trusted_destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, trusted_destination)
+    arbitrary_destination = tmp_path / "scratch" / "Hangboards"
+    with pytest.raises(ValueError, match="Xcode resource"):
+        module.stage_approved_packages(repository_root, arbitrary_destination)

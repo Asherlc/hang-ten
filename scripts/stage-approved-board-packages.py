@@ -39,14 +39,49 @@ def _is_within(path: Path, parent: Path) -> bool:
     return True
 
 
+def _absolute_lexical(path: Path) -> Path:
+    return Path(os.path.abspath(path))
+
+
+def _reject_symlinked_ancestors(path: Path, description: str) -> None:
+    current = Path(path.anchor)
+    for part in path.parts[1:]:
+        current /= part
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        except OSError as error:
+            raise ValueError(f"cannot inspect {description}: {current}") from error
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"{description} must not contain symlinks: {current}")
+
+
+def _xcode_resource_root() -> Path:
+    target_build_directory = os.environ.get("TARGET_BUILD_DIR")
+    resource_folder_path = os.environ.get("UNLOCALIZED_RESOURCES_FOLDER_PATH")
+    if not target_build_directory or resource_folder_path is None:
+        raise ValueError("destination requires Xcode TARGET_BUILD_DIR and UNLOCALIZED_RESOURCES_FOLDER_PATH")
+    relative_resource_folder = Path(resource_folder_path)
+    if (
+        relative_resource_folder.is_absolute()
+        or not relative_resource_folder.parts
+        or any(part in {".", ".."} for part in relative_resource_folder.parts)
+    ):
+        raise ValueError("UNLOCALIZED_RESOURCES_FOLDER_PATH must be a relative Xcode resource path")
+    return _absolute_lexical(Path(target_build_directory) / relative_resource_folder)
+
+
 def _validate_destination(repository_root: Path, destination: Path) -> None:
-    if destination.name != "Hangboards":
-        raise ValueError("destination must be the app resource Hangboards directory")
+    resource_root = _xcode_resource_root()
+    _reject_symlinked_ancestors(resource_root, "Xcode resource root")
+    _reject_symlinked_ancestors(destination, "destination")
+    expected_destination = resource_root / "Hangboards"
+    if destination != expected_destination:
+        raise ValueError(f"destination must equal the Xcode resource Hangboards directory: {expected_destination}")
     for checkout_path in (repository_root / "Hangboards", repository_root / "HangTen"):
         if _is_within(destination, checkout_path):
             raise ValueError(f"destination must not write into the checkout: {destination}")
-    if destination.is_symlink():
-        raise ValueError(f"destination must not be a symlink: {destination}")
 
 
 def _regular_file(path: Path) -> None:
@@ -107,11 +142,16 @@ def _replace_destination(staging: Path, destination: Path) -> None:
 
 def stage_approved_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
     """Copy the validated catalog and approved package trees into *destination*."""
-    repository_root = Path(repository_root).resolve(strict=True)
-    destination = Path(destination).resolve(strict=False)
+    repository_root = _absolute_lexical(Path(repository_root))
+    destination = _absolute_lexical(Path(destination))
+    _reject_symlinked_ancestors(repository_root, "repository root")
+    _regular_directory(repository_root)
     _validate_destination(repository_root, destination)
 
-    catalog_path = repository_root / "Hangboards" / "catalog.json"
+    hangboards_root = repository_root / "Hangboards"
+    _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
+    _regular_directory(hangboards_root)
+    catalog_path = hangboards_root / "catalog.json"
     _regular_file(catalog_path)
     catalog = load_board_catalog_module(repository_root).validate_catalog(catalog_path)
 
