@@ -206,6 +206,18 @@ test("editor exposes curve-editing affordances", () => {
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
 });
 
+test("viewport wheel listener pans or cursor-anchored zooms by interaction intent", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+
+  assert.match(html, /src="editor-interaction-model\.js"/);
+  assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="editor-interaction-model.js"'));
+  assert.ok(html.indexOf('src="editor-interaction-model.js"') < html.indexOf('src="app.js"'));
+  assert.match(app, /addEventListener\("wheel", \(event\) => \{[\s\S]*event\.preventDefault\(\)/);
+  assert.match(app, /if \(action\.kind === "zoom"\) \{[\s\S]*setZoom\(state\.zoom \* action\.scale, event\.clientX, event\.clientY\)/);
+  assert.match(app, /state\.panX -= action\.deltaX;[\s\S]*state\.panY -= action\.deltaY;[\s\S]*renderTransform\(\);/);
+});
+
 test("declares each board picker element once in the element map", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const initBlock = app.match(

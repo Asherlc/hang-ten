@@ -35,6 +35,7 @@
     shouldRenderEdgeCurveHandle,
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
+  const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { timelineFor, canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
@@ -2906,7 +2907,14 @@
   el["canvas-viewport"].addEventListener("pointercancel", onViewportPointerUp);
   el["canvas-viewport"].addEventListener("wheel", (event) => {
     event.preventDefault();
-    setZoom(state.zoom * Math.exp(-event.deltaY * 0.0012), event.clientX, event.clientY);
+    const action = viewportWheelAction(event);
+    if (action.kind === "zoom") {
+      setZoom(state.zoom * action.scale, event.clientX, event.clientY);
+      return;
+    }
+    state.panX -= action.deltaX;
+    state.panY -= action.deltaY;
+    renderTransform();
   }, { passive: false });
 
   el["canvas-viewport"].addEventListener("dragover", (event) => event.preventDefault());
