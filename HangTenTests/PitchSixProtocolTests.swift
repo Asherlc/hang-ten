@@ -35,6 +35,36 @@ final class PitchSixProtocolTests: XCTestCase {
         XCTAssertEqual(decoded[1].kilogramsForce, 258 / 2.20462262185, accuracy: 0.000_001)
     }
 
+    func testDecoderReadsSampleBytesFromANonzeroIndexDataSlice() throws {
+        let adapter = try XCTUnwrap(PitchSixProtocolAdapter(profile: .pitchSix))
+        let framedPacket = Data([0xFF, 0xFF, 0x00, 0x01, 0x00, 0x00, 0x01])
+        let frame = framedPacket[framedPacket.index(framedPacket.startIndex, offsetBy: 2)...]
+
+        let decoded = try XCTUnwrap(adapter.decode(frame, receivedAt: receivedAt))
+
+        XCTAssertEqual(decoded.count, 1)
+        XCTAssertEqual(decoded[0].kilogramsForce, 1 / 2.20462262185, accuracy: 0.000_001)
+    }
+
+    func testDecoderProcessesSourceConformingPacketWithMoreThanSixSamples() throws {
+        let adapter = try XCTUnwrap(PitchSixProtocolAdapter(profile: .pitchSix))
+        let frame = Data([
+            0x00, 0x07,
+            0x00, 0x00, 0x01,
+            0x00, 0x00, 0x02,
+            0x00, 0x00, 0x03,
+            0x00, 0x00, 0x04,
+            0x00, 0x00, 0x05,
+            0x00, 0x00, 0x06,
+            0x00, 0x00, 0x07
+        ])
+
+        let decoded = try XCTUnwrap(adapter.decode(frame, receivedAt: receivedAt))
+
+        XCTAssertEqual(decoded.count, 7)
+        XCTAssertEqual(decoded.last?.kilogramsForce ?? -1, 7 / 2.20462262185, accuracy: 0.000_001)
+    }
+
     func testDecoderRejectsMalformedCountsAndLengths() throws {
         let adapter = try XCTUnwrap(PitchSixProtocolAdapter(profile: .pitchSix))
 
