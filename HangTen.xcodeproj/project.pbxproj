@@ -35,6 +35,8 @@
 		AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000079 /* PitchSixProtocol.swift */; };
 		AA0000000000000000000080 /* WHC06ProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000080 /* WHC06ProtocolTests.swift */; };
 		AA0000000000000000000081 /* WHC06Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000081 /* WHC06Protocol.swift */; };
+		AA0000000000000000000082 /* EntralpiProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000082 /* EntralpiProtocolTests.swift */; };
+		AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000083 /* EntralpiProtocol.swift */; };
 		AA0000000000000000000019 /* MotherboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* MotherboardModels.swift */; };
 		AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* MotherboardProtocolTests.swift */; };
 		AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* MotherboardProtocol.swift */; };
@@ -118,6 +120,8 @@
 		BB0000000000000000000079 /* PitchSixProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchSixProtocol.swift; sourceTree = "<group>"; };
 		BB0000000000000000000080 /* WHC06ProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06ProtocolTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000081 /* WHC06Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06Protocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000082 /* EntralpiProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000083 /* EntralpiProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocol.swift; sourceTree = "<group>"; };
 		BB0000000000000000000022 /* MotherboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000023 /* MotherboardProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocolTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000024 /* MotherboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocol.swift; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 				BB0000000000000000000077 /* ProgressorProtocol.swift */,
 				BB0000000000000000000079 /* PitchSixProtocol.swift */,
 				BB0000000000000000000081 /* WHC06Protocol.swift */,
+				BB0000000000000000000083 /* EntralpiProtocol.swift */,
 				BB0000000000000000000022 /* MotherboardModels.swift */,
 				BB0000000000000000000024 /* MotherboardProtocol.swift */,
 				BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */,
@@ -292,6 +297,7 @@
 				BB0000000000000000000076 /* ProgressorProtocolTests.swift */,
 				BB0000000000000000000078 /* PitchSixProtocolTests.swift */,
 				BB0000000000000000000080 /* WHC06ProtocolTests.swift */,
+				BB0000000000000000000082 /* EntralpiProtocolTests.swift */,
 				BB0000000000000000000023 /* MotherboardProtocolTests.swift */,
 				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
 				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
@@ -459,6 +465,7 @@
 				AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */,
 				AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */,
 				AA0000000000000000000081 /* WHC06Protocol.swift in Sources */,
+				AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */,
 				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
 				AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */,
@@ -495,6 +502,7 @@
 				AA0000000000000000000076 /* ProgressorProtocolTests.swift in Sources */,
 				AA0000000000000000000078 /* PitchSixProtocolTests.swift in Sources */,
 				AA0000000000000000000080 /* WHC06ProtocolTests.swift in Sources */,
+				AA0000000000000000000082 /* EntralpiProtocolTests.swift in Sources */,
 				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
 				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
 				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,
