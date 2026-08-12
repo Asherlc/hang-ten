@@ -22,35 +22,8 @@ struct RecordedActivitySegment: Codable, Hashable {
     let holdType: String?
     let sizeMillimeters: Int?
     let durationSeconds: TimeInterval?
-    let peakLoadKGF: Double?
-    let actualLoadedDurationSeconds: TimeInterval?
 
-    enum CodingKeys: String, CodingKey {
-        case stepID, stepNumber, kind, holdIDs, holdType, sizeMillimeters, durationSeconds
-        case peakLoadKGF, actualLoadedDurationSeconds
-    }
-
-    init(
-        stepID: String,
-        stepNumber: Int,
-        kind: WorkoutSegmentKind,
-        holdIDs: [String],
-        holdType: String?,
-        sizeMillimeters: Int?,
-        durationSeconds: TimeInterval?,
-        peakLoadKGF: Double? = nil,
-        actualLoadedDurationSeconds: TimeInterval? = nil
-    ) {
-        self.stepID = stepID
-        self.stepNumber = stepNumber
-        self.kind = kind
-        self.holdIDs = holdIDs
-        self.holdType = holdType
-        self.sizeMillimeters = sizeMillimeters
-        self.durationSeconds = durationSeconds
-        self.peakLoadKGF = peakLoadKGF
-        self.actualLoadedDurationSeconds = actualLoadedDurationSeconds
-    }
+    enum CodingKeys: String, CodingKey { case stepID, stepNumber, kind, holdIDs, holdType, sizeMillimeters, durationSeconds }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -61,18 +34,28 @@ struct RecordedActivitySegment: Codable, Hashable {
         try container.encodeIfPresent(holdType, forKey: .holdType)
         try container.encodeIfPresent(sizeMillimeters, forKey: .sizeMillimeters)
         try container.encodeIfPresent(durationSeconds, forKey: .durationSeconds)
-        try container.encodeIfPresent(peakLoadKGF, forKey: .peakLoadKGF)
-        try container.encodeIfPresent(actualLoadedDurationSeconds, forKey: .actualLoadedDurationSeconds)
     }
+}
+
+struct RecordedActivityStepMeasurement: Codable, Hashable {
+    let stepID: String
+    let peakLoadKGF: Double?
+    let actualLoadedDurationSeconds: TimeInterval?
 }
 
 struct WorkoutActivityMetadata: Codable, Hashable {
     let version: Int
     let segments: [RecordedActivitySegment]
+    let measurements: [RecordedActivityStepMeasurement]?
 
-    init(version: Int = 1, segments: [RecordedActivitySegment]) {
+    init(
+        version: Int = 1,
+        segments: [RecordedActivitySegment],
+        measurements: [RecordedActivityStepMeasurement]? = nil
+    ) {
         self.version = version
         self.segments = segments
+        self.measurements = measurements
     }
 }
 
@@ -124,8 +107,7 @@ struct WorkoutActivityRecorder {
     func segments(
         for plan: TrainingPlan,
         on board: TrainingBoard,
-        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
-        stepMeasurements: [String: WorkoutStepMeasurement] = [:]
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
     ) throws -> [RecordedActivitySegment] {
         var result: [RecordedActivitySegment] = []
         for step in plan.steps {
@@ -150,7 +132,6 @@ struct WorkoutActivityRecorder {
                     result.append(RecordedActivitySegment(stepID: step.id, stepNumber: step.number, kind: .rest, holdIDs: [], holdType: nil, sizeMillimeters: nil, durationSeconds: duration))
                     continue
                 }
-                let load = measuredLoad(for: stepMeasurements[step.id])
                 guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holdsByTarget = segment.targets.map {
                     BoardTargetResolver.resolveHolds(for: $0, on: board)
@@ -167,9 +148,7 @@ struct WorkoutActivityRecorder {
                             holdIDs: holds.map(\.id),
                             holdType: nil,
                             sizeMillimeters: nil,
-                            durationSeconds: duration,
-                            peakLoadKGF: load.peakLoadKGF,
-                            actualLoadedDurationSeconds: load.actualLoadedDurationSeconds
+                            durationSeconds: duration
                         )
                     )
                     continue
@@ -188,9 +167,7 @@ struct WorkoutActivityRecorder {
                         holdIDs: ids,
                         holdType: kind.rawValue,
                         sizeMillimeters: size,
-                        durationSeconds: duration,
-                        peakLoadKGF: load.peakLoadKGF,
-                        actualLoadedDurationSeconds: load.actualLoadedDurationSeconds
+                        durationSeconds: duration
                     )
                 }
             }
@@ -198,21 +175,42 @@ struct WorkoutActivityRecorder {
         return result
     }
 
-    private func measuredLoad(
-        for measurement: WorkoutStepMeasurement?
-    ) -> (peakLoadKGF: Double?, actualLoadedDurationSeconds: TimeInterval?) {
-        guard let measurement, measurement.sampleCount > 0 else {
-            return (nil, nil)
-        }
+    func metadata(
+        for plan: TrainingPlan,
+        on board: TrainingBoard,
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
+        stepMeasurements: [WorkoutStepMeasurement] = []
+    ) throws -> WorkoutActivityMetadata {
+        WorkoutActivityMetadata(
+            segments: try segments(
+                for: plan,
+                on: board,
+                stopwatchDurations: stopwatchDurations
+            ),
+            measurements: measuredSteps(from: stepMeasurements)
+        )
+    }
 
-        let peakLoadKGF = measurement.peakLoadKGF.flatMap {
-            $0.isFinite && $0 >= 0 ? $0 : nil
+    private func measuredSteps(
+        from measurements: [WorkoutStepMeasurement]
+    ) -> [RecordedActivityStepMeasurement]? {
+        let result = measurements.compactMap { measurement -> RecordedActivityStepMeasurement? in
+            guard measurement.sampleCount > 0 else { return nil }
+            let peakLoadKGF = measurement.peakLoadKGF.flatMap {
+                $0.isFinite && $0 >= 0 ? $0 : nil
+            }
+            let loadedDuration = measurement.actualLoadedDuration
+            let actualLoadedDurationSeconds = loadedDuration.isFinite && loadedDuration >= 0
+                ? loadedDuration
+                : nil
+            guard peakLoadKGF != nil || actualLoadedDurationSeconds != nil else { return nil }
+            return RecordedActivityStepMeasurement(
+                stepID: measurement.stepID,
+                peakLoadKGF: peakLoadKGF,
+                actualLoadedDurationSeconds: actualLoadedDurationSeconds
+            )
         }
-        let loadedDuration = measurement.actualLoadedDuration
-        let actualLoadedDurationSeconds = loadedDuration.isFinite && loadedDuration >= 0
-            ? loadedDuration
-            : nil
-        return (peakLoadKGF, actualLoadedDurationSeconds)
+        return result.isEmpty ? nil : result
     }
 
     func json(for metadata: WorkoutActivityMetadata) throws -> String {

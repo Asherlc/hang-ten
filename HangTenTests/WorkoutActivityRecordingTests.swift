@@ -295,15 +295,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertFalse(json.contains("sizeMillimeters"))
     }
 
-    func testMeasuredWorkSegmentIncludesPeakLoadAndActualLoadedDuration() throws {
+    func testMeasuredStepIsExportedOnceAlongsideDescriptorSegments() throws {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .ids("edge-left"),
+                target: .ids("edge-left", "jug-center"),
                 timing: .fixed,
                 duration: 10
-            ),
-            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
+            )
         ])
         let measurement = WorkoutStepMeasurement(
             stepID: "step",
@@ -314,19 +313,26 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             status: .measured
         )
 
-        let records = try WorkoutActivityRecorder().segments(
+        let metadata = try WorkoutActivityRecorder().metadata(
             for: workout,
             on: board,
-            stepMeasurements: ["step": measurement]
+            stepMeasurements: [measurement]
         )
 
-        XCTAssertEqual(records[0].peakLoadKGF, 37.25)
-        XCTAssertEqual(records[0].actualLoadedDurationSeconds, 3.5)
-        XCTAssertNil(records[1].peakLoadKGF)
-        XCTAssertNil(records[1].actualLoadedDurationSeconds)
+        XCTAssertEqual(metadata.segments.count, 2)
+        XCTAssertEqual(
+            metadata.measurements,
+            [
+                RecordedActivityStepMeasurement(
+                    stepID: "step",
+                    peakLoadKGF: 37.25,
+                    actualLoadedDurationSeconds: 3.5
+                )
+            ]
+        )
     }
 
-    func testUnmeasuredWorkSegmentOmitsLoadFields() throws {
+    func testUnmeasuredStepOmitsMeasurementCollection() throws {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -344,14 +350,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             status: .unmeasured
         )
 
-        let records = try WorkoutActivityRecorder().segments(
+        let metadata = try WorkoutActivityRecorder().metadata(
             for: workout,
             on: board,
-            stepMeasurements: ["step": measurement]
+            stepMeasurements: [measurement]
         )
 
-        XCTAssertNil(records[0].peakLoadKGF)
-        XCTAssertNil(records[0].actualLoadedDurationSeconds)
+        XCTAssertNil(metadata.measurements)
     }
 
     func testUnresolvedTargetThrowsItsSegmentKey() {
@@ -698,10 +703,15 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         guard waitUntil({ service.savedWorkouts.count == 1 }) else {
             return
         }
-        XCTAssertEqual(service.savedWorkouts[0].activitySegments[0].peakLoadKGF, 37.25)
         XCTAssertEqual(
-            service.savedWorkouts[0].activitySegments[0].actualLoadedDurationSeconds,
-            3.5
+            service.savedWorkouts[0].activityMeasurements,
+            [
+                RecordedActivityStepMeasurement(
+                    stepID: "step",
+                    peakLoadKGF: 37.25,
+                    actualLoadedDurationSeconds: 3.5
+                )
+            ]
         )
     }
 
@@ -803,7 +813,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 holdIDs: ["edge-left"],
                 holdType: "edge",
                 sizeMillimeters: 21,
-                durationSeconds: 8.75,
+                durationSeconds: 8.75
+            )
+        ]
+        let activityMeasurements = [
+            RecordedActivityStepMeasurement(
+                stepID: "step",
                 peakLoadKGF: 37.25,
                 actualLoadedDurationSeconds: 3.5
             )
@@ -813,7 +828,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             title: "Plan",
             boardID: board.id,
             boardName: board.name,
-            activitySegments: activitySegments
+            activitySegments: activitySegments,
+            activityMeasurements: activityMeasurements
         )
 
         XCTAssertEqual(metadata[HKMetadataKeyWorkoutBrandName] as? String, "Hang Ten")
@@ -825,7 +841,31 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             WorkoutActivityMetadata.self,
             from: Data(json.utf8)
         )
-        XCTAssertEqual(decoded, WorkoutActivityMetadata(version: 1, segments: activitySegments))
+        XCTAssertEqual(
+            json,
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"holdIDs":["edge-left"],"holdType":"edge","kind":"work","sizeMillimeters":21,"stepID":"step","stepNumber":1}],"version":1}"#
+        )
+        XCTAssertEqual(
+            decoded,
+            WorkoutActivityMetadata(
+                version: 1,
+                segments: activitySegments,
+                measurements: activityMeasurements
+            )
+        )
+    }
+
+    func testLiteralVersionOnePayloadWithoutMeasurementsDecodes() throws {
+        let json = #"{"segments":[{"holdIDs":[],"kind":"rest","stepID":"step","stepNumber":1}],"version":1}"#
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutActivityMetadata.self,
+            from: Data(json.utf8)
+        )
+
+        XCTAssertEqual(decoded.version, 1)
+        XCTAssertNil(decoded.measurements)
+        XCTAssertEqual(decoded.segments.count, 1)
     }
 
     @discardableResult
@@ -921,6 +961,7 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
         let boardID: String
         let boardName: String
         let activitySegments: [RecordedActivitySegment]
+        let activityMeasurements: [RecordedActivityStepMeasurement]?
     }
 
     var authorizationState: HealthAuthorizationState = .authorized
@@ -939,6 +980,7 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Error?) -> Void
     ) {
         savedWorkouts.append(
@@ -948,7 +990,8 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
                 endDate: endDate,
                 boardID: boardID,
                 boardName: boardName,
-                activitySegments: activitySegments
+                activitySegments: activitySegments,
+                activityMeasurements: activityMeasurements
             )
         )
         completion(nil)

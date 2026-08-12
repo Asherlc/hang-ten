@@ -197,6 +197,7 @@ final class WorkoutHistoryService {
                 boardID: activityContext.boardID,
                 boardName: activityContext.boardName,
                 activitySegments: activityContext.activitySegments,
+                activityMeasurements: activityContext.activityMetadata.measurements,
                 completion: uploadCompletion
             )
         } else {
