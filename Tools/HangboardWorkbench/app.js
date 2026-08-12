@@ -1263,6 +1263,7 @@
     state.primitiveSession = null;
     state.selectedId = null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     el["draw-instruction"].classList.add("visible");
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
@@ -1295,6 +1296,7 @@
     state.primitiveSession = null;
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     el["draw-instruction"].classList.remove("visible");
     commitHistory("Added hold highlight");
     setStatus(`Added ${region.key}.`);
@@ -1316,6 +1318,7 @@
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Deleted hold highlight");
     setStatus(`Deleted ${region.key} hold highlight. Undo is available.`);
     render();
@@ -1368,6 +1371,7 @@
     state.regions.push(copy);
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Duplicated hold highlight");
     render();
   }
@@ -1412,6 +1416,7 @@
     state.regions.push(copy);
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Mirrored hold highlight copy");
     setStatus(`Created mirrored copy ${copy.key}.`);
     render();
@@ -1460,6 +1465,7 @@
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Mirrored geometry onto hold highlight");
     setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
     render();
@@ -1501,7 +1507,10 @@
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
     const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
-    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    if (restoredId !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
@@ -1516,7 +1525,10 @@
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
     const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
-    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    if (restoredId !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
@@ -1880,7 +1892,10 @@
   function focusRegion(regionId) {
     const numericId = Number(regionId);
     if (!state.regions.some((region) => region.id === numericId)) return false;
-    if (state.selectedId !== numericId) state.selectedCornerIndex = null;
+    if (state.selectedId !== numericId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = numericId;
     render();
     el["canvas-viewport"].focus({ preventScroll: true });
@@ -2568,6 +2583,7 @@
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     resetHistory();
     configureSvg();
     render();

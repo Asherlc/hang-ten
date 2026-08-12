@@ -462,6 +462,64 @@ test("viewport wheel listener pans or cursor-anchored zooms by interaction inten
   assert.match(app, /state\.panX -= action\.deltaX;[\s\S]*state\.panY -= action\.deltaY;[\s\S]*renderTransform\(\);/);
 });
 
+test("focusing a validation hold closes Advanced tools when it changes selection", () => {
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    advancedToolsOpen: true,
+    regions: [{ id: 7 }, { id: 8 }],
+  };
+  let rendered = 0;
+  let focused = 0;
+  let scrolled = 0;
+  const context = {
+    state,
+    render: () => { rendered += 1; },
+    el: { "canvas-viewport": { focus: () => { focused += 1; } } },
+    document: { querySelector: () => ({ scrollIntoView: () => { scrolled += 1; } }) },
+    requestAnimationFrame: (callback) => callback(),
+  };
+  vm.runInNewContext(extractFunction(app, "focusRegion"), context);
+
+  assert.equal(context.focusRegion(8), true);
+  assert.equal(state.selectedId, 8);
+  assert.equal(state.selectedCornerIndex, null);
+  assert.equal(state.advancedToolsOpen, false);
+  assert.equal(rendered, 1);
+  assert.equal(focused, 1);
+  assert.equal(scrolled, 1);
+});
+
+test("finishing a new hold closes Advanced tools when it selects the new hold", () => {
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    advancedToolsOpen: true,
+    drawing: true,
+    draft: [[1, 1], [9, 1], [9, 9]],
+    drawShape: "freeform",
+    primitiveSession: { pointerId: 1 },
+    regions: [],
+  };
+  const context = {
+    state,
+    canEditGeometry: () => true,
+    allocateRegionId: () => 8,
+    normalizeRegion: (region) => region,
+    commitHistory: () => {},
+    setStatus: () => {},
+    render: () => {},
+    el: { "draw-instruction": { classList: { remove: () => {} } } },
+  };
+  vm.runInNewContext(extractFunction(app, "finishDraw"), context);
+
+  context.finishDraw();
+
+  assert.equal(state.selectedId, 8);
+  assert.equal(state.selectedCornerIndex, null);
+  assert.equal(state.advancedToolsOpen, false);
+});
+
 test("declares each focused-editor element once in the element map", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const initBlock = app.match(
