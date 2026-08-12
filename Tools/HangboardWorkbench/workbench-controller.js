@@ -331,7 +331,7 @@
 
   function checkpointImageUrl(view) {
     if (!view) return null;
-    return view.editorImageUrl || view.reviewUrl || null;
+    return view.editorImageUrl || view.reviewUrl || view.normalArtifactUrl || null;
   }
 
   function checkpointComparisonUrl(view) {
