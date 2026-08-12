@@ -24,14 +24,14 @@ final class ForceSensorModelsTests: XCTestCase {
         }
     }
 
-    func testConnectableProfilesIncludeOnlyImplementedAdapters() {
+    func testConnectableProfilesIncludeOnlyImplementedBLEAdapters() {
         XCTAssertEqual(
             ForceSensorProfile.connectableCases,
             [.automatic, .motherboard, .progressor, .pitchSix, .genericProgressor]
         )
     }
 
-    func testRegistryResolvesAuditedAdaptersAndKeepsGenericProgressorManualOnly() throws {
+    func testRegistryResolvesBLEAdaptersAndKeepsAdvertisementOnlyProfilesOutOfConnectionFlow() throws {
         let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
         let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))
         let genericProgressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .genericProgressor))
@@ -46,21 +46,20 @@ final class ForceSensorModelsTests: XCTestCase {
             [.motherboard, .progressor, .pitchSix]
         )
     }
-    func testMatchingPolicyKeepsGenericProfilesOutOfAutomaticSelection() {
+    func testMatchingPolicyKeepsGenericAndAdvertisementOnlyProfilesOutOfAutomaticSelection() {
         XCTAssertEqual(ForceSensorProfile.automatic.matchingPolicy, .automatic)
 
         let namedProfiles: [ForceSensorProfile] = [
             .motherboard,
             .progressor,
             .pitchSix,
-            .whC06,
             .entralpi,
             .climbro
         ]
         XCTAssertTrue(namedProfiles.allSatisfy { $0.matchingPolicy == .named })
         XCTAssertTrue(namedProfiles.allSatisfy { $0.matchingPolicy.permitsAutomaticSelection })
 
-        let genericProfiles: [ForceSensorProfile] = [.genericProgressor, .genericWHC06]
+        let genericProfiles: [ForceSensorProfile] = [.whC06, .genericProgressor, .genericWHC06]
         XCTAssertTrue(genericProfiles.allSatisfy { $0.matchingPolicy == .generic })
         XCTAssertTrue(genericProfiles.allSatisfy { !$0.matchingPolicy.permitsAutomaticSelection })
     }
@@ -103,12 +102,18 @@ final class ForceSensorModelsTests: XCTestCase {
         )
         let advertisement = ForceSensorAdvertisement(
             name: "Synthetic sensor",
-            serviceUUIDs: [service]
+            serviceUUIDs: [service],
+            manufacturerData: [
+                ForceSensorManufacturerData(companyIdentifier: 0x0100, payload: Data([0x01]))
+            ]
         )
 
         XCTAssertEqual(contract.serviceUUIDs, [service])
         XCTAssertEqual(contract.notificationCharacteristics, [notification])
         XCTAssertEqual(advertisement.name, "Synthetic sensor")
         XCTAssertEqual(advertisement.serviceUUIDs, [service])
+        XCTAssertEqual(advertisement.manufacturerData, [
+            ForceSensorManufacturerData(companyIdentifier: 0x0100, payload: Data([0x01]))
+        ])
     }
 }

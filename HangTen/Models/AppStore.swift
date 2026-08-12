@@ -306,16 +306,17 @@ final class AppStore: ObservableObject {
         let recordingErrorMessage: String?
         let activityContext: PendingWorkoutActivityContext?
         do {
-            let activitySegments = try WorkoutActivityRecorder().segments(
+            let activityMetadata = try WorkoutActivityRecorder().metadata(
                 for: plan,
                 on: board,
-                stopwatchDurations: stopwatchDurations
+                stopwatchDurations: stopwatchDurations,
+                stepMeasurements: session?.steps ?? []
             )
             if hasRequestedHealthAuthorization {
                 activityContext = PendingWorkoutActivityContext(
                     boardID: board.id,
                     boardName: board.name,
-                    activitySegments: activitySegments
+                    activityMetadata: activityMetadata
                 )
             } else {
                 activityContext = nil
@@ -541,7 +542,8 @@ private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
             endDate: endDate,
             boardID: "",
             boardName: "",
-            activitySegments: []
+            activitySegments: [],
+            activityMeasurements: nil
         ) { error in
             if let error {
                 completion(.failure(error))
@@ -559,6 +561,7 @@ private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         savingService.saveCompletedWorkout(
@@ -567,7 +570,8 @@ private final class HealthWorkoutStoreAdapter: WorkoutHealthStore {
             endDate: endDate,
             boardID: boardID,
             boardName: boardName,
-            activitySegments: activitySegments
+            activitySegments: activitySegments,
+            activityMeasurements: activityMeasurements
         ) { error in
             if let error {
                 completion(.failure(error))
