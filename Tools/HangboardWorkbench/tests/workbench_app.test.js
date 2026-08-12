@@ -76,11 +76,14 @@ test("the workbench uses one accessible inspector panel and drawer controls", ()
 });
 
 
-test("clipboard write rejection reaches the existing status channel", () => {
+test("editor bootstrap does not reference the removed suite controls", () => {
   const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
-  const handler = appSource.slice(appSource.lastIndexOf('el["validation-copy-commands-button"]'), appSource.lastIndexOf("configureSvg();"));
-  assert.match(handler, /await navigator\.clipboard\.writeText\(commands\)/);
-  assert.match(handler, /catch \(error\)[\s\S]*setStatus\(error\?\.message/);
+  for (const obsoleteReference of [
+    "inspect-next-action", "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
+    "promotion-preview-button", "promotion-refresh-button", "promotion-save-button",
+    "validation-refresh-button", "validation-run-button", "validation-simulator-uuid", "validation-copy-commands-button",
+  ]) assert.doesNotMatch(appSource, new RegExp(obsoleteReference));
+  assert.doesNotMatch(appSource, /createToolSuiteController|createPromotionController|createValidationController|renderSuite|renderInspectView/);
 });
 
 test("setup preserves a recovered terminal job error after refreshing boards", async () => {

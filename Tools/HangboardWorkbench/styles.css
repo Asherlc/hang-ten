@@ -399,5 +399,6 @@ kbd { padding: 1px 4px; border: 1px solid #3a3e37; border-bottom-color: #51564c;
 @media (max-width: 980px) {
   .workspace-grid { grid-template-columns: 220px minmax(0, 1fr); }
   .brand-block { min-width: 180px; }
-  .toolbar-separator, .board-details { display: none; }
+  .toolbar-separator { display: none; }
+  .board-details > summary { padding: 0 9px; }
 }
