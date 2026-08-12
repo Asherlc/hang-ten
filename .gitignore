@@ -23,3 +23,6 @@ xcuserdata/
 
 # Local implementation/git worktrees
 .worktrees/
+
+# Developer-specific PostHog project token override
+/HangTen/Config/PostHog.local.xcconfig
