@@ -166,13 +166,15 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let motherboardIdentifier: String?
     let batteryValue: UInt16?
     let steps: [WorkoutStepMeasurement]
+    let forceSensorProfile: ForceSensorProfile
     let bodyweightKGF: Double?
     let motherboardMeasurements: [MotherboardMeasurement]
     let motherboardMeasurementsTruncated: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
-        case motherboardIdentifier, batteryValue, steps, bodyweightKGF, motherboardMeasurements, motherboardMeasurementsTruncated
+        case motherboardIdentifier, batteryValue, steps, forceSensorProfile, bodyweightKGF
+        case motherboardMeasurements, motherboardMeasurementsTruncated
     }
 
     init(
@@ -185,6 +187,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier: String?,
         batteryValue: UInt16?,
         steps: [WorkoutStepMeasurement],
+        forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
         motherboardMeasurements: [MotherboardMeasurement] = [],
         motherboardMeasurementsTruncated: Bool = false
@@ -198,6 +201,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.motherboardIdentifier = motherboardIdentifier
         self.batteryValue = batteryValue
         self.steps = steps
+        self.forceSensorProfile = forceSensorProfile
         self.bodyweightKGF = bodyweightKGF
         self.motherboardMeasurements = motherboardMeasurements
         self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
@@ -214,6 +218,8 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
         batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
         steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
+        let forceSensorProfileRawValue = try container.decodeIfPresent(String.self, forKey: .forceSensorProfile)
+        forceSensorProfile = forceSensorProfileRawValue.flatMap(ForceSensorProfile.init(rawValue:)) ?? .motherboard
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
         motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
@@ -222,12 +228,17 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
 
 final class MotherboardSettingsStore: ObservableObject {
     private enum Key {
+        static let forceSensorProfile = "motherboard.forceSensorProfile"
         static let forceUnit = "motherboard.forceUnit"
         static let thresholdKGF = "motherboard.thresholdKGF"
         static let bodyweightCaptureDuration = "motherboard.bodyweightCaptureDuration"
     }
 
     private let defaults: UserDefaults
+
+    @Published var forceSensorProfile: ForceSensorProfile {
+        didSet { defaults.set(forceSensorProfile.rawValue, forKey: Key.forceSensorProfile) }
+    }
 
     @Published var forceUnit: MotherboardForceUnit {
         didSet { defaults.set(forceUnit.rawValue, forKey: Key.forceUnit) }
@@ -255,6 +266,13 @@ final class MotherboardSettingsStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+
+        if let rawValue = defaults.string(forKey: Key.forceSensorProfile),
+           let storedProfile = ForceSensorProfile(rawValue: rawValue) {
+            forceSensorProfile = storedProfile
+        } else {
+            forceSensorProfile = .automatic
+        }
 
         if let rawValue = defaults.string(forKey: Key.forceUnit),
            let storedForceUnit = MotherboardForceUnit(rawValue: rawValue) {
