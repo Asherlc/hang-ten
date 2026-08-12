@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-tool_root="$repository_root/Tools/HangboardOnboarding"
+tool_root="$repository_root/Tools/HangboardPipeline"
 environment_root="$repository_root/.context/hangboard-onboarding-venv"
 python_command="${HANGBOARD_PYTHON:-python3}"
 
@@ -20,7 +20,6 @@ Commands:
   promote     Build a safe promotion package for an accepted review run
   release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Replay the accepted Metolius run without a live model call
-  convert     Convert a registered product photo to SVG and JSON
   catalog     Validate, inspect, or register hangboard package catalog artifacts
 EOF
 }
@@ -43,10 +42,17 @@ if ! "$python_command" -c 'import sys; raise SystemExit(0 if sys.version_info >=
     exit 69
 fi
 
+environment_has_package=false
+if [[ -x "$environment_root/bin/python" ]] && \
+   "$environment_root/bin/python" -c 'import hangboard_vectorizer' >/dev/null 2>&1; then
+    environment_has_package=true
+fi
+
 if [[ ! -x "$environment_root/bin/hangboard-onboard" || \
       ! -x "$environment_root/bin/hangboard-review" || \
       ! -x "$environment_root/bin/hangboard-promote" || \
       ! -x "$environment_root/bin/hangboard-release-check" || \
+      "$environment_has_package" != true || \
       "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-onboard" ]]; then
     "$python_command" -m venv "$environment_root"
     "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
@@ -84,9 +90,6 @@ case "$command_name" in
         fi
         exec "$environment_root/bin/hangboard-semantic-benchmark" \
             --accepted-run "$accepted_run" "$@"
-        ;;
-    convert)
-        exec "$environment_root/bin/hangboard-to-svg" "$@"
         ;;
     catalog)
         exec "$environment_root/bin/hangboard-catalog" "$@"
