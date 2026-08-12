@@ -55,6 +55,10 @@ def _step(job: dict[str, object], name: str) -> dict[str, object]:
     return next(step for step in job["steps"] if step.get("name") == name)
 
 
+def _normalized_expression(expression: str) -> str:
+    return " ".join(expression.split())
+
+
 def _native_release_quick_start(path: Path) -> str:
     readme = path.read_text(encoding="utf-8")
     _, marker, remainder = readme.partition("## Run the Apple Silicon macOS")
@@ -112,6 +116,99 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
                 check=False,
             )
             assert result.returncode == 0, result.stderr
+
+
+def test_workbench_release_classifies_changes_with_the_pinned_shared_taxonomy():
+    jobs = _workflow()["jobs"]
+    changes = jobs["changes"]
+
+    assert changes["runs-on"] == "ubuntu-latest"
+    assert changes["permissions"] == {"contents": "read", "pull-requests": "read"}
+    assert changes["outputs"] == {
+        component: f"${{{{ steps.filter.outputs.{component} }}}}"
+        for component in (
+            "python",
+            "workbench_web",
+            "workbench_native",
+            "shared_board_content",
+            "workflow",
+        )
+    }
+
+    checkout_step = _step(changes, "Check out source")
+    filter_step_index = next(
+        index
+        for index, step in enumerate(changes["steps"])
+        if step.get("id") == "filter"
+    )
+    assert changes["steps"].index(checkout_step) < filter_step_index
+    assert checkout_step["uses"] == (
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    )
+    assert checkout_step["with"]["persist-credentials"] is False
+    filter_step = changes["steps"][filter_step_index]
+    assert filter_step["uses"] == (
+        "dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d"
+    )
+    assert filter_step["with"]["filters"] == ".github/ci-paths.yml"
+
+
+def test_pr_workbench_jobs_are_component_gated_but_main_build_stays_full():
+    jobs = _workflow()["jobs"]
+
+    expected_conditions = {
+        "workbench-node": (
+            "github.event_name == 'pull_request' && "
+            "(needs.changes.outputs.workbench_web == 'true' || "
+            "needs.changes.outputs.shared_board_content == 'true' || "
+            "needs.changes.outputs.workflow == 'true')"
+        ),
+        "workbench-python": (
+            "github.event_name == 'pull_request' && "
+            "(needs.changes.outputs.python == 'true' || "
+            "needs.changes.outputs.shared_board_content == 'true' || "
+            "needs.changes.outputs.workflow == 'true')"
+        ),
+        "workbench-native": (
+            "github.event_name == 'pull_request' && "
+            "(needs.changes.outputs.workbench_native == 'true' || "
+            "needs.changes.outputs.workflow == 'true')"
+        ),
+    }
+    for job_name, expected_condition in expected_conditions.items():
+        assert jobs[job_name]["needs"] == "changes"
+        assert _normalized_expression(jobs[job_name]["if"]) == expected_condition
+
+    assert jobs["build"]["needs"] == "changes"
+    assert jobs["build"]["if"] == "github.event_name != 'pull_request'"
+    assert jobs["release"]["needs"] == "build"
+
+
+def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
+    jobs = _workflow()["jobs"]
+    node = jobs["workbench-node"]
+    python = jobs["workbench-python"]
+    native = jobs["workbench-native"]
+
+    assert node["runs-on"] == "ubuntu-latest"
+    assert _step(node, "Run focused Node suite")["run"] == (
+        "node --test Tools/HangboardWorkbench/tests/workbench*.test.js"
+    )
+
+    assert python["runs-on"] == "ubuntu-latest"
+    assert _step(python, "Set up Python")["with"]["python-version"] == "3.12"
+    assert "Tools/HangboardPipeline[dev]" in _step(
+        python, "Install workbench test dependencies"
+    )["run"]
+    assert _step(python, "Run focused Python suite")["run"] == (
+        "python -m pytest Tools/HangboardPipeline/tests "
+        "Tools/HangboardWorkbench/tests -q"
+    )
+
+    assert native["runs-on"] == "macos-latest"
+    assert _step(native, "Run native shell tests")["run"] == (
+        "swift test --package-path Tools/HangboardWorkbench/macos"
+    )
 
 
 def test_workflow_permissions_and_release_credentials_remain_narrow():
