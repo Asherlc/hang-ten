@@ -56,17 +56,15 @@ def test_taxonomy_assigns_editor_python_ios_and_shared_paths_conservatively() ->
     assert ".github/workflows/**" in filters["workflow"]
 ```
 
-Extend `test_ci_workflow.py` with a failing assertion that the main workflow references `.github/ci-paths.yml` and the immutable `dorny/paths-filter` pin.
-
 - [ ] **Step 2: Run the focused tests to verify they fail**
 
 Run:
 
 ```bash
-python -m pytest Tools/HangboardPipeline/tests/test_ci_path_taxonomy.py Tools/HangboardPipeline/tests/test_ci_workflow.py -q
+python -m pytest Tools/HangboardPipeline/tests/test_ci_path_taxonomy.py -q
 ```
 
-Expected: FAIL because the taxonomy file and workflow classifier do not exist.
+Expected: FAIL because the taxonomy file does not exist.
 
 - [ ] **Step 3: Create the taxonomy**
 
@@ -106,8 +104,6 @@ workflow:
   - '.github/actions/**'
   - 'Tools/HangboardPipeline/pyproject.toml'
 ```
-
-Add the `dorny/paths-filter` pin assertion now; Task 2 adds the workflow use.
 
 - [ ] **Step 4: Run the taxonomy tests**
 
