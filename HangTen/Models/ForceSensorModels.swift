@@ -59,9 +59,9 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .automatic:
             .automatic
-        case .genericProgressor, .genericWHC06:
+        case .whC06, .genericProgressor, .genericWHC06:
             .generic
-        case .motherboard, .progressor, .pitchSix, .whC06, .entralpi, .climbro:
+        case .motherboard, .progressor, .pitchSix, .entralpi, .climbro:
             .named
         }
     }
@@ -105,7 +105,23 @@ struct ForceSensorBLEContract: Equatable {
     let notificationCharacteristics: Set<ForceSensorBLECharacteristic>
 }
 
+struct ForceSensorManufacturerData: Equatable {
+    let companyIdentifier: UInt16
+    let payload: Data
+}
+
 struct ForceSensorAdvertisement: Equatable {
     let name: String?
     let serviceUUIDs: Set<UUID>
+    let manufacturerData: [ForceSensorManufacturerData]
+
+    init(
+        name: String?,
+        serviceUUIDs: Set<UUID>,
+        manufacturerData: [ForceSensorManufacturerData] = []
+    ) {
+        self.name = name
+        self.serviceUUIDs = serviceUUIDs
+        self.manufacturerData = manufacturerData
+    }
 }
