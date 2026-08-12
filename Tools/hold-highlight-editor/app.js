@@ -12,6 +12,7 @@
     mapEdgeCurves,
     mirrorEdgeCurves,
     insertEdgeCurves,
+    removeEdgeCurvesForVertex,
     findStrongestEdge,
     resolveHistorySelection,
     normalizeRegion,
@@ -21,6 +22,7 @@
     flattenContour,
     isExportableContour,
     shiftCornerTreatmentsForInsertion,
+    shiftCornerTreatmentsForDeletion,
     mirrorCornerTreatments,
     canSaveEditorState,
     runSessionLoadTransaction,
@@ -960,7 +962,13 @@
     event.stopPropagation();
     selectRegion(id);
     state.selectedCornerIndex = index;
-    state.handleSession = { pointerId: event.pointerId, index, changed: false };
+    const region = selectedRegion();
+    state.handleSession = {
+      pointerId: event.pointerId,
+      index,
+      original: clone(region.contour),
+      changed: false,
+    };
     render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
@@ -971,7 +979,14 @@
     event.stopPropagation();
     selectRegion(id);
     if (handleKind === "endpoint") state.selectedCornerIndex = commandIndex;
-    state.handleSession = { pointerId: event.pointerId, commandIndex, handleKind, changed: false };
+    const region = selectedRegion();
+    state.handleSession = {
+      pointerId: event.pointerId,
+      commandIndex,
+      handleKind,
+      original: parseDisplayPath(region.displayPath),
+      changed: false,
+    };
     render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
@@ -1383,6 +1398,20 @@
     const index = state.selectedCornerIndex;
     if (!canEditGeometry() || !isFreeformRegion(region) || !Number.isInteger(index) || index < 0 || index >= region.contour.length || region.contour.length <= 3) {
       return false;
+    }
+    if (Object.hasOwn(region.metadata, "edgeCurves")) {
+      region.metadata.edgeCurves = removeEdgeCurvesForVertex(
+        region.metadata.edgeCurves,
+        index,
+        region.contour.length,
+      );
+    }
+    if (Object.hasOwn(region.metadata, "cornerTreatments")) {
+      region.metadata.cornerTreatments = shiftCornerTreatmentsForDeletion(
+        region.metadata.cornerTreatments,
+        index,
+        region.contour.length,
+      );
     }
     region.contour.splice(index, 1);
     state.selectedCornerIndex = null;
@@ -2276,7 +2305,36 @@
     }
   }
 
-  function cancelPointerSessions() {
+  function restorePointerGeometry(session) {
+    if (!session) return false;
+    const region = selectedRegion();
+    if (!region) return false;
+    let restored = false;
+    if (session.original) {
+      if (isVectorMode()) region.displayPath = serializeDisplayPath(session.original);
+      else region.contour = clone(session.original);
+      restored = true;
+    }
+    if (session.originalAnchor) {
+      region.anchor = clone(session.originalAnchor);
+      restored = true;
+    }
+    if (session.originalEdgeCurves !== undefined) {
+      region.metadata.edgeCurves = clone(session.originalEdgeCurves);
+      restored = true;
+    }
+    if (session.rotation !== undefined) {
+      region.metadata.rotation = session.rotation;
+      restored = true;
+    }
+    if (session.bend !== undefined) {
+      region.metadata.bend = session.bend;
+      restored = true;
+    }
+    return restored;
+  }
+
+  function cancelPointerSessions({ restore = false } = {}) {
     const captures = [
       [state.transformSession, el["editor-svg"]],
       [state.dragSession, el["editor-svg"]],
@@ -2289,7 +2347,10 @@
       if (session?.pointerId == null || typeof target?.hasPointerCapture !== "function") return;
       if (target.hasPointerCapture(session.pointerId)) target.releasePointerCapture(session.pointerId);
     });
-    if ([state.transformSession, state.dragSession, state.handleSession, state.edgeSession].some((session) => session?.changed)) {
+    const geometrySessions = [state.transformSession, state.dragSession, state.handleSession, state.edgeSession];
+    if (restore) {
+      geometrySessions.forEach((session) => restorePointerGeometry(session));
+    } else if (geometrySessions.some((session) => session?.changed)) {
       commitHistory("Completed active edit before approval");
     }
     state.transformSession = null;
@@ -2995,7 +3056,7 @@
       state.panSession || state.primitiveSession || state.dragSession || state.handleSession || state.edgeSession || state.transformSession
     )) {
       event.preventDefault();
-      cancelPointerSessions();
+      cancelPointerSessions({ restore: true });
       setStatus("Active edit cancelled.");
       render();
       return;
@@ -3003,6 +3064,13 @@
     if (event.key === "Escape" && state.inspectorDrawerOpen) {
       event.preventDefault();
       closeInspectorDrawer();
+      return;
+    }
+    if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
+      event.preventDefault();
+      state.mirrorOntoSourceId = null;
+      setStatus("Mirror replacement cancelled.");
+      renderToolState();
       return;
     }
     if (event.key === "Escape" && state.selectedId != null) {
@@ -3017,10 +3085,6 @@
     } else if (event.key === "Delete" || event.key === "Backspace") {
       event.preventDefault();
       if (!deleteSelectedFreeformVertex()) deleteSelected();
-    } else if (event.key === "Escape" && state.mirrorOntoSourceId != null) {
-      state.mirrorOntoSourceId = null;
-      setStatus("Mirror replacement cancelled.");
-      renderToolState();
     } else if (event.key === "[") {
       navigateRegion(-1);
     } else if (event.key === "]") {

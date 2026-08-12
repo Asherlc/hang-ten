@@ -4,7 +4,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 
-const { contourPath } = require("../editor-model.js");
+const {
+  contourPath,
+  removeEdgeCurvesForVertex,
+  shiftCornerTreatmentsForDeletion,
+} = require("../editor-model.js");
 const {
   beginEdgeCurveSession,
   updateEdgeCurveSession,
@@ -234,7 +238,18 @@ test("deleting a selected freeform vertex preserves the three-point minimum", ()
     regions: [{
       id: 7,
       contour: [[1, 1], [9, 1], [9, 9], [1, 9]],
-      metadata: { shapeKind: "freeform" },
+      metadata: {
+        shapeKind: "freeform",
+        edgeCurves: Object.fromEntries([0, 1, 2, 3].map((index) => [
+          index,
+          { kind: "quadratic", control: [index, index + 0.5] },
+        ])),
+        cornerTreatments: {
+          0: { treatment: "sharp", amount: 1 },
+          2: { treatment: "rounded", amount: 2 },
+          3: { treatment: "sharp", amount: 3 },
+        },
+      },
     }],
   };
   const history = [];
@@ -244,6 +259,8 @@ test("deleting a selected freeform vertex preserves the three-point minimum", ()
     state,
     selectedRegion: () => state.regions.find((region) => region.id === state.selectedId) || null,
     canEditGeometry: () => editable,
+    removeEdgeCurvesForVertex,
+    shiftCornerTreatmentsForDeletion,
     commitHistory: (label) => history.push(label),
     render: () => { renders += 1; },
   };
@@ -251,6 +268,14 @@ test("deleting a selected freeform vertex preserves the three-point minimum", ()
 
   assert.equal(context.deleteSelectedFreeformVertex(), true);
   assert.deepEqual(state.regions[0].contour, [[1, 1], [9, 1], [1, 9]]);
+  assert.deepEqual(state.regions[0].metadata.edgeCurves, {
+    0: { kind: "quadratic", control: [0, 0.5] },
+    2: { kind: "quadratic", control: [3, 3.5] },
+  });
+  assert.deepEqual(state.regions[0].metadata.cornerTreatments, {
+    0: { treatment: "sharp", amount: 1 },
+    2: { treatment: "sharp", amount: 3 },
+  });
   assert.equal(state.selectedCornerIndex, null);
   assert.deepEqual(history, ["Deleted control point"]);
   assert.equal(renders, 1);
@@ -270,6 +295,49 @@ test("deleting a selected freeform vertex preserves the three-point minimum", ()
   assert.equal(JSON.stringify(state.regions[0].contour), frozenContour);
   state.selectedId = null;
   assert.equal(context.deleteSelectedFreeformVertex(), false);
+});
+
+test("restoring a cancelled pointer edit returns its original geometry and metadata", () => {
+  const state = {
+    selectedId: 7,
+    regions: [{
+      id: 7,
+      contour: [[3, 3], [8, 3], [8, 8], [3, 8]],
+      anchor: [6, 6],
+      metadata: {
+        edgeCurves: { 0: { kind: "quadratic", control: [4, 1] } },
+        rotation: 0.75,
+        bend: 14,
+      },
+    }],
+  };
+  const original = {
+    original: [[1, 1], [9, 1], [9, 9], [1, 9]],
+    originalAnchor: [5, 5],
+    originalEdgeCurves: { 1: { kind: "quadratic", control: [8, 4] } },
+    rotation: 0.25,
+    bend: 2,
+  };
+  const context = {
+    state,
+    selectedRegion: () => state.regions[0],
+    isVectorMode: () => false,
+    clone: (value) => JSON.parse(JSON.stringify(value)),
+  };
+
+  vm.runInNewContext(extractFunction(app, "restorePointerGeometry"), context);
+
+  assert.equal(context.restorePointerGeometry(original), true);
+  assert.deepEqual(state.regions[0], {
+    id: 7,
+    contour: original.original,
+    anchor: original.originalAnchor,
+    metadata: {
+      edgeCurves: original.originalEdgeCurves,
+      rotation: original.rotation,
+      bend: original.bend,
+    },
+  });
 });
 
 test("Escape deselects an idle hold but cancels drawing first", () => {
@@ -293,6 +361,7 @@ test("Escape deselects an idle hold but cancels drawing first", () => {
   };
   let cleared = 0;
   let canceled = 0;
+  let pointerCancellation = null;
   const context = {
     document: { activeElement: { tagName: "DIV" } },
     state,
@@ -300,7 +369,7 @@ test("Escape deselects an idle hold but cancels drawing first", () => {
     trapInspectorDrawerFocus: () => {},
     clearSelection: () => { cleared += 1; },
     cancelDraw: () => { canceled += 1; },
-    cancelPointerSessions: () => {},
+    cancelPointerSessions: (options) => { pointerCancellation = options; },
     closeInspectorDrawer: () => {},
     deleteSelectedFreeformVertex: () => false,
     deleteSelected: () => {},
@@ -311,6 +380,7 @@ test("Escape deselects an idle hold but cancels drawing first", () => {
     mirrorSelectedCopy: () => {},
     toggleEdgeSnapping: () => {},
     renderToolState: () => {},
+    render: () => {},
     setStatus: () => {},
   };
   vm.runInNewContext(app.slice(handlerStart, handlerEnd), context);
@@ -334,6 +404,17 @@ test("Escape deselects an idle hold but cancels drawing first", () => {
   state.drawing = true;
   assert.equal(dispatch("Escape"), true);
   assert.equal(canceled, 1);
+  assert.equal(cleared, 1);
+
+  state.drawing = false;
+  state.transformSession = { pointerId: 1 };
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(pointerCancellation?.restore, true);
+  state.transformSession = null;
+
+  state.mirrorOntoSourceId = 9;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(state.mirrorOntoSourceId, null);
   assert.equal(cleared, 1);
 });
 
