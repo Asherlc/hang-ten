@@ -5,14 +5,17 @@
 }(typeof globalThis === "object" ? globalThis : this, () => {
   "use strict";
 
-  const PROFILE_FIELDS = Object.freeze([
-    Object.freeze({ key: "boardID", label: "iOS board ID", note: "Canonical iOS identifier; confirm it against the approved board package.", type: "text" }),
+  const BOARD_INFO_FIELDS = Object.freeze([
     Object.freeze({ key: "manufacturer", label: "Manufacturer", note: "Use the manufacturer product page or packaging as evidence.", type: "text" }),
     Object.freeze({ key: "name", label: "Display name", note: "Use the exact product name from the evidence source.", type: "text" }),
     Object.freeze({ key: "subtitle", label: "Subtitle", note: "Write only evidence-backed product context; do not infer features from the photo.", type: "text" }),
     Object.freeze({ key: "dimensions", label: "Dimensions", note: "Transcribe the manufacturer’s published dimensions.", type: "text" }),
     Object.freeze({ key: "aspectRatio", label: "Aspect ratio", note: "Use the measured or published board aspect ratio.", type: "number" }),
     Object.freeze({ key: "productURL", label: "Product URL", note: "Link the manufacturer evidence used for this profile.", type: "url" }),
+  ]);
+  const PROFILE_FIELDS = Object.freeze([
+    Object.freeze({ key: "boardID", type: "text" }),
+    ...BOARD_INFO_FIELDS,
   ]);
   const GROUPS = Object.freeze([
     Object.freeze({ heading: "Metadata", match: (path) => path === "HangTen/Models/TrainingModels.swift" }),
@@ -51,7 +54,7 @@
 
   function isPromotionProfileComplete(profile) {
     const value = normalizedProfile(profile);
-    return PROFILE_FIELDS.every(({ key }) => (
+    return BOARD_INFO_FIELDS.every(({ key }) => (
       key === "aspectRatio"
         ? Number.isFinite(value.aspectRatio) && value.aspectRatio > 0
         : typeof value[key] === "string" && value[key].length > 0
@@ -59,7 +62,18 @@
   }
 
   function profileSignature(profile) {
-    return JSON.stringify(normalizedProfile(profile));
+    const value = normalizedProfile(profile);
+    return JSON.stringify(Object.fromEntries(BOARD_INFO_FIELDS.map(({ key }) => [key, value[key]])));
+  }
+
+  function repositoryBoardId(board) {
+    const value = board?.repositoryBoardId;
+    return typeof value === "string" && value.trim() ? value.trim() : null;
+  }
+
+  function profileForPromotion(profile, board) {
+    const boardID = repositoryBoardId(board);
+    return boardID ? normalizedProfile({ ...profile, boardID }) : null;
   }
 
   function fileGroup(path) {
@@ -107,12 +121,14 @@
     expectedRevisionId = null,
     profileReady = true,
     boardReady = true,
+    boardIdentityReady = true,
     profileChanged = false,
   } = {}) {
     if (busy) return { disabled: true, reason: "A promotion job is already active." };
     if (!boardReady) return { disabled: true, reason: "The active board must be complete and approved before promotion." };
-    if (!profileReady) return { disabled: true, reason: "Complete the explicit iOS promotion profile before saving." };
-    if (profileChanged) return { disabled: true, reason: "The promotion profile changed; generate a new preview." };
+    if (!boardIdentityReady) return { disabled: true, reason: "The active board needs a repository Board ID before promotion." };
+    if (!profileReady) return { disabled: true, reason: "Complete Board info in Inspect before saving." };
+    if (profileChanged) return { disabled: true, reason: "Board info changed; generate a new preview." };
     const status = promotionStatus(preview, { expectedRevisionId });
     return status.status === "ready"
       ? { disabled: false, reason: "" }
@@ -202,19 +218,20 @@
         expectedRevisionId: revisionId,
         profileReady: isPromotionProfileComplete(state.profile),
         boardReady: boardIsReady(board),
+        boardIdentityReady: Boolean(repositoryBoardId(board)),
         profileChanged: state.previewProfileSignature != null && state.previewProfileSignature !== profileSignature(state.profile),
       });
     }
 
     function setProfile(profile) {
       synchronizeContext();
-      state = { ...state, profile: normalizedProfile(profile), saved: false, error: "" };
+      state = { ...state, profile: normalizedProfile({ ...profile, boardID: "" }), saved: false, error: "" };
       emit();
       return getState();
     }
 
     function setProfileField(field, value) {
-      if (!PROFILE_FIELDS.some(({ key }) => key === field)) throw new RangeError(`Unknown promotion profile field: ${String(field)}`);
+      if (!BOARD_INFO_FIELDS.some(({ key }) => key === field)) throw new RangeError(`Unknown Board info field: ${String(field)}`);
       synchronizeContext();
       return setProfile({ ...state.profile, [field]: value });
     }
@@ -274,9 +291,10 @@
     async function generatePreview() {
       const context = synchronizeContext();
       if (!boardIsReady(context.board)) return setError("The active board must be complete and approved before promotion.");
-      if (!isPromotionProfileComplete(state.profile)) return setError("Complete the explicit iOS promotion profile before generating a preview.");
+      if (!repositoryBoardId(context.board)) return setError("The active board needs a repository Board ID before promotion.");
+      if (!isPromotionProfileComplete(state.profile)) return setError("Complete Board info in Inspect before generating a preview.");
       const token = ++operation;
-      const profile = normalizedProfile(state.profile);
+      const profile = profileForPromotion(state.profile, context.board);
       state = { ...state, busy: true, error: "", saved: false };
       emit();
       try {
@@ -307,7 +325,7 @@
       if (action.disabled) return setError(action.reason);
       const context = synchronizeContext();
       const token = ++operation;
-      const profile = normalizedProfile(state.profile);
+      const profile = profileForPromotion(state.profile, context.board);
       state = { ...state, busy: true, error: "" };
       emit();
       try {
@@ -330,6 +348,7 @@
           expectedRevisionId: context.revisionId,
           profileReady: isPromotionProfileComplete(profile),
           boardReady: boardIsReady(context.board),
+          boardIdentityReady: Boolean(repositoryBoardId(context.board)),
           profileChanged: state.previewProfileSignature !== profileSignature(profile),
         });
         if (refreshedState.disabled) {
@@ -390,8 +409,9 @@
     const profile = normalizedProfile(view.profile);
     const ready = boardIsReady(board);
     const profileReady = isPromotionProfileComplete(profile);
+    const boardIdentityReady = Boolean(repositoryBoardId(board));
     const profileChanged = view.previewProfileSignature != null && view.previewProfileSignature !== profileSignature(profile);
-    const action = saveActionState({ preview, busy: view.busy, expectedRevisionId, profileReady, boardReady: ready, profileChanged });
+    const action = saveActionState({ preview, busy: view.busy, expectedRevisionId, profileReady, boardReady: ready, boardIdentityReady, profileChanged });
     const status = promotionStatus(preview, { expectedRevisionId });
 
     const identity = root.querySelector("#promotion-identity");
@@ -399,7 +419,13 @@
     const statusNode = root.querySelector("#promotion-status");
     const error = root.querySelector("#promotion-error");
     if (identity) identity.textContent = board ? `${board.productName || board.boardId} · Revision ${expectedRevisionId} · baseline main` : "Choose one active board revision to begin promotion.";
-    if (readiness) readiness.textContent = ready ? "Ready: Stage 4 is complete and approved." : "Blocked: complete and approve Stage 4 in Onboard before promotion.";
+    if (readiness) readiness.textContent = !ready
+      ? "Blocked: complete and approve the board in Edit holds before promotion."
+      : !boardIdentityReady
+        ? "Blocked: the active board is not linked to a repository Board ID."
+        : profileReady
+          ? "Ready: Board info is complete."
+          : "Blocked: complete Board info in Inspect before promotion.";
     if (statusNode) {
       statusNode.textContent = saved ? "Saved locally" : status.label;
       statusNode.className = `promotion-status ${saved ? "saved" : status.status}`;
@@ -408,16 +434,10 @@
       error.textContent = view.error || "";
       error.classList.toggle("hidden", !view.error);
     }
-    PROFILE_FIELDS.forEach(({ key }) => {
-      const input = root.querySelector(`[data-promotion-field="${key}"]`);
-      if (!input) return;
-      if (root.ownerDocument.activeElement !== input) input.value = String(profile[key] ?? "");
-      input.disabled = Boolean(view.busy);
-    });
     const previewButton = root.querySelector("#promotion-preview-button");
     const refreshButton = root.querySelector("#promotion-refresh-button");
     const saveButton = root.querySelector("#promotion-save-button");
-    if (previewButton) previewButton.disabled = Boolean(view.busy) || !ready || !profileReady;
+    if (previewButton) previewButton.disabled = Boolean(view.busy) || !ready || !boardIdentityReady || !profileReady;
     if (refreshButton) refreshButton.disabled = Boolean(view.busy) || !board || !expectedRevisionId;
     if (saveButton) {
       saveButton.disabled = action.disabled;
@@ -462,6 +482,7 @@
   return Object.freeze({
     PROFILE_FIELDS,
     groupPromotionFiles,
+    BOARD_INFO_FIELDS,
     promotionStatus,
     saveActionState,
     isPromotionProfileComplete,
