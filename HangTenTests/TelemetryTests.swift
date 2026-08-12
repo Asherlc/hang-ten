@@ -12,6 +12,18 @@ final class TelemetryTests: XCTestCase {
         XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
+    func testConfiguredTraceEndpointUsesOTLPPathComponents() throws {
+        let configuration = PostHogConfiguration(
+            projectToken: "phc_test_token",
+            host: "https://us.i.posthog.com"
+        )
+
+        let endpoint = try XCTUnwrap(configuration.traceEndpoint)
+
+        XCTAssertEqual(endpoint.absoluteString, "https://us.i.posthog.com/i/v1/traces")
+        XCTAssertFalse(endpoint.absoluteString.contains("phc_test_token"))
+    }
+
     func testPostHogAdapterTranslatesOnlyTypedProperties() {
         let client = RecordingPostHogClient()
         let telemetry = PostHogTelemetry(client: client)

@@ -10,6 +10,52 @@ final class AppStoreTests: XCTestCase {
 
     deinit {}
 
+    func testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily() {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.selectBoard(BoardCatalog.rockProdigyTrainingCenter)
+
+        XCTAssertEqual(store.selectedBoard, BoardCatalog.rockProdigyTrainingCenter)
+        XCTAssertEqual(telemetry.events, [
+            .boardSelected(family: .rockProdigyTrainingCenter)
+        ])
+    }
+
+    func testSavingCustomRoutineEmitsEventAfterPersistenceSucceeds() throws {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+        let definition = try store.duplicateRoutine(PlanCatalog.all[0])
+
+        try store.saveCustomRoutine(definition)
+
+        XCTAssertEqual(telemetry.events, [.customRoutineSaved])
+    }
+
+    func testHealthAuthorizationDeniedEmitsCategoricalResult() {
+        let telemetry = RecordingTelemetry()
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .denied
+        let store = AppStore(
+            healthKitService: healthStore,
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.requestHealthAuthorization()
+
+        waitUntil {
+            telemetry.events == [.healthAuthorizationFinished(outcome: .denied)]
+        }
+        XCTAssertEqual(telemetry.events, [.healthAuthorizationFinished(outcome: .denied)])
+    }
+
     func testInitializationHydratesPersistedLocalHistoryWithoutHealthKitRead() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -1065,6 +1111,23 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             batteryValue: nil,
             steps: []
         )
+    }
+}
+
+@MainActor
+private final class RecordingTelemetry: TelemetryTracking {
+    private(set) var events: [HangTenTelemetryEvent] = []
+
+    lazy var dependencies = TelemetryDependencies(
+            tracking: self,
+            diagnostics: NoOpTelemetry(),
+            flags: NoOpTelemetry(),
+            replay: NoOpTelemetry(),
+            isNoOp: false
+        )
+
+    func track(_ event: HangTenTelemetryEvent) {
+        events.append(event)
     }
 }
 

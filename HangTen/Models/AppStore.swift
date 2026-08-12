@@ -160,6 +160,12 @@ final class AppStore: ObservableObject {
         customDefinition(for: plan.id) != nil
     }
 
+    func selectBoard(_ board: TrainingBoard) {
+        selectedBoard = board
+        guard let family = telemetryBoardFamily(for: board) else { return }
+        telemetry.tracking.track(.boardSelected(family: family))
+    }
+
     func customDefinition(for id: String) -> CustomRoutineDefinition? {
         customDefinitions.first { $0.id == id }
     }
@@ -168,6 +174,7 @@ final class AppStore: ObservableObject {
         do {
             try customRoutineStore.save(definition)
             reloadCustomRoutines()
+            telemetry.tracking.track(.customRoutineSaved)
         } catch {
             customRoutinePersistenceError = error.localizedDescription
             throw error
@@ -429,6 +436,11 @@ final class AppStore: ObservableObject {
                     error?.localizedDescription,
                     kind: error == nil ? nil : .authorization
                 )
+                self.telemetry.tracking.track(
+                    .healthAuthorizationFinished(
+                        outcome: self.telemetryHealthAuthorizationOutcome(state: state, error: error)
+                    )
+                )
                 self.refreshWorkoutHistory()
             }
         }
@@ -478,6 +490,37 @@ final class AppStore: ObservableObject {
     private func setHealthAuthorizationError(_ message: String?, kind: HealthErrorKind?) {
         healthAuthorizationError = message
         healthAuthorizationErrorKind = kind
+    }
+
+    private func telemetryBoardFamily(
+        for board: TrainingBoard
+    ) -> HangTenTelemetryEvent.BoardFamily? {
+        switch board.id {
+        case BoardCatalog.compactII.id:
+            return .compactII
+        case BoardCatalog.rockProdigyTrainingCenter.id:
+            return .rockProdigyTrainingCenter
+        default:
+            return nil
+        }
+    }
+
+    private func telemetryHealthAuthorizationOutcome(
+        state: HealthAuthorizationState,
+        error: Error?
+    ) -> HangTenTelemetryEvent.HealthAuthorizationOutcome {
+        if error != nil {
+            return .error
+        }
+
+        switch state {
+        case .authorized:
+            return .granted
+        case .denied, .notDetermined:
+            return .denied
+        case .unavailable:
+            return .unavailable
+        }
     }
 
     private static let completionSyncError = "Session was saved locally and will retry Apple Health sync."

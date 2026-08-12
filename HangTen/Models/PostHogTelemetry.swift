@@ -31,7 +31,10 @@ struct PostHogConfiguration {
             return nil
         }
 
-        return hostURL.appendingPathComponent("i/v1/traces")
+        return hostURL
+            .appendingPathComponent("i")
+            .appendingPathComponent("v1")
+            .appendingPathComponent("traces")
     }
 }
 

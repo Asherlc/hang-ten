@@ -84,13 +84,13 @@
 		AA0000000000000000000072 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
 		AA0000000000000000000073 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
-		AA0000000000000000000076 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000077 /* Telemetry.swift */; };
-		AA0000000000000000000077 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000078 /* PostHogTelemetry.swift */; };
-		AA0000000000000000000078 /* OpenTelemetryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */; };
-		AA0000000000000000000079 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* PostHog */; };
-		AA0000000000000000000080 /* OpenTelemetryApi in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000002 /* OpenTelemetryApi */; };
-		AA0000000000000000000081 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
-		AA0000000000000000000082 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
+		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
+		AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* PostHogTelemetry.swift */; };
+		AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */; };
+		AB0000000000000000000004 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* PostHog */; };
+		AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000002 /* OpenTelemetryApi */; };
+		AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
+		AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -172,11 +172,11 @@
 		BB0000000000000000000071 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000072 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000077 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
-		BB0000000000000000000078 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
-		BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
-		BB0000000000000000000080 /* PostHog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.xcconfig; sourceTree = "<group>"; };
-		BB0000000000000000000081 /* PostHog.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.local.xcconfig.example; sourceTree = "<group>"; };
+		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
+		AC0000000000000000000002 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
+		AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
+		AC0000000000000000000004 /* PostHog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.xcconfig; sourceTree = "<group>"; };
+		AC0000000000000000000005 /* PostHog.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.local.xcconfig.example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,10 +185,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000010 /* HealthKit.framework in Frameworks */,
-				AA0000000000000000000079 /* PostHog in Frameworks */,
-				AA0000000000000000000080 /* OpenTelemetryApi in Frameworks */,
-				AA0000000000000000000081 /* OpenTelemetrySdk in Frameworks */,
-				AA0000000000000000000082 /* OpenTelemetryProtocolExporterHTTP in Frameworks */,
+				AB0000000000000000000004 /* PostHog in Frameworks */,
+				AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */,
+				AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */,
+				AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,9 +264,9 @@
 				BB0000000000000000000062 /* CustomRoutineStore.swift */,
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 				BB0000000000000000000071 /* BoardStorage.swift */,
-				BB0000000000000000000077 /* Telemetry.swift */,
-				BB0000000000000000000078 /* PostHogTelemetry.swift */,
-				BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */,
+				AC0000000000000000000001 /* Telemetry.swift */,
+				AC0000000000000000000002 /* PostHogTelemetry.swift */,
+				AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -274,8 +274,8 @@
 		DD0000000000000000000008 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				BB0000000000000000000080 /* PostHog.xcconfig */,
-				BB0000000000000000000081 /* PostHog.local.xcconfig.example */,
+				AC0000000000000000000004 /* PostHog.xcconfig */,
+				AC0000000000000000000005 /* PostHog.local.xcconfig.example */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -518,9 +518,9 @@
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
 				AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */,
-				AA0000000000000000000076 /* Telemetry.swift in Sources */,
-				AA0000000000000000000077 /* PostHogTelemetry.swift in Sources */,
-				AA0000000000000000000078 /* OpenTelemetryDiagnostics.swift in Sources */,
+				AB0000000000000000000001 /* Telemetry.swift in Sources */,
+				AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */,
+				AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -695,7 +695,7 @@
 		};
 		FF0000000000000000000021 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB0000000000000000000080 /* PostHog.xcconfig */;
+				baseConfigurationReference = AC0000000000000000000004 /* PostHog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -729,7 +729,7 @@
 		};
 		FF0000000000000000000022 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB0000000000000000000080 /* PostHog.xcconfig */;
+				baseConfigurationReference = AC0000000000000000000004 /* PostHog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -741,7 +741,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your training sensor.";
 				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
 				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
