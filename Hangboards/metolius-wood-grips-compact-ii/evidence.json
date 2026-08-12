@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "boardID": "metolius.wood-grips-compact-ii",
+  "checkedAt": "2026-08-01",
+  "sources": [
+    {
+      "id": "product-page",
+      "title": "Metolius Wood Grips II Training Boards",
+      "url": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards",
+      "supports": ["identity", "dimensions", "front-geometry"]
+    },
+    {
+      "id": "hold-depth-diagram",
+      "title": "Metolius Wood Grips board depths",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428",
+      "supports": ["hold-depths", "hold-types", "hold-finger-capacity"]
+    },
+    {
+      "id": "training-board-manual",
+      "title": "Metolius Training Board Instructions",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826",
+      "supports": ["installation", "training-guidance"]
+    }
+  ],
+  "holdEvidence": {
+    "jug-left": ["hold-depth-diagram"],
+    "jug-right": ["hold-depth-diagram"],
+    "sloper-flat-left": ["hold-depth-diagram"],
+    "sloper-round-center": ["hold-depth-diagram"],
+    "sloper-flat-right": ["hold-depth-diagram"],
+    "edge-29-left": ["hold-depth-diagram"],
+    "pocket-29-three-left": ["hold-depth-diagram"],
+    "pocket-29-two-left": ["hold-depth-diagram"],
+    "pocket-29-four-center": ["hold-depth-diagram"],
+    "pocket-29-two-right": ["hold-depth-diagram"],
+    "pocket-29-three-right": ["hold-depth-diagram"],
+    "edge-29-right": ["hold-depth-diagram"],
+    "edge-19-left": ["hold-depth-diagram"],
+    "pocket-19-three-left": ["hold-depth-diagram"],
+    "pocket-19-two-left": ["hold-depth-diagram"],
+    "pocket-19-four-center": ["hold-depth-diagram"],
+    "pocket-19-two-right": ["hold-depth-diagram"],
+    "pocket-19-three-right": ["hold-depth-diagram"],
+    "edge-19-right": ["hold-depth-diagram"]
+  }
+}
