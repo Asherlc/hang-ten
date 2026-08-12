@@ -201,6 +201,25 @@
     return normalizeEdgeCurves(inserted, pointCount + 1);
   }
 
+  function removeEdgeCurvesForVertex(edgeCurves, deletionIndex, pointCount) {
+    if (!Number.isInteger(deletionIndex) || deletionIndex < 0 || deletionIndex >= pointCount) {
+      throw new RangeError("Edge curve deletion index is outside the contour.");
+    }
+    if (!Number.isInteger(pointCount) || pointCount < 4) {
+      throw new RangeError("Deleting an edge curve vertex requires at least four contour points.");
+    }
+    const curves = normalizeEdgeCurves(edgeCurves, pointCount);
+    const replacedEdge = (deletionIndex - 1 + pointCount) % pointCount;
+    const remaining = {};
+    Object.entries(curves).forEach(([key, entry]) => {
+      const oldIndex = Number(key);
+      if (oldIndex === replacedEdge || oldIndex === deletionIndex) return;
+      const newIndex = oldIndex > deletionIndex ? oldIndex - 1 : oldIndex;
+      remaining[newIndex] = { kind: "quadratic", control: [entry.control[0], entry.control[1]] };
+    });
+    return normalizeEdgeCurves(remaining, pointCount - 1);
+  }
+
   function normalizeEditableContour(editableContour) {
     if (!Array.isArray(editableContour) || editableContour.length < 3) {
       throw new Error("Editable contour must contain at least three finite points.");
@@ -501,6 +520,22 @@
       const index = Number(key);
       return [index >= insertionIndex ? index + 1 : index, clone(value)];
     }));
+  }
+
+  function shiftCornerTreatmentsForDeletion(cornerTreatments, deletionIndex, pointCount) {
+    if (!Number.isInteger(deletionIndex) || deletionIndex < 0 || deletionIndex >= pointCount) {
+      throw new RangeError("Corner deletion index is invalid");
+    }
+    if (!Number.isInteger(pointCount) || pointCount < 4) {
+      throw new RangeError("Deleting a corner requires at least four contour points");
+    }
+    const treatments = normalizeCornerTreatments(cornerTreatments, pointCount);
+    return Object.fromEntries(Object.entries(treatments)
+      .filter(([key]) => Number(key) !== deletionIndex)
+      .map(([key, value]) => {
+        const index = Number(key);
+        return [index > deletionIndex ? index - 1 : index, clone(value)];
+      }));
   }
 
   function mirrorCornerTreatments(cornerTreatments, pointCount) {
@@ -828,9 +863,11 @@
     mapEdgeCurves,
     mirrorEdgeCurves,
     insertEdgeCurves,
+    removeEdgeCurvesForVertex,
     nextStage2RegionId,
     isExportableContour,
     shiftCornerTreatmentsForInsertion,
+    shiftCornerTreatmentsForDeletion,
     mirrorCornerTreatments,
     canSaveEditorState,
     runSessionLoadTransaction,

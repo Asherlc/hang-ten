@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import shutil
 import socket
 import sys
@@ -35,7 +36,7 @@ from hangboard_vectorizer.workbench_validation import (  # noqa: E402
     ValidationCheck as FakeValidationCheck,
     ValidationReport as FakeValidationReport,
 )
-from workbench_assets import STATIC_ASSETS  # noqa: E402
+from workbench_assets import STATIC_ASSETS, STATIC_ASSET_ROUTES  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
     EditorError,
@@ -47,6 +48,7 @@ from server import (  # noqa: E402
     load_catalog,
     save_catalog_outline,
     save_review,
+    validate_hang_ten_checkout,
     validate_regions_document,
 )
 
@@ -721,6 +723,66 @@ def running_server(
         thread.join(timeout=2)
 
 
+def test_health_is_available_before_library_loading(tmp_path):
+    with running_server(make_run(tmp_path / "legacy"), FakeWorkbenchService(tmp_path)) as base:
+        status, payload = _raw_request(base, "GET", "/api/health")
+
+    assert status == 200
+    assert payload == {"ok": True}
+
+
+def _make_hang_ten_checkout(root: Path, missing: str | None = None) -> None:
+    for marker in (
+        ".git",
+        "Tools/HangboardOnboarding/boards",
+        "Tools/hold-highlight-editor",
+    ):
+        if marker != missing:
+            (root / marker).mkdir(parents=True)
+
+
+def test_checkout_validation_accepts_all_hang_ten_markers(tmp_path):
+    root = tmp_path / "hang-ten"
+    _make_hang_ten_checkout(root)
+
+    assert validate_hang_ten_checkout(root) == root.resolve()
+
+
+@pytest.mark.parametrize(
+    "missing",
+    [
+        ".git",
+        "Tools/HangboardOnboarding/boards",
+        "Tools/hold-highlight-editor",
+    ],
+)
+def test_checkout_validation_rejects_each_missing_hang_ten_marker(tmp_path, missing):
+    invalid = tmp_path / "not-hang-ten"
+    _make_hang_ten_checkout(invalid, missing=missing)
+
+    with pytest.raises(EditorError) as error:
+        validate_hang_ten_checkout(invalid)
+
+    assert str(invalid) not in str(error.value)
+
+
+def test_configured_and_discovered_roots_require_hang_ten_checkout(tmp_path):
+    root = tmp_path / "hang-ten"
+    _make_hang_ten_checkout(root)
+    nested = root / "nested" / "launch"
+    nested.mkdir(parents=True)
+
+    assert server_module._configured_repository_root(root) == root.resolve()
+    assert server_module._discover_repository_root(nested) == root.resolve()
+
+    invalid = tmp_path / "not-hang-ten"
+    _make_hang_ten_checkout(invalid, missing="Tools/hold-highlight-editor")
+    with pytest.raises(EditorError):
+        server_module._configured_repository_root(invalid)
+    with pytest.raises(EditorError):
+        server_module._discover_repository_root(invalid)
+
+
 def test_server_uses_configured_editor_root(tmp_path):
     editor_root = tmp_path / "embedded-editor"
     editor_root.mkdir()
@@ -768,6 +830,16 @@ def test_server_routes_static_files_from_the_shared_manifest(tmp_path, monkeypat
 
     assert status == 200
     assert body == b"manifest asset"
+
+
+def test_static_manifest_routes_every_local_script_referenced_by_index():
+    index = (EDITOR_ROOT / "index.html").read_text(encoding="utf-8")
+    local_script_sources = set(
+        re.findall(r'<script\s+src="([^"?#]+)"', index)
+    )
+    manifest_assets = {asset for _route, asset in STATIC_ASSET_ROUTES}
+
+    assert local_script_sources == manifest_assets - {"index.html", "styles.css"}
 
 
 def test_required_static_assets_are_validated_before_binding(tmp_path):
@@ -1890,6 +1962,7 @@ def test_workspace_root_keeps_the_discovered_repository_library(
 ):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     canonical_run = (
         EDITOR_ROOT.parent
         / "HangboardOnboarding"
@@ -1956,6 +2029,8 @@ def test_workspace_root_requires_a_repository_outside_explicit_legacy_mode(
 def test_workspace_root_rejects_an_escape_from_repository_context(tmp_path, capsys):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "HangboardOnboarding" / "boards").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     escaped_workspace = tmp_path / "escaped-workspace"
 
     with pytest.raises(SystemExit) as error:
@@ -1979,6 +2054,8 @@ def test_workspace_root_rejects_a_symlink_escape_from_repository_context(
 ):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "HangboardOnboarding" / "boards").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     escaped_workspace = tmp_path / "escaped-workspace"
     escaped_workspace.mkdir()
     linked_workspace = repository / ".context" / "workspace"
@@ -2009,6 +2086,7 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     (repository / ".git").mkdir(parents=True)
     library = repository / "Tools" / "HangboardOnboarding" / "boards"
     library.mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     workspace = repository / ".context" / "workspace"
 
     server, catalog = server_module._server_from_cli(
@@ -2044,6 +2122,7 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
 def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     broken = repository / "Tools" / "HangboardOnboarding" / "boards" / "broken-board"
     broken.mkdir(parents=True)
     (broken / "run.json").write_text("{}")
@@ -2076,6 +2155,7 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
 def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypatch):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     canonical_run = (
         EDITOR_ROOT.parent
         / "HangboardOnboarding"
@@ -2135,6 +2215,7 @@ def test_repository_save_job_redacts_write_target_path(tmp_path, monkeypatch):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardOnboarding" / "boards").mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     workspace = repository / ".context" / "workspace"
     imported_run = workspace / "imported-run"
     shutil.copytree(
@@ -2201,6 +2282,7 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
     (repository / ".git").mkdir(parents=True)
     library = repository / "Tools" / "HangboardOnboarding" / "boards"
     library.mkdir(parents=True)
+    (repository / "Tools" / "hold-highlight-editor").mkdir(parents=True)
     launch_directory = repository / "nested" / "checkout"
     launch_directory.mkdir(parents=True)
     monkeypatch.chdir(launch_directory)

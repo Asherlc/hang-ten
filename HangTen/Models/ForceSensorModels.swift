@@ -39,6 +39,16 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
         .genericWHC06
     ]
 
+    /// Profiles backed by a reviewed BLE adapter. Keep source-audited adapter
+    /// availability separate from the broader catalog of planned profiles.
+    static let connectableCases: [ForceSensorProfile] = [
+        .automatic,
+        .motherboard,
+        .progressor,
+        .pitchSix,
+        .genericProgressor
+    ]
+
     var id: String { rawValue }
 
     var label: String {
@@ -123,5 +133,76 @@ struct ForceSensorAdvertisement: Equatable {
         self.name = name
         self.serviceUUIDs = serviceUUIDs
         self.manufacturerData = manufacturerData
+    }
+}
+
+enum ForceSensorAdapter {
+    case progressor(ProgressorProtocolAdapter)
+    case pitchSix(PitchSixProtocolAdapter)
+
+    var profile: ForceSensorProfile {
+        switch self {
+        case .progressor(let adapter): adapter.profile
+        case .pitchSix(let adapter): adapter.profile
+        }
+    }
+
+    var capabilities: Set<ForceSensorCapability> {
+        switch self {
+        case .progressor(let adapter): adapter.capabilities
+        case .pitchSix(let adapter): adapter.capabilities
+        }
+    }
+
+    var contract: ForceSensorBLEContract {
+        switch self {
+        case .progressor(let adapter): adapter.contract
+        case .pitchSix(let adapter): adapter.contract
+        }
+    }
+
+    var writeCharacteristic: ForceSensorBLECharacteristic {
+        switch self {
+        case .progressor(let adapter): adapter.writeCharacteristic
+        case .pitchSix(let adapter): adapter.writeCharacteristic
+        }
+    }
+
+    func matches(_ advertisement: ForceSensorAdvertisement) -> Bool {
+        switch self {
+        case .progressor(let adapter): adapter.matches(advertisement)
+        case .pitchSix(let adapter): adapter.matches(advertisement)
+        }
+    }
+
+    func payload(for command: ForceSensorCommand) -> Data {
+        switch self {
+        case .progressor(let adapter): adapter.payload(for: command)
+        case .pitchSix(let adapter): adapter.payload(for: command)
+        }
+    }
+
+    func decode(_ frame: Data, receivedAt: Date) -> [ForceSensorSample]? {
+        switch self {
+        case .progressor(let adapter):
+            adapter.decode(frame, receivedAt: receivedAt)?.map(\.sample)
+        case .pitchSix(let adapter):
+            adapter.decode(frame, receivedAt: receivedAt)
+        }
+    }
+}
+
+enum ForceSensorAdapterRegistry {
+    static let automaticProfiles: [ForceSensorProfile] = [.motherboard, .progressor, .pitchSix]
+
+    static func adapter(for profile: ForceSensorProfile) -> ForceSensorAdapter? {
+        switch profile {
+        case .progressor, .genericProgressor:
+            ProgressorProtocolAdapter(profile: profile).map(ForceSensorAdapter.progressor)
+        case .pitchSix:
+            PitchSixProtocolAdapter(profile: profile).map(ForceSensorAdapter.pitchSix)
+        case .automatic, .motherboard, .whC06, .entralpi, .climbro, .genericWHC06:
+            nil
+        }
     }
 }

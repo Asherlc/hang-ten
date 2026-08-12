@@ -12,12 +12,13 @@ enum WorkoutSummaryMode: Equatable {
 enum WorkoutSummaryFormatting {
     static func granularSampleCountText(
         for measurements: [MotherboardMeasurement],
+        profile: ForceSensorProfile = .motherboard,
         wasTruncated: Bool = false
     ) -> String? {
         guard !measurements.isEmpty else { return nil }
         let label = measurements.count == 1 ? "sample" : "samples"
         let cappedMessage = wasTruncated ? " (capture capped; some samples may be missing)" : ""
-        return "\(measurements.count) granular Motherboard \(label)\(cappedMessage)"
+        return "\(measurements.count) granular \(profile.label) \(label)\(cappedMessage)"
     }
 
     static func bodyweightBaselineText(
@@ -101,6 +102,9 @@ struct WorkoutSessionHistoryView: View {
                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
                                 .font(.system(size: 12, weight: .medium, design: .rounded))
                                 .foregroundStyle(Color.hangMuted)
+                            Text(session.forceSensorProfile.label)
+                                .font(.system(size: 12, weight: .medium, design: .rounded))
+                                .foregroundStyle(Color.hangMuted)
                         }
                         .padding(.vertical, 3)
                     }
@@ -153,6 +157,12 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
+            Section("Sensor") {
+                Text(session.forceSensorProfile.label)
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+            }
+
             if let bodyweightBaselineText = WorkoutSummaryFormatting.bodyweightBaselineText(
                 for: session.bodyweightKGF,
                 unit: unit
@@ -166,6 +176,7 @@ private struct WorkoutSummaryContent: View {
 
             if let granularSampleCountText = WorkoutSummaryFormatting.granularSampleCountText(
                 for: session.motherboardMeasurements,
+                profile: session.forceSensorProfile,
                 wasTruncated: session.motherboardMeasurementsTruncated
             ) {
                 Section("Granular sensor data") {

@@ -54,91 +54,111 @@ jobs:
       - name: Run focused Node suite
         run: node --test Tools/hold-highlight-editor/tests/workbench*.test.js
 
-      - name: Build arm64 workbench executable
+      - name: Run native shell tests
+        run: swift test --package-path Tools/hold-highlight-editor/macos
+
+      - name: Build unsigned native app
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
+          runtime_dist_dir="$release_dir/runtime-dist"
           work_dir="$RUNNER_TEMP/hangboard-workbench-build"
           rm -rf "$release_dir" "$work_dir"
           mkdir -p "$release_dir" "$work_dir"
           "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
             Tools/hold-highlight-editor/packaging/build.py \
             --commit "$GITHUB_SHA" \
-            --dist-dir "$release_dir" \
+            --dist-dir "$runtime_dist_dir" \
             --work-dir "$work_dir"
+          runtime_dir="$runtime_dist_dir/hangboard-workbench"
+
+          swift build -c release --arch arm64 \
+            --package-path Tools/hold-highlight-editor/macos
+          shell_bin_dir="$(swift build -c release --arch arm64 \
+            --package-path Tools/hold-highlight-editor/macos --show-bin-path)"
+          shell_executable="$shell_bin_dir/HangboardWorkbench"
+          app_bundle="$release_dir/Hangboard Workbench.app"
+          "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
+            Tools/hold-highlight-editor/packaging/macos_app.py \
+            --shell "$shell_executable" \
+            --runtime-dir "$runtime_dir" \
+            --output "$app_bundle" \
+            --version "$GITHUB_RUN_NUMBER"
 
       - name: Verify executable identity
         run: |
           set -euo pipefail
-          executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
+          app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
+          shell_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+          runtime_executable="$app_bundle/Contents/Resources/workbench-runtime/hangboard-workbench"
           architecture="$(uname -m)"
           echo "Runner architecture: $architecture"
           test "$architecture" = "arm64"
-          file "$executable" | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
-          grep -q "arm64" "$RUNNER_TEMP/hangboard-workbench-file.txt"
-          "$executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
+          file "$shell_executable" "$runtime_executable" \
+            | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
+          test "$(grep -c 'arm64' "$RUNNER_TEMP/hangboard-workbench-file.txt")" -eq 2
+          "$runtime_executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
           grep -Fqx "$GITHUB_SHA" "$RUNNER_TEMP/hangboard-workbench-version.txt"
 
-      - name: Smoke test executable and clean up
+      - name: Smoke test unsigned app and clean up
         run: |
           set -euo pipefail
-          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-          export PATH="$(dirname "$python_bin"):$PATH"
-          executable="$GITHUB_WORKSPACE/.hangboard-workbench-release/hangboard-workbench"
-          smoke_log=""
-          workbench_pid=""
-          workbench_child_pid=""
+          app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
+          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+          smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
+          app_pid=""
+          app_child_pid=""
           cleanup() {
             status=$?
             trap - EXIT
-            if [[ -n "$workbench_pid" ]]; then
-              if kill -0 "$workbench_pid" 2>/dev/null; then
-                kill -TERM "$workbench_pid" || true
+            if [[ -n "$app_pid" ]]; then
+              if kill -0 "$app_pid" 2>/dev/null; then
+                kill -TERM "$app_pid" || true
               fi
-              wait "$workbench_pid" || true
+              wait "$app_pid" || true
             fi
-            if [[ -n "$workbench_child_pid" ]] && kill -0 "$workbench_child_pid" 2>/dev/null; then
-              kill -TERM "$workbench_child_pid" || true
+            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
+              kill -TERM "$app_child_pid" || true
             fi
-            if [[ "$status" -ne 0 && -n "$smoke_log" && -f "$smoke_log" ]]; then
+            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
               cat "$smoke_log" >&2
             fi
             exit "$status"
           }
           trap cleanup EXIT
 
-          smoke_signal() {
-            shutdown_signal="$1"
-            port="$2"
-            smoke_log="$RUNNER_TEMP/hangboard-workbench-smoke-${shutdown_signal}.log"
-            workbench_pid=""
-            workbench_child_pid=""
-
-            cd "$GITHUB_WORKSPACE"
-            "$executable" --no-open --port "$port" >"$smoke_log" 2>&1 &
-            workbench_pid=$!
-            ready=false
-            for _ in {1..30}; do
-              if ! kill -0 "$workbench_pid" 2>/dev/null; then
-                echo "Workbench exited before becoming ready for SIG${shutdown_signal}." >&2
-                exit 1
-              fi
-              if curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null; then
-                ready=true
-                break
-              fi
-              sleep 1
-            done
-            if [[ "$ready" != "true" ]]; then
-              echo "Workbench did not become ready within 30 seconds for SIG${shutdown_signal}." >&2
+          port=41739
+          cd "$GITHUB_WORKSPACE"
+          "$app_executable" --headless \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --port 41739 >"$smoke_log" 2>&1 &
+          app_pid=$!
+          ready=false
+          for _ in {1..30}; do
+            if ! kill -0 "$app_pid" 2>/dev/null; then
+              echo "Unsigned app exited before becoming ready." >&2
               exit 1
             fi
+            if curl --fail --silent --show-error \
+              "http://127.0.0.1:${port}/api/health" >/dev/null; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$ready" != "true" ]]; then
+            echo "Unsigned app did not become ready within 30 seconds." >&2
+            exit 1
+          fi
 
-            curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
-            while IFS= read -r asset_path; do
-              curl --fail --silent --show-error "http://127.0.0.1:${port}${asset_path}" >/dev/null
-            done < <(
-              python - <<'PY'
+          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/health" \
+            | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
+          curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
+          while IFS= read -r asset_path; do
+            curl --fail --silent --show-error \
+              "http://127.0.0.1:${port}${asset_path}" >/dev/null
+          done < <(
+            python - <<'PY'
           import sys
 
           sys.path.insert(0, "Tools/hold-highlight-editor")
@@ -147,55 +167,42 @@ jobs:
           for asset in STATIC_ASSETS:
               print(f"/{asset}")
           PY
-            )
-            curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-              | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+          )
+          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
+            | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
 
-            workbench_child_pid="$(pgrep -P "$workbench_pid" || true)"
-            if [[ -z "$workbench_child_pid" || "$workbench_child_pid" == *$'\n'* ]]; then
-              echo "Expected exactly one frozen workbench child process for SIG${shutdown_signal}." >&2
-              exit 1
-            fi
-            kill -"$shutdown_signal" "$workbench_pid"
-            if wait "$workbench_pid"; then
-              shutdown_status=0
-            else
-              shutdown_status=$?
-            fi
-            if [[ "$shutdown_status" -ne 0 ]]; then
-              echo "Workbench exited with status $shutdown_status after SIG${shutdown_signal}." >&2
-              exit 1
-            fi
-            if kill -0 "$workbench_pid" 2>/dev/null; then
-              echo "Workbench parent remained after SIG${shutdown_signal}." >&2
-              exit 1
-            fi
-            if kill -0 "$workbench_child_pid" 2>/dev/null; then
-              echo "Workbench child remained after SIG${shutdown_signal}." >&2
-              exit 1
-            fi
-            if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
-              echo "Workbench smoke log contains an error after SIG${shutdown_signal}." >&2
-              exit 1
-            fi
-            workbench_pid=""
-            workbench_child_pid=""
-          }
+          app_child_pid="$(pgrep -P "$app_pid" || true)"
+          if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
+            echo "Expected exactly one backend owned by the unsigned app." >&2
+            exit 1
+          fi
+          kill -TERM "$app_pid"
+          if ! wait "$app_pid"; then
+            echo "Unsigned app did not exit cleanly after SIGTERM." >&2
+            exit 1
+          fi
+          if kill -0 "$app_child_pid" 2>/dev/null; then
+            echo "Unsigned app backend remained after app shutdown." >&2
+            exit 1
+          fi
+          if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
+            echo "Unsigned app smoke log contains an error." >&2
+            exit 1
+          fi
+          app_pid=""
+          app_child_pid=""
 
-          smoke_signal INT 41739
-          smoke_signal TERM 41740
-
-      - name: Archive verified executable
+      - name: Archive verified unsigned app
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
           cd "$release_dir"
-          tar -czf hangboard-workbench-macos-arm64.tar.gz hangboard-workbench
+          tar -czf hangboard-workbench-macos-arm64.tar.gz "Hangboard Workbench.app"
           shasum -a 256 hangboard-workbench-macos-arm64.tar.gz > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
       # actions/upload-artifact v4.6.2
-      - name: Upload verified release assets
+      - name: Upload verified unsigned app
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: hangboard-workbench-release-${{ github.run_id }}
@@ -222,17 +229,34 @@ jobs:
           persist-credentials: false
 
       # actions/download-artifact v5.0.0
-      - name: Download verified release assets
+      - name: Download verified unsigned app
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: hangboard-workbench-release-${{ github.run_id }}
           path: release
 
-      - name: Verify downloaded release assets
+      - name: Verify downloaded unsigned app
         run: |
           set -euo pipefail
           cd release
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
+      # actions/setup-python v6.3.0
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
+
+      - name: Install workbench release dependencies
+        run: |
+          set -euo pipefail
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-release-venv/bin/python"
+          python -m venv "${python_bin%/bin/python}"
+          "$python_bin" -m pip install --upgrade pip
+          "$python_bin" -m pip install -e 'Tools/HangboardOnboarding' 'pyinstaller==6.22.0'
+          swift --version
 
       # Apple-Actions/import-codesign-certs v7.0.0
       - name: Import Developer ID Application certificate
@@ -251,39 +275,87 @@ jobs:
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/release"
-          executable="$release_dir/hangboard-workbench"
-          app_bundle="$release_dir/hangboard-workbench.app"
+          python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-release-venv/bin/python"
+          runtime_dist_dir="$release_dir/signed-runtime-dist"
+          runtime_work_dir="$RUNNER_TEMP/hangboard-workbench-signed-runtime-build"
+          app_bundle="$release_dir/Hangboard Workbench.app"
+          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
           archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
           api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
-          trap 'rm -f "$api_key_path"' EXIT
-
-          cd "$release_dir"
-          tar -xzf hangboard-workbench-macos-arm64.tar.gz
-          test -x "$executable"
-          python3 "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py" \
-            --executable "$executable" \
-            --output "$app_bundle" \
-            --version "$GITHUB_RUN_NUMBER"
+          smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
+          app_pid=""
+          app_child_pid=""
+          cleanup() {
+            status=$?
+            trap - EXIT
+            if [[ -n "$app_pid" ]]; then
+              if kill -0 "$app_pid" 2>/dev/null; then
+                kill -TERM "$app_pid" || true
+              fi
+              wait "$app_pid" || true
+            fi
+            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
+              kill -TERM "$app_child_pid" || true
+            fi
+            rm -f "$api_key_path"
+            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
+              cat "$smoke_log" >&2
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
 
           signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
             | awk -F '\"' '/Developer ID Application:/{print $2}')"
-          identity_count="$(printf '%s\n' "$signing_identities" | sed '/^$/d' | wc -l | tr -d ' ')"
+          matching_identities="$(printf '%s\n' "$signing_identities" \
+            | grep -F "($APPLE_TEAM_ID)" || true)"
+          identity_count="$(printf '%s\n' "$matching_identities" | sed '/^$/d' | wc -l | tr -d ' ')"
           if [[ "$identity_count" -ne 1 ]]; then
-            echo "Expected exactly one Developer ID Application identity, found $identity_count." >&2
+            echo "Expected exactly one Developer ID Application identity matching APPLE_TEAM_ID, found $identity_count." >&2
             exit 1
           fi
-          signing_identity="$signing_identities"
-          if [[ "$signing_identity" != *"($APPLE_TEAM_ID)" ]]; then
-            echo "Developer ID Application identity does not match APPLE_TEAM_ID." >&2
+          signing_identity="$matching_identities"
+
+          rm -rf "$runtime_dist_dir" "$runtime_work_dir" "$app_bundle"
+          mkdir -p "$runtime_dist_dir" "$runtime_work_dir"
+          "$python_bin" "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/build.py" \
+            --commit "$GITHUB_SHA" \
+            --dist-dir "$runtime_dist_dir" \
+            --work-dir "$runtime_work_dir" \
+            --codesign-identity "$signing_identity"
+          runtime_dir="$runtime_dist_dir/hangboard-workbench"
+
+          swift build -c release --arch arm64 \
+            --package-path Tools/hold-highlight-editor/macos
+          shell_bin_dir="$(swift build -c release --arch arm64 \
+            --package-path Tools/hold-highlight-editor/macos --show-bin-path)"
+          built_shell="$shell_bin_dir/HangboardWorkbench"
+          "$python_bin" "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py" \
+            --shell "$built_shell" \
+            --runtime-dir "$runtime_dir" \
+            --output "$app_bundle" \
+            --version "$GITHUB_RUN_NUMBER"
+
+          runtime_root="$app_bundle/Contents/Resources/workbench-runtime"
+          nested_macho_count=0
+          while IFS= read -r -d '' candidate; do
+            if file -b "$candidate" | grep -q 'Mach-O'; then
+              codesign --force --sign "$signing_identity" --options runtime --timestamp "$candidate"
+              nested_macho_count=$((nested_macho_count + 1))
+            fi
+          done < <(find "$runtime_root" -type f -print0)
+          if [[ "$nested_macho_count" -eq 0 ]]; then
+            echo "Expected at least one Mach-O file in the embedded runtime." >&2
             exit 1
           fi
 
-          codesign --force --sign "$signing_identity" --options runtime --timestamp \
-            "$app_bundle/Contents/MacOS/hangboard-workbench"
-          codesign --force --sign "$signing_identity" --options runtime --timestamp \
-            "$app_bundle"
+          shell_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+          codesign --force --sign "$signing_identity" --options runtime --timestamp "$shell_executable"
+          codesign --force --sign "$signing_identity" --options runtime --timestamp "$app_bundle"
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
+          cd "$release_dir"
           ditto -c -k --keepParent "$app_bundle" "$archive"
           umask 077
           printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
@@ -297,8 +369,53 @@ jobs:
           xcrun stapler validate "$app_bundle"
           spctl --assess --type execute --verbose=4 "$app_bundle"
 
+          port=41739
+          cd "$GITHUB_WORKSPACE"
+          "$app_executable" --headless \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --port "$port" >"$smoke_log" 2>&1 &
+          app_pid=$!
+          ready=false
+          for _ in {1..30}; do
+            if ! kill -0 "$app_pid" 2>/dev/null; then
+              echo "Signed app exited before becoming ready." >&2
+              exit 1
+            fi
+            if curl --fail --silent --show-error \
+              "http://127.0.0.1:${port}/api/health" \
+              | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$ready" != "true" ]]; then
+            echo "Signed app did not become ready within 30 seconds." >&2
+            exit 1
+          fi
+
+          app_child_pid="$(pgrep -P "$app_pid" || true)"
+          if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
+            echo "Expected exactly one backend owned by the signed app." >&2
+            exit 1
+          fi
+          kill -TERM "$app_pid"
+          if ! wait "$app_pid"; then
+            echo "Signed app did not exit cleanly after SIGTERM." >&2
+            exit 1
+          fi
+          if kill -0 "$app_child_pid" 2>/dev/null; then
+            echo "Signed app backend remained after app shutdown." >&2
+            exit 1
+          fi
+          app_pid=""
+          app_child_pid=""
+
           rm -f "$archive"
+          cd "$release_dir"
           ditto -c -k --keepParent "$app_bundle" "$archive"
+          unzip -Z1 "$archive" | awk -F/ 'NF {print $1}' | sort -u > "$zip_top_levels"
+          test "$(cat "$zip_top_levels")" = "Hangboard Workbench.app"
           shasum -a 256 hangboard-workbench-macos-arm64.zip > hangboard-workbench-macos-arm64.sha256
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 

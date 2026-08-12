@@ -4,24 +4,28 @@ A dependency-free local browser editor for hangboard hold-highlight artifacts.
 
 ## Run the Apple Silicon macOS release
 
-From a Hang Ten checkout, download both assets from a release directory, verify
-the ZIP, extract it, and launch the app with Finder or `open`:
+Download both assets from a release directory, verify the ZIP, extract it, and
+launch the native app:
 
 ```bash
 curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.zip
 curl -LO https://github.com/Asherlc/hang-ten/releases/download/<release>/hangboard-workbench-macos-arm64.sha256
 shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 unzip hangboard-workbench-macos-arm64.zip
-open hangboard-workbench.app
+open "Hangboard Workbench.app"
 ```
 
-The executable opens the workbench in the default browser automatically. It
-must run from inside a Hang Ten checkout, or receive the checkout explicitly
-with `--repository-root`. `--workspace-root` only moves transient work; it does
-not disable repository discovery or replace `--repository-root`. Use
-`--no-open` to suppress browser launch, `--port` to select another port, and
-`--version` to print the embedded source commit. Repository-free startup is
-reserved for explicit legacy `--run-dir` or `--catalog` inputs.
+On first launch, the native window asks you to choose the root folder of a
+valid Hang Ten checkout. The app remembers the last valid checkout and opens
+it on later launches. To work in another checkout, choose **Choose Hang Ten
+Checkout…** from the app menu.
+
+The editor appears only in the native window. All local saves write directly
+to the selected checkout, where they remain ordinary changes for normal Git
+review. If the selected folder is invalid or startup fails, the native window
+explains the problem and offers **Choose Another Checkout…** so you can retry.
+
+Remote hosting is not yet shipped; it remains a future deployment option.
 
 The release is Developer ID signed and notarized, so it is accepted by
 Gatekeeper without a Finder override.
@@ -62,11 +66,13 @@ The persistent sidebar works on one active board revision at a time:
 
 - **Onboard** retains the guided Stage 0–4 review workflow described below.
 - **Inspect** shows the active revision, approval/readiness state, Stage 4
-  normal and highlight artifacts, and the hold inventory before any native
-  generation is requested.
-- **Promote to iOS** requires an explicit, evidence-backed promotion profile.
-  Generate a preview first and review its grouped **Metadata**, **Geometry**,
-  and **Plans** diffs. A stale revision, changed profile, incomplete package,
+  normal and highlight artifacts, hold inventory, and editable **Board info**
+  for the current active revision. Board info stays in the active in-browser
+  profile until the board or revision changes.
+- **Promote to iOS** uses the Board info entered in Inspect and the active
+  board's canonical repository ID. Generate a preview first and review its
+  grouped **Metadata**, **Geometry**, and **Plans** diffs. A stale revision,
+  changed Board info, incomplete package,
   or target changed relative to `main` is a conflict: no promotion file is
   written. **Save locally** regenerates and verifies the preview token, then
   writes all approved native targets atomically for normal local Git review.

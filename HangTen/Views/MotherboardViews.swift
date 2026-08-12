@@ -110,7 +110,7 @@ struct MotherboardCard: View {
         if service.state.shouldDisconnect {
             service.disconnect()
         } else {
-            service.connect()
+            service.connect(profile: settings.forceSensorProfile)
         }
     }
 
@@ -126,6 +126,19 @@ struct MotherboardSettingsView: View {
 
     var body: some View {
         Form {
+            Section {
+                Picker("Profile", selection: $settings.forceSensorProfile) {
+                    ForEach(ForceSensorProfile.connectableCases) { profile in
+                        Text(profile.label).tag(profile)
+                    }
+                }
+                .disabled(service.state.shouldDisconnect)
+            } header: {
+                Text("Sensor profile")
+            } footer: {
+                Text("Only source-audited sensor protocols are available. Disconnect before changing the profile.")
+            }
+
             Section("Force unit") {
                 Picker("Unit", selection: $settings.forceUnit) {
                     ForEach(MotherboardForceUnit.allCases) { unit in
@@ -173,7 +186,7 @@ struct MotherboardSettingsView: View {
             } header: {
                 Text("Sensor")
             } footer: {
-                Text("Tare averages the next \(service.tareSampleTarget) unloaded samples and is available while the sensor is streaming.")
+                Text(tareDescription)
             }
         }
         .navigationTitle("Sensor settings")
@@ -193,6 +206,14 @@ struct MotherboardSettingsView: View {
             unitStyle: .long,
             fractionDigits: 0
         ) ?? "—"
+    }
+
+    private var tareDescription: String {
+        let profile = service.connectedProfile ?? settings.forceSensorProfile
+        if ForceSensorAdapterRegistry.adapter(for: profile)?.capabilities.contains(.hardwareTare) == true {
+            return "Tare sends the selected sensor's hardware tare command while it is streaming."
+        }
+        return "Tare averages the next \(service.tareSampleTarget) unloaded samples and is available while the sensor is streaming."
     }
 }
 
