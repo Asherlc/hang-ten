@@ -32,4 +32,23 @@ final class WorkoutSummaryTests: XCTestCase {
         )
         XCTAssertNil(WorkoutSummaryFormatting.bodyweightBaselineText(for: nil, unit: .kgf))
     }
+
+    func testGranularSampleTextUsesTheRecordedSensorProfile() throws {
+        let measurement = MotherboardMeasurement(
+            timestamp: Date(timeIntervalSince1970: 1),
+            sampleNumber: 1,
+            batteryValue: 0,
+            sensorLoadsKGF: [],
+            aggregateLoadKGF: 12
+        )
+
+        let text = try XCTUnwrap(
+            WorkoutSummaryFormatting.granularSampleCountText(
+                for: [measurement],
+                profile: .progressor
+            )
+        )
+
+        XCTAssertEqual(text, "1 granular Tindeq Progressor sample")
+    }
 }
