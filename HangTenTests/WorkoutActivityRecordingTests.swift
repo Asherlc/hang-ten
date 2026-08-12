@@ -785,6 +785,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
         let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
+        let expectedError = "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+        let localCompletionPublished = expectation(description: "Local completion published")
+        let completionObservation = store.$workoutHistory
+            .map(\.sessionCount)
+            .filter { $0 == 1 }
+            .first()
+            .sink { _ in
+                localCompletionPublished.fulfill()
+            }
+        let recordingErrorPublished = expectation(description: "Recording error published")
+        let errorObservation = store.$healthAuthorizationError
+            .compactMap { $0 }
+            .filter { $0 == expectedError }
+            .first()
+            .sink { _ in
+                recordingErrorPublished.fulfill()
+            }
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -800,15 +817,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_012)
         )
-        guard waitUntil({
-            store.sessionsCompleted == 1 &&
-                store.healthAuthorizationError == "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
-        }) else {
-            return
-        }
+
+        wait(for: [localCompletionPublished, recordingErrorPublished], timeout: 5)
+        withExtendedLifetime(completionObservation) {}
+        withExtendedLifetime(errorObservation) {}
         XCTAssertEqual(
             store.healthAuthorizationError,
-            "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+            expectedError
         )
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertTrue(store.sessionHistory.isEmpty)
