@@ -627,7 +627,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let store = AppStore(
             healthKitService: service,
             workoutSessionStore: sessionStore,
-            defaults: defaults
+            userDefaults: defaults
         )
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
