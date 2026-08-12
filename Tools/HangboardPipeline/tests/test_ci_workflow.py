@@ -54,12 +54,31 @@ def test_ci_classifies_changes_with_the_pinned_shared_taxonomy() -> None:
     assert changes["outputs"]["ios"] == "${{ steps.filter.outputs.ios }}"
     assert changes["outputs"]["python"] == "${{ steps.filter.outputs.python }}"
     assert (
+        changes["outputs"]["workbench_web"]
+        == "${{ steps.filter.outputs.workbench_web }}"
+    )
+    assert (
+        changes["outputs"]["workbench_native"]
+        == "${{ steps.filter.outputs.workbench_native }}"
+    )
+    assert (
         changes["outputs"]["shared_board_content"]
         == "${{ steps.filter.outputs.shared_board_content }}"
     )
     assert changes["outputs"]["metadata"] == "${{ steps.filter.outputs.metadata }}"
     assert changes["outputs"]["workflow"] == "${{ steps.filter.outputs.workflow }}"
-    filter_step = next(step for step in changes["steps"] if step["id"] == "filter")
+    checkout_step = next(
+        step for step in changes["steps"] if step["name"] == "Check out source"
+    )
+    filter_step_index = next(
+        index
+        for index, step in enumerate(changes["steps"])
+        if step.get("id") == "filter"
+    )
+    assert changes["steps"].index(checkout_step) < filter_step_index
+    assert checkout_step["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    assert checkout_step["with"]["persist-credentials"] is False
+    filter_step = changes["steps"][filter_step_index]
     assert filter_step["uses"] == "dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d"
     assert filter_step["with"]["filters"] == ".github/ci-paths.yml"
 
