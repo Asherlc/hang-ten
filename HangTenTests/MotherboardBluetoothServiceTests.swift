@@ -303,6 +303,29 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(transport.disconnectCount, 0)
     }
 
+    func testFourthRawChannelDoesNotAffectAggregateOrBalanceButRemainsAvailable() throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(transport: transport)
+        connectAndStartStreaming(service, with: transport)
+
+        emitRawPacket(on: transport, sampleNumber: 1, adcValues: [800, 400, 400, 100])
+        let baseline = try XCTUnwrap(service.latestMeasurement)
+
+        emitRawPacket(on: transport, sampleNumber: 2, adcValues: [800, 400, 400, 900])
+        let changedFourthChannel = try XCTUnwrap(service.latestMeasurement)
+
+        XCTAssertEqual(baseline.aggregateLoadKGF, 16, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.aggregateLoadKGF, 16, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightLoadKGF, 6, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.rightLoadKGF, 6, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftShare, changedFourthChannel.leftShare, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightShare, changedFourthChannel.rightShare, accuracy: 0.0001)
+        XCTAssertEqual(baseline.sensorLoadsKGF[3], 1, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.sensorLoadsKGF[3], 9, accuracy: 0.0001)
+    }
+
     func testFragmentedRawPacketPublishesMeasurementAndBatteryAfterCalibration() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)
@@ -1046,12 +1069,21 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
     private func emitCompleteCalibration(
         on transport: FakeMotherboardTransport,
-        massKGF: (Int, Int) -> String = { _, point in String(point) }
+        massKGF: ((Int, Int) -> String)? = nil
     ) {
         for sensor in 0..<4 {
             for point in 0..<4 {
+                let defaultMass = Double(point * 10)
+                let requestedMass = massKGF?(sensor, point) ?? defaultMass.description
+                let calibratedMass: String
+                if let parsedMass = Double(requestedMass), parsedMass.isFinite {
+                    let sign = (sensor == 1 || sensor == 2) ? -1.0 : 1.0
+                    calibratedMass = (parsedMass * sign).description
+                } else {
+                    calibratedMass = requestedMass
+                }
                 transport.emit(.notification(
-                    Data("\(sensor),\(point),\(massKGF(sensor, point)),\(point * 100)\r\n".utf8),
+                    Data("\(sensor),\(point),\(calibratedMass),\(point * 1_000)\r\n".utf8),
                     Date(timeIntervalSince1970: Double(sensor * 4 + point))
                 ))
             }
@@ -1077,13 +1109,26 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         sampleNumber: UInt16,
         adc: Int32
     ) {
+        emitRawPacket(
+            on: transport,
+            sampleNumber: sampleNumber,
+            adcValues: [adc * 2, adc, adc, adc]
+        )
+    }
+
+    private func emitRawPacket(
+        on transport: FakeMotherboardTransport,
+        sampleNumber: UInt16,
+        adcValues: [Int32]
+    ) {
+        precondition(adcValues.count == 4)
         var bytes = [
             UInt8(sampleNumber & 0x00FF),
             UInt8(sampleNumber >> 8),
             UInt8(90),
             UInt8(0)
         ]
-        for _ in 0..<4 {
+        for adc in adcValues {
             bytes.append(UInt8(truncatingIfNeeded: adc))
             bytes.append(UInt8(truncatingIfNeeded: adc >> 8))
             bytes.append(UInt8(truncatingIfNeeded: adc >> 16))
@@ -1231,14 +1276,14 @@ private struct DeterministicSimulationFrames {
         expectedLeftShare: 0.5
     )
     let bodyweight = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [20_000, 20_000, 20_000, 20_000]),
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 30_000, 20_000]),
         expectedAggregateLoadKGF: 80,
         expectedLeftShare: 0.5
     )
     let active = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [30_000, 20_000, 30_000, 20_000]),
-        expectedAggregateLoadKGF: 100,
-        expectedLeftShare: 0.6
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 10_000, 20_000]),
+        expectedAggregateLoadKGF: 60,
+        expectedLeftShare: 2.0 / 3.0
     )
 
     @MainActor

@@ -160,6 +160,8 @@ enum MotherboardProtocol {
     static let serviceUUID = UUID(uuidString: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")!
     static let rxUUID = UUID(uuidString: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E")!
     static let txUUID = UUID(uuidString: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")!
+    private static let channelPolarities: [Double] = [1, -1, -1, 1]
+    private static let forceChannelCount = 3
 
     static func command(_ text: String) -> Data {
         Data(text.utf8)
@@ -179,9 +181,10 @@ enum MotherboardProtocol {
             let adc = packet.adcValues.indices.contains(sensor) ? packet.adcValues[sensor] : 0
             let tare = tareKGF.indices.contains(sensor) ? tareKGF[sensor] : 0
             let calibratedLoad = finiteLoad(calibration.massKGF(sensor: sensor, adc: adc) ?? 0)
-            return finiteLoad(calibratedLoad - finiteLoad(tare))
+            let polarity = channelPolarities.indices.contains(sensor) ? channelPolarities[sensor] : 1
+            return finiteLoad(finiteLoad(calibratedLoad * polarity) - finiteLoad(tare))
         }
-        let aggregateLoadKGF = sensorLoadsKGF.reduce(0) { total, load in
+        let aggregateLoadKGF = sensorLoadsKGF.prefix(forceChannelCount).reduce(0) { total, load in
             finiteLoad(total + load)
         }
 

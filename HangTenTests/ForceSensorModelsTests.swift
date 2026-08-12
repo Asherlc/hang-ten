@@ -46,7 +46,6 @@ final class ForceSensorModelsTests: XCTestCase {
             [.motherboard, .progressor, .pitchSix]
         )
     }
-
     func testMatchingPolicyKeepsGenericProfilesOutOfAutomaticSelection() {
         XCTAssertEqual(ForceSensorProfile.automatic.matchingPolicy, .automatic)
 

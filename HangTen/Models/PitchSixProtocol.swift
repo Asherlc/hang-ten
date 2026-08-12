@@ -51,9 +51,16 @@ struct PitchSixProtocolAdapter {
     func decode(_ frame: Data, receivedAt: Date) -> [ForceSensorSample]? {
         guard frame.count >= 2 else { return nil }
 
-        let sampleCount = Int(frame[frame.startIndex]) << 8
-            | Int(frame[frame.index(after: frame.startIndex)])
-        guard (1...6).contains(sampleCount), frame.count == 2 + sampleCount * 3 else {
+        let headerStartIndex = frame.startIndex
+        let sampleCount = Int(frame[headerStartIndex]) << 8
+            | Int(frame[frame.index(after: headerStartIndex)])
+        let (payloadByteCount, payloadLengthOverflowed) = sampleCount.multipliedReportingOverflow(by: 3)
+        let (expectedFrameByteCount, frameLengthOverflowed) = payloadByteCount.addingReportingOverflow(2)
+        guard sampleCount > 0,
+              !payloadLengthOverflowed,
+              !frameLengthOverflowed,
+              frame.count == expectedFrameByteCount
+        else {
             return nil
         }
 
@@ -61,10 +68,15 @@ struct PitchSixProtocolAdapter {
         samples.reserveCapacity(sampleCount)
 
         for sampleIndex in 0..<sampleCount {
-            let offset = 2 + sampleIndex * 3
-            let pounds = Double(frame[offset]) * 32_768
-                + Double(frame[offset + 1]) * 256
-                + Double(frame[offset + 2])
+            let sampleStartIndex = frame.index(
+                frame.startIndex,
+                offsetBy: 2 + sampleIndex * 3
+            )
+            let sampleMiddleIndex = frame.index(after: sampleStartIndex)
+            let sampleEndIndex = frame.index(after: sampleMiddleIndex)
+            let pounds = Double(frame[sampleStartIndex]) * 32_768
+                + Double(frame[sampleMiddleIndex]) * 256
+                + Double(frame[sampleEndIndex])
             guard let sample = ForceSensorSample(
                 value: pounds,
                 unit: .poundsForce,

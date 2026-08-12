@@ -311,4 +311,3 @@ git push origin HEAD
 - [ ] Switch to a second checkout, save an edit, and verify only that checkout has Git-visible changes.
 - [ ] Verify the app has a valid Developer ID signature, notarization ticket, stapled ticket, and Gatekeeper assessment.
 - [ ] Confirm the editor UI retains only HTTP relative API calls, so serving that UI and API together remotely remains an additive future deployment.
-

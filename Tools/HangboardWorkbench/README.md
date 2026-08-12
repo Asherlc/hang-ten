@@ -66,11 +66,13 @@ The persistent sidebar works on one active board revision at a time:
 
 - **Onboard** retains the guided Stage 0–4 review workflow described below.
 - **Inspect** shows the active revision, approval/readiness state, Stage 4
-  normal and highlight artifacts, and the hold inventory before any native
-  generation is requested.
-- **Promote to iOS** requires an explicit, evidence-backed promotion profile.
-  Generate a preview first and review its grouped **Metadata**, **Geometry**,
-  and **Plans** diffs. A stale revision, changed profile, incomplete package,
+  normal and highlight artifacts, hold inventory, and editable **Board info**
+  for the current active revision. Board info stays in the active in-browser
+  profile until the board or revision changes.
+- **Promote to iOS** uses the Board info entered in Inspect and the active
+  board's canonical repository ID. Generate a preview first and review its
+  grouped **Metadata**, **Geometry**, and **Plans** diffs. A stale revision,
+  changed Board info, incomplete package,
   or target changed relative to `main` is a conflict: no promotion file is
   written. **Save locally** regenerates and verifies the preview token, then
   writes all approved native targets atomically for normal local Git review.
