@@ -64,6 +64,23 @@ final class ProgressorProtocolTests: XCTestCase {
         XCTAssertNil(adapter.decode(negativeFrame, receivedAt: receivedAt))
     }
 
+    func testDecoderRejectsEntireMultiRecordFrameWhenLaterForceIsInvalid() throws {
+        let adapter = try XCTUnwrap(ProgressorProtocolAdapter(profile: .progressor))
+        let validThenNonfinite = Data([
+            0x01, 0x10,
+            0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0xC0, 0x7F, 0x02, 0x00, 0x00, 0x00
+        ])
+        let validThenNegative = Data([
+            0x01, 0x10,
+            0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x80, 0xBF, 0x02, 0x00, 0x00, 0x00
+        ])
+
+        XCTAssertNil(adapter.decode(validThenNonfinite, receivedAt: receivedAt))
+        XCTAssertNil(adapter.decode(validThenNegative, receivedAt: receivedAt))
+    }
+
     func testCommandsUseExactProgressorBytes() throws {
         let adapter = try XCTUnwrap(ProgressorProtocolAdapter(profile: .progressor))
 
