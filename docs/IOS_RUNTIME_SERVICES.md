@@ -42,6 +42,7 @@ device after firmware changes.
 
 For compatibility with the unofficial `hangtime-grip-connect` reference, the
 first three calibrated values are interpreted as left, center, and right zones.
+Calibrated center and right values are negated before tare correction.
 The unchanged two-side UI splits the center zone neutrally between left and
 right. The fourth raw/calibrated value remains available to the four-sensor
 calibration and tare lifecycle, but is diagnostic-only and excluded from force

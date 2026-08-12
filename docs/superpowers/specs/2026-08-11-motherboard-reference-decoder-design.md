@@ -57,5 +57,5 @@ This assigns the center channel neutrally to both sides, so the displayed sides 
 
 The decoding model intentionally follows the public, unofficial `hangtime-grip-connect` Motherboard implementation. Griptonite documents that library as a third-party developer API and does not officially support it. The mapping is therefore a compatibility choice, not a claim of manufacturer-verified physical channel wiring.
 
-- https://github.com/Stevie-Ray/hangtime-grip-connect/blob/main/packages/core/src/models/device/motherboard.model.ts
+- https://github.com/Stevie-Ray/hangtime-grip-connect/blob/02dd6ff227ffb0fc521fd547a83e85453351eb3b/packages/core/src/models/device/motherboard.model.ts (retrieved 2026-08-11)
 - https://griptonite.io/training/faq/
