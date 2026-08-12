@@ -218,7 +218,8 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
         batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
         steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
-        forceSensorProfile = try container.decodeIfPresent(ForceSensorProfile.self, forKey: .forceSensorProfile) ?? .motherboard
+        let forceSensorProfileRawValue = try container.decodeIfPresent(String.self, forKey: .forceSensorProfile)
+        forceSensorProfile = forceSensorProfileRawValue.flatMap(ForceSensorProfile.init(rawValue:)) ?? .motherboard
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
         motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false

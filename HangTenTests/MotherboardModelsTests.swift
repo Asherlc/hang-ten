@@ -230,6 +230,30 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(decoded.forceSensorProfile, .motherboard)
     }
 
+    func testSessionRecordDecodesUnsupportedForceSensorProfileAsMotherboard() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "future-profile-plan",
+            planTitle: "Future profile plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 60),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object["forceSensorProfile"] = "future-force-sensor"
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.forceSensorProfile, .motherboard)
+    }
+
     func testSessionRecordRoundTripsForceSensorProfileThroughCodable() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
