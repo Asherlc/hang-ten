@@ -100,8 +100,14 @@ jobs:
           telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
           trap 'rm -f "$telemetry_xcconfig"' EXIT
           umask 077
-          printf 'POSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = %s\n' \
-            "$POSTHOG_CLIENT_TOKEN" "$POSTHOG_HOST" > "$telemetry_xcconfig"
+          case "$POSTHOG_HOST" in
+            https://?*) posthog_host_remainder="${POSTHOG_HOST#https://}" ;;
+            *) echo "POSTHOG_HOST must be a normal HTTPS URL" >&2; exit 1 ;;
+          esac
+          # `//` begins a comment in an xcconfig. Compose the second slash via
+          # a build setting so the resolved value remains the full HTTPS URL.
+          printf 'POSTHOG_URL_SLASH = /\nPOSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = https:/$(POSTHOG_URL_SLASH)%s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$posthog_host_remainder" > "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
