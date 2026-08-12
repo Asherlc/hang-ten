@@ -48,7 +48,6 @@ enum ForceSensorProfile: String, CaseIterable, Codable, Identifiable {
         .pitchSix,
         .genericProgressor
     ]
-
     var id: String { rawValue }
 
     var label: String {
