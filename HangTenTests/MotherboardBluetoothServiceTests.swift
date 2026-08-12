@@ -116,6 +116,30 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertIdentical(manager.connectedPeripherals.first, peripheral)
     }
 
+    func testCoreBluetoothTransportParsesManufacturerDataForWHC06ProfileResolution() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let peripheral = FakeMotherboardPeripheral(name: "Scale")
+        var discoveredDevices: [MotherboardDiscoveredDevice] = []
+        transport.eventHandler = { event in
+            guard case .discovered(let device) = event else { return }
+            discoveredDevices.append(device)
+        }
+
+        transport.configure(profile: .whC06)
+        transport.startScan()
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [
+                CBAdvertisementDataManufacturerDataKey: Data([0x00, 0x01, 0, 1, 2, 3])
+            ]
+        )
+
+        XCTAssertEqual(manager.scannedServiceUUIDs, [])
+        XCTAssertEqual(try XCTUnwrap(discoveredDevices.first).profile, .whC06)
+    }
+
     func testConnectCalibratesBeforeStartingThirtyHertzStream() {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(transport: transport)

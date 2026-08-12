@@ -735,11 +735,13 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     private func resolvedProfile(
         peripheralName: String?,
         advertisedLocalName: String?,
-        advertisedServiceUUIDs: Set<UUID>
+        advertisedServiceUUIDs: Set<UUID>,
+        manufacturerData: [ForceSensorManufacturerData]
     ) -> ForceSensorProfile? {
         let advertisement = ForceSensorAdvertisement(
             name: peripheralName ?? advertisedLocalName,
-            serviceUUIDs: advertisedServiceUUIDs
+            serviceUUIDs: advertisedServiceUUIDs,
+            manufacturerData: manufacturerData
         )
 
         switch requestedProfile {
@@ -757,10 +759,20 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
                 ? .motherboard
                 : nil
         default:
-            return ForceSensorAdapterRegistry.adapter(for: requestedProfile)?.matches(advertisement) == true
+            return matches(requestedProfile, advertisement: advertisement)
                 ? requestedProfile
                 : nil
         }
+    }
+
+    private func matches(
+        _ profile: ForceSensorProfile,
+        advertisement: ForceSensorAdvertisement
+    ) -> Bool {
+        if let adapter = ForceSensorAdapterRegistry.adapter(for: profile) {
+            return adapter.matches(advertisement)
+        }
+        return WHC06ProtocolAdapter(profile: profile)?.matches(advertisement) == true
     }
 
     private func clearSelectedPeripheral() {
@@ -788,10 +800,24 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
                 UUID(uuidString: $0.uuidString)
             }
         )
+        let manufacturerData: [ForceSensorManufacturerData]
+        if let data = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
+           data.count >= 2 {
+            let companyIdentifier = data.prefix(2).enumerated().reduce(UInt16(0)) { identifier, byte in
+                identifier | UInt16(byte.element) << (byte.offset * 8)
+            }
+            manufacturerData = [ForceSensorManufacturerData(
+                companyIdentifier: companyIdentifier,
+                payload: Data(data.dropFirst(2))
+            )]
+        } else {
+            manufacturerData = []
+        }
         guard let profile = resolvedProfile(
             peripheralName: peripheral.name,
             advertisedLocalName: advertisedLocalName,
-            advertisedServiceUUIDs: advertisedServiceUUIDs
+            advertisedServiceUUIDs: advertisedServiceUUIDs,
+            manufacturerData: manufacturerData
         ) else { return }
         let advertisedName = peripheral.name ?? advertisedLocalName ?? profile.label
 
