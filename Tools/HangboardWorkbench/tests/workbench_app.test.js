@@ -86,6 +86,13 @@ test("editor bootstrap does not reference the removed suite controls", () => {
   assert.doesNotMatch(appSource, /createToolSuiteController|createPromotionController|createValidationController|renderSuite|renderInspectView/);
 });
 
+test("the focused app no longer initializes suite, promotion, or validation views", () => {
+  const app = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
+
+  assert.doesNotMatch(app, /createToolSuiteController|createPromotionController|createValidationController/);
+  assert.doesNotMatch(app, /renderSuite\(|renderPromotionView|renderValidationView/);
+});
+
 test("setup preserves a recovered terminal job error after refreshing boards", async () => {
   const classes = new Set(["hidden"]);
   const setupError = {

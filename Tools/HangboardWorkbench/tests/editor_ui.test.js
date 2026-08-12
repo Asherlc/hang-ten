@@ -19,6 +19,15 @@ const {
   canStartRegionDrag,
 } = require("../curve-gesture-model.js");
 
+test("the inspector keeps direct correction controls visible while Advanced tools are closed", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+
+  assert.match(app, /advancedToolsOpen: false/);
+  assert.match(app, /function setAdvancedToolsOpen\(open\)/);
+  assert.match(app, /advancedToolVisibility\(\{[\s\S]*region,[\s\S]*editorMode: state\.editorMode/);
+  assert.match(app, /advanced-tools"\]\.classList\.toggle\("hidden", !state\.advancedToolsOpen \|\| !region\)/);
+});
+
 test("starting an edge session records its pointer and edge without mutating curves", () => {
   assert.equal(typeof beginEdgeCurveSession, "function");
   const edgeCurves = { 0: { kind: "quadratic", control: [5, -4] } };
@@ -453,7 +462,7 @@ test("viewport wheel listener pans or cursor-anchored zooms by interaction inten
   assert.match(app, /state\.panX -= action\.deltaX;[\s\S]*state\.panY -= action\.deltaY;[\s\S]*renderTransform\(\);/);
 });
 
-test("declares each board picker element once in the element map", () => {
+test("declares each focused-editor element once in the element map", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const initBlock = app.match(
     /const el = Object\.fromEntries\(\[(?<list>[\s\S]*?)\]\.map\(\(id\) => \[id, document\.getElementById\(id\)\]\)\);/,
@@ -463,7 +472,12 @@ test("declares each board picker element once in the element map", () => {
 
   const list = initBlock.groups.list;
 
-  for (const id of ["board-picker", "board-picker-separator", "board-select"]) {
+  for (const id of [
+    "board-picker", "board-picker-separator", "board-select",
+    "board-details", "board-details-name", "board-details-id", "board-details-revision", "more-actions",
+    "advanced-tools-toggle", "advanced-tools", "advanced-outline-tools", "advanced-transform-tools",
+    "advanced-assist-tools", "advanced-details-tools",
+  ]) {
     const matches = list.match(new RegExp(`"${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g")) ?? [];
     assert.equal(matches.length, 1, `${id} must appear exactly once in the element initialization list`);
   }

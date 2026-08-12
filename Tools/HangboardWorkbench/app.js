@@ -38,6 +38,7 @@
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
   const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
+  const { advancedToolVisibility } = globalThis.HoldEditorUIModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
@@ -154,6 +155,7 @@
     autosaveTimer: null,
     draftStatus: "clean",
     nextRegionId: 1,
+    advancedToolsOpen: false,
     inspectorDrawerOpen: false,
     inspectorDrawerOpener: null,
   };
@@ -165,7 +167,8 @@
     "compare-overlay", "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
     "status-text", "zoom-label", "opacity-slider", "inspector-title", "inspector-panel",
     "inspector-drawer-toggle", "inspector-drawer-close", "inspector-drawer-backdrop",
-    "inspector-empty", "inspector-form", "region-key-input",
+    "inspector-empty", "inspector-form", "region-key-input", "advanced-tools-toggle", "advanced-tools",
+    "advanced-outline-tools", "advanced-transform-tools", "advanced-assist-tools", "advanced-details-tools",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
     "load-image-button", "load-regions-button", "snap-button", "undo-button", "redo-button", "save-button", "save-state",
@@ -180,6 +183,7 @@
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "static-load-controls",
+    "board-details", "board-details-name", "board-details-id", "board-details-revision", "more-actions",
   ].map((id) => [id, document.getElementById(id)]));
   el["board-title"] = document.querySelector(".brand-block h1");
   const inspectorDrawerMedia = window.matchMedia("(max-width: 1250px)");
@@ -350,6 +354,7 @@
   }
 
   function render() {
+    renderBoardDetails();
     renderComparisonView();
     renderOverlay();
     renderRegionList();
@@ -359,6 +364,13 @@
     renderSaveState();
     renderToolState();
     renderValidation();
+  }
+
+  function renderBoardDetails() {
+    const view = state.board;
+    el["board-details-name"].textContent = view?.productName || "No board selected";
+    el["board-details-id"].textContent = view?.boardId || "—";
+    el["board-details-revision"].textContent = view?.revisionId || "—";
   }
 
   function renderToolState() {
@@ -642,9 +654,22 @@
 
   function renderInspector() {
     const region = selectedRegion();
+    const visibility = advancedToolVisibility({
+      region,
+      editorMode: state.editorMode,
+      editable: canEditGeometry(),
+      hasImagePixels: Boolean(state.imagePixels),
+    });
     el["inspector-title"].textContent = region ? `Hold ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
+    el["advanced-tools-toggle"].setAttribute("aria-expanded", String(state.advancedToolsOpen && Boolean(region)));
+    el["advanced-tools"].classList.toggle("hidden", !state.advancedToolsOpen || !region);
+    el["advanced-outline-tools"].classList.toggle("hidden", !visibility.outline);
+    el["advanced-transform-tools"].classList.toggle("hidden", !visibility.transform);
+    el["advanced-assist-tools"].classList.toggle("hidden", !visibility.assists);
+    el["advanced-details-tools"].classList.toggle("hidden", !visibility.details);
+    el["snap-button"].classList.toggle("hidden", !visibility.edgeSnap);
     if (!region) {
       el["corner-treatment-field"].classList.add("hidden");
       return;
@@ -795,12 +820,22 @@
       completeMirrorOnto(id);
       return;
     }
-    if (id !== state.selectedId) state.selectedCornerIndex = null;
+    if (id !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = id;
     render();
     const region = selectedRegion();
     if (region) setStatus(`Selected ${region.key} hold highlight. Drag the shape or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
+  }
+
+  function setAdvancedToolsOpen(open) {
+    state.advancedToolsOpen = Boolean(open) && Boolean(selectedRegion());
+    el["advanced-tools-toggle"].setAttribute("aria-expanded", String(state.advancedToolsOpen));
+    renderInspector();
+    renderToolState();
   }
 
   function clearSelection() {
@@ -1929,6 +1964,7 @@
       state.draftStatus = "clean";
       state.drawing = false;
       state.mirrorOntoSourceId = null;
+      state.advancedToolsOpen = false;
       state.regions = [];
       state.baselineRegions = [];
       state.selectedId = null;
@@ -2808,6 +2844,7 @@
   el["mirror-onto-button"].addEventListener("click", beginMirrorOnto);
   el["previous-region-button"].addEventListener("click", () => navigateRegion(-1));
   el["next-region-button"].addEventListener("click", () => navigateRegion(1));
+  el["advanced-tools-toggle"].addEventListener("click", () => setAdvancedToolsOpen(!state.advancedToolsOpen));
   el["snap-button"].addEventListener("click", toggleEdgeSnapping);
   el["export-button"].addEventListener("click", exportEditedRegions);
   el["corrections-button"].addEventListener("click", exportCorrections);
