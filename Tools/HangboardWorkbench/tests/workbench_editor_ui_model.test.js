@@ -12,6 +12,15 @@ test("freeform contour holds expose outline, assists, and details", () => {
   });
 });
 
+test("primitive contour holds expose all editable contour tools", () => {
+  assert.deepEqual(advancedToolVisibility({
+    region: { metadata: { shapeKind: "rectangle" } },
+    editorMode: "contour", editable: true, hasImagePixels: true,
+  }), {
+    outline: true, transform: true, assists: true, details: true, edgeSnap: true,
+  });
+});
+
 test("vector and no-selection states expose no contour expert controls", () => {
   assert.deepEqual(advancedToolVisibility({
     region: null, editorMode: "contour", editable: true, hasImagePixels: true,
