@@ -30,39 +30,34 @@ test("the guided opening screen offers repository and in-progress board pickers"
   assert.doesNotMatch(markup, /setup-import-path|Existing CLI run|Import run/);
 });
 
-test("the workbench has a persistent single-board tool suite shell", () => {
+test("the workbench is a single focused hold-outline editor", () => {
   const ids = actualElementIds(markup);
   for (const id of [
-    "tool-suite-sidebar",
-    "active-board-card",
-    "tool-onboard",
-    "tool-inspect",
-    "tool-promote",
-    "tool-validate",
-    "inspect-view",
-    "inspect-board-preview",
-    "inspect-artifact-links",
-    "inspect-board-info",
-    "inspect-hold-inventory",
-    "inspect-readiness",
-    "inspect-next-action",
-    "promote-view",
-    "validate-view",
+    "board-select", "undo-button", "redo-button", "save-state", "save-button",
+    "region-list", "canvas-viewport", "inspector-panel", "advanced-tools-toggle",
+    "advanced-outline-tools", "advanced-transform-tools", "advanced-assist-tools",
+    "advanced-details-tools", "more-actions", "board-details",
   ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
-  assert.match(markup, /data-tool="onboard"/);
-  assert.match(markup, /data-tool="inspect"/);
-  assert.match(markup, /data-tool="promote"/);
-  assert.match(markup, /data-tool="validate"/);
-  assert.match(markup, /workbench-suite-model\.js/);
-  assert.match(markup, /workbench-suite-controller\.js/);
+  assert.doesNotMatch(markup, /tool-suite-sidebar|tool-onboard|tool-inspect|tool-promote|tool-validate/);
+  assert.doesNotMatch(markup, />Promote to iOS<|>Validate</);
 });
 
-test("the Onboard editor presents one direct hold-editing task", () => {
-  const onboard = markup.match(/<section class="tool-view onboard-view"[\s\S]*?<\/section>\s*<\/section>\s*<section class="tool-view inspect-view/);
+test("persistent secondary actions are contextual rather than toolbar controls", () => {
+  const moreActions = markup.match(/<details id="more-actions"[\s\S]*?<\/details>/);
+  const advancedTools = markup.match(/<div id="advanced-tools"[\s\S]*?<\/div>\s*<\/form>/);
 
-  assert.ok(onboard, "expected the Onboard view markup");
-  assert.match(onboard[0], />Edit holds</);
-  assert.doesNotMatch(onboard[0], /Hold-contour refinement|Smoothing|Vector refinement/);
+  assert.ok(moreActions, "expected the More actions popover");
+  assert.ok(advancedTools, "expected the Advanced tools region");
+  for (const id of ["compare-button", "export-button", "corrections-button"]) {
+    assert.match(moreActions[0], new RegExp(`id="${id}"`), `${id} must be under More actions`);
+  }
+  assert.match(advancedTools[0], /id="snap-button"/, "snap-button must be under Advanced tools");
+  const toolbarWithoutDetails = markup
+    .match(/<div class="toolbar"[\s\S]*?<\/div>\s*<\/header>/)[0]
+    .replace(/<details\b[\s\S]*?<\/details>/g, "");
+  for (const id of ["snap-button", "compare-button", "export-button", "corrections-button"]) {
+    assert.doesNotMatch(toolbarWithoutDetails, new RegExp(`id="${id}"`));
+  }
 });
 
 test("the workbench uses one accessible inspector panel and drawer controls", () => {
@@ -80,31 +75,6 @@ test("the workbench uses one accessible inspector panel and drawer controls", ()
   assert.match(markup, /<button[^>]*id="inspector-drawer-toggle"[^>]*aria-expanded="false"[^>]*aria-controls="inspector-panel"/);
 });
 
-test("the suite surfaces only local save and explicit simulator handoff boundaries", () => {
-  const ids = actualElementIds(markup);
-  for (const id of [
-    "promotion-save-button",
-    "validation-simulator-uuid",
-    "validation-simulator-commands",
-  ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
-  assert.match(markup, /Save locally never commits, pushes, or synchronizes remote changes\./);
-  assert.match(markup, /do not create, delete, boot, or archive simulators\./);
-  assert.match(markup, /already-owned simulator/);
-});
-
-test("suite navigation keeps editable Board info in Inspect, not Promote", () => {
-  for (const field of ["manufacturer", "name", "subtitle", "dimensions", "aspect-ratio", "product-url"]) {
-    assert.match(markup, new RegExp(`<label[^>]*for="board-info-${field}"`));
-    assert.match(markup, new RegExp(`<input[^>]*id="board-info-${field}"[^>]*data-board-info-field`));
-    assert.match(markup, new RegExp(`<small id="board-info-${field}-hint"`));
-  }
-  assert.doesNotMatch(markup, /promotion-board-id|data-promotion-field|iOS board ID/);
-  assert.match(markup, /id="validation-simulator-error" role="alert"/);
-  const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
-  assert.match(appSource, /data-board-info-field/);
-  assert.match(appSource, /if \(active\) button\.setAttribute\("aria-current", "page"\)/);
-  assert.match(appSource, /else button\.removeAttribute\("aria-current"\)/);
-});
 
 test("clipboard write rejection reaches the existing status channel", () => {
   const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
