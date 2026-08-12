@@ -22,8 +22,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Classify changed components
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      ios: ${{ steps.filter.outputs.ios }}
+      python: ${{ steps.filter.outputs.python }}
+      shared_board_content: ${{ steps.filter.outputs.shared_board_content }}
+      metadata: ${{ steps.filter.outputs.metadata }}
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+      - id: filter
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
+        with:
+          filters: .github/ci-paths.yml
+
   metadata:
     name: Validate App Store metadata
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.metadata == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 15
 
@@ -39,6 +64,13 @@ jobs:
 
   python:
     name: Test (Python)
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.python == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -85,6 +117,13 @@ jobs:
 
   build:
     name: Build (${{ matrix.name }})
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 30
     strategy:
@@ -136,6 +175,8 @@ jobs:
 
   build-release-device:
     name: Build (Release device)
+    needs:
+      - changes
     if: github.event_name != 'pull_request'
     runs-on: macos-26
     timeout-minutes: 30
@@ -180,6 +221,13 @@ jobs:
 
   test:
     name: Test (iOS Simulator)
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 30
 
