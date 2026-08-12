@@ -16,6 +16,7 @@ _ASSET_NAMES = {
     "flat": "flat.png",
     "ai-v2": "ai-v2.png",
 }
+_CATALOG_STATUSES = {"draft", "approved"}
 _DRAFT_README = """# {slug} generated-catalog review material
 
 This directory retains the following **unreviewed-generated-catalog** material:
@@ -103,18 +104,15 @@ def _load_catalog(catalog_path: Path) -> dict[str, object]:
         raise ValueError("catalog.json boards entries must be objects")
     normalized_entries: list[dict[str, object]] = []
     for entry in payload["boards"]:
-        if set(entry) == {"id", "path", "status"}:
-            normalized_entries.append(dict(entry))
-            continue
-        if set(entry) == {"id", "path", "lifecycle"} and entry["lifecycle"] == "shipped":
-            legacy_path = Path(str(entry["path"]))
-            if len(legacy_path.parts) != 2 or legacy_path.name != "board.json":
-                raise ValueError("legacy shipped catalog entry must point to a board.json package manifest")
-            normalized_entries.append(
-                {"id": entry["id"], "path": legacy_path.parent.as_posix(), "status": "draft"}
-            )
-            continue
-        raise ValueError("catalog.json boards entries must use status or legacy shipped lifecycle")
+        if set(entry) != {"id", "path", "status"}:
+            raise ValueError("catalog.json boards entries must use id, path, and status")
+        if not isinstance(entry["id"], str) or not entry["id"]:
+            raise ValueError("catalog.json board id must be a non-empty string")
+        if not isinstance(entry["path"], str) or not entry["path"]:
+            raise ValueError("catalog.json board path must be a non-empty string")
+        if not isinstance(entry["status"], str) or entry["status"] not in _CATALOG_STATUSES:
+            raise ValueError("catalog.json board status must be one of ('draft', 'approved')")
+        normalized_entries.append(dict(entry))
     return {"schemaVersion": 1, "boards": normalized_entries}
 
 

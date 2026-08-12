@@ -75,13 +75,14 @@ def test_importer_creates_draft_package_inventory_from_generated_catalog(tmp_pat
 
     assert result.returncode == 0, result.stderr
     catalog = json.loads((destination_root / "catalog.json").read_text(encoding="utf-8"))
-    entries_by_path = {entry["path"]: entry for entry in catalog["boards"]}
     expected_primary = _primary_images(source_root)
-    assert set(entries_by_path) == set(expected_primary)
+    assert len(catalog["boards"]) == len(expected_primary)
 
     for slug, source in expected_primary.items():
         package_root = destination_root / slug
-        imported_entry = entries_by_path[slug]
+        matching_entries = [entry for entry in catalog["boards"] if entry["path"] == slug]
+        assert len(matching_entries) == 1
+        imported_entry = matching_entries[0]
         assert imported_entry == {"id": slug, "path": slug, "status": "draft"}
         assert (package_root / "assets" / "primary.png").read_bytes() == source.read_bytes()
         assert "unreviewed-generated-catalog" in (package_root / "README.md").read_text(encoding="utf-8")
@@ -110,16 +111,22 @@ def test_repository_retains_the_moved_generated_catalog_as_draft_packages() -> N
     assert not relevant_source_files
 
     catalog = json.loads((REPO_ROOT / "Hangboards" / "catalog.json").read_text(encoding="utf-8"))
-    entries_by_path = {entry["path"]: entry for entry in catalog["boards"]}
-    assert MOVED_DRAFT_SLUGS <= set(entries_by_path)
+    assert len(catalog["boards"]) == len(MOVED_DRAFT_SLUGS)
     for slug in MOVED_DRAFT_SLUGS:
         package_root = REPO_ROOT / "Hangboards" / slug
-        assert entries_by_path[slug] == {"id": slug, "path": slug, "status": "draft"}
+        matching_entries = [entry for entry in catalog["boards"] if entry["path"] == slug]
+        assert len(matching_entries) == 1
+        assert matching_entries[0] == {"id": slug, "path": slug, "status": "draft"}
         assert (package_root / "assets" / "primary.png").is_file()
         assert (package_root / "review" / "outline.approx.json").is_file()
         assert "unreviewed-generated-catalog" in (package_root / "README.md").read_text(encoding="utf-8")
         for forbidden in ("board.json", "evidence.json", "semantics.json", "artwork.json"):
             assert not (package_root / forbidden).exists()
+    assert not [
+        entry
+        for entry in catalog["boards"]
+        if entry["path"] == "metolius-wood-grips-compact-ii"
+    ]
 
 
 def test_importer_preserves_approved_package_and_quarantines_generated_material(tmp_path: Path) -> None:
@@ -178,8 +185,8 @@ def test_importer_rejects_duplicate_variant_basenames(tmp_path: Path) -> None:
     assert "duplicate generated-catalog source basename" in result.stderr
 
 
-def test_importer_normalizes_legacy_shipped_entry_to_a_flat_draft_until_its_package_is_complete(tmp_path: Path) -> None:
-    # Marking an incomplete legacy package approved would make status-only catalog validation fail.
+def test_importer_rejects_legacy_lifecycle_registry_entries(tmp_path: Path) -> None:
+    # Rewriting legacy lifecycle metadata into a draft would misrepresent a runtime package.
     source_root = tmp_path / "source"
     source_root.mkdir()
     (source_root / "draft-board.png").write_bytes(b"draft primary")
@@ -204,10 +211,30 @@ def test_importer_normalizes_legacy_shipped_entry_to_a_flat_draft_until_its_pack
 
     result = _run_importer(source_root, destination_root)
 
-    assert result.returncode == 0, result.stderr
-    catalog = json.loads((destination_root / "catalog.json").read_text(encoding="utf-8"))
-    assert {entry["id"]: entry for entry in catalog["boards"]}["legacy.board"] == {
-        "id": "legacy.board",
-        "path": "legacy-board",
-        "status": "draft",
-    }
+    assert result.returncode != 0
+    assert "must use id, path, and status" in result.stderr
+
+
+def test_importer_rejects_unknown_catalog_status(tmp_path: Path) -> None:
+    # Retaining a status outside the closed registry state set would evade catalog validation.
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    (source_root / "draft-board.png").write_bytes(b"draft primary")
+    destination_root = tmp_path / "Hangboards"
+    destination_root.mkdir()
+    (destination_root / "catalog.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {"id": "retired.board", "path": "retired-board", "status": "retired"}
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = _run_importer(source_root, destination_root)
+
+    assert result.returncode != 0
+    assert "status must be one of ('draft', 'approved')" in result.stderr
