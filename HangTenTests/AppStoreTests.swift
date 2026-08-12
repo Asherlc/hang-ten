@@ -25,6 +25,18 @@ final class AppStoreTests: XCTestCase {
         ])
     }
 
+    func testTelemetryDependenciesDoNotRetainRecordingTelemetry() {
+        weak var releasedTelemetry: RecordingTelemetry?
+
+        do {
+            let telemetry = RecordingTelemetry()
+            releasedTelemetry = telemetry
+            _ = telemetry.dependencies
+        }
+
+        XCTAssertNil(releasedTelemetry)
+    }
+
     func testSavingCustomRoutineEmitsEventAfterPersistenceSucceeds() throws {
         let telemetry = RecordingTelemetry()
         let store = AppStore(
@@ -1185,13 +1197,15 @@ private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting, 
     private(set) var diagnostics: [HangTenDiagnostic] = []
     private(set) var actions: [Action] = []
 
-    lazy var dependencies = TelemetryDependencies(
+    var dependencies: TelemetryDependencies {
+        TelemetryDependencies(
             tracking: self,
             diagnostics: self,
             flags: NoOpTelemetry(),
             replay: self,
             isNoOp: false
         )
+    }
 
     deinit {}
 
