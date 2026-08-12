@@ -210,6 +210,10 @@
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
+  function capturePointerRegionSnapshot(region, session) {
+    return { ...session, regionId: region.id, originalRegion: clone(region) };
+  }
+
   function setStatus(message) { el["status-text"].textContent = message; }
 
   function syncInspectorDrawerAccessibility() {
@@ -945,7 +949,7 @@
     selectRegion(id);
     const region = selectedRegion();
     const start = clientToSvg(event.clientX, event.clientY);
-    state.dragSession = {
+    state.dragSession = capturePointerRegionSnapshot(region, {
       pointerId: event.pointerId,
       start,
       original: isVectorMode() ? parseDisplayPath(region.displayPath) : clone(region.contour),
@@ -953,7 +957,7 @@
       originalAnchor: clone(region.anchor || centroid(geometryPoints(region, false))),
       originalEdgeCurves: edgeCurvesSnapshot(region),
       changed: false,
-    };
+    });
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -963,12 +967,12 @@
     selectRegion(id);
     state.selectedCornerIndex = index;
     const region = selectedRegion();
-    state.handleSession = {
+    state.handleSession = capturePointerRegionSnapshot(region, {
       pointerId: event.pointerId,
       index,
       original: clone(region.contour),
       changed: false,
-    };
+    });
     render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
@@ -980,13 +984,13 @@
     selectRegion(id);
     if (handleKind === "endpoint") state.selectedCornerIndex = commandIndex;
     const region = selectedRegion();
-    state.handleSession = {
+    state.handleSession = capturePointerRegionSnapshot(region, {
       pointerId: event.pointerId,
       commandIndex,
       handleKind,
       original: parseDisplayPath(region.displayPath),
       changed: false,
-    };
+    });
     render();
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
@@ -996,12 +1000,12 @@
     event.stopPropagation();
     selectRegion(id);
     const region = selectedRegion();
-    state.edgeSession = beginEdgeCurveSession({
+    state.edgeSession = capturePointerRegionSnapshot(region, beginEdgeCurveSession({
       pointerId: event.pointerId,
       index,
       edgeCurves: region.metadata.edgeCurves,
       pointCount: region.contour.length,
-    });
+    }));
     const feedback = edgeCurveFeedback(region);
     if (feedback) setStatus(feedback);
     el["editor-svg"].setPointerCapture(event.pointerId);
@@ -1015,7 +1019,7 @@
     const region = selectedRegion();
     const center = centroid(geometryPoints(region));
     const start = clientToSvg(event.clientX, event.clientY);
-    state.transformSession = {
+    state.transformSession = capturePointerRegionSnapshot(region, {
       pointerId: event.pointerId,
       kind,
       start,
@@ -1026,7 +1030,7 @@
       rotation: Number(region.metadata.rotation || 0),
       bend: Number(region.metadata.bend || 0),
       changed: false,
-    };
+    });
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -1036,7 +1040,7 @@
     event.stopPropagation();
     selectRegion(id);
     const region = selectedRegion();
-    state.transformSession = {
+    state.transformSession = capturePointerRegionSnapshot(region, {
       pointerId: event.pointerId,
       kind: "resize",
       resizeHandle: handle,
@@ -1046,7 +1050,7 @@
       originalEdgeCurves: edgeCurvesSnapshot(region),
       rotation: Number(region.metadata.rotation || 0),
       changed: false,
-    };
+    });
     el["editor-svg"].setPointerCapture(event.pointerId);
   }
 
@@ -2306,32 +2310,11 @@
   }
 
   function restorePointerGeometry(session) {
-    if (!session) return false;
-    const region = selectedRegion();
-    if (!region) return false;
-    let restored = false;
-    if (session.original) {
-      if (isVectorMode()) region.displayPath = serializeDisplayPath(session.original);
-      else region.contour = clone(session.original);
-      restored = true;
-    }
-    if (session.originalAnchor) {
-      region.anchor = clone(session.originalAnchor);
-      restored = true;
-    }
-    if (session.originalEdgeCurves !== undefined) {
-      region.metadata.edgeCurves = clone(session.originalEdgeCurves);
-      restored = true;
-    }
-    if (session.rotation !== undefined) {
-      region.metadata.rotation = session.rotation;
-      restored = true;
-    }
-    if (session.bend !== undefined) {
-      region.metadata.bend = session.bend;
-      restored = true;
-    }
-    return restored;
+    if (!session?.originalRegion || session.regionId == null) return false;
+    const regionIndex = state.regions.findIndex((region) => region.id === session.regionId);
+    if (regionIndex < 0) return false;
+    state.regions[regionIndex] = clone(session.originalRegion);
+    return true;
   }
 
   function cancelPointerSessions({ restore = false } = {}) {

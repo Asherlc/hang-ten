@@ -297,46 +297,58 @@ test("deleting a selected freeform vertex preserves the three-point minimum", ()
   assert.equal(context.deleteSelectedFreeformVertex(), false);
 });
 
-test("restoring a cancelled pointer edit returns its original geometry and metadata", () => {
+test("restoring a cancelled pointer edit targets its original hold and preserves the exact original shape", () => {
   const state = {
-    selectedId: 7,
-    regions: [{
-      id: 7,
-      contour: [[3, 3], [8, 3], [8, 8], [3, 8]],
-      anchor: [6, 6],
-      metadata: {
-        edgeCurves: { 0: { kind: "quadratic", control: [4, 1] } },
-        rotation: 0.75,
-        bend: 14,
+    selectedId: 8,
+    regions: [
+      {
+        id: 7,
+        contour: [[3, 3], [8, 3], [8, 8], [3, 8]],
+        anchor: [6, 6],
+        metadata: {
+          edgeCurves: { 0: { kind: "quadratic", control: [4, 1] } },
+          rotation: 0.75,
+          bend: 14,
+          cornerTreatments: { 1: { treatment: "rounded", amount: 8 } },
+        },
       },
-    }],
+      { id: 8, contour: [[20, 20], [30, 20], [30, 30]], metadata: { rotation: 9 } },
+    ],
   };
-  const original = {
-    original: [[1, 1], [9, 1], [9, 9], [1, 9]],
-    originalAnchor: [5, 5],
-    originalEdgeCurves: { 1: { kind: "quadratic", control: [8, 4] } },
-    rotation: 0.25,
-    bend: 2,
+  const originalRegion = {
+    id: 7,
+    key: "grip-007",
+    contour: [[1, 1], [9, 1], [9, 9], [1, 9]],
+    metadata: { pathStyle: "straight" },
   };
-  const context = {
-    state,
-    selectedRegion: () => state.regions[0],
-    isVectorMode: () => false,
-    clone: (value) => JSON.parse(JSON.stringify(value)),
-  };
+  const session = { regionId: 7, originalRegion };
+  const context = { state, clone: (value) => JSON.parse(JSON.stringify(value)) };
 
   vm.runInNewContext(extractFunction(app, "restorePointerGeometry"), context);
 
-  assert.equal(context.restorePointerGeometry(original), true);
-  assert.deepEqual(state.regions[0], {
-    id: 7,
-    contour: original.original,
-    anchor: original.originalAnchor,
-    metadata: {
-      edgeCurves: original.originalEdgeCurves,
-      rotation: original.rotation,
-      bend: original.bend,
-    },
+  assert.equal(context.restorePointerGeometry(session), true);
+  assert.deepEqual(state.regions[0], originalRegion);
+  assert.deepEqual(state.regions[1], { id: 8, contour: [[20, 20], [30, 20], [30, 30]], metadata: { rotation: 9 } });
+  assert.equal(Object.hasOwn(state.regions[0], "anchor"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "edgeCurves"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "rotation"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "bend"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "cornerTreatments"), false);
+});
+
+test("pointer session snapshots retain the starting hold identity and exact region", () => {
+  const context = { clone: (value) => JSON.parse(JSON.stringify(value)) };
+  vm.runInNewContext(extractFunction(app, "capturePointerRegionSnapshot"), context);
+  const region = { id: 7, contour: [[1, 1], [2, 2], [3, 3]], metadata: {} };
+
+  const session = context.capturePointerRegionSnapshot(region, { pointerId: 17, changed: false });
+  region.contour[0][0] = 99;
+
+  assert.deepEqual(JSON.parse(JSON.stringify(session)), {
+    pointerId: 17,
+    changed: false,
+    regionId: 7,
+    originalRegion: { id: 7, contour: [[1, 1], [2, 2], [3, 3]], metadata: {} },
   });
 });
 
