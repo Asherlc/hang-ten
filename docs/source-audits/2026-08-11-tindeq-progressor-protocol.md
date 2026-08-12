@@ -13,6 +13,6 @@
 | `Progressor` advertised-name prefix | Official API; upstream adapter | Named profile matching |
 | Service-only generic discovery | Upstream adapter | Generic Progressor-compatible matching |
 | Tare/start/stop bytes `0x64`/`0x65`/`0x66` | Official API; upstream adapter | `payload(for:)` |
-| Type-1 notifications carrying little-endian Float32 kgf and UInt32 microsecond timestamps | Official API; upstream adapter | `decode(_:receivedAt:)` |
+| Type-1 notifications are TLV: byte 0 is the response type, byte 1 is the one-byte payload length, and the remaining bytes are little-endian Float32 kgf/UInt32 microsecond records | Official API; upstream adapter | `decode(_:receivedAt:)` requires the declared payload length to exactly equal all bytes after the two-byte header, then parses the payload in eight-byte records |
 
 The generic profile deliberately accepts only the advertised Progressor service UUID; it does not infer compatibility from an arbitrary peripheral name.

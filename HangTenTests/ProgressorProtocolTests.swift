@@ -34,19 +34,19 @@ final class ProgressorProtocolTests: XCTestCase {
             0x01, 0x09,
             0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00, 0xFF
         ])
-        let truncatedPayload = Data([
-            0x01, 0x08,
-            0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00
-        ])
-        let mismatchedLength = Data([
-            0x01, 0x10,
-            0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00
-        ])
 
         XCTAssertNil(adapter.decode(wrongHeader, receivedAt: receivedAt))
         XCTAssertNil(adapter.decode(oddPayload, receivedAt: receivedAt))
-        XCTAssertNil(adapter.decode(truncatedPayload, receivedAt: receivedAt))
-        XCTAssertNil(adapter.decode(mismatchedLength, receivedAt: receivedAt))
+    }
+
+    func testDecoderRejectsTypeOneFrameWithMismatchedTLVPayloadLength() throws {
+        let adapter = try XCTUnwrap(ProgressorProtocolAdapter(profile: .progressor))
+        let frame = Data([
+            0x01, 0x08,
+            0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00
+        ])
+
+        XCTAssertNil(adapter.decode(frame, receivedAt: receivedAt))
     }
 
     func testDecoderRejectsNonfiniteAndNegativeForce() throws {
