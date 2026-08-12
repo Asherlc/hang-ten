@@ -11,8 +11,8 @@ UART protocol.
 
 ## Scope
 
-- Refactor the CoreBluetooth transport and connection service around a
-  profile-specific protocol contract.
+- Define a profile-specific protocol contract for the CoreBluetooth transport
+  and connection service; transport integration remains deferred.
 - Keep Motherboard's calibration, command, parser, reconnect, software-tare,
   workout, and UI behaviour intact.
 - Add Entralpi discovery, GATT subscription, standing calibration, and pulling
@@ -63,6 +63,7 @@ The Motherboard profile retains its current UART UUIDs, `C` calibration command,
 `S30` stream command, line parser, and measurements. The Entralpi profile has:
 
 - exact, case-sensitive local/device name matcher: `ENTRALPI`;
+- service-scoped UART notification characteristic `FFF4`;
 - Weight Scale service `0000181D-0000-1000-8000-00805F9B34FB`;
 - notification characteristic
   `0000FFF1-0000-1000-8000-00805F9B34FB`;
@@ -72,11 +73,12 @@ The Motherboard profile retains its current UART UUIDs, `C` calibration command,
 
 ### Bluetooth transport
 
-Refactor the existing CoreBluetooth transport to receive a profile contract
-instead of referring directly to `MotherboardProtocol`. Scanning, device
-retention, GATT discovery, characteristic lookup, notification enablement,
-writes, and disconnect handling use that contract. The transport reports the
-same lifecycle events used by the connection service.
+Transport integration remains deferred. When implemented, the existing
+CoreBluetooth transport will receive a profile contract instead of referring
+directly to `MotherboardProtocol`. Scanning, device retention, GATT discovery,
+characteristic lookup, notification enablement, writes, and disconnect handling
+will use that contract. The transport will report the same lifecycle events used
+by the connection service.
 
 ### Connection service
 
@@ -112,10 +114,12 @@ remains unchanged.
 
 Use TDD for every production change:
 
-1. Entralpi protocol tests cover prefix matching, UUID contract, big-endian
-   centigram preservation, short-frame rejection, and absence of commands.
+1. Entralpi protocol tests cover exact, case-sensitive `ENTRALPI` equality
+   matching, UUID contract, big-endian centigram preservation, short-frame
+   rejection, and absence of commands.
 2. Transport tests cover contract-driven scanning/discovery and ensure the
-   Entralpi route uses `181D/FFF1`, while all Motherboard transport tests stay
+   Entralpi route uses both service-scoped UART `FFF4` and Weight Scale
+   `181D/FFF1` notification paths, while all Motherboard transport tests stay
    green.
 3. Connection-service tests cover ten-sample calibration, instability/range
    rejection, baseline-minus-raw conversion, no pre-calibration samples, and
