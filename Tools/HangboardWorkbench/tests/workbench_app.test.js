@@ -6,6 +6,7 @@ const { restoreOpeningAfterJobRecovery } = require("../workbench-controller.js")
 
 const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
 const readme = fs.readFileSync(path.join(__dirname, "../README.md"), "utf8");
+const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
 
 function actualElementIds(html) {
   const withoutComments = html.replace(/<!--[\s\S]*?-->/g, "");
@@ -15,6 +16,69 @@ function actualElementIds(html) {
     if (id) ids.add(id[1] || id[2]);
   }
   return ids;
+}
+
+function extractFunction(source, name) {
+  const start = source.indexOf(`function ${name}(`);
+  assert.notEqual(start, -1, `expected ${name}() to be present`);
+  const bodyStart = source.indexOf("{", start);
+  let depth = 0;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  assert.fail(`could not extract ${name}()`);
+}
+
+function literalCallArguments(source, callee, argumentIndex) {
+  const marker = `${callee}(`;
+  const values = [];
+  let searchFrom = 0;
+  while (searchFrom < source.length) {
+    const callStart = source.indexOf(marker, searchFrom);
+    if (callStart < 0) break;
+    const openParen = callStart + marker.length - 1;
+    const argumentsList = [];
+    let argumentStart = openParen + 1;
+    let depth = 1;
+    let quote = null;
+    let escaped = false;
+    let index = openParen + 1;
+    for (; index < source.length; index += 1) {
+      const character = source[index];
+      if (quote) {
+        if (escaped) escaped = false;
+        else if (character === "\\") escaped = true;
+        else if (character === quote) quote = null;
+        continue;
+      }
+      if (character === '"' || character === "'" || character === "`") {
+        quote = character;
+      } else if (character === "(") {
+        depth += 1;
+      } else if (character === ")") {
+        depth -= 1;
+        if (depth === 0) {
+          argumentsList.push(source.slice(argumentStart, index));
+          break;
+        }
+      } else if (character === "," && depth === 1) {
+        argumentsList.push(source.slice(argumentStart, index));
+        argumentStart = index + 1;
+      }
+    }
+    const value = argumentsList[argumentIndex]?.trim();
+    if (value && /^["'`]/.test(value)) values.push(value);
+    searchFrom = Math.max(index + 1, callStart + marker.length);
+  }
+  return values;
+}
+
+function propertyMessageLiterals(source) {
+  const literal = String.raw`(?:\`(?:\\.|[^\`])*\`|"(?:\\.|[^"])*"|'(?:\\.|[^'])*')`;
+  return [...source.matchAll(new RegExp(`message\\s*:\\s*(${literal})`, "g"))]
+    .map((match) => match[1]);
 }
 
 test("the guided opening screen offers repository and in-progress board pickers", () => {
@@ -76,6 +140,41 @@ test("persistent secondary actions are contextual rather than toolbar controls",
   }
 });
 
+test("every retained inspector action is a non-submitting form button", () => {
+  const inspectorForm = markup.match(/<form class="inspector-form[\s\S]*?<\/form>/);
+  assert.ok(inspectorForm, "expected the selected-hold inspector form");
+
+  const buttons = [...inspectorForm[0].matchAll(/<button\b[^>]*>/g)].map((match) => match[0]);
+  assert.ok(buttons.some((button) => /\bid="snap-button"/.test(button)), "expected Snap edges in the inspector");
+  for (const button of buttons) {
+    assert.match(button, /\btype=(?:"button"|'button')/, `${button} must not submit the inspector form`);
+  }
+});
+
+test("main editor runtime feedback uses hold-task language without banning data-contract terms", () => {
+  const validateGeometrySource = extractFunction(appSource, "validateGeometry");
+  const loadCheckpointSource = extractFunction(appSource, "loadCheckpoint");
+  const reviewAssetSource = loadCheckpointSource.match(/const reviewAsset =[\s\S]*?(?=\n\s*if \(!load\.isCurrent\(\)\))/);
+  assert.ok(reviewAssetSource, "expected the comparison-image loading pathway");
+
+  const runtimeCopy = [
+    ...propertyMessageLiterals(validateGeometrySource),
+    ...literalCallArguments(loadCheckpointSource, "Error", 0),
+    ...literalCallArguments(reviewAssetSource[0], "loadImageAsset", 1),
+    ...literalCallArguments(appSource, "setStatus", 0),
+    ...literalCallArguments(appSource, "runGuidedMutation", 1),
+    ...literalCallArguments(appSource, "commitHistory", 0),
+    ...[...appSource.matchAll(/state\.saveError\s*=\s*error\.message\s*\|\|\s*(["'`][^\n;]+["'`])/g)]
+      .map((match) => match[1]),
+  ];
+
+  assert.ok(runtimeCopy.length >= 20, "expected to audit the main editor's runtime copy sinks");
+  assert.doesNotMatch(
+    runtimeCopy.join("\n"),
+    /\b(?:Stage(?:\s+\d|\s*\$\{)|checkpoint|promotion|validation|approval)\b/i,
+  );
+});
+
 test("the workbench uses one accessible inspector panel and drawer controls", () => {
   const count = (id) => (markup.match(new RegExp(`\\bid=["']${id}["']`, "g")) ?? []).length;
   for (const id of [
@@ -93,7 +192,6 @@ test("the workbench uses one accessible inspector panel and drawer controls", ()
 
 
 test("editor bootstrap does not reference the removed suite controls", () => {
-  const appSource = fs.readFileSync(path.join(__dirname, "../app.js"), "utf8");
   for (const obsoleteReference of [
     "inspect-next-action", "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
     "promotion-preview-button", "promotion-refresh-button", "promotion-save-button",

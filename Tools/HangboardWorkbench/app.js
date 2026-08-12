@@ -1780,7 +1780,7 @@
       } else {
         const expected = baseline[index];
         if (!expected || expected.id !== region.id || expected.key !== region.key || expected.type !== region.type) {
-          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed required Stage 3 identity.` });
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed its required hold identity.` });
         }
         try {
           const commands = parseDisplayPath(region.displayPath);
@@ -1794,7 +1794,7 @@
       }
     });
     if (state.board.stage === 3 && state.regions.length !== baseline.length) {
-      errors.unshift({ regionId: state.regions[0]?.id ?? null, message: `Stage ${String(state.board.stage)} region inventory no longer matches the generated checkpoint.` });
+      errors.unshift({ regionId: state.regions[0]?.id ?? null, message: "The hold inventory no longer matches the original detected holds." });
     }
     return errors;
   }
@@ -1950,9 +1950,9 @@
       if (EDITOR_STAGES.has(view.stage)) {
         if (!baselineDocument) {
           const documentUrl = checkpointDocumentUrl(view);
-          if (!documentUrl) throw new Error(`Stage ${String(view.stage)} checkpoint document is unavailable`);
+          if (!documentUrl) throw new Error("Hold outline data is unavailable");
           const response = await fetch(documentUrl, { cache: "no-store" });
-          if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
+          if (!response.ok) throw new Error("Could not load hold outline data");
           baselineDocument = await response.json();
         }
         validateEditableImageAlignment(view, imageAsset, baselineDocument);
@@ -1962,7 +1962,7 @@
       const reviewAsset = comparisonUrl
         ? await loadImageAsset(
           comparisonUrl,
-          `Stage ${String(view.stage)} annotated review`,
+          "Annotated hold outline comparison",
         )
         : null;
       if (!load.isCurrent()) return false;
@@ -2231,11 +2231,11 @@
       await refreshBoards();
       if (!load.isCurrent()) return;
       const loaded = await loadCheckpoint(updated, null, load);
-      if (loaded) setStatus(`Stage ${String(updated.stage)} is ready for review.`);
+      if (loaded) setStatus("Saved outline changes.");
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        state.saveError = error.message || "Approval failed";
+        state.saveError = error.message || "Could not save outline changes";
         focusGeometryError(state.saveError);
         setStatus(state.saveError);
       }
@@ -2273,7 +2273,7 @@
     if (restore) {
       geometrySessions.forEach((session) => restorePointerGeometry(session));
     } else if (geometrySessions.some((session) => session?.changed)) {
-      commitHistory("Completed active edit before approval");
+      commitHistory("Completed active edit before saving");
     }
     state.transformSession = null;
     state.dragSession = null;
@@ -2290,7 +2290,7 @@
 
   async function retryCurrent() {
     if (!state.board || state.busy) return;
-    await runGuidedMutation((options) => workbenchClient.retry(state.board, options), "Checkpoint regenerated.");
+    await runGuidedMutation((options) => workbenchClient.retry(state.board, options), "Hold outlines regenerated.");
   }
 
   async function reviseCurrent() {
