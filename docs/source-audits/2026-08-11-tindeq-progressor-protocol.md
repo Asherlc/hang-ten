@@ -4,6 +4,7 @@
 
 - Official Tindeq Progressor API: https://tindeq.com/progressor_api/
 - Upstream implementation reference: https://github.com/Stevie-Ray/hangtime-grip-connect/blob/68791aab75cea3f5e1de453057f98d9099b3a452/packages/core/src/models/device/progressor.model.ts
+- Audited upstream file blob SHA: `c19d8b73885edda5ea8cfb2b567024f0a6e2a35b`
 
 ## Implementation mapping
 
