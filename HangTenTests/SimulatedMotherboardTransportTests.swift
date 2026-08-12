@@ -9,11 +9,21 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
         let bodyweightSamples = samples.dropFirst(15).prefix(40)
 
         XCTAssertEqual(tareSamples.count, 15)
-        XCTAssertTrue(tareSamples.allSatisfy { $0.aggregateLoadKGF == 0.08 })
+        XCTAssertTrue(tareSamples.allSatisfy {
+            abs($0.aggregateLoadKGF - 0.08) < 0.0001
+        })
+        XCTAssertTrue(tareSamples.allSatisfy {
+            $0.sensorLoadsKGF == [0.03, 0.02, 0.03, 0.02]
+        })
         XCTAssertGreaterThanOrEqual(bodyweightSamples.count, 40)
-        XCTAssertTrue(bodyweightSamples.allSatisfy { $0.aggregateLoadKGF == 64 })
         XCTAssertTrue(bodyweightSamples.allSatisfy {
-            $0.sensorLoadsKGF == [19.2, 12.8, 19.2, 12.8]
+            abs($0.aggregateLoadKGF - 64) < 0.0001
+        })
+        XCTAssertTrue(bodyweightSamples.allSatisfy {
+            $0.sensorLoadsKGF == [25.6, 12.8, 25.6, 12.8]
+        })
+        XCTAssertTrue(samples.allSatisfy {
+            abs($0.aggregateLoadKGF - $0.sensorLoadsKGF.prefix(3).reduce(0, +)) < 0.0001
         })
     }
 
@@ -21,7 +31,18 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
         let activeSamples = SimulatedMotherboardTransport.defaultSamples.dropFirst(55)
 
         XCTAssertGreaterThanOrEqual(activeSamples.count, 4)
-        XCTAssertEqual(activeSamples.map(\.aggregateLoadKGF), [80, 72, 90, 76])
+        zip(activeSamples.map(\.aggregateLoadKGF), [80, 72, 90, 76]).forEach { actual, expected in
+            XCTAssertEqual(actual, expected, accuracy: 0.0001)
+        }
+        XCTAssertEqual(
+            activeSamples.map(\.sensorLoadsKGF),
+            [
+                [40, 16, 24, 16],
+                [18, 21.6, 32.4, 21.6],
+                [45, 18, 27, 18],
+                [14.25, 24.7, 37.05, 24.7]
+            ]
+        )
         zip(activeSamples.map(\.leftShare), [0.6, 0.4, 0.6, 0.35]).forEach { actual, expected in
             XCTAssertEqual(actual, expected, accuracy: 0.0001)
         }
@@ -33,7 +54,9 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
         let firstActiveSample = SimulatedMotherboardTransport.defaultSamples[55]
 
         XCTAssertEqual(relaxedSamples.count, 40)
-        XCTAssertTrue(relaxedSamples.allSatisfy { $0.aggregateLoadKGF == 64 })
+        XCTAssertTrue(relaxedSamples.allSatisfy {
+            abs($0.aggregateLoadKGF - 64) < 0.0001
+        })
         XCTAssertEqual(firstActiveSample.aggregateLoadKGF, 80)
         XCTAssertNotEqual(firstActiveSample.leftShare, 0.5, accuracy: 0.0001)
     }
@@ -60,6 +83,10 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
         XCTAssertNotNil(service.latestMeasurement)
         XCTAssertEqual(service.latestMeasurement!.sampleNumber, 1)
         XCTAssertEqual(service.latestMeasurement!.aggregateLoadKGF, 0.4, accuracy: 0.05)
+        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[0], 0.2, accuracy: 0.05)
+        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[1], 0, accuracy: 0.05)
+        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[2], 0.2, accuracy: 0.05)
+        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[3], 0.1, accuracy: 0.05)
         XCTAssertGreaterThanOrEqual(service.latestMeasurement!.timestamp, streamStartedAt)
 
         let firstCycleTimestamp = service.latestMeasurement!.timestamp
@@ -76,7 +103,7 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
             timestamp: Date(timeIntervalSince1970: timestamp),
             sampleNumber: sampleNumber,
             batteryValue: 88,
-            sensorLoadsKGF: Array(repeating: load / 4, count: 4),
+            sensorLoadsKGF: [load / 2, 0, load / 2, load / 4],
             aggregateLoadKGF: load
         )
     }

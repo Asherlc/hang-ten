@@ -64,7 +64,6 @@ final class PitchSixProtocolTests: XCTestCase {
         XCTAssertEqual(decoded.count, 7)
         XCTAssertEqual(decoded.last?.kilogramsForce ?? -1, 7 / 2.20462262185, accuracy: 0.000_001)
     }
-
     func testDecoderRejectsMalformedCountsAndLengths() throws {
         let adapter = try XCTUnwrap(PitchSixProtocolAdapter(profile: .pitchSix))
 
