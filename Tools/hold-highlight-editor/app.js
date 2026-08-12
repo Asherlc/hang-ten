@@ -180,6 +180,8 @@
     draftStatus: "clean",
     nextRegionId: 1,
     suiteState: createSuiteState(),
+    inspectorDrawerOpen: false,
+    inspectorDrawerOpener: null,
   };
 
   const el = Object.fromEntries([
@@ -187,7 +189,8 @@
     "canvas-viewport", "canvas-stage", "editor-svg", "board-image",
     "annotated-review", "annotated-review-image",
     "compare-overlay", "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
-    "status-text", "zoom-label", "opacity-slider", "inspector-title",
+    "status-text", "zoom-label", "opacity-slider", "inspector-title", "inspector-panel",
+    "inspector-drawer-toggle", "inspector-drawer-close", "inspector-drawer-backdrop",
     "inspector-empty", "inspector-form", "region-key-input",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
@@ -210,12 +213,53 @@
     "validation-refresh-button", "validation-run-button", "validation-simulator-uuid", "validation-copy-commands-button",
   ].map((id) => [id, document.getElementById(id)]));
   el["board-title"] = document.querySelector(".brand-block h1");
+  const inspectorDrawerMedia = window.matchMedia("(max-width: 1250px)");
 
   const svgNS = "http://www.w3.org/2000/svg";
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
   function setStatus(message) { el["status-text"].textContent = message; }
+
+  function openInspectorDrawer() {
+    if (!inspectorDrawerMedia.matches) return;
+    state.inspectorDrawerOpener = document.activeElement || el["inspector-drawer-toggle"];
+    state.inspectorDrawerOpen = true;
+    el["inspector-panel"].classList.add("drawer-open");
+    el["inspector-drawer-backdrop"].classList.add("drawer-open");
+    el["inspector-drawer-toggle"].setAttribute("aria-expanded", "true");
+    el["inspector-drawer-close"].focus({ preventScroll: true });
+  }
+
+  function closeInspectorDrawer({ restoreFocus = true } = {}) {
+    state.inspectorDrawerOpen = false;
+    el["inspector-panel"].classList.remove("drawer-open");
+    el["inspector-drawer-backdrop"].classList.remove("drawer-open");
+    el["inspector-drawer-toggle"].setAttribute("aria-expanded", "false");
+    const opener = state.inspectorDrawerOpener;
+    state.inspectorDrawerOpener = null;
+    if (restoreFocus && opener?.isConnected) opener.focus({ preventScroll: true });
+  }
+
+  function trapInspectorDrawerFocus(event) {
+    if (!state.inspectorDrawerOpen || !inspectorDrawerMedia.matches || event.key !== "Tab") return;
+    const focusable = [...el["inspector-panel"].querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    )].filter((node) => !node.hidden && node.getClientRects().length > 0);
+    if (!focusable.length) {
+      event.preventDefault();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !el["inspector-panel"].contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !el["inspector-panel"].contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   function colorFor(region) { return TYPE_COLORS[region.type] || TYPE_COLORS.edge; }
 
@@ -2859,6 +2903,9 @@
   el["fit-button"].addEventListener("click", fitCanvas);
   el["zoom-in-button"].addEventListener("click", () => setZoom(state.zoom * 1.2));
   el["zoom-out-button"].addEventListener("click", () => setZoom(state.zoom / 1.2));
+  el["inspector-drawer-toggle"].addEventListener("click", openInspectorDrawer);
+  el["inspector-drawer-close"].addEventListener("click", () => closeInspectorDrawer());
+  el["inspector-drawer-backdrop"].addEventListener("click", () => closeInspectorDrawer());
   el["opacity-slider"].addEventListener("input", (event) => { state.opacity = Number(event.target.value) / 100; renderOverlay(); });
   el["region-key-input"].addEventListener("change", (event) => updateSelected((region) => { region.key = event.target.value.trim() || region.key; }, "Renamed hold highlight"));
   el["region-type-select"].addEventListener("change", (event) => updateSelected((region) => { region.type = event.target.value; }, "Changed hold type"));
@@ -2926,8 +2973,12 @@
     });
   });
 
+  inspectorDrawerMedia.addEventListener("change", (event) => {
+    if (!event.matches) closeInspectorDrawer({ restoreFocus: false });
+  });
   window.addEventListener("resize", () => state.imageHref && fitCanvas());
   window.addEventListener("keydown", (event) => {
+    trapInspectorDrawerFocus(event);
     const editingText = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName);
     if (event.code === "Space" && !editingText) { state.spacePressed = true; event.preventDefault(); }
     if (event.key === "Enter" && state.drawing) {
@@ -2938,6 +2989,11 @@
     if (event.key === "Escape" && state.drawing) {
       event.preventDefault();
       cancelDraw();
+      return;
+    }
+    if (event.key === "Escape" && state.inspectorDrawerOpen) {
+      event.preventDefault();
+      closeInspectorDrawer();
       return;
     }
     if (editingText) return;

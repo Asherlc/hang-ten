@@ -56,6 +56,19 @@ test("the workbench has a persistent single-board tool suite shell", () => {
   assert.match(markup, /workbench-suite-controller\.js/);
 });
 
+test("the workbench uses one accessible inspector panel and drawer controls", () => {
+  const count = (id) => (markup.match(new RegExp(`\\bid=["']${id}["']`, "g")) ?? []).length;
+  for (const id of [
+    "inspector-panel",
+    "inspector-drawer-toggle",
+    "inspector-drawer-close",
+    "inspector-drawer-backdrop",
+  ]) assert.equal(count(id), 1, `${id} must appear exactly once`);
+
+  assert.match(markup, /<aside[^>]*id="inspector-panel"[^>]*role="dialog"[^>]*aria-modal="true"[^>]*aria-labelledby="inspector-title"/);
+  assert.match(markup, /<button[^>]*id="inspector-drawer-toggle"[^>]*aria-expanded="false"[^>]*aria-controls="inspector-panel"/);
+});
+
 test("the suite surfaces only local save and explicit simulator handoff boundaries", () => {
   const ids = actualElementIds(markup);
   for (const id of [

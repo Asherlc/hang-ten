@@ -341,6 +341,7 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
     document: { activeElement: { tagName: "INPUT" } },
     finishDraw: () => { finished += 1; },
     cancelDraw: () => { canceled += 1; },
+    trapInspectorDrawerFocus: () => {},
     renderToolState: () => {},
     setStatus: () => {},
     state,
@@ -371,6 +372,24 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
   assert.equal(dispatch("Escape"), true);
   assert.equal(finished, 1);
   assert.equal(canceled, 1);
+});
+
+test("keeps the inspector available as a responsive accessible drawer", () => {
+  const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(css, /@media \(max-width: 1250px\)[\s\S]*\.workspace-grid \{ grid-template-columns: 250px minmax\(0, 1fr\); \}/);
+  assert.match(css, /\.inspector-panel\.drawer-open/);
+  assert.doesNotMatch(css, /@media \(max-width: 980px\)[\s\S]*\.inspector-panel \{ display: none; \}/);
+  assert.match(app, /function openInspectorDrawer\(\)/);
+  assert.match(app, /function closeInspectorDrawer\(\{ restoreFocus = true \} = \{\}\)/);
+  assert.match(app, /function trapInspectorDrawerFocus\(event\)/);
+  assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "true"\)/);
+  assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "false"\)/);
+
+  const keydownStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const closeDrawerStart = app.indexOf("closeInspectorDrawer", keydownStart);
+  const editingTextGuard = app.indexOf("if (editingText) return;", keydownStart);
+  assert.ok(closeDrawerStart > keydownStart && closeDrawerStart < editingTextGuard, "Escape must close the inspector drawer before ordinary keyboard handling");
 });
 
 test("preserves the selected primitive shape when adding a highlight", () => {
