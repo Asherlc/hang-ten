@@ -79,6 +79,12 @@
 		AA0000000000000000000073 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
 		AA0000000000000000000074 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000075 /* TelemetryTests.swift */; };
 		AA0000000000000000000076 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000077 /* Telemetry.swift */; };
+		AA0000000000000000000077 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000078 /* PostHogTelemetry.swift */; };
+		AA0000000000000000000078 /* OpenTelemetryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */; };
+		AA0000000000000000000079 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* PostHog */; };
+		AA0000000000000000000080 /* OpenTelemetryApi in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000002 /* OpenTelemetryApi */; };
+		AA0000000000000000000081 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
+		AA0000000000000000000082 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +161,10 @@
 		BB0000000000000000000072 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000077 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
+		BB0000000000000000000078 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
+		BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
+		BB0000000000000000000080 /* PostHog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.xcconfig; sourceTree = "<group>"; };
+		BB0000000000000000000081 /* PostHog.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.local.xcconfig.example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +173,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000010 /* HealthKit.framework in Frameworks */,
+				AA0000000000000000000079 /* PostHog in Frameworks */,
+				AA0000000000000000000080 /* OpenTelemetryApi in Frameworks */,
+				AA0000000000000000000081 /* OpenTelemetrySdk in Frameworks */,
+				AA0000000000000000000082 /* OpenTelemetryProtocolExporterHTTP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +205,7 @@
 			children = (
 				BB0000000000000000000001 /* HangTenApp.swift */,
 				BB0000000000000000000011 /* HangTen.entitlements */,
+				DD0000000000000000000008 /* Config */,
 				DD0000000000000000000004 /* Models */,
 				DD0000000000000000000005 /* Views */,
 				DD0000000000000000000006 /* Resources */,
@@ -235,8 +250,19 @@
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 				BB0000000000000000000071 /* BoardStorage.swift */,
 				BB0000000000000000000077 /* Telemetry.swift */,
+				BB0000000000000000000078 /* PostHogTelemetry.swift */,
+				BB0000000000000000000079 /* OpenTelemetryDiagnostics.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		DD0000000000000000000008 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				BB0000000000000000000080 /* PostHog.xcconfig */,
+				BB0000000000000000000081 /* PostHog.local.xcconfig.example */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		DD0000000000000000000005 /* Views */ = {
@@ -336,6 +362,12 @@
 			dependencies = (
 			);
 			name = HangTen;
+			packageProductDependencies = (
+				GG0000000000000000000001 /* PostHog */,
+				GG0000000000000000000002 /* OpenTelemetryApi */,
+				GG0000000000000000000003 /* OpenTelemetrySdk */,
+				GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */,
+			);
 			productName = HangTen;
 			productReference = BB0000000000000000000010 /* HangTen.app */;
 			productType = "com.apple.product-type.application";
@@ -389,6 +421,11 @@
 			productRefGroup = DD0000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */,
+				HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */,
+			);
 			targets = (
 				EE0000000000000000000001 /* HangTen */,
 				EE0000000000000000000002 /* HangTenTests */,
@@ -461,6 +498,8 @@
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
 				AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */,
 				AA0000000000000000000076 /* Telemetry.swift in Sources */,
+				AA0000000000000000000077 /* PostHogTelemetry.swift in Sources */,
+				AA0000000000000000000078 /* OpenTelemetryDiagnostics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,6 +538,56 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.59.3;
+			};
+		};
+		HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/open-telemetry/opentelemetry-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+		HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/open-telemetry/opentelemetry-swift-core.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		GG0000000000000000000001 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+		GG0000000000000000000002 /* OpenTelemetryApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */;
+			productName = OpenTelemetryApi;
+		};
+		GG0000000000000000000003 /* OpenTelemetrySdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */;
+			productName = OpenTelemetrySdk;
+		};
+		GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */;
+			productName = OpenTelemetryProtocolExporterHTTP;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FF0000000000000000000011 /* Debug */ = {
@@ -582,6 +671,7 @@
 		};
 		FF0000000000000000000021 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB0000000000000000000080 /* PostHog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -594,6 +684,8 @@
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
+				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
+				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -613,6 +705,7 @@
 		};
 		FF0000000000000000000022 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB0000000000000000000080 /* PostHog.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -625,6 +718,8 @@
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from your Griptonite Motherboard.";
+				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
+				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

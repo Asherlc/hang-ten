@@ -25,6 +25,7 @@ final class AppStore: ObservableObject {
     private let motherboardSettingsStore: MotherboardSettingsStore
     private let workoutSessionStore: WorkoutSessionStoring
     private let customRoutineStore: CustomRoutineStoring
+    private let telemetry: TelemetryDependencies
     private var customDefinitions: [CustomRoutineDefinition]
     private var preservesCompletionError = false
     private var healthAuthorizationErrorKind: HealthErrorKind?
@@ -36,7 +37,8 @@ final class AppStore: ObservableObject {
         workoutSessionStore: WorkoutSessionStoring? = nil,
         workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
         customRoutineStore: CustomRoutineStoring? = nil,
-        defaults: UserDefaults = .standard
+        defaults: UserDefaults = .standard,
+        telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
         self.healthKitService = healthKitService
@@ -46,6 +48,7 @@ final class AppStore: ObservableObject {
         self.motherboardSettingsStore = motherboardSettingsStore ?? MotherboardSettingsStore(
             defaults: defaults
         )
+        self.telemetry = telemetry
 
         let resolvedCustomRoutineStore = customRoutineStore ?? CustomRoutineStore(defaults: defaults)
         self.customRoutineStore = resolvedCustomRoutineStore

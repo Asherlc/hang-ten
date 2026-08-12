@@ -2,6 +2,27 @@ import XCTest
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
+    func testConfigurationWithoutAProjectTokenBuildsNoOpDependencies() {
+        let configuration = PostHogConfiguration(
+            projectToken: "$(POSTHOG_CLIENT_TOKEN)",
+            host: ""
+        )
+
+        XCTAssertFalse(configuration.isConfigured)
+        XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
+    }
+
+    func testPostHogAdapterTranslatesOnlyTypedProperties() {
+        let client = RecordingPostHogClient()
+        let telemetry = PostHogTelemetry(client: client)
+
+        telemetry.track(.boardSelected(family: .compactII))
+
+        XCTAssertEqual(client.captures, [
+            .init(event: "board selected", properties: ["board_family": "compact_ii"])
+        ])
+    }
+
     func testWorkoutFinishedUsesOnlyOutcomeAndCoarseDurationBucket() {
         let event = HangTenTelemetryEvent.workoutFinished(
             outcome: .completed,
@@ -46,3 +67,24 @@ final class TelemetryTests: XCTestCase {
 }
 
 private struct TestError: Error {}
+
+private final class RecordingPostHogClient: PostHogCapturing {
+    struct Capture: Equatable {
+        let event: String
+        let properties: [String: String]
+    }
+
+    private(set) var captures: [Capture] = []
+
+    func capture(event: String, properties: [String: String]) {
+        captures.append(.init(event: event, properties: properties))
+    }
+
+    func isFeatureEnabled(_ key: String, default defaultValue: Bool) -> Bool {
+        defaultValue
+    }
+
+    func startSessionReplay() {}
+
+    func stopSessionReplay() {}
+}
