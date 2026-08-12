@@ -2362,7 +2362,8 @@ struct WorkoutView: View {
 	}
 
 	private func capture(_ measurement: MotherboardMeasurement, at monotonicTime: TimeInterval) {
-		guard sessionState.activeStartUptime != nil else { return }
+		guard sessionState.activeStartUptime != nil,
+			  motherboardBluetoothService.connectedProfile == .motherboard else { return }
 		motherboardMeasurementCollector.capture(
 			measurement,
 			startedAt: sessionState.routineStartedAt,
@@ -2410,6 +2411,7 @@ struct WorkoutView: View {
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
+			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
 			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate

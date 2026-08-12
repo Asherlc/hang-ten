@@ -14,6 +14,13 @@ enum MotherboardBluetoothPowerState: Equatable {
 struct MotherboardDiscoveredDevice: Equatable, Identifiable {
     let id: UUID
     let name: String
+    let profile: ForceSensorProfile
+
+    init(id: UUID, name: String, profile: ForceSensorProfile = .motherboard) {
+        self.id = id
+        self.name = name
+        self.profile = profile
+    }
 }
 
 enum MotherboardTransportEvent {
@@ -52,6 +59,10 @@ protocol MotherboardTransport: AnyObject {
     func write(_ data: Data)
 }
 
+extension MotherboardTransport {
+    func configure(profile: ForceSensorProfile) {}
+}
+
 #if DEBUG
 @MainActor
 protocol MotherboardSimulationControlling: AnyObject {
@@ -66,6 +77,7 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var batteryValue: UInt16?
     @Published private(set) var lastError: String?
     @Published private(set) var connectedDeviceID: UUID?
+    @Published private(set) var connectedProfile: ForceSensorProfile?
     @Published private(set) var isTaring = false
     @Published private(set) var tareSamplesCollected = 0
     @Published private(set) var tareCompletionCount = 0
@@ -91,6 +103,9 @@ final class MotherboardBluetoothService: ObservableObject {
     private var bodyweightMeasurementTask: Task<Void, Never>?
     private var lastPowerState: MotherboardBluetoothPowerState = .unknown
     private var consecutiveStreamingParserErrors = 0
+    private var requestedProfile: ForceSensorProfile = .motherboard
+    private var activeProfile: ForceSensorProfile?
+    private var nextForceSensorSampleNumber: UInt16 = 0
 
     private static let maximumBodyweightMeasurementDuration = TimeInterval(UInt64.max / 1_000_000_000)
     private static let maximumConsecutiveStreamingParserErrors = 3
@@ -114,11 +129,20 @@ final class MotherboardBluetoothService: ObservableObject {
         }
     }
 
-    func connect() {
+    func connect(profile: ForceSensorProfile = .motherboard) {
+        guard ForceSensorProfile.connectableCases.contains(profile) else {
+            wantsConnection = false
+            lastError = "\(profile.label) is not available yet."
+            state = .failed
+            return
+        }
+
         wantsConnection = true
         reconnectAttempts = 0
         lastError = nil
+        requestedProfile = profile
         resetSession()
+        transport.configure(profile: profile)
         state = .scanning
         scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
         transport.startScan()
@@ -132,7 +156,7 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     func startStreaming() {
-        guard calibration != nil, state != .streaming else { return }
+        guard activeProfile == .motherboard, calibration != nil, state != .streaming else { return }
         scheduleTimeout(
             after: timeouts.streamAcknowledgement,
             message: "Motherboard did not acknowledge the 30 Hz stream. Reconnect the sensor and try again."
@@ -142,6 +166,10 @@ final class MotherboardBluetoothService: ObservableObject {
 
     func stopStreaming() {
         guard state == .streaming else { return }
+        if let adapter = activeProfile.flatMap(ForceSensorAdapterRegistry.adapter(for:)),
+           adapter.capabilities.contains(.explicitStartStop) {
+            transport.write(adapter.payload(for: .stop))
+        }
         wantsConnection = false
         reconnectAttempts = 0
         cleanupTransportSession()
@@ -151,6 +179,12 @@ final class MotherboardBluetoothService: ObservableObject {
 
     func tare() {
         guard state == .streaming, !isTaring else { return }
+        if let adapter = activeProfile.flatMap(ForceSensorAdapterRegistry.adapter(for:)),
+           adapter.capabilities.contains(.hardwareTare) {
+            transport.write(adapter.payload(for: .tare))
+            tareCompletionCount += 1
+            return
+        }
         tareAccumulatorKGF = Array(repeating: 0.0, count: 4)
         tareSamplesCollected = 0
         isTaring = true
@@ -206,6 +240,8 @@ final class MotherboardBluetoothService: ObservableObject {
             cancelTimeout()
             transport.stopScan()
             connectedDeviceID = device.id
+            activeProfile = device.profile
+            connectedProfile = device.profile
             state = .connecting
             scheduleTimeout(after: timeouts.connect, message: "Motherboard connection timed out. Move the sensor closer and try again.")
             transport.connect(to: device)
@@ -222,8 +258,20 @@ final class MotherboardBluetoothService: ObservableObject {
         case .notificationsReady:
             guard wantsConnection, state == .calibrating else { return }
             cancelTimeout()
-            scheduleTimeout(after: timeouts.calibration, message: "Motherboard calibration timed out. Reconnect the sensor and try again.")
-            transport.write(MotherboardProtocol.command("C"))
+            guard let activeProfile else { return }
+            if activeProfile == .motherboard {
+                scheduleTimeout(after: timeouts.calibration, message: "Motherboard calibration timed out. Reconnect the sensor and try again.")
+                transport.write(MotherboardProtocol.command("C"))
+            } else {
+                if let adapter = ForceSensorAdapterRegistry.adapter(for: activeProfile),
+                   adapter.capabilities.contains(.explicitStartStop) {
+                    transport.write(adapter.payload(for: .start))
+                }
+                consecutiveStreamingParserErrors = 0
+                state = .streaming
+                reconnectAttempts = 0
+                lastError = nil
+            }
 
         case .notification(let data, let receivedAt):
             handleNotification(data, receivedAt: receivedAt)
@@ -261,6 +309,11 @@ final class MotherboardBluetoothService: ObservableObject {
     }
 
     private func handleNotification(_ data: Data, receivedAt: Date) {
+        guard activeProfile == .motherboard else {
+            handleForceSensorNotification(data, receivedAt: receivedAt)
+            return
+        }
+
         for event in parser.append(data, receivedAt: receivedAt) {
             switch event {
             case .calibration(let row):
@@ -312,6 +365,38 @@ final class MotherboardBluetoothService: ObservableObject {
         }
     }
 
+    private func handleForceSensorNotification(_ data: Data, receivedAt: Date) {
+        guard state == .streaming,
+              let activeProfile,
+              let adapter = ForceSensorAdapterRegistry.adapter(for: activeProfile) else {
+            return
+        }
+
+        guard let samples = adapter.decode(data, receivedAt: receivedAt) else {
+            consecutiveStreamingParserErrors += 1
+            if consecutiveStreamingParserErrors >= Self.maximumConsecutiveStreamingParserErrors {
+                fail("\(activeProfile.label) sent an invalid force sample.")
+            }
+            return
+        }
+
+        consecutiveStreamingParserErrors = 0
+        for sample in samples {
+            nextForceSensorSampleNumber &+= 1
+            let measurement = MotherboardMeasurement(
+                timestamp: sample.receivedAt,
+                sampleNumber: nextForceSensorSampleNumber,
+                batteryValue: 0,
+                sensorLoadsKGF: [],
+                aggregateLoadKGF: sample.kilogramsForce
+            )
+            latestMeasurement = measurement
+            batteryValue = nil
+            collectTareSample(measurement)
+            collectBodyweightSample(measurement)
+        }
+    }
+
     private func handleDisconnect(_ message: String?) {
         cleanupTransportSession()
         lastError = message
@@ -356,6 +441,9 @@ final class MotherboardBluetoothService: ObservableObject {
         latestMeasurement = nil
         batteryValue = nil
         connectedDeviceID = nil
+        connectedProfile = nil
+        activeProfile = nil
+        nextForceSensorSampleNumber = 0
         consecutiveStreamingParserErrors = 0
     }
 
@@ -536,12 +624,15 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     private let centralManagerFactory: (CBCentralManagerDelegate) -> MotherboardCentralManaging
     private var centralManager: MotherboardCentralManaging?
-    private var discoveredPeripherals: [UUID: MotherboardPeripheralManaging] = [:]
+    private var discoveredPeripherals: [UUID: (peripheral: MotherboardPeripheralManaging, profile: ForceSensorProfile)] = [:]
     private var selectedPeripheral: MotherboardPeripheralManaging?
+    private var selectedProfile: ForceSensorProfile?
     private var rxCharacteristic: CBCharacteristic?
     private var txCharacteristic: CBCharacteristic?
+    private var pendingCharacteristicServiceUUIDs: Set<CBUUID> = []
     private var scanRequested = false
     private var txNotificationsRequested = false
+    private var requestedProfile: ForceSensorProfile = .motherboard
 
     override convenience init() {
         self.init { delegate in
@@ -567,6 +658,10 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         (peripheralName ?? advertisedLocalName) == "Motherboard"
     }
 
+    func configure(profile: ForceSensorProfile) {
+        requestedProfile = profile
+    }
+
     func startScan() {
         scanRequested = true
         if centralManager == nil {
@@ -582,12 +677,14 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     func connect(to device: MotherboardDiscoveredDevice) {
         stopScan()
-        guard let peripheral = discoveredPeripherals[device.id] else {
+        guard let discovered = discoveredPeripherals[device.id] else {
             eventHandler?(.disconnected("Motherboard is no longer available."))
             return
         }
 
+        let peripheral = discovered.peripheral
         selectedPeripheral = peripheral
+        selectedProfile = discovered.profile
         peripheral.delegate = self
         centralManager?.connect(peripheral, options: nil)
     }
@@ -617,9 +714,53 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
     private func beginScanIfPossible() {
         guard let centralManager, centralManager.state == .poweredOn else { return }
         centralManager.scanForPeripherals(
-            withServices: [CBUUID(nsuuid: MotherboardProtocol.serviceUUID)],
+            withServices: serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:)),
             options: nil
         )
+    }
+
+    private func serviceUUIDs(for profile: ForceSensorProfile) -> Set<UUID> {
+        switch profile {
+        case .automatic:
+            return ForceSensorAdapterRegistry.automaticProfiles.reduce(into: Set<UUID>()) { result, profile in
+                result.formUnion(serviceUUIDs(for: profile))
+            }
+        case .motherboard:
+            return [MotherboardProtocol.serviceUUID]
+        default:
+            return ForceSensorAdapterRegistry.adapter(for: profile)?.contract.serviceUUIDs ?? []
+        }
+    }
+
+    private func resolvedProfile(
+        peripheralName: String?,
+        advertisedLocalName: String?,
+        advertisedServiceUUIDs: Set<UUID>
+    ) -> ForceSensorProfile? {
+        let advertisement = ForceSensorAdvertisement(
+            name: peripheralName ?? advertisedLocalName,
+            serviceUUIDs: advertisedServiceUUIDs
+        )
+
+        switch requestedProfile {
+        case .automatic:
+            if isExpectedMotherboard(peripheralName: peripheralName, advertisedLocalName: advertisedLocalName) {
+                return .motherboard
+            }
+            return ForceSensorAdapterRegistry.automaticProfiles
+                .filter { $0 != .motherboard }
+                .first { profile in
+                    ForceSensorAdapterRegistry.adapter(for: profile)?.matches(advertisement) == true
+                }
+        case .motherboard:
+            return isExpectedMotherboard(peripheralName: peripheralName, advertisedLocalName: advertisedLocalName)
+                ? .motherboard
+                : nil
+        default:
+            return ForceSensorAdapterRegistry.adapter(for: requestedProfile)?.matches(advertisement) == true
+                ? requestedProfile
+                : nil
+        }
     }
 
     private func clearSelectedPeripheral() {
@@ -627,6 +768,8 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         selectedPeripheral = nil
         rxCharacteristic = nil
         txCharacteristic = nil
+        selectedProfile = nil
+        pendingCharacteristicServiceUUIDs = []
         txNotificationsRequested = false
     }
 
@@ -640,16 +783,23 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
         advertisementData: [String: Any]
     ) {
         let advertisedLocalName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        guard isExpectedMotherboard(
+        let advertisedServiceUUIDs = Set(
+            (advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []).compactMap {
+                UUID(uuidString: $0.uuidString)
+            }
+        )
+        guard let profile = resolvedProfile(
             peripheralName: peripheral.name,
-            advertisedLocalName: advertisedLocalName
+            advertisedLocalName: advertisedLocalName,
+            advertisedServiceUUIDs: advertisedServiceUUIDs
         ) else { return }
-        let advertisedName = peripheral.name ?? advertisedLocalName ?? "Motherboard"
+        let advertisedName = peripheral.name ?? advertisedLocalName ?? profile.label
 
-        discoveredPeripherals[peripheral.identifier] = peripheral
+        discoveredPeripherals[peripheral.identifier] = (peripheral, profile)
         eventHandler?(.discovered(MotherboardDiscoveredDevice(
             id: peripheral.identifier,
-            name: advertisedName
+            name: advertisedName,
+            profile: profile
         )))
     }
 
@@ -702,7 +852,7 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
         guard selectedPeripheral?.identifier == peripheral.identifier,
               let selectedPeripheral else { return }
         selectedPeripheral.delegate = self
-        selectedPeripheral.discoverServices([CBUUID(nsuuid: MotherboardProtocol.serviceUUID)])
+        selectedPeripheral.discoverServices(serviceUUIDs(for: selectedProfile ?? .motherboard).map(CBUUID.init(nsuuid:)))
         eventHandler?(.connected)
     }
 
@@ -720,39 +870,41 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBCentralManagerDel
 extension CoreBluetoothMotherboardTransport: @preconcurrency CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         let peripheral = CoreBluetoothPeripheralAdapter(peripheral)
+        let profile = selectedProfile ?? .motherboard
+        let expectedServiceUUIDs = Set(serviceUUIDs(for: profile).map(CBUUID.init(nsuuid:)))
         guard error == nil,
-              let service = peripheral.services?.first(where: {
-                  $0.uuid == CBUUID(nsuuid: MotherboardProtocol.serviceUUID)
-              }) else {
-            reportFailure(error, fallback: "Motherboard UART service was not found.")
+              let services = peripheral.services,
+              expectedServiceUUIDs.isSubset(of: Set(services.map(\.uuid))) else {
+            reportFailure(error, fallback: "Sensor BLE service was not found.")
             return
         }
 
-        peripheral.discoverCharacteristics([
-            CBUUID(nsuuid: MotherboardProtocol.rxUUID),
-            CBUUID(nsuuid: MotherboardProtocol.txUUID)
-        ], for: service)
+        pendingCharacteristicServiceUUIDs = expectedServiceUUIDs
+        for service in services where expectedServiceUUIDs.contains(service.uuid) {
+            peripheral.discoverCharacteristics(characteristicUUIDs(for: service.uuid, profile: profile), for: service)
+        }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard error == nil else {
-            reportFailure(error, fallback: "Motherboard UART characteristics could not be discovered.")
+            reportFailure(error, fallback: "Sensor BLE characteristics could not be discovered.")
             return
         }
 
+        let profile = selectedProfile ?? .motherboard
         for characteristic in service.characteristics ?? [] {
-            switch characteristic.uuid {
-            case CBUUID(nsuuid: MotherboardProtocol.rxUUID):
+            if let writeUUID = writeCharacteristicUUID(for: profile), characteristic.uuid == writeUUID {
                 rxCharacteristic = characteristic
-            case CBUUID(nsuuid: MotherboardProtocol.txUUID):
+            }
+            if let notificationUUID = notificationCharacteristicUUID(for: profile), characteristic.uuid == notificationUUID {
                 txCharacteristic = characteristic
-            default:
-                break
             }
         }
+        pendingCharacteristicServiceUUIDs.remove(service.uuid)
 
+        guard pendingCharacteristicServiceUUIDs.isEmpty else { return }
         guard rxCharacteristic != nil, txCharacteristic != nil else {
-            reportFailure(nil, fallback: "Motherboard UART characteristics were not found.")
+            reportFailure(nil, fallback: "Sensor BLE characteristics were not found.")
             return
         }
         eventHandler?(.characteristicsReady)
@@ -776,6 +928,47 @@ extension CoreBluetoothMotherboardTransport: @preconcurrency CBPeripheralDelegat
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         guard characteristic == rxCharacteristic, let error else { return }
-        reportFailure(error, fallback: "Motherboard command could not be sent.")
+        reportFailure(error, fallback: "Sensor command could not be sent.")
+    }
+}
+
+private extension CoreBluetoothMotherboardTransport {
+    func notificationCharacteristicUUID(for profile: ForceSensorProfile) -> CBUUID? {
+        switch profile {
+        case .motherboard:
+            CBUUID(nsuuid: MotherboardProtocol.txUUID)
+        default:
+            ForceSensorAdapterRegistry.adapter(for: profile)
+                .flatMap { adapter in
+                    adapter.contract.notificationCharacteristics.first
+                }
+                .map { CBUUID(nsuuid: $0.characteristicUUID) }
+        }
+    }
+
+    func writeCharacteristicUUID(for profile: ForceSensorProfile) -> CBUUID? {
+        switch profile {
+        case .motherboard:
+            CBUUID(nsuuid: MotherboardProtocol.rxUUID)
+        default:
+            ForceSensorAdapterRegistry.adapter(for: profile)
+                .map { CBUUID(nsuuid: $0.writeCharacteristic.characteristicUUID) }
+        }
+    }
+
+    func characteristicUUIDs(for serviceUUID: CBUUID, profile: ForceSensorProfile) -> [CBUUID]? {
+        switch profile {
+        case .motherboard:
+            return [CBUUID(nsuuid: MotherboardProtocol.rxUUID), CBUUID(nsuuid: MotherboardProtocol.txUUID)]
+        default:
+            guard let adapter = ForceSensorAdapterRegistry.adapter(for: profile) else { return nil }
+            var identifiers = adapter.contract.notificationCharacteristics
+                .filter { CBUUID(nsuuid: $0.serviceUUID) == serviceUUID }
+                .map { CBUUID(nsuuid: $0.characteristicUUID) }
+            if CBUUID(nsuuid: adapter.writeCharacteristic.serviceUUID) == serviceUUID {
+                identifiers.append(CBUUID(nsuuid: adapter.writeCharacteristic.characteristicUUID))
+            }
+            return identifiers
+        }
     }
 }

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Build the Hangboard Workbench as a reproducible arm64 macOS executable."""
+"""Build the Hangboard Workbench as a reproducible arm64 macOS runtime."""
 
 from __future__ import annotations
 
 import os
 import platform
 import re
+import stat
 import sys
 import tempfile
 from argparse import ArgumentParser, Namespace
@@ -77,8 +78,12 @@ def _pyinstaller_arguments(
     metadata_root: Path,
     dist_dir: Path,
     work_dir: Path,
+    codesign_identity: str | None = None,
 ) -> list[str]:
     """Return the complete, explicit runtime manifest for PyInstaller."""
+    if codesign_identity is not None and not codesign_identity.strip():
+        raise BuildError("codesign identity must be non-empty when supplied")
+
     editor_root, onboarding_root = _validate_source_layout(repository_root)
     metadata_path = metadata_root / "build-commit.txt"
     if not metadata_path.is_file():
@@ -88,7 +93,7 @@ def _pyinstaller_arguments(
         str(editor_root / "workbench_binary.py"),
         "--name",
         "hangboard-workbench",
-        "--onefile",
+        "--onedir",
         "--noconfirm",
         "--clean",
         "--target-architecture",
@@ -108,6 +113,8 @@ def _pyinstaller_arguments(
         "--hidden-import",
         "hangboard_vectorizer.board_library",
     ]
+    if codesign_identity is not None:
+        arguments.extend(["--codesign-identity", codesign_identity])
     for asset in workbench_assets.STATIC_ASSETS:
         arguments.extend(_add_data_argument(editor_root / asset))
     arguments.extend(_add_data_argument(metadata_path))
@@ -122,22 +129,41 @@ def _require_arm64_macos() -> None:
 
 
 def _require_expected_output(dist_dir: Path) -> Path:
-    expected = dist_dir / "hangboard-workbench"
-    executable_outputs = [
-        path
-        for path in dist_dir.glob("hangboard-workbench*")
-        if path.is_file() and os.access(path, os.X_OK)
-    ]
-    if executable_outputs != [expected]:
-        raise BuildError("PyInstaller did not produce exactly one expected executable")
-    return expected
+    runtime = dist_dir / "hangboard-workbench"
+    executable = runtime / "hangboard-workbench"
+    try:
+        runtime_mode = runtime.stat().st_mode
+        executable_mode = executable.stat().st_mode
+    except OSError as error:
+        raise BuildError(
+            "PyInstaller did not produce the expected onedir runtime executable"
+        ) from error
+    if not stat.S_ISDIR(runtime_mode) or runtime.is_symlink():
+        raise BuildError("PyInstaller did not produce the expected onedir runtime")
+    if not stat.S_ISREG(executable_mode) or not executable_mode & stat.S_IXUSR:
+        raise BuildError(
+            "PyInstaller did not produce the expected onedir runtime executable"
+        )
+    return runtime
 
 
-def _build(repository_root: Path, commit: str, dist_dir: Path, work_dir: Path) -> Path:
+def _build(
+    repository_root: Path,
+    commit: str,
+    dist_dir: Path,
+    work_dir: Path,
+    codesign_identity: str | None = None,
+) -> Path:
     _require_arm64_macos()
     metadata_root = work_dir / "metadata"
     _write_build_metadata(metadata_root, commit)
-    arguments = _pyinstaller_arguments(repository_root, metadata_root, dist_dir, work_dir)
+    arguments = _pyinstaller_arguments(
+        repository_root,
+        metadata_root,
+        dist_dir,
+        work_dir,
+        codesign_identity=codesign_identity,
+    )
 
     import PyInstaller.__main__
 
@@ -150,6 +176,7 @@ def _arguments(arguments: list[str] | None = None) -> Namespace:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--dist-dir", required=True, type=Path)
     parser.add_argument("--work-dir", required=True, type=Path)
+    parser.add_argument("--codesign-identity")
     return parser.parse_args(arguments)
 
 
@@ -162,6 +189,7 @@ def main(arguments: list[str] | None = None) -> int:
             commit=parsed.commit,
             dist_dir=parsed.dist_dir.expanduser().resolve(),
             work_dir=parsed.work_dir.expanduser().resolve(),
+            codesign_identity=parsed.codesign_identity,
         )
     except BuildError as error:
         print(f"Hangboard Workbench build: {error}", file=sys.stderr)
