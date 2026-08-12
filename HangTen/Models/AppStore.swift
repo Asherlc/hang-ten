@@ -90,10 +90,12 @@ final class AppStore: ObservableObject {
 
     convenience init(
         healthKitService: any HealthWorkoutSaving,
+        workoutSessionStore: WorkoutSessionStoring? = nil,
         defaults: UserDefaults = .standard
     ) {
         self.init(
             healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+            workoutSessionStore: workoutSessionStore,
             defaults: defaults
         )
     }

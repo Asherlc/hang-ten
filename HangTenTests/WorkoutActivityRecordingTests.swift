@@ -5,6 +5,23 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    private var sessionStoreDirectory: URL!
+
+    override func setUp() {
+        super.setUp()
+        sessionStoreDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "WorkoutActivityRecordingTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+    }
+
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: sessionStoreDirectory)
+        sessionStoreDirectory = nil
+        super.tearDown()
+    }
+
     private let board = TrainingBoard(
         id: "fixture.board",
         manufacturer: "Fixture",
@@ -67,6 +84,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let defaults = makeDefaults()
         defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         return defaults
+    }
+
+    private func makeSessionStore(defaults: UserDefaults) -> WorkoutSessionStore {
+        WorkoutSessionStore(defaults: defaults, directory: sessionStoreDirectory)
     }
 
     private func plan(
@@ -428,9 +449,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testAppStoreResolutionPreservesDirectFeatureFallbackAndKindBehavior() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let exactFeatureTarget = HoldTarget.feature(
             .mediumEdge,
@@ -484,9 +507,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let plan = LegacyPlanSeedCatalog.repeaters
         let board = BoardCatalog.compactII
@@ -620,7 +645,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             workoutSaved.fulfill()
         }
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, defaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
             .map(\.sessionCount)
@@ -671,7 +700,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testCompletionExportsMeasuredLoadThroughHealthKitSegments() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, defaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -731,6 +764,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: WorkoutHealthStoreSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
             defaults: defaults
         )
         let workout = plan([
@@ -757,7 +791,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testLegacyCompletionUsesSelectedBoardAndNoStopwatchDurations() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, userDefaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         store.selectedBoard = board
         let workout = plan([
             WorkoutSegment(
@@ -784,7 +822,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         let expectedError = "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
