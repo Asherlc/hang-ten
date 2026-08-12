@@ -116,7 +116,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertIdentical(manager.connectedPeripherals.first, peripheral)
     }
 
-    func testCoreBluetoothTransportParsesManufacturerDataForWHC06ProfileResolution() throws {
+    func testCoreBluetoothTransportScansWithoutServiceFilterForWHC06Profile() throws {
         let manager = FakeCentralManager()
         let transport = CoreBluetoothMotherboardTransport { _ in manager }
         let peripheral = FakeMotherboardPeripheral(name: "Scale")
@@ -136,7 +136,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(manager.scannedServiceUUIDs, [])
+        XCTAssertNil(manager.scannedServiceUUIDs)
         XCTAssertEqual(try XCTUnwrap(discoveredDevices.first).profile, .whC06)
     }
 

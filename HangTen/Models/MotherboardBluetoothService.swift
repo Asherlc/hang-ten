@@ -713,8 +713,9 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
 
     private func beginScanIfPossible() {
         guard let centralManager, centralManager.state == .poweredOn else { return }
+        let serviceUUIDs = serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:))
         centralManager.scanForPeripherals(
-            withServices: serviceUUIDs(for: requestedProfile).map(CBUUID.init(nsuuid:)),
+            withServices: serviceUUIDs.isEmpty ? nil : serviceUUIDs,
             options: nil
         )
     }
