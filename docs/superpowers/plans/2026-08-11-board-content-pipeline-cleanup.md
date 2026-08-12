@@ -1,5 +1,8 @@
 # Board Content Pipeline Cleanup Implementation Plan
 
+> **Superseded:** The generated-runtime-artifact architecture in this plan was
+> replaced on 2026-08-12 by [Direct Board Package Bundling](2026-08-12-direct-board-package-bundling.md). Do not execute the remaining tasks here.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make each evidence-backed `Hangboards/<board-slug>/` package the one editable source of truth for all board-owned metadata, evidence, semantic mappings, normalized vector geometry, and optional presentation assets; generate every Hang Ten board artifact from those packages; and retire unsuccessful image-automation experiments without removing the functioning pipeline or Workbench.
