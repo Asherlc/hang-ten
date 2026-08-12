@@ -12,6 +12,7 @@ on:
       - Tools/HangboardPipeline/**
       - Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml
+      - .github/workflows/ci.yml
   push:
     branches:
       - main
@@ -23,6 +24,7 @@ on:
       - Tools/HangboardPipeline/**
       - Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml
+      - .github/workflows/ci.yml
   merge_group:
   workflow_dispatch:
   schedule:
