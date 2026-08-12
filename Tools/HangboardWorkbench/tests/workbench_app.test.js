@@ -175,6 +175,32 @@ test("main editor runtime feedback uses hold-task language without banning data-
   );
 });
 
+test("focused editor error sinks format external messages before rendering", () => {
+  for (const functionName of [
+    "renderValidation",
+    "handleAutosaveError",
+    "selectLibraryBoard",
+    "selectGuidedBoard",
+    "createGuidedBoard",
+    "approveCurrent",
+    "runGuidedMutation",
+    "loadGuidedWorkbench",
+    "loadServerSession",
+    "saveToRun",
+  ]) {
+    assert.match(
+      extractFunction(appSource, functionName),
+      /formatFocusedEditorError|focusedEditorErrorMessage/,
+      `${functionName}() must format external errors at its UI boundary`,
+    );
+  }
+  assert.doesNotMatch(
+    appSource,
+    /(?:state\.saveError|\.textContent)\s*=\s*(?:error|failure)\.message\b/,
+    "external messages must not be assigned directly to visible editor state",
+  );
+});
+
 test("the workbench uses one accessible inspector panel and drawer controls", () => {
   const count = (id) => (markup.match(new RegExp(`\\bid=["']${id}["']`, "g")) ?? []).length;
   for (const id of [

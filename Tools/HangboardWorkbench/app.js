@@ -38,7 +38,7 @@
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
   const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
-  const { advancedToolVisibility } = globalThis.HoldEditorUIModel;
+  const { advancedToolVisibility, formatFocusedEditorError } = globalThis.HoldEditorUIModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { canApprove, openingSections } = globalThis.HoldWorkbenchModel;
   const {
@@ -191,6 +191,10 @@
   const svgNS = "http://www.w3.org/2000/svg";
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+  function focusedEditorErrorMessage(error, fallback) {
+    return formatFocusedEditorError(error?.message, fallback);
+  }
 
   function capturePointerRegionSnapshot(region, session) {
     return { ...session, regionId: region.id, originalRegion: clone(region) };
@@ -607,12 +611,13 @@
     el["validation-list"].replaceChildren();
     state.validationErrors.forEach((error) => {
       const item = document.createElement("li");
+      const message = formatFocusedEditorError(error.message, "Outline needs attention");
       if (error.regionId == null) {
-        item.textContent = error.message;
+        item.textContent = message;
       } else {
         const button = document.createElement("button");
         button.type = "button";
-        button.textContent = error.message;
+        button.textContent = message;
         button.addEventListener("click", () => focusRegion(error.regionId));
         item.appendChild(button);
       }
@@ -1739,8 +1744,8 @@
     state.dirty = true;
     state.draftStatus = "dirty";
     if (holdForActiveJobRecovery(error)) return;
-    state.saveError = error.message || "Draft save failed";
-    focusGeometryError(state.saveError);
+    state.saveError = focusedEditorErrorMessage(error, "Draft save failed");
+    focusGeometryError(error?.message);
     setStatus(state.saveError);
     render();
   }
@@ -1849,7 +1854,10 @@
   function focusGeometryError(message) {
     const error = geometryValidationError(message);
     if (!error) return false;
-    state.validationErrors = [error];
+    state.validationErrors = [{
+      ...error,
+      message: formatFocusedEditorError(error.message, "Outline needs attention"),
+    }];
     if (error.regionId != null) focusRegion(error.regionId);
     return true;
   }
@@ -2097,7 +2105,10 @@
     state.libraryBoards = opening.library;
     state.libraryDiagnostics = opening.diagnostics;
     state.boards = opening.runtime;
-    state.openingErrors = { ...opening.errors };
+    state.openingErrors = Object.fromEntries(Object.entries(opening.errors || {}).map(([key, message]) => [
+      key,
+      formatFocusedEditorError(message, "Could not load boards"),
+    ]));
     renderRecentRuns();
     renderOpeningSections();
     return state.boards;
@@ -2121,7 +2132,9 @@
       handleOpeningSelectionFailure({
         error,
         editingFrozen: state.editingFrozen,
-        setLibraryError(message) { state.openingErrors.library = message; },
+        setLibraryError(message) {
+          state.openingErrors.library = formatFocusedEditorError(message, "Could not open repository board.");
+        },
         showSetup,
       });
       return false;
@@ -2148,7 +2161,7 @@
       return loaded;
     } catch (error) {
       if (!load.isCurrent()) return false;
-      state.saveError = error.message || "Could not load board";
+      state.saveError = focusedEditorErrorMessage(error, "Could not load board");
       setStatus(state.saveError);
       return false;
     } finally {
@@ -2188,7 +2201,7 @@
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        el["setup-error"].textContent = error.message || "Could not create the board.";
+        el["setup-error"].textContent = focusedEditorErrorMessage(error, "Could not create the board.");
         el["setup-error"].classList.remove("hidden");
       }
     } finally {
@@ -2235,8 +2248,8 @@
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        state.saveError = error.message || "Could not save outline changes";
-        focusGeometryError(state.saveError);
+        state.saveError = focusedEditorErrorMessage(error, "Could not save outline changes");
+        focusGeometryError(error?.message);
         setStatus(state.saveError);
       }
     } finally {
@@ -2317,8 +2330,8 @@
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        state.saveError = error.message || "Workbench action failed";
-        focusGeometryError(state.saveError);
+        state.saveError = focusedEditorErrorMessage(error, "Workbench action failed");
+        focusGeometryError(error?.message);
         setStatus(state.saveError);
       }
     } finally {
@@ -2361,14 +2374,14 @@
         }
         const failure = reconciliation.failed.at(-1)?.error;
         if (failure) {
-          state.saveError = failure.message || "Could not reconnect to an active job";
+          state.saveError = focusedEditorErrorMessage(failure, "Could not reconnect to an active job");
           recoveredFailure = failure;
         }
       } catch (error) {
         holdForStoredActiveJob();
         if (activeJobStore.readAll().length) return true;
         state.editingFrozen = false;
-        state.saveError = error.message || "Could not reconcile active jobs";
+        state.saveError = focusedEditorErrorMessage(error, "Could not reconcile active jobs");
         recoveredFailure = error;
       } finally {
         if (!activeJobStore.readAll().length) state.busy = false;
@@ -2376,7 +2389,9 @@
       }
     }
     await restoreOpeningAfterJobRecovery({
-      failure: recoveredFailure,
+      failure: recoveredFailure
+        ? { message: focusedEditorErrorMessage(recoveredFailure, "Could not reconnect to an active job") }
+        : null,
       refreshBoards,
       showSetup,
       setupError: el["setup-error"],
@@ -2453,7 +2468,7 @@
     } catch (error) {
       console.warn(error);
       if (previousRunId) el["board-select"].value = previousRunId;
-      setStatus(formatSessionLoadError(error));
+      setStatus(formatFocusedEditorError(formatSessionLoadError(error), "Could not load board"));
       return false;
     } finally {
       state.loadingSession = false;
@@ -2688,7 +2703,7 @@
       }
       setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
-      state.saveError = error.message || "Save failed";
+      state.saveError = focusedEditorErrorMessage(error, "Save failed");
       setStatus(state.saveError);
     } finally {
       state.saving = false;
