@@ -236,6 +236,10 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         XCTAssertEqual(baseline.aggregateLoadKGF, 16, accuracy: 0.0001)
         XCTAssertEqual(changedFourthChannel.aggregateLoadKGF, 16, accuracy: 0.0001)
+        XCTAssertEqual(baseline.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.leftLoadKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(baseline.rightLoadKGF, 6, accuracy: 0.0001)
+        XCTAssertEqual(changedFourthChannel.rightLoadKGF, 6, accuracy: 0.0001)
         XCTAssertEqual(baseline.leftShare, changedFourthChannel.leftShare, accuracy: 0.0001)
         XCTAssertEqual(baseline.rightShare, changedFourthChannel.rightShare, accuracy: 0.0001)
         XCTAssertEqual(baseline.sensorLoadsKGF[3], 1, accuracy: 0.0001)
@@ -973,9 +977,17 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
     ) {
         for sensor in 0..<4 {
             for point in 0..<4 {
-                let defaultMass = (sensor == 1 || sensor == 2) ? -point : point
+                let defaultMass = Double(point * 10)
+                let requestedMass = massKGF?(sensor, point) ?? defaultMass.description
+                let calibratedMass: String
+                if let parsedMass = Double(requestedMass), parsedMass.isFinite {
+                    let sign = (sensor == 1 || sensor == 2) ? -1.0 : 1.0
+                    calibratedMass = (parsedMass * sign).description
+                } else {
+                    calibratedMass = requestedMass
+                }
                 transport.emit(.notification(
-                    Data("\(sensor),\(point),\(massKGF?(sensor, point) ?? String(defaultMass)),\(point * 100)\r\n".utf8),
+                    Data("\(sensor),\(point),\(calibratedMass),\(point * 1_000)\r\n".utf8),
                     Date(timeIntervalSince1970: Double(sensor * 4 + point))
                 ))
             }
