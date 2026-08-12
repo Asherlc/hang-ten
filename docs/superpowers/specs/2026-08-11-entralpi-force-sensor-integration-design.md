@@ -84,8 +84,9 @@ by the connection service.
 
 Make the current connection service profile-aware. Motherboard follows its
 existing calibration-to-streaming sequence. Entralpi begins notifications once
-its characteristic is ready, then enters a calibration state rather than
-publishing force samples.
+both service-scoped notification paths are ready: UART `FFF4` and Weight Scale
+service `181D` characteristic `FFF1`, then enters a calibration state rather
+than publishing force samples.
 
 Entralpi calibration records ten stable readings while the user stands on the
 plate. It rejects invalid readings, a mean outside 1...200 kg, or standard
