@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import shutil
 import socket
 import sys
@@ -35,7 +36,7 @@ from hangboard_vectorizer.workbench_validation import (  # noqa: E402
     ValidationCheck as FakeValidationCheck,
     ValidationReport as FakeValidationReport,
 )
-from workbench_assets import STATIC_ASSETS  # noqa: E402
+from workbench_assets import STATIC_ASSETS, STATIC_ASSET_ROUTES  # noqa: E402
 from server import (  # noqa: E402
     EditorCatalog,
     EditorError,
@@ -829,6 +830,16 @@ def test_server_routes_static_files_from_the_shared_manifest(tmp_path, monkeypat
 
     assert status == 200
     assert body == b"manifest asset"
+
+
+def test_static_manifest_routes_every_local_script_referenced_by_index():
+    index = (EDITOR_ROOT / "index.html").read_text(encoding="utf-8")
+    local_script_sources = set(
+        re.findall(r'<script\s+src="([^"?#]+)"', index)
+    )
+    manifest_assets = {asset for _route, asset in STATIC_ASSET_ROUTES}
+
+    assert local_script_sources == manifest_assets - {"index.html", "styles.css"}
 
 
 def test_required_static_assets_are_validated_before_binding(tmp_path):

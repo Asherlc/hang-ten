@@ -10,7 +10,6 @@ const {
 
 const profile = Object.freeze({
   schemaVersion: 1,
-  boardID: "metolius.wood-grips.compact-ii",
   manufacturer: "Metolius",
   name: "Wood Grips Compact II",
   subtitle: "A compact wood board.",
@@ -37,8 +36,16 @@ function preview(overrides = {}) {
   };
 }
 
-function suite(board = { state: "complete", boardId: "board-7", revisionId: "revision-1" }) {
-  return { activeBoard: board, activeRevision: board.revisionId };
+const DEFAULT_BOARD = Object.freeze({
+  state: "complete",
+  boardId: "board-7",
+  repositoryBoardId: "metolius.wood-grips.compact-ii",
+  revisionId: "revision-1",
+});
+
+function suite(board = {}) {
+  const activeBoard = { ...DEFAULT_BOARD, ...board };
+  return { activeBoard, activeRevision: activeBoard.revisionId };
 }
 
 function controllerHarness({ board, client = {}, onPromotion = () => {} } = {}) {
@@ -106,7 +113,7 @@ test("preview generation blocks an incomplete board before a job is started", as
   assert.match(controller.getState().error, /complete and approved/i);
 });
 
-test("preview generation blocks a missing explicit profile before a job is started", async () => {
+test("preview generation blocks missing Board info before a job is started", async () => {
   let calls = 0;
   const { controller } = controllerHarness({
     client: { async previewPromotion() { calls += 1; return preview(); } },
@@ -115,7 +122,7 @@ test("preview generation blocks a missing explicit profile before a job is start
   await controller.generatePreview();
 
   assert.equal(calls, 0);
-  assert.match(controller.getState().error, /explicit iOS promotion profile/i);
+  assert.match(controller.getState().error, /Board info in Inspect/i);
 });
 
 test("aspect ratio keeps trimmed non-numeric text while empty input stays empty", () => {
@@ -143,13 +150,37 @@ test("preview result from a stale board context is discarded without repopulatin
   assert.equal(controller.getState().profile.boardID, "");
 });
 
-test("promotion results use the active workbench board identity and preserve the iOS board ID", async () => {
+test("promotion derives its board ID from the active repository board", async () => {
   const promotions = [];
-  const { controller } = controllerHarness({ onPromotion: (result) => promotions.push(result) });
-  controller.setProfile(profile);
+  const submittedProfiles = [];
+  const { controller } = controllerHarness({
+    client: {
+      async previewPromotion(_boardId, _revisionId, submittedProfile) {
+        submittedProfiles.push(submittedProfile);
+        return preview();
+      },
+    },
+    onPromotion: (result) => promotions.push(result),
+  });
+  controller.setProfile({ ...profile, boardID: "do-not-use-this" });
   await controller.generatePreview();
   assert.equal(promotions[0].boardId, "board-7");
   assert.equal(promotions[0].boardID, "metolius.wood-grips.compact-ii");
+  assert.equal(submittedProfiles[0].boardID, "metolius.wood-grips.compact-ii");
+});
+
+test("promotion blocks a board without a repository Board ID", async () => {
+  let calls = 0;
+  const { controller } = controllerHarness({
+    board: { state: "complete", boardId: "board-7", repositoryBoardId: null, revisionId: "revision-1" },
+    client: { async previewPromotion() { calls += 1; return preview(); } },
+  });
+  controller.setProfile(profile);
+
+  await controller.generatePreview();
+
+  assert.equal(calls, 0);
+  assert.match(controller.getState().error, /repository Board ID/i);
 });
 
 test("switching boards after a local save clears the saved promotion state", () => {
@@ -165,7 +196,7 @@ test("switching boards after a local save clears the saved promotion state", () 
   assert.equal(state.error, "");
 });
 
-test("switching boards resets the explicit promotion profile", () => {
+test("switching boards resets the Board info profile", () => {
   const { controller, setSuite } = controllerHarness();
   controller.setProfile(profile);
 
@@ -184,17 +215,17 @@ test("switching boards resets the explicit promotion profile", () => {
   });
 });
 
-test("the first profile field edit after a board switch starts from a blank profile", () => {
+test("the first Board info field edit after a board switch starts from a blank profile", () => {
   const { controller, setSuite } = controllerHarness();
   controller.setProfile(profile);
 
   setSuite(suite({ state: "complete", boardId: "board-8", revisionId: "revision-1" }));
-  controller.setProfileField("boardID", "metolius.wood-grips.deluxe");
+  controller.setProfileField("manufacturer", "Metolius");
 
   assert.deepEqual(controller.getState().profile, {
     schemaVersion: 1,
-    boardID: "metolius.wood-grips.deluxe",
-    manufacturer: "",
+    boardID: "",
+    manufacturer: "Metolius",
     name: "",
     subtitle: "",
     dimensions: "",

@@ -93,7 +93,7 @@
           <button class="tool-button" id="retry-button" disabled>Retry</button>
           <button class="tool-button" id="revise-button" disabled>Revise upstream</button>
           <span class="save-state" id="save-state">Checking workspace…</span>
-          <button class="tool-button accent" id="save-button" disabled>Approve &amp; continue</button>
+          <button class="tool-button accent" id="save-button" disabled>Save changes</button>
           <button class="tool-button export-action" id="export-button">Export edited highlights</button>
           <button class="tool-button export-action" id="corrections-button">Export corrections</button>
         </div>
@@ -126,11 +126,10 @@
           <section class="workflow-block" id="workflow-block">
             <div class="panel-heading">
               <div>
-                <span class="eyebrow">Progress</span>
-                <h2>Pipeline</h2>
+                <span class="eyebrow">Editor</span>
+                <h2>Edit holds</h2>
               </div>
             </div>
-            <ol class="stage-timeline" id="stage-timeline" aria-label="Onboarding stages"></ol>
           </section>
 
           <section class="recent-block" id="recent-block">
@@ -177,8 +176,8 @@
               <button data-overlay="none">Image only</button>
             </div>
             <div class="checkpoint-label">
-              <span class="eyebrow">Checkpoint</span>
-              <strong id="checkpoint-title">Waiting for a board</strong>
+              <span class="eyebrow">Editor</span>
+              <strong id="checkpoint-title">Edit holds</strong>
             </div>
             <div class="canvas-actions">
               <label class="opacity-control">Overlay <input id="opacity-slider" type="range" min="5" max="80" value="34" /></label>
@@ -186,6 +185,7 @@
               <span class="zoom-label" id="zoom-label">100%</span>
               <button class="icon-button" id="zoom-in-button" title="Zoom in">＋</button>
               <button class="tool-button compact" id="fit-button">Fit</button>
+              <button class="tool-button compact inspector-drawer-toggle" id="inspector-drawer-toggle" type="button" aria-expanded="false" aria-controls="inspector-panel">Inspector</button>
             </div>
           </div>
 
@@ -211,7 +211,7 @@
           </div>
 
           <div class="validation-panel hidden" id="validation-panel" role="alert">
-            <strong>Fix geometry before approval</strong>
+            <strong>Fix geometry before saving</strong>
             <ul id="validation-list"></ul>
           </div>
           <footer class="statusbar">
@@ -220,7 +220,9 @@
           </footer>
         </section>
 
-        <aside class="panel inspector-panel">
+        <div class="inspector-drawer-backdrop" id="inspector-drawer-backdrop" aria-hidden="true"></div>
+        <aside class="panel inspector-panel" id="inspector-panel" aria-labelledby="inspector-title">
+          <button class="icon-button inspector-drawer-close" id="inspector-drawer-close" type="button" aria-label="Close hold inspector">×</button>
           <div class="panel-heading">
             <div>
               <span class="eyebrow">Inspector</span>
@@ -267,7 +269,6 @@
             <div class="inspector-actions">
               <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
               <button type="button" class="tool-button" id="next-region-button">Next →</button>
-              <button type="button" class="tool-button" id="edit-points-button">Edit points</button>
               <button type="button" class="tool-button" id="simplify-curve-button">Simplify curve</button>
               <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
               <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
@@ -300,6 +301,41 @@
               <span class="eyebrow">Approval and revision</span>
               <div id="inspect-approval-status"></div>
             </section>
+            <section class="inspect-card inspect-board-info-card" id="inspect-board-info" aria-labelledby="inspect-board-info-title">
+              <div class="inspect-card-heading">
+                <div>
+                  <span class="eyebrow">Board details</span>
+                  <h3 id="inspect-board-info-title">Board info</h3>
+                </div>
+                <p>These editable details are used for the active board revision when you generate a local promotion preview.</p>
+              </div>
+              <div class="board-info-grid">
+                <label for="board-info-manufacturer">Manufacturer
+                  <input id="board-info-manufacturer" data-board-info-field="manufacturer" type="text" autocomplete="organization" aria-describedby="board-info-manufacturer-hint" />
+                  <small id="board-info-manufacturer-hint">Used in the local promotion preview.</small>
+                </label>
+                <label for="board-info-name">Display name
+                  <input id="board-info-name" data-board-info-field="name" type="text" autocomplete="off" aria-describedby="board-info-name-hint" />
+                  <small id="board-info-name-hint">Used in the local promotion preview.</small>
+                </label>
+                <label for="board-info-subtitle">Subtitle
+                  <input id="board-info-subtitle" data-board-info-field="subtitle" type="text" autocomplete="off" aria-describedby="board-info-subtitle-hint" />
+                  <small id="board-info-subtitle-hint">Used in the local promotion preview.</small>
+                </label>
+                <label for="board-info-dimensions">Dimensions
+                  <input id="board-info-dimensions" data-board-info-field="dimensions" type="text" autocomplete="off" aria-describedby="board-info-dimensions-hint" />
+                  <small id="board-info-dimensions-hint">Used in the local promotion preview.</small>
+                </label>
+                <label for="board-info-aspect-ratio">Aspect ratio
+                  <input id="board-info-aspect-ratio" data-board-info-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" aria-describedby="board-info-aspect-ratio-hint" />
+                  <small id="board-info-aspect-ratio-hint">Used in the local promotion preview.</small>
+                </label>
+                <label class="board-info-wide" for="board-info-product-url">Product URL
+                  <input id="board-info-product-url" data-board-info-field="productURL" type="url" autocomplete="url" aria-describedby="board-info-product-url-hint" />
+                  <small id="board-info-product-url-hint">Used in the local promotion preview.</small>
+                </label>
+              </div>
+            </section>
             <section class="inspect-card inspect-readiness-card">
               <span class="eyebrow">Readiness</span>
               <div id="inspect-readiness"></div>
@@ -319,46 +355,6 @@
             <p id="promotion-readiness"></p>
             <p class="promotion-status empty" id="promotion-status">No preview</p>
             <p class="promotion-error hidden" id="promotion-error" role="alert"></p>
-          </section>
-
-          <section class="promotion-card" aria-labelledby="promotion-profile-title">
-            <div class="promotion-card-heading">
-              <div>
-                <span class="eyebrow">Explicit profile</span>
-                <h3 id="promotion-profile-title">iOS promotion profile</h3>
-              </div>
-              <p>These fields cannot be inferred from board artwork. Record the evidence used for each value.</p>
-            </div>
-            <div class="promotion-profile-grid">
-              <label for="promotion-board-id">iOS board ID
-                <input id="promotion-board-id" data-promotion-field="boardID" type="text" autocomplete="off" required aria-describedby="promotion-board-id-hint" />
-                <small id="promotion-board-id-hint">Canonical iOS identifier; confirm it against the approved board package.</small>
-              </label>
-              <label for="promotion-manufacturer">Manufacturer
-                <input id="promotion-manufacturer" data-promotion-field="manufacturer" type="text" autocomplete="organization" required aria-describedby="promotion-manufacturer-hint" />
-                <small id="promotion-manufacturer-hint">Use the manufacturer product page or packaging as evidence.</small>
-              </label>
-              <label for="promotion-name">Display name
-                <input id="promotion-name" data-promotion-field="name" type="text" autocomplete="off" required aria-describedby="promotion-name-hint" />
-                <small id="promotion-name-hint">Use the exact product name from the evidence source.</small>
-              </label>
-              <label for="promotion-subtitle">Subtitle
-                <input id="promotion-subtitle" data-promotion-field="subtitle" type="text" autocomplete="off" required aria-describedby="promotion-subtitle-hint" />
-                <small id="promotion-subtitle-hint">Write only evidence-backed product context; do not infer features from the photo.</small>
-              </label>
-              <label for="promotion-dimensions">Dimensions
-                <input id="promotion-dimensions" data-promotion-field="dimensions" type="text" autocomplete="off" required aria-describedby="promotion-dimensions-hint" />
-                <small id="promotion-dimensions-hint">Transcribe the manufacturer’s published dimensions.</small>
-              </label>
-              <label for="promotion-aspect-ratio">Aspect ratio
-                <input id="promotion-aspect-ratio" data-promotion-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" required aria-describedby="promotion-aspect-ratio-hint" />
-                <small id="promotion-aspect-ratio-hint">Use the measured or published board aspect ratio.</small>
-              </label>
-              <label class="promotion-profile-wide" for="promotion-product-url">Product URL
-                <input id="promotion-product-url" data-promotion-field="productURL" type="url" autocomplete="url" required aria-describedby="promotion-product-url-hint" />
-                <small id="promotion-product-url-hint">Link the manufacturer evidence used for this profile.</small>
-              </label>
-            </div>
           </section>
 
           <section class="promotion-card promotion-actions" aria-label="Promotion actions">
@@ -444,6 +440,7 @@
 
     <script src="editor-model.js"></script>
     <script src="curve-gesture-model.js"></script>
+    <script src="editor-interaction-model.js"></script>
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>

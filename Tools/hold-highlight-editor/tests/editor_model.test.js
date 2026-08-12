@@ -20,9 +20,11 @@ const {
   mapEdgeCurves,
   mirrorEdgeCurves,
   insertEdgeCurves,
+  removeEdgeCurvesForVertex,
   nextStage2RegionId,
   isExportableContour,
   shiftCornerTreatmentsForInsertion,
+  shiftCornerTreatmentsForDeletion,
   mirrorCornerTreatments,
   canSaveEditorState,
   runSessionLoadTransaction,
@@ -849,6 +851,30 @@ test("insertEdgeCurves discards the split edge and shifts following edge indexes
     4: { kind: "quadratic", control: [3, 3.5] },
   });
   assert.equal(Object.hasOwn(result, 5), false);
+});
+
+test("deleting a freeform vertex discards replaced edges and reindexes remaining metadata", () => {
+  const edgeCurves = Object.fromEntries([0, 1, 2, 3, 4].map((index) => [
+    index,
+    { kind: "quadratic", control: [index, index + 0.5] },
+  ]));
+  const cornerTreatments = {
+    0: { treatment: "sharp", amount: 1 },
+    2: { treatment: "rounded", amount: 2 },
+    4: { treatment: "sharp", amount: 3 },
+  };
+
+  assert.deepEqual(removeEdgeCurvesForVertex(edgeCurves, 2, 5), {
+    0: { kind: "quadratic", control: [0, 0.5] },
+    2: { kind: "quadratic", control: [3, 3.5] },
+    3: { kind: "quadratic", control: [4, 4.5] },
+  });
+  assert.deepEqual(shiftCornerTreatmentsForDeletion(cornerTreatments, 2, 5), {
+    0: { treatment: "sharp", amount: 1 },
+    3: { treatment: "sharp", amount: 3 },
+  });
+  assert.deepEqual(edgeCurves[4].control, [4, 4.5]);
+  assert.deepEqual(cornerTreatments[4], { treatment: "sharp", amount: 3 });
 });
 
 test("normalizePipelineDocument preserves validated edge curves and omits absent metadata", () => {

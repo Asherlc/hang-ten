@@ -4,7 +4,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 
-const { contourPath } = require("../editor-model.js");
+const {
+  contourPath,
+  removeEdgeCurvesForVertex,
+  shiftCornerTreatmentsForDeletion,
+} = require("../editor-model.js");
 const {
   beginEdgeCurveSession,
   updateEdgeCurveSession,
@@ -190,7 +194,7 @@ test("editor exposes curve-editing affordances", () => {
   const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
 
-  assert.match(html, /Edit points/);
+  assert.doesNotMatch(html, /Edit points/);
   assert.match(app, /edge-curve-handle/);
   assert.match(app, /startEdgeCurveDrag/);
   assert.match(app, /edgeCurveInspectorState/);
@@ -204,6 +208,249 @@ test("editor exposes curve-editing affordances", () => {
   assert.ok(html.indexOf('src="editor-model.js"') < html.indexOf('src="curve-gesture-model.js"'));
   assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="app.js"'));
   assert.match(app, /return \[clamp\(transformed\.x, 0, state\.canvas\.width\), clamp\(transformed\.y, 0, state\.canvas\.height\)\];/);
+});
+
+function extractFunction(source, name) {
+  const start = source.indexOf(`function ${name}(`);
+  assert.notEqual(start, -1, `expected ${name}() to be present`);
+  const bodyStart = source.indexOf("{", start);
+  let depth = 0;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  assert.fail(`could not extract ${name}()`);
+}
+
+test("freeform holds expose independently draggable vertices instead of object resizing", () => {
+  assert.match(app, /function isFreeformRegion\(region\)/);
+  assert.match(app, /if \(isFreeformRegion\(region\)\) renderFreeformVertexHandles\(group, region\);/);
+  assert.match(app, /if \(!isFreeformRegion\(region\)\) renderObjectControls\(group, region\);/);
+  assert.match(app, /function clearSelection\(\) \{[\s\S]*selectRegion\(null\);/);
+});
+
+test("deleting a selected freeform vertex preserves the three-point minimum", () => {
+  assert.match(app, /function deleteSelectedFreeformVertex\(\)/);
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    regions: [{
+      id: 7,
+      contour: [[1, 1], [9, 1], [9, 9], [1, 9]],
+      metadata: {
+        shapeKind: "freeform",
+        edgeCurves: Object.fromEntries([0, 1, 2, 3].map((index) => [
+          index,
+          { kind: "quadratic", control: [index, index + 0.5] },
+        ])),
+        cornerTreatments: {
+          0: { treatment: "sharp", amount: 1 },
+          2: { treatment: "rounded", amount: 2 },
+          3: { treatment: "sharp", amount: 3 },
+        },
+      },
+    }],
+  };
+  const history = [];
+  let renders = 0;
+  let editable = true;
+  const context = {
+    state,
+    selectedRegion: () => state.regions.find((region) => region.id === state.selectedId) || null,
+    canEditGeometry: () => editable,
+    removeEdgeCurvesForVertex,
+    shiftCornerTreatmentsForDeletion,
+    commitHistory: (label) => history.push(label),
+    render: () => { renders += 1; },
+  };
+  vm.runInNewContext(`${extractFunction(app, "isFreeformRegion")}\n${extractFunction(app, "deleteSelectedFreeformVertex")}`, context);
+
+  assert.equal(context.deleteSelectedFreeformVertex(), true);
+  assert.deepEqual(state.regions[0].contour, [[1, 1], [9, 1], [1, 9]]);
+  assert.deepEqual(state.regions[0].metadata.edgeCurves, {
+    0: { kind: "quadratic", control: [0, 0.5] },
+    2: { kind: "quadratic", control: [3, 3.5] },
+  });
+  assert.deepEqual(state.regions[0].metadata.cornerTreatments, {
+    0: { treatment: "sharp", amount: 1 },
+    2: { treatment: "sharp", amount: 3 },
+  });
+  assert.equal(state.selectedCornerIndex, null);
+  assert.deepEqual(history, ["Deleted control point"]);
+  assert.equal(renders, 1);
+
+  const before = JSON.stringify(state.regions);
+  state.selectedCornerIndex = 0;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  assert.equal(JSON.stringify(state.regions), before);
+
+  state.regions[0].metadata.shapeKind = "rectangle";
+  state.regions[0].contour.push([1, 1]);
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  state.regions[0].metadata.shapeKind = "freeform";
+  const frozenContour = JSON.stringify(state.regions[0].contour);
+  editable = false;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+  assert.equal(JSON.stringify(state.regions[0].contour), frozenContour);
+  state.selectedId = null;
+  assert.equal(context.deleteSelectedFreeformVertex(), false);
+});
+
+test("restoring a cancelled pointer edit targets its original hold and preserves the exact original shape", () => {
+  const state = {
+    selectedId: 8,
+    regions: [
+      {
+        id: 7,
+        contour: [[3, 3], [8, 3], [8, 8], [3, 8]],
+        anchor: [6, 6],
+        metadata: {
+          edgeCurves: { 0: { kind: "quadratic", control: [4, 1] } },
+          rotation: 0.75,
+          bend: 14,
+          cornerTreatments: { 1: { treatment: "rounded", amount: 8 } },
+        },
+      },
+      { id: 8, contour: [[20, 20], [30, 20], [30, 30]], metadata: { rotation: 9 } },
+    ],
+  };
+  const originalRegion = {
+    id: 7,
+    key: "grip-007",
+    contour: [[1, 1], [9, 1], [9, 9], [1, 9]],
+    metadata: { pathStyle: "straight" },
+  };
+  const session = { regionId: 7, originalRegion };
+  const context = { state, clone: (value) => JSON.parse(JSON.stringify(value)) };
+
+  vm.runInNewContext(extractFunction(app, "restorePointerGeometry"), context);
+
+  assert.equal(context.restorePointerGeometry(session), true);
+  assert.deepEqual(state.regions[0], originalRegion);
+  assert.deepEqual(state.regions[1], { id: 8, contour: [[20, 20], [30, 20], [30, 30]], metadata: { rotation: 9 } });
+  assert.equal(Object.hasOwn(state.regions[0], "anchor"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "edgeCurves"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "rotation"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "bend"), false);
+  assert.equal(Object.hasOwn(state.regions[0].metadata, "cornerTreatments"), false);
+});
+
+test("pointer session snapshots retain the starting hold identity and exact region", () => {
+  const context = { clone: (value) => JSON.parse(JSON.stringify(value)) };
+  vm.runInNewContext(extractFunction(app, "capturePointerRegionSnapshot"), context);
+  const region = { id: 7, contour: [[1, 1], [2, 2], [3, 3]], metadata: {} };
+
+  const session = context.capturePointerRegionSnapshot(region, { pointerId: 17, changed: false });
+  region.contour[0][0] = 99;
+
+  assert.deepEqual(JSON.parse(JSON.stringify(session)), {
+    pointerId: 17,
+    changed: false,
+    regionId: 7,
+    originalRegion: { id: 7, contour: [[1, 1], [2, 2], [3, 3]], metadata: {} },
+  });
+});
+
+test("Escape deselects an idle hold but cancels drawing first", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const handlerEnd = app.indexOf('window.addEventListener("keyup"', handlerStart);
+  assert.notEqual(handlerStart, -1);
+  assert.notEqual(handlerEnd, -1);
+  const listeners = {};
+  const state = {
+    drawing: false,
+    spacePressed: false,
+    mirrorOntoSourceId: null,
+    inspectorDrawerOpen: false,
+    selectedId: 4,
+    panSession: null,
+    primitiveSession: null,
+    dragSession: null,
+    handleSession: null,
+    edgeSession: null,
+    transformSession: null,
+  };
+  let cleared = 0;
+  let canceled = 0;
+  let pointerCancellation = null;
+  const context = {
+    document: { activeElement: { tagName: "DIV" } },
+    state,
+    window: { addEventListener: (name, callback) => { listeners[name] = callback; } },
+    trapInspectorDrawerFocus: () => {},
+    clearSelection: () => { cleared += 1; },
+    cancelDraw: () => { canceled += 1; },
+    cancelPointerSessions: (options) => { pointerCancellation = options; },
+    closeInspectorDrawer: () => {},
+    deleteSelectedFreeformVertex: () => false,
+    deleteSelected: () => {},
+    finishDraw: () => {},
+    redo: () => {},
+    undo: () => {},
+    navigateRegion: () => {},
+    mirrorSelectedCopy: () => {},
+    toggleEdgeSnapping: () => {},
+    renderToolState: () => {},
+    render: () => {},
+    setStatus: () => {},
+  };
+  vm.runInNewContext(app.slice(handlerStart, handlerEnd), context);
+  const dispatch = (key) => {
+    let prevented = false;
+    listeners.keydown({
+      key,
+      code: key,
+      preventDefault: () => { prevented = true; },
+      ctrlKey: false,
+      metaKey: false,
+      shiftKey: false,
+    });
+    return prevented;
+  };
+
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(cleared, 1);
+  assert.equal(canceled, 0);
+
+  state.drawing = true;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(canceled, 1);
+  assert.equal(cleared, 1);
+
+  state.drawing = false;
+  state.transformSession = { pointerId: 1 };
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(pointerCancellation?.restore, true);
+  state.transformSession = null;
+
+  state.mirrorOntoSourceId = 9;
+  assert.equal(dispatch("Escape"), true);
+  assert.equal(state.mirrorOntoSourceId, null);
+  assert.equal(cleared, 1);
+});
+
+test("Delete and Backspace remove a selected freeform vertex before deleting its hold", () => {
+  const keydown = app.slice(
+    app.indexOf('window.addEventListener("keydown"'),
+    app.indexOf('window.addEventListener("keyup"'),
+  );
+  assert.match(
+    keydown,
+    /event\.key === "Delete" \|\| event\.key === "Backspace"[\s\S]*if \(!deleteSelectedFreeformVertex\(\)\) deleteSelected\(\);/,
+  );
+});
+
+test("viewport wheel listener pans or cursor-anchored zooms by interaction intent", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+
+  assert.match(html, /src="editor-interaction-model\.js"/);
+  assert.ok(html.indexOf('src="curve-gesture-model.js"') < html.indexOf('src="editor-interaction-model.js"'));
+  assert.ok(html.indexOf('src="editor-interaction-model.js"') < html.indexOf('src="app.js"'));
+  assert.match(app, /addEventListener\("wheel", \(event\) => \{[\s\S]*event\.preventDefault\(\)/);
+  assert.match(app, /if \(action\.kind === "zoom"\) \{[\s\S]*setZoom\(state\.zoom \* action\.scale, event\.clientX, event\.clientY\)/);
+  assert.match(app, /state\.panX -= action\.deltaX;[\s\S]*state\.panY -= action\.deltaY;[\s\S]*renderTransform\(\);/);
 });
 
 test("declares each board picker element once in the element map", () => {
@@ -329,6 +576,7 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
     document: { activeElement: { tagName: "INPUT" } },
     finishDraw: () => { finished += 1; },
     cancelDraw: () => { canceled += 1; },
+    trapInspectorDrawerFocus: () => {},
     renderToolState: () => {},
     setStatus: () => {},
     state,
@@ -359,6 +607,32 @@ test("handles drawing Enter and Escape before the focused-control guard", () => 
   assert.equal(dispatch("Escape"), true);
   assert.equal(finished, 1);
   assert.equal(canceled, 1);
+});
+
+test("keeps the inspector available as a responsive accessible drawer", () => {
+  const css = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(css, /@media \(max-width: 1250px\)[\s\S]*\.workspace-grid \{ grid-template-columns: 250px minmax\(0, 1fr\); \}/);
+  assert.match(css, /\.inspector-panel\.drawer-open/);
+  assert.doesNotMatch(css, /@media \(max-width: 980px\)[\s\S]*\.inspector-panel \{ display: none; \}/);
+  assert.match(app, /function openInspectorDrawer\(\)/);
+  assert.match(app, /function closeInspectorDrawer\(\{ restoreFocus = true \} = \{\}\)/);
+  assert.match(app, /function trapInspectorDrawerFocus\(event\)/);
+  assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "true"\)/);
+  assert.match(app, /inspector-drawer-toggle"\]\.setAttribute\("aria-expanded", "false"\)/);
+  assert.match(app, /function syncInspectorDrawerAccessibility\(\)/);
+  assert.match(app, /const drawerIsModal = inspectorDrawerMedia\.matches && state\.inspectorDrawerOpen;/);
+  assert.match(app, /panel\.setAttribute\("role", "dialog"\)/);
+  assert.match(app, /panel\.setAttribute\("aria-modal", "true"\)/);
+  assert.match(app, /panel\.inert = true;/);
+  assert.match(app, /panel\.setAttribute\("aria-hidden", "true"\)/);
+  assert.match(app, /panel\.inert = false;/);
+  assert.match(app, /panel\.removeAttribute\("aria-modal"\)/);
+
+  const keydownStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const closeDrawerStart = app.indexOf("closeInspectorDrawer", keydownStart);
+  const editingTextGuard = app.indexOf("if (editingText) return;", keydownStart);
+  assert.ok(closeDrawerStart > keydownStart && closeDrawerStart < editingTextGuard, "Escape must close the inspector drawer before ordinary keyboard handling");
 });
 
 test("preserves the selected primitive shape when adding a highlight", () => {
