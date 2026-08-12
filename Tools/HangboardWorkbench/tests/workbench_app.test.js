@@ -5,6 +5,7 @@ const path = require("node:path");
 const { restoreOpeningAfterJobRecovery } = require("../workbench-controller.js");
 
 const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
+const readme = fs.readFileSync(path.join(__dirname, "../README.md"), "utf8");
 
 function actualElementIds(html) {
   const withoutComments = html.replace(/<!--[\s\S]*?-->/g, "");
@@ -40,6 +41,19 @@ test("the workbench is a single focused hold-outline editor", () => {
   ]) assert.equal(ids.has(id), true, `${id} must resolve to an element`);
   assert.doesNotMatch(markup, /tool-suite-sidebar|tool-onboard|tool-inspect|tool-promote|tool-validate/);
   assert.doesNotMatch(markup, />Promote to iOS<|>Validate</);
+});
+
+test("the main editor copy and operator docs explain direct outlining without pipeline terminology", () => {
+  const workspace = markup.match(/<section class="workspace-grid"[\s\S]*?<\/section>\s*<\/main>/);
+  assert.ok(workspace, "expected the focused editor workspace");
+  const visibleWorkspaceCopy = workspace[0].replace(/<[^>]*>/g, " ");
+
+  assert.match(visibleWorkspaceCopy, /Edit holds/);
+  assert.doesNotMatch(visibleWorkspaceCopy, /Stage [0-9]|checkpoint|Promote to iOS|Validate/);
+  assert.match(readme, /## Correct hold outlines/);
+  assert.match(readme, /Open \*\*Advanced tools\*\* only for shape, curve, transform, edge snap, mirror, and metadata work\./);
+  assert.match(readme, /Use \*\*More\*\* for comparison or artifact exports\./);
+  assert.match(readme, /Save locally; saving does not commit, push, or synchronize changes\./);
 });
 
 test("persistent secondary actions are contextual rather than toolbar controls", () => {
