@@ -46,10 +46,12 @@ test("the workbench is a single focused hold-outline editor", () => {
 test("the main editor copy and operator docs explain direct outlining without pipeline terminology", () => {
   const workspace = markup.match(/<section class="workspace-grid"[\s\S]*?<\/section>\s*<\/main>/);
   assert.ok(workspace, "expected the focused editor workspace");
-  const visibleWorkspaceCopy = workspace[0].replace(/<[^>]*>/g, " ");
 
-  assert.match(visibleWorkspaceCopy, /Edit holds/);
-  assert.doesNotMatch(visibleWorkspaceCopy, /Stage [0-9]|checkpoint|Promote to iOS|Validate/);
+  assert.match(workspace[0], /Edit holds/);
+  assert.doesNotMatch(
+    workspace[0],
+    /(?:>[^<]*(?:Stage [0-9]|checkpoint|Promote to iOS|Validate)[^<]*<|\b(?:aria-label|aria-labelledby|title|alt|placeholder)=["'][^"']*(?:Stage [0-9]|checkpoint|Promote to iOS|Validate)[^"']*["'])/,
+  );
   assert.match(readme, /## Correct hold outlines/);
   assert.match(readme, /Open \*\*Advanced tools\*\* only for shape, curve, transform, edge snap, mirror, and metadata work\./);
   assert.match(readme, /Use \*\*More\*\* for comparison or artifact exports\./);
