@@ -306,10 +306,14 @@ final class AppStore: ObservableObject {
         let recordingErrorMessage: String?
         let activityContext: PendingWorkoutActivityContext?
         do {
+            let stepMeasurements = session.map {
+                Dictionary(uniqueKeysWithValues: $0.steps.map { ($0.stepID, $0) })
+            } ?? [:]
             let activitySegments = try WorkoutActivityRecorder().segments(
                 for: plan,
                 on: board,
-                stopwatchDurations: stopwatchDurations
+                stopwatchDurations: stopwatchDurations,
+                stepMeasurements: stepMeasurements
             )
             if hasRequestedHealthAuthorization {
                 activityContext = PendingWorkoutActivityContext(

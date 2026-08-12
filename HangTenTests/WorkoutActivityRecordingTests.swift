@@ -295,6 +295,65 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertFalse(json.contains("sizeMillimeters"))
     }
 
+    func testMeasuredWorkSegmentIncludesPeakLoadAndActualLoadedDuration() throws {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 10
+            ),
+            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
+        ])
+        let measurement = WorkoutStepMeasurement(
+            stepID: "step",
+            plannedActiveDuration: 10,
+            intervals: [LoadInterval(start: 1, end: 4.5)],
+            peakLoadKGF: 37.25,
+            sampleCount: 20,
+            status: .measured
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            stepMeasurements: ["step": measurement]
+        )
+
+        XCTAssertEqual(records[0].peakLoadKGF, 37.25)
+        XCTAssertEqual(records[0].actualLoadedDurationSeconds, 3.5)
+        XCTAssertNil(records[1].peakLoadKGF)
+        XCTAssertNil(records[1].actualLoadedDurationSeconds)
+    }
+
+    func testUnmeasuredWorkSegmentOmitsLoadFields() throws {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 10
+            )
+        ])
+        let measurement = WorkoutStepMeasurement(
+            stepID: "step",
+            plannedActiveDuration: 10,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            stepMeasurements: ["step": measurement]
+        )
+
+        XCTAssertNil(records[0].peakLoadKGF)
+        XCTAssertNil(records[0].actualLoadedDurationSeconds)
+    }
+
     func testUnresolvedTargetThrowsItsSegmentKey() {
         let workout = plan([
             WorkoutSegment(
@@ -592,6 +651,60 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testCompletionExportsMeasuredLoadThroughHealthKitSegments() {
+        let service = HealthWorkoutSavingSpy()
+        let defaults = makeHealthConnectedDefaults()
+        let store = AppStore(healthKitService: service, defaults: defaults)
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 10
+            )
+        ])
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_010)
+        let session = WorkoutSessionRecord(
+            id: UUID(),
+            planID: workout.id,
+            planTitle: workout.title,
+            recordedAt: endDate,
+            startDate: startDate,
+            endDate: endDate,
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [
+                WorkoutStepMeasurement(
+                    stepID: "step",
+                    plannedActiveDuration: 10,
+                    intervals: [LoadInterval(start: 1, end: 4.5)],
+                    peakLoadKGF: 37.25,
+                    sampleCount: 20,
+                    status: .measured
+                )
+            ]
+        )
+
+        store.markSessionComplete(
+            workout,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate,
+            session: session
+        )
+
+        guard waitUntil({ service.savedWorkouts.count == 1 }) else {
+            return
+        }
+        XCTAssertEqual(service.savedWorkouts[0].activitySegments[0].peakLoadKGF, 37.25)
+        XCTAssertEqual(
+            service.savedWorkouts[0].activitySegments[0].actualLoadedDurationSeconds,
+            3.5
+        )
+    }
+
     func testPrimaryAppStoreInitializerStoresHistoryInSuppliedDefaults() {
         let defaults = makeDefaults()
         let store = AppStore(
@@ -690,7 +803,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 holdIDs: ["edge-left"],
                 holdType: "edge",
                 sizeMillimeters: 21,
-                durationSeconds: 8.75
+                durationSeconds: 8.75,
+                peakLoadKGF: 37.25,
+                actualLoadedDurationSeconds: 3.5
             )
         ]
 
