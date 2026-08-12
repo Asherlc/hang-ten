@@ -13,6 +13,7 @@ from conftest import load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CATALOG_PATH = REPO_ROOT / "Hangboards" / "catalog.json"
 BOARD_PATH = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "board.json"
+EVIDENCE_PATH = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "evidence.json"
 ACCEPTED_RUN_PATH = (
     REPO_ROOT
     / "Tools"
@@ -67,6 +68,64 @@ class BoardCatalogTests(unittest.TestCase):
         self.assertTrue(pocket_holds)
         for hold in pocket_holds:
             self.assertIn("pocket", hold.features)
+
+    def test_validate_catalog_requires_complete_compact_ii_evidence(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            catalog_path, board_root = copy_catalog_fixture(workspace)
+            evidence_path = board_root / "evidence.json"
+            evidence_path.unlink()
+            with self.assertRaisesRegex(ValueError, r"evidence\.json does not exist"):
+                module.validate_catalog(catalog_path)
+
+        mutations = (
+            (
+                "mismatched board id",
+                lambda evidence: evidence.__setitem__("boardID", "metolius.wrong-board"),
+                "does not match board id",
+            ),
+            (
+                "non-HTTPS source URL",
+                lambda evidence: evidence["sources"][0].__setitem__(
+                    "url", "http://example.com/compact-ii"
+                ),
+                "HTTPS",
+            ),
+            (
+                "missing referenced source",
+                lambda evidence: evidence["holdEvidence"]["jug-left"].__setitem__(
+                    0, "missing-source"
+                ),
+                "unknown source id",
+            ),
+            (
+                "missing physical hold",
+                lambda evidence: evidence["holdEvidence"].pop("jug-left"),
+                "holdEvidence keys must exactly match board hold ids",
+            ),
+        )
+        for name, mutate, expected_error in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp_dir:
+                workspace = Path(temp_dir)
+                catalog_path, board_root = copy_catalog_fixture(workspace)
+                evidence_path = board_root / "evidence.json"
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                mutate(evidence)
+                evidence_path.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    module.validate_catalog(catalog_path)
+
+    def test_compact_ii_evidence_maps_every_hold_to_depth_diagram(self) -> None:
+        module = load_module()
+
+        evidence = module.load_evidence(EVIDENCE_PATH)
+
+        self.assertEqual(set(evidence.hold_evidence), COMPACT_II_HOLD_IDS)
+        for hold_id in COMPACT_II_HOLD_IDS:
+            self.assertEqual(evidence.hold_evidence[hold_id], ("hold-depth-diagram",))
 
     def test_validate_catalog_rejects_duplicate_ids_and_escaping_paths(self) -> None:
         module = load_module()
@@ -657,6 +716,7 @@ def copy_catalog_fixture(destination_root: Path) -> tuple[Path, Path]:
     board_root.mkdir(parents=True, exist_ok=True)
     shutil.copy2(CATALOG_PATH, hangboards_root / "catalog.json")
     shutil.copy2(BOARD_PATH, board_root / "board.json")
+    shutil.copy2(EVIDENCE_PATH, board_root / "evidence.json")
     return hangboards_root / "catalog.json", board_root
 
 

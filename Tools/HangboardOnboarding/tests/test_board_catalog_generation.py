@@ -49,6 +49,7 @@ def test_render_swift_catalog_contains_compact_ii_and_all_stable_hold_ids() -> N
 
     assert 'id: "metolius.wood-grips-compact-ii"' in rendered
     assert rendered.count("BoardHold(") == 19
+    assert "hold-depth-diagram" not in rendered
     for hold_id in COMPACT_II_HOLD_IDS:
         assert f'id: "{hold_id}"' in rendered
 

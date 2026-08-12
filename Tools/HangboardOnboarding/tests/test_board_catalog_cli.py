@@ -27,6 +27,10 @@ def _fixture_catalog(destination_root: Path) -> tuple[Path, Path]:
         REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "board.json",
         board_root / "board.json",
     )
+    shutil.copy2(
+        REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii" / "evidence.json",
+        board_root / "evidence.json",
+    )
     return hangboards_root / "catalog.json", board_root / "board.json"
 
 

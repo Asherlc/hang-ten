@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from datetime import date
 import json
 import math
 import os
 import re
 from pathlib import Path
 import shutil
+from types import MappingProxyType
 import tempfile
 from typing import Any, Mapping
 from urllib.parse import urlparse
@@ -16,6 +18,7 @@ from urllib.parse import urlparse
 
 _CATALOG_SCHEMA_VERSION = 1
 _BOARD_SCHEMA_VERSION = 1
+_EVIDENCE_SCHEMA_VERSION = 1
 _CATALOG_TRANSACTION_SCHEMA_VERSION = 1
 _LIFECYCLES = ("draft", "onboarding", "approved", "shipped")
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
@@ -115,6 +118,107 @@ class CatalogDocument:
             "schemaVersion": self.schema_version,
             "boards": [board.to_json() for board in self.boards],
         }
+
+
+@dataclass(frozen=True)
+class EvidenceSource:
+    id: str
+    title: str
+    url: str
+    supports: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class BoardEvidenceDocument:
+    board_id: str
+    checked_at: date
+    sources: tuple[EvidenceSource, ...]
+    hold_evidence: Mapping[str, tuple[str, ...]]
+    schema_version: int = _EVIDENCE_SCHEMA_VERSION
+
+    @classmethod
+    def from_json(cls, payload: Mapping[str, Any], source: str) -> "BoardEvidenceDocument":
+        schema_version = _required_int(payload, "schemaVersion", f"{source}.schemaVersion")
+        if isinstance(schema_version, bool) or schema_version != _EVIDENCE_SCHEMA_VERSION:
+            raise ValueError(
+                f"{source}.schemaVersion must be {_EVIDENCE_SCHEMA_VERSION}, got {schema_version!r}"
+            )
+        board_id = _required_str(payload, "boardID", f"{source}.boardID")
+        _require_identifier(board_id, "evidence board id")
+        checked_at_raw = _required_str(payload, "checkedAt", f"{source}.checkedAt")
+        try:
+            checked_at = date.fromisoformat(checked_at_raw)
+        except ValueError as error:
+            raise ValueError(f"{source}.checkedAt must be an ISO calendar date") from error
+
+        sources_payload = _required_list(payload, "sources", f"{source}.sources")
+        if not sources_payload:
+            raise ValueError(f"{source}.sources must not be empty")
+        sources: list[EvidenceSource] = []
+        source_ids: set[str] = set()
+        for index, raw_source in enumerate(sources_payload):
+            source_path = f"{source}.sources[{index}]"
+            if not isinstance(raw_source, Mapping):
+                raise ValueError(f"{source_path} must be an object")
+            source_id = _required_str(raw_source, "id", f"{source_path}.id")
+            _require_identifier(source_id, "evidence source id")
+            if source_id in source_ids:
+                raise ValueError(f"duplicate evidence source id: {source_id}")
+            source_ids.add(source_id)
+            title = _required_str(raw_source, "title", f"{source_path}.title")
+            url = _required_str(raw_source, "url", f"{source_path}.url")
+            parsed_url = urlparse(url)
+            if parsed_url.scheme != "https" or not parsed_url.netloc:
+                raise ValueError(f"{source_path}.url must be an absolute HTTPS URL")
+            supports_payload = _required_list(raw_source, "supports", f"{source_path}.supports")
+            if not supports_payload:
+                raise ValueError(f"{source_path}.supports must not be empty")
+            supports = tuple(
+                _required_str({"value": value}, "value", f"{source_path}.supports[{item_index}]")
+                for item_index, value in enumerate(supports_payload)
+            )
+            if len(supports) != len(set(supports)):
+                raise ValueError(f"{source_path}.supports must contain unique strings")
+            sources.append(EvidenceSource(source_id, title, url, supports))
+
+        hold_evidence_payload = _required_mapping(payload, "holdEvidence", source)
+        hold_evidence: dict[str, tuple[str, ...]] = {}
+        for hold_id, evidence_source_ids_raw in hold_evidence_payload.items():
+            if not isinstance(hold_id, str):
+                raise ValueError(f"{source}.holdEvidence keys must be strings")
+            _require_identifier(hold_id, "evidence hold id")
+            evidence_source_ids = _required_list(
+                {"value": evidence_source_ids_raw}, "value", f"{source}.holdEvidence[{hold_id!r}]"
+            )
+            if not evidence_source_ids:
+                raise ValueError(f"{source}.holdEvidence[{hold_id!r}] must not be empty")
+            parsed_source_ids = tuple(
+                _required_str(
+                    {"value": value},
+                    "value",
+                    f"{source}.holdEvidence[{hold_id!r}][{index}]",
+                )
+                for index, value in enumerate(evidence_source_ids)
+            )
+            if len(parsed_source_ids) != len(set(parsed_source_ids)):
+                raise ValueError(
+                    f"{source}.holdEvidence[{hold_id!r}] must contain unique source ids"
+                )
+            for evidence_source_id in parsed_source_ids:
+                if evidence_source_id not in source_ids:
+                    raise ValueError(
+                        f"{source}.holdEvidence[{hold_id!r}] references unknown source id "
+                        f"{evidence_source_id!r}"
+                    )
+            hold_evidence[hold_id] = parsed_source_ids
+
+        return cls(
+            board_id=board_id,
+            checked_at=checked_at,
+            sources=tuple(sources),
+            hold_evidence=MappingProxyType(hold_evidence),
+            schema_version=schema_version,
+        )
 
 
 @dataclass
@@ -424,6 +528,12 @@ def load_board(path: Path) -> BoardDocument:
     return BoardDocument.from_json(payload, "board", board_root=board_path.parent)
 
 
+def load_evidence(path: Path) -> BoardEvidenceDocument:
+    evidence_path = Path(path)
+    payload = _load_json_payload(evidence_path, "evidence.json")
+    return BoardEvidenceDocument.from_json(payload, "evidence.json")
+
+
 def validate_catalog(path: Path) -> CatalogDocument:
     catalog = load_catalog(path)
     catalog_root = Path(path).parent.resolve(strict=False)
@@ -439,10 +549,19 @@ def validate_catalog(path: Path) -> CatalogDocument:
             raise ValueError(f"duplicate board path: {entry.path}")
         seen_board_paths.add(board_path)
         board = load_board(board_path)
+        evidence = load_evidence(board_path.parent / "evidence.json")
         if board.id != entry.id:
             raise ValueError(
                 f"board id in {entry.path!r} ({board.id!r}) does not match catalog id {entry.id!r}"
             )
+        if evidence.board_id != board.id:
+            raise ValueError(
+                f"evidence board id {evidence.board_id!r} does not match board id {board.id!r}"
+            )
+        board_hold_ids = {hold.id for hold in board.holds}
+        evidence_hold_ids = set(evidence.hold_evidence)
+        if evidence_hold_ids != board_hold_ids:
+            raise ValueError("evidence holdEvidence keys must exactly match board hold ids")
         if board.lifecycle != entry.lifecycle:
             raise ValueError(
                 f"board lifecycle mismatch for {entry.id!r}: catalog entry {entry.lifecycle!r} vs board {board.lifecycle!r}"
