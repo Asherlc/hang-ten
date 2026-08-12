@@ -138,7 +138,7 @@ jobs:
 
   build-release-device:
     name: Build (Release device)
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push'
     runs-on: macos-26
     timeout-minutes: 30
 
