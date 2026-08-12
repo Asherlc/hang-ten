@@ -614,6 +614,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
+        let workoutSaved = expectation(description: "HealthKit workout save")
+        service.onSave = {
+            workoutSaved.fulfill()
+        }
         let defaults = makeHealthConnectedDefaults()
         let store = AppStore(healthKitService: service, defaults: defaults)
         let workout = plan([
@@ -636,9 +640,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: endDate
         )
 
-        guard waitUntil({ store.sessionsCompleted == 1 && service.savedWorkouts.count == 1 }) else {
-            return
-        }
+        wait(for: [workoutSaved], timeout: 5)
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
@@ -966,6 +968,7 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
 
     var authorizationState: HealthAuthorizationState = .authorized
     private(set) var savedWorkouts: [SavedWorkout] = []
+    var onSave: (() -> Void)?
 
     func requestAuthorization(
         completion: @escaping (HealthAuthorizationState, Error?) -> Void
@@ -994,6 +997,7 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
                 activityMeasurements: activityMeasurements
             )
         )
+        onSave?()
         completion(nil)
     }
 }
