@@ -101,3 +101,48 @@ server suite is required as a release gate.
 ## Commit
 
 `refactor: consolidate board tools`
+
+## Review-fix addendum
+
+Follow-up review identified lost YAML indentation in Dependabot, CI, and
+CodeQL, plus a macOS-only test interpreter path. All fixes are scoped to those
+findings.
+
+- Restored valid YAML indentation while retaining the relocated
+  `Tools/HangboardPipeline` and `Tools/HangboardWorkbench` paths.
+- Changed the wrapper test environment to use `sys.executable`, so it runs
+  with the active interpreter on macOS and Ubuntu instead of a hard-coded
+  Homebrew path.
+- Re-ran full Workbench server verification with output captured under
+  `.context` to avoid output-stream truncation. It completed successfully;
+  the prior apparent stall was not a test deadlock.
+
+Review-fix verification:
+
+```sh
+ruby -ryaml -e 'ARGV.each { |p| YAML.load_file(p); puts "OK #{p}" }' \
+  .github/dependabot.yml .github/workflows/ci.yml .github/workflows/codeql.yml
+# all three files: OK
+
+.context/board-pipeline-tests-py312/bin/python -m pytest \
+  Tools/HangboardPipeline/tests/test_board_catalog.py \
+  Tools/HangboardPipeline/tests/test_board_catalog_generation.py \
+  Tools/HangboardWorkbench/tests/test_server.py \
+  Tools/HangboardWorkbench/tests/test_workbench_release_workflow.py -q
+# 160 passed, 14 subtests passed in 38.11s
+
+.context/board-pipeline-tests-py312/bin/python -m pytest \
+  Tools/HangboardPipeline/tests/test_board_catalog_cli.py -q
+# 7 passed
+
+node --test Tools/HangboardWorkbench/tests/workbench*.test.js
+# 81 passed
+
+swift test --package-path Tools/HangboardWorkbench/macos
+# 20 passed
+
+.context/board-pipeline-tests-py312/bin/python scripts/export-board-library.py --check
+# exit 0
+```
+
+No remaining concerns from the review findings.

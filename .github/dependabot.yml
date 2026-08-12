@@ -6,7 +6,7 @@ updates:
       interval: weekly
     open-pull-requests-limit: 10
   - package-ecosystem: pip
-directory: /Tools/HangboardPipeline
+    directory: /Tools/HangboardPipeline
     schedule:
       interval: weekly
     open-pull-requests-limit: 10

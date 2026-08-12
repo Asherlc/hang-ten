@@ -4,6 +4,7 @@ import json
 import os
 import subprocess
 import shutil
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -46,7 +47,7 @@ def _fixture_catalog(destination_root: Path) -> tuple[Path, Path]:
 
 def _wrapper_environment() -> dict[str, str]:
     environment = os.environ.copy()
-    environment["HANGBOARD_PYTHON"] = "/opt/homebrew/bin/python3.12"
+    environment["HANGBOARD_PYTHON"] = sys.executable
     environment["PIP_NO_BUILD_ISOLATION"] = "1"
     return environment
 
