@@ -1,5 +1,6 @@
 import XCTest
 import HealthKit
+import Combine
 @testable import HangTen
 
 @MainActor
@@ -620,6 +621,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
         let defaults = makeHealthConnectedDefaults()
         let store = AppStore(healthKitService: service, defaults: defaults)
+        let localCompletionPublished = expectation(description: "Local completion published")
+        let completionObservation = store.$workoutHistory
+            .map(\.sessionCount)
+            .filter { $0 == 1 }
+            .first()
+            .sink { _ in
+                localCompletionPublished.fulfill()
+            }
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -640,7 +649,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: endDate
         )
 
-        wait(for: [workoutSaved], timeout: 5)
+        wait(for: [workoutSaved, localCompletionPublished], timeout: 5)
+        withExtendedLifetime(completionObservation) {}
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
