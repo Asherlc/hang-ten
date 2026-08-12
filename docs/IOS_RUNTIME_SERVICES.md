@@ -40,6 +40,14 @@ are not an official manufacturer SDK or protocol guarantee. Do not treat the
 displayed load as a certified measurement, and revalidate against the physical
 device after firmware changes.
 
+For compatibility with the unofficial `hangtime-grip-connect` reference, the
+first three calibrated values are interpreted as left, center, and right zones.
+The unchanged two-side UI splits the center zone neutrally between left and
+right. The fourth raw/calibrated value remains available to the four-sensor
+calibration and tare lifecycle, but is diagnostic-only and excluded from force
+aggregate and balance calculations; this is an unverified third-party
+compatibility choice, not manufacturer-verified wiring.
+
 `HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
 selects Progress and replaces the CoreBluetooth transport with a deterministic
 fixture that sends real calibration and raw notification frames through

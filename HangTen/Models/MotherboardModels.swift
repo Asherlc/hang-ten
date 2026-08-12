@@ -63,14 +63,19 @@ struct MotherboardMeasurement: Codable, Equatable {
         aggregateLoadKGF = try container.decode(Double.self, forKey: .aggregateLoadKGF)
     }
 
-    private enum Side {
-        static let leftChannels = [0, 2]
-        static let rightChannels = [1, 3]
+    private enum ReferenceZone {
+        static let left = 0
+        static let center = 1
+        static let right = 2
     }
 
-    var leftLoadKGF: Double { load(for: Side.leftChannels) }
+    var leftLoadKGF: Double {
+        load(for: [(ReferenceZone.left, 1), (ReferenceZone.center, 0.5)])
+    }
 
-    var rightLoadKGF: Double { load(for: Side.rightChannels) }
+    var rightLoadKGF: Double {
+        load(for: [(ReferenceZone.center, 0.5), (ReferenceZone.right, 1)])
+    }
 
     var leftShare: Double { share(for: leftLoadKGF) }
 
@@ -86,11 +91,13 @@ struct MotherboardMeasurement: Codable, Equatable {
         return percentage.isFinite ? percentage : .greatestFiniteMagnitude
     }
 
-    private func load(for channels: [Int]) -> Double {
-        channels.reduce(0) { total, index in
-            guard sensorLoadsKGF.indices.contains(index), sensorLoadsKGF[index].isFinite else { return total }
-            let load = max(0, sensorLoadsKGF[index])
-            let sum = total + load
+    private func load(for weightedChannels: [(index: Int, weight: Double)]) -> Double {
+        weightedChannels.reduce(0) { total, channel in
+            guard sensorLoadsKGF.indices.contains(channel.index),
+                  sensorLoadsKGF[channel.index].isFinite,
+                  channel.weight.isFinite else { return total }
+            let weightedLoad = max(0, sensorLoadsKGF[channel.index]) * max(0, channel.weight)
+            let sum = total + weightedLoad
             return sum.isFinite ? sum : .greatestFiniteMagnitude
         }
     }
