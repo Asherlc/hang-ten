@@ -1183,9 +1183,9 @@ private struct DeterministicSimulationFrames {
         expectedLeftShare: 0.5
     )
     let active = DeterministicSimulationFrame(
-        data: deterministicRawFrame(adcValues: [50_000, 20_000, 30_000, 20_000]),
-        expectedAggregateLoadKGF: 100,
-        expectedLeftShare: 0.6
+        data: deterministicRawFrame(adcValues: [30_000, 20_000, 10_000, 20_000]),
+        expectedAggregateLoadKGF: 60,
+        expectedLeftShare: 2.0 / 3.0
     )
 
     @MainActor
