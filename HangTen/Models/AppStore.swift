@@ -123,6 +123,18 @@ final class AppStore: ObservableObject {
         )
     }
 
+    convenience init(
+        healthKitService: any HealthWorkoutSaving,
+        workoutSessionStore: any WorkoutSessionStoring,
+        userDefaults: UserDefaults
+    ) {
+        self.init(
+            healthKitService: HealthWorkoutStoreAdapter(healthKitService),
+            workoutSessionStore: workoutSessionStore,
+            defaults: userDefaults
+        )
+    }
+
     convenience init(userDefaults: UserDefaults) {
         self.init(defaults: userDefaults)
     }

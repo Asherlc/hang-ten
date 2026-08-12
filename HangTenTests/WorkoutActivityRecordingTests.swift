@@ -784,7 +784,16 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
+        let defaults = makeDefaults()
+        let sessionDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("WorkoutActivityRecordingTests-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: sessionDirectory) }
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: sessionDirectory)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: sessionStore,
+            userDefaults: defaults
+        )
         let expectedError = "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
