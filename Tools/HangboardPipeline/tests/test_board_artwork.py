@@ -209,12 +209,12 @@ def test_approved_package_requires_evidence_for_actual_assets_without_presentati
 
 
 @pytest.mark.parametrize("missing", ["evidence.json", "semantics.json", "artwork.json"])
-def test_approved_package_requires_each_sidecar(tmp_path: Path, missing: str) -> None:
+def test_board_package_requires_each_sidecar(tmp_path: Path, missing: str) -> None:
     module = load_board_catalog_module()
     root = _write_approved_package(tmp_path / "package")
     (root / missing).unlink()
 
-    with pytest.raises(ValueError, match=rf"approved package .*{missing}"):
+    with pytest.raises(ValueError, match=rf"board package .*{missing}"):
         module.load_board_package(root)
 
 

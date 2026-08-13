@@ -4,7 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from conftest import load_board_catalog_module
 
@@ -115,15 +115,6 @@ ROCK_PRODIGY_SEMANTICS = {
     ),
 }
 
-COMPACT_REPAIR_MASKS = (
-    (374, 148, 18),
-    (743, 148, 18),
-    (1035, 148, 18),
-    (1400, 148, 18),
-    (405, 309, 18),
-    (1371, 309, 18),
-)
-
 
 def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
     return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
@@ -196,7 +187,7 @@ def _assert_artwork_preserved(package_root: Path, expected: dict[str, object]) -
     assert actual["holdPieces"] == expected["holdPieces"]
 
 
-def test_registry_approves_only_the_two_reviewed_runtime_boards() -> None:
+def test_registry_contains_the_two_source_backed_runtime_boards() -> None:
     module = load_board_catalog_module()
     catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
     approved = {entry.id: entry.path for entry in catalog.entries}
@@ -244,7 +235,7 @@ def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> 
         "pocket-19-four-center-lower",
     )
     assert package.artwork.hold_ids == {hold_id for hold_id, _ in COMPACT_HOLDS}
-    assert package.board.presentation_asset_path == "assets/CompactBoardIllustration.png"
+    assert package.board.presentation_asset_path == "assets/primary.png"
     _assert_artwork_preserved(COMPACT_ROOT, expected_artwork)
 
 
@@ -283,51 +274,24 @@ def test_rock_prodigy_package_preserves_runtime_inventory_semantics_and_artwork(
     _assert_artwork_preserved(ROCK_PRODIGY_ROOT, expected_artwork)
 
 
-def test_compact_screwless_asset_is_a_six_mask_pixel_local_repair() -> None:
-    source_path = COMPACT_ROOT / "review" / "presentation-repair" / "CompactBoardIllustration.original.png"
-    repaired_path = COMPACT_ROOT / "assets" / "CompactBoardIllustration.png"
-    source = Image.open(source_path).convert("RGB")
+def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
+    repaired_path = COMPACT_ROOT / "assets" / "primary.png"
     repaired = Image.open(repaired_path).convert("RGB")
 
-    assert source.size == repaired.size == (1774, 457)
-    assert hashlib.sha256(source_path.read_bytes()).hexdigest() == "5d687fb6e1a33f0f1d9ae221facfc2c831de66d0f9b95b1febadfd924c631b34"
-    difference = ImageChops.difference(source, repaired)
-    changed_pixels = set()
-    for y in range(source.height):
-        for x in range(source.width):
-            if difference.getpixel((x, y)) != (0, 0, 0):
-                changed_pixels.add((x, y))
-
-    assert changed_pixels
-    assert all(
-        any((x - center_x) ** 2 + (y - center_y) ** 2 <= radius ** 2 for center_x, center_y, radius in COMPACT_REPAIR_MASKS)
-        for x, y in changed_pixels
-    )
-    for center_x, center_y, radius in COMPACT_REPAIR_MASKS:
-        assert any(
-            (x - center_x) ** 2 + (y - center_y) ** 2 <= radius ** 2
-            for x, y in changed_pixels
-        )
-        repaired_pixels = [
-            repaired.getpixel((x, y))
-            for y in range(center_y - radius, center_y + radius + 1)
-            for x in range(center_x - radius, center_x + radius + 1)
-            if (x - center_x) ** 2 + (y - center_y) ** 2 <= radius ** 2
-        ]
-        # Every formerly dark fastener pixel is now in the surrounding wood-tone range.
-        assert min(sum(pixel) for pixel in repaired_pixels) > 500
+    assert repaired.size == (1774, 457)
+    assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "7e39c41e0e3bfb3d61d2ba0c331281bc04c06e98817ecc0fa8e3180f7923216e"
 
     evidence = json.loads((COMPACT_ROOT / "evidence.json").read_text(encoding="utf-8"))
-    assert evidence["assetEvidence"]["assets/CompactBoardIllustration.png"]["method"] == "external-generative-adaptation"
+    assert evidence["assetEvidence"]["assets/primary.png"]["method"] == "external-generative-adaptation"
 
 
-def test_reference_assets_and_unreviewed_rock_catalog_material_stay_segregated() -> None:
+def test_compact_keeps_only_its_source_photo_and_presentation_asset() -> None:
     compact_reference = COMPACT_ROOT / "assets" / "WoodGripsCompactII.jpg"
     assert hashlib.sha256(compact_reference.read_bytes()).hexdigest() == "c101a319076448be38977c606b5be57f1f254e2fe273b0c56a69ca2f52bdb596"
 
-    quarantine = ROCK_PRODIGY_ROOT / "review" / "unreviewed-generated-catalog"
-    assert hashlib.sha256((quarantine / "assets" / "primary.png").read_bytes()).hexdigest() == "8d5c4e853a4186a0ca21cca32b57cd6844d9644a4a9b5dacdedfc9287fc22a35"
-    assert hashlib.sha256((quarantine / "assets" / "flat.png").read_bytes()).hexdigest() == "f6904ef9ce7b64d35cc5b776a5249769f9fb108f86066886db2c0bd2427fed44"
-    assert hashlib.sha256((quarantine / "review" / "outline.approx.json").read_bytes()).hexdigest() == "5284b158e75150b1328bd0610e50537aff2280439b3e9bf2aba97e9586465319"
+    assert {path.name for path in (COMPACT_ROOT / "assets").iterdir()} == {
+        "primary.png",
+        "WoodGripsCompactII.jpg",
+    }
     assert not (ROCK_PRODIGY_ROOT / "assets").exists()
     assert set(json.loads((ROCK_PRODIGY_ROOT / "evidence.json").read_text(encoding="utf-8"))["assetEvidence"]) == set()

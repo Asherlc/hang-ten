@@ -90,12 +90,12 @@ def test_repeated_staging_refreshes_nested_package_file_changes(
     repository_root, _, approved_package = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
-    nested_source = approved_package / "review" / "incremental-marker.txt"
+    nested_source = approved_package / "metadata" / "incremental-marker.txt"
     nested_source.parent.mkdir(exist_ok=True)
     nested_source.write_bytes(b"first nested revision")
 
     module.stage_board_packages(repository_root, destination)
-    nested_destination = destination / "approved-board" / "review" / nested_source.name
+    nested_destination = destination / "approved-board" / "metadata" / nested_source.name
     assert nested_destination.read_bytes() == b"first nested revision"
 
     nested_source.write_bytes(b"second nested revision")
@@ -110,7 +110,7 @@ def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
         encoding="utf-8"
     )
     phase_start = project.index(
-        "CC0000000000000000000007 /* Stage Approved Board Packages */ = {"
+        "CC0000000000000000000007 /* Stage Board Packages */ = {"
     )
     phase_end = project.index("\n\t\t};", phase_start)
     phase = project[phase_start:phase_end]

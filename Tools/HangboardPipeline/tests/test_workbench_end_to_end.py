@@ -60,6 +60,21 @@ _DIRECT_PACKAGE_SOURCE = (
 )
 
 
+def _copy_valid_package(destination: Path, board_id: str) -> None:
+    """Copy a complete package and assign it a test-only canonical ID."""
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    for filename, key in (
+        ("board.json", "id"),
+        ("evidence.json", "boardID"),
+        ("semantics.json", "boardID"),
+        ("artwork.json", "boardID"),
+    ):
+        path = destination / filename
+        document = json.loads(path.read_text(encoding="utf-8"))
+        document[key] = board_id
+        path.write_text(json.dumps(document), encoding="utf-8")
+
+
 def test_checkout_repository_library_discovers_compact_ii() -> None:
     repository_root = Path(__file__).resolve().parents[3]
 
@@ -97,7 +112,6 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
         repository_root,
         candidate_root,
         board_id="metolius.wood-grips-compact-ii",
-        status="approved",
     )
 
     assert publication.paths == (
@@ -109,7 +123,6 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
         {
             "id": "metolius.wood-grips-compact-ii",
             "path": "compact-ii",
-            "status": "approved",
         }
     ]
     assert (hangboards / "compact-ii" / "board.json").read_bytes() == (
@@ -134,24 +147,24 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
     candidates = tmp_path / "candidates"
     first_candidate = candidates / "first-board"
     second_candidate = candidates / "second-board"
-    first_candidate.mkdir(parents=True)
-    second_candidate.mkdir(parents=True)
-    (first_candidate / "draft.txt").write_text("first", encoding="utf-8")
-    (second_candidate / "draft.txt").write_text("second", encoding="utf-8")
+    _copy_valid_package(first_candidate, "example.first-board")
+    _copy_valid_package(second_candidate, "example.second-board")
 
     actual_copytree = workbench_promotion.shutil.copytree
     first_copy_started = Event()
     release_first_copy = Event()
     second_copy_started = Event()
 
-    def coordinated_copytree(source: Path, destination: Path, **kwargs: object):
+    def coordinated_copytree(
+        source: Path, destination: Path, *args: object, **kwargs: object
+    ):
         if Path(source) == first_candidate:
             first_copy_started.set()
             if not release_first_copy.wait(timeout=5):
                 raise TimeoutError("first package copy was not released")
         elif Path(source) == second_candidate:
             second_copy_started.set()
-        return actual_copytree(source, destination, **kwargs)
+        return actual_copytree(source, destination, *args, **kwargs)
 
     monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -160,7 +173,6 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
             repository_root,
             first_candidate,
             board_id="example.first-board",
-            status="draft",
         )
         assert first_copy_started.wait(2)
         second = executor.submit(
@@ -168,7 +180,6 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
             repository_root,
             second_candidate,
             board_id="example.second-board",
-            status="draft",
         )
         if second_copy_started.wait(timeout=0.5):
             second.result(timeout=5)
@@ -181,8 +192,8 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
         "example.first-board",
         "example.second-board",
     }
-    assert (hangboards / "first-board" / "draft.txt").read_text() == "first"
-    assert (hangboards / "second-board" / "draft.txt").read_text() == "second"
+    assert json.loads((hangboards / "first-board" / "board.json").read_text())["id"] == "example.first-board"
+    assert json.loads((hangboards / "second-board" / "board.json").read_text())["id"] == "example.second-board"
 
 
 def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
@@ -197,25 +208,26 @@ def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
     )
     candidates = tmp_path / "candidates"
     invalid_candidate = candidates / "invalid-approved"
-    valid_candidate = candidates / "valid-draft"
+    valid_candidate = candidates / "valid-board"
     invalid_candidate.mkdir(parents=True)
-    valid_candidate.mkdir(parents=True)
     (invalid_candidate / "incomplete.txt").write_text("invalid", encoding="utf-8")
-    (valid_candidate / "draft.txt").write_text("valid", encoding="utf-8")
+    _copy_valid_package(valid_candidate, "example.valid-board")
 
     actual_copytree = workbench_promotion.shutil.copytree
     invalid_copy_started = Event()
     release_invalid_copy = Event()
     valid_copy_started = Event()
 
-    def coordinated_copytree(source: Path, destination: Path, **kwargs: object):
+    def coordinated_copytree(
+        source: Path, destination: Path, *args: object, **kwargs: object
+    ):
         if Path(source) == invalid_candidate:
             invalid_copy_started.set()
             if not release_invalid_copy.wait(timeout=5):
                 raise TimeoutError("invalid package copy was not released")
         elif Path(source) == valid_candidate:
             valid_copy_started.set()
-        return actual_copytree(source, destination, **kwargs)
+        return actual_copytree(source, destination, *args, **kwargs)
 
     monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -223,16 +235,14 @@ def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
             workbench_promotion.publish_package_candidate,
             repository_root,
             invalid_candidate,
-            board_id="example.invalid-approved",
-            status="approved",
+            board_id="example.invalid-board",
         )
         assert invalid_copy_started.wait(2)
         valid = executor.submit(
             workbench_promotion.publish_package_candidate,
             repository_root,
             valid_candidate,
-            board_id="example.valid-draft",
-            status="draft",
+            board_id="example.valid-board",
         )
         if valid_copy_started.wait(timeout=0.5):
             valid.result(timeout=5)
@@ -244,24 +254,23 @@ def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
     catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
     assert catalog["boards"] == [
         {
-            "id": "example.valid-draft",
-            "path": "valid-draft",
-            "status": "draft",
+            "id": "example.valid-board",
+            "path": "valid-board",
         }
     ]
-    assert (hangboards / "valid-draft" / "draft.txt").read_text() == "valid"
-    assert not (hangboards / "invalid-approved").exists()
+    assert json.loads((hangboards / "valid-board" / "board.json").read_text())["id"] == "example.valid-board"
+    assert not (hangboards / "invalid-board").exists()
 
 
-def test_package_publication_replaces_a_matching_draft_with_an_approved_package(
+def test_package_publication_replaces_a_matching_canonical_package(
     tmp_path: Path,
 ) -> None:
     """A matching ID/path is a canonical revision, not a duplicate package."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
-    destination.mkdir(parents=True)
-    (destination / "draft.txt").write_text("old draft", encoding="utf-8")
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    (destination / "old-revision.txt").write_text("old revision", encoding="utf-8")
     (hangboards / "catalog.json").write_text(
         json.dumps(
             {
@@ -270,7 +279,6 @@ def test_package_publication_replaces_a_matching_draft_with_an_approved_package(
                     {
                         "id": "metolius.wood-grips-compact-ii",
                         "path": "compact-ii",
-                        "status": "draft",
                     }
                 ],
             }
@@ -285,7 +293,6 @@ def test_package_publication_replaces_a_matching_draft_with_an_approved_package(
         repository_root,
         candidate,
         board_id="metolius.wood-grips-compact-ii",
-        status="approved",
     )
 
     catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
@@ -293,16 +300,15 @@ def test_package_publication_replaces_a_matching_draft_with_an_approved_package(
         {
             "id": "metolius.wood-grips-compact-ii",
             "path": "compact-ii",
-            "status": "approved",
         }
     ]
-    assert not (destination / "draft.txt").exists()
+    assert not (destination / "old-revision.txt").exists()
     assert (destination / "board.json").read_bytes() == (
         candidate / "board.json"
     ).read_bytes()
 
 
-def test_package_publication_atomically_updates_an_existing_approved_revision(
+def test_package_publication_atomically_updates_an_existing_revision(
     tmp_path: Path,
 ) -> None:
     """An approved package can be revised without duplicating its registry entry."""
@@ -319,7 +325,6 @@ def test_package_publication_atomically_updates_an_existing_approved_revision(
                     {
                         "id": "metolius.wood-grips-compact-ii",
                         "path": "compact-ii",
-                        "status": "approved",
                     }
                 ],
             }
@@ -335,12 +340,14 @@ def test_package_publication_atomically_updates_an_existing_approved_revision(
         repository_root,
         candidate,
         board_id="metolius.wood-grips-compact-ii",
-        status="approved",
     )
 
     catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
     assert len(catalog["boards"]) == 1
-    assert catalog["boards"][0]["status"] == "approved"
+    assert catalog["boards"][0] == {
+        "id": "metolius.wood-grips-compact-ii",
+        "path": "compact-ii",
+    }
     assert not (destination / "old-revision.txt").exists()
     assert (destination / "new-revision.txt").read_text() == "new"
 
@@ -348,7 +355,7 @@ def test_package_publication_atomically_updates_an_existing_approved_revision(
 def test_failed_existing_package_revision_preserves_package_and_catalog(
     tmp_path: Path,
 ) -> None:
-    """Validation failure must leave the prior approved package fully active."""
+    """Validation failure must leave the prior canonical package fully active."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
@@ -363,7 +370,6 @@ def test_failed_existing_package_revision_preserves_package_and_catalog(
                     {
                         "id": "metolius.wood-grips-compact-ii",
                         "path": "compact-ii",
-                        "status": "approved",
                     }
                 ],
             },
@@ -381,7 +387,6 @@ def test_failed_existing_package_revision_preserves_package_and_catalog(
             repository_root,
             candidate,
             board_id="metolius.wood-grips-compact-ii",
-            status="approved",
         )
 
     assert catalog_path.read_bytes() == catalog_bytes
@@ -403,8 +408,8 @@ def test_package_publication_rejects_id_or_path_aliases(
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
-    destination.mkdir(parents=True)
-    (destination / "draft.txt").write_text("old", encoding="utf-8")
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    (destination / "prior.txt").write_text("old", encoding="utf-8")
     catalog_path = hangboards / "catalog.json"
     catalog_path.write_text(
         json.dumps(
@@ -414,7 +419,6 @@ def test_package_publication_rejects_id_or_path_aliases(
                     {
                         "id": "metolius.wood-grips-compact-ii",
                         "path": "compact-ii",
-                        "status": "draft",
                     }
                 ],
             }
@@ -431,11 +435,10 @@ def test_package_publication_rejects_id_or_path_aliases(
             repository_root,
             candidate,
             board_id=board_id,
-            status="draft",
         )
 
     assert json.loads(catalog_path.read_text())["boards"][0]["path"] == "compact-ii"
-    assert (destination / "draft.txt").read_text() == "old"
+    assert (destination / "prior.txt").read_text() == "old"
 
 
 def test_final_save_never_publishes_into_the_legacy_repository_library(
