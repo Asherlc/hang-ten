@@ -21,7 +21,6 @@ from hangboard_vectorizer.board_library import (
     LibraryBoard,
     RepositoryBoardLibrary,
 )
-from hangboard_vectorizer.ios_promotion import read_promotion_profile
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.generic_stage2 import GenericStage2Runner
 from hangboard_vectorizer.onboard_cli import main
@@ -36,6 +35,7 @@ from hangboard_vectorizer.workbench import (
     WorkbenchServiceError,
     WorkbenchView,
 )
+import hangboard_vectorizer.workbench_promotion as workbench_promotion
 from hangboard_vectorizer.workbench_store import (
     BoardRecord,
     WorkbenchStore,
@@ -57,24 +57,9 @@ _BOARD_FIXTURES = (
     ),
 )
 
-_PROMOTION_PACKAGE_SOURCE = (
+_DIRECT_PACKAGE_SOURCE = (
     Path(__file__).resolve().parents[3]
-    / "Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii"
-)
-_PROMOTION_PROFILE_SOURCE = Path(__file__).parent / "data/ios-promotion-profile.json"
-_PROMOTION_TARGETS = (
-    "HangTen/Models/GeneratedBoardCatalog.swift",
-    "HangTen/Views/MetoliusCompactIIDesign.swift",
-    "HangTen/Models/PlanStorage.swift",
-    "HangTen/Resources/PlanLibrary.json",
-)
-_PROMOTION_PLAN_LIBRARY_INPUTS = (
-    "scripts/export-plan-library.sh",
-    "scripts/ExportPlanLibrary.swift",
-    "HangTen/Views/DesignSystem.swift",
-    "HangTen/Models/TrainingModels.swift",
-    "HangTen/Models/WorkoutStepNormalization.swift",
-    "HangTen/Models/PlanStorage.swift",
+    / "Hangboards/metolius-wood-grips-compact-ii"
 )
 
 
@@ -89,101 +74,54 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
     assert snapshot.diagnostics == ()
 
 
-def test_canonical_board_promotes_locally_then_validates_without_git_side_effects(
+def test_workbench_publishes_a_validated_package_and_registry_without_legacy_artifacts(
     tmp_path: Path,
 ) -> None:
-    """The single-board suite may write reviewed targets, but never Git history or remotes."""
-    repository_root = _promotion_repository(tmp_path)
-    service = WorkbenchService(
-        WorkbenchStore(tmp_path / "workbench"),
-        library=RepositoryBoardLibrary(repository_root),
+    """A package publication only changes the canonical package and registry."""
+    repository_root = tmp_path / "repository"
+    candidate_root = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate_root)
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
     )
-    opened = service.open_library_board("metolius-wood-grips-compact-ii")
-    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
-    profile = read_promotion_profile(opened.run_root)
-    before_targets = _promotion_target_contents(repository_root)
-    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
-    remotes_before = _promotion_git(repository_root, "remote")
+    legacy_targets = {
+        "HangTen/Models/GeneratedBoardCatalog.swift": "legacy catalog\n",
+        "HangTen.xcodeproj/project.pbxproj": "legacy project\n",
+        "Tools/HangboardPipeline/boards/legacy-board.json": "legacy library\n",
+    }
+    for relative, contents in legacy_targets.items():
+        target = repository_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(contents, encoding="utf-8")
 
-    assert opened.state == "complete"
-    assert opened.repository_board_id == "metolius-wood-grips-compact-ii"
-    assert service.get_board(opened.board_id, revision_id=opened.revision_id) == opened
-
-    preview = service.preview_promotion(
-        opened.board_id,
-        expected_revision_id=opened.revision_id,
-        profile=profile,
-    )
-
-    assert preview.preview_token
-    assert [item.path for item in preview.files] == list(_PROMOTION_TARGETS)
-    assert preview.issues == ()
-    assert _promotion_target_contents(repository_root) == before_targets
-
-    saved = service.save_promotion(
-        opened.board_id,
-        expected_revision_id=opened.revision_id,
-        profile=profile,
-        preview_token=preview.preview_token,
-    )
-    report = service.validation_report(
-        opened.board_id, expected_revision_id=opened.revision_id
+    publication = workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate_root,
+        board_id="metolius.wood-grips-compact-ii",
+        status="approved",
     )
 
-    assert saved.saved is True
-    assert saved.paths == _PROMOTION_TARGETS
-    checks = {check.check_id: check for check in report.checks}
-    assert checks["package-readiness"].status == "passed"
-    assert checks["hold-id-parity"].status == "passed"
-    assert (
-        repository_root / "scripts/export-plan-library.sh"
-    ).read_text(encoding="utf-8") == (
-        Path(__file__).resolve().parents[3] / "scripts/export-plan-library.sh"
-    ).read_text(encoding="utf-8")
-    plan_library = checks["plan-library"]
-    if plan_library.status == "passed":
-        pytest.fail("plan-library unexpectedly passed; remove the known-failure marker")
-    assert report.overall_status == "failed"
-    assert plan_library.status == "failed"
-    assert not plan_library.details
-    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
-    assert _promotion_git(repository_root, "remote") == remotes_before
-    assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
-        _PROMOTION_TARGETS
+    assert publication.paths == (
+        Path("Hangboards/catalog.json"),
+        Path("Hangboards/compact-ii"),
     )
-    pytest.xfail("plan-library validation has a known Swift compilation failure")
-
-
-def test_promotion_conflict_leaves_every_target_at_its_preexisting_contents(
-    tmp_path: Path,
-) -> None:
-    """A changed target fails before generation can partially replace another target."""
-    repository_root = _promotion_repository(tmp_path)
-    service = WorkbenchService(
-        WorkbenchStore(tmp_path / "workbench"),
-        library=RepositoryBoardLibrary(repository_root),
-    )
-    opened = service.open_library_board("metolius-wood-grips-compact-ii")
-    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
-    profile = read_promotion_profile(opened.run_root)
-    changed_target = repository_root / _PROMOTION_TARGETS[-1]
-    changed_target.write_text(
-        changed_target.read_text(encoding="utf-8") + "\n// unrelated local edit\n",
-        encoding="utf-8",
-    )
-    before = _promotion_target_contents(repository_root)
-    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
-
-    with pytest.raises(WorkbenchServiceError, match="changed relative to main"):
-        service.preview_promotion(
-            opened.board_id,
-            expected_revision_id=opened.revision_id,
-            profile=profile,
-        )
-
-    assert _promotion_target_contents(repository_root) == before
-    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
-    assert not list(repository_root.glob(".hangboard-promotion-*"))
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "metolius.wood-grips-compact-ii",
+            "path": "compact-ii",
+            "status": "approved",
+        }
+    ]
+    assert (hangboards / "compact-ii" / "board.json").read_bytes() == (
+        candidate_root / "board.json"
+    ).read_bytes()
+    assert {
+        relative: (repository_root / relative).read_text(encoding="utf-8")
+        for relative in legacy_targets
+    } == legacy_targets
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(

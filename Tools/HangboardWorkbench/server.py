@@ -461,10 +461,13 @@ def _workbench_job_payload(result: object) -> object:
         PromotionSaveResult,
     )
     from hangboard_vectorizer.workbench import WorkbenchView
+    from hangboard_vectorizer.workbench_promotion import PackagePublication
     from hangboard_vectorizer.workbench_validation import ValidationReport
 
     if isinstance(result, WorkbenchView):
         return _workbench_view_payload(result)
+    if isinstance(result, PackagePublication):
+        return {"paths": [path.as_posix() for path in result.paths]}
     if isinstance(result, PromotionPreview):
         return {
             "boardId": result.board_id,
@@ -727,6 +730,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     request.path.removeprefix("/api/library/").removesuffix("/open")
                 )
                 self._post_library_open(service, board_id)
+                return
+            if request.path == "/api/package-candidates":
+                self._post_package_candidate(service, payload)
                 return
             if request.path.startswith("/api/boards/") and request.path.endswith("/promotion/preview"):
                 board_id = unquote(
@@ -1116,6 +1122,19 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             board_id,
             operation,
             conflict_key=service.mutation_reservation_key(board_id),
+        )
+
+    def _post_package_candidate(self, service: object, payload: dict[str, Any]) -> None:
+        """Publish a reviewed `.context` package without touching native app sources."""
+        candidate_path = self._required_string(payload, "candidatePath")
+        board_id = self._required_string(payload, "boardId")
+        status = self._required_string(payload, "status")
+        self._submit_job(
+            f"package:{board_id}",
+            lambda: service.publish_package_candidate(
+                Path(candidate_path), board_id=board_id, status=status
+            ),
+            conflict_key=f"package:{board_id}",
         )
 
     def _post_promotion(

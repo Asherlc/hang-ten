@@ -61,15 +61,29 @@ jobs:
           cache: pip
           cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
 
-      - name: Verify generated board library
+      - name: Validate canonical board catalog
         working-directory: ${{ github.workspace }}
-        run: python3 scripts/export-board-library.py --check
+        run: scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 
       - name: Install wheel-build prerequisites
         run: python -m pip install 'setuptools>=68' wheel
 
       - name: Install Python package and test dependencies
         run: python -m pip install -e ".[dev]"
+
+      - name: Verify imported draft inventory
+        run: python -m pytest tests/test_generated_catalog_import.py -q
+
+      - name: Stage approved board packages into a temporary app resource root
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          resource_root="$RUNNER_TEMP/hang-ten-approved-package-stage"
+          TARGET_BUILD_DIR="$resource_root/build" \
+          UNLOCALIZED_RESOURCES_FOLDER_PATH="Resources" \
+          python3 scripts/stage-approved-board-packages.py \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --destination "$resource_root/build/Resources/Hangboards"
 
       - name: Run pytest suite
         run: python -m pytest -q --junitxml=pytest-results.xml
@@ -266,6 +280,23 @@ jobs:
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGN_IDENTITY="-" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
+
+      - name: Run approved board package-store tests
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project HangTen.xcodeproj \
+            -scheme HangTen \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
+            -parallel-testing-enabled NO \
+            -maximum-parallel-testing-workers 1 \
+            -derivedDataPath "$RUNNER_TEMP/hang-ten-package-test-derived-data" \
+            CODE_SIGNING_ALLOWED=YES \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGN_IDENTITY="-" \
+            -only-testing:HangTenTests/BoardPackageStoreTests \
+            test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/package-store.log"
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure

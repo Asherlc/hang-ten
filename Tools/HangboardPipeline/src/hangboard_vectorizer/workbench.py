@@ -38,7 +38,13 @@ from .review_edits import (
     validate_stage_edit,
 )
 from .workbench_store import BoardRecord, RevisionRecord, WorkbenchStore
-from .workbench_promotion import preview_for_revision, save_for_revision
+from .workbench_promotion import (
+    PackagePublication,
+    publish_package_candidate as publish_direct_package_candidate,
+    preview_for_revision,
+    repository_root,
+    save_for_revision,
+)
 from .workbench_validation import ValidationReport, build_validation_report
 
 
@@ -237,6 +243,22 @@ class WorkbenchService:
             if board.repository_board_id is not None
             else board.id
         )
+
+    def publish_package_candidate(
+        self, candidate_root: Path, *, board_id: str, status: str
+    ) -> PackagePublication:
+        """Publish one `.context` package candidate through the canonical registry."""
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        try:
+            root = repository_root(self.__library)
+            candidate = Path(candidate_root).resolve(strict=True)
+            candidate.relative_to(root / ".context")
+            return publish_direct_package_candidate(
+                root, candidate, board_id=board_id, status=status
+            )
+        except (OSError, ValueError) as error:
+            raise WorkbenchServiceError(str(error)) from error
 
     def __open_library_board(self, board_id: str) -> WorkbenchView:
         if self.__library is None:
