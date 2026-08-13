@@ -245,6 +245,22 @@ def test_soill_and_tension_candidates_with_incomplete_hold_evidence_remain_prima
         }
 
 
+def test_trango_candidates_with_non_exhaustive_hold_guides_remain_primary_only() -> None:
+    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
+    registered_paths = {entry["path"] for entry in catalog["boards"]}
+
+    for slug in (
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-natural",
+        "trango-rock-prodigy-pivot",
+    ):
+        package_root = HANGBOARDS_ROOT / slug
+        assert slug not in registered_paths
+        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
+            "assets/primary.png"
+        }
+
+
 def test_every_registered_package_has_one_presentation_and_complete_evidence() -> None:
     module = load_board_catalog_module()
     catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
