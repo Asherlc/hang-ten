@@ -14,7 +14,7 @@
 - Python-only pull requests skip iOS/Xcode unless a declared shared board/export path changes.
 - iOS and shared board/export changes run the iOS build and simulator suite.
 - Workflow/taxonomy edits run the full relevant pull-request suite.
-- `push` to `main`, `merge_group`, and Workbench `workflow_dispatch` always run complete validation regardless of filters.
+- `push` to `main`, `merge_group`, and Workbench `workflow_dispatch` run all applicable validation regardless of filters; the main CI Release-device build remains push-only.
 - Preserve current release-artifact, signing, notarization, App Store release, Stage 2/3 data, and local-save behavior.
 - Use only Boolean `paths-filter` outputs in `if:` expressions; never interpolate changed-file lists into shell commands.
 - Keep existing required main-CI job names stable; a non-applicable job must be visibly skipped, not removed by a workflow-level path trigger.
@@ -335,7 +335,7 @@ git push origin simplify-board-editor
 ### Spec coverage
 
 - One taxonomy and immutable filter action pin: Task 1.
-- Main CI stable job IDs, PR gating, and force-full main/merge queue: Task 2.
+- Main CI stable job IDs, PR gating, and force-full eligible jobs on main/merge queue: Task 2.
 - Workbench browser-only PR avoids Python/native build; main releases stay full: Task 3.
 - Python-only/iOS/shared/workflow change matrix and force-full event rules:
   Tasks 1–3 configuration tests.

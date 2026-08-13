@@ -10,6 +10,7 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 CI_WORKFLOW_PATH = REPOSITORY_ROOT / ".github" / "workflows" / "ci.yml"
+CODEQL_WORKFLOW_PATH = REPOSITORY_ROOT / ".github" / "workflows" / "codeql.yml"
 
 pytestmark = pytest.mark.skipif(
     shutil.which("ruby") is None,
@@ -105,13 +106,44 @@ def test_ci_keeps_existing_jobs_but_gates_only_pr_work_by_component() -> None:
     assert "needs.changes.outputs.workflow == 'true'" in jobs["test"]["if"]
     assert "needs.changes.outputs.shared_board_content == 'true'" in jobs["test"]["if"]
     assert jobs["build-release-device"]["needs"] == ["changes"]
-    assert jobs["build-release-device"]["if"] == "github.event_name != 'pull_request'"
+    assert jobs["build-release-device"]["if"] == "github.event_name == 'push'"
 
 
-def test_merge_queue_runs_the_release_device_build_as_part_of_the_full_gate() -> None:
+def test_release_device_build_stays_push_only() -> None:
     workflow = load_yaml(CI_WORKFLOW_PATH)
 
     assert "merge_group" in workflow["true"]
-    assert workflow["jobs"]["build-release-device"]["if"] == (
-        "github.event_name != 'pull_request'"
-    )
+    assert workflow["jobs"]["build-release-device"]["if"] == "github.event_name == 'push'"
+
+
+def test_codeql_workflow_uses_conditional_language_gate() -> None:
+    workflow = CODEQL_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d" in workflow
+    assert "languages: actions" in workflow
+    assert "needs.changes.outputs.swift == 'true'" in workflow
+    assert "needs.changes.outputs.python == 'true'" in workflow
+    assert "needs.changes.outputs.javascript == 'true'" in workflow
+    assert "name: CodeQL gate" in workflow
+    assert "if: ${{ always() }}" in workflow
+    assert "needs: [changes, analyze-actions, analyze-swift, analyze-python, analyze-javascript]" in workflow
+
+
+def test_codeql_workflow_is_not_filtered_before_it_can_report_its_gate() -> None:
+    workflow = CODEQL_WORKFLOW_PATH.read_text(encoding="utf-8")
+    trigger_section = workflow.split("permissions:", 1)[0]
+
+    assert "paths:" not in trigger_section
+    assert "paths-ignore:" not in trigger_section
+
+
+def test_codeql_change_detector_checks_out_history_before_filtering() -> None:
+    workflow = CODEQL_WORKFLOW_PATH.read_text(encoding="utf-8")
+    changes_job = workflow.split("  changes:", 1)[1].split("  analyze-actions:", 1)[0]
+    checkout = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    paths_filter = "dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d"
+
+    assert checkout in changes_job
+    assert "persist-credentials: false" in changes_job
+    assert "fetch-depth: 0" in changes_job
+    assert changes_job.index(checkout) < changes_job.index(paths_filter)

@@ -509,6 +509,17 @@ test("editable checkpoints use the clean editor image while preserving annotated
   assert.equal(checkpointImageUrl({ stage: 1, reviewUrl: view.reviewUrl }), view.reviewUrl);
 });
 
+test("checkpoint image selection uses the completed board normal artifact when no editor or review image exists", () => {
+  assert.equal(
+    checkpointImageUrl({
+      editorImageUrl: null,
+      reviewUrl: null,
+      normalArtifactUrl: "/api/artifact?path=stage-4-normal.png",
+    }),
+    "/api/artifact?path=stage-4-normal.png",
+  );
+});
+
 test("editable checkpoint comparison selects the review separately from the editor image", () => {
   const view = {
     stage: 2,

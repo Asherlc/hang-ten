@@ -1,0 +1,2 @@
+// Copy this file to PostHog.local.xcconfig and add the project token locally.
+POSTHOG_CLIENT_TOKEN = phc_your_project_token
