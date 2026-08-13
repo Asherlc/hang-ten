@@ -49,7 +49,7 @@ def _parser() -> argparse.ArgumentParser:
     validate = subcommands.add_parser("validate", help="validate a catalog and board packages")
     validate.add_argument("--catalog", type=Path, required=True)
 
-    status = subcommands.add_parser("status", help="print catalog metadata and statuses")
+    status = subcommands.add_parser("status", help="print catalog metadata")
     status.add_argument("--catalog", type=Path, required=True)
 
     return parser
@@ -67,7 +67,6 @@ def _board_status(entry: CatalogEntry, _package_root: Path) -> dict[str, object]
     return {
         "id": entry.id,
         "path": entry.path,
-        "status": entry.status,
     }
 
 

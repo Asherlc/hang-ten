@@ -67,7 +67,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
-        let packageOwnedLiterals = try approvedPackageOwnedLiterals(at: repositoryRoot)
+        let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
         let legacyArtifactTokens = [
             "GeneratedBoardCatalog",
@@ -163,7 +163,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             .deletingLastPathComponent()
     }
 
-    private func approvedPackageOwnedLiterals(at repositoryRoot: URL) throws -> Set<String> {
+    private func packageOwnedLiterals(at repositoryRoot: URL) throws -> Set<String> {
         let hangboardsRoot = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let catalogURL = hangboardsRoot.appendingPathComponent("catalog.json")
         let catalogObject = try XCTUnwrap(
@@ -172,7 +172,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let entries = try XCTUnwrap(catalogObject["boards"] as? [[String: Any]])
         var identifiers = Set<String>()
 
-        for entry in entries where entry["status"] as? String == "approved" {
+        for entry in entries {
             let boardID = try XCTUnwrap(entry["id"] as? String)
             let packagePath = try XCTUnwrap(entry["path"] as? String)
             identifiers.insert(boardID)

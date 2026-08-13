@@ -14,10 +14,7 @@ from typing import Iterator
 from uuid import uuid4
 
 from .board_library import RepositoryBoardLibrary
-from .board_catalog import load_approved_package, validate_catalog
-
-
-_PACKAGE_STATUSES = frozenset({"draft", "approved"})
+from .board_catalog import load_board_package, validate_catalog
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,16 +29,13 @@ def publish_package_candidate(
     candidate_root: Path,
     *,
     board_id: str,
-    status: str,
 ) -> PackagePublication:
-    """Install one reviewed package candidate and register its shipping status.
+    """Install one package candidate and register it in the catalog.
 
     Candidates are copied only into ``Hangboards/<slug>``.  The catalog
     validator is the final authority, so no native source, Xcode asset, or
     legacy board-library artifact participates in this publication path.
     """
-    if status not in _PACKAGE_STATUSES:
-        raise ValueError("status must be either 'draft' or 'approved'")
     root = Path(repository_root).resolve(strict=True)
     hangboards_root = root / "Hangboards"
     catalog_path = hangboards_root / "catalog.json"
@@ -63,7 +57,6 @@ def publish_package_candidate(
             candidate,
             board_id=board_id,
             slug=slug,
-            status=status,
         )
     return PackagePublication(
         paths=(Path("Hangboards/catalog.json"), Path("Hangboards") / slug)
@@ -89,7 +82,6 @@ def _publish_package_candidate_locked(
     *,
     board_id: str,
     slug: str,
-    status: str,
 ) -> None:
     """Commit one package and its catalog entry while holding the catalog lock."""
     validate_catalog(catalog_path)
@@ -106,7 +98,7 @@ def _publish_package_candidate_locked(
     if replacing and (matching_id != matching_path or len(matching_id) != 1):
         raise ValueError("catalog already contains the package ID or path")
 
-    updated_entry = {"id": board_id, "path": slug, "status": status}
+    updated_entry = {"id": board_id, "path": slug}
     if replacing:
         updated_entries = list(entries)
         updated_entries[matching_id[0]] = updated_entry
@@ -130,10 +122,9 @@ def _publish_package_candidate_locked(
     try:
         shutil.copytree(candidate, staging, symlinks=True)
         _require_regular_tree(staging)
-        if status == "approved":
-            package = load_approved_package(staging)
-            if package.board.id != board_id:
-                raise ValueError("approved package board ID does not match registry ID")
+        package = load_board_package(staging)
+        if package.board.id != board_id:
+            raise ValueError("board package ID does not match registry ID")
 
         updated_catalog = {
             "schemaVersion": existing["schemaVersion"],

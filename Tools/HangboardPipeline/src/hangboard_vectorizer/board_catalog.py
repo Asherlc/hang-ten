@@ -1,4 +1,4 @@
-"""Fail-closed registry and approved board-package validation."""
+"""Fail-closed registry and board-package validation."""
 
 from __future__ import annotations
 
@@ -30,7 +30,6 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
-_STATUSES = frozenset({"draft", "approved"})
 _SIDECARS = ("board.json", "evidence.json", "semantics.json", "artwork.json")
 _EVIDENCE_METHODS = frozenset({"manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation"})
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
@@ -143,16 +142,12 @@ def _require_no_symlinks(root: Path) -> None:
 class CatalogEntry:
     id: str
     path: str
-    status: str
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "CatalogEntry":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "path", "status"}, source)
-        status = _string(payload["status"], f"{source}.status")
-        if status not in _STATUSES:
-            raise ValueError(f"{source}.status must be one of ('draft', 'approved')")
-        return cls(_identifier(payload["id"], f"{source}.id"), _string(payload["path"], f"{source}.path"), status)
+        _closed(payload, {"id", "path"}, source)
+        return cls(_identifier(payload["id"], f"{source}.id"), _string(payload["path"], f"{source}.path"))
 
 
 @dataclass(frozen=True)
@@ -412,23 +407,23 @@ def _package_assets(root: Path) -> set[str]:
     return assets
 
 
-def load_approved_package(package_root: Path) -> BoardPackage:
+def load_board_package(package_root: Path) -> BoardPackage:
     root = Path(package_root)
     if not root.is_dir() or root.is_symlink():
-        raise ValueError(f"approved package does not exist or is not a directory: {root}")
+        raise ValueError(f"board package does not exist or is not a directory: {root}")
     _require_no_symlinks(root)
     for sidecar in _SIDECARS:
         if not (root / sidecar).is_file():
-            raise ValueError(f"approved package {root} {sidecar} does not exist")
+            raise ValueError(f"board package {root} {sidecar} does not exist")
     extra_json = {path.name for path in root.glob("*.json")} - set(_SIDECARS)
     if extra_json:
-        raise ValueError(f"approved package has unknown JSON sidecars: {sorted(extra_json)}")
+        raise ValueError(f"board package has unknown JSON sidecars: {sorted(extra_json)}")
     board = _load_board(_load_json(root / "board.json", "board.json"), root)
     evidence = _load_evidence(_load_json(root / "evidence.json", "evidence.json"))
     semantics = _load_semantics(_load_json(root / "semantics.json", "semantics.json"))
     artwork = load_artwork(root / "artwork.json")
     if len({board.id, evidence.board_id, semantics.board_id, artwork.board_id}) != 1:
-        raise ValueError("approved package sidecar board IDs must match")
+        raise ValueError("board package sidecar board IDs must match")
     hold_ids = {hold.id for hold in board.holds}
     for semantic, mapped_holds in semantics.semantic_holds.items():
         for hold_id in mapped_holds:
@@ -477,8 +472,7 @@ def validate_catalog(catalog_path: Path) -> CatalogDocument:
         paths.add(package_root)
         if not package_root.is_dir() or package_root.is_symlink():
             raise ValueError(f"catalog package directory does not exist: {package_root}")
-        if entry.status == "approved":
-            package = load_approved_package(package_root)
-            if package.board.id != entry.id:
-                raise ValueError(f"approved package board ID {package.board.id!r} does not match catalog id {entry.id!r}")
+        package = load_board_package(package_root)
+        if package.board.id != entry.id:
+            raise ValueError(f"board package ID {package.board.id!r} does not match catalog id {entry.id!r}")
     return catalog

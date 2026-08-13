@@ -670,7 +670,7 @@ enum BoardCatalog {
         do {
             return try BoardPackageStore()
         } catch {
-            fatalError("Bundled approved board packages could not be loaded: \(error.localizedDescription)")
+            fatalError("Bundled board packages could not be loaded: \(error.localizedDescription)")
         }
     }()
 
@@ -678,7 +678,7 @@ enum BoardCatalog {
 
     static let defaultBoard: TrainingBoard = {
         guard let board = all.first else {
-            fatalError("The bundled board catalog contains no approved boards.")
+            fatalError("The bundled board catalog contains no boards.")
         }
         return board
     }()
@@ -907,7 +907,7 @@ enum LegacyPlanSeedCatalog {
         }
         precondition(
             matches.count == 1,
-            "Expected exactly one approved board package with \(semanticID) semantics."
+            "Expected exactly one board package with \(semanticID) semantics."
         )
         return matches[0]
     }
@@ -920,7 +920,7 @@ enum LegacyPlanSeedCatalog {
             for: exactTargetBoard.id
         )[semanticID] else {
             preconditionFailure(
-                "The approved board package is missing \(semanticID) semantics."
+                "The board package is missing \(semanticID) semantics."
             )
         }
         if let holdIndex {

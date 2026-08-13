@@ -27,15 +27,17 @@ def _json_output(output: str) -> dict[str, object]:
     return json.loads(output[output.find("{") :])
 
 
-def test_catalog_cli_reports_two_state_registry_entries(tmp_path: Path) -> None:
-    package = tmp_path / "draft-board"
-    package.mkdir()
+def test_catalog_cli_reports_catalog_entries(tmp_path: Path) -> None:
+    source = REPO_ROOT / "Hangboards/metolius-wood-grips-compact-ii"
+    package = tmp_path / "package-board"
+    import shutil
+    shutil.copytree(source, package)
     catalog_path = tmp_path / "catalog.json"
     catalog_path.write_text(
         json.dumps(
             {
                 "schemaVersion": 1,
-                "boards": [{"id": "draft.board", "path": "draft-board", "status": "draft"}],
+                "boards": [{"id": "metolius.wood-grips-compact-ii", "path": "package-board"}],
             }
         ),
         encoding="utf-8",
@@ -45,5 +47,5 @@ def test_catalog_cli_reports_two_state_registry_entries(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert _json_output(result.stdout) == {
-        "boards": [{"id": "draft.board", "path": "draft-board", "status": "draft"}]
+        "boards": [{"id": "metolius.wood-grips-compact-ii", "path": "package-board"}]
     }

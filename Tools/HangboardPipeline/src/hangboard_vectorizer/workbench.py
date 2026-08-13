@@ -211,7 +211,7 @@ class WorkbenchService:
         )
 
     def publish_package_candidate(
-        self, candidate_root: Path, *, board_id: str, status: str
+        self, candidate_root: Path, *, board_id: str
     ) -> PackagePublication:
         """Publish one `.context` package candidate through the canonical registry."""
         if self.__library is None:
@@ -221,7 +221,7 @@ class WorkbenchService:
             candidate = Path(candidate_root).resolve(strict=True)
             candidate.relative_to(root / ".context")
             return publish_direct_package_candidate(
-                root, candidate, board_id=board_id, status=status
+                root, candidate, board_id=board_id
             )
         except (OSError, ValueError) as error:
             raise WorkbenchServiceError(str(error)) from error

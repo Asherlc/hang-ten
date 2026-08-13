@@ -132,9 +132,9 @@ def _write_approved_package(root: Path) -> Path:
     return root
 
 
-def test_load_approved_package_validates_complete_cross_file_contract(tmp_path: Path) -> None:
+def test_load_board_package_validates_complete_cross_file_contract(tmp_path: Path) -> None:
     module = load_board_catalog_module()
-    package = module.load_approved_package(_write_approved_package(tmp_path / "package"))
+    package = module.load_board_package(_write_approved_package(tmp_path / "package"))
 
     assert package.board.id == "approved.board"
     assert package.board.facts["subtitle"] == "A complete approved test board."
@@ -167,7 +167,7 @@ def test_approved_package_accepts_a_named_photo_asset_without_treating_it_as_a_f
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
-    package = module.load_approved_package(root)
+    package = module.load_board_package(root)
 
     assert package.board.presentation_asset_path == "assets/presentation.png"
 
@@ -186,7 +186,7 @@ def test_approved_package_allows_no_presentation_asset_or_assets_directory(tmp_p
     (root / "assets" / "presentation.png").unlink()
     (root / "assets").rmdir()
 
-    package = module.load_approved_package(root)
+    package = module.load_board_package(root)
 
     assert package.board.presentation_asset_path is None
     assert package.evidence.asset_evidence == {}
@@ -205,7 +205,7 @@ def test_approved_package_requires_evidence_for_actual_assets_without_presentati
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
     with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 @pytest.mark.parametrize("missing", ["evidence.json", "semantics.json", "artwork.json"])
@@ -215,7 +215,7 @@ def test_approved_package_requires_each_sidecar(tmp_path: Path, missing: str) ->
     (root / missing).unlink()
 
     with pytest.raises(ValueError, match=rf"approved package .*{missing}"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 def test_approved_package_rejects_uncovered_assets_and_path_escapes(tmp_path: Path) -> None:
@@ -227,7 +227,7 @@ def test_approved_package_rejects_uncovered_assets_and_path_escapes(tmp_path: Pa
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
     with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
     evidence["assetEvidence"]["assets/presentation.png"] = _evidence_map()
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
@@ -236,7 +236,7 @@ def test_approved_package_rejects_uncovered_assets_and_path_escapes(tmp_path: Pa
     board["presentation"]["assetPath"] = "../outside.png"
     board_path.write_text(json.dumps(board), encoding="utf-8")
     with pytest.raises(ValueError, match="relative path inside the package"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 def test_approved_package_rejects_invalid_semantics_artwork_and_symlinks(tmp_path: Path) -> None:
@@ -247,7 +247,7 @@ def test_approved_package_rejects_invalid_semantics_artwork_and_symlinks(tmp_pat
     semantics["semanticHolds"]["outer-holds"]["holdIDs"] = ["missing"]
     semantics_path.write_text(json.dumps(semantics), encoding="utf-8")
     with pytest.raises(ValueError, match="unknown physical hold 'missing'"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
     semantics["semanticHolds"]["outer-holds"]["holdIDs"] = ["hold-left"]
     semantics_path.write_text(json.dumps(semantics), encoding="utf-8")
@@ -256,13 +256,13 @@ def test_approved_package_rejects_invalid_semantics_artwork_and_symlinks(tmp_pat
     artwork["holdPieces"][0]["frame"]["x"] = float("nan")
     artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
     with pytest.raises(ValueError, match="must be finite"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
     artwork["holdPieces"][0]["frame"]["x"] = 0.2
     artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
     (root / "assets" / "escaped.png").symlink_to(tmp_path / "outside.png")
     with pytest.raises(ValueError, match="symlink"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 def test_approved_package_requires_exact_physical_artwork_and_evidence_keys(tmp_path: Path) -> None:
@@ -273,7 +273,7 @@ def test_approved_package_requires_exact_physical_artwork_and_evidence_keys(tmp_
     artwork["holdPieces"] = []
     artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
     with pytest.raises(ValueError, match="artwork hold IDs must exactly match"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
     artwork["holdPieces"] = _approved_payloads()["artwork"]["holdPieces"]
     artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
@@ -282,7 +282,7 @@ def test_approved_package_requires_exact_physical_artwork_and_evidence_keys(tmp_
     evidence["semanticEvidence"] = {}
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
     with pytest.raises(ValueError, match="semanticEvidence keys must equal semantic IDs"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 @pytest.mark.parametrize(
@@ -312,7 +312,7 @@ def test_approved_package_rejects_missing_or_invalid_runtime_hold_metadata(
     board_path.write_text(json.dumps(board), encoding="utf-8")
 
     with pytest.raises(ValueError, match=message):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 def test_approved_package_rejects_invalid_runtime_hold_depth_range(tmp_path: Path) -> None:
@@ -327,7 +327,7 @@ def test_approved_package_rejects_invalid_runtime_hold_depth_range(tmp_path: Pat
     board_path.write_text(json.dumps(board), encoding="utf-8")
 
     with pytest.raises(ValueError, match="lowerBound must not exceed upperBound"):
-        module.load_approved_package(root)
+        module.load_board_package(root)
 
 
 def test_approved_package_requires_evidence_for_every_runtime_hold_field(tmp_path: Path) -> None:
@@ -339,4 +339,4 @@ def test_approved_package_requires_evidence_for_every_runtime_hold_field(tmp_pat
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
     with pytest.raises(ValueError, match="holdEvidence keys must equal physical hold field paths"):
-        module.load_approved_package(root)
+        module.load_board_package(root)

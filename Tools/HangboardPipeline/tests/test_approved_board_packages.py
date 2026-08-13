@@ -199,7 +199,7 @@ def _assert_artwork_preserved(package_root: Path, expected: dict[str, object]) -
 def test_registry_approves_only_the_two_reviewed_runtime_boards() -> None:
     module = load_board_catalog_module()
     catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
-    approved = {entry.id: entry.path for entry in catalog.entries if entry.status == "approved"}
+    approved = {entry.id: entry.path for entry in catalog.entries}
 
     assert approved == {
         "metolius.wood-grips-compact-ii": "metolius-wood-grips-compact-ii",
@@ -209,7 +209,7 @@ def test_registry_approves_only_the_two_reviewed_runtime_boards() -> None:
 
 def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> None:
     module = load_board_catalog_module()
-    package = module.load_approved_package(COMPACT_ROOT)
+    package = module.load_board_package(COMPACT_ROOT)
     fixture = _load_preservation_fixture("metolius-wood-grips-compact-ii")
     assert fixture["sourceRevision"] == "f1761e7"
     assert fixture["runtimeMetadataSource"] == "HangTen/Models/GeneratedBoardCatalog.swift"
@@ -250,7 +250,7 @@ def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> 
 
 def test_rock_prodigy_package_preserves_runtime_inventory_semantics_and_artwork() -> None:
     module = load_board_catalog_module()
-    package = module.load_approved_package(ROCK_PRODIGY_ROOT)
+    package = module.load_board_package(ROCK_PRODIGY_ROOT)
     fixture = _load_preservation_fixture("trango-rock-prodigy-training-center")
     assert fixture["sourceRevision"] == "f1761e7"
     assert fixture["runtimeMetadataSource"] == "HangTen/Models/TrainingModels.swift"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import generated hangboard artwork as review-only draft packages."""
+"""Import one generated primary image into each flat board package."""
 
 from __future__ import annotations
 
@@ -7,24 +7,10 @@ import argparse
 import json
 from pathlib import Path
 import shutil
-from typing import Iterable
 
 
 _CONTACT_SHEET = "contact-sheet"
-_ASSET_NAMES = {
-    "primary": "primary.png",
-    "flat": "flat.png",
-    "ai-v2": "ai-v2.png",
-}
-_CATALOG_STATUSES = {"draft", "approved"}
-_DRAFT_README = """# {slug} generated-catalog review material
-
-This directory retains the following **unreviewed-generated-catalog** material:
-{materials}
-
-These files are review material only. They must not be used as factual metadata,
-evidence, physical geometry, hold truth, runtime artwork, or runtime geometry.
-"""
+_PRIMARY_ASSET = Path("assets") / "primary.png"
 
 
 def _unique_files(directory: Path, pattern: str, *, recursive: bool = False) -> list[Path]:
@@ -50,46 +36,9 @@ def _primary_sources(source_root: Path) -> dict[str, Path]:
     return primary
 
 
-def _variant_sources(source_root: Path, directory: str, suffix: str) -> dict[str, Path]:
-    variants: dict[str, Path] = {}
-    for source in _unique_files(source_root / directory, f"*{suffix}.png", recursive=True):
-        slug = source.name[: -len(f"{suffix}.png")]
-        if not slug:
-            raise ValueError(f"invalid generated-catalog variant basename: {source.name}")
-        if slug in variants:
-            raise ValueError(f"duplicate generated-catalog variant basename: {source.name}")
-        variants[slug] = source
-    return variants
-
-
-def _outline_sources(source_root: Path) -> dict[str, Path]:
-    outlines: dict[str, Path] = {}
-    for source in _unique_files(source_root / "outlines", "*.json", recursive=True):
-        if source.stem in outlines:
-            raise ValueError(f"duplicate generated-catalog outline basename: {source.name}")
-        outlines[source.stem] = source
-    return outlines
-
-
 def _copy(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, destination)
-
-
-def _retained_sources(
-    slug: str,
-    primary: Path,
-    flat: dict[str, Path],
-    ai_v2: dict[str, Path],
-    outlines: dict[str, Path],
-) -> Iterable[tuple[Path, Path]]:
-    yield primary, Path("assets") / _ASSET_NAMES["primary"]
-    if slug in flat:
-        yield flat[slug], Path("assets") / _ASSET_NAMES["flat"]
-    if slug in ai_v2:
-        yield ai_v2[slug], Path("assets") / _ASSET_NAMES["ai-v2"]
-    if slug in outlines:
-        yield outlines[slug], Path("review") / "outline.approx.json"
 
 
 def _load_catalog(catalog_path: Path) -> dict[str, object]:
@@ -104,14 +53,12 @@ def _load_catalog(catalog_path: Path) -> dict[str, object]:
         raise ValueError("catalog.json boards entries must be objects")
     normalized_entries: list[dict[str, object]] = []
     for entry in payload["boards"]:
-        if set(entry) != {"id", "path", "status"}:
-            raise ValueError("catalog.json boards entries must use id, path, and status")
+        if set(entry) != {"id", "path"}:
+            raise ValueError("catalog.json boards entries must use id and path")
         if not isinstance(entry["id"], str) or not entry["id"]:
             raise ValueError("catalog.json board id must be a non-empty string")
         if not isinstance(entry["path"], str) or not entry["path"]:
             raise ValueError("catalog.json board path must be a non-empty string")
-        if not isinstance(entry["status"], str) or entry["status"] not in _CATALOG_STATUSES:
-            raise ValueError("catalog.json board status must be one of ('draft', 'approved')")
         normalized_entries.append(dict(entry))
     return {"schemaVersion": 1, "boards": normalized_entries}
 
@@ -121,68 +68,20 @@ def _write_catalog(catalog_path: Path, boards: list[dict[str, object]]) -> None:
     catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
 
 
-def _is_approved_at_slug(entry: dict[str, object], slug: str) -> bool:
-    return entry.get("path") == slug and entry.get("status") == "approved"
-
-
-def _draft_readme(slug: str, sources: Iterable[tuple[Path, Path]], source_root: Path) -> str:
-    material_lines = "\n".join(
-        f"- `{source.relative_to(source_root).as_posix()}` retained as `{destination.as_posix()}`"
-        for source, destination in sources
-    )
-    return _DRAFT_README.format(slug=slug, materials=material_lines)
-
-
 def import_generated_catalog(source_root: Path, destination_root: Path) -> None:
-    """Copy an existing generated catalog into flat, review-only board packages."""
+    """Copy an existing generated catalog into flat board packages."""
     source_root = Path(source_root)
     destination_root = Path(destination_root)
     primary = _primary_sources(source_root)
-    flat = _variant_sources(source_root, "flat-illustrations", "-flat")
-    ai_v2 = _variant_sources(source_root, "ai-illustrations-v2", "-ai-v2")
-    outlines = _outline_sources(source_root)
     catalog_path = destination_root / "catalog.json"
-    catalog = _load_catalog(catalog_path)
-    entries = list(catalog["boards"])
-
-    approved_slugs = {
-        str(entry["path"])
-        for entry in entries
-        if isinstance(entry, dict) and _is_approved_at_slug(entry, str(entry.get("path", "")))
-    }
-    imported_slugs = set(primary)
-    retained_entries = [
-        entry
-        for entry in entries
-        if not (
-            isinstance(entry, dict)
-            and entry.get("status") == "draft"
-            and entry.get("path") in imported_slugs
-        )
-    ]
+    # Generated artwork has no factual package sidecars. It stays available in
+    # its package directory but is not registered for the shipped runtime
+    # catalog until a factual package is authored on its own branch.
+    _load_catalog(catalog_path)
 
     for slug in sorted(primary):
-        sources = tuple(_retained_sources(slug, primary[slug], flat, ai_v2, outlines))
         package_root = destination_root / slug
-        if slug in approved_slugs:
-            quarantine_root = package_root / "review" / "unreviewed-generated-catalog"
-            for source, relative_destination in sources:
-                _copy(source, quarantine_root / relative_destination)
-            continue
-
-        for source, relative_destination in sources:
-            _copy(source, package_root / relative_destination)
-        (package_root / "README.md").write_text(
-            _draft_readme(slug, sources, source_root), encoding="utf-8"
-        )
-        retained_entries.append({"id": slug, "path": slug, "status": "draft"})
-
-    deterministic_entries = sorted(
-        retained_entries,
-        key=lambda entry: (str(entry.get("path", "")), str(entry.get("id", ""))),
-    )
-    destination_root.mkdir(parents=True, exist_ok=True)
-    _write_catalog(catalog_path, deterministic_entries)
+        _copy(primary[slug], package_root / _PRIMARY_ASSET)
 
 
 def main() -> None:

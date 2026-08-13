@@ -387,7 +387,7 @@
 			buildPhases = (
 				CC0000000000000000000002 /* Sources */,
 				CC0000000000000000000001 /* Frameworks */,
-				CC0000000000000000000007 /* Stage Approved Board Packages */,
+				CC0000000000000000000007 /* Stage Board Packages */,
 				CC0000000000000000000003 /* Resources */,
 			);
 			buildRules = (
@@ -504,7 +504,7 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh\"\n";
 		};
-		CC0000000000000000000007 /* Stage Approved Board Packages */ = {
+		CC0000000000000000000007 /* Stage Board Packages */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -513,7 +513,7 @@
 			inputPaths = (
 				"${SRCROOT}/Hangboards",
 			);
-			name = "Stage Approved Board Packages";
+			name = "Stage Board Packages";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards/catalog.json",
 			);

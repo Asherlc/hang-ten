@@ -2,23 +2,22 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
-    func testStoreLoadsOnlyApprovedPackageDataAndResources() throws {
+    func testStoreLoadsEveryCatalogPackageDataAndResources() throws {
         let fixture = try makeFixtureBundle()
         defer { fixture.remove() }
 
         let store = try BoardPackageStore(bundle: fixture.bundle)
-        let board = try XCTUnwrap(store.board(id: "approved-board"))
+        let board = try XCTUnwrap(store.board(id: "package-board"))
         let design = try XCTUnwrap(store.design(for: board.id))
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
 
-        XCTAssertEqual(store.boards.map(\.id), ["approved-board"])
-        XCTAssertNil(store.board(id: "draft-board"))
+        XCTAssertEqual(store.boards.map(\.id), ["package-board"])
         XCTAssertEqual(board.manufacturer, "Fixture Maker")
         XCTAssertEqual(board.name, "Approved Board")
         XCTAssertEqual(board.subtitle, "Package-owned fixture metadata.")
         XCTAssertEqual(board.dimensions, "20 × 10 cm")
         XCTAssertEqual(board.aspectRatio, 2)
-        XCTAssertEqual(board.productURL.absoluteString, "https://example.com/approved-board")
+        XCTAssertEqual(board.productURL.absoluteString, "https://example.com/package-board")
         XCTAssertEqual(board.holds.map(\.id), ["jug-left", "jug-right"])
         XCTAssertEqual(board.holds.first?.gripType, .openHand)
         XCTAssertEqual(board.holds.first?.fingerCapacity, 4)
@@ -26,10 +25,10 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.holds.first?.features, [.jug])
         XCTAssertNil(board.photoAssetName)
         XCTAssertEqual(
-            store.semantics(for: "approved-board")["outer-jugs"],
+            store.semantics(for: "package-board")["outer-jugs"],
             ["jug-left", "jug-right"]
         )
-        XCTAssertEqual(design.id, "approved-board")
+        XCTAssertEqual(design.id, "package-board")
         XCTAssertEqual(design.layers.count, 1)
         XCTAssertEqual(design.holds.map(\.holdID), ["jug-left", "jug-right"])
         XCTAssertEqual(imageURL.lastPathComponent, "presentation.png")
@@ -45,7 +44,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/approved-board/board.json")
+                .malformedJSON(resource: "Hangboards/package-board/board.json")
             )
         }
     }
@@ -60,7 +59,7 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), filename) { error in
                 XCTAssertEqual(
                     error as? BoardPackageStoreError,
-                    .missingApprovedSidecar(boardID: "approved-board", filename: filename)
+                    .missingPackageSidecar(boardID: "package-board", filename: filename)
                 )
             }
         }
@@ -80,7 +79,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .unknownArtworkHoldID(boardID: "approved-board", holdID: "unknown-hold")
+                .unknownArtworkHoldID(boardID: "package-board", holdID: "unknown-hold")
             )
         }
     }
@@ -99,7 +98,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .missingArtworkHoldID(boardID: "approved-board", holdID: "jug-right")
+                .missingArtworkHoldID(boardID: "package-board", holdID: "jug-right")
             )
         }
     }
@@ -116,7 +115,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .presentationAssetPathEscape(boardID: "approved-board", path: "../escaped.png")
+                .presentationAssetPathEscape(boardID: "package-board", path: "../escaped.png")
             )
         }
     }
@@ -137,7 +136,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .approvedPackagePathEscape(boardID: "approved-board", path: "board.json")
+                .packagePathEscape(boardID: "package-board", path: "board.json")
             )
         }
     }
@@ -145,9 +144,9 @@ final class BoardPackageStoreTests: XCTestCase {
     func testStoreRejectsUnknownKeysAtSidecarRoots() throws {
         for (relativePath, resource) in [
             ("../catalog.json", "Hangboards/catalog.json"),
-            ("board.json", "Hangboards/approved-board/board.json"),
-            ("semantics.json", "Hangboards/approved-board/semantics.json"),
-            ("artwork.json", "Hangboards/approved-board/artwork.json")
+            ("board.json", "Hangboards/package-board/board.json"),
+            ("semantics.json", "Hangboards/package-board/semantics.json"),
+            ("artwork.json", "Hangboards/package-board/artwork.json")
         ] {
             try assertMalformedJSON(relativePath: relativePath, resource: resource) { document in
                 document["unexpected"] = true
@@ -158,7 +157,7 @@ final class BoardPackageStoreTests: XCTestCase {
     func testStoreRejectsUnknownKeysInNestedPackageDocuments() throws {
         try assertMalformedJSON(
             relativePath: "board.json",
-            resource: "Hangboards/approved-board/board.json"
+            resource: "Hangboards/package-board/board.json"
         ) { board in
             var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
             holds[0]["unexpected"] = true
@@ -167,7 +166,7 @@ final class BoardPackageStoreTests: XCTestCase {
 
         try assertMalformedJSON(
             relativePath: "semantics.json",
-            resource: "Hangboards/approved-board/semantics.json"
+            resource: "Hangboards/package-board/semantics.json"
         ) { semantics in
             var mappings = try XCTUnwrap(semantics["semanticHolds"] as? [String: Any])
             var outerJugs = try XCTUnwrap(mappings["outer-jugs"] as? [String: Any])
@@ -178,7 +177,7 @@ final class BoardPackageStoreTests: XCTestCase {
 
         try assertMalformedJSON(
             relativePath: "artwork.json",
-            resource: "Hangboards/approved-board/artwork.json"
+            resource: "Hangboards/package-board/artwork.json"
         ) { artwork in
             var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
             var treatment = try XCTUnwrap(pieces[0]["treatment"] as? [String: Any])
@@ -255,7 +254,7 @@ final class BoardPackageStoreTests: XCTestCase {
             .appendingPathComponent("BoardPackageStoreTests-\(UUID().uuidString)")
             .appendingPathExtension("bundle")
         let hangboardsURL = bundleURL.appendingPathComponent("Hangboards", isDirectory: true)
-        let packageURL = hangboardsURL.appendingPathComponent("approved-board", isDirectory: true)
+        let packageURL = hangboardsURL.appendingPathComponent("package-board", isDirectory: true)
         let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
 
         try FileManager.default.createDirectory(at: assetsURL, withIntermediateDirectories: true)
@@ -327,7 +326,7 @@ final class BoardPackageStoreTests: XCTestCase {
             guard case .invalidPackage(let boardID, _) = error as? BoardPackageStoreError else {
                 return XCTFail("Expected invalidPackage, got \(error)")
             }
-            XCTAssertEqual(boardID, "approved-board")
+            XCTAssertEqual(boardID, "package-board")
         }
     }
 
@@ -337,8 +336,7 @@ final class BoardPackageStoreTests: XCTestCase {
             {
               "schemaVersion": 1,
               "boards": [
-                { "id": "approved-board", "path": "approved-board", "status": "approved" },
-                { "id": "draft-board", "path": "draft-board", "status": "draft" }
+                { "id": "package-board", "path": "package-board" }
               ]
             }
             """#.utf8
@@ -350,11 +348,11 @@ final class BoardPackageStoreTests: XCTestCase {
             #"""
             {
               "schemaVersion": 1,
-              "id": "approved-board",
+              "id": "package-board",
               "manufacturer": "Fixture Maker",
               "name": "Approved Board",
               "subtitle": "Package-owned fixture metadata.",
-              "productURL": "https://example.com/approved-board",
+              "productURL": "https://example.com/package-board",
               "dimensions": "20 × 10 cm",
               "aspectRatio": 2,
               "presentation": { "assetPath": "assets/presentation.png" },
@@ -398,7 +396,7 @@ final class BoardPackageStoreTests: XCTestCase {
             #"""
             {
               "schemaVersion": 1,
-              "boardID": "approved-board",
+              "boardID": "package-board",
               "semanticHolds": {
                 "outer-jugs": { "holdIDs": ["jug-left", "jug-right"] }
               }
@@ -412,7 +410,7 @@ final class BoardPackageStoreTests: XCTestCase {
             #"""
             {
               "schemaVersion": 1,
-              "boardID": "approved-board",
+              "boardID": "package-board",
               "canvasFrame": { "x": 0.05, "y": 0.05, "width": 0.9, "height": 0.9 },
               "palette": "sculptedWood",
               "silhouette": { "type": "roundedRect", "cornerRadiusFraction": 0.1 },

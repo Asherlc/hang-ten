@@ -65,8 +65,8 @@ private extension String {
 enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     case missingCatalog
     case malformedJSON(resource: String)
-    case missingApprovedSidecar(boardID: String, filename: String)
-    case approvedPackagePathEscape(boardID: String, path: String)
+    case missingPackageSidecar(boardID: String, filename: String)
+    case packagePathEscape(boardID: String, path: String)
     case presentationAssetPathEscape(boardID: String, path: String)
     case missingPresentationAsset(boardID: String, path: String)
     case boardIDMismatch(expected: String, actual: String, resource: String)
@@ -83,10 +83,10 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
             "The bundled Hangboards/catalog.json resource is missing."
         case .malformedJSON(let resource):
             "The bundled board resource is malformed: \(resource)."
-        case let .missingApprovedSidecar(boardID, filename):
-            "Approved board \(boardID) is missing \(filename)."
-        case let .approvedPackagePathEscape(boardID, path):
-            "Approved board \(boardID) has a package path outside Hangboards: \(path)."
+        case let .missingPackageSidecar(boardID, filename):
+            "Board \(boardID) is missing \(filename)."
+        case let .packagePathEscape(boardID, path):
+            "Board \(boardID) has a package path outside Hangboards: \(path)."
         case let .presentationAssetPathEscape(boardID, path):
             "Approved board \(boardID) has a presentation path outside its package: \(path)."
         case let .missingPresentationAsset(boardID, path):
@@ -153,8 +153,6 @@ struct BoardPackageStore {
             guard seenCatalogPaths.insert(entry.path).inserted else {
                 throw BoardPackageStoreError.malformedJSON(resource: "Hangboards/catalog.json")
             }
-            guard entry.status == .approved else { continue }
-
             let packageURL = try Self.packageURL(
                 for: entry,
                 below: hangboardsURL
@@ -270,13 +268,13 @@ struct BoardPackageStore {
         resourcePrefix: String
     ) throws -> Value {
         guard let url = confinedURL(relativePath: filename, below: packageURL) else {
-            throw BoardPackageStoreError.approvedPackagePathEscape(
+            throw BoardPackageStoreError.packagePathEscape(
                 boardID: boardID,
                 path: filename
             )
         }
         guard FileManager.default.isReadableFile(atPath: url.path) else {
-            throw BoardPackageStoreError.missingApprovedSidecar(
+            throw BoardPackageStoreError.missingPackageSidecar(
                 boardID: boardID,
                 filename: filename
             )
@@ -301,7 +299,7 @@ struct BoardPackageStore {
         below hangboardsURL: URL
     ) throws -> URL {
         guard let url = confinedURL(relativePath: entry.path, below: hangboardsURL) else {
-            throw BoardPackageStoreError.approvedPackagePathEscape(
+            throw BoardPackageStoreError.packagePathEscape(
                 boardID: entry.id,
                 path: entry.path
             )
@@ -568,27 +566,19 @@ private struct BoardPackageCatalogDocument: Decodable {
 }
 
 private struct BoardPackageCatalogEntry: Decodable {
-    enum Status: String, Decodable {
-        case draft
-        case approved
-    }
-
     let id: String
     let path: String
-    let status: Status
 
     private enum CodingKeys: String, CodingKey {
         case id
         case path
-        case status
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "path", "status"])
+        try decoder.rejectUnknownKeys(["id", "path"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         path = try container.decode(String.self, forKey: .path)
-        status = try container.decode(Status.self, forKey: .status)
     }
 }
 

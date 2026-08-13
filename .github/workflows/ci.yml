@@ -116,7 +116,7 @@ jobs:
       - name: Verify imported draft inventory
         run: python -m pytest tests/test_generated_catalog_import.py -q
 
-      - name: Stage approved board packages into a temporary app resource root
+      - name: Stage board packages into a temporary app resource root
         working-directory: ${{ github.workspace }}
         run: |
           set -euo pipefail
@@ -394,7 +394,7 @@ jobs:
             CODE_SIGN_IDENTITY="-" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
 
-      - name: Run approved board package-store tests
+      - name: Run board package-store tests
         run: |
           set -o pipefail
           xcodebuild \

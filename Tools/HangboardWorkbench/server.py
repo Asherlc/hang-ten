@@ -1054,11 +1054,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         """Publish a reviewed `.context` package without touching native app sources."""
         candidate_path = self._required_string(payload, "candidatePath")
         board_id = self._required_string(payload, "boardId")
-        status = self._required_string(payload, "status")
         self._submit_job(
             f"package:{board_id}",
             lambda: service.publish_package_candidate(
-                Path(candidate_path), board_id=board_id, status=status
+                Path(candidate_path), board_id=board_id
             ),
             conflict_key=f"package:{board_id}",
         )

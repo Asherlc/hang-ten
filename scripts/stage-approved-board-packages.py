@@ -140,8 +140,8 @@ def _replace_destination(staging: Path, destination: Path) -> None:
         shutil.rmtree(backup)
 
 
-def stage_approved_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
-    """Copy the validated catalog and approved package trees into *destination*."""
+def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
+    """Copy the validated catalog and every listed package tree into *destination*."""
     repository_root = _absolute_lexical(Path(repository_root))
     destination = _absolute_lexical(Path(destination))
     _reject_symlinked_ancestors(repository_root, "repository root")
@@ -162,8 +162,6 @@ def stage_approved_packages(repository_root: Path, destination: Path) -> tuple[P
         _copy_regular_file(catalog_path, staging / "catalog.json")
         staged_paths: list[Path] = [destination / "catalog.json"]
         for entry in catalog.entries:
-            if entry.status != "approved":
-                continue
             package_source = catalog_path.parent / entry.path
             package_destination = staging / entry.path
             _copy_regular_tree(package_source, package_destination)
@@ -185,7 +183,7 @@ def parse_arguments() -> argparse.Namespace:
 
 def main() -> int:
     arguments = parse_arguments()
-    stage_approved_packages(arguments.repository_root, arguments.destination)
+    stage_board_packages(arguments.repository_root, arguments.destination)
     return 0
 
 

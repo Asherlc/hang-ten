@@ -38,25 +38,13 @@ def build_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
     approved_source = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
     approved_package = hangboards / "approved-board"
     shutil.copytree(approved_source, approved_package)
-    draft_package = hangboards / "draft-board"
-    draft_package.mkdir()
-    (draft_package / "draft-only.txt").write_bytes(b"draft package bytes")
     catalog = hangboards / "catalog.json"
     catalog.write_bytes(
         json.dumps(
             {
                 "schemaVersion": 1,
                 "boards": [
-                    {
-                        "id": "metolius.wood-grips-compact-ii",
-                        "path": "approved-board",
-                        "status": "approved",
-                    },
-                    {
-                        "id": "draft.board",
-                        "path": "draft-board",
-                        "status": "draft",
-                    },
+                    {"id": "metolius.wood-grips-compact-ii", "path": "approved-board"},
                 ],
             },
             indent=2,
@@ -70,7 +58,7 @@ def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Pa
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
 
 
-def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destination(
+def test_staging_copies_catalog_package_bytes_and_replaces_stale_destination(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
@@ -82,11 +70,10 @@ def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destinati
     sibling_marker = destination.parent / "keep-this-sibling.txt"
     sibling_marker.write_bytes(b"must remain")
 
-    staged = module.stage_approved_packages(repository_root, destination)
+    staged = module.stage_board_packages(repository_root, destination)
 
     assert staged == (destination / "catalog.json", destination / "approved-board")
     assert destination.joinpath("catalog.json").read_bytes() == catalog.read_bytes()
-    assert not destination.joinpath("draft-board").exists()
     assert not destination.joinpath("stale").exists()
     assert sibling_marker.read_bytes() == b"must remain"
     for source_path in approved_package.rglob("*"):
@@ -107,12 +94,12 @@ def test_repeated_staging_refreshes_nested_package_file_changes(
     nested_source.parent.mkdir(exist_ok=True)
     nested_source.write_bytes(b"first nested revision")
 
-    module.stage_approved_packages(repository_root, destination)
+    module.stage_board_packages(repository_root, destination)
     nested_destination = destination / "approved-board" / "review" / nested_source.name
     assert nested_destination.read_bytes() == b"first nested revision"
 
     nested_source.write_bytes(b"second nested revision")
-    module.stage_approved_packages(repository_root, destination)
+    module.stage_board_packages(repository_root, destination)
 
     assert nested_destination.read_bytes() == b"second nested revision"
 
@@ -146,7 +133,7 @@ def test_staging_rejects_symlinked_destination_and_leaves_its_target_untouched(
     destination.symlink_to(external_destination, target_is_directory=True)
 
     with pytest.raises(ValueError, match="symlink"):
-        module.stage_approved_packages(repository_root, destination)
+        module.stage_board_packages(repository_root, destination)
 
     assert marker.read_bytes() == b"protected"
 
@@ -162,7 +149,7 @@ def test_staging_rejects_symlinked_destination_ancestor(
     configure_xcode_destination(monkeypatch, destination)
 
     with pytest.raises(ValueError, match="symlink"):
-        module.stage_approved_packages(repository_root, destination)
+        module.stage_board_packages(repository_root, destination)
 
 
 def test_staging_rejects_symlinked_hangboards_source_root(
@@ -178,7 +165,7 @@ def test_staging_rejects_symlinked_hangboards_source_root(
     configure_xcode_destination(monkeypatch, destination)
 
     with pytest.raises(ValueError, match="symlink"):
-        module.stage_approved_packages(repository_root, destination)
+        module.stage_board_packages(repository_root, destination)
 
 
 def test_staging_rejects_checkout_and_non_xcode_destinations(
@@ -190,10 +177,10 @@ def test_staging_rejects_checkout_and_non_xcode_destinations(
     configure_xcode_destination(monkeypatch, checkout_destination)
 
     with pytest.raises(ValueError, match="checkout"):
-        module.stage_approved_packages(repository_root, checkout_destination)
+        module.stage_board_packages(repository_root, checkout_destination)
 
     trusted_destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, trusted_destination)
     arbitrary_destination = tmp_path / "scratch" / "Hangboards"
     with pytest.raises(ValueError, match="Xcode resource"):
-        module.stage_approved_packages(repository_root, arbitrary_destination)
+        module.stage_board_packages(repository_root, arbitrary_destination)
