@@ -28,7 +28,6 @@ BUILD_ACTION_PATH = (
 COMMENT_WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-pr-comment.yml"
 )
-UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 sys.path.insert(0, str(EDITOR_ROOT))
 
 from workbench_assets import STATIC_ASSETS  # noqa: E402
@@ -65,21 +64,6 @@ def _build_action() -> dict[str, object]:
 
 def _step(job: dict[str, object], name: str) -> dict[str, object]:
     return next(step for step in job["steps"] if step.get("name") == name)
-
-
-def _assert_uv_precedes_python_test_steps(job: dict[str, object]) -> None:
-    steps = job["steps"]
-    uv_index = next(
-        index for index, step in enumerate(steps) if step.get("name") == "Set up uv"
-    )
-    assert steps[uv_index]["uses"] == UV_ACTION
-    test_indices = [
-        index
-        for index, step in enumerate(steps)
-        if "pytest" in str(step.get("run", "")) or "uv " in str(step.get("run", ""))
-    ]
-    assert test_indices
-    assert uv_index < min(test_indices)
 
 
 def _normalized_expression(expression: str) -> str:
@@ -125,7 +109,12 @@ def test_release_readmes_document_the_native_checkout_workflow():
 
 
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
-    jobs = _workflow()["jobs"]
+    jobs = {
+        **_workflow()["jobs"],
+        **_workflow(PR_WORKFLOW_PATH)["jobs"],
+        **_workflow(COMMENT_WORKFLOW_PATH)["jobs"],
+        "composite-build": _build_action(),
+    }
     for job_name, job in jobs.items():
         for index, step in enumerate(job["steps"]):
             script = step.get("run")
@@ -166,32 +155,42 @@ def test_pr_build_and_main_release_share_the_composite_build_action():
         ]
         == uses
     )
+    release_build = release["jobs"]["build"]
+    release_build_step = _step(
+        release_build, "Build and upload verified unsigned app"
+    )
+    assert release_build_step["id"] == "build"
+    assert release_build["outputs"]["artifact-name"] == (
+        "${{ steps.build.outputs.artifact-name }}"
+    )
+    assert _step(release["jobs"]["release"], "Download verified unsigned app")[
+        "with"
+    ]["name"] == "${{ needs.build.outputs.artifact-name }}"
     assert (
         action["outputs"]["artifact-url"]["value"]
         == "${{ steps.upload.outputs.artifact-url }}"
     )
-    assert _step(action["runs"], "Upload verified unsigned app")["id"] == "upload"
+    assert (
+        action["outputs"]["artifact-id"]["value"]
+        == "${{ steps.upload.outputs.artifact-id }}"
+    )
+    assert "${{ github.run_attempt }}" in action["outputs"]["artifact-name"]["value"]
+    upload = _step(action["runs"], "Upload verified unsigned app")
+    assert upload["id"] == "upload"
+    assert upload["with"]["name"] == action["outputs"]["artifact-name"]["value"]
+    assert upload["with"]["compression-level"] == 0
 
 
-def test_pr_build_is_component_gated_and_exposes_the_artifact_url():
+def test_pr_build_uses_one_auditable_component_gate():
     jobs = _workflow(PR_WORKFLOW_PATH)["jobs"]
     changes = jobs["changes"]
     assert changes["permissions"] == {"contents": "read", "pull-requests": "read"}
     assert _step(changes, "Check out source")["with"]["persist-credentials"] is False
     assert jobs["build"]["needs"] == "changes"
     condition = _normalized_expression(jobs["build"]["if"])
-    for component in (
-        "python",
-        "workbench_web",
-        "workbench_native",
-        "shared_board_content",
-        "workflow",
-    ):
-        assert f"needs.changes.outputs.{component} == 'true'" in condition
-    assert (
-        jobs["build"]["outputs"]["artifact-url"]
-        == "${{ steps.build.outputs.artifact-url }}"
-    )
+    assert changes["outputs"] == {"workbench": "${{ steps.filter.outputs.workbench }}"}
+    assert condition == "needs.changes.outputs.workbench == 'true'"
+    assert "outputs" not in jobs["build"]
 
 
 def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
@@ -202,26 +201,39 @@ def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
     ]
     assert comment["permissions"] == {
         "actions": "read",
-        "contents": "read",
         "pull-requests": "write",
     }
+    assert comment["timeout-minutes"] == 5
     assert _normalized_expression(comment["if"]) == (
         "github.event.workflow_run.event == 'pull_request' && "
         "github.event.workflow_run.conclusion == 'success'"
     )
     script = _step(comment, "Post workbench download link")["run"]
     for fragment in (
+        'pulls/$PR_NUMBER',
+        'current_head_sha" != "$HEAD_SHA',
+        "actions/workflows/hangboard-workbench-pr.yml/runs",
+        ".run_number > $run_number",
+        ".run_attempt > $run_attempt",
+        'newer_run_exists" == "true"',
         "actions/runs/$RUN_ID/artifacts?per_page=100",
         "actions/runs/$RUN_ID/jobs?per_page=100",
         'select(.name == "Build verified arm64 workbench")',
         'if [[ "$build_conclusion" == "skipped" ]]',
         "did not change relevant paths",
         "<!-- hangboard-workbench-artifact -->",
+        '.user.login == "github-actions[bot]"',
         "issues/comments/$comment_id",
     ):
         assert fragment in script
     assert script.index('if [[ "$build_conclusion" == "skipped" ]]') < script.index(
         "Expected unexpired artifact"
+    )
+    assert script.index('current_head_sha" != "$HEAD_SHA') < script.index(
+        'artifact_name="hangboard-workbench'
+    )
+    assert script.index('newer_run_exists" == "true"') < script.index(
+        'artifact_name="hangboard-workbench'
     )
     assert "pull_request_target" not in COMMENT_WORKFLOW_PATH.read_text(
         encoding="utf-8"
@@ -260,7 +272,6 @@ def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
     build = jobs["build"]
 
     assert build["runs-on"] == "macos-latest"
-    _assert_uv_precedes_python_test_steps(_build_action())
     identity_script = _step(_build_action(), "Verify executable identity")["run"]
     assert 'test "$architecture" = "arm64"' in identity_script
 

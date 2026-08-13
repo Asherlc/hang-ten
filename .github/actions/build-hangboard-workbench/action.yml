@@ -7,202 +7,202 @@ outputs:
     value: ${{ steps.upload.outputs.artifact-url }}
   artifact-name:
     description: Name of the uploaded workbench artifact.
-    value: hangboard-workbench-macos-arm64-${{ github.run_id }}
+    value: hangboard-workbench-macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+  artifact-id:
+    description: GitHub ID of the uploaded workbench artifact.
+    value: ${{ steps.upload.outputs.artifact-id }}
 
 runs:
   using: composite
   steps:
-  # actions/setup-python v6.3.0
-  - name: Set up Python
-    uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-    with:
-      python-version: '3.12'
-      cache: 'pip'
-      cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
-  
-  # astral-sh/setup-uv v6
-  - name: Set up uv
-    uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-  
-  - name: Install workbench build dependencies
-    shell: bash
-    run: |
-      set -euo pipefail
-      python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-      python -m venv "${python_bin%/bin/python}"
-      "$python_bin" -m pip install --upgrade pip
-      "$python_bin" -m pip install -e 'Tools/HangboardPipeline[dev]' 'pyinstaller==6.22.0'
-  
-  - name: Run focused Python suite
-    shell: bash
-    run: |
-      set -euo pipefail
-      python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-      "$python_bin" -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
-  
-  - name: Run focused Node suite
-    shell: bash
-    run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
-  
-  - name: Run native shell tests
-    shell: bash
-    run: swift test --package-path Tools/HangboardWorkbench/macos
-  
-  - name: Build unsigned native app
-    shell: bash
-    run: |
-      set -euo pipefail
-      release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
-      runtime_dist_dir="$release_dir/runtime-dist"
-      work_dir="$RUNNER_TEMP/hangboard-workbench-build"
-      rm -rf "$release_dir" "$work_dir"
-      mkdir -p "$release_dir" "$work_dir"
-      "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-        Tools/HangboardWorkbench/packaging/build.py \
-        --commit "$GITHUB_SHA" \
-        --dist-dir "$runtime_dist_dir" \
-        --work-dir "$work_dir"
-      runtime_dir="$runtime_dist_dir/hangboard-workbench"
-  
-      swift build -c release --arch arm64 \
-        --package-path Tools/HangboardWorkbench/macos
-      shell_bin_dir="$(swift build -c release --arch arm64 \
-        --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
-      shell_executable="$shell_bin_dir/HangboardWorkbench"
-      app_bundle="$release_dir/Hangboard Workbench.app"
-      "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-        Tools/HangboardWorkbench/packaging/macos_app.py \
-        --shell "$shell_executable" \
-        --runtime-dir "$runtime_dir" \
-        --output "$app_bundle" \
-        --version "$GITHUB_RUN_NUMBER"
-  
-  - name: Verify executable identity
-    shell: bash
-    run: |
-      set -euo pipefail
-      app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
-      shell_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
-      runtime_executable="$app_bundle/Contents/Resources/workbench-runtime/hangboard-workbench"
-      architecture="$(uname -m)"
-      echo "Runner architecture: $architecture"
-      test "$architecture" = "arm64"
-      file "$shell_executable" "$runtime_executable" \
-        | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
-      test "$(grep -c 'arm64' "$RUNNER_TEMP/hangboard-workbench-file.txt")" -eq 2
-      "$runtime_executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
-      grep -Fqx "$GITHUB_SHA" "$RUNNER_TEMP/hangboard-workbench-version.txt"
-  
-  - name: Smoke test unsigned app and clean up
-    shell: bash
-    run: |
-      set -euo pipefail
-      app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
-      app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
-      smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
-      app_pid=""
-      app_child_pid=""
-      cleanup() {
-        status=$?
-        trap - EXIT
-        if [[ -n "$app_pid" ]]; then
-          if kill -0 "$app_pid" 2>/dev/null; then
-            kill -TERM "$app_pid" || true
+    # actions/setup-python v6.3.0
+    - name: Set up Python
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+        cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
+
+    - name: Install workbench build dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+        python -m venv "${python_bin%/bin/python}"
+        "$python_bin" -m pip install --upgrade pip
+        "$python_bin" -m pip install -e 'Tools/HangboardPipeline[dev]' 'pyinstaller==6.22.0'
+
+    - name: Run focused Python suite
+      shell: bash
+      run: |
+        set -euo pipefail
+        python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
+        "$python_bin" -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
+
+    - name: Run focused Node suite
+      shell: bash
+      run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
+
+    - name: Run native shell tests
+      shell: bash
+      run: swift test --package-path Tools/HangboardWorkbench/macos
+
+    - name: Build unsigned native app
+      shell: bash
+      run: |
+        set -euo pipefail
+        release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
+        runtime_dist_dir="$release_dir/runtime-dist"
+        work_dir="$RUNNER_TEMP/hangboard-workbench-build"
+        rm -rf "$release_dir" "$work_dir"
+        mkdir -p "$release_dir" "$work_dir"
+        "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
+          Tools/HangboardWorkbench/packaging/build.py \
+          --commit "$GITHUB_SHA" \
+          --dist-dir "$runtime_dist_dir" \
+          --work-dir "$work_dir"
+        runtime_dir="$runtime_dist_dir/hangboard-workbench"
+
+        swift build -c release --arch arm64 \
+          --package-path Tools/HangboardWorkbench/macos
+        shell_bin_dir="$(swift build -c release --arch arm64 \
+          --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
+        shell_executable="$shell_bin_dir/HangboardWorkbench"
+        app_bundle="$release_dir/Hangboard Workbench.app"
+        "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
+          Tools/HangboardWorkbench/packaging/macos_app.py \
+          --shell "$shell_executable" \
+          --runtime-dir "$runtime_dir" \
+          --output "$app_bundle" \
+          --version "$GITHUB_RUN_NUMBER"
+
+    - name: Verify executable identity
+      shell: bash
+      run: |
+        set -euo pipefail
+        app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
+        shell_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+        runtime_executable="$app_bundle/Contents/Resources/workbench-runtime/hangboard-workbench"
+        architecture="$(uname -m)"
+        echo "Runner architecture: $architecture"
+        test "$architecture" = "arm64"
+        file "$shell_executable" "$runtime_executable" \
+          | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
+        test "$(grep -c 'arm64' "$RUNNER_TEMP/hangboard-workbench-file.txt")" -eq 2
+        "$runtime_executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
+        grep -Fqx "$GITHUB_SHA" "$RUNNER_TEMP/hangboard-workbench-version.txt"
+
+    - name: Smoke test unsigned app and clean up
+      shell: bash
+      run: |
+        set -euo pipefail
+        app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
+        app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+        smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
+        app_pid=""
+        app_child_pid=""
+        cleanup() {
+          status=$?
+          trap - EXIT
+          if [[ -n "$app_pid" ]]; then
+            if kill -0 "$app_pid" 2>/dev/null; then
+              kill -TERM "$app_pid" || true
+            fi
+            wait "$app_pid" || true
           fi
-          wait "$app_pid" || true
-        fi
-        if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
-          kill -TERM "$app_child_pid" || true
-        fi
-        if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
-          cat "$smoke_log" >&2
-        fi
-        exit "$status"
-      }
-      trap cleanup EXIT
-  
-      port=41739
-      cd "$GITHUB_WORKSPACE"
-      "$app_executable" --headless \
-        --repository-root "$GITHUB_WORKSPACE" \
-        --port 41739 >"$smoke_log" 2>&1 &
-      app_pid=$!
-      ready=false
-      for _ in {1..30}; do
-        if ! kill -0 "$app_pid" 2>/dev/null; then
-          echo "Unsigned app exited before becoming ready." >&2
+          if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
+            kill -TERM "$app_child_pid" || true
+          fi
+          if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
+            cat "$smoke_log" >&2
+          fi
+          exit "$status"
+        }
+        trap cleanup EXIT
+
+        port=41739
+        cd "$GITHUB_WORKSPACE"
+        "$app_executable" --headless \
+          --repository-root "$GITHUB_WORKSPACE" \
+          --port 41739 >"$smoke_log" 2>&1 &
+        app_pid=$!
+        ready=false
+        for _ in {1..30}; do
+          if ! kill -0 "$app_pid" 2>/dev/null; then
+            echo "Unsigned app exited before becoming ready." >&2
+            exit 1
+          fi
+          if curl --fail --silent --show-error \
+            "http://127.0.0.1:${port}/api/health" >/dev/null; then
+            ready=true
+            break
+          fi
+          sleep 1
+        done
+        if [[ "$ready" != "true" ]]; then
+          echo "Unsigned app did not become ready within 30 seconds." >&2
           exit 1
         fi
-        if curl --fail --silent --show-error \
-          "http://127.0.0.1:${port}/api/health" >/dev/null; then
-          ready=true
-          break
+
+        curl --fail --silent --show-error "http://127.0.0.1:${port}/api/health" \
+          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
+        curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
+        while IFS= read -r asset_path; do
+          curl --fail --silent --show-error \
+            "http://127.0.0.1:${port}${asset_path}" >/dev/null
+        done < <(
+          python - <<'PY'
+        import sys
+
+        sys.path.insert(0, "Tools/HangboardWorkbench")
+        from workbench_assets import STATIC_ASSETS
+
+        for asset in STATIC_ASSETS:
+            print(f"/{asset}")
+        PY
+        )
+        curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
+          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+
+        app_child_pid="$(pgrep -P "$app_pid" || true)"
+        if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
+          echo "Expected exactly one backend owned by the unsigned app." >&2
+          exit 1
         fi
-        sleep 1
-      done
-      if [[ "$ready" != "true" ]]; then
-        echo "Unsigned app did not become ready within 30 seconds." >&2
-        exit 1
-      fi
-  
-      curl --fail --silent --show-error "http://127.0.0.1:${port}/api/health" \
-        | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
-      curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
-      while IFS= read -r asset_path; do
-        curl --fail --silent --show-error \
-          "http://127.0.0.1:${port}${asset_path}" >/dev/null
-      done < <(
-        python - <<'PY'
-      import sys
-  
-      sys.path.insert(0, "Tools/HangboardWorkbench")
-      from workbench_assets import STATIC_ASSETS
-  
-      for asset in STATIC_ASSETS:
-          print(f"/{asset}")
-      PY
-      )
-      curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-        | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
-  
-      app_child_pid="$(pgrep -P "$app_pid" || true)"
-      if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
-        echo "Expected exactly one backend owned by the unsigned app." >&2
-        exit 1
-      fi
-      kill -TERM "$app_pid"
-      if ! wait "$app_pid"; then
-        echo "Unsigned app did not exit cleanly after SIGTERM." >&2
-        exit 1
-      fi
-      if kill -0 "$app_child_pid" 2>/dev/null; then
-        echo "Unsigned app backend remained after app shutdown." >&2
-        exit 1
-      fi
-      if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
-        echo "Unsigned app smoke log contains an error." >&2
-        exit 1
-      fi
-      app_pid=""
-      app_child_pid=""
-  
-  - name: Archive verified unsigned app
-    shell: bash
-    run: |
-      set -euo pipefail
-      release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
-      cd "$release_dir"
-      tar -czf hangboard-workbench-macos-arm64.tar.gz "Hangboard Workbench.app"
-      shasum -a 256 hangboard-workbench-macos-arm64.tar.gz > hangboard-workbench-macos-arm64.sha256
-      shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
-  
-  # actions/upload-artifact v4.6.2
-  - name: Upload verified unsigned app
-    id: upload
-    uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-    with:
-      name: hangboard-workbench-macos-arm64-${{ github.run_id }}
-      path: |
-        ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.tar.gz
-        ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.sha256
-      if-no-files-found: error
+        kill -TERM "$app_pid"
+        if ! wait "$app_pid"; then
+          echo "Unsigned app did not exit cleanly after SIGTERM." >&2
+          exit 1
+        fi
+        if kill -0 "$app_child_pid" 2>/dev/null; then
+          echo "Unsigned app backend remained after app shutdown." >&2
+          exit 1
+        fi
+        if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
+          echo "Unsigned app smoke log contains an error." >&2
+          exit 1
+        fi
+        app_pid=""
+        app_child_pid=""
+
+    - name: Archive verified unsigned app
+      shell: bash
+      run: |
+        set -euo pipefail
+        release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
+        cd "$release_dir"
+        tar -czf hangboard-workbench-macos-arm64.tar.gz "Hangboard Workbench.app"
+        shasum -a 256 hangboard-workbench-macos-arm64.tar.gz > hangboard-workbench-macos-arm64.sha256
+        shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
+
+    # actions/upload-artifact v4.6.2
+    - name: Upload verified unsigned app
+      id: upload
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: hangboard-workbench-macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.tar.gz
+          ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.sha256
+        if-no-files-found: error
+        compression-level: 0

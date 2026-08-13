@@ -45,6 +45,7 @@ def test_taxonomy_has_each_required_component_filter() -> None:
         "python",
         "workbench_web",
         "workbench_native",
+        "workbench",
         "shared_board_content",
         "metadata",
         "workflow",
@@ -56,6 +57,10 @@ def test_taxonomy_assigns_editor_python_ios_and_shared_paths_conservatively() ->
 
     assert "Tools/HangboardWorkbench/*.js" in filters["workbench_web"]
     assert "Tools/HangboardPipeline/**" in filters["python"]
+    assert "Tools/HangboardPipeline/**" in filters["workbench"]
+    assert "Tools/HangboardWorkbench/**" in filters["workbench"]
+    assert "Hangboards/**" in filters["workbench"]
+    assert ".github/actions/**" in filters["workbench"]
     assert "HangTen/**" in filters["ios"]
     assert "Hangboards/**" in filters["shared_board_content"]
     assert "scripts/export-board-library.py" in filters["shared_board_content"]

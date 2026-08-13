@@ -19,6 +19,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: macos-latest
     timeout-minutes: 45
+    outputs:
+      artifact-name: ${{ steps.build.outputs.artifact-name }}
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -26,11 +28,12 @@ jobs:
           persist-credentials: false
 
       - name: Build and upload verified unsigned app
+        id: build
         uses: ./.github/actions/build-hangboard-workbench
 
   release:
-    needs: build
     name: Publish immutable workbench release
+    needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: macos-latest
     timeout-minutes: 30
@@ -49,7 +52,9 @@ jobs:
       - name: Download verified unsigned app
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
-          name: hangboard-workbench-macos-arm64-${{ github.run_id }}
+          # A "re-run failed jobs" keeps the successful build job from its
+          # original attempt, so consume the name that job actually uploaded.
+          name: ${{ needs.build.outputs.artifact-name }}
           path: release
 
       - name: Verify downloaded unsigned app
