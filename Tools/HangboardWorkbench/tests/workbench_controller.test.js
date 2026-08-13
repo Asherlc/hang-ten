@@ -50,21 +50,18 @@ function memoryStorage() {
   };
 }
 
-test("opening board controller fetches both lists and opens the selected repository or runtime board", async () => {
+test("opening board controller fetches all boards once and opens the selected repository or runtime board", async () => {
   const calls = [];
   const controller = createOpeningBoardController({
-    async listLibraryBoards() {
-      calls.push("library");
+    async listBoards() {
+      calls.push("boards");
       return {
-        boards: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+        repositoryBoards: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+        inProgressBoards: [{ boardId: "board-2", productName: "Beta", saved: false }],
         diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
       };
     },
-    async listBoards() {
-      calls.push("runtime");
-      return [{ boardId: "board-2", productName: "Beta", saved: false }];
-    },
-    async openLibraryBoard(boardId) {
+    async openRepositoryBoard(boardId) {
       calls.push(["open", boardId]);
       return { boardId: "board-1", productName: "Alpha" };
     },
@@ -75,14 +72,14 @@ test("opening board controller fetches both lists and opens the selected reposit
   });
 
   assert.deepEqual(await controller.refresh(), {
-    library: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+    repositoryBoards: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
     diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
-    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
-    errors: { library: "", runtime: "" },
+    inProgressBoards: [{ boardId: "board-2", productName: "Beta", saved: false }],
+    error: "",
   });
   assert.deepEqual(await controller.openRepositoryBoard("alpha"), { boardId: "board-1", productName: "Alpha" });
   assert.deepEqual(await controller.openRuntimeBoard("board-2"), { boardId: "board-2", productName: "Beta" });
-  assert.deepEqual(calls, ["library", "runtime", ["open", "alpha"], ["get", "board-2"]]);
+  assert.deepEqual(calls, ["boards", ["open", "alpha"], ["get", "board-2"]]);
 });
 
 test("opening board rows pass the selected repository and runtime identifiers", () => {
@@ -106,11 +103,14 @@ test("opening board rows pass the selected repository and runtime identifiers", 
 
   renderOpeningBoardList(repository, {
     state: "boards",
-    boards: [{ boardId: "metolius-compact-ii", displayName: "Wood Grips Compact II" }],
+    boards: [
+      { boardId: "metolius-compact-ii", displayName: "Wood Grips Compact II", status: "published" },
+      { boardId: "beastmaker-1000", displayName: "beastmaker-1000", status: "draft" },
+    ],
   }, {
     label: (board) => board.displayName,
     detail: () => "Ready to open",
-    onSelect: (boardId) => selected.push(["openLibraryBoard", boardId]),
+    onSelect: (boardId) => selected.push(["openRepositoryBoard", boardId]),
   });
   renderOpeningBoardList(inProgress, {
     state: "boards",
@@ -122,33 +122,34 @@ test("opening board rows pass the selected repository and runtime identifiers", 
   });
 
   repository.children[0].listeners.click();
+  repository.children[1].listeners.click();
   inProgress.children[0].listeners.click();
 
   assert.deepEqual(selected, [
-    ["openLibraryBoard", "metolius-compact-ii"],
+    ["openRepositoryBoard", "metolius-compact-ii"],
+    ["openRepositoryBoard", "beastmaker-1000"],
     ["getBoard", "runtime-board-17"],
   ]);
 });
 
-test("opening board controller preserves the runtime list when the library request fails", async () => {
+test("opening board controller reports one failure when the boards request fails", async () => {
   const controller = createOpeningBoardController({
-    async listLibraryBoards() { throw new Error("Repository unavailable"); },
-    async listBoards() { return [{ boardId: "board-2", productName: "Beta", saved: false }]; },
-    async openLibraryBoard() { throw new Error("not used"); },
+    async listBoards() { throw new Error("Boards unavailable"); },
+    async openRepositoryBoard() { throw new Error("not used"); },
     async getBoard() { throw new Error("not used"); },
   });
 
   assert.deepEqual(await controller.refresh(), {
-    library: [],
+    repositoryBoards: [],
     diagnostics: [],
-    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
-    errors: { library: "Repository unavailable", runtime: "" },
+    inProgressBoards: [],
+    error: "Boards unavailable",
   });
 });
 
 test("opening screen renders empty board sections while leaving Create board visible", () => {
-  assert.deepEqual(openingScreenState({ library: [], runtime: [], errors: {} }), {
-    repository: { state: "empty", boards: [], message: "No published boards yet." },
+  assert.deepEqual(openingScreenState({ repositoryBoards: [], inProgressBoards: [] }), {
+    repository: { state: "empty", boards: [], message: "No repository boards yet." },
     inProgress: { state: "empty", boards: [], message: "No boards in progress." },
     repositoryDiagnostics: [],
     createFormVisible: true,
@@ -157,15 +158,15 @@ test("opening screen renders empty board sections while leaving Create board vis
 
 test("opening screen retains Create board when the repository list reports an error", () => {
   assert.deepEqual(openingScreenState({
-    library: [],
-    runtime: [{ boardId: "board-2", productName: "Beta", saved: false }],
-    errors: { library: "Repository unavailable", runtime: "" },
+    repositoryBoards: [],
+    inProgressBoards: [{ boardId: "board-2", productName: "Beta", saved: false }],
+    error: "Repository unavailable",
   }), {
     repository: { state: "error", boards: [], message: "Repository unavailable" },
     inProgress: {
-      state: "boards",
+      state: "error",
       boards: [{ boardId: "board-2", productName: "Beta", saved: false }],
-      message: "",
+      message: "Repository unavailable",
     },
     repositoryDiagnostics: [],
     createFormVisible: true,
@@ -179,7 +180,7 @@ test("opening screen keeps valid repository boards selectable while exposing pac
     message: "broken-board: run is not Stage 4 complete",
   }];
   const screen = openingScreenState({
-    library: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
+    repositoryBoards: [{ boardId: "alpha", displayName: "Alpha", revisionToken: "a".repeat(64) }],
     diagnostics,
   });
 
@@ -190,7 +191,7 @@ test("opening screen keeps valid repository boards selectable while exposing pac
 
 test("opening screen with only package diagnostics omits the misleading empty-library message", () => {
   const screen = openingScreenState({
-    library: [],
+    repositoryBoards: [],
     diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
   });
 
@@ -236,14 +237,14 @@ test("opening screen keeps the Create board form visible for empty and repositor
     },
   };
 
-  renderOpeningFormVisibility(form, openingScreenState({ library: [], runtime: [], errors: {} }));
+  renderOpeningFormVisibility(form, openingScreenState({ repositoryBoards: [], inProgressBoards: [] }));
   assert.equal(classes.has("hidden"), false);
 
   classes.add("hidden");
   renderOpeningFormVisibility(form, openingScreenState({
-    library: [],
-    runtime: [],
-    errors: { library: "Repository unavailable" },
+    repositoryBoards: [],
+    inProgressBoards: [],
+    error: "Repository unavailable",
   }));
   assert.equal(classes.has("hidden"), false);
 });

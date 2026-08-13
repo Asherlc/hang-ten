@@ -15,13 +15,17 @@ test("board reads recover when the local backend briefly rejects connections", a
   global.fetch = async (path) => {
     calls.push(path);
     if (calls.length < 3) throw new TypeError("Load failed");
-    return response({ ok: true, boards: [{ boardId: "recovered-board" }] });
+    return response({ ok: true, boards: [{ boardId: "recovered-board", location: "repository" }] });
   };
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
 
   try {
-    assert.deepEqual(await client.listBoards(), [{ boardId: "recovered-board" }]);
+    assert.deepEqual(await client.listBoards(), {
+      repositoryBoards: [{ boardId: "recovered-board", location: "repository" }],
+      inProgressBoards: [],
+      diagnostics: [],
+    });
     assert.deepEqual(calls, ["/api/boards", "/api/boards", "/api/boards"]);
   } finally {
     global.setTimeout = originalSetTimeout;
@@ -74,27 +78,20 @@ test("request failures are reported to the native diagnostic bridge", async () =
     },
   };
   global.fetch = async (path) => {
-    if (path === "/api/library") return { ok: false, status: 503, async json() { return { ok: false }; } };
+    if (path === "/api/boards") return { ok: false, status: 503, async json() { return { ok: false }; } };
     return { ok: true, status: 200, async json() { throw new SyntaxError("bad json"); } };
   };
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
 
   try {
-    await assert.rejects(client.listLibraryBoards(), /\/api\/library failed \(503\)/);
-    await assert.rejects(client.listBoards(), /unreadable response \(200\)/);
+    await assert.rejects(client.listBoards(), /\/api\/boards failed \(503\)/);
     assert.deepEqual(diagnostics, [
       {
-        path: "/api/library",
-        category: "server",
-        message: "Workbench request for /api/library failed (503)",
-        status: 503,
-      },
-      {
         path: "/api/boards",
-        category: "unreadable-response",
-        message: "Workbench request for /api/boards returned an unreadable response (200)",
-        status: 200,
+        category: "server",
+        message: "Workbench request for /api/boards failed (503)",
+        status: 503,
       },
     ]);
   } finally {
@@ -188,7 +185,7 @@ test("createFromUpload sends the raw image with its media type and encoded produ
   const image = { type: "image/webp", bytes: new Uint8Array([1, 2, 3]) };
   global.fetch = async (path, options = {}) => {
     calls.push([path, options]);
-    if (path.startsWith("/api/boards/upload?")) {
+    if (path.startsWith("/api/boards?")) {
       return response({ ok: true, jobId: "job-upload", boardId: "board-upload" });
     }
     return response({
@@ -206,7 +203,7 @@ test("createFromUpload sends the raw image with its media type and encoded produ
   const client = require("../workbench-client.js");
 
   assert.deepEqual(await client.createFromUpload("Board & Rail", image), { boardId: "board-upload" });
-  assert.equal(calls[0][0], "/api/boards/upload?productName=Board+%26+Rail");
+  assert.equal(calls[0][0], "/api/boards?type=upload&productName=Board+%26+Rail");
   assert.deepEqual(calls[0][1].headers, { "Content-Type": "image/webp" });
   assert.equal(calls[0][1].body, image);
 });
@@ -485,7 +482,7 @@ test("importRun submits an explicit CLI run root to the import endpoint", async 
   const calls = [];
   global.fetch = async (path, options = {}) => {
     calls.push([path, options]);
-    if (path === "/api/boards/import") return response({ ok: true, jobId: "job-import" });
+    if (path === "/api/boards") return response({ ok: true, jobId: "job-import" });
     return response({
       ok: true,
       job: {
@@ -501,17 +498,17 @@ test("importRun submits an explicit CLI run root to the import endpoint", async 
   const client = require("../workbench-client.js");
 
   assert.deepEqual(await client.importRun("/workspace/cli-run"), { boardId: "board-imported" });
-  assert.equal(calls[0][0], "/api/boards/import");
-  assert.deepEqual(JSON.parse(calls[0][1].body), { runRoot: "/workspace/cli-run" });
+  assert.equal(calls[0][0], "/api/boards");
+  assert.deepEqual(JSON.parse(calls[0][1].body), { type: "import", runRoot: "/workspace/cli-run" });
 });
 
-test("listLibraryBoards returns repository boards and diagnostics", async () => {
+test("listBoards returns repository boards and diagnostics", async () => {
   const calls = [];
   global.fetch = async (path) => {
     calls.push(path);
     return response({
       ok: true,
-      boards: [{ boardId: "example-board" }],
+      boards: [{ boardId: "example-board", location: "repository" }],
       diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
     });
   };
@@ -519,20 +516,21 @@ test("listLibraryBoards returns repository boards and diagnostics", async () => 
   const client = require("../workbench-client.js");
 
   assert.deepEqual(
-    await client.listLibraryBoards(),
+    await client.listBoards(),
     {
-      boards: [{ boardId: "example-board" }],
+      repositoryBoards: [{ boardId: "example-board", location: "repository" }],
+      inProgressBoards: [],
       diagnostics: [{ path: "broken-board", code: "invalid_run", message: "Broken package" }],
     },
   );
-  assert.deepEqual(calls, ["/api/library"]);
+  assert.deepEqual(calls, ["/api/boards"]);
 });
 
-test("openLibraryBoard posts to the encoded repository route", async () => {
+test("openRepositoryBoard creates a workspace board from a repository board", async () => {
   const calls = [];
-  global.fetch = async (path) => {
-    calls.push(path);
-    if (path === "/api/library/example%20board/open") {
+  global.fetch = async (path, options = {}) => {
+    calls.push([path, options]);
+    if (path === "/api/boards") {
       return response({ ok: true, jobId: "job-library" });
     }
     return response({
@@ -549,18 +547,22 @@ test("openLibraryBoard posts to the encoded repository route", async () => {
   delete require.cache[require.resolve("../workbench-client.js")];
   const client = require("../workbench-client.js");
 
-  assert.deepEqual(await client.openLibraryBoard("example board"), { boardId: "board-0001" });
-  assert.deepEqual(calls, [
-    "/api/library/example%20board/open",
+  assert.deepEqual(await client.openRepositoryBoard("example board"), { boardId: "board-0001" });
+  assert.deepEqual(calls.map(([path]) => path), [
+    "/api/boards",
     "/api/jobs/job-library",
   ]);
+  assert.deepEqual(JSON.parse(calls[0][1].body), {
+    type: "repository",
+    boardId: "example board",
+  });
 });
 
-test("finalSave posts to the encoded board-scoped save route", async () => {
+test("finalSave patches the encoded board resource", async () => {
   const calls = [];
   global.fetch = async (path, options = {}) => {
     calls.push([path, options]);
-    if (path === "/api/boards/board%209/save") {
+    if (path === "/api/boards/board%209") {
       return response({ ok: true, jobId: "job-save", boardId: "board 9" });
     }
     return response({
@@ -581,7 +583,8 @@ test("finalSave posts to the encoded board-scoped save route", async () => {
     await client.finalSave({ boardId: "board 9", revisionId: "revision-1" }),
     { boardId: "board 9", saved: true },
   );
-  assert.equal(calls[0][0], "/api/boards/board%209/save");
+  assert.equal(calls[0][0], "/api/boards/board%209");
+  assert.equal(calls[0][1].method, "PATCH");
   assert.deepEqual(JSON.parse(calls[0][1].body), {
     boardId: "board 9",
     expectedRevisionId: "revision-1",
@@ -651,7 +654,7 @@ test("validation run uses a revision-bound job", async () => {
       checks: [],
     },
   );
-  assert.equal(calls[0][0], "/api/boards/board%209/validation/run");
+  assert.equal(calls[0][0], "/api/boards/board%209/validation");
   assert.deepEqual(JSON.parse(calls[0][1].body), {
     boardId: "board 9",
     expectedRevisionId: "revision-2",

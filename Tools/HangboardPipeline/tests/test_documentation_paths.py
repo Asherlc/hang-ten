@@ -81,6 +81,22 @@ def test_ci_python_job_provisions_uv_before_running_pipeline_tests() -> None:
     assert uv_index < min(test_indices)
 
 
+def test_required_debug_build_check_is_the_unconditional_matrix_build() -> None:
+    """The protected matrix check must exist for every workflow run."""
+    workflow = _ci_workflow()
+    jobs = workflow["jobs"]
+    ios_build = jobs["build-ios"]
+
+    required_name = "Build (Debug simulator)"
+    assert ios_build["name"] == "Build (${{ matrix.name }})"
+    assert "if" not in ios_build
+    assert "needs" not in ios_build
+    assert "build-required" not in jobs
+    matrix = ios_build["strategy"]["matrix"]["include"]
+    assert [entry["name"] for entry in matrix] == ["Debug simulator"]
+    assert ios_build["name"].replace("${{ matrix.name }}", matrix[0]["name"]) == required_name
+
+
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     """The documented staging command must use the script's Xcode destination contract."""
     testing = TESTING.read_text(encoding="utf-8")

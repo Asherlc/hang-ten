@@ -51,9 +51,35 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
-Open `http://localhost:4173`. The opening screen lists published boards and
-work in progress, or lets you create a board from the exact commercial product
-name and an HTTP(S) image URL or local upload.
+Open `http://localhost:4173`. The opening screen lists repository boards with
+their draft or published status and workspace work in progress. Draft boards
+start editing from their existing primary image; published boards start from
+their complete package. You can also create a board from the exact commercial
+product name and an HTTP(S) image URL or local upload.
+
+### Board HTTP resources
+
+The Workbench exposes one REST collection at `/api/boards`:
+
+- `GET /api/boards` lists each logical board once under its stable board ID and
+  includes a dereferenceable `href`. Opening a repository board does not create
+  a second identity: the same item gains its in-progress revision fields.
+  Boards created from URLs, uploads, or imports always receive a deterministic,
+  opaque ID derived from their internal workspace identity. That public ID does
+  not change when the repository catalog changes, and internal IDs are never
+  accepted as aliases by the HTTP API.
+- `POST /api/boards` creates a workspace board from exactly one explicit JSON
+  representation: `{type:"url", productName, source}`,
+  `{type:"import", runRoot}`, or `{type:"repository", boardId}`. Mixed,
+  incomplete, and unknown representations are rejected. A raw `image/*` body
+  uses the required query metadata `type=upload&productName=...`.
+- `GET /api/boards/{boardId}` reads a board in any lifecycle state. `PATCH` on
+  an in-progress board persists its final state without replacing the resource.
+- `GET /api/boards/{boardId}/validation` reads its report; `POST` creates a
+  report for the supplied revision.
+
+Asynchronous creation and mutation responses identify a job resource at
+`/api/jobs/{jobId}`.
 
 ## Correct hold outlines
 

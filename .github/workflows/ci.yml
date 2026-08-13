@@ -143,15 +143,11 @@ jobs:
           path: Tools/HangboardPipeline/pytest-results.xml
           if-no-files-found: ignore
 
-  build:
+  build-ios:
+    # Branch protection requires the expanded matrix job's exact check name.
+    # Do not path-gate this job: a skipped matrix job does not create that
+    # check run, so GitHub leaves the requirement in "Expected" forever.
     name: Build (${{ matrix.name }})
-    needs:
-      - changes
-    if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 30
     strategy:

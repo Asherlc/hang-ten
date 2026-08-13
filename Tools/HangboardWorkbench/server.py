@@ -41,6 +41,9 @@ _ABSOLUTE_PATH_IN_TEXT = re.compile(
 CUBIC_SEGMENTS = 12
 HOLD_IDENTIFIER = re.compile(r"hold-(\d+)$")
 _CATALOG_OUTLINE_SAVE_LOCK = RLock()
+def _unlinked_board_id(board_id: str) -> str:
+    """Return the stable public identity of a workspace-only board."""
+    return f"board-{hashlib.sha256(f'workspace\0{board_id}'.encode()).hexdigest()}"
 
 
 def _new_board_reservation_key() -> str:
@@ -407,7 +410,7 @@ def save_review(
     }
 
 
-def _workbench_view_payload(view: object) -> dict[str, Any]:
+def _workbench_view_payload(view: object, public_board_id: str) -> dict[str, Any]:
     run_root = Path(view.run_root).resolve()
     def artifact_url(path: Path | None, label: str) -> str | None:
         if path is None:
@@ -421,7 +424,7 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
             ) from error
         return "/api/artifact?" + urlencode(
             {
-                "boardId": view.board_id,
+                "boardId": public_board_id,
                 "revisionId": view.revision_id,
                 "path": relative_artifact.as_posix(),
             }
@@ -435,7 +438,7 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
         getattr(view, "normal_artifact_path", None), "Stage 4 normal"
     )
     return {
-        "boardId": view.board_id,
+        "boardId": public_board_id,
         "revisionId": view.revision_id,
         "parentRevisionId": view.parent_revision_id,
         "productName": view.product_name,
@@ -454,14 +457,85 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
     }
 
 
+class PublicBoardMapper:
+    """The single boundary between internal workspace and public board identities."""
+
+    def __init__(self, service: object) -> None:
+        self._service = service
+
+    def _mappings(self) -> tuple[dict[str, str], dict[str, str]]:
+        internal_to_public: dict[str, str] = {}
+        public_to_internal: dict[str, str] = {}
+        repository_ids = {board.board_id for board in self._service.library_snapshot().boards}
+        for view in self._service.list_boards():
+            public_id = view.repository_board_id or _unlinked_board_id(view.board_id)
+            if view.repository_board_id is None and public_id in repository_ids:
+                raise EditorError("workspace board identity collision")
+            previous = public_to_internal.get(public_id)
+            if previous is not None and previous != view.board_id:
+                raise EditorError("workspace board identity collision")
+            internal_to_public[view.board_id] = public_id
+            public_to_internal[public_id] = view.board_id
+        return internal_to_public, public_to_internal
+
+    def public_id(self, view: object) -> str:
+        public_id = view.repository_board_id or _unlinked_board_id(view.board_id)
+        internal_to_public, _ = self._mappings()
+        if internal_to_public.get(view.board_id) != public_id:
+            raise EditorError("workspace board identity collision")
+        return public_id
+
+    def internal_id(self, public_id: str) -> str:
+        _, public_to_internal = self._mappings()
+        try:
+            return public_to_internal[public_id]
+        except KeyError as error:
+            raise RequestError(HTTPStatus.NOT_FOUND, "board does not exist") from error
+
+    def view_payload(self, view: object) -> dict[str, Any]:
+        public_id = self.public_id(view)
+        return {
+            **_workbench_view_payload(view, public_id),
+            "href": f"/api/boards/{public_id}",
+            "inProgress": True,
+        }
+
+    def result_payload(self, result: object) -> object:
+        """Serialize every asynchronous result through public board identity."""
+        from hangboard_vectorizer.workbench import WorkbenchView
+        from hangboard_vectorizer.workbench_promotion import PackagePublication
+        from hangboard_vectorizer.workbench_validation import ValidationReport
+
+        if isinstance(result, WorkbenchView):
+            return self.view_payload(result)
+        if isinstance(result, PackagePublication):
+            return {"paths": [path.as_posix() for path in result.paths]}
+        if isinstance(result, ValidationReport):
+            public_id = self.public_id(
+                next(view for view in self._service.list_boards() if view.board_id == result.board_id)
+            )
+            return {
+                "boardId": public_id,
+                "href": f"/api/boards/{public_id}/validation",
+                "revisionId": result.revision_id,
+                "overallStatus": result.overall_status,
+                "checks": [
+                    {"checkId": check.check_id, "status": check.status,
+                     "message": check.message, "details": list(check.details)}
+                    for check in result.checks
+                ],
+            }
+        raise TypeError("workbench job result is unsupported")
+
+
 def _workbench_job_payload(result: object) -> object:
-    """Serialize the small set of workbench result contracts exposed to browsers."""
+    """Serialize non-board jobs when no Workbench service is configured."""
     from hangboard_vectorizer.workbench import WorkbenchView
     from hangboard_vectorizer.workbench_promotion import PackagePublication
     from hangboard_vectorizer.workbench_validation import ValidationReport
 
     if isinstance(result, WorkbenchView):
-        return _workbench_view_payload(result)
+        raise TypeError("WorkbenchView serialization requires a board mapper")
     if isinstance(result, PackagePublication):
         return {"paths": [path.as_posix() for path in result.paths]}
     if isinstance(result, ValidationReport):
@@ -506,9 +580,10 @@ def create_server(
         if source is not None
         else None
     )
+    board_mapper = PublicBoardMapper(workbench_service) if workbench_service is not None else None
     jobs = BoardJobManager(
         max_workers=max_workers,
-        result_serializer=_workbench_job_payload,
+        result_serializer=board_mapper.result_payload if board_mapper else _workbench_job_payload,
         public_error_types=public_job_error_types,
         public_error_formatter=_public_job_error_message,
         outcome_root=job_outcome_root,
@@ -522,6 +597,7 @@ def create_server(
         SessionHandler,
         editor_root=resolved_editor_root,
         workbench_service=workbench_service,
+        board_mapper=board_mapper,
         job_manager=jobs,
         public_error_types=public_job_error_types,
     )
@@ -537,11 +613,13 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         *,
         editor_root: Path,
         workbench_service: object | None,
+        board_mapper: PublicBoardMapper | None,
         job_manager: BoardJobManager,
         public_error_types: tuple[type[Exception], ...],
     ) -> None:
         self.editor_root = Path(editor_root).resolve(strict=False)
         self.workbench_service = workbench_service
+        self.board_mapper = board_mapper
         self.job_manager = job_manager
         self.public_error_types = public_error_types
         super().__init__(server_address, request_handler)
@@ -563,9 +641,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         path = request.path
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
-            return
-        if path == "/api/library":
-            self._get_library()
             return
         if path == "/api/boards":
             self._get_boards()
@@ -672,53 +747,55 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         request = urlsplit(self.path)
         try:
             service = self._workbench_service()
-            if request.path == "/api/boards/upload":
+            if (
+                request.path == "/api/boards"
+                and self.headers.get_content_type() != "application/json"
+            ):
                 self._post_upload(service, request.query)
                 return
             payload = self._read_json_object()
             if request.path == "/api/boards":
-                product_name = self._required_string(payload, "productName")
-                source = self._required_string(payload, "source")
-                self._submit_job(
-                    _new_board_reservation_key(),
-                    lambda: service.create_from_url(product_name, source),
-                )
-                return
-            if request.path == "/api/boards/import":
-                run_root = Path(self._required_string(payload, "runRoot"))
-                self._submit_job(
-                    _new_board_reservation_key(),
-                    lambda: service.import_run(run_root),
-                )
-                return
-            if request.path.startswith("/api/library/") and request.path.endswith("/open"):
-                board_id = unquote(
-                    request.path.removeprefix("/api/library/").removesuffix("/open")
-                )
-                self._post_library_open(service, board_id)
+                creation_type = self._required_string(payload, "type")
+                allowed = {
+                    "url": {"type", "productName", "source"},
+                    "import": {"type", "runRoot"},
+                    "repository": {"type", "boardId"},
+                }
+                if creation_type not in allowed:
+                    raise RequestError(HTTPStatus.BAD_REQUEST, "type must be url, import, or repository")
+                unknown = set(payload) - allowed[creation_type]
+                missing = allowed[creation_type] - set(payload)
+                if unknown or missing:
+                    raise RequestError(
+                        HTTPStatus.BAD_REQUEST,
+                        f"{creation_type} creation fields must be exactly: {', '.join(sorted(allowed[creation_type]))}",
+                    )
+                if creation_type == "repository":
+                    self._post_repository_board_open(
+                        service,
+                        self._required_string(payload, "boardId"),
+                    )
+                elif creation_type == "import":
+                    run_root = Path(self._required_string(payload, "runRoot"))
+                    self._submit_job(
+                        _new_board_reservation_key(), lambda: service.import_run(run_root)
+                    )
+                elif creation_type == "url":
+                    product_name = self._required_string(payload, "productName")
+                    source = self._required_string(payload, "source")
+                    self._submit_job(
+                        _new_board_reservation_key(),
+                        lambda: service.create_from_url(product_name, source),
+                    )
                 return
             if request.path == "/api/package-candidates":
                 self._post_package_candidate(service, payload)
                 return
-            if request.path.startswith("/api/boards/") and request.path.endswith("/validation/run"):
+            if request.path.startswith("/api/boards/") and request.path.endswith("/validation"):
                 board_id = unquote(
-                    request.path.removeprefix("/api/boards/").removesuffix("/validation/run")
+                    request.path.removeprefix("/api/boards/").removesuffix("/validation")
                 )
                 self._post_validation(service, board_id, payload)
-                return
-            if (
-                request.path.startswith("/api/boards/")
-                and request.path.endswith("/save")
-                and "/" not in request.path.removeprefix("/api/boards/").removesuffix("/save")
-            ):
-                board_id = unquote(
-                    request.path.removeprefix("/api/boards/").removesuffix("/save")
-                )
-                if self._required_string(payload, "boardId") != board_id:
-                    raise RequestError(
-                        HTTPStatus.BAD_REQUEST, "boardId must match the save route"
-                    )
-                self._post_mutation(service, "/api/final-save", payload)
                 return
             if request.path in {
                 "/api/drafts",
@@ -746,7 +823,44 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {"ok": False, "error": "request failed"},
             )
 
+    def do_PATCH(self) -> None:  # noqa: N802
+        if not self._allow_request(mutation=True):
+            return
+        request = urlsplit(self.path)
+        board_suffix = request.path.removeprefix("/api/boards/")
+        if request.path.startswith("/api/boards/") and board_suffix and "/" not in board_suffix:
+            try:
+                public_board_id = unquote(board_suffix)
+                service = self._workbench_service()
+                payload = self._read_json_object()
+                if self._required_string(payload, "boardId") != public_board_id:
+                    raise RequestError(
+                        HTTPStatus.BAD_REQUEST, "boardId must match the board route"
+                    )
+                self._post_mutation(
+                    service, "/api/final-save", payload
+                )
+            except RequestError as error:
+                self._send_json(error.status, {"ok": False, "error": str(error)})
+            except JobConflictError as error:
+                self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+            except JobCapacityError as error:
+                self._send_json(
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                    {"ok": False, "error": str(error)},
+                )
+            except ValueError as error:
+                self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+            except Exception:
+                self._send_json(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    {"ok": False, "error": "request failed"},
+                )
+            return
+        self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+
     def do_PUT(self) -> None:  # noqa: N802
+        """Retain PUT only for the legacy whole-document outline save API."""
         if not self._allow_request(mutation=True):
             return
         request = urlsplit(self.path)
@@ -800,35 +914,30 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _get_boards(self) -> None:
         try:
             service = self._workbench_service()
-            boards = [_workbench_view_payload(view) for view in service.list_boards()]
-        except RequestError as error:
-            self._send_json(error.status, {"ok": False, "error": str(error)})
-            return
-        except self._public_error_types() as error:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
-            return
-        except Exception:
-            self._send_json(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                {"ok": False, "error": "request failed"},
-            )
-            return
-        self._send_json(HTTPStatus.OK, {"ok": True, "boards": boards})
-
-    def _get_library(self) -> None:
-        try:
-            service = self._workbench_service()
             snapshot = service.library_snapshot()
-            boards = [
-                {
+            repository = {board.board_id: board for board in snapshot.boards}
+            boards = [{
                     "boardId": board.board_id,
+                    "href": f"/api/boards/{board.board_id}",
                     "displayName": board.display_name,
                     "revisionToken": board.revision_token,
+                    "status": board.status,
+                    "inProgress": False,
                 }
-                for board in snapshot.boards
-            ]
+                for board in snapshot.boards]
+            by_id = {board["boardId"]: index for index, board in enumerate(boards)}
+            for view in service.list_boards():
+                payload = self._board_mapper().view_payload(view)
+                public_id = payload["boardId"]
+                if public_id in repository:
+                    source = repository[public_id]
+                    payload.update(displayName=source.display_name, status=source.status,
+                                   revisionToken=source.revision_token)
+                    boards[by_id[public_id]] = payload
+                else:
+                    boards.append(payload)
             diagnostics = [
-                self._library_diagnostic_payload(diagnostic)
+                self._repository_diagnostic_payload(diagnostic)
                 for diagnostic in snapshot.diagnostics
             ]
         except RequestError as error:
@@ -845,18 +954,43 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(
             HTTPStatus.OK,
-            {"ok": True, "boards": boards, "diagnostics": diagnostics},
+            {
+                "ok": True,
+                "boards": boards,
+                "diagnostics": diagnostics,
+            },
         )
+
+    def _workspace_board_id(self, service: object, public_id: str) -> str:
+        return self._board_mapper().internal_id(public_id)
 
     def _get_board(self, board_id: str, query: str) -> None:
         try:
             if not board_id:
                 raise RequestError(HTTPStatus.NOT_FOUND, "not found")
             service = self._workbench_service()
+            try:
+                internal_id = self._board_mapper().internal_id(board_id)
+            except RequestError:
+                internal_id = None
+            runtime = next((item for item in service.list_boards()
+                            if item.board_id == internal_id), None)
+            if runtime is None:
+                board = next((item for item in service.library_snapshot().boards if item.board_id == board_id), None)
+                if board is None: raise RequestError(HTTPStatus.NOT_FOUND, "board does not exist")
+                self._send_json(HTTPStatus.OK, {"ok": True, "board": {
+                    "boardId": board_id,
+                    "href": f"/api/boards/{board_id}",
+                    "displayName": board.display_name,
+                    "revisionToken": board.revision_token,
+                    "status": board.status,
+                    "inProgress": False,
+                }})
+                return
             revision_values = parse_qs(query).get("revisionId", [])
             revision_id = revision_values[0] if revision_values else None
-            board = _workbench_view_payload(
-                service.get_board(board_id, revision_id=revision_id)
+            board = self._board_mapper().view_payload(
+                service.get_board(runtime.board_id, revision_id=revision_id)
             )
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
@@ -877,8 +1011,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if not board_id:
                 raise RequestError(HTTPStatus.NOT_FOUND, "not found")
             revision_id = self._required_query_string(parse_qs(query), "revisionId")
-            report = self._workbench_service().get_validation_report(
-                board_id, expected_revision_id=revision_id
+            service = self._workbench_service()
+            internal_id = self._workspace_board_id(service, board_id)
+            report = service.get_validation_report(
+                internal_id, expected_revision_id=revision_id
             )
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
@@ -898,7 +1034,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 "ok": True,
                 "boardId": board_id,
                 "revisionId": revision_id,
-                "report": None if report is None else _workbench_job_payload(report),
+                "report": None if report is None else self._board_mapper().result_payload(report),
             },
         )
 
@@ -920,7 +1056,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     HTTPStatus.BAD_REQUEST,
                     "artifact path must stay within the selected revision",
                 )
-            board_id = self._required_query_string(values, "boardId")
+            public_board_id = self._required_query_string(values, "boardId")
+            board_id = self._workspace_board_id(self._workbench_service(), public_board_id)
             revision_id = self._required_query_string(values, "revisionId")
             view = self._workbench_service().get_board(
                 board_id, revision_id=revision_id
@@ -948,9 +1085,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
                 "Content-Type must be image/*",
             )
-        product_name = self._required_query_string(
-            parse_qs(query), "productName"
-        )
+        values = parse_qs(query)
+        if set(values) != {"type", "productName"} or self._required_query_string(values, "type") != "upload":
+            raise RequestError(HTTPStatus.BAD_REQUEST, "upload metadata must contain exactly type=upload and productName")
+        product_name = self._required_query_string(values, "productName")
         content = self._read_body()
         if not content:
             raise RequestError(HTTPStatus.BAD_REQUEST, "upload must not be empty")
@@ -959,7 +1097,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             lambda: service.create_from_upload(product_name, content),
         )
 
-    def _post_library_open(self, service: object, board_id: str) -> None:
+    def _post_repository_board_open(self, service: object, board_id: str) -> None:
         if not board_id:
             raise RequestError(HTTPStatus.NOT_FOUND, "not found")
         if not any(
@@ -984,7 +1122,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         return path.as_posix()
 
     @classmethod
-    def _library_diagnostic_payload(cls, diagnostic: object) -> dict[str, str]:
+    def _repository_diagnostic_payload(cls, diagnostic: object) -> dict[str, str]:
         path = cls._relative_diagnostic_path(diagnostic.path)
         message = diagnostic.message
         if (
@@ -998,8 +1136,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _post_mutation(
         self, service: object, path: str, payload: dict[str, Any]
     ) -> None:
-        board_id = self._required_string(payload, "boardId")
+        public_board_id = self._required_string(payload, "boardId")
         revision_id = self._required_string(payload, "expectedRevisionId")
+        if path != "/api/final-save":
+            self._required_stage(payload, "expectedStage")
+        if path in {"/api/drafts", "/api/approve"}:
+            self._required_string(payload, "expectedCheckpointToken")
+        if path == "/api/drafts" and "document" not in payload:
+            raise RequestError(HTTPStatus.BAD_REQUEST, "document is required")
+        board_id = self._workspace_board_id(service, public_board_id)
         if path == "/api/final-save":
             operation = lambda: service.save(
                 board_id, expected_revision_id=revision_id
@@ -1045,7 +1190,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     expected_revision_id=revision_id,
                 )
         self._submit_job(
-            board_id,
+            public_board_id,
             operation,
             conflict_key=service.mutation_reservation_key(board_id),
         )
@@ -1072,9 +1217,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 HTTPStatus.BAD_REQUEST, "boardId must match the validation route"
             )
         revision_id = self._required_string(payload, "expectedRevisionId")
+        public_board_id = board_id
+        board_id = self._workspace_board_id(service, public_board_id)
 
         self._submit_job(
-            board_id,
+            public_board_id,
             lambda: service.validation_report(
                 board_id, expected_revision_id=revision_id
             ),
@@ -1098,7 +1245,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         response: dict[str, object] = {"ok": True, "jobId": job.id}
         if include_board_id:
             response["boardId"] = board_id
-        self._send_json(HTTPStatus.ACCEPTED, response)
+        self._send_json(
+            HTTPStatus.ACCEPTED,
+            response,
+            headers={"Location": f"/api/jobs/{job.id}"},
+        )
 
     def _read_json_object(self) -> dict[str, Any]:
         if self.headers.get_content_type() != "application/json":
@@ -1173,6 +1324,12 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _job_manager(self) -> BoardJobManager:
         return self.server.job_manager
 
+    def _board_mapper(self) -> PublicBoardMapper:
+        mapper = getattr(self.server, "board_mapper", None)
+        if mapper is None:
+            raise RequestError(HTTPStatus.NOT_FOUND, "workbench service is unavailable")
+        return mapper
+
     def _public_error_types(self) -> tuple[type[Exception], ...]:
         return self.server.public_error_types
 
@@ -1219,12 +1376,20 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     def _run_url(path: str, run_id: str, include_run: bool) -> str:
         return f"{path}?{urlencode({'run': run_id})}" if include_run else path
 
-    def _send_json(self, status: HTTPStatus, value: object) -> None:
+    def _send_json(
+        self,
+        status: HTTPStatus,
+        value: object,
+        *,
+        headers: dict[str, str] | None = None,
+    ) -> None:
         body = json.dumps(value, separators=(",", ":"), allow_nan=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        for name, header_value in (headers or {}).items():
+            self.send_header(name, header_value)
         self.end_headers()
         self.wfile.write(body)
 

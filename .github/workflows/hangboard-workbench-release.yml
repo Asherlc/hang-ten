@@ -283,7 +283,7 @@ jobs:
               print(f"/{asset}")
           PY
           )
-          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
+          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/boards" \
             | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
 
           app_child_pid="$(pgrep -P "$app_pid" || true)"

@@ -326,7 +326,7 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
         assert required_fragment in script
     assert "http://127.0.0.1:${port}/api/health" in script
     assert "http://127.0.0.1:${port}/" in script
-    assert "http://127.0.0.1:${port}/api/library" in script
+    assert "http://127.0.0.1:${port}/api/boards" in script
     assert 'payload == {"ok": True}' in script
     assert 'app_child_pid="$(pgrep -P "$app_pid" || true)"' in script
     assert 'kill -TERM "$app_pid"' in script

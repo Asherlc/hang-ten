@@ -182,9 +182,10 @@
   async function postJob(path, body, {
     headers = { "Content-Type": "application/json" },
     onAccepted = () => {},
+    method = "POST",
   } = {}) {
     const payload = await request(path, {
-      method: "POST",
+      method,
       headers,
       body: headers["Content-Type"] === "application/json" ? JSON.stringify(body) : body,
     });
@@ -196,24 +197,22 @@
   }
 
   async function listBoards() {
-    return (await request("/api/boards")).boards;
-  }
-
-  async function listLibraryBoards() {
-    const payload = await request("/api/library");
+    const payload = await request("/api/boards");
+    const boards = Array.isArray(payload.boards) ? payload.boards : [];
     return {
-      boards: Array.isArray(payload.boards) ? payload.boards : [],
+      repositoryBoards: boards.filter((board) => board.inProgress !== true),
+      inProgressBoards: boards.filter((board) => board.inProgress === true),
       diagnostics: Array.isArray(payload.diagnostics) ? payload.diagnostics : [],
     };
   }
 
   async function createFromUrl(productName, source, options = {}) {
-    return postJob("/api/boards", { productName, source }, options);
+    return postJob("/api/boards", { type: "url", productName, source }, options);
   }
 
   async function createFromUpload(productName, image, options = {}) {
-    const query = new URLSearchParams({ productName });
-    return postJob(`/api/boards/upload?${query.toString()}`, image, {
+    const query = new URLSearchParams({ type: "upload", productName });
+    return postJob(`/api/boards?${query.toString()}`, image, {
       ...options,
       headers: {
         "Content-Type": image.type || "application/octet-stream",
@@ -222,11 +221,11 @@
   }
 
   async function importRun(runRoot, options = {}) {
-    return postJob("/api/boards/import", { runRoot }, options);
+    return postJob("/api/boards", { type: "import", runRoot }, options);
   }
 
-  async function openLibraryBoard(boardId, options = {}) {
-    return postJob(`/api/library/${encodeURIComponent(boardId)}/open`, {}, options);
+  async function openRepositoryBoard(boardId, options = {}) {
+    return postJob("/api/boards", { type: "repository", boardId }, options);
   }
 
   async function getBoard(boardId, revisionId = null) {
@@ -246,7 +245,7 @@
   }
 
   async function runValidation(boardId, revisionId, options = {}) {
-    return postJob(`/api/boards/${encodeURIComponent(boardId)}/validation/run`, {
+    return postJob(`/api/boards/${encodeURIComponent(boardId)}/validation`, {
       boardId,
       expectedRevisionId: revisionId,
     }, options);
@@ -282,19 +281,18 @@
   }
 
   async function finalSave(view, options = {}) {
-    return postJob(`/api/boards/${encodeURIComponent(view.boardId)}/save`, {
+    return postJob(`/api/boards/${encodeURIComponent(view.boardId)}`, {
       boardId: view.boardId,
       expectedRevisionId: view.revisionId,
-    }, options);
+    }, { ...options, method: "PATCH" });
   }
 
   return {
     listBoards,
-    listLibraryBoards,
     createFromUrl,
     createFromUpload,
     importRun,
-    openLibraryBoard,
+    openRepositoryBoard,
     getBoard,
     getValidationReport,
     runValidation,
