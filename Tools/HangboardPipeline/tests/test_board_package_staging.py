@@ -23,7 +23,7 @@ def load_staging_module():
     return module
 
 
-def build_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
+def build_repository(tmp_path: Path) -> tuple[Path, Path, list[Path], Path]:
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     vectorizer_source = REPO_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
@@ -35,22 +35,20 @@ def build_repository(tmp_path: Path) -> tuple[Path, Path, Path]:
         / "hangboard_vectorizer"
     )
     shutil.copytree(vectorizer_source, vectorizer_destination)
-    approved_source = REPO_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
-    approved_package = hangboards / "approved-board"
-    shutil.copytree(approved_source, approved_package)
+    source_hangboards = REPO_ROOT / "Hangboards"
+    hangboards.mkdir(parents=True)
     catalog = hangboards / "catalog.json"
-    catalog.write_bytes(
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [
-                    {"id": "metolius.wood-grips-compact-ii", "path": "approved-board"},
-                ],
-            },
-            indent=2,
-        ).encode("utf-8"),
-    )
-    return repository_root, catalog, approved_package
+    shutil.copyfile(source_hangboards / "catalog.json", catalog)
+    entries = json.loads(catalog.read_text(encoding="utf-8"))["boards"]
+    catalog_packages = []
+    for entry in entries:
+        package = hangboards / entry["path"]
+        shutil.copytree(source_hangboards / entry["path"], package)
+        catalog_packages.append(package)
+
+    unregistered_candidate = hangboards / "unregistered-candidate"
+    shutil.copytree(catalog_packages[0], unregistered_candidate)
+    return repository_root, catalog, catalog_packages, unregistered_candidate
 
 
 def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
@@ -62,7 +60,7 @@ def test_staging_copies_catalog_package_bytes_and_replaces_stale_destination(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
-    repository_root, catalog, approved_package = build_repository(tmp_path)
+    repository_root, catalog, catalog_packages, unregistered_candidate = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
     (destination / "stale").mkdir(parents=True)
@@ -72,14 +70,24 @@ def test_staging_copies_catalog_package_bytes_and_replaces_stale_destination(
 
     staged = module.stage_board_packages(repository_root, destination)
 
-    assert staged == (destination / "catalog.json", destination / "approved-board")
+    expected_package_paths = [
+        destination / entry["path"]
+        for entry in json.loads(catalog.read_text(encoding="utf-8"))["boards"]
+    ]
+    assert staged == (destination / "catalog.json", *expected_package_paths)
     assert destination.joinpath("catalog.json").read_bytes() == catalog.read_bytes()
     assert not destination.joinpath("stale").exists()
     assert sibling_marker.read_bytes() == b"must remain"
-    for source_path in approved_package.rglob("*"):
-        if source_path.is_file():
-            relative_path = source_path.relative_to(approved_package)
-            assert destination.joinpath("approved-board", relative_path).read_bytes() == source_path.read_bytes()
+    assert {path.name for path in destination.iterdir()} == {
+        "catalog.json", *(path.name for path in catalog_packages)
+    }
+    assert not destination.joinpath(unregistered_candidate.name).exists()
+    for source_package in catalog_packages:
+        assert destination.joinpath(source_package.name, "assets", "primary.png").is_file()
+        for source_path in source_package.rglob("*"):
+            if source_path.is_file():
+                relative_path = source_path.relative_to(source_package)
+                assert destination.joinpath(source_package.name, relative_path).read_bytes() == source_path.read_bytes()
 
 
 def test_repeated_staging_refreshes_nested_package_file_changes(
@@ -87,14 +95,14 @@ def test_repeated_staging_refreshes_nested_package_file_changes(
 ) -> None:
     """Every staging invocation must replace previously staged nested bytes."""
     module = load_staging_module()
-    repository_root, _, approved_package = build_repository(tmp_path)
+    repository_root, _, catalog_packages, _ = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
-    nested_source = approved_package / "assets" / "primary.png"
+    nested_source = catalog_packages[0] / "assets" / "primary.png"
     nested_source.write_bytes(b"first nested revision")
 
     module.stage_board_packages(repository_root, destination)
-    nested_destination = destination / "approved-board" / "assets" / nested_source.name
+    nested_destination = destination / catalog_packages[0].name / "assets" / nested_source.name
     assert nested_destination.read_bytes() == b"first nested revision"
 
     nested_source.write_bytes(b"second nested revision")
@@ -121,7 +129,7 @@ def test_staging_rejects_symlinked_destination_and_leaves_its_target_untouched(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
-    repository_root, _, _ = build_repository(tmp_path)
+    repository_root, _, _, _ = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
     destination.parent.mkdir(parents=True)
@@ -141,7 +149,7 @@ def test_staging_rejects_symlinked_destination_ancestor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
-    repository_root, _, _ = build_repository(tmp_path)
+    repository_root, _, _, _ = build_repository(tmp_path)
     linked_build = tmp_path / "linked-build"
     linked_build.symlink_to(tmp_path / "external-build", target_is_directory=True)
     destination = linked_build / "HangTen.app" / "Hangboards"
@@ -155,7 +163,7 @@ def test_staging_rejects_symlinked_hangboards_source_root(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
-    repository_root, _, _ = build_repository(tmp_path)
+    repository_root, _, _, _ = build_repository(tmp_path)
     hangboards = repository_root / "Hangboards"
     external_hangboards = tmp_path / "external-hangboards"
     hangboards.rename(external_hangboards)
@@ -171,7 +179,7 @@ def test_staging_rejects_checkout_and_non_xcode_destinations(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
-    repository_root, _, _ = build_repository(tmp_path)
+    repository_root, _, _, _ = build_repository(tmp_path)
     checkout_destination = repository_root / "HangTen" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, checkout_destination)
 

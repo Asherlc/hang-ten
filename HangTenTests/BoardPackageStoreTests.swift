@@ -31,7 +31,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(design.id, "package-board")
         XCTAssertEqual(design.layers.count, 1)
         XCTAssertEqual(design.holds.map(\.holdID), ["jug-left", "jug-right"])
-        XCTAssertEqual(imageURL.lastPathComponent, "presentation.png")
+        XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), presentationBytes)
     }
 
@@ -263,7 +263,7 @@ final class BoardPackageStoreTests: XCTestCase {
         try boardData.write(to: packageURL.appendingPathComponent("board.json"))
         try semanticsData.write(to: packageURL.appendingPathComponent("semantics.json"))
         try artworkData.write(to: packageURL.appendingPathComponent("artwork.json"))
-        try presentationBytes.write(to: assetsURL.appendingPathComponent("presentation.png"))
+        try presentationBytes.write(to: assetsURL.appendingPathComponent("primary.png"))
         try mutate?(packageURL)
 
         let bundle = try XCTUnwrap(Bundle(url: bundleURL))
@@ -355,7 +355,7 @@ final class BoardPackageStoreTests: XCTestCase {
               "productURL": "https://example.com/package-board",
               "dimensions": "20 × 10 cm",
               "aspectRatio": 2,
-              "presentation": { "assetPath": "assets/presentation.png" },
+              "presentation": { "assetPath": "assets/primary.png" },
               "holds": [
                 {
                   "id": "jug-left",

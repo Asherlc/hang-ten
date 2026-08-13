@@ -3,13 +3,38 @@ import XCTest
 
 final class BoardSourceBoundaryTests: XCTestCase {
     func testCatalogContainsExactlyApprovedPackageBoards() {
+        let expectedIDs = [
+            "metolius.wood-grips-compact-ii",
+            "trango.rock-prodigy-training-center"
+        ]
+
         XCTAssertEqual(
             BoardCatalog.all.map(\.id).sorted(),
-            [
-                "metolius.wood-grips-compact-ii",
-                "trango.rock-prodigy-training-center"
-            ]
+            expectedIDs
         )
+    }
+
+    func testEveryCatalogBoardUsesItsPackagePrimaryPNG() throws {
+        let repositoryRoot = repositoryRootURL()
+        let packagePaths = try catalogPackagePaths(at: repositoryRoot)
+
+        for board in BoardCatalog.all {
+            let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let imageURL = try XCTUnwrap(
+                BoardCatalog.packageStore.presentationImageURL(for: board)
+            )
+            let expectedAssetsURL = Bundle.main.resourceURL!
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("assets", isDirectory: true)
+                .standardizedFileURL
+
+            XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
+            XCTAssertTrue(
+                imageURL.standardizedFileURL.path.hasPrefix(expectedAssetsURL.path + "/"),
+                "Expected \(board.id) presentation image below \(expectedAssetsURL.path), got \(imageURL.path)."
+            )
+        }
     }
 
     func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
@@ -201,6 +226,25 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
 
         return identifiers
+    }
+
+    private func catalogPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
+        let catalogURL = repositoryRoot
+            .appendingPathComponent("Hangboards", isDirectory: true)
+            .appendingPathComponent("catalog.json")
+        let catalogObject = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: catalogURL)) as? [String: Any]
+        )
+        let entries = try XCTUnwrap(catalogObject["boards"] as? [[String: Any]])
+
+        return try Dictionary(
+            uniqueKeysWithValues: entries.map { entry in
+                (
+                    try XCTUnwrap(entry["id"] as? String),
+                    try XCTUnwrap(entry["path"] as? String)
+                )
+            }
+        )
     }
 
     private func collectArtifactIdentifiers(from value: Any, into identifiers: inout Set<String>) {
