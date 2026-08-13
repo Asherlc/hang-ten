@@ -117,10 +117,8 @@ jobs:
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "$archive_path" \
-            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
+            HANGTEN_DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            HANGTEN_PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             -xcconfig "$telemetry_xcconfig" \
             clean archive
