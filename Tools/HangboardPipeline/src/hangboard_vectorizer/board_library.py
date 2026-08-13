@@ -11,7 +11,7 @@ import re
 import shutil
 import tempfile
 
-from .board_artwork import BoardHoldPieceDocument
+from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
 from .board_catalog import BoardHold, BoardPackage, load_board_package, load_catalog
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
@@ -209,9 +209,11 @@ class _CanonicalPackageRunner:
             "silhouettePaths": [
                 {
                     "pieceIndex": 0,
-                    "displayPath": (
-                        f"M 0 0 L {width} 0 L {width} {height} "
-                        f"L 0 {height} Z"
+                    "displayPath": self._shape_path(
+                        self._package.artwork.canvas_frame,
+                        self._package.artwork.silhouette,
+                        width,
+                        height,
                     ),
                 }
             ],
@@ -234,11 +236,30 @@ class _CanonicalPackageRunner:
     def _piece_path(
         piece: BoardHoldPieceDocument, width: int = 1, height: int = 1
     ) -> str:
-        frame, shape = piece.frame, piece.shape
+        return _CanonicalPackageRunner._shape_path(
+            piece.frame, piece.shape, width, height
+        )
+
+    @staticmethod
+    def _shape_path(
+        frame: NormalizedFrame,
+        shape: BoardShapeDocument,
+        width: int,
+        height: int,
+    ) -> str:
         x, y = frame.x * width, frame.y * height
         w, h = frame.width * width, frame.height * height
         if shape.type == "roundedRect":
-            return f"M {x} {y} L {x+w} {y} L {x+w} {y+h} L {x} {y+h} Z"
+            radius = min(w, h) * (shape.corner_radius_fraction or 0)
+            return (
+                f"M {x + radius} {y} L {x + w - radius} {y} "
+                f"Q {x + w} {y} {x + w} {y + radius} "
+                f"L {x + w} {y + h - radius} "
+                f"Q {x + w} {y + h} {x + w - radius} {y + h} "
+                f"L {x + radius} {y + h} "
+                f"Q {x} {y + h} {x} {y + h - radius} "
+                f"L {x} {y + radius} Q {x} {y} {x + radius} {y} Z"
+            )
         commands = []
         for command in shape.commands:
             values = {

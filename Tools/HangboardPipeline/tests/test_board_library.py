@@ -101,6 +101,24 @@ def test_copy_current_run_materializes_an_editable_runtime_run(tmp_path: Path) -
     assert (status["status"], status["stage"]) == ("complete", 4)
     assert (destination / "run.json").is_file()
 
+    stage_three = next(destination.glob("stages/03/*/stage-3-vector-regions.json"))
+    vector_document = json.loads(stage_three.read_text(encoding="utf-8"))
+    canonical_artwork = json.loads((FIXTURE / "artwork.json").read_text(encoding="utf-8"))
+    # Runtime geometry must retain both the package silhouette and rounded hold
+    # contours; replacing either with a bounding rectangle loses canonical art.
+    assert vector_document["silhouettePaths"][0]["displayPath"].count(" C ") > 0
+    rounded_piece = next(
+        piece
+        for piece in canonical_artwork["holdPieces"]
+        if piece["shape"]["type"] == "roundedRect"
+    )
+    rounded_region = next(
+        region
+        for region in vector_document["regions"]
+        if region["key"] == rounded_piece["holdID"]
+    )
+    assert rounded_region["displayPath"].count(" Q ") == 4
+
 
 def test_copy_current_run_rejects_existing_destination(tmp_path: Path) -> None:
     library = RepositoryBoardLibrary(_repository(tmp_path))

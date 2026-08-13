@@ -1809,18 +1809,15 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     canonical_run = (
-        EDITOR_ROOT.parent
-        / "HangboardPipeline"
-        / "boards"
-        / "metolius-wood-grips-compact-ii"
+        REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
     )
     shutil.copytree(
         canonical_run,
-        repository
-        / "Tools"
-        / "HangboardPipeline"
-        / "boards"
-        / "metolius-wood-grips-compact-ii",
+        repository / "Hangboards" / "metolius-wood-grips-compact-ii",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Hangboards" / "catalog.json",
+        repository / "Hangboards" / "catalog.json",
     )
     launch_directory = repository / "nested" / "launch"
     launch_directory.mkdir(parents=True)
@@ -1844,7 +1841,7 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     assert server.server_address[0] == "127.0.0.1"
     assert status == 200
     assert [board["boardId"] for board in payload["boards"]] == [
-        "metolius-wood-grips-compact-ii"
+        "metolius.wood-grips-compact-ii"
     ]
     assert payload["diagnostics"] == []
     assert (workspace / "boards").is_dir()
@@ -2050,18 +2047,15 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     canonical_run = (
-        EDITOR_ROOT.parent
-        / "HangboardPipeline"
-        / "boards"
-        / "metolius-wood-grips-compact-ii"
+        REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
     )
     shutil.copytree(
         canonical_run,
-        repository
-        / "Tools"
-        / "HangboardPipeline"
-        / "boards"
-        / "metolius-wood-grips-compact-ii",
+        repository / "Hangboards" / "metolius-wood-grips-compact-ii",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Hangboards" / "catalog.json",
+        repository / "Hangboards" / "catalog.json",
     )
     workspace = repository / ".context" / "external-workspace"
     server, _catalog = server_module._server_from_cli(
@@ -2079,7 +2073,7 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
     copy_current_run = library.copy_current_run
 
     def create_destination_before_copy(board_id: str, destination: Path):
-        shutil.copytree(canonical_run, destination)
+        copy_current_run(board_id, destination)
         return copy_current_run(board_id, destination)
 
     monkeypatch.setattr(library, "copy_current_run", create_destination_before_copy)
@@ -2088,7 +2082,7 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
     base = f"http://127.0.0.1:{server.server_port}"
     try:
         _status, accepted = _post_json(
-            base + "/api/library/metolius-wood-grips-compact-ii/open", {}
+            base + "/api/library/metolius.wood-grips-compact-ii/open", {}
         )
         outcome = _await_workbench_job(base, accepted["jobId"])
     finally:
@@ -2112,6 +2106,9 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
     library = repository / "Hangboards"
     library.mkdir(parents=True)
+    (library / "catalog.json").write_text(
+        '{"schemaVersion":1,"boards":[]}\n', encoding="utf-8"
+    )
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     launch_directory = repository / "nested" / "checkout"
