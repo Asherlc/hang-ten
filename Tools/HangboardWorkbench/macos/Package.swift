@@ -8,8 +8,14 @@ let package = Package(
     products: [
         .executable(name: "HangboardWorkbench", targets: ["HangboardWorkbench"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/getsentry/sentry-cocoa.git", from: "8.0.0"),
+    ],
     targets: [
-        .executableTarget(name: "HangboardWorkbench"),
+        .executableTarget(
+            name: "HangboardWorkbench",
+            dependencies: [.product(name: "Sentry", package: "sentry-cocoa")]
+        ),
         .testTarget(
             name: "HangboardWorkbenchTests",
             dependencies: ["HangboardWorkbench"]

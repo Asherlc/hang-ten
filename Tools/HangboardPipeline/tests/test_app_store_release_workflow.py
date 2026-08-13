@@ -5,6 +5,17 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW_PATH = REPOSITORY_ROOT / ".github" / "workflows" / "release.yml"
+
+
+def test_release_uploads_archived_dsyms_with_scoped_sentry_configuration() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}" in workflow
+    assert "SENTRY_ORG: ${{ vars.SENTRY_ORG }}" in workflow
+    assert "SENTRY_PROJECT: ${{ vars.SENTRY_IOS_PROJECT }}" in workflow
+    assert 'dsym_dir="$PWD/build/HangTen.xcarchive/dSYMs"' in workflow
+    assert 'sentry-cli debug-files upload "$dsym_dir"' in workflow
+    assert "SENTRY_AUTH_TOKEN =" not in workflow
 PROJECT_PATH = REPOSITORY_ROOT / "HangTen.xcodeproj" / "project.pbxproj"
 
 
