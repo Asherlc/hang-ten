@@ -51,7 +51,7 @@ jobs:
             --argjson pr "$PR_NUMBER" \
             --argjson run_number "$RUN_NUMBER" \
             --argjson run_attempt "$RUN_ATTEMPT" \
-            'any(.[][].workflow_runs[];
+            'any(.[].workflow_runs[];
               any(.pull_requests[]; .number == $pr) and
               ((.run_number > $run_number) or
                (.run_number == $run_number and .run_attempt > $run_attempt)))' \
@@ -65,13 +65,13 @@ jobs:
           artifacts="$(gh api --paginate --slurp \
             "repos/$REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100")"
           artifact_id="$(jq --arg name "$artifact_name" \
-            '[.[][] | select(.name == $name and (.expired | not))] | last | .id // empty' \
+            '[.[].artifacts[] | select(.name == $name and (.expired | not))] | last | .id // empty' \
             <<<"$artifacts")"
           if [[ -z "$artifact_id" ]]; then
             jobs="$(gh api --paginate --slurp \
               "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
             build_conclusion="$(jq -r \
-              '[.[][].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
+              '[.[].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
               <<<"$jobs")"
             if [[ "$build_conclusion" == "skipped" ]]; then
               echo "Workbench build was skipped because this pull request did not change relevant paths."

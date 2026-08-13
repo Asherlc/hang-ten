@@ -70,6 +70,28 @@ def _normalized_expression(expression: str) -> str:
     return " ".join(expression.split())
 
 
+def _jq_program(script: str, assignment: str) -> str:
+    match = re.search(
+        rf'{re.escape(assignment)}="\$\(jq.*?\n\s+\'(.*?)\' \\\n\s+<<<"\$[a-z_]+"\)"',
+        script,
+        re.DOTALL,
+    )
+    assert match is not None, f"Could not find jq program assigned to {assignment}"
+    return match.group(1)
+
+
+def _run_jq(program: str, payload: object, *arguments: str) -> str:
+    result = subprocess.run(
+        ["jq", "-r", *arguments, program],
+        input=json.dumps(payload),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    return result.stdout.strip()
+
+
 def _native_release_quick_start(path: Path) -> str:
     readme = path.read_text(encoding="utf-8")
     _, marker, remainder = readme.partition("## Run the Apple Silicon macOS")
@@ -237,6 +259,118 @@ def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
     )
     assert "pull_request_target" not in COMMENT_WORKFLOW_PATH.read_text(
         encoding="utf-8"
+    )
+
+
+@pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required")
+def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
+    workflow = _workflow(COMMENT_WORKFLOW_PATH)
+    script = _step(
+        workflow["jobs"]["comment-pr-artifact"], "Post workbench download link"
+    )["run"]
+
+    runs_program = _jq_program(script, "newer_run_exists")
+    assert ".[].workflow_runs[]" in runs_program
+    runs = [
+        {
+            "total_count": 2,
+            "workflow_runs": [
+                {
+                    "run_number": 41,
+                    "run_attempt": 1,
+                    "pull_requests": [{"number": 127}],
+                }
+            ],
+        },
+        {
+            "total_count": 2,
+            "workflow_runs": [
+                {
+                    "run_number": 42,
+                    "run_attempt": 2,
+                    "pull_requests": [{"number": 127}],
+                }
+            ],
+        },
+    ]
+    assert (
+        _run_jq(
+            runs_program,
+            runs,
+            "--argjson",
+            "pr",
+            "127",
+            "--argjson",
+            "run_number",
+            "42",
+            "--argjson",
+            "run_attempt",
+            "1",
+        )
+        == "true"
+    )
+
+    artifacts_program = _jq_program(script, "artifact_id")
+    assert ".[].artifacts[]" in artifacts_program
+    artifacts = [
+        {
+            "total_count": 2,
+            "artifacts": [
+                {"id": 10, "name": "wanted", "expired": True},
+            ],
+        },
+        {
+            "total_count": 2,
+            "artifacts": [
+                {"id": 20, "name": "wanted", "expired": False},
+            ],
+        },
+    ]
+    assert _run_jq(artifacts_program, artifacts, "--arg", "name", "wanted") == "20"
+
+    jobs_program = _jq_program(script, "build_conclusion")
+    assert ".[].jobs[]" in jobs_program
+    jobs = [
+        {"total_count": 2, "jobs": [{"name": "Classify", "conclusion": "success"}]},
+        {
+            "total_count": 2,
+            "jobs": [
+                {
+                    "name": "Build verified arm64 workbench",
+                    "conclusion": "skipped",
+                }
+            ],
+        },
+    ]
+    assert _run_jq(jobs_program, jobs) == "skipped"
+
+    comments_program = _jq_program(script, "comment_id")
+    assert ".[][]" in comments_program
+    comments = [
+        [
+            {
+                "id": 30,
+                "user": {"login": "contributor"},
+                "body": "<!-- hangboard-workbench-artifact -->",
+            }
+        ],
+        [
+            {
+                "id": 40,
+                "user": {"login": "github-actions[bot]"},
+                "body": "<!-- hangboard-workbench-artifact -->\nready",
+            }
+        ],
+    ]
+    assert (
+        _run_jq(
+            comments_program,
+            comments,
+            "--arg",
+            "marker",
+            "<!-- hangboard-workbench-artifact -->",
+        )
+        == "40"
     )
 
 
