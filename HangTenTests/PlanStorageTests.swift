@@ -19,6 +19,65 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testBuiltInPlanDataReplacesDivergentMappingsWithPackageSemantics() throws {
+        let packageStore = BoardCatalog.packageStore
+        let board = try XCTUnwrap(packageStore.boards.first { board in
+            packageStore.semantics(for: board.id).contains { _, holdIDs in
+                board.holds.contains { !holdIDs.contains($0.id) }
+            }
+        })
+        let packageSemantics = packageStore.semantics(for: board.id)
+        let semanticID = try XCTUnwrap(packageSemantics.keys.sorted().first { semanticID in
+            let holdIDs = packageSemantics[semanticID] ?? []
+            return board.holds.contains { !holdIDs.contains($0.id) }
+        })
+        let expectedHoldIDs = try XCTUnwrap(packageSemantics[semanticID])
+        let divergentHoldID = try XCTUnwrap(
+            board.holds.map(\.id).first { !expectedHoldIDs.contains($0) }
+        )
+        let definition = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "semantic-target",
+                    duration: 10,
+                    targets: [.semantic(semanticID)],
+                    segments: []
+                )
+            ],
+            boardID: board.id,
+            boardMappings: [
+                BoardMappingDefinition(
+                    boardID: board.id,
+                    semanticHolds: [
+                        semanticID: SemanticHoldMappingDefinition(holdIDs: [divergentHoldID])
+                    ]
+                )
+            ]
+        )
+
+        let store = try PlanLibraryStore(
+            builtInData: JSONEncoder().encode(definition),
+            packageStore: packageStore
+        )
+        let mappingsByBoardID = Dictionary(
+            uniqueKeysWithValues: store.definition.boardMappings.map {
+                ($0.boardID, $0.semanticHolds.mapValues(\.holdIDs))
+            }
+        )
+
+        XCTAssertEqual(
+            store.plan(id: "test.plan")?.steps.first?.targets,
+            [.ids(expectedHoldIDs)]
+        )
+        XCTAssertEqual(Set(mappingsByBoardID.keys), Set(packageStore.boards.map(\.id)))
+        for packageBoard in packageStore.boards {
+            XCTAssertEqual(
+                mappingsByBoardID[packageBoard.id],
+                packageStore.semantics(for: packageBoard.id)
+            )
+        }
+    }
+
     func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
         for gripType in GripType.allCases {
             let encoded = try JSONEncoder().encode(gripType)
@@ -1246,7 +1305,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
-    func testEffectiveSemanticMappingsPreserveSourcePathsAndPlanMappingsTakePrecedence() {
+    func testBoardSemanticMappingsRemainAuthoritativeDuringValidation() {
         let edgeOnlyBoard = TrainingBoard(
             id: "fixture.edge-only",
             manufacturer: "Fixture Maker",
@@ -1301,12 +1360,13 @@ final class PlanStorageTests: XCTestCase {
             $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
                 $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
         })
-        XCTAssertFalse(issues.contains {
-            $0.path == "boards[0].semanticHolds.fixture-overridden"
+        XCTAssertTrue(issues.contains {
+            $0.path == "boards[0].semanticHolds.fixture-overridden" &&
+                $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
         })
     }
 
-    func testBoardLoadedSemanticMappingsResolveWithPlanMappingsTakingPrecedence() throws {
+    func testBoardLoadedSemanticMappingsCannotBeOverriddenByPlanMappings() throws {
         let boardStore = try BoardLibraryStore(data: Data(
             #"""
             {
@@ -1420,10 +1480,10 @@ final class PlanStorageTests: XCTestCase {
             planMappingStore.plan(id: "test.plan")?.steps.first?.targets
         )
 
-        XCTAssertEqual(planMappingTargets, [.kind(.jug), .kind(.pinch)])
+        XCTAssertEqual(planMappingTargets, [.ids("fixture.edge"), .kind(.pinch)])
         XCTAssertEqual(
             BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[0], on: board),
-            ["fixture.jug"]
+            ["fixture.edge"]
         )
         XCTAssertEqual(
             BoardTargetResolver.resolveHoldIDs(for: planMappingTargets[1], on: board),

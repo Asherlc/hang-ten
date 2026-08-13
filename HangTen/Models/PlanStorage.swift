@@ -599,14 +599,12 @@ enum PlanLibraryValidator {
         validateLibraryMetadata(library.metadata, issues: &issues)
 
         var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
-        var planMappingPathByBoardID: [String: String] = [:]
         for (index, mapping) in library.boardMappings.enumerated() {
             let path = "boardMappings[\(index)]"
             if planMappingByBoardID[mapping.boardID] != nil {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
             }
             planMappingByBoardID[mapping.boardID] = mapping
-            planMappingPathByBoardID[mapping.boardID] = path
 
             if !boardIDs.contains(mapping.boardID) {
                 issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
@@ -631,6 +629,15 @@ enum PlanLibraryValidator {
                 for holdID in target.holdIDs where !knownHoldIDs.contains(holdID) {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
                 }
+                if let kind = target.kind,
+                   !board.holds.contains(where: { $0.kind == kind }) {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: semanticPath,
+                            message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(mapping.boardID)\"."
+                        )
+                    )
+                }
             }
         }
 
@@ -647,20 +654,6 @@ enum PlanLibraryValidator {
                 }
             )
         }
-        for (boardID, mapping) in planMappingByBoardID {
-            var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
-            semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
-            var semanticPaths = semanticMappingPathByBoardID[boardID] ?? [:]
-            for semanticID in mapping.semanticHolds.keys {
-                semanticPaths[semanticID] = "\(planMappingPathByBoardID[boardID]!).semanticHolds.\(semanticID)"
-            }
-            mappingByBoardID[boardID] = BoardMappingDefinition(
-                boardID: boardID,
-                semanticHolds: semanticHolds
-            )
-            semanticMappingPathByBoardID[boardID] = semanticPaths
-        }
-
         for (boardID, mapping) in mappingByBoardID {
             guard let board = boardByID[boardID]?.first else { continue }
             for (semanticID, target) in mapping.semanticHolds {
@@ -1124,12 +1117,9 @@ struct PlanDefinitionResolver {
 
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
-        let planMapping = library.boardMappings.first { $0.boardID == board.id }
         let mapping = BoardMappingDefinition(
             boardID: board.id,
-            semanticHolds: board.semanticHolds.merging(planMapping?.semanticHolds ?? [:]) {
-                _, planMapping in planMapping
-            }
+            semanticHolds: board.semanticHolds
         )
 
         for reference in definition.blocks {
@@ -1337,6 +1327,45 @@ struct PlanLibraryStore {
     }
 
     init(
+        builtInData data: Data,
+        decoder: JSONDecoder = JSONDecoder(),
+        packageStore: BoardPackageStore = BoardCatalog.packageStore
+    ) throws {
+        let definition: PlanLibraryDefinition
+        do {
+            definition = try decoder.decode(PlanLibraryDefinition.self, from: data)
+        } catch {
+            throw PlanLibraryStoreError.decoding(error)
+        }
+        try self.init(builtInDefinition: definition, packageStore: packageStore)
+    }
+
+    init(
+        builtInDefinition definition: PlanLibraryDefinition,
+        packageStore: BoardPackageStore = BoardCatalog.packageStore
+    ) throws {
+        let packageMappings = packageStore.boards.map { board in
+            BoardMappingDefinition(
+                boardID: board.id,
+                semanticHolds: packageStore.semantics(for: board.id).mapValues {
+                    SemanticHoldMappingDefinition(holdIDs: $0)
+                }
+            )
+        }
+        let packageBackedDefinition = PlanLibraryDefinition(
+            schemaVersion: definition.schemaVersion,
+            metadata: definition.metadata,
+            boardMappings: packageMappings,
+            blocks: definition.blocks,
+            plans: definition.plans
+        )
+        try self.init(
+            definition: packageBackedDefinition,
+            availableBoards: packageStore.boards
+        )
+    }
+
+    init(
         contentsOf url: URL,
         decoder: JSONDecoder = JSONDecoder(),
         availableBoards: [TrainingBoard] = BoardCatalog.all
@@ -1388,7 +1417,7 @@ struct PlanLibraryStore {
         let bundles = [Bundle.main, Bundle(for: PlanLibraryBundleToken.self)]
         if let url = bundles.compactMap({ $0.url(forResource: "PlanLibrary", withExtension: "json") }).first {
             do {
-                return try PlanLibraryStore(contentsOf: url)
+                return try PlanLibraryStore(builtInData: Data(contentsOf: url))
             } catch {
                 fatalError("Bundled plan library failed validation: \(error.localizedDescription)")
             }
@@ -1398,7 +1427,9 @@ struct PlanLibraryStore {
         // resources. The migration document keeps those environments useful
         // without weakening validation of the actual bundled file.
         do {
-            return try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+            return try PlanLibraryStore(
+                builtInDefinition: BuiltInPlanLibraryDefinition.document
+            )
         } catch {
             fatalError("Built-in plan library failed validation: \(error.localizedDescription)")
         }
