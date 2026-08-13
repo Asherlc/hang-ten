@@ -1,4 +1,5 @@
 import SwiftUI
+import Sentry
 
 @main
 struct HangTenApp: App {
@@ -7,6 +8,10 @@ struct HangTenApp: App {
 	@StateObject private var store: AppStore
 
 	init() {
+		SentrySDK.start { options in
+			options.dsn = Bundle.main.object(forInfoDictionaryKey: "SENTRY_DSN") as? String
+		}
+
 		#if DEBUG
 		let useMotherboardReviewFixture = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
 		let transport: MotherboardTransport = useMotherboardReviewFixture

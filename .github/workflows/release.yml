@@ -132,6 +132,22 @@ jobs:
           echo "Build: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app_path/Info.plist")"
           codesign --verify --deep --strict --verbose=2 "$app_path"
 
+      - name: Upload iOS debug symbols to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_IOS_PROJECT }}
+        run: |
+          set -euo pipefail
+          : "${SENTRY_AUTH_TOKEN:?Configure the SENTRY_AUTH_TOKEN secret}"
+          : "${SENTRY_ORG:?Configure the SENTRY_ORG variable}"
+          : "${SENTRY_PROJECT:?Configure the SENTRY_IOS_PROJECT variable}"
+          brew install getsentry/tools/sentry-cli
+          dsym_dir="$PWD/build/HangTen.xcarchive/dSYMs"
+          test -d "$dsym_dir"
+          find "$dsym_dir" -name '*.dSYM' -type d -print -quit | grep -q .
+          sentry-cli debug-files upload "$dsym_dir"
+
       - name: Export App Store package
         env:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}

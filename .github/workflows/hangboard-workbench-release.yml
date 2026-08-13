@@ -188,6 +188,7 @@ jobs:
           runtime_dir="$runtime_dist_dir/hangboard-workbench"
 
           swift build -c release --arch arm64 \
+            -Xswiftc -g \
             --package-path Tools/HangboardWorkbench/macos
           shell_bin_dir="$(swift build -c release --arch arm64 \
             --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
@@ -387,6 +388,9 @@ jobs:
           APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
           APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_WORKBENCH_PROJECT }}
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/release"
@@ -442,10 +446,15 @@ jobs:
           runtime_dir="$runtime_dist_dir/hangboard-workbench"
 
           swift build -c release --arch arm64 \
+            -Xswiftc -g \
             --package-path Tools/HangboardWorkbench/macos
           shell_bin_dir="$(swift build -c release --arch arm64 \
             --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
           built_shell="$shell_bin_dir/HangboardWorkbench"
+          shell_dsym="$release_dir/HangboardWorkbench.dSYM"
+          rm -rf "$shell_dsym"
+          dsymutil "$built_shell" -o "$shell_dsym"
+          test -d "$shell_dsym"
           "$python_bin" "$GITHUB_WORKSPACE/Tools/HangboardWorkbench/packaging/macos_app.py" \
             --shell "$built_shell" \
             --runtime-dir "$runtime_dir" \
@@ -469,6 +478,12 @@ jobs:
           codesign --force --sign "$signing_identity" --options runtime --timestamp "$shell_executable"
           codesign --force --sign "$signing_identity" --options runtime --timestamp "$app_bundle"
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
+
+          : "${SENTRY_AUTH_TOKEN:?Configure the SENTRY_AUTH_TOKEN secret}"
+          : "${SENTRY_ORG:?Configure the SENTRY_ORG variable}"
+          : "${SENTRY_PROJECT:?Configure the SENTRY_WORKBENCH_PROJECT variable}"
+          brew install getsentry/tools/sentry-cli
+          sentry-cli debug-files upload "$shell_dsym"
 
           cd "$release_dir"
           ditto -c -k --keepParent "$app_bundle" "$archive"
