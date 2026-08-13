@@ -20,6 +20,7 @@ RELEASE_README_PATHS = (
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
 )
+UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 sys.path.insert(0, str(EDITOR_ROOT))
 
 from workbench_assets import STATIC_ASSETS  # noqa: E402
@@ -53,6 +54,21 @@ def _workflow() -> dict[str, object]:
 
 def _step(job: dict[str, object], name: str) -> dict[str, object]:
     return next(step for step in job["steps"] if step.get("name") == name)
+
+
+def _assert_uv_precedes_python_test_steps(job: dict[str, object]) -> None:
+    steps = job["steps"]
+    uv_index = next(
+        index for index, step in enumerate(steps) if step.get("name") == "Set up uv"
+    )
+    assert steps[uv_index]["uses"] == UV_ACTION
+    test_indices = [
+        index
+        for index, step in enumerate(steps)
+        if "pytest" in str(step.get("run", "")) or "uv " in str(step.get("run", ""))
+    ]
+    assert test_indices
+    assert uv_index < min(test_indices)
 
 
 def _normalized_expression(expression: str) -> str:
@@ -198,9 +214,7 @@ def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
 
     assert python["runs-on"] == "ubuntu-latest"
     assert _step(python, "Set up Python")["with"]["python-version"] == "3.12"
-    assert _step(python, "Set up uv")["uses"] == (
-        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
-    )
+    _assert_uv_precedes_python_test_steps(python)
     install_dependencies = _step(python, "Install workbench test dependencies")["run"]
     assert "python -m pip install 'setuptools>=84.0.0' wheel" in install_dependencies
     assert "python -m pip install -e 'Tools/HangboardPipeline[dev]'" in install_dependencies
@@ -240,9 +254,7 @@ def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
     build = jobs["build"]
 
     assert build["runs-on"] == "macos-latest"
-    assert _step(build, "Set up uv")["uses"] == (
-        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
-    )
+    _assert_uv_precedes_python_test_steps(build)
     identity_script = _step(build, "Verify executable identity")["run"]
     assert 'test "$architecture" = "arm64"' in identity_script
 

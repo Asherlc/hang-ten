@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+import shutil
+import subprocess
+
+import pytest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -8,6 +13,29 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPipeline/TESTING.md"
+_UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
+
+
+def _ci_workflow() -> dict[str, object]:
+    if shutil.which("ruby") is None:
+        pytest.skip("Ruby is required to parse the CI workflow")
+    result = subprocess.run(
+        [
+            "ruby",
+            "-ryaml",
+            "-rjson",
+            "-e",
+            "print JSON.generate(YAML.load_file(ARGV.fetch(0)))",
+            str(CI_WORKFLOW),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    document = json.loads(result.stdout)
+    assert isinstance(document, dict)
+    return document
 
 
 def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() -> None:
@@ -21,7 +49,6 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "test_generated_catalog_import.py" in ci_workflow
     assert "stage-approved-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
-    assert "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff" in ci_workflow
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs
@@ -29,6 +56,29 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "bundles only registered packages" in active_docs
     assert "assets/primary.png" in active_docs
     assert "GeneratedBoardCatalog" not in active_docs
+
+
+def test_ci_python_job_provisions_uv_before_running_pipeline_tests() -> None:
+    """The wheel-content test invokes uv from inside pytest."""
+    workflow = _ci_workflow()
+    jobs = workflow["jobs"]
+    assert isinstance(jobs, dict)
+    python_job = jobs["python"]
+    assert isinstance(python_job, dict)
+    steps = python_job["steps"]
+    assert isinstance(steps, list)
+
+    uv_index = next(
+        index for index, step in enumerate(steps) if step.get("name") == "Set up uv"
+    )
+    assert steps[uv_index]["uses"] == _UV_ACTION
+    test_indices = [
+        index
+        for index, step in enumerate(steps)
+        if "pytest" in str(step.get("run", "")) or "uv " in str(step.get("run", ""))
+    ]
+    assert test_indices
+    assert uv_index < min(test_indices)
 
 
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
