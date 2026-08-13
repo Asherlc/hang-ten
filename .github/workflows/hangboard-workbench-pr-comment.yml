@@ -3,7 +3,7 @@ name: Comment on Hangboard Workbench build
 'on':
   workflow_run:
     workflows:
-      - Build and release Hangboard Workbench
+      - Build Hangboard Workbench for pull requests
     types:
       - completed
 
@@ -43,6 +43,15 @@ jobs:
             '[.[][] | select(.name == $name and (.expired | not))] | last | .id // empty' \
             <<<"$artifacts")"
           if [[ -z "$artifact_id" ]]; then
+            jobs="$(gh api --paginate --slurp \
+              "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
+            build_conclusion="$(jq -r \
+              '[.[][].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
+              <<<"$jobs")"
+            if [[ "$build_conclusion" == "skipped" ]]; then
+              echo "Workbench build was skipped because this pull request did not change relevant paths."
+              exit 0
+            fi
             echo "Expected unexpired artifact '$artifact_name' was not found." >&2
             exit 1
           fi

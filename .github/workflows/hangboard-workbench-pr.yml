@@ -1,0 +1,61 @@
+name: Build Hangboard Workbench for pull requests
+
+on:
+  pull_request:
+    branches:
+      - main
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hangboard-workbench-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Classify changed components
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      workbench_web: ${{ steps.filter.outputs.workbench_web }}
+      workbench_native: ${{ steps.filter.outputs.workbench_native }}
+      shared_board_content: ${{ steps.filter.outputs.shared_board_content }}
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - id: filter
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
+        with:
+          filters: .github/ci-paths.yml
+
+  build:
+    name: Build verified arm64 workbench
+    needs: changes
+    if: >-
+      needs.changes.outputs.python == 'true' ||
+      needs.changes.outputs.workbench_web == 'true' ||
+      needs.changes.outputs.workbench_native == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.workflow == 'true'
+    runs-on: macos-latest
+    timeout-minutes: 45
+    outputs:
+      artifact-url: ${{ steps.build.outputs.artifact-url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - id: build
+        name: Build and upload verified unsigned app
+        uses: ./.github/actions/build-hangboard-workbench
