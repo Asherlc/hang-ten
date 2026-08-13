@@ -6,7 +6,7 @@ final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
 
-    @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
+    @Published var selectedBoard: TrainingBoard = BoardCatalog.defaultBoard
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
     @Published var lastSessionTitle: String?
     @Published private(set) var sessionHistory: [WorkoutSessionRecord]

@@ -1416,50 +1416,19 @@ private final class PlanLibraryBundleToken {}
 /// compare the resolved plans against the legacy catalog while the storage
 /// format is introduced, and avoids silently changing any routine timing.
 enum BuiltInPlanLibraryDefinition {
-    private static let compactBoardID = BoardCatalog.compactII.id
-    private static let rockProdigyBoardID = BoardCatalog.rockProdigyTrainingCenter.id
-
-    private static let semanticHoldIDs: [String: [String]] = [
-        "outer-jugs": ["jug-left", "jug-right"],
-        "edge-29": ["edge-29-left", "edge-29-right"],
-        "edge-19": ["edge-19-left", "edge-19-right"],
-        "flat-slopers": BoardCatalog.compactIIFlatSloperHoldIDs,
-        "round-sloper": ["sloper-round-center"],
-        "pocket-29-three": ["pocket-29-three-left", "pocket-29-three-right"],
-        "pocket-29-two": ["pocket-29-two-left", "pocket-29-two-right"],
-        "pocket-29-four": ["pocket-29-four-center"],
-        "pocket-19-three": ["pocket-19-three-left", "pocket-19-three-right"],
-        "pocket-19-two": ["pocket-19-two-left", "pocket-19-two-right"],
-        "pocket-19-four": ["pocket-19-four-center"]
-    ]
-
-    private static let rockProdigySemanticHoldIDs: [String: [String]] = [
-        "warmup-jug": ["trango.rptc.left.top-jug", "trango.rptc.right.top-jug"],
-        "large-open-hand-rail": ["trango.rptc.left.large-open-rail", "trango.rptc.right.large-open-rail"],
-        "deep-two-finger-pocket": ["trango.rptc.left.deep-mr-pocket", "trango.rptc.right.deep-mr-pocket"],
-        "thin-crimp": ["trango.rptc.left.thin-crimp", "trango.rptc.right.thin-crimp"],
-        "shallow-three-finger-slot": ["trango.rptc.left.three-finger-slot", "trango.rptc.right.three-finger-slot"],
-        "wide-pinch": ["trango.rptc.left.wide-pinch", "trango.rptc.right.wide-pinch"],
-        "sloper": ["trango.rptc.left.sloper", "trango.rptc.right.sloper"]
-    ]
+    private static let boardMappings: [BoardMappingDefinition] = BoardCatalog.all.map { board in
+        BoardMappingDefinition(
+            boardID: board.id,
+            semanticHolds: BoardCatalog.packageStore.semantics(for: board.id).mapValues {
+                SemanticHoldMappingDefinition(holdIDs: $0)
+            }
+        )
+    }
 
     static let document: PlanLibraryDefinition = makeDocument()
 
     private static func makeDocument() -> PlanLibraryDefinition {
         let legacyPlans = LegacyPlanSeedCatalog.all
-        let boardMapping = BoardMappingDefinition(
-            boardID: compactBoardID,
-            semanticHolds: semanticHoldIDs.reduce(into: [:]) { result, entry in
-                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
-            }
-        )
-        let rockProdigyBoardMapping = BoardMappingDefinition(
-            boardID: rockProdigyBoardID,
-            semanticHolds: rockProdigySemanticHoldIDs.reduce(into: [:]) { result, entry in
-                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
-            }
-        )
-
         var blocks: [WorkoutBlockDefinition] = []
         var blockIDs = Set<String>()
         var definitions: [PlanDefinition] = []
@@ -1523,7 +1492,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
             ),
-            boardMappings: [boardMapping, rockProdigyBoardMapping],
+            boardMappings: boardMappings,
             blocks: blocks,
             plans: definitions
         )
@@ -1682,8 +1651,12 @@ enum BuiltInPlanLibraryDefinition {
 
     private static func semanticID(for holdIDs: [String]) -> String? {
         let targetIDs = Set(holdIDs)
-        if let semanticID = semanticHoldIDs.first(where: { Set($0.value) == targetIDs })?.key {
-            return semanticID
+        for mapping in boardMappings {
+            if let semanticID = mapping.semanticHolds.first(where: {
+                Set($0.value.holdIDs) == targetIDs
+            })?.key {
+                return semanticID
+            }
         }
         return nil
     }

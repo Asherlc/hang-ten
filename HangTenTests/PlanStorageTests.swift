@@ -2,6 +2,23 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testBuiltInBoardMappingsMatchPackageSemantics() {
+        let mappingsByBoardID = Dictionary(
+            uniqueKeysWithValues: BuiltInPlanLibraryDefinition.document.boardMappings.map {
+                ($0.boardID, $0.semanticHolds.mapValues(\.holdIDs))
+            }
+        )
+
+        XCTAssertEqual(Set(mappingsByBoardID.keys), Set(BoardCatalog.all.map(\.id)))
+        for board in BoardCatalog.all {
+            XCTAssertEqual(
+                mappingsByBoardID[board.id],
+                BoardCatalog.packageStore.semantics(for: board.id),
+                "Plan semantics must come from the approved package for \(board.id)."
+            )
+        }
+    }
+
     func testGripTypeRoundTripsDistinctCurrentRawValues() throws {
         for gripType in GripType.allCases {
             let encoded = try JSONEncoder().encode(gripType)
@@ -1128,7 +1145,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testRockProdigyMetadataUsesDistinctPinchKindAndDepthFeatures() throws {
-        let board = BoardCatalog.rockProdigyTrainingCenter
+        let board = try packageBoard(containingSemantic: "warmup-jug")
         let pinchHolds = board.holds.filter { $0.kind == .pinch }
 
         XCTAssertEqual(pinchHolds.count, 6)
@@ -1147,8 +1164,8 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testRockProdigyBoardDesignHoldIDsMatchMetadata() throws {
-        let board = BoardCatalog.rockProdigyTrainingCenter
-        let design = try XCTUnwrap(BoardDesignCatalog.design(for: board.id))
+        let board = try packageBoard(containingSemantic: "warmup-jug")
+        let design = try XCTUnwrap(BoardCatalog.packageStore.design(for: board.id))
 
         XCTAssertEqual(Set(board.holds.map(\.id)), Set(design.holds.map(\.holdID)))
         XCTAssertEqual(design.holds.count, board.holds.count)
@@ -1156,7 +1173,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testRockProdigyPlanIsBoardSpecificAndEveryTargetResolves() throws {
         let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
-        let board = BoardCatalog.rockProdigyTrainingCenter
+        let board = try packageBoard(containingSemantic: "warmup-jug")
 
         XCTAssertEqual(plan.boardID, board.id)
         XCTAssertTrue(plan.steps.flatMap(\.targets).contains { $0.feature == .widePinch })
@@ -1169,7 +1186,7 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testCompactIIStillResolvesGenericNonPinchPlans() throws {
-        let compact = BoardCatalog.compactII
+        let compact = BoardCatalog.defaultBoard
         let genericPlans = LegacyPlanSeedCatalog.all.filter {
             $0.boardID == nil && $0.id != LegacyPlanSeedCatalog.reiHangboardSample.id
         }
@@ -1191,7 +1208,11 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.targets)
                 .first { $0.feature == .mediumPinch }
         )
-        XCTAssertEqual(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: BoardCatalog.rockProdigyTrainingCenter), ["trango.rptc.left.medium-pinch", "trango.rptc.right.medium-pinch"])
+        let rockProdigy = try packageBoard(containingSemantic: "warmup-jug")
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: rockProdigy),
+            ["trango.rptc.left.medium-pinch", "trango.rptc.right.medium-pinch"]
+        )
         XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
     }
 
@@ -1424,6 +1445,14 @@ final class PlanStorageTests: XCTestCase {
                 )
             ]
         ).validationIssues(availableBoards: BoardCatalog.all)
+    }
+
+    private func packageBoard(containingSemantic semanticID: String) throws -> TrainingBoard {
+        let matches = BoardCatalog.all.filter {
+            BoardCatalog.packageStore.semantics(for: $0.id)[semanticID] != nil
+        }
+        XCTAssertEqual(matches.count, 1)
+        return try XCTUnwrap(matches.first)
     }
 
     private func makeStep(
