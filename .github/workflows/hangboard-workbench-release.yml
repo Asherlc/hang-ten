@@ -570,6 +570,9 @@ jobs:
           release_response="$RUNNER_TEMP/hangboard-workbench-release.json"
           release_error="$RUNNER_TEMP/hangboard-workbench-release-error.txt"
 
+          main_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          latest_flag="$(select_latest_flag "$main_sha" "$GITHUB_SHA")"
+
           tag_exists=false
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" >"$tag_response" 2>"$tag_error"; then
             tag_exists=true
@@ -594,6 +597,37 @@ jobs:
             if [[ "$release_commit" != "$GITHUB_SHA" ]]; then
               echo "Existing release $tag targets $release_commit, not $GITHUB_SHA." >&2
               exit 1
+            fi
+            release_is_draft="$(python -c 'import json,sys; print(str(json.load(open(sys.argv[1]))["draft"]).lower())' "$release_response")"
+            if [[ "$release_is_draft" == "true" ]]; then
+              python - "$release_response" <<'PY'
+          import json
+          import sys
+
+          release = json.load(open(sys.argv[1]))
+          if release["prerelease"]:
+              raise SystemExit("Existing draft release must not be a prerelease.")
+          asset_names = {asset["name"] for asset in release["assets"]}
+          required_asset_names = {
+              "hangboard-workbench-macos-arm64.sha256",
+              "hangboard-workbench-macos-arm64.zip",
+          }
+          if not asset_names <= required_asset_names:
+              raise SystemExit(
+                  f"Existing draft release contains unexpected assets: {sorted(asset_names)}"
+              )
+          PY
+              cd "$release_dir"
+              gh release upload "$tag" \
+                hangboard-workbench-macos-arm64.zip \
+                hangboard-workbench-macos-arm64.sha256 \
+                --repo "$GITHUB_REPOSITORY" \
+                --clobber
+              gh release edit "$tag" \
+                --repo "$GITHUB_REPOSITORY" \
+                --draft=false \
+                "$latest_flag"
+              exit 0
             fi
             python - "$release_response" <<'PY'
           import json
@@ -645,8 +679,6 @@ jobs:
           if [[ "$tag_exists" == "true" ]]; then
             echo "Existing tag $tag has no release; creating the missing release." >&2
           fi
-          main_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
-          latest_flag="$(select_latest_flag "$main_sha" "$GITHUB_SHA")"
           cd "$release_dir"
           gh release create "$tag" \
             hangboard-workbench-macos-arm64.zip \
@@ -655,4 +687,8 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "Hangboard Workbench ${short_sha}" \
             --notes "Developer ID signed and notarized Apple Silicon workbench built from ${GITHUB_SHA}." \
+            --draft
+          gh release edit "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft=false \
             "$latest_flag"

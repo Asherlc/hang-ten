@@ -546,7 +546,34 @@ def test_existing_release_validation_checks_downloaded_zip_checksum():
     assert script.index("asset_names = sorted") < script.index("gh release download")
     assert script.index("gh release download") < script.index(
         "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256"
-    ) < script.index("exit 0")
+    ) < script.rindex("exit 0")
+
+
+def test_release_is_uploaded_as_a_draft_before_it_becomes_immutable():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    create = 'gh release create "$tag"'
+    publish = 'gh release edit "$tag"'
+    assert create in script
+    create_index = script.index(create)
+    publish_index = script.index(publish, create_index)
+    assert "--draft" in script[create_index:publish_index]
+    assert '--draft=false' in script[publish_index:]
+    assert create_index < publish_index
+
+
+def test_interrupted_draft_release_is_repaired_before_publication():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    assert 'if [[ "$release_is_draft" == "true" ]]; then' in script
+    assert 'gh release upload "$tag"' in script
+    assert "--clobber" in script
+    assert 'gh release edit "$tag"' in script
+    assert script.index('gh release upload "$tag"') < script.index(
+        'gh release edit "$tag"'
+    )
 
 
 def test_final_release_checksum_uses_the_downloadable_zip_basename():
