@@ -14,9 +14,10 @@ not used to supply unsupported hold facts.
 | `trango-rock-prodigy-natural` | `trango.rock-prodigy-natural` | [Natural product page](https://trango.com/products/rock-prodigy-natural) | [Natural main image](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946) | [Natural quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361) |
 | `trango-rock-prodigy-pivot` | `trango.rock-prodigy-pivot` | [Pivot product page](https://trango.com/products/rock-prodigy-pivot) | [Pivot main image](https://trango.com/cdn/shop/products/22840_RockProdigyPivot_MainImage_TopDown.jpg?v=1755037446&width=1946) | [Pivot quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507), [Pivot depth guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905) |
 
-The pages and linked documents are first-party Trango material. The existing
-Rock Prodigy Training Center package and its sources were intentionally not
-used as evidence for a Forge, Natural, or Pivot hold: Trango says Forge has
+The pages and linked documents are first-party Trango material. The current
+unregistered, primary-only Rock Prodigy Training Center candidate and its
+sources were intentionally not used as evidence for a Forge, Natural, or Pivot
+hold: Trango says Forge has
 different hold dimensions from the Training Center, and shared brand naming is
 not evidence of a cross-model hold map.
 
