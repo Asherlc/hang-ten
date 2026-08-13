@@ -20,6 +20,12 @@ RELEASE_README_PATHS = (
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
 )
+COMMENT_WORKFLOW_PATH = (
+    REPOSITORY_ROOT
+    / ".github"
+    / "workflows"
+    / "hangboard-workbench-pr-comment.yml"
+)
 UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 sys.path.insert(0, str(EDITOR_ROOT))
 
@@ -32,7 +38,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def _workflow() -> dict[str, object]:
+def _workflow(path: Path = WORKFLOW_PATH) -> dict[str, object]:
     parsed = subprocess.run(
         [
             "ruby",
@@ -40,7 +46,7 @@ def _workflow() -> dict[str, object]:
             "-rjson",
             "-e",
             "print JSON.generate(YAML.load_file(ARGV.fetch(0)))",
-            str(WORKFLOW_PATH),
+            str(path),
         ],
         capture_output=True,
         text=True,
@@ -231,6 +237,54 @@ def test_pr_native_app_is_a_workflow_artifact_but_never_a_github_release():
     assert download["with"]["name"] == upload["with"]["name"]
 
 
+def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
+    workflow = _workflow(COMMENT_WORKFLOW_PATH)
+    comment = workflow["jobs"]["comment-pr-artifact"]
+
+    assert workflow["on"] == {
+        "workflow_run": {
+            "workflows": ["Build and release Hangboard Workbench"],
+            "types": ["completed"],
+        }
+    }
+    assert comment["runs-on"] == "ubuntu-latest"
+    assert comment["permissions"] == {
+        "actions": "read",
+        "contents": "read",
+        "pull-requests": "write",
+    }
+    assert _normalized_expression(comment["if"]) == (
+        "github.event.workflow_run.event == 'pull_request' && "
+        "github.event.workflow_run.conclusion == 'success'"
+    )
+
+    step = _step(comment, "Post workbench download link")
+    assert step["env"]["GH_TOKEN"] == "${{ github.token }}"
+    assert step["env"]["RUN_ID"] == "${{ github.event.workflow_run.id }}"
+    assert step["env"]["PR_NUMBER"] == (
+        "${{ github.event.workflow_run.pull_requests[0].number }}"
+    )
+    script = step["run"]
+    for required_fragment in (
+        'artifact_name="hangboard-workbench-macos-arm64-$RUN_ID"',
+        "actions/runs/$RUN_ID/artifacts?per_page=100",
+        "select(.name == $name and (.expired | not))",
+        "Expected unexpired artifact",
+        "gh api --paginate --slurp",
+        "<!-- hangboard-workbench-artifact -->",
+        "($artifact_url)",
+        "issues/$PR_NUMBER/comments?per_page=100",
+        'select(.body | contains($marker))',
+        'if [[ -n "$comment_id" ]]',
+        "issues/comments/$comment_id",
+    ):
+        assert required_fragment in script
+
+    assert "pull_request_target" not in COMMENT_WORKFLOW_PATH.read_text(
+        encoding="utf-8"
+    )
+
+
 def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
     jobs = _workflow()["jobs"]
     node = jobs["workbench-node"]
@@ -274,8 +328,15 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
         if "GH_TOKEN" in step.get("env", {})
     ]
     assert credential_steps == [
-        ("release", "Publish immutable GitHub release")
+        ("release", "Publish immutable GitHub release"),
     ]
+    comment_jobs = _workflow(COMMENT_WORKFLOW_PATH)["jobs"]
+    assert [
+        (job_name, step["name"])
+        for job_name, job in comment_jobs.items()
+        for step in job["steps"]
+        if "GH_TOKEN" in step.get("env", {})
+    ] == [("comment-pr-artifact", "Post workbench download link")]
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
 
 
