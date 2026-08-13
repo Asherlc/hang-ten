@@ -6,9 +6,11 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import tempfile
 
 from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
@@ -34,6 +36,7 @@ class LibraryBoard:
     display_name: str
     run_path: Path
     revision_token: str
+    status: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -392,6 +395,57 @@ class RepositoryBoardLibrary:
                         catalog_entry.path, error.code, error.message
                     )
                 )
+        registered_paths = {entry.path for entry in catalog.entries}
+        for entry in sorted(self._boards_root.iterdir(), key=lambda path: path.name):
+            if (
+                entry.name in registered_paths
+                or not entry.is_dir()
+                or entry.is_symlink()
+            ):
+                continue
+            assets = entry / "assets"
+            primary = assets / "primary.png"
+            try:
+                is_draft = (
+                    assets.is_dir()
+                    and not assets.is_symlink()
+                    and primary.is_file()
+                    and not primary.is_symlink()
+                    and primary.resolve(strict=True).is_relative_to(
+                        entry.resolve(strict=True)
+                    )
+                )
+                if not is_draft:
+                    continue
+                if not _BOARD_ID.fullmatch(entry.name):
+                    diagnostics.append(
+                        LibraryDiagnostic(
+                            entry.name,
+                            "invalid_board_id",
+                            f"Hangboards/{entry.name}: directory identifier is invalid",
+                        )
+                    )
+                    continue
+                revision_token = sha256(primary.read_bytes()).hexdigest()
+            except OSError as error:
+                diagnostics.append(
+                    LibraryDiagnostic(
+                        entry.name,
+                        "invalid_run",
+                        f"Hangboards/{entry.name}: primary image is not readable: {error}",
+                    )
+                )
+                continue
+            else:
+                boards.append(
+                    LibraryBoard(
+                        entry.name,
+                        entry.name,
+                        entry,
+                        revision_token,
+                        "draft",
+                    )
+                )
         boards.sort(key=lambda board: (board.display_name.casefold(), board.board_id))
         return LibrarySnapshot(tuple(boards), tuple(diagnostics))
 
@@ -405,6 +459,8 @@ class RepositoryBoardLibrary:
     def copy_current_run(self, board_id: str, destination: Path) -> LibraryBoard:
         """Materialize a canonical package into a new editable runtime run."""
         board = self.get_board(board_id)
+        if board.status != "published":
+            raise BoardLibraryError(f"board is not published: {board.board_id}")
         destination = Path(destination)
         if ".." in destination.parts:
             raise BoardLibraryError(
@@ -428,6 +484,63 @@ class RepositoryBoardLibrary:
             raise
         else:
             shutil.rmtree(stage, ignore_errors=True)
+        return board
+
+    def copy_draft_source(self, board_id: str, destination: Path) -> LibraryBoard:
+        """Copy the exact draft image through no-follow descriptors.
+
+        Descriptor-relative traversal prevents a concurrent repository writer from
+        replacing a validated directory or image with a symlink between discovery
+        and materialization.
+        """
+        board = self.get_board(board_id)
+        if board.status != "draft":
+            raise BoardLibraryError(f"board is not a draft: {board.board_id}")
+        destination = Path(destination)
+        if destination.exists() or destination.is_symlink():
+            raise BoardLibraryError(f"destination already exists: {destination}")
+        if not destination.parent.is_dir():
+            raise BoardLibraryError("destination parent does not exist")
+
+        directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+        file_flags = os.O_RDONLY | os.O_NOFOLLOW
+        descriptors: list[int] = []
+        try:
+            descriptors.append(os.open(self._repository_root, directory_flags))
+            for component in ("Hangboards", board.run_path.name, "assets"):
+                descriptors.append(
+                    os.open(component, directory_flags, dir_fd=descriptors[-1])
+                )
+            source_fd = os.open("primary.png", file_flags, dir_fd=descriptors[-1])
+            descriptors.append(source_fd)
+            if not stat.S_ISREG(os.fstat(source_fd).st_mode):
+                raise BoardLibraryError("draft primary image is not a regular file")
+            destination_fd = os.open(
+                destination,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                0o600,
+            )
+            descriptors.append(destination_fd)
+            digest = sha256()
+            with os.fdopen(os.dup(source_fd), "rb") as source, os.fdopen(
+                os.dup(destination_fd), "wb"
+            ) as target:
+                while chunk := source.read(1024 * 1024):
+                    digest.update(chunk)
+                    target.write(chunk)
+            if digest.hexdigest() != board.revision_token:
+                raise BoardLibraryError("draft primary image changed while opening")
+        except (OSError, ValueError) as error:
+            destination.unlink(missing_ok=True)
+            if isinstance(error, BoardLibraryError):
+                raise
+            raise BoardLibraryError("draft primary image is not safely readable") from error
+        except Exception:
+            destination.unlink(missing_ok=True)
+            raise
+        finally:
+            for descriptor in reversed(descriptors):
+                os.close(descriptor)
         return board
 
     def _read_board(self, package_root: Path) -> LibraryBoard:
@@ -466,6 +579,7 @@ class RepositoryBoardLibrary:
             display_name,
             package_root,
             self._package_revision_token(package_root),
+            "published",
         )
 
     def _materialize_package_run(self, board: LibraryBoard, destination: Path) -> None:

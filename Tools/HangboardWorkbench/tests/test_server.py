@@ -79,6 +79,7 @@ class FakeLibraryBoard:
     board_id: str
     display_name: str
     revision_token: str
+    status: str = "published"
 
 
 @dataclass(frozen=True)
@@ -1127,6 +1128,17 @@ def test_import_run_returns_a_pollable_job(tmp_path):
 
 def test_get_library_lists_validated_repository_boards(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
+    service.library = FakeLibrarySnapshot(
+        boards=service.library.boards + (
+            FakeLibraryBoard(
+                board_id="beastmaker-1000",
+                display_name="beastmaker-1000",
+                revision_token="b" * 64,
+                status="draft",
+            ),
+        ),
+        diagnostics=service.library.diagnostics,
+    )
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         status, payload = _raw_request(base, "GET", "/api/library")
 
@@ -1138,7 +1150,14 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
                 "boardId": "example-board",
                 "displayName": "Example Board",
                 "revisionToken": REPOSITORY_REVISION_TOKEN,
-            }
+                "status": "published",
+            },
+            {
+                "boardId": "beastmaker-1000",
+                "displayName": "beastmaker-1000",
+                "revisionToken": "b" * 64,
+                "status": "draft",
+            },
         ],
         "diagnostics": [
             {
@@ -1840,9 +1859,12 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     assert catalog is None
     assert server.server_address[0] == "127.0.0.1"
     assert status == 200
-    assert [board["boardId"] for board in payload["boards"]] == [
-        "metolius.wood-grips-compact-ii"
-    ]
+    assert payload["boards"] == [{
+        "boardId": "metolius.wood-grips-compact-ii",
+        "displayName": "Wood Grips Compact II",
+        "revisionToken": payload["boards"][0]["revisionToken"],
+        "status": "published",
+    }]
     assert payload["diagnostics"] == []
     assert (workspace / "boards").is_dir()
     assert (workspace / ".workbench-job-outcomes").is_dir()

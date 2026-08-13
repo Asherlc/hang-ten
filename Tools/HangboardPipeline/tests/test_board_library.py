@@ -12,6 +12,7 @@ from hangboard_vectorizer.onboarding_run import read_status
 
 
 FIXTURE = Path(__file__).resolve().parents[3] / "Hangboards" / "metolius-wood-grips-compact-ii"
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
 
 def _repository(tmp_path: Path) -> Path:
@@ -34,8 +35,25 @@ def test_snapshot_discovers_canonical_packages(tmp_path: Path) -> None:
     assert [(board.board_id, board.display_name) for board in snapshot.boards] == [
         ("metolius.wood-grips-compact-ii", "Wood Grips Compact II")
     ]
+    assert [board.status for board in snapshot.boards] == ["published"]
     assert snapshot.diagnostics == ()
     assert len(snapshot.boards[0].revision_token) == 64
+
+
+def test_repository_inventory_lists_published_and_draft_boards() -> None:
+    snapshot = RepositoryBoardLibrary(REPOSITORY_ROOT).snapshot()
+    board_directories = {
+        path.name for path in (REPOSITORY_ROOT / "Hangboards").iterdir() if path.is_dir()
+    }
+
+    published = {board.run_path.name for board in snapshot.boards if board.status == "published"}
+    drafts = {board.run_path.name for board in snapshot.boards if board.status == "draft"}
+
+    assert published == {"metolius-wood-grips-compact-ii"}
+    assert len(published) == 1
+    assert len(drafts) == 32
+    assert published.isdisjoint(drafts)
+    assert published | drafts == board_directories
 
 
 def test_snapshot_does_not_create_registry(tmp_path: Path) -> None:
@@ -62,6 +80,143 @@ def test_snapshot_reports_invalid_package_without_hiding_valid_package(tmp_path:
         ("invalid-package", "missing_manifest")
     ]
     assert "Hangboards/invalid-package" in snapshot.diagnostics[0].message
+
+
+def test_snapshot_reports_unregistered_image_board_as_draft(tmp_path: Path) -> None:
+    repository = _repository(tmp_path)
+    candidate = repository / "Hangboards" / "beastmaker-1000" / "assets"
+    candidate.mkdir(parents=True)
+    (candidate / "primary.png").write_bytes(b"candidate image")
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [(item.board_id, item.display_name, item.status) for item in snapshot.boards] == [
+        ("beastmaker-1000", "beastmaker-1000", "draft"),
+        ("metolius.wood-grips-compact-ii", "Wood Grips Compact II", "published"),
+    ]
+    assert snapshot.diagnostics == ()
+
+
+def test_snapshot_rejects_draft_directory_with_invalid_board_id(tmp_path: Path) -> None:
+    repository = _repository(tmp_path)
+    primary = repository / "Hangboards" / "Beastmaker 1000" / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(b"draft image")
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == [
+        "metolius.wood-grips-compact-ii"
+    ]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("Beastmaker 1000", "invalid_board_id")
+    ]
+
+
+def test_snapshot_reports_unreadable_draft_without_hiding_valid_boards(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = _repository(tmp_path)
+    primary = repository / "Hangboards" / "beastmaker-1000" / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(b"draft image")
+    actual_read_bytes = Path.read_bytes
+
+    def fail_for_draft(path: Path) -> bytes:
+        if path == primary:
+            raise PermissionError("permission denied")
+        return actual_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", fail_for_draft)
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == [
+        "metolius.wood-grips-compact-ii"
+    ]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("beastmaker-1000", "invalid_run")
+    ]
+    assert "primary image is not readable" in snapshot.diagnostics[0].message
+
+
+def test_snapshot_does_not_discover_draft_through_symlinked_assets(
+    tmp_path: Path,
+) -> None:
+    repository = _repository(tmp_path)
+    outside = tmp_path / "outside-assets"
+    outside.mkdir()
+    (outside / "primary.png").write_bytes(b"outside image")
+    draft = repository / "Hangboards" / "escaped-draft"
+    draft.mkdir()
+    (draft / "assets").symlink_to(outside, target_is_directory=True)
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == [
+        "metolius.wood-grips-compact-ii"
+    ]
+
+
+def test_copy_draft_source_rejects_primary_replaced_by_symlink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = _repository(tmp_path)
+    primary = repository / "Hangboards" / "beastmaker-1000" / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(b"draft image")
+    outside = tmp_path / "outside.png"
+    outside.write_bytes(b"outside image")
+    library = RepositoryBoardLibrary(repository)
+    destination = tmp_path / "workspace" / "source.png"
+    destination.parent.mkdir()
+    actual_open = board_library.os.open
+    replaced = False
+
+    def replace_before_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal replaced
+        if path == "primary.png" and not replaced:
+            replaced = True
+            primary.unlink()
+            primary.symlink_to(outside)
+        return actual_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(board_library.os, "open", replace_before_open)
+
+    with pytest.raises(BoardLibraryError, match="not safely readable"):
+        library.copy_draft_source("beastmaker-1000", destination)
+
+    assert not destination.exists()
+
+
+def test_copy_draft_source_rejects_content_changed_after_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = _repository(tmp_path)
+    primary = repository / "Hangboards" / "beastmaker-1000" / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(b"original image")
+    library = RepositoryBoardLibrary(repository)
+    destination = tmp_path / "workspace" / "source.png"
+    destination.parent.mkdir()
+    actual_open = board_library.os.open
+    replaced = False
+
+    def replace_before_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal replaced
+        if path == "primary.png" and not replaced:
+            replaced = True
+            replacement = primary.with_suffix(".replacement")
+            replacement.write_bytes(b"changed image")
+            replacement.replace(primary)
+        return actual_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(board_library.os, "open", replace_before_open)
+
+    with pytest.raises(BoardLibraryError, match="changed while opening"):
+        library.copy_draft_source("beastmaker-1000", destination)
+
+    assert not destination.exists()
 
 
 def test_snapshot_validates_the_canonical_manifest_identity(tmp_path: Path) -> None:
