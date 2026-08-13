@@ -1,0 +1,35 @@
+ios:
+  - 'HangTen/**'
+  - 'HangTenTests/**'
+  - 'HangTen.xcodeproj/**'
+  - '.github/ExportOptions.plist'
+python:
+  - 'Tools/HangboardPipeline/**'
+  - 'Tools/HangboardWorkbench/**/*.py'
+  - 'Tools/HangboardWorkbench/tests/**/*.py'
+workbench_web:
+  - 'Tools/HangboardWorkbench/**/*.html'
+  - 'Tools/HangboardWorkbench/**/*.css'
+  - 'Tools/HangboardWorkbench/**/*.js'
+  - 'Tools/HangboardWorkbench/*.js'
+  - 'Tools/HangboardWorkbench/tests/**/*.test.js'
+workbench_native:
+  - 'Tools/HangboardWorkbench/macos/**'
+  - 'Tools/HangboardWorkbench/packaging/**'
+shared_board_content:
+  - 'Hangboards/**'
+  - 'Tools/HangboardPipeline/boards/**'
+  - 'HangTen/Resources/BoardLibrary.json'
+  - 'scripts/export-board-library.py'
+  - 'scripts/export-board-catalog.py'
+  - 'docs/hangboard-generative-catalog/**'
+metadata:
+  - 'metadata/**'
+  - 'scripts/validate-app-store-metadata.sh'
+  - 'HangTen.xcodeproj/**'
+  - 'HangTen/Resources/Assets.xcassets/AppIcon.appiconset/**'
+workflow:
+  - '.github/workflows/**'
+  - '.github/ci-paths.yml'
+  - '.github/actions/**'
+  - 'Tools/HangboardPipeline/pyproject.toml'

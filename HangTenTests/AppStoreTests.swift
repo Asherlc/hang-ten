@@ -10,6 +10,122 @@ final class AppStoreTests: XCTestCase {
 
     deinit {}
 
+    func testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily() {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        let board = BoardCatalog.board(for: "trango.rock-prodigy-training-center")
+        store.selectBoard(board)
+
+        XCTAssertEqual(store.selectedBoard, board)
+        XCTAssertEqual(telemetry.events, [
+            .boardSelected(family: .rockProdigyTrainingCenter)
+        ])
+    }
+
+    func testTelemetryDependenciesDoNotRetainRecordingTelemetry() {
+        weak var releasedTelemetry: RecordingTelemetry?
+
+        do {
+            let telemetry = RecordingTelemetry()
+            releasedTelemetry = telemetry
+            _ = telemetry.dependencies
+        }
+
+        XCTAssertNil(releasedTelemetry)
+    }
+
+    func testSavingCustomRoutineEmitsEventAfterPersistenceSucceeds() throws {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+        let definition = try store.duplicateRoutine(PlanCatalog.all[0])
+
+        try store.saveCustomRoutine(definition)
+
+        XCTAssertEqual(telemetry.events, [.customRoutineSaved])
+    }
+
+    func testFailingCustomRoutineSaveRecordsCategoricalPersistenceDiagnostic() throws {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            customRoutineStore: FailingCustomRoutineStore(),
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+        let definition = try store.duplicateRoutine(PlanCatalog.all[0])
+
+        XCTAssertThrowsError(try store.saveCustomRoutine(definition))
+
+        XCTAssertEqual(telemetry.diagnostics.count, 1)
+        XCTAssertEqual(telemetry.diagnostics[0].category, .persistence)
+        XCTAssertEqual(telemetry.diagnostics[0].operation, .save)
+        XCTAssertEqual(telemetry.diagnostics[0].errorKind, .other)
+    }
+
+    func testHealthAuthorizationDeniedEmitsCategoricalResult() {
+        let telemetry = RecordingTelemetry()
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .denied
+        let store = AppStore(
+            healthKitService: healthStore,
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.requestHealthAuthorization()
+
+        waitUntil {
+            telemetry.events == [.healthAuthorizationFinished(outcome: .denied)]
+        }
+        XCTAssertEqual(telemetry.events, [.healthAuthorizationFinished(outcome: .denied)])
+    }
+
+    func testHealthAuthorizationPausesReplayUntilTheAuthorizationResultIsHandled() {
+        let telemetry = RecordingTelemetry()
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .denied
+        let store = AppStore(
+            healthKitService: healthStore,
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.requestHealthAuthorization()
+
+        XCTAssertEqual(telemetry.actions, [.replayStopped])
+        waitUntil {
+            telemetry.actions == [
+                .replayStopped,
+                .healthAuthorizationFinished(outcome: .denied),
+                .replayStarted
+            ]
+        }
+    }
+
+    func testHealthAuthorizationNotDeterminedDoesNotEmitOutcome() {
+        let telemetry = RecordingTelemetry()
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let store = AppStore(
+            healthKitService: healthStore,
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+
+        store.requestHealthAuthorization()
+        let expectation = expectation(description: "authorization callback completes")
+        DispatchQueue.main.async { expectation.fulfill() }
+        wait(for: [expectation], timeout: 1)
+
+        XCTAssertEqual(telemetry.events, [])
+    }
+
     func testInitializationHydratesPersistedLocalHistoryWithoutHealthKitRead() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -656,6 +772,7 @@ private final class FakeHealthWorkoutSaving: HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Error?) -> Void
     ) {
         withLock {
@@ -804,6 +921,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         let (result, shouldDefer) = withLock {
@@ -1065,6 +1183,69 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             batteryValue: nil,
             steps: []
         )
+    }
+}
+
+@MainActor
+private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting, SessionReplayControlling {
+    enum Action: Equatable {
+        case healthAuthorizationFinished(outcome: HangTenTelemetryEvent.HealthAuthorizationOutcome)
+        case replayStarted
+        case replayStopped
+    }
+
+    private(set) var events: [HangTenTelemetryEvent] = []
+    private(set) var diagnostics: [HangTenDiagnostic] = []
+    private(set) var actions: [Action] = []
+
+    var dependencies: TelemetryDependencies {
+        TelemetryDependencies(
+            tracking: self,
+            diagnostics: self,
+            flags: NoOpTelemetry(),
+            replay: self,
+            isNoOp: false
+        )
+    }
+
+    deinit {}
+
+    func track(_ event: HangTenTelemetryEvent) {
+        events.append(event)
+        if case let .healthAuthorizationFinished(outcome) = event {
+            actions.append(.healthAuthorizationFinished(outcome: outcome))
+        }
+    }
+
+    func record(_ diagnostic: HangTenDiagnostic) {
+        diagnostics.append(diagnostic)
+    }
+
+    func start() {
+        actions.append(.replayStarted)
+    }
+
+    func stop() {
+        actions.append(.replayStopped)
+    }
+}
+
+private final class FailingCustomRoutineStore: CustomRoutineStoring {
+    private struct Failure: Error {}
+
+    let routines: [CustomRoutineDefinition] = []
+    let persistenceError: String? = nil
+
+    deinit {}
+
+    func save(_ routine: CustomRoutineDefinition) throws {
+        throw Failure()
+    }
+
+    func delete(id: String) throws {}
+
+    func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan {
+        fatalError("The failing store contains no routines.")
     }
 }
 

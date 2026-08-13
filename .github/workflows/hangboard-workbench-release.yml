@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+  merge_group:
   workflow_dispatch:
 
 permissions:
@@ -17,8 +18,108 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    name: Classify changed components
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      workbench_web: ${{ steps.filter.outputs.workbench_web }}
+      workbench_native: ${{ steps.filter.outputs.workbench_native }}
+      shared_board_content: ${{ steps.filter.outputs.shared_board_content }}
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - id: filter
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
+        with:
+          filters: .github/ci-paths.yml
+
+  workbench-node:
+    name: Test workbench browser editor
+    needs: changes
+    if: >-
+      github.event_name == 'pull_request' &&
+      (needs.changes.outputs.workbench_web == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.workflow == 'true')
+    runs-on: ubuntu-latest
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Run focused Node suite
+        run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
+
+  workbench-python:
+    name: Test workbench Python backend
+    needs: changes
+    if: >-
+      github.event_name == 'pull_request' &&
+      (needs.changes.outputs.python == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.workflow == 'true')
+    runs-on: ubuntu-latest
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # actions/setup-python v6.3.0
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
+
+      - name: Install workbench test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install 'setuptools>=84.0.0' wheel
+          python -m pip install -e 'Tools/HangboardPipeline[dev]'
+
+      - name: Run focused Python suite
+        run: python -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
+
+  workbench-native:
+    name: Test native workbench shell
+    needs: changes
+    if: >-
+      github.event_name == 'pull_request' &&
+      (needs.changes.outputs.workbench_native == 'true' ||
+      needs.changes.outputs.workflow == 'true')
+    runs-on: macos-latest
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Run native shell tests
+        run: swift test --package-path Tools/HangboardWorkbench/macos
+
   build:
     name: Build verified arm64 workbench
+    needs: changes
+    if: github.event_name != 'pull_request'
     runs-on: macos-latest
     timeout-minutes: 45
 

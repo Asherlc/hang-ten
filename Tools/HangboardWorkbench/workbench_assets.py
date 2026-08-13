@@ -13,10 +13,8 @@ STATIC_ASSET_ROUTES = (
     ("/workbench-client.js", "workbench-client.js"),
     ("/workbench-controller.js", "workbench-controller.js"),
     ("/workbench-model.js", "workbench-model.js"),
-    ("/workbench-suite-model.js", "workbench-suite-model.js"),
-    ("/workbench-suite-controller.js", "workbench-suite-controller.js"),
-    ("/validation-view.js", "validation-view.js"),
     ("/vector-path-model.js", "vector-path-model.js"),
+    ("/editor-ui-model.js", "editor-ui-model.js"),
     ("/app.js", "app.js"),
 )
 

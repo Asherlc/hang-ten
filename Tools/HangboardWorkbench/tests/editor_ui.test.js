@@ -19,6 +19,96 @@ const {
   canStartRegionDrag,
 } = require("../curve-gesture-model.js");
 
+test("the inspector keeps direct correction controls visible while Advanced tools are closed", () => {
+  const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
+
+  assert.match(app, /advancedToolsOpen: false/);
+  assert.match(app, /function setAdvancedToolsOpen\(open\)/);
+  assert.match(app, /advancedToolVisibility\(\{[\s\S]*region,[\s\S]*editorMode: state\.editorMode/);
+  assert.match(app, /advanced-tools"\]\.classList\.toggle\("hidden", !state\.advancedToolsOpen \|\| !region\)/);
+});
+
+test("E opens and closes Advanced tools but ignores focused form controls", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const handlerEnd = app.indexOf('window.addEventListener("keyup"', handlerStart);
+  assert.notEqual(handlerStart, -1);
+  assert.notEqual(handlerEnd, -1);
+  const listeners = {};
+  const state = {
+    drawing: false,
+    spacePressed: false,
+    mirrorOntoSourceId: null,
+    inspectorDrawerOpen: false,
+    selectedId: 4,
+    advancedToolsOpen: false,
+    panSession: null,
+    primitiveSession: null,
+    dragSession: null,
+    handleSession: null,
+    edgeSession: null,
+    transformSession: null,
+  };
+  const expandedValues = [];
+  let inspectorRenders = 0;
+  let toolStateRenders = 0;
+  const context = {
+    document: { activeElement: { tagName: "DIV" } },
+    state,
+    el: {
+      "advanced-tools-toggle": {
+        setAttribute: (name, value) => expandedValues.push([name, value]),
+      },
+    },
+    selectedRegion: () => ({ id: state.selectedId }),
+    renderInspector: () => { inspectorRenders += 1; },
+    renderToolState: () => { toolStateRenders += 1; },
+    window: { addEventListener: (name, callback) => { listeners[name] = callback; } },
+    trapInspectorDrawerFocus: () => {},
+    clearSelection: () => {},
+    cancelDraw: () => {},
+    cancelPointerSessions: () => {},
+    closeInspectorDrawer: () => {},
+    deleteSelectedFreeformVertex: () => false,
+    deleteSelected: () => {},
+    finishDraw: () => {},
+    redo: () => {},
+    undo: () => {},
+    navigateRegion: () => {},
+    mirrorSelectedCopy: () => {},
+    toggleEdgeSnapping: () => {},
+    render: () => {},
+    setStatus: () => {},
+  };
+  vm.runInNewContext(
+    `${extractFunction(app, "setAdvancedToolsOpen")}\n${app.slice(handlerStart, handlerEnd)}`,
+    context,
+  );
+  const dispatchE = () => listeners.keydown({
+    key: "e",
+    code: "KeyE",
+    preventDefault: () => {},
+    ctrlKey: false,
+    metaKey: false,
+    shiftKey: false,
+  });
+
+  dispatchE();
+  assert.equal(state.advancedToolsOpen, true);
+  dispatchE();
+  assert.equal(state.advancedToolsOpen, false);
+  assert.deepEqual(expandedValues, [["aria-expanded", "true"], ["aria-expanded", "false"]]);
+  assert.equal(inspectorRenders, 2);
+  assert.equal(toolStateRenders, 2);
+
+  for (const tagName of ["INPUT", "TEXTAREA", "SELECT"]) {
+    context.document.activeElement = { tagName };
+    dispatchE();
+  }
+  assert.equal(state.advancedToolsOpen, false);
+  assert.equal(inspectorRenders, 2);
+  assert.equal(toolStateRenders, 2);
+});
+
 test("starting an edge session records its pointer and edge without mutating curves", () => {
   assert.equal(typeof beginEdgeCurveSession, "function");
   const edgeCurves = { 0: { kind: "quadratic", control: [5, -4] } };
@@ -453,7 +543,65 @@ test("viewport wheel listener pans or cursor-anchored zooms by interaction inten
   assert.match(app, /state\.panX -= action\.deltaX;[\s\S]*state\.panY -= action\.deltaY;[\s\S]*renderTransform\(\);/);
 });
 
-test("declares each board picker element once in the element map", () => {
+test("focusing a validation hold closes Advanced tools when it changes selection", () => {
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    advancedToolsOpen: true,
+    regions: [{ id: 7 }, { id: 8 }],
+  };
+  let rendered = 0;
+  let focused = 0;
+  let scrolled = 0;
+  const context = {
+    state,
+    render: () => { rendered += 1; },
+    el: { "canvas-viewport": { focus: () => { focused += 1; } } },
+    document: { querySelector: () => ({ scrollIntoView: () => { scrolled += 1; } }) },
+    requestAnimationFrame: (callback) => callback(),
+  };
+  vm.runInNewContext(extractFunction(app, "focusRegion"), context);
+
+  assert.equal(context.focusRegion(8), true);
+  assert.equal(state.selectedId, 8);
+  assert.equal(state.selectedCornerIndex, null);
+  assert.equal(state.advancedToolsOpen, false);
+  assert.equal(rendered, 1);
+  assert.equal(focused, 1);
+  assert.equal(scrolled, 1);
+});
+
+test("finishing a new hold closes Advanced tools when it selects the new hold", () => {
+  const state = {
+    selectedId: 7,
+    selectedCornerIndex: 2,
+    advancedToolsOpen: true,
+    drawing: true,
+    draft: [[1, 1], [9, 1], [9, 9]],
+    drawShape: "freeform",
+    primitiveSession: { pointerId: 1 },
+    regions: [],
+  };
+  const context = {
+    state,
+    canEditGeometry: () => true,
+    allocateRegionId: () => 8,
+    normalizeRegion: (region) => region,
+    commitHistory: () => {},
+    setStatus: () => {},
+    render: () => {},
+    el: { "draw-instruction": { classList: { remove: () => {} } } },
+  };
+  vm.runInNewContext(extractFunction(app, "finishDraw"), context);
+
+  context.finishDraw();
+
+  assert.equal(state.selectedId, 8);
+  assert.equal(state.selectedCornerIndex, null);
+  assert.equal(state.advancedToolsOpen, false);
+});
+
+test("declares each focused-editor element once in the element map", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8");
   const initBlock = app.match(
     /const el = Object\.fromEntries\(\[(?<list>[\s\S]*?)\]\.map\(\(id\) => \[id, document\.getElementById\(id\)\]\)\);/,
@@ -463,7 +611,12 @@ test("declares each board picker element once in the element map", () => {
 
   const list = initBlock.groups.list;
 
-  for (const id of ["board-picker", "board-picker-separator", "board-select"]) {
+  for (const id of [
+    "board-picker", "board-picker-separator", "board-select",
+    "board-details", "board-details-name", "board-details-id", "board-details-revision", "more-actions",
+    "advanced-tools-toggle", "advanced-tools", "advanced-outline-tools", "advanced-transform-tools",
+    "advanced-assist-tools", "advanced-details-tools",
+  ]) {
     const matches = list.match(new RegExp(`"${id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g")) ?? [];
     assert.equal(matches.length, 1, `${id} must appear exactly once in the element initialization list`);
   }

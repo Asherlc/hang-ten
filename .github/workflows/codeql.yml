@@ -4,25 +4,9 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - HangTen/**
-      - HangTen.xcodeproj/**
-      - scripts/hangboard-tools.sh
-      - scripts/stage-approved-board-packages.py
-      - Tools/HangboardPipeline/**
-      - Tools/HangboardWorkbench/**
-      - .github/workflows/codeql.yml
   push:
     branches:
       - main
-    paths:
-      - HangTen/**
-      - HangTen.xcodeproj/**
-      - scripts/hangboard-tools.sh
-      - scripts/stage-approved-board-packages.py
-      - Tools/HangboardPipeline/**
-      - Tools/HangboardWorkbench/**
-      - .github/workflows/codeql.yml
   merge_group:
   workflow_dispatch:
   schedule:
@@ -32,16 +16,92 @@ permissions:
   contents: read
   security-events: write
   actions: read
+  pull-requests: read
 
 concurrency:
   group: codeql-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect changed languages
+    runs-on: ubuntu-latest
+    outputs:
+      swift: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || steps.filter.outputs.swift == 'true' }}
+      python: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || steps.filter.outputs.python == 'true' }}
+      javascript: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || steps.filter.outputs.javascript == 'true' }}
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      # dorny/paths-filter v3.0.2
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
+        with:
+          filters: |
+            swift:
+              - '**/*.swift'
+              - '**/Package.swift'
+              - '**/Package.resolved'
+              - 'HangTen.xcodeproj/**'
+              - '.github/workflows/codeql.yml'
+            python:
+              - '**/*.py'
+              - '**/pyproject.toml'
+              - '**/requirements*.txt'
+              - '**/poetry.lock'
+              - '**/Pipfile.lock'
+              - '.github/workflows/codeql.yml'
+            javascript:
+              - '**/*.js'
+              - '**/*.jsx'
+              - '**/*.mjs'
+              - '**/*.cjs'
+              - '**/*.ts'
+              - '**/*.tsx'
+              - '**/package.json'
+              - '**/package-lock.json'
+              - '**/yarn.lock'
+              - '**/pnpm-lock.yaml'
+              - '.github/workflows/codeql.yml'
+
+  analyze-actions:
+    name: Analyze (GitHub Actions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # github/codeql-action v4.37.6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          languages: actions
+          build-mode: none
+
+      # github/codeql-action v4.37.6
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          category: "/language:actions"
+
   analyze-swift:
     name: Analyze (Swift)
     runs-on: macos-26
     timeout-minutes: 30
+    needs: changes
+    if: ${{ needs.changes.outputs.swift == 'true' }}
 
     steps:
       # actions/checkout v4.2.2
@@ -80,17 +140,12 @@ jobs:
         with:
           category: "/language:swift"
 
-  analyze-interpreted:
-    name: Analyze (${{ matrix.language }})
+  analyze-python:
+    name: Analyze (Python)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language:
-          - javascript-typescript
-          - python
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' }}
 
     steps:
       # actions/checkout v4.2.2
@@ -103,11 +158,60 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3
         with:
-          languages: ${{ matrix.language }}
+          languages: python
           build-mode: none
 
       # github/codeql-action v4.37.6
       - name: Analyze with CodeQL
         uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
         with:
-          category: "/language:${{ matrix.language }}"
+          category: "/language:python"
+
+  analyze-javascript:
+    name: Analyze (JavaScript/TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: changes
+    if: ${{ needs.changes.outputs.javascript == 'true' }}
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # github/codeql-action v4.37.6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      # github/codeql-action v4.37.6
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3
+        with:
+          category: "/language:javascript-typescript"
+
+  codeql-gate:
+    name: CodeQL gate
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [changes, analyze-actions, analyze-swift, analyze-python, analyze-javascript]
+
+    steps:
+      - name: Verify CodeQL analyses
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          ACTIONS_RESULT: ${{ needs.analyze-actions.result }}
+          SWIFT_RESULT: ${{ needs.analyze-swift.result }}
+          PYTHON_RESULT: ${{ needs.analyze-python.result }}
+          JAVASCRIPT_RESULT: ${{ needs.analyze-javascript.result }}
+        run: |
+          set -euo pipefail
+          test "$CHANGES_RESULT" = success
+          test "$ACTIONS_RESULT" = success
+          for result in "$SWIFT_RESULT" "$PYTHON_RESULT" "$JAVASCRIPT_RESULT"; do
+            test "$result" = success || test "$result" = skipped
+          done
