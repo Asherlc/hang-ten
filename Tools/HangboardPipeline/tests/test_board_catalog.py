@@ -25,6 +25,45 @@ def test_catalog_requires_a_complete_package_for_every_entry(tmp_path: Path) -> 
     assert catalog.entries[0].path == "example-board"
 
 
+def test_registered_packages_use_the_canonical_primary_presentation_asset() -> None:
+    module = load_board_catalog_module()
+    catalog_path = Path(__file__).resolve().parents[3] / "Hangboards/catalog.json"
+    catalog = module.validate_catalog(catalog_path)
+
+    for entry in catalog.entries:
+        package = module.load_board_package(catalog_path.parent / entry.path)
+        assert package.board.presentation_asset_path == "assets/primary.png"
+        assert (package.root / "assets/primary.png").is_file()
+
+
+def test_catalog_rejects_a_registered_package_without_the_primary_presentation_asset(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    board_path = tmp_path / "example-board" / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board.pop("presentation")
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="must present assets/primary.png"):
+        module.validate_catalog(catalog_path)
+
+
+def test_catalog_rejects_a_registered_package_that_presents_a_source_photo(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    board_path = tmp_path / "example-board" / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["presentation"] = {"assetPath": "assets/WoodGripsCompactII.jpg"}
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="must present assets/primary.png"):
+        module.validate_catalog(catalog_path)
+
+
 def test_catalog_rejects_status_and_nested_lifecycle_paths(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     catalog_path = _write_catalog(tmp_path)

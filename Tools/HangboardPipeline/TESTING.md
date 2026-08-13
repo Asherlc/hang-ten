@@ -10,7 +10,7 @@ complete pipeline and Workbench suites:
   Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
 ```
 
-Validate the canonical package registry and exercise approved-package staging
+Validate the canonical package registry and exercise package staging
 without writing into the app source tree:
 
 ```sh
@@ -30,5 +30,6 @@ UNLOCALIZED_RESOURCES_FOLDER_PATH="$UNLOCALIZED_RESOURCES_FOLDER_PATH" \
 ```
 
 The generated experimental catalog and its Swift/JSON exporters were retired.
-Draft packages remain review inventory only; only registry entries with
-`status: approved` are staged into an app resource destination.
+Only packages listed in `Hangboards/catalog.json` are registered and staged
+into an app resource destination. Imported candidates remain unregistered
+until they satisfy the complete package contract.

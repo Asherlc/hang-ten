@@ -273,7 +273,7 @@ def test_rock_prodigy_package_preserves_runtime_inventory_semantics_and_artwork(
     )
     assert tuple(piece.id for piece in package.artwork.hold_pieces) == expected_piece_ids
     assert package.artwork.hold_ids == {hold_id for hold_id, _ in ROCK_PRODIGY_HOLDS}
-    assert package.board.presentation_asset_path is None
+    assert package.board.presentation_asset_path == "assets/primary.png"
     _assert_artwork_preserved(ROCK_PRODIGY_ROOT, expected_artwork)
 
 
@@ -288,7 +288,7 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
     assert evidence["assetEvidence"]["assets/primary.png"]["method"] == "external-generative-adaptation"
 
 
-def test_compact_keeps_only_its_source_photo_and_presentation_asset() -> None:
+def test_registered_packages_keep_only_canonical_presentation_assets() -> None:
     compact_reference = COMPACT_ROOT / "assets" / "WoodGripsCompactII.jpg"
     assert hashlib.sha256(compact_reference.read_bytes()).hexdigest() == "c101a319076448be38977c606b5be57f1f254e2fe273b0c56a69ca2f52bdb596"
 
@@ -296,8 +296,16 @@ def test_compact_keeps_only_its_source_photo_and_presentation_asset() -> None:
         "primary.png",
         "WoodGripsCompactII.jpg",
     }
-    assert not (ROCK_PRODIGY_ROOT / "assets").exists()
-    assert set(json.loads((ROCK_PRODIGY_ROOT / "evidence.json").read_text(encoding="utf-8"))["assetEvidence"]) == set()
+    rock_primary = ROCK_PRODIGY_ROOT / "assets" / "primary.png"
+    assert hashlib.sha256(rock_primary.read_bytes()).hexdigest() == "8d5c4e853a4186a0ca21cca32b57cd6844d9644a4a9b5dacdedfc9287fc22a35"
+    assert {path.name for path in (ROCK_PRODIGY_ROOT / "assets").iterdir()} == {"primary.png"}
+    rock_evidence = json.loads((ROCK_PRODIGY_ROOT / "evidence.json").read_text(encoding="utf-8"))
+    assert rock_evidence["assetEvidence"] == {
+        "assets/primary.png": {
+            "sourceIDs": ["product-image"],
+            "method": "external-generative-adaptation",
+        }
+    }
 
 
 def test_source_photo_requires_its_exact_package_relative_evidence_path(tmp_path: Path) -> None:

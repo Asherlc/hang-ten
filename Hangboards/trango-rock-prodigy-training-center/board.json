@@ -7,6 +7,9 @@
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
   "dimensions": "18.2\" × 12.1\" assembled (two 9.1\" × 12.1\" pieces)",
   "aspectRatio": 1.5041322314049586,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
   "holds": [
     {
       "id": "trango.rptc.left.top-jug",

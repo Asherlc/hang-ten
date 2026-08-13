@@ -2878,5 +2878,12 @@
       "method": "reviewed-human-authored-normalization"
     }
   },
-  "assetEvidence": {}
+  "assetEvidence": {
+    "assets/primary.png": {
+      "sourceIDs": [
+        "product-image"
+      ],
+      "method": "external-generative-adaptation"
+    }
+  }
 }

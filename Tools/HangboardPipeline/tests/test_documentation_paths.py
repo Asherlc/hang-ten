@@ -38,3 +38,13 @@ def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     assert 'TARGET_BUILD_DIR="$stage_root"' in testing
     assert 'UNLOCALIZED_RESOURCES_FOLDER_PATH="HangTen.app"' in testing
     assert 'destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"' in testing
+
+
+def test_testing_guidance_uses_registered_not_lifecycle_inventory_terms() -> None:
+    testing = TESTING.read_text(encoding="utf-8")
+
+    assert "Draft packages" not in testing
+    assert "status: approved" not in testing
+    assert "review inventory" not in testing
+    assert "registered and staged" in testing
+    assert "unregistered" in testing

@@ -490,4 +490,8 @@ def validate_catalog(catalog_path: Path) -> CatalogDocument:
         package = load_board_package(package_root)
         if package.board.id != entry.id:
             raise ValueError(f"board package ID {package.board.id!r} does not match catalog id {entry.id!r}")
+        if package.board.presentation_asset_path != "assets/primary.png":
+            raise ValueError("registered board package must present assets/primary.png")
+        if not (package.root / "assets/primary.png").is_file():
+            raise ValueError("registered board package assets/primary.png does not exist")
     return catalog
