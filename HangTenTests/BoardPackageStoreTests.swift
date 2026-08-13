@@ -138,6 +138,20 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreTreatsNullPresentationAsAbsent() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                board["presentation"] = NSNull()
+            }
+        }
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.board(id: "package-board"))
+
+        XCTAssertNil(store.presentationImageURL(for: board))
+    }
+
     func testStoreRejectsApprovedSidecarSymlinkEscapingPackage() throws {
         let fixture = try makeFixtureBundle { packageURL in
             let boardURL = packageURL.appendingPathComponent("board.json")

@@ -621,9 +621,10 @@ private struct BoardPackageBoardDocument: Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decode(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        presentation = container.contains(.presentation)
-            ? try container.decode(BoardPackagePresentationDocument.self, forKey: .presentation)
-            : nil
+        presentation = try container.decodeIfPresent(
+            BoardPackagePresentationDocument.self,
+            forKey: .presentation
+        )
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
     }
 
