@@ -82,6 +82,30 @@ Add these environment variables:
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
 
+## PostHog CI configuration
+
+The app runs without telemetry when its PostHog client token is absent. This is
+intentional for local builds and untrusted fork pull requests. PostHog
+credentials are not provisioned by this repository: after creating the new
+Hang Ten PostHog project, an authorized maintainer must configure the following
+to enable anonymous telemetry in trusted GitHub Actions builds:
+
+- Repository secret `POSTHOG_CLIENT_TOKEN`: the Hang Ten PostHog public client
+  project key (`phc_...`). Although it is a client-side key, retain it as a
+  secret so it is not committed or exposed in workflow logs.
+- Repository variable `POSTHOG_HOST`: the PostHog ingestion host. Use
+  `https://us.i.posthog.com` unless the project is in another region.
+
+The release workflow runs in the `app-store-connect` environment, whose
+secrets and variables are scoped separately from the repository. After the
+project exists, define the same `POSTHOG_CLIENT_TOKEN` environment secret and
+`POSTHOG_HOST` environment variable there so the signed TestFlight archive
+includes telemetry. The host defaults to `https://us.i.posthog.com` when the
+variable is omitted; a missing token remains a safe no-op rather than failing
+CI. The workflows place these values in a mode-`0600` temporary xcconfig, pass
+only that file path to Xcode, and remove it when the job step exits so token
+values are not interpolated into captured build logs.
+
 The API key needs the Admin role for provisioning-profile access, and App Store
 Connect must already contain an app record for `com.hangten.training` plus an
 App Store provisioning profile for that bundle ID. The workflow assigns a
@@ -102,7 +126,7 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
 The hangboard guide uses the repository-local staged onboarding tool in
-`Tools/HangboardOnboarding`. Run its accepted Compact II parity fixture without
+`Tools/HangboardPipeline`. Run its accepted Compact II parity fixture without
 a model call before onboarding a new product:
 
 ```sh

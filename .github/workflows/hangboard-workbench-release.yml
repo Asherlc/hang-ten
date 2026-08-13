@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
+          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
 
       - name: Install workbench build dependencies
         run: |
@@ -43,19 +43,19 @@ jobs:
           python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
           python -m venv "${python_bin%/bin/python}"
           "$python_bin" -m pip install --upgrade pip
-          "$python_bin" -m pip install -e 'Tools/HangboardOnboarding[dev]' 'pyinstaller==6.22.0'
+          "$python_bin" -m pip install -e 'Tools/HangboardPipeline[dev]' 'pyinstaller==6.22.0'
 
       - name: Run focused Python suite
         run: |
           set -euo pipefail
           python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-          "$python_bin" -m pytest Tools/HangboardOnboarding/tests Tools/hold-highlight-editor/tests -q
+          "$python_bin" -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
 
       - name: Run focused Node suite
-        run: node --test Tools/hold-highlight-editor/tests/workbench*.test.js
+        run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
 
       - name: Run native shell tests
-        run: swift test --package-path Tools/hold-highlight-editor/macos
+        run: swift test --package-path Tools/HangboardWorkbench/macos
 
       - name: Build unsigned native app
         run: |
@@ -66,20 +66,20 @@ jobs:
           rm -rf "$release_dir" "$work_dir"
           mkdir -p "$release_dir" "$work_dir"
           "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-            Tools/hold-highlight-editor/packaging/build.py \
+            Tools/HangboardWorkbench/packaging/build.py \
             --commit "$GITHUB_SHA" \
             --dist-dir "$runtime_dist_dir" \
             --work-dir "$work_dir"
           runtime_dir="$runtime_dist_dir/hangboard-workbench"
 
           swift build -c release --arch arm64 \
-            --package-path Tools/hold-highlight-editor/macos
+            --package-path Tools/HangboardWorkbench/macos
           shell_bin_dir="$(swift build -c release --arch arm64 \
-            --package-path Tools/hold-highlight-editor/macos --show-bin-path)"
+            --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
           shell_executable="$shell_bin_dir/HangboardWorkbench"
           app_bundle="$release_dir/Hangboard Workbench.app"
           "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-            Tools/hold-highlight-editor/packaging/macos_app.py \
+            Tools/HangboardWorkbench/packaging/macos_app.py \
             --shell "$shell_executable" \
             --runtime-dir "$runtime_dir" \
             --output "$app_bundle" \
@@ -161,7 +161,7 @@ jobs:
             python - <<'PY'
           import sys
 
-          sys.path.insert(0, "Tools/hold-highlight-editor")
+          sys.path.insert(0, "Tools/HangboardWorkbench")
           from workbench_assets import STATIC_ASSETS
 
           for asset in STATIC_ASSETS:
@@ -247,7 +247,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: Tools/HangboardOnboarding/pyproject.toml
+          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
 
       - name: Install workbench release dependencies
         run: |
@@ -255,7 +255,7 @@ jobs:
           python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-release-venv/bin/python"
           python -m venv "${python_bin%/bin/python}"
           "$python_bin" -m pip install --upgrade pip
-          "$python_bin" -m pip install -e 'Tools/HangboardOnboarding' 'pyinstaller==6.22.0'
+          "$python_bin" -m pip install -e 'Tools/HangboardPipeline' 'pyinstaller==6.22.0'
           swift --version
 
       # Apple-Actions/import-codesign-certs v7.0.0
@@ -319,7 +319,7 @@ jobs:
 
           rm -rf "$runtime_dist_dir" "$runtime_work_dir" "$app_bundle"
           mkdir -p "$runtime_dist_dir" "$runtime_work_dir"
-          "$python_bin" "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/build.py" \
+          "$python_bin" "$GITHUB_WORKSPACE/Tools/HangboardWorkbench/packaging/build.py" \
             --commit "$GITHUB_SHA" \
             --dist-dir "$runtime_dist_dir" \
             --work-dir "$runtime_work_dir" \
@@ -327,11 +327,11 @@ jobs:
           runtime_dir="$runtime_dist_dir/hangboard-workbench"
 
           swift build -c release --arch arm64 \
-            --package-path Tools/hold-highlight-editor/macos
+            --package-path Tools/HangboardWorkbench/macos
           shell_bin_dir="$(swift build -c release --arch arm64 \
-            --package-path Tools/hold-highlight-editor/macos --show-bin-path)"
+            --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
           built_shell="$shell_bin_dir/HangboardWorkbench"
-          "$python_bin" "$GITHUB_WORKSPACE/Tools/hold-highlight-editor/packaging/macos_app.py" \
+          "$python_bin" "$GITHUB_WORKSPACE/Tools/HangboardWorkbench/packaging/macos_app.py" \
             --shell "$built_shell" \
             --runtime-dir "$runtime_dir" \
             --output "$app_bundle" \

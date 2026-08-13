@@ -71,7 +71,7 @@ scripts/export-board-catalog.sh --check
 ```
 
 Hang Ten vendors the reviewed onboarding tool under
-`Tools/HangboardOnboarding`. Its model-facing contract is deliberately small:
+`Tools/HangboardPipeline`. Its model-facing contract is deliberately small:
 one batched semantic response supplies generic grip hints, while deterministic
 local processing owns masks, boundaries, normalized paths, previews, and hash
 validation. Exact semantic responses are cached by source pixels, prompt,
@@ -157,13 +157,13 @@ Use `--status` at any time for read-only hash and state validation. If a local
 geometry gate cannot resolve one region, escalate only that crop; do not lower
 a gate, request model-generated contours, or infer an unobserved grip from
 symmetry. The accepted Compact II replay fixture is versioned at
-`Tools/HangboardOnboarding/boards/metolius-wood-grips-compact-ii/`; it is a
+`Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii/`; it is a
 test fixture, not the canonical board package.
 
 Only complete runs with approved checkpoints through Stage 4 may be published
 into the canonical `Hangboards/<board-folder>/board.json` package. Keep every
 unfinished run under the ignored `.context/` directory; the accepted run under
-`Tools/HangboardOnboarding/boards/` remains a replay fixture for tests.
+`Tools/HangboardPipeline/boards/` remains a replay fixture for tests.
 
 ## 3. Keep metadata and artwork separate
 

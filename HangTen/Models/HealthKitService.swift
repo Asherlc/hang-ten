@@ -15,6 +15,7 @@ protocol HealthWorkoutSaving: AnyObject {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Error?) -> Void
     )
 }
@@ -116,6 +117,7 @@ protocol WorkoutHealthStore: AnyObject {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Result<UUID, Error>) -> Void
     )
 }
@@ -129,6 +131,7 @@ extension WorkoutHealthStore {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]? = nil,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         saveCompletedWorkout(
@@ -282,6 +285,7 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]? = nil,
         completion: @escaping (Error?) -> Void
     ) {
         let id = UUID()
@@ -292,7 +296,8 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
             endDate: endDate,
             boardID: boardID,
             boardName: boardName,
-            activitySegments: activitySegments
+            activitySegments: activitySegments,
+            activityMeasurements: activityMeasurements
         ) { result in
             switch result {
             case .success:
@@ -311,6 +316,7 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]? = nil,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         let metadata: [String: Any]
@@ -320,7 +326,8 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
                 sessionID: id,
                 boardID: boardID,
                 boardName: boardName,
-                activitySegments: activitySegments
+                activitySegments: activitySegments,
+                activityMeasurements: activityMeasurements
             )
         } catch {
             completion(.failure(error))
@@ -397,12 +404,17 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         sessionID: UUID? = nil,
         boardID: String,
         boardName: String,
-        activitySegments: [RecordedActivitySegment]
+        activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]? = nil
     ) throws -> [String: Any] {
         let activityJSON: String
         do {
             activityJSON = try WorkoutActivityRecorder().json(
-                for: WorkoutActivityMetadata(version: 1, segments: activitySegments)
+                for: WorkoutActivityMetadata(
+                    version: 1,
+                    segments: activitySegments,
+                    measurements: activityMeasurements
+                )
             )
         } catch {
             throw HealthWorkoutWriteError.encodeActivitySegments

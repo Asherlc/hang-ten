@@ -1,9 +1,27 @@
 import XCTest
 import HealthKit
+import Combine
 @testable import HangTen
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    private var sessionStoreDirectory: URL!
+    private var sessionStores: [WorkoutSessionStore] = []
+
+    override func setUp() {
+        super.setUp()
+        sessionStoreDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "WorkoutActivityRecordingTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+    }
+
+    override func tearDown() {
+        cleanUpSessionStores()
+        super.tearDown()
+    }
+
     private let board = TrainingBoard(
         id: "fixture.board",
         manufacturer: "Fixture",
@@ -66,6 +84,57 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let defaults = makeDefaults()
         defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         return defaults
+    }
+
+    private func makeSessionStore(
+        defaults: UserDefaults,
+        fileManager: FileManager = .default
+    ) -> WorkoutSessionStore {
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: sessionStoreDirectory,
+            fileManager: fileManager
+        )
+        sessionStores.append(store)
+        return store
+    }
+
+    private func cleanUpSessionStores() {
+        sessionStores.forEach { $0.flush() }
+        sessionStores.removeAll()
+        if let sessionStoreDirectory {
+            try? FileManager.default.removeItem(at: sessionStoreDirectory)
+        }
+        sessionStoreDirectory = nil
+    }
+
+    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() {
+        let directory = sessionStoreDirectory!
+        let fileManager = BlockingWorkoutActivityFileManager()
+        let store = makeSessionStore(defaults: makeDefaults(), fileManager: fileManager)
+        let record = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Plan",
+            recordedAt: Date(timeIntervalSinceReferenceDate: 1_010),
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+
+        store.append(record)
+        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        let allowWrite = fileManager.allowWrite
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            allowWrite.signal()
+        }
+
+        cleanUpSessionStores()
+
+        XCTAssertEqual(fileManager.writeFinished.wait(timeout: .now() + 1), .success)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
     private func plan(
@@ -295,6 +364,70 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertFalse(json.contains("sizeMillimeters"))
     }
 
+    func testMeasuredStepIsExportedOnceAlongsideDescriptorSegments() throws {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left", "jug-center"),
+                timing: .fixed,
+                duration: 10
+            )
+        ])
+        let measurement = WorkoutStepMeasurement(
+            stepID: "step",
+            plannedActiveDuration: 10,
+            intervals: [LoadInterval(start: 1, end: 4.5)],
+            peakLoadKGF: 37.25,
+            sampleCount: 20,
+            status: .measured
+        )
+
+        let metadata = try WorkoutActivityRecorder().metadata(
+            for: workout,
+            on: board,
+            stepMeasurements: [measurement]
+        )
+
+        XCTAssertEqual(metadata.segments.count, 2)
+        XCTAssertEqual(
+            metadata.measurements,
+            [
+                RecordedActivityStepMeasurement(
+                    stepID: "step",
+                    peakLoadKGF: 37.25,
+                    actualLoadedDurationSeconds: 3.5
+                )
+            ]
+        )
+    }
+
+    func testUnmeasuredStepOmitsMeasurementCollection() throws {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 10
+            )
+        ])
+        let measurement = WorkoutStepMeasurement(
+            stepID: "step",
+            plannedActiveDuration: 10,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured
+        )
+
+        let metadata = try WorkoutActivityRecorder().metadata(
+            for: workout,
+            on: board,
+            stepMeasurements: [measurement]
+        )
+
+        XCTAssertNil(metadata.measurements)
+    }
+
     func testUnresolvedTargetThrowsItsSegmentKey() {
         let workout = plan([
             WorkoutSegment(
@@ -363,9 +496,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testAppStoreResolutionPreservesDirectFeatureFallbackAndKindBehavior() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let exactFeatureTarget = HoldTarget.feature(
             .mediumEdge,
@@ -419,9 +554,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let plan = LegacyPlanSeedCatalog.repeaters
         let board = BoardCatalog.compactII
@@ -550,8 +687,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testExactBoardCompletionRecordsObservedSegmentsAndLocalCompletion() {
         let service = HealthWorkoutSavingSpy()
+        let workoutSaved = expectation(description: "HealthKit workout save")
+        service.onSave = {
+            workoutSaved.fulfill()
+        }
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, defaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+        let localCompletionPublished = expectation(description: "Local completion published")
+        let completionObservation = store.$workoutHistory
+            .map(\.sessionCount)
+            .filter { $0 == 1 }
+            .first()
+            .sink { _ in
+                localCompletionPublished.fulfill()
+            }
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -572,9 +725,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             endDate: endDate
         )
 
-        guard waitUntil({ store.sessionsCompleted == 1 && service.savedWorkouts.count == 1 }) else {
-            return
-        }
+        wait(for: [workoutSaved, localCompletionPublished], timeout: 5)
+        withExtendedLifetime(completionObservation) {}
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertTrue(store.sessionHistory.isEmpty)
         XCTAssertEqual(store.lastSessionTitle, "Plan")
@@ -592,10 +744,74 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testCompletionExportsMeasuredLoadThroughHealthKitSegments() {
+        let service = HealthWorkoutSavingSpy()
+        let defaults = makeHealthConnectedDefaults()
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .ids("edge-left"),
+                timing: .fixed,
+                duration: 10
+            )
+        ])
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_010)
+        let session = WorkoutSessionRecord(
+            id: UUID(),
+            planID: workout.id,
+            planTitle: workout.title,
+            recordedAt: endDate,
+            startDate: startDate,
+            endDate: endDate,
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [
+                WorkoutStepMeasurement(
+                    stepID: "step",
+                    plannedActiveDuration: 10,
+                    intervals: [LoadInterval(start: 1, end: 4.5)],
+                    peakLoadKGF: 37.25,
+                    sampleCount: 20,
+                    status: .measured
+                )
+            ]
+        )
+
+        store.markSessionComplete(
+            workout,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate,
+            session: session
+        )
+
+        guard waitUntil({ service.savedWorkouts.count == 1 }) else {
+            return
+        }
+        XCTAssertEqual(
+            service.savedWorkouts[0].activityMeasurements,
+            [
+                RecordedActivityStepMeasurement(
+                    stepID: "step",
+                    peakLoadKGF: 37.25,
+                    actualLoadedDurationSeconds: 3.5
+                )
+            ]
+        )
+    }
+
     func testPrimaryAppStoreInitializerStoresHistoryInSuppliedDefaults() {
         let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: WorkoutHealthStoreSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
             defaults: defaults
         )
         let workout = plan([
@@ -622,7 +838,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testLegacyCompletionUsesSelectedBoardAndNoStopwatchDurations() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, userDefaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         store.selectedBoard = board
         let workout = plan([
             WorkoutSegment(
@@ -649,7 +869,29 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
-        let store = AppStore(healthKitService: service, userDefaults: makeDefaults())
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+        let expectedError = "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+        let localCompletionPublished = expectation(description: "Local completion published")
+        let completionObservation = store.$workoutHistory
+            .map(\.sessionCount)
+            .filter { $0 == 1 }
+            .first()
+            .sink { _ in
+                localCompletionPublished.fulfill()
+            }
+        let recordingErrorPublished = expectation(description: "Recording error published")
+        let errorObservation = store.$healthAuthorizationError
+            .compactMap { $0 }
+            .filter { $0 == expectedError }
+            .first()
+            .sink { _ in
+                recordingErrorPublished.fulfill()
+            }
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -665,15 +907,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_012)
         )
-        guard waitUntil({
-            store.sessionsCompleted == 1 &&
-                store.healthAuthorizationError == "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
-        }) else {
-            return
-        }
+
+        wait(for: [localCompletionPublished, recordingErrorPublished], timeout: 5)
+        withExtendedLifetime(completionObservation) {}
+        withExtendedLifetime(errorObservation) {}
         XCTAssertEqual(
             store.healthAuthorizationError,
-            "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
+            expectedError
         )
         XCTAssertEqual(store.sessionsCompleted, 1)
         XCTAssertTrue(store.sessionHistory.isEmpty)
@@ -693,12 +933,20 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 durationSeconds: 8.75
             )
         ]
+        let activityMeasurements = [
+            RecordedActivityStepMeasurement(
+                stepID: "step",
+                peakLoadKGF: 37.25,
+                actualLoadedDurationSeconds: 3.5
+            )
+        ]
 
         let metadata = try HealthKitService.workoutMetadata(
             title: "Plan",
             boardID: board.id,
             boardName: board.name,
-            activitySegments: activitySegments
+            activitySegments: activitySegments,
+            activityMeasurements: activityMeasurements
         )
 
         XCTAssertEqual(metadata[HKMetadataKeyWorkoutBrandName] as? String, "Hang Ten")
@@ -710,7 +958,31 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             WorkoutActivityMetadata.self,
             from: Data(json.utf8)
         )
-        XCTAssertEqual(decoded, WorkoutActivityMetadata(version: 1, segments: activitySegments))
+        XCTAssertEqual(
+            json,
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"holdIDs":["edge-left"],"holdType":"edge","kind":"work","sizeMillimeters":21,"stepID":"step","stepNumber":1}],"version":1}"#
+        )
+        XCTAssertEqual(
+            decoded,
+            WorkoutActivityMetadata(
+                version: 1,
+                segments: activitySegments,
+                measurements: activityMeasurements
+            )
+        )
+    }
+
+    func testLiteralVersionOnePayloadWithoutMeasurementsDecodes() throws {
+        let json = #"{"segments":[{"holdIDs":[],"kind":"rest","stepID":"step","stepNumber":1}],"version":1}"#
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutActivityMetadata.self,
+            from: Data(json.utf8)
+        )
+
+        XCTAssertEqual(decoded.version, 1)
+        XCTAssertNil(decoded.measurements)
+        XCTAssertEqual(decoded.segments.count, 1)
     }
 
     @discardableResult
@@ -806,10 +1078,12 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
         let boardID: String
         let boardName: String
         let activitySegments: [RecordedActivitySegment]
+        let activityMeasurements: [RecordedActivityStepMeasurement]?
     }
 
     var authorizationState: HealthAuthorizationState = .authorized
     private(set) var savedWorkouts: [SavedWorkout] = []
+    var onSave: (() -> Void)?
 
     func requestAuthorization(
         completion: @escaping (HealthAuthorizationState, Error?) -> Void
@@ -824,6 +1098,7 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Error?) -> Void
     ) {
         savedWorkouts.append(
@@ -833,9 +1108,11 @@ private final class HealthWorkoutSavingSpy: HealthWorkoutSaving {
                 endDate: endDate,
                 boardID: boardID,
                 boardName: boardName,
-                activitySegments: activitySegments
+                activitySegments: activitySegments,
+                activityMeasurements: activityMeasurements
             )
         )
+        onSave?()
         completion(nil)
     }
 }
@@ -864,5 +1141,26 @@ private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         completion(.success(UUID()))
+    }
+}
+
+private final class BlockingWorkoutActivityFileManager: FileManager {
+    let writeStarted = DispatchSemaphore(value: 0)
+    let allowWrite = DispatchSemaphore(value: 0)
+    let writeFinished = DispatchSemaphore(value: 0)
+
+    override func createDirectory(
+        at url: URL,
+        withIntermediateDirectories createIntermediates: Bool,
+        attributes: [FileAttributeKey: Any]? = nil
+    ) throws {
+        writeStarted.signal()
+        allowWrite.wait()
+        defer { writeFinished.signal() }
+        try super.createDirectory(
+            at: url,
+            withIntermediateDirectories: createIntermediates,
+            attributes: attributes
+        )
     }
 }

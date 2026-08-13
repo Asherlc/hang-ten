@@ -291,7 +291,7 @@ struct HomeView: View {
                 Menu {
                     ForEach(BoardCatalog.all) { board in
                         Button {
-                            store.selectedBoard = board
+                            store.selectBoard(board)
                         } label: {
                             Label(
                                 board.name,

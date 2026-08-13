@@ -11,7 +11,7 @@ def load_board_catalog_module(repo_root: Path):
     module_path = (
         repo_root
         / "Tools"
-        / "HangboardOnboarding"
+        / "HangboardPipeline"
         / "src"
         / "hangboard_vectorizer"
         / "board_catalog.py"

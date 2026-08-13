@@ -8,12 +8,12 @@ xcuserdata/
 
 # Default transient hangboard workspaces
 /.context/
-/Tools/HangboardOnboarding/boards/.transactions/
+/Tools/HangboardPipeline/boards/.transactions/
 
 # PyInstaller output for the local workbench release build
-/Tools/hold-highlight-editor/packaging/build/
-/Tools/hold-highlight-editor/packaging/dist/
-/Tools/hold-highlight-editor/packaging/*.spec
+/Tools/HangboardWorkbench/packaging/build/
+/Tools/HangboardWorkbench/packaging/dist/
+/Tools/HangboardWorkbench/packaging/*.spec
 
 # Conductor workspace-local state
 .context/
@@ -23,3 +23,6 @@ xcuserdata/
 
 # Local implementation/git worktrees
 .worktrees/
+
+# Developer-specific PostHog project token override
+/HangTen/Config/PostHog.local.xcconfig
