@@ -169,7 +169,7 @@ def test_workbench_release_classifies_changes_with_the_pinned_shared_taxonomy():
     assert filter_step["with"]["filters"] == ".github/ci-paths.yml"
 
 
-def test_pr_workbench_jobs_are_component_gated_but_main_build_stays_full():
+def test_pr_workbench_jobs_and_native_build_are_component_gated():
     jobs = _workflow()["jobs"]
 
     expected_conditions = {
@@ -197,8 +197,38 @@ def test_pr_workbench_jobs_are_component_gated_but_main_build_stays_full():
 
     assert jobs["build"]["needs"] == "changes"
     assert jobs["build"]["name"] == "Build verified arm64 workbench"
-    assert jobs["build"]["if"] == "github.event_name != 'pull_request'"
+    assert _normalized_expression(jobs["build"]["if"]) == (
+        "github.event_name != 'pull_request' || "
+        "needs.changes.outputs.python == 'true' || "
+        "needs.changes.outputs.workbench_web == 'true' || "
+        "needs.changes.outputs.workbench_native == 'true' || "
+        "needs.changes.outputs.shared_board_content == 'true' || "
+        "needs.changes.outputs.workflow == 'true'"
+    )
     assert jobs["release"]["needs"] == "build"
+
+
+def test_pr_native_app_is_a_workflow_artifact_but_never_a_github_release():
+    jobs = _workflow()["jobs"]
+    build = jobs["build"]
+    release = jobs["release"]
+
+    upload = _step(build, "Upload verified unsigned app")
+    assert upload["with"]["name"] == (
+        "hangboard-workbench-macos-arm64-${{ github.run_id }}"
+    )
+    assert upload["with"]["if-no-files-found"] == "error"
+    assert "hangboard-workbench-macos-arm64.tar.gz" in upload["with"]["path"]
+    assert "hangboard-workbench-macos-arm64.sha256" in upload["with"]["path"]
+
+    release_condition = _normalized_expression(release["if"])
+    assert "github.event_name == 'push'" in release_condition
+    assert "github.event_name == 'workflow_dispatch'" in release_condition
+    assert "github.ref == 'refs/heads/main'" in release_condition
+    assert "pull_request" not in release_condition
+
+    download = _step(release, "Download verified unsigned app")
+    assert download["with"]["name"] == upload["with"]["name"]
 
 
 def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
@@ -543,8 +573,8 @@ def test_release_publication_runs_for_main_pushes_and_manual_dispatches():
     assert workflow["jobs"]["build"]["name"] == (
         "Build verified arm64 workbench"
     )
-    assert workflow["jobs"]["build"]["if"] == (
-        "github.event_name != 'pull_request'"
+    assert _normalized_expression(workflow["jobs"]["build"]["if"]).startswith(
+        "github.event_name != 'pull_request' ||"
     )
     assert workflow["jobs"]["release"]["if"] == (
         "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && "

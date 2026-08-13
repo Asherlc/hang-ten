@@ -206,7 +206,13 @@ enum WorkbenchMain {
 }
 
 @MainActor
-private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigationDelegate, WKScriptMessageHandler {
+    private enum Recovery: Equatable {
+        case backendStopped
+        case webContentStopped
+        case connectionQuestionable
+    }
+
     private let backend = BackendController()
     private let selection = CheckoutSelection()
     private let sessionCoordinator = WorkbenchSessionCoordinator()
@@ -217,8 +223,15 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private var shutdownInProgress = false
     private var shutdownComplete = false
     private var allowWindowClose = false
+    private var activeCheckout: URL?
+    private var activeSession: BackendController.Session?
+    private var healthTask: Task<Void, Never>?
+    private var startupGeneration = UUID()
+    private var reportedFailureSessionID: UUID?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        webView.navigationDelegate = self
+        webView.configuration.userContentController.add(self, name: "workbenchDiagnostics")
         installMainMenu()
         createWindow()
         NSApplication.shared.activate(ignoringOtherApps: true)
@@ -303,29 +316,40 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     }
 
     private func load(_ checkout: URL) {
+        let generation = UUID()
+        startupGeneration = generation
         startupTask?.cancel()
+        healthTask?.cancel()
         sessionCoordinator.deactivateSession()
+        activeSession = nil
+        reportedFailureSessionID = nil
+        activeCheckout = checkout
         startupTask = Task { [weak self] in
             guard let self else { return }
             await self.backend.stop()
             guard !Task.isCancelled else { return }
             do {
                 let session = try await self.backend.startSession(repositoryRoot: checkout)
-                guard !Task.isCancelled else {
+                guard !Task.isCancelled, self.startupGeneration == generation else {
                     await self.backend.stop(session: session)
                     return
                 }
                 self.sessionCoordinator.activateSession(session) { [weak self] exit in
-                    self?.showMessage(
+                    self?.showRecoverableFailure(
                         title: "Hangboard Workbench Backend Stopped",
-                        detail: exit.localizedDescription
+                        detail: exit.localizedDescription,
+                        session: session,
+                        recovery: .backendStopped
                     )
                 }
+                self.activeSession = session
                 self.selection.remember(checkout)
                 self.showWebView(session.url)
+                self.monitorHealth(of: session)
             } catch is CancellationError {
                 // A replacement checkout or app shutdown owns cleanup.
             } catch {
+                guard self.startupGeneration == generation else { return }
                 self.showMessage(
                     title: "Hangboard Workbench Could Not Start",
                     detail: error.localizedDescription
@@ -378,6 +402,175 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         webView.load(URLRequest(url: url))
     }
 
+    private func monitorHealth(of session: BackendController.Session) {
+        healthTask?.cancel()
+        healthTask = Task { [weak self] in
+            var failures = 0
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(2))
+                guard !Task.isCancelled else { return }
+                var request = URLRequest(url: session.url.appending(path: "api/health"))
+                request.timeoutInterval = 1
+                request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+                request.setValue("no-store", forHTTPHeaderField: "Cache-Control")
+                let healthy: Bool
+                do {
+                    let (data, response) = try await URLSession.shared.data(for: request)
+                    healthy = (response as? HTTPURLResponse)?.statusCode == 200
+                        && ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])?["ok"] as? Bool == true
+                } catch {
+                    healthy = false
+                }
+                failures = healthy ? 0 : failures + 1
+                guard failures >= 3 else { continue }
+                guard self?.activeSession?.id == session.id else { return }
+                self?.showRecoverableFailure(
+                    title: "Hangboard Workbench Backend Is Unreachable",
+                    detail: "The backend failed three consecutive health checks.",
+                    session: session,
+                    recovery: .connectionQuestionable
+                )
+                return
+            }
+        }
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Swift.Error) {
+        guard (error as NSError).code != NSURLErrorCancelled else { return }
+        guard let session = activeSession else { return }
+        showRecoverableFailure(title: "Editor Navigation Failed", detail: error.localizedDescription, session: session, recovery: .connectionQuestionable)
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Swift.Error) {
+        guard (error as NSError).code != NSURLErrorCancelled else { return }
+        guard let session = activeSession else { return }
+        showRecoverableFailure(title: "Editor Could Not Connect", detail: error.localizedDescription, session: session, recovery: .connectionQuestionable)
+    }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        guard let session = activeSession else { return }
+        showRecoverableFailure(
+            title: "Editor Web Process Stopped",
+            detail: "WebKit terminated the process displaying the editor.",
+            session: session,
+            recovery: .webContentStopped
+        )
+    }
+
+    private func showRecoverableFailure(
+        title: String,
+        detail: String,
+        session: BackendController.Session,
+        recovery: Recovery
+    ) {
+        guard activeSession?.id == session.id, reportedFailureSessionID != session.id else { return }
+        reportedFailureSessionID = session.id
+        healthTask?.cancel()
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = title
+        alert.informativeText = diagnosticDetail(detail, session: session)
+        switch recovery {
+        case .backendStopped:
+            alert.addButton(withTitle: "Restart Backend…")
+            alert.addButton(withTitle: "Keep Editor Open")
+        case .webContentStopped:
+            alert.addButton(withTitle: "Reload Editor")
+            alert.addButton(withTitle: "Restart Backend…")
+        case .connectionQuestionable:
+            alert.addButton(withTitle: "Keep Editor Open")
+            alert.addButton(withTitle: "Restart Backend…")
+        }
+        let response = alert.runModal()
+        if recovery == .webContentStopped, response == .alertFirstButtonReturn {
+            reportedFailureSessionID = nil
+            webView.reload()
+            monitorHealth(of: session)
+        } else if (recovery == .connectionQuestionable && response == .alertSecondButtonReturn)
+                    || (recovery != .connectionQuestionable && response == .alertFirstButtonReturn)
+                    || (recovery == .webContentStopped && response == .alertSecondButtonReturn) {
+            requestBackendRestart(session: session)
+        } else {
+            reportedFailureSessionID = nil
+            // Do not immediately resume health alerts: retaining the editor is
+            // an explicit choice to protect unsaved state and avoid alert loops.
+        }
+    }
+
+    private func diagnosticDetail(_ detail: String, session: BackendController.Session) -> String {
+        let mismatch = session.runtimeIdentity != "unknown" && session.checkoutIdentity != "unknown"
+            && session.runtimeIdentity != session.checkoutIdentity
+            ? "\nBuild mismatch: the packaged runtime and selected checkout are from different commits."
+            : ""
+        return "\(detail)\n\nBackend: \(session.url.absoluteString)\nRuntime build: \(session.runtimeIdentity)\nCheckout build: \(session.checkoutIdentity)\(mismatch)\nCheckout: \(activeCheckout?.path ?? "unknown")"
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == "workbenchDiagnostics", let session = activeSession else { return }
+        guard message.frameInfo.securityOrigin.host == session.url.host,
+              message.frameInfo.securityOrigin.port == session.url.port else { return }
+        guard let body = message.body as? [String: Any], body.count <= 5,
+              Set(body.keys).isSubset(of: ["path", "category", "message", "status", "attempts"]),
+              let path = body["path"] as? String,
+              let category = body["category"] as? String,
+              let detail = body["message"] as? String,
+              path.count <= 256, path.hasPrefix("/api/"), !path.contains(".."),
+              detail.count <= 1024,
+              ["transport", "server", "unreadable-response"].contains(category) else { return }
+        let statusNumber = body["status"] as? NSNumber
+        guard statusNumber == nil || statusNumber!.doubleValue == Double(statusNumber!.intValue) else { return }
+        let statusCode = statusNumber?.intValue
+        guard statusCode == nil || (100...599).contains(statusCode!) else { return }
+        if category == "server" { guard let statusCode, statusCode >= 500 else { return } }
+        if category == "unreadable-response" {
+            guard let statusCode, (200...299).contains(statusCode) || statusCode >= 500 else { return }
+        }
+        if category == "transport" {
+            guard let attempts = body["attempts"] as? NSNumber,
+                  attempts.doubleValue == Double(attempts.intValue),
+                  (1...3).contains(attempts.intValue) else { return }
+        } else if body["attempts"] != nil {
+            return
+        }
+        let status = statusCode.map { ", HTTP \($0)" } ?? ""
+        showRecoverableFailure(
+            title: "Editor Request Failed",
+            detail: "\(category) failure for \(path)\(status): \(detail)",
+            session: session,
+            recovery: .connectionQuestionable
+        )
+    }
+
+    private func requestBackendRestart(session: BackendController.Session) {
+        guard activeSession?.id == session.id else { return }
+        guard let checkout = activeCheckout ?? selection.lastValidCheckout() else {
+            chooseCheckout(nil)
+            return
+        }
+        confirmDiscardingUnsavedChanges(discardTitle: "Discard and Restart") { [weak self] confirmed in
+            guard let self else { return }
+            guard confirmed else {
+                self.reportedFailureSessionID = nil
+                self.monitorHealth(of: session)
+                return
+            }
+            self.load(checkout)
+        }
+    }
+
+    @objc
+    private func restartBackend(_ sender: Any?) {
+        guard let checkout = activeCheckout ?? selection.lastValidCheckout() else {
+            chooseCheckout(sender)
+            return
+        }
+        guard let session = activeSession else {
+            load(checkout)
+            return
+        }
+        requestBackendRestart(session: session)
+    }
+
     private func showMessage(title: String, detail: String, retryTitle: String = "Choose Another Checkout…") {
         let titleLabel = NSTextField(labelWithString: title)
         titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
@@ -388,7 +581,8 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         detailLabel.alignment = .center
         detailLabel.maximumNumberOfLines = 12
 
-        let retryButton = NSButton(title: retryTitle, target: self, action: #selector(chooseCheckout(_:)))
+        let retryAction = retryTitle == "Restart Backend" ? #selector(restartBackend(_:)) : #selector(chooseCheckout(_:))
+        let retryButton = NSButton(title: retryTitle, target: self, action: retryAction)
         retryButton.bezelStyle = .rounded
         retryButton.keyEquivalent = "\r"
 
@@ -404,6 +598,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         guard !shutdownInProgress else { return }
         shutdownInProgress = true
         startupTask?.cancel()
+        healthTask?.cancel()
 
         confirmDiscardingUnsavedChanges(discardTitle: "Discard and Quit") { [weak self] confirmed in
             guard let self else { return }

@@ -5,6 +5,151 @@ function response(payload) {
   return { ok: true, status: 200, async json() { return payload; } };
 }
 
+test("board reads recover when the local backend briefly rejects connections", async () => {
+  const calls = [];
+  const originalSetTimeout = global.setTimeout;
+  global.setTimeout = (resolve) => {
+    queueMicrotask(resolve);
+    return 1;
+  };
+  global.fetch = async (path) => {
+    calls.push(path);
+    if (calls.length < 3) throw new TypeError("Load failed");
+    return response({ ok: true, boards: [{ boardId: "recovered-board" }] });
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  try {
+    assert.deepEqual(await client.listBoards(), [{ boardId: "recovered-board" }]);
+    assert.deepEqual(calls, ["/api/boards", "/api/boards", "/api/boards"]);
+  } finally {
+    global.setTimeout = originalSetTimeout;
+  }
+});
+
+test("mutations are not retried when the local backend rejects a connection", async () => {
+  const calls = [];
+  global.fetch = async (path) => {
+    calls.push(path);
+    throw new TypeError("Load failed");
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  await assert.rejects(
+    client.createFromUrl("Board", "https://example.test/board.png"),
+    /Load failed/,
+  );
+  assert.deepEqual(calls, ["/api/boards"]);
+});
+
+test("transport errors identify the failing endpoint and attempt count", async () => {
+  const originalSetTimeout = global.setTimeout;
+  global.setTimeout = (resolve) => {
+    queueMicrotask(resolve);
+    return 1;
+  };
+  global.fetch = async () => {
+    throw new TypeError("connection refused");
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  try {
+    await assert.rejects(
+      client.listBoards(),
+      /backend for \/api\/boards after 3 attempts: connection refused/,
+    );
+  } finally {
+    global.setTimeout = originalSetTimeout;
+  }
+});
+
+test("request failures are reported to the native diagnostic bridge", async () => {
+  const diagnostics = [];
+  global.webkit = {
+    messageHandlers: {
+      workbenchDiagnostics: { postMessage(value) { diagnostics.push(value); } },
+    },
+  };
+  global.fetch = async (path) => {
+    if (path === "/api/library") return { ok: false, status: 503, async json() { return { ok: false }; } };
+    return { ok: true, status: 200, async json() { throw new SyntaxError("bad json"); } };
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  try {
+    await assert.rejects(client.listLibraryBoards(), /\/api\/library failed \(503\)/);
+    await assert.rejects(client.listBoards(), /unreadable response \(200\)/);
+    assert.deepEqual(diagnostics, [
+      {
+        path: "/api/library",
+        category: "server",
+        message: "Workbench request for /api/library failed (503)",
+        status: 503,
+      },
+      {
+        path: "/api/boards",
+        category: "unreadable-response",
+        message: "Workbench request for /api/boards returned an unreadable response (200)",
+        status: 200,
+      },
+    ]);
+  } finally {
+    delete global.webkit;
+  }
+});
+
+test("expected client errors do not trigger native recovery diagnostics", async () => {
+  const diagnostics = [];
+  global.webkit = {
+    messageHandlers: {
+      workbenchDiagnostics: { postMessage(value) { diagnostics.push(value); } },
+    },
+  };
+  global.fetch = async () => ({
+    ok: false,
+    status: 422,
+    async json() { return { ok: false, error: "Board name is required" }; },
+  });
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  try {
+    await assert.rejects(client.createFromUrl("", ""), /Board name is required/);
+    assert.deepEqual(diagnostics, []);
+  } finally {
+    delete global.webkit;
+  }
+});
+
+test("native diagnostics are bounded before crossing the bridge", async () => {
+  const diagnostics = [];
+  global.webkit = {
+    messageHandlers: {
+      workbenchDiagnostics: { postMessage(value) { diagnostics.push(value); } },
+    },
+  };
+  global.fetch = async () => ({
+    ok: false,
+    status: 503,
+    async json() { return { ok: false, error: "x".repeat(4096) }; },
+  });
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  try {
+    await assert.rejects(client.listBoards());
+    assert.equal(diagnostics.length, 1);
+    assert.equal(diagnostics[0].message.length, 1024);
+    assert.deepEqual(Object.keys(diagnostics[0]).sort(), ["category", "message", "path", "status"]);
+  } finally {
+    delete global.webkit;
+  }
+});
+
 test("a newly accepted job ID is exposed before polling completes", async () => {
   const calls = [];
   let releasePoll;
@@ -247,6 +392,28 @@ test("a polling deadline bounds a stalled job request", async () => {
     releaseRequest?.();
     await polling.catch(() => {});
   }
+});
+
+test("job polling does not start transport retries that outlive its deadline", async () => {
+  let calls = 0;
+  const originalSetTimeout = global.setTimeout;
+  global.fetch = async () => {
+    calls += 1;
+    throw new TypeError("connection refused");
+  };
+  delete require.cache[require.resolve("../workbench-client.js")];
+  const client = require("../workbench-client.js");
+
+  await assert.rejects(
+    client.pollJob("job-deadline", { interval: 100, maxDuration: 0 }),
+    (error) => {
+      assert.match(error.message, /deadline/i);
+      assert.equal(error.jobId, "job-deadline");
+      return true;
+    },
+  );
+  await new Promise((resolve) => originalSetTimeout(resolve, 250));
+  assert.equal(calls, 1);
 });
 
 test("a server-confirmed failed job reports a terminal error with its accepted identity", async () => {
