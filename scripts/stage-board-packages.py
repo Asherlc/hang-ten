@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage validated, approved hangboard packages into an app resource bundle."""
+"""Stage validated, registered hangboard packages into an app resource bundle."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ def load_board_catalog_module(repository_root: Path):
         / "hangboard_vectorizer"
         / "board_catalog.py"
     )
-    spec = importlib.util.spec_from_file_location("approved_board_package_staging", module_path)
+    spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"unable to load board catalog module from {module_path}")
     module = importlib.util.module_from_spec(spec)

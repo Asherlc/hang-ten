@@ -14,7 +14,7 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertEqual(
                 mappingsByBoardID[board.id],
                 BoardCatalog.packageStore.semantics(for: board.id),
-                "Plan semantics must come from the approved package for \(board.id)."
+                "Plan semantics must come from the registered package for \(board.id)."
             )
         }
     }
@@ -1190,8 +1190,7 @@ final class PlanStorageTests: XCTestCase {
             "method.intermediate-hangboarding.repeaters",
             "method.intermediate-hangboarding.emom",
             "lattice.beginner-climbers-training-guide",
-            "rei.hangboard-sample-workout",
-            "trango.rock-prodigy-training-center.intermediate"
+            "rei.hangboard-sample-workout"
         ]
 
         XCTAssertTrue(expectedIDs.allSatisfy { id in
@@ -1199,48 +1198,7 @@ final class PlanStorageTests: XCTestCase {
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
-            ["coach", "coach", "coach", "coach", "coach", "retailer", "manufacturer"]
-        )
-    }
-
-    func testRockProdigyMetadataUsesDistinctPinchKindAndDepthFeatures() throws {
-        let board = try packageBoard(containingSemantic: "warmup-jug")
-        let pinchHolds = board.holds.filter { $0.kind == .pinch }
-
-        XCTAssertEqual(pinchHolds.count, 6)
-        XCTAssertEqual(
-            Set(pinchHolds.flatMap { $0.features }),
-            Set([.widePinch, .mediumPinch, .smallPinch])
-        )
-        XCTAssertEqual(
-            board.holds.first { $0.id == "trango.rptc.left.large-open-rail" }?.depthRangeMillimeters,
-            20...33
-        )
-        XCTAssertEqual(
-            board.holds.first { $0.id == "trango.rptc.left.small-crimp-rail" }?.depthRangeMillimeters,
-            10...24
-        )
-    }
-
-    func testRockProdigyBoardDesignHoldIDsMatchMetadata() throws {
-        let board = try packageBoard(containingSemantic: "warmup-jug")
-        let design = try XCTUnwrap(BoardCatalog.packageStore.design(for: board.id))
-
-        XCTAssertEqual(Set(board.holds.map(\.id)), Set(design.holds.map(\.holdID)))
-        XCTAssertEqual(design.holds.count, board.holds.count)
-    }
-
-    func testRockProdigyPlanIsBoardSpecificAndEveryTargetResolves() throws {
-        let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
-        let board = try packageBoard(containingSemantic: "warmup-jug")
-
-        XCTAssertEqual(plan.boardID, board.id)
-        XCTAssertTrue(plan.steps.flatMap(\.targets).contains { $0.feature == .widePinch })
-        XCTAssertFalse(plan.steps.flatMap(\.targets).contains { $0.kind == .edge })
-        XCTAssertTrue(
-            plan.steps.flatMap(\.targets).allSatisfy {
-                !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty
-            }
+            ["coach", "coach", "coach", "coach", "coach", "retailer"]
         )
     }
 
@@ -1267,11 +1225,6 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.targets)
                 .first { $0.feature == .mediumPinch }
         )
-        let rockProdigy = try packageBoard(containingSemantic: "warmup-jug")
-        XCTAssertEqual(
-            BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: rockProdigy),
-            ["trango.rptc.left.medium-pinch", "trango.rptc.right.medium-pinch"]
-        )
         XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
     }
 
@@ -1292,17 +1245,6 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(hollow.count, 4)
         XCTAssertTrue(pullUps.allSatisfy { $0.instruction.contains("2–4 total") })
         XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
-    }
-
-    func testRockProdigyIntermediateKeepsDeadHangOnlyAndSevenThenSixRepStructure() throws {
-        let plan = LegacyPlanSeedCatalog.rockProdigyIntermediate
-        XCTAssertTrue(plan.steps.dropFirst().filter { $0.phase == .hang }.allSatisfy {
-            $0.instruction.contains("Dead hang only") &&
-                $0.instruction.contains("do not perform pull-ups or lock-offs")
-        })
-        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-1-rep-") }.count, 42)
-        XCTAssertEqual(plan.steps.filter { $0.id.contains("-set-2-rep-") }.count, 36)
-        XCTAssertEqual(plan.steps.filter { $0.id.contains("-recovery") }.map(\.duration).filter { $0 == 180 }.count, 12)
     }
 
     func testBoardSemanticMappingsRemainAuthoritativeDuringValidation() {
@@ -1505,14 +1447,6 @@ final class PlanStorageTests: XCTestCase {
                 )
             ]
         ).validationIssues(availableBoards: BoardCatalog.all)
-    }
-
-    private func packageBoard(containingSemantic semanticID: String) throws -> TrainingBoard {
-        let matches = BoardCatalog.all.filter {
-            BoardCatalog.packageStore.semantics(for: $0.id)[semanticID] != nil
-        }
-        XCTAssertEqual(matches.count, 1)
-        return try XCTUnwrap(matches.first)
     }
 
     private func makeStep(

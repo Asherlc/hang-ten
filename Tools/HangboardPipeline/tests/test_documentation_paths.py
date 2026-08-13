@@ -47,7 +47,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
 
     assert "catalog validate --catalog Hangboards/catalog.json" in ci_workflow
     assert "test_generated_catalog_import.py" in ci_workflow
-    assert "stage-approved-board-packages.py" in ci_workflow
+    assert "stage-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
@@ -85,7 +85,7 @@ def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     """The documented staging command must use the script's Xcode destination contract."""
     testing = TESTING.read_text(encoding="utf-8")
 
-    assert 'stage_root="$(mktemp -d .context/stage-approved-board-packages.XXXXXX)"' in testing
+    assert 'stage_root="$(mktemp -d .context/stage-board-packages.XXXXXX)"' in testing
     assert 'TARGET_BUILD_DIR="$stage_root"' in testing
     assert 'UNLOCALIZED_RESOURCES_FOLDER_PATH="HangTen.app"' in testing
     assert 'destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"' in testing

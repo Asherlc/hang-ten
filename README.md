@@ -144,7 +144,7 @@ scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 The registry lists only complete source-backed packages with exactly an `id`
 and flat `path`; Git branches are the in-progress mechanism. Unregistered
 image candidates contain only `assets/primary.png` and are not app content.
-The Xcode build phase runs `scripts/stage-approved-board-packages.py`, which
+The Xcode build phase runs `scripts/stage-board-packages.py`, which
 bundles only registered packages and the registry into the app resource bundle.
 
 Matching repo skills live under `.codex/skills/` and load these guides before

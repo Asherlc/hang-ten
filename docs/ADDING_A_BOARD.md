@@ -85,7 +85,7 @@ is not active package evidence or runtime input.
 ## 3. Bundle registered packages directly
 
 The app bundles only registered packages plus `catalog.json`. Xcode invokes
-`scripts/stage-approved-board-packages.py` during the build and copies the
+`scripts/stage-board-packages.py` during the build and copies the
 validated resources into the app bundle. Do not copy package files into an
 asset catalog, add board definitions to Swift, or generate an app-side board
 catalog.

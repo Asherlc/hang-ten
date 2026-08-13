@@ -117,17 +117,17 @@ jobs:
       - name: Install Python package and test dependencies
         run: python -m pip install -e ".[dev]"
 
-      - name: Verify imported draft inventory
+      - name: Verify unregistered image inventory
         run: python -m pytest tests/test_generated_catalog_import.py -q
 
       - name: Stage board packages into a temporary app resource root
         working-directory: ${{ github.workspace }}
         run: |
           set -euo pipefail
-          resource_root="$RUNNER_TEMP/hang-ten-approved-package-stage"
+          resource_root="$RUNNER_TEMP/hang-ten-package-stage"
           TARGET_BUILD_DIR="$resource_root/build" \
           UNLOCALIZED_RESOURCES_FOLDER_PATH="Resources" \
-          python3 scripts/stage-approved-board-packages.py \
+          python3 scripts/stage-board-packages.py \
             --repository-root "$GITHUB_WORKSPACE" \
             --destination "$resource_root/build/Resources/Hangboards"
 

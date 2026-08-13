@@ -1998,61 +1998,6 @@ enum LegacyPlanSeedCatalog {
         }())
     )
 
-    private static func rockProdigySet(
-        prefix: String,
-        title: String,
-        target: HoldTarget,
-        gripType: GripType,
-        count: Int,
-        setLabel: String,
-        recoveryAfter: Bool
-    ) -> [WorkoutStep] {
-        var steps = (1...count).map { rep in
-            hangStep(
-                id: "\(prefix)-rep-\(rep)",
-                title: "Rock Prodigy · \(title) · \(setLabel), rep \(rep)",
-                instruction: "Dead hang only for 7 seconds, then rest 3 seconds before the next rep. Use two hands; do not perform pull-ups or lock-offs.",
-                accessory: "7s hang · 3s rest · dead hang only",
-                active: 7,
-                rest: rep < count ? 3 : 0,
-                targets: [target],
-                gripType: gripType
-            )
-        }
-        if recoveryAfter {
-            steps.append(recoveryStep(id: "\(prefix)-recovery", title: "Rock Prodigy · three-minute set recovery", duration: 180, accessory: "3m rest between sets"))
-        }
-        return steps
-    }
-
-    static let rockProdigyIntermediate = TrainingPlan(
-        id: "trango.rock-prodigy-training-center.intermediate",
-        title: "Rock Prodigy Training Center · Intermediate",
-        subtitle: "Official manual timing and 7-rep/6-rep dead-hang sequence; recover 48h and complete 6–10 workouts before progressing.",
-        level: "Intermediate",
-        sourceLabel: "Trango Rock Prodigy Training Center · Rock Prodigy method",
-        sourceURL: URL(string: "https://trango.com/products/rock-prodigy-training-center")!,
-        provenance: .adapted,
-        boardID: requiredBoard(containingSemantic: "warmup-jug").id,
-        steps: numbered({
-            var steps = rockProdigySet(prefix: "rock-prodigy-warmup-jug", title: "warm-up jug", target: .feature(.jug), gripType: .openHand, count: 7, setLabel: "warm-up", recoveryAfter: true)
-            let grips: [(prefix: String, title: String, target: HoldTarget, grip: GripType)] = [
-                ("rock-prodigy-large-edge", "large open-hand edge", .feature(.largeOpenHandRail), .openHand),
-                ("rock-prodigy-deep-two-finger", "deep 2-finger pocket", .feature(.deepTwoFingerPocket), .openHand),
-                ("rock-prodigy-small-crimp", "small semi-closed crimp", .feature(.thinCrimp), .halfCrimp),
-                ("rock-prodigy-shallow-three-finger", "shallow 3-finger pocket", .feature(.shallowThreeFingerSlot), .openHand),
-                ("rock-prodigy-wide-pinch", "wide pinch", .feature(.widePinch), .openHand),
-                ("rock-prodigy-sloper", "sloper", .feature(.largeSlope), .openHand)
-            ]
-            for (index, grip) in grips.enumerated() {
-                steps += rockProdigySet(prefix: "\(grip.prefix)-set-1", title: grip.title, target: grip.target, gripType: grip.grip, count: 7, setLabel: "set 1", recoveryAfter: true)
-                steps += rockProdigySet(prefix: "\(grip.prefix)-set-2", title: grip.title, target: grip.target, gripType: grip.grip, count: 6, setLabel: "set 2", recoveryAfter: index < grips.count - 1)
-            }
-            return steps
-        }())
-    )
-
-
     /// Kept as the stable featured-plan symbol used by navigation fallbacks.
     static let metoliusTenMinute = metoliusEntry
 
@@ -2074,8 +2019,7 @@ enum LegacyPlanSeedCatalog {
             methodRepeaters,
             methodEMOM,
             latticeBeginnerGuide,
-            reiHangboardSample,
-            rockProdigyIntermediate
+            reiHangboardSample
         ]
 
         #if DEBUG

@@ -17,14 +17,14 @@ without writing into the app source tree:
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 .context/hangboard-onboarding-venv/bin/python -m pytest \
   Tools/HangboardPipeline/tests/test_generated_catalog_import.py -q
-stage_root="$(mktemp -d .context/stage-approved-board-packages.XXXXXX)"
+stage_root="$(mktemp -d .context/stage-board-packages.XXXXXX)"
 TARGET_BUILD_DIR="$stage_root"
 UNLOCALIZED_RESOURCES_FOLDER_PATH="HangTen.app"
 destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"
 TARGET_BUILD_DIR="$TARGET_BUILD_DIR" \
 UNLOCALIZED_RESOURCES_FOLDER_PATH="$UNLOCALIZED_RESOURCES_FOLDER_PATH" \
 .context/hangboard-onboarding-venv/bin/python \
-  scripts/stage-approved-board-packages.py \
+  scripts/stage-board-packages.py \
   --repository-root . \
   --destination "$destination"
 ```

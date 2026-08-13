@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def load_staging_module():
-    module_path = REPO_ROOT / "scripts" / "stage-approved-board-packages.py"
+    module_path = REPO_ROOT / "scripts" / "stage-board-packages.py"
     spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
         raise AssertionError("unable to load board package staging script")

@@ -37,6 +37,7 @@ CANDIDATE_SLUGS = {
     "trango-rock-prodigy-forge",
     "trango-rock-prodigy-natural",
     "trango-rock-prodigy-pivot",
+    "trango-rock-prodigy-training-center",
     "yy-verticalboard-evo",
     "yy-verticalboard-first",
     "yy-verticalboard-light",
@@ -53,6 +54,7 @@ SOURCE_AUDITS = (
     "2026-08-12-single-board-documentation-packages.md",
     "2026-08-12-soill-tension-board-packages.md",
     "2026-08-12-trango-board-packages.md",
+    "2026-08-12-rock-prodigy-board-package.md",
     "2026-08-12-yy-vertical-board-packages.md",
     "2026-08-12-zlagboard-board-packages.md",
 )

@@ -161,7 +161,7 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/HangboardWorkbench/server.py
 ```
 
-This discovers the checkout, reads complete approved board packages from
+This discovers the checkout, reads complete registered board packages from
 `Hangboards/<board-folder>/board.json`, and writes in-progress work
 under `.context/hangboard-workbench/`. Automation can select different roots
 explicitly:

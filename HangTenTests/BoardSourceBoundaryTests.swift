@@ -2,10 +2,9 @@ import XCTest
 @testable import HangTen
 
 final class BoardSourceBoundaryTests: XCTestCase {
-    func testCatalogContainsExactlyApprovedPackageBoards() {
+    func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
-            "metolius.wood-grips-compact-ii",
-            "trango.rock-prodigy-training-center"
+            "metolius.wood-grips-compact-ii"
         ]
 
         XCTAssertEqual(

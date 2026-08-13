@@ -17,12 +17,12 @@ final class AppStoreTests: XCTestCase {
             telemetry: telemetry.dependencies
         )
 
-        let board = BoardCatalog.board(for: "trango.rock-prodigy-training-center")
+        let board = BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
         store.selectBoard(board)
 
         XCTAssertEqual(store.selectedBoard, board)
         XCTAssertEqual(telemetry.events, [
-            .boardSelected(family: .rockProdigyTrainingCenter)
+            .boardSelected(family: .compactII)
         ])
     }
 

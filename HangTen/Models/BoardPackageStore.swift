@@ -88,23 +88,23 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
         case let .packagePathEscape(boardID, path):
             "Board \(boardID) has a package path outside Hangboards: \(path)."
         case let .presentationAssetPathEscape(boardID, path):
-            "Approved board \(boardID) has a presentation path outside its package: \(path)."
+            "Board \(boardID) has a presentation path outside its package: \(path)."
         case let .missingPresentationAsset(boardID, path):
-            "Approved board \(boardID) is missing its presentation asset: \(path)."
+            "Board \(boardID) is missing its presentation asset: \(path)."
         case let .boardIDMismatch(expected, actual, resource):
             "Expected board ID \(expected) in \(resource), got \(actual)."
         case .duplicateBoardID(let boardID):
             "The bundled catalog contains duplicate board ID \(boardID)."
         case let .duplicateHoldID(boardID, holdID):
-            "Approved board \(boardID) contains duplicate hold ID \(holdID)."
+            "Board \(boardID) contains duplicate hold ID \(holdID)."
         case let .unknownSemanticHoldID(boardID, holdID):
-            "Approved board \(boardID) semantics reference unknown hold ID \(holdID)."
+            "Board \(boardID) semantics reference unknown hold ID \(holdID)."
         case let .unknownArtworkHoldID(boardID, holdID):
-            "Approved board \(boardID) artwork references unknown hold ID \(holdID)."
+            "Board \(boardID) artwork references unknown hold ID \(holdID)."
         case let .missingArtworkHoldID(boardID, holdID):
-            "Approved board \(boardID) artwork is missing hold ID \(holdID)."
+            "Board \(boardID) artwork is missing hold ID \(holdID)."
         case let .invalidPackage(boardID, reason):
-            "Approved board \(boardID) is invalid: \(reason)"
+            "Board \(boardID) is invalid: \(reason)"
         }
     }
 }

@@ -2,6 +2,24 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+    func testStoreErrorsDoNotExposeRemovedLifecycleState() {
+        let errors: [BoardPackageStoreError] = [
+            .presentationAssetPathEscape(boardID: "package-board", path: "../primary.png"),
+            .missingPresentationAsset(boardID: "package-board", path: "assets/primary.png"),
+            .duplicateHoldID(boardID: "package-board", holdID: "jug-left"),
+            .unknownSemanticHoldID(boardID: "package-board", holdID: "missing"),
+            .unknownArtworkHoldID(boardID: "package-board", holdID: "missing"),
+            .missingArtworkHoldID(boardID: "package-board", holdID: "missing"),
+            .invalidPackage(boardID: "package-board", reason: "fixture")
+        ]
+
+        for error in errors {
+            let description = error.localizedDescription.lowercased()
+            XCTAssertFalse(description.contains("approved"))
+            XCTAssertFalse(description.contains("draft"))
+        }
+    }
+
     func testStoreLoadsEveryCatalogPackageDataAndResources() throws {
         let fixture = try makeFixtureBundle()
         defer { fixture.remove() }
