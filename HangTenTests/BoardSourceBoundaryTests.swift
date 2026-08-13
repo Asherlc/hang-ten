@@ -221,10 +221,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
     }
 
     private func appSourceAndResourceURLs(at repositoryRoot: URL) throws -> [URL] {
-        // This iOS test target cannot launch git. Keep this list synchronized with
-        // `git ls-files -- HangTen HangTen.xcodeproj/project.pbxproj`; it is the
-        // exact tracked-file candidate set from the repository index.
-        return trackedAppBoundaryPaths
+        // The test target's manifest build phase keeps this checked-in list equal
+        // to `git ls-files`, which the iOS simulator itself cannot invoke.
+        return try trackedAppBoundaryPaths(at: repositoryRoot)
             .filter { relativePath in
                 exclusionReason(for: relativePath) == nil &&
                     (relativePath.hasPrefix("HangTen/") ||
@@ -233,67 +232,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             .map { repositoryRoot.appendingPathComponent($0) }
     }
 
-    private var trackedAppBoundaryPaths: [String] {
-        """
-        HangTen.xcodeproj/project.pbxproj
-        HangTen/HangTen.entitlements
-        HangTen/HangTenApp.swift
-        HangTen/Models/AppStore.swift
-        HangTen/Models/BoardPackageStore.swift
-        HangTen/Models/BoardStorage.swift
-        HangTen/Models/CustomRoutineDraft.swift
-        HangTen/Models/CustomRoutineStore.swift
-        HangTen/Models/ForceSensorModels.swift
-        HangTen/Models/HealthKitService.swift
-        HangTen/Models/LocalWorkoutHistoryStore.swift
-        HangTen/Models/MotherboardBluetoothService.swift
-        HangTen/Models/MotherboardModels.swift
-        HangTen/Models/MotherboardProtocol.swift
-        HangTen/Models/MotherboardWorkoutPreparation.swift
-        HangTen/Models/MotherboardWorkoutRecorder.swift
-        HangTen/Models/PitchSixProtocol.swift
-        HangTen/Models/PlanFilters.swift
-        HangTen/Models/PlanStorage.swift
-        HangTen/Models/ProgressorProtocol.swift
-        HangTen/Models/SimulatedMotherboardTransport.swift
-        HangTen/Models/TrainingModels.swift
-        HangTen/Models/WHC06Protocol.swift
-        HangTen/Models/WorkoutActivityRecording.swift
-        HangTen/Models/WorkoutAudioCoach.swift
-        HangTen/Models/WorkoutHistory.swift
-        HangTen/Models/WorkoutHistoryService.swift
-        HangTen/Models/WorkoutSessionStore.swift
-        HangTen/Models/WorkoutStepNormalization.swift
-        HangTen/Models/WorkoutStopwatch.swift
-        HangTen/Models/WorkoutTimeline.swift
-        HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-        HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-60@2x.png
-        HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-76@2x.png
-        HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-83.5@2x.png
-        HangTen/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
-        HangTen/Resources/Assets.xcassets/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandFist.imageset/hand-fist.svg
-        HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandFrontThree.imageset/hand-fill.svg
-        HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandGrabbing.imageset/hand-grabbing.svg
-        HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg
-        HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json
-        HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg
-        HangTen/Resources/PlanLibrary.json
-        HangTen/Views/BoardDesignLanguage.swift
-        HangTen/Views/BoardMapView.swift
-        HangTen/Views/CustomRoutineEditorView.swift
-        HangTen/Views/DesignSystem.swift
-        HangTen/Views/GripDiagramView.swift
-        HangTen/Views/MotherboardViews.swift
-        HangTen/Views/MotherboardWorkoutPreparationView.swift
-        HangTen/Views/RootView.swift
-        HangTen/Views/WorkoutStepPickerView.swift
-        HangTen/Views/WorkoutSummaryView.swift
-        """.split(separator: "\n").map(String.init)
+    private func trackedAppBoundaryPaths(at repositoryRoot: URL) throws -> [String] {
+        let manifestURL = repositoryRoot
+            .appendingPathComponent("HangTenTests", isDirectory: true)
+            .appendingPathComponent("BoardSourceBoundaryTrackedPaths.txt")
+        return try String(contentsOf: manifestURL, encoding: .utf8)
+            .split(separator: "\n")
+            .map(String.init)
     }
 
     private func exclusionReason(for relativePath: String) -> String? {

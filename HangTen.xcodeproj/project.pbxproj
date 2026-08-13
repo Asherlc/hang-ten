@@ -359,6 +359,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */;
 			buildPhases = (
+				CC0000000000000000000008 /* Verify Board Source Boundary Manifest */,
 				CC0000000000000000000005 /* HangTenTests Sources */,
 				CC0000000000000000000004 /* HangTenTests Frameworks */,
 				CC0000000000000000000006 /* Resources */,
@@ -432,6 +433,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		CC0000000000000000000008 /* Verify Board Source Boundary Manifest */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
+				"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh",
+			);
+			name = "Verify Board Source Boundary Manifest";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh\"\n";
+		};
 		CC0000000000000000000007 /* Stage Approved Board Packages */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
