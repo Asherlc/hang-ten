@@ -28,6 +28,18 @@ test("the inspector keeps direct correction controls visible while Advanced tool
   assert.match(app, /advanced-tools"\]\.classList\.toggle\("hidden", !state\.advancedToolsOpen \|\| !region\)/);
 });
 
+test("E toggles Advanced tools outside text fields", () => {
+  const keydown = app.slice(
+    app.indexOf('window.addEventListener("keydown"'),
+    app.indexOf('window.addEventListener("keyup"'),
+  );
+
+  assert.match(
+    keydown,
+    /event\.key\.toLowerCase\(\) === "e"[\s\S]*setAdvancedToolsOpen\(!state\.advancedToolsOpen\)/,
+  );
+});
+
 test("starting an edge session records its pointer and edge without mutating curves", () => {
   assert.equal(typeof beginEdgeCurveSession, "function");
   const edgeCurves = { 0: { kind: "quadratic", control: [5, -4] } };

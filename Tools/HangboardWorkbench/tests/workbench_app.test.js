@@ -122,6 +122,12 @@ test("the main editor copy and operator docs explain direct outlining without pi
   );
   assert.match(readme, /## Correct hold outlines/);
   assert.match(readme, /Open \*\*Advanced tools\*\* only for shape, curve, transform, edge snap, mirror, and metadata work\./);
+  assert.match(readme, /Select a hold highlight, then open \*\*Advanced tools\*\*/);
+  assert.match(readme, /Press `E` to open or close \*\*Advanced tools\*\*/);
+  assert.match(readme, /drag an edge handle to bow that segment without moving its vertices/);
+  assert.match(readme, /hold Alt during the drag to bypass snapping/);
+  assert.match(readme, /undo the gesture to restore the prior edge in one step/);
+  assert.doesNotMatch(readme, /\*\*Edit points\*\*|toggle detailed point editing/i);
   assert.match(readme, /Use \*\*More\*\* for comparison or artifact exports\./);
   assert.match(readme, /Save locally; saving does not commit, push, or synchronize changes\./);
 });

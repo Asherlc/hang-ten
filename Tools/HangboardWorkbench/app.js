@@ -3036,6 +3036,8 @@
       navigateRegion(1);
     } else if (event.key.toLowerCase() === "m") {
       mirrorSelectedCopy();
+    } else if (event.key.toLowerCase() === "e") {
+      setAdvancedToolsOpen(!state.advancedToolsOpen);
     } else if (event.key.toLowerCase() === "s") {
       toggleEdgeSnapping();
     }

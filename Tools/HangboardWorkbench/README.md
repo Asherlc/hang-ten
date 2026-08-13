@@ -184,11 +184,11 @@ Any Stage 1 image and compatible `stage-2-regions.json` can be loaded through th
 
 Hold highlights can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
-Selected regions expose object-level rotate and bend handles. Individual contour points and per-edge curve handles remain available behind the **Edit points** toggle for fine correction.
+Selected hold highlights expose individual contour points directly. Select a hold highlight, then open **Advanced tools** for object-level rotate and bend handles, per-edge curve handles, snapping, and other fine corrections. Press `E` to open or close **Advanced tools** outside text fields.
 
 ### Edit individual edges
 
-Enable **Edit points**, then drag an edge handle to bow that segment without moving its vertices. Turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
+Select a hold highlight and open **Advanced tools**, then drag an edge handle to bow that segment without moving its vertices. Turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
 
 ### Fast tracing workflow
 
@@ -203,7 +203,7 @@ Shortcuts outside text fields:
 
 - `[` / `]`: previous or next hold highlight
 - `M`: mirror copy
-- `E`: toggle detailed point editing
+- `E`: open or close **Advanced tools** for the selected hold highlight
 - `S`: toggle edge snapping
 - `Space`: pan
 

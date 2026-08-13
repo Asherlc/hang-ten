@@ -83,7 +83,7 @@ def test_ci_classifies_changes_with_the_pinned_shared_taxonomy() -> None:
     assert filter_step["with"]["filters"] == ".github/ci-paths.yml"
 
 
-def test_ci_keeps_existing_jobs_but_gates_pr_work_by_component() -> None:
+def test_ci_keeps_existing_jobs_but_gates_only_pr_work_by_component() -> None:
     workflow = load_yaml(CI_WORKFLOW_PATH)
     jobs = workflow["jobs"]
 
@@ -106,3 +106,12 @@ def test_ci_keeps_existing_jobs_but_gates_pr_work_by_component() -> None:
     assert "needs.changes.outputs.shared_board_content == 'true'" in jobs["test"]["if"]
     assert jobs["build-release-device"]["needs"] == ["changes"]
     assert jobs["build-release-device"]["if"] == "github.event_name != 'pull_request'"
+
+
+def test_merge_queue_runs_the_release_device_build_as_part_of_the_full_gate() -> None:
+    workflow = load_yaml(CI_WORKFLOW_PATH)
+
+    assert "merge_group" in workflow["true"]
+    assert workflow["jobs"]["build-release-device"]["if"] == (
+        "github.event_name != 'pull_request'"
+    )

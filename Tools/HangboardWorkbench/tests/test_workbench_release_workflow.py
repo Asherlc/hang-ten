@@ -180,6 +180,7 @@ def test_pr_workbench_jobs_are_component_gated_but_main_build_stays_full():
         assert _normalized_expression(jobs[job_name]["if"]) == expected_condition
 
     assert jobs["build"]["needs"] == "changes"
+    assert jobs["build"]["name"] == "Build verified arm64 workbench"
     assert jobs["build"]["if"] == "github.event_name != 'pull_request'"
     assert jobs["release"]["needs"] == "build"
 
@@ -513,8 +514,20 @@ def test_release_publication_runs_for_main_pushes_and_manual_dispatches():
     workflow = _workflow()
     triggers = workflow["true"]
 
-    assert set(triggers) == {"pull_request", "push", "workflow_dispatch"}
+    assert set(triggers) == {
+        "pull_request",
+        "push",
+        "merge_group",
+        "workflow_dispatch",
+    }
     assert triggers["push"] == {"branches": ["main"]}
+    assert triggers["merge_group"] is None
+    assert workflow["jobs"]["build"]["name"] == (
+        "Build verified arm64 workbench"
+    )
+    assert workflow["jobs"]["build"]["if"] == (
+        "github.event_name != 'pull_request'"
+    )
     assert workflow["jobs"]["release"]["if"] == (
         "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && "
         "github.ref == 'refs/heads/main'"
