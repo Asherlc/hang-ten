@@ -564,6 +564,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
             return
+        if path == "/api/telemetry":
+            token = os.environ.get("POSTHOG_CLIENT_TOKEN", "").strip()
+            host = os.environ.get("POSTHOG_HOST", "https://us.i.posthog.com").strip()
+            configured = token.startswith("phc_") and host.startswith("https://")
+            self._send_json(
+                HTTPStatus.OK,
+                {"token": token, "host": host} if configured else {},
+            )
+            return
         if path == "/api/library":
             self._get_library()
             return

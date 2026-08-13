@@ -673,6 +673,28 @@ def test_health_is_available_before_library_loading(tmp_path):
     assert payload == {"ok": True}
 
 
+def test_telemetry_configuration_is_disabled_without_a_public_token(tmp_path, monkeypatch):
+    monkeypatch.delenv("POSTHOG_CLIENT_TOKEN", raising=False)
+    with running_server(make_run(tmp_path / "legacy")) as base:
+        status, payload = _raw_request(base, "GET", "/api/telemetry")
+
+    assert status == 200
+    assert payload == {}
+
+
+def test_telemetry_configuration_exposes_only_the_public_capture_settings(tmp_path, monkeypatch):
+    monkeypatch.setenv("POSTHOG_CLIENT_TOKEN", "phc_test-public-token")
+    monkeypatch.setenv("POSTHOG_HOST", "https://eu.i.posthog.com")
+    with running_server(make_run(tmp_path / "legacy")) as base:
+        status, payload = _raw_request(base, "GET", "/api/telemetry")
+
+    assert status == 200
+    assert payload == {
+        "token": "phc_test-public-token",
+        "host": "https://eu.i.posthog.com",
+    }
+
+
 def _make_hang_ten_checkout(root: Path, missing: str | None = None) -> None:
     for marker in (
         ".git",

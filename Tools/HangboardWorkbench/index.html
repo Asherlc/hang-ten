@@ -304,6 +304,8 @@
     <input id="image-file-input" type="file" accept="image/*" hidden />
     <input id="regions-file-input" type="file" accept="application/json,.json" hidden />
 
+    <script src="error-reporting.js"></script>
+    <script>globalThis.HoldEditorErrorReporting.install();</script>
     <script src="editor-model.js"></script>
     <script src="curve-gesture-model.js"></script>
     <script src="editor-interaction-model.js"></script>

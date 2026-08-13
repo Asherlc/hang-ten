@@ -7,6 +7,7 @@ STATIC_ASSET_ROUTES = (
     ("/", "index.html"),
     ("/index.html", "index.html"),
     ("/styles.css", "styles.css"),
+    ("/error-reporting.js", "error-reporting.js"),
     ("/editor-model.js", "editor-model.js"),
     ("/curve-gesture-model.js", "curve-gesture-model.js"),
     ("/editor-interaction-model.js", "editor-interaction-model.js"),

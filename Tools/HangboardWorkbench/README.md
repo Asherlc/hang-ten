@@ -55,6 +55,15 @@ Open `http://localhost:4173`. The opening screen lists published boards and
 work in progress, or lets you create a board from the exact commercial product
 name and an HTTP(S) image URL or local upload.
 
+### Optional PostHog error reporting
+
+Set `POSTHOG_CLIENT_TOKEN` to a PostHog public project token (`phc_…`) before
+launching the editor to report uncaught browser errors and unhandled promise
+rejections. `POSTHOG_HOST` is optional and defaults to
+`https://us.i.posthog.com`. With no valid token, reporting remains disabled and
+the editor makes no PostHog requests. Error messages are scrubbed of URLs and
+filesystem paths before they leave the editor.
+
 ## Correct hold outlines
 
 1. Choose a board.
