@@ -87,6 +87,10 @@ jobs:
           cache: 'pip'
           cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
 
+      # astral-sh/setup-uv v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+
       - name: Install workbench test dependencies
         run: |
           set -euo pipefail
@@ -137,6 +141,10 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
           cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
+
+      # astral-sh/setup-uv v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
 
       - name: Install workbench build dependencies
         run: |

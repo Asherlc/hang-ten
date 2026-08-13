@@ -21,6 +21,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "test_generated_catalog_import.py" in ci_workflow
     assert "stage-approved-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
+    assert "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff" in ci_workflow
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs

@@ -198,6 +198,9 @@ def test_pr_workbench_jobs_run_only_their_focused_suites_on_matching_runners():
 
     assert python["runs-on"] == "ubuntu-latest"
     assert _step(python, "Set up Python")["with"]["python-version"] == "3.12"
+    assert _step(python, "Set up uv")["uses"] == (
+        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
+    )
     install_dependencies = _step(python, "Install workbench test dependencies")["run"]
     assert "python -m pip install 'setuptools>=84.0.0' wheel" in install_dependencies
     assert "python -m pip install -e 'Tools/HangboardPipeline[dev]'" in install_dependencies
@@ -237,6 +240,9 @@ def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
     build = jobs["build"]
 
     assert build["runs-on"] == "macos-latest"
+    assert _step(build, "Set up uv")["uses"] == (
+        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
+    )
     identity_script = _step(build, "Verify executable identity")["run"]
     assert 'test "$architecture" = "arm64"' in identity_script
 
