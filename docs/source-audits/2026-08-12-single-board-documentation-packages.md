@@ -38,15 +38,16 @@ authored.
 
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
-| Product identity and selected central hold depths | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | Moon identifies the Armstrong model; its product description names central 22 mm and 18 mm one-arm edges and a jug for one-arm pull-ups. |
+| Product identity, overall dimensions, aggregate hold inventory, and selected central hold depths | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | Moon identifies the Armstrong model; publishes 65 x 16.5 x 5.5 cm, an aggregate hold inventory, central 22 mm and 18 mm one-arm edges, and a jug for one-arm pull-ups. |
 | Visible layout | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | The manufacturer gallery shows a visible layout only. |
 | Per-hold guide/measurements | No manufacturer-issued numbered hold guide or complete per-hold measurement source located | No complete physical inventory or semantic map. |
 
-**Blocker:** Moon's product copy describes selected central holds but not the
-complete set of visible holds, their individual boundaries/depths, capacities,
-grip classifications, or all-board dimensions. A gallery cannot supply the
-unpublished fields. No `board.json`, `semantics.json`, `artwork.json`, or
-`evidence.json` is permitted.
+**Blocker:** Moon's aggregate inventory does not assign each individual
+physical hold an identity, boundary/frame, depth, capacity, or grip
+classification. It also does not map physical holds to semantic targets or to
+the normalized artwork pieces required by the package. A gallery cannot supply
+those unpublished one-to-one mappings. No `board.json`, `semantics.json`,
+`artwork.json`, or `evidence.json` is permitted.
 
 ## Nature Climbing Stoak Board III (`nature.stoak-board-iii`)
 
@@ -68,15 +69,15 @@ unregistered.
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
 | Product identity and high-level beginner positioning | [Linebreaker BASE product article](https://www.target10a.com/magazin/2017/01/01/linebreaker-base/) | target10a identifies the Linebreaker BASE and describes its grip selection and depths as intended for beginners. |
-| Official safety and mounting information | [Linebreaker BASE safety information](https://m.media-amazon.com/images/I/418jCjplLXL.pdf) | Manufacturer-branded safety, mounting, and use information; no hold map. |
+| Safety and mounting information | [Linebreaker BASE safety information](https://m.media-amazon.com/images/I/418jCjplLXL.pdf) | A manufacturer-branded document hosted on Amazon's CDN; it supplies safety, mounting, and use information, but no hold map. Its hosting does not establish target10a.com provenance. |
 | Per-hold guide, dimensions, and measurements | No official numbered hold guide, front/oblique measurement set, or per-hold depth source located | No complete physical inventory, boundaries, capacities, or classifications. |
 
-**Blocker:** The surviving official article is high-level copy and the safety
-document does not enumerate holds. Neither supports a discrete physical-hold
-inventory, per-hold dimensions/depths, finger capacities, grip types,
-semantics, or normalized artwork pieces. The generated presentation image is
-not evidence for those facts; the candidate remains primary-only and
-unregistered.
+**Blocker:** The official target10a.com article is high-level copy, and the
+manufacturer-branded CDN document does not enumerate holds. Neither supports
+a discrete physical-hold inventory, per-hold dimensions/depths, finger
+capacities, grip types, semantics, or normalized artwork pieces. The generated
+presentation image is not evidence for those facts; the candidate remains
+primary-only and unregistered.
 
 ## Retained primary candidates
 
