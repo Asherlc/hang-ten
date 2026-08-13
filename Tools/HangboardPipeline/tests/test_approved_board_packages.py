@@ -3,6 +3,9 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import shutil
+
+import pytest
 
 from PIL import Image
 
@@ -295,3 +298,17 @@ def test_compact_keeps_only_its_source_photo_and_presentation_asset() -> None:
     }
     assert not (ROCK_PRODIGY_ROOT / "assets").exists()
     assert set(json.loads((ROCK_PRODIGY_ROOT / "evidence.json").read_text(encoding="utf-8"))["assetEvidence"]) == set()
+
+
+def test_source_photo_requires_its_exact_package_relative_evidence_path(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = tmp_path / "compact"
+    shutil.copytree(COMPACT_ROOT, package_root)
+    evidence_path = package_root / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    assert (package_root / "assets" / "WoodGripsCompactII.jpg").is_file()
+    evidence["assetEvidence"].pop("assets/WoodGripsCompactII.jpg")
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
+        module.load_board_package(package_root)

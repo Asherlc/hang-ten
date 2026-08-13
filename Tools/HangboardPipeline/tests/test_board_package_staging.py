@@ -90,12 +90,11 @@ def test_repeated_staging_refreshes_nested_package_file_changes(
     repository_root, _, approved_package = build_repository(tmp_path)
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
-    nested_source = approved_package / "metadata" / "incremental-marker.txt"
-    nested_source.parent.mkdir(exist_ok=True)
+    nested_source = approved_package / "assets" / "primary.png"
     nested_source.write_bytes(b"first nested revision")
 
     module.stage_board_packages(repository_root, destination)
-    nested_destination = destination / "approved-board" / "metadata" / nested_source.name
+    nested_destination = destination / "approved-board" / "assets" / nested_source.name
     assert nested_destination.read_bytes() == b"first nested revision"
 
     nested_source.write_bytes(b"second nested revision")

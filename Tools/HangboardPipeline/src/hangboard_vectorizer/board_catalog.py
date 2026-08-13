@@ -31,6 +31,8 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _SIDECARS = ("board.json", "evidence.json", "semantics.json", "artwork.json")
+_PACKAGE_ROOT_FILES = frozenset((*_SIDECARS, "assets"))
+_SOURCE_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".webp", ".heic"})
 _EVIDENCE_METHODS = frozenset({"manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation"})
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
 _GRIP_TYPES = frozenset({"openHand", "halfCrimp", "fullCrimp", "fourFingerPocket", "threeFingerPocket", "twoFingerPocket", "sloper"})
@@ -399,11 +401,24 @@ def _package_assets(root: Path) -> set[str]:
     if not assets_root.is_dir() or assets_root.is_symlink():
         raise ValueError("package assets must be a non-symlink directory")
     assets: set[str] = set()
-    for item in assets_root.rglob("*"):
+    source_photo_count = 0
+    for item in assets_root.iterdir():
         if item.is_symlink():
             raise ValueError(f"package contains symlink: {item}")
-        if item.is_file():
-            assets.add(item.relative_to(root).as_posix())
+        if not item.is_file():
+            raise ValueError("package assets must be flat regular files")
+        relative_path = item.relative_to(root).as_posix()
+        if item.name == "primary.png":
+            assets.add(relative_path)
+            continue
+        if item.suffix.lower() == ".png":
+            raise ValueError("only assets/primary.png may be a PNG")
+        if item.suffix.lower() not in _SOURCE_IMAGE_EXTENSIONS:
+            raise ValueError("package source asset must be a .jpg, .jpeg, .webp, or .heic image")
+        source_photo_count += 1
+        if source_photo_count > 1:
+            raise ValueError("package may contain at most one original source photo")
+        assets.add(relative_path)
     return assets
 
 
@@ -412,12 +427,12 @@ def load_board_package(package_root: Path) -> BoardPackage:
     if not root.is_dir() or root.is_symlink():
         raise ValueError(f"board package does not exist or is not a directory: {root}")
     _require_no_symlinks(root)
+    for item in root.iterdir():
+        if item.name not in _PACKAGE_ROOT_FILES:
+            raise ValueError(f"unknown package file: {item.name}")
     for sidecar in _SIDECARS:
         if not (root / sidecar).is_file():
             raise ValueError(f"board package {root} {sidecar} does not exist")
-    extra_json = {path.name for path in root.glob("*.json")} - set(_SIDECARS)
-    if extra_json:
-        raise ValueError(f"board package has unknown JSON sidecars: {sorted(extra_json)}")
     board = _load_board(_load_json(root / "board.json", "board.json"), root)
     evidence = _load_evidence(_load_json(root / "evidence.json", "evidence.json"))
     semantics = _load_semantics(_load_json(root / "semantics.json", "semantics.json"))

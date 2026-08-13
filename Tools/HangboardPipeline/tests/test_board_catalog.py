@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import shutil
 
 import pytest
 
@@ -11,7 +12,6 @@ from conftest import load_board_catalog_module
 def _write_catalog(root: Path, *, path: str = "example-board") -> Path:
     root.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[3] / "Hangboards/metolius-wood-grips-compact-ii"
-    import shutil
     shutil.copytree(source, root / "example-board")
     catalog_path = root / "catalog.json"
     catalog_path.write_text(json.dumps({"schemaVersion": 1, "boards": [{"id": "metolius.wood-grips-compact-ii", "path": path}]}), encoding="utf-8")
@@ -36,4 +36,55 @@ def test_catalog_rejects_status_and_nested_lifecycle_paths(tmp_path: Path) -> No
     payload["boards"][0] = {"id": "metolius.wood-grips-compact-ii", "path": "draft/example-board"}
     catalog_path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError, match="single board-slug directory"):
+        module.validate_catalog(catalog_path)
+
+
+@pytest.mark.parametrize("extra_path", ["README.md", "review", "outline.json", "outline.approx.json"])
+def test_registered_package_rejects_files_that_encode_review_state(
+    tmp_path: Path,
+    extra_path: str,
+) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    package = tmp_path / "example-board"
+    extra = package / extra_path
+    if extra_path == "review":
+        extra.mkdir()
+    else:
+        extra.write_text("review state", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unknown package file"):
+        module.validate_catalog(catalog_path)
+
+
+def test_registered_package_rejects_a_second_generated_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    package = tmp_path / "example-board"
+    (package / "assets" / "alternate.png").write_bytes(b"second generated image")
+
+    with pytest.raises(ValueError, match="only assets/primary.png may be a PNG"):
+        module.validate_catalog(catalog_path)
+
+
+def test_registered_package_rejects_nested_assets(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    package = tmp_path / "example-board"
+    nested = package / "assets" / "source"
+    nested.mkdir()
+    (nested / "manufacturer.jpg").write_bytes(b"source image")
+
+    with pytest.raises(ValueError, match="package assets must be flat"):
+        module.validate_catalog(catalog_path)
+
+
+def test_registered_package_allows_at_most_one_original_source_photo(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    assets = tmp_path / "example-board" / "assets"
+    (assets / "manufacturer-front.jpg").write_bytes(b"front source")
+    (assets / "manufacturer-side.jpg").write_bytes(b"side source")
+
+    with pytest.raises(ValueError, match="at most one original source photo"):
         module.validate_catalog(catalog_path)

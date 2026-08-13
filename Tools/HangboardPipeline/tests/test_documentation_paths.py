@@ -10,8 +10,8 @@ ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPipeline/TESTING.md"
 
 
-def test_active_delivery_guidance_uses_the_direct_approved_package_contract() -> None:
-    """Removing a direct-package delivery step would let drafts or legacy outputs ship."""
+def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() -> None:
+    """Removing direct package validation would let unregistered content ship."""
     ci_workflow = CI_WORKFLOW.read_text(encoding="utf-8")
     active_docs = "\n".join(
         path.read_text(encoding="utf-8") for path in (README, ADDING_A_BOARD)
@@ -21,10 +21,12 @@ def test_active_delivery_guidance_uses_the_direct_approved_package_contract() ->
     assert "test_generated_catalog_import.py" in ci_workflow
     assert "stage-approved-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
-    assert "status: draft" in active_docs
-    assert "status: approved" in active_docs
-    assert "drafts never ship" in active_docs
-    assert "bundles only approved packages" in active_docs
+    assert "status: draft" not in active_docs
+    assert "status: approved" not in active_docs
+    assert "exactly two states" not in active_docs
+    assert "bundles only approved packages" not in active_docs
+    assert "bundles only registered packages" in active_docs
+    assert "assets/primary.png" in active_docs
     assert "GeneratedBoardCatalog" not in active_docs
 
 

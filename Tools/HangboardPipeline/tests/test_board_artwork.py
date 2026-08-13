@@ -40,7 +40,7 @@ def _approved_payloads() -> dict[str, dict[str, object]]:
             "productURL": "https://example.com/board",
             "dimensions": "100 mm",
             "aspectRatio": 2.0,
-            "presentation": {"assetPath": "assets/presentation.png"},
+            "presentation": {"assetPath": "assets/primary.png"},
             "holds": [
                 {
                     "id": "hold-left",
@@ -116,7 +116,7 @@ def _approved_payloads() -> dict[str, dict[str, object]]:
                 "layers.top-plane": evidence,
                 "holdPieces.hold-left-piece": evidence,
             },
-            "assetEvidence": {"assets/presentation.png": evidence},
+            "assetEvidence": {"assets/primary.png": evidence},
         },
     }
 
@@ -128,7 +128,7 @@ def _write_approved_package(root: Path) -> Path:
         root.joinpath(f"{name}.json").write_text(json.dumps(payload), encoding="utf-8")
     assets = root / "assets"
     assets.mkdir()
-    (assets / "presentation.png").write_bytes(b"presentation")
+    (assets / "primary.png").write_bytes(b"presentation")
     return root
 
 
@@ -154,22 +154,19 @@ def test_load_board_package_validates_complete_cross_file_contract(tmp_path: Pat
     assert package.artwork.hold_ids == frozenset({"hold-left"})
 
 
-def test_approved_package_accepts_a_named_photo_asset_without_treating_it_as_a_fact(tmp_path: Path) -> None:
+def test_approved_package_accepts_an_evidence_covered_source_photo(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     root = _write_approved_package(tmp_path / "package")
-    board_path = root / "board.json"
-    board = json.loads(board_path.read_text(encoding="utf-8"))
-    board["presentation"] = {
-        "photoAsset": {"name": "Presentation", "path": "assets/presentation.png"}
-    }
-    board_path.write_text(json.dumps(board), encoding="utf-8")
     evidence_path = root / "evidence.json"
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    source_photo = root / "assets" / "manufacturer-source.jpg"
+    source_photo.write_bytes(b"original manufacturer source")
+    evidence["assetEvidence"]["assets/manufacturer-source.jpg"] = _evidence_map()
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
     package = module.load_board_package(root)
 
-    assert package.board.presentation_asset_path == "assets/presentation.png"
+    assert package.board.presentation_asset_path == "assets/primary.png"
 
 
 def test_approved_package_allows_no_presentation_asset_or_assets_directory(tmp_path: Path) -> None:
@@ -183,7 +180,7 @@ def test_approved_package_allows_no_presentation_asset_or_assets_directory(tmp_p
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
     evidence["assetEvidence"] = {}
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
-    (root / "assets" / "presentation.png").unlink()
+    (root / "assets" / "primary.png").unlink()
     (root / "assets").rmdir()
 
     package = module.load_board_package(root)
@@ -223,13 +220,13 @@ def test_approved_package_rejects_uncovered_assets_and_path_escapes(tmp_path: Pa
     root = _write_approved_package(tmp_path / "package")
     evidence_path = root / "evidence.json"
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
-    evidence["assetEvidence"].pop("assets/presentation.png")
+    evidence["assetEvidence"].pop("assets/primary.png")
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
     with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
         module.load_board_package(root)
 
-    evidence["assetEvidence"]["assets/presentation.png"] = _evidence_map()
+    evidence["assetEvidence"]["assets/primary.png"] = _evidence_map()
     evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
     board_path = root / "board.json"
     board = json.loads(board_path.read_text(encoding="utf-8"))

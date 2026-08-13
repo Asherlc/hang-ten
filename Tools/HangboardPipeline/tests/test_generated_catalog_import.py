@@ -35,4 +35,7 @@ def test_repository_generated_packages_are_primary_only_and_unregistered() -> No
         assert (package / "assets/primary.png").is_file()
         assert not (package / "README.md").exists()
         assert not (package / "review").exists()
+        assert not (package / "outline.json").exists()
+        assert not (package / "outline.approx.json").exists()
+        assert list(package.glob("*.json")) == []
         assert sorted(path.name for path in (package / "assets").iterdir()) == ["primary.png"]

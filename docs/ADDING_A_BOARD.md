@@ -27,8 +27,10 @@ The Compact II audit uses these official sources:
 
 ## 2. Create a flat package and registry entry
 
-Every package is a single flat directory below `Hangboards/`; lifecycle names
-do not appear in its path.
+Every complete package is a single flat directory below `Hangboards/`. Its
+presence in `catalog.json` is the only runtime publication mechanism; Git
+branches are the only in-progress mechanism. Do not add lifecycle, review,
+confidence, approximation, onboarding, or shipping fields or directories.
 
 ```text
 Hangboards/
@@ -39,43 +41,50 @@ Hangboards/
     semantics.json
     artwork.json
     assets/
+      primary.png
+      original-source-photo.jpg # optional, unchanged, evidence-covered
 ```
 
-`catalog.json` is the registry. It has exactly two statuses:
+`catalog.json` is the registry. Each entry has exactly an identifier and flat
+package path:
 
 ```json
-{"id": "manufacturer.model", "path": "manufacturer-model", "status": "draft"}
-{"id": "manufacturer.model", "path": "manufacturer-model", "status": "approved"}
+{"id": "manufacturer.model", "path": "manufacturer-model"}
 ```
 
-In review shorthand, `status: draft` is the non-shipping state and
-`status: approved` is the only shipping-eligible state.
+Registered packages contain exactly the four JSON sidecars above. `artwork.json`
+is the sole normalized geometry source: do not add `outline.json`,
+`outline.approx.json`, SVG duplicates, a `review/` directory, or a board
+README. `assets/primary.png` is the one generated raster retained for the
+board. An optional original source image must be a flat `.jpg`, `.jpeg`,
+`.webp`, or `.heic` asset and have an exact package-relative entry in
+`evidence.json.assetEvidence`; it does not establish non-visible hold facts.
 
-Use `draft` while evidence, hold facts, semantics, or artwork still need
-review. A draft may retain imported reference material below its package, but
-it is not a factual source and drafts never ship. Do not add runtime facts,
-routine mappings, or app assets from a draft.
+An unregistered image candidate contains only `assets/primary.png` and no JSON
+sidecars, README, review directory, outline, or parallel geometry. It is not
+runtime content. Keep research gaps in the branch or a source-audit document,
+then author all four sidecars only when official manufacturer evidence supports
+the board facts, hold semantics, and artwork.
 
-An `approved` entry requires all four package documents, their source-backed
-evidence mappings, valid artwork, and an approved package validator result.
-Promotion is a review decision: do not manufacture missing evidence or fill a
-hold field from an image alone.
+Every registered package requires nonempty HTTPS evidence sources, an ISO
+`checkedAt` date, and exact evidence mappings for each factual field, hold
+field, semantic target, artwork element, and retained asset. Do not manufacture
+missing evidence or fill a hold field from an image alone.
 
-Validate the registry after every package or status change:
+Validate the registry after every package change:
 
 ```sh
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
 ```
 
-The importer keeps the previous generated-catalog material as draft review
-inventory. Its historical rationale is recorded in
+The importer keeps generated catalog images as unregistered, primary-only
+candidates. Its historical rationale is recorded in
 [the catalog history](history/HANGBOARD_GENERATIVE_CATALOG.md); that material
 is not active package evidence or runtime input.
 
-## 3. Bundle approved packages directly
+## 3. Bundle registered packages directly
 
-The app bundles only approved packages plus `catalog.json`. Xcode invokes
+The app bundles only registered packages plus `catalog.json`. Xcode invokes
 `scripts/stage-approved-board-packages.py` during the build and copies the
 validated resources into the app bundle. Do not copy package files into an
 asset catalog, add board definitions to Swift, or generate an app-side board
@@ -93,9 +102,9 @@ xcodebuild build -project HangTen.xcodeproj -scheme HangTen \
 
 ## 4. Optional onboarding work
 
-The staged onboarding tool produces review artifacts under `.context/`. Those
+The staged onboarding tool produces artifacts under `.context/`. Those
 artifacts can support a later human-authored package, but a completed run is
-not itself an approved package and is never bundled directly.
+not itself a registered package and is never bundled directly.
 
 ```sh
 scripts/hangboard-tools.sh onboard \
@@ -111,10 +120,11 @@ the app or the canonical registry.
 ## Completion checklist
 
 - Primary manufacturer sources and review date are recorded in `evidence.json`.
-- The package has a flat slug path and one registry entry.
-- The entry is `draft` until the package is complete and reviewed.
-- An approved package passes catalog validation with source-backed metadata,
-  semantics, and artwork.
-- The app build stages only approved package directories.
+- The package has a flat slug path, exactly four JSON sidecars, one generated
+  `assets/primary.png`, and at most one evidence-covered original source photo.
+- It has one registry entry only after source-backed metadata, semantics, and
+  artwork pass catalog validation.
+- Unregistered candidates remain primary-only with no app/package review state.
+- The app build stages only registered package directories.
 - Portrait and landscape normal and active hold states are inspected on the
   dedicated simulator before shipping.

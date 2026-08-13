@@ -139,13 +139,13 @@ Canonical hangboard package checks:
 
 ```sh
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
 ```
 
-The registry has exactly two states: `draft` and `approved`. Draft packages
-retain imported or review material but never ship. The Xcode build phase runs
-`scripts/stage-approved-board-packages.py`, which bundles only approved
-packages and the registry into the app resource bundle.
+The registry lists only complete source-backed packages with exactly an `id`
+and flat `path`; Git branches are the in-progress mechanism. Unregistered
+image candidates contain only `assets/primary.png` and are not app content.
+The Xcode build phase runs `scripts/stage-approved-board-packages.py`, which
+bundles only registered packages and the registry into the app resource bundle.
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
