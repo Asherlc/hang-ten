@@ -94,7 +94,7 @@ def test_main_names_a_missing_static_asset_without_exposing_its_root(
     repository_root = tmp_path / "repository"
     (repository_root / ".git").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    (repository_root / "Tools" / "HangboardPipeline" / "boards").mkdir(parents=True)
+    (repository_root / "Hangboards").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardWorkbench" / "server.py").touch()
     workspace_root = repository_root / ".context" / "workspace"
@@ -130,7 +130,7 @@ def test_main_names_the_requested_host_and_port_when_binding_fails(
     repository_root = tmp_path / "repository"
     (repository_root / ".git").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    (repository_root / "Tools" / "HangboardPipeline" / "boards").mkdir(parents=True)
+    (repository_root / "Hangboards").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository_root / "Tools" / "HangboardWorkbench" / "server.py").touch()
     workspace_root = repository_root / ".context" / "private-workspace"

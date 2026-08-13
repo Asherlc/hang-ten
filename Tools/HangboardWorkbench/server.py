@@ -1649,7 +1649,7 @@ def validate_hang_ten_checkout(root: Path) -> Path:
     markers = (
         resolved_root / ".git",
         resolved_root / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer",
-        resolved_root / "Tools" / "HangboardPipeline" / "boards",
+        resolved_root / "Hangboards",
         resolved_root / "Tools" / "HangboardWorkbench" / "server.py",
     )
     if (

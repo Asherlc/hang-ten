@@ -88,7 +88,7 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
 
     snapshot = RepositoryBoardLibrary(repository_root).snapshot()
 
-    assert "metolius-wood-grips-compact-ii" in {
+    assert "metolius.wood-grips-compact-ii" in {
         board.board_id for board in snapshot.boards
     }
     assert snapshot.diagnostics == ()
@@ -109,7 +109,7 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
     legacy_targets = {
         "HangTen/Models/GeneratedBoardCatalog.swift": "legacy catalog\n",
         "HangTen.xcodeproj/project.pbxproj": "legacy project\n",
-        "Tools/HangboardPipeline/boards/legacy-board.json": "legacy library\n",
+        "Hangboards/legacy-board.json": "unrelated registry entry\n",
     }
     for relative, contents in legacy_targets.items():
         target = repository_root / relative
@@ -451,10 +451,10 @@ def test_package_publication_rejects_id_or_path_aliases(
     )
 
 
-def test_final_save_never_publishes_into_the_legacy_repository_library(
+def test_final_save_never_publishes_into_the_canonical_repository_registry(
     tmp_path: Path,
 ) -> None:
-    """Reintroducing ``library.publish`` would make local save mutate app artifacts."""
+    """A local save must not mutate canonical app artifacts."""
     library = _empty_repository_library(tmp_path / "repository")
     service = _fixture_service(tmp_path / "workspace", library=library)
     complete = _complete_runtime_board(service, "Example Board")
@@ -632,21 +632,12 @@ def test_open_library_board_links_the_exact_token_returned_by_copy(
 ) -> None:
     library, entry = _repository_library(tmp_path)
     service = _fixture_service(tmp_path / "workspace", library=library)
-    newer_run = _complete_runtime_board(
-        _fixture_service(tmp_path / "newer-seed"),
-        entry.display_name,
-        color=(90, 110, 130),
-    )
     actual_copy = library.copy_current_run
     advanced_revisions = []
 
     def advance_current_then_copy(board_id: str, destination: Path) -> LibraryBoard:
         advanced_revisions.append(
-            library.publish(
-                run_root=newer_run.run_root,
-                board_id=entry.board_id,
-                expected_revision_token=entry.revision_token,
-            )
+            _advance_package_revision(library, entry.board_id)
         )
         return actual_copy(board_id, destination)
 
@@ -781,18 +772,9 @@ def test_open_changed_library_manifest_preserves_divergent_runtime_revision(
     service = _fixture_service(tmp_path / "workspace", library=library)
     opened = service.open_library_board(entry.board_id)
     divergent = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+        opened.board_id, stage=1, expected_revision_id=opened.revision_id
     )
-    changed = _complete_runtime_board(
-        _fixture_service(tmp_path / "changed-seed"),
-        entry.display_name,
-        color=(90, 110, 130),
-    )
-    published = library.publish(
-        run_root=changed.run_root,
-        board_id=entry.board_id,
-        expected_revision_token=entry.revision_token,
-    )
+    published = _advance_package_revision(library, entry.board_id)
 
     newer = service.open_library_board(entry.board_id)
     runtime_board = service.store.read_board(opened.board_id)
@@ -818,18 +800,9 @@ def test_failed_newer_library_open_restores_the_exact_previous_active_revision(
     service = _fixture_service(tmp_path / "workspace", library=library)
     opened = service.open_library_board(entry.board_id)
     divergent = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
+        opened.board_id, stage=1, expected_revision_id=opened.revision_id
     )
-    changed = _complete_runtime_board(
-        _fixture_service(tmp_path / "changed-seed"),
-        entry.display_name,
-        color=(90, 110, 130),
-    )
-    library.publish(
-        run_root=changed.run_root,
-        board_id=entry.board_id,
-        expected_revision_token=entry.revision_token,
-    )
+    _advance_package_revision(library, entry.board_id)
 
     actual_write = service.store._write_board
 
@@ -1290,8 +1263,11 @@ def _fixture_service(
 
 
 def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
-    library_root = root / "Tools" / "HangboardPipeline" / "boards"
+    library_root = root / "Hangboards"
     library_root.mkdir(parents=True)
+    (library_root / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
+    )
     return RepositoryBoardLibrary(root)
 
 
@@ -1303,14 +1279,22 @@ def _repository_library(
     region_keys: tuple[str, ...] = ("grip-001",),
 ) -> tuple[RepositoryBoardLibrary, LibraryBoard]:
     library = _empty_repository_library(root / "repository")
-    seed = _fixture_service(root / "seed", region_keys=region_keys)
-    complete = _complete_runtime_board(seed, product_name, color=color)
-    published = library.publish(
-        run_root=complete.run_root,
-        board_id=None,
-        expected_revision_token=None,
+    del product_name, color, region_keys
+    package = library.repository_root / "Hangboards" / _DIRECT_PACKAGE_SOURCE.name
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, package)
+    shutil.copy2(
+        _DIRECT_PACKAGE_SOURCE.parent / "catalog.json", package.parent / "catalog.json"
     )
-    return library, published.board
+    return library, library.get_board("metolius.wood-grips-compact-ii")
+
+
+def _advance_package_revision(
+    library: RepositoryBoardLibrary, board_id: str
+) -> LibraryBoard:
+    board = library.get_board(board_id)
+    evidence = board.run_path / "evidence.json"
+    evidence.write_bytes(evidence.read_bytes() + b"\n")
+    return library.get_board(board_id)
 
 
 def _complete_runtime_board(
