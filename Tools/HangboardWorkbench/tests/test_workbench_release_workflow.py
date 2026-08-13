@@ -134,6 +134,20 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
             assert result.returncode == 0, result.stderr
 
 
+def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
+    release = _workflow()["jobs"]["release"]
+    step = _step(release, "Sign, notarize, and validate workbench app")
+    script = step["run"]
+
+    assert step["env"]["SENTRY_AUTH_TOKEN"] == "${{ secrets.SENTRY_AUTH_TOKEN }}"
+    assert step["env"]["SENTRY_ORG"] == "${{ vars.SENTRY_ORG }}"
+    assert step["env"]["SENTRY_PROJECT"] == "${{ vars.SENTRY_WORKBENCH_PROJECT }}"
+    assert '-Xswiftc -g' in script
+    assert 'dsymutil "$built_shell" -o "$shell_dsym"' in script
+    assert 'sentry-cli debug-files upload "$shell_dsym"' in script
+    assert "SENTRY_AUTH_TOKEN =" not in script
+
+
 def test_workbench_release_classifies_changes_with_the_pinned_shared_taxonomy():
     jobs = _workflow()["jobs"]
     changes = jobs["changes"]
@@ -387,6 +401,9 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "APPSTORE_API_KEY_ID": "${{ vars.APPSTORE_API_KEY_ID }}",
         "APPSTORE_API_PRIVATE_KEY": "${{ secrets.APPSTORE_API_PRIVATE_KEY }}",
         "APPLE_TEAM_ID": "${{ vars.APPLE_TEAM_ID }}",
+        "SENTRY_AUTH_TOKEN": "${{ secrets.SENTRY_AUTH_TOKEN }}",
+        "SENTRY_ORG": "${{ vars.SENTRY_ORG }}",
+        "SENTRY_PROJECT": "${{ vars.SENTRY_WORKBENCH_PROJECT }}",
     }
     signing_script = signing_step["run"]
     for required_fragment in (
