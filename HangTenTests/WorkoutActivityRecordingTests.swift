@@ -5,6 +5,23 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    private var sessionStoreDirectory: URL!
+    private var sessionStores: [WorkoutSessionStore] = []
+
+    override func setUp() {
+        super.setUp()
+        sessionStoreDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(
+                "WorkoutActivityRecordingTests-\(UUID().uuidString)",
+                isDirectory: true
+            )
+    }
+
+    override func tearDown() {
+        cleanUpSessionStores()
+        super.tearDown()
+    }
+
     private let board = TrainingBoard(
         id: "fixture.board",
         manufacturer: "Fixture",
@@ -67,6 +84,57 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let defaults = makeDefaults()
         defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
         return defaults
+    }
+
+    private func makeSessionStore(
+        defaults: UserDefaults,
+        fileManager: FileManager = .default
+    ) -> WorkoutSessionStore {
+        let store = WorkoutSessionStore(
+            defaults: defaults,
+            directory: sessionStoreDirectory,
+            fileManager: fileManager
+        )
+        sessionStores.append(store)
+        return store
+    }
+
+    private func cleanUpSessionStores() {
+        sessionStores.forEach { $0.flush() }
+        sessionStores.removeAll()
+        if let sessionStoreDirectory {
+            try? FileManager.default.removeItem(at: sessionStoreDirectory)
+        }
+        sessionStoreDirectory = nil
+    }
+
+    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() {
+        let directory = sessionStoreDirectory!
+        let fileManager = BlockingWorkoutActivityFileManager()
+        let store = makeSessionStore(defaults: makeDefaults(), fileManager: fileManager)
+        let record = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Plan",
+            recordedAt: Date(timeIntervalSinceReferenceDate: 1_010),
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+
+        store.append(record)
+        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        let allowWrite = fileManager.allowWrite
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            allowWrite.signal()
+        }
+
+        cleanUpSessionStores()
+
+        XCTAssertEqual(fileManager.writeFinished.wait(timeout: .now() + 1), .success)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
     private func plan(
@@ -428,9 +496,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testAppStoreResolutionPreservesDirectFeatureFallbackAndKindBehavior() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let exactFeatureTarget = HoldTarget.feature(
             .mediumEdge,
@@ -484,9 +554,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+        let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
-            userDefaults: makeDefaults()
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let plan = LegacyPlanSeedCatalog.repeaters
         let board = BoardCatalog.compactII
@@ -620,14 +692,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             workoutSaved.fulfill()
         }
         let defaults = makeHealthConnectedDefaults()
-        let sessionDirectory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("WorkoutActivityRecordingTests-\(UUID().uuidString)", isDirectory: true)
-        defer { try? FileManager.default.removeItem(at: sessionDirectory) }
-        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: sessionDirectory)
         let store = AppStore(
             healthKitService: service,
-            workoutSessionStore: sessionStore,
-            userDefaults: defaults
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let localCompletionPublished = expectation(description: "Local completion published")
         let completionObservation = store.$workoutHistory
@@ -679,7 +747,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testCompletionExportsMeasuredLoadThroughHealthKitSegments() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, defaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -739,6 +811,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: WorkoutHealthStoreSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
             defaults: defaults
         )
         let workout = plan([
@@ -765,7 +838,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testLegacyCompletionUsesSelectedBoardAndNoStopwatchDurations() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeHealthConnectedDefaults()
-        let store = AppStore(healthKitService: service, userDefaults: defaults)
+        let store = AppStore(
+            healthKitService: service,
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
         store.selectedBoard = board
         let workout = plan([
             WorkoutSegment(
@@ -793,14 +870,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testRecorderFailureSurfacesErrorWithoutCallingHealthKit() {
         let service = HealthWorkoutSavingSpy()
         let defaults = makeDefaults()
-        let sessionDirectory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("WorkoutActivityRecordingTests-\(UUID().uuidString)", isDirectory: true)
-        defer { try? FileManager.default.removeItem(at: sessionDirectory) }
-        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: sessionDirectory)
         let store = AppStore(
             healthKitService: service,
-            workoutSessionStore: sessionStore,
-            userDefaults: defaults
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
         )
         let expectedError = "Session logged in Hang Ten, but Hang Ten could not match a workout activity to the selected board."
         let localCompletionPublished = expectation(description: "Local completion published")
@@ -1068,5 +1141,26 @@ private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         completion(.success(UUID()))
+    }
+}
+
+private final class BlockingWorkoutActivityFileManager: FileManager {
+    let writeStarted = DispatchSemaphore(value: 0)
+    let allowWrite = DispatchSemaphore(value: 0)
+    let writeFinished = DispatchSemaphore(value: 0)
+
+    override func createDirectory(
+        at url: URL,
+        withIntermediateDirectories createIntermediates: Bool,
+        attributes: [FileAttributeKey: Any]? = nil
+    ) throws {
+        writeStarted.signal()
+        allowWrite.wait()
+        defer { writeFinished.signal() }
+        try super.createDirectory(
+            at: url,
+            withIntermediateDirectories: createIntermediates,
+            attributes: attributes
+        )
     }
 }
