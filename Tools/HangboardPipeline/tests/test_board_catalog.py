@@ -31,9 +31,25 @@ def test_registered_packages_use_the_canonical_primary_presentation_asset() -> N
     catalog = module.validate_catalog(catalog_path)
 
     for entry in catalog.entries:
-        package = module.load_board_package(catalog_path.parent / entry.path)
+        package_root = catalog_path.parent / entry.path
+        package = module.load_board_package(package_root)
         assert package.board.presentation_asset_path == "assets/primary.png"
-        assert (package.root / "assets/primary.png").is_file()
+        assert {path.name for path in package_root.glob("*.json")} == {
+            "board.json",
+            "evidence.json",
+            "semantics.json",
+            "artwork.json",
+        }
+
+        asset_paths = {
+            path.relative_to(package_root).as_posix()
+            for path in (package_root / "assets").iterdir()
+        }
+        assert "assets/primary.png" in asset_paths
+        source_photos = asset_paths - {"assets/primary.png"}
+        assert len(source_photos) <= 1
+        assert all(Path(path).suffix.lower() in {".jpg", ".jpeg", ".webp", ".heic"} for path in source_photos)
+        assert set(package.evidence.asset_evidence) == asset_paths
 
 
 def test_catalog_rejects_a_registered_package_without_the_primary_presentation_asset(

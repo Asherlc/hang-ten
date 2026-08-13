@@ -118,6 +118,14 @@ ROCK_PRODIGY_SEMANTICS = {
     ),
 }
 
+CANONICAL_PACKAGE_SIDECARS = {
+    "board.json",
+    "evidence.json",
+    "semantics.json",
+    "artwork.json",
+}
+SOURCE_PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".webp", ".heic"}
+
 
 def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
     return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
@@ -199,6 +207,27 @@ def test_registry_contains_the_two_source_backed_runtime_boards() -> None:
         "metolius.wood-grips-compact-ii": "metolius-wood-grips-compact-ii",
         "trango.rock-prodigy-training-center": "trango-rock-prodigy-training-center",
     }
+
+
+def test_every_registered_package_has_one_presentation_and_complete_evidence() -> None:
+    module = load_board_catalog_module()
+    catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
+
+    for entry in catalog.entries:
+        package_root = HANGBOARDS_ROOT / entry.path
+        package = module.load_board_package(package_root)
+        assert package.board.presentation_asset_path == "assets/primary.png"
+        assert {path.name for path in package_root.glob("*.json")} == CANONICAL_PACKAGE_SIDECARS
+
+        asset_paths = {
+            path.relative_to(package_root).as_posix()
+            for path in (package_root / "assets").iterdir()
+        }
+        assert "assets/primary.png" in asset_paths
+        source_photos = asset_paths - {"assets/primary.png"}
+        assert len(source_photos) <= 1
+        assert all(Path(path).suffix.lower() in SOURCE_PHOTO_EXTENSIONS for path in source_photos)
+        assert set(package.evidence.asset_evidence) == asset_paths
 
 
 def test_compact_package_preserves_runtime_inventory_semantics_and_artwork() -> None:
