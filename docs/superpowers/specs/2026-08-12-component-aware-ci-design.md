@@ -5,8 +5,8 @@
 ## Goal
 
 Reduce pull-request latency and macOS runner use by running each CI component
-only when changed files can affect it, while retaining complete validation for
-merge-queue entries and changes pushed to `main`.
+only when changed files can affect it, while retaining all applicable
+validation for merge-queue entries and changes pushed to `main`.
 
 ## Problem
 
@@ -64,13 +64,13 @@ requests, use `needs: changes` and Boolean job conditions:
 - `python`: `python`, `workflow`, or `shared_board_content`.
 - iOS `build` and simulator `test`: `ios`, `workflow`, or
   `shared_board_content`.
-- `build-release-device` uses `github.event_name != 'pull_request'`: it is
-  skipped for pull requests, but runs for both pushes and `merge_group`.
+- `build-release-device` uses `github.event_name == 'push'`: it remains a
+  post-merge check and does not run for pull requests or `merge_group`.
 
 Skipped jobs remain visible, preserving the required-check surface without
-allocating a macOS runner. For `push` to `main` and `merge_group`, every main
-CI job runs regardless of filter outputs, including the Release device build.
-These are the complete integration gates.
+allocating a macOS runner. For `push` to `main` and `merge_group`, every
+eligible main CI job runs regardless of filter outputs. The Release device
+build remains limited to pushes after merge.
 
 ### Workbench workflow
 
@@ -107,10 +107,11 @@ contracts parse YAML through the repository's Ruby YAML convention and prove:
 - both classifier jobs check out content before `paths-filter` and retain
   `contents: read` plus `pull-requests: read`;
 - shared board content selects Workbench Node and Python, not native;
-- main CI `merge_group` runs every job, including `build-release-device`;
+- main CI keeps `build-release-device` push-only while `merge_group` runs the
+  other complete integration jobs;
 - Workbench `merge_group` runs the stable full `build` job but cannot run the
   publishing job;
-- `push` and `merge_group` complete gates do not depend on filter outputs.
+- `push` and `merge_group` eligible gates do not depend on filter outputs.
 
 The contracts assert workflow behavior and configuration structure. This
 design document records the policy; it is not treated as a runtime test.
@@ -121,8 +122,8 @@ design document records the policy; it is not treated as a runtime test.
 - Python-only pull requests skip iOS/Xcode unless shared content changes.
 - iOS and shared board/export changes run iOS build and simulator tests.
 - Workflow/taxonomy edits are conservative and run full relevant PR coverage.
-- Main pushes and merge-queue entries always run full suites; main CI
-  merge-queue entries include the Release device build.
+- Main pushes and merge-queue entries run every eligible suite; the main CI
+  Release device build remains push-only.
 - Workbench merge-queue entries run the complete stable `build` validation and
   never publish a release.
 - Existing required job identifiers and names remain stable, including
@@ -134,7 +135,7 @@ design document records the policy; it is not treated as a runtime test.
 
 Under-classified shared paths are the main risk. One shared taxonomy,
 conservative `workflow` matching for workflow/taxonomy edits, configuration
-contracts, and full `main`/merge-queue runs reduce it. Reading classification
+contracts, and full eligible `main`/merge-queue runs reduce it. Reading classification
 from the PR checkout is safe under that conservative rule and avoids adding a
 trusted-base checkout plus shell comparison machinery. Job-level conditions
 avoid disappearing required workflows. The immutable action pin prevents
