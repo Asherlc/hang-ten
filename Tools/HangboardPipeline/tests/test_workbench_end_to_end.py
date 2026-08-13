@@ -121,6 +121,323 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
     } == legacy_targets
 
 
+def test_parallel_package_publications_preserve_both_catalog_entries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Publishing a different board must not overwrite a concurrent catalog edit."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
+    )
+    candidates = tmp_path / "candidates"
+    first_candidate = candidates / "first-board"
+    second_candidate = candidates / "second-board"
+    first_candidate.mkdir(parents=True)
+    second_candidate.mkdir(parents=True)
+    (first_candidate / "draft.txt").write_text("first", encoding="utf-8")
+    (second_candidate / "draft.txt").write_text("second", encoding="utf-8")
+
+    actual_copytree = workbench_promotion.shutil.copytree
+    first_copy_started = Event()
+    release_first_copy = Event()
+    second_copy_started = Event()
+
+    def coordinated_copytree(source: Path, destination: Path, **kwargs: object):
+        if Path(source) == first_candidate:
+            first_copy_started.set()
+            if not release_first_copy.wait(timeout=5):
+                raise TimeoutError("first package copy was not released")
+        elif Path(source) == second_candidate:
+            second_copy_started.set()
+        return actual_copytree(source, destination, **kwargs)
+
+    monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            first_candidate,
+            board_id="example.first-board",
+            status="draft",
+        )
+        assert first_copy_started.wait(2)
+        second = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            second_candidate,
+            board_id="example.second-board",
+            status="draft",
+        )
+        if second_copy_started.wait(timeout=0.5):
+            second.result(timeout=5)
+        release_first_copy.set()
+        first.result(timeout=5)
+        second.result(timeout=5)
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert {entry["id"] for entry in catalog["boards"]} == {
+        "example.first-board",
+        "example.second-board",
+    }
+    assert (hangboards / "first-board" / "draft.txt").read_text() == "first"
+    assert (hangboards / "second-board" / "draft.txt").read_text() == "second"
+
+
+def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failing job must not restore a catalog snapshot older than another job."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
+    )
+    candidates = tmp_path / "candidates"
+    invalid_candidate = candidates / "invalid-approved"
+    valid_candidate = candidates / "valid-draft"
+    invalid_candidate.mkdir(parents=True)
+    valid_candidate.mkdir(parents=True)
+    (invalid_candidate / "incomplete.txt").write_text("invalid", encoding="utf-8")
+    (valid_candidate / "draft.txt").write_text("valid", encoding="utf-8")
+
+    actual_copytree = workbench_promotion.shutil.copytree
+    invalid_copy_started = Event()
+    release_invalid_copy = Event()
+    valid_copy_started = Event()
+
+    def coordinated_copytree(source: Path, destination: Path, **kwargs: object):
+        if Path(source) == invalid_candidate:
+            invalid_copy_started.set()
+            if not release_invalid_copy.wait(timeout=5):
+                raise TimeoutError("invalid package copy was not released")
+        elif Path(source) == valid_candidate:
+            valid_copy_started.set()
+        return actual_copytree(source, destination, **kwargs)
+
+    monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        invalid = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            invalid_candidate,
+            board_id="example.invalid-approved",
+            status="approved",
+        )
+        assert invalid_copy_started.wait(2)
+        valid = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            valid_candidate,
+            board_id="example.valid-draft",
+            status="draft",
+        )
+        if valid_copy_started.wait(timeout=0.5):
+            valid.result(timeout=5)
+        release_invalid_copy.set()
+        with pytest.raises(ValueError, match="board.json"):
+            invalid.result(timeout=5)
+        valid.result(timeout=5)
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "example.valid-draft",
+            "path": "valid-draft",
+            "status": "draft",
+        }
+    ]
+    assert (hangboards / "valid-draft" / "draft.txt").read_text() == "valid"
+    assert not (hangboards / "invalid-approved").exists()
+
+
+def test_package_publication_replaces_a_matching_draft_with_an_approved_package(
+    tmp_path: Path,
+) -> None:
+    """A matching ID/path is a canonical revision, not a duplicate package."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    destination.mkdir(parents=True)
+    (destination / "draft.txt").write_text("old draft", encoding="utf-8")
+    (hangboards / "catalog.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                        "status": "draft",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+
+    workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate,
+        board_id="metolius.wood-grips-compact-ii",
+        status="approved",
+    )
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "metolius.wood-grips-compact-ii",
+            "path": "compact-ii",
+            "status": "approved",
+        }
+    ]
+    assert not (destination / "draft.txt").exists()
+    assert (destination / "board.json").read_bytes() == (
+        candidate / "board.json"
+    ).read_bytes()
+
+
+def test_package_publication_atomically_updates_an_existing_approved_revision(
+    tmp_path: Path,
+) -> None:
+    """An approved package can be revised without duplicating its registry entry."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    (destination / "old-revision.txt").write_text("old", encoding="utf-8")
+    (hangboards / "catalog.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                        "status": "approved",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+    (candidate / "new-revision.txt").write_text("new", encoding="utf-8")
+
+    workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate,
+        board_id="metolius.wood-grips-compact-ii",
+        status="approved",
+    )
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert len(catalog["boards"]) == 1
+    assert catalog["boards"][0]["status"] == "approved"
+    assert not (destination / "old-revision.txt").exists()
+    assert (destination / "new-revision.txt").read_text() == "new"
+
+
+def test_failed_existing_package_revision_preserves_package_and_catalog(
+    tmp_path: Path,
+) -> None:
+    """Validation failure must leave the prior approved package fully active."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    (destination / "old-revision.txt").write_text("old", encoding="utf-8")
+    catalog_path = hangboards / "catalog.json"
+    catalog_bytes = (
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                        "status": "approved",
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n"
+    ).encode()
+    catalog_path.write_bytes(catalog_bytes)
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+    (candidate / "evidence.json").unlink()
+
+    with pytest.raises(ValueError, match="evidence.json"):
+        workbench_promotion.publish_package_candidate(
+            repository_root,
+            candidate,
+            board_id="metolius.wood-grips-compact-ii",
+            status="approved",
+        )
+
+    assert catalog_path.read_bytes() == catalog_bytes
+    assert (destination / "old-revision.txt").read_text() == "old"
+    assert (destination / "evidence.json").is_file()
+
+
+@pytest.mark.parametrize(
+    ("board_id", "candidate_slug"),
+    (
+        ("metolius.wood-grips-compact-ii", "different-path"),
+        ("example.different-id", "compact-ii"),
+    ),
+)
+def test_package_publication_rejects_id_or_path_aliases(
+    tmp_path: Path, board_id: str, candidate_slug: str
+) -> None:
+    """Only the exact existing ID/path pair may replace a canonical package."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    destination.mkdir(parents=True)
+    (destination / "draft.txt").write_text("old", encoding="utf-8")
+    catalog_path = hangboards / "catalog.json"
+    catalog_path.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                        "status": "draft",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / candidate_slug
+    candidate.mkdir(parents=True)
+    (candidate / "draft.txt").write_text("new", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="catalog already contains"):
+        workbench_promotion.publish_package_candidate(
+            repository_root,
+            candidate,
+            board_id=board_id,
+            status="draft",
+        )
+
+    assert json.loads(catalog_path.read_text())["boards"][0]["path"] == "compact-ii"
+    assert (destination / "draft.txt").read_text() == "old"
+
+
 def test_final_save_never_publishes_into_the_legacy_repository_library(
     tmp_path: Path,
 ) -> None:

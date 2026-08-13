@@ -95,6 +95,42 @@ def test_staging_copies_only_approved_package_bytes_and_replaces_stale_destinati
             assert destination.joinpath("approved-board", relative_path).read_bytes() == source_path.read_bytes()
 
 
+def test_repeated_staging_refreshes_nested_package_file_changes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Every staging invocation must replace previously staged nested bytes."""
+    module = load_staging_module()
+    repository_root, _, approved_package = build_repository(tmp_path)
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    nested_source = approved_package / "review" / "incremental-marker.txt"
+    nested_source.parent.mkdir(exist_ok=True)
+    nested_source.write_bytes(b"first nested revision")
+
+    module.stage_approved_packages(repository_root, destination)
+    nested_destination = destination / "approved-board" / "review" / nested_source.name
+    assert nested_destination.read_bytes() == b"first nested revision"
+
+    nested_source.write_bytes(b"second nested revision")
+    module.stage_approved_packages(repository_root, destination)
+
+    assert nested_destination.read_bytes() == b"second nested revision"
+
+
+def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
+    """Always-running staging makes every nested JSON/PNG edit an effective input."""
+    project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
+        encoding="utf-8"
+    )
+    phase_start = project.index(
+        "CC0000000000000000000007 /* Stage Approved Board Packages */ = {"
+    )
+    phase_end = project.index("\n\t\t};", phase_start)
+    phase = project[phase_start:phase_end]
+
+    assert "alwaysOutOfDate = 1;" in phase
+
+
 def test_staging_rejects_symlinked_destination_and_leaves_its_target_untouched(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

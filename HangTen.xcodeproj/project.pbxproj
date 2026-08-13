@@ -451,6 +451,7 @@
 		};
 		CC0000000000000000000007 /* Stage Approved Board Packages */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
