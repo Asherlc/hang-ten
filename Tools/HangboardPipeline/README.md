@@ -134,8 +134,10 @@ The canonical package for each board lives under `Hangboards/`:
 - `Hangboards/catalog.json` is the package registry.
 - `Hangboards/<board-folder>/board.json` is that board’s current source of
   truth.
-- Repository status is `draft` for a primary-image-only board and `published`
-  for a complete package registered in `catalog.json`.
+- Repository status is `draft` for any unregistered, safely named board
+  directory with a non-symlink `assets/primary.png`, even when the directory
+  contains additional files. A complete package registered in `catalog.json`
+  is `published`.
 
 Stage output is still written to temporary, ignored run folders first (for
 example under `.context/hangboard-onboarding/...`). Registration only accepts
