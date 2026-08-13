@@ -6,14 +6,15 @@ Restore published-board loading in Hangboard Workbench after the canonical packa
 
 ## Root Cause
 
-The package migration made `Hangboards/` the canonical board source, but the workbench still validates a checkout and configures `RepositoryBoardLibrary` around the obsolete `Tools/HangboardPipeline/boards/` path. The native app accepts the current checkout shape only if that removed directory exists, while the backend attempts to load boards from it. As a result, both opening-screen list requests fail in the released workbench.
+The package migration made `Hangboards/` the canonical board source, but the workbench still validates a checkout and configures `RepositoryBoardLibrary` around the obsolete `Tools/HangboardPipeline/boards/` path. That library expects Stage-4 onboarding runs (`run.json` and stage artifacts), whereas the canonical source now contains validated packages (`catalog.json`, `board.json`, `artwork.json`, and `assets/primary.png`). A directory rename alone would therefore replace an unavailable legacy dependency with an incompatible format.
 
 ## Design
 
 The workbench checkout contract is updated in every owning layer:
 
 - Python server validation requires `Hangboards/`, the pipeline source package, the workbench server, and `.git`.
-- `RepositoryBoardLibrary` discovers packages directly from `Hangboards/` and never consults the removed pipeline board directory.
+- A canonical-package library reads and validates `Hangboards/catalog.json` and its registered packages. It supplies the existing workbench library interface: snapshot, lookup, a stable revision token, and an isolated runtime materialization operation.
+- Opening a published package produces a complete, editable runtime revision below `.context/hangboard-workbench/`. The materialized stage artifacts are derived from the package's primary image and authoritative artwork metadata; they are working copies only. Saving or revising never reads from, writes to, or falls back to `Tools/HangboardPipeline/boards/`.
 - The native macOS checkout picker validates the same canonical markers and tells users the same requirement.
 - Documentation names `Hangboards/` as the published-board source.
 
@@ -21,7 +22,7 @@ No fallback path is permitted. A checkout containing only `Tools/HangboardPipeli
 
 ## Contract Test
 
-Add a server-level regression test that constructs a valid canonical checkout with `Hangboards/`, invokes the normal workbench startup path, and proves that both opening-screen data sources are available: `GET /api/library` returns the repository snapshot and `GET /api/boards` returns the runtime list. The test must fail if either checkout validation or repository-library discovery reverts to the legacy board directory.
+Add a server-level regression test that constructs a valid canonical checkout with `Hangboards/` and a registered, valid package, invokes the normal workbench startup path, and proves the full opening contract: `GET /api/library` returns that canonical board, `GET /api/boards` returns the runtime list, and opening the returned board ID creates a usable runtime revision. The test must fail if checkout validation, package discovery, or opening reverts to the legacy board directory.
 
 Native checkout-selection tests will also assert that `Hangboards/` is required and `Tools/HangboardPipeline/boards/` alone is rejected.
 
