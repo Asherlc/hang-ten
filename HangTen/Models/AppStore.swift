@@ -513,14 +513,12 @@ final class AppStore: ObservableObject {
     private func telemetryBoardFamily(
         for board: TrainingBoard
     ) -> HangTenTelemetryEvent.BoardFamily? {
-        switch board.id {
-        case "metolius.wood-grips-compact-ii":
-            return .compactII
-        case "trango.rock-prodigy-training-center":
-            return .rockProdigyTrainingCenter
-        default:
+        guard let familyComponent = board.id.split(separator: ".").last else {
             return nil
         }
+        return HangTenTelemetryEvent.BoardFamily(
+            rawValue: familyComponent.replacingOccurrences(of: "-", with: "_")
+        )
     }
 
     private func telemetryHealthAuthorizationOutcome(
