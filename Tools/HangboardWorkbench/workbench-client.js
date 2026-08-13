@@ -6,23 +6,88 @@
   "use strict";
 
   const ACTIVE_JOB_STATES = new Set(["queued", "running"]);
+  const READ_ATTEMPTS = 3;
+  const READ_RETRY_DELAY = 100;
 
-  async function request(path, options = {}) {
-    const response = await root.fetch(path, { cache: "no-store", ...options });
+  function wait(duration) {
+    return new Promise((resolve) => root.setTimeout(resolve, duration));
+  }
+
+  function reportRequestFailure(path, category, message, details = {}) {
+    const diagnostic = {
+      path: String(path).slice(0, 256),
+      category: String(category).slice(0, 64),
+      message: String(message).slice(0, 1024),
+    };
+    if (Number.isInteger(details.status) && details.status >= 100 && details.status <= 599) {
+      diagnostic.status = details.status;
+    }
+    if (Number.isInteger(details.attempts) && details.attempts >= 1 && details.attempts <= READ_ATTEMPTS) {
+      diagnostic.attempts = details.attempts;
+    }
+    try {
+      root.webkit?.messageHandlers?.workbenchDiagnostics?.postMessage(diagnostic);
+    } catch (_error) {
+      // Diagnostics must never replace the request failure the editor handles.
+    }
+  }
+
+  function requestFailure(path, category, message, details = {}) {
+    reportRequestFailure(path, category, message, details);
+    return new Error(message);
+  }
+
+  async function request(path, options = {}, { retryTransportFailures = true } = {}) {
+    const requestOptions = { cache: "no-store", ...options };
+    const method = String(requestOptions.method || "GET").toUpperCase();
+    let response;
+    for (let attempt = 1; attempt <= READ_ATTEMPTS; attempt += 1) {
+      try {
+        response = await root.fetch(path, requestOptions);
+        break;
+      } catch (error) {
+        if (method !== "GET" || !retryTransportFailures) {
+          const detail = error?.message ? `: ${error.message}` : "";
+          const message = `Could not reach the Hangboard Workbench backend for ${path}${detail}`;
+          reportRequestFailure(path, "transport", message, { attempts: attempt });
+          throw error;
+        }
+        if (attempt === READ_ATTEMPTS) {
+          const detail = error?.message ? `: ${error.message}` : "";
+          const message = `Could not reach the Hangboard Workbench backend for ${path} after ${attempt} attempt${attempt === 1 ? "" : "s"}${detail}`;
+          const failure = requestFailure(path, "transport", message, { attempts: attempt });
+          failure.cause = error;
+          throw failure;
+        }
+        await wait(READ_RETRY_DELAY);
+      }
+    }
     let payload;
     try {
       payload = await response.json();
     } catch (_error) {
-      throw new Error(`Workbench request failed (${String(response.status)})`);
+      const message = `Workbench request for ${path} returned an unreadable response (${String(response.status)})`;
+      if (response.ok || response.status >= 500) {
+        throw requestFailure(path, "unreadable-response", message, { status: response.status });
+      }
+      throw new Error(message);
     }
     if (!response.ok || !payload.ok) {
-      throw new Error(payload.error || `Workbench request failed (${String(response.status)})`);
+      const message = payload.error || `Workbench request for ${path} failed (${String(response.status)})`;
+      if (response.status >= 500) {
+        throw requestFailure(path, "server", message, { status: response.status });
+      }
+      throw new Error(message);
     }
     return payload;
   }
 
   async function getJob(jobId) {
-    return (await request(`/api/jobs/${encodeURIComponent(jobId)}`)).job;
+    return (await request(
+      `/api/jobs/${encodeURIComponent(jobId)}`,
+      {},
+      { retryTransportFailures: false },
+    )).job;
   }
 
   function uncertainJobError(jobId, message, cause = null) {

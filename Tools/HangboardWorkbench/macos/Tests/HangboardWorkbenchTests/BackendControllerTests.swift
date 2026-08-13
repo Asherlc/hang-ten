@@ -48,6 +48,79 @@ final class BackendControllerTests: XCTestCase {
         )
     }
 
+    func testSessionReportsPackagedRuntimeBuildIdentity() async throws {
+        let runtime = FileManager.default.temporaryDirectory
+            .appending(path: "BackendControllerTests-runtime-\(UUID().uuidString)", directoryHint: .isDirectory)
+        temporaryDirectories.append(runtime)
+        try FileManager.default.createDirectory(
+            at: runtime.appending(path: "_internal", directoryHint: .isDirectory),
+            withIntermediateDirectories: true
+        )
+        let commit = String(repeating: "a", count: 40)
+        try (commit + "\n").write(
+            to: runtime.appending(path: "_internal/build-commit.txt"),
+            atomically: true,
+            encoding: .ascii
+        )
+        let process = FakeBackendProcess()
+        let controller = BackendController(
+            executableURL: runtime.appending(path: "hangboard-workbench"),
+            processFactory: { process },
+            healthProbe: { _ in true },
+            sleep: { _ in },
+            portSelector: { 4317 }
+        )
+
+        let session = try await controller.startSession(repositoryRoot: try makeCheckout())
+
+        XCTAssertEqual(session.runtimeIdentity, commit)
+        await controller.stop()
+    }
+
+    func testCheckoutIdentityReadsSymbolicAndDetachedHeadsWithoutRunningGit() throws {
+        let checkout = try makeCheckout()
+        let git = checkout.appending(path: ".git", directoryHint: .isDirectory)
+        let commit = String(repeating: "b", count: 40)
+        try FileManager.default.createDirectory(
+            at: git.appending(path: "refs/heads", directoryHint: .isDirectory),
+            withIntermediateDirectories: true
+        )
+        try "ref: refs/heads/main\n".write(to: git.appending(path: "HEAD"), atomically: true, encoding: .ascii)
+        try "\(commit)\n".write(to: git.appending(path: "refs/heads/main"), atomically: true, encoding: .ascii)
+        XCTAssertEqual(BackendController.readCheckoutIdentity(at: checkout), commit)
+
+        let detached = String(repeating: "c", count: 40)
+        try detached.write(to: git.appending(path: "HEAD"), atomically: true, encoding: .ascii)
+        XCTAssertEqual(BackendController.readCheckoutIdentity(at: checkout), detached)
+    }
+
+    func testCheckoutIdentityRejectsUnsafeOrMalformedHeadReferences() throws {
+        let checkout = try makeCheckout()
+        let head = checkout.appending(path: ".git/HEAD")
+        try "ref: ../../outside\n".write(to: head, atomically: true, encoding: .ascii)
+        XCTAssertEqual(BackendController.readCheckoutIdentity(at: checkout), "unknown")
+        try "not-a-commit\n".write(to: head, atomically: true, encoding: .ascii)
+        XCTAssertEqual(BackendController.readCheckoutIdentity(at: checkout), "unknown")
+    }
+
+    func testCheckoutIdentityReadsLinkedWorktreeGitFileAndCommonRefs() throws {
+        let checkout = try makeCheckout()
+        let metadata = FileManager.default.temporaryDirectory
+            .appending(path: "BackendControllerTests-worktree-\(UUID().uuidString)", directoryHint: .isDirectory)
+        temporaryDirectories.append(metadata)
+        let worktreeGit = metadata.appending(path: "worktrees/test", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: worktreeGit, withIntermediateDirectories: true)
+        try FileManager.default.removeItem(at: checkout.appending(path: ".git"))
+        try "gitdir: \(worktreeGit.path)\n".write(to: checkout.appending(path: ".git"), atomically: true, encoding: .ascii)
+        try "../..\n".write(to: worktreeGit.appending(path: "commondir"), atomically: true, encoding: .ascii)
+        try "ref: refs/heads/worktree\n".write(to: worktreeGit.appending(path: "HEAD"), atomically: true, encoding: .ascii)
+        try FileManager.default.createDirectory(at: metadata.appending(path: "refs/heads"), withIntermediateDirectories: true)
+        let commit = String(repeating: "d", count: 40)
+        try commit.write(to: metadata.appending(path: "refs/heads/worktree"), atomically: true, encoding: .ascii)
+
+        XCTAssertEqual(BackendController.readCheckoutIdentity(at: checkout), commit)
+    }
+
     func testStartTimesOutAndCleansUpItsChild() async throws {
         let process = FakeBackendProcess()
         process.stderrText = "backend startup detail"

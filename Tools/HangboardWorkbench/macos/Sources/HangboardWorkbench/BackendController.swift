@@ -33,6 +33,8 @@ actor BackendController: BackendControlling {
     struct Session: Sendable {
         let id: UUID
         let url: URL
+        let runtimeIdentity: String
+        let checkoutIdentity: String
         let unexpectedExits: AsyncStream<BackendUnexpectedExit>
     }
 
@@ -79,6 +81,7 @@ actor BackendController: BackendControlling {
     private let portSelector: PortSelector
     private let startupTimeout: Duration
     private let pollingInterval: Duration
+    private let runtimeIdentity: String
 
     private final class Child: @unchecked Sendable {
         let id = UUID()
@@ -117,6 +120,7 @@ actor BackendController: BackendControlling {
         self.portSelector = portSelector
         self.startupTimeout = startupTimeout
         self.pollingInterval = pollingInterval
+        self.runtimeIdentity = Self.readRuntimeIdentity(beside: self.executableURL)
     }
 
     func start(repositoryRoot: URL, port requestedPort: UInt16 = 0) async throws -> URL {
@@ -182,6 +186,8 @@ actor BackendController: BackendControlling {
                 return Session(
                     id: launchedChild.id,
                     url: editorURL,
+                    runtimeIdentity: runtimeIdentity,
+                    checkoutIdentity: Self.readCheckoutIdentity(at: repositoryRoot),
                     unexpectedExits: launchedChild.unexpectedExits
                 )
             }
@@ -279,6 +285,85 @@ actor BackendController: BackendControlling {
             throw Error.couldNotSelectPort
         }
         return url
+    }
+
+    private static func readRuntimeIdentity(beside executableURL: URL) -> String {
+        let directory = executableURL.deletingLastPathComponent()
+        let candidates = [
+            directory.appending(path: "build-commit.txt"),
+            directory.appending(path: "_internal/build-commit.txt"),
+        ]
+        for candidate in candidates {
+            if let value = try? String(contentsOf: candidate, encoding: .ascii)
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+               value.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil {
+                return value
+            }
+        }
+        return "unknown"
+    }
+
+    static func readCheckoutIdentity(at repositoryRoot: URL) -> String {
+        guard let gitDirectories = gitDirectories(at: repositoryRoot), let git = gitDirectories.first,
+              let head = readSmallASCII(git.appending(path: "HEAD")) else { return "unknown" }
+        if isCommitIdentity(head) { return head }
+        guard head.hasPrefix("ref: ") else { return "unknown" }
+        let reference = String(head.dropFirst(5))
+        guard isSafeReference(reference) else { return "unknown" }
+        for directory in gitDirectories {
+            if let value = readSmallASCII(directory.appending(path: reference)), isCommitIdentity(value) {
+                return value
+            }
+        }
+        for directory in gitDirectories {
+            guard let packed = readSmallASCII(directory.appending(path: "packed-refs"), trimming: false) else { continue }
+            for line in packed.split(whereSeparator: \.isNewline) {
+                let fields = line.split(separator: " ", maxSplits: 1).map(String.init)
+                if fields.count == 2, fields[1] == reference, isCommitIdentity(fields[0]) { return fields[0] }
+            }
+        }
+        return "unknown"
+    }
+
+    private static func gitDirectories(at repositoryRoot: URL) -> [URL]? {
+        let dotGit = repositoryRoot.appending(path: ".git")
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: dotGit.path, isDirectory: &isDirectory) else { return nil }
+        if isDirectory.boolValue { return [dotGit.standardizedFileURL] }
+
+        guard let pointer = readSmallASCII(dotGit), pointer.hasPrefix("gitdir: ") else { return nil }
+        let rawPath = String(pointer.dropFirst(8))
+        guard !rawPath.isEmpty, !rawPath.contains("\0") else { return nil }
+        let worktreeGit = URL(fileURLWithPath: rawPath, relativeTo: repositoryRoot).standardizedFileURL
+        var directories = [worktreeGit]
+        if let commonPath = readSmallASCII(worktreeGit.appending(path: "commondir")),
+           !commonPath.isEmpty, !commonPath.contains("\0") {
+            directories.append(
+                URL(fileURLWithPath: commonPath, relativeTo: worktreeGit).standardizedFileURL
+            )
+        }
+        return directories
+    }
+
+    private static func readSmallASCII(_ url: URL, trimming: Bool = true) -> String? {
+        guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
+        defer { try? handle.close() }
+        guard let data = try? handle.read(upToCount: 65_537), data.count <= 65_536,
+              var value = String(data: data, encoding: .ascii) else { return nil }
+        if trimming { value = value.trimmingCharacters(in: .whitespacesAndNewlines) }
+        return value
+    }
+
+    private static func isSafeReference(_ reference: String) -> Bool {
+        guard reference.hasPrefix("refs/"), reference.count <= 1024,
+              !reference.contains("\\"), !reference.contains("//") else { return false }
+        return reference.split(separator: "/", omittingEmptySubsequences: false).allSatisfy {
+            !$0.isEmpty && $0 != "." && $0 != ".."
+        }
+    }
+
+    private static func isCommitIdentity(_ value: String) -> Bool {
+        value.range(of: "^[0-9a-f]{40}$", options: .regularExpression) != nil
     }
 
     private static func probeHealth(_ url: URL) async throws -> Bool {
