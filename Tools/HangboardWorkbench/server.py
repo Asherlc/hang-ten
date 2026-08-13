@@ -824,6 +824,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     "boardId": board.board_id,
                     "displayName": board.display_name,
                     "revisionToken": board.revision_token,
+                    "status": board.status,
                 }
                 for board in snapshot.boards
             ]
@@ -845,7 +846,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(
             HTTPStatus.OK,
-            {"ok": True, "boards": boards, "diagnostics": diagnostics},
+            {
+                "ok": True,
+                "boards": boards,
+                "diagnostics": diagnostics,
+            },
         )
 
     def _get_board(self, board_id: str, query: str) -> None:

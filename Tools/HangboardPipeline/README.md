@@ -134,13 +134,12 @@ The canonical package for each board lives under `Hangboards/`:
 - `Hangboards/catalog.json` is the package registry.
 - `Hangboards/<board-folder>/board.json` is that board’s current source of
   truth.
-- Lifecycle values progress as `draft` → `onboarding` → `approved` →
-  `shipped`.
+- Repository status is `draft` for a primary-image-only board and `published`
+  for a complete package registered in `catalog.json`.
 
 Stage output is still written to temporary, ignored run folders first (for
 example under `.context/hangboard-onboarding/...`). Registration only accepts
-symlink-free `.context` runs, advances lifecycle when appropriate, and never
-downgrades a shipped board. Register once a run is intended to be permanent:
+symlink-free `.context` runs. Register once a draft is ready to be published:
 
 ```bash
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
@@ -173,8 +172,9 @@ rtk python Tools/HangboardWorkbench/server.py \
 ```
 
 Open `http://localhost:4173`, then create a board from either an HTTP(S) image
-URL or an image upload. The opening screen also lists valid repository boards;
-select one to open its current committed package for editing. The exact
+URL or an image upload. The opening screen also lists all repository boards;
+select a draft to edit from its primary image or a published board to edit its
+current committed package. The exact
 [package and publication contract is documented in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md),
 which supersedes the prior repository library design. Saving a complete runtime
 revision remains local to the Workbench workspace. Canonical package publication

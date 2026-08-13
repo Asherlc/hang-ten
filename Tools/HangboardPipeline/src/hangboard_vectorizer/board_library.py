@@ -34,6 +34,7 @@ class LibraryBoard:
     display_name: str
     run_path: Path
     revision_token: str
+    status: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -392,6 +393,32 @@ class RepositoryBoardLibrary:
                         catalog_entry.path, error.code, error.message
                     )
                 )
+        registered_paths = {entry.path for entry in catalog.entries}
+        for entry in sorted(self._boards_root.iterdir(), key=lambda path: path.name):
+            if (
+                entry.name in registered_paths
+                or not entry.is_dir()
+                or entry.is_symlink()
+            ):
+                continue
+            assets = entry / "assets"
+            primary = assets / "primary.png"
+            if (
+                assets.is_dir()
+                and not assets.is_symlink()
+                and primary.is_file()
+                and not primary.is_symlink()
+                and primary.resolve().is_relative_to(entry.resolve())
+            ):
+                boards.append(
+                    LibraryBoard(
+                        entry.name,
+                        entry.name,
+                        entry,
+                        sha256(primary.read_bytes()).hexdigest(),
+                        "draft",
+                    )
+                )
         boards.sort(key=lambda board: (board.display_name.casefold(), board.board_id))
         return LibrarySnapshot(tuple(boards), tuple(diagnostics))
 
@@ -405,6 +432,8 @@ class RepositoryBoardLibrary:
     def copy_current_run(self, board_id: str, destination: Path) -> LibraryBoard:
         """Materialize a canonical package into a new editable runtime run."""
         board = self.get_board(board_id)
+        if board.status != "published":
+            raise BoardLibraryError(f"board is not published: {board.board_id}")
         destination = Path(destination)
         if ".." in destination.parts:
             raise BoardLibraryError(
@@ -466,6 +495,7 @@ class RepositoryBoardLibrary:
             display_name,
             package_root,
             self._package_revision_token(package_root),
+            "published",
         )
 
     def _materialize_package_run(self, board: LibraryBoard, destination: Path) -> None:

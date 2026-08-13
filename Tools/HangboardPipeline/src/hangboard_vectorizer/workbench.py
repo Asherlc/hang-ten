@@ -256,9 +256,15 @@ class WorkbenchService:
             previous_active_revision_id = matching_board.active_revision_id
             revision = self.store.create_revision(board.id)
         try:
-            copied_library_board = self.__library.copy_current_run(
-                library_board.board_id, revision.run_root
-            )
+            if library_board.status == "draft":
+                source = library_board.run_path / "assets" / "primary.png"
+                self.__start(board, revision, str(source))
+                cached_source_path(revision.run_root)
+                copied_library_board = library_board
+            else:
+                copied_library_board = self.__library.copy_current_run(
+                    library_board.board_id, revision.run_root
+                )
         except Exception:
             self.__fail_library_open(
                 board,

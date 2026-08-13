@@ -27,10 +27,11 @@ The Compact II audit uses these official sources:
 
 ## 2. Create a flat package and registry entry
 
-Every complete package is a single flat directory below `Hangboards/`. Its
-presence in `catalog.json` is the only runtime publication mechanism; Git
-branches are the only in-progress mechanism. Do not add lifecycle, review,
-confidence, approximation, onboarding, or shipping fields or directories.
+Every board is a single flat directory below `Hangboards/`. A board with only
+`assets/primary.png` is a draft that can be opened in the Workbench. A complete
+package listed in `catalog.json` is published. These are the only two repository
+statuses; do not add lifecycle, review, confidence, approximation, onboarding,
+or shipping fields or directories.
 
 ```text
 Hangboards/
@@ -60,11 +61,12 @@ board. An optional original source image must be a flat `.jpg`, `.jpeg`,
 `.webp`, or `.heic` asset and have an exact package-relative entry in
 `evidence.json.assetEvidence`; it does not establish non-visible hold facts.
 
-An unregistered image candidate contains only `assets/primary.png` and no JSON
-sidecars, README, review directory, outline, or parallel geometry. It is not
-runtime content. Keep research gaps in the branch or a source-audit document,
-then author all four sidecars only when official manufacturer evidence supports
-the board facts, hold semantics, and artwork.
+An unregistered draft board contains only `assets/primary.png` and no JSON
+sidecars, README, review directory, outline, or parallel geometry. It is
+editable Workbench input, but is not published app content. Keep research gaps
+in the branch or a source-audit document, then author all four sidecars only
+when official manufacturer evidence supports the board facts, hold semantics,
+and artwork.
 
 Every registered package requires nonempty HTTPS evidence sources, an ISO
 `checkedAt` date, and exact evidence mappings for each factual field, hold
@@ -78,7 +80,7 @@ scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 ```
 
 The importer keeps generated catalog images as unregistered, primary-only
-candidates. Its historical rationale is recorded in
+draft boards. Its historical rationale is recorded in
 [the catalog history](history/HANGBOARD_GENERATIVE_CATALOG.md); that material
 is not active package evidence or runtime input.
 
@@ -124,7 +126,7 @@ the app or the canonical registry.
   `assets/primary.png`, and at most one evidence-covered original source photo.
 - It has one registry entry only after source-backed metadata, semantics, and
   artwork pass catalog validation.
-- Unregistered candidates remain primary-only with no app/package review state.
+- Draft boards remain primary-only with no app/package review state.
 - The app build stages only registered package directories.
 - Portrait and landscape normal and active hold states are inspected on the
   dedicated simulator before shipping.
