@@ -28,16 +28,85 @@ test("the inspector keeps direct correction controls visible while Advanced tool
   assert.match(app, /advanced-tools"\]\.classList\.toggle\("hidden", !state\.advancedToolsOpen \|\| !region\)/);
 });
 
-test("E toggles Advanced tools outside text fields", () => {
-  const keydown = app.slice(
-    app.indexOf('window.addEventListener("keydown"'),
-    app.indexOf('window.addEventListener("keyup"'),
+test("E opens and closes Advanced tools but ignores focused form controls", () => {
+  const handlerStart = app.indexOf('window.addEventListener("keydown", (event) => {');
+  const handlerEnd = app.indexOf('window.addEventListener("keyup"', handlerStart);
+  assert.notEqual(handlerStart, -1);
+  assert.notEqual(handlerEnd, -1);
+  const listeners = {};
+  const state = {
+    drawing: false,
+    spacePressed: false,
+    mirrorOntoSourceId: null,
+    inspectorDrawerOpen: false,
+    selectedId: 4,
+    advancedToolsOpen: false,
+    panSession: null,
+    primitiveSession: null,
+    dragSession: null,
+    handleSession: null,
+    edgeSession: null,
+    transformSession: null,
+  };
+  const expandedValues = [];
+  let inspectorRenders = 0;
+  let toolStateRenders = 0;
+  const context = {
+    document: { activeElement: { tagName: "DIV" } },
+    state,
+    el: {
+      "advanced-tools-toggle": {
+        setAttribute: (name, value) => expandedValues.push([name, value]),
+      },
+    },
+    selectedRegion: () => ({ id: state.selectedId }),
+    renderInspector: () => { inspectorRenders += 1; },
+    renderToolState: () => { toolStateRenders += 1; },
+    window: { addEventListener: (name, callback) => { listeners[name] = callback; } },
+    trapInspectorDrawerFocus: () => {},
+    clearSelection: () => {},
+    cancelDraw: () => {},
+    cancelPointerSessions: () => {},
+    closeInspectorDrawer: () => {},
+    deleteSelectedFreeformVertex: () => false,
+    deleteSelected: () => {},
+    finishDraw: () => {},
+    redo: () => {},
+    undo: () => {},
+    navigateRegion: () => {},
+    mirrorSelectedCopy: () => {},
+    toggleEdgeSnapping: () => {},
+    render: () => {},
+    setStatus: () => {},
+  };
+  vm.runInNewContext(
+    `${extractFunction(app, "setAdvancedToolsOpen")}\n${app.slice(handlerStart, handlerEnd)}`,
+    context,
   );
+  const dispatchE = () => listeners.keydown({
+    key: "e",
+    code: "KeyE",
+    preventDefault: () => {},
+    ctrlKey: false,
+    metaKey: false,
+    shiftKey: false,
+  });
 
-  assert.match(
-    keydown,
-    /event\.key\.toLowerCase\(\) === "e"[\s\S]*setAdvancedToolsOpen\(!state\.advancedToolsOpen\)/,
-  );
+  dispatchE();
+  assert.equal(state.advancedToolsOpen, true);
+  dispatchE();
+  assert.equal(state.advancedToolsOpen, false);
+  assert.deepEqual(expandedValues, [["aria-expanded", "true"], ["aria-expanded", "false"]]);
+  assert.equal(inspectorRenders, 2);
+  assert.equal(toolStateRenders, 2);
+
+  for (const tagName of ["INPUT", "TEXTAREA", "SELECT"]) {
+    context.document.activeElement = { tagName };
+    dispatchE();
+  }
+  assert.equal(state.advancedToolsOpen, false);
+  assert.equal(inspectorRenders, 2);
+  assert.equal(toolStateRenders, 2);
 });
 
 test("starting an edge session records its pointer and edge without mutating curves", () => {
