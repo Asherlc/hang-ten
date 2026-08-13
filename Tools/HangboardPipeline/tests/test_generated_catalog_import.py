@@ -103,10 +103,20 @@ def test_repository_generated_packages_are_primary_only_and_unregistered() -> No
 
     for slug in unregistered:
         package = REPO_ROOT / "Hangboards" / slug
-        assert (package / "assets/primary.png").is_file()
-        assert not (package / "README.md").exists()
-        assert not (package / "review").exists()
-        assert not (package / "outline.json").exists()
-        assert not (package / "outline.approx.json").exists()
-        assert list(package.glob("*.json")) == []
-        assert sorted(path.name for path in (package / "assets").iterdir()) == ["primary.png"]
+        relative_paths = {
+            path.relative_to(package).as_posix() for path in package.rglob("*")
+        }
+        relative_files = {
+            path.relative_to(package).as_posix()
+            for path in package.rglob("*")
+            if path.is_file()
+        }
+        relative_directories = {
+            path.relative_to(package).as_posix()
+            for path in package.rglob("*")
+            if path.is_dir()
+        }
+
+        assert relative_paths == {"assets", "assets/primary.png"}
+        assert relative_files == {"assets/primary.png"}
+        assert relative_directories == {"assets"}

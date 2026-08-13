@@ -75,6 +75,14 @@ def _copy_valid_package(destination: Path, board_id: str) -> None:
         path.write_text(json.dumps(document), encoding="utf-8")
 
 
+def _set_package_subtitle(package_root: Path, subtitle: str) -> None:
+    """Create a legal, observable revision without adding package artifacts."""
+    path = package_root / "board.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    document["subtitle"] = subtitle
+    path.write_text(json.dumps(document), encoding="utf-8")
+
+
 def test_checkout_repository_library_discovers_compact_ii() -> None:
     repository_root = Path(__file__).resolve().parents[3]
 
@@ -210,7 +218,6 @@ def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
     invalid_candidate = candidates / "invalid-approved"
     valid_candidate = candidates / "valid-board"
     invalid_candidate.mkdir(parents=True)
-    (invalid_candidate / "incomplete.txt").write_text("invalid", encoding="utf-8")
     _copy_valid_package(valid_candidate, "example.valid-board")
 
     actual_copytree = workbench_promotion.shutil.copytree
@@ -270,7 +277,7 @@ def test_package_publication_replaces_a_matching_canonical_package(
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
-    (destination / "old-revision.txt").write_text("old revision", encoding="utf-8")
+    _set_package_subtitle(destination, "Previous canonical revision")
     (hangboards / "catalog.json").write_text(
         json.dumps(
             {
@@ -302,7 +309,6 @@ def test_package_publication_replaces_a_matching_canonical_package(
             "path": "compact-ii",
         }
     ]
-    assert not (destination / "old-revision.txt").exists()
     assert (destination / "board.json").read_bytes() == (
         candidate / "board.json"
     ).read_bytes()
@@ -316,7 +322,7 @@ def test_package_publication_atomically_updates_an_existing_revision(
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
-    (destination / "old-revision.txt").write_text("old", encoding="utf-8")
+    _set_package_subtitle(destination, "Previous canonical revision")
     (hangboards / "catalog.json").write_text(
         json.dumps(
             {
@@ -334,7 +340,7 @@ def test_package_publication_atomically_updates_an_existing_revision(
     )
     candidate = tmp_path / "candidate" / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
-    (candidate / "new-revision.txt").write_text("new", encoding="utf-8")
+    _set_package_subtitle(candidate, "New candidate revision")
 
     workbench_promotion.publish_package_candidate(
         repository_root,
@@ -348,8 +354,9 @@ def test_package_publication_atomically_updates_an_existing_revision(
         "id": "metolius.wood-grips-compact-ii",
         "path": "compact-ii",
     }
-    assert not (destination / "old-revision.txt").exists()
-    assert (destination / "new-revision.txt").read_text() == "new"
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "New candidate revision"
+    )
 
 
 def test_failed_existing_package_revision_preserves_package_and_catalog(
@@ -360,7 +367,7 @@ def test_failed_existing_package_revision_preserves_package_and_catalog(
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
-    (destination / "old-revision.txt").write_text("old", encoding="utf-8")
+    _set_package_subtitle(destination, "Previous canonical revision")
     catalog_path = hangboards / "catalog.json"
     catalog_bytes = (
         json.dumps(
@@ -390,7 +397,9 @@ def test_failed_existing_package_revision_preserves_package_and_catalog(
         )
 
     assert catalog_path.read_bytes() == catalog_bytes
-    assert (destination / "old-revision.txt").read_text() == "old"
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "Previous canonical revision"
+    )
     assert (destination / "evidence.json").is_file()
 
 
@@ -409,7 +418,7 @@ def test_package_publication_rejects_id_or_path_aliases(
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
-    (destination / "prior.txt").write_text("old", encoding="utf-8")
+    _set_package_subtitle(destination, "Previous canonical revision")
     catalog_path = hangboards / "catalog.json"
     catalog_path.write_text(
         json.dumps(
@@ -427,8 +436,7 @@ def test_package_publication_rejects_id_or_path_aliases(
         encoding="utf-8",
     )
     candidate = tmp_path / "candidate" / candidate_slug
-    candidate.mkdir(parents=True)
-    (candidate / "draft.txt").write_text("new", encoding="utf-8")
+    _copy_valid_package(candidate, board_id)
 
     with pytest.raises(ValueError, match="catalog already contains"):
         workbench_promotion.publish_package_candidate(
@@ -438,7 +446,9 @@ def test_package_publication_rejects_id_or_path_aliases(
         )
 
     assert json.loads(catalog_path.read_text())["boards"][0]["path"] == "compact-ii"
-    assert (destination / "prior.txt").read_text() == "old"
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "Previous canonical revision"
+    )
 
 
 def test_final_save_never_publishes_into_the_legacy_repository_library(
