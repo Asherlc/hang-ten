@@ -7,8 +7,8 @@ on:
     paths:
       - HangTen/**
       - HangTen.xcodeproj/**
-      - scripts/export-board-catalog.py
-      - scripts/export-board-library.py
+      - scripts/hangboard-tools.sh
+      - scripts/stage-approved-board-packages.py
       - Tools/HangboardPipeline/**
       - Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml
@@ -18,8 +18,8 @@ on:
     paths:
       - HangTen/**
       - HangTen.xcodeproj/**
-      - scripts/export-board-catalog.py
-      - scripts/export-board-library.py
+      - scripts/hangboard-tools.sh
+      - scripts/stage-approved-board-packages.py
       - Tools/HangboardPipeline/**
       - Tools/HangboardWorkbench/**
       - .github/workflows/codeql.yml

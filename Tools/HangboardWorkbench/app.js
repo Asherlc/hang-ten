@@ -46,7 +46,6 @@
     selectTool: selectSuiteTool,
   } = globalThis.HoldWorkbenchSuiteModel;
   const { createToolSuiteController } = globalThis.HoldWorkbenchSuiteController;
-  const { createPromotionController, renderPromotionView } = globalThis.HoldPromotionView;
   const {
     createValidationController,
     renderValidationView,
@@ -107,7 +106,6 @@
     onError: handleAutosaveError,
   });
   let suiteController = null;
-  let promotionController = null;
   let validationController = null;
 
   const TYPE_COLORS = {
@@ -197,8 +195,8 @@
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "static-load-controls",
-    "onboard-view", "inspect-view", "promote-view", "validate-view", "tool-suite-sidebar",
-    "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
+    "onboard-view", "inspect-view", "validate-view", "tool-suite-sidebar",
+    "tool-onboard", "tool-inspect", "tool-validate",
     "active-board-card", "active-board-name", "active-board-revision", "active-board-readiness",
     "inspect-board-preview", "inspect-artifact-links", "inspect-hold-inventory", "inspect-approval-status", "inspect-readiness", "inspect-next-action",
     "validation-refresh-button", "validation-run-button", "validation-simulator-uuid", "validation-copy-commands-button",
@@ -392,7 +390,7 @@
     return item;
   }
 
-  function renderInspectView(suite, promotion = null) {
+  function renderInspectView(suite) {
     const board = suite.activeBoard;
     el["inspect-board-preview"].replaceChildren();
     el["inspect-artifact-links"].replaceChildren();
@@ -436,12 +434,6 @@
       );
       appendInspectText(el["inspect-approval-status"], `Revision ${board.revisionId} · ${String(board.state || "unknown").replaceAll("_", " ")}`);
     }
-    const profile = promotion?.profile || {};
-    document.querySelectorAll("[data-board-info-field]").forEach((input) => {
-      const field = input.dataset.boardInfoField;
-      if (document.activeElement !== input) input.value = String(profile[field] ?? "");
-      input.disabled = !board || Boolean(promotion?.busy);
-    });
     appendInspectText(el["inspect-readiness"], `${suite.readiness.label}: continue with ${suite.readiness.nextTool}.`);
     el["inspect-next-action"].textContent = `Open ${suite.readiness.nextTool[0].toUpperCase()}${suite.readiness.nextTool.slice(1)}`;
     el["inspect-next-action"].disabled = !board;
@@ -463,14 +455,7 @@
     el["active-board-revision"].textContent = board ? `Revision ${suite.activeRevision}` : "Choose a board to begin.";
     el["active-board-readiness"].textContent = suite.readiness.label;
     el["active-board-readiness"].className = `readiness-badge ${suite.readiness.status}`;
-    const promotion = promotionController ? promotionController.getState() : null;
-    renderInspectView(suite, promotion);
-    if (promotionController) {
-      renderPromotionView(el["promote-view"], {
-        suite,
-        promotion,
-      });
-    }
+    renderInspectView(suite);
     if (validationController) {
       renderValidationView(el["validate-view"], {
         suite,
@@ -3109,20 +3094,6 @@
     },
     initialState: state.suiteState,
   });
-  promotionController = createPromotionController({
-    client: workbenchClient,
-    getSuiteState: () => suiteController.getState(),
-    onPromotion(promotion) {
-      suiteController.setResults({ promotion });
-    },
-    render(promotion) {
-      renderInspectView(state.suiteState, promotion);
-      renderPromotionView(el["promote-view"], {
-        suite: state.suiteState,
-        promotion,
-      });
-    },
-  });
   validationController = createValidationController({
     client: workbenchClient,
     getSuiteState: () => suiteController.getState(),
@@ -3141,21 +3112,6 @@
   });
   el["inspect-next-action"].addEventListener("click", () => {
     suiteController.selectTool(state.suiteState.readiness.nextTool);
-  });
-  document.querySelectorAll("[data-board-info-field]").forEach((input) => {
-    input.addEventListener("input", () => promotionController.setProfileField(
-      input.dataset.boardInfoField,
-      input.value,
-    ));
-  });
-  document.getElementById("promotion-preview-button").addEventListener("click", () => {
-    void promotionController.generatePreview();
-  });
-  document.getElementById("promotion-refresh-button").addEventListener("click", () => {
-    void promotionController.refreshPreview();
-  });
-  document.getElementById("promotion-save-button").addEventListener("click", () => {
-    void promotionController.saveLocally();
   });
   el["validation-refresh-button"].addEventListener("click", () => {
     void validationController.loadCachedReport();

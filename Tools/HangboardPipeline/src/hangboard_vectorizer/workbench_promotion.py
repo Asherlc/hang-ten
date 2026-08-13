@@ -4,22 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
-import math
 import os
 from pathlib import Path
 import shutil
-from typing import Any, Mapping
 from uuid import uuid4
 
 from .board_library import RepositoryBoardLibrary
 from .board_catalog import load_approved_package, validate_catalog
-from .ios_promotion import (
-    IosPromotionProfile,
-    PromotionPreview,
-    PromotionSaveResult,
-    build_promotion_preview,
-    save_promotion_preview,
-)
 
 
 _PACKAGE_STATUSES = frozenset({"draft", "approved"})
@@ -114,83 +105,6 @@ def _require_regular_tree(root: Path) -> None:
     for item in (root, *root.rglob("*")):
         if item.is_symlink():
             raise ValueError(f"package candidate contains a symlink: {item}")
-
-
-def profile_from_payload(value: object) -> IosPromotionProfile:
-    """Decode the explicit client-supplied profile without writing a run artifact."""
-    if not isinstance(value, Mapping):
-        raise ValueError("profile must be an object")
-    expected = {
-        "schemaVersion",
-        "boardID",
-        "manufacturer",
-        "name",
-        "subtitle",
-        "dimensions",
-        "aspectRatio",
-        "productURL",
-    }
-    if set(value) != expected:
-        raise ValueError("profile has unsupported or missing fields")
-    if value["schemaVersion"] != 1:
-        raise ValueError("unsupported iOS promotion profile schemaVersion")
-    string_fields = {
-        "boardID": "board_id",
-        "manufacturer": "manufacturer",
-        "name": "name",
-        "subtitle": "subtitle",
-        "dimensions": "dimensions",
-        "productURL": "product_url",
-    }
-    decoded: dict[str, Any] = {"schema_version": 1}
-    for source, destination in string_fields.items():
-        field = value[source]
-        if not isinstance(field, str) or not field.strip():
-            raise ValueError(f"profile {source} must be a non-empty string")
-        decoded[destination] = field.strip()
-    aspect_ratio = value["aspectRatio"]
-    if (
-        isinstance(aspect_ratio, bool)
-        or not isinstance(aspect_ratio, (int, float))
-        or not math.isfinite(aspect_ratio)
-        or aspect_ratio <= 0
-    ):
-        raise ValueError("profile aspectRatio must be finite positive")
-    decoded["aspect_ratio"] = float(aspect_ratio)
-    decoded["_source_bytes"] = json.dumps(
-        dict(value), sort_keys=True, separators=(",", ":"), ensure_ascii=False
-    ).encode("utf-8")
-    return IosPromotionProfile(**decoded)
-
-
-def preview_for_revision(
-    library: RepositoryBoardLibrary,
-    run_root: Path,
-    profile: IosPromotionProfile,
-    *,
-    base_ref: str,
-) -> PromotionPreview:
-    """Render a preview against the exact repository that owns the package."""
-    return build_promotion_preview(
-        run_root,
-        _repository_root(library),
-        profile,
-        expected_base_ref=base_ref,
-    )
-
-
-def save_for_revision(
-    library: RepositoryBoardLibrary,
-    preview: PromotionPreview,
-    *,
-    expected_preview_token: str,
-) -> PromotionSaveResult:
-    """Persist a verified preview only after its target fingerprints still match."""
-    return save_promotion_preview(
-        preview,
-        _repository_root(library),
-        expected_preview_token=expected_preview_token,
-    )
 
 
 def repository_root(library: RepositoryBoardLibrary) -> Path:

@@ -10,7 +10,6 @@
     Object.freeze({ checkId: "hold-id-parity", label: "Hold-ID parity", fallback: "Hold-ID parity has not run." }),
     Object.freeze({ checkId: "semantic-routine-resolution", label: "Semantic routine resolution", fallback: "Semantic routine resolution has not run." }),
     Object.freeze({ checkId: "plan-library", label: "Plan library freshness", fallback: "Plan library freshness has not run." }),
-    Object.freeze({ checkId: "promotion-status", label: "Promotion status", fallback: "No local iOS promotion has been saved for this revision." }),
   ]);
   const STATUS_LABELS = Object.freeze({
     passed: "Passed",
@@ -24,27 +23,12 @@
     return Object.hasOwn(STATUS_LABELS, status) ? status : "not_run";
   }
 
-  function promotionCheck(promotion, revisionId) {
-    if (promotion?.revisionId && promotion.revisionId !== revisionId) {
-      return { checkId: "promotion-status", status: "stale", message: "The promotion result belongs to a different board revision.", details: [] };
-    }
-    if (promotion?.saved === true) {
-      return { checkId: "promotion-status", status: "passed", message: "The reviewed iOS changes were saved locally.", details: [] };
-    }
-    if (Array.isArray(promotion?.issues) && promotion.issues.length) {
-      return { checkId: "promotion-status", status: "failed", message: "Promotion has unresolved local validation or conflict issues.", details: [] };
-    }
-    return { checkId: "promotion-status", status: "not_run", message: "No local iOS promotion has been saved for this revision.", details: [] };
-  }
-
-  function validationChecks(report = null, promotion = null) {
-    const revisionId = report?.revisionId || promotion?.revisionId || null;
+  function validationChecks(report = null) {
     const reported = new Map(
       Array.isArray(report?.checks)
         ? report.checks.filter((check) => check && typeof check.checkId === "string").map((check) => [check.checkId, check])
         : [],
     );
-    reported.set("promotion-status", promotionCheck(promotion, revisionId));
     return CHECKS.map(({ checkId, label, fallback }) => {
       const check = reported.get(checkId);
       return {
@@ -65,10 +49,10 @@
     return node;
   }
 
-  function renderValidationReport(container, report = null, promotion = null) {
+  function renderValidationReport(container, report = null) {
     if (!container) return;
     container.replaceChildren();
-    validationChecks(report, promotion).forEach((check) => {
+    validationChecks(report).forEach((check) => {
       const card = container.ownerDocument.createElement("article");
       card.className = `validation-check ${check.status}`;
       const heading = container.ownerDocument.createElement("div");
@@ -275,7 +259,7 @@
       commandError.classList.toggle("error", Boolean(simulatorError));
     }
     if (copyButton) copyButton.disabled = !commands;
-    renderValidationReport(checks, report, suite?.promotion || null);
+    renderValidationReport(checks, report);
   }
 
   return Object.freeze({

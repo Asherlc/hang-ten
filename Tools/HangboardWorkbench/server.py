@@ -456,10 +456,6 @@ def _workbench_view_payload(view: object) -> dict[str, Any]:
 
 def _workbench_job_payload(result: object) -> object:
     """Serialize the small set of workbench result contracts exposed to browsers."""
-    from hangboard_vectorizer.ios_promotion import (
-        PromotionPreview,
-        PromotionSaveResult,
-    )
     from hangboard_vectorizer.workbench import WorkbenchView
     from hangboard_vectorizer.workbench_promotion import PackagePublication
     from hangboard_vectorizer.workbench_validation import ValidationReport
@@ -468,33 +464,6 @@ def _workbench_job_payload(result: object) -> object:
         return _workbench_view_payload(result)
     if isinstance(result, PackagePublication):
         return {"paths": [path.as_posix() for path in result.paths]}
-    if isinstance(result, PromotionPreview):
-        return {
-            "boardId": result.board_id,
-            "revisionToken": result.revision_token,
-            "baseRef": result.base_ref,
-            "files": [
-                {
-                    "path": item.path,
-                    "currentText": item.current_text,
-                    "proposedText": item.proposed_text,
-                    "unifiedDiff": item.unified_diff,
-                }
-                for item in result.files
-            ],
-            "issues": [
-                {"code": item.code, "path": item.path, "message": item.message}
-                for item in result.issues
-            ],
-            "previewToken": result.preview_token,
-        }
-    if isinstance(result, PromotionSaveResult):
-        return {
-            "boardId": result.board_id,
-            "revisionId": result.revision_id,
-            "saved": result.saved,
-            "paths": list(result.paths),
-        }
     if isinstance(result, ValidationReport):
         return {
             "boardId": result.board_id,
@@ -601,19 +570,16 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/boards":
             self._get_boards()
             return
-        if path.startswith("/api/boards/") and path.endswith("/promotion"):
-            self._get_promotion(
-                unquote(path.removeprefix("/api/boards/").removesuffix("/promotion")),
-                request.query,
-            )
-            return
         if path.startswith("/api/boards/") and path.endswith("/validation"):
             self._get_validation(
                 unquote(path.removeprefix("/api/boards/").removesuffix("/validation")),
                 request.query,
             )
             return
-        if path.startswith("/api/boards/"):
+        if (
+            path.startswith("/api/boards/")
+            and "/" not in path.removeprefix("/api/boards/")
+        ):
             self._get_board(unquote(path.removeprefix("/api/boards/")), request.query)
             return
         if path.startswith("/api/jobs/"):
@@ -734,25 +700,17 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if request.path == "/api/package-candidates":
                 self._post_package_candidate(service, payload)
                 return
-            if request.path.startswith("/api/boards/") and request.path.endswith("/promotion/preview"):
-                board_id = unquote(
-                    request.path.removeprefix("/api/boards/").removesuffix("/promotion/preview")
-                )
-                self._post_promotion(service, board_id, payload, save=False)
-                return
-            if request.path.startswith("/api/boards/") and request.path.endswith("/promotion/save"):
-                board_id = unquote(
-                    request.path.removeprefix("/api/boards/").removesuffix("/promotion/save")
-                )
-                self._post_promotion(service, board_id, payload, save=True)
-                return
             if request.path.startswith("/api/boards/") and request.path.endswith("/validation/run"):
                 board_id = unquote(
                     request.path.removeprefix("/api/boards/").removesuffix("/validation/run")
                 )
                 self._post_validation(service, board_id, payload)
                 return
-            if request.path.startswith("/api/boards/") and request.path.endswith("/save"):
+            if (
+                request.path.startswith("/api/boards/")
+                and request.path.endswith("/save")
+                and "/" not in request.path.removeprefix("/api/boards/").removesuffix("/save")
+            ):
                 board_id = unquote(
                     request.path.removeprefix("/api/boards/").removesuffix("/save")
                 )
@@ -913,38 +871,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             )
             return
         self._send_json(HTTPStatus.OK, {"ok": True, "board": board})
-
-    def _get_promotion(self, board_id: str, query: str) -> None:
-        try:
-            if not board_id:
-                raise RequestError(HTTPStatus.NOT_FOUND, "not found")
-            revision_id = self._required_query_string(parse_qs(query), "revisionId")
-            preview = self._workbench_service().get_promotion_preview(
-                board_id, expected_revision_id=revision_id
-            )
-        except RequestError as error:
-            self._send_json(error.status, {"ok": False, "error": str(error)})
-            return
-        except self._public_error_types() as error:
-            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
-            return
-        except Exception:
-            self._send_json(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                {"ok": False, "error": "request failed"},
-            )
-            return
-        self._send_json(
-            HTTPStatus.OK,
-            {
-                "ok": True,
-                "boardId": board_id,
-                "revisionId": revision_id,
-                "preview": (
-                    None if preview is None else _workbench_job_payload(preview)
-                ),
-            },
-        )
 
     def _get_validation(self, board_id: str, query: str) -> None:
         try:
@@ -1135,47 +1061,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 Path(candidate_path), board_id=board_id, status=status
             ),
             conflict_key=f"package:{board_id}",
-        )
-
-    def _post_promotion(
-        self, service: object, board_id: str, payload: dict[str, Any], *, save: bool
-    ) -> None:
-        if not board_id:
-            raise RequestError(HTTPStatus.NOT_FOUND, "not found")
-        if self._required_string(payload, "boardId") != board_id:
-            raise RequestError(
-                HTTPStatus.BAD_REQUEST, "boardId must match the promotion route"
-            )
-        revision_id = self._required_string(payload, "expectedRevisionId")
-        try:
-            from hangboard_vectorizer.workbench_promotion import profile_from_payload
-
-            profile = profile_from_payload(payload.get("profile"))
-        except ValueError as error:
-            raise RequestError(HTTPStatus.BAD_REQUEST, str(error)) from error
-        if save:
-            preview_token = self._required_string(payload, "previewToken")
-            operation = lambda: service.save_promotion(
-                board_id,
-                expected_revision_id=revision_id,
-                profile=profile,
-                preview_token=preview_token,
-            )
-        else:
-            base_ref = payload.get("baseRef", "main")
-            if not isinstance(base_ref, str) or not base_ref.strip():
-                raise RequestError(HTTPStatus.BAD_REQUEST, "baseRef must be a non-empty string")
-            operation = lambda: service.preview_promotion(
-                board_id,
-                expected_revision_id=revision_id,
-                profile=profile,
-                base_ref=base_ref.strip(),
-            )
-        self._submit_job(
-            board_id,
-            operation,
-            conflict_key=service.mutation_reservation_key(board_id),
-            include_board_id=True,
         )
 
     def _post_validation(

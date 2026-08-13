@@ -8,7 +8,6 @@ from io import BytesIO
 import json
 from pathlib import Path
 import shutil
-import subprocess
 from threading import Event, Lock
 
 from PIL import Image
@@ -17,7 +16,6 @@ import pytest
 
 import hangboard_vectorizer.workbench as workbench_module
 from hangboard_vectorizer.board_library import (
-    BoardLibraryError,
     LibraryBoard,
     RepositoryBoardLibrary,
 )
@@ -39,7 +37,6 @@ import hangboard_vectorizer.workbench_promotion as workbench_promotion
 from hangboard_vectorizer.workbench_store import (
     BoardRecord,
     WorkbenchStore,
-    WorkbenchStoreError,
 )
 
 
@@ -122,6 +119,25 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
         relative: (repository_root / relative).read_text(encoding="utf-8")
         for relative in legacy_targets
     } == legacy_targets
+
+
+def test_final_save_never_publishes_into_the_legacy_repository_library(
+    tmp_path: Path,
+) -> None:
+    """Reintroducing ``library.publish`` would make local save mutate app artifacts."""
+    library = _empty_repository_library(tmp_path / "repository")
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    complete = _complete_runtime_board(service, "Example Board")
+
+    saved = service.save(
+        complete.board_id,
+        expected_revision_id=complete.revision_id,
+    )
+
+    assert saved.saved is True
+    assert saved.repository_board_id is None
+    assert saved.repository_revision_token is None
+    assert library.snapshot().boards == ()
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
@@ -564,270 +580,6 @@ def test_open_library_board_scans_runtime_boards_once(
     assert scan_count == 1
 
 
-def test_save_repository_conflict_leaves_runtime_revision_unsaved(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    opened = service.open_library_board(entry.board_id)
-    changed = _complete_runtime_board(
-        _fixture_service(tmp_path / "changed-seed"),
-        entry.display_name,
-        color=(90, 110, 130),
-    )
-    library.publish(
-        run_root=changed.run_root,
-        board_id=entry.board_id,
-        expected_revision_token=entry.revision_token,
-    )
-
-    with pytest.raises(BoardLibraryError, match="publication conflict"):
-        service.save(
-            opened.board_id, expected_revision_id=opened.revision_id
-        )
-
-    runtime_board = service.store.read_board(opened.board_id)
-    assert runtime_board.saved_revision_id is None
-    assert runtime_board.repository_revision_token == entry.revision_token
-
-
-def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    entries = library.snapshot().boards
-    assert [(entry.board_id, entry.display_name) for entry in entries] == [
-        (saved.repository_board_id, complete.product_name)
-    ]
-    assert saved.repository_revision_token == entries[0].revision_token
-    assert saved.saved is True
-
-
-def test_save_existing_board_uses_expected_repository_revision_token(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    expected_tokens = []
-    actual_publish = library.publish
-
-    def record_expected_token(
-        *,
-        run_root: Path,
-        board_id: str | None,
-        expected_revision_token: str | None,
-    ):
-        expected_tokens.append(expected_revision_token)
-        return actual_publish(
-            run_root=run_root,
-            board_id=board_id,
-            expected_revision_token=expected_revision_token,
-        )
-
-    monkeypatch.setattr(library, "publish", record_expected_token)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    assert saved.repository_revision_token != entry.revision_token
-    assert expected_tokens == [entry.revision_token]
-
-
-def test_stale_active_revision_is_rejected_before_repository_publication(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-    service.store.mark_descendants_stale(
-        complete.board_id, complete.revision_id, from_stage=3
-    )
-    actual_publish = library.publish
-    publish_calls = 0
-
-    def record_publish(*args: object, **kwargs: object):
-        nonlocal publish_calls
-        publish_calls += 1
-        return actual_publish(*args, **kwargs)
-
-    monkeypatch.setattr(library, "publish", record_publish)
-
-    with pytest.raises(WorkbenchStoreError, match="stale"):
-        service.save(complete.board_id, expected_revision_id=complete.revision_id)
-
-    assert publish_calls == 0
-    assert library.snapshot().boards == ()
-
-
-def test_unknown_legacy_repository_token_fails_safe_on_changed_save(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    workspace = tmp_path / "workspace"
-    service = _fixture_service(workspace, library=library)
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    manifest_path = workspace / "boards" / opened.board_id / "board.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["schemaVersion"] = 1
-    manifest["repositoryVersionId"] = "revision-0001"
-    manifest.pop("repositoryRevisionToken")
-    _write_json(manifest_path, manifest)
-    legacy_service = _fixture_service(workspace, library=library)
-
-    with pytest.raises(BoardLibraryError, match="publication conflict"):
-        legacy_service.save(
-            complete.board_id,
-            expected_revision_id=complete.revision_id,
-        )
-
-    persisted = legacy_service.store.read_board(complete.board_id)
-    assert persisted.saved_revision_id is None
-    assert persisted.repository_board_id == entry.board_id
-    assert persisted.repository_revision_token is None
-
-
-@pytest.mark.parametrize("existing_board", (False, True))
-def test_save_retry_reconciles_publication_after_atomic_runtime_update_failure(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    existing_board: bool,
-) -> None:
-    if existing_board:
-        library, entry = _repository_library(tmp_path)
-        service = _fixture_service(tmp_path / "workspace", library=library)
-        complete = service.open_library_board(entry.board_id)
-    else:
-        library = _empty_repository_library(tmp_path / "repository")
-        service = _fixture_service(tmp_path / "workspace", library=library)
-        complete = _complete_runtime_board(service, "Example Board")
-    actual_publish = service.store.publish_repository_revision
-    attempts = 0
-
-    def fail_once(*args: object, **kwargs: object):
-        nonlocal attempts
-        attempts += 1
-        if attempts == 1:
-            raise OSError("runtime publication update interrupted")
-        return actual_publish(*args, **kwargs)
-
-    monkeypatch.setattr(service.store, "publish_repository_revision", fail_once)
-    with pytest.raises(OSError, match="runtime publication update interrupted"):
-        service.save(complete.board_id, expected_revision_id=complete.revision_id)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-    repository_board = library.get_board(saved.repository_board_id)
-    assert saved.saved is True
-    assert len(library.snapshot().boards) == 1
-    assert repository_board.revision_token == saved.repository_revision_token
-
-
-def test_independent_workspaces_with_identical_local_ids_conflict_on_save(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    first_service = _fixture_service(tmp_path / "workspace-a", library=library)
-    second_service = _fixture_service(tmp_path / "workspace-b", library=library)
-    first_opened = first_service.open_library_board(entry.board_id)
-    second_opened = second_service.open_library_board(entry.board_id)
-    first_complete = _approve_to_completion(
-        first_service,
-        first_service.revise_stage(
-            first_opened.board_id,
-            stage=3,
-            expected_revision_id=first_opened.revision_id,
-        ),
-    )
-    second_complete = _approve_to_completion(
-        second_service,
-        second_service.revise_stage(
-            second_opened.board_id,
-            stage=3,
-            expected_revision_id=second_opened.revision_id,
-        ),
-    )
-    assert (first_complete.board_id, first_complete.revision_id) == (
-        second_complete.board_id,
-        second_complete.revision_id,
-    )
-
-    first_service.save(
-        first_complete.board_id,
-        expected_revision_id=first_complete.revision_id,
-    )
-
-    with pytest.raises(BoardLibraryError, match="conflict"):
-        second_service.save(
-            second_complete.board_id,
-            expected_revision_id=second_complete.revision_id,
-        )
-
-
-def test_repository_save_uses_one_combined_runtime_metadata_update(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-
-    def reject_legacy_update(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("split repository metadata update was used")
-
-    monkeypatch.setattr(service.store, "link_repository_revision", reject_legacy_update)
-    monkeypatch.setattr(service.store, "save_revision", reject_legacy_update)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    assert saved.saved is True
-    assert saved.repository_board_id == "example-board"
-
-
-@pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)
-def test_product_neutral_repository_replay(
-    tmp_path: Path,
-    product_name: str,
-    color: tuple[int, int, int],
-    region_keys: tuple[str, ...],
-) -> None:
-    library, entry = _repository_library(
-        tmp_path, product_name=product_name, color=color, region_keys=region_keys
-    )
-    service = _fixture_service(
-        tmp_path / "workspace", region_keys=region_keys, library=library
-    )
-
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-    reopened = service.open_library_board(entry.board_id)
-
-    assert saved.repository_revision_token != entry.revision_token
-    assert reopened.repository_revision_token == saved.repository_revision_token
-
-
 def test_revision_replays_hash_bound_file_semantic_proposal_into_child_run(
     tmp_path: Path,
 ) -> None:
@@ -1211,41 +963,6 @@ def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
     library_root = root / "Tools" / "HangboardPipeline" / "boards"
     library_root.mkdir(parents=True)
     return RepositoryBoardLibrary(root)
-
-
-def _promotion_repository(tmp_path: Path) -> Path:
-    repository_root = tmp_path / "repository"
-    shutil.copytree(
-        _PROMOTION_PACKAGE_SOURCE,
-        repository_root / "Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii",
-    )
-    for relative in _PROMOTION_TARGETS + _PROMOTION_PLAN_LIBRARY_INPUTS:
-        target = repository_root / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(Path(__file__).resolve().parents[3] / relative, target)
-    _promotion_git(repository_root, "init")
-    _promotion_git(repository_root, "checkout", "-b", "main")
-    _promotion_git(repository_root, "config", "user.name", "Hang Ten Tests")
-    _promotion_git(repository_root, "config", "user.email", "tests@example.invalid")
-    _promotion_git(repository_root, "add", ".")
-    _promotion_git(repository_root, "commit", "-m", "baseline")
-    return repository_root
-
-
-def _promotion_target_contents(repository_root: Path) -> dict[str, str]:
-    return {
-        relative: (repository_root / relative).read_text(encoding="utf-8")
-        for relative in _PROMOTION_TARGETS
-    }
-
-
-def _promotion_git(repository_root: Path, *args: str) -> str:
-    return subprocess.run(
-        ["git", "-C", str(repository_root), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
 
 
 def _repository_library(

@@ -66,16 +66,7 @@ The persistent sidebar works on one active board revision at a time:
 
 - **Onboard** retains the guided Stage 0–4 review workflow described below.
 - **Inspect** shows the active revision, approval/readiness state, Stage 4
-  normal and highlight artifacts, hold inventory, and editable **Board info**
-  for the current active revision. Board info stays in the active in-browser
-  profile until the board or revision changes.
-- **Promote to iOS** uses the Board info entered in Inspect and the active
-  board's canonical repository ID. Generate a preview first and review its
-  grouped **Metadata**, **Geometry**, and **Plans** diffs. A stale revision,
-  changed Board info, incomplete package,
-  or target changed relative to `main` is a conflict: no promotion file is
-  written. **Save locally** regenerates and verifies the preview token, then
-  writes all approved native targets atomically for normal local Git review.
+  normal and highlight artifacts, and hold inventory.
 - **Validate** runs the local package, hold-ID parity,
   semantic-routine-resolution, and plan-library checks.
   Its simulator field produces copyable commands only after the operator
@@ -128,15 +119,12 @@ rtk hangboard-onboard \
   --status
 ```
 
-At Stage 4, **Save locally** selects the complete, current, non-stale revision
-and publishes it to `Tools/HangboardPipeline/boards/<board-id>/`. Only complete
-runs with approved checkpoints through Stage 4 belong there; all unfinished
-runs stay under `.context/`. Save writes files for normal Git review, but never
-commits, pushes, copies artifacts into the Hang Ten app, modifies the app's
-product catalog, or synchronizes anything remotely.
-Hang Ten synchronization is a separate future command and is outside this
-workbench. CLI and other programmatic callers are producers of the same
-contract: they pass a completed run to `RepositoryBoardLibrary.publish()`.
+At Stage 4, **Save changes** selects the complete, current, non-stale revision
+inside the Workbench workspace. It never publishes to the legacy repository
+library or writes app artifacts. Canonical package publication is available to
+programmatic callers through `POST /api/package-candidates`; the candidate must
+be below repository `.context`, and the transaction may change only the flat
+`Hangboards/<slug>` package plus `Hangboards/catalog.json` after validation.
 
 ## Edit and save one existing Stage 2 run
 
@@ -226,14 +214,14 @@ rtk python3 Tools/HangboardWorkbench/server.py --catalog /absolute/path/to/catal
 
 `image` and `regions` are optional for standard run layouts and must be relative to `runDir`. Catalog and repeated `--run-dir` inputs can be combined. The selector changes only the active browser document; every load and save request names its run explicitly, so separate tabs cannot redirect each other's saves.
 
-## Edit the generative catalog outlines
+## Edit an external outline catalog
 
 Catalog-outline mode serves every `*.json` stem in the outline directory whose matching root PNG is in the source directory:
 
 ```bash
 rtk python3 Tools/HangboardWorkbench/server.py \
-  --catalog-source-dir /absolute/path/to/docs/hangboard-generative-catalog \
-  --catalog-outline-dir /absolute/path/to/docs/hangboard-generative-catalog/outlines
+  --catalog-source-dir /absolute/path/to/catalog-sources \
+  --catalog-outline-dir /absolute/path/to/catalog-outlines
 ```
 
 The board selector switches the active catalog document; the selected JSON is the only catalog file changed by Save. Recessed or dark cavities are traced along the inner usable boundary. Raised holds are traced along the outer silhouette. The server adapts normalized catalog paths to the editor's pixel contours, including sampled cubic curves, and maps each source outline ID to a stable positive editor ID.

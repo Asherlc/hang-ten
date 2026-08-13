@@ -108,7 +108,6 @@
           <nav class="tool-suite-nav" aria-label="Board tool navigation">
             <button class="tool-suite-button active" id="tool-onboard" type="button" data-tool="onboard">Onboard</button>
             <button class="tool-suite-button" id="tool-inspect" type="button" data-tool="inspect">Inspect</button>
-            <button class="tool-suite-button" id="tool-promote" type="button" data-tool="promote">Promote to iOS</button>
             <button class="tool-suite-button" id="tool-validate" type="button" data-tool="validate">Validate</button>
           </nav>
           <section class="active-board-card" id="active-board-card" aria-live="polite">
@@ -285,7 +284,7 @@
           <header class="tool-view-header">
             <span class="eyebrow">Board review</span>
             <h2 id="inspect-title">Inspect</h2>
-            <p>Review the active board package before generating a local iOS change.</p>
+            <p>Review the active board revision and its approved onboarding artifacts.</p>
           </header>
           <div class="inspect-grid">
             <section class="inspect-card" id="inspect-board-preview" aria-label="Board preview"></section>
@@ -301,89 +300,12 @@
               <span class="eyebrow">Approval and revision</span>
               <div id="inspect-approval-status"></div>
             </section>
-            <section class="inspect-card inspect-board-info-card" id="inspect-board-info" aria-labelledby="inspect-board-info-title">
-              <div class="inspect-card-heading">
-                <div>
-                  <span class="eyebrow">Board details</span>
-                  <h3 id="inspect-board-info-title">Board info</h3>
-                </div>
-                <p>These editable details are used for the active board revision when you generate a local promotion preview.</p>
-              </div>
-              <div class="board-info-grid">
-                <label for="board-info-manufacturer">Manufacturer
-                  <input id="board-info-manufacturer" data-board-info-field="manufacturer" type="text" autocomplete="organization" aria-describedby="board-info-manufacturer-hint" />
-                  <small id="board-info-manufacturer-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-name">Display name
-                  <input id="board-info-name" data-board-info-field="name" type="text" autocomplete="off" aria-describedby="board-info-name-hint" />
-                  <small id="board-info-name-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-subtitle">Subtitle
-                  <input id="board-info-subtitle" data-board-info-field="subtitle" type="text" autocomplete="off" aria-describedby="board-info-subtitle-hint" />
-                  <small id="board-info-subtitle-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-dimensions">Dimensions
-                  <input id="board-info-dimensions" data-board-info-field="dimensions" type="text" autocomplete="off" aria-describedby="board-info-dimensions-hint" />
-                  <small id="board-info-dimensions-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-aspect-ratio">Aspect ratio
-                  <input id="board-info-aspect-ratio" data-board-info-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" aria-describedby="board-info-aspect-ratio-hint" />
-                  <small id="board-info-aspect-ratio-hint">Used in the local promotion preview.</small>
-                </label>
-                <label class="board-info-wide" for="board-info-product-url">Product URL
-                  <input id="board-info-product-url" data-board-info-field="productURL" type="url" autocomplete="url" aria-describedby="board-info-product-url-hint" />
-                  <small id="board-info-product-url-hint">Used in the local promotion preview.</small>
-                </label>
-              </div>
-            </section>
             <section class="inspect-card inspect-readiness-card">
               <span class="eyebrow">Readiness</span>
               <div id="inspect-readiness"></div>
               <button class="tool-button accent" id="inspect-next-action" type="button">Open Onboard</button>
             </section>
           </div>
-        </section>
-
-        <section class="tool-view promote-view hidden" id="promote-view" aria-labelledby="promote-title">
-          <header class="tool-view-header">
-            <span class="eyebrow">Promotion</span>
-            <h2 id="promote-title">Promote to iOS</h2>
-            <p id="promotion-identity">Choose one active board revision to begin promotion.</p>
-          </header>
-
-          <section class="promotion-summary" aria-live="polite">
-            <p id="promotion-readiness"></p>
-            <p class="promotion-status empty" id="promotion-status">No preview</p>
-            <p class="promotion-error hidden" id="promotion-error" role="alert"></p>
-          </section>
-
-          <section class="promotion-card promotion-actions" aria-label="Promotion actions">
-            <button class="tool-button accent" id="promotion-preview-button" type="button">Generate preview</button>
-            <button class="tool-button" id="promotion-refresh-button" type="button">Refresh preview</button>
-            <button class="tool-button" id="promotion-save-button" type="button">Save locally</button>
-            <p>Save locally never commits, pushes, or synchronizes remote changes.</p>
-          </section>
-
-          <section class="promotion-card" aria-labelledby="promotion-issues-title">
-            <div class="promotion-card-heading">
-              <div>
-                <span class="eyebrow">Checks</span>
-                <h3 id="promotion-issues-title">Conflicts and validation issues</h3>
-              </div>
-            </div>
-            <div id="promotion-issues"></div>
-          </section>
-
-          <section class="promotion-card promotion-diffs" aria-labelledby="promotion-diffs-title">
-            <div class="promotion-card-heading">
-              <div>
-                <span class="eyebrow">Review</span>
-                <h3 id="promotion-diffs-title">Grouped native diff</h3>
-              </div>
-              <p>Review metadata, exact geometry, and plan changes before saving them into this checkout.</p>
-            </div>
-            <div id="promotion-diff-groups"></div>
-          </section>
         </section>
 
         <section class="tool-view validate-view hidden" id="validate-view" aria-labelledby="validate-title">
@@ -410,7 +332,7 @@
                 <span class="eyebrow">Local checks</span>
                 <h3 id="validation-checks-title">Package and parity report</h3>
               </div>
-              <p>Run validation after saving a promotion, or load the cached revision-bound report.</p>
+              <p>Run validation for the approved revision, or load its cached revision-bound report.</p>
             </div>
             <div id="validation-checks"></div>
           </section>
@@ -446,7 +368,6 @@
     <script src="workbench-model.js"></script>
     <script src="workbench-suite-model.js"></script>
     <script src="workbench-suite-controller.js"></script>
-    <script src="promotion-view.js"></script>
     <script src="validation-view.js"></script>
     <script src="vector-path-model.js"></script>
     <script src="app.js"></script>

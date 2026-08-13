@@ -454,60 +454,6 @@ class WorkbenchStore:
         return updated
 
     @_synchronized
-    def preflight_repository_revision(
-        self, board_id: str, revision_id: str
-    ) -> RevisionRecord:
-        """Read-only validation that one exact active revision can be published."""
-        board = self.read_board(board_id)
-        return self._active_savable_revision(board, revision_id)
-
-    @_synchronized
-    def publish_repository_revision(
-        self,
-        board_id: str,
-        revision_id: str,
-        *,
-        repository_board_id: str,
-        repository_revision_token: str,
-    ) -> BoardRecord:
-        """Atomically save a revision and record the repository revision it published."""
-        board = self.read_board(board_id)
-        revision = self._active_savable_revision(board, revision_id)
-        self._validate_repository_link(
-            repository_board_id, repository_revision_token
-        )
-        updated = replace(
-            board,
-            active_revision_id=revision.id,
-            saved_revision_id=revision.id,
-            repository_board_id=repository_board_id,
-            repository_revision_token=repository_revision_token,
-        )
-        self._write_board(updated)
-        return updated
-
-    @_synchronized
-    def link_repository_revision(
-        self,
-        board_id: str,
-        *,
-        repository_board_id: str,
-        repository_revision_token: str,
-    ) -> BoardRecord:
-        """Atomically record the repository revision represented by this board."""
-        board = self.read_board(board_id)
-        self._validate_repository_link(
-            repository_board_id, repository_revision_token
-        )
-        updated = replace(
-            board,
-            repository_board_id=repository_board_id,
-            repository_revision_token=repository_revision_token,
-        )
-        self._write_board(updated)
-        return updated
-
-    @_synchronized
     def finalize_repository_open(
         self,
         board_id: str,
@@ -893,17 +839,6 @@ class WorkbenchStore:
                 f"revision {revision.id} does not have a complete lineage"
             )
         return revision
-
-    @classmethod
-    def _active_savable_revision(
-        cls, board: BoardRecord, revision_id: str
-    ) -> RevisionRecord:
-        if board.active_revision_id != revision_id:
-            actual = board.active_revision_id or "none"
-            raise WorkbenchStoreError(
-                f"active revision changed: expected {revision_id}, found {actual}"
-            )
-        return cls._savable_revision(board, revision_id)
 
     @staticmethod
     def _replace_revision(
