@@ -1,5 +1,8 @@
 # Board Content Pipeline Cleanup Implementation Plan
 
+> **Superseded:** The generated-runtime-artifact architecture in this plan was
+> replaced on 2026-08-12 by [Direct Board Package Bundling](2026-08-12-direct-board-package-bundling.md). Do not execute the remaining tasks here.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make each evidence-backed `Hangboards/<board-slug>/` package the one editable source of truth for all board-owned metadata, evidence, semantic mappings, normalized vector geometry, and optional presentation assets; generate every Hang Ten board artifact from those packages; and retire unsuccessful image-automation experiments without removing the functioning pipeline or Workbench.
@@ -135,7 +138,7 @@ separate deterministic compiler step coordinated by the same top-level script.
 
 - [ ] **Step 2: Add failing board presentation and semantic tests.**
 
-  Assert `board.json` requires unique `presentation.generatedSymbol` values and validates an optional `photoAsset` name/path without path escape, symlinks, or a missing regular file. Assert `semantics.json.boardID` matches its board, semantic IDs and hold IDs are unique, mappings are non-empty, and all hold IDs exist in `board.json`.
+  Assert `board.json` requires unique `presentation.generatedSymbol` values and validates an optional `photoAsset` name/path without path escape, symlinks, or a missing regular file. Assert every regular file below an optional package `assets/` directory has exactly one `assetEvidence` mapping; presentation assets must refer to one of those mapped assets, while evidence-only manufacturer source media is retained without being copied to Xcode. Assert `semantics.json.boardID` matches its board, semantic IDs and hold IDs are unique, mappings are non-empty, and all hold IDs exist in `board.json`.
 
   ```python
   semantics["semanticHolds"]["outer-jugs"]["holdIDs"] = ["missing"]
@@ -168,7 +171,8 @@ separate deterministic compiler step coordinated by the same top-level script.
   factual field required by the validator, `holdEvidence` keys equal physical
   hold IDs, `semanticEvidence` keys equal semantic IDs, `artworkEvidence` keys
   equal `silhouette` plus `layers.<id>` and `holdPieces.<id>`, and
-  `assetEvidence` keys equal declared asset paths. Every mapping contains
+  `assetEvidence` keys equal every regular file beneath a package `assets/`
+  directory. Every mapping contains
   non-empty declared `sourceIDs` and one allowed method. Assert
   `external-generative-adaptation` is rejected for factual `fieldEvidence` and
   `holdEvidence`.
@@ -221,7 +225,8 @@ separate deterministic compiler step coordinated by the same top-level script.
 - Modify: `Hangboards/metolius-wood-grips-compact-ii/evidence.json`
 - Create: `Hangboards/metolius-wood-grips-compact-ii/semantics.json`
 - Create: `Hangboards/metolius-wood-grips-compact-ii/artwork.json`
-- Move if retained: `HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset/CompactBoardIllustration.png` to `Hangboards/metolius-wood-grips-compact-ii/assets/CompactBoardIllustration.png`
+- Move: `HangTen/Resources/Assets.xcassets/CompactBoard.imageset/WoodGripsCompactII.jpg` to `Hangboards/metolius-wood-grips-compact-ii/assets/WoodGripsCompactII.jpg`
+- Create: `Hangboards/metolius-wood-grips-compact-ii/assets/CompactBoardIllustration.png`
 - Modify: `Tools/HangboardPipeline/tests/test_board_catalog.py`
 - Modify: `Tools/HangboardPipeline/tests/test_board_artwork.py`
 
@@ -238,14 +243,25 @@ separate deterministic compiler step coordinated by the same top-level script.
   expected values by transcribing the current reviewed Swift and generated JSON
   into test literals before deleting either source.
 
-- [ ] **Step 2: Audit the existing presentation asset before moving it.**
+- [ ] **Step 2: Retain the manufacturer reference and create the required screwless presentation asset.**
 
-  Verify whether `CompactBoardIllustration.png` is traceable to the declared
-  product source and its generative adaptation history. If traceable, move it
-  into the package and add exact `assetEvidence` with method
-  `external-generative-adaptation`. If it is not traceable, set `photoAsset` to
-  `null`, leave no package asset, and plan removal of the stale runtime
-  imageset. Do not substitute the manufacturer photo or invent provenance.
+  Use `git mv` to place `WoodGripsCompactII.jpg` in the Compact II package as
+  a byte-identical manufacturer-source reference. Inspect the current
+  `CompactBoardIllustration.png`, then use the image-generation editing
+  workflow with that local image as the reference to create the package-owned
+  `assets/CompactBoardIllustration.png`. The edit prompt must require removal
+  of all visible screw or mounting holes only; it must preserve the existing
+  front-on crop, transparent/background treatment, canvas dimensions, board
+  silhouette, proportions, wood color, every hold opening, and all other
+  non-fastener details. Do not add branding, bolts, texture, shadows, holds,
+  or other hardware.
+
+  Visually compare the source and output at full resolution. Reject and
+  regenerate any output with residual holes, changed hold boundaries, changed
+  silhouette, altered board scale/crop, or invented details. Do not retain the
+  old fastener-bearing illustration as a second package asset or runtime
+  source. The new presentation PNG is an explicitly labeled visual adaptation,
+  never evidence for physical facts or vector geometry.
 
 - [ ] **Step 3: Create `semantics.json` from the currently shipped mapping.**
 
@@ -265,8 +281,12 @@ separate deterministic compiler step coordinated by the same top-level script.
 - [ ] **Step 5: Move presentation fields into `board.json` and complete evidence.**
 
   Move subtitle, generated symbol, and optional photo asset declaration from
-  Python/runtime overrides into `presentation`. Add exact field, semantic,
-  artwork, and asset evidence coverage. Do not change any physical hold fact.
+  Python/runtime overrides into `presentation`. Declare the screwless PNG as
+  its `photoAsset` and retain the source JPG as a package asset. Add exact
+  field, semantic, artwork, and asset evidence coverage: map the JPG to the
+  official product page with its truthful source-media method and map the PNG
+  to the same source using `external-generative-adaptation`. Do not change any
+  physical hold fact.
 
 - [ ] **Step 6: Advance the registry and validate the package.**
 
@@ -279,7 +299,10 @@ separate deterministic compiler step coordinated by the same top-level script.
   python3 -m pytest Tools/HangboardPipeline/tests/test_board_catalog.py Tools/HangboardPipeline/tests/test_board_artwork.py -q
   ```
 
-  Expected: the v2 package passes and all pre-migration invariants match.
+  Expected: the v2 package passes, the package owns both image roles, and all
+  pre-migration metadata/artwork invariants match. Complete a visual review of
+  the package presentation PNG before proceeding: it has no screw holes and
+  retains the reviewed board silhouette and every hold boundary.
 
 - [ ] **Step 7: Commit the Compact II canonical package.**
 

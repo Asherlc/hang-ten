@@ -3,8 +3,7 @@
   "boards": [
     {
       "id": "metolius.wood-grips-compact-ii",
-      "path": "metolius-wood-grips-compact-ii/board.json",
-      "lifecycle": "shipped"
+      "path": "metolius-wood-grips-compact-ii"
     }
   ]
 }

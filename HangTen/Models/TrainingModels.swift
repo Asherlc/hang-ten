@@ -42,7 +42,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-enum HoldCueStyle: String, Hashable {
+enum HoldCueStyle: String, Codable, Hashable {
     case outerJug
     case slot
     case pinch
@@ -665,233 +665,29 @@ struct TrainingPlan: Identifiable, Hashable {
 }
 
 enum BoardCatalog {
-    // Board geometry is data, not view code. Add new TrainingBoard values here
-    // and plans can resolve their hold IDs without changing the workout UI.
-    static let compactII = GeneratedBoardCatalog.compactII
-    static let compactIIFlatSloperHoldIDs = GeneratedBoardCatalog.compactII.holds.filter { $0.kind == .sloper && $0.features.contains(.largeSlope) }.map(\.id)
 
-    static let rockProdigyTrainingCenter = TrainingBoard(
-        id: "trango.rock-prodigy-training-center",
-        manufacturer: "Trango",
-        name: "Rock Prodigy Training Center",
-        subtitle: "Two-piece adjustable training board with variable rails, pockets, crimps, pinches, and slopers.",
-        dimensions: "18.2\" × 12.1\" assembled (two 9.1\" × 12.1\" pieces)",
-        aspectRatio: 18.2 / 12.1,
-        holds: {
-            var holds: [BoardHold] = []
+    static let packageStore: BoardPackageStore = {
+        do {
+            return try BoardPackageStore()
+        } catch {
+            fatalError("Bundled board packages could not be loaded: \(error.localizedDescription)")
+        }
+    }()
 
-            func mirrored(_ frame: HoldFrame) -> HoldFrame {
-                HoldFrame(
-                    x: 1 - frame.x - frame.width,
-                    y: frame.y,
-                    width: frame.width,
-                    height: frame.height
-                )
-            }
+    static let all = packageStore.boards
 
-            func addPair(
-                slug: String,
-                name: String,
-                shortLabel: String,
-                detail: String,
-                kind: HoldKind,
-                frame: HoldFrame,
-                sizeMillimeters: Int? = nil,
-                depthRangeMillimeters: ClosedRange<Int>? = nil,
-                gripType: GripType = .openHand,
-                fingerCapacity: Int = 4,
-                cueStyle: HoldCueStyle? = nil,
-                features: Set<HoldFeature> = []
-            ) {
-                holds.append(
-                    BoardHold(
-                        id: "trango.rptc.left.\(slug)",
-                        name: "Left \(name)",
-                        shortLabel: shortLabel,
-                        detail: detail,
-                        kind: kind,
-                        frame: frame,
-                        sizeMillimeters: sizeMillimeters,
-                        gripType: gripType,
-                        fingerCapacity: fingerCapacity,
-                        cueStyle: cueStyle,
-                        depthRangeMillimeters: depthRangeMillimeters,
-                        features: features
-                    )
-                )
-                holds.append(
-                    BoardHold(
-                        id: "trango.rptc.right.\(slug)",
-                        name: "Right \(name)",
-                        shortLabel: shortLabel,
-                        detail: detail,
-                        kind: kind,
-                        frame: mirrored(frame),
-                        sizeMillimeters: sizeMillimeters,
-                        gripType: gripType,
-                        fingerCapacity: fingerCapacity,
-                        cueStyle: cueStyle,
-                        depthRangeMillimeters: depthRangeMillimeters,
-                        features: features
-                    )
-                )
-            }
-
-            addPair(
-                slug: "top-jug",
-                name: "top jug",
-                shortLabel: "J",
-                detail: "Open-hand warm-up jug",
-                kind: .jug,
-                frame: HoldFrame(x: 0.270, y: 0.100, width: 0.145, height: 0.105),
-                features: [.jug]
-            )
-            addPair(
-                slug: "large-open-rail",
-                name: "20–33 mm variable-depth rail",
-                shortLabel: "20–33",
-                detail: "Large open-hand rail; variable depth 20–33 mm",
-                kind: .edge,
-                frame: HoldFrame(x: 0.205, y: 0.275, width: 0.235, height: 0.060),
-                depthRangeMillimeters: 20...33,
-                features: [.largeEdge, .largeOpenHandRail]
-            )
-            addPair(
-                slug: "small-crimp-rail",
-                name: "10–24 mm variable-depth rail",
-                shortLabel: "10–24",
-                detail: "Small/crimp rail; variable depth 10–24 mm",
-                kind: .edge,
-                frame: HoldFrame(x: 0.205, y: 0.365, width: 0.235, height: 0.055),
-                depthRangeMillimeters: 10...24,
-                gripType: .halfCrimp,
-                features: [.smallEdge]
-            )
-            addPair(
-                slug: "three-finger-slot",
-                name: "38 mm three-finger slot",
-                shortLabel: "3F",
-                detail: "Three-finger slot, 38 mm",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.235, y: 0.465, width: 0.135, height: 0.080),
-                sizeMillimeters: 38,
-                fingerCapacity: 3,
-                features: [.pocket, .threeFingerPocket, .shallowThreeFingerSlot]
-            )
-            addPair(
-                slug: "thin-crimp",
-                name: "7.5 mm thin crimp",
-                shortLabel: "7.5",
-                detail: "Thin crimp, 7.5 mm",
-                kind: .edge,
-                frame: HoldFrame(x: 0.315, y: 0.605, width: 0.105, height: 0.040),
-                gripType: .halfCrimp,
-                features: [.smallEdge, .thinCrimp]
-            )
-            addPair(
-                slug: "deep-mr-pocket",
-                name: "29 mm deep MR pocket",
-                shortLabel: "MR",
-                detail: "Deep middle+ring pocket, 29 mm",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.195, y: 0.705, width: 0.095, height: 0.055),
-                sizeMillimeters: 29,
-                fingerCapacity: 2,
-                features: [.pocket, .twoFingerPocket, .deepTwoFingerPocket]
-            )
-            addPair(
-                slug: "shallow-mr-pocket",
-                name: "19 mm shallow MR pocket",
-                shortLabel: "MR",
-                detail: "Shallow middle+ring pocket, 19 mm",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.225, y: 0.835, width: 0.095, height: 0.055),
-                sizeMillimeters: 19,
-                fingerCapacity: 2,
-                features: [.pocket, .twoFingerPocket]
-            )
-            addPair(
-                slug: "medium-im-pocket",
-                name: "26–36 mm medium IM pocket",
-                shortLabel: "IM",
-                detail: "Medium index+middle pocket, variable depth 26–36 mm",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.320, y: 0.705, width: 0.095, height: 0.055),
-                depthRangeMillimeters: 26...36,
-                fingerCapacity: 2,
-                features: [.pocket, .twoFingerPocket]
-            )
-            addPair(
-                slug: "shallow-im-pocket",
-                name: "19–24 mm shallow IM pocket",
-                shortLabel: "IM",
-                detail: "Shallow index+middle pocket, variable depth 19–24 mm",
-                kind: .pocket,
-                frame: HoldFrame(x: 0.320, y: 0.835, width: 0.095, height: 0.055),
-                depthRangeMillimeters: 19...24,
-                fingerCapacity: 2,
-                features: [.pocket, .twoFingerPocket]
-            )
-
-            // The depth guide identifies three pinch depths on the same
-            // outer angled block. They remain distinct logical contacts so a
-            // routine can name the manufacturer size without inventing a
-            // second physical surface.
-            let outerPinchFrame = HoldFrame(x: 0.025, y: 0.245, width: 0.160, height: 0.245)
-            addPair(
-                slug: "wide-pinch",
-                name: "87 mm wide pinch",
-                shortLabel: "W",
-                detail: "Wide pinch contact on the outer angled block, 87 mm",
-                kind: .pinch,
-                frame: outerPinchFrame,
-                sizeMillimeters: 87,
-                cueStyle: .pinch,
-                features: [.widePinch]
-            )
-            addPair(
-                slug: "medium-pinch",
-                name: "44 mm medium pinch",
-                shortLabel: "M",
-                detail: "Medium pinch contact on the outer angled block, 44 mm",
-                kind: .pinch,
-                frame: outerPinchFrame,
-                sizeMillimeters: 44,
-                cueStyle: .pinch,
-                features: [.mediumPinch]
-            )
-            addPair(
-                slug: "small-pinch",
-                name: "18 mm small pinch",
-                shortLabel: "S",
-                detail: "Small pinch contact on the outer angled block, 18 mm",
-                kind: .pinch,
-                frame: outerPinchFrame,
-                sizeMillimeters: 18,
-                cueStyle: .pinch,
-                features: [.smallPinch]
-            )
-            addPair(
-                slug: "sloper",
-                name: "outer sloper",
-                shortLabel: "SLO",
-                detail: "Open-hand sloper contact on the outer angled block",
-                kind: .sloper,
-                frame: outerPinchFrame,
-                features: [.largeSlope]
-            )
-
-            return holds
-        }(),
-        productURL: URL(string: "https://trango.com/products/rock-prodigy-training-center")!,
-        photoAssetName: nil
-    )
-
-    static let all: [TrainingBoard] = GeneratedBoardCatalog.all + [rockProdigyTrainingCenter]
+    static let defaultBoard: TrainingBoard = {
+        guard let board = all.first else {
+            fatalError("The bundled board catalog contains no boards.")
+        }
+        return board
+    }()
 
     static func board(for id: String?) -> TrainingBoard {
-        all.first { $0.id == id } ?? compactII
+        guard let id else { return defaultBoard }
+        return packageStore.board(id: id) ?? defaultBoard
     }
+
 }
 
 enum MetoliusCycleBuilder {
@@ -1102,6 +898,37 @@ enum MetoliusCycleBuilder {
 
 enum LegacyPlanSeedCatalog {
     static let repeaterStepIDPrefix = "repeaters-grip-"
+
+    private static let exactTargetBoard = requiredBoard(containingSemantic: "edge-19")
+
+    private static func requiredBoard(containingSemantic semanticID: String) -> TrainingBoard {
+        let matches = BoardCatalog.all.filter {
+            BoardCatalog.packageStore.semantics(for: $0.id)[semanticID] != nil
+        }
+        precondition(
+            matches.count == 1,
+            "Expected exactly one board package with \(semanticID) semantics."
+        )
+        return matches[0]
+    }
+
+    private static func exactTarget(
+        _ semanticID: String,
+        holdIndex: Int? = nil
+    ) -> HoldTarget {
+        guard let holdIDs = BoardCatalog.packageStore.semantics(
+            for: exactTargetBoard.id
+        )[semanticID] else {
+            preconditionFailure(
+                "The board package is missing \(semanticID) semantics."
+            )
+        }
+        if let holdIndex {
+            precondition(holdIDs.indices.contains(holdIndex))
+            return .ids([holdIDs[holdIndex]])
+        }
+        return .ids(holdIDs)
+    }
 
     private static let sourceURL = URL(
         string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
@@ -1437,7 +1264,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Lattice max hang protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered([
             hangStep(
                 id: "max-hangs-1",
@@ -1446,7 +1273,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.ids("edge-19-left", "edge-19-right")],
+                targets: [exactTarget("edge-19")],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1456,7 +1283,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.ids("edge-19-left", "edge-19-right")],
+                targets: [exactTarget("edge-19")],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1466,7 +1293,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.ids("edge-19-left", "edge-19-right")],
+                targets: [exactTarget("edge-19")],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1476,7 +1303,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.ids("edge-19-left", "edge-19-right")],
+                targets: [exactTarget("edge-19")],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1486,7 +1313,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [.ids("edge-19-left", "edge-19-right")],
+                targets: [exactTarget("edge-19")],
                 gripType: .halfCrimp
             ),
         ])
@@ -1500,7 +1327,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...3 {
@@ -1513,7 +1340,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: 6,
-                            targets: [.ids("edge-19-left", "edge-19-right")],
+                            targets: [exactTarget("edge-19")],
                             gripType: nil
                         )
                     )
@@ -1541,7 +1368,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...2 {
@@ -1554,7 +1381,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [.ids("edge-19-right")],
+                            targets: [exactTarget("edge-19", holdIndex: 1)],
                             gripType: nil
                         )
                     )
@@ -1566,7 +1393,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [.ids("edge-19-left")],
+                            targets: [exactTarget("edge-19", holdIndex: 0)],
                             gripType: nil
                         )
                     )
@@ -1584,7 +1411,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Eva López hangboard comparison",
         sourceURL: URL(string: "https://pubmed.ncbi.nlm.nih.gov/30988852/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...3 {
@@ -1597,7 +1424,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "App timer adaptation",
                             active: 10,
                             rest: rep < 5 ? 5 : 0,
-                            targets: [.ids("edge-19-left", "edge-19-right")],
+                            targets: [exactTarget("edge-19")],
                             gripType: nil
                         )
                     )
@@ -1625,7 +1452,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Beastmaker 7/3 study protocol",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(
@@ -1634,12 +1461,12 @@ enum LegacyPlanSeedCatalog {
                 grip: GripType?,
                 fingerConfiguration: FingerConfiguration?
             )] = [
-                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand, nil),
-                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, nil),
-                ("19 mm half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
-                ("Front-three open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("Back-three half crimp", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("Front-two open edge", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
+                ("29 mm open edge", [exactTarget("edge-29")], .openHand, nil),
+                ("19 mm open edge", [exactTarget("edge-19")], .openHand, nil),
+                ("19 mm half crimp", [exactTarget("edge-19")], .halfCrimp, nil),
+                ("Front-three open edge", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
             for set in 1...2 {
@@ -1693,16 +1520,16 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Lattice Abrahangs protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, nil),
-                ("F3 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [.ids("edge-19-left", "edge-19-right")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [.ids("edge-19-left", "edge-19-right")], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [exactTarget("edge-19")], .halfCrimp, nil),
+                ("F3 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1732,12 +1559,12 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Eric Hörst fingerboard protocols",
         sourceURL: URL(string: "https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm half crimp", [.ids("edge-29-left", "edge-29-right")], .halfCrimp),
-                ("19 mm open edge", [.ids("edge-19-left", "edge-19-right")], .openHand),
+                ("29 mm half crimp", [exactTarget("edge-29")], .halfCrimp),
+                ("19 mm open edge", [exactTarget("edge-19")], .openHand),
                 ("Two-finger pocket", [.feature(.twoFingerPocket)], .openHand)
             ]
 
@@ -1779,7 +1606,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Steve Bechtel 3–6–9 ladder protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for round in 1...3 {
@@ -1792,7 +1619,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "App timer · \(hangSeconds)s hang · 30s rest",
                             active: TimeInterval(hangSeconds),
                             rest: index < 2 ? 30 : 0,
-                            targets: [.ids("edge-29-left", "edge-29-right")],
+                            targets: [exactTarget("edge-29")],
                             gripType: nil
                         )
                     )
@@ -1820,11 +1647,11 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Tyler Nelson density hang protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [.ids("edge-29-left", "edge-29-right")], .openHand),
+                ("29 mm open edge", [exactTarget("edge-29")], .openHand),
                 ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
             ]
 
@@ -1878,7 +1705,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Zlagboard endurance protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/zlagboard-forearm-endurance-workout/")!,
         provenance: .adapted,
-        boardID: BoardCatalog.compactII.id,
+        boardID: exactTargetBoard.id,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for interval in 1...10 {
@@ -1890,7 +1717,7 @@ enum LegacyPlanSeedCatalog {
                         accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
-                        targets: [.ids("edge-29-left", "edge-29-right")],
+                        targets: [exactTarget("edge-29")],
                         gripType: nil
                     )
                 )
@@ -2171,61 +1998,6 @@ enum LegacyPlanSeedCatalog {
         }())
     )
 
-    private static func rockProdigySet(
-        prefix: String,
-        title: String,
-        target: HoldTarget,
-        gripType: GripType,
-        count: Int,
-        setLabel: String,
-        recoveryAfter: Bool
-    ) -> [WorkoutStep] {
-        var steps = (1...count).map { rep in
-            hangStep(
-                id: "\(prefix)-rep-\(rep)",
-                title: "Rock Prodigy · \(title) · \(setLabel), rep \(rep)",
-                instruction: "Dead hang only for 7 seconds, then rest 3 seconds before the next rep. Use two hands; do not perform pull-ups or lock-offs.",
-                accessory: "7s hang · 3s rest · dead hang only",
-                active: 7,
-                rest: rep < count ? 3 : 0,
-                targets: [target],
-                gripType: gripType
-            )
-        }
-        if recoveryAfter {
-            steps.append(recoveryStep(id: "\(prefix)-recovery", title: "Rock Prodigy · three-minute set recovery", duration: 180, accessory: "3m rest between sets"))
-        }
-        return steps
-    }
-
-    static let rockProdigyIntermediate = TrainingPlan(
-        id: "trango.rock-prodigy-training-center.intermediate",
-        title: "Rock Prodigy Training Center · Intermediate",
-        subtitle: "Official manual timing and 7-rep/6-rep dead-hang sequence; recover 48h and complete 6–10 workouts before progressing.",
-        level: "Intermediate",
-        sourceLabel: "Trango Rock Prodigy Training Center · Rock Prodigy method",
-        sourceURL: URL(string: "https://trango.com/products/rock-prodigy-training-center")!,
-        provenance: .adapted,
-        boardID: BoardCatalog.rockProdigyTrainingCenter.id,
-        steps: numbered({
-            var steps = rockProdigySet(prefix: "rock-prodigy-warmup-jug", title: "warm-up jug", target: .feature(.jug), gripType: .openHand, count: 7, setLabel: "warm-up", recoveryAfter: true)
-            let grips: [(prefix: String, title: String, target: HoldTarget, grip: GripType)] = [
-                ("rock-prodigy-large-edge", "large open-hand edge", .feature(.largeOpenHandRail), .openHand),
-                ("rock-prodigy-deep-two-finger", "deep 2-finger pocket", .feature(.deepTwoFingerPocket), .openHand),
-                ("rock-prodigy-small-crimp", "small semi-closed crimp", .feature(.thinCrimp), .halfCrimp),
-                ("rock-prodigy-shallow-three-finger", "shallow 3-finger pocket", .feature(.shallowThreeFingerSlot), .openHand),
-                ("rock-prodigy-wide-pinch", "wide pinch", .feature(.widePinch), .openHand),
-                ("rock-prodigy-sloper", "sloper", .feature(.largeSlope), .openHand)
-            ]
-            for (index, grip) in grips.enumerated() {
-                steps += rockProdigySet(prefix: "\(grip.prefix)-set-1", title: grip.title, target: grip.target, gripType: grip.grip, count: 7, setLabel: "set 1", recoveryAfter: true)
-                steps += rockProdigySet(prefix: "\(grip.prefix)-set-2", title: grip.title, target: grip.target, gripType: grip.grip, count: 6, setLabel: "set 2", recoveryAfter: index < grips.count - 1)
-            }
-            return steps
-        }())
-    )
-
-
     /// Kept as the stable featured-plan symbol used by navigation fallbacks.
     static let metoliusTenMinute = metoliusEntry
 
@@ -2247,8 +2019,7 @@ enum LegacyPlanSeedCatalog {
             methodRepeaters,
             methodEMOM,
             latticeBeginnerGuide,
-            reiHangboardSample,
-            rockProdigyIntermediate
+            reiHangboardSample
         ]
 
         #if DEBUG

@@ -6,7 +6,7 @@ final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
 
-    @Published var selectedBoard: TrainingBoard = BoardCatalog.compactII
+    @Published var selectedBoard: TrainingBoard = BoardCatalog.defaultBoard
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
     @Published var lastSessionTitle: String?
     @Published private(set) var sessionHistory: [WorkoutSessionRecord]
@@ -513,14 +513,17 @@ final class AppStore: ObservableObject {
     private func telemetryBoardFamily(
         for board: TrainingBoard
     ) -> HangTenTelemetryEvent.BoardFamily? {
-        switch board.id {
-        case BoardCatalog.compactII.id:
+        let normalizedBoardID = board.id.replacingOccurrences(of: "-", with: "_")
+
+        if normalizedBoardID.hasSuffix(HangTenTelemetryEvent.BoardFamily.compactII.rawValue) {
             return .compactII
-        case BoardCatalog.rockProdigyTrainingCenter.id:
-            return .rockProdigyTrainingCenter
-        default:
-            return nil
         }
+        if normalizedBoardID.hasSuffix(
+            HangTenTelemetryEvent.BoardFamily.rockProdigyTrainingCenter.rawValue
+        ) {
+            return .rockProdigyTrainingCenter
+        }
+        return nil
     }
 
     private func telemetryHealthAuthorizationOutcome(

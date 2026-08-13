@@ -70,33 +70,6 @@ final class BoardStorageTests: XCTestCase {
         }
     }
 
-    func testBundledCompactIIFixtureDecodesEveryBoardHold() throws {
-        let resourceURL = try XCTUnwrap(
-            Bundle(for: Self.self).url(forResource: "BoardLibrary", withExtension: "json")
-        )
-        let store = try BoardLibraryStore(contentsOf: resourceURL)
-        let board = try XCTUnwrap(store.boards.first)
-        let expectedBoard = BoardCatalog.compactII
-
-        XCTAssertEqual(board.id, "metolius.wood-grips-compact-ii")
-        XCTAssertEqual(board.holds.count, 19)
-        XCTAssertEqual(board.productURL.absoluteString, "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards")
-        XCTAssertEqual(board.photoAssetName, "CompactBoardIllustration")
-        XCTAssertEqual(board.id, expectedBoard.id)
-        XCTAssertEqual(board.manufacturer, expectedBoard.manufacturer)
-        XCTAssertEqual(board.name, expectedBoard.name)
-        XCTAssertEqual(board.subtitle, expectedBoard.subtitle)
-        XCTAssertEqual(board.dimensions, expectedBoard.dimensions)
-        XCTAssertEqual(board.aspectRatio, expectedBoard.aspectRatio)
-        XCTAssertEqual(board.productURL, expectedBoard.productURL)
-        XCTAssertEqual(board.photoAssetName, expectedBoard.photoAssetName)
-        XCTAssertEqual(expectedBoard.holds.count, 19)
-        XCTAssertEqual(
-            Dictionary(uniqueKeysWithValues: board.holds.map { ($0.id, $0) }),
-            Dictionary(uniqueKeysWithValues: expectedBoard.holds.map { ($0.id, $0) })
-        )
-    }
-
     func testBoardLibraryRejectsDuplicateBoardIDs() throws {
         let issues = validationIssues(for: try fixtureData { document in
             var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])

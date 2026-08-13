@@ -39,7 +39,7 @@ function visibleText(node) {
   return [node.textContent, ...node.children.map(visibleText)].filter(Boolean).join(" ");
 }
 
-test("validation report renders package, parity, semantic, plan, and promotion checks", () => {
+test("validation report renders package, parity, semantic, and plan checks", () => {
   const container = fakeContainer();
 
   renderValidationReport(container, {
@@ -52,14 +52,14 @@ test("validation report renders package, parity, semantic, plan, and promotion c
       { checkId: "semantic-routine-resolution", status: "stale", message: "routine targets changed", details: [] },
       { checkId: "plan-library", status: "not_run", message: "not run", details: [] },
     ],
-  }, { saved: true, revisionId: "revision-1" });
+  });
 
   const text = visibleText(container);
   assert.match(text, /Package integrity.*Passed/);
   assert.match(text, /Hold-ID parity.*Failed/);
   assert.match(text, /Semantic routine resolution.*Stale/);
   assert.match(text, /Plan library freshness.*Not run/);
-  assert.match(text, /Promotion status.*Passed/);
+  assert.doesNotMatch(text, /Promotion status/);
   assert.match(text, /stage 3 is missing hold-4/);
 });
 

@@ -22,6 +22,7 @@ shared_board_content:
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
+  - 'scripts/stage-board-packages.py'
   - 'docs/hangboard-generative-catalog/**'
 metadata:
   - 'metadata/**'

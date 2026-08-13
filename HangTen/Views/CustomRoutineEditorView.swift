@@ -24,7 +24,7 @@ struct CustomRoutineEditorView: View {
             _selectedBoardID = State(initialValue: boardID)
         case .generic:
             _selectedMode = State(initialValue: .generic)
-            _selectedBoardID = State(initialValue: BoardCatalog.compactII.id)
+            _selectedBoardID = State(initialValue: BoardCatalog.defaultBoard.id)
         }
     }
 

@@ -28,10 +28,6 @@ sys.path.insert(
 )
 
 import server as server_module  # noqa: E402
-from hangboard_vectorizer.ios_promotion import (  # noqa: E402
-    PromotionPreview as FakePromotionPreview,
-    PromotionSaveResult as FakePromotionSaveResult,
-)
 from hangboard_vectorizer.workbench import WorkbenchView as FakeWorkbenchView  # noqa: E402
 from hangboard_vectorizer.workbench_validation import (  # noqa: E402
     ValidationCheck as FakeValidationCheck,
@@ -107,7 +103,6 @@ class FakeWorkbenchService:
         self._root = root
         self._boards: dict[str, FakeWorkbenchView] = {}
         self._drafts: dict[str, object] = {}
-        self._promotion_previews: dict[tuple[str, str], FakePromotionPreview] = {}
         self._validation_reports: dict[tuple[str, str], FakeValidationReport] = {}
         self._counter = 0
         self._lock = Lock()
@@ -286,60 +281,6 @@ class FakeWorkbenchService:
         if expected_revision_id != view.revision_id:
             raise FakeWorkbenchError("expected revision does not match")
         return self._update(view, saved=True)
-
-    def preview_promotion(
-        self,
-        board_id: str,
-        *,
-        expected_revision_id: str,
-        profile: object,
-        base_ref: str = "main",
-    ) -> FakePromotionPreview:
-        view = self.get_board(board_id)
-        if expected_revision_id != view.revision_id:
-            raise FakeWorkbenchError("expected revision does not match")
-        if not hasattr(profile, "board_id"):
-            raise FakeWorkbenchError("profile must be an object")
-        preview = FakePromotionPreview(
-            board_id="example.board",
-            revision_token=view.revision_id,
-            base_ref=base_ref,
-            files=(),
-            issues=(),
-            preview_token="preview-token",
-        )
-        self._promotion_previews[(board_id, view.revision_id)] = preview
-        return preview
-
-    def get_promotion_preview(
-        self, board_id: str, *, expected_revision_id: str
-    ) -> FakePromotionPreview | None:
-        view = self.get_board(board_id)
-        if expected_revision_id != view.revision_id:
-            raise FakeWorkbenchError("expected revision does not match")
-        return self._promotion_previews.get((board_id, view.revision_id))
-
-    def save_promotion(
-        self,
-        board_id: str,
-        *,
-        expected_revision_id: str,
-        profile: object,
-        preview_token: str,
-    ) -> FakePromotionSaveResult:
-        view = self.get_board(board_id)
-        if expected_revision_id != view.revision_id:
-            raise FakeWorkbenchError("expected revision does not match")
-        if not hasattr(profile, "board_id"):
-            raise FakeWorkbenchError("profile must be an object")
-        if preview_token != "preview-token":
-            raise FakeWorkbenchError("preview token does not match")
-        return FakePromotionSaveResult(
-            board_id="example.board",
-            revision_id=view.revision_id,
-            saved=True,
-            paths=("HangTen/Models/TrainingModels.swift",),
-        )
 
     def validation_report(
         self, board_id: str, *, expected_revision_id: str
@@ -1438,48 +1379,42 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
     assert saved["saved"] is True
 
 
-def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
+@pytest.mark.parametrize(
+    ("method", "suffix"),
+    (
+        ("GET", "/promotion?revisionId=revision-1"),
+        ("POST", "/promotion/preview"),
+        ("POST", "/promotion/save"),
+    ),
+)
+def test_legacy_promotion_routes_are_not_registered(
+    running_workbench_server,
+    method: str,
+    suffix: str,
+) -> None:
+    """Registering any legacy promotion route would expose generated app writes."""
+    view = _create_board(running_workbench_server)
+
+    status, payload = _raw_request(
+        running_workbench_server,
+        method,
+        f"/api/boards/{view['boardId']}{suffix}",
+        headers={"Content-Type": "application/json"} if method == "POST" else None,
+        body=b"{}" if method == "POST" else None,
+    )
+
+    assert status == 404
+    assert payload == {"ok": False, "error": "not found"}
+
+
+def test_validation_routes_return_job_backed_safe_payloads(
     running_workbench_server,
 ):
     view = _create_board(running_workbench_server)
-    profile = {
-        "schemaVersion": 1,
-        "boardID": "example.board",
-        "manufacturer": "Example",
-        "name": "Example Board",
-        "subtitle": "An explicit test profile.",
-        "dimensions": "24\" × 6\"",
-        "aspectRatio": 4.0,
-        "productURL": "https://example.test/board",
-    }
-
-    promotion_status, promotion = read_json(
-        running_workbench_server
-        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
-    )
     validation_status, validation = read_json(
         running_workbench_server
         + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
     )
-    preview_status, preview_submission = _post_json(
-        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/preview",
-        {
-            "boardId": view["boardId"],
-            "expectedRevisionId": view["revisionId"],
-            "profile": profile,
-        },
-    )
-    preview = _poll_job(running_workbench_server, preview_submission["jobId"])
-    save_status, save_submission = _post_json(
-        running_workbench_server + f"/api/boards/{view['boardId']}/promotion/save",
-        {
-            "boardId": view["boardId"],
-            "expectedRevisionId": view["revisionId"],
-            "profile": profile,
-            "previewToken": "preview-token",
-        },
-    )
-    saved = _poll_job(running_workbench_server, save_submission["jobId"])
     run_status, run_submission = _post_json(
         running_workbench_server + f"/api/boards/{view['boardId']}/validation/run",
         {
@@ -1489,39 +1424,15 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
     )
     report = _poll_job(running_workbench_server, run_submission["jobId"])
 
-    assert promotion_status == validation_status == 200
-    assert promotion == {
-        "ok": True,
-        "boardId": view["boardId"],
-        "revisionId": view["revisionId"],
-        "preview": None,
-    }
+    assert validation_status == 200
     assert validation == {
         "ok": True,
         "boardId": view["boardId"],
         "revisionId": view["revisionId"],
         "report": None,
     }
-    assert preview_status == save_status == run_status == 202
-    assert preview_submission["boardId"] == save_submission["boardId"] == run_submission["boardId"] == view["boardId"]
-    assert preview["result"]["previewToken"] == "preview-token"
-    promotion_after_preview_status, promotion_after_preview = read_json(
-        running_workbench_server
-        + f"/api/boards/{view['boardId']}/promotion?revisionId={view['revisionId']}"
-    )
-    assert promotion_after_preview_status == 200
-    assert promotion_after_preview == {
-        "ok": True,
-        "boardId": view["boardId"],
-        "revisionId": view["revisionId"],
-        "preview": preview["result"],
-    }
-    assert saved["result"] == {
-        "boardId": "example.board",
-        "revisionId": view["revisionId"],
-        "saved": True,
-        "paths": ["HangTen/Models/TrainingModels.swift"],
-    }
+    assert run_status == 202
+    assert run_submission["boardId"] == view["boardId"]
     assert report["result"]["overallStatus"] == "passed"
     assert report["result"]["checks"][0]["checkId"] == "package-readiness"
     validation_after_run_status, validation_after_run = read_json(
@@ -1535,96 +1446,6 @@ def test_promotion_and_validation_routes_return_job_backed_safe_payloads(
         "revisionId": view["revisionId"],
         "report": report["result"],
     }
-
-
-def test_promotion_save_rejects_a_missing_token_before_submitting_a_write_job(
-    tmp_path: Path,
-) -> None:
-    service = FakeWorkbenchService(tmp_path / "workbench")
-    calls: list[object] = []
-
-    def save_must_not_run(*args: object, **kwargs: object) -> object:
-        calls.append((args, kwargs))
-        raise AssertionError("save promotion must not run for malformed input")
-
-    service.save_promotion = save_must_not_run  # type: ignore[method-assign]
-    with running_server(make_run(tmp_path / "legacy"), service) as base:
-        view = _create_board(base)
-        with pytest.raises(HTTPError) as error:
-            _post_json(
-                base + f"/api/boards/{view['boardId']}/promotion/save",
-                {
-                    "boardId": view["boardId"],
-                    "expectedRevisionId": view["revisionId"],
-                    "profile": {
-                        "schemaVersion": 1,
-                        "boardID": "example.board",
-                        "manufacturer": "Example",
-                        "name": "Example Board",
-                        "subtitle": "An explicit test profile.",
-                        "dimensions": "24\" × 6\"",
-                        "aspectRatio": 4.0,
-                        "productURL": "https://example.test/board",
-                    },
-                },
-            )
-
-    assert error.value.code == 400
-    body = json.load(error.value)
-    assert body["ok"] is False
-    assert "previewToken" in body["error"]
-    assert calls == []
-
-
-def test_promotion_save_rejects_an_invalid_profile_with_a_distinct_error(
-    tmp_path: Path,
-) -> None:
-    service = FakeWorkbenchService(tmp_path / "workbench")
-    with running_server(make_run(tmp_path / "legacy"), service) as base:
-        view = _create_board(base)
-        with pytest.raises(HTTPError) as error:
-            _post_json(
-                base + f"/api/boards/{view['boardId']}/promotion/save",
-                {
-                    "boardId": view["boardId"],
-                    "expectedRevisionId": view["revisionId"],
-                    "profile": "not-an-object",
-                    "previewToken": "preview-token",
-                },
-            )
-
-    assert error.value.code == 400
-    assert json.load(error.value)["error"] == "profile must be an object"
-
-
-def test_promotion_save_reports_a_preview_token_mismatch_distinctly(
-    running_workbench_server,
-) -> None:
-    view = _create_board(running_workbench_server)
-    status, submission = _post_json(
-        running_workbench_server
-        + f"/api/boards/{view['boardId']}/promotion/save",
-        {
-            "boardId": view["boardId"],
-            "expectedRevisionId": view["revisionId"],
-            "profile": {
-                "schemaVersion": 1,
-                "boardID": "example.board",
-                "manufacturer": "Example",
-                "name": "Example Board",
-                "subtitle": "An explicit test profile.",
-                "dimensions": "24\" × 6\"",
-                "aspectRatio": 4.0,
-                "productURL": "https://example.test/board",
-            },
-            "previewToken": "wrong-token",
-        },
-    )
-
-    job = _poll_job(running_workbench_server, submission["jobId"])
-    assert status == 202
-    assert job["state"] == "failed"
-    assert job["error"] == "preview token does not match"
 
 
 def test_workbench_job_payload_rejects_an_unsupported_result_type() -> None:
@@ -2245,72 +2066,6 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )
-def test_repository_save_job_redacts_write_target_path(tmp_path, monkeypatch):
-    repository = tmp_path / "repository"
-    (repository / ".git").mkdir(parents=True)
-    (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    (repository / "Tools" / "HangboardPipeline" / "boards").mkdir(parents=True)
-    (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
-    (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
-    workspace = repository / ".context" / "workspace"
-    imported_run = workspace / "imported-run"
-    shutil.copytree(
-        EDITOR_ROOT.parent
-        / "HangboardPipeline"
-        / "boards"
-        / "metolius-wood-grips-compact-ii",
-        imported_run,
-    )
-    server, _catalog = server_module._server_from_cli(
-        [
-            "--repository-root",
-            str(repository),
-            "--workspace-root",
-            str(workspace),
-            "--port",
-            "0",
-        ]
-    )
-    service = server.workbench_service
-    library = service._WorkbenchService__library
-    copy_tree = library._copy_tree
-
-    def create_write_target_before_copy(source: Path, destination: Path):
-        destination.mkdir(parents=True)
-        return copy_tree(source, destination)
-
-    monkeypatch.setattr(library, "_copy_tree", create_write_target_before_copy)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    base = f"http://127.0.0.1:{server.server_port}"
-    try:
-        _status, imported = _post_json(
-            base + "/api/boards/import", {"runRoot": str(imported_run)}
-        )
-        imported_outcome = _await_workbench_job(base, imported["jobId"])
-        assert imported_outcome["state"] == "succeeded"
-        view = imported_outcome["result"]
-        _status, accepted = _post_json(
-            base + f"/api/boards/{view['boardId']}/save",
-            {
-                "boardId": view["boardId"],
-                "expectedRevisionId": view["revisionId"],
-            },
-        )
-        outcome = _await_workbench_job(base, accepted["jobId"])
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2)
-
-    assert outcome["state"] == "failed"
-    assert str(repository) not in outcome["error"]
-    assert outcome["error"] == "repository operation failed"
-
-
-@pytest.mark.filterwarnings(
-    "ignore:urllib3 .* doesn't match a supported version!"
-)
 def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
     tmp_path, monkeypatch
 ):
@@ -2543,16 +2298,6 @@ def test_catalog_outline_discovery_uses_json_stems_and_requires_source_png(tmp_p
     (source_dir / "alpha-board.png").unlink()
     with pytest.raises(EditorError, match="matching PNG"):
         discover_catalog_outline_sessions(source_dir, outline_dir)
-
-
-def test_real_catalog_discovers_all_outline_stems_and_root_sources():
-    catalog_root = EDITOR_ROOT.parents[1] / "docs/hangboard-generative-catalog"
-
-    sessions = discover_catalog_outline_sessions(catalog_root, catalog_root / "outlines")
-
-    assert sessions
-    assert [session.label for session in sessions] == sorted(session.label for session in sessions)
-    assert all(session.session.image_path == catalog_root / f"{session.label}.png" for session in sessions)
 
 
 def test_catalog_regions_flatten_cubics_to_pixel_contours_without_control_points(tmp_path):

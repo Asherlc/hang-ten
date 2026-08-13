@@ -124,13 +124,13 @@ final class CustomRoutineDraftTests: XCTestCase {
     }
 
     func testRetargetedNewDraftKeepsItsGeneratedDefinitionID() {
-        let draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        let draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.defaultBoard.id))
 
         XCTAssertEqual(draft.retargeted(to: .generic).definition().id, draft.definition().id)
     }
 
     func testRetargetingNewDraftPreservesRowsAndMetadataWhileClearingOnlyIncompatibleTargets() {
-        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.defaultBoard.id))
         draft.title = "Retarget me"
         draft.subtitle = "Keep this description"
         draft.difficulty = "Advanced"
@@ -174,7 +174,7 @@ final class CustomRoutineDraftTests: XCTestCase {
     }
 
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
-        let retainedHold = try XCTUnwrap(BoardCatalog.compactII.holds.first)
+        let retainedHold = try XCTUnwrap(BoardCatalog.defaultBoard.holds.first)
         let replacementBoard = TrainingBoard(
             id: "replacement-board",
             manufacturer: "Test",
@@ -186,7 +186,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             productURL: try XCTUnwrap(URL(string: "https://example.com/board")),
             photoAssetName: nil
         )
-        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.defaultBoard.id))
         draft.steps = [
             .init(
                 id: "hang",
@@ -269,7 +269,7 @@ final class CustomRoutineDraftTests: XCTestCase {
     }
 
     func testBoardSpecificDraftStoresExactSelectedHoldIDs() {
-        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.compactII.id))
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: BoardCatalog.defaultBoard.id))
         draft.steps = [
             .init(
                 id: "hang",
@@ -287,7 +287,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertEqual(
             definition.targetMode,
-            .boardSpecific(boardID: BoardCatalog.compactII.id)
+            .boardSpecific(boardID: BoardCatalog.defaultBoard.id)
         )
         XCTAssertEqual(definition.steps[0].targets, [.holdIDs(["edge-19-left", "edge-19-right"])])
     }
@@ -477,7 +477,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             difficulty: nil,
             category: nil,
             tags: [],
-            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [WorkoutStepDefinition(
                 id: "saved-step",
                 title: "Saved step",

@@ -161,7 +161,7 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/HangboardWorkbench/server.py
 ```
 
-This discovers the checkout, reads complete approved board packages from
+This discovers the checkout, reads complete registered board packages from
 `Hangboards/<board-folder>/board.json`, and writes in-progress work
 under `.context/hangboard-workbench/`. Automation can select different roots
 explicitly:
@@ -210,16 +210,18 @@ approved over the replacement.
 
 ## Single-board suite workflow
 
-Select one complete canonical board from the repository list and use the suite
-sidebar in order: **Onboard** for Stage 0–4 review, **Inspect** to confirm the
-active revision and accepted artifacts, **Promote to iOS** to complete an
-explicit evidence-backed profile and review grouped metadata, geometry, and
-plan diffs, then **Validate** for package, hold-ID parity, and plan-library
-checks. Promotion preview is read-only. A stale revision or preview token,
-incomplete approval, invalid profile, or target changed relative to `main`
-returns a conflict and leaves the checkout untouched. **Save locally** writes
-only the verified, grouped-diff native targets atomically for local Git review;
-it never commits, pushes, updates a remote, or synchronizes the app catalog.
+Use **Onboard** for Stage 0–4 review, **Inspect** to confirm the active revision
+and accepted artifacts, and **Validate** for hold-ID, semantic, and plan-library
+checks. Final **Save changes** selects the complete revision inside the local
+Workbench workspace. It does not publish to `Tools/HangboardPipeline/boards`,
+write generated Swift or JSON, or modify app resources.
+
+Canonical publication is a separate fail-closed API operation. A caller submits
+a reviewed candidate below repository `.context` to `POST /api/package-candidates`
+with its board ID and `draft` or `approved` status. The Workbench copies only to
+`Hangboards/<slug>`, updates `Hangboards/catalog.json`, and validates the whole
+registry. Invalid candidates roll back both paths. No native source, Xcode asset,
+or legacy board-library artifact participates in that transaction.
 
 The Validate tool accepts only a caller-supplied UUID and formats review
 commands for it. The browser does not create, delete, boot, erase, or archive
@@ -238,14 +240,10 @@ rtk hangboard-onboard \
   --status
 ```
 
-CLI-compatible runs are programmatic producers: once a run is complete and all
-five checkpoints are approved, its caller passes it to
-`RepositoryBoardLibrary.publish()` to update the canonical
-`Hangboards/<board-folder>/board.json` package. The browser never asks for a
-CLI run directory. Only complete approved runs belong in that package; all
-unfinished runs belong under the ignored `.context/` directory. Final **Save
-locally** writes the canonical package for normal Git review; it never commits,
-pushes, updates the Hang Ten app catalog, or synchronizes remotely.
+CLI-compatible runs remain review inputs. A source-backed package candidate is
+assembled below `.context` and goes through the canonical package validator
+before it can be registered. The browser never asks for a CLI run directory,
+and unfinished runs remain under the ignored `.context/` directory.
 
 The lower-level CLI remains useful for scripted operation. Start a persisted
 run from one local image or HTTP(S) source:
@@ -320,68 +318,6 @@ and grip-highlight previews from those paths. Publication validates the full
 Stage 1 → Stage 2 → Stage 3 hash chain, finalizes candidate hashes before any
 manual comparison evidence is read, and writes an acceptance record with a
 six-panel review image.
-
-## Generate catalog hold outlines
-
-Use the catalog CLI to emit editable hold-outline JSON for every product image
-in `docs/hangboard-generative-catalog`:
-
-```bash
-python -m hangboard_vectorizer.catalog_outline_cli \
-  --source-dir docs/hangboard-generative-catalog \
-  --output-dir docs/hangboard-generative-catalog/outlines \
-  --review-dir .context/hardboard-outlines/reviews
-```
-
-The command discovers only top-level `*.png` sources, skips the exact contact
-sheet name `contact-sheet-primary.png`, sorts the remaining 32 board images
-lexicographically, and writes one `<stem>.json` document per source plus an
-optional overlay PNG for review. `--check` validates the source/output set,
-JSON schema, normalized geometry, relative source-image wiring, and source
-canvas dimensions without writing files. A successful run prints how many
-catalog outline documents were verified; failures name the missing or invalid
-JSON file.
-
-Each outline document uses normalized coordinates in a source-sized canvas:
-
-```json
-{
-  "schemaVersion": 1,
-  "sourceImage": "../escape-unlimited.png",
-  "canvas": {"width": 1774, "height": 887},
-  "coordinateSpace": "normalized",
-  "references": [
-    {
-      "title": "Unlimited Board",
-      "url": "https://escapeclimbing.com/products/ec72000",
-      "hints": ["simplified full-width edge design"]
-    }
-  ],
-  "outlines": [
-    {
-      "id": "hold-01",
-      "label": "Approximate rail 1",
-      "kind": "rail",
-      "confidence": "approximate",
-      "bounds": {"x": 0.06, "y": 0.25, "width": 0.10, "height": 0.06},
-      "path": {"closed": true, "commands": [{"command": "M", "to": [0.06, 0.25]}]},
-      "notes": "approximate dark recess candidate; verify against visible board geometry"
-    }
-  ]
-}
-```
-
-`path` coordinates are always normalized to `0..1` in the source image's own
-canvas. `sourceImage` resolves from each JSON file back to its sibling catalog
-PNG via `../<basename>.png`. `bounds` is the normalized axis-aligned box
-enclosing the path and is used as a coarse edit/review aid rather than an
-authoritative hold semantic.
-
-The `references` field is advisory only: it preserves manufacturer URLs and
-coarse source hints for human review, but those hints must not be treated as
-measured geometry or exact finger-depth claims. Generated hold kinds, labels,
-and regions remain approximate. Review the overlay PNGs and the JSON before
-using these catalog outlines at runtime.
 
 ## Override regions
 

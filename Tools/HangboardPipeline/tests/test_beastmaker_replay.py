@@ -240,15 +240,11 @@ def test_independent_v14_evidence_is_shipped_in_a_built_wheel(tmp_path: Path) ->
     dist = tmp_path / "dist"
     result = subprocess.run(
         [
-            sys.executable,
-            "-m",
-            "pip",
-            "wheel",
-            "--no-build-isolation",
-            "--no-deps",
-            "--wheel-dir",
+            "uv",
+            "build",
+            "--wheel",
+            "--out-dir",
             str(dist),
-            ".",
         ],
         cwd=project_copy,
         capture_output=True,

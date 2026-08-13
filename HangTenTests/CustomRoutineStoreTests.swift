@@ -4,13 +4,13 @@ import XCTest
 final class CustomRoutineStoreTests: XCTestCase {
     func testCompactIIPocketsExposeCapacityWithDistinctGripSemantics() throws {
         let twoFingerPocket = try XCTUnwrap(
-            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-two-left" }
+            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-two-left" }
         )
         let threeFingerPocket = try XCTUnwrap(
-            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-three-left" }
+            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-three-left" }
         )
         let fourFingerPocket = try XCTUnwrap(
-            BoardCatalog.compactII.holds.first { $0.id == "pocket-29-four-center" }
+            BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-four-center" }
         )
 
         XCTAssertEqual(twoFingerPocket.fingerCapacity, 2)
@@ -163,7 +163,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             difficulty: "Advanced",
             category: "strength",
             tags: ["custom", "edges"],
-            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
                 WorkoutStepDefinition(
                     id: "step-1",
@@ -379,7 +379,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             difficulty: nil,
             category: nil,
             tags: [],
-            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [validStep(
                 targets: [.kind(.jug)],
                 segments: [
@@ -430,7 +430,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             difficulty: nil,
             category: nil,
             tags: [],
-            targetMode: .boardSpecific(boardID: BoardCatalog.compactII.id),
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
             steps: [
                 WorkoutStepDefinition(
                     id: "repeat",

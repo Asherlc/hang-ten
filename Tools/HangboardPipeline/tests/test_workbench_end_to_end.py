@@ -8,7 +8,6 @@ from io import BytesIO
 import json
 from pathlib import Path
 import shutil
-import subprocess
 from threading import Event, Lock
 
 from PIL import Image
@@ -17,11 +16,9 @@ import pytest
 
 import hangboard_vectorizer.workbench as workbench_module
 from hangboard_vectorizer.board_library import (
-    BoardLibraryError,
     LibraryBoard,
     RepositoryBoardLibrary,
 )
-from hangboard_vectorizer.ios_promotion import read_promotion_profile
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.generic_stage2 import GenericStage2Runner
 from hangboard_vectorizer.onboard_cli import main
@@ -36,10 +33,10 @@ from hangboard_vectorizer.workbench import (
     WorkbenchServiceError,
     WorkbenchView,
 )
+import hangboard_vectorizer.workbench_promotion as workbench_promotion
 from hangboard_vectorizer.workbench_store import (
     BoardRecord,
     WorkbenchStore,
-    WorkbenchStoreError,
 )
 
 
@@ -57,25 +54,33 @@ _BOARD_FIXTURES = (
     ),
 )
 
-_PROMOTION_PACKAGE_SOURCE = (
+_DIRECT_PACKAGE_SOURCE = (
     Path(__file__).resolve().parents[3]
-    / "Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii"
+    / "Hangboards/metolius-wood-grips-compact-ii"
 )
-_PROMOTION_PROFILE_SOURCE = Path(__file__).parent / "data/ios-promotion-profile.json"
-_PROMOTION_TARGETS = (
-    "HangTen/Models/GeneratedBoardCatalog.swift",
-    "HangTen/Views/MetoliusCompactIIDesign.swift",
-    "HangTen/Models/PlanStorage.swift",
-    "HangTen/Resources/PlanLibrary.json",
-)
-_PROMOTION_PLAN_LIBRARY_INPUTS = (
-    "scripts/export-plan-library.sh",
-    "scripts/ExportPlanLibrary.swift",
-    "HangTen/Views/DesignSystem.swift",
-    "HangTen/Models/TrainingModels.swift",
-    "HangTen/Models/WorkoutStepNormalization.swift",
-    "HangTen/Models/PlanStorage.swift",
-)
+
+
+def _copy_valid_package(destination: Path, board_id: str) -> None:
+    """Copy a complete package and assign it a test-only canonical ID."""
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    for filename, key in (
+        ("board.json", "id"),
+        ("evidence.json", "boardID"),
+        ("semantics.json", "boardID"),
+        ("artwork.json", "boardID"),
+    ):
+        path = destination / filename
+        document = json.loads(path.read_text(encoding="utf-8"))
+        document[key] = board_id
+        path.write_text(json.dumps(document), encoding="utf-8")
+
+
+def _set_package_subtitle(package_root: Path, subtitle: str) -> None:
+    """Create a legal, observable revision without adding package artifacts."""
+    path = package_root / "board.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    document["subtitle"] = subtitle
+    path.write_text(json.dumps(document), encoding="utf-8")
 
 
 def test_checkout_repository_library_discovers_compact_ii() -> None:
@@ -89,101 +94,380 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
     assert snapshot.diagnostics == ()
 
 
-def test_canonical_board_promotes_locally_then_validates_without_git_side_effects(
+def test_workbench_publishes_a_validated_package_and_registry_without_legacy_artifacts(
     tmp_path: Path,
 ) -> None:
-    """The single-board suite may write reviewed targets, but never Git history or remotes."""
-    repository_root = _promotion_repository(tmp_path)
-    service = WorkbenchService(
-        WorkbenchStore(tmp_path / "workbench"),
-        library=RepositoryBoardLibrary(repository_root),
+    """A package publication only changes the canonical package and registry."""
+    repository_root = tmp_path / "repository"
+    candidate_root = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate_root)
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
     )
-    opened = service.open_library_board("metolius-wood-grips-compact-ii")
-    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
-    profile = read_promotion_profile(opened.run_root)
-    before_targets = _promotion_target_contents(repository_root)
-    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
-    remotes_before = _promotion_git(repository_root, "remote")
+    legacy_targets = {
+        "HangTen/Models/GeneratedBoardCatalog.swift": "legacy catalog\n",
+        "HangTen.xcodeproj/project.pbxproj": "legacy project\n",
+        "Tools/HangboardPipeline/boards/legacy-board.json": "legacy library\n",
+    }
+    for relative, contents in legacy_targets.items():
+        target = repository_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(contents, encoding="utf-8")
 
-    assert opened.state == "complete"
-    assert opened.repository_board_id == "metolius-wood-grips-compact-ii"
-    assert service.get_board(opened.board_id, revision_id=opened.revision_id) == opened
-
-    preview = service.preview_promotion(
-        opened.board_id,
-        expected_revision_id=opened.revision_id,
-        profile=profile,
+    publication = workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate_root,
+        board_id="metolius.wood-grips-compact-ii",
     )
 
-    assert preview.preview_token
-    assert [item.path for item in preview.files] == list(_PROMOTION_TARGETS)
-    assert preview.issues == ()
-    assert _promotion_target_contents(repository_root) == before_targets
-
-    saved = service.save_promotion(
-        opened.board_id,
-        expected_revision_id=opened.revision_id,
-        profile=profile,
-        preview_token=preview.preview_token,
+    assert publication.paths == (
+        Path("Hangboards/catalog.json"),
+        Path("Hangboards/compact-ii"),
     )
-    report = service.validation_report(
-        opened.board_id, expected_revision_id=opened.revision_id
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "metolius.wood-grips-compact-ii",
+            "path": "compact-ii",
+        }
+    ]
+    assert (hangboards / "compact-ii" / "board.json").read_bytes() == (
+        candidate_root / "board.json"
+    ).read_bytes()
+    assert {
+        relative: (repository_root / relative).read_text(encoding="utf-8")
+        for relative in legacy_targets
+    } == legacy_targets
+
+
+def test_parallel_package_publications_preserve_both_catalog_entries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Publishing a different board must not overwrite a concurrent catalog edit."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
+    )
+    candidates = tmp_path / "candidates"
+    first_candidate = candidates / "first-board"
+    second_candidate = candidates / "second-board"
+    _copy_valid_package(first_candidate, "example.first-board")
+    _copy_valid_package(second_candidate, "example.second-board")
+
+    actual_copytree = workbench_promotion.shutil.copytree
+    first_copy_started = Event()
+    release_first_copy = Event()
+    second_copy_started = Event()
+
+    def coordinated_copytree(
+        source: Path, destination: Path, *args: object, **kwargs: object
+    ):
+        if Path(source) == first_candidate:
+            first_copy_started.set()
+            if not release_first_copy.wait(timeout=5):
+                raise TimeoutError("first package copy was not released")
+        elif Path(source) == second_candidate:
+            second_copy_started.set()
+        return actual_copytree(source, destination, *args, **kwargs)
+
+    monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            first_candidate,
+            board_id="example.first-board",
+        )
+        assert first_copy_started.wait(2)
+        second = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            second_candidate,
+            board_id="example.second-board",
+        )
+        if second_copy_started.wait(timeout=0.5):
+            second.result(timeout=5)
+        release_first_copy.set()
+        first.result(timeout=5)
+        second.result(timeout=5)
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert {entry["id"] for entry in catalog["boards"]} == {
+        "example.first-board",
+        "example.second-board",
+    }
+    assert json.loads((hangboards / "first-board" / "board.json").read_text())["id"] == "example.first-board"
+    assert json.loads((hangboards / "second-board" / "board.json").read_text())["id"] == "example.second-board"
+
+
+def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failing job must not restore a catalog snapshot older than another job."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    hangboards.mkdir(parents=True)
+    (hangboards / "catalog.json").write_text(
+        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
+    )
+    candidates = tmp_path / "candidates"
+    invalid_candidate = candidates / "invalid-approved"
+    valid_candidate = candidates / "valid-board"
+    invalid_candidate.mkdir(parents=True)
+    _copy_valid_package(valid_candidate, "example.valid-board")
+
+    actual_copytree = workbench_promotion.shutil.copytree
+    invalid_copy_started = Event()
+    release_invalid_copy = Event()
+    valid_copy_started = Event()
+
+    def coordinated_copytree(
+        source: Path, destination: Path, *args: object, **kwargs: object
+    ):
+        if Path(source) == invalid_candidate:
+            invalid_copy_started.set()
+            if not release_invalid_copy.wait(timeout=5):
+                raise TimeoutError("invalid package copy was not released")
+        elif Path(source) == valid_candidate:
+            valid_copy_started.set()
+        return actual_copytree(source, destination, *args, **kwargs)
+
+    monkeypatch.setattr(workbench_promotion.shutil, "copytree", coordinated_copytree)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        invalid = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            invalid_candidate,
+            board_id="example.invalid-board",
+        )
+        assert invalid_copy_started.wait(2)
+        valid = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            valid_candidate,
+            board_id="example.valid-board",
+        )
+        if valid_copy_started.wait(timeout=0.5):
+            valid.result(timeout=5)
+        release_invalid_copy.set()
+        with pytest.raises(ValueError, match="board.json"):
+            invalid.result(timeout=5)
+        valid.result(timeout=5)
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "example.valid-board",
+            "path": "valid-board",
+        }
+    ]
+    assert json.loads((hangboards / "valid-board" / "board.json").read_text())["id"] == "example.valid-board"
+    assert not (hangboards / "invalid-board").exists()
+
+
+def test_package_publication_replaces_a_matching_canonical_package(
+    tmp_path: Path,
+) -> None:
+    """A matching ID/path is a canonical revision, not a duplicate package."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    _set_package_subtitle(destination, "Previous canonical revision")
+    (hangboards / "catalog.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+
+    workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate,
+        board_id="metolius.wood-grips-compact-ii",
+    )
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["boards"] == [
+        {
+            "id": "metolius.wood-grips-compact-ii",
+            "path": "compact-ii",
+        }
+    ]
+    assert (destination / "board.json").read_bytes() == (
+        candidate / "board.json"
+    ).read_bytes()
+
+
+def test_package_publication_atomically_updates_an_existing_revision(
+    tmp_path: Path,
+) -> None:
+    """An approved package can be revised without duplicating its registry entry."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    _set_package_subtitle(destination, "Previous canonical revision")
+    (hangboards / "catalog.json").write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+    _set_package_subtitle(candidate, "New candidate revision")
+
+    workbench_promotion.publish_package_candidate(
+        repository_root,
+        candidate,
+        board_id="metolius.wood-grips-compact-ii",
+    )
+
+    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
+    assert len(catalog["boards"]) == 1
+    assert catalog["boards"][0] == {
+        "id": "metolius.wood-grips-compact-ii",
+        "path": "compact-ii",
+    }
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "New candidate revision"
+    )
+
+
+def test_failed_existing_package_revision_preserves_package_and_catalog(
+    tmp_path: Path,
+) -> None:
+    """Validation failure must leave the prior canonical package fully active."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    _set_package_subtitle(destination, "Previous canonical revision")
+    catalog_path = hangboards / "catalog.json"
+    catalog_bytes = (
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n"
+    ).encode()
+    catalog_path.write_bytes(catalog_bytes)
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+    (candidate / "evidence.json").unlink()
+
+    with pytest.raises(ValueError, match="evidence.json"):
+        workbench_promotion.publish_package_candidate(
+            repository_root,
+            candidate,
+            board_id="metolius.wood-grips-compact-ii",
+        )
+
+    assert catalog_path.read_bytes() == catalog_bytes
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "Previous canonical revision"
+    )
+    assert (destination / "evidence.json").is_file()
+
+
+@pytest.mark.parametrize(
+    ("board_id", "candidate_slug"),
+    (
+        ("metolius.wood-grips-compact-ii", "different-path"),
+        ("example.different-id", "compact-ii"),
+    ),
+)
+def test_package_publication_rejects_id_or_path_aliases(
+    tmp_path: Path, board_id: str, candidate_slug: str
+) -> None:
+    """Only the exact existing ID/path pair may replace a canonical package."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    _set_package_subtitle(destination, "Previous canonical revision")
+    catalog_path = hangboards / "catalog.json"
+    catalog_path.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "boards": [
+                    {
+                        "id": "metolius.wood-grips-compact-ii",
+                        "path": "compact-ii",
+                    }
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    candidate = tmp_path / "candidate" / candidate_slug
+    _copy_valid_package(candidate, board_id)
+
+    with pytest.raises(ValueError, match="catalog already contains"):
+        workbench_promotion.publish_package_candidate(
+            repository_root,
+            candidate,
+            board_id=board_id,
+        )
+
+    assert json.loads(catalog_path.read_text())["boards"][0]["path"] == "compact-ii"
+    assert json.loads((destination / "board.json").read_text())["subtitle"] == (
+        "Previous canonical revision"
+    )
+
+
+def test_final_save_never_publishes_into_the_legacy_repository_library(
+    tmp_path: Path,
+) -> None:
+    """Reintroducing ``library.publish`` would make local save mutate app artifacts."""
+    library = _empty_repository_library(tmp_path / "repository")
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    complete = _complete_runtime_board(service, "Example Board")
+
+    saved = service.save(
+        complete.board_id,
+        expected_revision_id=complete.revision_id,
     )
 
     assert saved.saved is True
-    assert saved.paths == _PROMOTION_TARGETS
-    checks = {check.check_id: check for check in report.checks}
-    assert checks["package-readiness"].status == "passed"
-    assert checks["hold-id-parity"].status == "passed"
-    assert (
-        repository_root / "scripts/export-plan-library.sh"
-    ).read_text(encoding="utf-8") == (
-        Path(__file__).resolve().parents[3] / "scripts/export-plan-library.sh"
-    ).read_text(encoding="utf-8")
-    plan_library = checks["plan-library"]
-    if plan_library.status == "passed":
-        pytest.fail("plan-library unexpectedly passed; remove the known-failure marker")
-    assert report.overall_status == "failed"
-    assert plan_library.status == "failed"
-    assert not plan_library.details
-    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
-    assert _promotion_git(repository_root, "remote") == remotes_before
-    assert set(_promotion_git(repository_root, "diff", "--name-only").splitlines()) == set(
-        _PROMOTION_TARGETS
-    )
-    pytest.xfail("plan-library validation has a known Swift compilation failure")
-
-
-def test_promotion_conflict_leaves_every_target_at_its_preexisting_contents(
-    tmp_path: Path,
-) -> None:
-    """A changed target fails before generation can partially replace another target."""
-    repository_root = _promotion_repository(tmp_path)
-    service = WorkbenchService(
-        WorkbenchStore(tmp_path / "workbench"),
-        library=RepositoryBoardLibrary(repository_root),
-    )
-    opened = service.open_library_board("metolius-wood-grips-compact-ii")
-    shutil.copy2(_PROMOTION_PROFILE_SOURCE, opened.run_root / "ios-promotion-profile.json")
-    profile = read_promotion_profile(opened.run_root)
-    changed_target = repository_root / _PROMOTION_TARGETS[-1]
-    changed_target.write_text(
-        changed_target.read_text(encoding="utf-8") + "\n// unrelated local edit\n",
-        encoding="utf-8",
-    )
-    before = _promotion_target_contents(repository_root)
-    head_before = _promotion_git(repository_root, "rev-parse", "HEAD")
-
-    with pytest.raises(WorkbenchServiceError, match="changed relative to main"):
-        service.preview_promotion(
-            opened.board_id,
-            expected_revision_id=opened.revision_id,
-            profile=profile,
-        )
-
-    assert _promotion_target_contents(repository_root) == before
-    assert _promotion_git(repository_root, "rev-parse", "HEAD") == head_before
-    assert not list(repository_root.glob(".hangboard-promotion-*"))
+    assert saved.repository_board_id is None
+    assert saved.repository_revision_token is None
+    assert library.snapshot().boards == ()
 
 
 def test_ui_created_run_is_resumable_by_cli_and_cli_run_is_listed_by_ui(
@@ -626,270 +910,6 @@ def test_open_library_board_scans_runtime_boards_once(
     assert scan_count == 1
 
 
-def test_save_repository_conflict_leaves_runtime_revision_unsaved(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    opened = service.open_library_board(entry.board_id)
-    changed = _complete_runtime_board(
-        _fixture_service(tmp_path / "changed-seed"),
-        entry.display_name,
-        color=(90, 110, 130),
-    )
-    library.publish(
-        run_root=changed.run_root,
-        board_id=entry.board_id,
-        expected_revision_token=entry.revision_token,
-    )
-
-    with pytest.raises(BoardLibraryError, match="publication conflict"):
-        service.save(
-            opened.board_id, expected_revision_id=opened.revision_id
-        )
-
-    runtime_board = service.store.read_board(opened.board_id)
-    assert runtime_board.saved_revision_id is None
-    assert runtime_board.repository_revision_token == entry.revision_token
-
-
-def test_save_new_board_publishes_then_links_runtime_record(tmp_path: Path) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    entries = library.snapshot().boards
-    assert [(entry.board_id, entry.display_name) for entry in entries] == [
-        (saved.repository_board_id, complete.product_name)
-    ]
-    assert saved.repository_revision_token == entries[0].revision_token
-    assert saved.saved is True
-
-
-def test_save_existing_board_uses_expected_repository_revision_token(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    expected_tokens = []
-    actual_publish = library.publish
-
-    def record_expected_token(
-        *,
-        run_root: Path,
-        board_id: str | None,
-        expected_revision_token: str | None,
-    ):
-        expected_tokens.append(expected_revision_token)
-        return actual_publish(
-            run_root=run_root,
-            board_id=board_id,
-            expected_revision_token=expected_revision_token,
-        )
-
-    monkeypatch.setattr(library, "publish", record_expected_token)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    assert saved.repository_revision_token != entry.revision_token
-    assert expected_tokens == [entry.revision_token]
-
-
-def test_stale_active_revision_is_rejected_before_repository_publication(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-    service.store.mark_descendants_stale(
-        complete.board_id, complete.revision_id, from_stage=3
-    )
-    actual_publish = library.publish
-    publish_calls = 0
-
-    def record_publish(*args: object, **kwargs: object):
-        nonlocal publish_calls
-        publish_calls += 1
-        return actual_publish(*args, **kwargs)
-
-    monkeypatch.setattr(library, "publish", record_publish)
-
-    with pytest.raises(WorkbenchStoreError, match="stale"):
-        service.save(complete.board_id, expected_revision_id=complete.revision_id)
-
-    assert publish_calls == 0
-    assert library.snapshot().boards == ()
-
-
-def test_unknown_legacy_repository_token_fails_safe_on_changed_save(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    workspace = tmp_path / "workspace"
-    service = _fixture_service(workspace, library=library)
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    manifest_path = workspace / "boards" / opened.board_id / "board.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["schemaVersion"] = 1
-    manifest["repositoryVersionId"] = "revision-0001"
-    manifest.pop("repositoryRevisionToken")
-    _write_json(manifest_path, manifest)
-    legacy_service = _fixture_service(workspace, library=library)
-
-    with pytest.raises(BoardLibraryError, match="publication conflict"):
-        legacy_service.save(
-            complete.board_id,
-            expected_revision_id=complete.revision_id,
-        )
-
-    persisted = legacy_service.store.read_board(complete.board_id)
-    assert persisted.saved_revision_id is None
-    assert persisted.repository_board_id == entry.board_id
-    assert persisted.repository_revision_token is None
-
-
-@pytest.mark.parametrize("existing_board", (False, True))
-def test_save_retry_reconciles_publication_after_atomic_runtime_update_failure(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    existing_board: bool,
-) -> None:
-    if existing_board:
-        library, entry = _repository_library(tmp_path)
-        service = _fixture_service(tmp_path / "workspace", library=library)
-        complete = service.open_library_board(entry.board_id)
-    else:
-        library = _empty_repository_library(tmp_path / "repository")
-        service = _fixture_service(tmp_path / "workspace", library=library)
-        complete = _complete_runtime_board(service, "Example Board")
-    actual_publish = service.store.publish_repository_revision
-    attempts = 0
-
-    def fail_once(*args: object, **kwargs: object):
-        nonlocal attempts
-        attempts += 1
-        if attempts == 1:
-            raise OSError("runtime publication update interrupted")
-        return actual_publish(*args, **kwargs)
-
-    monkeypatch.setattr(service.store, "publish_repository_revision", fail_once)
-    with pytest.raises(OSError, match="runtime publication update interrupted"):
-        service.save(complete.board_id, expected_revision_id=complete.revision_id)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-    repository_board = library.get_board(saved.repository_board_id)
-    assert saved.saved is True
-    assert len(library.snapshot().boards) == 1
-    assert repository_board.revision_token == saved.repository_revision_token
-
-
-def test_independent_workspaces_with_identical_local_ids_conflict_on_save(
-    tmp_path: Path,
-) -> None:
-    library, entry = _repository_library(tmp_path)
-    first_service = _fixture_service(tmp_path / "workspace-a", library=library)
-    second_service = _fixture_service(tmp_path / "workspace-b", library=library)
-    first_opened = first_service.open_library_board(entry.board_id)
-    second_opened = second_service.open_library_board(entry.board_id)
-    first_complete = _approve_to_completion(
-        first_service,
-        first_service.revise_stage(
-            first_opened.board_id,
-            stage=3,
-            expected_revision_id=first_opened.revision_id,
-        ),
-    )
-    second_complete = _approve_to_completion(
-        second_service,
-        second_service.revise_stage(
-            second_opened.board_id,
-            stage=3,
-            expected_revision_id=second_opened.revision_id,
-        ),
-    )
-    assert (first_complete.board_id, first_complete.revision_id) == (
-        second_complete.board_id,
-        second_complete.revision_id,
-    )
-
-    first_service.save(
-        first_complete.board_id,
-        expected_revision_id=first_complete.revision_id,
-    )
-
-    with pytest.raises(BoardLibraryError, match="conflict"):
-        second_service.save(
-            second_complete.board_id,
-            expected_revision_id=second_complete.revision_id,
-        )
-
-
-def test_repository_save_uses_one_combined_runtime_metadata_update(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _empty_repository_library(tmp_path / "repository")
-    service = _fixture_service(tmp_path / "workspace", library=library)
-    complete = _complete_runtime_board(service, "Example Board")
-
-    def reject_legacy_update(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("split repository metadata update was used")
-
-    monkeypatch.setattr(service.store, "link_repository_revision", reject_legacy_update)
-    monkeypatch.setattr(service.store, "save_revision", reject_legacy_update)
-
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-
-    assert saved.saved is True
-    assert saved.repository_board_id == "example-board"
-
-
-@pytest.mark.parametrize(("product_name", "color", "region_keys"), _BOARD_FIXTURES)
-def test_product_neutral_repository_replay(
-    tmp_path: Path,
-    product_name: str,
-    color: tuple[int, int, int],
-    region_keys: tuple[str, ...],
-) -> None:
-    library, entry = _repository_library(
-        tmp_path, product_name=product_name, color=color, region_keys=region_keys
-    )
-    service = _fixture_service(
-        tmp_path / "workspace", region_keys=region_keys, library=library
-    )
-
-    opened = service.open_library_board(entry.board_id)
-    revised = service.revise_stage(
-        opened.board_id, stage=3, expected_revision_id=opened.revision_id
-    )
-    complete = _approve_to_completion(service, revised)
-    saved = service.save(
-        complete.board_id, expected_revision_id=complete.revision_id
-    )
-    reopened = service.open_library_board(entry.board_id)
-
-    assert saved.repository_revision_token != entry.revision_token
-    assert reopened.repository_revision_token == saved.repository_revision_token
-
-
 def test_revision_replays_hash_bound_file_semantic_proposal_into_child_run(
     tmp_path: Path,
 ) -> None:
@@ -1273,41 +1293,6 @@ def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
     library_root = root / "Tools" / "HangboardPipeline" / "boards"
     library_root.mkdir(parents=True)
     return RepositoryBoardLibrary(root)
-
-
-def _promotion_repository(tmp_path: Path) -> Path:
-    repository_root = tmp_path / "repository"
-    shutil.copytree(
-        _PROMOTION_PACKAGE_SOURCE,
-        repository_root / "Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii",
-    )
-    for relative in _PROMOTION_TARGETS + _PROMOTION_PLAN_LIBRARY_INPUTS:
-        target = repository_root / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(Path(__file__).resolve().parents[3] / relative, target)
-    _promotion_git(repository_root, "init")
-    _promotion_git(repository_root, "checkout", "-b", "main")
-    _promotion_git(repository_root, "config", "user.name", "Hang Ten Tests")
-    _promotion_git(repository_root, "config", "user.email", "tests@example.invalid")
-    _promotion_git(repository_root, "add", ".")
-    _promotion_git(repository_root, "commit", "-m", "baseline")
-    return repository_root
-
-
-def _promotion_target_contents(repository_root: Path) -> dict[str, str]:
-    return {
-        relative: (repository_root / relative).read_text(encoding="utf-8")
-        for relative in _PROMOTION_TARGETS
-    }
-
-
-def _promotion_git(repository_root: Path, *args: str) -> str:
-    return subprocess.run(
-        ["git", "-C", str(repository_root), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
 
 
 def _repository_library(

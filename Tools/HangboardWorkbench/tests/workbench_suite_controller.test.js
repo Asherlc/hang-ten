@@ -46,7 +46,6 @@ test("suite controller retains the selected tool while a newer board revision re
     render(state) { rendered.push(state); },
     initialState: {
       ...createSuiteState({ board, activeTool: "inspect" }),
-      promotion: { previewToken: "old-preview", revisionId: "revision-1" },
       validation: { overallStatus: "passed", revisionId: "revision-1" },
     },
   });
@@ -55,7 +54,6 @@ test("suite controller retains the selected tool while a newer board revision re
 
   assert.equal(state.activeTool, "inspect");
   assert.equal(state.activeRevision, "revision-2");
-  assert.equal(state.promotion, null);
   assert.equal(state.validation, null);
   assert.deepEqual(rendered, [state]);
 });
@@ -83,7 +81,7 @@ test("a stale board request cannot overwrite a newer selected board", async () =
   assert.equal(rendered.length, 1);
 });
 
-test("a late promotion result cannot survive an active revision change", () => {
+test("a late validation result cannot survive an active revision change", () => {
   const rendered = [];
   const controller = createToolSuiteController({
     selectTool,
@@ -94,10 +92,14 @@ test("a late promotion result cannot survive an active revision change", () => {
 
   controller.setBoard({ ...board, revisionId: "revision-2" });
   const state = controller.setResults({
-    promotion: { previewToken: "preview-1", revisionId: "revision-1" },
+    validation: {
+      boardId: "board-7",
+      revisionId: "revision-1",
+      overallStatus: "passed",
+    },
   });
 
   assert.equal(state.activeRevision, "revision-2");
-  assert.equal(state.promotion, null);
+  assert.equal(state.validation, null);
   assert.equal(rendered.length, 2);
 });

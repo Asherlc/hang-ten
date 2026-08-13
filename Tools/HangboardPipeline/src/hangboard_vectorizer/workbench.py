@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from hashlib import sha256
 import json
 import os
@@ -31,20 +31,22 @@ from .onboarding_run import (
     start_run,
 )
 from .models import ConversionError
-from .ios_promotion import IosPromotionProfile, PromotionPreview, PromotionSaveResult
 from .review_edits import (
     materialize_stage2_edit,
     materialize_stage3_edit,
     validate_stage_edit,
 )
 from .workbench_store import BoardRecord, RevisionRecord, WorkbenchStore
-from .workbench_promotion import preview_for_revision, save_for_revision
+from .workbench_promotion import (
+    PackagePublication,
+    publish_package_candidate as publish_direct_package_candidate,
+    repository_root,
+)
 from .workbench_validation import ValidationReport, build_validation_report
 
 
 _FINAL_STAGE = 4
 _DRAFT_FILE = re.compile(r"draft-(\d+)\.json\Z")
-_REPOSITORY_BOARD_ID = re.compile(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
 _STATE_NAMES = {
     "awaiting_approval": "awaiting_review",
     "complete": "complete",
@@ -79,34 +81,6 @@ class WorkbenchServiceError(ValueError):
     """Raised when a guided workflow operation is inconsistent or unsupported."""
 
 
-def _ios_profile_matches_repository_board(
-    profile_board_id: str,
-    repository_board_id: str,
-    repository_board_ids: tuple[str, ...],
-) -> bool:
-    """Match an exact native ID or one unambiguous legacy dotted alias."""
-    if profile_board_id == repository_board_id:
-        return True
-    legacy_alias = profile_board_id.replace(".", "-")
-    if legacy_alias == profile_board_id:
-        return False
-    matching_candidates = {candidate for candidate in repository_board_ids if candidate.replace(".", "-") == legacy_alias}
-    return matching_candidates == {repository_board_id}
-
-
-def _repository_board_ids(snapshot: LibrarySnapshot) -> tuple[str, ...]:
-    candidates = [item.board_id for item in snapshot.boards]
-    for diagnostic in snapshot.diagnostics:
-        if "/" in diagnostic.path:
-            continue
-        if not _REPOSITORY_BOARD_ID.fullmatch(diagnostic.path):
-            continue
-        if diagnostic.path in candidates:
-            continue
-        candidates.append(diagnostic.path)
-    return tuple(candidates)
-
-
 class WorkbenchService:
     """Coordinate persistent board metadata and the shared onboarding state machine."""
 
@@ -121,8 +95,6 @@ class WorkbenchService:
         self.__library = library
         self.__library_open_locks_guard = RLock()
         self.__library_open_locks: dict[str, RLock] = {}
-        self.__promotion_previews_guard = RLock()
-        self.__promotion_previews: dict[tuple[str, str], PromotionPreview] = {}
         self.__validation_reports_guard = RLock()
         self.__validation_reports: dict[tuple[str, str], ValidationReport] = {}
         self.__runners = MappingProxyType(
@@ -237,6 +209,22 @@ class WorkbenchService:
             if board.repository_board_id is not None
             else board.id
         )
+
+    def publish_package_candidate(
+        self, candidate_root: Path, *, board_id: str
+    ) -> PackagePublication:
+        """Publish one `.context` package candidate through the canonical registry."""
+        if self.__library is None:
+            raise WorkbenchServiceError("repository board library is not configured")
+        try:
+            root = repository_root(self.__library)
+            candidate = Path(candidate_root).resolve(strict=True)
+            candidate.relative_to(root / ".context")
+            return publish_direct_package_candidate(
+                root, candidate, board_id=board_id
+            )
+        except (OSError, ValueError) as error:
+            raise WorkbenchServiceError(str(error)) from error
 
     def __open_library_board(self, board_id: str) -> WorkbenchView:
         if self.__library is None:
@@ -568,87 +556,8 @@ class WorkbenchService:
                 f"revision {revision.id} does not have a complete lineage"
             )
         self.store.mark_revision_complete(board.id, revision.id)
-        if self.__library is not None:
-            self.store.preflight_repository_revision(board.id, revision.id)
-            published = self.__library.publish(
-                run_root=revision.run_root,
-                board_id=board.repository_board_id,
-                expected_revision_token=board.repository_revision_token,
-            )
-            self.store.publish_repository_revision(
-                board.id,
-                revision.id,
-                repository_board_id=published.board.board_id,
-                repository_revision_token=published.revision_token,
-            )
-        else:
-            self.store.save_revision(board.id, revision.id)
+        self.store.save_revision(board.id, revision.id)
         return self.__view(board.id, revision.id)
-
-    def preview_promotion(
-        self,
-        board_id: str,
-        *,
-        expected_revision_id: str,
-        profile: IosPromotionProfile,
-        base_ref: str = "main",
-    ) -> PromotionPreview:
-        """Generate an in-memory native diff for the selected approved revision."""
-        board, revision = self.__promotion_context(
-            board_id, expected_revision_id=expected_revision_id, profile=profile
-        )
-        if self.__library is None:
-            raise WorkbenchServiceError("repository board library is not configured")
-        try:
-            preview = preview_for_revision(
-                self.__library, revision.run_root, profile, base_ref=base_ref
-            )
-        except (OSError, ValueError) as error:
-            raise WorkbenchServiceError(str(error)) from error
-        self.__promotion_context(
-            board.id, expected_revision_id=revision.id, profile=profile
-        )
-        self.__cache_promotion_preview(board, revision, preview)
-        return preview
-
-    def save_promotion(
-        self,
-        board_id: str,
-        *,
-        expected_revision_id: str,
-        profile: IosPromotionProfile,
-        preview_token: str,
-    ) -> PromotionSaveResult:
-        """Regenerate and atomically save a preview bound to this active revision."""
-        board, revision = self.__promotion_context(
-            board_id, expected_revision_id=expected_revision_id, profile=profile
-        )
-        if self.__library is None:
-            raise WorkbenchServiceError("repository board library is not configured")
-        try:
-            preview = preview_for_revision(
-                self.__library, revision.run_root, profile, base_ref="main"
-            )
-            self.__promotion_context(
-                board.id, expected_revision_id=revision.id, profile=profile
-            )
-            saved = save_for_revision(
-                self.__library, preview, expected_preview_token=preview_token
-            )
-        except (OSError, ValueError) as error:
-            raise WorkbenchServiceError(str(error)) from error
-        return replace(saved, revision_id=revision.id)
-
-    def get_promotion_preview(
-        self, board_id: str, *, expected_revision_id: str
-    ) -> PromotionPreview | None:
-        """Return the last in-memory preview for the requested active revision."""
-        board, revision = self.__active_revision(
-            board_id, expected_revision_id=expected_revision_id
-        )
-        with self.__promotion_previews_guard:
-            self.__discard_stale_promotion_previews(board.id, revision.id)
-            return self.__promotion_previews.get((board.id, revision.id))
 
     def validation_report(
         self,
@@ -657,7 +566,7 @@ class WorkbenchService:
         expected_revision_id: str,
     ) -> ValidationReport:
         """Return a read-only readiness report for the active approved revision."""
-        board, revision = self.__promotion_revision(
+        board, revision = self.__approved_revision(
             board_id, expected_revision_id=expected_revision_id
         )
         if self.__library is None:
@@ -674,7 +583,7 @@ class WorkbenchService:
             board_id=board_id,
             revision_id=revision.id,
         )
-        self.__promotion_revision(board.id, expected_revision_id=revision.id)
+        self.__approved_revision(board.id, expected_revision_id=revision.id)
         self.__cache_validation_report(board, revision, report)
         return report
 
@@ -682,7 +591,7 @@ class WorkbenchService:
         self, board_id: str, *, expected_revision_id: str
     ) -> ValidationReport | None:
         """Return the last successful validation report for the active revision."""
-        board, revision = self.__promotion_revision(
+        board, revision = self.__approved_revision(
             board_id, expected_revision_id=expected_revision_id
         )
         with self.__validation_reports_guard:
@@ -692,27 +601,6 @@ class WorkbenchService:
     def __library_open_lock(self, board_id: str) -> RLock:
         with self.__library_open_locks_guard:
             return self.__library_open_locks.setdefault(board_id, RLock())
-
-    def __cache_promotion_preview(
-        self,
-        board: BoardRecord,
-        revision: RevisionRecord,
-        preview: PromotionPreview,
-    ) -> None:
-        with self.__promotion_previews_guard:
-            self.__discard_stale_promotion_previews(board.id, revision.id)
-            self.__promotion_previews[(board.id, revision.id)] = preview
-
-    def __discard_stale_promotion_previews(
-        self, board_id: str, active_revision_id: str
-    ) -> None:
-        stale_keys = tuple(
-            key
-            for key in self.__promotion_previews
-            if key[0] == board_id and key[1] != active_revision_id
-        )
-        for key in stale_keys:
-            del self.__promotion_previews[key]
 
     def __cache_validation_report(
         self,
@@ -735,7 +623,7 @@ class WorkbenchService:
         for key in stale_keys:
             del self.__validation_reports[key]
 
-    def __promotion_revision(
+    def __approved_revision(
         self, board_id: str, *, expected_revision_id: str
     ) -> tuple[BoardRecord, RevisionRecord]:
         board, revision = self.__active_revision(
@@ -750,35 +638,6 @@ class WorkbenchService:
         if status.get("status") != "complete" or status.get("stage") != _FINAL_STAGE:
             raise WorkbenchServiceError(
                 f"revision {revision.id} does not have a complete approved run"
-            )
-        return board, revision
-
-    def __promotion_context(
-        self,
-        board_id: str,
-        *,
-        expected_revision_id: str,
-        profile: IosPromotionProfile,
-    ) -> tuple[BoardRecord, RevisionRecord]:
-        board, revision = self.__promotion_revision(
-            board_id, expected_revision_id=expected_revision_id
-        )
-        if board.repository_board_id is None:
-            raise WorkbenchServiceError(
-                "active board does not have a repository board identity"
-            )
-        repository_board_ids = (
-            _repository_board_ids(self.__library.snapshot())
-            if self.__library is not None
-            else ()
-        )
-        if not _ios_profile_matches_repository_board(
-            profile.board_id,
-            board.repository_board_id,
-            repository_board_ids,
-        ):
-            raise WorkbenchServiceError(
-                "promotion profile board ID does not match the active repository board"
             )
         return board, revision
 

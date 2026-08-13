@@ -12,7 +12,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
 
     private func makeRoutine(
         id: String = "custom.edge",
-        mode: CustomRoutineTargetMode = .boardSpecific(boardID: BoardCatalog.compactII.id)
+        mode: CustomRoutineTargetMode = .boardSpecific(boardID: BoardCatalog.defaultBoard.id)
     ) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
             id: id,
@@ -49,9 +49,9 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertTrue(store.plans.contains { $0.id == "custom.edge" })
         XCTAssertTrue(store.plans.contains { $0.id == PlanCatalog.all[0].id })
         let custom = try XCTUnwrap(store.plans.first { $0.id == "custom.edge" })
-        XCTAssertEqual(store.board(for: custom).id, BoardCatalog.compactII.id)
+        XCTAssertEqual(store.board(for: custom).id, BoardCatalog.defaultBoard.id)
         XCTAssertEqual(
-            store.holdIDs(for: custom.steps[0], on: BoardCatalog.compactII),
+            store.holdIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard),
             ["edge-19-left", "edge-19-right"] as Set
         )
     }
@@ -214,7 +214,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 sourceLabel: "Test",
                 sourceURL: nil,
                 provenance: .custom,
-                boardID: BoardCatalog.compactII.id,
+                boardID: BoardCatalog.defaultBoard.id,
                 steps: []
             )
         }

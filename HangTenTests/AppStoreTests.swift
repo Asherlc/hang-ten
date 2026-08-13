@@ -17,9 +17,35 @@ final class AppStoreTests: XCTestCase {
             telemetry: telemetry.dependencies
         )
 
-        store.selectBoard(BoardCatalog.rockProdigyTrainingCenter)
+        let board = BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+        store.selectBoard(board)
 
-        XCTAssertEqual(store.selectedBoard, BoardCatalog.rockProdigyTrainingCenter)
+        XCTAssertEqual(store.selectedBoard, board)
+        XCTAssertEqual(telemetry.events, [
+            .boardSelected(family: .compactII)
+        ])
+    }
+
+    func testSelectingBoardDerivesTelemetryFamilyFromBoardIDSuffix() {
+        let telemetry = RecordingTelemetry()
+        let store = AppStore(
+            defaults: makeDefaults(),
+            telemetry: telemetry.dependencies
+        )
+        let board = TrainingBoard(
+            id: "fixture.rock-prodigy-training-center",
+            manufacturer: "Fixture",
+            name: "Rock Prodigy Training Center",
+            subtitle: "Fixture board",
+            dimensions: "Fixture dimensions",
+            aspectRatio: 1,
+            holds: [],
+            productURL: URL(string: "https://example.com")!,
+            photoAssetName: nil
+        )
+
+        store.selectBoard(board)
+
         XCTAssertEqual(telemetry.events, [
             .boardSelected(family: .rockProdigyTrainingCenter)
         ])

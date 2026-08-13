@@ -285,24 +285,6 @@ def test_schema_1_repository_link_loads_safely_and_migrates_on_next_mutation(
     )
 
 
-def test_store_persists_repository_revision_without_changing_runtime_id(
-    tmp_path: Path,
-) -> None:
-    store = WorkbenchStore(tmp_path)
-    board, _revision = store.reserve_initial_revision("Example Board")
-
-    linked = store.link_repository_revision(
-        board.id,
-        repository_board_id="example-board",
-        repository_revision_token=_REVISION_TOKEN_A,
-    )
-
-    assert linked.id == board.id
-    assert linked.repository_board_id == "example-board"
-    assert linked.repository_revision_token == _REVISION_TOKEN_A
-    assert store.read_board(board.id) == linked
-
-
 def test_finalize_repository_open_publishes_complete_active_link_atomically(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -358,90 +340,6 @@ def test_finalize_repository_open_interruption_preserves_pending_unlinked_state(
     assert WorkbenchStore(tmp_path).read_board(board.id) == before
 
 
-def test_publish_repository_revision_updates_link_and_saved_revision_atomically(
-    tmp_path: Path,
-) -> None:
-    store, board, revision = _populated_store(tmp_path)
-    store.activate_revision(board.id, revision.id)
-    store.mark_revision_complete(board.id, revision.id)
-
-    published = store.publish_repository_revision(
-        board.id,
-        revision.id,
-        repository_board_id="example-board",
-        repository_revision_token=_REVISION_TOKEN_A,
-    )
-
-    assert published.active_revision_id == revision.id
-    assert published.saved_revision_id == revision.id
-    assert published.repository_board_id == "example-board"
-    assert published.repository_revision_token == _REVISION_TOKEN_A
-    assert WorkbenchStore(tmp_path).read_board(board.id) == published
-
-
-def test_repository_preflight_is_read_only_for_the_active_complete_revision(
-    tmp_path: Path,
-) -> None:
-    store, board, revision = _populated_store(tmp_path)
-    store.activate_revision(board.id, revision.id)
-    store.mark_revision_complete(board.id, revision.id)
-    manifest_path = tmp_path / "boards" / board.id / "board.json"
-    before = manifest_path.read_bytes()
-
-    validated = store.preflight_repository_revision(board.id, revision.id)
-
-    assert validated.id == revision.id
-    assert manifest_path.read_bytes() == before
-
-
-@pytest.mark.parametrize("operation", ("preflight", "finalize"))
-def test_repository_publication_gates_reject_a_non_active_complete_revision(
-    tmp_path: Path, operation: str
-) -> None:
-    store, board, active = _populated_store(tmp_path)
-    store.activate_revision(board.id, active.id)
-    store.mark_revision_complete(board.id, active.id)
-    inactive = store.create_revision(board.id)
-    store.mark_revision_complete(board.id, inactive.id)
-    before = store.read_board(board.id)
-
-    with pytest.raises(WorkbenchStoreError, match="active revision changed"):
-        if operation == "preflight":
-            store.preflight_repository_revision(board.id, inactive.id)
-        else:
-            store.publish_repository_revision(
-                board.id,
-                inactive.id,
-                repository_board_id="example-board",
-                repository_revision_token=_REVISION_TOKEN_A,
-            )
-
-    assert store.read_board(board.id) == before
-
-
-def test_publish_repository_revision_failure_preserves_all_previous_metadata(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    store, board, revision = _populated_store(tmp_path)
-    store.activate_revision(board.id, revision.id)
-    store.mark_revision_complete(board.id, revision.id)
-    before = store.read_board(board.id)
-
-    def fail_replace(_source: object, _destination: object) -> None:
-        raise OSError("repository metadata replacement interrupted")
-
-    monkeypatch.setattr("hangboard_vectorizer.workbench_store.os.replace", fail_replace)
-    with pytest.raises(OSError, match="repository metadata replacement interrupted"):
-        store.publish_repository_revision(
-            board.id,
-            revision.id,
-            repository_board_id="example-board",
-            repository_revision_token=_REVISION_TOKEN_A,
-        )
-
-    assert WorkbenchStore(tmp_path).read_board(board.id) == before
-
-
 def test_store_loads_old_manifest_without_repository_link(tmp_path: Path) -> None:
     store, board, _revision = _populated_store(tmp_path)
     manifest_path = tmp_path / "boards" / board.id / "board.json"
@@ -454,39 +352,6 @@ def test_store_loads_old_manifest_without_repository_link(tmp_path: Path) -> Non
 
     assert reopened.repository_board_id is None
     assert reopened.repository_revision_token is None
-
-
-@pytest.mark.parametrize(
-    ("repository_board_id", "repository_revision_token"),
-    ((None, _REVISION_TOKEN_A),),
-)
-def test_store_rejects_revision_token_without_repository_board_id(
-    tmp_path: Path,
-    repository_board_id: str | None,
-    repository_revision_token: str | None,
-) -> None:
-    store, board, _revision = _populated_store(tmp_path)
-
-    with pytest.raises(WorkbenchStoreError, match="provided together"):
-        store.link_repository_revision(
-            board.id,
-            repository_board_id=repository_board_id,  # type: ignore[arg-type]
-            repository_revision_token=repository_revision_token,  # type: ignore[arg-type]
-        )
-
-
-@pytest.mark.parametrize("revision_token", ("a" * 63, "A" * 64, "g" * 64))
-def test_store_rejects_invalid_repository_revision_token(
-    tmp_path: Path, revision_token: str
-) -> None:
-    store, board, _revision = _populated_store(tmp_path)
-
-    with pytest.raises(WorkbenchStoreError, match="revision token"):
-        store.link_repository_revision(
-            board.id,
-            repository_board_id="example-board",
-            repository_revision_token=revision_token,
-        )
 
 
 def test_write_draft_publishes_new_immutable_documents(tmp_path: Path) -> None:

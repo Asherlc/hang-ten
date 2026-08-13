@@ -10,7 +10,7 @@ timer structure, a value from a published range, or a Compact II target; the
 catalog labels that choice as an app adaptation. `remove` means the field is
 absent because the linked source did not support it.
 
-## Field decisions for all 20 built-in plans
+## Field decisions for all 19 built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
@@ -33,7 +33,6 @@ absent because the linked source did not support it.
 | `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `lattice.beginner-climbers-training-guide` | coach | [Lattice Training · The Beginner Climber's Training Guide](https://latticetraining.com/blog/the-beginners-guide) | title and identifiable foundational task names/priorities | subtitle, instruction, accessory, target, count, duration, interval, gripType: reference rows and preview timing are app representations, not a fabricated source protocol | warmUp, cooldown, fingerConfiguration |
 | `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
-| `trango.rock-prodigy-training-center.intermediate` | manufacturer | [Trango Rock Prodigy Training Center · Rock Prodigy method](https://trango.com/products/rock-prodigy-training-center) | title, instruction, accessory, target, count, duration, interval, gripType: manual 7/3 dead hangs, two-hand restriction, grip order, 7-rep/6-rep sets, and three-minute recoveries | subtitle: concise app wording for the manual's progression and recovery context | warmUp, cooldown, fingerConfiguration |
 
 ## Removed catalog content
 
@@ -76,8 +75,7 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"lattice.beginner-climbers-training-guide","sourceType":"coach","sourceLabel":"Lattice Training · The Beginner Climber's Training Guide","sourceURL":"https://latticetraining.com/blog/the-beginners-guide"},
-    {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","sourceType":"manufacturer","sourceLabel":"Trango Rock Prodigy Training Center · Rock Prodigy method","sourceURL":"https://trango.com/products/rock-prodigy-training-center"}
+    {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"}
   ],
   "planFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},
@@ -172,11 +170,7 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
     {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
     {"planID":"rei.hangboard-sample-workout","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-
-    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["title","instruction","accessory","target","count","duration","interval","gripType"],"decision":"keep","sourcePrescription":true},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["subtitle"],"decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
+    {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
   ],
   "stepFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","stepIDPattern":".*task-.*","field":"instruction","decision":"keep","sourcePrescription":true},
@@ -236,10 +230,7 @@ grip/finger cue.
     {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true},
-    {"planID":"trango.rock-prodigy-training-center.intermediate","stepIDPattern":".*","field":"gripType","decision":"keep","sourcePrescription":true}
+    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"}
   ]
 }
 ```

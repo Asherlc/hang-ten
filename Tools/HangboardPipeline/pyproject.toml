@@ -17,8 +17,6 @@ dependencies = [
 dev = ["pytest>=9.1.1"]
 
 [project.scripts]
-hangboard-catalog-flat = "hangboard_vectorizer.catalog_flat_illustrations:main"
-hangboard-catalog-outlines = "hangboard_vectorizer.catalog_outline_cli:main"
 hangboard-catalog = "hangboard_vectorizer.board_catalog_cli:main"
 hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
 hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
@@ -31,7 +29,6 @@ hangboard-to-svg = "hangboard_vectorizer.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"hangboard_vectorizer" = ["catalog_outline_sources.json"]
 "hangboard_vectorizer.evidence" = ["*.json"]
 "hangboard_vectorizer.products" = ["*.json", "*.png"]
 

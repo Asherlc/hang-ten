@@ -599,14 +599,12 @@ enum PlanLibraryValidator {
         validateLibraryMetadata(library.metadata, issues: &issues)
 
         var planMappingByBoardID: [String: BoardMappingDefinition] = [:]
-        var planMappingPathByBoardID: [String: String] = [:]
         for (index, mapping) in library.boardMappings.enumerated() {
             let path = "boardMappings[\(index)]"
             if planMappingByBoardID[mapping.boardID] != nil {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate board mapping ID \"\(mapping.boardID)\"."))
             }
             planMappingByBoardID[mapping.boardID] = mapping
-            planMappingPathByBoardID[mapping.boardID] = path
 
             if !boardIDs.contains(mapping.boardID) {
                 issues.append(PlanValidationIssue(path: path, message: "Unknown board ID \"\(mapping.boardID)\"."))
@@ -631,6 +629,15 @@ enum PlanLibraryValidator {
                 for holdID in target.holdIDs where !knownHoldIDs.contains(holdID) {
                     issues.append(PlanValidationIssue(path: semanticPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(mapping.boardID)\"."))
                 }
+                if let kind = target.kind,
+                   !board.holds.contains(where: { $0.kind == kind }) {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: semanticPath,
+                            message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(mapping.boardID)\"."
+                        )
+                    )
+                }
             }
         }
 
@@ -647,20 +654,6 @@ enum PlanLibraryValidator {
                 }
             )
         }
-        for (boardID, mapping) in planMappingByBoardID {
-            var semanticHolds = mappingByBoardID[boardID]?.semanticHolds ?? [:]
-            semanticHolds.merge(mapping.semanticHolds) { _, planMapping in planMapping }
-            var semanticPaths = semanticMappingPathByBoardID[boardID] ?? [:]
-            for semanticID in mapping.semanticHolds.keys {
-                semanticPaths[semanticID] = "\(planMappingPathByBoardID[boardID]!).semanticHolds.\(semanticID)"
-            }
-            mappingByBoardID[boardID] = BoardMappingDefinition(
-                boardID: boardID,
-                semanticHolds: semanticHolds
-            )
-            semanticMappingPathByBoardID[boardID] = semanticPaths
-        }
-
         for (boardID, mapping) in mappingByBoardID {
             guard let board = boardByID[boardID]?.first else { continue }
             for (semanticID, target) in mapping.semanticHolds {
@@ -1124,12 +1117,9 @@ struct PlanDefinitionResolver {
 
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
-        let planMapping = library.boardMappings.first { $0.boardID == board.id }
         let mapping = BoardMappingDefinition(
             boardID: board.id,
-            semanticHolds: board.semanticHolds.merging(planMapping?.semanticHolds ?? [:]) {
-                _, planMapping in planMapping
-            }
+            semanticHolds: board.semanticHolds
         )
 
         for reference in definition.blocks {
@@ -1337,6 +1327,45 @@ struct PlanLibraryStore {
     }
 
     init(
+        builtInData data: Data,
+        decoder: JSONDecoder = JSONDecoder(),
+        packageStore: BoardPackageStore = BoardCatalog.packageStore
+    ) throws {
+        let definition: PlanLibraryDefinition
+        do {
+            definition = try decoder.decode(PlanLibraryDefinition.self, from: data)
+        } catch {
+            throw PlanLibraryStoreError.decoding(error)
+        }
+        try self.init(builtInDefinition: definition, packageStore: packageStore)
+    }
+
+    init(
+        builtInDefinition definition: PlanLibraryDefinition,
+        packageStore: BoardPackageStore = BoardCatalog.packageStore
+    ) throws {
+        let packageMappings = packageStore.boards.map { board in
+            BoardMappingDefinition(
+                boardID: board.id,
+                semanticHolds: packageStore.semantics(for: board.id).mapValues {
+                    SemanticHoldMappingDefinition(holdIDs: $0)
+                }
+            )
+        }
+        let packageBackedDefinition = PlanLibraryDefinition(
+            schemaVersion: definition.schemaVersion,
+            metadata: definition.metadata,
+            boardMappings: packageMappings,
+            blocks: definition.blocks,
+            plans: definition.plans
+        )
+        try self.init(
+            definition: packageBackedDefinition,
+            availableBoards: packageStore.boards
+        )
+    }
+
+    init(
         contentsOf url: URL,
         decoder: JSONDecoder = JSONDecoder(),
         availableBoards: [TrainingBoard] = BoardCatalog.all
@@ -1388,7 +1417,7 @@ struct PlanLibraryStore {
         let bundles = [Bundle.main, Bundle(for: PlanLibraryBundleToken.self)]
         if let url = bundles.compactMap({ $0.url(forResource: "PlanLibrary", withExtension: "json") }).first {
             do {
-                return try PlanLibraryStore(contentsOf: url)
+                return try PlanLibraryStore(builtInData: Data(contentsOf: url))
             } catch {
                 fatalError("Bundled plan library failed validation: \(error.localizedDescription)")
             }
@@ -1398,7 +1427,9 @@ struct PlanLibraryStore {
         // resources. The migration document keeps those environments useful
         // without weakening validation of the actual bundled file.
         do {
-            return try PlanLibraryStore(definition: BuiltInPlanLibraryDefinition.document)
+            return try PlanLibraryStore(
+                builtInDefinition: BuiltInPlanLibraryDefinition.document
+            )
         } catch {
             fatalError("Built-in plan library failed validation: \(error.localizedDescription)")
         }
@@ -1416,50 +1447,19 @@ private final class PlanLibraryBundleToken {}
 /// compare the resolved plans against the legacy catalog while the storage
 /// format is introduced, and avoids silently changing any routine timing.
 enum BuiltInPlanLibraryDefinition {
-    private static let compactBoardID = BoardCatalog.compactII.id
-    private static let rockProdigyBoardID = BoardCatalog.rockProdigyTrainingCenter.id
-
-    private static let semanticHoldIDs: [String: [String]] = [
-        "outer-jugs": ["jug-left", "jug-right"],
-        "edge-29": ["edge-29-left", "edge-29-right"],
-        "edge-19": ["edge-19-left", "edge-19-right"],
-        "flat-slopers": BoardCatalog.compactIIFlatSloperHoldIDs,
-        "round-sloper": ["sloper-round-center"],
-        "pocket-29-three": ["pocket-29-three-left", "pocket-29-three-right"],
-        "pocket-29-two": ["pocket-29-two-left", "pocket-29-two-right"],
-        "pocket-29-four": ["pocket-29-four-center"],
-        "pocket-19-three": ["pocket-19-three-left", "pocket-19-three-right"],
-        "pocket-19-two": ["pocket-19-two-left", "pocket-19-two-right"],
-        "pocket-19-four": ["pocket-19-four-center"]
-    ]
-
-    private static let rockProdigySemanticHoldIDs: [String: [String]] = [
-        "warmup-jug": ["trango.rptc.left.top-jug", "trango.rptc.right.top-jug"],
-        "large-open-hand-rail": ["trango.rptc.left.large-open-rail", "trango.rptc.right.large-open-rail"],
-        "deep-two-finger-pocket": ["trango.rptc.left.deep-mr-pocket", "trango.rptc.right.deep-mr-pocket"],
-        "thin-crimp": ["trango.rptc.left.thin-crimp", "trango.rptc.right.thin-crimp"],
-        "shallow-three-finger-slot": ["trango.rptc.left.three-finger-slot", "trango.rptc.right.three-finger-slot"],
-        "wide-pinch": ["trango.rptc.left.wide-pinch", "trango.rptc.right.wide-pinch"],
-        "sloper": ["trango.rptc.left.sloper", "trango.rptc.right.sloper"]
-    ]
+    private static let boardMappings: [BoardMappingDefinition] = BoardCatalog.all.map { board in
+        BoardMappingDefinition(
+            boardID: board.id,
+            semanticHolds: BoardCatalog.packageStore.semantics(for: board.id).mapValues {
+                SemanticHoldMappingDefinition(holdIDs: $0)
+            }
+        )
+    }
 
     static let document: PlanLibraryDefinition = makeDocument()
 
     private static func makeDocument() -> PlanLibraryDefinition {
         let legacyPlans = LegacyPlanSeedCatalog.all
-        let boardMapping = BoardMappingDefinition(
-            boardID: compactBoardID,
-            semanticHolds: semanticHoldIDs.reduce(into: [:]) { result, entry in
-                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
-            }
-        )
-        let rockProdigyBoardMapping = BoardMappingDefinition(
-            boardID: rockProdigyBoardID,
-            semanticHolds: rockProdigySemanticHoldIDs.reduce(into: [:]) { result, entry in
-                result[entry.key] = SemanticHoldMappingDefinition(holdIDs: entry.value)
-            }
-        )
-
         var blocks: [WorkoutBlockDefinition] = []
         var blockIDs = Set<String>()
         var definitions: [PlanDefinition] = []
@@ -1523,7 +1523,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
             ),
-            boardMappings: [boardMapping, rockProdigyBoardMapping],
+            boardMappings: boardMappings,
             blocks: blocks,
             plans: definitions
         )
@@ -1586,12 +1586,6 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
                 "The app defaults the source ranges to 7 seconds and uses a manual 25-minute warm-up preview."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.rockProdigyIntermediate.id {
-            notes = [
-                "Trango's official manual URL: https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
-                "The exact intermediate 7-rep then 6-rep sequence, 7s/3s intervals, 3-minute set rests, two-hand dead-hang-only rule, and no pull-ups/no lock-offs are retained.",
-                "This plan is board-specific to the Trango Rock Prodigy Training Center; its warm-up jug, variable large rail, deep MR pocket, thin crimp, shallow 3-finger slot, wide pinch, and sloper resolve to the RPTC feature inventory."
             ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]
@@ -1682,8 +1676,12 @@ enum BuiltInPlanLibraryDefinition {
 
     private static func semanticID(for holdIDs: [String]) -> String? {
         let targetIDs = Set(holdIDs)
-        if let semanticID = semanticHoldIDs.first(where: { Set($0.value) == targetIDs })?.key {
-            return semanticID
+        for mapping in boardMappings {
+            if let semanticID = mapping.semanticHolds.first(where: {
+                Set($0.value.holdIDs) == targetIDs
+            })?.key {
+                return semanticID
+            }
         }
         return nil
     }
@@ -1763,7 +1761,6 @@ enum PlanCatalog {
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
     static let latticeBeginnerGuide = required("lattice.beginner-climbers-training-guide")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
-    static let rockProdigyIntermediate = required("trango.rock-prodigy-training-center.intermediate")
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
 

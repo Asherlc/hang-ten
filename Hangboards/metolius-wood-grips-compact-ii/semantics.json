@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "boardID": "metolius.wood-grips-compact-ii",
+  "semanticHolds": {
+    "edge-19": {
+      "holdIDs": [
+        "edge-19-left",
+        "edge-19-right"
+      ]
+    },
+    "edge-29": {
+      "holdIDs": [
+        "edge-29-left",
+        "edge-29-right"
+      ]
+    },
+    "flat-slopers": {
+      "holdIDs": [
+        "sloper-flat-left",
+        "sloper-flat-right"
+      ]
+    },
+    "outer-jugs": {
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ]
+    },
+    "pocket-19-four": {
+      "holdIDs": [
+        "pocket-19-four-center"
+      ]
+    },
+    "pocket-19-three": {
+      "holdIDs": [
+        "pocket-19-three-left",
+        "pocket-19-three-right"
+      ]
+    },
+    "pocket-19-two": {
+      "holdIDs": [
+        "pocket-19-two-left",
+        "pocket-19-two-right"
+      ]
+    },
+    "pocket-29-four": {
+      "holdIDs": [
+        "pocket-29-four-center"
+      ]
+    },
+    "pocket-29-three": {
+      "holdIDs": [
+        "pocket-29-three-left",
+        "pocket-29-three-right"
+      ]
+    },
+    "pocket-29-two": {
+      "holdIDs": [
+        "pocket-29-two-left",
+        "pocket-29-two-right"
+      ]
+    },
+    "round-sloper": {
+      "holdIDs": [
+        "sloper-round-center"
+      ]
+    }
+  }
+}

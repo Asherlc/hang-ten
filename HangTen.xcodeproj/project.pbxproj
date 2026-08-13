@@ -21,8 +21,6 @@
 		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000013 /* BoardDesignLanguage.swift */; };
-		AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */; };
-		AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
@@ -84,11 +82,11 @@
 		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
 		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
 		AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000066 /* CustomRoutineEditorView.swift */; };
-		AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000069 /* GeneratedBoardCatalog.swift */; };
+		AA0000000000000000000086 /* BoardPackageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000086 /* BoardPackageStore.swift */; };
+		AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000087 /* BoardPackageStoreTests.swift */; };
+		AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */; };
 		AA0000000000000000000070 /* BoardStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000070 /* BoardStorageTests.swift */; };
 		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
-		AA0000000000000000000072 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
-		AA0000000000000000000073 /* BoardLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000072 /* BoardLibrary.json */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
 		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
 		AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* PostHogTelemetry.swift */; };
@@ -113,8 +111,6 @@
 		BB0000000000000000000011 /* HangTen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HangTen.entitlements; sourceTree = "<group>"; };
 		BB0000000000000000000012 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000013 /* BoardDesignLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDesignLanguage.swift; sourceTree = "<group>"; };
-		BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetoliusCompactIIDesign.swift; sourceTree = "<group>"; };
-		BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockProdigyTrainingCenterDesign.swift; sourceTree = "<group>"; };
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
@@ -179,10 +175,11 @@
 		BB0000000000000000000064 /* CustomRoutineDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraft.swift; sourceTree = "<group>"; };
 		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000066 /* CustomRoutineEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineEditorView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000069 /* GeneratedBoardCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedBoardCatalog.swift; sourceTree = "<group>"; };
 		BB0000000000000000000070 /* BoardStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorageTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000071 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
-		BB0000000000000000000072 /* BoardLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardLibrary.json; sourceTree = "<group>"; };
+		BB0000000000000000000086 /* BoardPackageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStore.swift; sourceTree = "<group>"; };
+		BB0000000000000000000087 /* BoardPackageStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStoreTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
@@ -252,7 +249,6 @@
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
-				BB0000000000000000000069 /* GeneratedBoardCatalog.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000075 /* ForceSensorModels.swift */,
@@ -279,6 +275,7 @@
 				BB0000000000000000000062 /* CustomRoutineStore.swift */,
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 				BB0000000000000000000071 /* BoardStorage.swift */,
+				BB0000000000000000000086 /* BoardPackageStore.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* PostHogTelemetry.swift */,
 				AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */,
@@ -300,8 +297,6 @@
 			children = (
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000013 /* BoardDesignLanguage.swift */,
-				BB0000000000000000000014 /* MetoliusCompactIIDesign.swift */,
-				BB0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
@@ -319,7 +314,6 @@
 			children = (
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
-				BB0000000000000000000072 /* BoardLibrary.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -359,6 +353,8 @@
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
 				BB0000000000000000000070 /* BoardStorageTests.swift */,
+				BB0000000000000000000087 /* BoardPackageStoreTests.swift */,
+				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 			);
 			path = HangTenTests;
@@ -391,6 +387,7 @@
 			buildPhases = (
 				CC0000000000000000000002 /* Sources */,
 				CC0000000000000000000001 /* Frameworks */,
+				CC0000000000000000000007 /* Stage Board Packages */,
 				CC0000000000000000000003 /* Resources */,
 			);
 			buildRules = (
@@ -412,6 +409,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */;
 			buildPhases = (
+				CC0000000000000000000008 /* Verify Board Source Boundary Manifest */,
 				CC0000000000000000000005 /* HangTenTests Sources */,
 				CC0000000000000000000004 /* HangTenTests Frameworks */,
 				CC0000000000000000000006 /* Resources */,
@@ -476,7 +474,6 @@
 			files = (
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,
-				AA0000000000000000000072 /* BoardLibrary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,11 +482,46 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
-				AA0000000000000000000073 /* BoardLibrary.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CC0000000000000000000008 /* Verify Board Source Boundary Manifest */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
+				"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh",
+			);
+			name = "Verify Board Source Boundary Manifest";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh\"\n";
+		};
+		CC0000000000000000000007 /* Stage Board Packages */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Hangboards",
+			);
+			name = "Stage Board Packages";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards/catalog.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/stage-board-packages.py\" \\\n  --repository-root \"${SRCROOT}\" \\\n  --destination \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CC0000000000000000000002 /* Sources */ = {
@@ -507,8 +539,6 @@
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
 				AA0000000000000000000011 /* BoardDesignLanguage.swift in Sources */,
-				AA0000000000000000000012 /* MetoliusCompactIIDesign.swift in Sources */,
-				AA0000000000000000000067 /* RockProdigyTrainingCenterDesign.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
 				AA0000000000000000000075 /* ForceSensorModels.swift in Sources */,
 				AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */,
@@ -538,7 +568,7 @@
 				AA0000000000000000000062 /* CustomRoutineStore.swift in Sources */,
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
-				AA0000000000000000000069 /* GeneratedBoardCatalog.swift in Sources */,
+				AA0000000000000000000086 /* BoardPackageStore.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */,
 				AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */,
@@ -581,6 +611,8 @@
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
 				AA0000000000000000000070 /* BoardStorageTests.swift in Sources */,
+				AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */,
+				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

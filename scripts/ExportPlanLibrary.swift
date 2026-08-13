@@ -1,5 +1,12 @@
 import Foundation
 
+// The exporter decodes board artwork so it uses the same strict package path
+// as the app, but it does not render workout highlights.
+enum BoardHighlightMode: Hashable {
+    case active
+    case preview
+}
+
 @main
 enum ExportPlanLibrary {
     static func main() throws {

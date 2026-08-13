@@ -39,10 +39,9 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in `Hangboards/catalog.json` and each
-`Hangboards/<board-folder>/board.json` package, with the generated
-`HangTen/Models/GeneratedBoardCatalog.swift`, not in hand-authored
-`TrainingModels.swift`.
+and hold metadata lives in `Hangboards/catalog.json` and flat
+`Hangboards/<board-folder>/` packages. The app loads the staged package bytes
+from its resource bundle; no Swift board catalog is generated or hand-authored.
 
 ## Run
 
@@ -136,27 +135,23 @@ scripts/hangboard-tools.sh benchmark
 The report is written under `.context/hangboard-onboarding/`; Python packages,
 caches, and generated board runs remain local and are not part of the app.
 
-Canonical hangboard package and onboarding workflow commands:
+Canonical hangboard package checks:
 
 ```sh
 scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog register \
-  --catalog Hangboards/catalog.json \
-  --board metolius.wood-grips-compact-ii \
-  --run .context/hangboard-onboarding/manufacturer-model \
-  --run-id manufacturer-model
-
-# Regenerate and validate generated Swift catalog artifacts
-scripts/export-board-catalog.sh
-scripts/export-board-catalog.sh --check
 ```
+
+The registry lists only complete source-backed packages with exactly an `id`
+and flat `path`; Git branches are the in-progress mechanism. Unregistered
+image candidates contain only `assets/primary.png` and are not app content.
+The Xcode build phase runs `scripts/stage-board-packages.py`, which
+bundles only registered packages and the registry into the app resource bundle.
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
 
 For a reviewed Stage 2 hold-region run, use the local wrapper to inspect,
-compare, lint, preview, accept, and promote the artifacts:
+compare, lint, preview, and accept the artifacts:
 
 ```sh
 scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
@@ -164,29 +159,11 @@ scripts/hangboard-tools.sh compare --run .context/hangboard-onboarding/example -
 scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
 scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
 scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
-scripts/hangboard-tools.sh promote --run .context/hangboard-onboarding/example --repository-root "$PWD"
-scripts/hangboard-tools.sh release-check --run .context/hangboard-onboarding/example --repository-root "$PWD"
 ```
-
-`promote` is dry-run by default. Use `--apply` only with an explicit runtime
-integration profile, and expect `handoff-required` when that profile has not
-been configured yet; that result is the intentional stop before Swift/runtime
-integration work.
 
 For accepted decisions, `accept` persists the Stage 2 acceptance artifact and
 the current `lint-report.json`; it does not rewrite the automatic Stage 1 image
 or baseline Stage 2 JSON.
-
-For apply safety:
-
-- Run `promote` without `--apply` first and inspect `plannedWrites`,
-  `inputHashes`, and `outputHashes`.
-- Before `--apply`, make sure the destination file is recoverable from version
-  control or save a pre-apply backup copy yourself.
-- If an apply is wrong, restore the destination from git or your saved backup;
-  never delete files blindly to “start over.”
-- After restoring, rerun `promote` in dry-run mode and `release-check` until
-  the planned writes and hashes match the reviewed run.
 
 Regenerate the bundled routine document after an audited plan change:
 

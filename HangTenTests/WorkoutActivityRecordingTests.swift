@@ -561,7 +561,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             defaults: defaults
         )
         let plan = LegacyPlanSeedCatalog.repeaters
-        let board = BoardCatalog.compactII
+        let board = BoardCatalog.defaultBoard
         let repeaterSteps = plan.steps.filter { $0.id.hasPrefix(LegacyPlanSeedCatalog.repeaterStepIDPrefix) }
         let workSteps = repeaterSteps.filter { $0.phase == .hang }
         let interRepRestSteps = workSteps.filter { $0.restDuration == 3 }
