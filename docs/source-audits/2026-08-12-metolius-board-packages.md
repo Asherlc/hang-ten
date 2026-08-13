@@ -21,6 +21,24 @@ and were not used for any conclusion here.
 | `metolius-project` | [Project product page](https://www.metoliusclimbing.com/products/project-training-board); [Project numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307) | Product size, symmetric numbered layout, labeled outer jugs, 55 mm flat slopers, 53 mm round sloper, six numbered pocket families with stated depth/finger counts, and three numbered edge depths. | The diagram labels repeated hold groups but does not establish package evidence for every individual physical cavity and required field. It does not support the app-specific `cueStyle`/`features` values for jugs, slopers, pockets, or edges; the product page's generic training-guide link is not a Project semantic map. | Keep `assets/primary.png` only; unregistered. |
 | `metolius-simulator-3d` | [Metolius 2010 catalog](https://www.metoliusclimbing.com/pdf/Metolius_2010.pdf); [Simulator 3D numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619); [Simulator 3D training guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | The catalog gives the 28 in × 8.75 in board dimensions; the diagram labels the symmetric hold groups and stated depth/finger-count pocket and edge groups; the guide names routine targets. | The numbered diagram and guide identify groups, not a canonical physical-hold record with every package field. They do not support the app-specific `cueStyle`/`features` values for the labeled jugs, slopers, pockets, and edges. Reviewed artwork normalization can trace visible boundaries to the diagram, but cannot manufacture the missing semantic field evidence. | Keep `assets/primary.png` only; unregistered. |
 
+## Exact blockers
+
+### `metolius-climbers-edge`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `metolius-contact`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `metolius-project`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `metolius-simulator-3d`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
 To move any of these candidates into the runtime catalog, Metolius must publish
 model-specific material that maps every physical hold and explicitly supports
 the missing required fields, or the package schema must be redesigned to make

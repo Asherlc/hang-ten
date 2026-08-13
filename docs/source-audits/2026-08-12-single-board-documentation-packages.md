@@ -25,6 +25,8 @@ the manufacturer material actually covers.
 | Front presentation and visible ordering | [Lattice Triple Rung product gallery](https://latticetraining.com/product/triple-rung-wooden-hangboard/) | Product-gallery imagery establishes visible silhouette and rung layout only. |
 | Usage/test protocol | [Triple Rung instructions](https://latticetraining.com/app/uploads/2020/07/Triple-Run-Instructions-130x500mm-Folded-Print-Ready-PDF.pdf) | Installation and general training instructions; not a physical hold map. |
 
+### `lattice-triple-rung`
+
 **Blocker:** Lattice's materials identify the three edge *sizes*, but do not
 publish a numbered physical-hold diagram or map each edge to all package
 fields: a discrete boundary/frame, finger capacity, grip type, cue style, and
@@ -42,6 +44,8 @@ authored.
 | Visible layout | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | The manufacturer gallery shows a visible layout only. |
 | Per-hold guide/measurements | No manufacturer-issued numbered hold guide or complete per-hold measurement source located | No complete physical inventory or semantic map. |
 
+### `moon-armstrong`
+
 **Blocker:** Moon's aggregate inventory does not assign each individual
 physical hold an identity, boundary/frame, depth, capacity, or grip
 classification. It also does not map physical holds to semantic targets or to
@@ -57,6 +61,8 @@ those unpublished one-to-one mappings. No `board.json`, `semantics.json`,
 | Product gallery and surface appearance | [Nature Climbing Stoak Board III Oak](https://natureclimbing.com/products/stoak-board-iii) | Gallery establishes visible silhouette and materials only. |
 | Per-hold guide/measurements for the selected configuration | No manufacturer-issued numbered guide or fixed-configuration hold map located | No one-to-one inventory, boundaries, capacities, classifications, or adjustment-state map. |
 
+### `nature-stoak-board-iii`
+
 **Blocker:** The configurable insert system means the available edge depth can
 change. Nature does not publish a source assigning every configuration's
 physical hold boundary, final depth, finger capacity, grip type, or semantic
@@ -71,6 +77,8 @@ unregistered.
 | Product identity and high-level beginner positioning | [Linebreaker BASE product article](https://www.target10a.com/magazin/2017/01/01/linebreaker-base/) | target10a identifies the Linebreaker BASE and describes its grip selection and depths as intended for beginners. |
 | Safety and mounting information | [Linebreaker BASE safety information](https://m.media-amazon.com/images/I/418jCjplLXL.pdf) | A manufacturer-branded document hosted on Amazon's CDN; it supplies safety, mounting, and use information, but no hold map. Its hosting does not establish target10a.com provenance. |
 | Per-hold guide, dimensions, and measurements | No official numbered hold guide, front/oblique measurement set, or per-hold depth source located | No complete physical inventory, boundaries, capacities, or classifications. |
+
+### `target10a-linebreaker-base`
 
 **Blocker:** The official target10a.com article is high-level copy, and the
 manufacturer-branded CDN document does not enumerate holds. Neither supports

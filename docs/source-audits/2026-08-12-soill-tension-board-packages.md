@@ -22,6 +22,32 @@ independent model; source keys are not shared between models.
 | `tension-honestone` | `product`: [Honestone product page](https://tensionclimbing.com/products/honestone); `overview`: [Tension hangboards overview](https://tensionclimbing.com/pages/hangboards); `front-photos`: product-page imagery | Overall dimensions; 35°/45° macro-textured top slopers; 25 mm center incut edge; 25 mm one-finger pockets; 20/15/10/8 mm edge families and the stated radius for 10/8 mm edges. | The sources list families, not a canonical individual-hold diagram or count/location map. They leave each physical hold's required grip type, finger capacity beyond the named pockets, cue style, feature list, and normalized frame unsupported. Product photography cannot fill those fields. | Keep `assets/primary.png` only; unregistered. |
 | `tension-whetstone` | `product`: [Whetstone product page](https://tensionclimbing.com/products/whetstone); `overview`: [Tension hangboards overview](https://tensionclimbing.com/pages/hangboards); `front-photos`: product-page imagery | Overall dimensions; top ergo-bump jug; 40 mm center incut edge; 40 mm two-finger pockets; 40/30/25/20 mm edge families. | The sources do not provide a numbered or dimensioned physical-hold layout that ties each image boundary to a feature family. They do not establish every physical hold's grip type, finger capacity, cue style, feature list, or normalized frame. Inference from the image or descriptions would violate the evidence contract. | Keep `assets/primary.png` only; unregistered. |
 
+## Exact blockers
+
+### `soill-iron-palm-2`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `soill-split-palm`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `soill-training-tiles`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `tension-grindstone`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `tension-honestone`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
+### `tension-whetstone`
+
+The exact source-backed package blocker is recorded in this candidate's table row above.
+
 To register any candidate, its manufacturer must publish model-specific material
 that maps every physical hold and supports the missing runtime fields, or the
 package schema must be redesigned to make those fields genuinely optional with

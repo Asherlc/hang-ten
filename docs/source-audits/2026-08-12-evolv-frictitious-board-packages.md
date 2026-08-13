@@ -19,6 +19,8 @@ generated images.
 | Straight-on visible layout | [Evolv manufacturer-hosted still image](https://oberalp.imgix.net/ef857c73-13f1-4205-ac47-706cd101e1bb.jpg?auto=format&cs=srgb&fit=clip&type=still&w=628) | Visible silhouette and layout only. |
 | Oblique visible surfaces | [Evolv manufacturer-hosted technical image](https://oberalp.imgix.net/f8a564c9-b501-445f-bd43-af630730abfd.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628) and [second technical image](https://oberalp.imgix.net/e3b05632-02ce-467f-9226-d2a2862c482a.jpg?auto=format&cs=srgb&fit=clip&type=tech_detail&w=628) | Visible surface shape only. |
 
+### `evolv-kilter-basic-long`
+
 **Blocker:** Evolv's page enumerates hold *types* but does not publish an
 official numbered hold guide, per-hold count/boundaries, finger capacities, or
 grip classifications. The images cannot supply those non-visible facts. It
@@ -37,6 +39,8 @@ targets without inference.
 The product page says Pro 7 has seven holds and names a pull-up jug, pockets,
 and 35, 25, 20, 15, and 10 mm edges.
 
+### `frictitious-doormount-pro-7`
+
 **Blocker:** Frictitious does not identify the physical boundary/count of the
 pocket hold(s), their finger capacities, or a grip classification for the
 edges and pockets. Its images cannot convert the generic word “pockets” into
@@ -49,6 +53,8 @@ insufficient to map all seven individual records and their factual fields.
 | --- | --- | --- |
 | Product identity, dimensions, material, and published edge sizes | [Frictitious Megalith product page](https://frictitiousclimbing.com/products/megalith) | Lists 26.75 in × 6.5 in × 2.25 in, poplar wood, seven shoulder-width edge sizes (8–40 mm), full-width jug, a 25 mm center hold, a two-finger pocket on the 40 mm edge, and “mono pockets.” |
 | Manufacturer front imagery | [Megalith front image](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=1280) and [alternate official front image](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front-1.jpg?v=1780436232&width=3840) | Visible silhouette and layout only. |
+
+### `frictitious-megalith`
 
 **Blocker:** The product page never gives the count, location, or individual
 boundaries of the plural mono pockets, nor a complete per-hold classification

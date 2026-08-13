@@ -48,7 +48,7 @@ an exact key in its `evidence.json`.
 
 ## Exact blockers
 
-### `dewoodstok.woodbord`
+### `dewoodstok-woodbord`
 
 Missing official manufacturer evidence for the product URL, front and oblique
 reference images, the physical hold inventory and boundaries, every per-hold
@@ -56,7 +56,7 @@ depth and size, finger capacity, grip type, semantic targets, and artwork
 elements. The candidate remains primary-only and unregistered; no sidecars or
 catalog entry are permitted.
 
-### `escape.beta`
+### `escape-beta`
 
 Missing official manufacturer evidence for the individual physical hold
 inventory and boundaries, per-hold depth and size, finger capacity, grip type,
@@ -64,11 +64,10 @@ semantic targets, and the association of the gallery image areas to those
 facts. Overall dimensions and an image cannot fill those gaps. The candidate
 remains primary-only and unregistered.
 
-### `escape.unlimited`
+### `escape-unlimited`
 
 Missing official manufacturer evidence mapping each physical rung/hold to a
 measured depth, its boundaries, size, finger capacity, grip type, semantic
 targets, and artwork elements. The product copy's finger-pad sequence is not a
 millimetre measurement or a per-hold map, and it explicitly leaves mono/crimp
 placement to the climber. The candidate remains primary-only and unregistered.
-
