@@ -476,7 +476,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
         PendingWorkoutActivityContext(
             boardID: "board-a",
             boardName: "Board A",
-            activitySegments: [
+            activityMetadata: WorkoutActivityMetadata(segments: [
                 RecordedActivitySegment(
                     stepID: "step-a",
                     stepNumber: 1,
@@ -486,7 +486,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
                     sizeMillimeters: 20,
                     durationSeconds: 7
                 )
-            ]
+            ])
         )
     }
 }
@@ -684,6 +684,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         boardID: String,
         boardName: String,
         activitySegments: [RecordedActivitySegment],
+        activityMeasurements: [RecordedActivityStepMeasurement]?,
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         let (shouldDefer, onSave) = withLock {
@@ -692,7 +693,10 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
                 PendingWorkoutActivityContext(
                     boardID: boardID,
                     boardName: boardName,
-                    activitySegments: activitySegments
+                    activityMetadata: WorkoutActivityMetadata(
+                        segments: activitySegments,
+                        measurements: activityMeasurements
+                    )
                 )
             )
             let shouldDefer = deferSaveValue
