@@ -20,13 +20,15 @@ struct HangTenApp: App {
 		)
 		let motherboardSettingsStore = MotherboardSettingsStore()
 		let workoutSessionStore = WorkoutSessionStore()
+		let telemetry = TelemetryComposition.make(bundle: .main)
 
 		_motherboardBluetoothService = StateObject(wrappedValue: motherboardBluetoothService)
 		_motherboardSettingsStore = StateObject(wrappedValue: motherboardSettingsStore)
 		_store = StateObject(wrappedValue: AppStore(
 			motherboardBluetoothService: motherboardBluetoothService,
 			motherboardSettingsStore: motherboardSettingsStore,
-			workoutSessionStore: workoutSessionStore
+			workoutSessionStore: workoutSessionStore,
+			telemetry: telemetry
 		))
 
 		#if DEBUG
