@@ -85,14 +85,16 @@
     });
   }
 
-  function openingScreenState({ library = [], diagnostics = [], runtime = [], errors = {} } = {}) {
+  function openingScreenState({
+    library = [], diagnostics = [], runtime = [], errors = {},
+  } = {}) {
     const section = (boards, error, emptyMessage) => ({
       state: error ? "error" : boards.length ? "boards" : "empty",
       boards,
       message: error || (boards.length ? "" : emptyMessage),
     });
     const repositoryDiagnostics = Array.isArray(diagnostics) ? diagnostics : [];
-    const repository = section(library, errors.library || "", "No published boards yet.");
+    const repository = section(library, errors.library || "", "No repository boards yet.");
     if (!errors.library && !library.length && repositoryDiagnostics.length) {
       repository.state = "diagnostics";
       repository.message = "";

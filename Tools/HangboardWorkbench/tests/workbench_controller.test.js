@@ -106,7 +106,10 @@ test("opening board rows pass the selected repository and runtime identifiers", 
 
   renderOpeningBoardList(repository, {
     state: "boards",
-    boards: [{ boardId: "metolius-compact-ii", displayName: "Wood Grips Compact II" }],
+    boards: [
+      { boardId: "metolius-compact-ii", displayName: "Wood Grips Compact II", status: "published" },
+      { boardId: "beastmaker-1000", displayName: "beastmaker-1000", status: "draft" },
+    ],
   }, {
     label: (board) => board.displayName,
     detail: () => "Ready to open",
@@ -122,10 +125,12 @@ test("opening board rows pass the selected repository and runtime identifiers", 
   });
 
   repository.children[0].listeners.click();
+  repository.children[1].listeners.click();
   inProgress.children[0].listeners.click();
 
   assert.deepEqual(selected, [
     ["openLibraryBoard", "metolius-compact-ii"],
+    ["openLibraryBoard", "beastmaker-1000"],
     ["getBoard", "runtime-board-17"],
   ]);
 });
@@ -148,7 +153,7 @@ test("opening board controller preserves the runtime list when the library reque
 
 test("opening screen renders empty board sections while leaving Create board visible", () => {
   assert.deepEqual(openingScreenState({ library: [], runtime: [], errors: {} }), {
-    repository: { state: "empty", boards: [], message: "No published boards yet." },
+    repository: { state: "empty", boards: [], message: "No repository boards yet." },
     inProgress: { state: "empty", boards: [], message: "No boards in progress." },
     repositoryDiagnostics: [],
     createFormVisible: true,

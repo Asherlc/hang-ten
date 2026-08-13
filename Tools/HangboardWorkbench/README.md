@@ -51,9 +51,11 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
-Open `http://localhost:4173`. The opening screen lists published boards and
-work in progress, or lets you create a board from the exact commercial product
-name and an HTTP(S) image URL or local upload.
+Open `http://localhost:4173`. The opening screen lists repository boards with
+their draft or published status and workspace work in progress. Draft boards
+start editing from their existing primary image; published boards start from
+their complete package. You can also create a board from the exact commercial
+product name and an HTTP(S) image URL or local upload.
 
 ## Correct hold outlines
 

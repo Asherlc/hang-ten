@@ -627,6 +627,29 @@ def test_open_library_board_copies_current_token_and_is_idempotent(
     )
 
 
+def test_open_draft_repository_board_starts_editable_runtime_from_primary_image(
+    tmp_path: Path,
+) -> None:
+    library = _empty_repository_library(tmp_path / "repository")
+    draft_root = library.repository_root / "Hangboards" / "beastmaker-1000"
+    primary = draft_root / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(_fixture_image_bytes())
+    service = _fixture_service(tmp_path / "workspace", library=library)
+
+    entry = library.get_board("beastmaker-1000")
+    first = service.open_library_board(entry.board_id)
+    second = service.open_library_board(entry.board_id)
+
+    assert entry.status == "draft"
+    assert first.product_name == "beastmaker-1000"
+    assert first.stage == 0
+    assert second.board_id == first.board_id
+    assert second.revision_id == first.revision_id
+    assert first.repository_board_id == entry.board_id
+    assert first.repository_revision_token == entry.revision_token
+
+
 def test_open_library_board_links_the_exact_token_returned_by_copy(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
