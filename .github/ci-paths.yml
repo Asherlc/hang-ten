@@ -16,6 +16,18 @@ workbench_web:
 workbench_native:
   - 'Tools/HangboardWorkbench/macos/**'
   - 'Tools/HangboardWorkbench/packaging/**'
+workbench:
+  - 'Tools/HangboardPipeline/**'
+  - 'Tools/HangboardWorkbench/**'
+  - 'Hangboards/**'
+  - 'HangTen/Resources/BoardLibrary.json'
+  - 'scripts/export-board-library.py'
+  - 'scripts/export-board-catalog.py'
+  - 'scripts/stage-board-packages.py'
+  - 'docs/hangboard-generative-catalog/**'
+  - '.github/workflows/**'
+  - '.github/ci-paths.yml'
+  - '.github/actions/**'
 shared_board_content:
   - 'Hangboards/**'
   - 'HangTen/Resources/BoardLibrary.json'

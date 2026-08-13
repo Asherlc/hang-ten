@@ -1,0 +1,102 @@
+name: Comment on Hangboard Workbench build
+
+'on':
+  workflow_run:
+    workflows:
+      - Build Hangboard Workbench for pull requests
+    types:
+      - completed
+
+permissions:
+  contents: none
+
+jobs:
+  comment-pr-artifact:
+    name: Comment with workbench download
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      pull-requests: write
+
+    steps:
+      - name: Post workbench download link
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "The completed pull-request run has no associated pull request." >&2
+            exit 1
+          fi
+
+          current_head_sha="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')"
+          if [[ "$current_head_sha" != "$HEAD_SHA" ]]; then
+            echo "Ignoring a completed build for superseded head $HEAD_SHA (current: $current_head_sha)."
+            exit 0
+          fi
+
+          runs="$(gh api --paginate --slurp \
+            "repos/$REPOSITORY/actions/workflows/hangboard-workbench-pr.yml/runs?event=pull_request&status=success&per_page=100")"
+          newer_run_exists="$(jq -r \
+            --argjson pr "$PR_NUMBER" \
+            --argjson run_number "$RUN_NUMBER" \
+            --argjson run_attempt "$RUN_ATTEMPT" \
+            'any(.[].workflow_runs[];
+              any(.pull_requests[]; .number == $pr) and
+              ((.run_number > $run_number) or
+               (.run_number == $run_number and .run_attempt > $run_attempt)))' \
+            <<<"$runs")"
+          if [[ "$newer_run_exists" == "true" ]]; then
+            echo "Ignoring run $RUN_ID attempt $RUN_ATTEMPT because a newer successful run exists."
+            exit 0
+          fi
+
+          artifact_name="hangboard-workbench-macos-arm64-$RUN_ID-$RUN_ATTEMPT"
+          artifacts="$(gh api --paginate --slurp \
+            "repos/$REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100")"
+          artifact_id="$(jq --arg name "$artifact_name" \
+            '[.[].artifacts[] | select(.name == $name and (.expired | not))] | last | .id // empty' \
+            <<<"$artifacts")"
+          if [[ -z "$artifact_id" ]]; then
+            jobs="$(gh api --paginate --slurp \
+              "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
+            build_conclusion="$(jq -r \
+              '[.[].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
+              <<<"$jobs")"
+            if [[ "$build_conclusion" == "skipped" ]]; then
+              echo "Workbench build was skipped because this pull request did not change relevant paths."
+              exit 0
+            fi
+            echo "Expected unexpired artifact '$artifact_name' was not found." >&2
+            exit 1
+          fi
+
+          artifact_url="https://github.com/$REPOSITORY/actions/runs/$RUN_ID/artifacts/$artifact_id"
+          marker='<!-- hangboard-workbench-artifact -->'
+          body="${marker}
+          The Hangboard Workbench build is ready: [download the unsigned macOS arm64 artifact]($artifact_url)."
+          comments="$(gh api --paginate --slurp \
+            "repos/$REPOSITORY/issues/$PR_NUMBER/comments?per_page=100")"
+          comment_id="$(jq --arg marker "$marker" \
+            '[.[][] | select(
+              .user.login == "github-actions[bot]" and
+              (.body | contains($marker))
+            )] | last | .id // empty' \
+            <<<"$comments")"
+          if [[ -n "$comment_id" ]]; then
+            gh api --method PATCH "repos/$REPOSITORY/issues/comments/$comment_id" \
+              --field body="$body" >/dev/null
+          else
+            gh api --method POST "repos/$REPOSITORY/issues/$PR_NUMBER/comments" \
+              --field body="$body" >/dev/null
+          fi
