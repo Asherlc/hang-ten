@@ -3,12 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from hangboard_vectorizer.semantic_benchmark import (
-    HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS,
-    _highlight_pixels_equivalent,
     build_metolius_benchmark_report,
     main,
 )
@@ -38,16 +35,3 @@ def test_benchmark_cli_writes_canonical_sorted_report(tmp_path: Path) -> None:
 def test_benchmark_cli_rejects_outputs_outside_workspace_root(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="must stay inside workspace root"):
         main(["--package", str(PACKAGE), "--output", str(tmp_path.parent / "escaped.json"), "--workspace-root", str(tmp_path)])
-
-
-def test_highlight_pixels_equivalent_accepts_small_rgba_deltas() -> None:
-    accepted = np.asarray([[[10, 20, 30, 255]]], dtype=np.uint8)
-    replayed = np.asarray([[[11, 20, 29, 254]]], dtype=np.uint8)
-    assert HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS <= 32
-    assert _highlight_pixels_equivalent(accepted, replayed)
-
-
-def test_highlight_pixels_equivalent_rejects_larger_alpha_delta() -> None:
-    accepted = np.asarray([[[10, 20, 30, 255]]], dtype=np.uint8)
-    replayed = np.asarray([[[10, 20, 30, 252]]], dtype=np.uint8)
-    assert not _highlight_pixels_equivalent(accepted, replayed)

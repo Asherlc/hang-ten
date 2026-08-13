@@ -8,14 +8,8 @@ from hashlib import sha256
 import json
 from pathlib import Path
 
-import numpy as np
-
 from .board_catalog import load_board_package
 from .workspace_paths import default_workspace_root, resolve_workspace_path
-
-
-HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS = 32
-HIGHLIGHT_PIXEL_DIFF_SENTINEL = -1
 
 
 def build_metolius_benchmark_report(
@@ -70,39 +64,6 @@ def _package_hash(root: Path) -> str:
             digest.update(relative)
             digest.update(path.read_bytes())
     return digest.hexdigest()
-
-
-def _highlight_pixels_equivalent(
-    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
-) -> bool:
-    metrics = _highlight_pixel_diff_metrics(accepted_pixels, replayed_pixels)
-    return (
-        metrics["differingPixelCount"] != HIGHLIGHT_PIXEL_DIFF_SENTINEL
-        and metrics["differingPixelCount"]
-        <= HIGHLIGHT_PIXEL_EQUIVALENCE_MAX_CHANGED_PIXELS
-        and metrics["maxAbsChannelDifference"] <= 1
-    )
-
-
-def _highlight_pixel_diff_metrics(
-    accepted_pixels: np.ndarray, replayed_pixels: np.ndarray
-) -> dict[str, int]:
-    if (
-        accepted_pixels.shape != replayed_pixels.shape
-        or accepted_pixels.ndim != 3
-        or accepted_pixels.shape[-1] != 4
-    ):
-        return {
-            "differingPixelCount": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
-            "maxAbsChannelDifference": HIGHLIGHT_PIXEL_DIFF_SENTINEL,
-        }
-    differences = np.abs(
-        accepted_pixels.astype(np.int16) - replayed_pixels.astype(np.int16)
-    )
-    return {
-        "differingPixelCount": int(np.any(differences != 0, axis=-1).sum()),
-        "maxAbsChannelDifference": int(differences.max(initial=0)),
-    }
 
 
 def main(argv: Sequence[str] | None = None) -> int:
