@@ -567,7 +567,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/telemetry":
             token = os.environ.get("POSTHOG_CLIENT_TOKEN", "").strip()
             host = os.environ.get("POSTHOG_HOST", "https://us.i.posthog.com").strip()
-            configured = token.startswith("phc_") and host.startswith("https://")
+            try:
+                parsed_host = urlsplit(host)
+                # Accessing port forces urllib to reject non-numeric and
+                # out-of-range ports instead of silently accepting the URL.
+                parsed_host.port
+                valid_host = parsed_host.scheme == "https" and bool(parsed_host.hostname)
+            except ValueError:
+                valid_host = False
+            configured = token.startswith("phc_") and valid_host
             self._send_json(
                 HTTPStatus.OK,
                 {"token": token, "host": host} if configured else {},

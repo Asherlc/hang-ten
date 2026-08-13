@@ -6,23 +6,37 @@
   "use strict";
 
   const MAX_MESSAGE_LENGTH = 500;
+  const MAX_EXCEPTION_TYPE_LENGTH = 100;
+  const MAX_PENDING_ERRORS = 20;
+
+  function redact(value, maximumLength, fallback) {
+    return String(value || fallback)
+      .replace(/https?:\/\/\S+/gi, "[url]")
+      .replace(/file:\/\/[^\r\n]*/gi, "[file]")
+      .replace(/\b[A-Za-z]:[\\/][^\r\n]*/g, "[path]")
+      .replace(/\\\\[^\r\n]*/g, "[path]")
+      .replace(/(?:\/[^/\r\n]+){2,}[^\r\n]*/g, "[path]")
+      .slice(0, maximumLength) || fallback;
+  }
 
   function redactMessage(value) {
-    return String(value || "Unknown error")
-      .replace(/https?:\/\/\S+/gi, "[url]")
-      .replace(/file:\/\/\S+/gi, "[file]")
-      .replace(/\b[A-Za-z]:[\\/](?:[^\\/\s]+[\\/])*[^\\/\s]*/g, "[path]")
-      .replace(/\\\\[^\\\s]+\\[^\\\s]+(?:\\[^\\\s]+)*/g, "[path]")
-      .replace(/(?:\/[\w.@~+-]+){2,}/g, "[path]")
-      .slice(0, MAX_MESSAGE_LENGTH);
+    return redact(value, MAX_MESSAGE_LENGTH, "Unknown error");
+  }
+
+  function redactExceptionType(value) {
+    return redact(value || "Error", MAX_EXCEPTION_TYPE_LENGTH, "Error");
   }
 
   function exceptionProperties(error, { handled = false, mechanism = "onerror" } = {}) {
     const candidate = error && typeof error === "object" ? error : {};
-    const type = typeof candidate.name === "string" && candidate.name ? candidate.name : "Error";
+    const type = redactExceptionType(candidate.name);
     const value = redactMessage(candidate.message || error);
     return {
-      $exception_list: [{ type, value, mechanism: { type: mechanism, handled } }],
+      $exception_list: [{
+        type,
+        value,
+        mechanism: { type: redactExceptionType(mechanism), handled: Boolean(handled) },
+      }],
       $exception_type: type,
       $exception_message: value,
       editor_surface: "hold_editor",
@@ -30,15 +44,22 @@
   }
 
   function createReporter({ token, host, distinctId, fetch: send = globalThis.fetch } = {}) {
+    let captureHost;
+    try {
+      const parsedHost = new URL(host);
+      if (parsedHost.protocol === "https:" && parsedHost.hostname) captureHost = parsedHost.href.replace(/\/+$/, "");
+    } catch (_error) {
+      // Invalid configuration disables reporting.
+    }
     const enabled = typeof token === "string" && token.startsWith("phc_")
-      && typeof host === "string" && /^https:\/\//.test(host)
+      && Boolean(captureHost)
       && typeof distinctId === "string" && distinctId.length > 0
       && typeof send === "function";
     return {
       enabled,
       capture(error, context) {
         if (!enabled) return Promise.resolve(false);
-        return Promise.resolve().then(() => send(`${host.replace(/\/+$/, "")}/i/v0/e/`, {
+        return Promise.resolve().then(() => send(`${captureHost}/i/v0/e/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -62,7 +83,7 @@
     let configuring = true;
     const capture = (error, context) => {
       if (configuring) {
-        pending.push([error, context]);
+        if (pending.length < MAX_PENDING_ERRORS) pending.push([error, context]);
       } else {
         reporter.capture(error, context);
       }
@@ -109,5 +130,5 @@
     return reporter;
   }
 
-  return { createReporter, exceptionProperties, install, redactMessage };
+  return { createReporter, exceptionProperties, install, redactExceptionType, redactMessage };
 });

@@ -695,6 +695,26 @@ def test_telemetry_configuration_exposes_only_the_public_capture_settings(tmp_pa
     }
 
 
+@pytest.mark.parametrize(
+    "host",
+    [
+        "https://",
+        "https://[",
+        "https://us.i.posthog.com:not-a-port",
+        "http://us.i.posthog.com",
+        "not a URL",
+    ],
+)
+def test_telemetry_configuration_rejects_malformed_hosts(tmp_path, monkeypatch, host):
+    monkeypatch.setenv("POSTHOG_CLIENT_TOKEN", "phc_test-public-token")
+    monkeypatch.setenv("POSTHOG_HOST", host)
+    with running_server(make_run(tmp_path / "legacy")) as base:
+        status, payload = _raw_request(base, "GET", "/api/telemetry")
+
+    assert status == 200
+    assert payload == {}
+
+
 def _make_hang_ten_checkout(root: Path, missing: str | None = None) -> None:
     for marker in (
         ".git",
