@@ -85,6 +85,25 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsArtworkMissingPhysicalHoldID() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            let artworkURL = packageURL.appendingPathComponent("artwork.json")
+            try self.mutateJSONObject(at: artworkURL) { artwork in
+                var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
+                pieces.removeLast()
+                artwork["holdPieces"] = pieces
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .missingArtworkHoldID(boardID: "approved-board", holdID: "jug-right")
+            )
+        }
+    }
+
     func testStoreRejectsPresentationAssetPathEscape() throws {
         let fixture = try makeFixtureBundle { packageURL in
             let boardURL = packageURL.appendingPathComponent("board.json")
@@ -99,6 +118,129 @@ final class BoardPackageStoreTests: XCTestCase {
                 error as? BoardPackageStoreError,
                 .presentationAssetPathEscape(boardID: "approved-board", path: "../escaped.png")
             )
+        }
+    }
+
+    func testStoreRejectsApprovedSidecarSymlinkEscapingPackage() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            let boardURL = packageURL.appendingPathComponent("board.json")
+            let escapedURL = packageURL.deletingLastPathComponent()
+                .appendingPathComponent("escaped-board.json")
+            try FileManager.default.moveItem(at: boardURL, to: escapedURL)
+            try FileManager.default.createSymbolicLink(
+                at: boardURL,
+                withDestinationURL: escapedURL
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .approvedPackagePathEscape(boardID: "approved-board", path: "board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsUnknownKeysAtSidecarRoots() throws {
+        for (relativePath, resource) in [
+            ("../catalog.json", "Hangboards/catalog.json"),
+            ("board.json", "Hangboards/approved-board/board.json"),
+            ("semantics.json", "Hangboards/approved-board/semantics.json"),
+            ("artwork.json", "Hangboards/approved-board/artwork.json")
+        ] {
+            try assertMalformedJSON(relativePath: relativePath, resource: resource) { document in
+                document["unexpected"] = true
+            }
+        }
+    }
+
+    func testStoreRejectsUnknownKeysInNestedPackageDocuments() throws {
+        try assertMalformedJSON(
+            relativePath: "board.json",
+            resource: "Hangboards/approved-board/board.json"
+        ) { board in
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            holds[0]["unexpected"] = true
+            board["holds"] = holds
+        }
+
+        try assertMalformedJSON(
+            relativePath: "semantics.json",
+            resource: "Hangboards/approved-board/semantics.json"
+        ) { semantics in
+            var mappings = try XCTUnwrap(semantics["semanticHolds"] as? [String: Any])
+            var outerJugs = try XCTUnwrap(mappings["outer-jugs"] as? [String: Any])
+            outerJugs["unexpected"] = true
+            mappings["outer-jugs"] = outerJugs
+            semantics["semanticHolds"] = mappings
+        }
+
+        try assertMalformedJSON(
+            relativePath: "artwork.json",
+            resource: "Hangboards/approved-board/artwork.json"
+        ) { artwork in
+            var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
+            var treatment = try XCTUnwrap(pieces[0]["treatment"] as? [String: Any])
+            treatment["unexpected"] = true
+            pieces[0]["treatment"] = treatment
+            artwork["holdPieces"] = pieces
+        }
+    }
+
+    func testStoreRejectsEmptyDuplicateAndNonPositiveBoardMetadata() throws {
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                board["manufacturer"] = ""
+            }
+        }
+
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = 0
+                board["holds"] = holds
+            }
+        }
+
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["depthRangeMillimeters"] = ["lowerBound": 0, "upperBound": 10]
+                board["holds"] = holds
+            }
+        }
+
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["features"] = ["jug", "jug"]
+                board["holds"] = holds
+            }
+        }
+    }
+
+    func testStoreRejectsEmptyAndDuplicateSemanticHoldIDs() throws {
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("semantics.json")) { semantics in
+                var mappings = try XCTUnwrap(semantics["semanticHolds"] as? [String: Any])
+                mappings[""] = mappings.removeValue(forKey: "outer-jugs")
+                semantics["semanticHolds"] = mappings
+            }
+        }
+
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("semantics.json")) { semantics in
+                semantics["semanticHolds"] = ["outer-jugs": ["holdIDs": []]]
+            }
+        }
+
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("semantics.json")) { semantics in
+                semantics["semanticHolds"] = [
+                    "outer-jugs": ["holdIDs": ["jug-left", "jug-left"]]
+                ]
+            }
         }
     }
 
@@ -152,6 +294,41 @@ final class BoardPackageStoreTests: XCTestCase {
         try mutation(&object)
         try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
             .write(to: url)
+    }
+
+    private func assertMalformedJSON(
+        relativePath: String,
+        resource: String,
+        mutation: @escaping (inout [String: Any]) throws -> Void
+    ) throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(
+                at: packageURL.appendingPathComponent(relativePath).standardizedFileURL,
+                mutation: mutation
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), resource) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: resource)
+            )
+        }
+    }
+
+    private func assertInvalidPackage(
+        mutation: @escaping (URL) throws -> Void
+    ) throws {
+        let fixture = try makeFixtureBundle(mutate: mutation)
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(let boardID, _) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(boardID, "approved-board")
+        }
     }
 
     private var catalogData: Data {

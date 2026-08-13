@@ -920,17 +920,26 @@ enum BoardCatalog {
     // Temporary compatibility aliases for callers removed in Task 6. Their
     // values still come exclusively from the decoded package store.
     static var compactII: TrainingBoard {
-        packageStore.board(id: "metolius.wood-grips-compact-ii") ?? defaultBoard
+        guard let board = packageStore.board(id: "metolius.wood-grips-compact-ii") else {
+            fatalError("The approved Compact II board package is missing.")
+        }
+        return board
     }
 
     static var rockProdigyTrainingCenter: TrainingBoard {
-        packageStore.board(id: "trango.rock-prodigy-training-center") ?? defaultBoard
+        guard let board = packageStore.board(id: "trango.rock-prodigy-training-center") else {
+            fatalError("The approved Rock Prodigy board package is missing.")
+        }
+        return board
     }
 
     static var compactIIFlatSloperHoldIDs: [String] {
-        compactII.holds
-            .filter { $0.kind == .sloper && $0.features.contains(.largeSlope) }
-            .map(\.id)
+        guard let holdIDs = packageStore.semantics(
+            for: "metolius.wood-grips-compact-ii"
+        )["flat-slopers"] else {
+            fatalError("The approved Compact II package is missing flat-slopers semantics.")
+        }
+        return holdIDs
     }
 }
 
