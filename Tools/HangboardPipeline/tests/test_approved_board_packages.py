@@ -278,6 +278,18 @@ def test_yy_vertical_candidates_without_individual_hold_maps_remain_primary_only
         }
 
 
+def test_zlagboard_candidates_without_model_specific_hold_maps_remain_primary_only() -> None:
+    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
+    registered_paths = {entry["path"] for entry in catalog["boards"]}
+
+    for slug in ("zlagboard-evo", "zlagboard-pro"):
+        package_root = HANGBOARDS_ROOT / slug
+        assert slug not in registered_paths
+        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
+            "assets/primary.png"
+        }
+
+
 def test_every_registered_package_has_one_presentation_and_complete_evidence() -> None:
     module = load_board_catalog_module()
     catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
