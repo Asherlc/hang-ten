@@ -38,7 +38,7 @@ filter file and changed content come from the pull request's checkout on
 | `python` | `Tools/HangboardPipeline/**`, Python Workbench server/runtime/packaging files, Python tests, `pyproject.toml`, and Python CI/release workflow files | Python pipeline and Workbench tests |
 | `workbench_web` | Workbench HTML/CSS/browser JavaScript and Node tests, plus Node CI/release workflow files | Workbench Node tests |
 | `workbench_native` | `Tools/HangboardWorkbench/macos/**` and native packaging/release files | SwiftPM/native Workbench checks |
-| `shared_board_content` | `Hangboards/**`, `Tools/HangboardPipeline/boards/**`, `HangTen/Resources/BoardLibrary.json`, board export/catalog scripts, and catalog inputs | Python and iOS; Workbench Node and Python checks |
+| `shared_board_content` | `Hangboards/**`, `HangTen/Resources/BoardLibrary.json`, board export/catalog scripts, and catalog inputs | Python and iOS; Workbench Node and Python checks |
 | `metadata` | App Store metadata and its validation script | metadata validation |
 | `workflow` | `.github/workflows/**`, `.github/ci-paths.yml`, and action/dependency lock files | full relevant PR suite |
 

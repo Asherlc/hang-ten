@@ -677,7 +677,7 @@ def _make_hang_ten_checkout(root: Path, missing: str | None = None) -> None:
     for marker in (
         ".git",
         "Tools/HangboardPipeline/src/hangboard_vectorizer",
-        "Tools/HangboardPipeline/boards",
+        "Hangboards",
         "Tools/HangboardWorkbench/server.py",
     ):
         if marker != missing:
@@ -701,7 +701,7 @@ def test_checkout_validation_rejects_legacy_tool_roots(tmp_path):
     for marker in (
         ".git",
         "Tools/HangboardPipeline/src/hangboard_vectorizer",
-        "Tools/HangboardPipeline/boards",
+        "Hangboards",
         "Tools/HangboardWorkbench/server.py",
     ):
         (root / marker).mkdir(parents=True)
@@ -715,7 +715,7 @@ def test_checkout_validation_rejects_legacy_tool_roots(tmp_path):
     [
         ".git",
         "Tools/HangboardPipeline/src/hangboard_vectorizer",
-        "Tools/HangboardPipeline/boards",
+        "Hangboards",
         "Tools/HangboardWorkbench/server.py",
     ],
 )
@@ -1875,7 +1875,7 @@ def test_workspace_root_rejects_an_escape_from_repository_context(tmp_path, caps
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    (repository / "Tools" / "HangboardPipeline" / "boards").mkdir(parents=True)
+    (repository / "Hangboards").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     escaped_workspace = tmp_path / "escaped-workspace"
@@ -1902,7 +1902,7 @@ def test_workspace_root_rejects_a_symlink_escape_from_repository_context(
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    (repository / "Tools" / "HangboardPipeline" / "boards").mkdir(parents=True)
+    (repository / "Hangboards").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     escaped_workspace = tmp_path / "escaped-workspace"
@@ -1934,8 +1934,11 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    library = repository / "Tools" / "HangboardPipeline" / "boards"
+    library = repository / "Hangboards"
     library.mkdir(parents=True)
+    package = REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+    shutil.copytree(package, library / package.name)
+    shutil.copy2(REPOSITORY_ROOT / "Hangboards" / "catalog.json", library)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     workspace = repository / ".context" / "workspace"
@@ -1952,18 +1955,50 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
     try:
-        status, payload = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/library"
+        library_status, payload = read_json(base + "/api/library")
+        boards_status, boards_payload = read_json(base + "/api/boards")
+        open_status, submitted = _post_json(
+            base + "/api/library/metolius.wood-grips-compact-ii/open", {}
         )
+        for _ in range(1_000):
+            _status, job_payload = read_json(base + f"/api/jobs/{submitted['jobId']}")
+            opened = job_payload["job"]
+            if opened["state"] in {"succeeded", "failed"}:
+                break
+            time.sleep(0.01)
+        else:
+            pytest.fail("canonical package open did not finish within bounded polls")
+        final_status, final_boards = read_json(base + "/api/boards")
     finally:
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
 
     assert catalog is None
-    assert status == 200
-    assert payload == {"ok": True, "boards": [], "diagnostics": []}
+    assert library_status == 200
+    assert [board["boardId"] for board in payload["boards"]] == [
+        "metolius.wood-grips-compact-ii"
+    ]
+    assert payload["diagnostics"] == []
+    assert boards_status == 200
+    assert boards_payload == {"ok": True, "boards": []}
+    assert open_status == 202
+    assert opened["state"] == "succeeded", opened
+    assert opened["result"]["repositoryBoardId"] == "metolius.wood-grips-compact-ii"
+    assert opened["result"]["state"] == "complete"
+    assert opened["result"]["holdCount"] > 0
+    assert opened["result"]["normalArtifactUrl"]
+    assert final_status == 200
+    assert len(final_boards["boards"]) == 1
+    vector_path = next(workspace.rglob("stage-3-vector-regions.json"))
+    vector_document = json.loads(vector_path.read_text())
+    canonical_artwork = json.loads((package / "artwork.json").read_text())
+    assert [region["key"] for region in vector_document["regions"]] == [
+        piece["holdID"] for piece in canonical_artwork["holdPieces"]
+    ]
+    assert all(region["displayPath"] for region in vector_document["regions"])
     assert (workspace / "boards").is_dir()
 
 
@@ -1976,9 +2011,12 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
-    broken = repository / "Tools" / "HangboardPipeline" / "boards" / "broken-board"
+    broken = repository / "Hangboards" / "broken-board"
     broken.mkdir(parents=True)
-    (broken / "run.json").write_text("{}")
+    (broken / "board.json").write_text("{}")
+    (broken.parent / "catalog.json").write_text(
+        '{"schemaVersion":1,"boards":[{"id":"broken-board","path":"broken-board"}]}\n'
+    )
 
     server, _catalog = server_module._server_from_cli(
         ["--repository-root", str(repository), "--workspace-root", str(repository / ".context" / "workspace"), "--port", "0"]
@@ -2072,7 +2110,7 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
     repository = tmp_path / "repository"
     (repository / ".git").mkdir(parents=True)
     (repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer").mkdir(parents=True)
-    library = repository / "Tools" / "HangboardPipeline" / "boards"
+    library = repository / "Hangboards"
     library.mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()

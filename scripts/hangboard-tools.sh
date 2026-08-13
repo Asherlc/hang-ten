@@ -19,7 +19,7 @@ Commands:
   accept      Record an acceptance decision for reviewed hold regions
   promote     Build a safe promotion package for an accepted review run
   release-check Verify repo-facing release readiness for one promoted review run
-  benchmark   Replay the accepted Metolius run without a live model call
+  benchmark   Validate canonical package semantic and artwork parity
   catalog     Validate, inspect, or register hangboard package catalog artifacts
 EOF
 }
@@ -84,12 +84,12 @@ case "$command_name" in
         exec "$environment_root/bin/hangboard-release-check" release-check "$@"
         ;;
     benchmark)
-        accepted_run="$tool_root/boards/metolius-wood-grips-compact-ii"
         if [[ $# -eq 0 ]]; then
-            set -- --output "$repository_root/.context/hangboard-onboarding/metolius-parity/report.json"
+            set -- \
+                --package "$repository_root/Hangboards/metolius-wood-grips-compact-ii" \
+                --output "$repository_root/.context/hangboard-onboarding/metolius-parity/report.json"
         fi
-        exec "$environment_root/bin/hangboard-semantic-benchmark" \
-            --accepted-run "$accepted_run" "$@"
+        exec "$environment_root/bin/hangboard-semantic-benchmark" "$@"
         ;;
     catalog)
         exec "$environment_root/bin/hangboard-catalog" "$@"

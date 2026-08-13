@@ -1,21 +1,11 @@
 # Imported pipeline provenance
 
 The onboarding tool was imported from the local `hangboard-vectorizer`
-repository at commit `ce08eb9` (`feat: add zero-call semantic replay
-benchmark`). Package code, self-contained tests, evidence, and operator
-documentation were copied without semantic changes. Eight legacy test modules
-that depended on mutable, unversioned `work/real-beastmaker/**` directories
-were omitted; see `TESTING.md`.
+repository at commit `ce08eb9`. Package code, self-contained tests, evidence,
+and operator documentation were copied into this repository.
 
-`boards/metolius-wood-grips-compact-ii/` is the accepted visual run with
-run identity
-`30c65a90865de3c7de6e8e27a061056c4ef59e2d7a700e1406e3ae272e83e0b6`.
-It is intentionally versioned so `hangboard-semantic-benchmark` can fail
-closed unless cached semantic replay reproduces its Stage 2 labels, Stage 3
-geometry, and Stage 4 highlight pixels exactly with zero live model calls.
-
-Generated onboarding runs do not belong here. Put them below the Hang Ten
-repository's ignored `.context/` directory. Only complete runs with approved
-checkpoints through Stage 4 may be committed under `boards/<board-id>/`, as
-specified by the
-[unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
+The former tracked onboarding-run fixture was removed when published content
+migrated to canonical packages. The semantic benchmark now validates semantic
+and artwork parity directly from a package below `Hangboards/`, without relying
+on a `run.json` identity. Generated onboarding runs belong below the ignored
+`.context/` workspace and are never repository packages.

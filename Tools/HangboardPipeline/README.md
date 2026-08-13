@@ -176,13 +176,9 @@ Open `http://localhost:4173`, then create a board from either an HTTP(S) image
 URL or an image upload. The opening screen also lists valid repository boards;
 select one to open its current committed package for editing. The exact
 [package and publication contract is documented in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md),
-which supersedes the prior repository library design. When a complete revision
-is saved, the workbench atomically replaces the canonical board package.
-**Save locally** writes those files for normal Git review, but never commits or
-pushes them.
-
-CLI and other programmatic workflows are producers of the same contract: pass
-a completed run to `RepositoryBoardLibrary.publish()`. The browser never asks
+which supersedes the prior repository library design. Saving a complete runtime
+revision remains local to the Workbench workspace. Canonical package publication
+uses the separate package-candidate API described below; the browser never asks
 the user to provide a CLI run directory.
 
 The workbench runs Stage 0 immediately, then stops at every checkpoint for
@@ -213,8 +209,8 @@ approved over the replacement.
 Use **Onboard** for Stage 0–4 review, **Inspect** to confirm the active revision
 and accepted artifacts, and **Validate** for hold-ID, semantic, and plan-library
 checks. Final **Save changes** selects the complete revision inside the local
-Workbench workspace. It does not publish to `Tools/HangboardPipeline/boards`,
-write generated Swift or JSON, or modify app resources.
+Workbench workspace. It does not publish to `Hangboards/`, write generated
+Swift or JSON, or modify app resources.
 
 Canonical publication is a separate fail-closed API operation. A caller submits
 a reviewed candidate below repository `.context` to `POST /api/package-candidates`
@@ -273,18 +269,13 @@ hangboard-onboard \
   --status
 ```
 
-Replay the accepted Metolius compact semantic cache and write an offline parity
-report with zero live model calls:
+Validate canonical semantic targets and artwork coverage without model calls:
 
 ```bash
 hangboard-semantic-benchmark \
-  --accepted-run Tools/HangboardPipeline/boards/metolius-wood-grips-compact-ii \
+  --package Hangboards/metolius-wood-grips-compact-ii \
   --output .context/hangboard-onboarding/metolius-parity/report.json
 ```
-
-The command reports model activity separately from deterministic local work.
-See [docs/token-efficient-onboarding.md](docs/token-efficient-onboarding.md)
-for the cache identity, escalation rules, and measurement limits.
 
 The shared runner records the caller-asserted product name, preserves the exact
 cached source bytes, and publishes every generated checkpoint as hash-bound,

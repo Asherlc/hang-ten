@@ -90,7 +90,6 @@ workbench_native:
   - 'Tools/HangboardWorkbench/packaging/**'
 shared_board_content:
   - 'Hangboards/**'
-  - 'Tools/HangboardPipeline/boards/**'
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'

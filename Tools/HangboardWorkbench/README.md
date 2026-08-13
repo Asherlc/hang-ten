@@ -42,7 +42,7 @@ rtk python3 Tools/HangboardWorkbench/server.py
 ```
 
 The server discovers the checkout, reads saved boards from
-`Tools/HangboardPipeline/boards/`, and keeps in-progress work in
+`Hangboards/`, and keeps in-progress work in
 `.context/hangboard-workbench/`. Tests and automation can override those roots:
 
 ```bash

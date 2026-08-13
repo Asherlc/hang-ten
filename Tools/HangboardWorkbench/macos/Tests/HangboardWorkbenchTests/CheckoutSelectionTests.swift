@@ -33,7 +33,7 @@ final class CheckoutSelectionTests: XCTestCase {
         for marker in [
             ".git",
             "Tools/HangboardPipeline/src/hangboard_vectorizer",
-            "Tools/HangboardPipeline/boards",
+            "Hangboards",
             "Tools/HangboardWorkbench/server.py",
         ] {
             let root = try makeCheckout()
@@ -100,7 +100,7 @@ final class CheckoutSelectionTests: XCTestCase {
             withIntermediateDirectories: true
         )
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardPipeline/boards"),
+            at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
         try FileManager.default.createDirectory(

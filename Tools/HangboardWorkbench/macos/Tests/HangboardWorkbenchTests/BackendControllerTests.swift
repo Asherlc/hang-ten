@@ -348,7 +348,7 @@ final class BackendControllerTests: XCTestCase {
             withIntermediateDirectories: true
         )
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardPipeline/boards"),
+            at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
         try FileManager.default.createDirectory(

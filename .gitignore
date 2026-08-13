@@ -8,7 +8,6 @@ xcuserdata/
 
 # Default transient hangboard workspaces
 /.context/
-/Tools/HangboardPipeline/boards/.transactions/
 
 # PyInstaller output for the local workbench release build
 /Tools/HangboardWorkbench/packaging/build/
