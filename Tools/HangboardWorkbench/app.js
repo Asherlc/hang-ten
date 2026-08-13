@@ -38,20 +38,13 @@
     canStartRegionDrag,
   } = globalThis.HoldCurveGestureModel;
   const { viewportWheelAction } = globalThis.HoldEditorInteractionModel;
+  const {
+    advancedToolVisibility,
+    formatFocusedEditorDiagnostic,
+    formatFocusedEditorError,
+  } = globalThis.HoldEditorUIModel;
   const workbenchClient = globalThis.HoldWorkbenchClient;
   const { canApprove, openingSections } = globalThis.HoldWorkbenchModel;
-  const {
-    TOOL_IDS,
-    createSuiteState,
-    selectTool: selectSuiteTool,
-  } = globalThis.HoldWorkbenchSuiteModel;
-  const { createToolSuiteController } = globalThis.HoldWorkbenchSuiteController;
-  const { createPromotionController, renderPromotionView } = globalThis.HoldPromotionView;
-  const {
-    createValidationController,
-    renderValidationView,
-    simulatorCommands,
-  } = globalThis.HoldValidationView;
   const {
     parseDisplayPath,
     serializeDisplayPath,
@@ -106,10 +99,6 @@
     onSuccess: handleAutosaveSuccess,
     onError: handleAutosaveError,
   });
-  let suiteController = null;
-  let promotionController = null;
-  let validationController = null;
-
   const TYPE_COLORS = {
     jug: "#ff754f",
     sloper: "#32bbc1",
@@ -170,7 +159,7 @@
     autosaveTimer: null,
     draftStatus: "clean",
     nextRegionId: 1,
-    suiteState: createSuiteState(),
+    advancedToolsOpen: false,
     inspectorDrawerOpen: false,
     inspectorDrawerOpener: null,
   };
@@ -182,7 +171,8 @@
     "compare-overlay", "region-overlay", "draft-overlay", "empty-state", "draw-instruction",
     "status-text", "zoom-label", "opacity-slider", "inspector-title", "inspector-panel",
     "inspector-drawer-toggle", "inspector-drawer-close", "inspector-drawer-backdrop",
-    "inspector-empty", "inspector-form", "region-key-input",
+    "inspector-empty", "inspector-form", "region-key-input", "advanced-tools-toggle", "advanced-tools",
+    "advanced-outline-tools", "advanced-transform-tools", "advanced-assist-tools", "advanced-details-tools",
     "region-type-select", "region-shape-select", "region-path-style-select", "region-mode-select", "region-notes-input",
     "point-count", "area-value", "image-file-input", "regions-file-input",
     "load-image-button", "load-regions-button", "snap-button", "undo-button", "redo-button", "save-button", "save-state",
@@ -197,11 +187,7 @@
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
     "workflow-block", "recent-block", "inventory-block", "recent-runs", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "static-load-controls",
-    "onboard-view", "inspect-view", "promote-view", "validate-view", "tool-suite-sidebar",
-    "tool-onboard", "tool-inspect", "tool-promote", "tool-validate",
-    "active-board-card", "active-board-name", "active-board-revision", "active-board-readiness",
-    "inspect-board-preview", "inspect-artifact-links", "inspect-hold-inventory", "inspect-approval-status", "inspect-readiness", "inspect-next-action",
-    "validation-refresh-button", "validation-run-button", "validation-simulator-uuid", "validation-copy-commands-button",
+    "board-details", "board-details-name", "board-details-id", "board-details-revision", "more-actions",
   ].map((id) => [id, document.getElementById(id)]));
   el["board-title"] = document.querySelector(".brand-block h1");
   const inspectorDrawerMedia = window.matchMedia("(max-width: 1250px)");
@@ -209,6 +195,10 @@
   const svgNS = "http://www.w3.org/2000/svg";
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+  function focusedEditorErrorMessage(error, fallback) {
+    return formatFocusedEditorError(error?.message, fallback);
+  }
 
   function capturePointerRegionSnapshot(region, session) {
     return { ...session, regionId: region.id, originalRegion: clone(region) };
@@ -372,7 +362,7 @@
   }
 
   function render() {
-    renderSuite();
+    renderBoardDetails();
     renderComparisonView();
     renderOverlay();
     renderRegionList();
@@ -384,99 +374,11 @@
     renderValidation();
   }
 
-  function appendInspectText(container, text, className = "") {
-    const item = document.createElement("p");
-    if (className) item.className = className;
-    item.textContent = text;
-    container.appendChild(item);
-    return item;
-  }
-
-  function renderInspectView(suite, promotion = null) {
-    const board = suite.activeBoard;
-    el["inspect-board-preview"].replaceChildren();
-    el["inspect-artifact-links"].replaceChildren();
-    el["inspect-hold-inventory"].replaceChildren();
-    el["inspect-approval-status"].replaceChildren();
-    el["inspect-readiness"].replaceChildren();
-    if (!board) {
-      appendInspectText(el["inspect-board-preview"], "Choose a board to inspect its package.");
-      appendInspectText(el["inspect-artifact-links"], "Stage 4 artifacts will appear for the selected revision.");
-      appendInspectText(el["inspect-hold-inventory"], "No board is active.");
-      appendInspectText(el["inspect-approval-status"], "No active revision.");
-    } else {
-      const previewUrl = board.normalArtifactUrl || board.editorImageUrl || board.reviewUrl;
-      if (previewUrl) {
-        const image = document.createElement("img");
-        image.src = previewUrl;
-        image.alt = `Board preview for ${board.productName || board.boardId}`;
-        el["inspect-board-preview"].appendChild(image);
-      } else {
-        appendInspectText(el["inspect-board-preview"], "A board preview is not available for this revision.");
-      }
-      [
-        [board.normalArtifactUrl, "Stage 4 normal artifact"],
-        [board.reviewUrl, "Stage 4 highlighted artifact"],
-      ].forEach(([url, label]) => {
-        if (!url) return;
-        const link = document.createElement("a");
-        link.href = url;
-        link.target = "_blank";
-        link.rel = "noreferrer";
-        link.textContent = label;
-        el["inspect-artifact-links"].appendChild(link);
-      });
-      if (!el["inspect-artifact-links"].childElementCount) {
-        appendInspectText(el["inspect-artifact-links"], "Stage 4 artifacts are not available for this revision.");
-      }
-      const count = Number.isInteger(board.holdCount) ? board.holdCount : null;
-      appendInspectText(
-        el["inspect-hold-inventory"],
-        count != null ? `${String(count)} hold${count === 1 ? "" : "s"} in the loaded inventory.` : "Hold inventory is available in the Stage 4 artifacts.",
-      );
-      appendInspectText(el["inspect-approval-status"], `Revision ${board.revisionId} · ${String(board.state || "unknown").replaceAll("_", " ")}`);
-    }
-    const profile = promotion?.profile || {};
-    document.querySelectorAll("[data-board-info-field]").forEach((input) => {
-      const field = input.dataset.boardInfoField;
-      if (document.activeElement !== input) input.value = String(profile[field] ?? "");
-      input.disabled = !board || Boolean(promotion?.busy);
-    });
-    appendInspectText(el["inspect-readiness"], `${suite.readiness.label}: continue with ${suite.readiness.nextTool}.`);
-    el["inspect-next-action"].textContent = `Open ${suite.readiness.nextTool[0].toUpperCase()}${suite.readiness.nextTool.slice(1)}`;
-    el["inspect-next-action"].disabled = !board;
-  }
-
-  function renderSuite() {
-    const suite = state.suiteState;
-    if (!suite) return;
-    TOOL_IDS.forEach((toolId) => {
-      const button = el[`tool-${toolId}`];
-      const active = suite.activeTool === toolId;
-      button.classList.toggle("active", active);
-      if (active) button.setAttribute("aria-current", "page");
-      else button.removeAttribute("aria-current");
-      el[`${toolId}-view`].classList.toggle("hidden", !active);
-    });
-    const board = suite.activeBoard;
-    el["active-board-name"].textContent = board?.productName || board?.boardId || "No board selected";
-    el["active-board-revision"].textContent = board ? `Revision ${suite.activeRevision}` : "Choose a board to begin.";
-    el["active-board-readiness"].textContent = suite.readiness.label;
-    el["active-board-readiness"].className = `readiness-badge ${suite.readiness.status}`;
-    const promotion = promotionController ? promotionController.getState() : null;
-    renderInspectView(suite, promotion);
-    if (promotionController) {
-      renderPromotionView(el["promote-view"], {
-        suite,
-        promotion,
-      });
-    }
-    if (validationController) {
-      renderValidationView(el["validate-view"], {
-        suite,
-        validation: validationController.getState(),
-      });
-    }
+  function renderBoardDetails() {
+    const view = state.board;
+    el["board-details-name"].textContent = view?.productName || "No board selected";
+    el["board-details-id"].textContent = view?.boardId || "—";
+    el["board-details-revision"].textContent = view?.revisionId || "—";
   }
 
   function renderToolState() {
@@ -713,12 +615,13 @@
     el["validation-list"].replaceChildren();
     state.validationErrors.forEach((error) => {
       const item = document.createElement("li");
+      const message = formatFocusedEditorError(error.message, "Outline needs attention");
       if (error.regionId == null) {
-        item.textContent = error.message;
+        item.textContent = message;
       } else {
         const button = document.createElement("button");
         button.type = "button";
-        button.textContent = error.message;
+        button.textContent = message;
         button.addEventListener("click", () => focusRegion(error.regionId));
         item.appendChild(button);
       }
@@ -760,9 +663,22 @@
 
   function renderInspector() {
     const region = selectedRegion();
+    const visibility = advancedToolVisibility({
+      region,
+      editorMode: state.editorMode,
+      editable: canEditGeometry(),
+      hasImagePixels: Boolean(state.imagePixels),
+    });
     el["inspector-title"].textContent = region ? `Hold ${region.id}` : "No selection";
     el["inspector-empty"].classList.toggle("hidden", Boolean(region));
     el["inspector-form"].classList.toggle("hidden", !region);
+    el["advanced-tools-toggle"].setAttribute("aria-expanded", String(state.advancedToolsOpen && Boolean(region)));
+    el["advanced-tools"].classList.toggle("hidden", !state.advancedToolsOpen || !region);
+    el["advanced-outline-tools"].classList.toggle("hidden", !visibility.outline);
+    el["advanced-transform-tools"].classList.toggle("hidden", !visibility.transform);
+    el["advanced-assist-tools"].classList.toggle("hidden", !visibility.assists);
+    el["advanced-details-tools"].classList.toggle("hidden", !visibility.details);
+    el["snap-button"].classList.toggle("hidden", !visibility.edgeSnap);
     if (!region) {
       el["corner-treatment-field"].classList.add("hidden");
       return;
@@ -913,12 +829,22 @@
       completeMirrorOnto(id);
       return;
     }
-    if (id !== state.selectedId) state.selectedCornerIndex = null;
+    if (id !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = id;
     render();
     const region = selectedRegion();
     if (region) setStatus(`Selected ${region.key} hold highlight. Drag the shape or its control points.`);
     requestAnimationFrame(() => document.querySelector(`.region-item[data-region-id="${id}"]`)?.scrollIntoView({ block: "nearest" }));
+  }
+
+  function setAdvancedToolsOpen(open) {
+    state.advancedToolsOpen = Boolean(open) && Boolean(selectedRegion());
+    el["advanced-tools-toggle"].setAttribute("aria-expanded", String(state.advancedToolsOpen));
+    renderInspector();
+    renderToolState();
   }
 
   function clearSelection() {
@@ -1346,6 +1272,7 @@
     state.primitiveSession = null;
     state.selectedId = null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     el["draw-instruction"].classList.add("visible");
     el["draw-instruction"].textContent = ["freeform", "curved-freeform"].includes(state.drawShape)
       ? "Click around the hold. Press Enter to finish or Escape to cancel."
@@ -1378,6 +1305,7 @@
     state.primitiveSession = null;
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     el["draw-instruction"].classList.remove("visible");
     commitHistory("Added hold highlight");
     setStatus(`Added ${region.key}.`);
@@ -1399,6 +1327,7 @@
     state.regions = state.regions.filter((item) => item.id !== state.selectedId);
     state.selectedId = null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Deleted hold highlight");
     setStatus(`Deleted ${region.key} hold highlight. Undo is available.`);
     render();
@@ -1451,6 +1380,7 @@
     state.regions.push(copy);
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Duplicated hold highlight");
     render();
   }
@@ -1495,6 +1425,7 @@
     state.regions.push(copy);
     state.selectedId = nextId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Mirrored hold highlight copy");
     setStatus(`Created mirrored copy ${copy.key}.`);
     render();
@@ -1543,6 +1474,7 @@
     state.mirrorOntoSourceId = null;
     state.selectedId = targetId;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     commitHistory("Mirrored geometry onto hold highlight");
     setStatus(`Replaced ${target.key} with mirrored geometry from ${source.key}.`);
     render();
@@ -1584,7 +1516,10 @@
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
     const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
-    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    if (restoredId !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
@@ -1599,7 +1534,10 @@
     const entry = state.history[state.historyIndex];
     state.regions = JSON.parse(entry.snapshot);
     const restoredId = resolveHistorySelection(entry, state.regions, state.selectedId);
-    if (restoredId !== state.selectedId) state.selectedCornerIndex = null;
+    if (restoredId !== state.selectedId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = restoredId;
     state.dirty = JSON.stringify(state.regions) !== state.savedSnapshot;
     state.saveError = "";
@@ -1810,8 +1748,8 @@
     state.dirty = true;
     state.draftStatus = "dirty";
     if (holdForActiveJobRecovery(error)) return;
-    state.saveError = error.message || "Draft save failed";
-    focusGeometryError(state.saveError);
+    state.saveError = focusedEditorErrorMessage(error, "Draft save failed");
+    focusGeometryError(error?.message);
     setStatus(state.saveError);
     render();
   }
@@ -1851,7 +1789,7 @@
       } else {
         const expected = baseline[index];
         if (!expected || expected.id !== region.id || expected.key !== region.key || expected.type !== region.type) {
-          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed required Stage 3 identity.` });
+          errors.push({ regionId: region.id, message: `Region ${String(region.id)} changed its required hold identity.` });
         }
         try {
           const commands = parseDisplayPath(region.displayPath);
@@ -1865,7 +1803,7 @@
       }
     });
     if (state.board.stage === 3 && state.regions.length !== baseline.length) {
-      errors.unshift({ regionId: state.regions[0]?.id ?? null, message: `Stage ${String(state.board.stage)} region inventory no longer matches the generated checkpoint.` });
+      errors.unshift({ regionId: state.regions[0]?.id ?? null, message: "The hold inventory no longer matches the original detected holds." });
     }
     return errors;
   }
@@ -1920,7 +1858,10 @@
   function focusGeometryError(message) {
     const error = geometryValidationError(message);
     if (!error) return false;
-    state.validationErrors = [error];
+    state.validationErrors = [{
+      ...error,
+      message: formatFocusedEditorError(error.message, "Outline needs attention"),
+    }];
     if (error.regionId != null) focusRegion(error.regionId);
     return true;
   }
@@ -1963,7 +1904,10 @@
   function focusRegion(regionId) {
     const numericId = Number(regionId);
     if (!state.regions.some((region) => region.id === numericId)) return false;
-    if (state.selectedId !== numericId) state.selectedCornerIndex = null;
+    if (state.selectedId !== numericId) {
+      state.selectedCornerIndex = null;
+      state.advancedToolsOpen = false;
+    }
     state.selectedId = numericId;
     render();
     el["canvas-viewport"].focus({ preventScroll: true });
@@ -2018,9 +1962,9 @@
       if (EDITOR_STAGES.has(view.stage)) {
         if (!baselineDocument) {
           const documentUrl = checkpointDocumentUrl(view);
-          if (!documentUrl) throw new Error(`Stage ${String(view.stage)} checkpoint document is unavailable`);
+          if (!documentUrl) throw new Error("Hold outline data is unavailable");
           const response = await fetch(documentUrl, { cache: "no-store" });
-          if (!response.ok) throw new Error(`Could not load Stage ${String(view.stage)} checkpoint geometry`);
+          if (!response.ok) throw new Error("Could not load hold outline data");
           baselineDocument = await response.json();
         }
         validateEditableImageAlignment(view, imageAsset, baselineDocument);
@@ -2030,7 +1974,7 @@
       const reviewAsset = comparisonUrl
         ? await loadImageAsset(
           comparisonUrl,
-          `Stage ${String(view.stage)} annotated review`,
+          "Annotated hold outline comparison",
         )
         : null;
       if (!load.isCurrent()) return false;
@@ -2039,7 +1983,6 @@
       if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
       state.autosaveTimer = null;
       state.board = view;
-      suiteController?.setBoard(view);
       state.editorMode = view.editorMode || "contour";
       state.checkpointDocument = null;
       state.validationErrors = [];
@@ -2048,6 +1991,7 @@
       state.draftStatus = "clean";
       state.drawing = false;
       state.mirrorOntoSourceId = null;
+      state.advancedToolsOpen = false;
       state.regions = [];
       state.baselineRegions = [];
       state.selectedId = null;
@@ -2163,9 +2107,14 @@
   async function refreshBoards() {
     const opening = await openingBoardController.refresh();
     state.libraryBoards = opening.library;
-    state.libraryDiagnostics = opening.diagnostics;
+    state.libraryDiagnostics = (opening.diagnostics || []).map(
+      (diagnostic) => formatFocusedEditorDiagnostic(diagnostic),
+    );
     state.boards = opening.runtime;
-    state.openingErrors = { ...opening.errors };
+    state.openingErrors = Object.fromEntries(Object.entries(opening.errors || {}).map(([key, message]) => [
+      key,
+      formatFocusedEditorError(message, "Could not load boards"),
+    ]));
     renderRecentRuns();
     renderOpeningSections();
     return state.boards;
@@ -2189,7 +2138,9 @@
       handleOpeningSelectionFailure({
         error,
         editingFrozen: state.editingFrozen,
-        setLibraryError(message) { state.openingErrors.library = message; },
+        setLibraryError(message) {
+          state.openingErrors.library = formatFocusedEditorError(message, "Could not open repository board.");
+        },
         showSetup,
       });
       return false;
@@ -2216,7 +2167,7 @@
       return loaded;
     } catch (error) {
       if (!load.isCurrent()) return false;
-      state.saveError = error.message || "Could not load board";
+      state.saveError = focusedEditorErrorMessage(error, "Could not load board");
       setStatus(state.saveError);
       return false;
     } finally {
@@ -2256,7 +2207,7 @@
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        el["setup-error"].textContent = error.message || "Could not create the board.";
+        el["setup-error"].textContent = focusedEditorErrorMessage(error, "Could not create the board.");
         el["setup-error"].classList.remove("hidden");
       }
     } finally {
@@ -2299,12 +2250,12 @@
       await refreshBoards();
       if (!load.isCurrent()) return;
       const loaded = await loadCheckpoint(updated, null, load);
-      if (loaded) setStatus(`Stage ${String(updated.stage)} is ready for review.`);
+      if (loaded) setStatus("Saved outline changes.");
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        state.saveError = error.message || "Approval failed";
-        focusGeometryError(state.saveError);
+        state.saveError = focusedEditorErrorMessage(error, "Could not save outline changes");
+        focusGeometryError(error?.message);
         setStatus(state.saveError);
       }
     } finally {
@@ -2341,7 +2292,7 @@
     if (restore) {
       geometrySessions.forEach((session) => restorePointerGeometry(session));
     } else if (geometrySessions.some((session) => session?.changed)) {
-      commitHistory("Completed active edit before approval");
+      commitHistory("Completed active edit before saving");
     }
     state.transformSession = null;
     state.dragSession = null;
@@ -2358,7 +2309,7 @@
 
   async function retryCurrent() {
     if (!state.board || state.busy) return;
-    await runGuidedMutation((options) => workbenchClient.retry(state.board, options), "Checkpoint regenerated.");
+    await runGuidedMutation((options) => workbenchClient.retry(state.board, options), "Hold outlines regenerated.");
   }
 
   async function reviseCurrent() {
@@ -2385,8 +2336,8 @@
     } catch (error) {
       if (!load.isCurrent()) return;
       if (!holdForActiveJobRecovery(error)) {
-        state.saveError = error.message || "Workbench action failed";
-        focusGeometryError(state.saveError);
+        state.saveError = focusedEditorErrorMessage(error, "Workbench action failed");
+        focusGeometryError(error?.message);
         setStatus(state.saveError);
       }
     } finally {
@@ -2429,14 +2380,14 @@
         }
         const failure = reconciliation.failed.at(-1)?.error;
         if (failure) {
-          state.saveError = failure.message || "Could not reconnect to an active job";
+          state.saveError = focusedEditorErrorMessage(failure, "Could not reconnect to an active job");
           recoveredFailure = failure;
         }
       } catch (error) {
         holdForStoredActiveJob();
         if (activeJobStore.readAll().length) return true;
         state.editingFrozen = false;
-        state.saveError = error.message || "Could not reconcile active jobs";
+        state.saveError = focusedEditorErrorMessage(error, "Could not reconcile active jobs");
         recoveredFailure = error;
       } finally {
         if (!activeJobStore.readAll().length) state.busy = false;
@@ -2444,7 +2395,9 @@
       }
     }
     await restoreOpeningAfterJobRecovery({
-      failure: recoveredFailure,
+      failure: recoveredFailure
+        ? { message: focusedEditorErrorMessage(recoveredFailure, "Could not reconnect to an active job") }
+        : null,
       refreshBoards,
       showSetup,
       setupError: el["setup-error"],
@@ -2521,7 +2474,7 @@
     } catch (error) {
       console.warn(error);
       if (previousRunId) el["board-select"].value = previousRunId;
-      setStatus(formatSessionLoadError(error));
+      setStatus(formatFocusedEditorError(formatSessionLoadError(error), "Could not load board"));
       return false;
     } finally {
       state.loadingSession = false;
@@ -2651,6 +2604,7 @@
     state.regionsName = name;
     state.selectedId = state.regions[0]?.id ?? null;
     state.selectedCornerIndex = null;
+    state.advancedToolsOpen = false;
     resetHistory();
     configureSvg();
     render();
@@ -2755,7 +2709,7 @@
       }
       setStatus(`Saved edited hold highlights to ${result.regionsPath} and ${result.correctionsPath}.`);
     } catch (error) {
-      state.saveError = error.message || "Save failed";
+      state.saveError = focusedEditorErrorMessage(error, "Save failed");
       setStatus(state.saveError);
     } finally {
       state.saving = false;
@@ -2927,6 +2881,7 @@
   el["mirror-onto-button"].addEventListener("click", beginMirrorOnto);
   el["previous-region-button"].addEventListener("click", () => navigateRegion(-1));
   el["next-region-button"].addEventListener("click", () => navigateRegion(1));
+  el["advanced-tools-toggle"].addEventListener("click", () => setAdvancedToolsOpen(!state.advancedToolsOpen));
   el["snap-button"].addEventListener("click", toggleEdgeSnapping);
   el["export-button"].addEventListener("click", exportEditedRegions);
   el["corrections-button"].addEventListener("click", exportCorrections);
@@ -3081,6 +3036,8 @@
       navigateRegion(1);
     } else if (event.key.toLowerCase() === "m") {
       mirrorSelectedCopy();
+    } else if (event.key.toLowerCase() === "e") {
+      setAdvancedToolsOpen(!state.advancedToolsOpen);
     } else if (event.key.toLowerCase() === "s") {
       toggleEdgeSnapping();
     }
@@ -3098,88 +3055,6 @@
     markDraftSaved,
     focusRegion,
     setCompareEnabled,
-  });
-
-  suiteController = createToolSuiteController({
-    selectTool: selectSuiteTool,
-    loadBoard: (boardId, revisionId) => workbenchClient.getBoard(boardId, revisionId),
-    render(nextState) {
-      state.suiteState = nextState;
-      renderSuite();
-    },
-    initialState: state.suiteState,
-  });
-  promotionController = createPromotionController({
-    client: workbenchClient,
-    getSuiteState: () => suiteController.getState(),
-    onPromotion(promotion) {
-      suiteController.setResults({ promotion });
-    },
-    render(promotion) {
-      renderInspectView(state.suiteState, promotion);
-      renderPromotionView(el["promote-view"], {
-        suite: state.suiteState,
-        promotion,
-      });
-    },
-  });
-  validationController = createValidationController({
-    client: workbenchClient,
-    getSuiteState: () => suiteController.getState(),
-    onValidation(validation) {
-      suiteController.setResults({ validation });
-    },
-    render(validation) {
-      renderValidationView(el["validate-view"], {
-        suite: state.suiteState,
-        validation,
-      });
-    },
-  });
-  document.querySelectorAll("[data-tool]").forEach((button) => {
-    button.addEventListener("click", () => suiteController.selectTool(button.dataset.tool));
-  });
-  el["inspect-next-action"].addEventListener("click", () => {
-    suiteController.selectTool(state.suiteState.readiness.nextTool);
-  });
-  document.querySelectorAll("[data-board-info-field]").forEach((input) => {
-    input.addEventListener("input", () => promotionController.setProfileField(
-      input.dataset.boardInfoField,
-      input.value,
-    ));
-  });
-  document.getElementById("promotion-preview-button").addEventListener("click", () => {
-    void promotionController.generatePreview();
-  });
-  document.getElementById("promotion-refresh-button").addEventListener("click", () => {
-    void promotionController.refreshPreview();
-  });
-  document.getElementById("promotion-save-button").addEventListener("click", () => {
-    void promotionController.saveLocally();
-  });
-  el["validation-refresh-button"].addEventListener("click", () => {
-    void validationController.loadCachedReport();
-  });
-  el["validation-run-button"].addEventListener("click", () => {
-    void validationController.runReport();
-  });
-  el["validation-simulator-uuid"].addEventListener("input", (event) => {
-    validationController.setSimulatorUUID(event.target.value);
-  });
-  el["validation-copy-commands-button"].addEventListener("click", async () => {
-    let commands;
-    try {
-      commands = simulatorCommands(validationController.getState().simulatorUUID);
-    } catch (_error) {
-      return;
-    }
-    try {
-      if (!navigator.clipboard?.writeText) throw new Error("Clipboard access is unavailable.");
-      await navigator.clipboard.writeText(commands);
-      setStatus("Simulator commands copied.");
-    } catch (error) {
-      setStatus(error?.message || "Could not copy simulator commands.");
-    }
   });
 
   configureSvg();

@@ -51,94 +51,26 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --workspace-root /absolute/path/to/workbench-workspace
 ```
 
-Open `http://localhost:4173`. Choose a board, edit its hold highlights, add or
-delete highlights, choose each hold type, and save the review. For a new board, enter the exact
-commercial product name, choose an HTTP(S) image URL or local image upload, and select **Create board**. The
-image bytes, run manifests, approvals, drafts, and revisions stay under the
-workspace root. The opening screen separately lists validated **Boards in this
-repository**; selecting one opens its current committed version. The exact
-[package and publication contract is in the unified repository design](../../docs/superpowers/specs/2026-08-07-unified-hangboard-repository-design.md).
-The browser never asks for a CLI run directory.
+Open `http://localhost:4173`. The opening screen lists published boards and
+work in progress, or lets you create a board from the exact commercial product
+name and an HTTP(S) image URL or local upload.
 
-## Run the single-board tool suite
+## Correct hold outlines
 
-The persistent sidebar works on one active board revision at a time:
+1. Choose a board.
+2. Click a detected hold, adjust its hold type if needed, and drag its outline points on the image.
+3. Add a highlight only when detection missed one; delete one when it is wrong.
+4. Open **Advanced tools** only for shape, curve, transform, edge snap, mirror, and metadata work.
+5. Use **More** for comparison or artifact exports.
+6. Save locally; saving does not commit, push, or synchronize changes.
 
-- **Onboard** retains the guided Stage 0–4 review workflow described below.
-- **Inspect** shows the active revision, approval/readiness state, Stage 4
-  normal and highlight artifacts, hold inventory, and editable **Board info**
-  for the current active revision. Board info stays in the active in-browser
-  profile until the board or revision changes.
-- **Promote to iOS** uses the Board info entered in Inspect and the active
-  board's canonical repository ID. Generate a preview first and review its
-  grouped **Metadata**, **Geometry**, and **Plans** diffs. A stale revision,
-  changed Board info, incomplete package,
-  or target changed relative to `main` is a conflict: no promotion file is
-  written. **Save locally** regenerates and verifies the preview token, then
-  writes all approved native targets atomically for normal local Git review.
-- **Validate** runs the local package, hold-ID parity,
-  semantic-routine-resolution, and plan-library checks.
-  Its simulator field produces copyable commands only after the operator
-  supplies the UUID of a dedicated simulator that has already been created,
-  recorded, and made ready.
+## Command-line and developer workflows
 
-The browser never creates, deletes, boots, erases, or archives a simulator.
-It never commits, pushes, or synchronizes remotely. Simulator creation,
-ownership, readiness, review, and cleanup stay with the caller under
-[`docs/IOS_SIMULATOR_VALIDATION.md`](../../docs/IOS_SIMULATOR_VALIDATION.md);
-do not use `booted` or a device owned by another workspace.
+The workflows below are for command-line and developer use, not part of the
+editor's main task. They preserve the Stage 2 and Stage 3 artifact, autosave,
+history, and local-save behavior for compatible onboarding runs.
 
-Creation publishes Stage 0 and stops for review. **Approve & continue** binds
-the displayed checkpoint to its hashes, runs the next installed stage, and
-stops at the next review automatically. **Retry** publishes a new immutable
-attempt for the current stage without overwriting its earlier evidence.
-
-Stage 2 edits the pixel-aligned hold-highlight inventory that produces the label map.
-Stage 3 edits the vector display paths that become the final interactive grip
-geometry. Both editors autosave validated drafts bound to the active checkpoint
-attempt; approval materializes only the newest draft for that exact attempt.
-Undo/redo history is browser-local, and an unsaved same-browser recovery draft
-can be restored after refresh only while its checkpoint identity still matches.
-Accepted jobs are persisted independently and reconciled after refresh, so
-work on separate boards cannot overwrite another tab's recovery record.
-Published attempts and approvals remain immutable on disk.
-
-**Revise upstream** creates a new revision at the preceding approved stage and
-marks superseded downstream lineage stale. A typical local layout is:
-
-```text
-workbench-workspace/
-  boards/
-    board-0001/
-      board.json
-      revisions/
-        revision-0001/
-          run/
-          drafts/stage-2/draft-0001.json
-          drafts/stage-3/draft-0001.json
-```
-
-Each revision `run/` is a CLI-compatible onboarding run. Check one without
-changing it by using the same confinement root:
-
-```bash
-rtk hangboard-onboard \
-  --workspace-root /absolute/path/to/workbench-workspace \
-  --output /absolute/path/to/workbench-workspace/boards/board-0001/revisions/revision-0001/run \
-  --status
-```
-
-At Stage 4, **Save locally** selects the complete, current, non-stale revision
-and publishes it to `Tools/HangboardPipeline/boards/<board-id>/`. Only complete
-runs with approved checkpoints through Stage 4 belong there; all unfinished
-runs stay under `.context/`. Save writes files for normal Git review, but never
-commits, pushes, copies artifacts into the Hang Ten app, modifies the app's
-product catalog, or synchronizes anything remotely.
-Hang Ten synchronization is a separate future command and is outside this
-workbench. CLI and other programmatic callers are producers of the same
-contract: they pass a completed run to `RepositoryBoardLibrary.publish()`.
-
-## Edit and save one existing Stage 2 run
+### Edit and save one existing Stage 2 run
 
 ```bash
 rtk python3 Tools/HangboardWorkbench/server.py \
@@ -195,7 +127,7 @@ Apply cautiously:
 - After restoring, rerun dry-run `promote` and `release-check` before trying
   `--apply` again.
 
-## Choose among generated runs
+### Choose among generated runs
 
 Repeat `--run-dir` to put standard pipeline runs in the board selector:
 
@@ -226,7 +158,7 @@ rtk python3 Tools/HangboardWorkbench/server.py --catalog /absolute/path/to/catal
 
 `image` and `regions` are optional for standard run layouts and must be relative to `runDir`. Catalog and repeated `--run-dir` inputs can be combined. The selector changes only the active browser document; every load and save request names its run explicitly, so separate tabs cannot redirect each other's saves.
 
-## Edit the generative catalog outlines
+### Edit the generative catalog outlines
 
 Catalog-outline mode serves every `*.json` stem in the outline directory whose matching root PNG is in the source directory:
 
@@ -240,7 +172,7 @@ The board selector switches the active catalog document; the selected JSON is th
 
 Catalog Save writes edited or new outlines as closed `M`/`L` paths in normalized coordinates and recomputes their bounds. Outlines whose sampled editor contour is unchanged retain their original path commands—including cubic curves—and bounds exactly. Save preserves the catalog schema, source image, references, and untouched outline metadata, and never writes PNGs. Replacement is atomic through a same-directory temporary file; failed writes clean up that temporary file. The editor's **Export edited regions** and **Export corrections** buttons remain available as browser-download recovery backups if a save is unavailable or an additional local copy is needed.
 
-## Static mode
+### Static mode
 
 To use the editor without filesystem Save support:
 
@@ -252,13 +184,13 @@ Any Stage 1 image and compatible `stage-2-regions.json` can be loaded through th
 
 Hold highlights can be drawn as freeform polygons, smooth freeform curves, rectangles, rounded rectangles, arced rectangles, ellipses, or capsules. Every shape is stored as ordinary contour points for compatibility with the existing pipeline.
 
-Selected regions expose object-level rotate and bend handles. Individual contour points and per-edge curve handles remain available behind the **Edit points** toggle for fine correction.
+Selecting a hold highlight exposes its canvas handles: contour points and per-edge curve handles for freeform highlights, or resize, rotate, and bend handles for primitive shapes. Open **Advanced tools** for the corresponding shape, curve, and transform actions in the inspector, plus **Snap edges** and other fine controls. Press `E` to open or close **Advanced tools** outside text fields.
 
-## Edit individual edges
+### Edit individual edges
 
-Enable **Edit points**, then drag an edge handle to bow that segment without moving its vertices. Turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
+Select a hold highlight, then drag an edge handle to bow that segment without moving its vertices. Open **Advanced tools** and turn on **Snap edges** when the image boundary is useful; hold Alt during the drag to bypass snapping. If the curve is too aggressive, undo the gesture to restore the prior edge in one step.
 
-## Fast tracing workflow
+### Fast tracing workflow
 
 1. Draw one side of a repeated or symmetric hold layout.
 2. Use the eight frame handles to resize, the circular handle to rotate, and the diamond handle to bend. Hold Shift while resizing a corner to preserve aspect ratio.
@@ -271,7 +203,7 @@ Shortcuts outside text fields:
 
 - `[` / `]`: previous or next hold highlight
 - `M`: mirror copy
-- `E`: toggle detailed point editing
+- `E`: open or close **Advanced tools** for the selected hold highlight
 - `S`: toggle edge snapping
 - `Space`: pan
 

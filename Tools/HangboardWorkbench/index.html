@@ -85,43 +85,33 @@
             <button class="tool-button" id="load-image-button">Load image</button>
             <button class="tool-button" id="load-regions-button">Load highlights</button>
           </div>
-          <button class="tool-button" id="snap-button" disabled>Snap edges</button>
           <span class="toolbar-separator"></span>
           <button class="icon-button" id="undo-button" title="Undo (⌘Z)" aria-label="Undo">↶</button>
           <button class="icon-button" id="redo-button" title="Redo (⇧⌘Z)" aria-label="Redo">↷</button>
-          <button class="tool-button" id="compare-button" aria-pressed="false">Compare</button>
-          <button class="tool-button" id="retry-button" disabled>Retry</button>
-          <button class="tool-button" id="revise-button" disabled>Revise upstream</button>
           <span class="save-state" id="save-state">Checking workspace…</span>
           <button class="tool-button accent" id="save-button" disabled>Save changes</button>
-          <button class="tool-button export-action" id="export-button">Export edited highlights</button>
-          <button class="tool-button export-action" id="corrections-button">Export corrections</button>
+          <details id="board-details" class="board-details">
+            <summary>Board</summary>
+            <dl>
+              <div><dt>Name</dt><dd id="board-details-name">No board selected</dd></div>
+              <div><dt>Canonical ID</dt><dd id="board-details-id">—</dd></div>
+              <div><dt>Revision</dt><dd id="board-details-revision">—</dd></div>
+            </dl>
+          </details>
+          <details id="more-actions" class="more-actions">
+            <summary>More</summary>
+            <div class="more-actions-menu">
+              <button class="tool-button" id="compare-button" aria-pressed="false">Compare</button>
+              <button class="tool-button" id="retry-button" disabled>Retry</button>
+              <button class="tool-button" id="revise-button" disabled>Revise upstream</button>
+              <button class="tool-button" id="export-button">Export edited highlights</button>
+              <button class="tool-button" id="corrections-button">Export corrections</button>
+            </div>
+          </details>
         </div>
       </header>
 
-      <section class="suite-shell">
-        <aside class="tool-suite-sidebar" id="tool-suite-sidebar" aria-label="Workbench tools">
-          <div class="suite-heading">
-            <span class="eyebrow">Workbench</span>
-            <h2>Board tools</h2>
-          </div>
-          <nav class="tool-suite-nav" aria-label="Board tool navigation">
-            <button class="tool-suite-button active" id="tool-onboard" type="button" data-tool="onboard">Onboard</button>
-            <button class="tool-suite-button" id="tool-inspect" type="button" data-tool="inspect">Inspect</button>
-            <button class="tool-suite-button" id="tool-promote" type="button" data-tool="promote">Promote to iOS</button>
-            <button class="tool-suite-button" id="tool-validate" type="button" data-tool="validate">Validate</button>
-          </nav>
-          <section class="active-board-card" id="active-board-card" aria-live="polite">
-            <span class="eyebrow">Active board</span>
-            <strong id="active-board-name">No board selected</strong>
-            <span id="active-board-revision">Choose a board to begin.</span>
-            <span class="readiness-badge" id="active-board-readiness">Incomplete</span>
-          </section>
-        </aside>
-
-        <div class="suite-content">
-        <section class="tool-view onboard-view" id="onboard-view">
-        <section class="workspace-grid">
+      <section class="workspace-grid">
         <aside class="panel region-panel">
           <section class="workflow-block" id="workflow-block">
             <div class="panel-heading">
@@ -205,7 +195,7 @@
               </div>
               <div class="draw-instruction" id="draw-instruction">Click around the hold. Press Enter to finish or Escape to cancel.</div>
             </div>
-            <div class="annotated-review hidden" id="annotated-review" aria-label="Annotated checkpoint review">
+            <div class="annotated-review hidden" id="annotated-review" aria-label="Annotated outline review">
               <img id="annotated-review-image" alt="" />
             </div>
           </div>
@@ -235,203 +225,79 @@
             <label>Hold type
               <select id="region-type-select"><option value="pocket">Pocket</option><option value="edge">Edge</option><option value="sloper">Sloper</option><option value="jug">Jug</option></select>
             </label>
-            <label>Shape
-              <select id="region-shape-select"><option value="freeform">Freeform</option><option value="rectangle">Rectangle</option><option value="rounded-rectangle">Rounded rectangle</option><option value="arced-rectangle">Arced rectangle</option><option value="ellipse">Ellipse</option><option value="capsule">Capsule</option></select>
-            </label>
-            <label>Path style
-              <select id="region-path-style-select"><option value="straight">Straight segments</option><option value="smooth">Smooth curve</option></select>
-            </label>
-            <label class="tension-field hidden" id="tension-field">
-              <span>Curve tension <output id="curve-tension-value">80%</output></span>
-              <input id="curve-tension-slider" type="range" min="10" max="140" value="80" aria-describedby="curve-tension-feedback" />
-              <small id="curve-tension-feedback" class="curve-tension-feedback hidden" role="status"></small>
-            </label>
-            <fieldset class="corner-treatment-field hidden" id="corner-treatment-field">
-              <legend>Corner <span id="corner-number">—</span></legend>
-              <label>Treatment
-                <select id="corner-treatment-select" disabled><option value="sharp">Sharp</option><option value="rounded">Rounded</option></select>
-              </label>
-              <label>Radius / amount (px) <input id="corner-amount-input" type="number" min="0.5" max="100" step="0.5" value="12" disabled /></label>
-            </fieldset>
-            <label>Hold interaction mode
-              <select id="region-mode-select"><option value="aperture">Aperture</option><option value="surface">Surface</option></select>
-            </label>
-
-            <label>
-              Review notes
-              <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
-            </label>
-
             <div class="metric-grid">
               <div><span>Points</span><strong id="point-count">—</strong></div>
               <div><span>Area</span><strong id="area-value">—</strong></div>
             </div>
             <div class="inspector-actions">
-              <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
-              <button type="button" class="tool-button" id="next-region-button">Next →</button>
-              <button type="button" class="tool-button" id="simplify-curve-button">Simplify curve</button>
-              <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
-              <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
-              <button type="button" class="tool-button" id="mirror-onto-button">Mirror onto…</button>
+              <button id="advanced-tools-toggle" type="button" aria-expanded="false" aria-controls="advanced-tools">Advanced tools</button>
               <button type="button" class="tool-button danger" id="delete-button">Delete highlight</button>
+            </div>
+            <div id="advanced-tools" class="advanced-tools hidden">
+              <section id="advanced-outline-tools" class="advanced-tool-group hidden" aria-labelledby="advanced-outline-title">
+                <div class="advanced-tool-heading">
+                  <h3 id="advanced-outline-title">Outline</h3>
+                  <p>Refine the selected hold’s contour.</p>
+                </div>
+                <label>Shape
+                  <select id="region-shape-select"><option value="freeform">Freeform</option><option value="rectangle">Rectangle</option><option value="rounded-rectangle">Rounded rectangle</option><option value="arced-rectangle">Arced rectangle</option><option value="ellipse">Ellipse</option><option value="capsule">Capsule</option></select>
+                </label>
+                <label>Path style
+                  <select id="region-path-style-select"><option value="straight">Straight segments</option><option value="smooth">Smooth curve</option></select>
+                </label>
+                <label class="tension-field hidden" id="tension-field">
+                  <span>Curve tension <output id="curve-tension-value">80%</output></span>
+                  <input id="curve-tension-slider" type="range" min="10" max="140" value="80" aria-describedby="curve-tension-feedback" />
+                  <small id="curve-tension-feedback" class="curve-tension-feedback hidden" role="status"></small>
+                </label>
+                <fieldset class="corner-treatment-field hidden" id="corner-treatment-field">
+                  <legend>Corner <span id="corner-number">—</span></legend>
+                  <label>Treatment
+                    <select id="corner-treatment-select" disabled><option value="sharp">Sharp</option><option value="rounded">Rounded</option></select>
+                  </label>
+                  <label>Radius / amount (px) <input id="corner-amount-input" type="number" min="0.5" max="100" step="0.5" value="12" disabled /></label>
+                </fieldset>
+                <button type="button" class="tool-button" id="simplify-curve-button">Simplify curve</button>
+              </section>
+              <section id="advanced-transform-tools" class="advanced-tool-group hidden" aria-labelledby="advanced-transform-title">
+                <div class="advanced-tool-heading">
+                  <h3 id="advanced-transform-title">Transform</h3>
+                  <p>Navigate or duplicate the selected outline.</p>
+                </div>
+                <div class="advanced-button-row">
+                  <button type="button" class="tool-button" id="previous-region-button">← Previous</button>
+                  <button type="button" class="tool-button" id="next-region-button">Next →</button>
+                  <button type="button" class="tool-button" id="duplicate-button">Duplicate</button>
+                </div>
+              </section>
+              <section id="advanced-assist-tools" class="advanced-tool-group hidden" aria-labelledby="advanced-assist-title">
+                <div class="advanced-tool-heading">
+                  <h3 id="advanced-assist-title">Assists</h3>
+                  <p>Use optional alignment and symmetry aids.</p>
+                </div>
+                <div class="advanced-button-row">
+                  <button type="button" class="tool-button" id="snap-button" disabled>Snap edges</button>
+                  <button type="button" class="tool-button" id="mirror-copy-button">Mirror copy</button>
+                  <button type="button" class="tool-button" id="mirror-onto-button">Mirror onto…</button>
+                </div>
+              </section>
+              <section id="advanced-details-tools" class="advanced-tool-group hidden" aria-labelledby="advanced-details-title">
+                <div class="advanced-tool-heading">
+                  <h3 id="advanced-details-title">Details</h3>
+                  <p>Record hold behavior and your review context.</p>
+                </div>
+                <label>Hold interaction mode
+                  <select id="region-mode-select"><option value="aperture">Aperture</option><option value="surface">Surface</option></select>
+                </label>
+                <label>
+                  Review notes
+                  <textarea id="region-notes-input" rows="4" placeholder="Why was this hold highlight changed?"></textarea>
+                </label>
+              </section>
             </div>
           </form>
           <div class="legend"><span class="eyebrow">Types</span><div><i class="dot jug"></i> Jug</div><div><i class="dot sloper"></i> Sloper</div><div><i class="dot edge"></i> Edge</div><div><i class="dot pocket"></i> Pocket</div></div>
         </aside>
-        </section>
-        </section>
-
-        <section class="tool-view inspect-view hidden" id="inspect-view" aria-labelledby="inspect-title">
-          <header class="tool-view-header">
-            <span class="eyebrow">Board review</span>
-            <h2 id="inspect-title">Inspect</h2>
-            <p>Review the active board package before generating a local iOS change.</p>
-          </header>
-          <div class="inspect-grid">
-            <section class="inspect-card" id="inspect-board-preview" aria-label="Board preview"></section>
-            <section class="inspect-card">
-              <span class="eyebrow">Artifacts</span>
-              <div class="inspect-artifact-links" id="inspect-artifact-links"></div>
-            </section>
-            <section class="inspect-card">
-              <span class="eyebrow">Hold inventory</span>
-              <div id="inspect-hold-inventory"></div>
-            </section>
-            <section class="inspect-card">
-              <span class="eyebrow">Approval and revision</span>
-              <div id="inspect-approval-status"></div>
-            </section>
-            <section class="inspect-card inspect-board-info-card" id="inspect-board-info" aria-labelledby="inspect-board-info-title">
-              <div class="inspect-card-heading">
-                <div>
-                  <span class="eyebrow">Board details</span>
-                  <h3 id="inspect-board-info-title">Board info</h3>
-                </div>
-                <p>These editable details are used for the active board revision when you generate a local promotion preview.</p>
-              </div>
-              <div class="board-info-grid">
-                <label for="board-info-manufacturer">Manufacturer
-                  <input id="board-info-manufacturer" data-board-info-field="manufacturer" type="text" autocomplete="organization" aria-describedby="board-info-manufacturer-hint" />
-                  <small id="board-info-manufacturer-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-name">Display name
-                  <input id="board-info-name" data-board-info-field="name" type="text" autocomplete="off" aria-describedby="board-info-name-hint" />
-                  <small id="board-info-name-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-subtitle">Subtitle
-                  <input id="board-info-subtitle" data-board-info-field="subtitle" type="text" autocomplete="off" aria-describedby="board-info-subtitle-hint" />
-                  <small id="board-info-subtitle-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-dimensions">Dimensions
-                  <input id="board-info-dimensions" data-board-info-field="dimensions" type="text" autocomplete="off" aria-describedby="board-info-dimensions-hint" />
-                  <small id="board-info-dimensions-hint">Used in the local promotion preview.</small>
-                </label>
-                <label for="board-info-aspect-ratio">Aspect ratio
-                  <input id="board-info-aspect-ratio" data-board-info-field="aspectRatio" type="number" min="0.01" step="0.01" inputmode="decimal" aria-describedby="board-info-aspect-ratio-hint" />
-                  <small id="board-info-aspect-ratio-hint">Used in the local promotion preview.</small>
-                </label>
-                <label class="board-info-wide" for="board-info-product-url">Product URL
-                  <input id="board-info-product-url" data-board-info-field="productURL" type="url" autocomplete="url" aria-describedby="board-info-product-url-hint" />
-                  <small id="board-info-product-url-hint">Used in the local promotion preview.</small>
-                </label>
-              </div>
-            </section>
-            <section class="inspect-card inspect-readiness-card">
-              <span class="eyebrow">Readiness</span>
-              <div id="inspect-readiness"></div>
-              <button class="tool-button accent" id="inspect-next-action" type="button">Open Onboard</button>
-            </section>
-          </div>
-        </section>
-
-        <section class="tool-view promote-view hidden" id="promote-view" aria-labelledby="promote-title">
-          <header class="tool-view-header">
-            <span class="eyebrow">Promotion</span>
-            <h2 id="promote-title">Promote to iOS</h2>
-            <p id="promotion-identity">Choose one active board revision to begin promotion.</p>
-          </header>
-
-          <section class="promotion-summary" aria-live="polite">
-            <p id="promotion-readiness"></p>
-            <p class="promotion-status empty" id="promotion-status">No preview</p>
-            <p class="promotion-error hidden" id="promotion-error" role="alert"></p>
-          </section>
-
-          <section class="promotion-card promotion-actions" aria-label="Promotion actions">
-            <button class="tool-button accent" id="promotion-preview-button" type="button">Generate preview</button>
-            <button class="tool-button" id="promotion-refresh-button" type="button">Refresh preview</button>
-            <button class="tool-button" id="promotion-save-button" type="button">Save locally</button>
-            <p>Save locally never commits, pushes, or synchronizes remote changes.</p>
-          </section>
-
-          <section class="promotion-card" aria-labelledby="promotion-issues-title">
-            <div class="promotion-card-heading">
-              <div>
-                <span class="eyebrow">Checks</span>
-                <h3 id="promotion-issues-title">Conflicts and validation issues</h3>
-              </div>
-            </div>
-            <div id="promotion-issues"></div>
-          </section>
-
-          <section class="promotion-card promotion-diffs" aria-labelledby="promotion-diffs-title">
-            <div class="promotion-card-heading">
-              <div>
-                <span class="eyebrow">Review</span>
-                <h3 id="promotion-diffs-title">Grouped native diff</h3>
-              </div>
-              <p>Review metadata, exact geometry, and plan changes before saving them into this checkout.</p>
-            </div>
-            <div id="promotion-diff-groups"></div>
-          </section>
-        </section>
-
-        <section class="tool-view validate-view hidden" id="validate-view" aria-labelledby="validate-title">
-          <header class="tool-view-header">
-            <span class="eyebrow">Validation</span>
-            <h2 id="validate-title">Validate</h2>
-            <p id="validation-identity">Choose one active board revision to begin validation.</p>
-          </header>
-
-          <section class="validation-summary" aria-live="polite">
-            <p class="validation-status not_run" id="validation-status">Not run</p>
-            <p class="validation-error hidden" id="validation-error" role="alert"></p>
-          </section>
-
-          <section class="validation-card validation-actions" aria-label="Validation actions">
-            <button class="tool-button" id="validation-refresh-button" type="button">Load cached report</button>
-            <button class="tool-button accent" id="validation-run-button" type="button">Run validation</button>
-            <p>These checks cover the local package and native plan library only. They do not create, delete, boot, or archive simulators.</p>
-          </section>
-
-          <section class="validation-card" aria-labelledby="validation-checks-title">
-            <div class="validation-card-heading">
-              <div>
-                <span class="eyebrow">Local checks</span>
-                <h3 id="validation-checks-title">Package and parity report</h3>
-              </div>
-              <p>Run validation after saving a promotion, or load the cached revision-bound report.</p>
-            </div>
-            <div id="validation-checks"></div>
-          </section>
-
-          <section class="validation-card" aria-labelledby="validation-simulator-title">
-            <div class="validation-card-heading">
-              <div>
-                <span class="eyebrow">Simulator handoff</span>
-                <h3 id="validation-simulator-title">Dedicated simulator review</h3>
-              </div>
-              <p>Provide the explicit UUID of a dedicated, already-owned simulator. Follow <code>docs/IOS_SIMULATOR_VALIDATION.md</code> for creation, ownership, readiness, and cleanup.</p>
-            </div>
-            <label class="validation-uuid-label" for="validation-simulator-uuid">Simulator UUID
-              <input id="validation-simulator-uuid" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 12345678-1234-1234-1234-123456789ABC" />
-            </label>
-            <p class="validation-simulator-note" id="validation-simulator-error" role="alert"></p>
-            <textarea class="validation-command-output" id="validation-simulator-commands" rows="8" readonly aria-label="Simulator review commands"></textarea>
-            <button class="tool-button" id="validation-copy-commands-button" type="button">Copy commands</button>
-          </section>
-        </section>
-        </div>
       </section>
     </main>
 
@@ -444,11 +310,8 @@
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
     <script src="workbench-model.js"></script>
-    <script src="workbench-suite-model.js"></script>
-    <script src="workbench-suite-controller.js"></script>
-    <script src="promotion-view.js"></script>
-    <script src="validation-view.js"></script>
     <script src="vector-path-model.js"></script>
+    <script src="editor-ui-model.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
