@@ -1,13 +1,9 @@
 name: Build and release Hangboard Workbench
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-  merge_group:
   workflow_dispatch:
 
 permissions:
@@ -15,322 +11,30 @@ permissions:
 
 concurrency:
   group: hangboard-workbench-release-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: false
 
 jobs:
-  changes:
-    name: Classify changed components
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      python: ${{ steps.filter.outputs.python }}
-      workbench_web: ${{ steps.filter.outputs.workbench_web }}
-      workbench_native: ${{ steps.filter.outputs.workbench_native }}
-      shared_board_content: ${{ steps.filter.outputs.shared_board_content }}
-      workflow: ${{ steps.filter.outputs.workflow }}
-    steps:
-      # actions/checkout v7.0.1
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-
-      - id: filter
-        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
-        with:
-          filters: .github/ci-paths.yml
-
-  workbench-node:
-    name: Test workbench browser editor
-    needs: changes
-    if: >-
-      github.event_name == 'pull_request' &&
-      (needs.changes.outputs.workbench_web == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true' ||
-      needs.changes.outputs.workflow == 'true')
-    runs-on: ubuntu-latest
-
-    steps:
-      # actions/checkout v7.0.1
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-
-      - name: Run focused Node suite
-        run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
-
-  workbench-python:
-    name: Test workbench Python backend
-    needs: changes
-    if: >-
-      github.event_name == 'pull_request' &&
-      (needs.changes.outputs.python == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true' ||
-      needs.changes.outputs.workflow == 'true')
-    runs-on: ubuntu-latest
-
-    steps:
-      # actions/checkout v7.0.1
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-
-      # actions/setup-python v6.3.0
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
-
-      # astral-sh/setup-uv v6
-      - name: Set up uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-
-      - name: Install workbench test dependencies
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install 'setuptools>=84.0.0' wheel
-          python -m pip install -e 'Tools/HangboardPipeline[dev]'
-
-      - name: Run focused Python suite
-        run: python -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
-
-  workbench-native:
-    name: Test native workbench shell
-    needs: changes
-    if: >-
-      github.event_name == 'pull_request' &&
-      (needs.changes.outputs.workbench_native == 'true' ||
-      needs.changes.outputs.workflow == 'true')
-    runs-on: macos-latest
-
-    steps:
-      # actions/checkout v7.0.1
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-
-      - name: Run native shell tests
-        run: swift test --package-path Tools/HangboardWorkbench/macos
-
   build:
     name: Build verified arm64 workbench
-    needs: changes
-    if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.python == 'true' ||
-      needs.changes.outputs.workbench_web == 'true' ||
-      needs.changes.outputs.workbench_native == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true' ||
-      needs.changes.outputs.workflow == 'true'
+    if: github.ref == 'refs/heads/main'
     runs-on: macos-latest
     timeout-minutes: 45
-
+    outputs:
+      artifact-name: ${{ steps.build.outputs.artifact-name }}
     steps:
-      # actions/checkout v7.0.1
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
 
-      # actions/setup-python v6.3.0
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
-
-      # astral-sh/setup-uv v6
-      - name: Set up uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-
-      - name: Install workbench build dependencies
-        run: |
-          set -euo pipefail
-          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-          python -m venv "${python_bin%/bin/python}"
-          "$python_bin" -m pip install --upgrade pip
-          "$python_bin" -m pip install -e 'Tools/HangboardPipeline[dev]' 'pyinstaller==6.22.0'
-
-      - name: Run focused Python suite
-        run: |
-          set -euo pipefail
-          python_bin="$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python"
-          "$python_bin" -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
-
-      - name: Run focused Node suite
-        run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
-
-      - name: Run native shell tests
-        run: swift test --package-path Tools/HangboardWorkbench/macos
-
-      - name: Build unsigned native app
-        run: |
-          set -euo pipefail
-          release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
-          runtime_dist_dir="$release_dir/runtime-dist"
-          work_dir="$RUNNER_TEMP/hangboard-workbench-build"
-          rm -rf "$release_dir" "$work_dir"
-          mkdir -p "$release_dir" "$work_dir"
-          "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-            Tools/HangboardWorkbench/packaging/build.py \
-            --commit "$GITHUB_SHA" \
-            --dist-dir "$runtime_dist_dir" \
-            --work-dir "$work_dir"
-          runtime_dir="$runtime_dist_dir/hangboard-workbench"
-
-          swift build -c release --arch arm64 \
-            -Xswiftc -g \
-            --package-path Tools/HangboardWorkbench/macos
-          shell_bin_dir="$(swift build -c release --arch arm64 \
-            --package-path Tools/HangboardWorkbench/macos --show-bin-path)"
-          shell_executable="$shell_bin_dir/HangboardWorkbench"
-          app_bundle="$release_dir/Hangboard Workbench.app"
-          "$GITHUB_WORKSPACE/.context/hangboard-onboarding-venv/bin/python" \
-            Tools/HangboardWorkbench/packaging/macos_app.py \
-            --shell "$shell_executable" \
-            --runtime-dir "$runtime_dir" \
-            --output "$app_bundle" \
-            --version "$GITHUB_RUN_NUMBER"
-
-      - name: Verify executable identity
-        run: |
-          set -euo pipefail
-          app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
-          shell_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
-          runtime_executable="$app_bundle/Contents/Resources/workbench-runtime/hangboard-workbench"
-          architecture="$(uname -m)"
-          echo "Runner architecture: $architecture"
-          test "$architecture" = "arm64"
-          file "$shell_executable" "$runtime_executable" \
-            | tee "$RUNNER_TEMP/hangboard-workbench-file.txt"
-          test "$(grep -c 'arm64' "$RUNNER_TEMP/hangboard-workbench-file.txt")" -eq 2
-          "$runtime_executable" --version | tee "$RUNNER_TEMP/hangboard-workbench-version.txt"
-          grep -Fqx "$GITHUB_SHA" "$RUNNER_TEMP/hangboard-workbench-version.txt"
-
-      - name: Smoke test unsigned app and clean up
-        run: |
-          set -euo pipefail
-          app_bundle="$GITHUB_WORKSPACE/.hangboard-workbench-release/Hangboard Workbench.app"
-          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
-          smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
-          app_pid=""
-          app_child_pid=""
-          cleanup() {
-            status=$?
-            trap - EXIT
-            if [[ -n "$app_pid" ]]; then
-              if kill -0 "$app_pid" 2>/dev/null; then
-                kill -TERM "$app_pid" || true
-              fi
-              wait "$app_pid" || true
-            fi
-            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
-              kill -TERM "$app_child_pid" || true
-            fi
-            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
-              cat "$smoke_log" >&2
-            fi
-            exit "$status"
-          }
-          trap cleanup EXIT
-
-          port=41739
-          cd "$GITHUB_WORKSPACE"
-          "$app_executable" --headless \
-            --repository-root "$GITHUB_WORKSPACE" \
-            --port 41739 >"$smoke_log" 2>&1 &
-          app_pid=$!
-          ready=false
-          for _ in {1..30}; do
-            if ! kill -0 "$app_pid" 2>/dev/null; then
-              echo "Unsigned app exited before becoming ready." >&2
-              exit 1
-            fi
-            if curl --fail --silent --show-error \
-              "http://127.0.0.1:${port}/api/health" >/dev/null; then
-              ready=true
-              break
-            fi
-            sleep 1
-          done
-          if [[ "$ready" != "true" ]]; then
-            echo "Unsigned app did not become ready within 30 seconds." >&2
-            exit 1
-          fi
-
-          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/health" \
-            | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
-          curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
-          while IFS= read -r asset_path; do
-            curl --fail --silent --show-error \
-              "http://127.0.0.1:${port}${asset_path}" >/dev/null
-          done < <(
-            python - <<'PY'
-          import sys
-
-          sys.path.insert(0, "Tools/HangboardWorkbench")
-          from workbench_assets import STATIC_ASSETS
-
-          for asset in STATIC_ASSETS:
-              print(f"/{asset}")
-          PY
-          )
-          curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-            | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
-
-          app_child_pid="$(pgrep -P "$app_pid" || true)"
-          if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
-            echo "Expected exactly one backend owned by the unsigned app." >&2
-            exit 1
-          fi
-          kill -TERM "$app_pid"
-          if ! wait "$app_pid"; then
-            echo "Unsigned app did not exit cleanly after SIGTERM." >&2
-            exit 1
-          fi
-          if kill -0 "$app_child_pid" 2>/dev/null; then
-            echo "Unsigned app backend remained after app shutdown." >&2
-            exit 1
-          fi
-          if grep -Eq 'Traceback|Exception ignored in atexit callback|could not start' "$smoke_log"; then
-            echo "Unsigned app smoke log contains an error." >&2
-            exit 1
-          fi
-          app_pid=""
-          app_child_pid=""
-
-      - name: Archive verified unsigned app
-        run: |
-          set -euo pipefail
-          release_dir="$GITHUB_WORKSPACE/.hangboard-workbench-release"
-          cd "$release_dir"
-          tar -czf hangboard-workbench-macos-arm64.tar.gz "Hangboard Workbench.app"
-          shasum -a 256 hangboard-workbench-macos-arm64.tar.gz > hangboard-workbench-macos-arm64.sha256
-          shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
-
-      # actions/upload-artifact v4.6.2
-      - name: Upload verified unsigned app
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: hangboard-workbench-macos-arm64-${{ github.run_id }}
-          path: |
-            ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.tar.gz
-            ${{ github.workspace }}/.hangboard-workbench-release/hangboard-workbench-macos-arm64.sha256
-          if-no-files-found: error
+      - name: Build and upload verified unsigned app
+        id: build
+        uses: ./.github/actions/build-hangboard-workbench
 
   release:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-    needs: build
     name: Publish immutable workbench release
+    needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: macos-latest
     timeout-minutes: 30
     permissions:
@@ -348,7 +52,9 @@ jobs:
       - name: Download verified unsigned app
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
-          name: hangboard-workbench-macos-arm64-${{ github.run_id }}
+          # A "re-run failed jobs" keeps the successful build job from its
+          # original attempt, so consume the name that job actually uploaded.
+          name: ${{ needs.build.outputs.artifact-name }}
           path: release
 
       - name: Verify downloaded unsigned app
@@ -374,6 +80,25 @@ jobs:
           "$python_bin" -m pip install -e 'Tools/HangboardPipeline' 'pyinstaller==6.22.0'
           swift --version
 
+      - name: Install pinned Sentry CLI
+        run: |
+          set -euo pipefail
+          sentry_cli_path="$RUNNER_TEMP/sentry-cli-2.58.6"
+          sentry_cli_download="${sentry_cli_path}.download"
+          cleanup() {
+            rm -f "$sentry_cli_download"
+          }
+          trap cleanup EXIT
+          curl --fail --location --silent --show-error \
+            --output "$sentry_cli_download" \
+            https://github.com/getsentry/sentry-cli/releases/download/2.58.6/sentry-cli-Darwin-arm64
+          printf '%s  %s\n' \
+            a2979237fc1ba46d2db4d551a9269affdd1e4f16e667cf2f398f490be7accafb \
+            "$sentry_cli_download" | shasum -a 256 -c -
+          chmod 0755 "$sentry_cli_download"
+          mv "$sentry_cli_download" "$sentry_cli_path"
+          printf 'SENTRY_CLI_PATH=%s\n' "$sentry_cli_path" >> "$GITHUB_ENV"
+
       # Apple-Actions/import-codesign-certs v7.0.0
       - name: Import Developer ID Application certificate
         uses: Apple-Actions/import-codesign-certs@5142e029c445c10ffc7149d172e540235a065466
@@ -382,15 +107,9 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_FILE_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
 
-      - name: Sign, notarize, and validate workbench app
+      - name: Build, sign, and archive workbench app
         env:
-          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
-          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
-          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ vars.SENTRY_WORKBENCH_PROJECT }}
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/release"
@@ -398,32 +117,7 @@ jobs:
           runtime_dist_dir="$release_dir/signed-runtime-dist"
           runtime_work_dir="$RUNNER_TEMP/hangboard-workbench-signed-runtime-build"
           app_bundle="$release_dir/Hangboard Workbench.app"
-          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
           archive="$release_dir/hangboard-workbench-macos-arm64.zip"
-          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
-          smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
-          app_pid=""
-          app_child_pid=""
-          cleanup() {
-            status=$?
-            trap - EXIT
-            if [[ -n "$app_pid" ]]; then
-              if kill -0 "$app_pid" 2>/dev/null; then
-                kill -TERM "$app_pid" || true
-              fi
-              wait "$app_pid" || true
-            fi
-            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
-              kill -TERM "$app_child_pid" || true
-            fi
-            rm -f "$api_key_path"
-            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
-              cat "$smoke_log" >&2
-            fi
-            exit "$status"
-          }
-          trap cleanup EXIT
 
           signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
             | awk -F '\"' '/Developer ID Application:/{print $2}')"
@@ -479,14 +173,43 @@ jobs:
           codesign --force --sign "$signing_identity" --options runtime --timestamp "$app_bundle"
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
+          cd "$release_dir"
+          ditto -c -k --keepParent "$app_bundle" "$archive"
+
+      - name: Upload workbench debug symbols to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_WORKBENCH_PROJECT }}
+        run: |
+          set -euo pipefail
           : "${SENTRY_AUTH_TOKEN:?Configure the SENTRY_AUTH_TOKEN secret}"
           : "${SENTRY_ORG:?Configure the SENTRY_ORG variable}"
           : "${SENTRY_PROJECT:?Configure the SENTRY_WORKBENCH_PROJECT variable}"
-          brew install getsentry/tools/sentry-cli
-          sentry-cli debug-files upload "$shell_dsym"
+          shell_dsym="$GITHUB_WORKSPACE/release/HangboardWorkbench.dSYM"
+          test -d "$shell_dsym"
+          "$SENTRY_CLI_PATH" debug-files upload "$shell_dsym"
 
-          cd "$release_dir"
-          ditto -c -k --keepParent "$app_bundle" "$archive"
+      - name: Notarize workbench archive
+        env:
+          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          : "${APPSTORE_ISSUER_ID:?Configure the APPSTORE_ISSUER_ID variable}"
+          : "${APPSTORE_API_KEY_ID:?Configure the APPSTORE_API_KEY_ID variable}"
+          : "${APPSTORE_API_PRIVATE_KEY:?Configure the APPSTORE_API_PRIVATE_KEY secret}"
+          archive="$GITHUB_WORKSPACE/release/hangboard-workbench-macos-arm64.zip"
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
+          cleanup() {
+            status=$?
+            trap - EXIT
+            rm -f "$api_key_path"
+            exit "$status"
+          }
+          trap cleanup EXIT
+          test -f "$archive"
           umask 077
           printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
           chmod 600 "$api_key_path"
@@ -495,6 +218,37 @@ jobs:
             --key-id "$APPSTORE_API_KEY_ID" \
             --issuer "$APPSTORE_ISSUER_ID" \
             --wait
+
+      - name: Staple and validate workbench app
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/release"
+          app_bundle="$release_dir/Hangboard Workbench.app"
+          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+          archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
+          smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
+          app_pid=""
+          app_child_pid=""
+          cleanup() {
+            status=$?
+            trap - EXIT
+            if [[ -n "$app_pid" ]]; then
+              if kill -0 "$app_pid" 2>/dev/null; then
+                kill -TERM "$app_pid" || true
+              fi
+              wait "$app_pid" || true
+            fi
+            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
+              kill -TERM "$app_child_pid" || true
+            fi
+            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
+              cat "$smoke_log" >&2
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
           xcrun stapler staple "$app_bundle"
           xcrun stapler validate "$app_bundle"
           spctl --assess --type execute --verbose=4 "$app_bundle"
