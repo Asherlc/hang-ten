@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
@@ -73,8 +74,8 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreReportsEachMissingApprovedSidecar() throws {
-        for filename in ["board.json", "semantics.json"] {
+    func testStoreReportsEachMissingPackageSidecar() throws {
+        for filename in ["board.json", "evidence.json", "semantics.json"] {
             let fixture = try makeFixtureBundle { packageURL in
                 try FileManager.default.removeItem(at: packageURL.appendingPathComponent(filename))
             }
@@ -181,6 +182,62 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsDecodableJPEGRenamedToPrimaryPNG() throws {
+        XCTAssertNotNil(UIImage(data: self.jpegBytes))
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.jpegBytes.write(
+                to: packageURL.appendingPathComponent("assets/primary.png")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "package-board",
+                    reason: "presentation asset must be a decodable PNG"
+                )
+            )
+        }
+    }
+
+    func testStoreRejectsUnsupportedEvidenceSchema() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("evidence.json")) { evidence in
+                evidence["schemaVersion"] = 2
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/package-board/evidence.json")
+            )
+        }
+    }
+
+    func testStoreRejectsEvidenceBoardIDMismatch() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("evidence.json")) { evidence in
+                evidence["boardID"] = "other-board"
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .boardIDMismatch(
+                    expected: "package-board",
+                    actual: "other-board",
+                    resource: "Hangboards/package-board/evidence.json"
+                )
+            )
+        }
+    }
+
     func testStoreRejectsApprovedSidecarSymlinkEscapingPackage() throws {
         let fixture = try makeFixtureBundle { packageURL in
             let boardURL = packageURL.appendingPathComponent("board.json")
@@ -206,6 +263,7 @@ final class BoardPackageStoreTests: XCTestCase {
         for (relativePath, resource) in [
             ("../catalog.json", "Hangboards/catalog.json"),
             ("board.json", "Hangboards/package-board/board.json"),
+            ("evidence.json", "Hangboards/package-board/evidence.json"),
             ("semantics.json", "Hangboards/package-board/semantics.json")
         ] {
             try assertMalformedJSON(relativePath: relativePath, resource: resource) { document in
@@ -299,6 +357,12 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    private var jpegBytes: Data {
+        try! XCTUnwrap(
+            Data(base64Encoded: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAH/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/AL//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AL//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/AL//2gAMAwEAAgADAAAAEP/EABQQAQAAAAAAAAAAAAAAAAAAABD/2gAIAQEAAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QH//Z")
+        )
+    }
+
     private func makeFixtureBundle(
         mutate: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
@@ -313,6 +377,7 @@ final class BoardPackageStoreTests: XCTestCase {
         try propertyListData().write(to: bundleURL.appendingPathComponent("Info.plist"))
         try catalogData.write(to: hangboardsURL.appendingPathComponent("catalog.json"))
         try boardData.write(to: packageURL.appendingPathComponent("board.json"))
+        try evidenceData.write(to: packageURL.appendingPathComponent("evidence.json"))
         try semanticsData.write(to: packageURL.appendingPathComponent("semantics.json"))
         try presentationBytes.write(to: assetsURL.appendingPathComponent("primary.png"))
         try mutate?(packageURL)
@@ -451,6 +516,23 @@ final class BoardPackageStoreTests: XCTestCase {
               "semanticHolds": {
                 "outer-jugs": { "holdIDs": ["jug-left", "jug-right"] }
               }
+            }
+            """#.utf8
+        )
+    }
+
+    private var evidenceData: Data {
+        Data(
+            #"""
+            {
+              "schemaVersion": 1,
+              "boardID": "package-board",
+              "checkedAt": "2026-08-14",
+              "sources": [],
+              "fieldEvidence": {},
+              "holdEvidence": {},
+              "semanticEvidence": {},
+              "assetEvidence": {}
             }
             """#.utf8
         )

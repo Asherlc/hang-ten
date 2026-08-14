@@ -1,4 +1,6 @@
 import Foundation
+import ImageIO
+import UniformTypeIdentifiers
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -167,8 +169,15 @@ struct BoardPackageStore {
                 packageURL: packageURL,
                 resourcePrefix: resourcePrefix
             )
+            let evidenceDocument: BoardPackageEvidenceDocument = try Self.decodeSidecar(
+                named: "evidence.json",
+                boardID: entry.id,
+                packageURL: packageURL,
+                resourcePrefix: resourcePrefix
+            )
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateSchema(semanticsDocument.schemaVersion, resource: "\(resourcePrefix)/semantics.json")
+            try Self.validateSchema(evidenceDocument.schemaVersion, resource: "\(resourcePrefix)/evidence.json")
             try Self.validateMetadata(
                 boardDocument: boardDocument,
                 semanticsDocument: semanticsDocument,
@@ -178,6 +187,7 @@ struct BoardPackageStore {
                 catalogID: entry.id,
                 boardDocument: boardDocument,
                 semanticsDocument: semanticsDocument,
+                evidenceDocument: evidenceDocument,
                 resourcePrefix: resourcePrefix
             )
 
@@ -210,7 +220,8 @@ struct BoardPackageStore {
                     path: presentation.assetPath
                 )
             }
-            guard Self.isDecodablePresentationImage(at: assetURL) else {
+            guard Self.isPNGPresentationImage(at: assetURL),
+                  Self.isDecodablePresentationImage(at: assetURL) else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: board.id,
                     reason: "presentation asset must be a decodable PNG"
@@ -313,6 +324,14 @@ struct BoardPackageStore {
 #endif
     }
 
+    private static func isPNGPresentationImage(at url: URL) -> Bool {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let imageType = CGImageSourceGetType(source) else {
+            return false
+        }
+        return imageType as String == UTType.png.identifier
+    }
+
     private static func confinedURL(relativePath: String, below rootURL: URL) -> URL? {
         guard !relativePath.isEmpty,
               !relativePath.contains("\\"),
@@ -352,11 +371,13 @@ struct BoardPackageStore {
         catalogID: String,
         boardDocument: BoardPackageBoardDocument,
         semanticsDocument: BoardPackageSemanticsDocument,
+        evidenceDocument: BoardPackageEvidenceDocument,
         resourcePrefix: String
     ) throws {
         for (actual, filename) in [
             (boardDocument.id, "board.json"),
-            (semanticsDocument.boardID, "semantics.json")
+            (semanticsDocument.boardID, "semantics.json"),
+            (evidenceDocument.boardID, "evidence.json")
         ] where actual != catalogID {
             throw BoardPackageStoreError.boardIDMismatch(
                 expected: catalogID,
@@ -773,6 +794,79 @@ private struct BoardPackageSemanticsDocument: Decodable {
         semanticHolds = try container.decode(
             [String: BoardPackageSemanticMappingDocument].self,
             forKey: .semanticHolds
+        )
+    }
+}
+
+private struct BoardPackageEvidenceDocument: Decodable {
+    let schemaVersion: Int
+    let boardID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion
+        case boardID
+        case checkedAt
+        case sources
+        case fieldEvidence
+        case holdEvidence
+        case semanticEvidence
+        case assetEvidence
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence",
+            "holdEvidence", "semanticEvidence", "assetEvidence"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        _ = try container.decode(String.self, forKey: .checkedAt)
+        _ = try container.decode([BoardPackageEvidenceSourceDocument].self, forKey: .sources)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .fieldEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .holdEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .semanticEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .assetEvidence)
+    }
+}
+
+private struct BoardPackageEvidenceSourceDocument: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case url
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "title", "url"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        _ = try container.decode(String.self, forKey: .id)
+        _ = try container.decode(String.self, forKey: .title)
+        _ = try container.decode(String.self, forKey: .url)
+    }
+}
+
+private enum BoardPackageEvidenceMappingDocument: Decodable {
+    case sourceIDs([String])
+    case sourced(sourceIDs: [String], method: String)
+
+    private enum CodingKeys: String, CodingKey {
+        case sourceIDs
+        case method
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let sourceIDs = try? container.decode([String].self) {
+            self = .sourceIDs(sourceIDs)
+            return
+        }
+
+        try decoder.rejectUnknownKeys(["sourceIDs", "method"])
+        let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
+        self = .sourced(
+            sourceIDs: try keyedContainer.decode([String].self, forKey: .sourceIDs),
+            method: try keyedContainer.decode(String.self, forKey: .method)
         )
     }
 }

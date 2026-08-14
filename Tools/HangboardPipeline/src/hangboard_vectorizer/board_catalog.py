@@ -11,6 +11,7 @@ import re
 from types import MappingProxyType
 from typing import Any, Mapping
 from urllib.parse import urlparse
+import zlib
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
@@ -422,6 +423,40 @@ def _package_assets(root: Path) -> set[str]:
     return assets
 
 
+def _is_png(path: Path) -> bool:
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return False
+
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return False
+
+    offset = 8
+    has_ihdr = False
+    has_idat = False
+    while offset + 12 <= len(data):
+        length = int.from_bytes(data[offset:offset + 4], "big")
+        chunk_type = data[offset + 4:offset + 8]
+        chunk_end = offset + 8 + length
+        if chunk_end + 4 > len(data):
+            return False
+        chunk_data = data[offset + 8:chunk_end]
+        expected_crc = int.from_bytes(data[chunk_end:chunk_end + 4], "big")
+        if (zlib.crc32(chunk_type + chunk_data) & 0xFFFFFFFF) != expected_crc:
+            return False
+        if not has_ihdr:
+            if chunk_type != b"IHDR" or length != 13:
+                return False
+            has_ihdr = True
+        if chunk_type == b"IDAT":
+            has_idat = True
+        if chunk_type == b"IEND":
+            return has_ihdr and has_idat and length == 0 and chunk_end + 4 == len(data)
+        offset = chunk_end + 4
+    return False
+
+
 def load_board_package(package_root: Path) -> BoardPackage:
     root = Path(package_root)
     if not root.is_dir() or root.is_symlink():
@@ -484,6 +519,9 @@ def validate_catalog(catalog_path: Path) -> CatalogDocument:
             raise ValueError(f"board package ID {package.board.id!r} does not match catalog id {entry.id!r}")
         if package.board.presentation_asset_path != "assets/primary.png":
             raise ValueError("registered board package must present assets/primary.png")
-        if not (package.root / "assets/primary.png").is_file():
+        primary_asset = package.root / "assets/primary.png"
+        if not primary_asset.is_file():
             raise ValueError("registered board package assets/primary.png does not exist")
+        if not _is_png(primary_asset):
+            raise ValueError("registered board package assets/primary.png must contain PNG image data")
     return catalog
