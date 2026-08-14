@@ -79,6 +79,6 @@ numbered hold diagram or equivalent data sheet.
 For each model, obtain a manufacturer-issued, model-specific source that maps
 every physical contact region and boundary to its measurements, finger
 capacity, grip classification, and documented training target. Then author all
-four canonical sidecars and add exactly that ready model to `catalog.json` in
+three canonical sidecars and add exactly that ready model to `catalog.json` in
 one change. Do not use another YY Vertical model, the generated primary image,
 or visual similarity as a substitute.

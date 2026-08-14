@@ -159,9 +159,22 @@ def test_active_package_guidance_describes_three_sidecars_and_primary_raster() -
         TOOLS_SCRIPT,
     )
     active_text = "\n".join(path.read_text(encoding="utf-8") for path in active_package_docs)
+    adding_a_board_text = ADDING_A_BOARD.read_text(encoding="utf-8")
 
-    assert "board.json`, `evidence.json`, and `semantics.json" in active_text
-    assert "`artwork.json`" not in active_text
-    assert "artworkEvidence" not in active_text
-    assert "artwork parity" not in active_text
-    assert "hangboard-semantic-benchmark" not in active_text
+    assert "board.json`, `evidence.json`, and `semantics.json`" in adding_a_board_text
+    assert "`assets/primary.png` is the only board visual" in adding_a_board_text
+    assert "SVG" not in active_text
+    assert "artwork" not in active_text.lower()
+    for obsolete_contract in (
+        "`artwork.json`",
+        "artworkEvidence",
+        "artwork parity",
+        "hangboard-semantic-benchmark",
+        "interactive SVG",
+        "vector illustration",
+        "canonical product render",
+        "renderAsset",
+        "curated-vector",
+        "SVG embeds",
+    ):
+        assert obsolete_contract not in active_text

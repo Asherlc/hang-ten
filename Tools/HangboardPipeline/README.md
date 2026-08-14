@@ -1,12 +1,10 @@
-# Hangboard Vectorizer
+# Hangboard Package Workbench
 
-`hangboard-vectorizer` converts a clean, front-facing commercial hangboard
-photo into a uniform interactive SVG and a JSON geometry manifest. For a
-known product, a reviewed template defines every usable grip and a packaged,
-reviewed canonical product render supplies the visible board layer. The input
-photo supplies board geometry and alignment diagnostics; the caller asserts
-the product identity and verifies it in the preview. The photo is not restyled
-into a run-specific illustration.
+The pipeline helps prepare a source-backed hangboard package. A registered
+package supplies one `assets/primary.png` board visual plus factual normalized
+hold frames in `board.json`; generic consumers use those frames for taps and
+active or preview overlays. Product photos and staging artifacts support review
+of the package facts and retained asset, but are not alternate delivery visuals.
 
 ## Run the Apple Silicon macOS workbench release
 
@@ -48,22 +46,16 @@ source .venv/bin/activate
 python -m pip install -e ".[dev]"
 ```
 
-## Convert an identifiable product
+## Start an identifiable-product review
 
-List the built-in commercial products:
-
-```bash
-hangboard-to-svg --list-products
-```
-
-Convert a local image or HTTP(S) image URL by supplying its product ID:
+Start a local review run from an image or HTTPS source with the caller-asserted
+product name:
 
 ```bash
-hangboard-to-svg photo.jpg \
-  --product beastmaker-1000 \
-  --output board.svg \
-  --manifest board.json \
-  --preview diagnostic.png
+hangboard-onboard \
+  --product-name "Beastmaker 1000" \
+  --source photo.jpg \
+  --output .context/hangboard-onboarding/beastmaker-1000
 ```
 
 Generated paths are resolved beneath `.context/hangboard-onboarding` by
@@ -76,21 +68,16 @@ Alignment confidence measures how well the isolated board geometry aligns to
 the asserted template, not whether that product assertion is correct. Review
 the diagnostic preview to verify both identity and alignment.
 
-The Beastmaker 1000 template exports a self-contained SVG with an exact,
-packaged transparent PNG beneath 22 independently addressable vector paths:
-17 pockets, 2 corner jugs, and 3 sloper surfaces. The center sloper is one
-continuous double-width region (`sloper-center`) with no visual or semantic
-divider. It emits no detected `opening` paths. The SVG and manifest contain
-the same stable, ordered region IDs, and each manifest region has
-`source: "template"` and a nullable `openingId`. The embedded PNG provides
-the approved visible material and depth; the vector paths provide stable
-semantic identity, hit testing, highlighting, and measurement.
+The Beastmaker 1000 review inventory records 17 pockets, 2 corner jugs, and 3
+sloper surfaces. The center sloper is one continuous double-width region
+(`sloper-center`) with no visual or semantic divider. A registered package
+retains one primary PNG; its ordered `board.json` hold IDs and factual frames
+provide semantic identity, generic hit testing, highlights, and measurement.
 
 The diagnostic preview overlays every template region on the canonically
 aligned photograph. Inspect it whenever onboarding a new photo, especially for
-cropping, occlusion, or the wrong product selection. Generated outputs are
-published transactionally, so a conversion or validation failure does not
-leave partial SVG or manifest files.
+cropping, occlusion, or the wrong product selection. Package publication is
+transactional, so a validation failure does not leave a partial package.
 
 ## Alignment confidence
 
@@ -108,24 +95,13 @@ above the 15% limit. The manifest still records `confidence: "low"`, so callers
 can reject or flag it downstream. This flag does not improve a poor alignment;
 always review the preview.
 
-## Highlight regions
+## Hold frames and interaction
 
-Every enabled manifest region has the same ID as one SVG `.grip-region` path.
-Adding the `active` class highlights only that logical grip:
-
-```js
-document.getElementById("pocket-top-left").classList.add("active");
-```
-
-Template-backed SVG paths also expose `data-source`, `data-type`, and, where
-applicable, `data-side` and `data-label`. The built-in SVG style highlights a
-region on hover at lower opacity and an active region at higher opacity.
-
-Product-template coordinates and semantics come from a reviewed, versioned
-JSON map, not from photo darkness. This is why non-dark slopers and jugs remain
-independently identifiable. The manifest's `product` and `alignment` objects
-record the selected template and alignment result. Measurements absent from
-the template are omitted rather than inferred from pixels.
+Every registered `board.json` hold has a stable ID and normalized frame. The
+app renders the package primary PNG unchanged, then uses the frame for generic
+tap targets and active or preview overlays. Hold facts and semantic mappings
+come from the reviewed JSON/evidence records, not from image darkness; fields
+unsupported by source material are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
@@ -189,10 +165,9 @@ checkpoint; **Retry** regenerates the current checkpoint as a new attempt while
 preserving prior files.
 
 Stage 2 is the contour and pixel-label review: add, delete, or correct the
-stable region inventory against the registered raster. Stage 3 is the vector
-review: refine each retained region's final display path. Valid Stage 2 and
-Stage 3 edits autosave as immutable drafts and are materialized only when that
-checkpoint is approved.
+stable region inventory against the registered raster. Stage 3 reviews the
+retained normalized hold frames. Valid Stage 2 and Stage 3 edits autosave as
+immutable drafts and are materialized only when that checkpoint is approved.
 
 The workspace store persists `boards/board-NNNN/board.json`, evolving
 CLI-compatible `revisions/revision-NNNN/run/` directories, and immutable
@@ -284,32 +259,20 @@ immutable review evidence. CLI and UI operations use the same manifests,
 approval state machine, stage runners, and revision directories.
 
 Known products are intentionally curated rather than automatically recognized.
-To add one, use an authoritative, clean product photo to create and review a
-product template: canonical canvas, silhouette, every selectable grip path,
-and its metadata. Produce one reviewed transparent canonical render at that
-same canvas size, package it beside the product JSON, and name it with the
-template's `renderAsset`. Verify that the SVG embeds those exact bytes and
-that its ordered vector region IDs match the manifest. Once approved, every
-conversion of that exact model/revision has the same visible product render
-and the same selectable regions; a supplied photo supplies alignment evidence,
-while the operator verifies the asserted identity in the preview.
+To add one, use an authoritative, clean product photo to review the physical
+hold inventory, facts, normalized frames, and retained primary PNG. Once
+approved, the package has the same source-backed primary image and stable hold
+IDs for every consumer; the supplied photo supplies review evidence while the
+operator verifies the asserted identity in the preview.
 
-The deterministic height-field renderer remains available as a standalone
-library operation for profile-based product development. It is not selected
-automatically by SVG conversion: a product without a packaged `renderAsset`
-uses the existing curated-vector SVG branch, while unknown products can use
-the explicitly selected experimental-detection path.
+## Evidence-preserving package assembly
 
-## Evidence-preserving Stage 4 illustration
-
-The onboarding replay can bind an accepted Stage 1 RGBA PNG to accepted Stage
-3 paths without consulting a product template or redrawing the board. Stage 4
-embeds the supplied PNG byte-for-byte in one selectable SVG, preserves the
-ordered region paths in a compact manifest, and derives deterministic normal
-and grip-highlight previews from those paths. Publication validates the full
-Stage 1 → Stage 2 → Stage 3 hash chain, finalizes candidate hashes before any
+The onboarding replay can bind an accepted source image to the accepted hold
+inventory and frames without redrawing the board. Package publication validates
+the Stage 1 → Stage 2 → Stage 3 hash chain, finalizes candidate hashes before
 manual comparison evidence is read, and writes an acceptance record with a
-six-panel review image.
+six-panel review image. Registration retains the validated `primary.png` as
+the only board visual.
 
 ## Override regions
 
@@ -351,37 +314,12 @@ silently replacing its reviewed highlight geometry with a coarse polygon.
 
 ## Experimental recess detection
 
-For an unknown board without a reviewed template, explicitly opt into the
-legacy image detector:
-
-```bash
-hangboard-to-svg photo.jpg \
-  --experimental-recess-detection \
-  --output board.svg \
-  --manifest board.json \
-  --preview diagnostic.png
-```
-
-This mode finds visible dark recess candidates only. It cannot find non-dark
-slopers, infer whether a surface is a pocket, edge, rail, jug, or sloper, or
-guarantee stable IDs across reframing and threshold changes. Engraving, wood
-grain, perimeter edges, and shadows may become false positives. It is not a
-substitute for a reviewed product template when every usable grip matters.
-
-Only experimental mode uses the detector thresholds. Tune them as follows:
-
-```bash
-hangboard-to-svg photo.jpg --experimental-recess-detection \
-  --output board.svg --manifest board.json \
-  --background-tolerance 24 --contrast-threshold 20 \
-  --min-area-ratio 0.001 --rail-aspect-ratio 3.5 \
-  --rail-width-ratio 0.20 --row-tolerance-ratio 0.05 --width 1200
-```
-
-`--width` and the rail aspect ratio must be positive. Background and contrast
-thresholds must be between 0 and 255. Area, rail-width, and row-tolerance
-ratios must be between 0 and 1. The semantic and experimental modes are
-mutually exclusive; conversion fails if neither mode is selected.
+For an unknown board, image detection may produce a local research candidate
+for human review. It finds visible dark recesses only and cannot establish
+non-dark slopers, hold kind, stable IDs, factual frames, or semantics. Wood
+grain, perimeter edges, and shadows may become false positives. It is never a
+substitute for source-backed package facts, and it produces no delivery visual
+or registered package without the normal evidence and validation process.
 
 ## Input limitations
 

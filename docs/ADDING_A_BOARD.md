@@ -55,8 +55,8 @@ package path:
 Registered packages contain exactly `board.json`, `evidence.json`, and `semantics.json`.
 `assets/primary.png` is the only board visual. Each `board.json` hold frame is
 the factual normalized region generic consumers use for taps and active or
-preview highlights; do not add `outline.json`, `outline.approx.json`, SVG
-duplicates, a `review/` directory, or a board README. An optional original
+preview highlights; do not add `outline.json`, `outline.approx.json`, alternate
+derived images, a `review/` directory, or a board README. An optional original
 source image must be a flat `.jpg`, `.jpeg`,
 `.webp`, or `.heic` asset and have an exact package-relative entry in
 `evidence.json.assetEvidence`; it does not establish non-visible hold facts.
