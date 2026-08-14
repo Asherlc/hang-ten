@@ -68,6 +68,7 @@ class WorkbenchView:
     checkpoint_token: str | None
     review_path: Path | None
     editor_image_path: Path | None
+    editor_document_path: Path | None
     normal_artifact_path: Path | None
     hold_count: int | None
     editor_mode: str | None
@@ -766,7 +767,11 @@ class WorkbenchService:
             else None
         )
         if editable:
-            review_path, editor_image_path = self.__editable_artifacts(
+            (
+                review_path,
+                editor_image_path,
+                editor_document_path,
+            ) = self.__editable_artifacts(
                 revision, stage, review_value
             )
             normal_artifact_path, hold_count = None, None
@@ -776,7 +781,11 @@ class WorkbenchService:
                 if isinstance(review_value, str)
                 else None
             )
-            editor_image_path = None
+            editor_image_path, editor_document_path = (
+                self.__completed_editor_artifacts(revision)
+                if raw_state == "complete" and stage == _FINAL_STAGE
+                else (None, None)
+            )
             normal_artifact_path, hold_count = (
                 self.__stage4_inspect_artifacts(revision)
                 if raw_state == "complete" and stage == _FINAL_STAGE
@@ -793,6 +802,7 @@ class WorkbenchService:
             checkpoint_token=self.__checkpoint_token(revision, status),
             review_path=review_path,
             editor_image_path=editor_image_path,
+            editor_document_path=editor_document_path,
             normal_artifact_path=normal_artifact_path,
             hold_count=hold_count,
             editor_mode=editor_mode,
@@ -801,6 +811,22 @@ class WorkbenchService:
             repository_board_id=board.repository_board_id,
             repository_revision_token=board.repository_revision_token,
         )
+
+    def __completed_editor_artifacts(
+        self, revision: RevisionRecord
+    ) -> tuple[Path, Path]:
+        manifest = self.__manifest(revision.run_root)
+        stages = manifest.get("stages")
+        if not isinstance(stages, list) or len(stages) <= 3:
+            raise WorkbenchServiceError("completed editor evidence is missing")
+        record = stages[3]
+        if not isinstance(record, Mapping):
+            raise WorkbenchServiceError("completed editor evidence is missing")
+        editor_path = self.__editor_image_path(revision, 3, manifest)
+        if editor_path is None:
+            raise WorkbenchServiceError("completed editor image is missing")
+        document_path = self.__editable_document_path(revision, 3, record)
+        return editor_path, document_path
 
     def __stage4_inspect_artifacts(
         self, revision: RevisionRecord
@@ -957,7 +983,7 @@ class WorkbenchService:
         revision: RevisionRecord,
         stage: int,
         review_value: object,
-    ) -> tuple[Path, Path]:
+    ) -> tuple[Path, Path, Path]:
         try:
             manifest = self.__manifest(revision.run_root)
             stages = manifest.get("stages")
@@ -981,7 +1007,8 @@ class WorkbenchService:
             review_path = self.__confined_run_path(
                 revision.run_root, record.get("reviewPath")
             )
-            document = self.__editable_document(revision, stage, record)
+            document_path = self.__editable_document_path(revision, stage, record)
+            document = self.__read_object(document_path, "editable geometry")
             canvas = document.get("canvas")
             if not isinstance(canvas, Mapping):
                 raise ValueError("geometry canvas is missing")
@@ -1007,7 +1034,7 @@ class WorkbenchService:
                 or editor_hash == review_hash
             ):
                 raise ValueError("editable artifacts do not align")
-            return review_path, editor_path
+            return review_path, editor_path, document_path
         # WorkbenchServiceError derives from ValueError. Collapse every confined
         # evidence failure to the same public message so paths and details stay private.
         except (
@@ -1022,12 +1049,12 @@ class WorkbenchService:
                 "inconsistent editable evidence"
             ) from error
 
-    def __editable_document(
+    def __editable_document_path(
         self,
         revision: RevisionRecord,
         stage: int,
         record: Mapping[str, object],
-    ) -> dict[str, object]:
+    ) -> Path:
         filename = (
             "stage-2-regions.json"
             if stage == 2
@@ -1049,7 +1076,8 @@ class WorkbenchService:
             or sha256(document_path.read_bytes()).hexdigest() != expected_hash
         ):
             raise ValueError("editable geometry is not hash-bound")
-        return self.__read_object(document_path, "editable geometry")
+        self.__read_object(document_path, "editable geometry")
+        return document_path
 
     @staticmethod
     def __confined_run_path(run_root: Path, relative: object) -> Path:

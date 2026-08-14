@@ -97,10 +97,20 @@ def test_completed_stage4_view_exposes_accepted_normal_artifact_and_hold_count(
     """Inspect must use the immutable Stage 4 acceptance, not editor state."""
     assert complete_board.stage == 4
     assert complete_board.state == "complete"
-    assert complete_board.editor_image_path is None
+    assert complete_board.editor_image_path is not None
+    assert complete_board.editor_image_path.name == "stage-1-auto-rgba.png"
     assert complete_board.normal_artifact_path is not None
     assert complete_board.normal_artifact_path.name == "stage-4-normal.png"
     assert complete_board.hold_count == 0
+
+
+def test_completed_board_view_exposes_verified_editor_document(
+    complete_board: WorkbenchView,
+) -> None:
+    assert complete_board.editor_image_path is not None
+    assert complete_board.editor_image_path.name == "stage-1-auto-rgba.png"
+    assert complete_board.editor_document_path is not None
+    assert complete_board.editor_document_path.name == "stage-3-vector-regions.json"
 
 
 def test_get_board_rejects_editable_artifact_canvas_mismatched_to_clean_image(
