@@ -144,10 +144,14 @@ jobs:
           if-no-files-found: ignore
 
   build-ios:
-    # Branch protection requires the expanded matrix job's exact check name.
-    # Do not path-gate this job: a skipped matrix job does not create that
-    # check run, so GitHub leaves the requirement in "Expected" forever.
-    name: Build (${{ matrix.name }})
+    name: Build iOS (${{ matrix.name }})
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 30
     strategy:
@@ -217,6 +221,42 @@ jobs:
           name: ci-build-logs-${{ matrix.configuration }}-${{ matrix.sdk }}-${{ github.run_id }}
           path: ${{ runner.temp }}/hang-ten-logs/
           if-no-files-found: ignore
+
+  build-required:
+    # Keep this stable: branch protection requires this exact check name. A
+    # matrix job skipped by path classification never creates its expanded
+    # check name, leaving the pull request waiting forever.
+    name: Build (Debug simulator)
+    needs:
+      - changes
+      - build-ios
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report required build status
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          BUILD_RESULT: ${{ needs.build-ios.result }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+        run: |
+          set -euo pipefail
+          if [[ "$CHANGES_RESULT" != "success" ]]; then
+            echo "Change classification did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+          if [[ "$BUILD_REQUIRED" == "true" ]]; then
+            if [[ "$BUILD_RESULT" != "success" ]]; then
+              echo "Required iOS build did not succeed: $BUILD_RESULT" >&2
+              exit 1
+            fi
+            echo "Required iOS build succeeded."
+          else
+            if [[ "$BUILD_RESULT" != "skipped" ]]; then
+              echo "Non-required iOS build had unexpected result: $BUILD_RESULT" >&2
+              exit 1
+            fi
+            echo "iOS build is not required for the changed components."
+          fi
 
   build-release-device:
     name: Build (Release device)

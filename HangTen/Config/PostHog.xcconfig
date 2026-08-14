@@ -1,3 +1,4 @@
 POSTHOG_CLIENT_TOKEN =
 POSTHOG_HOST = https://us.i.posthog.com
+SENTRY_DSN = https://088ccff208bb716d4f9a6684fdaed553@o4511073249067008.ingest.us.sentry.io/4511905306640384
 #include? "PostHog.local.xcconfig"

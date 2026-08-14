@@ -80,21 +80,39 @@ def test_ci_python_job_provisions_uv_before_running_pipeline_tests() -> None:
     assert test_indices
     assert uv_index < min(test_indices)
 
-
-def test_required_debug_build_check_is_the_unconditional_matrix_build() -> None:
-    """The protected matrix check must exist for every workflow run."""
+def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> None:
+    """Path-gated matrix jobs must not leave branch protection waiting."""
     workflow = _ci_workflow()
     jobs = workflow["jobs"]
     ios_build = jobs["build-ios"]
+    required_check = jobs["build-required"]
 
     required_name = "Build (Debug simulator)"
-    assert ios_build["name"] == "Build (${{ matrix.name }})"
-    assert "if" not in ios_build
-    assert "needs" not in ios_build
-    assert "build-required" not in jobs
-    matrix = ios_build["strategy"]["matrix"]["include"]
-    assert [entry["name"] for entry in matrix] == ["Debug simulator"]
-    assert ios_build["name"].replace("${{ matrix.name }}", matrix[0]["name"]) == required_name
+    assert [job["name"] for job in jobs.values()].count(required_name) == 1
+
+    assert ios_build["name"] == "Build iOS (${{ matrix.name }})"
+    expected_predicate = (
+        "github.event_name != 'pull_request' || "
+        "needs.changes.outputs.ios == 'true' || "
+        "needs.changes.outputs.workflow == 'true' || "
+        "needs.changes.outputs.shared_board_content == 'true'"
+    )
+    assert " ".join(ios_build["if"].split()) == expected_predicate
+    assert required_check["name"] == required_name
+    assert required_check["needs"] == ["changes", "build-ios"]
+    assert required_check["if"] == "always()"
+    assert required_check["runs-on"] == "ubuntu-latest"
+
+    report_step = next(
+        step
+        for step in required_check["steps"]
+        if step.get("name") == "Report required build status"
+    )
+    assert report_step["env"]["CHANGES_RESULT"] == "${{ needs.changes.result }}"
+    assert report_step["env"]["BUILD_RESULT"] == "${{ needs.build-ios.result }}"
+    assert report_step["env"]["BUILD_REQUIRED"] == "${{ " + expected_predicate + " }}"
+    assert '[[ "$BUILD_RESULT" != "success" ]]' in report_step["run"]
+    assert '[[ "$BUILD_RESULT" != "skipped" ]]' in report_step["run"]
 
 
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:

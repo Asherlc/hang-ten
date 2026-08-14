@@ -41,9 +41,12 @@ _ABSOLUTE_PATH_IN_TEXT = re.compile(
 CUBIC_SEGMENTS = 12
 HOLD_IDENTIFIER = re.compile(r"hold-(\d+)$")
 _CATALOG_OUTLINE_SAVE_LOCK = RLock()
+
+
 def _unlinked_board_id(board_id: str) -> str:
     """Return the stable public identity of a workspace-only board."""
-    return f"board-{hashlib.sha256(f'workspace\0{board_id}'.encode()).hexdigest()}"
+    digest = hashlib.sha256(b"workspace\0" + board_id.encode()).hexdigest()
+    return f"board-{digest}"
 
 
 def _new_board_reservation_key() -> str:
