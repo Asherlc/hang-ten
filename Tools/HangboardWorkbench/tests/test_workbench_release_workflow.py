@@ -156,6 +156,20 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
             assert result.returncode == 0, result.stderr
 
 
+def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
+    release = _workflow()["jobs"]["release"]
+    step = _step(release, "Sign, notarize, and validate workbench app")
+    script = step["run"]
+
+    assert step["env"]["SENTRY_AUTH_TOKEN"] == "${{ secrets.SENTRY_AUTH_TOKEN }}"
+    assert step["env"]["SENTRY_ORG"] == "${{ vars.SENTRY_ORG }}"
+    assert step["env"]["SENTRY_PROJECT"] == "${{ vars.SENTRY_WORKBENCH_PROJECT }}"
+    assert '-Xswiftc -g' in script
+    assert 'dsymutil "$built_shell" -o "$shell_dsym"' in script
+    assert 'sentry-cli debug-files upload "$shell_dsym"' in script
+    assert "SENTRY_AUTH_TOKEN =" not in script
+
+
 def test_pr_build_and_main_release_share_the_composite_build_action():
     pr = _workflow(PR_WORKFLOW_PATH)
     release = _workflow()
@@ -438,6 +452,7 @@ def test_build_tests_and_assembles_the_unsigned_native_app():
     for required_fragment in (
         "Tools/HangboardWorkbench/packaging/build.py",
         "swift build -c release --arch arm64",
+        "-Xswiftc -g",
         "--package-path Tools/HangboardWorkbench/macos",
         "Tools/HangboardWorkbench/packaging/macos_app.py",
         '--shell "$shell_executable"',
@@ -526,6 +541,9 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "APPSTORE_API_KEY_ID": "${{ vars.APPSTORE_API_KEY_ID }}",
         "APPSTORE_API_PRIVATE_KEY": "${{ secrets.APPSTORE_API_PRIVATE_KEY }}",
         "APPLE_TEAM_ID": "${{ vars.APPLE_TEAM_ID }}",
+        "SENTRY_AUTH_TOKEN": "${{ secrets.SENTRY_AUTH_TOKEN }}",
+        "SENTRY_ORG": "${{ vars.SENTRY_ORG }}",
+        "SENTRY_PROJECT": "${{ vars.SENTRY_WORKBENCH_PROJECT }}",
     }
     signing_script = signing_step["run"]
     for required_fragment in (
@@ -673,10 +691,35 @@ def test_existing_release_validation_checks_downloaded_zip_checksum():
     assert 'current_asset="$release_dir/$asset_name"' not in script
     assert "cmp -s" not in script
     assert script.index("asset_names = sorted") < script.index("gh release download")
-    assert (
-        script.index("gh release download")
-        < script.index("shasum -a 256 -c hangboard-workbench-macos-arm64.sha256")
-        < script.index("exit 0")
+    assert script.index("gh release download") < script.index(
+        "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256"
+    ) < script.rindex("exit 0")
+
+
+def test_release_is_uploaded_as_a_draft_before_it_becomes_immutable():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    create = 'gh release create "$tag"'
+    publish = 'gh release edit "$tag"'
+    assert create in script
+    create_index = script.index(create)
+    publish_index = script.index(publish, create_index)
+    assert "--draft" in script[create_index:publish_index]
+    assert '--draft=false' in script[publish_index:]
+    assert create_index < publish_index
+
+
+def test_interrupted_draft_release_is_repaired_before_publication():
+    release = _workflow()["jobs"]["release"]
+    script = _step(release, "Publish immutable GitHub release")["run"]
+
+    assert 'if [[ "$release_is_draft" == "true" ]]; then' in script
+    assert 'gh release upload "$tag"' in script
+    assert "--clobber" in script
+    assert 'gh release edit "$tag"' in script
+    assert script.index('gh release upload "$tag"') < script.index(
+        'gh release edit "$tag"'
     )
 
 

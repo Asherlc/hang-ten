@@ -2081,7 +2081,7 @@
     el["setup-submit-button"].disabled = openingActionsDisabled(state);
     renderOpeningBoardList(el["repository-board-list"], screen.repository, {
       label: (board) => board.displayName || board.boardId,
-      detail: () => "Ready to open",
+      detail: (board) => board.status === "draft" ? "Draft · Ready to edit" : "Published · Ready to open",
       onSelect: selectLibraryBoard,
       disabled: openingActionsDisabled(state),
     });

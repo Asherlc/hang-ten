@@ -31,5 +31,5 @@ UNLOCALIZED_RESOURCES_FOLDER_PATH="$UNLOCALIZED_RESOURCES_FOLDER_PATH" \
 
 The generated experimental catalog and its Swift/JSON exporters were retired.
 Only packages listed in `Hangboards/catalog.json` are registered and staged
-into an app resource destination. Imported candidates remain unregistered
+into an app resource destination. Imported draft boards remain unregistered
 until they satisfy the complete package contract.

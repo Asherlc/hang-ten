@@ -69,6 +69,7 @@ runs:
         runtime_dir="$runtime_dist_dir/hangboard-workbench"
 
         swift build -c release --arch arm64 \
+          -Xswiftc -g \
           --package-path Tools/HangboardWorkbench/macos
         shell_bin_dir="$(swift build -c release --arch arm64 \
           --package-path Tools/HangboardWorkbench/macos --show-bin-path)"

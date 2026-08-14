@@ -1,6 +1,7 @@
 import AppKit
 import Darwin
 import Foundation
+import Sentry
 import WebKit
 
 struct HeadlessConfiguration: Equatable, Sendable {
@@ -185,6 +186,10 @@ final class WorkbenchSessionCoordinator {
 enum WorkbenchMain {
     @MainActor
     static func main() async {
+        SentrySDK.start { options in
+            options.dsn = "https://5a0b9f48d5bafd62da678c596c8319ea@o4511073249067008.ingest.us.sentry.io/4511905302183936"
+        }
+
         do {
             if let headless = try HeadlessConfiguration.parse(Array(CommandLine.arguments.dropFirst())) {
                 try await HeadlessRunner.run(configuration: headless, backend: BackendController())

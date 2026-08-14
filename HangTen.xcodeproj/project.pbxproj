@@ -95,6 +95,7 @@
 		AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000002 /* OpenTelemetryApi */; };
 		AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
 		AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
+		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -198,6 +199,7 @@
 				AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */,
 				AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */,
 				AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */,
+				AB0000000000000000000008 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +402,7 @@
 				GG0000000000000000000002 /* OpenTelemetryApi */,
 				GG0000000000000000000003 /* OpenTelemetrySdk */,
 				GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */,
+				GG0000000000000000000005 /* Sentry */,
 			);
 			productName = HangTen;
 			productReference = BB0000000000000000000010 /* HangTen.app */;
@@ -459,6 +462,7 @@
 				HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */,
 				HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */,
+				HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			targets = (
 				EE0000000000000000000001 /* HangTen */,
@@ -644,6 +648,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -666,6 +678,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */;
 			productName = OpenTelemetryProtocolExporterHTTP;
+		};
+		GG0000000000000000000005 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */
 
@@ -766,6 +783,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
 				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
 				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -802,6 +820,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
 				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
 				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
