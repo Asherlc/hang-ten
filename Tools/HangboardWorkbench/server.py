@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import math
 import mimetypes
 import os
@@ -12,6 +12,8 @@ import re
 import sys
 import tempfile
 from argparse import ArgumentParser
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -20,7 +22,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
 from threading import RLock
-from typing import Any, Iterable
+from typing import Any
 from urllib.parse import parse_qs, unquote, urlencode, urlsplit
 from uuid import uuid4
 
@@ -460,17 +462,36 @@ def _workbench_view_payload(view: object, public_board_id: str) -> dict[str, Any
     }
 
 
+@dataclass(frozen=True)
+class BoardIdentityMappings:
+    """One fresh snapshot of the public and internal board identities."""
+
+    internal_to_public: dict[str, str]
+    public_to_internal: dict[str, str]
+
+
 class PublicBoardMapper:
     """The single boundary between internal workspace and public board identities."""
 
     def __init__(self, service: object) -> None:
         self._service = service
 
-    def _mappings(self) -> tuple[dict[str, str], dict[str, str]]:
+    def _mappings(
+        self,
+        *,
+        snapshot: object | None = None,
+        views: Iterable[object] | None = None,
+    ) -> BoardIdentityMappings:
         internal_to_public: dict[str, str] = {}
         public_to_internal: dict[str, str] = {}
-        repository_ids = {board.board_id for board in self._service.library_snapshot().boards}
-        for view in self._service.list_boards():
+        if snapshot is None:
+            snapshot = self._service.library_snapshot()
+        if views is None:
+            views = self._service.list_boards()
+        else:
+            views = tuple(views)
+        repository_ids = {board.board_id for board in snapshot.boards}
+        for view in views:
             public_id = view.repository_board_id or _unlinked_board_id(view.board_id)
             if view.repository_board_id is None and public_id in repository_ids:
                 raise EditorError("workspace board identity collision")
@@ -479,24 +500,30 @@ class PublicBoardMapper:
                 raise EditorError("workspace board identity collision")
             internal_to_public[view.board_id] = public_id
             public_to_internal[public_id] = view.board_id
-        return internal_to_public, public_to_internal
+        return BoardIdentityMappings(internal_to_public, public_to_internal)
 
-    def public_id(self, view: object) -> str:
+    def public_id(
+        self, view: object, mappings: BoardIdentityMappings | None = None
+    ) -> str:
         public_id = view.repository_board_id or _unlinked_board_id(view.board_id)
-        internal_to_public, _ = self._mappings()
-        if internal_to_public.get(view.board_id) != public_id:
+        mappings = mappings or self._mappings()
+        if mappings.internal_to_public.get(view.board_id) != public_id:
             raise EditorError("workspace board identity collision")
         return public_id
 
-    def internal_id(self, public_id: str) -> str:
-        _, public_to_internal = self._mappings()
+    def internal_id(
+        self, public_id: str, mappings: BoardIdentityMappings | None = None
+    ) -> str:
+        mappings = mappings or self._mappings()
         try:
-            return public_to_internal[public_id]
+            return mappings.public_to_internal[public_id]
         except KeyError as error:
             raise RequestError(HTTPStatus.NOT_FOUND, "board does not exist") from error
 
-    def view_payload(self, view: object) -> dict[str, Any]:
-        public_id = self.public_id(view)
+    def view_payload(
+        self, view: object, mappings: BoardIdentityMappings | None = None
+    ) -> dict[str, Any]:
+        public_id = self.public_id(view, mappings)
         return {
             **_workbench_view_payload(view, public_id),
             "href": f"/api/boards/{public_id}",
@@ -514,9 +541,15 @@ class PublicBoardMapper:
         if isinstance(result, PackagePublication):
             return {"paths": [path.as_posix() for path in result.paths]}
         if isinstance(result, ValidationReport):
-            public_id = self.public_id(
-                next(view for view in self._service.list_boards() if view.board_id == result.board_id)
+            views = self._service.list_boards()
+            mappings = self._mappings(views=views)
+            view = next(
+                (view for view in views if view.board_id == result.board_id),
+                None,
             )
+            if view is None:
+                raise RequestError(HTTPStatus.NOT_FOUND, "board does not exist")
+            public_id = self.public_id(view, mappings)
             return {
                 "boardId": public_id,
                 "href": f"/api/boards/{public_id}/validation",
@@ -748,7 +781,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not self._allow_request(mutation=True):
             return
         request = urlsplit(self.path)
-        try:
+        with self._mutation_error_response():
             service = self._workbench_service()
             if (
                 request.path == "/api/boards"
@@ -809,22 +842,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 self._post_mutation(service, request.path, payload)
                 return
             raise RequestError(HTTPStatus.NOT_FOUND, "not found")
-        except RequestError as error:
-            self._send_json(error.status, {"ok": False, "error": str(error)})
-        except JobConflictError as error:
-            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
-        except JobCapacityError as error:
-            self._send_json(
-                HTTPStatus.SERVICE_UNAVAILABLE,
-                {"ok": False, "error": str(error)},
-            )
-        except ValueError as error:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
-        except Exception:
-            self._send_json(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                {"ok": False, "error": "request failed"},
-            )
 
     def do_PATCH(self) -> None:  # noqa: N802
         if not self._allow_request(mutation=True):
@@ -832,7 +849,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         request = urlsplit(self.path)
         board_suffix = request.path.removeprefix("/api/boards/")
         if request.path.startswith("/api/boards/") and board_suffix and "/" not in board_suffix:
-            try:
+            with self._mutation_error_response():
                 public_board_id = unquote(board_suffix)
                 service = self._workbench_service()
                 payload = self._read_json_object()
@@ -840,27 +857,35 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     raise RequestError(
                         HTTPStatus.BAD_REQUEST, "boardId must match the board route"
                     )
-                self._post_mutation(
-                    service, "/api/final-save", payload
-                )
-            except RequestError as error:
-                self._send_json(error.status, {"ok": False, "error": str(error)})
-            except JobConflictError as error:
-                self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
-            except JobCapacityError as error:
-                self._send_json(
-                    HTTPStatus.SERVICE_UNAVAILABLE,
-                    {"ok": False, "error": str(error)},
-                )
-            except ValueError as error:
-                self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
-            except Exception:
-                self._send_json(
-                    HTTPStatus.INTERNAL_SERVER_ERROR,
-                    {"ok": False, "error": "request failed"},
-                )
+                self._post_mutation(service, "/api/final-save", payload)
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+
+    @contextmanager
+    def _mutation_error_response(self) -> Iterator[None]:
+        """Map mutation failures to the shared public HTTP contract."""
+        try:
+            yield
+        except RequestError as error:
+            self._send_json(error.status, {"ok": False, "error": str(error)})
+        except JobConflictError as error:
+            self._send_json(
+                HTTPStatus.CONFLICT, {"ok": False, "error": str(error)}
+            )
+        except JobCapacityError as error:
+            self._send_json(
+                HTTPStatus.SERVICE_UNAVAILABLE,
+                {"ok": False, "error": str(error)},
+            )
+        except ValueError as error:
+            self._send_json(
+                HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)}
+            )
+        except Exception:
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": "request failed"},
+            )
 
     def do_PUT(self) -> None:  # noqa: N802
         """Retain PUT only for the legacy whole-document outline save API."""
@@ -919,7 +944,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             service = self._workbench_service()
             snapshot = service.library_snapshot()
             repository = {board.board_id: board for board in snapshot.boards}
-            boards = [{
+            boards = [
+                {
                     "boardId": board.board_id,
                     "href": f"/api/boards/{board.board_id}",
                     "displayName": board.display_name,
@@ -927,10 +953,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     "status": board.status,
                     "inProgress": False,
                 }
-                for board in snapshot.boards]
+                for board in snapshot.boards
+            ]
             by_id = {board["boardId"]: index for index, board in enumerate(boards)}
-            for view in service.list_boards():
-                payload = self._board_mapper().view_payload(view)
+            views = service.list_boards()
+            mappings = self._board_mapper()._mappings(
+                snapshot=snapshot, views=views
+            )
+            for view in views:
+                payload = self._board_mapper().view_payload(view, mappings)
                 public_id = payload["boardId"]
                 if public_id in repository:
                     source = repository[public_id]
@@ -964,7 +995,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             },
         )
 
-    def _workspace_board_id(self, service: object, public_id: str) -> str:
+    def _workspace_board_id(self, public_id: str) -> str:
         return self._board_mapper().internal_id(public_id)
 
     def _get_board(self, board_id: str, query: str) -> None:
@@ -976,19 +1007,41 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 internal_id = self._board_mapper().internal_id(board_id)
             except RequestError:
                 internal_id = None
-            runtime = next((item for item in service.list_boards()
-                            if item.board_id == internal_id), None)
+            runtime = next(
+                (
+                    item
+                    for item in service.list_boards()
+                    if item.board_id == internal_id
+                ),
+                None,
+            )
             if runtime is None:
-                board = next((item for item in service.library_snapshot().boards if item.board_id == board_id), None)
-                if board is None: raise RequestError(HTTPStatus.NOT_FOUND, "board does not exist")
-                self._send_json(HTTPStatus.OK, {"ok": True, "board": {
-                    "boardId": board_id,
-                    "href": f"/api/boards/{board_id}",
-                    "displayName": board.display_name,
-                    "revisionToken": board.revision_token,
-                    "status": board.status,
-                    "inProgress": False,
-                }})
+                board = next(
+                    (
+                        item
+                        for item in service.library_snapshot().boards
+                        if item.board_id == board_id
+                    ),
+                    None,
+                )
+                if board is None:
+                    raise RequestError(
+                        HTTPStatus.NOT_FOUND, "board does not exist"
+                    )
+                self._send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "board": {
+                            "boardId": board_id,
+                            "href": f"/api/boards/{board_id}",
+                            "displayName": board.display_name,
+                            "revisionToken": board.revision_token,
+                            "status": board.status,
+                            "inProgress": False,
+                        },
+                    },
+                )
                 return
             revision_values = parse_qs(query).get("revisionId", [])
             revision_id = revision_values[0] if revision_values else None
@@ -1015,9 +1068,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 raise RequestError(HTTPStatus.NOT_FOUND, "not found")
             revision_id = self._required_query_string(parse_qs(query), "revisionId")
             service = self._workbench_service()
-            internal_id = self._workspace_board_id(service, board_id)
+            internal_id = self._workspace_board_id(board_id)
             report = service.get_validation_report(
                 internal_id, expected_revision_id=revision_id
+            )
+            report_payload = (
+                None
+                if report is None
+                else self._board_mapper().result_payload(report)
             )
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
@@ -1037,7 +1095,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 "ok": True,
                 "boardId": board_id,
                 "revisionId": revision_id,
-                "report": None if report is None else self._board_mapper().result_payload(report),
+                "report": report_payload,
             },
         )
 
@@ -1060,7 +1118,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                     "artifact path must stay within the selected revision",
                 )
             public_board_id = self._required_query_string(values, "boardId")
-            board_id = self._workspace_board_id(self._workbench_service(), public_board_id)
+            board_id = self._workspace_board_id(public_board_id)
             revision_id = self._required_query_string(values, "revisionId")
             view = self._workbench_service().get_board(
                 board_id, revision_id=revision_id
@@ -1141,57 +1199,50 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
     ) -> None:
         public_board_id = self._required_string(payload, "boardId")
         revision_id = self._required_string(payload, "expectedRevisionId")
-        if path != "/api/final-save":
-            self._required_stage(payload, "expectedStage")
-        if path in {"/api/drafts", "/api/approve"}:
+        stage = (
+            None
+            if path == "/api/final-save"
+            else self._required_stage(payload, "expectedStage")
+        )
+        checkpoint_token = (
             self._required_string(payload, "expectedCheckpointToken")
+            if path in {"/api/drafts", "/api/approve"}
+            else None
+        )
         if path == "/api/drafts" and "document" not in payload:
             raise RequestError(HTTPStatus.BAD_REQUEST, "document is required")
-        board_id = self._workspace_board_id(service, public_board_id)
+        board_id = self._workspace_board_id(public_board_id)
         if path == "/api/final-save":
             operation = lambda: service.save(
                 board_id, expected_revision_id=revision_id
             )
+        elif path == "/api/drafts":
+            operation = lambda: service.save_draft(
+                board_id,
+                payload["document"],
+                expected_stage=stage,
+                expected_checkpoint_token=checkpoint_token,
+                expected_revision_id=revision_id,
+            )
+        elif path == "/api/approve":
+            operation = lambda: service.approve_and_advance(
+                board_id,
+                expected_stage=stage,
+                expected_checkpoint_token=checkpoint_token,
+                expected_revision_id=revision_id,
+            )
+        elif path == "/api/revise":
+            operation = lambda: service.revise_stage(
+                board_id,
+                stage=stage,
+                expected_revision_id=revision_id,
+            )
         else:
-            stage = self._required_stage(payload, "expectedStage")
-            if path == "/api/drafts":
-                checkpoint_token = self._required_string(
-                    payload, "expectedCheckpointToken"
-                )
-                if "document" not in payload:
-                    raise RequestError(
-                        HTTPStatus.BAD_REQUEST, "document is required"
-                    )
-                document = payload["document"]
-                operation = lambda: service.save_draft(
-                    board_id,
-                    document,
-                    expected_stage=stage,
-                    expected_checkpoint_token=checkpoint_token,
-                    expected_revision_id=revision_id,
-                )
-            elif path == "/api/approve":
-                checkpoint_token = self._required_string(
-                    payload, "expectedCheckpointToken"
-                )
-                operation = lambda: service.approve_and_advance(
-                    board_id,
-                    expected_stage=stage,
-                    expected_checkpoint_token=checkpoint_token,
-                    expected_revision_id=revision_id,
-                )
-            elif path == "/api/revise":
-                operation = lambda: service.revise_stage(
-                    board_id,
-                    stage=stage,
-                    expected_revision_id=revision_id,
-                )
-            else:
-                operation = lambda: service.retry(
-                    board_id,
-                    expected_stage=stage,
-                    expected_revision_id=revision_id,
-                )
+            operation = lambda: service.retry(
+                board_id,
+                expected_stage=stage,
+                expected_revision_id=revision_id,
+            )
         self._submit_job(
             public_board_id,
             operation,
@@ -1221,7 +1272,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             )
         revision_id = self._required_string(payload, "expectedRevisionId")
         public_board_id = board_id
-        board_id = self._workspace_board_id(service, public_board_id)
+        board_id = self._workspace_board_id(public_board_id)
 
         self._submit_job(
             public_board_id,

@@ -389,6 +389,37 @@ class FakeWorkbenchService:
         return updated
 
 
+class CountingBoardListService(FakeWorkbenchService):
+    """Record board inventory calls made by a single HTTP request."""
+
+    def __init__(self, root: Path):
+        super().__init__(root)
+        self.library_snapshot_calls = 0
+        self.list_boards_calls = 0
+
+    def list_boards(self) -> tuple[FakeWorkbenchView, ...]:
+        self.list_boards_calls += 1
+        return super().list_boards()
+
+    def library_snapshot(self) -> FakeLibrarySnapshot:
+        self.library_snapshot_calls += 1
+        return super().library_snapshot()
+
+
+class VanishingValidationReportService(FakeWorkbenchService):
+    """Remove a board after its report is loaded to exercise safe serialization."""
+
+    def get_validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport | None:
+        report = super().get_validation_report(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        with self._lock:
+            self._boards.pop(board_id)
+        return report
+
+
 class RaceRevealingCreationService(FakeWorkbenchService):
     """Detect concurrent allocation without preventing it in the fake itself."""
 
@@ -832,7 +863,9 @@ def read_json(url: str):
         return response.status, json.load(response)
 
 
-def _post_json(url: str, payload: object):
+def _post_json(
+    url: str, payload: object, *, include_headers: bool = False
+):
     request = Request(
         url,
         data=json.dumps(payload).encode(),
@@ -840,7 +873,10 @@ def _post_json(url: str, payload: object):
         headers={"Content-Type": "application/json"},
     )
     with urlopen(request) as response:
-        return response.status, json.load(response)
+        result = response.status, json.load(response)
+        if include_headers:
+            return *result, dict(response.headers.items())
+        return result
 
 
 def _raw_request(
@@ -850,13 +886,17 @@ def _raw_request(
     *,
     body: bytes | None = None,
     headers: dict[str, str] | None = None,
-) -> tuple[int, dict[str, object]]:
+    include_headers: bool = False,
+) -> tuple[int, dict[str, object]] | tuple[int, dict[str, object], dict[str, str]]:
     target = urlsplit(base)
     connection = HTTPConnection(target.hostname, target.port)
     try:
         connection.request(method, path, body=body, headers=headers or {})
         response = connection.getresponse()
-        return response.status, json.loads(response.read())
+        result = response.status, json.loads(response.read())
+        if include_headers:
+            return *result, dict(response.getheaders())
+        return result
     finally:
         connection.close()
 
@@ -882,15 +922,17 @@ def _await_workbench_job(base: str, job_id: str):
 
 
 def _create_board(base: str):
-    status, created = _post_json(
+    status, created, headers = _post_json(
         base + "/api/boards",
         {
             "type": "url",
             "productName": "Example Board",
             "source": "https://example.test/board.png",
         },
+        include_headers=True,
     )
     assert status == 202
+    assert headers["Location"] == f"/api/jobs/{created['jobId']}"
     final = _poll_job(base, created["jobId"])
     assert final["state"] == "succeeded"
     return final["result"]
@@ -1206,17 +1248,19 @@ def test_repository_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
 def test_post_repository_board_open_is_a_tracked_board_job(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
-        status, accepted = _raw_request(
+        status, accepted, headers = _raw_request(
             base,
             "POST",
             "/api/boards",
             body=json.dumps({"type": "repository", "boardId": "example-board"}).encode(),
             headers={"Content-Type": "application/json"},
+            include_headers=True,
         )
         terminal = _poll_job(base, accepted["jobId"])
         get_status, selected = read_json(base + terminal["result"]["href"])
 
     assert status == 202
+    assert headers["Location"] == f"/api/jobs/{accepted['jobId']}"
     assert get_status == 200
     assert terminal["state"] == "succeeded"
     assert terminal["result"]["boardId"] == "example-board"
@@ -1355,6 +1399,22 @@ def test_list_and_get_workbench_boards_return_safe_views(running_workbench_serve
     assert "board-1" not in json.dumps({"created": created, "listed": listed, "selected": selected})
 
 
+def test_boards_listing_builds_one_fresh_identity_mapping_per_request(tmp_path):
+    service = CountingBoardListService(tmp_path / "workbench")
+    service.create_from_url("First", "https://example.test/first.png")
+    service.create_from_url("Second", "https://example.test/second.png")
+    service.library_snapshot_calls = 0
+    service.list_boards_calls = 0
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = read_json(base + "/api/boards")
+
+    assert status == 200
+    assert len([board for board in payload["boards"] if board["inProgress"]]) == 2
+    assert service.library_snapshot_calls == 1
+    assert service.list_boards_calls == 1
+
+
 def test_unlinked_public_identity_does_not_follow_repository_catalog(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     view = service.create_from_url("Unlinked", "https://example.test/unlinked.png")
@@ -1445,6 +1505,7 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
     with urlopen(request) as response:
         assert response.status == 202
         accepted = json.load(response)
+        assert response.headers["Location"] == f"/api/jobs/{accepted['jobId']}"
     terminal = _poll_job(running_workbench_server, accepted["jobId"])
     assert terminal["state"] == "succeeded"
     saved = terminal["result"]
@@ -1489,12 +1550,13 @@ def test_validation_routes_return_job_backed_safe_payloads(
         running_workbench_server
         + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
     )
-    run_status, run_submission = _post_json(
+    run_status, run_submission, headers = _post_json(
         running_workbench_server + f"/api/boards/{view['boardId']}/validation",
         {
             "boardId": view["boardId"],
             "expectedRevisionId": view["revisionId"],
         },
+        include_headers=True,
     )
     report = _poll_job(running_workbench_server, run_submission["jobId"])
 
@@ -1506,6 +1568,7 @@ def test_validation_routes_return_job_backed_safe_payloads(
         "report": None,
     }
     assert run_status == 202
+    assert headers["Location"] == f"/api/jobs/{run_submission['jobId']}"
     assert run_submission["boardId"] == view["boardId"]
     assert report["result"]["overallStatus"] == "passed"
     assert report["result"]["checks"][0]["checkId"] == "package-readiness"
@@ -1520,6 +1583,23 @@ def test_validation_routes_return_job_backed_safe_payloads(
         "revisionId": view["revisionId"],
         "report": report["result"],
     }
+
+
+def test_validation_report_for_vanished_board_returns_not_found(tmp_path):
+    service = VanishingValidationReportService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+    service.validation_report(view.board_id, expected_revision_id=view.revision_id)
+    public_board_id = server_module._unlinked_board_id(view.board_id)
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(
+            base,
+            "GET",
+            f"/api/boards/{public_board_id}/validation?revisionId={view.revision_id}",
+        )
+
+    assert status == 404
+    assert payload == {"ok": False, "error": "board does not exist"}
 
 
 def test_workbench_job_payload_rejects_an_unsupported_result_type() -> None:
