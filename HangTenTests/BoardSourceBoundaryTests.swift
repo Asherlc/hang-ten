@@ -59,7 +59,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "HangTen/Views/MetoliusCompactIIDesign.swift",
             "HangTen/Views/RockProdigyTrainingCenterDesign.swift",
             "HangTen/Resources/Assets.xcassets/CompactBoard.imageset",
-            "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset"
+            "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset",
+            "HangTen/Views/BoardDesignLanguage.swift",
+            "Hangboards/metolius-wood-grips-compact-ii/artwork.json"
         ]
 
         for relativePath in forbiddenRelativePaths {
@@ -80,13 +82,25 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "GeneratedBoardCatalog.swift",
             "BoardLibrary.json",
             "MetoliusCompactIIDesign.swift",
-            "RockProdigyTrainingCenterDesign.swift"
+            "RockProdigyTrainingCenterDesign.swift",
+            "BoardDesignLanguage.swift"
         ] {
             XCTAssertFalse(
                 project?.contains(artifactName) == true,
                 "Remove the stale Xcode project reference to \(artifactName)."
             )
         }
+    }
+
+    func testBoardMapUsesPackagePresentationImageWithGenericHoldOverlays() throws {
+        let repositoryRoot = repositoryRootURL()
+        let sourceURL = repositoryRoot
+            .appendingPathComponent("HangTen/Views/BoardMapView.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("BoardPresentationImage"))
+        XCTAssertFalse(source.contains("Canvas("))
+        XCTAssertFalse(source.contains("BoardDesign"))
     }
 
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
@@ -99,7 +113,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "MetoliusCompactIIDesign",
             "RockProdigyTrainingCenterDesign",
             "CompactBoard.imageset",
-            "CompactBoardIllustration"
+            "CompactBoardIllustration",
+            "BoardDesignLanguage"
         ]
         let hardcodedMappingPatterns = [
             #"semanticHolds\s*:\s*\[\s*\""#,
@@ -109,13 +124,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "TrainingBoard(",
             "BoardHold(",
             "HoldFrame(",
-            "BoardDesign(",
             "BoardNormalizedPath(commands:"
         ]
         let genericGeometryOwners: Set<String> = [
             "HangTen/Models/BoardPackageStore.swift",
-            "HangTen/Models/BoardStorage.swift",
-            "HangTen/Views/BoardDesignLanguage.swift"
+            "HangTen/Models/BoardStorage.swift"
         ]
 
         var findings: [String] = []
@@ -217,11 +230,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
             }
 
-            let artworkURL = packageURL.appendingPathComponent("artwork.json")
-            let artworkObject = try JSONSerialization.jsonObject(
-                with: Data(contentsOf: artworkURL)
-            )
-            collectArtifactIdentifiers(from: artworkObject, into: &identifiers)
         }
 
         return identifiers
@@ -244,23 +252,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 )
             }
         )
-    }
-
-    private func collectArtifactIdentifiers(from value: Any, into identifiers: inout Set<String>) {
-        if let dictionary = value as? [String: Any] {
-            for key in ["id", "holdID"] {
-                if let identifier = dictionary[key] as? String {
-                    identifiers.insert(identifier)
-                }
-            }
-            for child in dictionary.values {
-                collectArtifactIdentifiers(from: child, into: &identifiers)
-            }
-        } else if let array = value as? [Any] {
-            for child in array {
-                collectArtifactIdentifiers(from: child, into: &identifiers)
-            }
-        }
     }
 
     private func appSourceAndResourceURLs(at repositoryRoot: URL) throws -> [URL] {
