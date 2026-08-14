@@ -33,6 +33,8 @@ _ROOT_ITEMS = frozenset((*_SIDECARS, "assets"))
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
 _GRIP_TYPES = frozenset({"openHand", "halfCrimp", "fullCrimp", "fourFingerPocket", "threeFingerPocket", "twoFingerPocket", "sloper"})
 _CUE_STYLES = frozenset({"outerJug", "slot", "pinch", "rounded"})
+_TREATMENT_TYPES = frozenset({"surface", "shelf", "recess"})
+_RECESS_DEPTHS = frozenset({"shallow", "deep"})
 _HOLD_FEATURES = frozenset({
     "jug", "roundSloper", "largeSlope", "largeEdge", "mediumEdge", "smallEdge",
     "pocket", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket",
@@ -315,10 +317,11 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
         _non_empty_string(layer.get("role"), f"artwork.json.layers[{index}].role")
         try:
             NormalizedFrame.from_json(layer["frame"], f"artwork.json.layers[{index}].frame")
+            display_path_for_shape(
+                layer["frame"], layer["shape"], 1000, 1000, label=f"layer {layer_id}"
+            )
         except (KeyError, GeometryError, TypeError) as error:
-            raise BoardPackageError(f"layer {layer_id} has invalid frame") from error
-        if not isinstance(layer["shape"], Mapping):
-            raise BoardPackageError(f"layer {layer_id} has invalid shape")
+            raise BoardPackageError(f"layer {layer_id} has invalid geometry") from error
     hold_ids = {hold["id"] for hold in board["holds"]}
     pieces: list[Mapping[str, Any]] = []
     seen_piece_ids: set[str] = set()
@@ -326,6 +329,13 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
     for index, raw in enumerate(artwork["holdPieces"]):
         if not isinstance(raw, dict):
             raise BoardPackageError(f"artwork.json.holdPieces[{index}] must be an object")
+        piece_label = f"artwork.json.holdPieces[{index}]"
+        expected_piece_keys = {"id", "holdID", "frame", "shape"}
+        if "treatment" in raw:
+            expected_piece_keys.add("treatment")
+        _exact_keys(raw, expected_piece_keys, piece_label)
+        if "treatment" in raw:
+            _validate_artwork_treatment(raw["treatment"], f"{piece_label}.treatment")
         piece_id = _identifier(raw.get("id"), f"artwork.json.holdPieces[{index}].id")
         hold_id = _identifier(raw.get("holdID"), f"artwork.json.holdPieces[{index}].holdID")
         if piece_id in seen_piece_ids:
@@ -342,6 +352,23 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
             display_path_for_shape(piece["frame"], piece["shape"], 1000, 1000, label=f"hold {piece['holdID']}")
         except (KeyError, GeometryError) as error:
             raise BoardPackageError(f"hold {piece['holdID']} has invalid artwork geometry") from error
+
+
+def _validate_artwork_treatment(value: object, label: str) -> None:
+    """Validate optional decorative rendering data without treating it as hold geometry."""
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    treatment_type = _enum(value.get("type"), _TREATMENT_TYPES, f"{label}.type")
+    if treatment_type == "surface":
+        _exact_keys(value, {"type"}, label)
+        return
+    if treatment_type == "shelf":
+        _exact_keys(value, {"type", "rimInsetFraction"}, label)
+        _inclusive_fraction(value["rimInsetFraction"], f"{label}.rimInsetFraction")
+        return
+    _exact_keys(value, {"type", "rimInsetFraction", "depth"}, label)
+    _inclusive_fraction(value["rimInsetFraction"], f"{label}.rimInsetFraction")
+    _enum(value["depth"], _RECESS_DEPTHS, f"{label}.depth")
 
 
 def _validate_semantics(semantics: Mapping[str, Any], hold_ids: set[str]) -> None:
@@ -684,6 +711,12 @@ def _non_empty_string(value: object, label: str) -> str:
 def _positive_number(value: object, label: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
         raise BoardPackageError(f"{label} must be a positive finite number")
+    return float(value)
+
+
+def _inclusive_fraction(value: object, label: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 0.5:
+        raise BoardPackageError(f"{label} must be in 0...0.5")
     return float(value)
 
 

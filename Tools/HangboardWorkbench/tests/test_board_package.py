@@ -196,6 +196,45 @@ def test_rejects_duplicate_board_hold_ids_and_mismatched_artwork_ids(tmp_path: P
         load_board_package(package_root)
 
 
+def test_rejects_an_artwork_layer_with_an_unparseable_shape(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    artwork_path = library / SLUG / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    artwork["layers"][0]["shape"] = {"not": "a-shape"}
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="layer top-plane has invalid geometry"):
+        load_board_package(library / SLUG)
+
+
+def test_rejects_an_artwork_hold_piece_with_an_extra_field(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    artwork_path = library / SLUG / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    artwork["holdPieces"][0]["extra"] = "unexpected"
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="artwork.json.holdPieces\\[0\\] has unknown keys"):
+        load_board_package(library / SLUG)
+
+
+def test_rejects_an_artwork_hold_piece_with_an_invalid_treatment(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    artwork_path = library / SLUG / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    artwork["holdPieces"][0]["treatment"] = {
+        "type": "shelf",
+        "rimInsetFraction": 0.51,
+    }
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+
+    with pytest.raises(
+        BoardPackageError,
+        match="artwork.json.holdPieces\\[0\\].treatment.rimInsetFraction must be in 0...0.5",
+    ):
+        load_board_package(library / SLUG)
+
+
 def test_replaces_a_valid_candidate_and_leaves_live_files_untouched_when_validation_fails(
     tmp_path: Path,
 ) -> None:

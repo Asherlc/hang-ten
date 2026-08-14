@@ -320,7 +320,7 @@ def _rounded_rectangle(frame: NormalizedFrame, radius: float, width: int, height
             ("L", (x, y + vertical)),
             ("Z", ()),
         ]
-    return [
+    return _without_zero_length_lines([
         ("M", (x + corner, y)),
         ("L", (x + horizontal - corner, y)),
         ("Q", (x + horizontal, y, x + horizontal, y + corner)),
@@ -331,7 +331,22 @@ def _rounded_rectangle(frame: NormalizedFrame, radius: float, width: int, height
         ("L", (x, y + corner)),
         ("Q", (x, y, x + corner, y)),
         ("Z", ()),
-    ]
+    ])
+
+
+def _without_zero_length_lines(
+    commands: list[tuple[str, tuple[float, ...]]]
+) -> list[tuple[str, tuple[float, ...]]]:
+    """Omit redundant straight spans from fully rounded pill and circle shapes."""
+    result = [commands[0]]
+    current = commands[0][1][-2:]
+    for command, values in commands[1:]:
+        if command == "L" and _same_point(current, values[-2:]):
+            continue
+        result.append((command, values))
+        if command != "Z":
+            current = values[-2:]
+    return result
 
 
 def _render(command: str, values: tuple[float, ...]) -> str:

@@ -41,6 +41,18 @@ def test_round_trips_two_cubic_segments_with_controls_outside_the_visual_bounds(
     assert display_path_for_shape(frame.to_json(), shape, 100, 100, label="hold").data == path.data
 
 
+def test_parses_a_pill_shaped_rounded_rectangle() -> None:
+    path = display_path_for_shape(
+        {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.8},
+        {"type": "roundedRect", "cornerRadiusFraction": 0.5},
+        100,
+        100,
+        label="pill",
+    )
+
+    assert path.data.endswith(" Z")
+
+
 @pytest.mark.parametrize(
     ("display_path", "message"),
     [
