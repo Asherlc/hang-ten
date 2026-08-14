@@ -1699,8 +1699,11 @@
       ],
       "method": "external-generative-adaptation"
     },
-    "assets/WoodGripsCompactII.jpg": [
-      "product-page"
-    ]
+    "assets/WoodGripsCompactII.jpg": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
   }
 }

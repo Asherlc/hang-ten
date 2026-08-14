@@ -14,6 +14,11 @@ REPOSITORY_ROOT = WORKBENCH_ROOT.parents[1]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
+from board_geometry import (  # noqa: E402
+    NormalizedFrame,
+    display_path_for_shape,
+    normalized_frame_for_path,
+)
 from board_package import (  # noqa: E402
     BoardPackageError,
     discover_packages,
@@ -52,7 +57,7 @@ def _candidate_with_id(tmp_path: Path, library: Path, slug: str, board_id: str) 
     return candidate
 
 
-def test_loads_a_registered_package_with_its_primary_image_and_hold_document() -> None:
+def test_canonical_fixture_uses_frames_derived_from_each_artwork_outline() -> None:
     package = load_board_package(REPOSITORY_ROOT / "Hangboards" / SLUG)
 
     assert primary_image_path(package).name == "primary.png"
@@ -62,6 +67,22 @@ def test_loads_a_registered_package_with_its_primary_image_and_hold_document() -
         hold["id"] for hold in package.board["holds"]
     }
     assert all(region["displayPath"].endswith(" Z") for region in document["regions"])
+    pieces = {piece["holdID"]: piece for piece in package.artwork["holdPieces"]}
+    width, height = document["canvas"]["width"], document["canvas"]["height"]
+    for hold in package.board["holds"]:
+        outline = display_path_for_shape(
+            pieces[hold["id"]]["frame"],
+            pieces[hold["id"]]["shape"],
+            width,
+            height,
+            label=hold["id"],
+        )
+        expected = normalized_frame_for_path(outline, width, height)
+        actual = NormalizedFrame.from_json(hold["frame"])
+        assert (actual.x, actual.y, actual.width, actual.height) == pytest.approx(
+            (expected.x, expected.y, expected.width, expected.height),
+            abs=0.0000005,
+        )
 
 
 def test_discovers_registered_canonical_packages() -> None:
@@ -204,6 +225,91 @@ def test_rejects_an_artwork_layer_with_an_unparseable_shape(tmp_path: Path) -> N
     artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
 
     with pytest.raises(BoardPackageError, match="layer top-plane has invalid geometry"):
+        load_board_package(library / SLUG)
+
+
+def test_rejects_a_board_hold_frame_that_disagrees_with_its_artwork_outline(
+    tmp_path: Path,
+) -> None:
+    library = _copy_library(tmp_path)
+    board_path = library / SLUG / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    board["holds"][0]["frame"]["x"] = 0.001
+    board_path.write_text(json.dumps(board), encoding="utf-8")
+
+    with pytest.raises(
+        BoardPackageError,
+        match="board.json.holds\\[0\\].frame must match its derived artwork outline",
+    ):
+        load_board_package(library / SLUG)
+
+
+@pytest.mark.parametrize("sidecar", ("board.json", "artwork.json", "evidence.json", "semantics.json"))
+def test_rejects_a_boolean_schema_version(sidecar: str, tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    sidecar_path = library / SLUG / sidecar
+    document = json.loads(sidecar_path.read_text(encoding="utf-8"))
+    document["schemaVersion"] = True
+    sidecar_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="schemaVersion must be 1"):
+        load_board_package(library / SLUG)
+
+
+def test_rejects_a_boolean_catalog_schema_version(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    catalog_path = library / "catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog["schemaVersion"] = True
+    catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="catalog.json.schemaVersion must be 1"):
+        discover_packages(library)
+
+
+def test_rejects_a_boolean_editor_document_schema_version(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    document = editor_document(load_board_package(library / SLUG))
+    document["schemaVersion"] = True
+
+    with pytest.raises(BoardPackageError, match="editor document.schemaVersion must be 1"):
+        save_editor_document(library, SLUG, document)
+
+
+def test_rejects_evidence_source_ids_without_a_method(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    evidence_path = library / SLUG / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["fieldEvidence"]["manufacturer"] = ["product-page"]
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="evidence.json.fieldEvidence.manufacturer must be an object"):
+        load_board_package(library / SLUG)
+
+
+@pytest.mark.parametrize(
+    ("mutate", "message"),
+    (
+        (
+            lambda value: value.__setitem__("palette", "inventedPalette"),
+            "artwork.json.palette must be one of",
+        ),
+        (
+            lambda value: value["layers"][0].__setitem__("role", "inventedRole"),
+            "artwork.json.layers\\[0\\].role must be one of",
+        ),
+    ),
+)
+def test_rejects_noncanonical_artwork_metadata(
+    mutate: object, message: str, tmp_path: Path
+) -> None:
+    library = _copy_library(tmp_path)
+    artwork_path = library / SLUG / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    mutate(artwork)
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match=message):
         load_board_package(library / SLUG)
 
 

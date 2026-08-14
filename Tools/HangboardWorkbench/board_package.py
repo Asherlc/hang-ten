@@ -21,6 +21,7 @@ from board_geometry import (
     GeometryError,
     NormalizedFrame,
     display_path_for_shape,
+    normalized_frame_for_path,
     parse_closed_path,
     shape_for_path,
 )
@@ -35,6 +36,9 @@ _GRIP_TYPES = frozenset({"openHand", "halfCrimp", "fullCrimp", "fourFingerPocket
 _CUE_STYLES = frozenset({"outerJug", "slot", "pinch", "rounded"})
 _TREATMENT_TYPES = frozenset({"surface", "shelf", "recess"})
 _RECESS_DEPTHS = frozenset({"shallow", "deep"})
+_ARTWORK_PALETTES = frozenset({"sculptedWood"})
+_ARTWORK_LAYER_ROLES = frozenset({"topPlane", "separator", "bottomPlane", "topSeam"})
+_FRAME_TOLERANCE = 0.0000005
 _HOLD_FEATURES = frozenset({
     "jug", "roundSloper", "largeSlope", "largeEdge", "mediumEdge", "smallEdge",
     "pocket", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket",
@@ -138,6 +142,7 @@ def load_board_package(package_root: Path) -> BoardPackage:
     assets = _validate_assets(root, board)
     _validate_semantics(semantics, set(hold["id"] for hold in board["holds"]))
     _validate_artwork(artwork, board)
+    _validate_board_hold_frames(board, artwork, *_png_dimensions(root / "assets" / "primary.png"))
     _validate_evidence(evidence, board, semantics, artwork, assets)
     return BoardPackage(root, board, artwork, evidence, semantics)
 
@@ -248,8 +253,7 @@ def _validate_board(board: Mapping[str, Any]) -> None:
         {"schemaVersion", "id", *_FACT_FIELDS, "holds", "presentation"},
         "board.json",
     )
-    if board.get("schemaVersion") != 1:
-        raise BoardPackageError("board.json.schemaVersion must be 1")
+    _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
     _identifier(board.get("id"), "board.json.id")
     for field in _FACT_FIELDS - {"aspectRatio", "productURL"}:
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -294,14 +298,15 @@ def _validate_board(board: Mapping[str, Any]) -> None:
 
 def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> None:
     _exact_keys(artwork, {"schemaVersion", "boardID", "canvasFrame", "palette", "silhouette", "layers", "holdPieces"}, "artwork.json")
-    if artwork.get("schemaVersion") != 1 or not isinstance(artwork.get("holdPieces"), list):
+    _schema_version_one(artwork.get("schemaVersion"), "artwork.json.schemaVersion")
+    if not isinstance(artwork.get("holdPieces"), list):
         raise BoardPackageError("artwork.json is invalid")
     try:
         NormalizedFrame.from_json(artwork["canvasFrame"], "artwork.json.canvasFrame")
         display_path_for_shape({"x": 0, "y": 0, "width": 1, "height": 1}, artwork["silhouette"], 1000, 1000, label="silhouette")
     except (GeometryError, KeyError, TypeError) as error:
         raise BoardPackageError("artwork.json is invalid") from error
-    _non_empty_string(artwork["palette"], "artwork.json.palette")
+    _enum(artwork["palette"], _ARTWORK_PALETTES, "artwork.json.palette")
     layers = artwork["layers"]
     if not isinstance(layers, list):
         raise BoardPackageError("artwork.json.layers must be an array")
@@ -314,7 +319,7 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
         if layer_id in layer_ids:
             raise BoardPackageError("duplicate artwork layer ID")
         layer_ids.add(layer_id)
-        _non_empty_string(layer.get("role"), f"artwork.json.layers[{index}].role")
+        _enum(layer.get("role"), _ARTWORK_LAYER_ROLES, f"artwork.json.layers[{index}].role")
         try:
             NormalizedFrame.from_json(layer["frame"], f"artwork.json.layers[{index}].frame")
             display_path_for_shape(
@@ -350,6 +355,41 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
             raise BoardPackageError(f"hold {piece['holdID']} has invalid artwork geometry") from error
 
 
+def _validate_board_hold_frames(
+    board: Mapping[str, Any], artwork: Mapping[str, Any], width: int, height: int
+) -> None:
+    """Require each saved board frame to match the exact rendered hold outline.
+
+    Frame values are normalized canvas coordinates.  They may differ from the
+    derived floating-point value by at most half of one millionth (the direct
+    package's six-decimal rounding precision).
+    """
+    pieces = {piece["holdID"]: piece for piece in artwork["holdPieces"]}
+    for index, hold in enumerate(board["holds"]):
+        hold_id = hold["id"]
+        try:
+            outline = display_path_for_shape(
+                pieces[hold_id]["frame"],
+                pieces[hold_id]["shape"],
+                width,
+                height,
+                label=f"hold {hold_id}",
+            )
+            derived = NormalizedFrame.from_json(
+                normalized_frame_for_path(outline, width, height).to_json(),
+                f"hold {hold_id}.derivedFrame",
+            )
+            declared = NormalizedFrame.from_json(
+                hold["frame"], f"board.json.holds[{index}].frame"
+            )
+        except (KeyError, GeometryError, TypeError) as error:
+            raise BoardPackageError(f"hold {hold_id} has invalid artwork geometry") from error
+        if not _frames_match(declared, derived):
+            raise BoardPackageError(
+                f"board.json.holds[{index}].frame must match its derived artwork outline"
+            )
+
+
 def _validate_artwork_treatment(value: object, label: str) -> None:
     """Validate optional decorative rendering data without treating it as hold geometry."""
     if not isinstance(value, Mapping):
@@ -369,8 +409,7 @@ def _validate_artwork_treatment(value: object, label: str) -> None:
 
 def _validate_semantics(semantics: Mapping[str, Any], hold_ids: set[str]) -> None:
     _exact_keys(semantics, {"schemaVersion", "boardID", "semanticHolds"}, "semantics.json")
-    if semantics.get("schemaVersion") != 1:
-        raise BoardPackageError("semantics.json.schemaVersion must be 1")
+    _schema_version_one(semantics.get("schemaVersion"), "semantics.json.schemaVersion")
     raw_holds = semantics.get("semanticHolds")
     if not isinstance(raw_holds, dict):
         raise BoardPackageError("semantics.json.semanticHolds must be an object")
@@ -403,8 +442,7 @@ def _validate_evidence(
         {"schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence", "holdEvidence", "semanticEvidence", "artworkEvidence", "assetEvidence"},
         "evidence.json",
     )
-    if evidence.get("schemaVersion") != 1:
-        raise BoardPackageError("evidence.json.schemaVersion must be 1")
+    _schema_version_one(evidence.get("schemaVersion"), "evidence.json.schemaVersion")
     try:
         date.fromisoformat(_non_empty_string(evidence.get("checkedAt"), "evidence.json.checkedAt"))
     except ValueError as error:
@@ -466,10 +504,7 @@ def _validate_evidence_map(
     if set(value) != set(expected):
         raise BoardPackageError(f"evidence.json.{label} keys must exactly match canonical data")
     for key, mapping in value.items():
-        if isinstance(mapping, list):
-            raw_source_ids = mapping
-            method = None
-        elif isinstance(mapping, Mapping):
+        if isinstance(mapping, Mapping):
             _exact_keys(mapping, {"sourceIDs", "method"}, f"evidence.json.{label}.{key}")
             raw_source_ids = mapping.get("sourceIDs")
             method = _enum(mapping.get("method"), _EVIDENCE_METHODS, f"evidence.json.{label}.{key}.method")
@@ -485,7 +520,7 @@ def _validate_evidence_map(
                     f"evidence.json.{label}.{key}.method {method} is not permitted"
                 )
         else:
-            raise BoardPackageError(f"evidence.json.{label}.{key} is invalid")
+            raise BoardPackageError(f"evidence.json.{label}.{key} must be an object")
         if not isinstance(raw_source_ids, list) or not raw_source_ids:
             raise BoardPackageError(f"evidence.json.{label}.{key}.sourceIDs must be non-empty")
         references = [_identifier(item, f"evidence.json.{label}.{key}.sourceIDs") for item in raw_source_ids]
@@ -493,7 +528,6 @@ def _validate_evidence_map(
             raise BoardPackageError(f"evidence.json.{label}.{key}.sourceIDs must be unique")
         if unknown := set(references) - source_ids:
             raise BoardPackageError(f"evidence.json.{label}.{key} references unknown source ID {sorted(unknown)[0]!r}")
-        del method
 
 
 def _validate_assets(root: Path, board: Mapping[str, Any]) -> set[str]:
@@ -525,8 +559,9 @@ def _validate_sidecar_identity(document: Mapping[str, Any], name: str) -> None:
 
 def _validate_editor_document(document: Mapping[str, Any], hold_ids: tuple[str, ...], width: int, height: int) -> dict[str, Any]:
     canvas = document.get("canvas") if isinstance(document, Mapping) else None
-    if not isinstance(document, Mapping) or document.get("schemaVersion") != 1 or canvas != {"width": width, "height": height}:
+    if not isinstance(document, Mapping) or canvas != {"width": width, "height": height}:
         raise BoardPackageError("editor document canvas does not match the primary image")
+    _schema_version_one(document.get("schemaVersion"), "editor document.schemaVersion")
     raw_regions = document.get("regions")
     if not isinstance(raw_regions, list):
         raise BoardPackageError("editor document regions must be an array")
@@ -548,7 +583,8 @@ def _validate_editor_document(document: Mapping[str, Any], hold_ids: tuple[str, 
 
 def _load_catalog(path: Path) -> tuple[CatalogEntry, ...]:
     raw = _load_json(path, "catalog.json")
-    if raw.get("schemaVersion") != 1 or not isinstance(raw.get("boards"), list):
+    _schema_version_one(raw.get("schemaVersion"), "catalog.json.schemaVersion")
+    if not isinstance(raw.get("boards"), list):
         raise BoardPackageError("catalog.json is invalid")
     entries: list[CatalogEntry] = []
     identifiers: set[str] = set()
@@ -702,6 +738,22 @@ def _non_empty_string(value: object, label: str) -> str:
     if not isinstance(value, str) or not value:
         raise BoardPackageError(f"{label} must be a non-empty string")
     return value
+
+
+def _schema_version_one(value: object, label: str) -> None:
+    if isinstance(value, bool) or not isinstance(value, int) or value != 1:
+        raise BoardPackageError(f"{label} must be 1")
+
+
+def _frames_match(declared: NormalizedFrame, derived: NormalizedFrame) -> bool:
+    return all(
+        abs(actual - expected) <= _FRAME_TOLERANCE
+        for actual, expected in zip(
+            (declared.x, declared.y, declared.width, declared.height),
+            (derived.x, derived.y, derived.width, derived.height),
+            strict=True,
+        )
+    )
 
 
 def _positive_number(value: object, label: str) -> float:
