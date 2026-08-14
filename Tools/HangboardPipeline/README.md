@@ -62,17 +62,34 @@ Generated paths are resolved beneath `.context/hangboard-onboarding` by
 default. Set `--workspace-root` (or `HANGBOARD_WORKSPACE_ROOT`) to another
 explicitly owned root; absolute paths and `..` components may not escape it.
 
-`--product` is a caller assertion that the photo is the exact named model and
-revision; the converter does not recognize commercial products automatically.
-Alignment confidence measures how well the isolated board geometry aligns to
-the asserted template, not whether that product assertion is correct. Review
-the diagnostic preview to verify both identity and alignment.
+`--product-name` is the caller-asserted commercial product name for an
+onboarding run. Review the diagnostic preview to verify the asserted identity.
+
+## Convert a product photo
+
+Use the lower-level converter when producing a local diagnostic artifact from
+a curated product template:
+
+```bash
+hangboard-to-svg photo.jpg \
+  --product beastmaker-1000 \
+  --output beastmaker-1000-output \
+  --manifest beastmaker-1000.json \
+  --preview beastmaker-1000-preview.png
+```
+
+`--product` is the built-in commercial product ID for `hangboard-to-svg`.
+`--product` and `--allow-low-confidence` are conversion options. Alignment
+confidence measures how well the isolated board geometry aligns to the selected
+template, not whether the product ID is correct. Review the diagnostic preview
+to verify both identity and alignment.
 
 The Beastmaker 1000 review inventory records 17 pockets, 2 corner jugs, and 3
 sloper surfaces. The center sloper is one continuous double-width region
 (`sloper-center`) with no visual or semantic divider. A registered package
 retains one primary PNG; its ordered `board.json` hold IDs and factual frames
-provide semantic identity, generic hit testing, highlights, and measurement.
+provide physical hold identity, generic hit testing, highlights, and
+measurement. Semantic mappings come from `semantics.json`.
 
 The diagnostic preview overlays every template region on the canonically
 aligned photograph. Inspect it whenever onboarding a new photo, especially for
