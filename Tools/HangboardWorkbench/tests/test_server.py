@@ -71,6 +71,41 @@ CORRECTIONS = {
     "deleted": [],
 }
 
+EDITOR_DOCUMENT = {
+    "schemaVersion": 1,
+    "canvas": {"width": 1000, "height": 358},
+    "regions": [
+        {
+            "id": 1,
+            "key": "grip-001",
+            "type": "edge",
+            "displayPath": "M 10 10 L 40 10 L 40 30 L 10 30 Z",
+            "metadata": {"mode": "surface"},
+        },
+        {
+            "id": 2,
+            "key": "grip-002",
+            "type": "pocket",
+            "displayPath": "M 60 10 L 90 10 L 90 30 L 60 30 Z",
+            "metadata": {"mode": "aperture"},
+        },
+        {
+            "id": 3,
+            "key": "grip-003",
+            "type": "edge",
+            "displayPath": "M 10 50 L 40 50 L 40 70 L 10 70 Z",
+            "metadata": {"mode": "surface"},
+        },
+        {
+            "id": 4,
+            "key": "grip-004",
+            "type": "pocket",
+            "displayPath": "M 60 50 L 90 50 L 90 70 L 60 70 Z",
+            "metadata": {"mode": "aperture"},
+        },
+    ],
+}
+
 REPOSITORY_REVISION_TOKEN = "a" * 64
 
 
@@ -384,7 +419,7 @@ class FakeWorkbenchService:
             )
             editor_document.parent.mkdir(parents=True, exist_ok=True)
             editor_document.write_text(
-                json.dumps({"regions": [{}, {}, {}, {}]}), encoding="utf-8"
+                json.dumps(EDITOR_DOCUMENT), encoding="utf-8"
             )
             changes["editor_document_path"] = editor_document
         if stage == 4 and state == "complete":
@@ -1523,7 +1558,15 @@ def test_completed_board_api_exposes_editor_document_and_clean_image(
     assert view["editorDocumentUrl"] is not None
     status, document = read_json(running_workbench_server + view["editorDocumentUrl"])
     assert status == 200
+    assert document["canvas"] == {"width": 1000, "height": 358}
     assert len(document["regions"]) == 4
+    assert document["regions"][0] == {
+        "id": 1,
+        "key": "grip-001",
+        "type": "edge",
+        "displayPath": "M 10 10 L 40 10 L 40 30 L 10 30 Z",
+        "metadata": {"mode": "surface"},
+    }
 
 
 def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
