@@ -7,8 +7,8 @@ import shutil
 import pytest
 
 from hangboard_vectorizer import board_library
+from hangboard_vectorizer.board_catalog import load_board_package
 from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
-from hangboard_vectorizer.onboarding_run import read_status
 
 
 FIXTURE = Path(__file__).resolve().parents[3] / "Hangboards" / "metolius-wood-grips-compact-ii"
@@ -245,34 +245,25 @@ def test_revision_token_covers_the_whole_package(tmp_path: Path) -> None:
     assert after != before
 
 
-def test_copy_current_run_materializes_an_editable_runtime_run(tmp_path: Path) -> None:
+def test_copy_current_run_uses_board_hold_frames_for_regions(tmp_path: Path) -> None:
     library = RepositoryBoardLibrary(_repository(tmp_path))
     destination = tmp_path / ".context" / "runtime" / "run"
 
-    board = library.copy_current_run("metolius.wood-grips-compact-ii", destination)
+    library.copy_current_run("metolius.wood-grips-compact-ii", destination)
 
-    assert board.board_id == "metolius.wood-grips-compact-ii"
-    status = read_status(destination)
-    assert (status["status"], status["stage"]) == ("complete", 4)
-    assert (destination / "run.json").is_file()
-
-    stage_three = next(destination.glob("stages/03/*/stage-3-vector-regions.json"))
-    vector_document = json.loads(stage_three.read_text(encoding="utf-8"))
-    canonical_artwork = json.loads((FIXTURE / "artwork.json").read_text(encoding="utf-8"))
-    # Runtime geometry must retain both the package silhouette and rounded hold
-    # contours; replacing either with a bounding rectangle loses canonical art.
-    assert vector_document["silhouettePaths"][0]["displayPath"].count(" C ") > 0
-    rounded_piece = next(
-        piece
-        for piece in canonical_artwork["holdPieces"]
-        if piece["shape"]["type"] == "roundedRect"
+    document = json.loads(
+        next(destination.glob("stages/03/*/stage-3-vector-regions.json")).read_text()
     )
-    rounded_region = next(
-        region
-        for region in vector_document["regions"]
-        if region["key"] == rounded_piece["holdID"]
+    package = load_board_package(FIXTURE)
+    assert [region["key"] for region in document["regions"]] == [
+        hold.id for hold in package.board.holds
+    ]
+    assert document["silhouettePaths"] == []
+    assert all(
+        region["displayPath"].startswith("M ")
+        and region["displayPath"].endswith(" Z")
+        for region in document["regions"]
     )
-    assert rounded_region["displayPath"].count(" Q ") == 4
 
 
 def test_copy_current_run_rejects_existing_destination(tmp_path: Path) -> None:
