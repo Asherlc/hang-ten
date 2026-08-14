@@ -14,10 +14,13 @@ jobs:
   comment-pr-artifact:
     name: Comment with workbench download
     if: >-
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
+      github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    concurrency:
+      group: >-
+        hangboard-workbench-pr-comment-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
+      cancel-in-progress: false
     permissions:
       actions: read
       pull-requests: write
@@ -25,78 +28,189 @@ jobs:
     steps:
       - name: Post workbench download link
         env:
+          BASE_BRANCH: main
           GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
           REPOSITORY: ${{ github.repository }}
           RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
           RUN_ID: ${{ github.event.workflow_run.id }}
           RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
         run: |
           set -euo pipefail
-          if [[ -z "$PR_NUMBER" ]]; then
-            echo "The completed pull-request run has no associated pull request." >&2
+          marker='<!-- hangboard-workbench-artifact -->'
+          identity="<!-- hangboard-workbench-artifact-run head_repository=$HEAD_REPOSITORY head_sha=$HEAD_SHA run_id=$RUN_ID run_attempt=$RUN_ATTEMPT -->"
+
+          if [[ -z "$HEAD_BRANCH" || -z "$HEAD_SHA" || "$HEAD_REPOSITORY" != */* ]]; then
+            echo "The completed run is missing a usable head repository, branch, or SHA." >&2
             exit 1
           fi
 
-          current_head_sha="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER" --jq '.head.sha')"
-          if [[ "$current_head_sha" != "$HEAD_SHA" ]]; then
-            echo "Ignoring a completed build for superseded head $HEAD_SHA (current: $current_head_sha)."
+          head_owner="${HEAD_REPOSITORY%%/*}"
+          pulls="$(gh api --method GET --paginate --slurp \
+            "repos/$REPOSITORY/pulls" \
+            -f state=open \
+            -f base="$BASE_BRANCH" \
+            -f head="$head_owner:$HEAD_BRANCH" \
+            -f per_page=100)"
+          matching_prs="$(jq -c \
+            --arg head_repository "$HEAD_REPOSITORY" \
+            --arg head_branch "$HEAD_BRANCH" \
+            --arg head_sha "$HEAD_SHA" \
+            --arg repository "$REPOSITORY" \
+            --arg base_branch "$BASE_BRANCH" \
+            '[.[][] | select(
+              .state == "open" and
+              .head.repo.full_name == $head_repository and
+              .head.ref == $head_branch and
+              .head.sha == $head_sha and
+              .base.repo.full_name == $repository and
+              .base.ref == $base_branch
+            )]' \
+            <<<"$pulls")"
+          candidate_count="$(jq 'length' <<<"$matching_prs")"
+          if [[ "$candidate_count" -ne 1 ]]; then
+            echo "Expected exactly one open base-repository pull request for $HEAD_REPOSITORY:$HEAD_BRANCH@$HEAD_SHA, found $candidate_count." >&2
+            exit 1
+          fi
+          PR_NUMBER="$(jq -r '.[0].number' <<<"$matching_prs")"
+
+          current_head_matches() {
+            local current_pr
+            current_pr="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER")"
+            jq -e \
+              --arg head_repository "$HEAD_REPOSITORY" \
+              --arg head_branch "$HEAD_BRANCH" \
+              --arg head_sha "$HEAD_SHA" \
+              --arg repository "$REPOSITORY" \
+              --arg base_branch "$BASE_BRANCH" \
+              '.state == "open" and
+               .head.repo.full_name == $head_repository and
+               .head.ref == $head_branch and
+               .head.sha == $head_sha and
+               .base.repo.full_name == $repository and
+               .base.ref == $base_branch' \
+              <<<"$current_pr" >/dev/null
+          }
+
+          if ! current_head_matches; then
+            echo "Ignoring run $RUN_ID because pull request $PR_NUMBER no longer has its exact head."
             exit 0
           fi
 
-          runs="$(gh api --paginate --slurp \
-            "repos/$REPOSITORY/actions/workflows/hangboard-workbench-pr.yml/runs?event=pull_request&status=success&per_page=100")"
+          runs="$(gh api --method GET --paginate --slurp \
+            "repos/$REPOSITORY/actions/workflows/hangboard-workbench-pr.yml/runs" \
+            -f event=pull_request \
+            -f head_sha="$HEAD_SHA" \
+            -f per_page=100)"
           newer_run_exists="$(jq -r \
-            --argjson pr "$PR_NUMBER" \
+            --arg head_repository "$HEAD_REPOSITORY" \
+            --arg head_branch "$HEAD_BRANCH" \
+            --arg head_sha "$HEAD_SHA" \
             --argjson run_number "$RUN_NUMBER" \
             --argjson run_attempt "$RUN_ATTEMPT" \
             'any(.[].workflow_runs[];
-              any(.pull_requests[]; .number == $pr) and
+              .head_repository.full_name == $head_repository and
+              .head_branch == $head_branch and
+              .head_sha == $head_sha and
               ((.run_number > $run_number) or
                (.run_number == $run_number and .run_attempt > $run_attempt)))' \
             <<<"$runs")"
           if [[ "$newer_run_exists" == "true" ]]; then
-            echo "Ignoring run $RUN_ID attempt $RUN_ATTEMPT because a newer successful run exists."
+            echo "Ignoring run $RUN_ID attempt $RUN_ATTEMPT because a newer exact-head run exists."
             exit 0
           fi
 
-          artifact_name="hangboard-workbench-macos-arm64-$RUN_ID-$RUN_ATTEMPT"
-          artifacts="$(gh api --paginate --slurp \
-            "repos/$REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100")"
-          artifact_id="$(jq --arg name "$artifact_name" \
-            '[.[].artifacts[] | select(.name == $name and (.expired | not))] | last | .id // empty' \
-            <<<"$artifacts")"
-          if [[ -z "$artifact_id" ]]; then
-            jobs="$(gh api --paginate --slurp \
-              "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
-            build_conclusion="$(jq -r \
-              '[.[].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
-              <<<"$jobs")"
-            if [[ "$build_conclusion" == "skipped" ]]; then
-              echo "Workbench build was skipped because this pull request did not change relevant paths."
-              exit 0
-            fi
-            echo "Expected unexpired artifact '$artifact_name' was not found." >&2
-            exit 1
-          fi
-
-          artifact_url="https://github.com/$REPOSITORY/actions/runs/$RUN_ID/artifacts/$artifact_id"
-          marker='<!-- hangboard-workbench-artifact -->'
-          body="${marker}
-          The Hangboard Workbench build is ready: [download the unsigned macOS arm64 artifact]($artifact_url)."
           comments="$(gh api --paginate --slurp \
             "repos/$REPOSITORY/issues/$PR_NUMBER/comments?per_page=100")"
           comment_id="$(jq --arg marker "$marker" \
             '[.[][] | select(
               .user.login == "github-actions[bot]" and
               (.body | contains($marker))
-            )] | last | .id // empty' \
+            )] | sort_by(.id) | first | .id // empty' \
             <<<"$comments")"
-          if [[ -n "$comment_id" ]]; then
-            gh api --method PATCH "repos/$REPOSITORY/issues/comments/$comment_id" \
-              --field body="$body" >/dev/null
-          else
-            gh api --method POST "repos/$REPOSITORY/issues/$PR_NUMBER/comments" \
-              --field body="$body" >/dev/null
+
+          artifact_id=""
+          build_conclusion=""
+          handler_status=0
+          if [[ "$RUN_CONCLUSION" == "success" ]]; then
+            artifact_name="hangboard-workbench-macos-arm64-$RUN_ID-$RUN_ATTEMPT"
+            artifacts="$(gh api --paginate --slurp \
+              "repos/$REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100")"
+            artifact_id="$(jq --arg name "$artifact_name" \
+              '[.[].artifacts[] | select(.name == $name and (.expired | not))] | last | .id // empty' \
+              <<<"$artifacts")"
+            if [[ -z "$artifact_id" ]]; then
+              jobs="$(gh api --paginate --slurp \
+                "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
+              build_conclusion="$(jq -r \
+                '[.[].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
+                <<<"$jobs")"
+              if [[ "$build_conclusion" == "skipped" ]]; then
+                echo "Workbench build was skipped because this pull request did not change relevant paths."
+              else
+                echo "Expected unexpired artifact '$artifact_name' was not found." >&2
+                handler_status=1
+              fi
+            fi
           fi
+
+          if [[ -n "$artifact_id" ]]; then
+            artifact_url="https://github.com/$REPOSITORY/actions/runs/$RUN_ID/artifacts/$artifact_id"
+            body="${marker}
+          ${identity}
+          The Hangboard Workbench build for \`${HEAD_SHA}\` is ready: [download the unsigned macOS arm64 artifact](${artifact_url})."
+          elif [[ "$build_conclusion" == "skipped" ]]; then
+            body="${marker}
+          ${identity}
+          No downloadable Hangboard Workbench artifact is available for \`${HEAD_SHA}\`; this run was path-gated because it did not change relevant files."
+          else
+            body="${marker}
+          ${identity}
+          No downloadable Hangboard Workbench artifact is available for \`${HEAD_SHA}\`; workflow run ${RUN_ID} attempt ${RUN_ATTEMPT} concluded \`${RUN_CONCLUSION}\`."
+          fi
+
+          write_managed_comment() {
+            if [[ -n "$comment_id" ]]; then
+              gh api --method PATCH "repos/$REPOSITORY/issues/comments/$comment_id" \
+                --field body="$body" --jq '.id'
+            else
+              gh api --method POST "repos/$REPOSITORY/issues/$PR_NUMBER/comments" \
+                --field body="$body" --jq '.id'
+            fi
+          }
+
+          comment_identity_matches() {
+            local written_comment_id="$1"
+            gh api "repos/$REPOSITORY/issues/comments/$written_comment_id" --jq '.body' \
+              | grep -Fq "$identity"
+          }
+
+          cleanup_stale_write() {
+            local written_comment_id="$1"
+            local cleanup_body
+            if ! comment_identity_matches "$written_comment_id"; then
+              echo "Comment $written_comment_id now belongs to another run; leaving it unchanged."
+              return
+            fi
+            cleanup_body="${marker}
+          ${identity}
+          No downloadable Hangboard Workbench artifact is available because the pull request head changed after this run completed."
+            gh api --method PATCH "repos/$REPOSITORY/issues/comments/$written_comment_id" \
+              --field body="$cleanup_body" >/dev/null
+          }
+
+          if ! current_head_matches; then
+            echo "Ignoring run $RUN_ID because the pull request head changed before comment write."
+            exit 0
+          fi
+          written_comment_id="$(write_managed_comment)"
+          if ! current_head_matches; then
+            echo "Pull request head changed during comment write; neutralizing only run $RUN_ID's comment."
+            cleanup_stale_write "$written_comment_id"
+            exit 0
+          fi
+
+          exit "$handler_status"

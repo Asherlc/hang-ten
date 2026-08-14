@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -92,6 +93,187 @@ def _run_jq(program: str, payload: object, *arguments: str) -> str:
     return result.stdout.strip()
 
 
+def _run_pr_comment_handler(
+    tmp_path: Path,
+    *,
+    conclusion: str,
+    build_conclusion: str = "",
+    artifact_id: int | None = None,
+    supersede_after_write: bool = False,
+    comment_reassigned_before_cleanup: bool = False,
+) -> tuple[subprocess.CompletedProcess[str], list[str]]:
+    workflow = _workflow(COMMENT_WORKFLOW_PATH)
+    script = _step(
+        workflow["jobs"]["comment-pr-artifact"], "Post workbench download link"
+    )["run"]
+    capture_path = tmp_path / "comment-bodies"
+    latest_body_path = tmp_path / "latest-comment-body"
+    pull_read_count_path = tmp_path / "pull-read-count"
+    pull = {
+        "number": 129,
+        "state": "open",
+        "head": {
+            "ref": "safe-comment",
+            "sha": "a" * 40,
+            "repo": {"full_name": "contributor/hang-ten"},
+        },
+        "base": {"ref": "main", "repo": {"full_name": "Asherlc/hang-ten"}},
+    }
+    superseding_pull = {
+        **pull,
+        "head": {**pull["head"], "sha": "b" * 40},
+    }
+    mock_gh = r"""
+gh() {
+  local endpoint=""
+  local method="GET"
+  local previous=""
+  local argument
+  for argument in "$@"; do
+    if [[ "$previous" == "--method" ]]; then
+      method="$argument"
+    fi
+    if [[ "$argument" == repos/* ]]; then
+      endpoint="$argument"
+    fi
+    previous="$argument"
+  done
+
+  case "$endpoint" in
+    repos/Asherlc/hang-ten/pulls)
+      printf '%s\n' "$MOCK_PULLS"
+      ;;
+    repos/Asherlc/hang-ten/pulls/129)
+      pull_read_count=0
+      if [[ -f "$MOCK_PULL_READ_COUNT" ]]; then
+        pull_read_count="$(<"$MOCK_PULL_READ_COUNT")"
+      fi
+      pull_read_count=$((pull_read_count + 1))
+      printf '%s\n' "$pull_read_count" > "$MOCK_PULL_READ_COUNT"
+      if [[ "$MOCK_SUPERSEDE_AFTER_WRITE" == "true" && "$pull_read_count" -ge 3 ]]; then
+        printf '%s\n' "$MOCK_SUPERSEDING_PULL"
+      else
+        printf '%s\n' "$MOCK_PULL"
+      fi
+      ;;
+    repos/Asherlc/hang-ten/actions/workflows/hangboard-workbench-pr.yml/runs)
+      printf '%s\n' "$MOCK_RUNS"
+      ;;
+    repos/Asherlc/hang-ten/issues/129/comments?*)
+      printf '%s\n' "$MOCK_COMMENTS"
+      ;;
+    repos/Asherlc/hang-ten/actions/runs/700/artifacts?*)
+      printf '%s\n' "$MOCK_ARTIFACTS"
+      ;;
+    repos/Asherlc/hang-ten/actions/runs/700/jobs?*)
+      printf '%s\n' "$MOCK_JOBS"
+      ;;
+    repos/Asherlc/hang-ten/issues/comments/40)
+      if [[ "$method" == "PATCH" ]]; then
+        for argument in "$@"; do
+          if [[ "$argument" == body=* ]]; then
+            printf '%s\034' "${argument#body=}" >> "$MOCK_CAPTURE"
+            printf '%s' "${argument#body=}" > "$MOCK_LATEST_BODY"
+          fi
+        done
+        printf '40\n'
+      else
+        if [[ "$MOCK_COMMENT_REASSIGNED" == "true" ]]; then
+          printf '%s\n' '<!-- hangboard-workbench-artifact -->'
+          printf '%s\n' '<!-- hangboard-workbench-artifact-run head_repository=contributor/hang-ten head_sha=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb run_id=701 run_attempt=1 -->'
+        else
+          cat "$MOCK_LATEST_BODY"
+        fi
+      fi
+      ;;
+    *)
+      printf 'Unexpected gh endpoint: %s\n' "$endpoint" >&2
+      return 1
+      ;;
+  esac
+}
+"""
+    run = {
+        "run_number": 7,
+        "run_attempt": 2,
+        "head_sha": "a" * 40,
+        "head_branch": "safe-comment",
+        "head_repository": {"full_name": "contributor/hang-ten"},
+        "pull_requests": [],
+    }
+    jobs = [
+        {
+            "name": "Build verified arm64 workbench",
+            "conclusion": build_conclusion,
+        }
+    ]
+    result = subprocess.run(
+        ["bash", "-c", f"{mock_gh}\n{script}"],
+        capture_output=True,
+        text=True,
+        check=False,
+        env={
+            **os.environ,
+            "BASE_BRANCH": "main",
+            "GH_TOKEN": "test-token",
+            "HEAD_BRANCH": "safe-comment",
+            "HEAD_REPOSITORY": "contributor/hang-ten",
+            "HEAD_SHA": "a" * 40,
+            "MOCK_ARTIFACTS": json.dumps(
+                [
+                    {
+                        "artifacts": (
+                            []
+                            if artifact_id is None
+                            else [
+                                {
+                                    "id": artifact_id,
+                                    "name": "hangboard-workbench-macos-arm64-700-2",
+                                    "expired": False,
+                                }
+                            ]
+                        )
+                    }
+                ]
+            ),
+            "MOCK_CAPTURE": str(capture_path),
+            "MOCK_COMMENT_REASSIGNED": str(
+                comment_reassigned_before_cleanup
+            ).lower(),
+            "MOCK_COMMENTS": json.dumps(
+                [
+                    [
+                        {
+                            "id": 40,
+                            "user": {"login": "github-actions[bot]"},
+                            "body": "<!-- hangboard-workbench-artifact -->\nold",
+                        }
+                    ]
+                ]
+            ),
+            "MOCK_JOBS": json.dumps([{"jobs": jobs}]),
+            "MOCK_LATEST_BODY": str(latest_body_path),
+            "MOCK_PULL": json.dumps(pull),
+            "MOCK_PULL_READ_COUNT": str(pull_read_count_path),
+            "MOCK_PULLS": json.dumps([[pull]]),
+            "MOCK_RUNS": json.dumps([{"workflow_runs": [run]}]),
+            "MOCK_SUPERSEDE_AFTER_WRITE": str(supersede_after_write).lower(),
+            "MOCK_SUPERSEDING_PULL": json.dumps(superseding_pull),
+            "REPOSITORY": "Asherlc/hang-ten",
+            "RUN_ATTEMPT": "2",
+            "RUN_CONCLUSION": conclusion,
+            "RUN_ID": "700",
+            "RUN_NUMBER": "7",
+        },
+    )
+    bodies = (
+        capture_path.read_text(encoding="utf-8").split("\x1c")
+        if capture_path.exists()
+        else []
+    )
+    return result, [body for body in bodies if body]
+
+
 def _native_release_quick_start(path: Path) -> str:
     readme = path.read_text(encoding="utf-8")
     _, marker, remainder = readme.partition("## Run the Apple Silicon macOS")
@@ -158,16 +340,26 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
 
 def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
     release = _workflow()["jobs"]["release"]
-    step = _step(release, "Sign, notarize, and validate workbench app")
-    script = step["run"]
+    install = _step(release, "Install pinned Sentry CLI")
+    build = _step(release, "Build, sign, and archive workbench app")
+    upload = _step(release, "Upload workbench debug symbols to Sentry")
 
-    assert step["env"]["SENTRY_AUTH_TOKEN"] == "${{ secrets.SENTRY_AUTH_TOKEN }}"
-    assert step["env"]["SENTRY_ORG"] == "${{ vars.SENTRY_ORG }}"
-    assert step["env"]["SENTRY_PROJECT"] == "${{ vars.SENTRY_WORKBENCH_PROJECT }}"
-    assert '-Xswiftc -g' in script
-    assert 'dsymutil "$built_shell" -o "$shell_dsym"' in script
-    assert 'sentry-cli debug-files upload "$shell_dsym"' in script
-    assert "SENTRY_AUTH_TOKEN =" not in script
+    assert "2.58.6" in install["run"]
+    assert (
+        "a2979237fc1ba46d2db4d551a9269affdd1e4f16e667cf2f398f490be7accafb"
+        in install["run"]
+    )
+    assert "${{ secrets." not in json.dumps(install, sort_keys=True)
+    assert '-Xswiftc -g' in build["run"]
+    assert 'dsymutil "$built_shell" -o "$shell_dsym"' in build["run"]
+    assert upload["env"] == {
+        "SENTRY_AUTH_TOKEN": "${{ secrets.SENTRY_AUTH_TOKEN }}",
+        "SENTRY_ORG": "${{ vars.SENTRY_ORG }}",
+        "SENTRY_PROJECT": "${{ vars.SENTRY_WORKBENCH_PROJECT }}",
+    }
+    assert '"$SENTRY_CLI_PATH" debug-files upload "$shell_dsym"' in upload["run"]
+    assert "brew install" not in upload["run"]
+    assert release["steps"].index(install) < release["steps"].index(upload)
 
 
 def test_pr_build_and_main_release_share_the_composite_build_action():
@@ -247,7 +439,7 @@ def test_pr_build_uses_one_auditable_component_gate():
     assert "outputs" not in jobs["build"]
 
 
-def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
+def test_completed_pr_runs_are_serialized_and_manage_one_current_head_comment():
     workflow = _workflow(COMMENT_WORKFLOW_PATH)
     comment = workflow["jobs"]["comment-pr-artifact"]
     assert workflow["on"]["workflow_run"]["workflows"] == [
@@ -259,39 +451,139 @@ def test_successful_pr_build_posts_one_updatable_artifact_download_comment():
     }
     assert comment["timeout-minutes"] == 5
     assert _normalized_expression(comment["if"]) == (
-        "github.event.workflow_run.event == 'pull_request' && "
-        "github.event.workflow_run.conclusion == 'success'"
+        "github.event.workflow_run.event == 'pull_request'"
     )
-    script = _step(comment, "Post workbench download link")["run"]
+    assert comment["concurrency"] == {
+        "group": (
+            "hangboard-workbench-pr-comment-"
+            "${{ github.event.workflow_run.head_repository.id }}-"
+            "${{ github.event.workflow_run.head_branch }}"
+        ),
+        "cancel-in-progress": False,
+    }
+    step = _step(comment, "Post workbench download link")
+    assert step["env"]["HEAD_BRANCH"] == "${{ github.event.workflow_run.head_branch }}"
+    assert step["env"]["HEAD_REPOSITORY"] == (
+        "${{ github.event.workflow_run.head_repository.full_name }}"
+    )
+    assert step["env"]["RUN_CONCLUSION"] == (
+        "${{ github.event.workflow_run.conclusion }}"
+    )
+    assert "PR_NUMBER" not in step["env"]
+    script = step["run"]
     for fragment in (
-        'pulls/$PR_NUMBER',
-        'current_head_sha" != "$HEAD_SHA',
+        'repos/$REPOSITORY/pulls',
+        '-f head="$head_owner:$HEAD_BRANCH"',
+        '.head.repo.full_name == $head_repository',
+        '.head.ref == $head_branch',
+        '.head.sha == $head_sha',
+        '.base.repo.full_name == $repository',
+        'candidate_count" -ne 1',
+        'current_head_matches',
         "actions/workflows/hangboard-workbench-pr.yml/runs",
+        '.head_repository.full_name == $head_repository',
+        ".head_sha == $head_sha",
         ".run_number > $run_number",
         ".run_attempt > $run_attempt",
         'newer_run_exists" == "true"',
+        'RUN_CONCLUSION" == "success"',
         "actions/runs/$RUN_ID/artifacts?per_page=100",
         "actions/runs/$RUN_ID/jobs?per_page=100",
         'select(.name == "Build verified arm64 workbench")',
         'if [[ "$build_conclusion" == "skipped" ]]',
         "did not change relevant paths",
         "<!-- hangboard-workbench-artifact -->",
+        "<!-- hangboard-workbench-artifact-run",
+        "head_repository=$HEAD_REPOSITORY",
+        "head_sha=$HEAD_SHA",
+        "run_id=$RUN_ID",
+        "run_attempt=$RUN_ATTEMPT",
+        "No downloadable Hangboard Workbench artifact is available",
         '.user.login == "github-actions[bot]"',
         "issues/comments/$comment_id",
+        "cleanup_stale_write",
+        "comment_identity_matches",
     ):
         assert fragment in script
-    assert script.index('if [[ "$build_conclusion" == "skipped" ]]') < script.index(
-        "Expected unexpired artifact"
-    )
-    assert script.index('current_head_sha" != "$HEAD_SHA') < script.index(
-        'artifact_name="hangboard-workbench'
+    assert script.count("current_head_matches") >= 4
+    write_index = script.index('written_comment_id="$(write_managed_comment)"')
+    pre_write_validation = script.rfind("if ! current_head_matches", 0, write_index)
+    post_write_validation = script.index("if ! current_head_matches", write_index)
+    assert pre_write_validation > script.index("issues/comments/$comment_id")
+    assert pre_write_validation < write_index < post_write_validation
+    assert script.index("cleanup_stale_write", post_write_validation) > (
+        post_write_validation
     )
     assert script.index('newer_run_exists" == "true"') < script.index(
         'artifact_name="hangboard-workbench'
     )
+    assert "workflow_run.pull_requests" not in COMMENT_WORKFLOW_PATH.read_text(
+        encoding="utf-8"
+    )
     assert "pull_request_target" not in COMMENT_WORKFLOW_PATH.read_text(
         encoding="utf-8"
     )
+
+
+@pytest.mark.parametrize("conclusion", ["failure", "cancelled", "skipped"])
+def test_non_successful_current_head_runs_neutralize_the_artifact_comment(
+    tmp_path,
+    conclusion,
+):
+    result, bodies = _run_pr_comment_handler(tmp_path, conclusion=conclusion)
+
+    assert result.returncode == 0, result.stderr
+    assert len(bodies) == 1
+    assert "<!-- hangboard-workbench-artifact -->" in bodies[0]
+    assert "head_repository=contributor/hang-ten" in bodies[0]
+    assert f"head_sha={'a' * 40}" in bodies[0]
+    assert "run_id=700 run_attempt=2" in bodies[0]
+    assert f"concluded `{conclusion}`" in bodies[0]
+    assert "/artifacts/" not in bodies[0]
+
+
+def test_path_gated_current_head_run_neutralizes_the_artifact_comment(tmp_path):
+    result, bodies = _run_pr_comment_handler(
+        tmp_path,
+        conclusion="success",
+        build_conclusion="skipped",
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert len(bodies) == 1
+    assert "path-gated because it did not change relevant files" in bodies[0]
+    assert "/artifacts/" not in bodies[0]
+
+
+def test_post_write_head_change_only_neutralizes_the_same_run_identity(tmp_path):
+    result, bodies = _run_pr_comment_handler(
+        tmp_path,
+        conclusion="success",
+        artifact_id=900,
+        supersede_after_write=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert len(bodies) == 2
+    assert "/actions/runs/700/artifacts/900" in bodies[0]
+    assert "head_sha=" + "a" * 40 in bodies[0]
+    assert "head_sha=" + "a" * 40 in bodies[1]
+    assert "head changed after this run completed" in bodies[1]
+    assert "/artifacts/" not in bodies[1]
+
+
+def test_stale_handler_never_overwrites_a_newer_run_identity(tmp_path):
+    result, bodies = _run_pr_comment_handler(
+        tmp_path,
+        conclusion="success",
+        artifact_id=900,
+        supersede_after_write=True,
+        comment_reassigned_before_cleanup=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert len(bodies) == 1
+    assert "Comment 40 now belongs to another run; leaving it unchanged." in result.stdout
 
 
 @pytest.mark.skipif(shutil.which("jq") is None, reason="jq is required")
@@ -300,6 +592,55 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
     script = _step(
         workflow["jobs"]["comment-pr-artifact"], "Post workbench download link"
     )["run"]
+
+    candidates_program = _jq_program(script, "matching_prs")
+    pulls = [
+        [],
+        [
+            {
+                "number": 128,
+                "state": "open",
+                "head": {
+                    "ref": "safe-comment",
+                    "sha": "a" * 40,
+                    "repo": {"full_name": "someone/other-fork"},
+                },
+                "base": {"ref": "main", "repo": {"full_name": "Asherlc/hang-ten"}},
+            },
+            {
+                "number": 129,
+                "state": "open",
+                "head": {
+                    "ref": "safe-comment",
+                    "sha": "a" * 40,
+                    "repo": {"full_name": "contributor/hang-ten"},
+                },
+                "base": {"ref": "main", "repo": {"full_name": "Asherlc/hang-ten"}},
+            },
+        ],
+    ]
+    matching_pulls = json.loads(
+        _run_jq(
+            candidates_program,
+            pulls,
+            "--arg",
+            "head_repository",
+            "contributor/hang-ten",
+            "--arg",
+            "head_branch",
+            "safe-comment",
+            "--arg",
+            "head_sha",
+            "a" * 40,
+            "--arg",
+            "repository",
+            "Asherlc/hang-ten",
+            "--arg",
+            "base_branch",
+            "main",
+        )
+    )
+    assert [pull["number"] for pull in matching_pulls] == [129]
 
     runs_program = _jq_program(script, "newer_run_exists")
     assert ".[].workflow_runs[]" in runs_program
@@ -310,7 +651,10 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
                 {
                     "run_number": 41,
                     "run_attempt": 1,
-                    "pull_requests": [{"number": 127}],
+                    "head_sha": "a" * 40,
+                    "head_branch": "safe-comment",
+                    "head_repository": {"full_name": "contributor/hang-ten"},
+                    "pull_requests": [],
                 }
             ],
         },
@@ -320,7 +664,10 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
                 {
                     "run_number": 42,
                     "run_attempt": 2,
-                    "pull_requests": [{"number": 127}],
+                    "head_sha": "a" * 40,
+                    "head_branch": "safe-comment",
+                    "head_repository": {"full_name": "contributor/hang-ten"},
+                    "pull_requests": [],
                 }
             ],
         },
@@ -329,9 +676,15 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
         _run_jq(
             runs_program,
             runs,
-            "--argjson",
-            "pr",
-            "127",
+            "--arg",
+            "head_repository",
+            "contributor/hang-ten",
+            "--arg",
+            "head_branch",
+            "safe-comment",
+            "--arg",
+            "head_sha",
+            "a" * 40,
             "--argjson",
             "run_number",
             "42",
@@ -340,6 +693,43 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
             "1",
         )
         == "true"
+    )
+    assert (
+        _run_jq(
+            runs_program,
+            [
+                {
+                    "workflow_runs": [
+                        {
+                            "run_number": 99,
+                            "run_attempt": 1,
+                            "head_sha": "b" * 40,
+                            "head_branch": "safe-comment",
+                            "head_repository": {
+                                "full_name": "someone/other-fork"
+                            },
+                            "pull_requests": [],
+                        }
+                    ]
+                }
+            ],
+            "--arg",
+            "head_repository",
+            "contributor/hang-ten",
+            "--arg",
+            "head_branch",
+            "safe-comment",
+            "--arg",
+            "head_sha",
+            "a" * 40,
+            "--argjson",
+            "run_number",
+            "42",
+            "--argjson",
+            "run_attempt",
+            "1",
+        )
+        == "false"
     )
 
     artifacts_program = _jq_program(script, "artifact_id")
@@ -431,6 +821,30 @@ def test_workflow_permissions_and_release_credentials_remain_narrow():
         if "GH_TOKEN" in step.get("env", {})
     ] == [("comment-pr-artifact", "Post workbench download link")]
     assert "immutable-releases" not in WORKFLOW_PATH.read_text(encoding="utf-8")
+
+
+def test_release_secrets_are_only_exposed_to_their_minimal_consumer_steps():
+    release = _workflow()["jobs"]["release"]
+    secret_steps = {
+        step["name"]: json.dumps(step, sort_keys=True)
+        for step in release["steps"]
+        if "${{ secrets." in json.dumps(step, sort_keys=True)
+    }
+
+    assert set(secret_steps) == {
+        "Import Developer ID Application certificate",
+        "Upload workbench debug symbols to Sentry",
+        "Notarize workbench archive",
+    }
+    assert "DEVELOPER_ID_CERTIFICATE_FILE_BASE64" in secret_steps[
+        "Import Developer ID Application certificate"
+    ]
+    assert "SENTRY_AUTH_TOKEN" in secret_steps[
+        "Upload workbench debug symbols to Sentry"
+    ]
+    assert "APPSTORE_API_PRIVATE_KEY" in secret_steps["Notarize workbench archive"]
+    assert "curl" not in secret_steps["Upload workbench debug symbols to Sentry"]
+    assert "curl" not in secret_steps["Notarize workbench archive"]
 
 
 def test_build_uses_the_macos_latest_runner_required_by_arm64_verification():
@@ -535,16 +949,17 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "p12-password": "${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}",
     }
 
-    signing_step = _step(release, "Sign, notarize, and validate workbench app")
+    signing_step = _step(release, "Build, sign, and archive workbench app")
     assert signing_step["env"] == {
+        "APPLE_TEAM_ID": "${{ vars.APPLE_TEAM_ID }}",
+    }
+    notarization_step = _step(release, "Notarize workbench archive")
+    assert notarization_step["env"] == {
         "APPSTORE_ISSUER_ID": "${{ vars.APPSTORE_ISSUER_ID }}",
         "APPSTORE_API_KEY_ID": "${{ vars.APPSTORE_API_KEY_ID }}",
         "APPSTORE_API_PRIVATE_KEY": "${{ secrets.APPSTORE_API_PRIVATE_KEY }}",
-        "APPLE_TEAM_ID": "${{ vars.APPLE_TEAM_ID }}",
-        "SENTRY_AUTH_TOKEN": "${{ secrets.SENTRY_AUTH_TOKEN }}",
-        "SENTRY_ORG": "${{ vars.SENTRY_ORG }}",
-        "SENTRY_PROJECT": "${{ vars.SENTRY_WORKBENCH_PROJECT }}",
     }
+    validation_step = _step(release, "Staple and validate workbench app")
     signing_script = signing_step["run"]
     for required_fragment in (
         "Developer ID Application:",
@@ -561,18 +976,21 @@ def test_release_signs_notarizes_and_publishes_a_stapled_app_bundle():
         "--options runtime",
         "--timestamp",
         "codesign --verify --deep --strict --verbose=2",
-        "xcrun notarytool submit",
-        "--wait",
-        "xcrun stapler staple",
-        "xcrun stapler validate",
-        "spctl --assess --type execute --verbose=4",
         "hangboard-workbench-macos-arm64.zip",
-        "hangboard-workbench-macos-arm64.sha256",
         "RUNNER_TEMP",
     ):
         assert required_fragment in signing_script
     archive_command = 'ditto -c -k --keepParent "$app_bundle" "$archive"'
-    assert signing_script.count(archive_command) == 2
+    assert signing_script.count(archive_command) == 1
+    assert "xcrun notarytool" not in signing_script
+    assert "${{ secrets." not in json.dumps(signing_step, sort_keys=True)
+    assert "xcrun notarytool submit" in notarization_step["run"]
+    assert "--wait" in notarization_step["run"]
+    assert "xcrun stapler staple" in validation_step["run"]
+    assert "xcrun stapler validate" in validation_step["run"]
+    assert "spctl --assess --type execute --verbose=4" in validation_step["run"]
+    assert validation_step["run"].count(archive_command) == 1
+    assert "hangboard-workbench-macos-arm64.sha256" in validation_step["run"]
     assert 'ditto --keepParent "$app_bundle" "$archive"' not in signing_script
     for inline_packaging_fragment in (
         'mkdir -p "$app_bundle/Contents/MacOS"',
@@ -620,7 +1038,7 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
     dependencies = _step(release, "Install workbench release dependencies")["run"]
     assert "pyinstaller==6.22.0" in dependencies
 
-    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+    signing_script = _step(release, "Build, sign, and archive workbench app")["run"]
     for required_fragment in (
         'grep -F "($APPLE_TEAM_ID)"',
         'if [[ "$identity_count" -ne 1 ]]',
@@ -652,25 +1070,31 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
         < signing_script.index(app_sign)
     )
 
-    assert signing_script.index("xcrun stapler validate") < signing_script.index(
+    validation_script = _step(release, "Staple and validate workbench app")["run"]
+    assert validation_script.index("xcrun stapler validate") < validation_script.index(
         '"$app_executable" --headless'
     )
-    assert "spctl --assess --type execute --verbose=4" in signing_script
-    assert "xcrun notarytool submit" in signing_script
+    assert "spctl --assess --type execute --verbose=4" in validation_script
+    assert "xcrun notarytool submit" not in validation_script
 
 
 def test_release_signing_protects_api_key_and_allows_notarization_to_finish():
     release = _workflow()["jobs"]["release"]
-    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+    notarization_step = _step(release, "Notarize workbench archive")
+    notarization_script = notarization_step["run"]
 
     assert release["timeout-minutes"] == 30
     write_key = 'printf \'%s\' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"'
-    assert "umask 077" in signing_script
-    assert 'chmod 600 "$api_key_path"' in signing_script
-    assert signing_script.index("umask 077") < signing_script.index(write_key)
-    assert signing_script.index(write_key) < signing_script.index(
+    assert "umask 077" in notarization_script
+    assert 'chmod 600 "$api_key_path"' in notarization_script
+    assert notarization_script.index("umask 077") < notarization_script.index(write_key)
+    assert notarization_script.index(write_key) < notarization_script.index(
         'chmod 600 "$api_key_path"'
     )
+    assert 'rm -f "$api_key_path"' in notarization_script
+    assert "sentry-cli" not in notarization_script
+    assert "codesign" not in notarization_script
+    assert "swift build" not in notarization_script
 
 
 def test_existing_release_validation_checks_downloaded_zip_checksum():
@@ -725,26 +1149,31 @@ def test_interrupted_draft_release_is_repaired_before_publication():
 
 def test_final_release_checksum_uses_the_downloadable_zip_basename():
     release = _workflow()["jobs"]["release"]
-    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+    validation_script = _step(release, "Staple and validate workbench app")["run"]
 
     assert (
         "shasum -a 256 hangboard-workbench-macos-arm64.zip "
         "> hangboard-workbench-macos-arm64.sha256"
-    ) in signing_script
+    ) in validation_script
     assert (
         'shasum -a 256 "$archive" > hangboard-workbench-macos-arm64.sha256'
-        not in signing_script
+        not in validation_script
     )
-    assert "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256" in signing_script
+    assert (
+        "shasum -a 256 -c hangboard-workbench-macos-arm64.sha256"
+        in validation_script
+    )
 
 
 def test_signed_release_zip_uses_the_documented_top_level_app_basename():
     release = _workflow()["jobs"]["release"]
-    signing_script = _step(release, "Sign, notarize, and validate workbench app")["run"]
+    signing_script = _step(release, "Build, sign, and archive workbench app")["run"]
+    validation_script = _step(release, "Staple and validate workbench app")["run"]
 
     assert 'app_bundle="$release_dir/Hangboard Workbench.app"' in signing_script
     assert (
-        'test "$(cat "$zip_top_levels")" = "Hangboard Workbench.app"' in signing_script
+        'test "$(cat "$zip_top_levels")" = "Hangboard Workbench.app"'
+        in validation_script
     )
     assert 'app_bundle="$release_dir/hangboard-workbench.app"' not in signing_script
 

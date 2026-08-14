@@ -80,6 +80,25 @@ jobs:
           "$python_bin" -m pip install -e 'Tools/HangboardPipeline' 'pyinstaller==6.22.0'
           swift --version
 
+      - name: Install pinned Sentry CLI
+        run: |
+          set -euo pipefail
+          sentry_cli_path="$RUNNER_TEMP/sentry-cli-2.58.6"
+          sentry_cli_download="${sentry_cli_path}.download"
+          cleanup() {
+            rm -f "$sentry_cli_download"
+          }
+          trap cleanup EXIT
+          curl --fail --location --silent --show-error \
+            --output "$sentry_cli_download" \
+            https://github.com/getsentry/sentry-cli/releases/download/2.58.6/sentry-cli-Darwin-arm64
+          printf '%s  %s\n' \
+            a2979237fc1ba46d2db4d551a9269affdd1e4f16e667cf2f398f490be7accafb \
+            "$sentry_cli_download" | shasum -a 256 -c -
+          chmod 0755 "$sentry_cli_download"
+          mv "$sentry_cli_download" "$sentry_cli_path"
+          printf 'SENTRY_CLI_PATH=%s\n' "$sentry_cli_path" >> "$GITHUB_ENV"
+
       # Apple-Actions/import-codesign-certs v7.0.0
       - name: Import Developer ID Application certificate
         uses: Apple-Actions/import-codesign-certs@5142e029c445c10ffc7149d172e540235a065466
@@ -88,15 +107,9 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_ID_CERTIFICATE_FILE_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_ID_CERTIFICATE_PASSWORD }}
 
-      - name: Sign, notarize, and validate workbench app
+      - name: Build, sign, and archive workbench app
         env:
-          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
-          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
-          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ vars.SENTRY_WORKBENCH_PROJECT }}
         run: |
           set -euo pipefail
           release_dir="$GITHUB_WORKSPACE/release"
@@ -104,32 +117,7 @@ jobs:
           runtime_dist_dir="$release_dir/signed-runtime-dist"
           runtime_work_dir="$RUNNER_TEMP/hangboard-workbench-signed-runtime-build"
           app_bundle="$release_dir/Hangboard Workbench.app"
-          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
           archive="$release_dir/hangboard-workbench-macos-arm64.zip"
-          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
-          smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
-          app_pid=""
-          app_child_pid=""
-          cleanup() {
-            status=$?
-            trap - EXIT
-            if [[ -n "$app_pid" ]]; then
-              if kill -0 "$app_pid" 2>/dev/null; then
-                kill -TERM "$app_pid" || true
-              fi
-              wait "$app_pid" || true
-            fi
-            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
-              kill -TERM "$app_child_pid" || true
-            fi
-            rm -f "$api_key_path"
-            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
-              cat "$smoke_log" >&2
-            fi
-            exit "$status"
-          }
-          trap cleanup EXIT
 
           signing_identities="$(security find-identity -v -p codesigning signing_temp.keychain \
             | awk -F '\"' '/Developer ID Application:/{print $2}')"
@@ -185,14 +173,43 @@ jobs:
           codesign --force --sign "$signing_identity" --options runtime --timestamp "$app_bundle"
           codesign --verify --deep --strict --verbose=2 "$app_bundle"
 
+          cd "$release_dir"
+          ditto -c -k --keepParent "$app_bundle" "$archive"
+
+      - name: Upload workbench debug symbols to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_WORKBENCH_PROJECT }}
+        run: |
+          set -euo pipefail
           : "${SENTRY_AUTH_TOKEN:?Configure the SENTRY_AUTH_TOKEN secret}"
           : "${SENTRY_ORG:?Configure the SENTRY_ORG variable}"
           : "${SENTRY_PROJECT:?Configure the SENTRY_WORKBENCH_PROJECT variable}"
-          brew install getsentry/tools/sentry-cli
-          sentry-cli debug-files upload "$shell_dsym"
+          shell_dsym="$GITHUB_WORKSPACE/release/HangboardWorkbench.dSYM"
+          test -d "$shell_dsym"
+          "$SENTRY_CLI_PATH" debug-files upload "$shell_dsym"
 
-          cd "$release_dir"
-          ditto -c -k --keepParent "$app_bundle" "$archive"
+      - name: Notarize workbench archive
+        env:
+          APPSTORE_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          APPSTORE_API_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          : "${APPSTORE_ISSUER_ID:?Configure the APPSTORE_ISSUER_ID variable}"
+          : "${APPSTORE_API_KEY_ID:?Configure the APPSTORE_API_KEY_ID variable}"
+          : "${APPSTORE_API_PRIVATE_KEY:?Configure the APPSTORE_API_PRIVATE_KEY secret}"
+          archive="$GITHUB_WORKSPACE/release/hangboard-workbench-macos-arm64.zip"
+          api_key_path="$RUNNER_TEMP/AuthKey_${APPSTORE_API_KEY_ID}.p8"
+          cleanup() {
+            status=$?
+            trap - EXIT
+            rm -f "$api_key_path"
+            exit "$status"
+          }
+          trap cleanup EXIT
+          test -f "$archive"
           umask 077
           printf '%s' "$APPSTORE_API_PRIVATE_KEY" > "$api_key_path"
           chmod 600 "$api_key_path"
@@ -201,6 +218,37 @@ jobs:
             --key-id "$APPSTORE_API_KEY_ID" \
             --issuer "$APPSTORE_ISSUER_ID" \
             --wait
+
+      - name: Staple and validate workbench app
+        run: |
+          set -euo pipefail
+          release_dir="$GITHUB_WORKSPACE/release"
+          app_bundle="$release_dir/Hangboard Workbench.app"
+          app_executable="$app_bundle/Contents/MacOS/HangboardWorkbench"
+          archive="$release_dir/hangboard-workbench-macos-arm64.zip"
+          zip_top_levels="$RUNNER_TEMP/hangboard-workbench-zip-top-levels.txt"
+          smoke_log="$RUNNER_TEMP/hangboard-workbench-signed-app-smoke.log"
+          app_pid=""
+          app_child_pid=""
+          cleanup() {
+            status=$?
+            trap - EXIT
+            if [[ -n "$app_pid" ]]; then
+              if kill -0 "$app_pid" 2>/dev/null; then
+                kill -TERM "$app_pid" || true
+              fi
+              wait "$app_pid" || true
+            fi
+            if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
+              kill -TERM "$app_child_pid" || true
+            fi
+            if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
+              cat "$smoke_log" >&2
+            fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+
           xcrun stapler staple "$app_bundle"
           xcrun stapler validate "$app_bundle"
           spctl --assess --type execute --verbose=4 "$app_bundle"
