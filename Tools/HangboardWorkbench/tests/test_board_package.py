@@ -267,6 +267,17 @@ def test_rejects_a_boolean_catalog_schema_version(tmp_path: Path) -> None:
         discover_packages(library)
 
 
+def test_rejects_an_unknown_catalog_field(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    catalog_path = library / "catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog["unexpected"] = "ignored configuration must not be accepted"
+    catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="catalog.json has unknown keys: \\['unexpected'\\]"):
+        discover_packages(library)
+
+
 def test_rejects_a_boolean_editor_document_schema_version(tmp_path: Path) -> None:
     library = _copy_library(tmp_path)
     document = editor_document(load_board_package(library / SLUG))

@@ -583,6 +583,7 @@ def _validate_editor_document(document: Mapping[str, Any], hold_ids: tuple[str, 
 
 def _load_catalog(path: Path) -> tuple[CatalogEntry, ...]:
     raw = _load_json(path, "catalog.json")
+    _exact_keys(raw, {"schemaVersion", "boards"}, "catalog.json")
     _schema_version_one(raw.get("schemaVersion"), "catalog.json.schemaVersion")
     if not isinstance(raw.get("boards"), list):
         raise BoardPackageError("catalog.json is invalid")
