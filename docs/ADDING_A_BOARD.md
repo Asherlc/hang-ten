@@ -1,12 +1,12 @@
 # Adding a hangboard
 
 This guide is the active contract for adding a physical hangboard to Hang Ten.
-It keeps factual hold metadata, artwork, and their source mappings together in
-one canonical package.
+It keeps factual hold metadata, normalized hold frames, semantics, assets, and
+their source mappings together in one canonical package.
 
 ## 1. Establish the physical source of truth
 
-Collect primary manufacturer evidence before naming holds or drawing artwork:
+Collect primary manufacturer evidence before naming holds or defining frames:
 
 1. The current product page and official dimensions.
 2. A straight-on image for silhouette, spacing, and count.
@@ -40,7 +40,6 @@ Hangboards/
     board.json
     evidence.json
     semantics.json
-    artwork.json
     assets/
       primary.png
       original-source-photo.jpg # optional, unchanged, evidence-covered
@@ -53,25 +52,26 @@ package path:
 {"id": "manufacturer.model", "path": "manufacturer-model"}
 ```
 
-Registered packages contain exactly the four JSON sidecars above. `artwork.json`
-is the sole normalized geometry source: do not add `outline.json`,
-`outline.approx.json`, SVG duplicates, a `review/` directory, or a board
-README. `assets/primary.png` is the one generated raster retained for the
-board. An optional original source image must be a flat `.jpg`, `.jpeg`,
+Registered packages contain exactly `board.json`, `evidence.json`, and `semantics.json`.
+`assets/primary.png` is the only board visual. Each `board.json` hold frame is
+the factual normalized region generic consumers use for taps and active or
+preview highlights; do not add `outline.json`, `outline.approx.json`, SVG
+duplicates, a `review/` directory, or a board README. An optional original
+source image must be a flat `.jpg`, `.jpeg`,
 `.webp`, or `.heic` asset and have an exact package-relative entry in
 `evidence.json.assetEvidence`; it does not establish non-visible hold facts.
 
 An unregistered draft board contains only `assets/primary.png` and no JSON
 sidecars, README, review directory, outline, or parallel geometry. It is
 editable Workbench input, but is not published app content. Keep research gaps
-in the branch or a source-audit document, then author all four sidecars only
-when official manufacturer evidence supports the board facts, hold semantics,
-and artwork.
+in the branch or a source-audit document, then author all three sidecars only
+when official manufacturer evidence supports the board facts, hold frames, and
+semantics.
 
 Every registered package requires nonempty HTTPS evidence sources, an ISO
 `checkedAt` date, and exact evidence mappings for each factual field, hold
-field, semantic target, artwork element, and retained asset. Do not manufacture
-missing evidence or fill a hold field from an image alone.
+field, semantic target, and retained asset. Do not manufacture missing evidence
+or fill a hold field or frame from an image alone.
 
 Validate the registry after every package change:
 
@@ -122,10 +122,10 @@ the app or the canonical registry.
 ## Completion checklist
 
 - Primary manufacturer sources and review date are recorded in `evidence.json`.
-- The package has a flat slug path, exactly four JSON sidecars, one generated
+- The package has a flat slug path, exactly three JSON sidecars, one generated
   `assets/primary.png`, and at most one evidence-covered original source photo.
-- It has one registry entry only after source-backed metadata, semantics, and
-  artwork pass catalog validation.
+- It has one registry entry only after source-backed metadata, hold frames, and
+  semantics pass catalog validation.
 - Draft boards remain primary-only with no app/package review state.
 - The app build stages only registered package directories.
 - Portrait and landscape normal and active hold states are inspected on the

@@ -13,6 +13,8 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPipeline/TESTING.md"
+PIPELINE_README = REPO_ROOT / "Tools/HangboardPipeline/README.md"
+TOOLS_SCRIPT = REPO_ROOT / "scripts/hangboard-tools.sh"
 _UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 
 
@@ -145,3 +147,21 @@ def test_testing_guidance_uses_registered_not_lifecycle_inventory_terms() -> Non
     assert "review inventory" not in testing
     assert "registered and staged" in testing
     assert "unregistered" in testing
+
+
+def test_active_package_guidance_describes_three_sidecars_and_primary_raster() -> None:
+    """A fourth sidecar would recreate a competing board-rendering contract."""
+    active_package_docs = (
+        README,
+        ADDING_A_BOARD,
+        PIPELINE_README,
+        TESTING,
+        TOOLS_SCRIPT,
+    )
+    active_text = "\n".join(path.read_text(encoding="utf-8") for path in active_package_docs)
+
+    assert "board.json`, `evidence.json`, and `semantics.json" in active_text
+    assert "`artwork.json`" not in active_text
+    assert "artworkEvidence" not in active_text
+    assert "artwork parity" not in active_text
+    assert "hangboard-semantic-benchmark" not in active_text

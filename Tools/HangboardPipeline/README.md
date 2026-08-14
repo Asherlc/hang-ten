@@ -271,12 +271,11 @@ hangboard-onboard \
   --status
 ```
 
-Validate canonical semantic targets and artwork coverage without model calls:
+Validate a registered package's factual metadata, normalized hold frames,
+semantics, evidence, and primary PNG:
 
 ```bash
-hangboard-semantic-benchmark \
-  --package Hangboards/metolius-wood-grips-compact-ii \
-  --output .context/hangboard-onboarding/metolius-parity/report.json
+scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
 ```
 
 The shared runner records the caller-asserted product name, preserves the exact

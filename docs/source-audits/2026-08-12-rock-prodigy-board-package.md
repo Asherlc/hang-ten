@@ -28,10 +28,11 @@ pre-migration Swift data. Neither source satisfies the requirement that every
 factual hold field map to direct official manufacturer evidence.
 
 The official sources above do not exhaustively establish the detailed 26-hold
-model. Therefore its four package sidecars and board-specific runtime plan were
+model. Therefore its three package sidecars and board-specific runtime plan were
 removed. No reduced or inferred package was substituted. Registration can be
 reconsidered only when Trango publishes a direct exhaustive hold guide that
-supports every required field, semantic target, and artwork element.
+supports every required field, normalized hold frame, semantic target, and
+asset.
 
 There is no package `review/` directory, approximate outline, README, or
 separate presentation declaration. The retained `assets/primary.png` is an
