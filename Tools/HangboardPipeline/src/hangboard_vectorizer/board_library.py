@@ -13,8 +13,13 @@ import shutil
 import stat
 import tempfile
 
+import cv2
+import numpy as np
+from PIL import Image
+
 from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
 from .board_catalog import BoardHold, BoardPackage, load_board_package, load_catalog
+from .display_paths import flatten_display_path, parse_display_path
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
 
@@ -89,13 +94,22 @@ class _CanonicalPackageRunner:
     def _write_stage(self, candidate: dict[str, object], root: Path) -> None:
         if self.stage == 1:
             registered = root / "stage-1-auto-rgba.png"
-            shutil.copy2(self._asset, registered)
-            candidate["registered"] = {"fileSha256": self._hash(registered)}
+            with Image.open(self._asset) as image:
+                rgba = np.asarray(image.convert("RGBA"), dtype=np.uint8)
+            Image.fromarray(rgba).save(registered)
+            candidate["registered"] = {
+                "alphaSha256": sha256(rgba[..., 3].tobytes()).hexdigest(),
+                "fileSha256": self._hash(registered),
+                "height": int(rgba.shape[0]),
+                "pixelSha256": sha256(rgba.tobytes()).hexdigest(),
+                "width": int(rgba.shape[1]),
+            }
         elif self.stage == 2:
             regions = root / "stage-2-regions.json"
-            self._write_json(regions, self._region_document(stage=2))
             labels = root / "stage-2-labels.png"
-            shutil.copy2(self._asset, labels)
+            region_document, label_pixels = self._stage2_artifacts()
+            self._write_json(regions, region_document)
+            Image.fromarray(label_pixels).save(labels)
             candidate.update(
                 {
                     "regionCount": len(self._holds),
@@ -211,6 +225,7 @@ class _CanonicalPackageRunner:
             "regions": regions,
             "silhouettePaths": [
                 {
+                    "id": "piece-01-silhouette",
                     "pieceIndex": 0,
                     "displayPath": self._shape_path(
                         self._package.artwork.canvas_frame,
@@ -221,6 +236,55 @@ class _CanonicalPackageRunner:
                 }
             ],
         }
+
+    def _stage2_artifacts(self) -> tuple[dict[str, object], np.ndarray]:
+        vector_document = self._region_document(stage=3)
+        canvas = vector_document["canvas"]
+        width, height = int(canvas["width"]), int(canvas["height"])
+        labels = np.zeros((height, width), dtype=np.uint16)
+        regions = []
+        for vector_region in vector_document["regions"]:
+            region = dict(vector_region)
+            parsed = parse_display_path(
+                region["displayPath"],
+                f"package hold {region['key']}",
+                width,
+                height,
+                allow_linear_segments=True,
+            )
+            if parsed is None:
+                raise BoardLibraryError("package hold path is invalid")
+            contour = flatten_display_path(parsed, curve_steps=48)
+            rounded = np.rint(contour).astype(np.int32)
+            cv2.fillPoly(labels, [rounded], int(region["id"]), lineType=cv2.LINE_8)
+            region.pop("displayPath", None)
+            region.pop("pieceIndex", None)
+            region.pop("symmetry", None)
+            region["contour"] = contour.tolist()
+            regions.append(region)
+
+        for region in regions:
+            owned = labels == int(region["id"])
+            ys, xs = np.nonzero(owned)
+            if not len(xs):
+                raise BoardLibraryError("package hold path has no raster area")
+            region["areaPixels"] = int(len(xs))
+            region["bounds"] = [
+                int(xs.min()),
+                int(ys.min()),
+                int(xs.max()) + 1,
+                int(ys.max()) + 1,
+            ]
+        return (
+            {
+                "schemaVersion": 1,
+                "stage": 2,
+                "canvas": dict(canvas),
+                "labelEncoding": "uint16-region-id",
+                "regions": regions,
+            },
+            labels,
+        )
 
     @staticmethod
     def _runtime_metadata(hold: BoardHold) -> dict[str, object]:

@@ -1640,7 +1640,6 @@
   }
 
   function readStoredDraft(view) {
-    discardStaleDrafts(view);
     try {
       return draftStore.read(view);
     } catch (error) {
@@ -1963,22 +1962,30 @@
       if (!load.isCurrent()) return false;
       const imageUrl = checkpointImageUrl(view);
       const documentUrl = view.editorDocumentUrl;
-      if (!documentUrl || !imageUrl) throw new Error("Hold data is unavailable for this board");
+      if (!imageUrl) throw new Error("Board image is unavailable");
       const [imageAsset, response] = await Promise.all([
         loadImageAsset(imageUrl, "Board image"),
-        fetch(documentUrl, { cache: "no-store" }),
+        documentUrl
+          ? fetch(documentUrl, { cache: "no-store" })
+          : Promise.resolve(null),
       ]);
       if (!load.isCurrent()) return false;
-      if (!response.ok) throw new Error("Could not load holds for this board");
-      const baselineDocument = await response.json();
-      validateEditableImageAlignment(view, imageAsset, baselineDocument);
-      const restored = EDITOR_STAGES.has(view.stage) ? readStoredDraft(view) : null;
-      const stagedDocument = stageCheckpointDocument(
-        view,
-        imageAsset,
-        baselineDocument,
-        restored?.document,
-      );
+      if (response && !response.ok) throw new Error("Could not load holds for this board");
+      const baselineDocument = response ? await response.json() : null;
+      const restored = baselineDocument && EDITOR_STAGES.has(view.stage)
+        ? readStoredDraft(view)
+        : null;
+      const stagedDocument = baselineDocument
+        ? stageCheckpointDocument(
+          view,
+          imageAsset,
+          baselineDocument,
+          restored?.document,
+        )
+        : null;
+      if (baselineDocument) {
+        validateEditableImageAlignment(view, imageAsset, baselineDocument);
+      }
       if (!load.isCurrent()) return false;
       const comparisonUrl = checkpointComparisonUrl(view);
       const reviewAsset = comparisonUrl
@@ -1990,52 +1997,58 @@
       if (!load.isCurrent()) return false;
 
       return load.commit(() => {
-      if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
-      state.autosaveTimer = null;
-      state.board = view;
-      state.editorMode = stagedDocument.editorMode;
-      state.checkpointDocument = null;
-      state.validationErrors = [];
-      state.saveError = "";
-      state.editingFrozen = false;
-      state.draftStatus = "clean";
-      state.drawing = false;
-      state.mirrorOntoSourceId = null;
-      state.advancedToolsOpen = false;
-      state.regions = [];
-      state.baselineRegions = [];
-      state.selectedId = null;
-      state.selectedCornerIndex = null;
-      state.imageHref = "";
-      state.imageName = "";
-      state.imagePixels = null;
-      el["board-image"].removeAttribute("href");
-      el["annotated-review-image"].removeAttribute("src");
-      el["annotated-review-image"].alt = "";
-      if (imageAsset) applyImageAsset(imageAsset);
-      if (reviewAsset) applyAnnotatedReviewAsset(reviewAsset);
+        discardStaleDrafts(view);
+        if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
+        state.autosaveTimer = null;
+        state.board = view;
+        state.editorMode = stagedDocument?.editorMode || "contour";
+        state.checkpointDocument = null;
+        state.validationErrors = [];
+        state.saveError = "";
+        state.editingFrozen = false;
+        state.draftStatus = "clean";
+        state.drawing = false;
+        state.mirrorOntoSourceId = null;
+        state.advancedToolsOpen = false;
+        state.regions = [];
+        state.baselineRegions = [];
+        state.selectedId = null;
+        state.selectedCornerIndex = null;
+        state.imageHref = "";
+        state.imageName = "";
+        state.imagePixels = null;
+        el["board-image"].removeAttribute("href");
+        el["annotated-review-image"].removeAttribute("src");
+        el["annotated-review-image"].alt = "";
+        if (imageAsset) applyImageAsset(imageAsset);
+        if (reviewAsset) applyAnnotatedReviewAsset(reviewAsset);
 
-      state.checkpointDocument = clone(baselineDocument);
-      setRegions(
-        stagedDocument.document,
-        "board-holds.json",
-        stagedDocument.editorMode,
-        stagedDocument.baseline,
-      );
-      if (EDITOR_STAGES.has(view.stage)) {
-        if (restored?.dirty) {
-          state.savedSnapshot = JSON.stringify(state.baselineRegions);
-          state.dirty = true;
-          state.draftStatus = "dirty";
-          persistCurrentDraft();
-          scheduleDraftSave();
-          setStatus("Restored an unsaved same-browser draft for this revision.");
-        } else if (restored) {
-          state.draftStatus = "saved";
-          state.savedSnapshot = JSON.stringify(state.regions);
-          setStatus("Restored the latest same-browser draft for this revision.");
+        if (stagedDocument) {
+          state.checkpointDocument = clone(baselineDocument);
+          setRegions(
+            stagedDocument.document,
+            "board-holds.json",
+            stagedDocument.editorMode,
+            stagedDocument.baseline,
+          );
+        } else {
+          state.regionsName = "";
+          resetHistory();
         }
-      }
+        if (stagedDocument && EDITOR_STAGES.has(view.stage)) {
+          if (restored?.dirty) {
+            state.savedSnapshot = JSON.stringify(state.baselineRegions);
+            state.dirty = true;
+            state.draftStatus = "dirty";
+            persistCurrentDraft();
+            scheduleDraftSave();
+            setStatus("Restored an unsaved same-browser draft for this revision.");
+          } else if (restored) {
+            state.draftStatus = "saved";
+            state.savedSnapshot = JSON.stringify(state.regions);
+            setStatus("Restored the latest same-browser draft for this revision.");
+          }
+        }
         renderEditorShell();
       });
     } finally {
@@ -2126,6 +2139,15 @@
     return state.boards;
   }
 
+  async function prepareEditableBoard(view) {
+    if (
+      view?.state !== "complete"
+      || view.stage !== 4
+      || !view.editorDocumentUrl
+    ) return view;
+    return runTrackedJob((options) => workbenchClient.revise(view, 3, options));
+  }
+
   async function selectLibraryBoard(boardId) {
     if (openingActionsDisabled(state)) return false;
     const load = loadCoordinator.begin();
@@ -2133,7 +2155,8 @@
     showWorkbench();
     renderSaveState();
     try {
-      const view = await openingBoardController.openRepositoryBoard(boardId);
+      const opened = await openingBoardController.openRepositoryBoard(boardId);
+      const view = await prepareEditableBoard(opened);
       await refreshBoards();
       if (!load.isCurrent()) return false;
       const loaded = await loadCheckpoint(view, null, load);
@@ -2166,7 +2189,9 @@
     showWorkbench();
     renderSaveState();
     try {
-      const view = await openingBoardController.openRuntimeBoard(boardId);
+      const opened = await openingBoardController.openRuntimeBoard(boardId);
+      const view = await prepareEditableBoard(opened);
+      if (view !== opened) await refreshBoards();
       if (!load.isCurrent()) return false;
       const loaded = await loadCheckpoint(view, null, load);
       if (loaded) setStatus(`Reviewing ${view.productName}.`);

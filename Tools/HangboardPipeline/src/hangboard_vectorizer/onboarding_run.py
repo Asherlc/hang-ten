@@ -390,6 +390,99 @@ def replace_pending_checkpoint(
     return _checkpoint_result(output, stage=current_stage, status="awaiting_approval")
 
 
+def fork_approved_stage(
+    source: Path,
+    output: Path,
+    *,
+    stage: int,
+) -> Mapping[str, object]:
+    """Copy an approved checkpoint into a new run awaiting fresh review."""
+    source = Path(source).resolve(strict=True)
+    output = Path(output).resolve(strict=False)
+    if output.exists() or output.is_symlink():
+        raise FileExistsError(f"onboarding run already exists: {output}")
+    if not output.parent.is_dir():
+        raise FileNotFoundError(f"output parent does not exist: {output.parent}")
+    if stage not in (2, 3):
+        raise OnboardingStateError("editable forks are supported only for Stage 2 and Stage 3")
+
+    with _exclusive_lock(_run_lock_path(source)), _exclusive_lock(
+        _start_lock_path(output)
+    ):
+        source_manifest = _load_and_validate(source)
+        source_pipeline = _mapping(source_manifest["pipeline"], "pipeline")
+        if (
+            source_pipeline.get("status") != "complete"
+            or source_pipeline.get("currentStage") != _FINAL_STAGE
+        ):
+            raise OnboardingStateError("editable fork source is not complete")
+        selected = _stage_record(source_manifest, stage)
+        if selected.get("status") != "approved":
+            raise OnboardingStateError(f"Stage {stage} has not been approved")
+
+        temporary_root = Path(
+            tempfile.mkdtemp(prefix=f".{output.name}.fork-", dir=output.parent)
+        )
+        published = False
+        try:
+            shutil.rmtree(temporary_root)
+            shutil.copytree(
+                source,
+                temporary_root,
+                symlinks=True,
+                ignore=shutil.ignore_patterns(".onboarding.lock"),
+            )
+            if any(entry.is_symlink() for entry in temporary_root.rglob("*")):
+                raise OnboardingStateError("fork source contains a symlink")
+            manifest = _load_and_validate(temporary_root)
+            stages = _list(manifest["stages"], "stages")
+
+            for record_object in stages[stage + 1 :]:
+                record = _mapping(record_object, "stage record")
+                _remove_confined_file(temporary_root, record.get("approvalPath"))
+                _remove_confined_tree(temporary_root, record.get("artifactRoot"))
+
+            reopened = _mapping(stages[stage], "stage record")
+            _remove_confined_file(temporary_root, reopened.get("approvalPath"))
+            _remove_confined_file(temporary_root, reopened.get("acceptancePath"))
+            for key in (
+                "approvalPath",
+                "approvalSha256",
+                "acceptancePath",
+                "acceptanceSha256",
+            ):
+                reopened.pop(key, None)
+            reopened["status"] = "review_pending"
+            manifest["stages"] = stages[: stage + 1]
+
+            retained_failures = []
+            for failure_object in _list(
+                manifest.get("failedAttempts", []), "failedAttempts"
+            ):
+                failure = _mapping(failure_object, "failed attempt")
+                if _integer(failure.get("stage"), "failedAttempt.stage") >= stage:
+                    _remove_confined_tree(
+                        temporary_root, failure.get("artifactRoot")
+                    )
+                else:
+                    retained_failures.append(failure_object)
+            manifest["failedAttempts"] = retained_failures
+            manifest["pipeline"] = {
+                "currentStage": stage,
+                "nextAction": f"approve-stage-{stage}",
+                "nextStage": stage + 1,
+                "status": "awaiting_approval",
+            }
+            _write_manifest(temporary_root, manifest)
+            _load_and_validate(temporary_root)
+            temporary_root.replace(output)
+            published = True
+        finally:
+            if not published:
+                shutil.rmtree(temporary_root, ignore_errors=True)
+    return _checkpoint_result(output, stage=stage, status="awaiting_approval")
+
+
 def read_status(output: Path) -> Mapping[str, object]:
     """Validate an existing run without modifying it and return its state."""
     output = Path(output)
@@ -1105,6 +1198,22 @@ def _absolute_relative(root: Path, value: object) -> Path:
     relative = _string(value, "relative path")
     _validate_relative(relative)
     return root / relative
+
+
+def _remove_confined_file(root: Path, value: object) -> None:
+    if value is None:
+        return
+    path = _absolute_relative(root, value)
+    if not path.is_file() or path.is_symlink():
+        raise OnboardingStateError("fork artifact file is invalid")
+    path.unlink()
+
+
+def _remove_confined_tree(root: Path, value: object) -> None:
+    path = _absolute_relative(root, value)
+    if not path.is_dir() or path.is_symlink():
+        raise OnboardingStateError("fork artifact directory is invalid")
+    shutil.rmtree(path)
 
 
 def _lexists(path: Path) -> bool:

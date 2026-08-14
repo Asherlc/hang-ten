@@ -12,6 +12,7 @@ import tempfile
 from PIL import Image
 import pytest
 
+import hangboard_vectorizer.workbench as workbench_module
 from hangboard_vectorizer import source_cache
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.models import ConversionError
@@ -353,23 +354,20 @@ def test_revision_fork_replays_accepted_stage2_and_stage3_reviewed_edits(
     assert replayed_stage3["replayMarker"] == "accepted-stage-3-edit"
 
 
-def test_revision_replay_failure_does_not_mark_parent_lineage_stale(
+def test_completed_revision_fork_failure_does_not_mark_parent_lineage_stale(
     service: WorkbenchService,
     complete_board: WorkbenchView,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    def fail_replay(
-        _context: RunContext,
-        _document: Mapping[str, object],
-        _artifact_root: Path,
-    ) -> StageCheckpoint:
-        raise RuntimeError("replay interrupted")
+    def fail_fork(_source: Path, _output: Path, *, stage: int) -> object:
+        assert stage == 3
+        raise RuntimeError("fork interrupted")
 
     monkeypatch.setattr(
-        "hangboard_vectorizer.workbench.materialize_stage2_edit", fail_replay
+        "hangboard_vectorizer.workbench.fork_approved_stage", fail_fork
     )
 
-    with pytest.raises(RuntimeError, match="replay interrupted"):
+    with pytest.raises(RuntimeError, match="fork interrupted"):
         service.revise_stage(complete_board.board_id, stage=3)
 
     parent = service.store.read_revision(
@@ -381,7 +379,26 @@ def test_revision_replay_failure_does_not_mark_parent_lineage_stale(
     assert board.active_revision_id == parent.id
     assert child.parent_revision_id == parent.id
     assert child.state == "failed"
-    assert child.run_root.is_dir()
+    assert not child.run_root.exists()
+
+
+def test_completed_revision_fork_rejects_a_symlink_before_copying_child_data(
+    service: WorkbenchService,
+    complete_board: WorkbenchView,
+) -> None:
+    outside = complete_board.run_root.parent / "outside.txt"
+    outside.write_text("workspace-private data", encoding="utf-8")
+    (complete_board.run_root / "untracked-link").symlink_to(outside)
+
+    with pytest.raises(ValueError, match="fork source contains a symlink"):
+        service.revise_stage(complete_board.board_id, stage=3)
+
+    board = service.store.read_board(complete_board.board_id)
+    child = board.revisions[-1]
+    assert board.active_revision_id == complete_board.revision_id
+    assert child.state == "failed"
+    assert not child.run_root.exists()
+    assert outside.read_text(encoding="utf-8") == "workspace-private data"
 
 
 def test_concurrent_initial_creation_exposes_no_pending_revision(
@@ -426,7 +443,7 @@ def test_concurrent_initial_creation_exposes_no_pending_revision(
     ] == [created.revision_id]
 
 
-def test_concurrent_fork_replay_keeps_parent_active_until_child_is_usable(
+def test_concurrent_completed_fork_keeps_parent_active_until_child_is_usable(
     service: WorkbenchService,
     complete_board: WorkbenchView,
     monkeypatch: pytest.MonkeyPatch,
@@ -434,18 +451,16 @@ def test_concurrent_fork_replay_keeps_parent_active_until_child_is_usable(
     entered = Event()
     release = Event()
 
-    def block_replay(
-        context: RunContext,
-        document: Mapping[str, object],
-        artifact_root: Path,
-    ) -> StageCheckpoint:
+    actual_fork = workbench_module.fork_approved_stage
+
+    def block_fork(source: Path, output: Path, *, stage: int) -> object:
         entered.set()
         if not release.wait(timeout=5):
-            raise TimeoutError("replay was not released")
-        return _materialize_reviewed_stub(2, context, document, artifact_root)
+            raise TimeoutError("fork was not released")
+        return actual_fork(source, output, stage=stage)
 
     monkeypatch.setattr(
-        "hangboard_vectorizer.workbench.materialize_stage2_edit", block_replay
+        "hangboard_vectorizer.workbench.fork_approved_stage", block_fork
     )
 
     with ThreadPoolExecutor(max_workers=1) as executor:
@@ -487,24 +502,21 @@ def test_competing_fork_activation_failure_retains_failed_child_and_winner(
 ) -> None:
     first_entered = Event()
     release_first = Event()
-    replay_count = 0
+    fork_count = 0
+    actual_fork = workbench_module.fork_approved_stage
 
-    def block_first_replay(
-        context: RunContext,
-        document: Mapping[str, object],
-        artifact_root: Path,
-    ) -> StageCheckpoint:
-        nonlocal replay_count
-        replay_count += 1
-        if replay_count == 1:
+    def block_first_fork(source: Path, output: Path, *, stage: int) -> object:
+        nonlocal fork_count
+        fork_count += 1
+        if fork_count == 1:
             first_entered.set()
             if not release_first.wait(timeout=5):
-                raise TimeoutError("first replay was not released")
-        return _materialize_reviewed_stub(2, context, document, artifact_root)
+                raise TimeoutError("first fork was not released")
+        return actual_fork(source, output, stage=stage)
 
     monkeypatch.setattr(
-        "hangboard_vectorizer.workbench.materialize_stage2_edit",
-        block_first_replay,
+        "hangboard_vectorizer.workbench.fork_approved_stage",
+        block_first_fork,
     )
 
     with ThreadPoolExecutor(max_workers=1) as executor:

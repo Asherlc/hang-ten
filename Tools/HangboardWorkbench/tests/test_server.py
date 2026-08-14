@@ -28,6 +28,7 @@ sys.path.insert(
 )
 
 import server as server_module  # noqa: E402
+from hangboard_vectorizer.display_paths import parse_display_path  # noqa: E402
 from hangboard_vectorizer.workbench import WorkbenchView as FakeWorkbenchView  # noqa: E402
 from hangboard_vectorizer.workbench_validation import (  # noqa: E402
     ValidationCheck as FakeValidationCheck,
@@ -2258,6 +2259,85 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
             time.sleep(0.01)
         else:
             pytest.fail("canonical package open did not finish within bounded polls")
+
+        completed_view = opened["result"]
+        completed_document_path = next(
+            workspace.rglob("stage-3-vector-regions.json")
+        )
+        completed_document_bytes = completed_document_path.read_bytes()
+
+        def real_mutation(route: str, view: dict, **extra: object) -> dict:
+            checkpoint = (
+                {"expectedCheckpointToken": view["checkpointToken"]}
+                if view.get("checkpointToken") is not None
+                else {}
+            )
+            status, accepted = _post_json(
+                base + route,
+                {
+                    "boardId": view["boardId"],
+                    "expectedRevisionId": view["revisionId"],
+                    "expectedStage": view["stage"],
+                    **checkpoint,
+                    **extra,
+                },
+            )
+            assert status == 202
+            for _ in range(5_000):
+                _status, job_payload = read_json(
+                    base + f"/api/jobs/{accepted['jobId']}"
+                )
+                job = job_payload["job"]
+                if job["state"] in {"succeeded", "failed"}:
+                    assert job["state"] == "succeeded", job
+                    return job["result"]
+                time.sleep(0.01)
+            pytest.fail("canonical package mutation did not finish within bounded polls")
+
+        editable = real_mutation(
+            "/api/revise", completed_view, expectedStage=3
+        )
+        document_status, editable_document = read_json(
+            base + editable["editorDocumentUrl"]
+        )
+        edited_document = json.loads(json.dumps(editable_document))
+        edited_region = edited_document["regions"][0]
+        edited_path = parse_display_path(
+            edited_region["displayPath"],
+            "HTTP edited package hold",
+            edited_document["canvas"]["width"],
+            edited_document["canvas"]["height"],
+            allow_linear_segments=True,
+        )
+        assert edited_path is not None
+        edited_region["displayPath"] = edited_path.scaled(0.999)
+        edited_region["anchor"] = [
+            coordinate * 0.999 for coordinate in edited_region["anchor"]
+        ]
+        edited_region.setdefault("metadata", {})["notes"] = (
+            "HTTP edit-and-save regression"
+        )
+        drafted = real_mutation(
+            "/api/drafts", editable, document=edited_document
+        )
+        stage4 = real_mutation("/api/approve", drafted)
+        completed_edit = real_mutation("/api/approve", stage4)
+        patch_status, patch_payload = _raw_request(
+            base,
+            "PATCH",
+            f"/api/boards/{completed_edit['boardId']}",
+            body=json.dumps(
+                {
+                    "boardId": completed_edit["boardId"],
+                    "expectedRevisionId": completed_edit["revisionId"],
+                }
+            ).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        assert patch_status == 202
+        saved_job = _await_workbench_job(base, patch_payload["jobId"])
+        assert saved_job["state"] == "succeeded", saved_job
+        saved_edit = saved_job["result"]
         final_status, final_boards = read_json(base + "/api/boards")
     finally:
         server.shutdown()
@@ -2277,6 +2357,30 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     assert opened["result"]["state"] == "complete"
     assert opened["result"]["holdCount"] > 0
     assert opened["result"]["normalArtifactUrl"]
+    assert document_status == 200
+    assert editable["stage"] == 3
+    assert editable["parentRevisionId"] == completed_view["revisionId"]
+    assert editable_document == json.loads(completed_document_bytes)
+    assert saved_edit["saved"] is True
+    assert saved_edit["revisionId"] == completed_edit["revisionId"]
+    assert saved_edit["repositoryBoardId"] == "metolius.wood-grips-compact-ii"
+    accepted_edit_path = [
+        path
+        for path in workspace.rglob("stage-3-vector-regions.json")
+        if path != completed_document_path
+        and json.loads(path.read_text())["regions"][0]
+        .get("metadata", {})
+        .get("notes") == "HTTP edit-and-save regression"
+    ]
+    assert len(accepted_edit_path) == 1
+    accepted_edit = json.loads(accepted_edit_path[0].read_text())
+    assert accepted_edit["regions"][0]["displayPath"] == (
+        edited_region["displayPath"]
+    )
+    assert accepted_edit["regions"][0]["displayPath"] != (
+        editable_document["regions"][0]["displayPath"]
+    )
+    assert completed_document_path.read_bytes() == completed_document_bytes
     assert final_status == 200
     assert len([board for board in final_boards["boards"] if board["inProgress"] is True]) == 1
     vector_path = next(workspace.rglob("stage-3-vector-regions.json"))

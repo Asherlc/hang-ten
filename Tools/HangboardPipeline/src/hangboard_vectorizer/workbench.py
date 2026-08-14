@@ -25,6 +25,7 @@ from .onboarding_run import (
     StageRunner,
     approve_stage,
     cached_source_path,
+    fork_approved_stage,
     read_status,
     replace_pending_checkpoint,
     resume_run,
@@ -475,23 +476,37 @@ class WorkbenchService:
         if not isinstance(selected, dict) or selected.get("status") != "approved":
             raise WorkbenchServiceError(f"stage {stage} has not been approved")
 
-        source = cached_source_path(parent.run_root)
         revision = self.store.create_revision(
             board.id, parent_revision_id=parent.id, fork_stage=stage
         )
         try:
-            self.__start(board, revision, str(source))
-            for accepted_stage in range(stage):
-                if accepted_stage in (2, 3):
-                    self.__replay_reviewed_edit(
-                        source_revision=parent,
-                        target_revision=revision,
-                        stage=accepted_stage,
-                    )
-                approve_stage(revision.run_root, accepted_stage)
-                if accepted_stage == 1:
-                    self.__carry_stage2_replay_input(parent, revision)
-                resume_run(revision.run_root, runners=self.__runners)
+            pipeline = manifest.get("pipeline")
+            completed_vector_fork = (
+                stage == 3
+                and isinstance(pipeline, Mapping)
+                and pipeline.get("status") == "complete"
+                and pipeline.get("currentStage") == _FINAL_STAGE
+            )
+            if completed_vector_fork:
+                fork_approved_stage(
+                    parent.run_root,
+                    revision.run_root,
+                    stage=stage,
+                )
+            else:
+                source = cached_source_path(parent.run_root)
+                self.__start(board, revision, str(source))
+                for accepted_stage in range(stage):
+                    if accepted_stage in (2, 3):
+                        self.__replay_reviewed_edit(
+                            source_revision=parent,
+                            target_revision=revision,
+                            stage=accepted_stage,
+                        )
+                    approve_stage(revision.run_root, accepted_stage)
+                    if accepted_stage == 1:
+                        self.__carry_stage2_replay_input(parent, revision)
+                    resume_run(revision.run_root, runners=self.__runners)
             self.store.activate_revision(
                 board.id,
                 revision.id,
@@ -767,12 +782,26 @@ class WorkbenchService:
             else None
         )
         if editable:
+            parent = (
+                self.store.read_revision(board.id, revision.parent_revision_id)
+                if revision.parent_revision_id is not None
+                else None
+            )
+            completed_vector_fork = (
+                revision.fork_stage == 3
+                and parent is not None
+                and parent.current_stage == _FINAL_STAGE
+                and parent.state == "complete"
+            )
             (
                 review_path,
                 editor_image_path,
                 editor_document_path,
             ) = self.__editable_artifacts(
-                revision, stage, review_value
+                revision,
+                stage,
+                review_value,
+                allow_shared_review=completed_vector_fork,
             )
             normal_artifact_path, hold_count = None, None
         else:
@@ -988,6 +1017,8 @@ class WorkbenchService:
         revision: RevisionRecord,
         stage: int,
         review_value: object,
+        *,
+        allow_shared_review: bool = False,
     ) -> tuple[Path, Path, Path]:
         try:
             manifest = self.__manifest(revision.run_root)
@@ -1035,8 +1066,10 @@ class WorkbenchService:
             review_hash = sha256(review_path.read_bytes()).hexdigest()
             if (
                 image_size != (width, height)
-                or editor_path == review_path
-                or editor_hash == review_hash
+                or (
+                    not allow_shared_review
+                    and (editor_path == review_path or editor_hash == review_hash)
+                )
             ):
                 raise ValueError("editable artifacts do not align")
             return review_path, editor_path, document_path

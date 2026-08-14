@@ -106,6 +106,213 @@ test("loads a completed board from its explicit editor document URL", async () =
   assert.doesNotMatch(source, /checkpointDocumentUrl\(/);
 });
 
+test("a new image-only board loads without requesting a hold document", async () => {
+  const state = {
+    board: { boardId: "previous-board" },
+    regions: [{ id: 9, key: "previous" }],
+    baselineRegions: [{ id: 9, key: "previous" }],
+    imageHref: "previous.png",
+    checkpointDocument: { regions: [{ id: 9 }] },
+    autosaveTimer: null,
+  };
+  let fetchCount = 0;
+  let setRegionsCount = 0;
+  const loadCheckpoint = new Function(
+    "loadCoordinator",
+    "state",
+    "renderSaveState",
+    "checkpointImageUrl",
+    "loadImageAsset",
+    "fetch",
+    "validateEditableImageAlignment",
+    "stageCheckpointDocument",
+    "checkpointComparisonUrl",
+    "clearTimeout",
+    "clone",
+    "el",
+    "applyImageAsset",
+    "applyAnnotatedReviewAsset",
+    "EDITOR_STAGES",
+    "readStoredDraft",
+    "discardStaleDrafts",
+    "setRegions",
+    "resetHistory",
+    "renderEditorShell",
+    "render",
+    `return (async ${extractFunction(appSource, "loadCheckpoint")});`,
+  )(
+    { begin() { throw new Error("the supplied load should be used"); } },
+    state,
+    () => {},
+    (view) => view.editorImageUrl,
+    async (href) => ({ href, name: "Board image", image: { naturalWidth: 120, naturalHeight: 60 } }),
+    async () => { fetchCount += 1; throw new Error("hold document must not be requested"); },
+    () => {},
+    () => { throw new Error("image-only boards have no hold document to stage"); },
+    () => null,
+    () => {},
+    structuredClone,
+    {
+      "board-image": { removeAttribute() {} },
+      "annotated-review-image": { removeAttribute() {}, alt: "" },
+    },
+    (asset) => { state.imageHref = asset.href; state.canvas = { width: 120, height: 60 }; },
+    () => {},
+    new Set([2, 3]),
+    () => null,
+    () => {},
+    () => { setRegionsCount += 1; },
+    () => {},
+    () => {},
+    () => {},
+  );
+
+  const loaded = await loadCheckpoint(
+    {
+      boardId: "new-board",
+      revisionId: "revision-1",
+      stage: 0,
+      state: "awaiting_review",
+      editorImageUrl: "/stage-0-review.png",
+      editorDocumentUrl: null,
+    },
+    null,
+    { isCurrent: () => true, commit(callback) { callback(); return true; } },
+  );
+
+  assert.equal(loaded, true);
+  assert.equal(fetchCount, 0);
+  assert.equal(setRegionsCount, 0);
+  assert.equal(state.board.boardId, "new-board");
+  assert.equal(state.imageHref, "/stage-0-review.png");
+  assert.deepEqual(state.regions, []);
+});
+
+test("opening a completed board first creates an editable Stage 3 revision", async () => {
+  const source = extractFunction(appSource, "prepareEditableBoard");
+  const calls = [];
+  const prepareEditableBoard = new Function(
+    "runTrackedJob",
+    "workbenchClient",
+    `return (async ${source});`,
+  )(
+    async (operation) => operation({ onAccepted() {} }),
+    {
+      async revise(view, stage) {
+        calls.push([view.revisionId, stage]);
+        return { ...view, revisionId: "revision-2", parentRevisionId: view.revisionId, stage: 3, state: "awaiting_review" };
+      },
+    },
+  );
+  const complete = {
+    boardId: "published-board",
+    revisionId: "revision-1",
+    stage: 4,
+    state: "complete",
+    editorDocumentUrl: "/holds.json",
+  };
+
+  const editable = await prepareEditableBoard(complete);
+
+  assert.deepEqual(calls, [["revision-1", 3]]);
+  assert.equal(editable.revisionId, "revision-2");
+  assert.equal(editable.parentRevisionId, "revision-1");
+  assert.equal(editable.stage, 3);
+  assert.match(extractFunction(appSource, "selectLibraryBoard"), /prepareEditableBoard/);
+  const guidedSelection = extractFunction(appSource, "selectGuidedBoard");
+  assert.match(guidedSelection, /prepareEditableBoard/);
+  assert.ok(
+    guidedSelection.indexOf("prepareEditableBoard")
+      < guidedSelection.indexOf("refreshBoards")
+      && guidedSelection.indexOf("refreshBoards")
+        < guidedSelection.indexOf("loadCheckpoint"),
+    "the board rail must refresh after the completed revision is forked",
+  );
+});
+
+test("failed checkpoint preparation does not prune the visible board recovery draft", async () => {
+  let pruneCount = 0;
+  const draftHelpers = new Function(
+    "draftStore",
+    "console",
+    `${extractFunction(appSource, "discardStaleDrafts")}
+${extractFunction(appSource, "readStoredDraft")}
+return { discardStaleDrafts, readStoredDraft };`,
+  )(
+    {
+      discardMismatched() { pruneCount += 1; },
+      read() { return { document: { canvas: { width: 100, height: 50 }, regions: [] } }; },
+    },
+    { warn() {} },
+  );
+  const state = {
+    board: { boardId: "visible-board" },
+    regions: [{ id: 9, key: "visible" }],
+    baselineRegions: [{ id: 9, key: "visible" }],
+    imageHref: "visible.png",
+    checkpointDocument: { regions: [{ id: 9 }] },
+  };
+  const before = structuredClone(state);
+  const loadCheckpoint = new Function(
+    "loadCoordinator",
+    "state",
+    "renderSaveState",
+    "checkpointImageUrl",
+    "loadImageAsset",
+    "fetch",
+    "validateEditableImageAlignment",
+    "stageCheckpointDocument",
+    "checkpointComparisonUrl",
+    "clearTimeout",
+    "clone",
+    "el",
+    "applyImageAsset",
+    "applyAnnotatedReviewAsset",
+    "EDITOR_STAGES",
+    "readStoredDraft",
+    "discardStaleDrafts",
+    "setRegions",
+    "renderEditorShell",
+    "render",
+    `return (async ${extractFunction(appSource, "loadCheckpoint")});`,
+  )(
+    { begin() { throw new Error("the supplied load should be used"); } },
+    state,
+    () => {},
+    (view) => view.editorImageUrl,
+    async (href) => {
+      if (href === "/comparison.png") throw new Error("comparison unavailable");
+      return { href, image: { naturalWidth: 100, naturalHeight: 50 } };
+    },
+    async () => ({ ok: true, async json() { return { canvas: { width: 100, height: 50 }, regions: [] }; } }),
+    () => {},
+    (_view, _image, baseline, restored) => ({ baseline, document: restored || baseline, editorMode: "contour" }),
+    () => "/comparison.png",
+    () => {},
+    structuredClone,
+    {},
+    () => {},
+    () => {},
+    new Set([2, 3]),
+    draftHelpers.readStoredDraft,
+    draftHelpers.discardStaleDrafts,
+    () => {},
+    () => {},
+    () => {},
+  );
+
+  await assert.rejects(
+    loadCheckpoint(
+      { boardId: "next-board", revisionId: "revision-2", stage: 2, editorImageUrl: "/board.png", editorDocumentUrl: "/holds.json" },
+      null,
+      { isCurrent: () => true, commit(callback) { callback(); return true; } },
+    ),
+    /comparison unavailable/,
+  );
+  assert.equal(pruneCount, 0);
+  assert.deepEqual(state, before);
+});
+
 test("checkpoint loading stages vector documents and rejects malformed data before commit", async () => {
   const helpers = new Function(
     "normalizePipelineDocument",
@@ -176,6 +383,7 @@ return { editorModeForDocument, stageCheckpointDocument };`,
     "applyAnnotatedReviewAsset",
     "EDITOR_STAGES",
     "readStoredDraft",
+    "discardStaleDrafts",
     "setRegions",
     "renderEditorShell",
     "render",
@@ -210,6 +418,7 @@ return { editorModeForDocument, stageCheckpointDocument };`,
     () => {},
     new Set([2, 3]),
     () => null,
+    () => {},
     () => { throw new Error("setRegions must not run for malformed data"); },
     () => {},
     () => {},

@@ -19,6 +19,7 @@ from hangboard_vectorizer.board_library import (
     LibraryBoard,
     RepositoryBoardLibrary,
 )
+from hangboard_vectorizer.display_paths import parse_display_path
 from hangboard_vectorizer.generic_stage0 import StageCheckpoint
 from hangboard_vectorizer.generic_stage2 import GenericStage2Runner
 from hangboard_vectorizer.onboard_cli import main
@@ -625,6 +626,85 @@ def test_open_library_board_copies_current_token_and_is_idempotent(
     assert service.mutation_reservation_key(first.board_id) == (
         f"repository-board:{entry.board_id}"
     )
+
+
+def test_published_board_edit_forks_exact_vector_baseline_and_saves_child_revision(
+    tmp_path: Path,
+) -> None:
+    """Editing a package must save changed geometry in a child, never the baseline."""
+    library, entry = _repository_library(tmp_path)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+    published = service.open_library_board(entry.board_id)
+    assert published.state == "complete"
+    assert published.editor_document_path is not None
+    published_document_bytes = published.editor_document_path.read_bytes()
+    published_document = json.loads(published_document_bytes)
+
+    editable = service.revise_stage(
+        published.board_id,
+        stage=3,
+        expected_revision_id=published.revision_id,
+    )
+
+    assert editable.state == "awaiting_review"
+    assert editable.stage == 3
+    assert editable.parent_revision_id == published.revision_id
+    assert editable.repository_board_id == entry.board_id
+    assert editable.repository_revision_token == entry.revision_token
+    assert editable.editor_document_path is not None
+    assert json.loads(editable.editor_document_path.read_bytes()) == published_document
+
+    edited_document = deepcopy(published_document)
+    edited_region = edited_document["regions"][0]
+    edited_path = parse_display_path(
+        edited_region["displayPath"],
+        "edited package hold",
+        edited_document["canvas"]["width"],
+        edited_document["canvas"]["height"],
+        allow_linear_segments=True,
+    )
+    assert edited_path is not None
+    edited_region["displayPath"] = edited_path.scaled(0.999)
+    edited_region["anchor"] = [coordinate * 0.999 for coordinate in edited_region["anchor"]]
+    edited_region.setdefault("metadata", {})["notes"] = "package-backed edit regression"
+    service.save_draft(
+        editable.board_id,
+        edited_document,
+        expected_revision_id=editable.revision_id,
+        expected_stage=3,
+        expected_checkpoint_token=editable.checkpoint_token,
+    )
+    stage4 = service.approve_and_advance(
+        editable.board_id,
+        expected_revision_id=editable.revision_id,
+        expected_stage=3,
+        expected_checkpoint_token=editable.checkpoint_token,
+    )
+    complete = service.approve_and_advance(
+        stage4.board_id,
+        expected_revision_id=stage4.revision_id,
+        expected_stage=4,
+        expected_checkpoint_token=stage4.checkpoint_token,
+    )
+    saved = service.save(
+        complete.board_id,
+        expected_revision_id=complete.revision_id,
+    )
+
+    accepted_edit = _stage_document(
+        saved.run_root, 3, "stage-3-vector-regions.json"
+    )
+    assert accepted_edit["regions"][0]["metadata"]["notes"] == (
+        "package-backed edit regression"
+    )
+    assert accepted_edit["regions"][0]["displayPath"] == edited_region["displayPath"]
+    assert accepted_edit["regions"][0]["displayPath"] != (
+        published_document["regions"][0]["displayPath"]
+    )
+    assert saved.saved is True
+    assert saved.revision_id != published.revision_id
+    assert published.editor_document_path.read_bytes() == published_document_bytes
+    assert service.store.read_board(saved.board_id).saved_revision_id == saved.revision_id
 
 
 def test_open_draft_repository_board_starts_editable_runtime_from_primary_image(
