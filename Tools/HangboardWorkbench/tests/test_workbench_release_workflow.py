@@ -432,10 +432,12 @@ def test_pr_build_and_main_release_share_the_composite_build_action():
     assert upload["with"]["compression-level"] == 0
 
 
-def test_composite_build_uses_sha_pinned_setup_uv_before_python_tests():
+def test_composite_build_installs_direct_workbench_dev_dependencies_before_python_tests():
     steps = _build_action()["steps"]
-    uv_index = next(
-        index for index, step in enumerate(steps) if step.get("name") == "Set up uv"
+    dependency_install_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step.get("name") == "Install workbench build dependencies"
     )
     python_suite_index = next(
         index
@@ -443,11 +445,11 @@ def test_composite_build_uses_sha_pinned_setup_uv_before_python_tests():
         if step.get("name") == "Run focused Python suite"
     )
 
-    # The suite includes a packaging regression test that invokes `uv build`.
-    assert steps[uv_index]["uses"] == (
-        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
-    )
-    assert uv_index < python_suite_index
+    assert all(step.get("name") != "Set up uv" for step in steps)
+    dependencies = steps[dependency_install_index]["run"]
+    assert "python -m venv" in dependencies
+    assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
+    assert dependency_install_index < python_suite_index
 
 
 def test_pr_build_uses_one_auditable_component_gate():
@@ -1064,7 +1066,11 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
     setup_python = _step(release, "Set up Python")
     assert setup_python["uses"].startswith("actions/setup-python@")
     dependencies = _step(release, "Install workbench release dependencies")["run"]
-    assert "pyinstaller==6.22.0" in dependencies
+    assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
+    assert "pyinstaller==" not in dependencies
+    assert "pyinstaller==6.22.0" in (EDITOR_ROOT / "pyproject.toml").read_text(
+        encoding="utf-8"
+    )
 
     signing_script = _step(release, "Build, sign, and archive workbench app")["run"]
     for required_fragment in (

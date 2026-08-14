@@ -4,6 +4,7 @@ import json
 import shutil
 import sys
 import threading
+import time
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,29 @@ from board_package import (  # noqa: E402
 
 
 SLUG = "metolius-wood-grips-compact-ii"
+_THREAD_SYNC_TIMEOUT_SECONDS = 30
+
+
+def _wait_for_thread_event(
+    event: threading.Event,
+    description: str,
+    worker_errors: list[BaseException] | None = None,
+) -> None:
+    """Wait for a coordinated thread hand-off and surface worker failures."""
+    deadline = time.monotonic() + _THREAD_SYNC_TIMEOUT_SECONDS
+    remaining = deadline - time.monotonic()
+    if event.wait(timeout=max(remaining, 0)):
+        return
+
+    errors = ""
+    if worker_errors:
+        errors = f" Worker errors: {worker_errors!r}"
+    pytest.fail(f"Timed out waiting for {description}.{errors}")
+
+
+def _join_thread(thread: threading.Thread, description: str) -> None:
+    thread.join(timeout=_THREAD_SYNC_TIMEOUT_SECONDS)
+    assert not thread.is_alive(), f"Timed out waiting for {description} to finish"
 
 
 def _copy_library(tmp_path: Path) -> Path:
@@ -105,17 +129,24 @@ def test_public_readers_wait_for_package_replacement_to_finish(
     release_replacement = threading.Event()
     reader_finished = threading.Event()
     reader_errors: list[BaseException] = []
+    writer_errors: list[BaseException] = []
     real_replace = board_package.os.replace
 
     def pause_after_package_move(source: str | Path, destination: str | Path) -> None:
         real_replace(source, destination)
         if Path(destination) == library / f".{SLUG}.workbench-backup":
             package_moved.set()
-            assert release_replacement.wait(timeout=2)
+            _wait_for_thread_event(release_replacement, "replacement release")
 
     monkeypatch.setattr(board_package.os, "replace", pause_after_package_move)
 
-    writer = threading.Thread(target=lambda: replace_package(library, SLUG, candidate))
+    def replace() -> None:
+        try:
+            replace_package(library, SLUG, candidate)
+        except BaseException as error:  # pragma: no cover - surfaced below
+            writer_errors.append(error)
+
+    writer = threading.Thread(target=replace, name="package-replacement")
 
     def discover() -> None:
         try:
@@ -132,13 +163,14 @@ def test_public_readers_wait_for_package_replacement_to_finish(
 
     reader_thread = threading.Thread(target=discover)
     writer.start()
-    assert package_moved.wait(timeout=2)
+    _wait_for_thread_event(package_moved, "package replacement to begin", writer_errors)
     reader_thread.start()
     assert not reader_finished.wait(timeout=0.1)
     release_replacement.set()
-    writer.join(timeout=5)
-    reader_thread.join(timeout=5)
+    _join_thread(writer, "package replacement")
+    _join_thread(reader_thread, "package reader")
 
+    assert not writer_errors
     assert not reader_errors
     assert reader_finished.is_set()
 
@@ -450,7 +482,7 @@ def test_concurrent_new_packages_preserve_both_catalog_entries(
     def pause_first_transaction(*args: object) -> None:
         if not first_ready.is_set():
             first_ready.set()
-            assert release_first.wait(timeout=2)
+            _wait_for_thread_event(release_first, "first package release")
         real_transaction(*args)
 
     monkeypatch.setattr(board_package, "_replace_transaction", pause_first_transaction)
@@ -472,12 +504,12 @@ def test_concurrent_new_packages_preserve_both_catalog_entries(
     first_thread = threading.Thread(target=save, args=("first-board", first), name="first-save")
     second_thread = threading.Thread(target=save, args=("second-board", second), name="second-save")
     first_thread.start()
-    assert first_ready.wait(timeout=2)
+    _wait_for_thread_event(first_ready, "first package replacement to begin", errors)
     second_thread.start()
     assert not second_catalog_read.wait(timeout=0.1)
     release_first.set()
-    first_thread.join(timeout=5)
-    second_thread.join(timeout=5)
+    _join_thread(first_thread, "first package replacement")
+    _join_thread(second_thread, "second package replacement")
 
     assert not errors
     assert {entry.board_id for entry in discover_packages(library)} == {
