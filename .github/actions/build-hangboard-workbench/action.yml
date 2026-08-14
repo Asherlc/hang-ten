@@ -107,20 +107,57 @@ runs:
         smoke_log="$RUNNER_TEMP/hangboard-workbench-unsigned-app-smoke.log"
         app_pid=""
         app_child_pid=""
+        curl_timeout_args=(--connect-timeout 5 --max-time 15)
+        process_is_active() {
+          local pid="$1"
+          local state
+          state="$(ps -o stat= -p "$pid" 2>/dev/null || true)"
+          [[ -n "$state" && "$state" != *Z* ]]
+        }
+        stop_owned_process() {
+          local pid="$1"
+          local name="$2"
+          local deadline
+          if ! process_is_active "$pid"; then
+            return 0
+          fi
+          kill -TERM "$pid" || true
+          deadline=$((SECONDS + 10))
+          while process_is_active "$pid"; do
+            if (( SECONDS >= deadline )); then
+              echo "$name did not exit after SIGTERM; sending SIGKILL." >&2
+              kill -KILL "$pid" || true
+              deadline=$((SECONDS + 5))
+              while process_is_active "$pid"; do
+                if (( SECONDS >= deadline )); then
+                  echo "$name did not exit after SIGKILL." >&2
+                  return 1
+                fi
+                sleep 1
+              done
+              return 1
+            fi
+            sleep 1
+          done
+        }
         cleanup() {
           status=$?
           trap - EXIT
+          cleanup_failed=false
           if [[ -n "$app_pid" ]]; then
-            if kill -0 "$app_pid" 2>/dev/null; then
-              kill -TERM "$app_pid" || true
+            if ! stop_owned_process "$app_pid" "unsigned app"; then
+              cleanup_failed=true
             fi
-            wait "$app_pid" || true
           fi
-          if [[ -n "$app_child_pid" ]] && kill -0 "$app_child_pid" 2>/dev/null; then
-            kill -TERM "$app_child_pid" || true
+          if [[ -n "$app_child_pid" ]] \
+            && ! stop_owned_process "$app_child_pid" "unsigned app backend"; then
+            cleanup_failed=true
           fi
           if [[ "$status" -ne 0 && -f "$smoke_log" ]]; then
             cat "$smoke_log" >&2
+          fi
+          if [[ "$cleanup_failed" == "true" && "$status" -eq 0 ]]; then
+            status=1
           fi
           exit "$status"
         }
@@ -138,7 +175,7 @@ runs:
             echo "Unsigned app exited before becoming ready." >&2
             exit 1
           fi
-          if curl --fail --silent --show-error \
+          if curl --fail --silent --show-error "${curl_timeout_args[@]}" \
             "http://127.0.0.1:${port}/api/health" >/dev/null; then
             ready=true
             break
@@ -150,11 +187,11 @@ runs:
           exit 1
         fi
 
-        curl --fail --silent --show-error "http://127.0.0.1:${port}/api/health" \
+        curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/health" \
           | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload == {"ok": True}'
-        curl --fail --silent --show-error "http://127.0.0.1:${port}/" >/dev/null
+        curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/" >/dev/null
         while IFS= read -r asset_path; do
-          curl --fail --silent --show-error \
+          curl --fail --silent --show-error "${curl_timeout_args[@]}" \
             "http://127.0.0.1:${port}${asset_path}" >/dev/null
         done < <(
           python - <<'PY'
@@ -167,16 +204,15 @@ runs:
             print(f"/{asset}")
         PY
         )
-        curl --fail --silent --show-error "http://127.0.0.1:${port}/api/library" \
-          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True'
+        curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/boards" \
+          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True; assert isinstance(payload["boards"], list); assert isinstance(payload["diagnostics"], list); assert all(isinstance(board.get("boardId"), str) and isinstance(board.get("status"), str) for board in payload["boards"])'
 
         app_child_pid="$(pgrep -P "$app_pid" || true)"
         if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
           echo "Expected exactly one backend owned by the unsigned app." >&2
           exit 1
         fi
-        kill -TERM "$app_pid"
-        if ! wait "$app_pid"; then
+        if ! stop_owned_process "$app_pid" "unsigned app"; then
           echo "Unsigned app did not exit cleanly after SIGTERM." >&2
           exit 1
         fi

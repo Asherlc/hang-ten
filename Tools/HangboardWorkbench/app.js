@@ -86,9 +86,8 @@
   const draftStore = createDraftStore(localStorage);
   const activeJobStore = createActiveJobStore(localStorage);
   const openingBoardController = createOpeningBoardController({
-    listLibraryBoards: () => workbenchClient.listLibraryBoards(),
     listBoards: () => workbenchClient.listBoards(),
-    openLibraryBoard: (boardId) => runTrackedJob((options) => workbenchClient.openLibraryBoard(boardId, options)),
+    openRepositoryBoard: (boardId) => runTrackedJob((options) => workbenchClient.openRepositoryBoard(boardId, options)),
     getBoard: (boardId) => workbenchClient.getBoard(boardId),
   });
   const autosaveCoordinator = createAutosaveCoordinator({
@@ -148,7 +147,7 @@
     boards: [],
     libraryBoards: [],
     libraryDiagnostics: [],
-    openingErrors: { library: "", runtime: "" },
+    openingError: "",
     board: null,
     editorMode: "contour",
     checkpointDocument: null,
@@ -2071,10 +2070,10 @@
   function renderOpeningSections() {
     const sections = openingSections(state.libraryBoards, state.boards);
     const screen = openingScreenState({
-      library: sections.library,
+      repositoryBoards: sections.library,
       diagnostics: state.libraryDiagnostics,
-      runtime: sections.inProgress,
-      errors: state.openingErrors,
+      inProgressBoards: sections.inProgress,
+      error: state.openingError,
     });
     renderOpeningFormVisibility(el["create-board-form"], screen);
     renderRepositoryDiagnostics(el["repository-diagnostics"], screen.repositoryDiagnostics);
@@ -2106,15 +2105,12 @@
 
   async function refreshBoards() {
     const opening = await openingBoardController.refresh();
-    state.libraryBoards = opening.library;
+    state.libraryBoards = opening.repositoryBoards;
     state.libraryDiagnostics = (opening.diagnostics || []).map(
       (diagnostic) => formatFocusedEditorDiagnostic(diagnostic),
     );
-    state.boards = opening.runtime;
-    state.openingErrors = Object.fromEntries(Object.entries(opening.errors || {}).map(([key, message]) => [
-      key,
-      formatFocusedEditorError(message, "Could not load boards"),
-    ]));
+    state.boards = opening.inProgressBoards;
+    state.openingError = formatFocusedEditorError(opening.error, "Could not load boards");
     renderRecentRuns();
     renderOpeningSections();
     return state.boards;
@@ -2139,7 +2135,7 @@
         error,
         editingFrozen: state.editingFrozen,
         setLibraryError(message) {
-          state.openingErrors.library = formatFocusedEditorError(message, "Could not open repository board.");
+          state.openingError = formatFocusedEditorError(message, "Could not open repository board.");
         },
         showSetup,
       });
@@ -2403,7 +2399,7 @@
       setupError: el["setup-error"],
       setStatus,
     });
-    if (state.openingErrors.library && state.openingErrors.runtime) {
+    if (state.openingError) {
       state.guided = false;
       showStaticLoadControls(true);
       showWorkbench();

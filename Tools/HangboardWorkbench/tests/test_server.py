@@ -389,6 +389,37 @@ class FakeWorkbenchService:
         return updated
 
 
+class CountingBoardListService(FakeWorkbenchService):
+    """Record board inventory calls made by a single HTTP request."""
+
+    def __init__(self, root: Path):
+        super().__init__(root)
+        self.library_snapshot_calls = 0
+        self.list_boards_calls = 0
+
+    def list_boards(self) -> tuple[FakeWorkbenchView, ...]:
+        self.list_boards_calls += 1
+        return super().list_boards()
+
+    def library_snapshot(self) -> FakeLibrarySnapshot:
+        self.library_snapshot_calls += 1
+        return super().library_snapshot()
+
+
+class VanishingValidationReportService(FakeWorkbenchService):
+    """Remove a board after its report is loaded to exercise safe serialization."""
+
+    def get_validation_report(
+        self, board_id: str, *, expected_revision_id: str
+    ) -> FakeValidationReport | None:
+        report = super().get_validation_report(
+            board_id, expected_revision_id=expected_revision_id
+        )
+        with self._lock:
+            self._boards.pop(board_id)
+        return report
+
+
 class RaceRevealingCreationService(FakeWorkbenchService):
     """Detect concurrent allocation without preventing it in the fake itself."""
 
@@ -832,7 +863,9 @@ def read_json(url: str):
         return response.status, json.load(response)
 
 
-def _post_json(url: str, payload: object):
+def _post_json(
+    url: str, payload: object, *, include_headers: bool = False
+):
     request = Request(
         url,
         data=json.dumps(payload).encode(),
@@ -840,7 +873,10 @@ def _post_json(url: str, payload: object):
         headers={"Content-Type": "application/json"},
     )
     with urlopen(request) as response:
-        return response.status, json.load(response)
+        result = response.status, json.load(response)
+        if include_headers:
+            return *result, dict(response.headers.items())
+        return result
 
 
 def _raw_request(
@@ -850,13 +886,17 @@ def _raw_request(
     *,
     body: bytes | None = None,
     headers: dict[str, str] | None = None,
-) -> tuple[int, dict[str, object]]:
+    include_headers: bool = False,
+) -> tuple[int, dict[str, object]] | tuple[int, dict[str, object], dict[str, str]]:
     target = urlsplit(base)
     connection = HTTPConnection(target.hostname, target.port)
     try:
         connection.request(method, path, body=body, headers=headers or {})
         response = connection.getresponse()
-        return response.status, json.loads(response.read())
+        result = response.status, json.loads(response.read())
+        if include_headers:
+            return *result, dict(response.getheaders())
+        return result
     finally:
         connection.close()
 
@@ -882,14 +922,17 @@ def _await_workbench_job(base: str, job_id: str):
 
 
 def _create_board(base: str):
-    status, created = _post_json(
+    status, created, headers = _post_json(
         base + "/api/boards",
         {
+            "type": "url",
             "productName": "Example Board",
             "source": "https://example.test/board.png",
         },
+        include_headers=True,
     )
     assert status == 202
+    assert headers["Location"] == f"/api/jobs/{created['jobId']}"
     final = _poll_job(base, created["jobId"])
     assert final["state"] == "succeeded"
     return final["result"]
@@ -992,6 +1035,7 @@ def test_mutations_reject_foreign_or_missing_browser_origins_but_allow_local_ui_
     running_workbench_server,
 ):
     body = json.dumps({
+        "type": "url",
         "productName": "Origin Board",
         "source": "https://example.test/board.png",
     }).encode()
@@ -1035,6 +1079,7 @@ def test_create_url_run_returns_job_and_can_be_polled(running_workbench_server):
     status, created = _post_json(
         running_workbench_server + "/api/boards",
         {
+            "type": "url",
             "productName": "Example Board",
             "source": "https://example.test/board.png",
         },
@@ -1061,6 +1106,7 @@ def test_completed_creation_job_reconciles_after_server_restart(tmp_path):
         status, submitted = _post_json(
             base + "/api/boards",
             {
+                "type": "url",
                 "productName": "Restarted Board",
                 "source": "https://example.test/restarted.png",
             },
@@ -1075,13 +1121,13 @@ def test_completed_creation_job_reconciles_after_server_restart(tmp_path):
     assert status == 202
     assert recovered_status == 200
     assert recovered["job"] == completed
-    assert recovered["job"]["result"]["boardId"] == "board-1"
+    assert recovered["job"]["result"]["boardId"] == server_module._unlinked_board_id("board-1")
 
 
 def test_create_upload_accepts_only_bounded_images(running_workbench_server):
-    query = urlencode({"productName": "Uploaded Board"})
+    query = urlencode({"type": "upload", "productName": "Uploaded Board"})
     request = Request(
-        running_workbench_server + f"/api/boards/upload?{query}",
+        running_workbench_server + f"/api/boards?{query}",
         data=b"uploaded-image",
         method="POST",
         headers={"Content-Type": "image/png"},
@@ -1096,7 +1142,7 @@ def test_create_upload_accepts_only_bounded_images(running_workbench_server):
     assert final["result"]["productName"] == "Uploaded Board"
 
     invalid = Request(
-        running_workbench_server + f"/api/boards/upload?{query}",
+        running_workbench_server + f"/api/boards?{query}",
         data=b"not-an-image",
         method="POST",
         headers={"Content-Type": "application/octet-stream"},
@@ -1116,8 +1162,8 @@ def test_import_run_returns_a_pollable_job(tmp_path):
     imported_run.mkdir()
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         status, submitted = _post_json(
-            base + "/api/boards/import",
-            {"runRoot": str(imported_run)},
+            base + "/api/boards",
+            {"type": "import", "runRoot": str(imported_run)},
         )
         final = _poll_job(base, submitted["jobId"])
 
@@ -1126,7 +1172,7 @@ def test_import_run_returns_a_pollable_job(tmp_path):
     assert final["result"]["productName"] == "CLI Imported Board"
 
 
-def test_get_library_lists_validated_repository_boards(tmp_path):
+def test_get_boards_lists_validated_repository_boards(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     service.library = FakeLibrarySnapshot(
         boards=service.library.boards + (
@@ -1140,7 +1186,7 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
         diagnostics=service.library.diagnostics,
     )
     with running_server(make_run(tmp_path / "legacy"), service) as base:
-        status, payload = _raw_request(base, "GET", "/api/library")
+        status, payload = _raw_request(base, "GET", "/api/boards")
 
     assert status == 200
     assert payload == {
@@ -1148,15 +1194,19 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
         "boards": [
             {
                 "boardId": "example-board",
+                "href": "/api/boards/example-board",
                 "displayName": "Example Board",
                 "revisionToken": REPOSITORY_REVISION_TOKEN,
                 "status": "published",
+                "inProgress": False,
             },
             {
                 "boardId": "beastmaker-1000",
+                "href": "/api/boards/beastmaker-1000",
                 "displayName": "beastmaker-1000",
                 "revisionToken": "b" * 64,
                 "status": "draft",
+                "inProgress": False,
             },
         ],
         "diagnostics": [
@@ -1169,7 +1219,7 @@ def test_get_library_lists_validated_repository_boards(tmp_path):
     }
 
 
-def test_library_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
+def test_repository_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     service.library = replace(
         service.library,
@@ -1182,7 +1232,7 @@ def test_library_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
         ),
     )
     with running_server(make_run(tmp_path / "legacy"), service) as base:
-        status, payload = _raw_request(base, "GET", "/api/library")
+        status, payload = _raw_request(base, "GET", "/api/boards")
 
     assert status == 200
     assert payload["diagnostics"] == [
@@ -1195,20 +1245,27 @@ def test_library_diagnostic_messages_do_not_expose_absolute_paths(tmp_path):
     assert str(tmp_path) not in json.dumps(payload)
 
 
-def test_post_library_open_is_a_tracked_board_job(tmp_path):
+def test_post_repository_board_open_is_a_tracked_board_job(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
-        status, accepted = _raw_request(
+        status, accepted, headers = _raw_request(
             base,
             "POST",
-            "/api/library/example-board/open",
-            body=b"{}",
+            "/api/boards",
+            body=json.dumps({"type": "repository", "boardId": "example-board"}).encode(),
             headers={"Content-Type": "application/json"},
+            include_headers=True,
         )
         terminal = _poll_job(base, accepted["jobId"])
+        get_status, selected = read_json(base + terminal["result"]["href"])
 
     assert status == 202
+    assert headers["Location"] == f"/api/jobs/{accepted['jobId']}"
+    assert get_status == 200
     assert terminal["state"] == "succeeded"
+    assert terminal["result"]["boardId"] == "example-board"
+    assert terminal["result"]["href"] == "/api/boards/example-board"
+    assert selected["board"]["boardId"] == terminal["result"]["boardId"]
     assert terminal["result"]["repositoryBoardId"] == "example-board"
     assert terminal["result"]["repositoryRevisionToken"] == REPOSITORY_REVISION_TOKEN
 
@@ -1217,13 +1274,13 @@ def test_parallel_opens_of_one_repository_board_conflict_on_a_stable_key(tmp_pat
     service = BlockingLibraryOpenService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         first_status, first = _post_json(
-            base + "/api/library/example-board/open", {}
+            base + "/api/boards", {"type": "repository", "boardId": "example-board"}
         )
         assert first_status == 202
         assert service.open_started.wait(1)
 
         with pytest.raises(HTTPError) as conflict:
-            _post_json(base + "/api/library/example-board/open", {})
+            _post_json(base + "/api/boards", {"type": "repository", "boardId": "example-board"})
         service.open_gate.set()
         assert _poll_job(base, first["jobId"])["state"] == "succeeded"
 
@@ -1234,7 +1291,7 @@ def test_repository_open_conflicts_after_runtime_board_link_becomes_visible(tmp_
     service = PostLinkBlockingLibraryOpenService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         first_status, first = _post_json(
-            base + "/api/library/example-board/open", {}
+            base + "/api/boards", {"type": "repository", "boardId": "example-board"}
         )
         assert first_status == 202
         assert service.open_linked.wait(1)
@@ -1246,8 +1303,8 @@ def test_repository_open_conflicts_after_runtime_board_link_becomes_visible(tmp_
         second_open_status, _second_open = _raw_request(
             base,
             "POST",
-            "/api/library/example-board/open",
-            body=b"{}",
+            "/api/boards",
+            body=json.dumps({"type": "repository", "boardId": "example-board"}).encode(),
             headers={"Content-Type": "application/json"},
         )
         mutation_status, _mutation = _raw_request(
@@ -1256,7 +1313,7 @@ def test_repository_open_conflicts_after_runtime_board_link_becomes_visible(tmp_
             "/api/retry",
             body=json.dumps(
                 {
-                    "boardId": existing.board_id,
+                    "boardId": "example-board",
                     "expectedRevisionId": existing.revision_id,
                     "expectedStage": existing.stage,
                 }
@@ -1275,14 +1332,14 @@ def test_repository_open_conflicts_after_runtime_board_link_becomes_visible(tmp_
     assert terminal["boardId"] == "example-board"
 
 
-def test_library_unknown_board_returns_not_found(tmp_path):
+def test_repository_unknown_board_returns_not_found(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         status, payload = _raw_request(
             base,
             "POST",
-            "/api/library/missing-board/open",
-            body=b"{}",
+            "/api/boards",
+            body=json.dumps({"type": "repository", "boardId": "missing-board"}).encode(),
             headers={"Content-Type": "application/json"},
         )
 
@@ -1290,17 +1347,17 @@ def test_library_unknown_board_returns_not_found(tmp_path):
     assert payload == {"ok": False, "error": "board does not exist: missing-board"}
 
 
-def test_library_rejects_invalid_catalog_data(tmp_path):
+def test_boards_reject_invalid_catalog_data(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     service.library_error = FakeWorkbenchError("catalog board is malformed")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
-        status, payload = _raw_request(base, "GET", "/api/library")
+        status, payload = _raw_request(base, "GET", "/api/boards")
 
     assert status == 400
     assert payload == {"ok": False, "error": "catalog board is malformed"}
 
 
-def test_library_open_retains_loopback_origin_protection(tmp_path):
+def test_repository_open_retains_loopback_origin_protection(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         for headers in (
@@ -1313,7 +1370,7 @@ def test_library_open_retains_loopback_origin_protection(tmp_path):
             status, payload = _raw_request(
                 base,
                 "POST",
-                "/api/library/example-board/open",
+                "/api/boards",
                 body=b"{}",
                 headers=headers,
             )
@@ -1326,14 +1383,89 @@ def test_list_and_get_workbench_boards_return_safe_views(running_workbench_serve
     created = _create_board(running_workbench_server)
 
     list_status, listed = read_json(running_workbench_server + "/api/boards")
+    listed_board = next(board for board in listed["boards"] if board["inProgress"] is True)
     get_status, selected = read_json(
-        running_workbench_server + f"/api/boards/{created['boardId']}"
+        running_workbench_server + listed_board["href"]
     )
 
     assert list_status == get_status == 200
-    assert listed["boards"] == [created]
-    assert selected["board"] == created
+    assert listed_board == {
+        **created,
+        "href": f"/api/boards/{created['boardId']}",
+        "inProgress": True,
+    }
+    assert selected["board"] == {**created, "href": f"/api/boards/{created['boardId']}", "inProgress": True}
     assert str(Path.home()) not in json.dumps(listed)
+    assert "board-1" not in json.dumps({"created": created, "listed": listed, "selected": selected})
+
+
+def test_boards_listing_builds_one_fresh_identity_mapping_per_request(tmp_path):
+    service = CountingBoardListService(tmp_path / "workbench")
+    service.create_from_url("First", "https://example.test/first.png")
+    service.create_from_url("Second", "https://example.test/second.png")
+    service.library_snapshot_calls = 0
+    service.list_boards_calls = 0
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = read_json(base + "/api/boards")
+
+    assert status == 200
+    assert len([board for board in payload["boards"] if board["inProgress"]]) == 2
+    assert service.library_snapshot_calls == 1
+    assert service.list_boards_calls == 1
+
+
+def test_board_get_reuses_one_identity_mapping_snapshot(tmp_path):
+    service = CountingBoardListService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+    public_board_id = server_module._unlinked_board_id(view.board_id)
+    service.library_snapshot_calls = 0
+    service.list_boards_calls = 0
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = read_json(base + f"/api/boards/{public_board_id}")
+
+    assert status == 200
+    assert payload["board"]["boardId"] == public_board_id
+    assert service.library_snapshot_calls == 1
+    assert service.list_boards_calls == 1
+
+
+def test_public_board_mapper_exposes_a_bound_identity_mapping(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+
+    mappings = server_module.PublicBoardMapper(service).mappings(
+        snapshot=service.library_snapshot(), views=service.list_boards()
+    )
+
+    assert mappings.internal_to_public[view.board_id] == server_module._unlinked_board_id(
+        view.board_id
+    )
+
+
+def test_unlinked_public_identity_does_not_follow_repository_catalog(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    view = service.create_from_url("Unlinked", "https://example.test/unlinked.png")
+    mapper = server_module.PublicBoardMapper(service)
+    initial = mapper.public_id(view)
+
+    service.library = replace(
+        service.library,
+        boards=(*service.library.boards, FakeLibraryBoard(view.board_id, "Later Board", "b" * 64)),
+    )
+
+    assert mapper.public_id(view) == initial == server_module._unlinked_board_id(view.board_id)
+    assert initial != view.board_id
+
+
+def test_public_identity_collision_is_rejected_instead_of_aliased(tmp_path, monkeypatch):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    view = service.create_from_url("Unlinked", "https://example.test/unlinked.png")
+    monkeypatch.setattr(server_module, "_unlinked_board_id", lambda _board_id: "example-board")
+
+    with pytest.raises(EditorError, match="identity collision"):
+        server_module.PublicBoardMapper(service).public_id(view)
 
 
 def test_editable_board_api_exposes_clean_and_annotated_artifacts_separately(
@@ -1390,9 +1522,22 @@ def test_board_scoped_save_returns_saved_revision(running_workbench_server):
     for _ in range(5):
         view = _post_mutation(running_workbench_server, "/api/approve", view)
 
-    saved = _post_mutation(
-        running_workbench_server, f"/api/boards/{view['boardId']}/save", view
+    request = Request(
+        running_workbench_server + f"/api/boards/{view['boardId']}",
+        data=json.dumps({
+            "boardId": view["boardId"],
+            "expectedRevisionId": view["revisionId"],
+        }).encode(),
+        method="PATCH",
+        headers={"Content-Type": "application/json"},
     )
+    with urlopen(request) as response:
+        assert response.status == 202
+        accepted = json.load(response)
+        assert response.headers["Location"] == f"/api/jobs/{accepted['jobId']}"
+    terminal = _poll_job(running_workbench_server, accepted["jobId"])
+    assert terminal["state"] == "succeeded"
+    saved = terminal["result"]
 
     assert view["state"] == "complete"
     assert saved["saved"] is True
@@ -1434,12 +1579,13 @@ def test_validation_routes_return_job_backed_safe_payloads(
         running_workbench_server
         + f"/api/boards/{view['boardId']}/validation?revisionId={view['revisionId']}"
     )
-    run_status, run_submission = _post_json(
-        running_workbench_server + f"/api/boards/{view['boardId']}/validation/run",
+    run_status, run_submission, headers = _post_json(
+        running_workbench_server + f"/api/boards/{view['boardId']}/validation",
         {
             "boardId": view["boardId"],
             "expectedRevisionId": view["revisionId"],
         },
+        include_headers=True,
     )
     report = _poll_job(running_workbench_server, run_submission["jobId"])
 
@@ -1451,6 +1597,7 @@ def test_validation_routes_return_job_backed_safe_payloads(
         "report": None,
     }
     assert run_status == 202
+    assert headers["Location"] == f"/api/jobs/{run_submission['jobId']}"
     assert run_submission["boardId"] == view["boardId"]
     assert report["result"]["overallStatus"] == "passed"
     assert report["result"]["checks"][0]["checkId"] == "package-readiness"
@@ -1465,6 +1612,23 @@ def test_validation_routes_return_job_backed_safe_payloads(
         "revisionId": view["revisionId"],
         "report": report["result"],
     }
+
+
+def test_validation_report_for_vanished_board_returns_not_found(tmp_path):
+    service = VanishingValidationReportService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+    service.validation_report(view.board_id, expected_revision_id=view.revision_id)
+    public_board_id = server_module._unlinked_board_id(view.board_id)
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = _raw_request(
+            base,
+            "GET",
+            f"/api/boards/{public_board_id}/validation?revisionId={view.revision_id}",
+        )
+
+    assert status == 404
+    assert payload == {"ok": False, "error": "board does not exist"}
 
 
 def test_workbench_job_payload_rejects_an_unsupported_result_type() -> None:
@@ -1486,7 +1650,7 @@ def test_workbench_mutations_require_optimistic_fields(
 ):
     for omitted in ("expectedRevisionId", "expectedStage"):
         payload = {
-            "boardId": "board-1",
+            "boardId": server_module._unlinked_board_id("board-1"),
             "expectedRevisionId": "revision-1",
             "expectedStage": 0,
             "expectedCheckpointToken": "checkpoint-0-attempt-1",
@@ -1508,7 +1672,7 @@ def test_draft_and_approval_mutations_require_checkpoint_identity(
     running_workbench_server, route
 ):
     payload = {
-        "boardId": "board-1",
+        "boardId": server_module._unlinked_board_id("board-1"),
         "expectedRevisionId": "revision-1",
         "expectedStage": 2,
     }
@@ -1525,14 +1689,43 @@ def test_draft_and_approval_mutations_require_checkpoint_identity(
 
 
 def test_board_scoped_save_requires_expected_revision(running_workbench_server):
+    request = Request(
+        running_workbench_server + "/api/boards/" + server_module._unlinked_board_id("board-1"),
+        data=json.dumps({"boardId": server_module._unlinked_board_id("board-1"), "expectedStage": 4}).encode(),
+        method="PATCH",
+        headers={"Content-Type": "application/json"},
+    )
     with pytest.raises(HTTPError) as error:
-        _post_json(
-            running_workbench_server + "/api/boards/board-1/save",
-            {"boardId": "board-1", "expectedStage": 4},
-        )
+        urlopen(request)
 
     assert error.value.code == 400
     assert "expectedRevisionId" in json.load(error.value)["error"]
+
+
+def test_board_scoped_save_rejects_a_payload_for_another_board(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    request = Request(
+        running_workbench_server + f"/api/boards/{view['boardId']}",
+        data=json.dumps(
+            {
+                "boardId": server_module._unlinked_board_id("another-board"),
+                "expectedRevisionId": view["revisionId"],
+            }
+        ).encode(),
+        method="PATCH",
+        headers={"Content-Type": "application/json"},
+    )
+
+    with pytest.raises(HTTPError) as error:
+        urlopen(request)
+
+    assert error.value.code == 400
+    assert json.load(error.value) == {
+        "ok": False,
+        "error": "boardId must match the board route",
+    }
 
 
 def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):
@@ -1576,6 +1769,7 @@ def test_independent_board_creation_jobs_run_concurrently(tmp_path):
         status, first = _post_json(
             base + "/api/boards",
             {
+                "type": "url",
                 "productName": "First Board",
                 "source": "https://example.test/first.png",
             },
@@ -1584,8 +1778,8 @@ def test_independent_board_creation_jobs_run_concurrently(tmp_path):
         assert service.creation_started.wait(1)
         upload = Request(
             base
-            + "/api/boards/upload?"
-            + urlencode({"productName": "Second Board"}),
+            + "/api/boards?"
+            + urlencode({"type": "upload", "productName": "Second Board"}),
             data=b"second-image",
             method="POST",
             headers={"Content-Type": "image/png"},
@@ -1594,8 +1788,8 @@ def test_independent_board_creation_jobs_run_concurrently(tmp_path):
             assert response.status == 202
             second = json.load(response)
         third_status, third = _post_json(
-            base + "/api/boards/import",
-            {"runRoot": str(imported_run)},
+            base + "/api/boards",
+            {"type": "import", "runRoot": str(imported_run)},
         )
         assert third_status == 202
         service.creation_release.set()
@@ -1738,8 +1932,8 @@ def test_workbench_request_limits_are_enforced(running_workbench_server):
 
     oversized_upload = Request(
         running_workbench_server
-        + "/api/boards/upload?"
-        + urlencode({"productName": "Too Large"}),
+        + "/api/boards?"
+        + urlencode({"type": "upload", "productName": "Too Large"}),
         data=b"x",
         method="POST",
         headers={
@@ -1792,7 +1986,7 @@ def test_artifact_endpoint_returns_safe_json_for_a_cyclic_symlink(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     with running_server(make_run(tmp_path / "legacy"), service) as base:
         view = _create_board(base)
-        run_root = service.get_board(view["boardId"]).run_root
+        run_root = service.get_board("board-1").run_root
         (run_root / "loop").symlink_to("loop")
         query = urlencode(
             {
@@ -1849,7 +2043,7 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     thread.start()
     try:
         status, payload = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/library"
+            f"http://127.0.0.1:{server.server_port}/api/boards"
         )
     finally:
         server.shutdown()
@@ -1859,11 +2053,13 @@ def test_workspace_root_keeps_the_discovered_repository_library(
     assert catalog is None
     assert server.server_address[0] == "127.0.0.1"
     assert status == 200
-    assert payload["boards"] == [{
+    assert [board for board in payload["boards"] if board["inProgress"] is False] == [{
         "boardId": "metolius.wood-grips-compact-ii",
+        "href": "/api/boards/metolius.wood-grips-compact-ii",
         "displayName": "Wood Grips Compact II",
-        "revisionToken": payload["boards"][0]["revisionToken"],
+        "revisionToken": [board for board in payload["boards"] if board["inProgress"] is False][0]["revisionToken"],
         "status": "published",
+        "inProgress": False,
     }]
     assert payload["diagnostics"] == []
     assert (workspace / "boards").is_dir()
@@ -1976,10 +2172,10 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        library_status, payload = read_json(base + "/api/library")
-        boards_status, boards_payload = read_json(base + "/api/boards")
+        boards_status, payload = read_json(base + "/api/boards")
         open_status, submitted = _post_json(
-            base + "/api/library/metolius.wood-grips-compact-ii/open", {}
+            base + "/api/boards",
+            {"type": "repository", "boardId": "metolius.wood-grips-compact-ii"},
         )
         for _ in range(1_000):
             _status, job_payload = read_json(base + f"/api/jobs/{submitted['jobId']}")
@@ -1996,13 +2192,12 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
         thread.join(timeout=2)
 
     assert catalog is None
-    assert library_status == 200
-    assert [board["boardId"] for board in payload["boards"]] == [
+    assert boards_status == 200
+    assert [board["boardId"] for board in [board for board in payload["boards"] if board["inProgress"] is False]] == [
         "metolius.wood-grips-compact-ii"
     ]
     assert payload["diagnostics"] == []
-    assert boards_status == 200
-    assert boards_payload == {"ok": True, "boards": []}
+    assert [board for board in payload["boards"] if board["inProgress"] is True] == []
     assert open_status == 202
     assert opened["state"] == "succeeded", opened
     assert opened["result"]["repositoryBoardId"] == "metolius.wood-grips-compact-ii"
@@ -2010,7 +2205,7 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     assert opened["result"]["holdCount"] > 0
     assert opened["result"]["normalArtifactUrl"]
     assert final_status == 200
-    assert len(final_boards["boards"]) == 1
+    assert len([board for board in final_boards["boards"] if board["inProgress"] is True]) == 1
     vector_path = next(workspace.rglob("stage-3-vector-regions.json"))
     vector_document = json.loads(vector_path.read_text())
     canonical_artwork = json.loads((package / "artwork.json").read_text())
@@ -2044,7 +2239,7 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
     thread.start()
     try:
         status, payload = _raw_request(
-            f"http://127.0.0.1:{server.server_port}", "GET", "/api/library"
+            f"http://127.0.0.1:{server.server_port}", "GET", "/api/boards"
         )
     finally:
         server.shutdown()
@@ -2053,7 +2248,7 @@ def test_repository_package_validation_errors_are_safe_diagnostics(tmp_path):
 
     assert status == 200
     assert payload["ok"] is True
-    assert payload["boards"] == []
+    assert [board for board in payload["boards"] if board["inProgress"] is False] == []
     assert payload["diagnostics"][0]["path"] == "broken-board"
     assert payload["diagnostics"][0]["code"] == "invalid_run"
     assert str(tmp_path) not in json.dumps(payload)
@@ -2104,7 +2299,8 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
     base = f"http://127.0.0.1:{server.server_port}"
     try:
         _status, accepted = _post_json(
-            base + "/api/library/metolius.wood-grips-compact-ii/open", {}
+            base + "/api/boards",
+            {"type": "repository", "boardId": "metolius.wood-grips-compact-ii"},
         )
         outcome = _await_workbench_job(base, accepted["jobId"])
     finally:
@@ -2142,7 +2338,7 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
     thread.start()
     try:
         status, payload = read_json(
-            f"http://127.0.0.1:{server.server_port}/api/library"
+            f"http://127.0.0.1:{server.server_port}/api/boards"
         )
     finally:
         server.shutdown()
@@ -2151,7 +2347,11 @@ def test_checkout_launch_discovers_nearest_repository_and_default_workspace(
 
     assert catalog is None
     assert status == 200
-    assert payload == {"ok": True, "boards": [], "diagnostics": []}
+    assert payload == {
+        "ok": True,
+        "boards": [],
+        "diagnostics": [],
+    }
     assert (repository / ".context" / "hangboard-workbench" / "boards").is_dir()
 
 

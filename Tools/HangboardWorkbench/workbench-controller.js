@@ -29,64 +29,54 @@
   }
 
   function createOpeningBoardController({
-    listLibraryBoards,
     listBoards,
-    openLibraryBoard,
+    openRepositoryBoard,
     getBoard,
   }) {
     for (const [name, callback] of Object.entries({
-      listLibraryBoards,
       listBoards,
-      openLibraryBoard,
+      openRepositoryBoard,
       getBoard,
     })) {
       if (typeof callback !== "function") throw new TypeError(`${name} must be a function`);
     }
 
-    const collect = (list) => Promise.resolve()
-      .then(list)
+    const collectBoards = () => Promise.resolve()
+      .then(listBoards)
       .then(
-        (boards) => ({ boards: Array.isArray(boards) ? boards : [], error: "" }),
-        (error) => ({ boards: [], error: error?.message || "Could not load boards." }),
-      );
-
-    const collectLibrary = () => Promise.resolve()
-      .then(listLibraryBoards)
-      .then(
-        (library) => ({
-          boards: Array.isArray(library?.boards) ? library.boards : [],
-          diagnostics: Array.isArray(library?.diagnostics) ? library.diagnostics : [],
+        (result) => ({
+          repositoryBoards: Array.isArray(result?.repositoryBoards) ? result.repositoryBoards : [],
+          inProgressBoards: Array.isArray(result?.inProgressBoards) ? result.inProgressBoards : [],
+          diagnostics: Array.isArray(result?.diagnostics) ? result.diagnostics : [],
           error: "",
         }),
         (error) => ({
-          boards: [],
+          repositoryBoards: [],
+          inProgressBoards: [],
           diagnostics: [],
-          error: error?.message || "Could not load repository boards.",
+          error: error?.message || "Could not load boards.",
         }),
       );
 
     async function refresh() {
-      const [library, runtime] = await Promise.all([
-        collectLibrary(),
-        collect(listBoards),
-      ]);
+      const boards = await collectBoards();
       return Object.freeze({
-        library: library.boards,
-        diagnostics: library.diagnostics,
-        runtime: runtime.boards,
-        errors: Object.freeze({ library: library.error, runtime: runtime.error }),
+        repositoryBoards: boards.repositoryBoards,
+        diagnostics: boards.diagnostics,
+        inProgressBoards: boards.inProgressBoards,
+        error: boards.error,
       });
     }
 
     return Object.freeze({
       refresh,
-      openRepositoryBoard: (boardId) => openLibraryBoard(boardId),
+      openRepositoryBoard,
       openRuntimeBoard: (boardId) => getBoard(boardId),
     });
   }
 
   function openingScreenState({
-    library = [], diagnostics = [], runtime = [], errors = {},
+    repositoryBoards = [], diagnostics = [], inProgressBoards = [], error = "",
   } = {}) {
     const section = (boards, error, emptyMessage) => ({
       state: error ? "error" : boards.length ? "boards" : "empty",
@@ -94,14 +84,14 @@
       message: error || (boards.length ? "" : emptyMessage),
     });
     const repositoryDiagnostics = Array.isArray(diagnostics) ? diagnostics : [];
-    const repository = section(library, errors.library || "", "No repository boards yet.");
-    if (!errors.library && !library.length && repositoryDiagnostics.length) {
+    const repository = section(repositoryBoards, error, "No repository boards yet.");
+    if (!error && !repositoryBoards.length && repositoryDiagnostics.length) {
       repository.state = "diagnostics";
       repository.message = "";
     }
     return {
       repository,
-      inProgress: section(runtime, errors.runtime || "", "No boards in progress."),
+      inProgress: section(inProgressBoards, error, "No boards in progress."),
       repositoryDiagnostics,
       createFormVisible: true,
     };

@@ -80,7 +80,6 @@ def test_ci_python_job_provisions_uv_before_running_pipeline_tests() -> None:
     assert test_indices
     assert uv_index < min(test_indices)
 
-
 def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> None:
     """Path-gated matrix jobs must not leave branch protection waiting."""
     workflow = _ci_workflow()
@@ -114,6 +113,18 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     assert report_step["env"]["BUILD_REQUIRED"] == "${{ " + expected_predicate + " }}"
     assert '[[ "$BUILD_RESULT" != "success" ]]' in report_step["run"]
     assert '[[ "$BUILD_RESULT" != "skipped" ]]' in report_step["run"]
+
+
+def test_ci_concurrency_does_not_cancel_a_pull_request_edited_run() -> None:
+    """An edit at the same SHA must not cancel its synchronize build."""
+    workflow = _ci_workflow()
+    concurrency = workflow["concurrency"]
+
+    assert concurrency["group"] == (
+        "ci-${{ github.workflow }}-${{ github.ref }}-"
+        "${{ github.event.action || github.event_name }}"
+    )
+    assert concurrency["cancel-in-progress"] is True
 
 
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:

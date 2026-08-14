@@ -894,11 +894,16 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
         assert required_fragment in script
     assert "http://127.0.0.1:${port}/api/health" in script
     assert "http://127.0.0.1:${port}/" in script
-    assert "http://127.0.0.1:${port}/api/library" in script
+    assert "http://127.0.0.1:${port}/api/boards" in script
     assert 'payload == {"ok": True}' in script
+    assert 'assert isinstance(payload["boards"], list)' in script
+    assert 'assert isinstance(payload["diagnostics"], list)' in script
+    assert 'assert all(isinstance(board.get("boardId"), str)' in script
+    assert 'curl_timeout_args=(--connect-timeout 5 --max-time 15)' in script
     assert 'app_child_pid="$(pgrep -P "$app_pid" || true)"' in script
-    assert 'kill -TERM "$app_pid"' in script
-    assert 'wait "$app_pid"' in script
+    assert 'stop_owned_process "$app_pid" "unsigned app"' in script
+    assert 'kill -TERM "$pid"' in script
+    assert 'kill -KILL "$pid"' in script
     assert 'kill -0 "$app_child_pid"' in script
 
     manifest_program = re.search(
