@@ -30,7 +30,7 @@ The Compact II audit uses these official sources:
 Every board is a single flat directory below `Hangboards/`. A board with only
 `assets/primary.png` is a draft that can be opened in the Workbench. A complete
 package listed in `catalog.json` is published. These are the only two repository
-statuses; do not add lifecycle, review, confidence, approximation, onboarding,
+statuses; do not add lifecycle, review, confidence, approximation, automation,
 or shipping fields or directories.
 
 ```text
@@ -76,7 +76,7 @@ missing evidence or fill a hold field from an image alone.
 Validate the registry after every package change:
 
 ```sh
-scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests/test_board_package.py
 ```
 
 The importer keeps generated catalog images as unregistered, primary-only
@@ -102,23 +102,6 @@ xcodebuild build -project HangTen.xcodeproj -scheme HangTen \
   -destination 'generic/platform=iOS Simulator'
 ```
 
-## 4. Optional onboarding work
-
-The staged onboarding tool produces artifacts under `.context/`. Those
-artifacts can support a later human-authored package, but a completed run is
-not itself a registered package and is never bundled directly.
-
-```sh
-scripts/hangboard-tools.sh onboard \
-  --product-name "Manufacturer Model" \
-  --source /absolute/path/to/front-photo.jpg \
-  --output .context/hangboard-onboarding/manufacturer-model
-```
-
-Review and retain only source-backed facts when preparing the package. Keep
-unfinished runs and generated previews in `.context/`; they are not part of
-the app or the canonical registry.
-
 ## Completion checklist
 
 - Primary manufacturer sources and review date are recorded in `evidence.json`.
@@ -126,7 +109,7 @@ the app or the canonical registry.
   `assets/primary.png`, and at most one evidence-covered original source photo.
 - It has one registry entry only after source-backed metadata, semantics, and
   artwork pass catalog validation.
-- Draft boards remain primary-only with no app/package review state.
+- Draft boards remain primary-only with no app/package lifecycle state.
 - The app build stages only registered package directories.
 - Portrait and landscape normal and active hold states are inspected on the
   dedicated simulator before shipping.

@@ -15,7 +15,6 @@ REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 PACKAGING_BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
 RELEASE_README_PATHS = (
     EDITOR_ROOT / "README.md",
-    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "README.md",
 )
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
@@ -310,6 +309,30 @@ def test_release_readmes_document_the_native_checkout_workflow():
             "quarantine",
         ):
             assert forbidden_fragment not in quick_start, path
+
+
+def test_workbench_readme_documents_only_direct_board_authoring():
+    readme = (EDITOR_ROOT / "README.md").read_text(encoding="utf-8").lower()
+
+    for required_fragment in (
+        "direct board packages",
+        "one closed, contiguous contour",
+        "save validates the complete package",
+    ):
+        assert required_fragment in readme
+
+    for obsolete_fragment in (
+        "pipeline",
+        "stage 2",
+        "stage 3",
+        "--run",
+        "recent runs",
+        "in progress",
+        "approval",
+        "promotion",
+        "checkpoint",
+    ):
+        assert obsolete_fragment not in readme
 
 
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):

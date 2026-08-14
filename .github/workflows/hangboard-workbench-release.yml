@@ -69,7 +69,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
+          cache-dependency-path: Tools/HangboardWorkbench/pyproject.toml
 
       - name: Install workbench release dependencies
         run: |
@@ -77,7 +77,7 @@ jobs:
           python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-release-venv/bin/python"
           python -m venv "${python_bin%/bin/python}"
           "$python_bin" -m pip install --upgrade pip
-          "$python_bin" -m pip install -e 'Tools/HangboardPipeline' 'pyinstaller==6.22.0'
+          "$python_bin" -m pip install -e 'Tools/HangboardWorkbench[dev]'
           swift --version
 
       - name: Install pinned Sentry CLI

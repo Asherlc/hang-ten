@@ -124,21 +124,11 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
-The hangboard guide uses the repository-local staged onboarding tool in
-`Tools/HangboardPipeline`. Run its accepted Compact II parity fixture without
-a model call before onboarding a new product:
+The Hangboard Workbench owns direct package validation and editing. Check the
+canonical board library with its focused test suite:
 
 ```sh
-scripts/hangboard-tools.sh benchmark
-```
-
-The report is written under `.context/hangboard-onboarding/`; Python packages,
-caches, and generated board runs remain local and are not part of the app.
-
-Canonical hangboard package checks:
-
-```sh
-scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests/test_board_package.py
 ```
 
 The registry lists only complete source-backed packages with exactly an `id`
@@ -149,21 +139,6 @@ bundles only registered packages and the registry into the app resource bundle.
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
-
-For a reviewed Stage 2 hold-region run, use the local wrapper to inspect,
-compare, lint, preview, and accept the artifacts:
-
-```sh
-scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
-scripts/hangboard-tools.sh compare --run .context/hangboard-onboarding/example --output .context/compare.html
-scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
-scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
-scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
-```
-
-For accepted decisions, `accept` persists the Stage 2 acceptance artifact and
-the current `lint-report.json`; it does not rewrite the automatic Stage 1 image
-or baseline Stage 2 JSON.
 
 Regenerate the bundled routine document after an audited plan change:
 

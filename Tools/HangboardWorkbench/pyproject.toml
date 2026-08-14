@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hangboard-workbench"
+version = "0.1.0"
+description = "Direct Hang Ten board package editor"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+  "pyinstaller==6.22.0",
+]
+
+[tool.setuptools]
+py-modules = [
+  "board_geometry",
+  "board_package",
+  "server",
+  "workbench_assets",
+  "workbench_binary",
+]

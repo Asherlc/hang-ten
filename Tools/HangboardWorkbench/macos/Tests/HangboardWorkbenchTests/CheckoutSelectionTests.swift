@@ -44,8 +44,8 @@ final class CheckoutSelectionTests: XCTestCase {
         }
     }
 
-    func testValidatedURLRejectsLegacyToolRoots() throws {
-        let root = try makeLegacyCheckout()
+    func testValidatedURLRejectsCheckoutWithoutDirectWorkbenchSources() throws {
+        let root = try makeInvalidCheckout()
 
         XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
     }
@@ -110,17 +110,17 @@ final class CheckoutSelectionTests: XCTestCase {
         return root
     }
 
-    private func makeLegacyCheckout() throws -> URL {
+    private func makeInvalidCheckout() throws -> URL {
         let root = FileManager.default.temporaryDirectory
-            .appending(path: "CheckoutSelectionTests-legacy-\(UUID().uuidString)", directoryHint: .isDirectory)
+            .appending(path: "CheckoutSelectionTests-invalid-\(UUID().uuidString)", directoryHint: .isDirectory)
         temporaryDirectories.append(root)
         try FileManager.default.createDirectory(at: root.appending(path: ".git"), withIntermediateDirectories: true)
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardOnboarding/boards"),
+            at: root.appending(path: "Tools/UnrelatedTools/boards"),
             withIntermediateDirectories: true
         )
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/hold-highlight-editor"),
+            at: root.appending(path: "Tools/UnrelatedEditor"),
             withIntermediateDirectories: true
         )
         return root

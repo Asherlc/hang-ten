@@ -151,6 +151,53 @@ def test_server_imports_with_only_the_workbench_on_pythonpath(tmp_path: Path) ->
     assert completed.stdout.strip() == "server"
 
 
+def test_a_clean_direct_checkout_lists_and_opens_the_metolius_package(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    library = checkout / "Hangboards"
+    editor_root = checkout / "Tools" / "HangboardWorkbench"
+    shutil.copytree(REPOSITORY_ROOT / "Hangboards", library)
+    shutil.copytree(
+        WORKBENCH_ROOT,
+        editor_root,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "tests"),
+    )
+    code = """
+import json
+import sys
+import threading
+from pathlib import Path
+from urllib.request import urlopen
+
+root = Path(sys.argv[1])
+sys.path.insert(0, str(root / 'Tools' / 'HangboardWorkbench'))
+from server import create_server
+
+httpd = create_server(root / 'Hangboards', port=0)
+thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+thread.start()
+base = f'http://{httpd.server_address[0]}:{httpd.server_address[1]}'
+try:
+    listed = json.loads(urlopen(base + '/api/boards').read())
+    assert listed['boards'][0]['boardId'] == 'metolius.wood-grips-compact-ii'
+    opened = json.loads(urlopen(base + listed['boards'][0]['href']).read())
+    assert len(opened['board']['document']['regions']) == 19
+finally:
+    httpd.shutdown()
+    thread.join(timeout=5)
+    httpd.server_close()
+"""
+    completed = subprocess.run(
+        [sys.executable, "-c", code, str(checkout)],
+        cwd=checkout,
+        env=os.environ | {"PYTHONPATH": str(editor_root)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+
+
 def test_checkout_validation_requires_only_the_direct_workbench_layout(tmp_path: Path) -> None:
     checkout = tmp_path / "checkout"
     (checkout / ".git").mkdir(parents=True)
