@@ -353,6 +353,12 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                 self.monitorHealth(of: session)
             } catch is CancellationError {
                 // A replacement checkout or app shutdown owns cleanup.
+            } catch BackendController.Error.runtimeCheckoutMismatch {
+                guard self.startupGeneration == generation else { return }
+                self.showMessage(
+                    title: "Workbench Build Does Not Match Checkout",
+                    detail: "The installed Workbench build and selected checkout are from different commits. Install a Workbench build matching the selected checkout, then try again."
+                )
             } catch {
                 guard self.startupGeneration == generation else { return }
                 self.showMessage(
