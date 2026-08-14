@@ -115,6 +115,18 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     assert '[[ "$BUILD_RESULT" != "skipped" ]]' in report_step["run"]
 
 
+def test_ci_concurrency_does_not_cancel_a_pull_request_edited_run() -> None:
+    """An edit at the same SHA must not cancel its synchronize build."""
+    workflow = _ci_workflow()
+    concurrency = workflow["concurrency"]
+
+    assert concurrency["group"] == (
+        "ci-${{ github.workflow }}-${{ github.ref }}-"
+        "${{ github.event.action || github.event_name }}"
+    )
+    assert concurrency["cancel-in-progress"] is True
+
+
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     """The documented staging command must use the script's Xcode destination contract."""
     testing = TESTING.read_text(encoding="utf-8")
