@@ -168,6 +168,8 @@ button:disabled { opacity: .35; cursor: default; }
 
 .canvas-column { min-width: 0; min-height: 0; display: grid; grid-template-rows: 50px minmax(0, 1fr) 34px; background: #10110f; }
 .canvas-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #171916; }
+.editor-heading { display: grid; gap: 2px; }
+.editor-views { position: relative; min-height: 0; overflow: hidden; }
 .segmented-control { display: flex; padding: 3px; background: #111310; border: 1px solid var(--line); border-radius: 8px; }
 .segmented-control button { height: 25px; padding: 0 9px; border: 0; background: transparent; color: var(--muted); font-size: 11px; }
 .segmented-control button.active { background: #2d312a; color: var(--text); box-shadow: 0 1px 3px #0008; }
