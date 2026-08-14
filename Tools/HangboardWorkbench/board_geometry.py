@@ -106,10 +106,15 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
 
 
 def normalized_frame_for_path(path: ClosedPath, width: int, height: int) -> NormalizedFrame:
-    """Return the exact normalized bounding frame for one validated path."""
+    """Return the normalized frame that can serialize every path control point."""
     if width <= 0 or height <= 0:
         raise GeometryError("canvas dimensions must be positive")
-    points = path.contour[:-1]
+    points = [
+        (values[index], values[index + 1])
+        for command, values in path.commands
+        if command != "Z"
+        for index in range(0, len(values), 2)
+    ]
     minimum_x = min(point[0] for point in points)
     maximum_x = max(point[0] for point in points)
     minimum_y = min(point[1] for point in points)

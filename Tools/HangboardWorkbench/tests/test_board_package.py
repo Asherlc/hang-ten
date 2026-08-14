@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 import sys
+import threading
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,20 @@ def _copy_library(tmp_path: Path) -> Path:
     library = tmp_path / "Hangboards"
     shutil.copytree(REPOSITORY_ROOT / "Hangboards", library)
     return library
+
+
+def _candidate_with_id(tmp_path: Path, library: Path, slug: str, board_id: str) -> Path:
+    candidate = tmp_path / slug
+    shutil.copytree(library / SLUG, candidate)
+    for name in ("board.json", "artwork.json", "evidence.json", "semantics.json"):
+        path = candidate / name
+        document = json.loads(path.read_text(encoding="utf-8"))
+        if name == "board.json":
+            document["id"] = board_id
+        else:
+            document["boardID"] = board_id
+        path.write_text(json.dumps(document), encoding="utf-8")
+    return candidate
 
 
 def test_loads_a_registered_package_with_its_primary_image_and_hold_document() -> None:
@@ -146,3 +161,100 @@ def test_restores_the_prior_package_and_catalog_when_replacement_io_fails(
 
     assert (live / "board.json").read_bytes() == package_before
     assert (library / "catalog.json").read_bytes() == catalog_before
+
+
+def test_concurrent_new_packages_preserve_both_catalog_entries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _copy_library(tmp_path)
+    first = _candidate_with_id(tmp_path, library, "first-board", "example.first-board")
+    second = _candidate_with_id(tmp_path, library, "second-board", "example.second-board")
+    first_ready = threading.Event()
+    release_first = threading.Event()
+    second_catalog_read = threading.Event()
+    real_transaction = board_package._replace_transaction
+    real_load_catalog = board_package._load_catalog
+
+    def pause_first_transaction(*args: object) -> None:
+        if not first_ready.is_set():
+            first_ready.set()
+            assert release_first.wait(timeout=2)
+        real_transaction(*args)
+
+    monkeypatch.setattr(board_package, "_replace_transaction", pause_first_transaction)
+
+    def record_catalog_read(path: Path) -> tuple[board_package.CatalogEntry, ...]:
+        if threading.current_thread().name == "second-save":
+            second_catalog_read.set()
+        return real_load_catalog(path)
+
+    monkeypatch.setattr(board_package, "_load_catalog", record_catalog_read)
+    errors: list[BaseException] = []
+
+    def save(slug: str, candidate: Path) -> None:
+        try:
+            replace_package(library, slug, candidate)
+        except BaseException as error:  # pragma: no cover - surfaced below
+            errors.append(error)
+
+    first_thread = threading.Thread(target=save, args=("first-board", first), name="first-save")
+    second_thread = threading.Thread(target=save, args=("second-board", second), name="second-save")
+    first_thread.start()
+    assert first_ready.wait(timeout=2)
+    second_thread.start()
+    assert not second_catalog_read.wait(timeout=0.1)
+    release_first.set()
+    first_thread.join(timeout=5)
+    second_thread.join(timeout=5)
+
+    assert not errors
+    assert {entry.board_id for entry in discover_packages(library)} == {
+        "metolius.wood-grips-compact-ii",
+        "example.first-board",
+        "example.second-board",
+    }
+
+
+def test_removes_a_new_package_when_catalog_installation_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _copy_library(tmp_path)
+    candidate = _candidate_with_id(tmp_path, library, "new-board", "example.new-board")
+    catalog_before = (library / "catalog.json").read_bytes()
+    real_replace = board_package.os.replace
+
+    def fail_catalog_install(source: str | Path, destination: str | Path) -> None:
+        if Path(source).parent.name.startswith(".workbench-save-") and Path(source).name == "catalog.json":
+            raise OSError("injected catalog install failure")
+        real_replace(source, destination)
+
+    monkeypatch.setattr(board_package.os, "replace", fail_catalog_install)
+
+    with pytest.raises(BoardPackageError, match="could not save"):
+        replace_package(library, "new-board", candidate)
+
+    assert not (library / "new-board").exists()
+    assert (library / "catalog.json").read_bytes() == catalog_before
+
+
+@pytest.mark.parametrize(
+    ("path", "mutate", "message"),
+    [
+        ("board.json", lambda value: value.pop("manufacturer"), "missing keys"),
+        ("board.json", lambda value: value["holds"][0].__setitem__("kind", "rail"), "kind must be one of"),
+        ("semantics.json", lambda value: value["semanticHolds"]["outer-jugs"].__setitem__("holdIDs", []), "must be non-empty"),
+        ("evidence.json", lambda value: value["sources"][0].__setitem__("url", "http://example.com"), "absolute HTTPS URL"),
+    ],
+)
+def test_rejects_malformed_canonical_metadata_and_sidecars(
+    tmp_path: Path, path: str, mutate: object, message: str
+) -> None:
+    library = _copy_library(tmp_path)
+    package = library / SLUG
+    sidecar = package / path
+    document = json.loads(sidecar.read_text(encoding="utf-8"))
+    mutate(document)
+    sidecar.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match=message):
+        load_board_package(package)

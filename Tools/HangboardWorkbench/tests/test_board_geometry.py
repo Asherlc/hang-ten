@@ -9,7 +9,13 @@ import pytest
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
-from board_geometry import GeometryError, normalized_frame_for_path, parse_closed_path  # noqa: E402
+from board_geometry import (  # noqa: E402
+    GeometryError,
+    display_path_for_shape,
+    normalized_frame_for_path,
+    parse_closed_path,
+    shape_for_path,
+)
 
 
 def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
@@ -22,6 +28,17 @@ def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
         "width": 0.4,
         "height": 0.4,
     }
+
+
+def test_round_trips_two_cubic_segments_with_controls_outside_the_visual_bounds() -> None:
+    path = parse_closed_path(
+        "M 20 20 C 0 20 0 80 20 80 C 100 80 100 20 20 20 Z", 100, 100
+    )
+
+    frame, shape = shape_for_path(path, 100, 100)
+
+    assert frame.to_json() == {"x": 0.0, "y": 0.2, "width": 1.0, "height": 0.6}
+    assert display_path_for_shape(frame.to_json(), shape, 100, 100, label="hold").data == path.data
 
 
 @pytest.mark.parametrize(

@@ -4,17 +4,21 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import date
 import fcntl
 import json
+import math
 import os
 from pathlib import Path
 import re
 import shutil
 import tempfile
 from typing import Any, Iterator, Mapping
+from urllib.parse import urlparse
 
 from board_geometry import (
     GeometryError,
+    NormalizedFrame,
     display_path_for_shape,
     parse_closed_path,
     shape_for_path,
@@ -25,6 +29,25 @@ _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _SIDECARS = ("board.json", "artwork.json", "evidence.json", "semantics.json")
 _ROOT_ITEMS = frozenset((*_SIDECARS, "assets"))
+_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_GRIP_TYPES = frozenset({"openHand", "halfCrimp", "fullCrimp", "fourFingerPocket", "threeFingerPocket", "twoFingerPocket", "sloper"})
+_CUE_STYLES = frozenset({"outerJug", "slot", "pinch", "rounded"})
+_HOLD_FEATURES = frozenset({
+    "jug", "roundSloper", "largeSlope", "largeEdge", "mediumEdge", "smallEdge",
+    "pocket", "twoFingerPocket", "threeFingerPocket", "fourFingerPocket",
+    "fourFingerFlatEdge", "fourFingerIncutEdge", "largeOpenHandRail",
+    "deepTwoFingerPocket", "thinCrimp", "shallowThreeFingerSlot", "widePinch",
+    "mediumPinch", "smallPinch",
+})
+_HOLD_FIELDS = frozenset({
+    "id", "name", "shortLabel", "detail", "kind", "frame", "sizeMillimeters",
+    "depthRangeMillimeters", "gripType", "fingerCapacity", "cueStyle", "features",
+})
+_FACT_FIELDS = frozenset({"manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio"})
+_EVIDENCE_METHODS = frozenset({
+    "manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation",
+})
+_SOURCE_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".webp", ".heic"})
 
 
 class BoardPackageError(ValueError):
@@ -90,9 +113,10 @@ def load_board_package(package_root: Path) -> BoardPackage:
     _validate_sidecar_identity(semantics, "semantics.json")
     if {board["id"], artwork["boardID"], evidence["boardID"], semantics["boardID"]} != {board["id"]}:
         raise BoardPackageError("board package sidecar board IDs must match")
-    _validate_assets(root, board)
+    assets = _validate_assets(root, board)
     _validate_semantics(semantics, set(hold["id"] for hold in board["holds"]))
     _validate_artwork(artwork, board)
+    _validate_evidence(evidence, board, semantics, artwork, assets)
     return BoardPackage(root, board, artwork, evidence, semantics)
 
 
@@ -134,36 +158,43 @@ def save_editor_document(library_root: Path, slug: str, document: Mapping[str, A
     """Validate edited hold paths and save their paths and derived frames together."""
     root = _library_root(library_root)
     slug = _slug(slug)
-    live = load_board_package(root / slug)
-    width, height = _png_dimensions(primary_image_path(live))
-    regions = _validate_editor_document(document, live.hold_ids, width, height)
-    candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
-    candidate = candidate_parent / slug
-    try:
-        shutil.copytree(live.root, candidate)
-        artwork_path = candidate / "artwork.json"
-        board_path = candidate / "board.json"
-        artwork = _load_json(artwork_path, "artwork.json")
-        board = _load_json(board_path, "board.json")
-        pieces = {piece["holdID"]: piece for piece in artwork["holdPieces"]}
-        holds = {hold["id"]: hold for hold in board["holds"]}
-        for hold_id, path in regions.items():
-            frame, shape = shape_for_path(path, width, height)
-            pieces[hold_id]["frame"] = frame.to_json()
-            pieces[hold_id]["shape"] = shape
-            holds[hold_id]["frame"] = frame.to_json()
-        _write_json(artwork_path, artwork)
-        _write_json(board_path, board)
-        replace_package(root, slug, candidate)
-    finally:
-        shutil.rmtree(candidate_parent, ignore_errors=True)
-    return load_board_package(root / slug)
+    with _library_lock(root):
+        live = load_board_package(root / slug)
+        width, height = _png_dimensions(primary_image_path(live))
+        regions = _validate_editor_document(document, live.hold_ids, width, height)
+        candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
+        candidate = candidate_parent / slug
+        try:
+            shutil.copytree(live.root, candidate)
+            artwork_path = candidate / "artwork.json"
+            board_path = candidate / "board.json"
+            artwork = _load_json(artwork_path, "artwork.json")
+            board = _load_json(board_path, "board.json")
+            pieces = {piece["holdID"]: piece for piece in artwork["holdPieces"]}
+            holds = {hold["id"]: hold for hold in board["holds"]}
+            for hold_id, path in regions.items():
+                frame, shape = shape_for_path(path, width, height)
+                pieces[hold_id]["frame"] = frame.to_json()
+                pieces[hold_id]["shape"] = shape
+                holds[hold_id]["frame"] = frame.to_json()
+            _write_json(artwork_path, artwork)
+            _write_json(board_path, board)
+            _replace_package_locked(root, slug, candidate)
+            return load_board_package(root / slug)
+        finally:
+            shutil.rmtree(candidate_parent, ignore_errors=True)
 
 
 def replace_package(library_root: Path, slug: str, candidate_root: Path) -> None:
     """Replace one canonical package and catalog entry with rollback on failure."""
     root = _library_root(library_root)
     slug = _slug(slug)
+    with _library_lock(root):
+        _replace_package_locked(root, slug, candidate_root)
+
+
+def _replace_package_locked(root: Path, slug: str, candidate_root: Path) -> None:
+    """Perform every read, validation, and replacement under the library lock."""
     candidate = load_board_package(candidate_root)
     stage = Path(tempfile.mkdtemp(prefix=".workbench-save-", dir=root))
     staged_package = stage / slug
@@ -184,16 +215,24 @@ def replace_package(library_root: Path, slug: str, candidate_root: Path) -> None
             catalog[catalog.index(previous)] = replacement
         _write_json(staged_catalog, _catalog_json(catalog))
         _validate_staged_catalog(root, catalog, slug, staged_package)
-        with _library_lock(root):
-            _replace_transaction(root, slug, staged_package, staged_catalog)
+        _replace_transaction(root, slug, staged_package, staged_catalog)
     finally:
         shutil.rmtree(stage, ignore_errors=True)
 
 
 def _validate_board(board: Mapping[str, Any]) -> None:
+    _exact_keys(
+        board,
+        {"schemaVersion", "id", *_FACT_FIELDS, "holds", "presentation"},
+        "board.json",
+    )
     if board.get("schemaVersion") != 1:
         raise BoardPackageError("board.json.schemaVersion must be 1")
     _identifier(board.get("id"), "board.json.id")
+    for field in _FACT_FIELDS - {"aspectRatio", "productURL"}:
+        _non_empty_string(board.get(field), f"board.json.{field}")
+    _https_url(board.get("productURL"), "board.json.productURL")
+    _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
     holds = board.get("holds")
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
@@ -201,26 +240,65 @@ def _validate_board(board: Mapping[str, Any]) -> None:
     for index, hold in enumerate(holds):
         if not isinstance(hold, dict):
             raise BoardPackageError(f"board.json.holds[{index}] must be an object")
+        _exact_keys(hold, _HOLD_FIELDS, f"board.json.holds[{index}]")
         hold_id = _identifier(hold.get("id"), f"board.json.holds[{index}].id")
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
-        if not isinstance(hold.get("kind"), str) or not hold["kind"]:
-            raise BoardPackageError(f"board.json.holds[{index}].kind must be a non-empty string")
+        _enum(hold.get("kind"), _HOLD_KINDS, f"board.json.holds[{index}].kind")
+        for field in ("name", "shortLabel", "detail"):
+            _non_empty_string(hold.get(field), f"board.json.holds[{index}].{field}")
         try:
-            from board_geometry import NormalizedFrame
-
             NormalizedFrame.from_json(hold.get("frame"), f"board.json.holds[{index}].frame")
         except (GeometryError, TypeError) as error:
             raise BoardPackageError(f"board.json.holds[{index}].frame is invalid") from error
+        _nullable_positive_integer(hold.get("sizeMillimeters"), f"board.json.holds[{index}].sizeMillimeters")
+        _nullable_millimeter_range(hold.get("depthRangeMillimeters"), f"board.json.holds[{index}].depthRangeMillimeters")
+        _enum(hold.get("gripType"), _GRIP_TYPES, f"board.json.holds[{index}].gripType")
+        capacity = hold.get("fingerCapacity")
+        if isinstance(capacity, bool) or not isinstance(capacity, int) or capacity not in range(1, 5):
+            raise BoardPackageError(f"board.json.holds[{index}].fingerCapacity must be in 1...4")
+        _enum(hold.get("cueStyle"), _CUE_STYLES, f"board.json.holds[{index}].cueStyle")
+        features = hold.get("features")
+        if not isinstance(features, list):
+            raise BoardPackageError(f"board.json.holds[{index}].features must be an array")
+        parsed_features = [_enum(feature, _HOLD_FEATURES, f"board.json.holds[{index}].features[{feature_index}]") for feature_index, feature in enumerate(features)]
+        if len(parsed_features) != len(set(parsed_features)):
+            raise BoardPackageError(f"board.json.holds[{index}].features must be unique")
     presentation = board.get("presentation")
     if not isinstance(presentation, dict) or presentation.get("assetPath") != "assets/primary.png" or set(presentation) != {"assetPath"}:
         raise BoardPackageError("board.json.presentation must declare assets/primary.png")
 
 
 def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> None:
+    _exact_keys(artwork, {"schemaVersion", "boardID", "canvasFrame", "palette", "silhouette", "layers", "holdPieces"}, "artwork.json")
     if artwork.get("schemaVersion") != 1 or not isinstance(artwork.get("holdPieces"), list):
         raise BoardPackageError("artwork.json is invalid")
+    try:
+        NormalizedFrame.from_json(artwork["canvasFrame"], "artwork.json.canvasFrame")
+        display_path_for_shape({"x": 0, "y": 0, "width": 1, "height": 1}, artwork["silhouette"], 1000, 1000, label="silhouette")
+    except (GeometryError, KeyError, TypeError) as error:
+        raise BoardPackageError("artwork.json is invalid") from error
+    _non_empty_string(artwork["palette"], "artwork.json.palette")
+    layers = artwork["layers"]
+    if not isinstance(layers, list):
+        raise BoardPackageError("artwork.json.layers must be an array")
+    layer_ids: set[str] = set()
+    for index, layer in enumerate(layers):
+        if not isinstance(layer, Mapping):
+            raise BoardPackageError(f"artwork.json.layers[{index}] must be an object")
+        _exact_keys(layer, {"id", "role", "frame", "shape"}, f"artwork.json.layers[{index}]")
+        layer_id = _identifier(layer.get("id"), f"artwork.json.layers[{index}].id")
+        if layer_id in layer_ids:
+            raise BoardPackageError("duplicate artwork layer ID")
+        layer_ids.add(layer_id)
+        _non_empty_string(layer.get("role"), f"artwork.json.layers[{index}].role")
+        try:
+            NormalizedFrame.from_json(layer["frame"], f"artwork.json.layers[{index}].frame")
+        except (KeyError, GeometryError, TypeError) as error:
+            raise BoardPackageError(f"layer {layer_id} has invalid frame") from error
+        if not isinstance(layer["shape"], Mapping):
+            raise BoardPackageError(f"layer {layer_id} has invalid shape")
     hold_ids = {hold["id"] for hold in board["holds"]}
     pieces: list[Mapping[str, Any]] = []
     seen_piece_ids: set[str] = set()
@@ -247,25 +325,121 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
 
 
 def _validate_semantics(semantics: Mapping[str, Any], hold_ids: set[str]) -> None:
+    _exact_keys(semantics, {"schemaVersion", "boardID", "semanticHolds"}, "semantics.json")
+    if semantics.get("schemaVersion") != 1:
+        raise BoardPackageError("semantics.json.schemaVersion must be 1")
     raw_holds = semantics.get("semanticHolds")
     if not isinstance(raw_holds, dict):
         raise BoardPackageError("semantics.json.semanticHolds must be an object")
     for semantic, value in raw_holds.items():
-        if not isinstance(value, dict) or not isinstance(value.get("holdIDs"), list):
+        _identifier(semantic, "semantics.json semantic ID")
+        if not isinstance(value, dict):
             raise BoardPackageError("semantics.json contains an invalid hold mapping")
+        _exact_keys(value, {"holdIDs"}, f"semantics.json.semanticHolds.{semantic}")
+        if not isinstance(value["holdIDs"], list) or not value["holdIDs"]:
+            raise BoardPackageError(f"semantics.json.semanticHolds.{semantic}.holdIDs must be non-empty")
+        semantic_hold_ids: list[str] = []
         for hold_id in value["holdIDs"]:
+            _identifier(hold_id, f"semantics.json.semanticHolds.{semantic}.holdIDs")
             if hold_id not in hold_ids:
                 raise BoardPackageError(f"semantic {semantic!r} references an unknown hold")
+            semantic_hold_ids.append(hold_id)
+        if len(semantic_hold_ids) != len(set(semantic_hold_ids)):
+            raise BoardPackageError(f"semantics.json.semanticHolds.{semantic}.holdIDs must be unique")
 
 
-def _validate_assets(root: Path, board: Mapping[str, Any]) -> None:
+def _validate_evidence(
+    evidence: Mapping[str, Any],
+    board: Mapping[str, Any],
+    semantics: Mapping[str, Any],
+    artwork: Mapping[str, Any],
+    assets: set[str],
+) -> None:
+    _exact_keys(
+        evidence,
+        {"schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence", "holdEvidence", "semanticEvidence", "artworkEvidence", "assetEvidence"},
+        "evidence.json",
+    )
+    if evidence.get("schemaVersion") != 1:
+        raise BoardPackageError("evidence.json.schemaVersion must be 1")
+    try:
+        date.fromisoformat(_non_empty_string(evidence.get("checkedAt"), "evidence.json.checkedAt"))
+    except ValueError as error:
+        raise BoardPackageError("evidence.json.checkedAt must be an ISO calendar date") from error
+    sources = evidence.get("sources")
+    if not isinstance(sources, list) or not sources:
+        raise BoardPackageError("evidence.json.sources must be non-empty")
+    source_ids: set[str] = set()
+    for index, source in enumerate(sources):
+        if not isinstance(source, Mapping):
+            raise BoardPackageError(f"evidence.json.sources[{index}] must be an object")
+        _exact_keys(source, {"id", "title", "url"}, f"evidence.json.sources[{index}]")
+        source_id = _identifier(source.get("id"), f"evidence.json.sources[{index}].id")
+        if source_id in source_ids:
+            raise BoardPackageError("duplicate evidence source ID")
+        source_ids.add(source_id)
+        _non_empty_string(source.get("title"), f"evidence.json.sources[{index}].title")
+        _https_url(source.get("url"), f"evidence.json.sources[{index}].url")
+
+    expected_hold_evidence = {f"{hold['id']}.{field}" for hold in board["holds"] for field in _HOLD_FIELDS}
+    expected_artwork_evidence = {
+        "silhouette",
+        *(f"layers.{layer['id']}" for layer in artwork["layers"]),
+        *(f"holdPieces.{piece['id']}" for piece in artwork["holdPieces"]),
+    }
+    _validate_evidence_map(evidence.get("fieldEvidence"), _FACT_FIELDS, "fieldEvidence", source_ids)
+    _validate_evidence_map(evidence.get("holdEvidence"), expected_hold_evidence, "holdEvidence", source_ids)
+    _validate_evidence_map(evidence.get("semanticEvidence"), set(semantics["semanticHolds"]), "semanticEvidence", source_ids)
+    _validate_evidence_map(evidence.get("artworkEvidence"), expected_artwork_evidence, "artworkEvidence", source_ids)
+    _validate_evidence_map(evidence.get("assetEvidence"), assets, "assetEvidence", source_ids)
+
+
+def _validate_evidence_map(value: object, expected: set[str] | frozenset[str], label: str, source_ids: set[str]) -> None:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"evidence.json.{label} must be an object")
+    if set(value) != set(expected):
+        raise BoardPackageError(f"evidence.json.{label} keys must exactly match canonical data")
+    for key, mapping in value.items():
+        if isinstance(mapping, list):
+            raw_source_ids = mapping
+            method = None
+        elif isinstance(mapping, Mapping):
+            _exact_keys(mapping, {"sourceIDs", "method"}, f"evidence.json.{label}.{key}")
+            raw_source_ids = mapping.get("sourceIDs")
+            method = _enum(mapping.get("method"), _EVIDENCE_METHODS, f"evidence.json.{label}.{key}.method")
+        else:
+            raise BoardPackageError(f"evidence.json.{label}.{key} is invalid")
+        if not isinstance(raw_source_ids, list) or not raw_source_ids:
+            raise BoardPackageError(f"evidence.json.{label}.{key}.sourceIDs must be non-empty")
+        references = [_identifier(item, f"evidence.json.{label}.{key}.sourceIDs") for item in raw_source_ids]
+        if len(references) != len(set(references)):
+            raise BoardPackageError(f"evidence.json.{label}.{key}.sourceIDs must be unique")
+        if unknown := set(references) - source_ids:
+            raise BoardPackageError(f"evidence.json.{label}.{key} references unknown source ID {sorted(unknown)[0]!r}")
+        del method
+
+
+def _validate_assets(root: Path, board: Mapping[str, Any]) -> set[str]:
     _confined_path(root, board["presentation"]["assetPath"], "presentation asset")
     assets = root / "assets"
     if not assets.is_dir() or assets.is_symlink():
         raise BoardPackageError("package assets must be a directory")
-    if any(not item.is_file() or item.is_symlink() for item in assets.iterdir()):
-        raise BoardPackageError("package assets must be flat regular files")
+    asset_paths: set[str] = set()
+    source_count = 0
+    for item in assets.iterdir():
+        if not item.is_file() or item.is_symlink():
+            raise BoardPackageError("package assets must be flat regular files")
+        if item.name == "primary.png":
+            asset_paths.add("assets/primary.png")
+            continue
+        if item.suffix.lower() not in _SOURCE_IMAGE_EXTENSIONS:
+            raise BoardPackageError("package source asset must be a supported image")
+        source_count += 1
+        if source_count > 1:
+            raise BoardPackageError("package may contain at most one original source image")
+        asset_paths.add(f"assets/{item.name}")
     _png_dimensions(assets / "primary.png")
+    return asset_paths
 
 
 def _validate_sidecar_identity(document: Mapping[str, Any], name: str) -> None:
@@ -335,17 +509,27 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path, staged_cat
     if package_backup.exists() or catalog_backup.exists():
         raise BoardPackageError("a previous board save needs recovery")
     package_moved = False
+    package_installed = False
     catalog_moved = False
     try:
         if live_package.exists():
             os.replace(live_package, package_backup)
             package_moved = True
         os.replace(staged_package, live_package)
+        package_installed = True
         os.replace(catalog, catalog_backup)
         catalog_moved = True
         os.replace(staged_catalog, catalog)
     except OSError as error:
-        _restore_transaction(live_package, catalog, package_backup, catalog_backup, package_moved, catalog_moved)
+        _restore_transaction(
+            live_package,
+            catalog,
+            package_backup,
+            catalog_backup,
+            package_moved,
+            package_installed,
+            catalog_moved,
+        )
         raise BoardPackageError("could not save board package") from error
     else:
         if package_backup.exists():
@@ -354,15 +538,23 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path, staged_cat
             catalog_backup.unlink()
 
 
-def _restore_transaction(live_package: Path, catalog: Path, package_backup: Path, catalog_backup: Path, package_moved: bool, catalog_moved: bool) -> None:
+def _restore_transaction(
+    live_package: Path,
+    catalog: Path,
+    package_backup: Path,
+    catalog_backup: Path,
+    package_moved: bool,
+    package_installed: bool,
+    catalog_moved: bool,
+) -> None:
     try:
         if catalog_moved and catalog_backup.exists():
             if catalog.exists():
                 catalog.unlink()
             os.replace(catalog_backup, catalog)
+        if package_installed and live_package.exists():
+            shutil.rmtree(live_package)
         if package_moved and package_backup.exists():
-            if live_package.exists():
-                shutil.rmtree(live_package)
             os.replace(package_backup, live_package)
     except OSError as error:  # A persistent backup is safer than a partial hidden failure.
         raise BoardPackageError("could not restore the previous board package") from error
@@ -405,6 +597,67 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def _exact_keys(value: Mapping[str, Any], expected: set[str] | frozenset[str], label: str) -> None:
+    unknown = set(value) - set(expected)
+    missing = set(expected) - set(value)
+    if unknown or missing:
+        details: list[str] = []
+        if unknown:
+            details.append(f"unknown keys: {sorted(unknown)}")
+        if missing:
+            details.append(f"missing keys: {sorted(missing)}")
+        raise BoardPackageError(f"{label} has " + "; ".join(details))
+
+
+def _non_empty_string(value: object, label: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise BoardPackageError(f"{label} must be a non-empty string")
+    return value
+
+
+def _positive_number(value: object, label: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+        raise BoardPackageError(f"{label} must be a positive finite number")
+    return float(value)
+
+
+def _positive_integer(value: object, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise BoardPackageError(f"{label} must be a positive integer")
+    return value
+
+
+def _nullable_positive_integer(value: object, label: str) -> int | None:
+    return None if value is None else _positive_integer(value, label)
+
+
+def _nullable_millimeter_range(value: object, label: str) -> None:
+    if value is None:
+        return
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"lowerBound", "upperBound"}, label)
+    lower = _positive_integer(value.get("lowerBound"), f"{label}.lowerBound")
+    upper = _positive_integer(value.get("upperBound"), f"{label}.upperBound")
+    if lower > upper:
+        raise BoardPackageError(f"{label}.lowerBound must not exceed upperBound")
+
+
+def _enum(value: object, allowed: frozenset[str], label: str) -> str:
+    parsed = _non_empty_string(value, label)
+    if parsed not in allowed:
+        raise BoardPackageError(f"{label} must be one of {sorted(allowed)}")
+    return parsed
+
+
+def _https_url(value: object, label: str) -> str:
+    url = _non_empty_string(value, label)
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not parsed.netloc:
+        raise BoardPackageError(f"{label} must be an absolute HTTPS URL")
+    return url
 
 
 def _identifier(value: object, label: str) -> str:
