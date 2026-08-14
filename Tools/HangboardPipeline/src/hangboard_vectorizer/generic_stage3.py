@@ -18,7 +18,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from .display_paths import DisplayPath, flatten_display_path, parse_display_path
+from .display_paths import DisplayPath, flatten_display_subpaths, parse_display_path
 from .generic_stage0 import StageCheckpoint
 from .models import ConversionError
 
@@ -732,9 +732,9 @@ def _mirror_path(path: DisplayPath, width: int, height: int) -> DisplayPath:
 
 
 def _rasterize(path: DisplayPath, width: int, height: int) -> np.ndarray:
-    contour = flatten_display_path(path, curve_steps=48)
     mask = np.zeros((height, width), np.uint8)
-    cv2.fillPoly(mask, [np.rint(contour).astype(np.int32)], 1)
+    for contour in flatten_display_subpaths(path, curve_steps=48):
+        cv2.fillPoly(mask, [np.rint(contour).astype(np.int32)], 1)
     return mask
 
 

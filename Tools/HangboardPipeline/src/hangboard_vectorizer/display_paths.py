@@ -39,6 +39,18 @@ def flatten_display_path(
     path: DisplayPath, *, scale: float = 1.0, curve_steps: int = 32
 ) -> np.ndarray:
     """Flatten one absolute closed display path into a scaled float64 contour."""
+    contours = flatten_display_subpaths(
+        path, scale=scale, curve_steps=curve_steps
+    )
+    if len(contours) != 1:
+        raise ValueError("display path must contain one contour")
+    return contours[0]
+
+
+def flatten_display_subpaths(
+    path: DisplayPath, *, scale: float = 1.0, curve_steps: int = 32
+) -> tuple[np.ndarray, ...]:
+    """Flatten every closed subpath into an independently scaled contour."""
     if not math.isfinite(scale) or scale <= 0:
         raise ValueError("display-path scale must be positive and finite")
     if (
@@ -49,11 +61,10 @@ def flatten_display_path(
         raise ValueError("display-path curve_steps must be an integer of at least 2")
 
     tokens = path.data.split()
-    points: list[np.ndarray] = []
+    contours: list[np.ndarray] = []
+    points: list[np.ndarray] | None = None
     current: np.ndarray | None = None
     start: np.ndarray | None = None
-    move_count = 0
-    close_count = 0
     index = 0
 
     def read_point() -> np.ndarray:
@@ -75,19 +86,18 @@ def flatten_display_path(
         command = tokens[index]
         index += 1
         if command == "M":
-            if move_count:
-                raise ValueError("display path must contain one contour")
+            if points is not None:
+                raise ValueError("display path subpath must close before the next M")
             current = read_point()
             start = current.copy()
-            points.append(current.copy())
-            move_count += 1
+            points = [current.copy()]
         elif command == "L":
-            if current is None:
+            if current is None or points is None:
                 raise ValueError("display path must start with M")
             current = read_point()
             points.append(current.copy())
         elif command == "Q":
-            if current is None:
+            if current is None or points is None:
                 raise ValueError("display path must start with M")
             control = read_point()
             end = read_point()
@@ -98,7 +108,7 @@ def flatten_display_path(
                 points.append(point)
             current = end
         elif command == "C":
-            if current is None:
+            if current is None or points is None:
                 raise ValueError("display path must start with M")
             control_1 = read_point()
             control_2 = read_point()
@@ -115,28 +125,32 @@ def flatten_display_path(
                 points.append(point)
             current = end
         elif command == "Z":
-            if current is None or start is None or close_count:
-                raise ValueError("display path must contain one closed contour")
+            if current is None or start is None or points is None:
+                raise ValueError("display path must contain closed subpaths")
             points.append(start.copy())
-            current = start.copy()
-            close_count += 1
-            if index != len(tokens):
-                raise ValueError("display path must contain one closed contour")
+            contour = np.asarray(points, dtype=np.float64)
+            if (
+                contour.ndim != 2
+                or contour.shape[1] != 2
+                or not np.isfinite(contour).all()
+            ):
+                raise ValueError(
+                    "display path must produce finite two-dimensional points"
+                )
+            if not np.array_equal(contour[0], contour[-1]):
+                raise ValueError("display path contour must be closed")
+            if np.unique(contour[:-1], axis=0).shape[0] < 3:
+                raise ValueError(
+                    "display path contour must contain at least three unique points"
+                )
+            contours.append(contour * scale)
+            current, start, points = None, None, None
         else:
             raise ValueError("display path contains an unsupported command")
 
-    if move_count != 1 or close_count != 1:
-        raise ValueError("display path must contain one closed contour")
-    contour = np.asarray(points, dtype=np.float64)
-    if contour.ndim != 2 or contour.shape[1] != 2 or not np.isfinite(contour).all():
-        raise ValueError("display path must produce finite two-dimensional points")
-    if not np.array_equal(contour[0], contour[-1]):
-        raise ValueError("display path contour must be closed")
-    if np.unique(contour[:-1], axis=0).shape[0] < 3:
-        raise ValueError(
-            "display path contour must contain at least three unique points"
-        )
-    return contour * scale
+    if points is not None or not contours:
+        raise ValueError("display path must contain closed subpaths")
+    return tuple(contours)
 
 
 def parse_display_path(
@@ -197,8 +211,22 @@ def parse_display_path(
             coordinates.append((x, y))
         index += arity
 
-    if commands.count("M") != 1 or commands.count("Z") != 1 or commands[-1] != "Z":
-        _invalid(field, "must contain one closed subpath")
+    subpath_open = False
+    subpath_count = 0
+    for command in commands:
+        if command == "M":
+            if subpath_open:
+                _invalid(field, "must close each subpath before the next M")
+            subpath_open = True
+            subpath_count += 1
+        elif command == "Z":
+            if not subpath_open:
+                _invalid(field, "contains a Z without an open subpath")
+            subpath_open = False
+        elif not subpath_open:
+            _invalid(field, "must start each subpath with M")
+    if subpath_open or not subpath_count or commands.count("Z") != subpath_count:
+        _invalid(field, "must contain closed subpaths")
     if not allow_linear_segments and not any(
         command in ("Q", "C") for command in commands
     ):

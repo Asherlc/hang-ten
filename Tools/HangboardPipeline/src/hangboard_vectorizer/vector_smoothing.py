@@ -10,7 +10,12 @@ from typing import Literal, TypeAlias
 import cv2
 import numpy as np
 
-from .display_paths import DisplayPath, flatten_display_path, parse_display_path
+from .display_paths import (
+    DisplayPath,
+    flatten_display_path,
+    flatten_display_subpaths,
+    parse_display_path,
+)
 
 
 RegionType: TypeAlias = Literal["pocket", "jug", "sloper"]
@@ -341,9 +346,11 @@ def rasterize_display_path(
     # its pixel center while keeping 4x acceptance rasterization memory bounded.
     sampling = 2
     render_scale = scale * sampling
-    contour = flatten_display_path(path, scale=float(render_scale), curve_steps=64)
     high = np.zeros((height * render_scale, width * render_scale), dtype=np.uint8)
-    cv2.fillPoly(high, [np.rint(contour).astype(np.int32)], 1)
+    for contour in flatten_display_subpaths(
+        path, scale=float(render_scale), curve_steps=64
+    ):
+        cv2.fillPoly(high, [np.rint(contour).astype(np.int32)], 1)
     # Cell edges lie on integer coordinates; the offset sample is strictly
     # inside one side of every shared edge, avoiding double-owned seam pixels.
     offset = sampling // 2

@@ -16,7 +16,11 @@ from typing import NoReturn
 import cv2
 import numpy as np
 
-from .display_paths import flatten_display_path, parse_display_path
+from .display_paths import (
+    flatten_display_path,
+    flatten_display_subpaths,
+    parse_display_path,
+)
 from .generic_stage0 import StageCheckpoint
 from . import generic_stage2, generic_stage3
 from .models import ConversionError
@@ -195,13 +199,18 @@ def validate_stage_edit(stage: int, document: object) -> Mapping[str, object]:
             if path is None:
                 _region_error(stage, region_id, "malformed displayPath")
             try:
-                contour = flatten_display_path(path, curve_steps=32)
+                contours = flatten_display_subpaths(path, curve_steps=32)
             except ValueError as error:
                 raise ConversionError(f"Stage 3 region {region_id}: malformed displayPath") from error
-            if _self_intersects(contour):
-                _region_error(stage, region_id, "displayPath has a prohibited self-intersection")
-            if _display_contour_is_degenerate(contour, width, height):
-                _region_error(stage, region_id, "displayPath is degenerate or empty")
+            for contour in contours:
+                if _self_intersects(contour):
+                    _region_error(
+                        stage,
+                        region_id,
+                        "displayPath has a prohibited self-intersection",
+                    )
+                if _display_contour_is_degenerate(contour, width, height):
+                    _region_error(stage, region_id, "displayPath is degenerate or empty")
     if stage == 2 and document.get("labelEncoding") != "uint16-region-id":
         raise ConversionError("Stage 2 edit label encoding is invalid")
     if stage == 3:

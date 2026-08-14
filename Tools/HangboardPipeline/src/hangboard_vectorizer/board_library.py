@@ -19,7 +19,7 @@ from PIL import Image
 
 from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
 from .board_catalog import BoardHold, BoardPackage, load_board_package, load_catalog
-from .display_paths import flatten_display_path, parse_display_path
+from .display_paths import flatten_display_subpaths, parse_display_path
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
 
@@ -179,44 +179,27 @@ class _CanonicalPackageRunner:
 
         with Image.open(self._asset) as image:
             width, height = image.size
-        holds = {hold.id: hold for hold in self._holds}
         regions = [
             {
                 "id": index,
-                "key": piece.hold_id,
-                "type": holds[piece.hold_id].kind,
+                "key": hold.id,
+                "type": hold.kind,
                 "pieceIndex": 0,
-                "displayPath": self._piece_path(piece, width, height),
+                "displayPath": self._hold_path(hold.id, width, height),
                 "anchor": [
-                    (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width / 2
-                    )
-                    * width,
-                    (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height / 2
-                    )
-                    * height,
+                    (hold.frame.x + hold.frame.width / 2) * width,
+                    (hold.frame.y + hold.frame.height / 2) * height,
                 ],
                 "bounds": [
-                    holds[piece.hold_id].frame.x * width,
-                    holds[piece.hold_id].frame.y * height,
-                    (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width
-                    )
-                    * width,
-                    (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height
-                    )
-                    * height,
+                    hold.frame.x * width,
+                    hold.frame.y * height,
+                    (hold.frame.x + hold.frame.width) * width,
+                    (hold.frame.y + hold.frame.height) * height,
                 ],
-                "metadata": self._runtime_metadata(holds[piece.hold_id]),
+                "metadata": self._runtime_metadata(hold),
                 "symmetry": {},
             }
-            for index, piece in enumerate(self._pieces, start=1)
+            for index, hold in enumerate(self._holds, start=1)
         ]
         return {
             "schemaVersion": 1,
@@ -254,13 +237,25 @@ class _CanonicalPackageRunner:
             )
             if parsed is None:
                 raise BoardLibraryError("package hold path is invalid")
-            contour = flatten_display_path(parsed, curve_steps=48)
-            rounded = np.rint(contour).astype(np.int32)
-            cv2.fillPoly(labels, [rounded], int(region["id"]), lineType=cv2.LINE_8)
+            contours = flatten_display_subpaths(parsed, curve_steps=48)
+            for contour in contours:
+                rounded = np.rint(contour).astype(np.int32)
+                cv2.fillPoly(
+                    labels, [rounded], int(region["id"]), lineType=cv2.LINE_8
+                )
             region.pop("displayPath", None)
             region.pop("pieceIndex", None)
             region.pop("symmetry", None)
-            region["contour"] = contour.tolist()
+            if len(contours) == 1:
+                stage2_contour = contours[0]
+            else:
+                # Stage 2 stores one review contour per physical hold; its label
+                # raster above remains the authoritative union of all pieces.
+                points = np.concatenate([contour[:-1] for contour in contours])
+                stage2_contour = cv2.convexHull(
+                    points.astype(np.float32), returnPoints=True
+                ).reshape(-1, 2)
+            region["contour"] = stage2_contour.tolist()
             regions.append(region)
 
         for region in regions:
@@ -305,6 +300,13 @@ class _CanonicalPackageRunner:
     ) -> str:
         return _CanonicalPackageRunner._shape_path(
             piece.frame, piece.shape, width, height
+        )
+
+    def _hold_path(self, hold_id: str, width: int, height: int) -> str:
+        return " ".join(
+            self._piece_path(piece, width, height)
+            for piece in self._pieces
+            if piece.hold_id == hold_id
         )
 
     @staticmethod

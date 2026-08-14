@@ -707,6 +707,98 @@ def test_published_board_edit_forks_exact_vector_baseline_and_saves_child_revisi
     assert service.store.read_board(saved.board_id).saved_revision_id == saved.revision_id
 
 
+def test_published_multi_piece_hold_opens_edits_approves_and_saves_as_one_region(
+    tmp_path: Path,
+) -> None:
+    """Two artwork pieces for one physical hold must remain one editable hold."""
+    library, entry = _repository_library(tmp_path)
+    artwork_path = entry.run_path / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    original_piece = deepcopy(artwork["holdPieces"][0])
+    assert original_piece["holdID"] == "jug-left"
+    second_piece = deepcopy(original_piece)
+    second_piece["id"] = "jug-left-secondary-piece"
+    second_piece["frame"]["x"] += second_piece["frame"]["width"] * 0.15
+    second_piece["frame"]["width"] *= 0.7
+    artwork["holdPieces"].insert(1, second_piece)
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+    evidence_path = entry.run_path / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["artworkEvidence"]["holdPieces.jug-left-secondary-piece"] = deepcopy(
+        evidence["artworkEvidence"][f"holdPieces.{original_piece['id']}"]
+    )
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+    entry = library.get_board(entry.board_id)
+    service = _fixture_service(tmp_path / "workspace", library=library)
+
+    published = service.open_library_board(entry.board_id)
+    assert published.editor_document_path is not None
+    published_document = json.loads(published.editor_document_path.read_text())
+    matching_regions = [
+        region
+        for region in published_document["regions"]
+        if region["key"] == "jug-left"
+    ]
+    assert len(matching_regions) == 1
+    assert matching_regions[0]["displayPath"].split().count("M") == 2
+    assert matching_regions[0]["displayPath"].split().count("Z") == 2
+
+    editable = service.revise_stage(
+        published.board_id,
+        stage=3,
+        expected_revision_id=published.revision_id,
+    )
+    assert editable.editor_document_path is not None
+    edited_document = json.loads(editable.editor_document_path.read_text())
+    edited_region = next(
+        region for region in edited_document["regions"] if region["key"] == "jug-left"
+    )
+    parsed = parse_display_path(
+        edited_region["displayPath"],
+        "multi-piece package hold",
+        edited_document["canvas"]["width"],
+        edited_document["canvas"]["height"],
+        allow_linear_segments=True,
+    )
+    assert parsed is not None
+    edited_region["displayPath"] = parsed.scaled(0.999)
+    edited_region["anchor"] = [value * 0.999 for value in edited_region["anchor"]]
+    edited_region.setdefault("metadata", {})["notes"] = "multi-piece edit"
+
+    drafted = service.save_draft(
+        editable.board_id,
+        edited_document,
+        expected_revision_id=editable.revision_id,
+        expected_stage=3,
+        expected_checkpoint_token=editable.checkpoint_token,
+    )
+    stage4 = service.approve_and_advance(
+        drafted.board_id,
+        expected_revision_id=drafted.revision_id,
+        expected_stage=3,
+        expected_checkpoint_token=drafted.checkpoint_token,
+    )
+    complete = service.approve_and_advance(
+        stage4.board_id,
+        expected_revision_id=stage4.revision_id,
+        expected_stage=4,
+        expected_checkpoint_token=stage4.checkpoint_token,
+    )
+    saved = service.save(
+        complete.board_id,
+        expected_revision_id=complete.revision_id,
+    )
+
+    accepted = _stage_document(saved.run_root, 3, "stage-3-vector-regions.json")
+    accepted_region = next(
+        region for region in accepted["regions"] if region["key"] == "jug-left"
+    )
+    assert saved.saved is True
+    assert accepted_region["metadata"]["notes"] == "multi-piece edit"
+    assert accepted_region["displayPath"] == edited_region["displayPath"]
+    assert len(accepted["regions"]) == len(published_document["regions"])
+
+
 def test_open_draft_repository_board_starts_editable_runtime_from_primary_image(
     tmp_path: Path,
 ) -> None:

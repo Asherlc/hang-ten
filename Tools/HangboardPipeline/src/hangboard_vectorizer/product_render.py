@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from .display_paths import DisplayPath, flatten_display_path
+from .display_paths import DisplayPath, flatten_display_subpaths
 from .models import ConversionError
 from .product_validation import (
     BEASTMAKER_1000_FORBIDDEN_SPLIT_CENTER_IDS,
@@ -185,9 +185,9 @@ def _validate_center_topology(template: ProductTemplate) -> None:
 def _path_mask(
     path: DisplayPath, width: int, height: int, supersample: int
 ) -> np.ndarray:
-    contour = flatten_display_path(path, scale=float(supersample))
     raster = np.zeros((height * supersample, width * supersample), dtype=np.uint8)
-    cv2.fillPoly(raster, [np.rint(contour).astype(np.int32)], 1)
+    for contour in flatten_display_subpaths(path, scale=float(supersample)):
+        cv2.fillPoly(raster, [np.rint(contour).astype(np.int32)], 1)
     return raster
 
 
