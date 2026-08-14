@@ -330,12 +330,8 @@ def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> N
         if not isinstance(raw, dict):
             raise BoardPackageError(f"artwork.json.holdPieces[{index}] must be an object")
         piece_label = f"artwork.json.holdPieces[{index}]"
-        expected_piece_keys = {"id", "holdID", "frame", "shape"}
-        if "treatment" in raw:
-            expected_piece_keys.add("treatment")
-        _exact_keys(raw, expected_piece_keys, piece_label)
-        if "treatment" in raw:
-            _validate_artwork_treatment(raw["treatment"], f"{piece_label}.treatment")
+        _exact_keys(raw, {"id", "holdID", "frame", "shape", "treatment"}, piece_label)
+        _validate_artwork_treatment(raw["treatment"], f"{piece_label}.treatment")
         piece_id = _identifier(raw.get("id"), f"artwork.json.holdPieces[{index}].id")
         hold_id = _identifier(raw.get("holdID"), f"artwork.json.holdPieces[{index}].holdID")
         if piece_id in seen_piece_ids:

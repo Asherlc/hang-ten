@@ -218,6 +218,17 @@ def test_rejects_an_artwork_hold_piece_with_an_extra_field(tmp_path: Path) -> No
         load_board_package(library / SLUG)
 
 
+def test_rejects_an_artwork_hold_piece_without_a_treatment(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    artwork_path = library / SLUG / "artwork.json"
+    artwork = json.loads(artwork_path.read_text(encoding="utf-8"))
+    del artwork["holdPieces"][0]["treatment"]
+    artwork_path.write_text(json.dumps(artwork), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="artwork.json.holdPieces\\[0\\] has missing keys"):
+        load_board_package(library / SLUG)
+
+
 def test_rejects_an_artwork_hold_piece_with_an_invalid_treatment(tmp_path: Path) -> None:
     library = _copy_library(tmp_path)
     artwork_path = library / SLUG / "artwork.json"
