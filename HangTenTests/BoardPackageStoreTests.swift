@@ -106,18 +106,79 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreTreatsNullPresentationAsAbsent() throws {
+    func testStoreRejectsAbsentAndNullPresentationDeclarations() throws {
+        for presentation: Any? in [nil, NSNull()] {
+            let fixture = try makeFixtureBundle { packageURL in
+                try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                    board["presentation"] = presentation
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(
+                        boardID: "package-board",
+                        reason: "presentation declaration is required"
+                    )
+                )
+            }
+        }
+    }
+
+    func testStoreRejectsNonPrimaryPresentationPath() throws {
         let fixture = try makeFixtureBundle { packageURL in
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
-                board["presentation"] = NSNull()
+                board["presentation"] = ["assetPath": "assets/alternate.png"]
             }
         }
         defer { fixture.remove() }
 
-        let store = try BoardPackageStore(bundle: fixture.bundle)
-        let board = try XCTUnwrap(store.board(id: "package-board"))
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "package-board",
+                    reason: "presentation asset path must be assets/primary.png"
+                )
+            )
+        }
+    }
 
-        XCTAssertNil(store.presentationImageURL(for: board))
+    func testStoreRejectsMissingPrimaryPresentationAsset() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try FileManager.default.removeItem(
+                at: packageURL.appendingPathComponent("assets/primary.png")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .missingPresentationAsset(boardID: "package-board", path: "assets/primary.png")
+            )
+        }
+    }
+
+    func testStoreRejectsUndecodablePrimaryPresentationAsset() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try Data("not a PNG".utf8).write(
+                to: packageURL.appendingPathComponent("assets/primary.png")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "package-board",
+                    reason: "presentation asset must be a decodable PNG"
+                )
+            )
+        }
     }
 
     func testStoreRejectsApprovedSidecarSymlinkEscapingPackage() throws {
@@ -233,7 +294,9 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     private var presentationBytes: Data {
-        Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+        try! XCTUnwrap(
+            Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WlQjXcAAAAASUVORK5CYII=")
+        )
     }
 
     private func makeFixtureBundle(

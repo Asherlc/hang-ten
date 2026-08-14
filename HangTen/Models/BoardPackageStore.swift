@@ -1,4 +1,9 @@
 import Foundation
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 private struct BoardPackageAnyCodingKey: CodingKey {
     let stringValue: String
@@ -188,20 +193,30 @@ struct BoardPackageStore {
             loadedBoards.append(board)
             loadedSemantics[board.id] = semantics
 
-            if let assetPath = boardDocument.presentation?.assetPath {
-                let assetURL = try Self.presentationAssetURL(
-                    path: assetPath,
+            guard let presentation = boardDocument.presentation else {
+                throw BoardPackageStoreError.invalidPackage(
                     boardID: board.id,
-                    packageURL: packageURL
+                    reason: "presentation declaration is required"
                 )
-                guard FileManager.default.isReadableFile(atPath: assetURL.path) else {
-                    throw BoardPackageStoreError.missingPresentationAsset(
-                        boardID: board.id,
-                        path: assetPath
-                    )
-                }
-                loadedPresentationURLs[board.id] = assetURL
             }
+            let assetURL = try Self.presentationAssetURL(
+                path: presentation.assetPath,
+                boardID: board.id,
+                packageURL: packageURL
+            )
+            guard FileManager.default.isReadableFile(atPath: assetURL.path) else {
+                throw BoardPackageStoreError.missingPresentationAsset(
+                    boardID: board.id,
+                    path: presentation.assetPath
+                )
+            }
+            guard Self.isDecodablePresentationImage(at: assetURL) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: board.id,
+                    reason: "presentation asset must be a decodable PNG"
+                )
+            }
+            loadedPresentationURLs[board.id] = assetURL
         }
 
         self.boards = loadedBoards
@@ -279,7 +294,23 @@ struct BoardPackageStore {
                 path: path
             )
         }
+        guard path == "assets/primary.png" else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "presentation asset path must be assets/primary.png"
+            )
+        }
         return url
+    }
+
+    private static func isDecodablePresentationImage(at url: URL) -> Bool {
+#if canImport(UIKit)
+        UIImage(contentsOfFile: url.path) != nil
+#elseif canImport(AppKit)
+        NSImage(contentsOf: url) != nil
+#else
+        false
+#endif
     }
 
     private static func confinedURL(relativePath: String, below rootURL: URL) -> URL? {
