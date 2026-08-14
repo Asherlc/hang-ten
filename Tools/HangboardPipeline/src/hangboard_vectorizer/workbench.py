@@ -815,18 +815,23 @@ class WorkbenchService:
     def __completed_editor_artifacts(
         self, revision: RevisionRecord
     ) -> tuple[Path, Path]:
-        manifest = self.__manifest(revision.run_root)
-        stages = manifest.get("stages")
-        if not isinstance(stages, list) or len(stages) <= 3:
-            raise WorkbenchServiceError("completed editor evidence is missing")
-        record = stages[3]
-        if not isinstance(record, Mapping):
-            raise WorkbenchServiceError("completed editor evidence is missing")
-        editor_path = self.__editor_image_path(revision, 3, manifest)
-        if editor_path is None:
-            raise WorkbenchServiceError("completed editor image is missing")
-        document_path = self.__editable_document_path(revision, 3, record)
-        return editor_path, document_path
+        try:
+            manifest = self.__manifest(revision.run_root)
+            stages = manifest.get("stages")
+            if not isinstance(stages, list) or len(stages) <= 3:
+                raise ValueError("completed editor evidence is missing")
+            record = stages[3]
+            if not isinstance(record, Mapping):
+                raise ValueError("completed editor evidence is missing")
+            editor_path = self.__editor_image_path(revision, 3, manifest)
+            if editor_path is None:
+                raise ValueError("completed editor image is missing")
+            document_path = self.__editable_document_path(revision, 3, record)
+            return editor_path, document_path
+        except (OSError, RuntimeError, SyntaxError, TypeError, ValueError) as error:
+            raise WorkbenchServiceError(
+                "inconsistent completed editor evidence"
+            ) from error
 
     def __stage4_inspect_artifacts(
         self, revision: RevisionRecord

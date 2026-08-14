@@ -113,6 +113,45 @@ def test_completed_board_view_exposes_verified_editor_document(
     assert complete_board.editor_document_path.name == "stage-3-vector-regions.json"
 
 
+def test_get_board_converts_unreadable_completed_editor_document_to_safe_error(
+    service: WorkbenchService,
+    complete_board: WorkbenchView,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert complete_board.editor_document_path is not None
+    document_path = complete_board.editor_document_path
+    original_read_bytes = Path.read_bytes
+    original_manifest = getattr(
+        WorkbenchService, "_WorkbenchService__manifest"
+    )
+    rereading_evidence = False
+
+    def manifest_before_completed_evidence(run_root: Path) -> dict[str, object]:
+        nonlocal rereading_evidence
+        manifest = original_manifest(run_root)
+        rereading_evidence = True
+        return manifest
+
+    def unreadable_document(path: Path) -> bytes:
+        if rereading_evidence and path == document_path:
+            raise PermissionError(f"permission denied: {path}")
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(
+        WorkbenchService,
+        "_WorkbenchService__manifest",
+        staticmethod(manifest_before_completed_evidence),
+    )
+    monkeypatch.setattr(Path, "read_bytes", unreadable_document)
+
+    with pytest.raises(
+        WorkbenchServiceError, match="inconsistent completed editor evidence"
+    ) as error:
+        service.get_board(complete_board.board_id)
+
+    assert str(complete_board.run_root) not in str(error.value)
+
+
 def test_get_board_rejects_editable_artifact_canvas_mismatched_to_clean_image(
     service: WorkbenchService, board_with_stage0: WorkbenchView
 ) -> None:
