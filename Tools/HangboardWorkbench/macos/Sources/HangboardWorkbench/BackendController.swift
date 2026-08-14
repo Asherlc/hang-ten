@@ -62,7 +62,7 @@ actor BackendController: BackendControlling {
             case .couldNotSelectPort:
                 return "A local port could not be selected for the Hangboard Workbench backend."
             case .runtimeCheckoutMismatch:
-                return "The installed Hangboard Workbench build does not match the selected checkout. Install a Workbench build that matches the selected checkout, then try again."
+                return "The installed direct Hangboard Workbench version does not match the selected checkout. Install a direct Workbench build that matches the selected checkout, then try again."
             }
         }
 

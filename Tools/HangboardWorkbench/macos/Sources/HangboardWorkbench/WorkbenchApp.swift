@@ -357,7 +357,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                 guard self.startupGeneration == generation else { return }
                 self.showMessage(
                     title: "Workbench Build Does Not Match Checkout",
-                    detail: "The installed Workbench build and selected checkout are from different commits. Install a Workbench build matching the selected checkout, then try again."
+                    detail: "The installed direct Workbench build and selected checkout are from different commits. Install a direct Workbench build matching the selected checkout, then try again."
                 )
             } catch {
                 guard self.startupGeneration == generation else { return }

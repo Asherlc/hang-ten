@@ -21,7 +21,7 @@ final class CheckoutSelectionTests: XCTestCase {
         super.tearDown()
     }
 
-    func testValidatedURLAcceptsTheSupportedPipelineAndWorkbenchMarkers() throws {
+    func testValidatedURLAcceptsTheDirectWorkbenchAndBoardLibraryMarkers() throws {
         let root = try makeCheckout()
 
         let result = try CheckoutSelection.validatedURL(root.appending(path: "."))
@@ -32,9 +32,10 @@ final class CheckoutSelectionTests: XCTestCase {
     func testValidatedURLRejectsEachMissingCheckoutMarker() throws {
         for marker in [
             ".git",
-            "Tools/HangboardPipeline/src/hangboard_vectorizer",
             "Hangboards",
             "Tools/HangboardWorkbench/server.py",
+            "Tools/HangboardWorkbench/board_package.py",
+            "Tools/HangboardWorkbench/board_geometry.py",
         ] {
             let root = try makeCheckout()
             try FileManager.default.removeItem(at: root.appending(path: marker))
@@ -96,10 +97,6 @@ final class CheckoutSelectionTests: XCTestCase {
         temporaryDirectories.append(root)
         try FileManager.default.createDirectory(at: root.appending(path: ".git"), withIntermediateDirectories: true)
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardPipeline/src/hangboard_vectorizer"),
-            withIntermediateDirectories: true
-        )
-        try FileManager.default.createDirectory(
             at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
@@ -108,6 +105,8 @@ final class CheckoutSelectionTests: XCTestCase {
             withIntermediateDirectories: true
         )
         try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/server.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_package.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_geometry.py"))
         return root
     }
 

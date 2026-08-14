@@ -28,7 +28,7 @@ def _load_build_module():
 build = _load_build_module()
 
 
-def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
+def test_pyinstaller_arguments_embed_only_direct_workbench_runtime_inputs(tmp_path):
     metadata = tmp_path / "metadata"
     metadata.mkdir()
     (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
@@ -40,7 +40,12 @@ def test_pyinstaller_arguments_embed_only_runtime_inputs(tmp_path):
 
     for asset in workbench_assets.STATIC_ASSETS:
         assert asset in joined
-    assert "hangboard_vectorizer" in joined
+    hidden_imports = [
+        arguments[index + 1]
+        for index, value in enumerate(arguments)
+        if value == "--hidden-import"
+    ]
+    assert hidden_imports == ["server", "board_package", "board_geometry"]
 
     embedded_operands = [
         arguments[index + 1]
@@ -105,21 +110,19 @@ def test_pyinstaller_rejects_empty_codesign_identity(identity, tmp_path):
         )
 
 
-def test_pyinstaller_arguments_follow_the_shared_static_asset_manifest(
+def test_pyinstaller_arguments_accept_a_workbench_and_board_library_without_other_tool_sources(
     tmp_path, monkeypatch
 ):
     repository = tmp_path / "repository"
+    (repository / "Hangboards").mkdir(parents=True)
     editor_root = repository / "Tools" / "HangboardWorkbench"
     editor_root.mkdir(parents=True)
     (editor_root / "workbench_binary.py").write_text("", encoding="utf-8")
+    (editor_root / "server.py").write_text("", encoding="utf-8")
+    (editor_root / "board_package.py").write_text("", encoding="utf-8")
+    (editor_root / "board_geometry.py").write_text("", encoding="utf-8")
+    (editor_root / "workbench_assets.py").write_text("", encoding="utf-8")
     (editor_root / "manifest-only.js").write_text("", encoding="utf-8")
-    (
-        repository
-        / "Tools"
-        / "HangboardPipeline"
-        / "src"
-        / "hangboard_vectorizer"
-    ).mkdir(parents=True)
     metadata = tmp_path / "metadata"
     metadata.mkdir()
     (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
@@ -137,7 +140,7 @@ def test_pyinstaller_arguments_follow_the_shared_static_asset_manifest(
     assert "index.html" not in joined
 
 
-def test_pyinstaller_arguments_exclude_product_and_evidence_resources(tmp_path):
+def test_pyinstaller_arguments_include_only_direct_workbench_imports(tmp_path):
     metadata = tmp_path / "metadata"
     metadata.mkdir()
     (metadata / "build-commit.txt").write_text("a" * 40 + "\n", encoding="ascii")
@@ -148,11 +151,12 @@ def test_pyinstaller_arguments_exclude_product_and_evidence_resources(tmp_path):
         tmp_path / "dist",
         tmp_path / "work",
     )
-    joined = "\n".join(arguments)
-
     assert "--collect-data" not in arguments
-    assert "hangboard_vectorizer.products" not in joined
-    assert "hangboard_vectorizer.evidence" not in joined
+    assert [
+        arguments[index + 1]
+        for index, value in enumerate(arguments)
+        if value == "--hidden-import"
+    ] == ["server", "board_package", "board_geometry"]
 
 
 @pytest.mark.parametrize("commit", ["A" * 40, "a" * 39, "a" * 41, "not-a-sha"])

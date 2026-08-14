@@ -18,7 +18,7 @@ WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = WORKBENCH_ROOT.parents[1]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
-from server import create_server, validate_hang_ten_checkout  # noqa: E402
+from server import EditorError, create_server, validate_hang_ten_checkout  # noqa: E402
 
 
 BOARD_ID = "metolius.wood-grips-compact-ii"
@@ -136,7 +136,7 @@ def test_load_failures_do_not_expose_library_paths(tmp_path: Path) -> None:
     assert str(library) not in json.dumps(result)
 
 
-def test_server_imports_without_the_pipeline_path(tmp_path: Path) -> None:
+def test_server_imports_with_only_the_workbench_on_pythonpath(tmp_path: Path) -> None:
     code = "import server; print(server.__name__)"
     environment = os.environ | {"PYTHONPATH": str(WORKBENCH_ROOT)}
     completed = subprocess.run(
@@ -158,5 +158,11 @@ def test_checkout_validation_requires_only_the_direct_workbench_layout(tmp_path:
     workbench = checkout / "Tools" / "HangboardWorkbench"
     workbench.mkdir(parents=True)
     (workbench / "server.py").touch()
+    (workbench / "board_package.py").touch()
+    (workbench / "board_geometry.py").touch()
 
     assert validate_hang_ten_checkout(checkout) == checkout.resolve()
+    (workbench / "board_geometry.py").unlink()
+
+    with pytest.raises(EditorError, match="Hang Ten checkout"):
+        validate_hang_ten_checkout(checkout)

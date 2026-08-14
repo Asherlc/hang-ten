@@ -332,8 +332,19 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 def validate_hang_ten_checkout(root: Path) -> Path:
     """Accept a checkout containing the direct Workbench and board library."""
     resolved_root = Path(root).expanduser().resolve(strict=False)
-    markers = (resolved_root / ".git", resolved_root / "Hangboards", resolved_root / "Tools" / "HangboardWorkbench" / "server.py")
-    if not resolved_root.is_dir() or not markers[0].exists() or not markers[1].is_dir() or not markers[2].is_file():
+    markers = (
+        resolved_root / ".git",
+        resolved_root / "Hangboards",
+        resolved_root / "Tools" / "HangboardWorkbench" / "server.py",
+        resolved_root / "Tools" / "HangboardWorkbench" / "board_package.py",
+        resolved_root / "Tools" / "HangboardWorkbench" / "board_geometry.py",
+    )
+    if (
+        not resolved_root.is_dir()
+        or not markers[0].exists()
+        or not markers[1].is_dir()
+        or any(not marker.is_file() for marker in markers[2:])
+    ):
         raise EditorError("repository root must be a Hang Ten checkout")
     return resolved_root
 

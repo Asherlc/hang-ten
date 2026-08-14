@@ -443,10 +443,6 @@ final class BackendControllerTests: XCTestCase {
         temporaryDirectories.append(root)
         try FileManager.default.createDirectory(at: root.appending(path: ".git"), withIntermediateDirectories: true)
         try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardPipeline/src/hangboard_vectorizer"),
-            withIntermediateDirectories: true
-        )
-        try FileManager.default.createDirectory(
             at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
@@ -455,6 +451,8 @@ final class BackendControllerTests: XCTestCase {
             withIntermediateDirectories: true
         )
         try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/server.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_package.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_geometry.py"))
         if let head {
             try (head + "\n").write(to: root.appending(path: ".git/HEAD"), atomically: true, encoding: .ascii)
         }
