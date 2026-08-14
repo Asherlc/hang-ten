@@ -30,7 +30,11 @@ SLUG = "metolius-wood-grips-compact-ii"
 
 def _copy_library(tmp_path: Path) -> Path:
     library = tmp_path / "Hangboards"
-    shutil.copytree(REPOSITORY_ROOT / "Hangboards", library)
+    shutil.copytree(
+        REPOSITORY_ROOT / "Hangboards",
+        library,
+        ignore=shutil.ignore_patterns(".workbench.lock"),
+    )
     return library
 
 
@@ -64,6 +68,107 @@ def test_discovers_registered_canonical_packages() -> None:
     assert discover_packages(REPOSITORY_ROOT / "Hangboards") == (
         board_package.CatalogEntry("metolius.wood-grips-compact-ii", SLUG),
     )
+
+
+@pytest.mark.parametrize("reader", ("discovery", "registered-open"))
+def test_public_readers_wait_for_package_replacement_to_finish(
+    reader: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _copy_library(tmp_path)
+    candidate = _candidate_with_id(tmp_path, library, SLUG, "metolius.wood-grips-compact-ii")
+    board_path = candidate / "board.json"
+    candidate_board = json.loads(board_path.read_text(encoding="utf-8"))
+    candidate_board["name"] = "Replacement board"
+    board_path.write_text(json.dumps(candidate_board), encoding="utf-8")
+    package_moved = threading.Event()
+    release_replacement = threading.Event()
+    reader_finished = threading.Event()
+    reader_errors: list[BaseException] = []
+    real_replace = board_package.os.replace
+
+    def pause_after_package_move(source: str | Path, destination: str | Path) -> None:
+        real_replace(source, destination)
+        if Path(destination) == library / f".{SLUG}.workbench-backup":
+            package_moved.set()
+            assert release_replacement.wait(timeout=2)
+
+    monkeypatch.setattr(board_package.os, "replace", pause_after_package_move)
+
+    writer = threading.Thread(target=lambda: replace_package(library, SLUG, candidate))
+
+    def discover() -> None:
+        try:
+            if reader == "discovery":
+                discover_packages(library)
+            else:
+                board_package.open_registered_package(
+                    library, "metolius.wood-grips-compact-ii"
+                )
+        except BaseException as error:  # pragma: no cover - surfaced below
+            reader_errors.append(error)
+        finally:
+            reader_finished.set()
+
+    reader_thread = threading.Thread(target=discover)
+    writer.start()
+    assert package_moved.wait(timeout=2)
+    reader_thread.start()
+    assert not reader_finished.wait(timeout=0.1)
+    release_replacement.set()
+    writer.join(timeout=5)
+    reader_thread.join(timeout=5)
+
+    assert not reader_errors
+    assert reader_finished.is_set()
+
+
+def test_rejects_a_library_lock_symlink_without_following_its_target(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    outside_lock = tmp_path / "outside.lock"
+    outside_lock.write_text("outside lock content", encoding="utf-8")
+    (library / ".workbench.lock").symlink_to(outside_lock)
+
+    with pytest.raises(BoardPackageError, match="workbench lock must be a regular file"):
+        discover_packages(library)
+
+    assert outside_lock.read_text(encoding="utf-8") == "outside lock content"
+
+
+@pytest.mark.parametrize(
+    ("evidence_map", "key"),
+    (
+        ("fieldEvidence", "manufacturer"),
+        ("holdEvidence", "jug-left.kind"),
+        ("semanticEvidence", "outer-jugs"),
+        ("artworkEvidence", "holdPieces.jug-left-top-cap"),
+    ),
+)
+def test_rejects_external_generation_as_canonical_evidence(
+    evidence_map: str, key: str, tmp_path: Path
+) -> None:
+    library = _copy_library(tmp_path)
+    evidence_path = library / SLUG / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence[evidence_map][key]["method"] = "external-generative-adaptation"
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="external-generative-adaptation is not permitted"):
+        load_board_package(library / SLUG)
+
+
+def test_rejects_external_generation_for_an_original_source_asset(tmp_path: Path) -> None:
+    library = _copy_library(tmp_path)
+    package = library / SLUG
+    evidence_path = package / "evidence.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidence["assetEvidence"]["assets/WoodGripsCompactII.jpg"] = {
+        "sourceIDs": ["product-page"],
+        "method": "external-generative-adaptation",
+    }
+    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+
+    with pytest.raises(BoardPackageError, match="external-generative-adaptation is not permitted"):
+        load_board_package(package)
 
 
 def test_rejects_duplicate_board_hold_ids_and_mismatched_artwork_ids(tmp_path: Path) -> None:

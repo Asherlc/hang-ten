@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import tempfile
 from typing import Any, Iterator, Mapping
 from urllib.parse import urlparse
@@ -47,6 +48,7 @@ _FACT_FIELDS = frozenset({"manufacturer", "name", "subtitle", "productURL", "dim
 _EVIDENCE_METHODS = frozenset({
     "manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation",
 })
+_CANONICAL_EVIDENCE_METHODS = _EVIDENCE_METHODS - {"external-generative-adaptation"}
 _SOURCE_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".webp", ".heic"})
 
 
@@ -80,12 +82,30 @@ class BoardPackage:
 def discover_packages(library_root: Path) -> tuple[CatalogEntry, ...]:
     """Read the direct board catalog and validate every registered package."""
     root = _library_root(library_root)
-    entries = _load_catalog(root / "catalog.json")
-    for entry in entries:
+    with _library_lock(root, shared=True):
+        entries = _load_catalog(root / "catalog.json")
+        for entry in entries:
+            package = load_board_package(root / entry.slug)
+            if package.board_id != entry.board_id:
+                raise BoardPackageError("catalog board ID does not match its package")
+        return entries
+
+
+def open_registered_package(library_root: Path, board_id: str) -> BoardPackage:
+    """Load one catalogued package while holding a coherent library read lock."""
+    root = _library_root(library_root)
+    board_id = _identifier(board_id, "board ID")
+    with _library_lock(root, shared=True):
+        entry = next(
+            (candidate for candidate in _load_catalog(root / "catalog.json") if candidate.board_id == board_id),
+            None,
+        )
+        if entry is None:
+            raise BoardPackageError("board is not registered")
         package = load_board_package(root / entry.slug)
         if package.board_id != entry.board_id:
             raise BoardPackageError("catalog board ID does not match its package")
-    return entries
+        return package
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
@@ -387,14 +407,37 @@ def _validate_evidence(
         *(f"layers.{layer['id']}" for layer in artwork["layers"]),
         *(f"holdPieces.{piece['id']}" for piece in artwork["holdPieces"]),
     }
-    _validate_evidence_map(evidence.get("fieldEvidence"), _FACT_FIELDS, "fieldEvidence", source_ids)
-    _validate_evidence_map(evidence.get("holdEvidence"), expected_hold_evidence, "holdEvidence", source_ids)
-    _validate_evidence_map(evidence.get("semanticEvidence"), set(semantics["semanticHolds"]), "semanticEvidence", source_ids)
-    _validate_evidence_map(evidence.get("artworkEvidence"), expected_artwork_evidence, "artworkEvidence", source_ids)
-    _validate_evidence_map(evidence.get("assetEvidence"), assets, "assetEvidence", source_ids)
+    _validate_evidence_map(
+        evidence.get("fieldEvidence"), _FACT_FIELDS, "fieldEvidence", source_ids, _CANONICAL_EVIDENCE_METHODS
+    )
+    _validate_evidence_map(
+        evidence.get("holdEvidence"), expected_hold_evidence, "holdEvidence", source_ids, _CANONICAL_EVIDENCE_METHODS
+    )
+    _validate_evidence_map(
+        evidence.get("semanticEvidence"), set(semantics["semanticHolds"]), "semanticEvidence", source_ids, _CANONICAL_EVIDENCE_METHODS
+    )
+    _validate_evidence_map(
+        evidence.get("artworkEvidence"), expected_artwork_evidence, "artworkEvidence", source_ids, _CANONICAL_EVIDENCE_METHODS
+    )
+    _validate_evidence_map(
+        evidence.get("assetEvidence"),
+        assets,
+        "assetEvidence",
+        source_ids,
+        _EVIDENCE_METHODS,
+        external_generation_keys=frozenset({"assets/primary.png"}),
+    )
 
 
-def _validate_evidence_map(value: object, expected: set[str] | frozenset[str], label: str, source_ids: set[str]) -> None:
+def _validate_evidence_map(
+    value: object,
+    expected: set[str] | frozenset[str],
+    label: str,
+    source_ids: set[str],
+    allowed_methods: frozenset[str],
+    *,
+    external_generation_keys: frozenset[str] = frozenset(),
+) -> None:
     if not isinstance(value, Mapping):
         raise BoardPackageError(f"evidence.json.{label} must be an object")
     if set(value) != set(expected):
@@ -407,6 +450,17 @@ def _validate_evidence_map(value: object, expected: set[str] | frozenset[str], l
             _exact_keys(mapping, {"sourceIDs", "method"}, f"evidence.json.{label}.{key}")
             raw_source_ids = mapping.get("sourceIDs")
             method = _enum(mapping.get("method"), _EVIDENCE_METHODS, f"evidence.json.{label}.{key}.method")
+            if method not in allowed_methods:
+                raise BoardPackageError(
+                    f"evidence.json.{label}.{key}.method {method} is not permitted"
+                )
+            if (
+                method == "external-generative-adaptation"
+                and key not in external_generation_keys
+            ):
+                raise BoardPackageError(
+                    f"evidence.json.{label}.{key}.method {method} is not permitted"
+                )
         else:
             raise BoardPackageError(f"evidence.json.{label}.{key} is invalid")
         if not isinstance(raw_source_ids, list) or not raw_source_ids:
@@ -561,10 +615,20 @@ def _restore_transaction(
 
 
 @contextmanager
-def _library_lock(root: Path) -> Iterator[None]:
-    descriptor = os.open(root / ".workbench.lock", os.O_CREAT | os.O_RDWR, 0o600)
+def _library_lock(root: Path, *, shared: bool = False) -> Iterator[None]:
+    no_follow = getattr(os, "O_NOFOLLOW", None)
+    if no_follow is None:
+        raise BoardPackageError("safe workbench lock opening is unavailable")
     try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        descriptor = os.open(
+            root / ".workbench.lock", os.O_CREAT | os.O_RDWR | no_follow, 0o600
+        )
+    except OSError as error:
+        raise BoardPackageError("workbench lock must be a regular file") from error
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise BoardPackageError("workbench lock must be a regular file")
+        fcntl.flock(descriptor, fcntl.LOCK_SH if shared else fcntl.LOCK_EX)
         yield
     finally:
         fcntl.flock(descriptor, fcntl.LOCK_UN)
