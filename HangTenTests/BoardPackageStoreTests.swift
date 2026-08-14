@@ -183,9 +183,10 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testStoreRejectsDecodableJPEGRenamedToPrimaryPNG() throws {
-        XCTAssertNotNil(UIImage(data: self.jpegBytes))
+        let jpegBytes = try self.makeJPEGBytes()
+        XCTAssertNotNil(UIImage(data: jpegBytes))
         let fixture = try makeFixtureBundle { packageURL in
-            try self.jpegBytes.write(
+            try jpegBytes.write(
                 to: packageURL.appendingPathComponent("assets/primary.png")
             )
         }
@@ -357,10 +358,14 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
-    private var jpegBytes: Data {
-        try! XCTUnwrap(
-            Data(base64Encoded: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAH/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/AL//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AL//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/AL//2gAMAwEAAgADAAAAEP/EABQQAQAAAAAAAAAAAAAAAAAAABD/2gAIAQEAAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QH//Z")
-        )
+    private func makeJPEGBytes() throws -> Data {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 1, height: 1))
+        let image = renderer.image { context in
+            UIColor.systemRed.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        }
+
+        return try XCTUnwrap(image.jpegData(compressionQuality: 1))
     }
 
     private func makeFixtureBundle(

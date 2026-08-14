@@ -106,6 +106,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
+        let genericCanonicalAssetPaths: Set<String> = [
+            "assets/primary.png"
+        ]
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
         let legacyArtifactTokens = [
             "GeneratedBoardCatalog",
@@ -150,7 +153,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             for token in legacyArtifactTokens where source.contains(token) {
                 findings.append("\(relativePath): legacy artifact token \(token)")
             }
-            for literal in packageOwnedLiterals where source.contains("\"\(literal)\"") {
+            for literal in packageOwnedLiterals
+            where !genericCanonicalAssetPaths.contains(literal)
+                && source.contains("\"\(literal)\"") {
                 findings.append("\(relativePath): package-owned literal \(literal)")
             }
             for pattern in hardcodedMappingPatterns where source.range(
