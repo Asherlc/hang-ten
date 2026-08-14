@@ -38,7 +38,6 @@ def test_registered_packages_use_the_canonical_primary_presentation_asset() -> N
             "board.json",
             "evidence.json",
             "semantics.json",
-            "artwork.json",
         }
 
         asset_paths = {

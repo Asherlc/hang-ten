@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
-import importlib.util
 import json
 import math
 from pathlib import Path
@@ -13,24 +12,9 @@ from types import MappingProxyType
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
-try:  # Standard package import, plus direct-file loading used by pipeline tests.
-    from .board_artwork import BoardArtworkDocument, NormalizedFrame, load_artwork
-except ImportError:  # pragma: no cover - exercised by direct module consumers
-    _artwork_path = Path(__file__).with_name("board_artwork.py")
-    _spec = importlib.util.spec_from_file_location("hangboard_board_artwork", _artwork_path)
-    assert _spec and _spec.loader
-    _module = importlib.util.module_from_spec(_spec)
-    import sys
-    sys.modules[_spec.name] = _module
-    _spec.loader.exec_module(_module)
-    BoardArtworkDocument = _module.BoardArtworkDocument
-    NormalizedFrame = _module.NormalizedFrame
-    load_artwork = _module.load_artwork
-
-
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
-_SIDECARS = ("board.json", "evidence.json", "semantics.json", "artwork.json")
+_SIDECARS = ("board.json", "evidence.json", "semantics.json")
 _PACKAGE_ROOT_FILES = frozenset((*_SIDECARS, "assets"))
 _SOURCE_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".webp", ".heic"})
 _EVIDENCE_METHODS = frozenset({"manufacturer-measurement", "reviewed-human-authored-normalization", "external-generative-adaptation"})
@@ -81,6 +65,24 @@ def _number(value: Any, source: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
         raise ValueError(f"{source} must be finite")
     return float(value)
+
+
+@dataclass(frozen=True)
+class NormalizedFrame:
+    x: float
+    y: float
+    width: float
+    height: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "NormalizedFrame":
+        payload = _mapping(value, source)
+        _closed(payload, {"x", "y", "width", "height"}, source)
+        x, y = _number(payload["x"], f"{source}.x"), _number(payload["y"], f"{source}.y")
+        width, height = _number(payload["width"], f"{source}.width"), _number(payload["height"], f"{source}.height")
+        if width <= 0 or height <= 0 or x < 0 or y < 0 or x + width > 1 or y + height > 1:
+            raise ValueError(f"{source} must stay inside the normalized 0...1 range")
+        return cls(x, y, width, height)
 
 
 def _positive_integer(value: Any, source: str) -> int:
@@ -231,7 +233,6 @@ class BoardEvidenceDocument:
     field_evidence: Mapping[str, EvidenceMapping]
     hold_evidence: Mapping[str, EvidenceMapping]
     semantic_evidence: Mapping[str, EvidenceMapping]
-    artwork_evidence: Mapping[str, EvidenceMapping]
     asset_evidence: Mapping[str, EvidenceMapping]
 
 
@@ -241,7 +242,6 @@ class BoardPackage:
     board: BoardDocument
     evidence: BoardEvidenceDocument
     semantics: BoardSemanticsDocument
-    artwork: BoardArtworkDocument
 
 
 def _load_board(value: Mapping[str, Any], root: Path) -> BoardDocument:
@@ -359,7 +359,7 @@ def _mapping_evidence(value: Any, source: str, declared_sources: set[str]) -> Ev
 
 
 def _load_evidence(value: Mapping[str, Any]) -> BoardEvidenceDocument:
-    required = {"schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence", "holdEvidence", "semanticEvidence", "artworkEvidence", "assetEvidence"}
+    required = {"schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence", "holdEvidence", "semanticEvidence", "assetEvidence"}
     _closed(value, required, "evidence.json")
     if isinstance(value["schemaVersion"], bool) or value["schemaVersion"] != 1:
         raise ValueError("evidence.json.schemaVersion must be 1")
@@ -386,7 +386,7 @@ def _load_evidence(value: Mapping[str, Any]) -> BoardEvidenceDocument:
     def parse_map(key: str) -> Mapping[str, EvidenceMapping]:
         raw_map = _mapping(value[key], f"evidence.json.{key}")
         return MappingProxyType({str(name): _mapping_evidence(raw, f"evidence.json.{key}.{name}", source_ids) for name, raw in raw_map.items()})
-    return BoardEvidenceDocument(_identifier(value["boardID"], "evidence.json.boardID"), parse_map("fieldEvidence"), parse_map("holdEvidence"), parse_map("semanticEvidence"), parse_map("artworkEvidence"), parse_map("assetEvidence"))
+    return BoardEvidenceDocument(_identifier(value["boardID"], "evidence.json.boardID"), parse_map("fieldEvidence"), parse_map("holdEvidence"), parse_map("semanticEvidence"), parse_map("assetEvidence"))
 
 
 def _exact_keys(actual: Mapping[str, Any], expected: set[str], message: str) -> None:
@@ -436,19 +436,13 @@ def load_board_package(package_root: Path) -> BoardPackage:
     board = _load_board(_load_json(root / "board.json", "board.json"), root)
     evidence = _load_evidence(_load_json(root / "evidence.json", "evidence.json"))
     semantics = _load_semantics(_load_json(root / "semantics.json", "semantics.json"))
-    artwork = load_artwork(root / "artwork.json")
-    if len({board.id, evidence.board_id, semantics.board_id, artwork.board_id}) != 1:
+    if len({board.id, evidence.board_id, semantics.board_id}) != 1:
         raise ValueError("board package sidecar board IDs must match")
     hold_ids = {hold.id for hold in board.holds}
     for semantic, mapped_holds in semantics.semantic_holds.items():
         for hold_id in mapped_holds:
             if hold_id not in hold_ids:
                 raise ValueError(f"semantic {semantic!r} references unknown physical hold {hold_id!r}")
-    if artwork.hold_ids != hold_ids:
-        raise ValueError("artwork hold IDs must exactly match board physical hold IDs")
-    for piece in artwork.hold_pieces:
-        if piece.hold_id not in hold_ids:
-            raise ValueError(f"artwork piece references unknown physical hold {piece.hold_id!r}")
     _exact_keys(evidence.field_evidence, set(board.facts), "fieldEvidence keys must equal board factual fields")
     hold_evidence_keys = {
         f"{hold.id}.{field}"
@@ -457,13 +451,11 @@ def load_board_package(package_root: Path) -> BoardPackage:
     }
     _exact_keys(evidence.hold_evidence, hold_evidence_keys, "holdEvidence keys must equal physical hold field paths")
     _exact_keys(evidence.semantic_evidence, set(semantics.semantic_holds), "semanticEvidence keys must equal semantic IDs")
-    artwork_keys = {"silhouette", *(f"layers.{layer.id}" for layer in artwork.layers), *(f"holdPieces.{piece.id}" for piece in artwork.hold_pieces)}
-    _exact_keys(evidence.artwork_evidence, artwork_keys, "artworkEvidence keys must equal artwork elements")
     assets = _package_assets(root)
     _exact_keys(evidence.asset_evidence, assets, "assetEvidence keys must equal package assets")
     if board.presentation_asset_path is not None and board.presentation_asset_path not in assets:
         raise ValueError("board presentation asset must resolve to a package asset")
-    return BoardPackage(root.resolve(), board, evidence, semantics, artwork)
+    return BoardPackage(root.resolve(), board, evidence, semantics)
 
 
 def load_catalog(path: Path) -> CatalogDocument:

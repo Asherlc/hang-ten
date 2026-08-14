@@ -14,14 +14,13 @@ from hangboard_vectorizer.semantic_benchmark import (
 PACKAGE = Path(__file__).resolve().parents[3] / "Hangboards" / "metolius-wood-grips-compact-ii"
 
 
-def test_canonical_package_benchmark_proves_semantic_and_artwork_parity(tmp_path: Path) -> None:
+def test_canonical_package_benchmark_proves_semantic_parity(tmp_path: Path) -> None:
     report = build_metolius_benchmark_report(
         PACKAGE, tmp_path / "report.json", workspace_root=tmp_path
     )
     assert report["boardId"] == "metolius.wood-grips-compact-ii"
     assert report["parity"]["exact"] is True
     assert report["parity"]["semantics"]["exact"] is True
-    assert report["parity"]["artwork"]["exact"] is True
     assert len(report["packageSha256"]) == 64
 
 
