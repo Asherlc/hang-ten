@@ -1415,6 +1415,35 @@ def test_boards_listing_builds_one_fresh_identity_mapping_per_request(tmp_path):
     assert service.list_boards_calls == 1
 
 
+def test_board_get_reuses_one_identity_mapping_snapshot(tmp_path):
+    service = CountingBoardListService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+    public_board_id = server_module._unlinked_board_id(view.board_id)
+    service.library_snapshot_calls = 0
+    service.list_boards_calls = 0
+
+    with running_server(make_run(tmp_path / "legacy"), service) as base:
+        status, payload = read_json(base + f"/api/boards/{public_board_id}")
+
+    assert status == 200
+    assert payload["board"]["boardId"] == public_board_id
+    assert service.library_snapshot_calls == 1
+    assert service.list_boards_calls == 1
+
+
+def test_public_board_mapper_exposes_a_bound_identity_mapping(tmp_path):
+    service = FakeWorkbenchService(tmp_path / "workbench")
+    view = service.create_from_url("Example", "https://example.test/board.png")
+
+    mappings = server_module.PublicBoardMapper(service).mappings(
+        snapshot=service.library_snapshot(), views=service.list_boards()
+    )
+
+    assert mappings.internal_to_public[view.board_id] == server_module._unlinked_board_id(
+        view.board_id
+    )
+
+
 def test_unlinked_public_identity_does_not_follow_repository_catalog(tmp_path):
     service = FakeWorkbenchService(tmp_path / "workbench")
     view = service.create_from_url("Unlinked", "https://example.test/unlinked.png")
@@ -1671,6 +1700,32 @@ def test_board_scoped_save_requires_expected_revision(running_workbench_server):
 
     assert error.value.code == 400
     assert "expectedRevisionId" in json.load(error.value)["error"]
+
+
+def test_board_scoped_save_rejects_a_payload_for_another_board(
+    running_workbench_server,
+):
+    view = _create_board(running_workbench_server)
+    request = Request(
+        running_workbench_server + f"/api/boards/{view['boardId']}",
+        data=json.dumps(
+            {
+                "boardId": server_module._unlinked_board_id("another-board"),
+                "expectedRevisionId": view["revisionId"],
+            }
+        ).encode(),
+        method="PATCH",
+        headers={"Content-Type": "application/json"},
+    )
+
+    with pytest.raises(HTTPError) as error:
+        urlopen(request)
+
+    assert error.value.code == 400
+    assert json.load(error.value) == {
+        "ok": False,
+        "error": "boardId must match the board route",
+    }
 
 
 def test_second_http_mutation_for_same_board_returns_conflict(tmp_path):

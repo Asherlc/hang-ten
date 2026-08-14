@@ -17,6 +17,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import partial
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
@@ -502,6 +503,15 @@ class PublicBoardMapper:
             public_to_internal[public_id] = view.board_id
         return BoardIdentityMappings(internal_to_public, public_to_internal)
 
+    def mappings(
+        self,
+        *,
+        snapshot: object | None = None,
+        views: Iterable[object] | None = None,
+    ) -> BoardIdentityMappings:
+        """Return one reusable snapshot of public workspace identities."""
+        return self._mappings(snapshot=snapshot, views=views)
+
     def public_id(
         self, view: object, mappings: BoardIdentityMappings | None = None
     ) -> str:
@@ -943,6 +953,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             service = self._workbench_service()
             snapshot = service.library_snapshot()
+            views = service.list_boards()
+            mapper = self._board_mapper()
+            mappings = mapper.mappings(snapshot=snapshot, views=views)
             repository = {board.board_id: board for board in snapshot.boards}
             boards = [
                 {
@@ -956,12 +969,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 for board in snapshot.boards
             ]
             by_id = {board["boardId"]: index for index, board in enumerate(boards)}
-            views = service.list_boards()
-            mappings = self._board_mapper()._mappings(
-                snapshot=snapshot, views=views
-            )
             for view in views:
-                payload = self._board_mapper().view_payload(view, mappings)
+                payload = mapper.view_payload(view, mappings)
                 public_id = payload["boardId"]
                 if public_id in repository:
                     source = repository[public_id]
@@ -1003,14 +1012,18 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if not board_id:
                 raise RequestError(HTTPStatus.NOT_FOUND, "not found")
             service = self._workbench_service()
+            snapshot = service.library_snapshot()
+            views = service.list_boards()
+            mapper = self._board_mapper()
+            mappings = mapper.mappings(snapshot=snapshot, views=views)
             try:
-                internal_id = self._board_mapper().internal_id(board_id)
+                internal_id = mapper.internal_id(board_id, mappings)
             except RequestError:
                 internal_id = None
             runtime = next(
                 (
                     item
-                    for item in service.list_boards()
+                    for item in views
                     if item.board_id == internal_id
                 ),
                 None,
@@ -1019,7 +1032,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 board = next(
                     (
                         item
-                        for item in service.library_snapshot().boards
+                        for item in snapshot.boards
                         if item.board_id == board_id
                     ),
                     None,
@@ -1045,8 +1058,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 return
             revision_values = parse_qs(query).get("revisionId", [])
             revision_id = revision_values[0] if revision_values else None
-            board = self._board_mapper().view_payload(
-                service.get_board(runtime.board_id, revision_id=revision_id)
+            board = mapper.view_payload(
+                service.get_board(runtime.board_id, revision_id=revision_id), mappings
             )
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
@@ -1213,11 +1226,12 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             raise RequestError(HTTPStatus.BAD_REQUEST, "document is required")
         board_id = self._workspace_board_id(public_board_id)
         if path == "/api/final-save":
-            operation = lambda: service.save(
-                board_id, expected_revision_id=revision_id
+            operation = partial(
+                service.save, board_id, expected_revision_id=revision_id
             )
         elif path == "/api/drafts":
-            operation = lambda: service.save_draft(
+            operation = partial(
+                service.save_draft,
                 board_id,
                 payload["document"],
                 expected_stage=stage,
@@ -1225,20 +1239,23 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 expected_revision_id=revision_id,
             )
         elif path == "/api/approve":
-            operation = lambda: service.approve_and_advance(
+            operation = partial(
+                service.approve_and_advance,
                 board_id,
                 expected_stage=stage,
                 expected_checkpoint_token=checkpoint_token,
                 expected_revision_id=revision_id,
             )
         elif path == "/api/revise":
-            operation = lambda: service.revise_stage(
+            operation = partial(
+                service.revise_stage,
                 board_id,
                 stage=stage,
                 expected_revision_id=revision_id,
             )
         else:
-            operation = lambda: service.retry(
+            operation = partial(
+                service.retry,
                 board_id,
                 expected_stage=stage,
                 expected_revision_id=revision_id,
