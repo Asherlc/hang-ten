@@ -1,15 +1,23 @@
 from __future__ import annotations
 
 import importlib.util
+from io import BytesIO
 import json
 import shutil
 import sys
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def png_bytes(color: tuple[int, int, int]) -> bytes:
+    buffer = BytesIO()
+    Image.new("RGB", (1, 1), color).save(buffer, format="PNG")
+    return buffer.getvalue()
 
 
 def load_staging_module():
@@ -99,16 +107,18 @@ def test_repeated_staging_refreshes_nested_package_file_changes(
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
     nested_source = catalog_packages[0] / "assets" / "primary.png"
-    nested_source.write_bytes(b"first nested revision")
+    first_revision = png_bytes((255, 0, 0))
+    nested_source.write_bytes(first_revision)
 
     module.stage_board_packages(repository_root, destination)
     nested_destination = destination / catalog_packages[0].name / "assets" / nested_source.name
-    assert nested_destination.read_bytes() == b"first nested revision"
+    assert nested_destination.read_bytes() == first_revision
 
-    nested_source.write_bytes(b"second nested revision")
+    second_revision = png_bytes((0, 0, 255))
+    nested_source.write_bytes(second_revision)
     module.stage_board_packages(repository_root, destination)
 
-    assert nested_destination.read_bytes() == b"second nested revision"
+    assert nested_destination.read_bytes() == second_revision
 
 
 def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
