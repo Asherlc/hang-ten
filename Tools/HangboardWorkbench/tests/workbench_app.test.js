@@ -7,6 +7,7 @@ const {
   restoreOpeningAfterJobRecovery,
 } = require("../workbench-controller.js");
 const { formatFocusedEditorDiagnostic } = require("../editor-ui-model.js");
+const { normalizePipelineDocument } = require("../editor-model.js");
 
 const markup = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
 const readme = fs.readFileSync(path.join(__dirname, "../README.md"), "utf8");
@@ -105,8 +106,131 @@ test("loads a completed board from its explicit editor document URL", async () =
   assert.doesNotMatch(source, /checkpointDocumentUrl\(/);
 });
 
+test("checkpoint loading stages vector documents and rejects malformed data before commit", async () => {
+  const helpers = new Function(
+    "normalizePipelineDocument",
+    `${extractFunction(appSource, "editorModeForDocument")}
+${extractFunction(appSource, "stageCheckpointDocument")}
+return { editorModeForDocument, stageCheckpointDocument };`,
+  )(normalizePipelineDocument);
+  const vectorDocument = {
+    canvas: { width: 100, height: 50 },
+    regions: [{ id: 1, key: "hold-1", type: "edge", displayPath: "M 10 10 L 20 10 L 20 20 Z" }],
+  };
+  const vectorStage = helpers.stageCheckpointDocument(
+    { stage: 4, editorMode: null },
+    { image: { naturalWidth: 100, naturalHeight: 50 } },
+    vectorDocument,
+  );
+  assert.equal(vectorStage.editorMode, "vector");
+  assert.equal(vectorStage.document.regions[0].displayPath, vectorDocument.regions[0].displayPath);
+  const validContourDocument = {
+    canvas: { width: 100, height: 50 },
+    regions: [{ id: 2, key: "hold-2", type: "edge", contour: [[0, 0], [10, 0], [10, 10]] }],
+  };
+  const malformedDraft = {
+    ...validContourDocument,
+    regions: [{
+      ...validContourDocument.regions[0],
+      metadata: { editableContour: [[0, 0], [10, Infinity], [10, 10]] },
+    }],
+  };
+  assert.throws(
+    () => helpers.stageCheckpointDocument(
+      { stage: 2, editorMode: "contour" },
+      { image: { naturalWidth: 100, naturalHeight: 50 } },
+      validContourDocument,
+      malformedDraft,
+    ),
+    /Editable contour point 1 must contain two finite coordinates/,
+  );
+
+  const source = extractFunction(appSource, "loadCheckpoint");
+  assert.ok(
+    source.indexOf("stageCheckpointDocument") < source.indexOf("return load.commit"),
+    "the document must be staged before editor state is committed",
+  );
+  const state = {
+    board: { boardId: "previous-board" },
+    regions: [{ id: 9, key: "previous" }],
+    baselineRegions: [{ id: 9, key: "previous" }],
+    imageHref: "previous.png",
+    checkpointDocument: { regions: [{ id: 9 }] },
+  };
+  const before = structuredClone(state);
+  let committed = false;
+  const loadCheckpoint = new Function(
+    "loadCoordinator",
+    "state",
+    "renderSaveState",
+    "checkpointImageUrl",
+    "loadImageAsset",
+    "fetch",
+    "validateEditableImageAlignment",
+    "stageCheckpointDocument",
+    "checkpointComparisonUrl",
+    "clearTimeout",
+    "clone",
+    "el",
+    "applyImageAsset",
+    "applyAnnotatedReviewAsset",
+    "EDITOR_STAGES",
+    "readStoredDraft",
+    "setRegions",
+    "renderEditorShell",
+    "render",
+    "requestAnimationFrame",
+    "fitCanvas",
+    `return (async ${source});`,
+  )(
+    { begin() { throw new Error("the supplied load should be used"); } },
+    state,
+    () => {},
+    (view) => view.editorImageUrl,
+    async () => ({ image: { naturalWidth: 100, naturalHeight: 50 } }),
+    async () => ({ ok: true, async json() {
+      return {
+        canvas: { width: 100, height: 50 },
+        regions: [{
+          id: 1,
+          key: "invalid",
+          type: "edge",
+          contour: [[0, 0], [10, 0], [10, 10]],
+          metadata: { editableContour: [[0, 0], [10, Infinity], [10, 10]] },
+        }],
+      };
+    } }),
+    () => {},
+    helpers.stageCheckpointDocument,
+    () => null,
+    () => {},
+    structuredClone,
+    {},
+    () => {},
+    () => {},
+    new Set([2, 3]),
+    () => null,
+    () => { throw new Error("setRegions must not run for malformed data"); },
+    () => {},
+    () => {},
+    () => {},
+  );
+
+  await assert.rejects(
+    loadCheckpoint(
+      { stage: 4, editorImageUrl: "/board.png", editorDocumentUrl: "/holds.json", editorMode: null },
+      null,
+      { isCurrent: () => true, commit(callback) { committed = true; callback(); return true; } },
+    ),
+    /Editable contour point 1 must contain two finite coordinates/,
+  );
+  assert.equal(committed, false);
+  assert.deepEqual(state, before);
+});
+
 test("the board rail has no user-facing run terminology", () => {
   assert.doesNotMatch(markup, />Recent runs</);
+  assert.doesNotMatch(markup, /Checking for recent runs/);
   assert.doesNotMatch(appSource, /function renderRecentRuns\(/);
 });
 

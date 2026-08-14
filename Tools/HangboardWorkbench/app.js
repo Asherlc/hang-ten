@@ -1931,6 +1931,26 @@
     el["annotated-review"].classList.toggle("hidden", !showReview);
   }
 
+  function editorModeForDocument(view, document) {
+    if (view?.editorMode) return view.editorMode;
+    return document?.regions?.some(
+      (region) => typeof region.displayPath === "string" && region.displayPath.trim(),
+    ) ? "vector" : "contour";
+  }
+
+  function stageCheckpointDocument(view, imageAsset, baselineDocument, restoredDocument = null) {
+    const image = imageAsset?.image || imageAsset;
+    const fallbackCanvas = { width: image.naturalWidth, height: image.naturalHeight };
+    const editorMode = editorModeForDocument(view, baselineDocument);
+    const baseline = normalizePipelineDocument(baselineDocument, fallbackCanvas, editorMode);
+    const document = normalizePipelineDocument(
+      restoredDocument || baselineDocument,
+      baseline.canvas,
+      editorMode,
+    );
+    return { baseline, document, editorMode };
+  }
+
   async function loadCheckpoint(view, providedDocument = null, pendingLoad = null) {
     if (!view) return false;
     const ownsLoad = pendingLoad == null;
@@ -1952,6 +1972,13 @@
       if (!response.ok) throw new Error("Could not load holds for this board");
       const baselineDocument = await response.json();
       validateEditableImageAlignment(view, imageAsset, baselineDocument);
+      const restored = EDITOR_STAGES.has(view.stage) ? readStoredDraft(view) : null;
+      const stagedDocument = stageCheckpointDocument(
+        view,
+        imageAsset,
+        baselineDocument,
+        restored?.document,
+      );
       if (!load.isCurrent()) return false;
       const comparisonUrl = checkpointComparisonUrl(view);
       const reviewAsset = comparisonUrl
@@ -1966,7 +1993,7 @@
       if (state.autosaveTimer != null) clearTimeout(state.autosaveTimer);
       state.autosaveTimer = null;
       state.board = view;
-      state.editorMode = view.editorMode || "contour";
+      state.editorMode = stagedDocument.editorMode;
       state.checkpointDocument = null;
       state.validationErrors = [];
       state.saveError = "";
@@ -1988,9 +2015,13 @@
       if (imageAsset) applyImageAsset(imageAsset);
       if (reviewAsset) applyAnnotatedReviewAsset(reviewAsset);
 
-      const restored = EDITOR_STAGES.has(view.stage) ? readStoredDraft(view) : null;
       state.checkpointDocument = clone(baselineDocument);
-      setRegions(restored?.document || baselineDocument, "board-holds.json", view.editorMode, baselineDocument);
+      setRegions(
+        stagedDocument.document,
+        "board-holds.json",
+        stagedDocument.editorMode,
+        stagedDocument.baseline,
+      );
       if (EDITOR_STAGES.has(view.stage)) {
         if (restored?.dirty) {
           state.savedSnapshot = JSON.stringify(state.baselineRegions);
