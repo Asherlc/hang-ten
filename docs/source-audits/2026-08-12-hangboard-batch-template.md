@@ -18,17 +18,17 @@ official source supports it.
 
 ## Evidence coverage
 
-| hold field or artwork element | official source URL | package evidence key | representation method |
+| board fact, hold field, semantic target, or asset | official source URL | package evidence key | representation method |
 | --- | --- | --- | --- |
 
 The completed package must use exact evidence maps: `fieldEvidence` covers
 every factual field in `board.json`; `holdEvidence` covers every
 `<hold-id>.<field>`; `semanticEvidence` covers every semantic ID;
-`artworkEvidence` covers the silhouette, every layer, and every hold piece;
 and `assetEvidence` covers `assets/primary.png` plus an optional unchanged
 source photo. The registered package has exactly `board.json`, `evidence.json`,
-`semantics.json`, and `artwork.json`, with `assets/primary.png` as its only
-generated raster.
+and `semantics.json`; `assets/primary.png` is its only board visual. Each
+`board.json` hold frame is the normalized factual region used for generic taps
+and highlights.
 
 ## Evidence blockers
 
@@ -40,4 +40,4 @@ leave its existing directory unregistered with only `assets/primary.png`:
 Missing official evidence: no manufacturer hold guide or measurement supports
 `fingerCapacity`, `gripType`, and each physical hold boundary. The product page
 and front image establish identity and silhouette only. No `board.json`,
-`semantics.json`, `artwork.json`, `evidence.json`, or catalog entry was added.
+`semantics.json`, `evidence.json`, or catalog entry was added.

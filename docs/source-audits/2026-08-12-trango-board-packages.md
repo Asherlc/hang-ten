@@ -32,15 +32,15 @@ not evidence of a cross-model hold map.
 ## Evidence-key readiness matrix
 
 A registered board must have evidence for every `board.json` fact, every
-physical `holds[]` field, each semantic target, every artwork element and hold
-piece, and `assets/primary.png`. The table below identifies why none of these
+physical `holds[]` field and normalized frame, each semantic target, and
+`assets/primary.png`. The table below identifies why none of these
 candidates can honestly populate those maps.
 
 | candidate | source-backed portions | missing required package evidence | result |
 | --- | --- | --- | --- |
-| `trango.rock-prodigy-forge` | Product identity/dimensions; selected named grips and several measurements; official front image | Complete individual physical-hold inventory and boundaries; source-backed `gripType`, `fingerCapacity`, `cueStyle`, and `features` for every contact region; exhaustive semantic and artwork mappings | Do not add sidecars or a catalog entry. |
-| `trango.rock-prodigy-natural` | Product identity/material/dimensions; named key grips, capacities, and depth ranges; official front image | Complete inventory and individual boundaries, because the manufacturer calls the guide non-comprehensive; all required app-specific field mappings and exhaustive semantic/artwork mappings | Do not add sidecars or a catalog entry. |
-| `trango.rock-prodigy-pivot` | Product identity; officially named key grips across orientations; official front image | Published board dimensions; complete inventory/boundaries across all 22 positions; source-backed field mappings and exhaustive semantic/artwork mappings | Do not add sidecars or a catalog entry. |
+| `trango.rock-prodigy-forge` | Product identity/dimensions; selected named grips and several measurements; official front image | Complete individual physical-hold inventory and frames; source-backed `gripType`, `fingerCapacity`, `cueStyle`, and `features` for every contact region; exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
+| `trango.rock-prodigy-natural` | Product identity/material/dimensions; named key grips, capacities, and depth ranges; official front image | Complete inventory and individual frames, because the manufacturer calls the guide non-comprehensive; all required app-specific field mappings and exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
+| `trango.rock-prodigy-pivot` | Product identity; officially named key grips across orientations; official front image | Published board dimensions; complete inventory/frames across all 22 positions; source-backed field mappings and exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
 
 ## Exact blockers
 
@@ -51,8 +51,8 @@ publish the complete, individual physical-hold inventory needed to distinguish
 all board contact regions. The product page's claim that Forge dimensions
 differ from the Training Center expressly prevents filling that gap from the
 Training Center package. No source establishes every required hold boundary,
-capacity, grip classification, UI cue, feature, semantic target, or artwork
-piece. The candidate must remain primary-only and unregistered.
+capacity, grip classification, UI cue, feature, semantic target, or normalized
+frame. The candidate must remain primary-only and unregistered.
 
 ### `trango-rock-prodigy-natural`
 
@@ -68,7 +68,7 @@ unregistered.
 Trango documents orientations and selected key grips but explicitly does not
 claim a comprehensive list of possible holds. It publishes neither an
 exhaustive physical boundary map nor overall board dimensions. The source set
-cannot support all per-hold records, semantic targets, and artwork mappings
+cannot support all per-hold records, semantic targets, and normalized frames
 without inference. The candidate must remain primary-only and unregistered.
 
 ## Required follow-up
@@ -76,6 +76,6 @@ without inference. The candidate must remain primary-only and unregistered.
 Obtain a manufacturer-issued exhaustive, model-specific hold diagram or data
 sheet for each board. It must map every physical contact region and its
 boundary to measured depth/size, finger capacity, grip classification, and
-the documented targets intended for training. Then author all four canonical
+the documented targets intended for training. Then author all three canonical
 sidecars and register that model in one change. Do not treat Training Center
 evidence as a substitute.

@@ -4,16 +4,15 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-The first supported board is the Metolius Wood Grips Compact II. Its map is a
-deterministic, textureless vector illustration based on Metolius's product
-photography and hold-depth diagram. The same declared contact path renders a
-hold cavity, its active red highlight, and its interaction area, so a highlight
-cannot drift away from the hold.
+The first supported board is the Metolius Wood Grips Compact II. Its package
+ships one source-backed `assets/primary.png` board visual. Factual normalized
+hold frames in `board.json` drive the generic tap, active-highlight, and
+preview-overlay behavior, so interaction stays aligned to the packaged image.
 
 ## Included
 
-- A reusable hangboard design language with normalized geometry, mirrored
-  pairs, dimensional planes, recess depths, and exact-path highlights.
+- A reusable hangboard package contract with normalized hold frames, mirrored
+  pairs, dimensional metadata, and generic image overlays.
 - An audited Compact II hold map covering its jugs, flat and round slopers,
   29/19 mm edges, and 2-, 3-, and 4-finger pockets.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
@@ -125,15 +124,8 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
 The hangboard guide uses the repository-local staged onboarding tool in
-`Tools/HangboardPipeline`. Run its accepted Compact II parity fixture without
-a model call before onboarding a new product:
-
-```sh
-scripts/hangboard-tools.sh benchmark
-```
-
-The report is written under `.context/hangboard-onboarding/`; Python packages,
-caches, and generated board runs remain local and are not part of the app.
+`Tools/HangboardPipeline`. Python packages, caches, and generated board runs
+remain local and are not part of the app.
 
 Canonical hangboard package checks:
 

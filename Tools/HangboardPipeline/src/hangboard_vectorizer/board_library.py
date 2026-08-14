@@ -13,7 +13,6 @@ import shutil
 import stat
 import tempfile
 
-from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
 from .board_catalog import BoardHold, BoardPackage, load_board_package, load_catalog
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
@@ -58,9 +57,7 @@ class _CanonicalPackageRunner:
     def __init__(self, stage: int, asset: Path, package: BoardPackage) -> None:
         self.stage = stage
         self._asset = asset
-        self._package = package
         self._holds = package.board.holds
-        self._pieces = package.artwork.hold_pieces
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
         artifact_root.mkdir(parents=True)
@@ -137,11 +134,7 @@ class _CanonicalPackageRunner:
                     "holds": [
                         {
                             "holdID": hold.id,
-                            "displayPaths": [
-                                self._piece_path(piece)
-                                for piece in self._pieces
-                                if piece.hold_id == hold.id
-                            ],
+                            "displayPaths": [self._frame_path(hold)],
                         }
                         for hold in self._holds
                     ],
@@ -165,61 +158,50 @@ class _CanonicalPackageRunner:
 
         with Image.open(self._asset) as image:
             width, height = image.size
-        holds = {hold.id: hold for hold in self._holds}
         regions = [
             {
                 "id": index,
-                "key": piece.hold_id,
-                "type": holds[piece.hold_id].kind,
+                "key": hold.id,
+                "type": hold.kind,
                 "pieceIndex": 0,
-                "displayPath": self._piece_path(piece, width, height),
+                "displayPath": self._frame_path(hold, width, height),
                 "anchor": [
                     (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width / 2
+                        hold.frame.x
+                        + hold.frame.width / 2
                     )
                     * width,
                     (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height / 2
+                        hold.frame.y
+                        + hold.frame.height / 2
                     )
                     * height,
                 ],
                 "bounds": [
-                    holds[piece.hold_id].frame.x * width,
-                    holds[piece.hold_id].frame.y * height,
+                    hold.frame.x * width,
+                    hold.frame.y * height,
                     (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width
+                        hold.frame.x
+                        + hold.frame.width
                     )
                     * width,
                     (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height
+                        hold.frame.y
+                        + hold.frame.height
                     )
                     * height,
                 ],
-                "metadata": self._runtime_metadata(holds[piece.hold_id]),
+                "metadata": self._runtime_metadata(hold),
                 "symmetry": {},
             }
-            for index, piece in enumerate(self._pieces, start=1)
+            for index, hold in enumerate(self._holds, start=1)
         ]
         return {
             "schemaVersion": 1,
             "stage": stage,
             "canvas": {"width": width, "height": height},
             "regions": regions,
-            "silhouettePaths": [
-                {
-                    "pieceIndex": 0,
-                    "displayPath": self._shape_path(
-                        self._package.artwork.canvas_frame,
-                        self._package.artwork.silhouette,
-                        width,
-                        height,
-                    ),
-                }
-            ],
+            "silhouettePaths": [],
         }
 
     @staticmethod
@@ -236,60 +218,12 @@ class _CanonicalPackageRunner:
         return metadata
 
     @staticmethod
-    def _piece_path(
-        piece: BoardHoldPieceDocument, width: int = 1, height: int = 1
+    def _frame_path(
+        hold: BoardHold, width: int = 1, height: int = 1
     ) -> str:
-        return _CanonicalPackageRunner._shape_path(
-            piece.frame, piece.shape, width, height
-        )
-
-    @staticmethod
-    def _shape_path(
-        frame: NormalizedFrame,
-        shape: BoardShapeDocument,
-        width: int,
-        height: int,
-    ) -> str:
-        x, y = frame.x * width, frame.y * height
-        w, h = frame.width * width, frame.height * height
-        if shape.type == "roundedRect":
-            radius = min(w, h) * (shape.corner_radius_fraction or 0)
-            return (
-                f"M {x + radius} {y} L {x + w - radius} {y} "
-                f"Q {x + w} {y} {x + w} {y + radius} "
-                f"L {x + w} {y + h - radius} "
-                f"Q {x + w} {y + h} {x + w - radius} {y + h} "
-                f"L {x + radius} {y + h} "
-                f"Q {x} {y + h} {x} {y + h - radius} "
-                f"L {x} {y + radius} Q {x} {y} {x + radius} {y} Z"
-            )
-        commands = []
-        for command in shape.commands:
-            values = {
-                "move": "M",
-                "line": "L",
-                "quad": "Q",
-                "curve": "C",
-                "close": "Z",
-            }
-            if command.command == "close":
-                commands.append("Z")
-                continue
-            points = []
-            for point in (
-                command.control1,
-                command.control2,
-                command.control,
-                command.to,
-            ):
-                if point is not None:
-                    points.extend((x + point[0] * w, y + point[1] * h))
-            commands.append(
-                values[command.command]
-                + " "
-                + " ".join(str(value) for value in points)
-            )
-        return " ".join(commands)
+        x, y = hold.frame.x * width, hold.frame.y * height
+        w, h = hold.frame.width * width, hold.frame.height * height
+        return f"M {x} {y} H {x + w} V {y + h} H {x} Z"
 
     @staticmethod
     def _selectable_svg(document: Mapping[str, object]) -> str:

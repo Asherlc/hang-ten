@@ -1,4 +1,4 @@
-"""Offline semantic and artwork parity report for a canonical board package."""
+"""Offline semantic parity report for a canonical board package."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def build_metolius_benchmark_report(
     workspace_root: Path,
     cache_root: Path | None = None,
 ) -> dict[str, object]:
-    """Validate canonical semantic/artwork parity and write a stable report."""
+    """Validate canonical semantic parity and write a stable report."""
     del cache_root
     package = load_board_package(Path(package_root))
     owned_root = Path(workspace_root).resolve(strict=False)
@@ -32,23 +32,16 @@ def build_metolius_benchmark_report(
         for targets in package.semantics.semantic_holds.values()
         for hold_id in targets
     }
-    artwork_ids = {piece.hold_id for piece in package.artwork.hold_pieces}
     semantic_exact = semantic_ids == hold_ids
-    artwork_exact = artwork_ids == hold_ids
     report: dict[str, object] = {
         "boardId": package.board.id,
         "packageSha256": _package_hash(package.root),
         "parity": {
-            "exact": semantic_exact and artwork_exact,
+            "exact": semantic_exact,
             "semantics": {
                 "exact": semantic_exact,
                 "missingHoldIds": sorted(hold_ids - semantic_ids),
                 "unknownHoldIds": sorted(semantic_ids - hold_ids),
-            },
-            "artwork": {
-                "exact": artwork_exact,
-                "missingHoldIds": sorted(hold_ids - artwork_ids),
-                "unknownHoldIds": sorted(artwork_ids - hold_ids),
             },
         },
     }
@@ -68,7 +61,7 @@ def _package_hash(root: Path) -> str:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate canonical hangboard semantic and artwork parity",
+        description="Validate canonical hangboard semantic parity",
     )
     parser.add_argument("--package", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)

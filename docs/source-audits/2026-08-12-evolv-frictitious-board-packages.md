@@ -2,8 +2,8 @@
 
 Checked 2026-08-12. This audit evaluates the unregistered image candidates
 against the source-backed package contract in `docs/ADDING_A_BOARD.md`. A
-product page and a manufacturer-hosted image establish product identity and
-visible artwork only. They do not establish a physical hold's capacity, grip
+product page and a manufacturer-hosted image establish product identity and a
+visible board image only. They do not establish a physical hold's capacity, grip
 classification, or a distinct physical boundary unless the manufacturer
 explicitly documents it.
 
@@ -60,14 +60,14 @@ insufficient to map all seven individual records and their factual fields.
 boundaries of the plural mono pockets, nor a complete per-hold classification
 and capacity map. It also does not say how the 40 mm edge's two-finger pocket
 is bounded relative to the edge as a separate physical hold. The official
-images may be normalized into artwork once the factual hold inventory exists,
-but cannot establish it. No source-backed `board.json`, `semantics.json`, or
-evidence map can be authored without inventing that inventory.
+images may support the retained primary image once the factual hold inventory
+exists, but cannot establish it. No source-backed `board.json`, `semantics.json`,
+or evidence map can be authored without inventing that inventory.
 
 ## Required follow-up
 
 Request manufacturer-issued numbered hold diagrams or manuals for all three
 models. The material must name every physical hold and establish its boundary,
 depth/size, finger capacity, and grip classification. Once available, update
-this audit with exact source rows and author the four package sidecars in one
+this audit with exact source rows and author the three package sidecars in one
 change; do not infer missing fields from the retained `primary.png` files.

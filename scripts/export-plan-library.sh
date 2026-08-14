@@ -17,7 +17,6 @@ UNLOCALIZED_RESOURCES_FOLDER_PATH="Resources" \
 
 xcrun swiftc \
   "$repo_root/HangTen/Views/DesignSystem.swift" \
-  "$repo_root/HangTen/Views/BoardDesignLanguage.swift" \
   "$repo_root/HangTen/Models/BoardStorage.swift" \
   "$repo_root/HangTen/Models/BoardPackageStore.swift" \
   "$repo_root/HangTen/Models/TrainingModels.swift" \

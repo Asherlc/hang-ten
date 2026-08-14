@@ -67,7 +67,6 @@ def _copy_valid_package(destination: Path, board_id: str) -> None:
         ("board.json", "id"),
         ("evidence.json", "boardID"),
         ("semantics.json", "boardID"),
-        ("artwork.json", "boardID"),
     ):
         path = destination / filename
         document = json.loads(path.read_text(encoding="utf-8"))

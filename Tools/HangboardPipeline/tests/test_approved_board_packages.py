@@ -72,13 +72,8 @@ CANONICAL_PACKAGE_SIDECARS = {
     "board.json",
     "evidence.json",
     "semantics.json",
-    "artwork.json",
 }
 SOURCE_PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".webp", ".heic"}
-
-
-def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
-    return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
 
 
 def test_registry_contains_only_the_fully_officially_sourced_runtime_board() -> None:
@@ -194,7 +189,7 @@ def test_every_registered_package_has_one_presentation_and_complete_evidence() -
         assert set(package.evidence.asset_evidence) == asset_paths
 
 
-def test_compact_package_uses_the_official_hold_inventory_semantics_and_artwork() -> None:
+def test_compact_package_uses_the_official_hold_inventory_and_semantics() -> None:
     module = load_board_catalog_module()
     package = module.load_board_package(COMPACT_ROOT)
 
@@ -223,29 +218,8 @@ def test_compact_package_uses_the_official_hold_inventory_semantics_and_artwork(
         if key.endswith(".gripType")
     )
     assert dict(package.semantics.semantic_holds) == COMPACT_SEMANTICS
-    assert _frame_tuple(package.artwork.canvas_frame) == (0.025, 0.005, 0.950, 0.965)
-    assert tuple(layer.id for layer in package.artwork.layers) == (
-        "top-plane",
-        "middle-separator",
-        "bottom-plane",
-        "left-top-seam",
-        "right-top-seam",
-    )
-    assert tuple(piece.id for piece in package.artwork.hold_pieces) == (
-        "jug-left-top-cap", "jug-right-top-cap",
-        "sloper-flat-left-top-surface", "sloper-flat-right-top-surface",
-        "sloper-round-center-surface",
-        "edge-29-left-upper-side-rail", "edge-29-right-upper-side-rail",
-        "pocket-29-three-left-upper", "pocket-29-three-right-upper",
-        "pocket-29-two-left-upper", "pocket-29-two-right-upper",
-        "pocket-29-four-center-upper",
-        "edge-19-left-lower-side-rail", "edge-19-right-lower-side-rail",
-        "pocket-19-three-left-lower", "pocket-19-three-right-lower",
-        "pocket-19-two-left-lower", "pocket-19-two-right-lower",
-        "pocket-19-four-center-lower",
-    )
-    assert package.artwork.hold_ids == {hold_id for hold_id, _ in COMPACT_HOLDS}
     assert package.board.presentation_asset_path == "assets/primary.png"
+    assert not COMPACT_ROOT.joinpath("artwork.json").exists()
 
 
 def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:

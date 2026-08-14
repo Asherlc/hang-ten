@@ -38,7 +38,6 @@ def test_registered_packages_use_the_canonical_primary_presentation_asset() -> N
             "board.json",
             "evidence.json",
             "semantics.json",
-            "artwork.json",
         }
 
         asset_paths = {
@@ -77,6 +76,30 @@ def test_catalog_rejects_a_registered_package_that_presents_a_source_photo(
     board_path.write_text(json.dumps(board), encoding="utf-8")
 
     with pytest.raises(ValueError, match="must present assets/primary.png"):
+        module.validate_catalog(catalog_path)
+
+
+def test_catalog_rejects_registered_package_with_invalid_primary_png_bytes(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    primary = tmp_path / "example-board" / "assets" / "primary.png"
+    primary.write_bytes(b"not a PNG")
+
+    with pytest.raises(ValueError, match="assets/primary.png must contain PNG image data"):
+        module.validate_catalog(catalog_path)
+
+
+def test_catalog_rejects_registered_package_with_jpeg_renamed_primary_png(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    catalog_path = _write_catalog(tmp_path)
+    assets = tmp_path / "example-board" / "assets"
+    (assets / "primary.png").write_bytes((assets / "WoodGripsCompactII.jpg").read_bytes())
+
+    with pytest.raises(ValueError, match="assets/primary.png must contain PNG image data"):
         module.validate_catalog(catalog_path)
 
 

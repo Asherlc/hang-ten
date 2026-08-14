@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -13,6 +14,8 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPipeline/TESTING.md"
+PIPELINE_README = REPO_ROOT / "Tools/HangboardPipeline/README.md"
+TOOLS_SCRIPT = REPO_ROOT / "scripts/hangboard-tools.sh"
 _UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 
 
@@ -145,3 +148,46 @@ def test_testing_guidance_uses_registered_not_lifecycle_inventory_terms() -> Non
     assert "review inventory" not in testing
     assert "registered and staged" in testing
     assert "unregistered" in testing
+
+
+def test_pipeline_readme_separates_onboarding_and_conversion_options() -> None:
+    """Onboarding accepts a product name; conversion accepts a product ID."""
+    pipeline_readme = PIPELINE_README.read_text(encoding="utf-8")
+
+    assert "## Convert a product photo" in pipeline_readme
+    assert "hangboard-to-svg" in pipeline_readme
+    assert "`--product` and `--allow-low-confidence` are conversion options." in pipeline_readme
+    assert "Semantic mappings come from `semantics.json`." in pipeline_readme
+    assert "`--product` is a caller assertion" not in pipeline_readme
+
+
+def test_active_package_guidance_describes_three_sidecars_and_primary_raster() -> None:
+    """A fourth sidecar would recreate a competing board-rendering contract."""
+    active_package_docs = (
+        README,
+        ADDING_A_BOARD,
+        PIPELINE_README,
+        TESTING,
+        TOOLS_SCRIPT,
+    )
+    active_text = "\n".join(path.read_text(encoding="utf-8") for path in active_package_docs)
+    active_text_lower = active_text.lower()
+    adding_a_board_text = ADDING_A_BOARD.read_text(encoding="utf-8")
+
+    assert "board.json`, `evidence.json`, and `semantics.json`" in adding_a_board_text
+    assert "`assets/primary.png` is the only board visual" in adding_a_board_text
+    assert re.search(r"(?<![-\\w])svg(?![-\\w])", active_text_lower) is None
+    assert "artwork" not in active_text_lower
+    for obsolete_contract in (
+        "`artwork.json`",
+        "artworkEvidence",
+        "artwork parity",
+        "hangboard-semantic-benchmark",
+        "interactive SVG",
+        "vector illustration",
+        "canonical product render",
+        "renderAsset",
+        "curated-vector",
+        "SVG embeds",
+    ):
+        assert obsolete_contract.lower() not in active_text_lower

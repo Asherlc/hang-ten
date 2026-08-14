@@ -2208,9 +2208,9 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     assert len([board for board in final_boards["boards"] if board["inProgress"] is True]) == 1
     vector_path = next(workspace.rglob("stage-3-vector-regions.json"))
     vector_document = json.loads(vector_path.read_text())
-    canonical_artwork = json.loads((package / "artwork.json").read_text())
+    canonical_board = json.loads((package / "board.json").read_text())
     assert [region["key"] for region in vector_document["regions"]] == [
-        piece["holdID"] for piece in canonical_artwork["holdPieces"]
+        hold["id"] for hold in canonical_board["holds"]
     ]
     assert all(region["displayPath"] for region in vector_document["regions"])
     assert (workspace / "boards").is_dir()

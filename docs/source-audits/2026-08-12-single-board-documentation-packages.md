@@ -13,9 +13,8 @@ one-to-one physical-hold inventory.
 Every ready package would need exact evidence for the board facts; every
 `holds[].{id,name,shortLabel,detail,kind,frame,sizeMillimeters,`
 `depthRangeMillimeters,gripType,fingerCapacity,cueStyle,features}` field;
-every semantic target; the silhouette, each artwork layer and hold piece; and
-`assets/primary.png`. The source rows below state which of those requirements
-the manufacturer material actually covers.
+every semantic target; and `assets/primary.png`. The source rows below state
+which of those requirements the manufacturer material actually covers.
 
 ## Lattice Triple Rung (`lattice.triple-rung`)
 
@@ -49,9 +48,9 @@ authored.
 **Blocker:** Moon's aggregate inventory does not assign each individual
 physical hold an identity, boundary/frame, depth, capacity, or grip
 classification. It also does not map physical holds to semantic targets or to
-the normalized artwork pieces required by the package. A gallery cannot supply
-those unpublished one-to-one mappings. No `board.json`, `semantics.json`,
-`artwork.json`, or `evidence.json` is permitted.
+the normalized frames required by the package. A gallery cannot supply those
+unpublished one-to-one mappings. No `board.json`, `semantics.json`, or
+`evidence.json` is permitted.
 
 ## Nature Climbing Stoak Board III (`nature.stoak-board-iii`)
 
@@ -83,7 +82,7 @@ unregistered.
 **Blocker:** The official target10a.com article is high-level copy, and the
 manufacturer-branded CDN document does not enumerate holds. Neither supports
 a discrete physical-hold inventory, per-hold dimensions/depths, finger
-capacities, grip types, semantics, or normalized artwork pieces. The generated
+capacities, grip types, semantics, or normalized hold frames. The generated
 presentation image is not evidence for those facts; the candidate remains
 primary-only and unregistered.
 
@@ -102,4 +101,4 @@ Obtain manufacturer-published hold diagrams, manuals, or measurement tables
 that identify every discrete hold and its boundaries, sizes/depths, finger
 capacity, grip classification, and supported semantic targets. The resulting
 source set must also select and document one Stoak Board III insert
-configuration. Only then may all four sidecars and a catalog entry be added.
+configuration. Only then may all three sidecars and a catalog entry be added.
