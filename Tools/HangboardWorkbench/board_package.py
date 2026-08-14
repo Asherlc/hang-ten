@@ -1,0 +1,449 @@
+"""Direct canonical board-package tools owned by Hangboard Workbench."""
+
+from __future__ import annotations
+
+from contextlib import contextmanager
+from dataclasses import dataclass
+import fcntl
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import tempfile
+from typing import Any, Iterator, Mapping
+
+from board_geometry import (
+    GeometryError,
+    display_path_for_shape,
+    parse_closed_path,
+    shape_for_path,
+)
+
+
+_IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
+_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
+_SIDECARS = ("board.json", "artwork.json", "evidence.json", "semantics.json")
+_ROOT_ITEMS = frozenset((*_SIDECARS, "assets"))
+
+
+class BoardPackageError(ValueError):
+    """Raised for invalid or unsafe direct board-package operations."""
+
+
+@dataclass(frozen=True, slots=True)
+class CatalogEntry:
+    board_id: str
+    slug: str
+
+
+@dataclass(frozen=True, slots=True)
+class BoardPackage:
+    root: Path
+    board: dict[str, Any]
+    artwork: dict[str, Any]
+    evidence: dict[str, Any]
+    semantics: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return self.board["id"]
+
+    @property
+    def hold_ids(self) -> tuple[str, ...]:
+        return tuple(hold["id"] for hold in self.board["holds"])
+
+
+def discover_packages(library_root: Path) -> tuple[CatalogEntry, ...]:
+    """Read the direct board catalog and validate every registered package."""
+    root = _library_root(library_root)
+    entries = _load_catalog(root / "catalog.json")
+    for entry in entries:
+        package = load_board_package(root / entry.slug)
+        if package.board_id != entry.board_id:
+            raise BoardPackageError("catalog board ID does not match its package")
+    return entries
+
+
+def load_board_package(package_root: Path) -> BoardPackage:
+    """Load one canonical package without accepting links or extra package files."""
+    root = Path(package_root)
+    if root.is_symlink():
+        raise BoardPackageError("board package must not be a symlink")
+    try:
+        root = root.resolve(strict=True)
+    except OSError as error:
+        raise BoardPackageError("board package is not accessible") from error
+    if not root.is_dir() or root.is_symlink():
+        raise BoardPackageError("board package must be a directory")
+    _reject_symlinks(root)
+    if {item.name for item in root.iterdir()} != _ROOT_ITEMS:
+        raise BoardPackageError("board package must contain only canonical sidecars and assets")
+    documents = {name.removesuffix(".json"): _load_json(root / name, name) for name in _SIDECARS}
+    board = documents["board"]
+    artwork = documents["artwork"]
+    evidence = documents["evidence"]
+    semantics = documents["semantics"]
+    _validate_board(board)
+    _validate_sidecar_identity(artwork, "artwork.json")
+    _validate_sidecar_identity(evidence, "evidence.json")
+    _validate_sidecar_identity(semantics, "semantics.json")
+    if {board["id"], artwork["boardID"], evidence["boardID"], semantics["boardID"]} != {board["id"]}:
+        raise BoardPackageError("board package sidecar board IDs must match")
+    _validate_assets(root, board)
+    _validate_semantics(semantics, set(hold["id"] for hold in board["holds"]))
+    _validate_artwork(artwork, board)
+    return BoardPackage(root, board, artwork, evidence, semantics)
+
+
+def primary_image_path(package: BoardPackage) -> Path:
+    """Return the one canonical package image after confinement validation."""
+    image = _confined_path(package.root, "assets/primary.png", "primary image")
+    if not image.is_file() or image.is_symlink():
+        raise BoardPackageError("package primary image is missing")
+    _png_dimensions(image)
+    return image
+
+
+def editor_document(package: BoardPackage) -> dict[str, object]:
+    """Build the direct editable hold document from saved canonical package data."""
+    width, height = _png_dimensions(primary_image_path(package))
+    pieces = {piece["holdID"]: piece for piece in package.artwork["holdPieces"]}
+    regions: list[dict[str, object]] = []
+    for index, hold in enumerate(package.board["holds"], start=1):
+        hold_id = hold["id"]
+        try:
+            path = display_path_for_shape(
+                pieces[hold_id]["frame"], pieces[hold_id]["shape"], width, height, label=f"hold {hold_id}"
+            )
+        except (KeyError, GeometryError) as error:
+            raise BoardPackageError(f"hold {hold_id} has invalid artwork geometry") from error
+        regions.append(
+            {
+                "id": index,
+                "key": hold_id,
+                "type": hold["kind"],
+                "displayPath": path.data,
+                "metadata": {},
+            }
+        )
+    return {"schemaVersion": 1, "canvas": {"width": width, "height": height}, "regions": regions}
+
+
+def save_editor_document(library_root: Path, slug: str, document: Mapping[str, Any]) -> BoardPackage:
+    """Validate edited hold paths and save their paths and derived frames together."""
+    root = _library_root(library_root)
+    slug = _slug(slug)
+    live = load_board_package(root / slug)
+    width, height = _png_dimensions(primary_image_path(live))
+    regions = _validate_editor_document(document, live.hold_ids, width, height)
+    candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
+    candidate = candidate_parent / slug
+    try:
+        shutil.copytree(live.root, candidate)
+        artwork_path = candidate / "artwork.json"
+        board_path = candidate / "board.json"
+        artwork = _load_json(artwork_path, "artwork.json")
+        board = _load_json(board_path, "board.json")
+        pieces = {piece["holdID"]: piece for piece in artwork["holdPieces"]}
+        holds = {hold["id"]: hold for hold in board["holds"]}
+        for hold_id, path in regions.items():
+            frame, shape = shape_for_path(path, width, height)
+            pieces[hold_id]["frame"] = frame.to_json()
+            pieces[hold_id]["shape"] = shape
+            holds[hold_id]["frame"] = frame.to_json()
+        _write_json(artwork_path, artwork)
+        _write_json(board_path, board)
+        replace_package(root, slug, candidate)
+    finally:
+        shutil.rmtree(candidate_parent, ignore_errors=True)
+    return load_board_package(root / slug)
+
+
+def replace_package(library_root: Path, slug: str, candidate_root: Path) -> None:
+    """Replace one canonical package and catalog entry with rollback on failure."""
+    root = _library_root(library_root)
+    slug = _slug(slug)
+    candidate = load_board_package(candidate_root)
+    stage = Path(tempfile.mkdtemp(prefix=".workbench-save-", dir=root))
+    staged_package = stage / slug
+    staged_catalog = stage / "catalog.json"
+    try:
+        shutil.copytree(candidate.root, staged_package)
+        candidate = load_board_package(staged_package)
+        catalog = list(_load_catalog(root / "catalog.json"))
+        previous = next((entry for entry in catalog if entry.slug == slug), None)
+        if previous is not None and previous.board_id != candidate.board_id:
+            raise BoardPackageError("replacement package must keep the registered board ID")
+        replacement = CatalogEntry(candidate.board_id, slug)
+        if previous is None:
+            if any(entry.board_id == candidate.board_id for entry in catalog):
+                raise BoardPackageError("catalog already registers this board ID")
+            catalog.append(replacement)
+        else:
+            catalog[catalog.index(previous)] = replacement
+        _write_json(staged_catalog, _catalog_json(catalog))
+        _validate_staged_catalog(root, catalog, slug, staged_package)
+        with _library_lock(root):
+            _replace_transaction(root, slug, staged_package, staged_catalog)
+    finally:
+        shutil.rmtree(stage, ignore_errors=True)
+
+
+def _validate_board(board: Mapping[str, Any]) -> None:
+    if board.get("schemaVersion") != 1:
+        raise BoardPackageError("board.json.schemaVersion must be 1")
+    _identifier(board.get("id"), "board.json.id")
+    holds = board.get("holds")
+    if not isinstance(holds, list) or not holds:
+        raise BoardPackageError("board.json.holds must be a non-empty array")
+    identifiers: set[str] = set()
+    for index, hold in enumerate(holds):
+        if not isinstance(hold, dict):
+            raise BoardPackageError(f"board.json.holds[{index}] must be an object")
+        hold_id = _identifier(hold.get("id"), f"board.json.holds[{index}].id")
+        if hold_id in identifiers:
+            raise BoardPackageError("duplicate hold ID")
+        identifiers.add(hold_id)
+        if not isinstance(hold.get("kind"), str) or not hold["kind"]:
+            raise BoardPackageError(f"board.json.holds[{index}].kind must be a non-empty string")
+        try:
+            from board_geometry import NormalizedFrame
+
+            NormalizedFrame.from_json(hold.get("frame"), f"board.json.holds[{index}].frame")
+        except (GeometryError, TypeError) as error:
+            raise BoardPackageError(f"board.json.holds[{index}].frame is invalid") from error
+    presentation = board.get("presentation")
+    if not isinstance(presentation, dict) or presentation.get("assetPath") != "assets/primary.png" or set(presentation) != {"assetPath"}:
+        raise BoardPackageError("board.json.presentation must declare assets/primary.png")
+
+
+def _validate_artwork(artwork: Mapping[str, Any], board: Mapping[str, Any]) -> None:
+    if artwork.get("schemaVersion") != 1 or not isinstance(artwork.get("holdPieces"), list):
+        raise BoardPackageError("artwork.json is invalid")
+    hold_ids = {hold["id"] for hold in board["holds"]}
+    pieces: list[Mapping[str, Any]] = []
+    seen_piece_ids: set[str] = set()
+    seen_hold_ids: set[str] = set()
+    for index, raw in enumerate(artwork["holdPieces"]):
+        if not isinstance(raw, dict):
+            raise BoardPackageError(f"artwork.json.holdPieces[{index}] must be an object")
+        piece_id = _identifier(raw.get("id"), f"artwork.json.holdPieces[{index}].id")
+        hold_id = _identifier(raw.get("holdID"), f"artwork.json.holdPieces[{index}].holdID")
+        if piece_id in seen_piece_ids:
+            raise BoardPackageError("duplicate artwork piece ID")
+        if hold_id in seen_hold_ids:
+            raise BoardPackageError("duplicate hold ID in artwork")
+        seen_piece_ids.add(piece_id)
+        seen_hold_ids.add(hold_id)
+        pieces.append(raw)
+    if seen_hold_ids != hold_ids:
+        raise BoardPackageError("artwork hold IDs must exactly match board hold IDs")
+    for piece in pieces:
+        try:
+            display_path_for_shape(piece["frame"], piece["shape"], 1000, 1000, label=f"hold {piece['holdID']}")
+        except (KeyError, GeometryError) as error:
+            raise BoardPackageError(f"hold {piece['holdID']} has invalid artwork geometry") from error
+
+
+def _validate_semantics(semantics: Mapping[str, Any], hold_ids: set[str]) -> None:
+    raw_holds = semantics.get("semanticHolds")
+    if not isinstance(raw_holds, dict):
+        raise BoardPackageError("semantics.json.semanticHolds must be an object")
+    for semantic, value in raw_holds.items():
+        if not isinstance(value, dict) or not isinstance(value.get("holdIDs"), list):
+            raise BoardPackageError("semantics.json contains an invalid hold mapping")
+        for hold_id in value["holdIDs"]:
+            if hold_id not in hold_ids:
+                raise BoardPackageError(f"semantic {semantic!r} references an unknown hold")
+
+
+def _validate_assets(root: Path, board: Mapping[str, Any]) -> None:
+    _confined_path(root, board["presentation"]["assetPath"], "presentation asset")
+    assets = root / "assets"
+    if not assets.is_dir() or assets.is_symlink():
+        raise BoardPackageError("package assets must be a directory")
+    if any(not item.is_file() or item.is_symlink() for item in assets.iterdir()):
+        raise BoardPackageError("package assets must be flat regular files")
+    _png_dimensions(assets / "primary.png")
+
+
+def _validate_sidecar_identity(document: Mapping[str, Any], name: str) -> None:
+    _identifier(document.get("boardID"), f"{name}.boardID")
+
+
+def _validate_editor_document(document: Mapping[str, Any], hold_ids: tuple[str, ...], width: int, height: int) -> dict[str, Any]:
+    canvas = document.get("canvas") if isinstance(document, Mapping) else None
+    if not isinstance(document, Mapping) or document.get("schemaVersion") != 1 or canvas != {"width": width, "height": height}:
+        raise BoardPackageError("editor document canvas does not match the primary image")
+    raw_regions = document.get("regions")
+    if not isinstance(raw_regions, list):
+        raise BoardPackageError("editor document regions must be an array")
+    paths: dict[str, Any] = {}
+    for region in raw_regions:
+        if not isinstance(region, Mapping) or not isinstance(region.get("key"), str):
+            raise BoardPackageError("editor document contains an invalid hold")
+        hold_id = region["key"]
+        if hold_id in paths:
+            raise BoardPackageError("duplicate hold ID")
+        try:
+            paths[hold_id] = parse_closed_path(region.get("displayPath"), width, height, label=f"hold {hold_id}")
+        except GeometryError as error:
+            raise BoardPackageError(str(error)) from error
+    if set(paths) != set(hold_ids):
+        raise BoardPackageError("editor document hold IDs must exactly match board hold IDs")
+    return paths
+
+
+def _load_catalog(path: Path) -> tuple[CatalogEntry, ...]:
+    raw = _load_json(path, "catalog.json")
+    if raw.get("schemaVersion") != 1 or not isinstance(raw.get("boards"), list):
+        raise BoardPackageError("catalog.json is invalid")
+    entries: list[CatalogEntry] = []
+    identifiers: set[str] = set()
+    slugs: set[str] = set()
+    for index, raw_entry in enumerate(raw["boards"]):
+        if not isinstance(raw_entry, dict) or set(raw_entry) != {"id", "path"}:
+            raise BoardPackageError(f"catalog.json.boards[{index}] is invalid")
+        board_id = _identifier(raw_entry["id"], f"catalog.json.boards[{index}].id")
+        slug = _slug(raw_entry["path"])
+        if board_id in identifiers or slug in slugs:
+            raise BoardPackageError("catalog.json contains duplicate board entries")
+        identifiers.add(board_id)
+        slugs.add(slug)
+        entries.append(CatalogEntry(board_id, slug))
+    return tuple(entries)
+
+
+def _catalog_json(entries: list[CatalogEntry]) -> dict[str, object]:
+    return {"schemaVersion": 1, "boards": [{"id": entry.board_id, "path": entry.slug} for entry in entries]}
+
+
+def _validate_staged_catalog(root: Path, entries: list[CatalogEntry], staged_slug: str, staged_package: Path) -> None:
+    for entry in entries:
+        package = staged_package if entry.slug == staged_slug else root / entry.slug
+        loaded = load_board_package(package)
+        if loaded.board_id != entry.board_id:
+            raise BoardPackageError("catalog board ID does not match its package")
+
+
+def _replace_transaction(root: Path, slug: str, staged_package: Path, staged_catalog: Path) -> None:
+    live_package = root / slug
+    catalog = root / "catalog.json"
+    package_backup = root / f".{slug}.workbench-backup"
+    catalog_backup = root / ".catalog.workbench-backup.json"
+    if package_backup.exists() or catalog_backup.exists():
+        raise BoardPackageError("a previous board save needs recovery")
+    package_moved = False
+    catalog_moved = False
+    try:
+        if live_package.exists():
+            os.replace(live_package, package_backup)
+            package_moved = True
+        os.replace(staged_package, live_package)
+        os.replace(catalog, catalog_backup)
+        catalog_moved = True
+        os.replace(staged_catalog, catalog)
+    except OSError as error:
+        _restore_transaction(live_package, catalog, package_backup, catalog_backup, package_moved, catalog_moved)
+        raise BoardPackageError("could not save board package") from error
+    else:
+        if package_backup.exists():
+            shutil.rmtree(package_backup)
+        if catalog_backup.exists():
+            catalog_backup.unlink()
+
+
+def _restore_transaction(live_package: Path, catalog: Path, package_backup: Path, catalog_backup: Path, package_moved: bool, catalog_moved: bool) -> None:
+    try:
+        if catalog_moved and catalog_backup.exists():
+            if catalog.exists():
+                catalog.unlink()
+            os.replace(catalog_backup, catalog)
+        if package_moved and package_backup.exists():
+            if live_package.exists():
+                shutil.rmtree(live_package)
+            os.replace(package_backup, live_package)
+    except OSError as error:  # A persistent backup is safer than a partial hidden failure.
+        raise BoardPackageError("could not restore the previous board package") from error
+
+
+@contextmanager
+def _library_lock(root: Path) -> Iterator[None]:
+    descriptor = os.open(root / ".workbench.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+def _library_root(path: Path) -> Path:
+    if Path(path).is_symlink():
+        raise BoardPackageError("board library must not be a symlink")
+    try:
+        root = Path(path).resolve(strict=True)
+    except OSError as error:
+        raise BoardPackageError("board library is not accessible") from error
+    if not root.is_dir() or root.is_symlink():
+        raise BoardPackageError("board library must be a directory")
+    return root
+
+
+def _load_json(path: Path, label: str) -> dict[str, Any]:
+    if not path.is_file() or path.is_symlink():
+        raise BoardPackageError(f"{label} is missing")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise BoardPackageError(f"{label} is invalid JSON") from error
+    if not isinstance(value, dict):
+        raise BoardPackageError(f"{label} must be an object")
+    return value
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def _identifier(value: object, label: str) -> str:
+    if not isinstance(value, str) or not _IDENTIFIER.fullmatch(value):
+        raise BoardPackageError(f"{label} must be identifier-shaped")
+    return value
+
+
+def _slug(value: object) -> str:
+    if not isinstance(value, str) or not _SLUG.fullmatch(value):
+        raise BoardPackageError("board package path must be a single board slug")
+    return value
+
+
+def _confined_path(root: Path, relative: object, label: str) -> Path:
+    if not isinstance(relative, str) or not relative or Path(relative).is_absolute() or "\\" in relative or ".." in Path(relative).parts:
+        raise BoardPackageError(f"{label} must stay inside its board package")
+    candidate = root / relative
+    try:
+        candidate.resolve(strict=False).relative_to(root)
+    except ValueError as error:
+        raise BoardPackageError(f"{label} must stay inside its board package") from error
+    return candidate
+
+
+def _reject_symlinks(root: Path) -> None:
+    if root.is_symlink() or any(item.is_symlink() for item in root.rglob("*")):
+        raise BoardPackageError("board package must not contain symlinks")
+
+
+def _png_dimensions(path: Path) -> tuple[int, int]:
+    try:
+        header = path.read_bytes()[:24]
+    except OSError as error:
+        raise BoardPackageError("package primary image is not readable") from error
+    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+        raise BoardPackageError("package primary image must be a PNG")
+    width = int.from_bytes(header[16:20], "big")
+    height = int.from_bytes(header[20:24], "big")
+    if width <= 0 or height <= 0:
+        raise BoardPackageError("package primary image has invalid dimensions")
+    return width, height
