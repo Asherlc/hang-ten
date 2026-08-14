@@ -333,7 +333,7 @@
   }
 
   function validateEditableImageAlignment(view, imageAsset, geometryDocument) {
-    if (!view || !EDITABLE_STAGES.has(view.stage)) return imageAsset;
+    if (!view?.editorDocumentUrl) return imageAsset;
     const image = imageAsset?.image || imageAsset;
     const canvas = geometryDocument?.canvas;
     const validCanvas = Number.isInteger(canvas?.width) && canvas.width > 0

@@ -99,6 +99,17 @@ test("the guided opening screen offers repository and in-progress board pickers"
   assert.doesNotMatch(markup, /setup-import-path|Existing CLI run|Import run/);
 });
 
+test("loads a completed board from its explicit editor document URL", async () => {
+  const source = extractFunction(appSource, "loadCheckpoint");
+  assert.match(source, /view\.editorDocumentUrl/);
+  assert.doesNotMatch(source, /checkpointDocumentUrl\(/);
+});
+
+test("the board rail has no user-facing run terminology", () => {
+  assert.doesNotMatch(markup, />Recent runs</);
+  assert.doesNotMatch(appSource, /function renderRecentRuns\(/);
+});
+
 test("the workbench is a single focused hold-outline editor", () => {
   const ids = actualElementIds(markup);
   for (const id of [
@@ -223,7 +234,7 @@ test("opening repository diagnostics are translated at the app boundary before v
     "state",
     "formatFocusedEditorDiagnostic",
     "formatFocusedEditorError",
-    "renderRecentRuns",
+    "renderOpenBoards",
     "renderOpeningSections",
     `return (async ${extractFunction(appSource, "refreshBoards")});`,
   )(

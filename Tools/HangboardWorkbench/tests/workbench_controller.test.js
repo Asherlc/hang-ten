@@ -502,6 +502,7 @@ test("editable checkpoints use the clean editor image while preserving annotated
   const view = {
     stage: 3,
     editorImageUrl: "/api/artifact?path=clean.png",
+    editorDocumentUrl: "/api/artifact?path=regions.json",
     reviewUrl: "/api/artifact?path=annotated.png",
   };
 
@@ -538,7 +539,23 @@ test("editable checkpoint image dimensions must match the geometry canvas", () =
   const view = {
     stage: 3,
     editorImageUrl: "/api/artifact?path=clean.png",
+    editorDocumentUrl: "/api/artifact?path=regions.json",
     reviewUrl: "/api/artifact?path=annotated.png",
+  };
+  const imageAsset = { image: { naturalWidth: 1000, naturalHeight: 159 } };
+  const geometry = { canvas: { width: 1000, height: 160 }, regions: [] };
+
+  assert.throws(
+    () => validateEditableImageAlignment(view, imageAsset, geometry),
+    /image dimensions do not match geometry canvas/,
+  );
+});
+
+test("completed board editor geometry must align with its explicit editor image", () => {
+  const view = {
+    stage: 4,
+    editorImageUrl: "/api/artifact?path=clean.png",
+    editorDocumentUrl: "/api/artifact?path=regions.json",
   };
   const imageAsset = { image: { naturalWidth: 1000, naturalHeight: 159 } };
   const geometry = { canvas: { width: 1000, height: 160 }, regions: [] };

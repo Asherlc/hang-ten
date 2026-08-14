@@ -184,7 +184,7 @@
     "compare-button", "retry-button", "revise-button",
     "setup-screen", "workbench-screen", "create-board-form", "setup-product-field", "setup-product-input", "setup-url-input", "setup-upload-input",
     "setup-url-field", "setup-upload-field", "setup-error", "setup-submit-button", "repository-board-list", "repository-diagnostics", "in-progress-board-list",
-    "workflow-block", "recent-block", "inventory-block", "recent-runs", "new-board-button",
+    "workflow-block", "open-boards-block", "inventory-block", "open-boards", "new-board-button",
     "board-title", "board-state", "checkpoint-title", "validation-panel", "validation-list", "static-load-controls",
     "board-details", "board-details-name", "board-details-id", "board-details-revision", "more-actions",
   ].map((id) => [id, document.getElementById(id)]));
@@ -1931,17 +1931,6 @@
     el["annotated-review"].classList.toggle("hidden", !showReview);
   }
 
-  function checkpointDocumentUrl(view) {
-    const names = { 2: "stage-2-regions.json", 3: "stage-3-vector-regions.json" };
-    const name = names[view.stage];
-    if (!name || !view.reviewUrl) return null;
-    const url = new URL(view.reviewUrl, window.location.origin);
-    const path = url.searchParams.get("path");
-    if (!path) return null;
-    url.searchParams.set("path", path.replace(/[^/]+$/, name));
-    return `${url.pathname}?${url.searchParams.toString()}`;
-  }
-
   async function loadCheckpoint(view, providedDocument = null, pendingLoad = null) {
     if (!view) return false;
     const ownsLoad = pendingLoad == null;
@@ -1953,21 +1942,16 @@
     try {
       if (!load.isCurrent()) return false;
       const imageUrl = checkpointImageUrl(view);
-      const imageAsset = imageUrl
-        ? await loadImageAsset(imageUrl, `Stage ${String(view.stage)} editor image`)
-        : null;
+      const documentUrl = view.editorDocumentUrl;
+      if (!documentUrl || !imageUrl) throw new Error("Hold data is unavailable for this board");
+      const [imageAsset, response] = await Promise.all([
+        loadImageAsset(imageUrl, "Board image"),
+        fetch(documentUrl, { cache: "no-store" }),
+      ]);
       if (!load.isCurrent()) return false;
-      let baselineDocument = providedDocument;
-      if (EDITOR_STAGES.has(view.stage)) {
-        if (!baselineDocument) {
-          const documentUrl = checkpointDocumentUrl(view);
-          if (!documentUrl) throw new Error("Hold outline data is unavailable");
-          const response = await fetch(documentUrl, { cache: "no-store" });
-          if (!response.ok) throw new Error("Could not load hold outline data");
-          baselineDocument = await response.json();
-        }
-        validateEditableImageAlignment(view, imageAsset, baselineDocument);
-      }
+      if (!response.ok) throw new Error("Could not load holds for this board");
+      const baselineDocument = await response.json();
+      validateEditableImageAlignment(view, imageAsset, baselineDocument);
       if (!load.isCurrent()) return false;
       const comparisonUrl = checkpointComparisonUrl(view);
       const reviewAsset = comparisonUrl
@@ -2004,10 +1988,10 @@
       if (imageAsset) applyImageAsset(imageAsset);
       if (reviewAsset) applyAnnotatedReviewAsset(reviewAsset);
 
+      const restored = EDITOR_STAGES.has(view.stage) ? readStoredDraft(view) : null;
+      state.checkpointDocument = clone(baselineDocument);
+      setRegions(restored?.document || baselineDocument, "board-holds.json", view.editorMode, baselineDocument);
       if (EDITOR_STAGES.has(view.stage)) {
-        const restored = readStoredDraft(view);
-        state.checkpointDocument = clone(baselineDocument);
-        setRegions(restored?.document || baselineDocument, `stage-${String(view.stage)}-checkpoint.json`, view.editorMode, baselineDocument);
         if (restored?.dirty) {
           state.savedSnapshot = JSON.stringify(state.baselineRegions);
           state.dirty = true;
@@ -2020,11 +2004,6 @@
           state.savedSnapshot = JSON.stringify(state.regions);
           setStatus("Restored the latest same-browser draft for this revision.");
         }
-      } else {
-        resetHistory();
-        configureSvg();
-        render();
-        requestAnimationFrame(fitCanvas);
       }
         renderEditorShell();
       });
@@ -2040,22 +2019,22 @@
   function renderEditorShell() {
     if (!state.guided) return;
     const view = state.board;
-    renderRecentRuns();
+    renderOpenBoards();
     el["board-title"].textContent = view?.productName || "Hangboard Workbench";
     el["board-state"].textContent = view
       ? `Revision ${view.revisionId} · ${view.state.replaceAll("_", " ")}`
       : "Create or choose a board to begin.";
     el["checkpoint-title"].textContent = "Edit holds";
-    el["inventory-block"].classList.toggle("hidden", !view || !EDITOR_STAGES.has(view.stage));
+    el["inventory-block"].classList.toggle("hidden", !view?.editorDocumentUrl);
     renderSaveState();
   }
 
-  function renderRecentRuns() {
-    el["recent-runs"].replaceChildren();
+  function renderOpenBoards() {
+    el["open-boards"].replaceChildren();
     state.boards.forEach((board) => {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = `recent-run${board.boardId === state.board?.boardId ? " active" : ""}`;
+      button.className = `open-board${board.boardId === state.board?.boardId ? " active" : ""}`;
       button.disabled = openingActionsDisabled(state);
       const productName = document.createElement("span");
       productName.textContent = board.productName;
@@ -2063,7 +2042,7 @@
       status.textContent = board.saved ? "Saved locally" : "Unsaved changes";
       button.append(productName, status);
       button.addEventListener("click", () => void selectGuidedBoard(board.boardId));
-      el["recent-runs"].appendChild(button);
+      el["open-boards"].appendChild(button);
     });
   }
 
@@ -2111,7 +2090,7 @@
     );
     state.boards = opening.inProgressBoards;
     state.openingError = formatFocusedEditorError(opening.error, "Could not load boards");
-    renderRecentRuns();
+    renderOpenBoards();
     renderOpeningSections();
     return state.boards;
   }
