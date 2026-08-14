@@ -2,15 +2,26 @@
   "use strict";
 
   const client = globalThis.HoldWorkbenchClient;
-  const { loadBoardAtomically, saveBoardAtomically, validateEditorDocument } = globalThis.HoldWorkbenchController;
+  const {
+    createBoardOperationCoordinator,
+    loadBoardAtomically,
+    saveBoardAtomically,
+    validateEditorDocument,
+  } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const state = { boards: [], board: null, document: null, image: null, selectedKey: null, busy: false, dirty: false };
   const el = Object.fromEntries([
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
-    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path",
+    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path", "apply-hold-button",
   ].map((id) => [id, document.getElementById(id)]));
+  const boardOperations = createBoardOperationCoordinator({
+    onBusyChange: (busy) => {
+      state.busy = busy;
+      render();
+    },
+  });
 
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
@@ -43,12 +54,15 @@
       const detail = document.createElement("small");
       button.type = "button";
       button.className = `region-item${state.board?.boardId === board.boardId ? " selected" : ""}`;
+      button.disabled = state.busy;
       title.className = "region-key";
       title.textContent = board.displayName;
       detail.className = "region-type";
       detail.textContent = `${board.holdCount} holds`;
       button.append(title, detail);
-      button.addEventListener("click", () => { void selectBoard(board.boardId); });
+      button.addEventListener("click", () => {
+        if (!state.busy) void selectBoard(board.boardId);
+      });
       el["board-list"].append(button);
     }
   }
@@ -86,6 +100,8 @@
 
   function renderInspector() {
     const hold = selectedHold();
+    el["apply-hold-button"].disabled = state.busy || !hold;
+    el["hold-path"].disabled = state.busy || !hold;
     el["hold-empty"].classList.toggle("hidden", Boolean(hold));
     el["hold-form"].classList.toggle("hidden", !hold);
     el["hold-heading"].textContent = hold ? hold.key : "No selection";
@@ -111,53 +127,55 @@
   }
 
   async function refreshBoards() {
-    state.busy = true;
-    renderSaveState();
+    if (state.busy) return;
     el["boards-error"].classList.add("hidden");
-    try {
-      state.boards = await client.listBoards();
-      renderBoards();
-      setStatus("Boards loaded.");
-    } catch (error) {
-      el["boards-error"].textContent = error.message || "Could not load boards.";
-      el["boards-error"].classList.remove("hidden");
-      setStatus("Could not load boards.");
-    } finally {
-      state.busy = false;
-      renderSaveState();
-    }
+    await boardOperations.perform(async () => {
+      try {
+        state.boards = await client.listBoards();
+        renderBoards();
+        setStatus("Boards loaded.");
+      } catch (error) {
+        el["boards-error"].textContent = error.message || "Could not load boards.";
+        el["boards-error"].classList.remove("hidden");
+        setStatus("Could not load boards.");
+      }
+    });
   }
 
   async function selectBoard(boardId) {
-    state.busy = true;
+    if (state.busy) return;
     setValidation();
-    renderSaveState();
-    try {
-      await loadBoardAtomically({
-        boardId,
-        getBoard: client.getBoard,
-        loadImage,
-        commit: ({ board, document: documentValue, image }) => {
-          state.board = board;
-          state.document = clone(documentValue);
-          state.image = image;
-          state.selectedKey = null;
-          state.dirty = false;
-        },
-      });
-      setStatus("Board loaded.");
-      render();
-    } catch (error) {
-      setValidation(error.message || "Could not load board.");
-      setStatus("Could not load board. The current editor was kept.");
-    } finally {
-      state.busy = false;
-      renderSaveState();
-    }
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await loadBoardAtomically({
+          boardId,
+          getBoard: client.getBoard,
+          loadImage,
+          commit: ({ board, document: documentValue, image }) => {
+            if (!isCurrent()) return;
+            state.board = board;
+            state.document = clone(documentValue);
+            state.image = image;
+            state.selectedKey = null;
+            state.dirty = false;
+            committed = true;
+          },
+        });
+        if (!committed) return;
+        setStatus("Board loaded.");
+        render();
+      } catch (error) {
+        if (!isCurrent()) return;
+        setValidation(error.message || "Could not load board.");
+        setStatus("Could not load board. The current editor was kept.");
+      }
+    });
   }
 
   function applyHold(event) {
     event.preventDefault();
+    if (state.busy) return;
     const hold = selectedHold();
     if (!hold) return;
     const candidate = clone(state.document);
@@ -175,36 +193,40 @@
   }
 
   async function saveBoard() {
-    if (!state.board || !state.document) return;
+    if (state.busy || !state.board || !state.document) return;
     try {
       validateEditorDocument(state.document);
     } catch (error) {
       setValidation(error.message || "Hold document is invalid.");
       return;
     }
-    state.busy = true;
-    renderSaveState();
-    try {
-      await saveBoardAtomically({
-        boardId: state.board.boardId,
-        document: state.document,
-        save: client.saveBoard,
-        commit: ({ board, document: documentValue }) => {
-          state.board = board;
-          state.document = clone(documentValue);
-          state.dirty = false;
-        },
-      });
-      setValidation();
-      setStatus("Board saved.");
-      render();
-    } catch (error) {
-      setValidation(error.message || "Could not save board.");
-      setStatus("Could not save board. Your editor changes were kept.");
-    } finally {
-      state.busy = false;
-      renderSaveState();
-    }
+    const boardId = state.board.boardId;
+    const documentValue = state.document;
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await saveBoardAtomically({
+          boardId,
+          document: clone(documentValue),
+          save: client.saveBoard,
+          commit: ({ board, document: savedDocument }) => {
+            if (!isCurrent() || state.board?.boardId !== boardId || state.document !== documentValue) return;
+            state.board = board;
+            state.document = clone(savedDocument);
+            state.dirty = false;
+            committed = true;
+          },
+        });
+        if (!committed) return;
+        setValidation();
+        setStatus("Board saved.");
+        render();
+      } catch (error) {
+        if (!isCurrent()) return;
+        setValidation(error.message || "Could not save board.");
+        setStatus("Could not save board. Your editor changes were kept.");
+      }
+    });
   }
 
   el["refresh-boards-button"].addEventListener("click", () => { void refreshBoards(); });

@@ -63,5 +63,38 @@
     return saved;
   }
 
-  return Object.freeze({ loadBoardAtomically, saveBoardAtomically, validateEditorDocument });
+  function createBoardOperationCoordinator({ onBusyChange = () => {} } = {}) {
+    if (typeof onBusyChange !== "function") throw new TypeError("Board busy callback must be a function");
+    let activeToken = null;
+    let nextToken = 0;
+
+    async function perform(operation) {
+      if (typeof operation !== "function") throw new TypeError("Board operation must be a function");
+      if (activeToken !== null) return { started: false, value: undefined };
+      const token = ++nextToken;
+      activeToken = token;
+      onBusyChange(true);
+      try {
+        const value = await operation({ isCurrent: () => activeToken === token });
+        return { started: true, value };
+      } finally {
+        if (activeToken === token) {
+          activeToken = null;
+          onBusyChange(false);
+        }
+      }
+    }
+
+    return Object.freeze({
+      perform,
+      get isBusy() { return activeToken !== null; },
+    });
+  }
+
+  return Object.freeze({
+    createBoardOperationCoordinator,
+    loadBoardAtomically,
+    saveBoardAtomically,
+    validateEditorDocument,
+  });
 }));
