@@ -440,6 +440,9 @@ def _workbench_view_payload(view: object, public_board_id: str) -> dict[str, Any
     editor_image_url = artifact_url(
         getattr(view, "editor_image_path", None), "editor image"
     )
+    editor_document_url = artifact_url(
+        getattr(view, "editor_document_path", None), "editor document"
+    )
     normal_artifact_url = artifact_url(
         getattr(view, "normal_artifact_path", None), "Stage 4 normal"
     )
@@ -453,6 +456,7 @@ def _workbench_view_payload(view: object, public_board_id: str) -> dict[str, Any
         "checkpointToken": view.checkpoint_token,
         "reviewUrl": review_url,
         "editorImageUrl": editor_image_url,
+        "editorDocumentUrl": editor_document_url,
         "normalArtifactUrl": normal_artifact_url,
         "holdCount": getattr(view, "hold_count", None),
         "editorMode": view.editor_mode,

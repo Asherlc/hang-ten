@@ -334,6 +334,7 @@ class FakeWorkbenchService:
                 state="awaiting_review",
                 review_path=review_path,
                 editor_image_path=None,
+                editor_document_path=None,
                 normal_artifact_path=None,
                 hold_count=None,
                 editor_mode=None,
@@ -375,13 +376,23 @@ class FakeWorkbenchService:
             editor_image.write_bytes(b"clean-canvas-image")
             changes["editor_image_path"] = editor_image
             changes.setdefault("editor_mode", "contour" if stage == 2 else "vector")
+        if stage in (2, 3) and "editor_document_path" not in changes:
+            editor_document = view.run_root / (
+                "stages/02/stage-2-regions.json"
+                if stage == 2
+                else "stages/03/stage-3-vector-regions.json"
+            )
+            editor_document.parent.mkdir(parents=True, exist_ok=True)
+            editor_document.write_text(
+                json.dumps({"regions": [{}, {}, {}, {}]}), encoding="utf-8"
+            )
+            changes["editor_document_path"] = editor_document
         if stage == 4 and state == "complete":
             normal = view.run_root / "stages/04/stage-4-normal.png"
             normal.parent.mkdir(parents=True, exist_ok=True)
             normal.write_bytes(b"stage-4-normal")
             changes.setdefault("normal_artifact_path", normal)
             changes.setdefault("hold_count", 4)
-            changes.setdefault("editor_image_path", None)
             changes.setdefault("editor_mode", None)
         updated = replace(view, **changes)
         with self._lock:
@@ -938,6 +949,13 @@ def _create_board(base: str):
     return final["result"]
 
 
+def _complete_board(base: str):
+    view = _create_board(base)
+    for _ in range(5):
+        view = _post_mutation(base, "/api/approve", view)
+    return view
+
+
 def _post_mutation(base: str, route: str, view: dict, **extra):
     checkpoint = (
         {"expectedCheckpointToken": view["checkpointToken"]}
@@ -1484,16 +1502,28 @@ def test_editable_board_api_exposes_clean_and_annotated_artifacts_separately(
 def test_completed_board_api_exposes_stage4_inspect_artifacts_and_hold_count(
     running_workbench_server,
 ):
-    view = _create_board(running_workbench_server)
-    for _ in range(5):
-        view = _post_mutation(running_workbench_server, "/api/approve", view)
+    view = _complete_board(running_workbench_server)
 
     assert view["state"] == "complete"
-    assert view["editorImageUrl"] is None
+    assert view["editorImageUrl"] is not None
     assert view["normalArtifactUrl"] is not None
     assert view["holdCount"] == 4
+    with urlopen(running_workbench_server + view["editorImageUrl"]) as response:
+        assert response.read() == b"clean-canvas-image"
     with urlopen(running_workbench_server + view["normalArtifactUrl"]) as response:
         assert response.read() == b"stage-4-normal"
+
+
+def test_completed_board_api_exposes_editor_document_and_clean_image(
+    running_workbench_server,
+):
+    view = _complete_board(running_workbench_server)
+
+    assert view["editorImageUrl"] is not None
+    assert view["editorDocumentUrl"] is not None
+    status, document = read_json(running_workbench_server + view["editorDocumentUrl"])
+    assert status == 200
+    assert len(document["regions"]) == 4
 
 
 def test_draft_approve_retry_and_revise_routes_preserve_optimistic_context(
