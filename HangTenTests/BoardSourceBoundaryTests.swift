@@ -148,34 +148,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
-        let genericCanonicalAssetPaths: Set<String> = [
-            "assets/primary.png"
-        ]
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
-        let legacyArtifactTokens = [
-            "GeneratedBoardCatalog",
-            "BoardLibrary.json",
-            "MetoliusCompactIIDesign",
-            "RockProdigyTrainingCenterDesign",
-            "CompactBoard.imageset",
-            "CompactBoardIllustration",
-            "BoardDesignLanguage"
-        ]
-        let hardcodedMappingPatterns = [
-            #"semanticHolds\s*:\s*\[\s*\""#,
-            #"(?:assetPath|photoAssetName)\s*:\s*\""#
-        ]
-        let boardSpecificGeometryConstructs = [
-            "TrainingBoard(",
-            "BoardHold(",
-            "HoldFrame(",
-            "BoardNormalizedPath(commands:"
-        ]
-        let genericGeometryOwners: Set<String> = [
-            "HangTen/Models/BoardPackageStore.swift",
-            "HangTen/Models/BoardStorage.swift",
-            "HangTen/Models/TrainingModels.swift"
-        ]
 
         var findings: [String] = []
         for sourceURL in sourceURLs {
@@ -183,41 +156,80 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 of: repositoryRoot.path + "/",
                 with: ""
             )
-            for token in legacyArtifactTokens where relativePath.contains(token) {
-                findings.append("\(relativePath): legacy artifact path \(token)")
-            }
-            for literal in packageOwnedLiterals where relativePath.contains(literal) {
-                findings.append("\(relativePath): package-owned path literal \(literal)")
-            }
-
-            guard let source = try? String(contentsOf: sourceURL, encoding: .utf8) else {
-                continue
-            }
-            for token in legacyArtifactTokens where source.contains(token) {
-                findings.append("\(relativePath): legacy artifact token \(token)")
-            }
-            for literal in packageOwnedLiterals
-            where !genericCanonicalAssetPaths.contains(literal)
-                && source.contains("\"\(literal)\"") {
-                findings.append("\(relativePath): package-owned literal \(literal)")
-            }
-            for pattern in hardcodedMappingPatterns where source.range(
-                of: pattern,
-                options: .regularExpression
-            ) != nil {
-                findings.append("\(relativePath): hardcoded mapping matching \(pattern)")
-            }
-            if !genericGeometryOwners.contains(relativePath) {
-                for construct in boardSpecificGeometryConstructs where source.contains(construct) {
-                    findings.append("\(relativePath): board geometry construct \(construct)")
-                }
-            }
+            let source = (try? String(contentsOf: sourceURL, encoding: .utf8)) ?? ""
+            findings.append(
+                contentsOf: BoardSourceBoundaryAudit.findings(
+                    relativePath: relativePath,
+                    source: source,
+                    packageOwnedLiterals: packageOwnedLiterals
+                )
+            )
         }
 
         XCTAssertEqual(
             findings.sorted(),
             [],
             "Board metadata, mappings, assets, and concrete geometry belong only in approved Hangboards packages."
+        )
+    }
+
+    func testBoundaryAuditAllowsPlanMappingsOnlyInDedicatedOwner() {
+        let mapping = """
+        enum LegacyPlanSeedBoardMappings {
+            static let all = [BoardMappingDefinition(
+                boardID: "metolius.wood-grips-compact-ii",
+                semanticHolds: [
+                    "edge-19": SemanticHoldMappingDefinition(
+                        holdIDs: ["edge-19-left", "edge-19-right"]
+                    )
+                ]
+            )]
+        }
+        """
+        let packageOwnedLiterals: Set<String> = [
+            "metolius.wood-grips-compact-ii",
+            "edge-19-left",
+            "edge-19-right"
+        ]
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: mapping,
+                packageOwnedLiterals: packageOwnedLiterals
+            ),
+            []
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/UnauthorizedMappings.swift",
+                source: mapping,
+                packageOwnedLiterals: packageOwnedLiterals
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: mapping + "\n" + mapping.replacingOccurrences(
+                    of: "LegacyPlanSeedBoardMappings",
+                    with: "UnauthorizedPlanMappings"
+                ),
+                packageOwnedLiterals: packageOwnedLiterals
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
+                source: #"let image = BoardPresentation(assetPath: "assets/primary.png")"#,
+                packageOwnedLiterals: ["assets/primary.png"]
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/UnauthorizedGeometry.swift",
+                source: "let frame = HoldFrame(x: 0, y: 0, width: 1, height: 1)",
+                packageOwnedLiterals: []
+            ).isEmpty
         )
     }
 
