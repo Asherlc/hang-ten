@@ -1522,8 +1522,188 @@
       ],
       "method": "external-generative-adaptation"
     },
-    "assets/WoodGripsCompactII.jpg": [
-      "product-page"
-    ]
+    "assets/WoodGripsCompactII.jpg": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
+  "artworkEvidence": {
+    "silhouette": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.top-plane": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.middle-separator": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.bottom-plane": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.left-top-seam": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "layers.right-top-seam": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.jug-left-top-cap": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.jug-right-top-cap": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-flat-left-top-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-flat-right-top-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.sloper-round-center-surface": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-29-left-upper-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-29-right-upper-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-three-left-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-three-right-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-two-left-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-two-right-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-29-four-center-upper": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-19-left-lower-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.edge-19-right-lower-side-rail": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-three-left-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-three-right-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-two-left-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-two-right-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    },
+    "holdPieces.pocket-19-four-center-lower": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
   }
 }

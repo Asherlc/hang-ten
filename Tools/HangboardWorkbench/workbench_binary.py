@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Protocol
 
 from server import (
-    EditorCatalog,
     EditorError,
     ServerBindError,
     StaticAssetError,
@@ -31,7 +30,7 @@ class WorkbenchServerFactory(Protocol):
         arguments: list[str],
         *,
         editor_root: Path,
-    ) -> tuple[WorkbenchHTTPServer, EditorCatalog | None]: ...
+    ) -> tuple[WorkbenchHTTPServer, None]: ...
 
 
 def _resource_root() -> Path:

@@ -4,9 +4,9 @@ ios:
   - 'HangTen.xcodeproj/**'
   - '.github/ExportOptions.plist'
 python:
-  - 'Tools/HangboardPipeline/**'
   - 'Tools/HangboardWorkbench/**/*.py'
   - 'Tools/HangboardWorkbench/tests/**/*.py'
+  - 'scripts/run-supported-python.sh'
 workbench_web:
   - 'Tools/HangboardWorkbench/**/*.html'
   - 'Tools/HangboardWorkbench/**/*.css'
@@ -17,13 +17,13 @@ workbench_native:
   - 'Tools/HangboardWorkbench/macos/**'
   - 'Tools/HangboardWorkbench/packaging/**'
 workbench:
-  - 'Tools/HangboardPipeline/**'
   - 'Tools/HangboardWorkbench/**'
   - 'Hangboards/**'
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
   - 'scripts/stage-board-packages.py'
+  - 'scripts/run-supported-python.sh'
   - 'docs/hangboard-generative-catalog/**'
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
@@ -34,6 +34,7 @@ shared_board_content:
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
   - 'scripts/stage-board-packages.py'
+  - 'scripts/run-supported-python.sh'
   - 'docs/hangboard-generative-catalog/**'
 metadata:
   - 'metadata/**'
@@ -44,4 +45,4 @@ workflow:
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
   - '.github/actions/**'
-  - 'Tools/HangboardPipeline/pyproject.toml'
+  - 'Tools/HangboardWorkbench/pyproject.toml'

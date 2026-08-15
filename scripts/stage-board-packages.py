@@ -13,18 +13,17 @@ import uuid
 from pathlib import Path
 
 
-def load_board_catalog_module(repository_root: Path):
+def load_board_package_module(repository_root: Path):
     module_path = (
         repository_root
         / "Tools"
-        / "HangboardPipeline"
-        / "src"
-        / "hangboard_vectorizer"
-        / "board_catalog.py"
+        / "HangboardWorkbench"
+        / "board_package.py"
     )
-    spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
+    sys.path.insert(0, str(module_path.parent))
+    spec = importlib.util.spec_from_file_location("workbench_board_package", module_path)
     if spec is None or spec.loader is None:
-        raise RuntimeError(f"unable to load board catalog module from {module_path}")
+        raise RuntimeError(f"unable to load direct board package module from {module_path}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -153,7 +152,8 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     _regular_directory(hangboards_root)
     catalog_path = hangboards_root / "catalog.json"
     _regular_file(catalog_path)
-    catalog = load_board_catalog_module(repository_root).validate_catalog(catalog_path)
+    board_packages = load_board_package_module(repository_root)
+    catalog = board_packages.discover_packages(hangboards_root)
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
@@ -161,11 +161,11 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
         staging.mkdir()
         _copy_regular_file(catalog_path, staging / "catalog.json")
         staged_paths: list[Path] = [destination / "catalog.json"]
-        for entry in catalog.entries:
-            package_source = catalog_path.parent / entry.path
-            package_destination = staging / entry.path
+        for entry in catalog:
+            package_source = catalog_path.parent / entry.slug
+            package_destination = staging / entry.slug
             _copy_regular_tree(package_source, package_destination)
-            staged_paths.append(destination / entry.path)
+            staged_paths.append(destination / entry.slug)
         _replace_destination(staging, destination)
         return tuple(staged_paths)
     except BaseException:

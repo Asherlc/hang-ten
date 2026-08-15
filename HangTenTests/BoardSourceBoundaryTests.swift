@@ -60,8 +60,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "HangTen/Views/RockProdigyTrainingCenterDesign.swift",
             "HangTen/Resources/Assets.xcassets/CompactBoard.imageset",
             "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset",
-            "HangTen/Views/BoardDesignLanguage.swift",
-            "Hangboards/metolius-wood-grips-compact-ii/artwork.json"
+            "HangTen/Views/BoardDesignLanguage.swift"
         ]
 
         for relativePath in forbiddenRelativePaths {
@@ -89,6 +88,26 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 project?.contains(artifactName) == true,
                 "Remove the stale Xcode project reference to \(artifactName)."
             )
+        }
+    }
+
+    func testEveryCatalogPackageIncludesDirectArtworkGeometry() throws {
+        let repositoryRoot = repositoryRootURL()
+        let packagePaths = try catalogPackagePaths(at: repositoryRoot)
+
+        for board in BoardCatalog.all {
+            let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let artworkURL = repositoryRoot
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("artwork.json")
+            let artwork = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: artworkURL)) as? [String: Any]
+            )
+
+            XCTAssertEqual(artwork["schemaVersion"] as? Int, 1)
+            XCTAssertEqual(artwork["boardID"] as? String, board.id)
+            XCTAssertNotNil(artwork["holdPieces"] as? [[String: Any]])
         }
     }
 

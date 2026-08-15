@@ -15,7 +15,6 @@ REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 PACKAGING_BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
 RELEASE_README_PATHS = (
     EDITOR_ROOT / "README.md",
-    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "README.md",
 )
 WORKFLOW_PATH = (
     REPOSITORY_ROOT / ".github" / "workflows" / "hangboard-workbench-release.yml"
@@ -312,6 +311,30 @@ def test_release_readmes_document_the_native_checkout_workflow():
             assert forbidden_fragment not in quick_start, path
 
 
+def test_workbench_readme_documents_only_direct_board_authoring():
+    readme = (EDITOR_ROOT / "README.md").read_text(encoding="utf-8").lower()
+
+    for required_fragment in (
+        "direct board packages",
+        "one closed, contiguous contour",
+        "save validates the complete package",
+    ):
+        assert required_fragment in readme
+
+    for obsolete_fragment in (
+        "pipeline",
+        "stage 2",
+        "stage 3",
+        "--run",
+        "recent runs",
+        "in progress",
+        "approval",
+        "promotion",
+        "checkpoint",
+    ):
+        assert obsolete_fragment not in readme
+
+
 def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
     jobs = {
         **_workflow()["jobs"],
@@ -409,10 +432,12 @@ def test_pr_build_and_main_release_share_the_composite_build_action():
     assert upload["with"]["compression-level"] == 0
 
 
-def test_composite_build_uses_sha_pinned_setup_uv_before_python_tests():
+def test_composite_build_installs_direct_workbench_dev_dependencies_before_python_tests():
     steps = _build_action()["steps"]
-    uv_index = next(
-        index for index, step in enumerate(steps) if step.get("name") == "Set up uv"
+    dependency_install_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step.get("name") == "Install workbench build dependencies"
     )
     python_suite_index = next(
         index
@@ -420,11 +445,11 @@ def test_composite_build_uses_sha_pinned_setup_uv_before_python_tests():
         if step.get("name") == "Run focused Python suite"
     )
 
-    # The suite includes a packaging regression test that invokes `uv build`.
-    assert steps[uv_index]["uses"] == (
-        "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
-    )
-    assert uv_index < python_suite_index
+    assert all(step.get("name") != "Set up uv" for step in steps)
+    dependencies = steps[dependency_install_index]["run"]
+    assert "python -m venv" in dependencies
+    assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
+    assert dependency_install_index < python_suite_index
 
 
 def test_pr_build_uses_one_auditable_component_gate():
@@ -897,8 +922,11 @@ def test_build_smokes_the_final_app_headlessly_and_stops_its_owned_backend():
     assert "http://127.0.0.1:${port}/api/boards" in script
     assert 'payload == {"ok": True}' in script
     assert 'assert isinstance(payload["boards"], list)' in script
-    assert 'assert isinstance(payload["diagnostics"], list)' in script
+    assert 'assert payload["boards"]' in script
     assert 'assert all(isinstance(board.get("boardId"), str)' in script
+    assert 'board["holdCount"] > 0' in script
+    assert 'payload["diagnostics"]' not in script
+    assert 'board.get("status")' not in script
     assert 'curl_timeout_args=(--connect-timeout 5 --max-time 15)' in script
     assert 'app_child_pid="$(pgrep -P "$app_pid" || true)"' in script
     assert 'stop_owned_process "$app_pid" "unsigned app"' in script
@@ -1041,7 +1069,11 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
     setup_python = _step(release, "Set up Python")
     assert setup_python["uses"].startswith("actions/setup-python@")
     dependencies = _step(release, "Install workbench release dependencies")["run"]
-    assert "pyinstaller==6.22.0" in dependencies
+    assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
+    assert "pyinstaller==" not in dependencies
+    assert "pyinstaller==6.22.0" in (EDITOR_ROOT / "pyproject.toml").read_text(
+        encoding="utf-8"
+    )
 
     signing_script = _step(release, "Build, sign, and archive workbench app")["run"]
     for required_fragment in (

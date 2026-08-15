@@ -30,22 +30,24 @@ def _editor_root(repository_root: Path) -> Path:
     return repository_root / "Tools" / "HangboardWorkbench"
 
 
-def _onboarding_root(repository_root: Path) -> Path:
-    return repository_root / "Tools" / "HangboardPipeline"
-
-
-def _validate_source_layout(repository_root: Path) -> tuple[Path, Path]:
+def _validate_source_layout(repository_root: Path) -> Path:
     editor_root = _editor_root(repository_root)
-    onboarding_root = _onboarding_root(repository_root)
-    required_files = [editor_root / "workbench_binary.py"] + [
+    required_files = [
+        editor_root / filename
+        for filename in (
+            "workbench_binary.py",
+            "server.py",
+            "board_package.py",
+            "board_geometry.py",
+            "workbench_assets.py",
+        )
+    ] + [
         editor_root / asset for asset in workbench_assets.STATIC_ASSETS
     ]
     missing = [path for path in required_files if not path.is_file()]
     if missing:
         raise BuildError(f"required runtime input is missing: {missing[0]}")
-    if not (onboarding_root / "src" / "hangboard_vectorizer").is_dir():
-        raise BuildError("hangboard_vectorizer source package is missing")
-    return editor_root, onboarding_root
+    return editor_root
 
 
 def _write_build_metadata(metadata_root: Path, commit: str) -> Path:
@@ -84,7 +86,7 @@ def _pyinstaller_arguments(
     if codesign_identity is not None and not codesign_identity.strip():
         raise BuildError("codesign identity must be non-empty when supplied")
 
-    editor_root, onboarding_root = _validate_source_layout(repository_root)
+    editor_root = _validate_source_layout(repository_root)
     metadata_path = metadata_root / "build-commit.txt"
     if not metadata_path.is_file():
         raise BuildError("build metadata is missing")
@@ -105,13 +107,13 @@ def _pyinstaller_arguments(
         "--specpath",
         str(work_dir / "spec"),
         "--paths",
-        str(onboarding_root / "src"),
+        str(editor_root),
         "--hidden-import",
-        "hangboard_vectorizer.workbench",
+        "server",
         "--hidden-import",
-        "hangboard_vectorizer.workbench_store",
+        "board_package",
         "--hidden-import",
-        "hangboard_vectorizer.board_library",
+        "board_geometry",
     ]
     if codesign_identity is not None:
         arguments.extend(["--codesign-identity", codesign_identity])

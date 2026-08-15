@@ -9,6 +9,9 @@ xcuserdata/
 # Default transient hangboard workspaces
 /.context/
 
+# Workbench's local board-library lock
+/Hangboards/.workbench.lock
+
 # PyInstaller output for the local workbench release build
 /Tools/HangboardWorkbench/packaging/build/
 /Tools/HangboardWorkbench/packaging/dist/

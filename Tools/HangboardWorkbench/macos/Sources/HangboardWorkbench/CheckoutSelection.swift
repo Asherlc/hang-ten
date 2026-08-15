@@ -5,7 +5,7 @@ final class CheckoutSelection {
         case notHangTenCheckout
 
         var errorDescription: String? {
-            "Choose a Hang Ten checkout containing .git, Hangboards, Tools/HangboardPipeline/src/hangboard_vectorizer, and Tools/HangboardWorkbench/server.py."
+            "Choose a Hang Ten checkout containing .git, Hangboards, and the direct Workbench tools."
         }
     }
 
@@ -55,15 +55,17 @@ final class CheckoutSelection {
         guard isDirectory(normalized, fileManager: fileManager),
               fileManager.fileExists(atPath: normalized.appending(path: ".git").path),
               isDirectory(
-                  normalized.appending(path: "Tools/HangboardPipeline/src/hangboard_vectorizer"),
-                  fileManager: fileManager
-              ),
-              isDirectory(
                   normalized.appending(path: "Hangboards"),
                   fileManager: fileManager
               ),
               fileManager.fileExists(
                   atPath: normalized.appending(path: "Tools/HangboardWorkbench/server.py").path
+              ),
+              fileManager.fileExists(
+                  atPath: normalized.appending(path: "Tools/HangboardWorkbench/board_package.py").path
+              ),
+              fileManager.fileExists(
+                  atPath: normalized.appending(path: "Tools/HangboardWorkbench/board_geometry.py").path
               ) else {
             throw ValidationError.notHangTenCheckout
         }

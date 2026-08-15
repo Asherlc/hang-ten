@@ -49,19 +49,8 @@ final class BackendControllerTests: XCTestCase {
     }
 
     func testSessionReportsPackagedRuntimeBuildIdentity() async throws {
-        let runtime = FileManager.default.temporaryDirectory
-            .appending(path: "BackendControllerTests-runtime-\(UUID().uuidString)", directoryHint: .isDirectory)
-        temporaryDirectories.append(runtime)
-        try FileManager.default.createDirectory(
-            at: runtime.appending(path: "_internal", directoryHint: .isDirectory),
-            withIntermediateDirectories: true
-        )
         let commit = String(repeating: "a", count: 40)
-        try (commit + "\n").write(
-            to: runtime.appending(path: "_internal/build-commit.txt"),
-            atomically: true,
-            encoding: .ascii
-        )
+        let runtime = try makeRuntime(commit: commit)
         let process = FakeBackendProcess()
         let controller = BackendController(
             executableURL: runtime.appending(path: "hangboard-workbench"),
@@ -75,6 +64,27 @@ final class BackendControllerTests: XCTestCase {
 
         XCTAssertEqual(session.runtimeIdentity, commit)
         await controller.stop()
+    }
+
+    func testStartRejectsKnownRuntimeAndCheckoutIdentityMismatch() async throws {
+        let runtime = try makeRuntime(commit: String(repeating: "a", count: 40))
+        let checkout = try makeCheckout(head: String(repeating: "b", count: 40))
+        let process = FakeBackendProcess()
+        let backend = BackendController(
+            executableURL: runtime.appending(path: "hangboard-workbench"),
+            processFactory: { process },
+            healthProbe: { _ in true },
+            sleep: { _ in },
+            portSelector: { 4173 }
+        )
+
+        do {
+            _ = try await backend.start(repositoryRoot: checkout, port: 4173)
+            XCTFail("Expected known runtime and checkout mismatch to prevent startup")
+        } catch {
+            XCTAssertEqual(error as? BackendController.Error, .runtimeCheckoutMismatch)
+        }
+        XCTAssertEqual(process.runCount, 0)
     }
 
     func testCheckoutIdentityReadsSymbolicAndDetachedHeadsWithoutRunningGit() throws {
@@ -411,15 +421,27 @@ final class BackendControllerTests: XCTestCase {
         XCTAssertEqual(events, ["start:/tmp/hang-ten:4317", "wait", "stop"])
     }
 
-    private func makeCheckout() throws -> URL {
+    private func makeRuntime(commit: String) throws -> URL {
+        let runtime = FileManager.default.temporaryDirectory
+            .appending(path: "BackendControllerTests-runtime-\(UUID().uuidString)", directoryHint: .isDirectory)
+        temporaryDirectories.append(runtime)
+        try FileManager.default.createDirectory(
+            at: runtime.appending(path: "_internal", directoryHint: .isDirectory),
+            withIntermediateDirectories: true
+        )
+        try (commit + "\n").write(
+            to: runtime.appending(path: "_internal/build-commit.txt"),
+            atomically: true,
+            encoding: .ascii
+        )
+        return runtime
+    }
+
+    private func makeCheckout(head: String? = nil) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appending(path: "BackendControllerTests-\(UUID().uuidString)", directoryHint: .isDirectory)
         temporaryDirectories.append(root)
         try FileManager.default.createDirectory(at: root.appending(path: ".git"), withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardPipeline/src/hangboard_vectorizer"),
-            withIntermediateDirectories: true
-        )
         try FileManager.default.createDirectory(
             at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
@@ -429,6 +451,11 @@ final class BackendControllerTests: XCTestCase {
             withIntermediateDirectories: true
         )
         try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/server.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_package.py"))
+        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_geometry.py"))
+        if let head {
+            try (head + "\n").write(to: root.appending(path: ".git/HEAD"), atomically: true, encoding: .ascii)
+        }
         return root
     }
 

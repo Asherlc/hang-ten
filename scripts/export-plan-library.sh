@@ -11,6 +11,7 @@ exporter_path="$resource_dir/export-plan-library"
 
 TARGET_BUILD_DIR="$export_dir" \
 UNLOCALIZED_RESOURCES_FOLDER_PATH="Resources" \
+  "$repo_root/scripts/run-supported-python.sh" \
   "$repo_root/scripts/stage-board-packages.py" \
   --repository-root "$repo_root" \
   --destination "$resource_dir/Hangboards"
