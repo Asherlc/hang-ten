@@ -4,6 +4,8 @@ from collections import Counter
 import math
 from pathlib import Path
 
+from PIL import Image
+
 from hangboard_vectorizer.board_catalog import load_board_package
 
 
@@ -73,6 +75,42 @@ POCKET_FACTS = {
     "pocket-17-three": (17, 3, "threeFingerPocket"),
     "pocket-17-two": (17, 2, "twoFingerPocket"),
 }
+PRESENTATION_SIZE = (1774, 887)
+EXPECTED_PIXEL_FRAMES = {
+    "pinch-left": (65.208, 213.06, 264.388, 486.2),
+    "pinch-right": (1444.404, 213.06, 264.388, 486.2),
+    "jug-left": (311.072, 167.3, 158.296, 153.296),
+    "jug-right": (1304.632, 167.3, 158.296, 153.296),
+    "sloper-round-left": (469.368, 154.144, 200.396, 152.724),
+    "sloper-round-right": (1104.236, 154.144, 200.396, 152.724),
+    "pocket-30-four-left": (349.804, 320.024, 170.084, 56.056),
+    "pocket-30-four-right": (1254.112, 320.024, 170.084, 56.056),
+    "pocket-40-two-left": (550.2, 325.744, 84.2, 49.764),
+    "pocket-40-two-right": (1139.6, 325.744, 84.2, 49.764),
+    "pocket-20-three-left": (248.764, 410.972, 117.88, 52.052),
+    "pocket-20-three-right": (1407.356, 410.972, 117.88, 52.052),
+    "pocket-30-three-left": (393.588, 410.972, 127.984, 49.764),
+    "pocket-30-three-right": (1252.428, 410.972, 127.984, 49.764),
+    "pocket-32-two-left": (548.516, 409.256, 85.884, 52.052),
+    "pocket-32-two-right": (1139.6, 409.256, 85.884, 52.052),
+    "pocket-20-four-left": (223.504, 493.34, 144.824, 48.62),
+    "pocket-20-four-right": (1405.672, 493.34, 144.824, 48.62),
+    "pocket-25-three-left": (391.904, 493.912, 129.668, 48.048),
+    "pocket-25-three-right": (1252.428, 493.912, 129.668, 48.048),
+    "pocket-25-two-left": (548.516, 493.34, 85.884, 46.904),
+    "pocket-25-two-right": (1139.6, 493.34, 85.884, 46.904),
+    "pocket-12-four-left": (215.084, 573.992, 153.244, 45.76),
+    "pocket-12-four-right": (1405.672, 573.992, 153.244, 45.76),
+    "pocket-17-three-left": (390.22, 573.992, 131.352, 44.616),
+    "pocket-17-three-right": (1252.428, 573.992, 131.352, 44.616),
+    "pocket-17-two-left": (546.832, 572.848, 87.568, 45.188),
+    "pocket-17-two-right": (1139.6, 572.848, 87.568, 45.188),
+    "sloper-flat-center": (669.764, 153.0, 434.472, 84.084),
+    "edge-15-center": (676.5, 239.372, 421.0, 47.476),
+    "edge-35-center": (659.66, 317.164, 454.68, 90.376),
+    "edge-28-center": (664.712, 439.572, 444.576, 104.676),
+    "edge-23-center": (663.028, 556.832, 447.944, 78.364),
+}
 
 
 def _points(command: object) -> tuple[tuple[float, float], ...]:
@@ -86,6 +124,8 @@ def _points(command: object) -> tuple[tuple[float, float], ...]:
 def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
+        presentation_size = presentation.size
 
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
@@ -95,6 +135,7 @@ def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
     assert board.facts["dimensions"] == "32.5 × 11 × 2.625 in (826 × 279 × 67 mm)"
     assert math.isclose(board.facts["aspectRatio"], 32.5 / 11, abs_tol=1e-12)
     assert board.presentation_asset_path == "assets/primary.png"
+    assert presentation_size == PRESENTATION_SIZE
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "pocket": 22,
@@ -114,6 +155,23 @@ def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
         assert piece.frame.width * piece.frame.height > 0
+
+        # Canonical Workbench frames are normalized to the complete primary
+        # image canvas, including its intentional outer padding.
+        actual_pixel_frame = (
+            piece.frame.x * presentation_size[0],
+            piece.frame.y * presentation_size[1],
+            piece.frame.width * presentation_size[0],
+            piece.frame.height * presentation_size[1],
+        )
+        assert all(
+            math.isclose(actual, expected, abs_tol=1e-6)
+            for actual, expected in zip(
+                actual_pixel_frame,
+                EXPECTED_PIXEL_FRAMES[hold.id],
+                strict=True,
+            )
+        )
 
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id].geometry[0]
