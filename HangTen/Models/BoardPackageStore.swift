@@ -461,34 +461,22 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an invalid finger capacity"
                 )
             }
-            guard !hold.geometry.isEmpty else {
+            let geometryValidation = BoardHoldGeometryValidator.validate(
+                hold.geometry.map(\.holdPieceDocument),
+                holdID: hold.id,
+                pieceID: { "\(hold.id)-piece-\($0)" }
+            )
+            guard !geometryValidation.isEmpty else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) geometry must include at least one piece"
                 )
             }
-            for (pieceIndex, piece) in hold.geometry.enumerated() {
-                guard piece.frame.isNormalized else {
+            for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
+                if let failureReason = pieceValidation.packageFailureReason {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] has an invalid frame"
-                    )
-                }
-                do {
-                    _ = try piece.boardHoldPiece(
-                        id: "\(hold.id)-piece-\(pieceIndex)",
-                        holdID: hold.id
-                    )
-                } catch {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] is invalid: \(error)"
-                    )
-                }
-                guard piece.shape.usesDeclaredFrame else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] frame must match its shape bounds"
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] \(failureReason)"
                     )
                 }
             }
@@ -653,6 +641,11 @@ private struct BoardPackageHoldDocument: Decodable {
     }
 
     func trainingBoardHold() throws -> BoardHold {
+        guard !geometry.isEmpty else {
+            throw BoardGeometryAdaptationError.invalid(
+                "hold \(id) geometry must include at least one piece"
+            )
+        }
         let pieces = try geometry.enumerated().map { index, document in
             try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
         }
@@ -695,11 +688,15 @@ private struct BoardPackageGeometryDocument: Decodable {
     }
 
     func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
-        try BoardHoldPieceDocument(
+        try holdPieceDocument.boardHoldPiece(id: id, holdID: holdID)
+    }
+
+    var holdPieceDocument: BoardHoldPieceDocument {
+        BoardHoldPieceDocument(
             frame: frame,
             shape: shape,
             treatment: treatment
-        ).boardHoldPiece(id: id, holdID: holdID)
+        )
     }
 }
 
