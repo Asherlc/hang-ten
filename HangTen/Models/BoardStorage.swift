@@ -31,8 +31,8 @@ struct BoardLibraryMetadata: Codable, Hashable {
 
 struct BoardHoldPieceDocument: Codable, Hashable {
     let frame: BoardPackageFrameDocument
-    let shape: BoardArtworkShapeDocument
-    let treatment: BoardArtworkTreatmentDocument?
+    let shape: BoardGeometryShapeDocument
+    let treatment: BoardGeometryTreatmentDocument?
 }
 
 struct BoardHoldDefinition: Codable, Hashable {
@@ -83,7 +83,7 @@ struct BoardHoldDefinition: Codable, Hashable {
             geometry = [
                 BoardHoldPieceDocument(
                     frame: frame,
-                    shape: BoardArtworkShapeDocument(
+                    shape: BoardGeometryShapeDocument(
                         type: "roundedRect",
                         commands: nil,
                         cornerRadiusFraction: 0
@@ -391,6 +391,14 @@ enum BoardLibraryValidator {
                     BoardLibraryValidationIssue(
                         path: piecePath,
                         message: "Invalid hold geometry: \(error)"
+                    )
+                )
+            }
+            if !piece.shape.usesDeclaredFrame {
+                issues.append(
+                    BoardLibraryValidationIssue(
+                        path: piecePath,
+                        message: "Hold geometry frame must match its shape bounds."
                     )
                 )
             }
