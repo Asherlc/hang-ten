@@ -237,6 +237,86 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
+    func testBoundaryAuditAllowsCanonicalPresentationVocabularyOnlyInGenericLoader() {
+        let canonicalPresentationVocabulary: Set<String> = [
+            "assets/primary.png",
+            "primary.png",
+            "primary"
+        ]
+        let genericLoaderSource = """
+        let assetPath = "assets/primary.png"
+        let filename = "primary.png"
+        let stem = "primary"
+        """
+
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/UnauthorizedLoader.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: #"let mapping = BoardPresentation(assetPath: "assets/primary.png")"#,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ).isEmpty
+        )
+        XCTAssertFalse(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: #"let packageID = "fixture.package-specific""#,
+                packageOwnedLiterals: ["fixture.package-specific"]
+            ).isEmpty
+        )
+    }
+
+    func testPackageDiscoveryAllowsOnlySafeWorkbenchLockOperationalFile() throws {
+        let repositoryRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let packageURL = hangboardsURL.appendingPathComponent("fixture-board", isDirectory: true)
+        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
+        let unexpectedFileURL = hangboardsURL.appendingPathComponent("unexpected.txt")
+        let outsideLockURL = repositoryRoot.appendingPathComponent("outside-lock")
+        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
+        try Data(#"{"id":"fixture.board"}"#.utf8).write(
+            to: packageURL.appendingPathComponent("board.json")
+        )
+        defer { try? FileManager.default.removeItem(at: repositoryRoot) }
+
+        try Data().write(to: lockURL)
+        XCTAssertEqual(
+            try discoveredPackagePaths(at: repositoryRoot),
+            ["fixture.board": "fixture-board"]
+        )
+
+        try FileManager.default.removeItem(at: lockURL)
+        try Data().write(to: outsideLockURL)
+        try FileManager.default.createSymbolicLink(
+            at: lockURL,
+            withDestinationURL: outsideLockURL
+        )
+        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
+
+        try FileManager.default.removeItem(at: lockURL)
+        try FileManager.default.createDirectory(at: lockURL, withIntermediateDirectories: false)
+        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
+
+        try FileManager.default.removeItem(at: lockURL)
+        try Data().write(to: unexpectedFileURL)
+        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
+    }
+
     func testBoundaryAuditIgnoresUntrackedAppScratchFiles() throws {
         let repositoryRoot = repositoryRootURL()
         let scratchRelativePath = "HangTen/BoundaryAuditUntrackedScratch.swift"
@@ -296,14 +376,27 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let children = try FileManager.default.contentsOfDirectory(
             at: hangboardsURL,
-            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey]
+            includingPropertiesForKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ]
         )
         var paths: [String: String] = [:]
         for child in children {
-            let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
-            guard values.isDirectory == true, values.isSymbolicLink != true else {
-                XCTFail("Hangboards must contain only non-symlinked direct child directories")
+            let values = try child.resourceValues(forKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ])
+            if child.lastPathComponent == ".workbench.lock" {
+                guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                    throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
+                }
                 continue
+            }
+            guard values.isDirectory == true, values.isSymbolicLink != true else {
+                throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }
             let boardURL = child.appendingPathComponent("board.json")
             guard FileManager.default.fileExists(atPath: boardURL.path) else { continue }
