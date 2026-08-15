@@ -1258,7 +1258,10 @@ final class PlanStorageTests: XCTestCase {
         let step = makeStep(
             id: "semantic-target",
             duration: 10,
-            targets: [.semantic("fixture-overridden")],
+            targets: [
+                .semantic("fixture-overridden"),
+                .semantic("fixture-board-owned")
+            ],
             segments: []
         )
 
@@ -1277,10 +1280,13 @@ final class PlanStorageTests: XCTestCase {
         )
         let issues = library.validationIssues(availableBoards: [edgeOnlyBoard])
 
-        XCTAssertFalse(issues.contains { $0.path.hasPrefix("boards[0].semanticHolds") })
         XCTAssertTrue(issues.contains {
             $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
                 $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
+        })
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0].targets[1]" &&
+                $0.message == "Unknown semantic target \"fixture-board-owned\" for board \"fixture.edge-only\"."
         })
         XCTAssertFalse(issues.contains { $0.message.contains("fixture-overridden") })
     }
