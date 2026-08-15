@@ -41,7 +41,7 @@ def _copy(source: Path, destination: Path) -> None:
 
 
 def import_generated_catalog(source_root: Path, destination_root: Path) -> None:
-    """Copy an existing generated catalog into flat board packages."""
+    """Copy generated primary images into primary-only board-package drafts."""
     source_root = Path(source_root)
     destination_root = Path(destination_root)
     primary = _primary_sources(source_root)
