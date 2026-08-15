@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import importlib.util
 import json
 import os
@@ -16,6 +17,14 @@ CANONICAL_PACKAGE = (
     REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
 )
 PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
+VALIDATION_FIXTURES = json.loads(
+    (
+        REPOSITORY_ROOT
+        / "HangTenTests"
+        / "Fixtures"
+        / "BoardPackageValidationFixtures.json"
+    ).read_text(encoding="utf-8")
+)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -36,7 +45,7 @@ def _board_document(
         "subtitle": "A physical fixture board.",
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 × 10 cm",
-        "aspectRatio": 2,
+        "aspectRatio": 1774 / 457,
         "presentation": {"assetPath": "assets/primary.png"},
         "holds": [
             {
@@ -180,6 +189,47 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     assert not (library / "catalog.json").exists()
 
 
+def test_rejects_a_plausible_png_header_without_complete_image_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    truncated = base64.b64decode(
+        VALIDATION_FIXTURES["png"]["plausibleHeaderTruncatedBase64"],
+        validate=True,
+    )
+    assert len(truncated) == 24
+    assert truncated[:8] == b"\x89PNG\r\n\x1a\n"
+    assert truncated[12:16] == b"IHDR"
+    (package / "assets" / "primary.png").write_bytes(truncated)
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.load_board_package(package)
+
+
+def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package, lambda board: board.update(aspectRatio=3.88))
+
+    loaded = board_package.load_board_package(package)
+
+    assert loaded.board["aspectRatio"] == 3.88
+
+
+def test_rejects_an_aspect_ratio_that_does_not_match_the_primary_canvas(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package, lambda board: board.update(aspectRatio=34 / 7))
+
+    with pytest.raises(BoardPackageError, match="aspectRatio.*primary image"):
+        board_package.load_board_package(package)
+
+
 def test_final_inventory_rejects_an_exact_primary_only_draft(tmp_path: Path) -> None:
     library = _library(tmp_path)
     _write_finished_package(library, "finished-board", "finished.board")
@@ -229,7 +279,7 @@ def test_rejects_root_catalog_malformed_drafts_and_invalid_pngs(tmp_path: Path) 
     shutil.rmtree(malformed)
     package = library / "fixture-board"
     (package / "assets" / "primary.png").write_bytes(b"not a PNG")
-    with pytest.raises(BoardPackageError, match="must be a PNG"):
+    with pytest.raises(BoardPackageError, match="PNG"):
         board_package.load_board_package(package)
 
 
@@ -481,6 +531,54 @@ def test_replace_rolls_back_the_live_package_when_installation_fails(
     assert failed
     assert _package_snapshot(live) == before
     assert not (library / "catalog.json").exists()
+
+
+def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    live = _write_finished_package(library, "fixture-board", "fixture.board")
+    candidate_library = tmp_path / "candidates"
+    candidate_library.mkdir()
+    candidate = _write_finished_package(
+        candidate_library,
+        "fixture-board",
+        "fixture.board",
+        name="Edited Fixture Board",
+    )
+    before = _package_snapshot(live)
+    real_replace = os.replace
+    failures: list[str] = []
+
+    def fail_install_and_restore(source, destination):
+        source_path = Path(source)
+        destination_path = Path(destination)
+        if (
+            destination_path == live
+            and source_path.name == "fixture-board"
+            and source_path.parent.name.startswith(".workbench-save-")
+        ):
+            failures.append("install")
+            raise OSError("injected package installation failure")
+        if destination_path == live and (
+            source_path.name == ".previous"
+            or source_path.name.startswith(".workbench-previous-")
+        ):
+            failures.append("restore")
+            raise OSError("injected package restoration failure")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(board_package.os, "replace", fail_install_and_restore)
+
+    with pytest.raises(BoardPackageError, match="could not restore"):
+        board_package.replace_package(library, "fixture-board", candidate)
+
+    backups = sorted(library.glob(".workbench-previous-*"))
+    assert failures == ["install", "restore"]
+    assert not live.exists()
+    assert len(backups) == 1
+    assert _package_snapshot(backups[0]) == before
+    assert not any(path.name.startswith(".workbench-save-") for path in library.iterdir())
 
 
 def test_staging_copies_only_complete_direct_children_without_a_registry(
