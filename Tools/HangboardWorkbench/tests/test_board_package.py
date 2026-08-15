@@ -235,6 +235,16 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     assert not (library / "catalog.json").exists()
 
 
+def test_opening_a_missing_valid_board_raises_not_available_error(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+
+    with pytest.raises(board_package.BoardNotAvailableError):
+        board_package.open_package(library, "missing.board")
+
+
 def test_discovery_uses_the_shared_non_ascii_ordering_contract(tmp_path: Path) -> None:
     library = _library(tmp_path)
     ordering = VALIDATION_FIXTURES["ordering"]
