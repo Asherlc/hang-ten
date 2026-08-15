@@ -2,6 +2,28 @@ import XCTest
 @testable import HangTen
 
 final class BoardStorageTests: XCTestCase {
+    func testFrameOnlyBoardHoldCreatesRectangleGeometryAndDerivesBounds() throws {
+        let suppliedFrame = HoldFrame(x: 0.2, y: 0.3, width: 0.4, height: 0.2)
+        let hold = BoardHold(
+            id: "legacy-frame-hold",
+            name: "Legacy frame hold",
+            shortLabel: "Legacy",
+            detail: "Fixture",
+            kind: .edge,
+            frame: suppliedFrame
+        )
+
+        let piece = try XCTUnwrap(hold.geometry.first)
+        XCTAssertEqual(hold.geometry.count, 1)
+        XCTAssertEqual(piece.holdID, hold.id)
+        XCTAssertEqual(piece.frame, suppliedFrame.rect)
+        XCTAssertEqual(hold.frame.rect, suppliedFrame.rect)
+
+        let path = piece.path(in: CGRect(x: 0, y: 0, width: 100, height: 100))
+        XCTAssertTrue(path.contains(CGPoint(x: 40, y: 40)))
+        XCTAssertFalse(path.contains(CGPoint(x: 10, y: 40)))
+    }
+
     func testBoardLibraryPreservesUnknownPhysicalMetadataAndDerivesHoldFrameFromGeometry() throws {
         let store = try BoardLibraryStore(data: compactFixture)
         let board = try XCTUnwrap(store.boards.first)
