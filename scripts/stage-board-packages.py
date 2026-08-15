@@ -135,16 +135,8 @@ def _replace_destination(staging: Path, destination: Path) -> None:
         if replaced_existing_destination and not destination.exists():
             os.replace(backup, destination)
         raise
-    # Installing staging is the commit point. Keep a sibling recovery backup
-    # when best-effort cleanup fails instead of reporting that staging failed.
     if replaced_existing_destination:
-        try:
-            shutil.rmtree(backup)
-        except OSError as error:
-            print(
-                f"warning: could not remove backup directory {backup}: {error}",
-                file=sys.stderr,
-            )
+        shutil.rmtree(backup)
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
@@ -158,7 +150,7 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
     _regular_directory(hangboards_root)
-    packages = load_board_package_module(repository_root).discover_packages_without_lock(
+    inventory = load_board_package_module(repository_root).discover_board_packages(
         hangboards_root
     )
 
@@ -167,7 +159,7 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     try:
         staging.mkdir()
         staged_paths: list[Path] = []
-        for package in packages:
+        for package in inventory.packages:
             package_source = package.root
             package_destination = staging / package.root.name
             _copy_regular_tree(package_source, package_destination)
