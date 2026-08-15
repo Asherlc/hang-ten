@@ -174,7 +174,8 @@ def test_metolius_contact_aspect_ratio_matches_its_png_ihdr() -> None:
     assert primary[12:16] == b"IHDR"
     width, height = struct.unpack(">II", primary[16:24])
     assert (width, height) == PRESENTATION_SIZE
-    assert math.isclose(board["aspectRatio"], width / height, abs_tol=1e-12)
+    assert width / height == 2.0
+    assert board["aspectRatio"] == 2.0
 
 
 def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
@@ -189,7 +190,7 @@ def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
     assert board["manufacturer"] == "Metolius"
     assert board["name"] == "Contact Training Board"
     assert board["dimensions"] == "32.5 × 11 × 2.625 in (826 × 279 × 67 mm)"
-    assert math.isclose(board["aspectRatio"], 2.0, abs_tol=1e-12)
+    assert board["aspectRatio"] == 2.0
     assert board["presentation"]["assetPath"] == "assets/primary.png"
     assert presentation_size == PRESENTATION_SIZE
     assert tuple(holds) == EXPECTED_HOLDS
