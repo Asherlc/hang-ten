@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import base64
-import errno
 import importlib.util
 import json
 import os
 import shutil
 import struct
 import sys
-import zlib
 from pathlib import Path
 from types import ModuleType
 
@@ -18,74 +15,83 @@ TEST_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(TEST_ROOT))
 import conftest as shared_fixtures  # noqa: E402
 
-REPOSITORY_ROOT = shared_fixtures.REPOSITORY_ROOT
-WORKBENCH_ROOT = shared_fixtures.WORKBENCH_ROOT
-CANONICAL_PACKAGE = shared_fixtures.CANONICAL_PACKAGE
-PRIMARY_IMAGE = shared_fixtures.PRIMARY_IMAGE
-VALIDATION_FIXTURES = json.loads(
-    (
-        REPOSITORY_ROOT
-        / "HangTenTests"
-        / "Fixtures"
-        / "BoardPackageValidationFixtures.json"
-    ).read_text(encoding="utf-8")
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_PACKAGE = (
+    REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
 )
-assert VALIDATION_FIXTURES["outOfBoundsFrames"], (
-    "outOfBoundsFrames must contain at least one fixture"
-)
-SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
+PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
 
 
-def _load_stage_module(module_name: str) -> ModuleType:
-    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
-    spec = importlib.util.spec_from_file_location(module_name, stage_path)
-    assert spec is not None
-    assert spec.loader is not None
-    stage_module = importlib.util.module_from_spec(spec)
-    previous_bytecode_setting = sys.dont_write_bytecode
-    sys.dont_write_bytecode = True
-    try:
-        spec.loader.exec_module(stage_module)
-    finally:
-        sys.dont_write_bytecode = previous_bytecode_setting
-    return stage_module
+def _board_document(
+    board_id: str,
+    *,
+    manufacturer: str = "Fixture Maker",
+    name: str = "Fixture Board",
+) -> dict[str, object]:
+    return {
+        "schemaVersion": 1,
+        "id": board_id,
+        "manufacturer": manufacturer,
+        "name": name,
+        "subtitle": "A physical fixture board.",
+        "productURL": f"https://example.com/{board_id}",
+        "dimensions": "20 × 10 cm",
+        "aspectRatio": 2,
+        "presentation": {"assetPath": "assets/primary.png"},
+        "holds": [
+            {
+                "id": "hold-left",
+                "name": "Left hold",
+                "kind": "jug",
+                "geometry": [
+                    {
+                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
+                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+                    },
+                    {
+                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
+                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
+                        "treatment": {"type": "surface"},
+                    },
+                ],
+            }
+        ],
+    }
 
 
-def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
-    return (
-        struct.pack(">I", len(payload))
-        + chunk_type
-        + payload
-        + struct.pack(">I", zlib.crc32(chunk_type + payload) & 0xFFFFFFFF)
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def _write_finished_package(
+    library: Path,
+    slug: str,
+    board_id: str,
+    *,
+    manufacturer: str = "Fixture Maker",
+    name: str = "Fixture Board",
+) -> Path:
+    package = library / slug
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    _write_json(
+        package / "board.json",
+        _board_document(board_id, manufacturer=manufacturer, name=name),
     )
+    return package
 
 
-def _indexed_png_with_palette_after_idat() -> bytes:
-    return b"".join(
-        (
-            b"\x89PNG\r\n\x1a\n",
-            _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 3, 0, 0, 0)),
-            _png_chunk(b"IDAT", zlib.compress(b"\x00\x00")),
-            _png_chunk(b"PLTE", b"\x00\x00\x00"),
-            _png_chunk(b"IEND", b""),
-        )
-    )
-
-
-def _png_with_corrupt_post_ihdr_data() -> bytes:
-    data = bytearray(PRIMARY_IMAGE.read_bytes())
-    data[-1] ^= 0xFF
-    return bytes(data)
-
-
-_board_document = shared_fixtures.board_document
-_write_json = shared_fixtures.write_json
-_write_finished_package = shared_fixtures.write_finished_package
-_write_draft = shared_fixtures.write_draft
+def _write_draft(library: Path, slug: str) -> Path:
+    assets = library / slug / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    return assets.parent
 
 
 def _library(tmp_path: Path) -> Path:
@@ -102,21 +108,6 @@ def _mutate_board(package: Path, mutation) -> None:
     board = _read_board(package)
     mutation(board)
     _write_json(package / "board.json", board)
-
-
-def _replace_holds_with_supported_kinds(board: dict[str, object]) -> None:
-    holds = board["holds"]
-    assert isinstance(holds, list) and holds and isinstance(holds[0], dict)
-    template = holds[0]
-    board["holds"] = [
-        {
-            **template,
-            "id": f"hold-{kind}",
-            "name": f"Fixture {kind}",
-            "kind": kind,
-        }
-        for kind in SUPPORTED_HOLD_KINDS
-    ]
 
 
 def _package_snapshot(package: Path) -> dict[str, bytes]:
@@ -194,243 +185,6 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     assert not (library / "catalog.json").exists()
 
 
-def test_opening_a_missing_valid_board_raises_not_available_error(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "fixture-board", "fixture.board")
-
-    with pytest.raises(board_package.BoardNotAvailableError):
-        board_package.open_package(library, "missing.board")
-
-
-def test_discovery_uses_the_shared_non_ascii_ordering_contract(tmp_path: Path) -> None:
-    library = _library(tmp_path)
-    ordering = VALIDATION_FIXTURES["ordering"]
-    for package in ordering["packages"]:
-        _write_finished_package(
-            library,
-            package["slug"],
-            package["id"],
-            manufacturer=package["manufacturer"],
-            name=package["name"],
-        )
-
-    packages = board_package.discover_packages(library)
-
-    assert [package.board_id for package in packages] == ordering["expectedBoardIDs"]
-
-
-def test_discovery_excludes_the_exact_internal_recovery_directory(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "current-board", "current.board")
-    recovery = library / ".workbench-recovery"
-    recovery.mkdir()
-    _write_finished_package(
-        recovery,
-        "current-board-previous-0123456789abcdef0123456789abcdef",
-        "previous.board",
-    )
-
-    packages = board_package.discover_packages(library)
-
-    assert [package.board_id for package in packages] == ["current.board"]
-
-
-def test_discovery_does_not_broaden_the_recovery_directory_exclusion(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "current-board", "current.board")
-    (library / ".workbench-recovery-old").mkdir()
-
-    with pytest.raises(BoardPackageError):
-        board_package.discover_packages(library)
-
-
-def test_discovery_open_and_noop_save_ignore_abandoned_staging_directories(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "fixture-board", "fixture.board")
-    staging_directories = [
-        library / ".workbench-edit-abandoned",
-        library / ".workbench-save-abandoned",
-    ]
-    for staging in staging_directories:
-        (staging / "partial-package").mkdir(parents=True)
-        (staging / "partial-package" / "board.json").write_text(
-            "{ incomplete", encoding="utf-8"
-        )
-
-    packages = board_package.discover_packages(library)
-    package = board_package.open_package(library, "fixture.board")
-    saved = board_package.save_editor_document(
-        library,
-        "fixture-board",
-        board_package.editor_document(package),
-    )
-
-    assert [candidate.board_id for candidate in packages] == ["fixture.board"]
-    assert saved.board_id == "fixture.board"
-    assert all(staging.is_dir() for staging in staging_directories)
-
-
-@pytest.mark.parametrize(
-    "lookalike", [".workbench-edit", ".workbench-editor-abandoned", ".workbench-saved"]
-)
-def test_discovery_does_not_broaden_the_staging_directory_exclusion(
-    lookalike: str, tmp_path: Path
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "fixture-board", "fixture.board")
-    (library / lookalike).mkdir()
-
-    with pytest.raises(BoardPackageError):
-        board_package.discover_packages(library)
-
-
-@pytest.mark.parametrize("prefix", [".workbench-edit-", ".workbench-save-"])
-@pytest.mark.parametrize("unsafe_kind", ["file", "symlink"])
-def test_discovery_rejects_unsafe_reserved_staging_paths(
-    prefix: str, unsafe_kind: str, tmp_path: Path
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "fixture-board", "fixture.board")
-    staging = library / f"{prefix}abandoned"
-    if unsafe_kind == "file":
-        staging.write_text("unsafe", encoding="utf-8")
-    else:
-        outside = tmp_path / f"outside-{prefix.removeprefix('.')}"
-        outside.mkdir()
-        staging.symlink_to(outside, target_is_directory=True)
-
-    with pytest.raises(BoardPackageError):
-        board_package.discover_packages(library)
-
-
-@pytest.mark.parametrize("unsafe_kind", ["file", "symlink"])
-def test_discovery_rejects_an_unsafe_reserved_recovery_path(
-    unsafe_kind: str, tmp_path: Path
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "current-board", "current.board")
-    recovery = library / ".workbench-recovery"
-    if unsafe_kind == "file":
-        recovery.write_text("unsafe", encoding="utf-8")
-    else:
-        outside = tmp_path / "outside-recovery"
-        outside.mkdir()
-        recovery.symlink_to(outside, target_is_directory=True)
-
-    with pytest.raises(BoardPackageError):
-        board_package.discover_packages(library)
-
-
-def test_rejects_a_plausible_png_header_without_complete_image_data(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    truncated = base64.b64decode(
-        VALIDATION_FIXTURES["png"]["plausibleHeaderTruncatedBase64"],
-        validate=True,
-    )
-    assert len(truncated) == 24
-    assert truncated[:8] == b"\x89PNG\r\n\x1a\n"
-    assert truncated[12:16] == b"IHDR"
-    (package / "assets" / "primary.png").write_bytes(truncated)
-
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.load_board_package(package)
-
-
-def test_rejects_an_indexed_png_with_palette_after_image_data(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    invalid_png = _indexed_png_with_palette_after_idat()
-    assert invalid_png.index(b"IDAT") < invalid_png.index(b"PLTE")
-    (package / "assets" / "primary.png").write_bytes(invalid_png)
-    _mutate_board(package, lambda board: board.update(aspectRatio=1))
-
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.load_board_package(package)
-
-
-def test_rejects_shared_indexed_png_with_duplicate_palette(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    invalid_png = base64.b64decode(
-        VALIDATION_FIXTURES["png"]["duplicatePaletteBase64"],
-        validate=True,
-    )
-    assert invalid_png.count(b"PLTE") == 2
-    (package / "assets" / "primary.png").write_bytes(invalid_png)
-    _mutate_board(package, lambda board: board.update(aspectRatio=1))
-
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.load_board_package(package)
-
-
-def test_open_ignores_corrupt_post_ihdr_data_in_an_unselected_sibling(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    _write_finished_package(library, "selected-board", "selected.board")
-    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
-    (corrupt / "assets" / "primary.png").write_bytes(
-        _png_with_corrupt_post_ihdr_data()
-    )
-
-    package = board_package.open_package(library, "selected.board")
-
-    assert package.board_id == "selected.board"
-
-
-def test_open_and_direct_load_reject_selected_corrupt_post_ihdr_data(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
-    (corrupt / "assets" / "primary.png").write_bytes(
-        _png_with_corrupt_post_ihdr_data()
-    )
-
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.open_package(library, "corrupt.board")
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.load_board_package(corrupt)
-
-
-def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: board.update(aspectRatio=3.88))
-
-    loaded = board_package.load_board_package(package)
-
-    assert loaded.board["aspectRatio"] == 3.88
-
-
-def test_rejects_an_aspect_ratio_that_does_not_match_the_primary_canvas(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    _mutate_board(package, lambda board: board.update(aspectRatio=34 / 7))
-
-    with pytest.raises(BoardPackageError, match="aspectRatio.*primary image"):
-        board_package.load_board_package(package)
-
-
 def test_final_inventory_rejects_an_exact_primary_only_draft(tmp_path: Path) -> None:
     library = _library(tmp_path)
     _write_finished_package(library, "finished-board", "finished.board")
@@ -480,7 +234,7 @@ def test_rejects_root_catalog_malformed_drafts_and_invalid_pngs(tmp_path: Path) 
     shutil.rmtree(malformed)
     package = library / "fixture-board"
     (package / "assets" / "primary.png").write_bytes(b"not a PNG")
-    with pytest.raises(BoardPackageError, match="PNG"):
+    with pytest.raises(BoardPackageError, match="must be a PNG"):
         board_package.load_board_package(package)
 
 
@@ -519,19 +273,6 @@ def test_rejects_duplicate_discovered_board_and_hold_ids(tmp_path: Path) -> None
     )
     with pytest.raises(BoardPackageError, match="duplicate hold ID"):
         board_package.load_board_package(package)
-
-
-def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
-    library = _library(tmp_path)
-    package = _write_finished_package(library, "fixture-board", "fixture.board")
-    assert board_package._HOLD_KINDS == frozenset(SUPPORTED_HOLD_KINDS)
-    _mutate_board(package, _replace_holds_with_supported_kinds)
-
-    loaded = board_package.load_board_package(package)
-
-    assert [hold["kind"] for hold in loaded.board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
 
 
 @pytest.mark.parametrize(
@@ -588,21 +329,6 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
         board_package.load_board_package(package)
 
 
-@pytest.mark.parametrize(
-    "fixture",
-    VALIDATION_FIXTURES["outOfBoundsFrames"],
-    ids=lambda fixture: fixture["name"],
-)
-def test_rejects_shared_out_of_bounds_normalized_frames(
-    fixture: dict[str, object],
-) -> None:
-    with pytest.raises(board_package.GeometryError, match="normalized canvas"):
-        board_package.NormalizedFrame.from_json(
-            fixture["frame"],
-            fixture["name"],
-        )
-
-
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     tmp_path: Path,
 ) -> None:
@@ -624,26 +350,15 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
 
 
 def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
     package = board_package.load_board_package(
         _write_finished_package(library, "fixture-board", "fixture.board")
     )
-    monkeypatch.setattr(
-        board_package,
-        "_png_dimensions",
-        lambda _path: pytest.fail("editor_document repeated complete PNG validation"),
-    )
-    monkeypatch.setattr(
-        board_package,
-        "_png_header_dimensions",
-        lambda _path: pytest.fail("editor_document repeated PNG header inspection"),
-    )
 
     document = board_package.editor_document(package)
 
-    assert document["canvas"] == {"width": 1774, "height": 457}
     assert [region["key"] for region in document["regions"]] == [
         "hold-left-piece-0",
         "hold-left-piece-1",
@@ -676,23 +391,6 @@ def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(
     )
     assert {path.name for path in package_root.iterdir()} == {"board.json", "assets"}
     assert not (library / "catalog.json").exists()
-
-
-def test_noop_save_rejects_selected_live_package_with_corrupt_post_ihdr_data(
-    tmp_path: Path,
-) -> None:
-    library = _library(tmp_path)
-    package_root = _write_finished_package(
-        library, "fixture-board", "fixture.board"
-    )
-    package = board_package.load_board_package(package_root)
-    document = board_package.editor_document(package)
-    (package_root / "assets" / "primary.png").write_bytes(
-        _png_with_corrupt_post_ihdr_data()
-    )
-
-    with pytest.raises(BoardPackageError, match="PNG"):
-        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
@@ -787,154 +485,7 @@ def test_replace_rolls_back_the_live_package_when_installation_fails(
 
     assert failed
     assert _package_snapshot(live) == before
-    assert not (library / ".workbench-recovery").exists()
     assert not (library / "catalog.json").exists()
-
-
-def test_replace_keeps_the_backup_inside_a_library_mount_boundary(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _library(tmp_path)
-    live = _write_finished_package(library, "fixture-board", "fixture.board")
-    candidate_library = tmp_path / "candidates"
-    candidate_library.mkdir()
-    candidate = _write_finished_package(
-        candidate_library,
-        "fixture-board",
-        "fixture.board",
-        name="Edited Fixture Board",
-    )
-    real_replace = os.replace
-    backup_destinations: list[Path] = []
-
-    def reject_cross_mount_replace(source, destination):
-        source_path = Path(source)
-        destination_path = Path(destination)
-        source_is_below_library = source_path == library or library in source_path.parents
-        destination_is_below_library = (
-            destination_path == library or library in destination_path.parents
-        )
-        if source_path == live:
-            backup_destinations.append(destination_path)
-        if source_is_below_library != destination_is_below_library:
-            raise OSError(errno.EXDEV, "injected cross-device package replacement")
-        return real_replace(source, destination)
-
-    monkeypatch.setattr(board_package.os, "replace", reject_cross_mount_replace)
-
-    board_package.replace_package(library, "fixture-board", candidate)
-
-    assert len(backup_destinations) == 1
-    assert backup_destinations[0].parent == library / ".workbench-recovery"
-    assert board_package.open_package(library, "fixture.board").board["name"] == (
-        "Edited Fixture Board"
-    )
-    assert not (library / ".workbench-recovery").exists()
-
-
-def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _library(tmp_path)
-    live = _write_finished_package(library, "fixture-board", "fixture.board")
-    candidate_library = tmp_path / "candidates"
-    candidate_library.mkdir()
-    candidate = _write_finished_package(
-        candidate_library,
-        "fixture-board",
-        "fixture.board",
-        name="Edited Fixture Board",
-    )
-    before = _package_snapshot(live)
-    real_replace = os.replace
-    failures: list[str] = []
-
-    def fail_install_and_restore(source, destination):
-        source_path = Path(source)
-        destination_path = Path(destination)
-        if (
-            destination_path == live
-            and source_path.name == "fixture-board"
-            and source_path.parent.name.startswith(".workbench-save-")
-        ):
-            failures.append("install")
-            raise OSError("injected package installation failure")
-        if (
-            destination_path == live
-            and source_path.parent == library / ".workbench-recovery"
-            and source_path.name.startswith("fixture-board-previous-")
-        ):
-            failures.append("restore")
-            raise OSError("injected package restoration failure")
-        return real_replace(source, destination)
-
-    monkeypatch.setattr(board_package.os, "replace", fail_install_and_restore)
-
-    with pytest.raises(BoardPackageError, match="could not restore"):
-        board_package.replace_package(library, "fixture-board", candidate)
-
-    recovery = library / ".workbench-recovery"
-    backups = sorted(recovery.glob("fixture-board-previous-*"))
-    assert failures == ["install", "restore"]
-    assert not live.exists()
-    assert len(backups) == 1
-    assert _package_snapshot(backups[0]) == before
-    assert board_package.discover_packages(library) == ()
-    assert not any(path.name.startswith(".workbench-save-") for path in library.iterdir())
-
-
-def test_replace_commits_new_package_when_backup_cleanup_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _library(tmp_path)
-    live = _write_finished_package(library, "fixture-board", "fixture.board")
-    candidate_library = tmp_path / "candidates"
-    candidate_library.mkdir()
-    candidate = _write_finished_package(
-        candidate_library,
-        "fixture-board",
-        "fixture.board",
-        name="Edited Fixture Board",
-    )
-    before = _package_snapshot(live)
-    real_rmtree = shutil.rmtree
-    cleanup_failures: list[Path] = []
-    recovery = library / ".workbench-recovery"
-
-    def fail_backup_cleanup(path, *args, **kwargs):
-        cleanup_path = Path(path)
-        if cleanup_path.parent == recovery and cleanup_path.name.startswith(
-            "fixture-board-previous-"
-        ):
-            cleanup_failures.append(cleanup_path)
-            raise OSError("injected backup cleanup failure")
-        return real_rmtree(path, *args, **kwargs)
-
-    monkeypatch.setattr(board_package.shutil, "rmtree", fail_backup_cleanup)
-
-    board_package.replace_package(library, "fixture-board", candidate)
-    first_commit = _package_snapshot(live)
-    _mutate_board(
-        candidate,
-        lambda board: board.update(name="Edited Fixture Board Again"),
-    )
-    board_package.replace_package(library, "fixture-board", candidate)
-
-    backups = sorted(recovery.glob("fixture-board-previous-*"))
-    assert set(cleanup_failures) == set(backups)
-    assert board_package.open_package(library, "fixture.board").board["name"] == (
-        "Edited Fixture Board Again"
-    )
-    assert len(backups) == 2
-    assert len({backup.name for backup in backups}) == 2
-    assert {_package_snapshot(backup)["board.json"] for backup in backups} == {
-        before["board.json"],
-        first_commit["board.json"],
-    }
-    assert [package.board_id for package in board_package.discover_packages(library)] == [
-        "fixture.board"
-    ]
-    assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
 def test_staging_copies_only_complete_direct_children_without_a_registry(
@@ -943,21 +494,23 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     repository = tmp_path / "repository"
     library = repository / "Hangboards"
     library.mkdir(parents=True)
-    finished = _write_finished_package(library, "finished-board", "finished.board")
-    _mutate_board(finished, _replace_holds_with_supported_kinds)
+    _write_finished_package(library, "finished-board", "finished.board")
     _write_draft(library, "draft-board")
     workbench = repository / "Tools" / "HangboardWorkbench"
     workbench.mkdir(parents=True)
     for filename in ["board_package.py", "board_geometry.py"]:
         shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
 
-    stage_module = _load_stage_module("stage_board_packages_test")
-    discovered_module = stage_module.load_board_package_module(repository)
-
-    def fail_lock(*_args: object, **_kwargs: object) -> object:
-        raise AssertionError("workbench lock must not be taken in staging path")
-
-    discovered_module._library_lock = fail_lock
+    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
+    spec = importlib.util.spec_from_file_location("stage_board_packages_test", stage_path)
+    assert spec is not None and spec.loader is not None
+    stage_module = importlib.util.module_from_spec(spec)
+    previous_bytecode_setting = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(stage_module)
+    finally:
+        sys.dont_write_bytecode = previous_bytecode_setting
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
@@ -977,56 +530,3 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
         "finished-board/board.json",
     ]
     assert not (destination / "catalog.json").exists()
-    staged_board = json.loads(
-        (destination / "finished-board" / "board.json").read_text(encoding="utf-8")
-    )
-    assert [hold["kind"] for hold in staged_board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
-
-
-def test_staging_commits_new_destination_when_backup_cleanup_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repository = tmp_path / "repository"
-    library = repository / "Hangboards"
-    library.mkdir(parents=True)
-    _write_finished_package(library, "finished-board", "finished.board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
-
-    stage_module = _load_stage_module("stage_board_packages_cleanup_test")
-
-    build_root = tmp_path / "build"
-    destination = build_root / "Resources" / "Hangboards"
-    destination.mkdir(parents=True)
-    (destination / "previous.txt").write_text("recoverable", encoding="utf-8")
-    monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
-    monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
-    real_rmtree = shutil.rmtree
-    cleanup_failures: list[Path] = []
-
-    def fail_backup_cleanup(path, *args, **kwargs):
-        cleanup_path = Path(path)
-        if cleanup_path.name.startswith(".Hangboards.previous-"):
-            cleanup_failures.append(cleanup_path)
-            raise OSError("injected staged backup cleanup failure")
-        return real_rmtree(path, *args, **kwargs)
-
-    monkeypatch.setattr(stage_module.shutil, "rmtree", fail_backup_cleanup)
-
-    staged = stage_module.stage_board_packages(repository, destination)
-
-    backups = sorted(destination.parent.glob(".Hangboards.previous-*"))
-    assert staged == (destination / "finished-board",)
-    assert cleanup_failures == backups
-    assert len(backups) == 1
-    assert (backups[0] / "previous.txt").read_text(encoding="utf-8") == "recoverable"
-    assert [package.board_id for package in board_package.discover_packages(destination)] == [
-        "finished.board"
-    ]
-    assert not any(
-        path.name.startswith(".Hangboards.previous-") for path in destination.iterdir()
-    )

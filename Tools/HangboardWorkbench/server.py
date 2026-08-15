@@ -197,17 +197,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             package = open_package(self.server.library_root, board_id)
             payload = _board_payload(package, include_document=True)
-        except BoardNotAvailableError:
-            self._send_json(
-                HTTPStatus.NOT_FOUND,
-                {"ok": False, "error": "board is not available"},
-            )
-            return
-        except BoardPackageError:
-            self._send_json(
-                HTTPStatus.BAD_REQUEST,
-                {"ok": False, "error": "could not load board"},
-            )
+        except BoardPackageError as error:
+            message = _safe_message(error, "could not load board")
+            status = HTTPStatus.NOT_FOUND if message == "board is not available" else HTTPStatus.BAD_REQUEST
+            self._send_json(status, {"ok": False, "error": message if status == HTTPStatus.NOT_FOUND else "could not load board"})
             return
         except OSError:
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not load board"})
