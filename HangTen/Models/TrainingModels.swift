@@ -913,18 +913,73 @@ enum MetoliusCycleBuilder {
     }
 }
 
+/// Board-specific target vocabulary retained by the plan migration seed.
+/// Physical board packages intentionally contain no training-plan semantics.
+enum LegacyPlanSeedBoardMappings {
+    static let all = [
+        BoardMappingDefinition(
+            boardID: "metolius.wood-grips-compact-ii",
+            semanticHolds: [
+                "edge-19": SemanticHoldMappingDefinition(
+                    holdIDs: ["edge-19-left", "edge-19-right"]
+                ),
+                "edge-29": SemanticHoldMappingDefinition(
+                    holdIDs: ["edge-29-left", "edge-29-right"]
+                ),
+                "flat-slopers": SemanticHoldMappingDefinition(
+                    holdIDs: ["sloper-flat-left", "sloper-flat-right"]
+                ),
+                "outer-jugs": SemanticHoldMappingDefinition(
+                    holdIDs: ["jug-left", "jug-right"]
+                ),
+                "pocket-19-four": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-19-four-center"]
+                ),
+                "pocket-19-three": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-19-three-left", "pocket-19-three-right"]
+                ),
+                "pocket-19-two": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-19-two-left", "pocket-19-two-right"]
+                ),
+                "pocket-29-four": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-29-four-center"]
+                ),
+                "pocket-29-three": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-29-three-left", "pocket-29-three-right"]
+                ),
+                "pocket-29-two": SemanticHoldMappingDefinition(
+                    holdIDs: ["pocket-29-two-left", "pocket-29-two-right"]
+                ),
+                "round-sloper": SemanticHoldMappingDefinition(
+                    holdIDs: ["sloper-round-center"]
+                )
+            ]
+        )
+    ]
+
+    static func required(containingSemantic semanticID: String) -> BoardMappingDefinition {
+        let matches = all.filter { $0.semanticHolds[semanticID] != nil }
+        precondition(
+            matches.count == 1,
+            "Expected exactly one plan mapping with \(semanticID) semantics."
+        )
+        return matches[0]
+    }
+}
+
 enum LegacyPlanSeedCatalog {
     static let repeaterStepIDPrefix = "repeaters-grip-"
 
-    private static let exactTargetBoard = requiredBoard(containingSemantic: "edge-19")
+    private static let exactTargetMapping = LegacyPlanSeedBoardMappings.required(
+        containingSemantic: "edge-19"
+    )
+    private static let exactTargetBoard = requiredBoard(id: exactTargetMapping.boardID)
 
-    private static func requiredBoard(containingSemantic semanticID: String) -> TrainingBoard {
-        let matches = BoardCatalog.all.filter {
-            BoardCatalog.packageStore.semantics(for: $0.id)[semanticID] != nil
-        }
+    private static func requiredBoard(id boardID: String) -> TrainingBoard {
+        let matches = BoardCatalog.all.filter { $0.id == boardID }
         precondition(
             matches.count == 1,
-            "Expected exactly one board package with \(semanticID) semantics."
+            "Expected exactly one discovered board with ID \(boardID)."
         )
         return matches[0]
     }
@@ -933,11 +988,9 @@ enum LegacyPlanSeedCatalog {
         _ semanticID: String,
         holdIndex: Int? = nil
     ) -> HoldTarget {
-        guard let holdIDs = BoardCatalog.packageStore.semantics(
-            for: exactTargetBoard.id
-        )[semanticID] else {
+        guard let holdIDs = exactTargetMapping.semanticHolds[semanticID]?.holdIDs else {
             preconditionFailure(
-                "The board package is missing \(semanticID) semantics."
+                "The plan seed mapping is missing \(semanticID) semantics."
             )
         }
         if let holdIndex {
