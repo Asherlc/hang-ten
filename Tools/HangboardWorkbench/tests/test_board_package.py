@@ -25,6 +25,7 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
+SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -112,6 +113,21 @@ def _mutate_board(package: Path, mutation) -> None:
     board = _read_board(package)
     mutation(board)
     _write_json(package / "board.json", board)
+
+
+def _replace_holds_with_supported_kinds(board: dict[str, object]) -> None:
+    holds = board["holds"]
+    assert isinstance(holds, list) and holds and isinstance(holds[0], dict)
+    template = holds[0]
+    board["holds"] = [
+        {
+            **template,
+            "id": f"hold-{kind}",
+            "name": f"Fixture {kind}",
+            "kind": kind,
+        }
+        for kind in SUPPORTED_HOLD_KINDS
+    ]
 
 
 def _package_snapshot(package: Path) -> dict[str, bytes]:
@@ -318,6 +334,19 @@ def test_rejects_duplicate_discovered_board_and_hold_ids(tmp_path: Path) -> None
     )
     with pytest.raises(BoardPackageError, match="duplicate hold ID"):
         board_package.load_board_package(package)
+
+
+def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    assert board_package._HOLD_KINDS == frozenset(SUPPORTED_HOLD_KINDS)
+    _mutate_board(package, _replace_holds_with_supported_kinds)
+
+    loaded = board_package.load_board_package(package)
+
+    assert [hold["kind"] for hold in loaded.board["holds"]] == list(
+        SUPPORTED_HOLD_KINDS
+    )
 
 
 @pytest.mark.parametrize(
@@ -587,7 +616,8 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     repository = tmp_path / "repository"
     library = repository / "Hangboards"
     library.mkdir(parents=True)
-    _write_finished_package(library, "finished-board", "finished.board")
+    finished = _write_finished_package(library, "finished-board", "finished.board")
+    _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
     workbench = repository / "Tools" / "HangboardWorkbench"
     workbench.mkdir(parents=True)
@@ -623,3 +653,9 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
         "finished-board/board.json",
     ]
     assert not (destination / "catalog.json").exists()
+    staged_board = json.loads(
+        (destination / "finished-board" / "board.json").read_text(encoding="utf-8")
+    )
+    assert [hold["kind"] for hold in staged_board["holds"]] == list(
+        SUPPORTED_HOLD_KINDS
+    )
