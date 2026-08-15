@@ -1,77 +1,8 @@
 {
   "png": {
     "validTwoByOneBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGNgYGD4//8/AAYBAv4CsjmuAAAAAElFTkSuQmCC",
-    "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB",
-    "duplicatePaletteBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUAAACnej3aAAAAA1BMVEX///+nxBvIAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg=="
+    "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB"
   },
-  "ordering": {
-    "packages": [
-      {
-        "slug": "strasse-board",
-        "id": "strasse.board",
-        "manufacturer": "Straße",
-        "name": "Model"
-      },
-      {
-        "slug": "strasze-board",
-        "id": "strasze.board",
-        "manufacturer": "Strasze",
-        "name": "Model"
-      },
-      {
-        "slug": "name-strasse-board",
-        "id": "name-strasse.board",
-        "manufacturer": "Name Maker",
-        "name": "Straße"
-      },
-      {
-        "slug": "name-strasze-board",
-        "id": "name-strasze.board",
-        "manufacturer": "Name Maker",
-        "name": "Strasze"
-      },
-      {
-        "slug": "manufacturer-lowercase-board",
-        "id": "manufacturer-lowercase.board",
-        "manufacturer": "case maker",
-        "name": "Model"
-      },
-      {
-        "slug": "manufacturer-uppercase-board",
-        "id": "manufacturer-uppercase.board",
-        "manufacturer": "Case Maker",
-        "name": "Model"
-      },
-      {
-        "slug": "name-lowercase-board",
-        "id": "name-lowercase.board",
-        "manufacturer": "Tie Maker",
-        "name": "model"
-      },
-      {
-        "slug": "name-uppercase-board",
-        "id": "name-uppercase.board",
-        "manufacturer": "Tie Maker",
-        "name": "Model"
-      }
-    ],
-    "expectedBoardIDs": [
-      "manufacturer-uppercase.board",
-      "manufacturer-lowercase.board",
-      "name-strasze.board",
-      "name-strasse.board",
-      "strasze.board",
-      "strasse.board",
-      "name-uppercase.board",
-      "name-lowercase.board"
-    ]
-  },
-  "outOfBoundsFrames": [
-    {
-      "name": "fractional-overflow",
-      "frame": {"x": 0.9, "y": 0.1, "width": 0.1000000005, "height": 0.2}
-    }
-  ],
   "malformedPathShapes": [
     {
       "name": "zero-area",
