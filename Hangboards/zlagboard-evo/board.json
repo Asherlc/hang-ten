@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "id": "zlagboard.evo",
+  "manufacturer": "Zlagboard",
+  "name": "Zlagboard Evo",
+  "subtitle": "Wood hangboard with crimps, pockets, slopers, and jugs.",
+  "productURL": "https://www.zlagboard.com/hangboards",
+  "dimensions": "8 × 23 × 70.5 cm",
+  "aspectRatio": 8.8125,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "jug-top-left",
+      "name": "Left top jug",
+      "kind": "jug",
+      "geometry": [{
+        "frame": {"x": 0.0335, "y": 0.246, "width": 0.1195, "height": 0.143},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0, 0.45]},
+          {"command": "curve", "control1": [0, 0.18], "control2": [0.12, 0.02], "to": [0.38, 0]},
+          {"command": "curve", "control1": [0.62, 0], "control2": [0.9, 0.02], "to": [1, 0.12]},
+          {"command": "curve", "control1": [1, 0.38], "control2": [0.98, 0.75], "to": [0.92, 0.96]},
+          {"command": "curve", "control1": [0.62, 1], "control2": [0.25, 1], "to": [0, 0.98]},
+          {"command": "curve", "control1": [0, 0.82], "control2": [0, 0.6], "to": [0, 0.45]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-32-left",
+      "name": "Left 32° sloper",
+      "kind": "sloper",
+      "geometry": [{
+        "frame": {"x": 0.154, "y": 0.251, "width": 0.119, "height": 0.115},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0, 0.08]},
+          {"command": "curve", "control1": [0.24, 0], "control2": [0.66, 0], "to": [0.92, 0.02]},
+          {"command": "curve", "control1": [0.98, 0.12], "control2": [1, 0.3], "to": [1, 0.48]},
+          {"command": "curve", "control1": [1, 0.7], "control2": [0.97, 0.9], "to": [0.94, 0.97]},
+          {"command": "curve", "control1": [0.66, 1], "control2": [0.3, 1], "to": [0.05, 0.98]},
+          {"command": "curve", "control1": [0.01, 0.72], "control2": [0, 0.34], "to": [0, 0.08]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-20-left",
+      "name": "Left 20° sloper",
+      "kind": "sloper",
+      "geometry": [{
+        "frame": {"x": 0.273, "y": 0.253, "width": 0.111, "height": 0.078},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.02, 0.05]},
+          {"command": "curve", "control1": [0.28, 0], "control2": [0.7, 0], "to": [0.96, 0.04]},
+          {"command": "curve", "control1": [0.99, 0.18], "control2": [1, 0.4], "to": [1, 0.6]},
+          {"command": "curve", "control1": [0.99, 0.82], "control2": [0.95, 0.94], "to": [0.9, 0.98]},
+          {"command": "curve", "control1": [0.64, 1], "control2": [0.3, 1], "to": [0.04, 0.96]},
+          {"command": "curve", "control1": [0.01, 0.76], "control2": [0, 0.28], "to": [0.02, 0.05]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "jug-sloper-center",
+      "name": "Center sloper JUG",
+      "kind": "jug",
+      "geometry": [{
+        "frame": {"x": 0.419, "y": 0.249, "width": 0.168, "height": 0.09},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.08, 0.04]},
+          {"command": "curve", "control1": [0.25, 0], "control2": [0.4, 0.03], "to": [0.5, 0.04]},
+          {"command": "curve", "control1": [0.6, 0.03], "control2": [0.75, 0], "to": [0.92, 0.04]},
+          {"command": "curve", "control1": [0.98, 0.13], "control2": [1, 0.34], "to": [0.98, 0.54]},
+          {"command": "curve", "control1": [0.94, 0.83], "control2": [0.78, 0.97], "to": [0.5, 1]},
+          {"command": "curve", "control1": [0.22, 0.97], "control2": [0.06, 0.83], "to": [0.02, 0.54]},
+          {"command": "curve", "control1": [0, 0.34], "control2": [0.02, 0.13], "to": [0.08, 0.04]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-20-right",
+      "name": "Right 20° sloper",
+      "kind": "sloper",
+      "geometry": [{
+        "frame": {"x": 0.616, "y": 0.253, "width": 0.111, "height": 0.078},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.98, 0.05]},
+          {"command": "curve", "control1": [0.72, 0], "control2": [0.3, 0], "to": [0.04, 0.04]},
+          {"command": "curve", "control1": [0.01, 0.18], "control2": [0, 0.4], "to": [0, 0.6]},
+          {"command": "curve", "control1": [0.01, 0.82], "control2": [0.05, 0.94], "to": [0.1, 0.98]},
+          {"command": "curve", "control1": [0.36, 1], "control2": [0.7, 1], "to": [0.96, 0.96]},
+          {"command": "curve", "control1": [0.99, 0.76], "control2": [1, 0.28], "to": [0.98, 0.05]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-32-right",
+      "name": "Right 32° sloper",
+      "kind": "sloper",
+      "geometry": [{
+        "frame": {"x": 0.727, "y": 0.251, "width": 0.119, "height": 0.115},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1, 0.08]},
+          {"command": "curve", "control1": [0.76, 0], "control2": [0.34, 0], "to": [0.08, 0.02]},
+          {"command": "curve", "control1": [0.02, 0.12], "control2": [0, 0.3], "to": [0, 0.48]},
+          {"command": "curve", "control1": [0, 0.7], "control2": [0.03, 0.9], "to": [0.06, 0.97]},
+          {"command": "curve", "control1": [0.34, 1], "control2": [0.7, 1], "to": [0.95, 0.98]},
+          {"command": "curve", "control1": [0.99, 0.72], "control2": [1, 0.34], "to": [1, 0.08]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "jug-top-right",
+      "name": "Right top jug",
+      "kind": "jug",
+      "geometry": [{
+        "frame": {"x": 0.847, "y": 0.246, "width": 0.1195, "height": 0.143},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1, 0.45]},
+          {"command": "curve", "control1": [1, 0.18], "control2": [0.88, 0.02], "to": [0.62, 0]},
+          {"command": "curve", "control1": [0.38, 0], "control2": [0.1, 0.02], "to": [0, 0.12]},
+          {"command": "curve", "control1": [0, 0.38], "control2": [0.02, 0.75], "to": [0.08, 0.96]},
+          {"command": "curve", "control1": [0.38, 1], "control2": [0.75, 1], "to": [1, 0.98]},
+          {"command": "curve", "control1": [1, 0.82], "control2": [1, 0.6], "to": [1, 0.45]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "edge-upper-30-left",
+      "name": "Left upper 30 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.068, "y": 0.394, "width": 0.124, "height": 0.096},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.13, 0.02]},
+          {"command": "curve", "control1": [0.06, 0.02], "control2": [0.01, 0.16], "to": [0, 0.43]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.05, 0.92], "to": [0.14, 0.98]},
+          {"command": "curve", "control1": [0.35, 1], "control2": [0.72, 1], "to": [0.88, 0.97]},
+          {"command": "curve", "control1": [0.96, 0.92], "control2": [1, 0.73], "to": [1, 0.47]},
+          {"command": "curve", "control1": [1, 0.2], "control2": [0.95, 0.05], "to": [0.87, 0.02]},
+          {"command": "curve", "control1": [0.65, 0], "control2": [0.34, 0], "to": [0.13, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-upper-30-left",
+      "name": "Left upper 30 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.217, "y": 0.396, "width": 0.09, "height": 0.095},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.16, 0.02]},
+          {"command": "curve", "control1": [0.07, 0.03], "control2": [0.01, 0.18], "to": [0, 0.45]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.06, 0.92], "to": [0.16, 0.98]},
+          {"command": "curve", "control1": [0.36, 1], "control2": [0.7, 1], "to": [0.85, 0.97]},
+          {"command": "curve", "control1": [0.95, 0.9], "control2": [1, 0.72], "to": [1, 0.45]},
+          {"command": "curve", "control1": [1, 0.2], "control2": [0.94, 0.05], "to": [0.84, 0.02]},
+          {"command": "curve", "control1": [0.64, 0], "control2": [0.35, 0], "to": [0.16, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-upper-25-left",
+      "name": "Left upper 25 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 25,
+      "geometry": [{
+        "frame": {"x": 0.336, "y": 0.399, "width": 0.061, "height": 0.093},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.24, 0.03]},
+          {"command": "curve", "control1": [0.1, 0.05], "control2": [0.02, 0.2], "to": [0, 0.47]},
+          {"command": "curve", "control1": [0.01, 0.73], "control2": [0.1, 0.91], "to": [0.25, 0.98]},
+          {"command": "curve", "control1": [0.4, 1], "control2": [0.64, 1], "to": [0.77, 0.97]},
+          {"command": "curve", "control1": [0.92, 0.9], "control2": [1, 0.72], "to": [1, 0.46]},
+          {"command": "curve", "control1": [0.99, 0.2], "control2": [0.9, 0.05], "to": [0.76, 0.03]},
+          {"command": "curve", "control1": [0.62, 0], "control2": [0.39, 0], "to": [0.24, 0.03]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "edge-upper-35-center",
+      "name": "Center upper 35 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 35,
+      "geometry": [{
+        "frame": {"x": 0.437, "y": 0.394, "width": 0.126, "height": 0.097},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.12, 0.02]},
+          {"command": "curve", "control1": [0.05, 0.02], "control2": [0.01, 0.17], "to": [0, 0.44]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.05, 0.92], "to": [0.13, 0.98]},
+          {"command": "curve", "control1": [0.34, 1], "control2": [0.66, 1], "to": [0.87, 0.98]},
+          {"command": "curve", "control1": [0.95, 0.92], "control2": [1, 0.72], "to": [1, 0.44]},
+          {"command": "curve", "control1": [0.99, 0.17], "control2": [0.95, 0.02], "to": [0.88, 0.02]},
+          {"command": "curve", "control1": [0.66, 0], "control2": [0.34, 0], "to": [0.12, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-upper-25-right",
+      "name": "Right upper 25 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 25,
+      "geometry": [{
+        "frame": {"x": 0.603, "y": 0.399, "width": 0.061, "height": 0.093},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.76, 0.03]},
+          {"command": "curve", "control1": [0.9, 0.05], "control2": [0.98, 0.2], "to": [1, 0.47]},
+          {"command": "curve", "control1": [0.99, 0.73], "control2": [0.9, 0.91], "to": [0.75, 0.98]},
+          {"command": "curve", "control1": [0.6, 1], "control2": [0.36, 1], "to": [0.23, 0.97]},
+          {"command": "curve", "control1": [0.08, 0.9], "control2": [0, 0.72], "to": [0, 0.46]},
+          {"command": "curve", "control1": [0.01, 0.2], "control2": [0.1, 0.05], "to": [0.24, 0.03]},
+          {"command": "curve", "control1": [0.38, 0], "control2": [0.61, 0], "to": [0.76, 0.03]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-upper-30-right",
+      "name": "Right upper 30 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.693, "y": 0.396, "width": 0.09, "height": 0.095},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.84, 0.02]},
+          {"command": "curve", "control1": [0.93, 0.03], "control2": [0.99, 0.18], "to": [1, 0.45]},
+          {"command": "curve", "control1": [1, 0.72], "control2": [0.94, 0.92], "to": [0.84, 0.98]},
+          {"command": "curve", "control1": [0.64, 1], "control2": [0.3, 1], "to": [0.15, 0.97]},
+          {"command": "curve", "control1": [0.05, 0.9], "control2": [0, 0.72], "to": [0, 0.45]},
+          {"command": "curve", "control1": [0, 0.2], "control2": [0.06, 0.05], "to": [0.16, 0.02]},
+          {"command": "curve", "control1": [0.36, 0], "control2": [0.65, 0], "to": [0.84, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "edge-upper-30-right",
+      "name": "Right upper 30 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.808, "y": 0.394, "width": 0.124, "height": 0.096},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.87, 0.02]},
+          {"command": "curve", "control1": [0.94, 0.02], "control2": [0.99, 0.16], "to": [1, 0.43]},
+          {"command": "curve", "control1": [1, 0.72], "control2": [0.95, 0.92], "to": [0.86, 0.98]},
+          {"command": "curve", "control1": [0.65, 1], "control2": [0.28, 1], "to": [0.12, 0.97]},
+          {"command": "curve", "control1": [0.04, 0.92], "control2": [0, 0.73], "to": [0, 0.47]},
+          {"command": "curve", "control1": [0, 0.2], "control2": [0.05, 0.05], "to": [0.13, 0.02]},
+          {"command": "curve", "control1": [0.35, 0], "control2": [0.66, 0], "to": [0.87, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "edge-lower-20-left",
+      "name": "Left lower 20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [{
+        "frame": {"x": 0.068, "y": 0.544, "width": 0.124, "height": 0.096},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.13, 0.02]},
+          {"command": "curve", "control1": [0.06, 0.02], "control2": [0.01, 0.16], "to": [0, 0.43]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.05, 0.92], "to": [0.14, 0.98]},
+          {"command": "curve", "control1": [0.35, 1], "control2": [0.72, 1], "to": [0.88, 0.97]},
+          {"command": "curve", "control1": [0.96, 0.92], "control2": [1, 0.73], "to": [1, 0.47]},
+          {"command": "curve", "control1": [1, 0.2], "control2": [0.95, 0.05], "to": [0.87, 0.02]},
+          {"command": "curve", "control1": [0.65, 0], "control2": [0.34, 0], "to": [0.13, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-lower-25-left",
+      "name": "Left lower 25 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 25,
+      "geometry": [{
+        "frame": {"x": 0.218, "y": 0.547, "width": 0.089, "height": 0.094},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.16, 0.02]},
+          {"command": "curve", "control1": [0.07, 0.03], "control2": [0.01, 0.18], "to": [0, 0.45]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.06, 0.92], "to": [0.16, 0.98]},
+          {"command": "curve", "control1": [0.36, 1], "control2": [0.7, 1], "to": [0.85, 0.97]},
+          {"command": "curve", "control1": [0.95, 0.9], "control2": [1, 0.72], "to": [1, 0.45]},
+          {"command": "curve", "control1": [1, 0.2], "control2": [0.94, 0.05], "to": [0.84, 0.02]},
+          {"command": "curve", "control1": [0.64, 0], "control2": [0.35, 0], "to": [0.16, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "pocket-lower-30-left",
+      "name": "Left lower 30 mm pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.339, "y": 0.548, "width": 0.054, "height": 0.093},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.27, 0.03]},
+          {"command": "curve", "control1": [0.11, 0.05], "control2": [0.02, 0.2], "to": [0, 0.47]},
+          {"command": "curve", "control1": [0.01, 0.74], "control2": [0.11, 0.92], "to": [0.28, 0.98]},
+          {"command": "curve", "control1": [0.42, 1], "control2": [0.61, 1], "to": [0.74, 0.97]},
+          {"command": "curve", "control1": [0.9, 0.9], "control2": [1, 0.72], "to": [1, 0.46]},
+          {"command": "curve", "control1": [0.99, 0.2], "control2": [0.89, 0.05], "to": [0.73, 0.03]},
+          {"command": "curve", "control1": [0.61, 0], "control2": [0.4, 0], "to": [0.27, 0.03]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-lower-30-center",
+      "name": "Center lower 30 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.435, "y": 0.544, "width": 0.13, "height": 0.098},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.12, 0.02]},
+          {"command": "curve", "control1": [0.05, 0.02], "control2": [0.01, 0.17], "to": [0, 0.44]},
+          {"command": "curve", "control1": [0, 0.72], "control2": [0.05, 0.92], "to": [0.13, 0.98]},
+          {"command": "curve", "control1": [0.34, 1], "control2": [0.66, 1], "to": [0.87, 0.98]},
+          {"command": "curve", "control1": [0.95, 0.92], "control2": [1, 0.72], "to": [1, 0.44]},
+          {"command": "curve", "control1": [0.99, 0.17], "control2": [0.95, 0.02], "to": [0.88, 0.02]},
+          {"command": "curve", "control1": [0.66, 0], "control2": [0.34, 0], "to": [0.12, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "pocket-lower-30-right",
+      "name": "Right lower 30 mm pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "geometry": [{
+        "frame": {"x": 0.607, "y": 0.548, "width": 0.054, "height": 0.093},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.73, 0.03]},
+          {"command": "curve", "control1": [0.89, 0.05], "control2": [0.98, 0.2], "to": [1, 0.47]},
+          {"command": "curve", "control1": [0.99, 0.74], "control2": [0.89, 0.92], "to": [0.72, 0.98]},
+          {"command": "curve", "control1": [0.58, 1], "control2": [0.39, 1], "to": [0.26, 0.97]},
+          {"command": "curve", "control1": [0.1, 0.9], "control2": [0, 0.72], "to": [0, 0.46]},
+          {"command": "curve", "control1": [0.01, 0.2], "control2": [0.11, 0.05], "to": [0.27, 0.03]},
+          {"command": "curve", "control1": [0.39, 0], "control2": [0.6, 0], "to": [0.73, 0.03]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "sloper-lower-25-right",
+      "name": "Right lower 25 mm sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 25,
+      "geometry": [{
+        "frame": {"x": 0.693, "y": 0.547, "width": 0.089, "height": 0.094},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.84, 0.02]},
+          {"command": "curve", "control1": [0.93, 0.03], "control2": [0.99, 0.18], "to": [1, 0.45]},
+          {"command": "curve", "control1": [1, 0.72], "control2": [0.94, 0.92], "to": [0.84, 0.98]},
+          {"command": "curve", "control1": [0.64, 1], "control2": [0.3, 1], "to": [0.15, 0.97]},
+          {"command": "curve", "control1": [0.05, 0.9], "control2": [0, 0.72], "to": [0, 0.45]},
+          {"command": "curve", "control1": [0, 0.2], "control2": [0.06, 0.05], "to": [0.16, 0.02]},
+          {"command": "curve", "control1": [0.36, 0], "control2": [0.65, 0], "to": [0.84, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    },
+    {
+      "id": "edge-lower-20-right",
+      "name": "Right lower 20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [{
+        "frame": {"x": 0.808, "y": 0.544, "width": 0.124, "height": 0.096},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.87, 0.02]},
+          {"command": "curve", "control1": [0.94, 0.02], "control2": [0.99, 0.16], "to": [1, 0.43]},
+          {"command": "curve", "control1": [1, 0.72], "control2": [0.95, 0.92], "to": [0.86, 0.98]},
+          {"command": "curve", "control1": [0.65, 1], "control2": [0.28, 1], "to": [0.12, 0.97]},
+          {"command": "curve", "control1": [0.04, 0.92], "control2": [0, 0.73], "to": [0, 0.47]},
+          {"command": "curve", "control1": [0, 0.2], "control2": [0.05, 0.05], "to": [0.13, 0.02]},
+          {"command": "curve", "control1": [0.35, 0], "control2": [0.66, 0], "to": [0.87, 0.02]},
+          {"command": "close"}
+        ]}
+      }]
+    }
+  ]
+}
