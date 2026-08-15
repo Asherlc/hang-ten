@@ -23,19 +23,19 @@ EXPECTED_KINDS = {
     "front-middle-1": "edge",
     "front-middle-2": "pocket",
     "front-middle-3": "pocket",
-    "front-middle-4": "edge",
+    "front-middle-4": "pocket",
     "front-middle-5": "jug",
-    "front-middle-6": "edge",
+    "front-middle-6": "pocket",
     "front-middle-7": "pocket",
     "front-middle-8": "pocket",
     "front-middle-9": "edge",
     "front-lower-1": "edge",
     "front-lower-2": "pocket",
-    "front-lower-3": "edge",
-    "front-lower-4": "edge",
+    "front-lower-3": "pocket",
+    "front-lower-4": "pocket",
     "front-lower-5": "edge",
-    "front-lower-6": "edge",
-    "front-lower-7": "edge",
+    "front-lower-6": "pocket",
+    "front-lower-7": "pocket",
     "front-lower-8": "pocket",
     "front-lower-9": "edge",
 }
@@ -56,10 +56,16 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "sloper": 5,
-        "edge": 11,
-        "pocket": 8,
+        "edge": 5,
+        "pocket": 14,
         "jug": 1,
     }
+
+    assert sorted(
+        str(path.relative_to(PACKAGE_ROOT))
+        for path in PACKAGE_ROOT.rglob("*")
+        if path.is_file()
+    ) == ["assets/primary.png", "board.json"]
 
     for hold in holds.values():
         assert len(hold.geometry) == 1
@@ -70,6 +76,11 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
         assert len(piece.shape.commands) >= 6
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
+        assert hold.size_millimeters is None
+        assert hold.depth_range_millimeters is None
+        assert hold.grip_type is None
+        assert hold.finger_capacity is None
+        assert hold.features is None
 
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id].frame
@@ -78,3 +89,37 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
         assert right.y == pytest.approx(left.y, abs=1e-6)
         assert right.width == pytest.approx(left.width, abs=1e-6)
         assert right.height == pytest.approx(left.height, abs=1e-6)
+
+        def command_points(hold_id: str) -> list[tuple[float, float]]:
+            piece = holds[hold_id].geometry[0]
+            points = []
+            for command in piece.shape.commands:
+                for attribute in ("to", "control", "control1", "control2"):
+                    point = getattr(command, attribute)
+                    if point is not None:
+                        points.append(
+                            (
+                                piece.frame.x + point[0] * piece.frame.width,
+                                piece.frame.y + point[1] * piece.frame.height,
+                            )
+                        )
+            return points
+
+        reflected_left = [(1 - x, y) for x, y in command_points(left_id)]
+        actual_right = command_points(right_id)
+        assert all(
+            any(
+                right_x == pytest.approx(left_x, abs=1e-6)
+                and right_y == pytest.approx(left_y, abs=1e-6)
+                for right_x, right_y in actual_right
+            )
+            for left_x, left_y in reflected_left
+        )
+        assert all(
+            any(
+                left_x == pytest.approx(right_x, abs=1e-6)
+                and left_y == pytest.approx(right_y, abs=1e-6)
+                for left_x, left_y in reflected_left
+            )
+            for right_x, right_y in actual_right
+        )
