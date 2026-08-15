@@ -54,6 +54,15 @@ MIRRORED_PAIRS = (
 CANONICAL_EXPECTATIONS = {
     "top-sloper-2": {
         "frame": {"x": 0.198435, "y": 0.151934, "width": 0.16180956, "height": 0.151934},
+        "shapeType": "path",
+        "commandSchema": (
+            ("move", frozenset({"to"})),
+            ("line", frozenset({"to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("close", frozenset()),
+        ),
         "localPoints": (
             (0.04040404040404041, 0.0), (0.98989898989899, 0.0),
             (0.9595959595959596, 0.96), (1.0, 0.28),
@@ -74,6 +83,15 @@ CANONICAL_EXPECTATIONS = {
     },
     "top-sloper-3": {
         "frame": {"x": 0.3585632, "y": 0.150552, "width": 0.2828736, "height": 0.11326},
+        "shapeType": "path",
+        "commandSchema": (
+            ("move", frozenset({"to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("close", frozenset()),
+        ),
         "localPoints": (
             (0.005208333333333335, 0.0), (0.9947916666666666, 0.0),
             (0.2604166666666667, 0.0), (0.7395833333333334, 0.0),
@@ -95,6 +113,15 @@ CANONICAL_EXPECTATIONS = {
     },
     "top-sloper-4": {
         "frame": {"x": 0.63975544, "y": 0.151934, "width": 0.16180956, "height": 0.151934},
+        "shapeType": "path",
+        "commandSchema": (
+            ("move", frozenset({"to"})),
+            ("line", frozenset({"to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("curve", frozenset({"control1", "control2", "to"})),
+            ("close", frozenset()),
+        ),
         "localPoints": (
             (0.010101010101010102, 0.0), (0.9595959595959596, 0.0),
             (1.0, 0.96), (0.98989898989899, 0.26), (1.0, 0.66),
@@ -182,6 +209,14 @@ def test_beastmaker_2000_canonical_frames_preserve_reviewed_canvas_geometry() ->
     for hold_id, expected in CANONICAL_EXPECTATIONS.items():
         piece = holds[hold_id]["geometry"][0]
         assert piece["frame"] == pytest.approx(expected["frame"], abs=1e-12)
+        assert piece["shape"]["type"] == expected["shapeType"]
+        assert tuple(
+            (
+                command["command"],
+                frozenset(key for key in command if key != "command"),
+            )
+            for command in piece["shape"]["commands"]
+        ) == expected["commandSchema"]
         assert_point_sequences(local_command_points(piece), expected["localPoints"])
         assert_point_sequences(command_points(piece), expected["reviewedAbsolutePoints"])
         actual_points = command_points(piece)
