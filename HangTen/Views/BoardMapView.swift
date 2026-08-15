@@ -17,6 +17,7 @@ struct BoardMapView: View {
                         hold: hold,
                         isHighlighted: highlightedHoldIDs.contains(hold.id),
                         highlightMode: highlightMode,
+                        showsLabel: showsLabels,
                         onTap: onHoldTap
                     )
                 }
@@ -46,6 +47,7 @@ private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
+    let showsLabel: Bool
     let onTap: ((BoardHold) -> Void)?
 
     var body: some View {
@@ -53,53 +55,12 @@ private struct PhysicalHoldVisual: View {
         ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
-            .overlay {
-                shape.stroke(
-                    isHighlighted ? highlightStroke : Color.clear,
-                    lineWidth: 2
-                )
-            }
-        }
-        .contentShape(shape)
-        .onTapGesture {
-            onTap?(hold)
-        }
-        .accessibilityLabel(hold.name)
-        .accessibilityAddTraits(.isButton)
-    }
-
-    private var highlightFill: Color {
-        switch highlightMode {
-        case .active: .holdActive
-        case .preview: .restBlue
-        }
-    }
-
-    private var highlightStroke: Color {
-        switch highlightMode {
-        case .active: .holdActiveDeep
-        case .preview: .restBlueDeep
-        }
-    }
-}
-
-private struct PhysicalHoldVisual: View {
-    let hold: BoardHold
-    let isHighlighted: Bool
-    let highlightMode: BoardHighlightMode
-    let showsLabel: Bool
-
-    var body: some View {
-        let shape = BoardHoldPathShape(pieces: hold.geometry)
-        ZStack {
-            shape
-                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
                 .overlay {
                     shape.stroke(
-                        isHighlighted ? highlightStroke : Color.hangWoodShadow,
-                        lineWidth: 1
+                        isHighlighted ? highlightStroke : Color.clear,
+                        lineWidth: 2
                     )
-            }
+                }
 
             if showsLabel {
                 GeometryReader { proxy in
@@ -119,6 +80,9 @@ private struct PhysicalHoldVisual: View {
             }
         }
         .contentShape(shape)
+        .onTapGesture {
+            onTap?(hold)
+        }
         .accessibilityLabel(hold.name)
         .accessibilityAddTraits(.isButton)
     }

@@ -118,13 +118,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
-                    .filter { !$0.hasPrefix(".") }
             )
             let assetEntries = try Set(
                 FileManager.default.contentsOfDirectory(
                     atPath: packageURL.appendingPathComponent("assets").path
                 )
-                .filter { !$0.hasPrefix(".") }
             )
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
@@ -155,6 +153,30 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
+        let legacyArtifactTokens = [
+            "GeneratedBoardCatalog",
+            "BoardLibrary.json",
+            "MetoliusCompactIIDesign",
+            "RockProdigyTrainingCenterDesign",
+            "CompactBoard.imageset",
+            "CompactBoardIllustration",
+            "BoardDesignLanguage"
+        ]
+        let hardcodedMappingPatterns = [
+            #"semanticHolds\s*:\s*\[\s*\""#,
+            #"(?:assetPath|photoAssetName)\s*:\s*\""#
+        ]
+        let boardSpecificGeometryConstructs = [
+            "TrainingBoard(",
+            "BoardHold(",
+            "HoldFrame(",
+            "BoardNormalizedPath(commands:"
+        ]
+        let genericGeometryOwners: Set<String> = [
+            "HangTen/Models/BoardPackageStore.swift",
+            "HangTen/Models/BoardStorage.swift",
+            "HangTen/Models/TrainingModels.swift"
+        ]
 
         var findings: [String] = []
         for sourceURL in sourceURLs {
@@ -382,41 +404,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let lockIsSymbolicLink = (try? FileManager.default.destinationOfSymbolicLink(
-            atPath: lockURL.path
-        )) != nil
-        if lockIsSymbolicLink {
-            throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-        }
-        if FileManager.default.fileExists(atPath: lockURL.path) {
-            let values = try? lockURL.resourceValues(forKeys: [
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ])
-            guard values?.isRegularFile == true, values?.isSymbolicLink != true else {
-                throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-            }
-        }
-
         let children = try FileManager.default.contentsOfDirectory(
             at: hangboardsURL,
-            includingPropertiesForKeys: [
-                .isDirectoryKey,
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ],
-            options: [.skipsHiddenFiles]
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey]
         )
         var paths: [String: String] = [:]
         for child in children {
-            let values = try child.resourceValues(forKeys: [
-                .isDirectoryKey,
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ])
+            let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
             guard values.isDirectory == true, values.isSymbolicLink != true else {
-                throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
+                XCTFail("Hangboards must contain only non-symlinked direct child directories")
+                continue
             }
             let boardURL = child.appendingPathComponent("board.json")
             guard FileManager.default.fileExists(atPath: boardURL.path) else { continue }

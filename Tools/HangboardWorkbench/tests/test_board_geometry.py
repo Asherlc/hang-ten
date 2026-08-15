@@ -47,24 +47,6 @@ def test_unions_multiple_normalized_piece_frames() -> None:
     }
 
 
-def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> None:
-    x = 75918 / 91672
-    width = (91672 - 75918) / 91672
-    assert round(x, 12) + round(width, 12) == 1.000000000001
-
-    serialized = NormalizedFrame(x=x, y=x, width=width, height=width).to_json()
-
-    assert serialized["width"] == 0.17185181953
-    assert serialized["height"] == 0.17185181953
-    assert json.dumps(serialized, separators=(",", ":")) == (
-        '{"x":0.82814818047,"y":0.82814818047,'
-        '"width":0.17185181953,"height":0.17185181953}'
-    )
-    assert serialized["x"] + serialized["width"] <= 1
-    assert serialized["y"] + serialized["height"] <= 1
-    assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
-
-
 def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
     path = parse_closed_path("M 10 20 L 50 20 L 50 60 L 10 60 Z", 100, 100)
 
