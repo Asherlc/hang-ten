@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -112,6 +113,23 @@ CANONICAL_EXPECTATIONS = {
         "reviewedBounds": (0.63975544, 0.151934, 0.801565, 0.303868),
     },
 }
+AUTHORIZED_CANONICAL_HOLDS = frozenset(CANONICAL_EXPECTATIONS)
+REVIEWED_IMMUTABLE_DIGEST = "5929c66200342b6a322e6c604784d7f78e160bbf4b7091d72e6e77bc974ad975"
+
+
+def reviewed_immutable_digest(board: dict[str, object]) -> str:
+    """Hash reviewed structure after replacing only authorized mutable subtrees."""
+    immutable = json.loads(json.dumps(board))
+    for hold in immutable["holds"]:
+        if hold["id"] in AUTHORIZED_CANONICAL_HOLDS:
+            assert len(hold["geometry"]) == 1
+            piece = hold["geometry"][0]
+            piece["frame"] = f"__canonical_frame__:{hold['id']}"
+            piece["shape"] = f"__canonical_shape__:{hold['id']}"
+    canonical_json = json.dumps(
+        immutable, ensure_ascii=True, sort_keys=True, separators=(",", ":")
+    )
+    return hashlib.sha256(canonical_json.encode()).hexdigest()
 
 
 def command_points(piece: dict[str, object]) -> list[tuple[float, float]]:
@@ -174,6 +192,12 @@ def test_beastmaker_2000_canonical_frames_preserve_reviewed_canvas_geometry() ->
             max(y for _, y in actual_points),
         )
         assert actual_bounds == pytest.approx(expected["reviewedBounds"], abs=1e-12)
+
+
+def test_beastmaker_2000_reviewed_immutable_structure_is_preserved() -> None:
+    board = json.loads((PACKAGE_ROOT / "board.json").read_text())
+
+    assert reviewed_immutable_digest(board) == REVIEWED_IMMUTABLE_DIGEST
 
 
 def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
