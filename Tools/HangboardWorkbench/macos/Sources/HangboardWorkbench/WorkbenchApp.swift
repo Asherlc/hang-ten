@@ -221,6 +221,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private let backend = BackendController()
     private let selection = CheckoutSelection()
     private let sessionCoordinator = WorkbenchSessionCoordinator()
+    private let sheetPresenter = WorkbenchSheetPresenter()
     private let webView = WKWebView(frame: .zero)
 
     private var window: NSWindow?
@@ -291,32 +292,36 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         panel.canCreateDirectories = false
         panel.directoryURL = selection.lastValidCheckout()
 
-        guard panel.runModal() == .OK, let url = panel.url else {
-            if selection.lastValidCheckout() == nil && webView.url == nil {
-                showMessage(
-                    title: "Choose a Hang Ten Checkout",
-                    detail: "Hangboard Workbench needs a checkout before it can start.",
-                    retryTitle: "Choose Checkout…"
-                )
-            }
-            return
-        }
-
-        do {
-            let checkout = try CheckoutSelection.validatedURL(url)
-            sessionCoordinator.requestCheckoutReplacement(
-                confirmDiscarding: { [weak self] completion in
-                    self?.confirmDiscardingUnsavedChanges(
-                        discardTitle: "Discard and Switch",
-                        completion: completion
+        sheetPresenter.present(panel, for: window) { [weak self] response in
+            guard let self else { return }
+            panel.orderOut(nil)
+            guard response == .OK, let url = panel.url else {
+                if self.selection.lastValidCheckout() == nil && self.webView.url == nil {
+                    self.showMessage(
+                        title: "Choose a Hang Ten Checkout",
+                        detail: "Hangboard Workbench needs a checkout before it can start.",
+                        retryTitle: "Choose Checkout…"
                     )
-                },
-                performReplacement: { [weak self] in
-                    self?.load(checkout)
                 }
-            )
-        } catch {
-            showMessage(title: "That Folder Is Not a Hang Ten Checkout", detail: error.localizedDescription)
+                return
+            }
+
+            do {
+                let checkout = try CheckoutSelection.validatedURL(url)
+                self.sessionCoordinator.requestCheckoutReplacement(
+                    confirmDiscarding: { [weak self] completion in
+                        self?.confirmDiscardingUnsavedChanges(
+                            discardTitle: "Discard and Switch",
+                            completion: completion
+                        )
+                    },
+                    performReplacement: { [weak self] in
+                        self?.load(checkout)
+                    }
+                )
+            } catch {
+                self.showMessage(title: "That Folder Is Not a Hang Ten Checkout", detail: error.localizedDescription)
+            }
         }
     }
 
@@ -475,6 +480,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         recovery: Recovery
     ) {
         guard activeSession?.id == session.id, reportedFailureSessionID != session.id else { return }
+        guard let window else { return }
         reportedFailureSessionID = session.id
         healthTask?.cancel()
         let alert = NSAlert()
@@ -492,19 +498,21 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             alert.addButton(withTitle: "Keep Editor Open")
             alert.addButton(withTitle: "Restart Backend…")
         }
-        let response = alert.runModal()
-        if recovery == .webContentStopped, response == .alertFirstButtonReturn {
-            reportedFailureSessionID = nil
-            webView.reload()
-            monitorHealth(of: session)
-        } else if (recovery == .connectionQuestionable && response == .alertSecondButtonReturn)
-                    || (recovery != .connectionQuestionable && response == .alertFirstButtonReturn)
-                    || (recovery == .webContentStopped && response == .alertSecondButtonReturn) {
-            requestBackendRestart(session: session)
-        } else {
-            reportedFailureSessionID = nil
-            // Do not immediately resume health alerts: retaining the editor is
-            // an explicit choice to protect unsaved state and avoid alert loops.
+        sheetPresenter.present(alert, for: window) { [weak self] response in
+            guard let self, self.activeSession?.id == session.id else { return }
+            if recovery == .webContentStopped, response == .alertFirstButtonReturn {
+                self.reportedFailureSessionID = nil
+                self.webView.reload()
+                self.monitorHealth(of: session)
+            } else if (recovery == .connectionQuestionable && response == .alertSecondButtonReturn)
+                        || (recovery != .connectionQuestionable && response == .alertFirstButtonReturn)
+                        || (recovery == .webContentStopped && response == .alertSecondButtonReturn) {
+                self.requestBackendRestart(session: session)
+            } else {
+                self.reportedFailureSessionID = nil
+                // Do not immediately resume health alerts: retaining the editor is
+                // an explicit choice to protect unsaved state and avoid alert loops.
+            }
         }
     }
 
@@ -657,7 +665,13 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             alert.informativeText = "Hangboard Workbench has unsaved editor changes."
             alert.addButton(withTitle: discardTitle)
             alert.addButton(withTitle: "Cancel")
-            completion(alert.runModal() == .alertFirstButtonReturn)
+            guard let window = self.window else {
+                completion(false)
+                return
+            }
+            self.sheetPresenter.present(alert, for: window) { response in
+                completion(response == .alertFirstButtonReturn)
+            }
         }
     }
 }
