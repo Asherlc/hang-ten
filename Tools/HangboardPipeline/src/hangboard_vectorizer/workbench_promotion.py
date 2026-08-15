@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from dataclasses import dataclass
-import fcntl
 import os
 from pathlib import Path
 import shutil
 import stat
-from typing import Iterator
 from uuid import uuid4
 
-from .board_library import RepositoryBoardLibrary
+from .board_library import RepositoryBoardLibrary, package_library_lock
 from .board_catalog import discover_board_packages, load_board_package
 
 
@@ -33,6 +30,8 @@ def publish_package_candidate(
 
     Candidates are copied only into ``Hangboards/<slug>``. Direct discovery is
     the final authority, so no native source or generated registry participates.
+    Replacement is rollback-safe rather than reader-atomic at the raw filesystem
+    boundary; cooperating Workbench readers share the library lock.
     """
     root = Path(repository_root).resolve(strict=True)
     hangboards_root = root / "Hangboards"
@@ -45,7 +44,7 @@ def publish_package_candidate(
     if not hangboards_root.is_dir() or hangboards_root.is_symlink():
         raise ValueError("Hangboards directory must be a regular directory")
 
-    with _package_publication_lock(hangboards_root):
+    with package_library_lock(hangboards_root, exclusive=True):
         _publish_package_candidate_locked(
             hangboards_root,
             candidate,
@@ -57,18 +56,6 @@ def publish_package_candidate(
     )
 
 
-@contextmanager
-def _package_publication_lock(hangboards_root: Path) -> Iterator[None]:
-    """Serialize package replacement transactions on the stable root inode."""
-    descriptor = os.open(hangboards_root, os.O_RDONLY)
-    try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
-        yield
-    finally:
-        fcntl.flock(descriptor, fcntl.LOCK_UN)
-        os.close(descriptor)
-
-
 def _publish_package_candidate_locked(
     hangboards_root: Path,
     candidate: Path,
@@ -76,7 +63,7 @@ def _publish_package_candidate_locked(
     board_id: str,
     slug: str,
 ) -> None:
-    """Commit one package while holding the direct-library lock."""
+    """Commit one rollback-safe package while holding the direct-library lock."""
     inventory = discover_board_packages(hangboards_root)
     matching_id = [package for package in inventory.packages if package.board.id == board_id]
     if matching_id and matching_id[0].root.name != slug:
