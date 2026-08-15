@@ -61,7 +61,9 @@ SOURCE_AUDITS = (
 BLOCKER_HEADING = re.compile(r"^### `(?P<slug>[a-z0-9-]+)`$", re.MULTILINE)
 
 
-def test_importer_retains_only_one_primary_image_without_catalog_registration(tmp_path: Path) -> None:
+def test_importer_retains_only_one_primary_image_without_reading_or_generating_a_catalog(
+    tmp_path: Path,
+) -> None:
     source = tmp_path / "source"
     source.mkdir()
     (source / "sample.png").write_bytes(b"primary")
@@ -69,19 +71,22 @@ def test_importer_retains_only_one_primary_image_without_catalog_registration(tm
     (source / "flat-illustrations/sample-flat.png").write_bytes(b"duplicate")
     destination = tmp_path / "Hangboards"
     destination.mkdir()
-    (destination / "catalog.json").write_text(json.dumps({"schemaVersion": 1, "boards": []}))
+    legacy_catalog = b"not valid JSON and no longer authoritative"
+    (destination / "catalog.json").write_bytes(legacy_catalog)
     result = subprocess.run([sys.executable, str(IMPORTER), "--source", str(source), "--destination", str(destination)], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert (destination / "sample/assets/primary.png").read_bytes() == b"primary"
     assert not (destination / "sample/assets/flat.png").exists()
     assert not (destination / "sample/README.md").exists()
-    assert json.loads((destination / "catalog.json").read_text())["boards"] == []
+    assert (destination / "catalog.json").read_bytes() == legacy_catalog
 
 
 def test_repository_generated_packages_are_primary_only_and_unregistered() -> None:
-    catalog_path = REPO_ROOT / "Hangboards/catalog.json"
-    catalog = json.loads(catalog_path.read_text())
-    registered = {entry["path"] for entry in catalog["boards"]}
+    registered = {
+        package.name
+        for package in (REPO_ROOT / "Hangboards").iterdir()
+        if package.is_dir() and (package / "board.json").is_file()
+    }
     package_directories = {
         package.name for package in (REPO_ROOT / "Hangboards").iterdir() if package.is_dir()
     }
@@ -94,7 +99,10 @@ def test_repository_generated_packages_are_primary_only_and_unregistered() -> No
         )
     }
 
-    load_board_catalog_module().validate_catalog(catalog_path)
+    inventory = load_board_catalog_module().discover_board_packages(
+        REPO_ROOT / "Hangboards"
+    )
+    assert {package.root.name for package in inventory.packages} == registered
     assert package_directories == CANDIDATE_SLUGS | registered
     assert len(package_directories) == 33
     assert unregistered == CANDIDATE_SLUGS

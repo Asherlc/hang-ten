@@ -45,7 +45,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
         path.read_text(encoding="utf-8") for path in (README, ADDING_A_BOARD)
     )
 
-    assert "catalog validate --catalog Hangboards/catalog.json" in ci_workflow
+    assert "packages validate --root Hangboards" in ci_workflow
     assert "test_generated_catalog_import.py" in ci_workflow
     assert "stage-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
@@ -53,7 +53,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs
     assert "bundles only approved packages" not in active_docs
-    assert "bundles only registered packages" in active_docs
+    assert "directly discovered" in active_docs
     assert "assets/primary.png" in active_docs
     assert "GeneratedBoardCatalog" not in active_docs
 
@@ -137,11 +137,11 @@ def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     assert 'destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"' in testing
 
 
-def test_testing_guidance_uses_registered_not_lifecycle_inventory_terms() -> None:
+def test_testing_guidance_uses_direct_discovery_not_lifecycle_inventory_terms() -> None:
     testing = TESTING.read_text(encoding="utf-8")
 
     assert "Draft packages" not in testing
     assert "status: approved" not in testing
     assert "review inventory" not in testing
-    assert "registered and staged" in testing
-    assert "unregistered" in testing
+    assert "direct-child packages" in testing
+    assert "primary-only boards remain migration drafts" in testing

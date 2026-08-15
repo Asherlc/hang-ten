@@ -39,9 +39,10 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in `Hangboards/catalog.json` and flat
-`Hangboards/<board-folder>/` packages. The app loads the staged package bytes
-from its resource bundle; no Swift board catalog is generated or hand-authored.
+and hold metadata lives in directly discovered
+`Hangboards/<board-folder>/board.json` packages. The app loads the staged
+package bytes from its resource bundle; no registry or Swift board catalog is
+generated or hand-authored.
 
 ## Run
 
@@ -138,14 +139,13 @@ caches, and generated board runs remain local and are not part of the app.
 Canonical hangboard package checks:
 
 ```sh
-scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh packages validate --root Hangboards
 ```
 
-The registry lists only complete source-backed packages with exactly an `id`
-and flat `path`; Git branches are the in-progress mechanism. Unregistered
-image candidates contain only `assets/primary.png` and are not app content.
-The Xcode build phase runs `scripts/stage-board-packages.py`, which
-bundles only registered packages and the registry into the app resource bundle.
+Complete source-backed packages contain exactly `board.json` and
+`assets/primary.png`; Git branches are the in-progress mechanism. Primary-only
+image candidates are ignored by app staging. The Xcode build phase runs
+`scripts/stage-board-packages.py`, which bundles validated complete packages.
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.

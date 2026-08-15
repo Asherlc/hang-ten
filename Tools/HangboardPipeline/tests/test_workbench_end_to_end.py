@@ -63,16 +63,10 @@ _DIRECT_PACKAGE_SOURCE = (
 def _copy_valid_package(destination: Path, board_id: str) -> None:
     """Copy a complete package and assign it a test-only canonical ID."""
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
-    for filename, key in (
-        ("board.json", "id"),
-        ("evidence.json", "boardID"),
-        ("semantics.json", "boardID"),
-        ("artwork.json", "boardID"),
-    ):
-        path = destination / filename
-        document = json.loads(path.read_text(encoding="utf-8"))
-        document[key] = board_id
-        path.write_text(json.dumps(document), encoding="utf-8")
+    path = destination / "board.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    document["id"] = board_id
+    path.write_text(json.dumps(document), encoding="utf-8")
 
 
 def _set_package_subtitle(package_root: Path, subtitle: str) -> None:
@@ -94,21 +88,19 @@ def test_checkout_repository_library_discovers_compact_ii() -> None:
     assert snapshot.diagnostics == ()
 
 
-def test_workbench_publishes_a_validated_package_and_registry_without_legacy_artifacts(
+def test_workbench_publishes_a_validated_direct_package_without_editing_legacy_artifacts(
     tmp_path: Path,
 ) -> None:
-    """A package publication only changes the canonical package and registry."""
+    """A package publication only changes its canonical direct-child directory."""
     repository_root = tmp_path / "repository"
     candidate_root = tmp_path / "candidate" / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate_root)
     hangboards = repository_root / "Hangboards"
     hangboards.mkdir(parents=True)
-    (hangboards / "catalog.json").write_text(
-        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
-    )
     legacy_targets = {
         "HangTen/Models/GeneratedBoardCatalog.swift": "legacy catalog\n",
         "HangTen.xcodeproj/project.pbxproj": "legacy project\n",
+        "Hangboards/catalog.json": "legacy registry\n",
         "Hangboards/legacy-board.json": "unrelated registry entry\n",
     }
     for relative, contents in legacy_targets.items():
@@ -122,17 +114,7 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
         board_id="metolius.wood-grips-compact-ii",
     )
 
-    assert publication.paths == (
-        Path("Hangboards/catalog.json"),
-        Path("Hangboards/compact-ii"),
-    )
-    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
-    assert catalog["boards"] == [
-        {
-            "id": "metolius.wood-grips-compact-ii",
-            "path": "compact-ii",
-        }
-    ]
+    assert publication.paths == (Path("Hangboards/compact-ii"),)
     assert (hangboards / "compact-ii" / "board.json").read_bytes() == (
         candidate_root / "board.json"
     ).read_bytes()
@@ -142,16 +124,13 @@ def test_workbench_publishes_a_validated_package_and_registry_without_legacy_art
     } == legacy_targets
 
 
-def test_parallel_package_publications_preserve_both_catalog_entries(
+def test_parallel_package_publications_preserve_both_directories(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Publishing a different board must not overwrite a concurrent catalog edit."""
+    """Publishing a different board must not overwrite a concurrent package."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     hangboards.mkdir(parents=True)
-    (hangboards / "catalog.json").write_text(
-        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
-    )
     candidates = tmp_path / "candidates"
     first_candidate = candidates / "first-board"
     second_candidate = candidates / "second-board"
@@ -195,8 +174,10 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
         first.result(timeout=5)
         second.result(timeout=5)
 
-    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
-    assert {entry["id"] for entry in catalog["boards"]} == {
+    assert {
+        json.loads(path.read_text())["id"]
+        for path in hangboards.glob("*/board.json")
+    } == {
         "example.first-board",
         "example.second-board",
     }
@@ -204,16 +185,13 @@ def test_parallel_package_publications_preserve_both_catalog_entries(
     assert json.loads((hangboards / "second-board" / "board.json").read_text())["id"] == "example.second-board"
 
 
-def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
+def test_failed_parallel_publication_cannot_rollback_a_successful_package(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """A failing job must not restore a catalog snapshot older than another job."""
+    """A failing job must not roll back another serialized publication."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     hangboards.mkdir(parents=True)
-    (hangboards / "catalog.json").write_text(
-        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
-    )
     candidates = tmp_path / "candidates"
     invalid_candidate = candidates / "invalid-approved"
     valid_candidate = candidates / "valid-board"
@@ -254,17 +232,10 @@ def test_failed_parallel_publication_cannot_rollback_a_successful_catalog_edit(
         if valid_copy_started.wait(timeout=0.5):
             valid.result(timeout=5)
         release_invalid_copy.set()
-        with pytest.raises(ValueError, match="board.json"):
+        with pytest.raises(ValueError, match="board package is missing"):
             invalid.result(timeout=5)
         valid.result(timeout=5)
 
-    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
-    assert catalog["boards"] == [
-        {
-            "id": "example.valid-board",
-            "path": "valid-board",
-        }
-    ]
     assert json.loads((hangboards / "valid-board" / "board.json").read_text())["id"] == "example.valid-board"
     assert not (hangboards / "invalid-board").exists()
 
@@ -278,21 +249,6 @@ def test_package_publication_replaces_a_matching_canonical_package(
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
     _set_package_subtitle(destination, "Previous canonical revision")
-    (hangboards / "catalog.json").write_text(
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [
-                    {
-                        "id": "metolius.wood-grips-compact-ii",
-                        "path": "compact-ii",
-                    }
-                ],
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     candidate = tmp_path / "candidate" / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
 
@@ -302,13 +258,6 @@ def test_package_publication_replaces_a_matching_canonical_package(
         board_id="metolius.wood-grips-compact-ii",
     )
 
-    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
-    assert catalog["boards"] == [
-        {
-            "id": "metolius.wood-grips-compact-ii",
-            "path": "compact-ii",
-        }
-    ]
     assert (destination / "board.json").read_bytes() == (
         candidate / "board.json"
     ).read_bytes()
@@ -323,21 +272,6 @@ def test_package_publication_atomically_updates_an_existing_revision(
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
     _set_package_subtitle(destination, "Previous canonical revision")
-    (hangboards / "catalog.json").write_text(
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [
-                    {
-                        "id": "metolius.wood-grips-compact-ii",
-                        "path": "compact-ii",
-                    }
-                ],
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     candidate = tmp_path / "candidate" / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
     _set_package_subtitle(candidate, "New candidate revision")
@@ -348,18 +282,12 @@ def test_package_publication_atomically_updates_an_existing_revision(
         board_id="metolius.wood-grips-compact-ii",
     )
 
-    catalog = json.loads((hangboards / "catalog.json").read_text(encoding="utf-8"))
-    assert len(catalog["boards"]) == 1
-    assert catalog["boards"][0] == {
-        "id": "metolius.wood-grips-compact-ii",
-        "path": "compact-ii",
-    }
     assert json.loads((destination / "board.json").read_text())["subtitle"] == (
         "New candidate revision"
     )
 
 
-def test_failed_existing_package_revision_preserves_package_and_catalog(
+def test_failed_existing_package_revision_preserves_package(
     tmp_path: Path,
 ) -> None:
     """Validation failure must leave the prior canonical package fully active."""
@@ -368,50 +296,36 @@ def test_failed_existing_package_revision_preserves_package_and_catalog(
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
     _set_package_subtitle(destination, "Previous canonical revision")
-    catalog_path = hangboards / "catalog.json"
-    catalog_bytes = (
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [
-                    {
-                        "id": "metolius.wood-grips-compact-ii",
-                        "path": "compact-ii",
-                    }
-                ],
-            },
-            indent=2,
-        )
-        + "\n"
-    ).encode()
-    catalog_path.write_bytes(catalog_bytes)
     candidate = tmp_path / "candidate" / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
-    (candidate / "evidence.json").unlink()
+    (candidate / "board.json").unlink()
 
-    with pytest.raises(ValueError, match="evidence.json"):
+    with pytest.raises(ValueError, match="board.json"):
         workbench_promotion.publish_package_candidate(
             repository_root,
             candidate,
             board_id="metolius.wood-grips-compact-ii",
         )
 
-    assert catalog_path.read_bytes() == catalog_bytes
     assert json.loads((destination / "board.json").read_text())["subtitle"] == (
         "Previous canonical revision"
     )
-    assert (destination / "evidence.json").is_file()
+    assert (destination / "assets" / "primary.png").is_file()
 
 
 @pytest.mark.parametrize(
-    ("board_id", "candidate_slug"),
+    ("board_id", "candidate_slug", "message"),
     (
-        ("metolius.wood-grips-compact-ii", "different-path"),
-        ("example.different-id", "compact-ii"),
+        (
+            "metolius.wood-grips-compact-ii",
+            "different-path",
+            "board ID already belongs",
+        ),
+        ("example.different-id", "compact-ii", "destination already exists"),
     ),
 )
 def test_package_publication_rejects_id_or_path_aliases(
-    tmp_path: Path, board_id: str, candidate_slug: str
+    tmp_path: Path, board_id: str, candidate_slug: str, message: str
 ) -> None:
     """Only the exact existing ID/path pair may replace a canonical package."""
     repository_root = tmp_path / "repository"
@@ -419,33 +333,16 @@ def test_package_publication_rejects_id_or_path_aliases(
     destination = hangboards / "compact-ii"
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
     _set_package_subtitle(destination, "Previous canonical revision")
-    catalog_path = hangboards / "catalog.json"
-    catalog_path.write_text(
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [
-                    {
-                        "id": "metolius.wood-grips-compact-ii",
-                        "path": "compact-ii",
-                    }
-                ],
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
     candidate = tmp_path / "candidate" / candidate_slug
     _copy_valid_package(candidate, board_id)
 
-    with pytest.raises(ValueError, match="catalog already contains"):
+    with pytest.raises(ValueError, match=message):
         workbench_promotion.publish_package_candidate(
             repository_root,
             candidate,
             board_id=board_id,
         )
 
-    assert json.loads(catalog_path.read_text())["boards"][0]["path"] == "compact-ii"
     assert json.loads((destination / "board.json").read_text())["subtitle"] == (
         "Previous canonical revision"
     )
@@ -1288,9 +1185,6 @@ def _fixture_service(
 def _empty_repository_library(root: Path) -> RepositoryBoardLibrary:
     library_root = root / "Hangboards"
     library_root.mkdir(parents=True)
-    (library_root / "catalog.json").write_text(
-        '{"schemaVersion": 1, "boards": []}\n', encoding="utf-8"
-    )
     return RepositoryBoardLibrary(root)
 
 
@@ -1305,9 +1199,6 @@ def _repository_library(
     del product_name, color, region_keys
     package = library.repository_root / "Hangboards" / _DIRECT_PACKAGE_SOURCE.name
     shutil.copytree(_DIRECT_PACKAGE_SOURCE, package)
-    shutil.copy2(
-        _DIRECT_PACKAGE_SOURCE.parent / "catalog.json", package.parent / "catalog.json"
-    )
     return library, library.get_board("metolius.wood-grips-compact-ii")
 
 
@@ -1315,8 +1206,10 @@ def _advance_package_revision(
     library: RepositoryBoardLibrary, board_id: str
 ) -> LibraryBoard:
     board = library.get_board(board_id)
-    evidence = board.run_path / "evidence.json"
-    evidence.write_bytes(evidence.read_bytes() + b"\n")
+    manifest = board.run_path / "board.json"
+    document = json.loads(manifest.read_text(encoding="utf-8"))
+    document["subtitle"] = f"{document.get('subtitle', '')} revision"
+    manifest.write_text(json.dumps(document), encoding="utf-8")
     return library.get_board(board_id)
 
 

@@ -123,7 +123,6 @@ def test_validation_reports_invalid_package_without_changing_checkout(
 def _validation_service(tmp_path: Path) -> tuple[WorkbenchService, str, str, Path]:
     repository_root = tmp_path / "repository"
     shutil.copytree(PACKAGE_SOURCE, repository_root / "Hangboards/metolius-wood-grips-compact-ii")
-    shutil.copy2(PACKAGE_SOURCE.parent / "catalog.json", repository_root / "Hangboards/catalog.json")
     (repository_root / "scripts").mkdir(parents=True)
     (repository_root / "scripts/export-plan-library.sh").write_text("#!/bin/zsh\n", encoding="utf-8")
     library = RepositoryBoardLibrary(repository_root)

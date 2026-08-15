@@ -129,28 +129,21 @@ the template are omitted rather than inferred from pixels.
 
 ## Onboard another commercial product
 
-The canonical package for each board lives under `Hangboards/`:
+The canonical package for each board is a direct child of `Hangboards/`:
 
-- `Hangboards/catalog.json` is the package registry.
-- `Hangboards/<board-folder>/board.json` is that board’s current source of
-  truth.
-- Repository status is `draft` for any unregistered, safely named board
-  directory with a non-symlink `assets/primary.png`, even when the directory
-  contains additional files. A complete package registered in `catalog.json`
-  is `published`.
+- `Hangboards/<board-folder>/board.json` contains identity, physical facts,
+  and normalized hold geometry.
+- `Hangboards/<board-folder>/assets/primary.png` is its source image.
+- A safely named directory containing only the primary image is a draft. A
+  finished package contains exactly `board.json` and `assets/primary.png`.
 
 Stage output is still written to temporary, ignored run folders first (for
-example under `.context/hangboard-onboarding/...`). Registration only accepts
-symlink-free `.context` runs. Register once a draft is ready to be published:
+example under `.context/hangboard-onboarding/...`). Publication only accepts
+symlink-free candidates. Validate the direct-child inventory before publishing:
 
 ```bash
-scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog status --catalog Hangboards/catalog.json
-scripts/hangboard-tools.sh catalog register \
-  --catalog Hangboards/catalog.json \
-  --board metolius.wood-grips-compact-ii \
-  --run .context/hangboard-onboarding/metolius-onboarding-run \
-  --run-id metolius-onboarding-run
+scripts/hangboard-tools.sh packages validate --root Hangboards
+scripts/hangboard-tools.sh packages status --root Hangboards
 ```
 
 Start a persisted onboarding run from one local image or HTTP(S) source:
@@ -162,7 +155,7 @@ root with its repository and transient-workspace defaults:
 rtk python Tools/HangboardWorkbench/server.py
 ```
 
-This discovers the checkout, reads complete registered board packages from
+This discovers the checkout, reads complete direct-child board packages from
 `Hangboards/<board-folder>/board.json`, and writes in-progress work
 under `.context/hangboard-workbench/`. Automation can select different roots
 explicitly:
@@ -217,8 +210,8 @@ Swift or JSON, or modify app resources.
 Canonical publication is a separate fail-closed API operation. A caller submits
 a reviewed candidate below repository `.context` to `POST /api/package-candidates`
 with its board ID and `draft` or `approved` status. The Workbench copies only to
-`Hangboards/<slug>`, updates `Hangboards/catalog.json`, and validates the whole
-registry. Invalid candidates roll back both paths. No native source, Xcode asset,
+`Hangboards/<slug>` and validates the whole directory inventory. Invalid
+candidates roll back the package replacement. No native source, Xcode asset,
 or legacy board-library artifact participates in that transaction.
 
 The Validate tool accepts only a caller-supplied UUID and formats review

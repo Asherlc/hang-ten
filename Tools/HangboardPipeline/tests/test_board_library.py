@@ -6,6 +6,7 @@ import shutil
 
 import pytest
 
+from conftest import write_board_package
 from hangboard_vectorizer import board_library
 from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
 from hangboard_vectorizer.onboarding_run import read_status
@@ -13,6 +14,50 @@ from hangboard_vectorizer.onboarding_run import read_status
 
 FIXTURE = Path(__file__).resolve().parents[3] / "Hangboards" / "metolius-wood-grips-compact-ii"
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_workbench_discovers_without_catalog_and_materializes_embedded_geometry(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    package = write_board_package(
+        repository / "Hangboards" / "fixture-model",
+        board_id="fixture.board",
+        manufacturer="Fixture Maker",
+        name="Fixture Board",
+    )
+    board_path = package / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"] = [
+        {
+            "frame": {"x": 0.1, "y": 0.2, "width": 0.2, "height": 0.3},
+            "shape": {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "line", "to": [1, 0]},
+                    {"command": "quad", "control": [1, 1], "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        }
+    ]
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+    library = RepositoryBoardLibrary(repository)
+
+    snapshot = library.snapshot()
+
+    assert [(board.board_id, board.display_name, board.status) for board in snapshot.boards] == [
+        ("fixture.board", "Fixture Board", "published")
+    ]
+    assert snapshot.diagnostics == ()
+
+    destination = tmp_path / ".context" / "runtime" / "run"
+    library.copy_current_run("fixture.board", destination)
+    vector_path = next(destination.glob("stages/03/*/stage-3-vector-regions.json"))
+    vector_document = json.loads(vector_path.read_text(encoding="utf-8"))
+    assert vector_document["regions"][0]["key"] == "hold-left"
+    assert " Q " in vector_document["regions"][0]["displayPath"]
 
 
 def _repository(tmp_path: Path) -> Path:
@@ -219,7 +264,9 @@ def test_copy_draft_source_rejects_content_changed_after_snapshot(
     assert not destination.exists()
 
 
-def test_snapshot_validates_the_canonical_manifest_identity(tmp_path: Path) -> None:
+def test_snapshot_uses_document_identity_independently_of_directory_slug(
+    tmp_path: Path,
+) -> None:
     repository = _repository(tmp_path)
     package = repository / "Hangboards" / FIXTURE.name
     manifest_path = package / "board.json"
@@ -229,16 +276,16 @@ def test_snapshot_validates_the_canonical_manifest_identity(tmp_path: Path) -> N
 
     snapshot = RepositoryBoardLibrary(repository).snapshot()
 
-    assert snapshot.boards == ()
-    assert snapshot.diagnostics[0].code == "invalid_run"
+    assert [board.board_id for board in snapshot.boards] == ["different-board"]
+    assert snapshot.diagnostics == ()
 
 
 def test_revision_token_covers_the_whole_package(tmp_path: Path) -> None:
     repository = _repository(tmp_path)
     library = RepositoryBoardLibrary(repository)
     before = library.get_board("metolius.wood-grips-compact-ii").revision_token
-    evidence = repository / "Hangboards" / FIXTURE.name / "evidence.json"
-    evidence.write_bytes(evidence.read_bytes() + b"\n")
+    board_path = repository / "Hangboards" / FIXTURE.name / "board.json"
+    board_path.write_bytes(board_path.read_bytes() + b"\n")
 
     after = library.get_board("metolius.wood-grips-compact-ii").revision_token
 
@@ -258,19 +305,16 @@ def test_copy_current_run_materializes_an_editable_runtime_run(tmp_path: Path) -
 
     stage_three = next(destination.glob("stages/03/*/stage-3-vector-regions.json"))
     vector_document = json.loads(stage_three.read_text(encoding="utf-8"))
-    canonical_artwork = json.loads((FIXTURE / "artwork.json").read_text(encoding="utf-8"))
-    # Runtime geometry must retain both the package silhouette and rounded hold
-    # contours; replacing either with a bounding rectangle loses canonical art.
-    assert vector_document["silhouettePaths"][0]["displayPath"].count(" C ") > 0
-    rounded_piece = next(
-        piece
-        for piece in canonical_artwork["holdPieces"]
-        if piece["shape"]["type"] == "roundedRect"
+    canonical_board = json.loads((FIXTURE / "board.json").read_text(encoding="utf-8"))
+    rounded_hold = next(
+        hold
+        for hold in canonical_board["holds"]
+        if hold["geometry"][0]["shape"]["type"] == "roundedRect"
     )
     rounded_region = next(
         region
         for region in vector_document["regions"]
-        if region["key"] == rounded_piece["holdID"]
+        if region["key"] == rounded_hold["id"]
     )
     assert rounded_region["displayPath"].count(" Q ") == 4
 
@@ -291,22 +335,12 @@ def test_get_board_rejects_invalid_identifier(tmp_path: Path) -> None:
         library.get_board("../escape")
 
 
-@pytest.mark.parametrize("package_path", ["../outside", "/tmp/outside"])
-def test_catalog_rejects_escaping_package_paths(
-    tmp_path: Path, package_path: str
-) -> None:
+def test_snapshot_rejects_a_symlinked_direct_child_package(tmp_path: Path) -> None:
     repository = tmp_path / "repository"
-    registry = repository / "Hangboards"
-    registry.mkdir(parents=True)
-    (registry / "catalog.json").write_text(
-        json.dumps(
-            {
-                "schemaVersion": 1,
-                "boards": [{"id": "escaped-board", "path": package_path}],
-            }
-        ),
-        encoding="utf-8",
-    )
+    hangboards = repository / "Hangboards"
+    outside = write_board_package(tmp_path / "outside")
+    hangboards.mkdir(parents=True)
+    (hangboards / "escaped-board").symlink_to(outside, target_is_directory=True)
 
     snapshot = RepositoryBoardLibrary(repository).snapshot()
 

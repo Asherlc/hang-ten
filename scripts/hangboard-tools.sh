@@ -20,7 +20,7 @@ Commands:
   promote     Build a safe promotion package for an accepted review run
   release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Validate canonical package semantic and artwork parity
-  catalog     Validate, inspect, or register hangboard package catalog artifacts
+  packages    Validate or inspect directly discovered hangboard packages
 EOF
 }
 
@@ -91,8 +91,8 @@ case "$command_name" in
         fi
         exec "$environment_root/bin/hangboard-semantic-benchmark" "$@"
         ;;
-    catalog)
-        exec "$environment_root/bin/hangboard-catalog" "$@"
+    packages)
+        exec "$environment_root/bin/hangboard-packages" "$@"
         ;;
     -h|--help|help)
         usage

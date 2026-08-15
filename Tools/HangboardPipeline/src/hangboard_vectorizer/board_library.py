@@ -13,8 +13,8 @@ import shutil
 import stat
 import tempfile
 
-from .board_artwork import BoardHoldPieceDocument, BoardShapeDocument, NormalizedFrame
-from .board_catalog import BoardHold, BoardPackage, load_board_package, load_catalog
+from .board_artwork import BoardShapeDocument, NormalizedFrame
+from .board_catalog import BoardGeometryPiece, BoardHold, BoardPackage, load_board_package
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
 
@@ -37,6 +37,7 @@ class LibraryBoard:
     run_path: Path
     revision_token: str
     status: str
+    sort_key: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,7 +61,11 @@ class _CanonicalPackageRunner:
         self._asset = asset
         self._package = package
         self._holds = package.board.holds
-        self._pieces = package.artwork.hold_pieces
+        self._pieces = tuple(
+            (hold, piece)
+            for hold in package.board.holds
+            for piece in hold.geometry
+        )
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
         artifact_root.mkdir(parents=True)
@@ -139,8 +144,8 @@ class _CanonicalPackageRunner:
                             "holdID": hold.id,
                             "displayPaths": [
                                 self._piece_path(piece)
-                                for piece in self._pieces
-                                if piece.hold_id == hold.id
+                                for owner, piece in self._pieces
+                                if owner.id == hold.id
                             ],
                         }
                         for hold in self._holds
@@ -165,44 +170,43 @@ class _CanonicalPackageRunner:
 
         with Image.open(self._asset) as image:
             width, height = image.size
-        holds = {hold.id: hold for hold in self._holds}
         regions = [
             {
                 "id": index,
-                "key": piece.hold_id,
-                "type": holds[piece.hold_id].kind,
+                "key": hold.id,
+                "type": hold.kind,
                 "pieceIndex": 0,
                 "displayPath": self._piece_path(piece, width, height),
                 "anchor": [
                     (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width / 2
+                        hold.frame.x
+                        + hold.frame.width / 2
                     )
                     * width,
                     (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height / 2
+                        hold.frame.y
+                        + hold.frame.height / 2
                     )
                     * height,
                 ],
                 "bounds": [
-                    holds[piece.hold_id].frame.x * width,
-                    holds[piece.hold_id].frame.y * height,
+                    hold.frame.x * width,
+                    hold.frame.y * height,
                     (
-                        holds[piece.hold_id].frame.x
-                        + holds[piece.hold_id].frame.width
+                        hold.frame.x
+                        + hold.frame.width
                     )
                     * width,
                     (
-                        holds[piece.hold_id].frame.y
-                        + holds[piece.hold_id].frame.height
+                        hold.frame.y
+                        + hold.frame.height
                     )
                     * height,
                 ],
-                "metadata": self._runtime_metadata(holds[piece.hold_id]),
+                "metadata": self._runtime_metadata(hold),
                 "symmetry": {},
             }
-            for index, piece in enumerate(self._pieces, start=1)
+            for index, (hold, piece) in enumerate(self._pieces, start=1)
         ]
         return {
             "schemaVersion": 1,
@@ -213,8 +217,8 @@ class _CanonicalPackageRunner:
                 {
                     "pieceIndex": 0,
                     "displayPath": self._shape_path(
-                        self._package.artwork.canvas_frame,
-                        self._package.artwork.silhouette,
+                        NormalizedFrame(0, 0, 1, 1),
+                        BoardShapeDocument("roundedRect", corner_radius_fraction=0),
                         width,
                         height,
                     ),
@@ -228,16 +232,17 @@ class _CanonicalPackageRunner:
         if hold.kind in {"edge", "pocket"} and hold.size_millimeters is not None:
             metadata["depthMm"] = hold.size_millimeters
         if hold.kind == "pocket":
-            metadata["fingerCount"] = hold.finger_capacity
+            if hold.finger_capacity is not None:
+                metadata["fingerCount"] = hold.finger_capacity
         if hold.kind == "sloper":
             metadata["profile"] = (
-                "round" if "roundSloper" in hold.features else "flat"
+                "round" if "roundSloper" in (hold.features or ()) else "flat"
             )
         return metadata
 
     @staticmethod
     def _piece_path(
-        piece: BoardHoldPieceDocument, width: int = 1, height: int = 1
+        piece: BoardGeometryPiece, width: int = 1, height: int = 1
     ) -> str:
         return _CanonicalPackageRunner._shape_path(
             piece.frame, piece.shape, width, height
@@ -319,7 +324,7 @@ class _BoardDiagnosticError(Exception):
 
 
 class RepositoryBoardLibrary:
-    """Discover canonical board packages from the repository registry."""
+    """Discover canonical board packages from direct Hangboards children."""
 
     def __init__(self, repository_root: Path) -> None:
         try:
@@ -350,58 +355,28 @@ class RepositoryBoardLibrary:
                 "Hangboards", "invalid_path", "Hangboards: must be a directory"
             )
             return LibrarySnapshot((), (diagnostic,))
-        catalog_path = self._boards_root / "catalog.json"
-        if not catalog_path.is_file() or catalog_path.is_symlink():
-            diagnostic = LibraryDiagnostic(
-                "catalog.json",
-                "missing_manifest",
-                "Hangboards/catalog.json: canonical catalog is missing",
-            )
-            return LibrarySnapshot((), (diagnostic,))
-        try:
-            catalog = load_catalog(catalog_path)
-        except (OSError, ValueError) as error:
-            diagnostic = LibraryDiagnostic(
-                "catalog.json",
-                "invalid_run",
-                f"Hangboards/catalog.json: {error}",
-            )
-            return LibrarySnapshot((), (diagnostic,))
         boards: list[LibraryBoard] = []
         diagnostics: list[LibraryDiagnostic] = []
-        for catalog_entry in catalog.entries:
-            if not self._valid_package_slug(catalog_entry.path):
+        for entry in sorted(self._boards_root.iterdir(), key=lambda path: path.name):
+            if entry.is_symlink():
                 diagnostics.append(
                     LibraryDiagnostic(
-                        catalog_entry.path,
+                        entry.name,
                         "invalid_path",
-                        "catalog package path must be one relative directory slug",
+                        f"Hangboards/{entry.name}: direct child must not be a symlink",
                     )
                 )
                 continue
-            entry = self._boards_root / catalog_entry.path
-            try:
-                board = self._read_board(entry)
-                if board.board_id != catalog_entry.id:
-                    raise _BoardDiagnosticError(
-                        "identity_mismatch",
-                        f"Hangboards/{catalog_entry.path}: "
-                        "package id does not match catalog id",
+            if not entry.is_dir():
+                continue
+            board_path = entry / "board.json"
+            if board_path.exists() or board_path.is_symlink():
+                try:
+                    boards.append(self._read_board(entry))
+                except _BoardDiagnosticError as error:
+                    diagnostics.append(
+                        LibraryDiagnostic(entry.name, error.code, error.message)
                     )
-                boards.append(board)
-            except _BoardDiagnosticError as error:
-                diagnostics.append(
-                    LibraryDiagnostic(
-                        catalog_entry.path, error.code, error.message
-                    )
-                )
-        registered_paths = {entry.path for entry in catalog.entries}
-        for entry in sorted(self._boards_root.iterdir(), key=lambda path: path.name):
-            if (
-                entry.name in registered_paths
-                or not entry.is_dir()
-                or entry.is_symlink()
-            ):
                 continue
             assets = entry / "assets"
             primary = assets / "primary.png"
@@ -416,6 +391,13 @@ class RepositoryBoardLibrary:
                     )
                 )
                 if not is_draft:
+                    diagnostics.append(
+                        LibraryDiagnostic(
+                            entry.name,
+                            "missing_manifest",
+                            f"Hangboards/{entry.name}: directory is missing board.json",
+                        )
+                    )
                     continue
                 if not _BOARD_ID.fullmatch(entry.name):
                     diagnostics.append(
@@ -444,9 +426,10 @@ class RepositoryBoardLibrary:
                         entry,
                         revision_token,
                         "draft",
+                        (entry.name.casefold(), entry.name, entry.name),
                     )
                 )
-        boards.sort(key=lambda board: (board.display_name.casefold(), board.board_id))
+        boards.sort(key=lambda board: board.sort_key)
         return LibrarySnapshot(tuple(boards), tuple(diagnostics))
 
     def get_board(self, board_id: str) -> LibraryBoard:
@@ -580,18 +563,18 @@ class RepositoryBoardLibrary:
             package_root,
             self._package_revision_token(package_root),
             "published",
+            (
+                package.board.manufacturer.casefold(),
+                package.board.manufacturer,
+                display_name.casefold(),
+                display_name,
+                board_id,
+            ),
         )
 
     def _materialize_package_run(self, board: LibraryBoard, destination: Path) -> None:
         package = load_board_package(board.run_path)
-        manifest = json.loads(
-            (board.run_path / "board.json").read_text(encoding="utf-8")
-        )
-        presentation = manifest["presentation"]
-        asset_path = presentation.get("assetPath")
-        if asset_path is None:
-            asset_path = presentation["photoAsset"]["path"]
-        asset = (board.run_path / asset_path).resolve(strict=True)
+        asset = (board.run_path / "assets" / "primary.png").resolve(strict=True)
         try:
             asset.relative_to(board.run_path.resolve())
         except ValueError as error:

@@ -10,11 +10,11 @@ complete pipeline and Workbench suites:
   Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q
 ```
 
-Validate the canonical package registry and exercise package staging
+Validate direct-child packages and exercise package staging
 without writing into the app source tree:
 
 ```sh
-scripts/hangboard-tools.sh catalog validate --catalog Hangboards/catalog.json
+scripts/hangboard-tools.sh packages validate --root Hangboards
 .context/hangboard-onboarding-venv/bin/python -m pytest \
   Tools/HangboardPipeline/tests/test_generated_catalog_import.py -q
 stage_root="$(mktemp -d .context/stage-board-packages.XXXXXX)"
@@ -30,6 +30,6 @@ UNLOCALIZED_RESOURCES_FOLDER_PATH="$UNLOCALIZED_RESOURCES_FOLDER_PATH" \
 ```
 
 The generated experimental catalog and its Swift/JSON exporters were retired.
-Only packages listed in `Hangboards/catalog.json` are registered and staged
-into an app resource destination. Imported draft boards remain unregistered
-until they satisfy the complete package contract.
+Complete direct-child packages are validated and staged into the app resource
+destination. Imported primary-only boards remain migration drafts until they
+satisfy the complete package contract.

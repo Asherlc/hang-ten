@@ -17,7 +17,7 @@ dependencies = [
 dev = ["pytest>=9.1.1"]
 
 [project.scripts]
-hangboard-catalog = "hangboard_vectorizer.board_catalog_cli:main"
+hangboard-packages = "hangboard_vectorizer.board_catalog_cli:main"
 hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
 hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
 hangboard-promote = "hangboard_vectorizer.promotion_cli:main"

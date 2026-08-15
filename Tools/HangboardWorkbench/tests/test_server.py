@@ -2028,10 +2028,6 @@ def test_workspace_root_keeps_the_discovered_repository_library(
         canonical_run,
         repository / "Hangboards" / "metolius-wood-grips-compact-ii",
     )
-    shutil.copy2(
-        REPOSITORY_ROOT / "Hangboards" / "catalog.json",
-        repository / "Hangboards" / "catalog.json",
-    )
     launch_directory = repository / "nested" / "launch"
     launch_directory.mkdir(parents=True)
     monkeypatch.chdir(launch_directory)
@@ -2153,7 +2149,6 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     library.mkdir(parents=True)
     package = REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
     shutil.copytree(package, library / package.name)
-    shutil.copy2(REPOSITORY_ROOT / "Hangboards" / "catalog.json", library)
     (repository / "Tools" / "HangboardWorkbench").mkdir(parents=True)
     (repository / "Tools" / "HangboardWorkbench" / "server.py").touch()
     workspace = repository / ".context" / "workspace"
@@ -2208,9 +2203,9 @@ def test_repository_root_constructs_library_backed_workbench(tmp_path):
     assert len([board for board in final_boards["boards"] if board["inProgress"] is True]) == 1
     vector_path = next(workspace.rglob("stage-3-vector-regions.json"))
     vector_document = json.loads(vector_path.read_text())
-    canonical_artwork = json.loads((package / "artwork.json").read_text())
+    canonical_board = json.loads((package / "board.json").read_text())
     assert [region["key"] for region in vector_document["regions"]] == [
-        piece["holdID"] for piece in canonical_artwork["holdPieces"]
+        hold["id"] for hold in canonical_board["holds"]
     ]
     assert all(region["displayPath"] for region in vector_document["regions"])
     assert (workspace / "boards").is_dir()
@@ -2269,10 +2264,6 @@ def test_repository_open_job_redacts_destination_exists_path(tmp_path, monkeypat
     shutil.copytree(
         canonical_run,
         repository / "Hangboards" / "metolius-wood-grips-compact-ii",
-    )
-    shutil.copy2(
-        REPOSITORY_ROOT / "Hangboards" / "catalog.json",
-        repository / "Hangboards" / "catalog.json",
     )
     workspace = repository / ".context" / "external-workspace"
     server, _catalog = server_module._server_from_cli(

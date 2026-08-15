@@ -2,144 +2,170 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-import shutil
 
 import pytest
 
-from conftest import load_board_catalog_module
+from conftest import (
+    board_document,
+    load_board_catalog_module,
+    write_board_package,
+    write_primary_only_draft,
+)
 
 
-def _write_catalog(root: Path, *, path: str = "example-board") -> Path:
-    root.mkdir(parents=True, exist_ok=True)
-    source = Path(__file__).resolve().parents[3] / "Hangboards/metolius-wood-grips-compact-ii"
-    shutil.copytree(source, root / "example-board")
-    catalog_path = root / "catalog.json"
-    catalog_path.write_text(json.dumps({"schemaVersion": 1, "boards": [{"id": "metolius.wood-grips-compact-ii", "path": path}]}), encoding="utf-8")
-    return catalog_path
-
-
-def test_catalog_requires_a_complete_package_for_every_entry(tmp_path: Path) -> None:
+def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
+    tmp_path: Path,
+) -> None:
     module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    catalog = module.validate_catalog(catalog_path)
-    assert catalog.entries[0].path == "example-board"
+    write_board_package(
+        tmp_path / "zeta-model",
+        board_id="zeta.board",
+        manufacturer="Zeta",
+        name="Model",
+    )
+    write_board_package(
+        tmp_path / "alpha-zulu",
+        board_id="alpha.zulu",
+        manufacturer="Alpha",
+        name="Zulu",
+    )
+    write_board_package(
+        tmp_path / "alpha-alpha-b",
+        board_id="alpha.b",
+        manufacturer="Alpha",
+        name="Alpha",
+    )
+    write_board_package(
+        tmp_path / "alpha-alpha-a",
+        board_id="alpha.a",
+        manufacturer="Alpha",
+        name="Alpha",
+    )
+    draft = write_primary_only_draft(tmp_path / "draft-model")
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [package.board.id for package in inventory.packages] == [
+        "alpha.a",
+        "alpha.b",
+        "alpha.zulu",
+        "zeta.board",
+    ]
+    assert [package.root.name for package in inventory.packages] == [
+        "alpha-alpha-a",
+        "alpha-alpha-b",
+        "alpha-zulu",
+        "zeta-model",
+    ]
+    assert inventory.drafts == (draft.resolve(),)
+    assert not (tmp_path / "catalog.json").exists()
 
 
-def test_registered_packages_use_the_canonical_primary_presentation_asset() -> None:
+def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
     module = load_board_catalog_module()
-    catalog_path = Path(__file__).resolve().parents[3] / "Hangboards/catalog.json"
-    catalog = module.validate_catalog(catalog_path)
+    write_primary_only_draft(tmp_path / "draft-model")
 
-    for entry in catalog.entries:
-        package_root = catalog_path.parent / entry.path
-        package = module.load_board_package(package_root)
-        assert package.board.presentation_asset_path == "assets/primary.png"
-        assert {path.name for path in package_root.glob("*.json")} == {
-            "board.json",
-            "evidence.json",
-            "semantics.json",
-            "artwork.json",
+    with pytest.raises(ValueError, match="missing board.json"):
+        module.discover_board_packages(tmp_path, require_complete_inventory=True)
+
+
+def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "first-model", board_id="duplicate.board")
+    write_board_package(tmp_path / "second-model", board_id="duplicate.board")
+
+    with pytest.raises(ValueError, match="duplicate board id: duplicate.board"):
+        module.discover_board_packages(tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda root: (root / "assets" / "primary.png").unlink(), "primary.png"),
+        (lambda root: (root / "semantics.json").write_text("{}"), "unknown package entry"),
+        (lambda root: (root / "assets" / "extra.png").write_bytes(b"extra"), "unknown asset"),
+    ],
+)
+def test_completed_package_requires_the_exact_finished_shape(
+    tmp_path: Path,
+    mutation,
+    message: str,
+) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    mutation(package)
+
+    with pytest.raises(ValueError, match=message):
+        module.discover_board_packages(tmp_path)
+
+
+def test_discovery_rejects_malformed_completed_package(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "board.json").write_text("{ malformed", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="invalid JSON"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_discovery_rejects_symlinked_direct_children_and_members(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    outside = write_board_package(tmp_path / "outside")
+    root = tmp_path / "Hangboards"
+    root.mkdir()
+    (root / "linked-model").symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.discover_board_packages(root)
+
+    (root / "linked-model").unlink()
+    package = write_board_package(root / "fixture-model")
+    primary = package / "assets" / "primary.png"
+    primary.unlink()
+    primary.symlink_to(outside / "assets" / "primary.png")
+
+    with pytest.raises(ValueError, match="symlink"):
+        module.discover_board_packages(root)
+
+
+def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"].append(
+        {
+            "frame": {"x": 0.4, "y": 0.1, "width": 0.1, "height": 0.2},
+            "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
         }
+    )
+    board_path.write_text(json.dumps(document), encoding="utf-8")
 
-        asset_paths = {
-            path.relative_to(package_root).as_posix()
-            for path in (package_root / "assets").iterdir()
-        }
-        assert "assets/primary.png" in asset_paths
-        source_photos = asset_paths - {"assets/primary.png"}
-        assert len(source_photos) <= 1
-        assert all(Path(path).suffix.lower() in {".jpg", ".jpeg", ".webp", ".heic"} for path in source_photos)
-        assert set(package.evidence.asset_evidence) == asset_paths
+    package = module.load_board_package(package_root)
+    hold = package.board.holds[0]
+
+    assert len(hold.geometry) == 2
+    assert (hold.frame.x, hold.frame.y, hold.frame.width, hold.frame.height) == pytest.approx(
+        (0.1, 0.1, 0.4, 0.4)
+    )
+    assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_catalog_rejects_a_registered_package_without_the_primary_presentation_asset(
+def test_package_loader_rejects_unknown_board_hold_and_geometry_keys(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    board_path = tmp_path / "example-board" / "board.json"
-    board = json.loads(board_path.read_text(encoding="utf-8"))
-    board.pop("presentation")
-    board_path.write_text(json.dumps(board), encoding="utf-8")
+    for location in ("board", "hold", "geometry"):
+        package = write_board_package(tmp_path / location)
+        board_path = package / "board.json"
+        document = board_document()
+        if location == "board":
+            document["unexpected"] = True
+        elif location == "hold":
+            document["holds"][0]["unexpected"] = True
+        else:
+            document["holds"][0]["geometry"][0]["unexpected"] = True
+        board_path.write_text(json.dumps(document), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="must present assets/primary.png"):
-        module.validate_catalog(catalog_path)
-
-
-def test_catalog_rejects_a_registered_package_that_presents_a_source_photo(
-    tmp_path: Path,
-) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    board_path = tmp_path / "example-board" / "board.json"
-    board = json.loads(board_path.read_text(encoding="utf-8"))
-    board["presentation"] = {"assetPath": "assets/WoodGripsCompactII.jpg"}
-    board_path.write_text(json.dumps(board), encoding="utf-8")
-
-    with pytest.raises(ValueError, match="must present assets/primary.png"):
-        module.validate_catalog(catalog_path)
-
-
-def test_catalog_rejects_status_and_nested_lifecycle_paths(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    payload = json.loads(catalog_path.read_text(encoding="utf-8"))
-    payload["boards"][0]["status"] = "draft"
-    catalog_path.write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(ValueError, match="unknown keys"):
-        module.validate_catalog(catalog_path)
-    payload["boards"][0] = {"id": "metolius.wood-grips-compact-ii", "path": "draft/example-board"}
-    catalog_path.write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(ValueError, match="single board-slug directory"):
-        module.validate_catalog(catalog_path)
-
-
-@pytest.mark.parametrize("extra_path", ["README.md", "review", "outline.json", "outline.approx.json"])
-def test_registered_package_rejects_files_that_encode_review_state(
-    tmp_path: Path,
-    extra_path: str,
-) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    package = tmp_path / "example-board"
-    extra = package / extra_path
-    if extra_path == "review":
-        extra.mkdir()
-    else:
-        extra.write_text("review state", encoding="utf-8")
-
-    with pytest.raises(ValueError, match="unknown package file"):
-        module.validate_catalog(catalog_path)
-
-
-def test_registered_package_rejects_a_second_generated_png(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    package = tmp_path / "example-board"
-    (package / "assets" / "alternate.png").write_bytes(b"second generated image")
-
-    with pytest.raises(ValueError, match="only assets/primary.png may be a PNG"):
-        module.validate_catalog(catalog_path)
-
-
-def test_registered_package_rejects_nested_assets(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    package = tmp_path / "example-board"
-    nested = package / "assets" / "source"
-    nested.mkdir()
-    (nested / "manufacturer.jpg").write_bytes(b"source image")
-
-    with pytest.raises(ValueError, match="package assets must be flat"):
-        module.validate_catalog(catalog_path)
-
-
-def test_registered_package_allows_at_most_one_original_source_photo(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    catalog_path = _write_catalog(tmp_path)
-    assets = tmp_path / "example-board" / "assets"
-    (assets / "manufacturer-front.jpg").write_bytes(b"front source")
-    (assets / "manufacturer-side.jpg").write_bytes(b"side source")
-
-    with pytest.raises(ValueError, match="at most one original source photo"):
-        module.validate_catalog(catalog_path)
+        with pytest.raises(ValueError, match="unknown keys"):
+            module.load_board_package(package)

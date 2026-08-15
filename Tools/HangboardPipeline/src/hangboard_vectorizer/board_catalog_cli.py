@@ -1,4 +1,4 @@
-"""Command-line entry point for hangboard catalog tooling."""
+"""Command-line entry point for hangboard package discovery."""
 
 from __future__ import annotations
 
@@ -8,11 +8,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from .board_catalog import (
-    CatalogEntry,
-    CatalogDocument,
-    validate_catalog,
-)
+from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
 
 
 class _CliError(ValueError):
@@ -22,13 +18,12 @@ class _CliError(ValueError):
 def main(argv: Sequence[str] | None = None) -> int:
     try:
         arguments = _parser().parse_args(argv)
-        if arguments.command == "validate":
-            catalog = validate_catalog(arguments.catalog)
-            print(_status_payload(catalog=catalog, catalog_path=arguments.catalog))
-            return 0
-        if arguments.command == "status":
-            catalog = validate_catalog(arguments.catalog)
-            print(_status_payload(catalog=catalog, catalog_path=arguments.catalog))
+        if arguments.command in {"validate", "status"}:
+            inventory = discover_board_packages(
+                arguments.root,
+                require_complete_inventory=arguments.final_inventory,
+            )
+            print(_status_payload(inventory))
             return 0
         raise _CliError("unknown command")
     except SystemExit as error:
@@ -43,30 +38,34 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="hangboard-catalog")
+    parser = argparse.ArgumentParser(prog="hangboard-packages")
     subcommands = parser.add_subparsers(dest="command", required=True)
-
-    validate = subcommands.add_parser("validate", help="validate a catalog and board packages")
-    validate.add_argument("--catalog", type=Path, required=True)
-
-    status = subcommands.add_parser("status", help="print catalog metadata")
-    status.add_argument("--catalog", type=Path, required=True)
-
+    for name, help_text in (
+        ("validate", "validate discovered board packages"),
+        ("status", "print discovered package metadata"),
+    ):
+        command = subcommands.add_parser(name, help=help_text)
+        command.add_argument("--root", type=Path, required=True)
+        command.add_argument(
+            "--final-inventory",
+            action="store_true",
+            help="reject primary-only draft directories",
+        )
     return parser
 
 
-def _status_payload(catalog: CatalogDocument, catalog_path: Path) -> str:
-    catalog_root = catalog_path.parent
+def _status_payload(inventory: BoardInventory) -> str:
     payload = {
-        "boards": [_board_status(entry, catalog_root / entry.path) for entry in catalog.entries],
+        "boards": [_board_status(package) for package in inventory.packages],
+        "drafts": [path.name for path in inventory.drafts],
     }
     return json.dumps(payload, indent=2, sort_keys=True)
 
 
-def _board_status(entry: CatalogEntry, _package_root: Path) -> dict[str, object]:
+def _board_status(package: BoardPackage) -> dict[str, object]:
     return {
-        "id": entry.id,
-        "path": entry.path,
+        "id": package.board.id,
+        "path": package.root.name,
     }
 
 
