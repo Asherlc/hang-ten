@@ -16,35 +16,46 @@ PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "zlagboard-pro"
 EXPECTED_PRIMARY_SHA256 = (
     "540ef36d327359b564646fa80080298a3ee07b651f1c7ced66ad11773951f148"
 )
+SURFACE = {"type": "surface"}
+DEEP_RECESS = {
+    "type": "recess",
+    "rimInsetFraction": 0.08,
+    "depth": "deep",
+}
+SHALLOW_RECESS = {
+    "type": "recess",
+    "rimInsetFraction": 0.08,
+    "depth": "shallow",
+}
 EXPECTED_HOLDS = (
-    ("top-jug-left", "jug", None),
-    ("top-sloper-32-left", "sloper", None),
-    ("top-sloper-20-left", "sloper", None),
-    ("top-sloper-jug-center", "jug", None),
-    ("top-sloper-20-right", "sloper", None),
-    ("top-sloper-32-right", "sloper", None),
-    ("top-jug-right", "jug", None),
-    ("upper-edge-30-left", "edge", 30),
-    ("upper-sloper-30-left", "sloper", 30),
-    ("upper-sloper-25-left", "sloper", 25),
-    ("upper-edge-35-center", "edge", 35),
-    ("upper-sloper-25-right", "sloper", 25),
-    ("upper-sloper-30-right", "sloper", 30),
-    ("upper-edge-30-right", "edge", 30),
-    ("middle-edge-20-left", "edge", 20),
-    ("middle-sloper-25-left", "sloper", 25),
-    ("middle-pocket-30-left", "pocket", 30),
-    ("middle-sloper-30-center", "sloper", 30),
-    ("middle-pocket-30-right", "pocket", 30),
-    ("middle-sloper-25-right", "sloper", 25),
-    ("middle-edge-20-right", "edge", 20),
-    ("lower-incut-edge-15-left", "edge", 15),
-    ("lower-edge-15-left", "edge", 15),
-    ("lower-incut-pocket-30-left", "pocket", 30),
-    ("lower-incut-edge-10-center", "edge", 10),
-    ("lower-incut-pocket-30-right", "pocket", 30),
-    ("lower-edge-15-right", "edge", 15),
-    ("lower-incut-edge-15-right", "edge", 15),
+    ("top-jug-left", "jug", None, SURFACE),
+    ("top-sloper-32-left", "sloper", None, SURFACE),
+    ("top-sloper-20-left", "sloper", None, SURFACE),
+    ("top-sloper-jug-center", "jug", None, SURFACE),
+    ("top-sloper-20-right", "sloper", None, SURFACE),
+    ("top-sloper-32-right", "sloper", None, SURFACE),
+    ("top-jug-right", "jug", None, SURFACE),
+    ("upper-edge-30-left", "edge", 30, DEEP_RECESS),
+    ("upper-sloper-30-left", "sloper", 30, DEEP_RECESS),
+    ("upper-sloper-25-left", "sloper", 25, DEEP_RECESS),
+    ("upper-edge-35-center", "edge", 35, DEEP_RECESS),
+    ("upper-sloper-25-right", "sloper", 25, DEEP_RECESS),
+    ("upper-sloper-30-right", "sloper", 30, DEEP_RECESS),
+    ("upper-edge-30-right", "edge", 30, DEEP_RECESS),
+    ("middle-edge-20-left", "edge", 20, SHALLOW_RECESS),
+    ("middle-sloper-25-left", "sloper", 25, DEEP_RECESS),
+    ("middle-pocket-30-left", "pocket", 30, DEEP_RECESS),
+    ("middle-sloper-30-center", "sloper", 30, DEEP_RECESS),
+    ("middle-pocket-30-right", "pocket", 30, DEEP_RECESS),
+    ("middle-sloper-25-right", "sloper", 25, DEEP_RECESS),
+    ("middle-edge-20-right", "edge", 20, SHALLOW_RECESS),
+    ("lower-incut-edge-15-left", "edge", 15, SHALLOW_RECESS),
+    ("lower-edge-15-left", "edge", 15, SHALLOW_RECESS),
+    ("lower-incut-pocket-30-left", "pocket", 30, DEEP_RECESS),
+    ("lower-incut-edge-10-center", "edge", 10, SHALLOW_RECESS),
+    ("lower-incut-pocket-30-right", "pocket", 30, DEEP_RECESS),
+    ("lower-edge-15-right", "edge", 15, SHALLOW_RECESS),
+    ("lower-incut-edge-15-right", "edge", 15, SHALLOW_RECESS),
 )
 MIRRORED_PAIRS = (
     ("top-jug-left", "top-jug-right"),
@@ -129,7 +140,8 @@ def test_zlagboard_pro_preserves_the_audited_physical_inventory() -> None:
         EXPECTED_PRIMARY_SHA256
     )
     assert tuple(
-        (hold.id, hold.kind, hold.size_millimeters) for hold in board.holds
+        (hold.id, hold.kind, hold.size_millimeters, hold.geometry[0].treatment)
+        for hold in board.holds
     ) == EXPECTED_HOLDS
     assert len(board.holds) == 28
     assert sum(len(hold.geometry) for hold in board.holds) == 28
@@ -144,6 +156,8 @@ def test_zlagboard_pro_preserves_the_audited_physical_inventory() -> None:
         assert len(hold.geometry) == 1
         assert hold.finger_capacity is None
         assert hold.depth_range_millimeters is None
+        assert hold.grip_type is None
+        assert hold.features is None
         piece = hold.geometry[0]
         assert piece.shape.type == "path"
         assert piece.shape.commands[0].command == "move"
