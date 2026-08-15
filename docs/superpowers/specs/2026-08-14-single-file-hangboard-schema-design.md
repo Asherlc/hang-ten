@@ -31,12 +31,6 @@ Each geometry piece contains its normalized frame, shape, and optional physical
 profile. The union of those pieces supplies the runtime hold bounds. The same
 piece paths draw normal contact, active contact, and hit-testing geometry.
 
-`aspectRatio` is the presentation canvas width divided by height, not the
-physical product-envelope or multi-piece installation ratio. It must match the
-decoded pixel dimensions of `assets/primary.png` within 0.1% relative error;
-this permits established two-decimal metadata while preventing visible global
-stretching in the runtime image-and-geometry canvas.
-
 `cueStyle`, `shortLabel`, coaching detail, palettes, colors, shadows, and
 gradients are app presentation concerns and are not board fields. The app owns
 all styling. Board-specific routine semantics are training-plan concerns and
@@ -62,3 +56,4 @@ document; its semantics and evidence are not carried forward. The remaining
 boards are then authored in small image-audited batches. Each batch verifies
 model hold IDs equal geometry hold IDs and inspects inactive and active paths
 in portrait and landscape.
+
