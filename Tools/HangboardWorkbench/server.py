@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import mimetypes
 import re
+import stat
 from argparse import ArgumentParser
 from contextlib import contextmanager
 from http import HTTPStatus
@@ -93,12 +94,11 @@ def create_server(
     for asset in dict.fromkeys(asset for _route, asset in STATIC_ASSET_ROUTES):
         if not (resolved_editor_root / asset).is_file():
             raise StaticAssetError(f"required static asset is missing: {asset}")
-    try:
-        resolved_library_root = Path(library_root).resolve(strict=True)
-    except OSError as error:
-        raise EditorError("board library is unavailable") from error
-    if not resolved_library_root.is_dir():
-        raise EditorError("board library is unavailable")
+    resolved_library_root = _resolved_lexical_directory(
+        library_root,
+        unavailable_message="board library is unavailable",
+        symlink_message="board library must not be a symlink",
+    )
     return WorkbenchHTTPServer(
         (host, port),
         EditorRequestHandler,
@@ -337,22 +337,73 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 
 def validate_hang_ten_checkout(root: Path) -> Path:
     """Accept a checkout containing the direct Workbench and board library."""
-    resolved_root = Path(root).expanduser().resolve(strict=False)
-    markers = (
-        resolved_root / ".git",
-        resolved_root / "Hangboards",
-        resolved_root / "Tools" / "HangboardWorkbench" / "server.py",
-        resolved_root / "Tools" / "HangboardWorkbench" / "board_package.py",
-        resolved_root / "Tools" / "HangboardWorkbench" / "board_geometry.py",
+    try:
+        resolved_root = _resolved_lexical_directory(
+            root,
+            unavailable_message="repository root must be a Hang Ten checkout",
+            symlink_message="repository root must be a Hang Ten checkout",
+        )
+    except EditorError:
+        raise EditorError("repository root must be a Hang Ten checkout")
+    git_marker = resolved_root / ".git"
+    hangboards = resolved_root / "Hangboards"
+    workbench = resolved_root / "Tools" / "HangboardWorkbench"
+    source_files = (
+        workbench / "server.py",
+        workbench / "board_package.py",
+        workbench / "board_geometry.py",
     )
     if (
-        not resolved_root.is_dir()
-        or not markers[0].exists()
-        or not markers[1].is_dir()
-        or any(not marker.is_file() for marker in markers[2:])
+        not _is_lexical_file_or_directory(git_marker)
+        or not _is_lexical_directory(hangboards)
+        or not _is_lexical_directory(workbench)
+        or any(not _is_lexical_file(source_file) for source_file in source_files)
     ):
         raise EditorError("repository root must be a Hang Ten checkout")
     return resolved_root
+
+
+def _resolved_lexical_directory(
+    path: Path,
+    *,
+    unavailable_message: str,
+    symlink_message: str,
+) -> Path:
+    lexical = Path(path).expanduser()
+    try:
+        mode = lexical.lstat().st_mode
+    except OSError as error:
+        raise EditorError(unavailable_message) from error
+    if stat.S_ISLNK(mode):
+        raise EditorError(symlink_message)
+    if not stat.S_ISDIR(mode):
+        raise EditorError(unavailable_message)
+    try:
+        return lexical.resolve(strict=True)
+    except OSError as error:
+        raise EditorError(unavailable_message) from error
+
+
+def _is_lexical_directory(path: Path) -> bool:
+    try:
+        return stat.S_ISDIR(path.lstat().st_mode)
+    except OSError:
+        return False
+
+
+def _is_lexical_file(path: Path) -> bool:
+    try:
+        return stat.S_ISREG(path.lstat().st_mode)
+    except OSError:
+        return False
+
+
+def _is_lexical_file_or_directory(path: Path) -> bool:
+    try:
+        mode = path.lstat().st_mode
+    except OSError:
+        return False
+    return stat.S_ISREG(mode) or stat.S_ISDIR(mode)
 
 
 def _discover_repository_root(start: Path) -> Path:

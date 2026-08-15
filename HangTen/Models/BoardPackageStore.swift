@@ -1,4 +1,6 @@
 import Foundation
+import ImageIO
+import UniformTypeIdentifiers
 
 private struct BoardPackageAnyCodingKey: CodingKey {
     let stringValue: String
@@ -101,6 +103,8 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
 }
 
 struct BoardPackageStore {
+    private static let presentationAspectRatioRelativeTolerance = 0.001
+
     let boards: [TrainingBoard]
 
     private let boardsByID: [String: TrainingBoard]
@@ -131,7 +135,10 @@ struct BoardPackageStore {
                 }
                 throw BoardPackageStoreError.missingBoardDocument(slug: slug)
             }
-            try Self.validateFinishedPackage(packageURL, boardID: slug)
+            let presentationSize = try Self.validateFinishedPackage(
+                packageURL,
+                boardID: slug
+            )
             let resourcePrefix = "Hangboards/\(slug)"
             let boardDocument: BoardPackageBoardDocument = try Self.decode(
                 from: boardURL,
@@ -139,6 +146,12 @@ struct BoardPackageStore {
             )
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateMetadata(boardDocument: boardDocument)
+            try Self.validatePresentationAspectRatio(
+                boardDocument.aspectRatio,
+                imageWidth: presentationSize.width,
+                imageHeight: presentationSize.height,
+                boardID: boardDocument.id
+            )
             _ = try Self.validateHolds(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
@@ -219,7 +232,10 @@ struct BoardPackageStore {
         return directories.sorted { $0.lastPathComponent < $1.lastPathComponent }
     }
 
-    private static func validateFinishedPackage(_ packageURL: URL, boardID: String) throws {
+    private static func validateFinishedPackage(
+        _ packageURL: URL,
+        boardID: String
+    ) throws -> (width: Int, height: Int) {
         try validateNoSymlinks(below: packageURL, boardID: boardID)
         let entries = try entryNames(in: packageURL)
         guard entries == ["assets", "board.json"] else {
@@ -250,12 +266,11 @@ struct BoardPackageStore {
                 path: "assets/primary.png"
             )
         }
-        guard try Data(contentsOf: primaryURL).prefix(8) == Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "assets/primary.png must be a PNG"
-            )
-        }
+        return try validatePNG(
+            at: primaryURL,
+            boardID: boardID,
+            label: "assets/primary.png"
+        )
     }
 
     private static func isPrimaryOnlyDraft(_ packageURL: URL) throws -> Bool {
@@ -266,13 +281,65 @@ struct BoardPackageStore {
               try entryNames(in: assetsURL) == ["primary.png"] else { return false }
         let primaryURL = assetsURL.appendingPathComponent("primary.png")
         guard try isRegularFile(primaryURL) else { return false }
-        guard try Data(contentsOf: primaryURL).prefix(8) == Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) else {
+        _ = try validatePNG(
+            at: primaryURL,
+            boardID: packageURL.lastPathComponent,
+            label: "draft assets/primary.png"
+        )
+        return true
+    }
+
+    private static func validatePNG(
+        at url: URL,
+        boardID: String,
+        label: String
+    ) throws -> (width: Int, height: Int) {
+        let data: Data
+        do {
+            data = try Data(contentsOf: url)
+        } catch {
             throw BoardPackageStoreError.invalidPackage(
-                boardID: packageURL.lastPathComponent,
-                reason: "draft assets/primary.png must be a PNG"
+                boardID: boardID,
+                reason: "\(label) must be a decodable PNG"
             )
         }
-        return true
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        let decodeOptions = [kCGImageSourceShouldCacheImmediately: true] as CFDictionary
+        guard data.starts(with: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+              let source = CGImageSourceCreateWithData(data as CFData, sourceOptions),
+              CGImageSourceGetType(source) as String? == UTType.png.identifier,
+              CGImageSourceGetCount(source) == 1,
+              CGImageSourceGetStatus(source) == .statusComplete,
+              CGImageSourceGetStatusAtIndex(source, 0) == .statusComplete,
+              let image = CGImageSourceCreateImageAtIndex(source, 0, decodeOptions) else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "\(label) must be a decodable PNG"
+            )
+        }
+        return (image.width, image.height)
+    }
+
+    private static func validatePresentationAspectRatio(
+        _ declaredRatio: Double,
+        imageWidth: Int,
+        imageHeight: Int,
+        boardID: String
+    ) throws {
+        guard declaredRatio.isFinite, declaredRatio > 0 else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "aspect ratio must be positive"
+            )
+        }
+        let imageRatio = Double(imageWidth) / Double(imageHeight)
+        let relativeError = abs(declaredRatio - imageRatio) / imageRatio
+        guard relativeError <= presentationAspectRatioRelativeTolerance else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "aspect ratio must match presentation image width/height within 0.1%"
+            )
+        }
     }
 
     private static func validateNoSymlinks(below rootURL: URL, boardID: String) throws {
@@ -889,8 +956,10 @@ private extension BoardGeometryShapeDocument {
                     "path must contain exactly one closed contour"
                 )
             }
+            let pathCommands = try commands.map { try $0.boardPathCommand() }
+            try pathCommands.validateSimpleContour()
             return .path(
-                BoardNormalizedPath(commands: try commands.map { try $0.boardPathCommand() })
+                BoardNormalizedPath(commands: pathCommands)
             )
 
         default:
@@ -943,6 +1012,171 @@ private extension BoardGeometryPathCommandDocument {
 
     func invalidCommand() -> BoardGeometryAdaptationError {
         .invalid("invalid \(command) path command")
+    }
+}
+
+private extension Array where Element == BoardPathCommand {
+    func validateSimpleContour() throws {
+        let points = try flattenedContour()
+        guard points.count >= 4, points.first == points.last else {
+            throw BoardGeometryAdaptationError.invalid("path must be a closed contour")
+        }
+        let uniquePoints = Set(points.dropLast().map { point in
+            QuantizedBoardPoint(point)
+        })
+        guard uniquePoints.count >= 3 else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path must contain at least three unique points"
+            )
+        }
+        let segmentCount = points.count - 1
+        for firstIndex in 0..<segmentCount {
+            let first = points[firstIndex]
+            let second = points[firstIndex + 1]
+            guard !Self.samePoint(first, second) else {
+                throw BoardGeometryAdaptationError.invalid(
+                    "path contains a zero-length segment"
+                )
+            }
+            for otherIndex in (firstIndex + 1)..<segmentCount {
+                if otherIndex == firstIndex + 1 ||
+                    (firstIndex == 0 && otherIndex == segmentCount - 1) {
+                    continue
+                }
+                if Self.segmentsIntersect(
+                    first,
+                    second,
+                    points[otherIndex],
+                    points[otherIndex + 1]
+                ) {
+                    throw BoardGeometryAdaptationError.invalid(
+                        "path must not self-intersect"
+                    )
+                }
+            }
+        }
+        let signedArea = zip(points, points.dropFirst()).reduce(CGFloat.zero) {
+            $0 + $1.0.x * $1.1.y - $1.1.x * $1.0.y
+        } / 2
+        guard abs(signedArea) > Self.contourEpsilon else {
+            throw BoardGeometryAdaptationError.invalid("path must enclose area")
+        }
+    }
+
+    private func flattenedContour() throws -> [CGPoint] {
+        guard case .move(let start)? = first else {
+            throw BoardGeometryAdaptationError.invalid("path must begin with move")
+        }
+        var current = start
+        var points = [start]
+        for command in dropFirst() {
+            switch command {
+            case .move:
+                throw BoardGeometryAdaptationError.invalid(
+                    "path must contain exactly one closed contour"
+                )
+            case .line(let destination):
+                current = destination
+                points.append(destination)
+            case .quad(let destination, let control):
+                let previous = current
+                for step in 1...32 {
+                    let t = CGFloat(step) / 32
+                    let inverse = 1 - t
+                    points.append(
+                        CGPoint(
+                            x: inverse * inverse * previous.x
+                                + 2 * inverse * t * control.x
+                                + t * t * destination.x,
+                            y: inverse * inverse * previous.y
+                                + 2 * inverse * t * control.y
+                                + t * t * destination.y
+                        )
+                    )
+                }
+                current = destination
+            case .curve(let destination, let control1, let control2):
+                let previous = current
+                for step in 1...32 {
+                    let t = CGFloat(step) / 32
+                    let inverse = 1 - t
+                    points.append(
+                        CGPoint(
+                            x: inverse * inverse * inverse * previous.x
+                                + 3 * inverse * inverse * t * control1.x
+                                + 3 * inverse * t * t * control2.x
+                                + t * t * t * destination.x,
+                            y: inverse * inverse * inverse * previous.y
+                                + 3 * inverse * inverse * t * control1.y
+                                + 3 * inverse * t * t * control2.y
+                                + t * t * t * destination.y
+                        )
+                    )
+                }
+                current = destination
+            case .close:
+                if current != start {
+                    points.append(start)
+                }
+                current = start
+            }
+        }
+        return points
+    }
+
+    private static let contourEpsilon = CGFloat(1e-9)
+
+    private static func samePoint(_ lhs: CGPoint, _ rhs: CGPoint) -> Bool {
+        abs(lhs.x - rhs.x) <= contourEpsilon &&
+            abs(lhs.y - rhs.y) <= contourEpsilon
+    }
+
+    private static func segmentsIntersect(
+        _ first: CGPoint,
+        _ second: CGPoint,
+        _ third: CGPoint,
+        _ fourth: CGPoint
+    ) -> Bool {
+        let firstThird = orientation(first, second, third)
+        let firstFourth = orientation(first, second, fourth)
+        let thirdFirst = orientation(third, fourth, first)
+        let thirdSecond = orientation(third, fourth, second)
+        let crosses = ((firstThird > contourEpsilon && firstFourth < -contourEpsilon) ||
+            (firstThird < -contourEpsilon && firstFourth > contourEpsilon)) &&
+            ((thirdFirst > contourEpsilon && thirdSecond < -contourEpsilon) ||
+                (thirdFirst < -contourEpsilon && thirdSecond > contourEpsilon))
+        if crosses { return true }
+        return [
+            (firstThird, first, second, third),
+            (firstFourth, first, second, fourth),
+            (thirdFirst, third, fourth, first),
+            (thirdSecond, third, fourth, second)
+        ].contains { value, segmentStart, segmentEnd, point in
+            abs(value) <= contourEpsilon &&
+                onSegment(segmentStart, segmentEnd, point)
+        }
+    }
+
+    private static func orientation(_ first: CGPoint, _ second: CGPoint, _ third: CGPoint) -> CGFloat {
+        (second.x - first.x) * (third.y - first.y) -
+            (second.y - first.y) * (third.x - first.x)
+    }
+
+    private static func onSegment(_ first: CGPoint, _ second: CGPoint, _ point: CGPoint) -> Bool {
+        point.x >= Swift.min(first.x, second.x) - contourEpsilon &&
+            point.x <= Swift.max(first.x, second.x) + contourEpsilon &&
+            point.y >= Swift.min(first.y, second.y) - contourEpsilon &&
+            point.y <= Swift.max(first.y, second.y) + contourEpsilon
+    }
+}
+
+private struct QuantizedBoardPoint: Hashable {
+    let x: Int64
+    let y: Int64
+
+    init(_ point: CGPoint) {
+        x = Int64((Double(point.x) * 1_000_000_000_000).rounded())
+        y = Int64((Double(point.y) * 1_000_000_000_000).rounded())
     }
 }
 
