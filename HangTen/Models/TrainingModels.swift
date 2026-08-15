@@ -386,27 +386,27 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
-        self.init(
-            id: id,
-            name: name,
-            kind: kind,
-            geometry: [
-                BoardHoldPiece(
-                    id: "\(id)-geometry-0",
-                    holdID: id,
-                    frame: frame.rect,
-                    shape: .roundedRect(cornerRadiusFraction: 0)
-                )
-            ],
-            sizeMillimeters: sizeMillimeters,
-            gripType: gripType,
-            fingerCapacity: fingerCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            features: features
-        )
+        if let fingerCapacity {
+            precondition(
+                Self.validFingerCapacityRange.contains(fingerCapacity),
+                "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+            )
+        }
+
+        self.id = id
+        self.name = name
+        self.kind = kind
+        self.geometry = []
+        self.gripType = gripType
+        self.fingerCapacity = fingerCapacity
+        self.frame = frame
+        self.sizeMillimeters = sizeMillimeters
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.features = features
     }
 }
 
