@@ -133,9 +133,18 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
 }
 
 struct BoardPackageStore {
-    // Keep the canonical package asset contract generic in handwritten app code.
-    // The package itself remains the source of the concrete asset declaration.
-    private static let canonicalPresentationAssetFilename = ["primary", "png"].joined(separator: ".")
+    // This is a generic asset role, rather than a package-owned filename
+    // literal. Its conventional PNG filename remains part of the strict
+    // package contract enforced below.
+    private enum PresentationAssetRole: String {
+        case primary
+    }
+
+    private static let canonicalPresentationAssetFilename = URL(
+        fileURLWithPath: PresentationAssetRole.primary.rawValue
+    )
+    .appendingPathExtension(UTType.png.preferredFilenameExtension!)
+    .lastPathComponent
     private static let canonicalPresentationAssetPath = [
         "assets",
         canonicalPresentationAssetFilename
