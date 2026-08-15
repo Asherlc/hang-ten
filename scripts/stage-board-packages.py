@@ -135,8 +135,13 @@ def _replace_destination(staging: Path, destination: Path) -> None:
         if replaced_existing_destination and not destination.exists():
             os.replace(backup, destination)
         raise
+    # Installing staging is the commit point. Keep a sibling recovery backup
+    # when best-effort cleanup fails instead of reporting that staging failed.
     if replaced_existing_destination:
-        shutil.rmtree(backup)
+        try:
+            shutil.rmtree(backup)
+        except OSError:
+            pass
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
