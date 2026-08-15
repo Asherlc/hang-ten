@@ -3,13 +3,20 @@ import Foundation
 enum BoardSourceBoundaryAudit {
     private static let planMappingOwnerPath = "HangTen/Models/TrainingModels.swift"
     private static let planMappingOwnerDeclaration = "enum LegacyPlanSeedBoardMappings {"
+    private static let genericPresentationLoaderPaths: Set<String> = [
+        "HangTen/Models/BoardPackageStore.swift"
+    ]
+    private static let genericCanonicalPresentationLiterals: Set<String> = [
+        "assets/primary.png",
+        "primary.png",
+        "primary"
+    ]
 
     static func findings(
         relativePath: String,
         source: String,
         packageOwnedLiterals: Set<String>
     ) -> [String] {
-        let genericCanonicalAssetPaths: Set<String> = ["assets/primary.png"]
         let legacyArtifactTokens = [
             "GeneratedBoardCatalog",
             "BoardLibrary.json",
@@ -37,6 +44,9 @@ enum BoardSourceBoundaryAudit {
             from: source,
             relativePath: relativePath
         )
+        let exemptedPresentationLiterals = genericPresentationLoaderPaths.contains(relativePath)
+            ? genericCanonicalPresentationLiterals
+            : []
 
         for token in legacyArtifactTokens where relativePath.contains(token) {
             findings.append("\(relativePath): legacy artifact path \(token)")
@@ -48,7 +58,7 @@ enum BoardSourceBoundaryAudit {
             findings.append("\(relativePath): legacy artifact token \(token)")
         }
         for literal in packageOwnedLiterals
-        where !genericCanonicalAssetPaths.contains(literal)
+        where !exemptedPresentationLiterals.contains(literal)
             && sourceWithoutOwnedPlanMappings.contains("\"\(literal)\"") {
             findings.append("\(relativePath): package-owned literal \(literal)")
         }
