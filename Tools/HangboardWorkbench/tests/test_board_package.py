@@ -670,6 +670,11 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         "_png_dimensions",
         lambda _path: pytest.fail("editor_document repeated complete PNG validation"),
     )
+    monkeypatch.setattr(
+        board_package,
+        "_png_header_dimensions",
+        lambda _path: pytest.fail("editor_document repeated PNG header inspection"),
+    )
 
     document = board_package.editor_document(package)
 
@@ -706,6 +711,23 @@ def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(
     )
     assert {path.name for path in package_root.iterdir()} == {"board.json", "assets"}
     assert not (library / "catalog.json").exists()
+
+
+def test_noop_save_rejects_selected_live_package_with_corrupt_post_ihdr_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    (package_root / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(

@@ -53,6 +53,12 @@ def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> Non
 
     serialized = NormalizedFrame(x=x, y=x, width=width, height=width).to_json()
 
+    assert serialized["width"] == 0.17185181953
+    assert serialized["height"] == 0.17185181953
+    assert json.dumps(serialized, separators=(",", ":")) == (
+        '{"x":0.82814818047,"y":0.82814818047,'
+        '"width":0.17185181953,"height":0.17185181953}'
+    )
     assert serialized["x"] + serialized["width"] <= 1
     assert serialized["y"] + serialized["height"] <= 1
     assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
