@@ -64,6 +64,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert board.facts["dimensions"] == "590 × 148 × 40 mm"
     assert math.isclose(board.facts["aspectRatio"], 590 / 148, abs_tol=1e-12)
     assert board.presentation_asset_path == "assets/primary.png"
+    assert tuple(hold.id for hold in board.holds) == EXPECTED_HOLDS
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "sloper": 1}
     assert holds["top-rim"].kind == "sloper"
