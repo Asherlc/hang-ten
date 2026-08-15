@@ -52,10 +52,16 @@ def test_soill_iron_palm_2_preserves_audited_contacts_and_symmetry() -> None:
     assert board.manufacturer == "So iLL"
     assert board.name == "Iron Palm 2.0"
     assert board.facts["dimensions"] == "27 × 11.5 × 4 in"
-    assert math.isclose(board.facts["aspectRatio"], 27 / 11.5, abs_tol=1e-12)
     assert board.presentation_asset_path == "assets/primary.png"
     with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
         assert image.size == PRESENTATION_SIZE
+        image_aspect_ratio = image.width / image.height
+    assert math.isclose(
+        board.facts["aspectRatio"],
+        image_aspect_ratio,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    )
 
     assert len(board.holds) == 8
     assert sum(len(hold.geometry) for hold in board.holds) == 10
