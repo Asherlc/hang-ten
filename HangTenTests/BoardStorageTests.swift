@@ -164,6 +164,20 @@ final class BoardStorageTests: XCTestCase {
         })
     }
 
+    func testDirectHoldConversionRejectsEmptyGeometryByThrowing() throws {
+        let definition = try JSONDecoder().decode(
+            BoardHoldDefinition.self,
+            from: Data(#"{"id":"fixture.empty","name":"Empty","kind":"edge","geometry":[]}"#.utf8)
+        )
+
+        XCTAssertThrowsError(try definition.trainingBoardHold()) { error in
+            XCTAssertEqual(
+                String(describing: error),
+                "hold fixture.empty geometry must include at least one piece"
+            )
+        }
+    }
+
     func testBoardLibraryAcceptsEveryPhysicalHoldKindDuringDecoding() throws {
         let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
         XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)
