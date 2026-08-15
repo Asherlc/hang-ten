@@ -43,6 +43,81 @@ MIRRORED_PAIRS = (
     *((f"front-middle-{left}", f"front-middle-{5 - left}") for left in range(1, 3)),
     *((f"front-lower-{left}", f"front-lower-{7 - left}") for left in range(1, 4)),
 )
+EXPECTED_FINGER_CAPACITIES = {
+    "top-rim": None,
+    "front-upper-1": 4,
+    "front-upper-2": 2,
+    "front-upper-3": 4,
+    "front-upper-4": 4,
+    "front-upper-5": 2,
+    "front-upper-6": 4,
+    "front-middle-1": 4,
+    "front-middle-2": 4,
+    "front-middle-3": 4,
+    "front-middle-4": 4,
+    "front-lower-1": 4,
+    "front-lower-2": 2,
+    "front-lower-3": 4,
+    "front-lower-4": 4,
+    "front-lower-5": 2,
+    "front-lower-6": 4,
+}
+TOP_RIM_COMMAND_SIGNATURE = (
+    ("move", (0.035, 1.0), None, None, None),
+    ("curve", (0.0, 0.68), None, (0.012, 0.98), (0.0, 0.83)),
+    ("curve", (0.045, 0.0), None, (0.0, 0.38), (0.014, 0.13)),
+    ("line", (0.955, 0.0), None, None, None),
+    ("curve", (1.0, 0.68), None, (0.986, 0.13), (1.0, 0.38)),
+    ("curve", (0.965, 1.0), None, (1.0, 0.83), (0.988, 0.98)),
+    ("line", (0.035, 1.0), None, None, None),
+    ("close", None, None, None, None),
+)
+WIDE_POCKET_COMMAND_SIGNATURE = (
+    ("move", (0.14, 0.0), None, None, None),
+    ("line", (0.86, 0.0), None, None, None),
+    ("curve", (1.0, 0.5), None, (0.94, 0.0), (1.0, 0.22)),
+    ("curve", (0.86, 1.0), None, (1.0, 0.78), (0.94, 1.0)),
+    ("line", (0.14, 1.0), None, None, None),
+    ("curve", (0.0, 0.5), None, (0.06, 1.0), (0.0, 0.78)),
+    ("curve", (0.14, 0.0), None, (0.0, 0.22), (0.06, 0.0)),
+    ("close", None, None, None, None),
+)
+NARROW_POCKET_COMMAND_SIGNATURE = (
+    ("move", (0.3, 0.0), None, None, None),
+    ("line", (0.7, 0.0), None, None, None),
+    ("curve", (1.0, 0.5), None, (0.87, 0.0), (1.0, 0.22)),
+    ("curve", (0.7, 1.0), None, (1.0, 0.78), (0.87, 1.0)),
+    ("line", (0.3, 1.0), None, None, None),
+    ("curve", (0.0, 0.5), None, (0.13, 1.0), (0.0, 0.78)),
+    ("curve", (0.3, 0.0), None, (0.0, 0.22), (0.13, 0.0)),
+    ("close", None, None, None, None),
+)
+EXPECTED_PATH_SIGNATURES = {
+    "top-rim": TOP_RIM_COMMAND_SIGNATURE,
+    "front-upper-1": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-upper-2": NARROW_POCKET_COMMAND_SIGNATURE,
+    "front-upper-3": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-upper-4": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-upper-5": NARROW_POCKET_COMMAND_SIGNATURE,
+    "front-upper-6": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-middle-1": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-middle-2": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-middle-3": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-middle-4": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-lower-1": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-lower-2": NARROW_POCKET_COMMAND_SIGNATURE,
+    "front-lower-3": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-lower-4": WIDE_POCKET_COMMAND_SIGNATURE,
+    "front-lower-5": NARROW_POCKET_COMMAND_SIGNATURE,
+    "front-lower-6": WIDE_POCKET_COMMAND_SIGNATURE,
+}
+
+
+def command_signature(hold) -> tuple[tuple[object, ...], ...]:
+    return tuple(
+        (command.command, command.to, command.control, command.control1, command.control2)
+        for command in hold.geometry[0].shape.commands
+    )
 
 
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
@@ -52,6 +127,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
 
     with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as image:
         assert image.size == PRESENTATION_SIZE
+        image_aspect_ratio = image.width / image.height
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {
         "primary.png"
@@ -62,7 +138,12 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert board.facts["subtitle"] == "FSC-certified bamboo hangboard."
     assert board.facts["productURL"] == "https://www.dewoodstok.nl/product/hangboard-woodbord/"
     assert board.facts["dimensions"] == "590 × 148 × 40 mm"
-    assert math.isclose(board.facts["aspectRatio"], 590 / 148, abs_tol=1e-12)
+    assert math.isclose(
+        board.facts["aspectRatio"],
+        image_aspect_ratio,
+        rel_tol=0,
+        abs_tol=1e-12,
+    )
     assert board.presentation_asset_path == "assets/primary.png"
     assert tuple(hold.id for hold in board.holds) == EXPECTED_HOLDS
     assert tuple(holds) == EXPECTED_HOLDS
@@ -112,6 +193,12 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
 
     capacities = Counter(hold.finger_capacity for hold in holds.values())
     assert capacities == {4: 12, 2: 4, None: 1}
+    assert {
+        hold_id: hold.finger_capacity for hold_id, hold in holds.items()
+    } == EXPECTED_FINGER_CAPACITIES
+    assert {
+        hold_id: command_signature(hold) for hold_id, hold in holds.items()
+    } == EXPECTED_PATH_SIGNATURES
 
     raw_document = (PACKAGE_ROOT / "board.json").read_text(encoding="utf-8")
     for forbidden in (
