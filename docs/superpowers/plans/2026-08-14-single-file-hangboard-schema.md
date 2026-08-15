@@ -74,7 +74,7 @@
 - [ ] **Step 4: Preserve migration and final modes.**
   Keep a validator mode that ignores primary-only drafts during migration and add a final-inventory mode that rejects them. Maintain all symlink and traversal protections.
 - [ ] **Step 5: Verify GREEN, commit, and push.**
-  Re-run Python and Swift focused tests, commit as `refactor: discover hangboards by directory`, and run `git push origin HEAD`.
+  Re-run Python and Swift-focused tests, commit as `refactor: discover hangboards by directory`, and run `git push origin HEAD`.
 
 ### Task 3: Migrate the Compact II reference package
 
