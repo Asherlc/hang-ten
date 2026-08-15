@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "id": "yy.verticalboard-first",
+  "manufacturer": "YY Vertical",
+  "name": "VerticalBoard First",
+  "subtitle": "Ten-grip poplar hangboard with five edge depths, two sloper angles, two jugs, and a central handle.",
+  "productURL": "https://www.yyvertical.com/en/products/verticalboard-first",
+  "dimensions": "540 × 130 × 50 mm",
+  "aspectRatio": 4.153846153846154,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "edge-45",
+      "name": "45 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 45,
+      "geometry": [
+        {
+          "frame": {"x": 0.089, "y": 0.454, "width": 0.147, "height": 0.084},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        },
+        {
+          "frame": {"x": 0.764, "y": 0.454, "width": 0.147, "height": 0.084},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.96, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.82], "control2": [0.96, 1.0], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.65, 0.97], "control2": [0.35, 0.97], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.04, 1.0], "control2": [0.0, 0.82], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.04, 0.0], "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.35, 0.03], "control2": [0.65, 0.03], "to": [0.9, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        }
+      ]
+    },
+    {
+      "id": "edge-33",
+      "name": "33 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 33,
+      "geometry": [
+        {
+          "frame": {"x": 0.249, "y": 0.455, "width": 0.143, "height": 0.081},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        },
+        {
+          "frame": {"x": 0.608, "y": 0.455, "width": 0.143, "height": 0.081},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.96, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.82], "control2": [0.96, 1.0], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.65, 0.97], "control2": [0.35, 0.97], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.04, 1.0], "control2": [0.0, 0.82], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.04, 0.0], "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.35, 0.03], "control2": [0.65, 0.03], "to": [0.9, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        }
+      ]
+    },
+    {
+      "id": "edge-25",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 25,
+      "geometry": [
+        {
+          "frame": {"x": 0.09, "y": 0.345, "width": 0.145, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        },
+        {
+          "frame": {"x": 0.765, "y": 0.345, "width": 0.145, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.96, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.82], "control2": [0.96, 1.0], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.65, 0.97], "control2": [0.35, 0.97], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.04, 1.0], "control2": [0.0, 0.82], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.04, 0.0], "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.35, 0.03], "control2": [0.65, 0.03], "to": [0.9, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        }
+      ]
+    },
+    {
+      "id": "edge-22",
+      "name": "22 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 22,
+      "geometry": [
+        {
+          "frame": {"x": 0.285, "y": 0.596, "width": 0.14, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        },
+        {
+          "frame": {"x": 0.575, "y": 0.596, "width": 0.14, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.96, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.82], "control2": [0.96, 1.0], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.65, 0.97], "control2": [0.35, 0.97], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.04, 1.0], "control2": [0.0, 0.82], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.04, 0.0], "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.35, 0.03], "control2": [0.65, 0.03], "to": [0.9, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        }
+      ]
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {"x": 0.138, "y": 0.596, "width": 0.14, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        },
+        {
+          "frame": {"x": 0.722, "y": 0.596, "width": 0.14, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.96, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.82], "control2": [0.96, 1.0], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.65, 0.97], "control2": [0.35, 0.97], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.04, 1.0], "control2": [0.0, 0.82], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.04, 0.0], "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.35, 0.03], "control2": [0.65, 0.03], "to": [0.9, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        }
+      ]
+    },
+    {
+      "id": "center-handle",
+      "name": "40 / 24 mm center handle",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.43, "y": 0.455, "width": 0.14, "height": 0.082},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        },
+        {
+          "frame": {"x": 0.432, "y": 0.597, "width": 0.136, "height": 0.08},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.1, 0.0]},
+            {"command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.0, 0.82], "control2": [0.04, 1.0], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.35, 0.97], "control2": [0.65, 0.97], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.82], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.96, 0.0], "to": [0.9, 0.0]},
+            {"command": "curve", "control1": [0.65, 0.03], "control2": [0.35, 0.03], "to": [0.1, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "shallow"}
+        }
+      ]
+    },
+    {
+      "id": "sloper-35",
+      "name": "35° sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.251, "y": 0.311, "width": 0.143, "height": 0.104},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.08, 0.04]},
+            {"command": "curve", "control1": [0.03, 0.04], "control2": [0.0, 0.18], "to": [0.0, 0.42]},
+            {"command": "curve", "control1": [0.0, 0.7], "control2": [0.04, 0.92], "to": [0.14, 1.0]},
+            {"command": "curve", "control1": [0.38, 0.97], "control2": [0.62, 0.97], "to": [0.86, 1.0]},
+            {"command": "curve", "control1": [0.96, 0.92], "control2": [1.0, 0.7], "to": [1.0, 0.42]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.97, 0.04], "to": [0.92, 0.04]},
+            {"command": "curve", "control1": [0.64, 0.0], "control2": [0.36, 0.0], "to": [0.08, 0.04]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "surface"}
+        },
+        {
+          "frame": {"x": 0.606, "y": 0.311, "width": 0.143, "height": 0.104},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.92, 0.04]},
+            {"command": "curve", "control1": [0.97, 0.04], "control2": [1.0, 0.18], "to": [1.0, 0.42]},
+            {"command": "curve", "control1": [1.0, 0.7], "control2": [0.96, 0.92], "to": [0.86, 1.0]},
+            {"command": "curve", "control1": [0.62, 0.97], "control2": [0.38, 0.97], "to": [0.14, 1.0]},
+            {"command": "curve", "control1": [0.04, 0.92], "control2": [0.0, 0.7], "to": [0.0, 0.42]},
+            {"command": "curve", "control1": [0.0, 0.18], "control2": [0.03, 0.04], "to": [0.08, 0.04]},
+            {"command": "curve", "control1": [0.36, 0.0], "control2": [0.64, 0.0], "to": [0.92, 0.04]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "sloper-20",
+      "name": "20° sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.394, "y": 0.312, "width": 0.212, "height": 0.052},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.05, 0.04]},
+            {"command": "curve", "control1": [0.02, 0.04], "control2": [0.0, 0.18], "to": [0.0, 0.4]},
+            {"command": "curve", "control1": [0.0, 0.7], "control2": [0.03, 0.94], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.36, 0.96], "control2": [0.64, 0.96], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.97, 0.94], "control2": [1.0, 0.7], "to": [1.0, 0.4]},
+            {"command": "curve", "control1": [1.0, 0.18], "control2": [0.98, 0.04], "to": [0.95, 0.04]},
+            {"command": "curve", "control1": [0.65, 0.0], "control2": [0.35, 0.0], "to": [0.05, 0.04]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "jug-left",
+      "name": "Left jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {"x": 0.073, "y": 0.291, "width": 0.177, "height": 0.051},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.12, 0.0]},
+            {"command": "curve", "control1": [0.05, 0.0], "control2": [0.0, 0.16], "to": [0.0, 0.4]},
+            {"command": "curve", "control1": [0.0, 0.72], "control2": [0.04, 0.94], "to": [0.14, 1.0]},
+            {"command": "curve", "control1": [0.4, 0.94], "control2": [0.68, 0.94], "to": [0.9, 1.0]},
+            {"command": "curve", "control1": [0.98, 0.9], "control2": [1.0, 0.7], "to": [1.0, 0.48]},
+            {"command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.04], "to": [0.88, 0.02]},
+            {"command": "curve", "control1": [0.6, 0.0], "control2": [0.34, 0.0], "to": [0.12, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "jug-right",
+      "name": "Right jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {"x": 0.75, "y": 0.291, "width": 0.177, "height": 0.051},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.88, 0.0]},
+            {"command": "curve", "control1": [0.95, 0.0], "control2": [1.0, 0.16], "to": [1.0, 0.4]},
+            {"command": "curve", "control1": [1.0, 0.72], "control2": [0.96, 0.94], "to": [0.86, 1.0]},
+            {"command": "curve", "control1": [0.6, 0.94], "control2": [0.32, 0.94], "to": [0.1, 1.0]},
+            {"command": "curve", "control1": [0.02, 0.9], "control2": [0.0, 0.7], "to": [0.0, 0.48]},
+            {"command": "curve", "control1": [0.0, 0.2], "control2": [0.04, 0.04], "to": [0.12, 0.02]},
+            {"command": "curve", "control1": [0.4, 0.0], "control2": [0.66, 0.0], "to": [0.88, 0.0]},
+            {"command": "close"}
+          ]},
+          "treatment": {"type": "surface"}
+        }
+      ]
+    }
+  ]
+}
