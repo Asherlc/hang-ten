@@ -39,8 +39,8 @@ class NormalizedFrame:
             or numbers["y"] < 0
             or numbers["width"] <= 0
             or numbers["height"] <= 0
-            or numbers["x"] + numbers["width"] > 1 + _EPSILON
-            or numbers["y"] + numbers["height"] > 1 + _EPSILON
+            or numbers["x"] + numbers["width"] > 1
+            or numbers["y"] + numbers["height"] > 1
         ):
             raise GeometryError(f"{label} must stay inside the normalized canvas")
         return cls(**numbers)
