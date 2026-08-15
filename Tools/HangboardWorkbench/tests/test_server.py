@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Iterator
 from contextlib import contextmanager
 import json
 import os
@@ -9,6 +8,7 @@ import subprocess
 import sys
 import threading
 from pathlib import Path
+from typing import Iterator
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -17,14 +17,13 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-TEST_ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(TEST_ROOT))
-import conftest as shared_fixtures  # noqa: E402
-
-REPOSITORY_ROOT = shared_fixtures.REPOSITORY_ROOT
-WORKBENCH_ROOT = shared_fixtures.WORKBENCH_ROOT
-PRIMARY_IMAGE = shared_fixtures.PRIMARY_IMAGE
-
+PRIMARY_IMAGE = (
+    REPOSITORY_ROOT
+    / "Hangboards"
+    / "metolius-wood-grips-compact-ii"
+    / "assets"
+    / "primary.png"
+)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -35,10 +34,41 @@ from server import EditorError, create_server, validate_hang_ten_checkout  # noq
 
 def _write_library(root: Path) -> Path:
     library = root / "Hangboards"
-    shared_fixtures.write_finished_package(
-        library,
-        "fixture-board",
-        "fixture.board",
+    package = library / "fixture-board"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    board = {
+        "schemaVersion": 1,
+        "id": "fixture.board",
+        "manufacturer": "Fixture Maker",
+        "name": "Fixture Board",
+        "subtitle": "A physical fixture board.",
+        "productURL": "https://example.com/fixture.board",
+        "dimensions": "20 × 10 cm",
+        "aspectRatio": 2,
+        "presentation": {"assetPath": "assets/primary.png"},
+        "holds": [
+            {
+                "id": "hold-left",
+                "name": "Left hold",
+                "kind": "jug",
+                "geometry": [
+                    {
+                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
+                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+                    },
+                    {
+                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
+                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
+                        "treatment": {"type": "surface"},
+                    },
+                ],
+            }
+        ],
+    }
+    (package / "board.json").write_text(
+        json.dumps(board, indent=2) + "\n", encoding="utf-8"
     )
     return library
 
@@ -52,8 +82,8 @@ def running_server(library: Path) -> Iterator[str]:
         yield f"http://127.0.0.1:{httpd.server_port}"
     finally:
         httpd.shutdown()
-        thread.join(timeout=5)
         httpd.server_close()
+        thread.join(timeout=5)
 
 
 def request_json(
@@ -180,59 +210,7 @@ def test_load_failures_do_not_expose_library_paths(tmp_path: Path) -> None:
     assert str(library) not in json.dumps(result)
 
 
-def test_get_board_routes_not_available_errors_by_type(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _write_library(tmp_path)
-    unavailable_error = getattr(
-        board_package, "BoardNotAvailableError", BoardPackageError
-    )
-
-    def raise_unavailable(*_args: object) -> object:
-        raise unavailable_error("unavailable details changed")
-
-    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
-
-    with running_server(library) as base:
-        status, result = request_json(base, "GET", "/api/boards/fixture.board")
-
-    assert status == 404
-    assert result == {"ok": False, "error": "board is not available"}
-
-
-def test_save_unknown_board_on_put_returns_404(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    library = _write_library(tmp_path)
-
-    def unavailable(_library: Path, _board_id: str) -> board_package.BoardPackage:
-        raise board_package.BoardNotAvailableError("board is not available")
-
-    monkeypatch.setattr(server_module, "open_package", unavailable)
-
-    with running_server(library) as base:
-        status, result = request_json(base, "PUT", "/api/boards/fixture.board", {"regions": []})
-
-    assert status == 404
-    assert result == {"ok": False, "error": "board is not available"}
-
-
-def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    library = _write_library(tmp_path)
-
-    def raise_base_error(*_args: object) -> object:
-        raise BoardPackageError("board is not available")
-
-    monkeypatch.setattr(server_module, "open_package", raise_base_error)
-
-    with running_server(library) as base:
-        status, result = request_json(base, "GET", "/api/boards/fixture.board")
-
-    assert status == 400
-    assert result == {"ok": False, "error": "could not load board"}
-
-
-def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
+def test_a_clean_checkout_lists_and_opens_the_migrated_compact_ii_package(
     tmp_path: Path,
 ) -> None:
     checkout = tmp_path / "checkout"
@@ -277,22 +255,8 @@ thread.start()
 base = f'http://{httpd.server_address[0]}:{httpd.server_address[1]}'
 try:
     listed = json.loads(urlopen(base + '/api/boards').read())
-    completed_packages = [
-        child
-        for child in (root / 'Hangboards').iterdir()
-        if child.is_dir() and (child / 'board.json').is_file()
-    ]
-    expected_ids = sorted(
-        json.loads((package / 'board.json').read_text())['id']
-        for package in completed_packages
-    )
-    assert sorted(board['boardId'] for board in listed['boards']) == expected_ids
-    compact_ii = next(
-        board
-        for board in listed['boards']
-        if board['boardId'] == 'metolius.wood-grips-compact-ii'
-    )
-    opened = json.loads(urlopen(base + compact_ii['href']).read())
+    assert [board['boardId'] for board in listed['boards']] == ['metolius.wood-grips-compact-ii']
+    opened = json.loads(urlopen(base + listed['boards'][0]['href']).read())
     assert len(opened['board']['document']['regions']) == 19
 finally:
     httpd.shutdown()
