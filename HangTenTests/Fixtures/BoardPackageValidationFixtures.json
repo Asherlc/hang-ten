@@ -4,6 +4,23 @@
     "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB",
     "duplicatePaletteBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUAAACnej3aAAAAA1BMVEX///+nxBvIAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg=="
   },
+  "ordering": {
+    "packages": [
+      {
+        "slug": "strasse-board",
+        "id": "strasse.board",
+        "manufacturer": "Straße",
+        "name": "Model"
+      },
+      {
+        "slug": "strasze-board",
+        "id": "strasze.board",
+        "manufacturer": "Strasze",
+        "name": "Model"
+      }
+    ],
+    "expectedBoardIDs": ["strasze.board", "strasse.board"]
+  },
   "outOfBoundsFrames": [
     {
       "name": "fractional-overflow",

@@ -97,6 +97,12 @@ def _indexed_png_with_palette_after_idat() -> bytes:
     )
 
 
+def _png_with_corrupt_post_ihdr_data() -> bytes:
+    data = bytearray(PRIMARY_IMAGE.read_bytes())
+    data[-1] ^= 0xFF
+    return bytes(data)
+
+
 def _write_finished_package(
     library: Path,
     slug: str,
@@ -229,6 +235,23 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     assert not (library / "catalog.json").exists()
 
 
+def test_discovery_uses_the_shared_non_ascii_ordering_contract(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    ordering = VALIDATION_FIXTURES["ordering"]
+    for package in ordering["packages"]:
+        _write_finished_package(
+            library,
+            package["slug"],
+            package["id"],
+            manufacturer=package["manufacturer"],
+            name=package["name"],
+        )
+
+    packages = board_package.discover_packages(library)
+
+    assert [package.board_id for package in packages] == ordering["expectedBoardIDs"]
+
+
 def test_discovery_excludes_the_exact_internal_recovery_directory(
     tmp_path: Path,
 ) -> None:
@@ -253,6 +276,67 @@ def test_discovery_does_not_broaden_the_recovery_directory_exclusion(
     library = _library(tmp_path)
     _write_finished_package(library, "current-board", "current.board")
     (library / ".workbench-recovery-old").mkdir()
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+def test_discovery_open_and_noop_save_ignore_abandoned_staging_directories(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    staging_directories = [
+        library / ".workbench-edit-abandoned",
+        library / ".workbench-save-abandoned",
+    ]
+    for staging in staging_directories:
+        (staging / "partial-package").mkdir(parents=True)
+        (staging / "partial-package" / "board.json").write_text(
+            "{ incomplete", encoding="utf-8"
+        )
+
+    packages = board_package.discover_packages(library)
+    package = board_package.open_package(library, "fixture.board")
+    saved = board_package.save_editor_document(
+        library,
+        "fixture-board",
+        board_package.editor_document(package),
+    )
+
+    assert [candidate.board_id for candidate in packages] == ["fixture.board"]
+    assert saved.board_id == "fixture.board"
+    assert all(staging.is_dir() for staging in staging_directories)
+
+
+@pytest.mark.parametrize(
+    "lookalike", [".workbench-edit", ".workbench-editor-abandoned", ".workbench-saved"]
+)
+def test_discovery_does_not_broaden_the_staging_directory_exclusion(
+    lookalike: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    (library / lookalike).mkdir()
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize("prefix", [".workbench-edit-", ".workbench-save-"])
+@pytest.mark.parametrize("unsafe_kind", ["file", "symlink"])
+def test_discovery_rejects_unsafe_reserved_staging_paths(
+    prefix: str, unsafe_kind: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    staging = library / f"{prefix}abandoned"
+    if unsafe_kind == "file":
+        staging.write_text("unsafe", encoding="utf-8")
+    else:
+        outside = tmp_path / f"outside-{prefix.removeprefix('.')}"
+        outside.mkdir()
+        staging.symlink_to(outside, target_is_directory=True)
 
     with pytest.raises(BoardPackageError):
         board_package.discover_packages(library)
@@ -323,6 +407,36 @@ def test_rejects_shared_indexed_png_with_duplicate_palette(
 
     with pytest.raises(BoardPackageError, match="PNG"):
         board_package.load_board_package(package)
+
+
+def test_open_ignores_corrupt_post_ihdr_data_in_an_unselected_sibling(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "selected-board", "selected.board")
+    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
+    (corrupt / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    package = board_package.open_package(library, "selected.board")
+
+    assert package.board_id == "selected.board"
+
+
+def test_open_and_direct_load_reject_selected_corrupt_post_ihdr_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
+    (corrupt / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.open_package(library, "corrupt.board")
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.load_board_package(corrupt)
 
 
 def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
@@ -535,15 +649,21 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
 
 
 def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     library = _library(tmp_path)
     package = board_package.load_board_package(
         _write_finished_package(library, "fixture-board", "fixture.board")
     )
+    monkeypatch.setattr(
+        board_package,
+        "_png_dimensions",
+        lambda _path: pytest.fail("editor_document repeated complete PNG validation"),
+    )
 
     document = board_package.editor_document(package)
 
+    assert document["canvas"] == {"width": 1774, "height": 457}
     assert [region["key"] for region in document["regions"]] == [
         "hold-left-piece-0",
         "hold-left-piece-1",
