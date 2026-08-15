@@ -31,81 +31,8 @@ struct BoardLibraryMetadata: Codable, Hashable {
 
 struct BoardHoldPieceDocument: Codable, Hashable {
     let frame: BoardPackageFrameDocument
-    let shape: BoardGeometryShapeDocument
-    let treatment: BoardGeometryTreatmentDocument?
-}
-
-enum BoardHoldFrameComponent: CaseIterable, Hashable {
-    case x
-    case y
-    case width
-    case height
-}
-
-struct BoardHoldPieceValidationResult {
-    let invalidFrameComponents: Set<BoardHoldFrameComponent>
-    let conversionFailureReason: String?
-    let usesDeclaredFrame: Bool
-
-    var packageFailureReason: String? {
-        if !invalidFrameComponents.isEmpty {
-            return "has an invalid frame"
-        }
-        if let conversionFailureReason {
-            return "is invalid: \(conversionFailureReason)"
-        }
-        if !usesDeclaredFrame {
-            return "frame must match its shape bounds"
-        }
-        return nil
-    }
-}
-
-struct BoardHoldGeometryValidationResult {
-    let isEmpty: Bool
-    let pieces: [BoardHoldPieceValidationResult]
-}
-
-enum BoardHoldGeometryValidator {
-    static func validate(
-        _ geometry: [BoardHoldPieceDocument],
-        holdID: String,
-        pieceID: (Int) -> String
-    ) -> BoardHoldGeometryValidationResult {
-        BoardHoldGeometryValidationResult(
-            isEmpty: geometry.isEmpty,
-            pieces: geometry.enumerated().map { index, piece in
-                var invalidFrameComponents = Set<BoardHoldFrameComponent>()
-                let frame = piece.frame
-                if !frame.x.isFinite || !(0...1).contains(frame.x) {
-                    invalidFrameComponents.insert(.x)
-                }
-                if !frame.y.isFinite || !(0...1).contains(frame.y) {
-                    invalidFrameComponents.insert(.y)
-                }
-                if !frame.width.isFinite || frame.width <= 0 || frame.x + frame.width > 1 {
-                    invalidFrameComponents.insert(.width)
-                }
-                if !frame.height.isFinite || frame.height <= 0 || frame.y + frame.height > 1 {
-                    invalidFrameComponents.insert(.height)
-                }
-
-                let conversionFailureReason: String?
-                do {
-                    _ = try piece.boardHoldPiece(id: pieceID(index), holdID: holdID)
-                    conversionFailureReason = nil
-                } catch {
-                    conversionFailureReason = String(describing: error)
-                }
-
-                return BoardHoldPieceValidationResult(
-                    invalidFrameComponents: invalidFrameComponents,
-                    conversionFailureReason: conversionFailureReason,
-                    usesDeclaredFrame: piece.shape.usesDeclaredFrame
-                )
-            }
-        )
-    }
+    let shape: BoardArtworkShapeDocument
+    let treatment: BoardArtworkTreatmentDocument?
 }
 
 struct BoardHoldDefinition: Codable, Hashable {
@@ -156,7 +83,7 @@ struct BoardHoldDefinition: Codable, Hashable {
             geometry = [
                 BoardHoldPieceDocument(
                     frame: frame,
-                    shape: BoardGeometryShapeDocument(
+                    shape: BoardArtworkShapeDocument(
                         type: "roundedRect",
                         commands: nil,
                         cornerRadiusFraction: 0
@@ -190,11 +117,6 @@ struct BoardHoldDefinition: Codable, Hashable {
     }
 
     func trainingBoardHold() throws -> BoardHold {
-        guard !geometry.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
-        }
         let pieces = try geometry.enumerated().map { index, document in
             try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
         }
@@ -438,12 +360,7 @@ enum BoardLibraryValidator {
         validateNonEmpty(hold.id, path: "\(path).id", label: "Hold ID", issues: &issues)
         validateNonEmpty(hold.name, path: "\(path).name", label: "Hold name", issues: &issues)
 
-        let geometryValidation = BoardHoldGeometryValidator.validate(
-            hold.geometry,
-            holdID: hold.id,
-            pieceID: { _ in "validation-piece" }
-        )
-        if geometryValidation.isEmpty {
+        if hold.geometry.isEmpty {
             issues.append(
                 BoardLibraryValidationIssue(
                     path: "\(path).geometry",
@@ -452,33 +369,28 @@ enum BoardLibraryValidator {
             )
         }
 
-        for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
+        for (pieceIndex, piece) in hold.geometry.enumerated() {
             let piecePath = "\(path).geometry[\(pieceIndex)]"
-            if pieceValidation.invalidFrameComponents.contains(.x) {
+            let frame = piece.frame
+            if !frame.x.isFinite || !(0...1).contains(frame.x) {
                 issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.x", message: "Frame x must be between 0 and 1."))
             }
-            if pieceValidation.invalidFrameComponents.contains(.y) {
+            if !frame.y.isFinite || !(0...1).contains(frame.y) {
                 issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.y", message: "Frame y must be between 0 and 1."))
             }
-            if pieceValidation.invalidFrameComponents.contains(.width) {
+            if !frame.width.isFinite || frame.width <= 0 || frame.x + frame.width > 1 {
                 issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.width", message: "Frame width must fit within normalized bounds."))
             }
-            if pieceValidation.invalidFrameComponents.contains(.height) {
+            if !frame.height.isFinite || frame.height <= 0 || frame.y + frame.height > 1 {
                 issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.height", message: "Frame height must fit within normalized bounds."))
             }
-            if let conversionFailureReason = pieceValidation.conversionFailureReason {
+            do {
+                _ = try piece.boardHoldPiece(id: "validation-piece", holdID: hold.id)
+            } catch {
                 issues.append(
                     BoardLibraryValidationIssue(
                         path: piecePath,
-                        message: "Invalid hold geometry: \(conversionFailureReason)"
-                    )
-                )
-            }
-            if !pieceValidation.usesDeclaredFrame {
-                issues.append(
-                    BoardLibraryValidationIssue(
-                        path: piecePath,
-                        message: "Hold geometry frame must match its shape bounds."
+                        message: "Invalid hold geometry: \(error)"
                     )
                 )
             }
