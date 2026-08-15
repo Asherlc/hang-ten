@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections import Counter
-from itertools import combinations
 import json
 import math
 from pathlib import Path
@@ -62,18 +61,6 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", header[16:24])
 
 
-def _contains(contour: tuple[tuple[float, float], ...], x: float, y: float) -> bool:
-    inside = False
-    for first, second in zip(contour, contour[1:]):
-        first_x, first_y = first
-        second_x, second_y = second
-        if (first_y > y) != (second_y > y):
-            crossing = (second_x - first_x) * (y - first_y) / (second_y - first_y) + first_x
-            if x < crossing:
-                inside = not inside
-    return inside
-
-
 def _filled_pixels(
     contour: tuple[tuple[float, float], ...], width: int, height: int
 ) -> set[int]:
@@ -81,12 +68,22 @@ def _filled_pixels(
     maximum_x = min(width - 1, math.ceil(max(point[0] for point in contour)) - 1)
     minimum_y = max(0, math.floor(min(point[1] for point in contour)))
     maximum_y = min(height - 1, math.ceil(max(point[1] for point in contour)) - 1)
-    return {
-        y * width + x
-        for y in range(minimum_y, maximum_y + 1)
-        for x in range(minimum_x, maximum_x + 1)
-        if _contains(contour, x + 0.5, y + 0.5)
-    }
+    segments = tuple(zip(contour, contour[1:]))
+    pixels: set[int] = set()
+    for y in range(minimum_y, maximum_y + 1):
+        center_y = y + 0.5
+        crossings = sorted(
+            (second_x - first_x) * (center_y - first_y) / (second_y - first_y) + first_x
+            for (first_x, first_y), (second_x, second_y) in segments
+            if (first_y > center_y) != (second_y > center_y)
+        )
+        assert len(crossings) % 2 == 0
+        row = y * width
+        for left, right in zip(crossings[0::2], crossings[1::2], strict=True):
+            first_x = max(minimum_x, math.ceil(left - 0.5))
+            end_x = min(maximum_x + 1, math.ceil(right - 0.5))
+            pixels.update(range(row + first_x, row + end_x))
+    return pixels
 
 
 def test_trango_rock_prodigy_pivot_preserves_numbered_physical_inventory() -> None:
