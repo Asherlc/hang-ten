@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 import json
 import os
@@ -8,7 +9,6 @@ import subprocess
 import sys
 import threading
 from pathlib import Path
-from typing import Iterator
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
