@@ -5,7 +5,9 @@ import importlib.util
 import json
 import os
 import shutil
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 import pytest
@@ -71,6 +73,27 @@ def _board_document(
 
 def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
+    return (
+        struct.pack(">I", len(payload))
+        + chunk_type
+        + payload
+        + struct.pack(">I", zlib.crc32(chunk_type + payload) & 0xFFFFFFFF)
+    )
+
+
+def _indexed_png_with_palette_after_idat() -> bytes:
+    return b"".join(
+        (
+            b"\x89PNG\r\n\x1a\n",
+            _png_chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 3, 0, 0, 0)),
+            _png_chunk(b"IDAT", zlib.compress(b"\x00\x00")),
+            _png_chunk(b"PLTE", b"\x00\x00\x00"),
+            _png_chunk(b"IEND", b""),
+        )
+    )
 
 
 def _write_finished_package(
@@ -218,6 +241,20 @@ def test_rejects_a_plausible_png_header_without_complete_image_data(
     assert truncated[:8] == b"\x89PNG\r\n\x1a\n"
     assert truncated[12:16] == b"IHDR"
     (package / "assets" / "primary.png").write_bytes(truncated)
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.load_board_package(package)
+
+
+def test_rejects_an_indexed_png_with_palette_after_image_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    invalid_png = _indexed_png_with_palette_after_idat()
+    assert invalid_png.index(b"IDAT") < invalid_png.index(b"PLTE")
+    (package / "assets" / "primary.png").write_bytes(invalid_png)
+    _mutate_board(package, lambda board: board.update(aspectRatio=1))
 
     with pytest.raises(BoardPackageError, match="PNG"):
         board_package.load_board_package(package)
