@@ -1,8 +1,15 @@
 {
   "png": {
     "validTwoByOneBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGNgYGD4//8/AAYBAv4CsjmuAAAAAElFTkSuQmCC",
-    "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB"
+    "plausibleHeaderTruncatedBase64": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAAB",
+    "duplicatePaletteBase64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEUAAACnej3aAAAAA1BMVEX///+nxBvIAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg=="
   },
+  "outOfBoundsFrames": [
+    {
+      "name": "fractional-overflow",
+      "frame": {"x": 0.9, "y": 0.1, "width": 0.1000000005, "height": 0.2}
+    }
+  ],
   "malformedPathShapes": [
     {
       "name": "zero-area",
