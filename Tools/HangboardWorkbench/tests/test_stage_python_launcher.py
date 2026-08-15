@@ -14,6 +14,13 @@ def _fake_python(path: Path, version: str, supported: bool) -> None:
     path.write_text(
         "#!/bin/sh\n"
         "if [ \"${1:-}\" = '-c' ]; then\n"
+        "  case \"${2:-}\" in\n"
+        "    *hangten-python*)\n"
+        f"      [ {0 if supported else 1} -eq 0 ] || exit 1\n"
+        f"      printf '%s\\n' 'hangten-python:cpython:{version.replace('.', ':')}'\n"
+        "      exit 0\n"
+        "      ;;\n"
+        "  esac\n"
         f"  exit {0 if supported else 1}\n"
         "fi\n"
         f"printf '%s|%s\\n' '{version}' \"$*\" > \"$FAKE_PYTHON_LOG\"\n",
@@ -44,6 +51,63 @@ def test_stage_launcher_uses_the_first_supported_versioned_python(tmp_path: Path
 
     assert result.returncode == 0, result.stderr
     assert execution_log.read_text(encoding="utf-8") == "3.11|stage.py --repository-root /tmp/repository\n"
+
+
+def test_stage_launcher_uses_a_valid_explicit_python_override(tmp_path: Path) -> None:
+    execution_log = tmp_path / "execution.log"
+    override = tmp_path / "python3.12"
+    _fake_python(override, "3.12", True)
+
+    result = subprocess.run(
+        [str(LAUNCHER), "stage.py", "--repository-root", "/tmp/repository"],
+        env={
+            **os.environ,
+            "HANGTEN_PYTHON": str(override),
+            "FAKE_PYTHON_LOG": str(execution_log),
+        },
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert execution_log.read_text(encoding="utf-8") == "3.12|stage.py --repository-root /tmp/repository\n"
+
+
+def test_stage_launcher_rejects_an_explicit_python_37_override(tmp_path: Path) -> None:
+    execution_log = tmp_path / "execution.log"
+    override = tmp_path / "python3.7"
+    _fake_python(override, "3.7", True)
+
+    result = subprocess.run(
+        [str(LAUNCHER), "stage.py", "--repository-root", "/tmp/repository"],
+        env={
+            **os.environ,
+            "HANGTEN_PYTHON": str(override),
+            "FAKE_PYTHON_LOG": str(execution_log),
+        },
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert "HANGTEN_PYTHON must name a Python 3.10 or newer interpreter." in result.stderr
+    assert not execution_log.exists()
+
+
+def test_stage_launcher_rejects_a_non_python_explicit_override(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [str(LAUNCHER), "stage.py", "--repository-root", "/tmp/repository"],
+        env={**os.environ, "HANGTEN_PYTHON": "/bin/echo"},
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert "HANGTEN_PYTHON must name a Python 3.10 or newer interpreter." in result.stderr
+    assert "stage.py --repository-root /tmp/repository" not in result.stdout
 
 
 def test_stage_launcher_explains_when_no_supported_python_is_available(tmp_path: Path) -> None:
