@@ -2,6 +2,25 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testBoardMappingReportsOnlyHoldIDsMissingFromBoard() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.wood-grips-compact-ii" }
+        )
+        let mapping = BoardMappingDefinition(
+            boardID: board.id,
+            semanticHolds: [
+                "fixture-target": SemanticHoldMappingDefinition(
+                    holdIDs: ["edge-19-left", "fixture.missing"]
+                )
+            ]
+        )
+
+        XCTAssertEqual(
+            mapping.unknownHoldIDs(on: board),
+            Set(["fixture.missing"])
+        )
+    }
+
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(
