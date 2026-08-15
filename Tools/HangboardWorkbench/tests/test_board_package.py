@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import errno
 import importlib.util
 import json
 import os
@@ -226,6 +227,53 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
         "zeta.board",
     ]
     assert not (library / "catalog.json").exists()
+
+
+def test_discovery_excludes_the_exact_internal_recovery_directory(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "current-board", "current.board")
+    recovery = library / ".workbench-recovery"
+    recovery.mkdir()
+    _write_finished_package(
+        recovery,
+        "current-board-previous-0123456789abcdef0123456789abcdef",
+        "previous.board",
+    )
+
+    packages = board_package.discover_packages(library)
+
+    assert [package.board_id for package in packages] == ["current.board"]
+
+
+def test_discovery_does_not_broaden_the_recovery_directory_exclusion(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "current-board", "current.board")
+    (library / ".workbench-recovery-old").mkdir()
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize("unsafe_kind", ["file", "symlink"])
+def test_discovery_rejects_an_unsafe_reserved_recovery_path(
+    unsafe_kind: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "current-board", "current.board")
+    recovery = library / ".workbench-recovery"
+    if unsafe_kind == "file":
+        recovery.write_text("unsafe", encoding="utf-8")
+    else:
+        outside = tmp_path / "outside-recovery"
+        outside.mkdir()
+        recovery.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
 
 
 def test_rejects_a_plausible_png_header_without_complete_image_data(
@@ -622,7 +670,49 @@ def test_replace_rolls_back_the_live_package_when_installation_fails(
 
     assert failed
     assert _package_snapshot(live) == before
+    assert not (library / ".workbench-recovery").exists()
     assert not (library / "catalog.json").exists()
+
+
+def test_replace_keeps_the_backup_inside_a_library_mount_boundary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    live = _write_finished_package(library, "fixture-board", "fixture.board")
+    candidate_library = tmp_path / "candidates"
+    candidate_library.mkdir()
+    candidate = _write_finished_package(
+        candidate_library,
+        "fixture-board",
+        "fixture.board",
+        name="Edited Fixture Board",
+    )
+    real_replace = os.replace
+    backup_destinations: list[Path] = []
+
+    def reject_cross_mount_replace(source, destination):
+        source_path = Path(source)
+        destination_path = Path(destination)
+        source_is_below_library = source_path == library or library in source_path.parents
+        destination_is_below_library = (
+            destination_path == library or library in destination_path.parents
+        )
+        if source_path == live:
+            backup_destinations.append(destination_path)
+        if source_is_below_library != destination_is_below_library:
+            raise OSError(errno.EXDEV, "injected cross-device package replacement")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(board_package.os, "replace", reject_cross_mount_replace)
+
+    board_package.replace_package(library, "fixture-board", candidate)
+
+    assert len(backup_destinations) == 1
+    assert backup_destinations[0].parent == library / ".workbench-recovery"
+    assert board_package.open_package(library, "fixture.board").board["name"] == (
+        "Edited Fixture Board"
+    )
+    assert not (library / ".workbench-recovery").exists()
 
 
 def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
@@ -652,9 +742,10 @@ def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
         ):
             failures.append("install")
             raise OSError("injected package installation failure")
-        if destination_path == live and (
-            source_path.name.startswith(".workbench-previous-")
-            or source_path.name.startswith(".Hangboards.workbench-previous-")
+        if (
+            destination_path == live
+            and source_path.parent == library / ".workbench-recovery"
+            and source_path.name.startswith("fixture-board-previous-")
         ):
             failures.append("restore")
             raise OSError("injected package restoration failure")
@@ -665,11 +756,13 @@ def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
     with pytest.raises(BoardPackageError, match="could not restore"):
         board_package.replace_package(library, "fixture-board", candidate)
 
-    backups = sorted(library.parent.glob(".Hangboards.workbench-previous-*"))
+    recovery = library / ".workbench-recovery"
+    backups = sorted(recovery.glob("fixture-board-previous-*"))
     assert failures == ["install", "restore"]
     assert not live.exists()
     assert len(backups) == 1
     assert _package_snapshot(backups[0]) == before
+    assert board_package.discover_packages(library) == ()
     assert not any(path.name.startswith(".workbench-save-") for path in library.iterdir())
 
 
@@ -689,12 +782,12 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     before = _package_snapshot(live)
     real_rmtree = shutil.rmtree
     cleanup_failures: list[Path] = []
+    recovery = library / ".workbench-recovery"
 
     def fail_backup_cleanup(path, *args, **kwargs):
         cleanup_path = Path(path)
-        if (
-            cleanup_path.name.startswith(".workbench-previous-")
-            or cleanup_path.name.startswith(".Hangboards.workbench-previous-")
+        if cleanup_path.parent == recovery and cleanup_path.name.startswith(
+            "fixture-board-previous-"
         ):
             cleanup_failures.append(cleanup_path)
             raise OSError("injected backup cleanup failure")
@@ -703,17 +796,28 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     monkeypatch.setattr(board_package.shutil, "rmtree", fail_backup_cleanup)
 
     board_package.replace_package(library, "fixture-board", candidate)
+    first_commit = _package_snapshot(live)
+    _mutate_board(
+        candidate,
+        lambda board: board.update(name="Edited Fixture Board Again"),
+    )
+    board_package.replace_package(library, "fixture-board", candidate)
 
-    backups = sorted(library.parent.glob(".Hangboards.workbench-previous-*"))
-    assert cleanup_failures == backups
+    backups = sorted(recovery.glob("fixture-board-previous-*"))
+    assert set(cleanup_failures) == set(backups)
     assert board_package.open_package(library, "fixture.board").board["name"] == (
-        "Edited Fixture Board"
+        "Edited Fixture Board Again"
     )
-    assert len(backups) == 1
-    assert _package_snapshot(backups[0]) == before
-    assert not any(
-        path.name.startswith(".workbench-previous-") for path in library.iterdir()
-    )
+    assert len(backups) == 2
+    assert len({backup.name for backup in backups}) == 2
+    assert {_package_snapshot(backup)["board.json"] for backup in backups} == {
+        before["board.json"],
+        first_commit["board.json"],
+    }
+    assert [package.board_id for package in board_package.discover_packages(library)] == [
+        "fixture.board"
+    ]
+    assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
 def test_staging_copies_only_complete_direct_children_without_a_registry(
