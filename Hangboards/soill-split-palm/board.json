@@ -6,7 +6,7 @@
   "subtitle": "Two-piece urethane hangboard.",
   "productURL": "https://soillholds.com/products/split-palm",
   "dimensions": "Each piece: 16.5 × 11 × 3 7/8 in",
-  "aspectRatio": 3.0,
+  "aspectRatio": 1.0,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
@@ -22,12 +22,12 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.02, 0.28]},
-              {"command": "curve", "control1": [0.02, 0.15], "control2": [0.08, 0.08], "to": [0.18, 0.08]},
+              {"command": "curve", "control1": [0.026183469424, 0.150147142096], "control2": [0.080772212329, 0.092403473459], "to": [0.18, 0.08]},
               {"command": "curve", "control1": [0.42, 0.05], "control2": [0.72, 0], "to": [0.86, 0.12]},
-              {"command": "curve", "control1": [0.96, 0.2], "control2": [1, 0.36], "to": [0.98, 0.55]},
-              {"command": "curve", "control1": [0.96, 0.72], "control2": [0.91, 0.84], "to": [0.84, 0.89]},
+              {"command": "curve", "control1": [0.957232287061, 0.203341960338], "control2": [1, 0.36], "to": [0.98, 0.55]},
+              {"command": "curve", "control1": [0.962080851292, 0.720231912724], "control2": [0.920108532936, 0.921346817236], "to": [0.84, 0.89]},
               {"command": "curve", "control1": [0.61, 0.8], "control2": [0.32, 0.98], "to": [0.09, 0.96]},
-              {"command": "curve", "control1": [0.03, 0.91], "control2": [0, 0.7], "to": [0.02, 0.28]},
+              {"command": "curve", "control1": [0.012191122689, 0.953234010669], "control2": [0, 0.7], "to": [0.02, 0.28]},
               {"command": "close"}
             ]
           },
@@ -46,12 +46,12 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.98, 0.28]},
-              {"command": "curve", "control1": [0.98, 0.15], "control2": [0.92, 0.08], "to": [0.82, 0.08]},
+              {"command": "curve", "control1": [0.973816530576, 0.150147142096], "control2": [0.919227787671, 0.092403473459], "to": [0.82, 0.08]},
               {"command": "curve", "control1": [0.58, 0.05], "control2": [0.28, 0], "to": [0.14, 0.12]},
-              {"command": "curve", "control1": [0.04, 0.2], "control2": [0, 0.36], "to": [0.02, 0.55]},
-              {"command": "curve", "control1": [0.04, 0.72], "control2": [0.09, 0.84], "to": [0.16, 0.89]},
+              {"command": "curve", "control1": [0.042767712939, 0.203341960338], "control2": [0, 0.36], "to": [0.02, 0.55]},
+              {"command": "curve", "control1": [0.037919148708, 0.720231912724], "control2": [0.079891467064, 0.921346817236], "to": [0.16, 0.89]},
               {"command": "curve", "control1": [0.39, 0.8], "control2": [0.68, 0.98], "to": [0.91, 0.96]},
-              {"command": "curve", "control1": [0.97, 0.91], "control2": [1, 0.7], "to": [0.98, 0.28]},
+              {"command": "curve", "control1": [0.987808877311, 0.953234010669], "control2": [1, 0.7], "to": [0.98, 0.28]},
               {"command": "close"}
             ]
           },
@@ -71,11 +71,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.49, 0]},
-              {"command": "curve", "control1": [0.22, 0], "control2": [0.04, 0.17], "to": [0, 0.43]},
-              {"command": "curve", "control1": [0, 0.68], "control2": [0.13, 0.89], "to": [0.35, 0.98]},
-              {"command": "curve", "control1": [0.55, 1], "control2": [0.78, 0.91], "to": [0.94, 0.69]},
+              {"command": "curve", "control1": [0.22, 0], "control2": [0.0, 0.166941071241], "to": [0, 0.43]},
+              {"command": "curve", "control1": [0, 0.68], "control2": [0.11348235994, 0.956348235994], "to": [0.35, 0.98]},
+              {"command": "curve", "control1": [0.55, 1], "control2": [0.849463139678, 0.946521104245], "to": [0.94, 0.69]},
               {"command": "curve", "control1": [1, 0.52], "control2": [1, 0.29], "to": [0.88, 0.14]},
-              {"command": "curve", "control1": [0.78, 0.04], "control2": [0.65, 0], "to": [0.49, 0]},
+              {"command": "curve", "control1": [0.79165477914, 0.029568473925], "control2": [0.65, 0], "to": [0.49, 0]},
               {"command": "close"}
             ]
           },
@@ -95,11 +95,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.51, 0]},
-              {"command": "curve", "control1": [0.78, 0], "control2": [0.96, 0.17], "to": [1, 0.43]},
-              {"command": "curve", "control1": [1, 0.68], "control2": [0.87, 0.89], "to": [0.65, 0.98]},
-              {"command": "curve", "control1": [0.45, 1], "control2": [0.22, 0.91], "to": [0.06, 0.69]},
+              {"command": "curve", "control1": [0.78, 0], "control2": [1.0, 0.166941071241], "to": [1, 0.43]},
+              {"command": "curve", "control1": [1, 0.68], "control2": [0.88651764006, 0.956348235994], "to": [0.65, 0.98]},
+              {"command": "curve", "control1": [0.45, 1], "control2": [0.150536860322, 0.946521104245], "to": [0.06, 0.69]},
               {"command": "curve", "control1": [0, 0.52], "control2": [0, 0.29], "to": [0.12, 0.14]},
-              {"command": "curve", "control1": [0.22, 0.04], "control2": [0.35, 0], "to": [0.51, 0]},
+              {"command": "curve", "control1": [0.20834522086, 0.029568473925], "control2": [0.35, 0], "to": [0.51, 0]},
               {"command": "close"}
             ]
           },
@@ -119,11 +119,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.5, 0]},
-              {"command": "curve", "control1": [0.25, 0], "control2": [0.07, 0.13], "to": [0.01, 0.38]},
-              {"command": "curve", "control1": [0, 0.62], "control2": [0.12, 0.84], "to": [0.35, 0.96]},
-              {"command": "curve", "control1": [0.55, 1], "control2": [0.79, 0.91], "to": [0.94, 0.7]},
+              {"command": "curve", "control1": [0.25, 0], "control2": [0.020703179851, 0.123123683573], "to": [0.01, 0.38]},
+              {"command": "curve", "control1": [0, 0.62], "control2": [0.095615372985, 0.909123074597], "to": [0.35, 0.96]},
+              {"command": "curve", "control1": [0.55, 1], "control2": [0.858391176948, 0.944826469157], "to": [0.94, 0.7]},
               {"command": "curve", "control1": [1, 0.52], "control2": [0.96, 0.25], "to": [0.82, 0.1]},
-              {"command": "curve", "control1": [0.72, 0.03], "control2": [0.61, 0], "to": [0.5, 0]},
+              {"command": "curve", "control1": [0.736712443294, 0.0107633321], "control2": [0.61, 0], "to": [0.5, 0]},
               {"command": "close"}
             ]
           },
@@ -143,11 +143,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.5, 0]},
-              {"command": "curve", "control1": [0.75, 0], "control2": [0.93, 0.13], "to": [0.99, 0.38]},
-              {"command": "curve", "control1": [1, 0.62], "control2": [0.88, 0.84], "to": [0.65, 0.96]},
-              {"command": "curve", "control1": [0.45, 1], "control2": [0.21, 0.91], "to": [0.06, 0.7]},
+              {"command": "curve", "control1": [0.75, 0], "control2": [0.979296820149, 0.123123683573], "to": [0.99, 0.38]},
+              {"command": "curve", "control1": [1, 0.62], "control2": [0.904384627015, 0.909123074597], "to": [0.65, 0.96]},
+              {"command": "curve", "control1": [0.45, 1], "control2": [0.141608823052, 0.944826469157], "to": [0.06, 0.7]},
               {"command": "curve", "control1": [0, 0.52], "control2": [0.04, 0.25], "to": [0.18, 0.1]},
-              {"command": "curve", "control1": [0.28, 0.03], "control2": [0.39, 0], "to": [0.5, 0]},
+              {"command": "curve", "control1": [0.263287556706, 0.0107633321], "control2": [0.39, 0], "to": [0.5, 0]},
               {"command": "close"}
             ]
           },
@@ -167,10 +167,10 @@
             "commands": [
               {"command": "move", "to": [0.05, 0.12]},
               {"command": "curve", "control1": [0.28, 0.02], "control2": [0.7, 0], "to": [0.9, 0.12]},
-              {"command": "curve", "control1": [1, 0.2], "control2": [1, 0.42], "to": [0.96, 0.6]},
+              {"command": "curve", "control1": [1.0, 0.18], "control2": [0.998635254973, 0.419702143459], "to": [0.96, 0.6]},
               {"command": "curve", "control1": [0.9, 0.88], "control2": [0.7, 0.98], "to": [0.48, 0.93]},
-              {"command": "curve", "control1": [0.28, 0.84], "control2": [0.08, 0.7], "to": [0.01, 0.48]},
-              {"command": "curve", "control1": [0, 0.32], "control2": [0.01, 0.19], "to": [0.05, 0.12]},
+              {"command": "curve", "control1": [0.266136668505, 0.881394697388], "control2": [0.024401145653, 0.710418330442], "to": [0.01, 0.48]},
+              {"command": "curve", "control1": [0, 0.32], "control2": [0.0, 0.141739130435], "to": [0.05, 0.12]},
               {"command": "close"}
             ]
           },
@@ -190,10 +190,10 @@
             "commands": [
               {"command": "move", "to": [0.95, 0.12]},
               {"command": "curve", "control1": [0.72, 0.02], "control2": [0.3, 0], "to": [0.1, 0.12]},
-              {"command": "curve", "control1": [0, 0.2], "control2": [0, 0.42], "to": [0.04, 0.6]},
+              {"command": "curve", "control1": [0.0, 0.18], "control2": [0.001364745027, 0.419702143459], "to": [0.04, 0.6]},
               {"command": "curve", "control1": [0.1, 0.88], "control2": [0.3, 0.98], "to": [0.52, 0.93]},
-              {"command": "curve", "control1": [0.72, 0.84], "control2": [0.92, 0.7], "to": [0.99, 0.48]},
-              {"command": "curve", "control1": [1, 0.32], "control2": [0.99, 0.19], "to": [0.95, 0.12]},
+              {"command": "curve", "control1": [0.733863331495, 0.881394697388], "control2": [0.975598854347, 0.710418330442], "to": [0.99, 0.48]},
+              {"command": "curve", "control1": [1, 0.32], "control2": [1.0, 0.141739130435], "to": [0.95, 0.12]},
               {"command": "close"}
             ]
           },
@@ -213,10 +213,10 @@
             "commands": [
               {"command": "move", "to": [0.04, 0.14]},
               {"command": "curve", "control1": [0.3, 0.04], "control2": [0.69, 0], "to": [0.9, 0.14]},
-              {"command": "curve", "control1": [0.98, 0.25], "control2": [1, 0.48], "to": [0.96, 0.66]},
-              {"command": "curve", "control1": [0.87, 0.9], "control2": [0.65, 1], "to": [0.42, 0.9]},
-              {"command": "curve", "control1": [0.18, 0.82], "control2": [0.03, 0.66], "to": [0.01, 0.45]},
-              {"command": "curve", "control1": [0, 0.29], "control2": [0.01, 0.18], "to": [0.04, 0.14]},
+              {"command": "curve", "control1": [1.0, 0.206666666667], "control2": [1, 0.48], "to": [0.96, 0.66]},
+              {"command": "curve", "control1": [0.904396360678, 0.91021637695], "control2": [0.657928560707, 0.979309520236], "to": [0.42, 0.9]},
+              {"command": "curve", "control1": [0.18, 0.82], "control2": [0.02315871388, 0.660539422078], "to": [0.01, 0.45]},
+              {"command": "curve", "control1": [0, 0.29], "control2": [0.0, 0.155384615385], "to": [0.04, 0.14]},
               {"command": "close"}
             ]
           },
@@ -236,10 +236,10 @@
             "commands": [
               {"command": "move", "to": [0.96, 0.14]},
               {"command": "curve", "control1": [0.7, 0.04], "control2": [0.31, 0], "to": [0.1, 0.14]},
-              {"command": "curve", "control1": [0.02, 0.25], "control2": [0, 0.48], "to": [0.04, 0.66]},
-              {"command": "curve", "control1": [0.13, 0.9], "control2": [0.35, 1], "to": [0.58, 0.9]},
-              {"command": "curve", "control1": [0.82, 0.82], "control2": [0.97, 0.66], "to": [0.99, 0.45]},
-              {"command": "curve", "control1": [1, 0.29], "control2": [0.99, 0.18], "to": [0.96, 0.14]},
+              {"command": "curve", "control1": [0.0, 0.206666666667], "control2": [0, 0.48], "to": [0.04, 0.66]},
+              {"command": "curve", "control1": [0.095603639322, 0.91021637695], "control2": [0.342071439293, 0.979309520236], "to": [0.58, 0.9]},
+              {"command": "curve", "control1": [0.82, 0.82], "control2": [0.97684128612, 0.660539422078], "to": [0.99, 0.45]},
+              {"command": "curve", "control1": [1, 0.29], "control2": [1.0, 0.155384615385], "to": [0.96, 0.14]},
               {"command": "close"}
             ]
           },
@@ -259,10 +259,10 @@
             "commands": [
               {"command": "move", "to": [0.02, 0.18]},
               {"command": "curve", "control1": [0.25, 0.06], "control2": [0.68, 0], "to": [0.94, 0.06]},
-              {"command": "curve", "control1": [0.99, 0.14], "control2": [1, 0.35], "to": [0.98, 0.56]},
-              {"command": "curve", "control1": [0.94, 0.8], "control2": [0.7, 0.94], "to": [0.42, 0.92]},
-              {"command": "curve", "control1": [0.18, 0.96], "control2": [0.04, 0.83], "to": [0.01, 0.62]},
-              {"command": "curve", "control1": [0, 0.42], "control2": [0, 0.26], "to": [0.02, 0.18]},
+              {"command": "curve", "control1": [1.0, 0.073846153846], "control2": [1, 0.35], "to": [0.98, 0.56]},
+              {"command": "curve", "control1": [0.956931952153, 0.802214502391], "control2": [0.7, 0.94], "to": [0.42, 0.92]},
+              {"command": "curve", "control1": [0.177307823806, 0.902664844558], "control2": [0.020593368273, 0.831867365464], "to": [0.01, 0.62]},
+              {"command": "curve", "control1": [0, 0.42], "control2": [0.0, 0.190434782609], "to": [0.02, 0.18]},
               {"command": "close"}
             ]
           },
@@ -282,10 +282,10 @@
             "commands": [
               {"command": "move", "to": [0.98, 0.18]},
               {"command": "curve", "control1": [0.75, 0.06], "control2": [0.32, 0], "to": [0.06, 0.06]},
-              {"command": "curve", "control1": [0.01, 0.14], "control2": [0, 0.35], "to": [0.02, 0.56]},
-              {"command": "curve", "control1": [0.06, 0.8], "control2": [0.3, 0.94], "to": [0.58, 0.92]},
-              {"command": "curve", "control1": [0.82, 0.96], "control2": [0.96, 0.83], "to": [0.99, 0.62]},
-              {"command": "curve", "control1": [1, 0.42], "control2": [1, 0.26], "to": [0.98, 0.18]},
+              {"command": "curve", "control1": [0.0, 0.073846153846], "control2": [0, 0.35], "to": [0.02, 0.56]},
+              {"command": "curve", "control1": [0.043068047847, 0.802214502391], "control2": [0.3, 0.94], "to": [0.58, 0.92]},
+              {"command": "curve", "control1": [0.822692176194, 0.902664844558], "control2": [0.979406631727, 0.831867365464], "to": [0.99, 0.62]},
+              {"command": "curve", "control1": [1, 0.42], "control2": [1.0, 0.190434782609], "to": [0.98, 0.18]},
               {"command": "close"}
             ]
           },
@@ -305,10 +305,10 @@
             "commands": [
               {"command": "move", "to": [0.02, 0.36]},
               {"command": "curve", "control1": [0.17, 0.14], "control2": [0.49, 0.02], "to": [0.82, 0.04]},
-              {"command": "curve", "control1": [0.95, 0.1], "control2": [1, 0.29], "to": [0.99, 0.5]},
-              {"command": "curve", "control1": [0.96, 0.71], "control2": [0.82, 0.85], "to": [0.62, 0.9]},
-              {"command": "curve", "control1": [0.39, 0.96], "control2": [0.14, 0.86], "to": [0.03, 0.66]},
-              {"command": "curve", "control1": [0, 0.55], "control2": [0, 0.44], "to": [0.02, 0.36]},
+              {"command": "curve", "control1": [0.962915979258, 0.0486615745], "control2": [1, 0.29], "to": [0.99, 0.5]},
+              {"command": "curve", "control1": [0.97990990809, 0.711891930109], "control2": [0.819479410963, 0.847961892792], "to": [0.62, 0.9]},
+              {"command": "curve", "control1": [0.39, 0.96], "control2": [0.090057664598, 0.880211436858], "to": [0.03, 0.66]},
+              {"command": "curve", "control1": [0, 0.55], "control2": [0.0, 0.389333333333], "to": [0.02, 0.36]},
               {"command": "close"}
             ]
           },
@@ -328,10 +328,10 @@
             "commands": [
               {"command": "move", "to": [0.98, 0.36]},
               {"command": "curve", "control1": [0.83, 0.14], "control2": [0.51, 0.02], "to": [0.18, 0.04]},
-              {"command": "curve", "control1": [0.05, 0.1], "control2": [0, 0.29], "to": [0.01, 0.5]},
-              {"command": "curve", "control1": [0.04, 0.71], "control2": [0.18, 0.85], "to": [0.38, 0.9]},
-              {"command": "curve", "control1": [0.61, 0.96], "control2": [0.86, 0.86], "to": [0.97, 0.66]},
-              {"command": "curve", "control1": [1, 0.55], "control2": [1, 0.44], "to": [0.98, 0.36]},
+              {"command": "curve", "control1": [0.037084020742, 0.0486615745], "control2": [0, 0.29], "to": [0.01, 0.5]},
+              {"command": "curve", "control1": [0.02009009191, 0.711891930109], "control2": [0.180520589037, 0.847961892792], "to": [0.38, 0.9]},
+              {"command": "curve", "control1": [0.61, 0.96], "control2": [0.909942335402, 0.880211436858], "to": [0.97, 0.66]},
+              {"command": "curve", "control1": [1, 0.55], "control2": [1.0, 0.389333333333], "to": [0.98, 0.36]},
               {"command": "close"}
             ]
           },
@@ -350,11 +350,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.88, 0.02]},
-              {"command": "curve", "control1": [0.97, 0.13], "control2": [0.97, 0.28], "to": [0.88, 0.43]},
-              {"command": "curve", "control1": [0.7, 0.72], "control2": [0.47, 0.97], "to": [0.27, 0.99]},
-              {"command": "curve", "control1": [0.12, 1], "control2": [0.01, 0.9], "to": [0.01, 0.75]},
+              {"command": "curve", "control1": [0.97, 0.13], "control2": [0.972250824345, 0.281373671889], "to": [0.88, 0.43]},
+              {"command": "curve", "control1": [0.7, 0.72], "control2": [0.470552334661, 0.976629844356], "to": [0.27, 0.99]},
+              {"command": "curve", "control1": [0.12, 1], "control2": [0.002509357458, 0.899812850832], "to": [0.01, 0.75]},
               {"command": "curve", "control1": [0.02, 0.55], "control2": [0.29, 0.26], "to": [0.66, 0.03]},
-              {"command": "curve", "control1": [0.75, 0], "control2": [0.83, 0], "to": [0.88, 0.02]},
+              {"command": "curve", "control1": [0.708260869565, 0.0], "control2": [0.863636363636, 0.0], "to": [0.88, 0.02]},
               {"command": "close"}
             ]
           },
@@ -366,11 +366,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.5, 0.01]},
-              {"command": "curve", "control1": [0.73, 0.01], "control2": [0.91, 0.18], "to": [0.96, 0.4]},
-              {"command": "curve", "control1": [1, 0.62], "control2": [0.88, 0.89], "to": [0.67, 0.97]},
-              {"command": "curve", "control1": [0.47, 1], "control2": [0.2, 0.94], "to": [0.08, 0.78]},
-              {"command": "curve", "control1": [0, 0.65], "control2": [0.05, 0.48], "to": [0.17, 0.3]},
-              {"command": "curve", "control1": [0.28, 0.11], "control2": [0.38, 0.02], "to": [0.5, 0.01]},
+              {"command": "curve", "control1": [0.73, 0.01], "control2": [0.919641605582, 0.178028830701], "to": [0.96, 0.4]},
+              {"command": "curve", "control1": [1, 0.62], "control2": [0.892235805073, 0.936664629239], "to": [0.67, 0.97]},
+              {"command": "curve", "control1": [0.47, 1], "control2": [0.184819485133, 0.950331663341], "to": [0.08, 0.78]},
+              {"command": "curve", "control1": [0, 0.65], "control2": [0.061609282142, 0.487220330846], "to": [0.17, 0.3]},
+              {"command": "curve", "control1": [0.28, 0.11], "control2": [0.379584054212, 0.01], "to": [0.5, 0.01]},
               {"command": "close"}
             ]
           },
@@ -382,11 +382,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.04, 0.04]},
-              {"command": "curve", "control1": [0.18, 0], "control2": [0.37, 0.08], "to": [0.55, 0.2]},
-              {"command": "curve", "control1": [0.74, 0.33], "control2": [0.93, 0.48], "to": [0.98, 0.66]},
-              {"command": "curve", "control1": [1, 0.8], "control2": [0.93, 0.94], "to": [0.8, 0.97]},
+              {"command": "curve", "control1": [0.0475, 0.0], "control2": [0.371458741093, 0.077840191274], "to": [0.55, 0.2]},
+              {"command": "curve", "control1": [0.74, 0.33], "control2": [0.953580310373, 0.475062172609], "to": [0.98, 0.66]},
+              {"command": "curve", "control1": [1, 0.8], "control2": [0.933156822205, 0.978322301388], "to": [0.8, 0.97]},
               {"command": "curve", "control1": [0.64, 0.96], "control2": [0.42, 0.78], "to": [0.2, 0.56]},
-              {"command": "curve", "control1": [0.08, 0.42], "control2": [0.01, 0.2], "to": [0.04, 0.04]},
+              {"command": "curve", "control1": [0.069615951896, 0.429615951896], "control2": [0.01, 0.2], "to": [0.04, 0.04]},
               {"command": "close"}
             ]
           },
@@ -405,11 +405,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.12, 0.02]},
-              {"command": "curve", "control1": [0.03, 0.13], "control2": [0.03, 0.28], "to": [0.12, 0.43]},
-              {"command": "curve", "control1": [0.3, 0.72], "control2": [0.53, 0.97], "to": [0.73, 0.99]},
-              {"command": "curve", "control1": [0.88, 1], "control2": [0.99, 0.9], "to": [0.99, 0.75]},
+              {"command": "curve", "control1": [0.03, 0.13], "control2": [0.027749175655, 0.281373671889], "to": [0.12, 0.43]},
+              {"command": "curve", "control1": [0.3, 0.72], "control2": [0.529447665339, 0.976629844356], "to": [0.73, 0.99]},
+              {"command": "curve", "control1": [0.88, 1], "control2": [0.997490642542, 0.899812850832], "to": [0.99, 0.75]},
               {"command": "curve", "control1": [0.98, 0.55], "control2": [0.71, 0.26], "to": [0.34, 0.03]},
-              {"command": "curve", "control1": [0.25, 0], "control2": [0.17, 0], "to": [0.12, 0.02]},
+              {"command": "curve", "control1": [0.291739130435, 0.0], "control2": [0.136363636364, 0.0], "to": [0.12, 0.02]},
               {"command": "close"}
             ]
           },
@@ -421,11 +421,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.5, 0.01]},
-              {"command": "curve", "control1": [0.27, 0.01], "control2": [0.09, 0.18], "to": [0.04, 0.4]},
-              {"command": "curve", "control1": [0, 0.62], "control2": [0.12, 0.89], "to": [0.33, 0.97]},
-              {"command": "curve", "control1": [0.53, 1], "control2": [0.8, 0.94], "to": [0.92, 0.78]},
-              {"command": "curve", "control1": [1, 0.65], "control2": [0.95, 0.48], "to": [0.83, 0.3]},
-              {"command": "curve", "control1": [0.72, 0.11], "control2": [0.62, 0.02], "to": [0.5, 0.01]},
+              {"command": "curve", "control1": [0.27, 0.01], "control2": [0.080358394418, 0.178028830701], "to": [0.04, 0.4]},
+              {"command": "curve", "control1": [0, 0.62], "control2": [0.107764194927, 0.936664629239], "to": [0.33, 0.97]},
+              {"command": "curve", "control1": [0.53, 1], "control2": [0.815180514867, 0.950331663341], "to": [0.92, 0.78]},
+              {"command": "curve", "control1": [1, 0.65], "control2": [0.938390717858, 0.487220330846], "to": [0.83, 0.3]},
+              {"command": "curve", "control1": [0.72, 0.11], "control2": [0.620415945788, 0.01], "to": [0.5, 0.01]},
               {"command": "close"}
             ]
           },
@@ -437,11 +437,11 @@
             "type": "path",
             "commands": [
               {"command": "move", "to": [0.96, 0.04]},
-              {"command": "curve", "control1": [0.82, 0], "control2": [0.63, 0.08], "to": [0.45, 0.2]},
-              {"command": "curve", "control1": [0.26, 0.33], "control2": [0.07, 0.48], "to": [0.02, 0.66]},
-              {"command": "curve", "control1": [0, 0.8], "control2": [0.07, 0.94], "to": [0.2, 0.97]},
+              {"command": "curve", "control1": [0.9525, 0.0], "control2": [0.628541258907, 0.077840191274], "to": [0.45, 0.2]},
+              {"command": "curve", "control1": [0.26, 0.33], "control2": [0.046419689627, 0.475062172609], "to": [0.02, 0.66]},
+              {"command": "curve", "control1": [0, 0.8], "control2": [0.066843177795, 0.978322301388], "to": [0.2, 0.97]},
               {"command": "curve", "control1": [0.36, 0.96], "control2": [0.58, 0.78], "to": [0.8, 0.56]},
-              {"command": "curve", "control1": [0.92, 0.42], "control2": [0.99, 0.2], "to": [0.96, 0.04]},
+              {"command": "curve", "control1": [0.930384048104, 0.429615951896], "control2": [0.99, 0.2], "to": [0.96, 0.04]},
               {"command": "close"}
             ]
           },
