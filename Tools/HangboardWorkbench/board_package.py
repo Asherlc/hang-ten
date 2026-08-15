@@ -383,7 +383,7 @@ def _replace_package_locked(
 
 def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
     live_package = root / slug
-    backup = root / f".workbench-previous-{uuid.uuid4().hex}"
+    backup = root.parent / f".{root.name}.workbench-previous-{uuid.uuid4().hex}"
     moved_live = False
     installed = False
     try:
@@ -407,8 +407,14 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
                 "could not restore the previous board package"
             ) from restore_error
         raise BoardPackageError("could not save board package") from error
+    # Installing the staged package is the commit point. A failed best-effort
+    # cleanup must not report rollback semantics or hide the committed package;
+    # the sibling backup remains recoverable outside package discovery.
     if moved_live:
-        shutil.rmtree(backup)
+        try:
+            shutil.rmtree(backup)
+        except OSError:
+            pass
 
 
 def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
@@ -808,7 +814,7 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             ihdr = payload
         elif chunk_type == b"PLTE":
-            if compressed_parts or not 3 <= length <= 768 or length % 3:
+            if has_palette or compressed_parts or not 3 <= length <= 768 or length % 3:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             has_palette = True
         elif chunk_type == b"IDAT":
