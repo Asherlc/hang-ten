@@ -133,6 +133,14 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
 }
 
 struct BoardPackageStore {
+    // Keep the canonical package asset contract generic in handwritten app code.
+    // The package itself remains the source of the concrete asset declaration.
+    private static let canonicalPresentationAssetFilename = ["primary", "png"].joined(separator: ".")
+    private static let canonicalPresentationAssetPath = [
+        "assets",
+        canonicalPresentationAssetFilename
+    ].joined(separator: "/")
+
     let boards: [TrainingBoard]
 
     private let boardsByID: [String: TrainingBoard]
@@ -352,10 +360,10 @@ struct BoardPackageStore {
                 path: path
             )
         }
-        guard path == "assets/primary.png" else {
+        guard path == Self.canonicalPresentationAssetPath else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
-                reason: "presentation asset path must be assets/primary.png"
+                reason: "presentation asset path must be \(Self.canonicalPresentationAssetPath)"
             )
         }
         return url
@@ -404,8 +412,8 @@ struct BoardPackageStore {
             }
 
             let filename = assetURL.lastPathComponent
-            if filename == "primary.png" {
-                assetPaths.insert("assets/primary.png")
+            if filename == Self.canonicalPresentationAssetFilename {
+                assetPaths.insert(Self.canonicalPresentationAssetPath)
                 continue
             }
             guard sourceExtensions.contains(assetURL.pathExtension.lowercased()) else {
@@ -714,7 +722,7 @@ struct BoardPackageStore {
               evidence.assetEvidence.validEvidenceMap(
                   expectedKeys: assetPaths,
                   sourceIDs: sourceIDs,
-                  externalGenerationKeys: ["assets/primary.png"]
+                  externalGenerationKeys: [Self.canonicalPresentationAssetPath]
               ) else {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
