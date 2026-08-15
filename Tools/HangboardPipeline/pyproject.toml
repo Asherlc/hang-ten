@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hangboard-vectorizer"
+version = "0.1.0"
+requires-python = ">=3.11.4"
+dependencies = [
+    "numpy>=2.4.6",
+    "opencv-python-headless>=5.0.0.93",
+    "Pillow>=12.3.0",
+    "requests>=2.34.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1.1"]
+
+[project.scripts]
+hangboard-packages = "hangboard_vectorizer.board_catalog_cli:main"
+hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
+hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
+hangboard-promote = "hangboard_vectorizer.promotion_cli:main"
+hangboard-review = "hangboard_vectorizer.review_cli:main"
+hangboard-semantic-benchmark = "hangboard_vectorizer.semantic_benchmark:main"
+hangboard-to-svg = "hangboard_vectorizer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"hangboard_vectorizer.evidence" = ["*.json"]
+"hangboard_vectorizer.products" = ["*.json", "*.png"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
