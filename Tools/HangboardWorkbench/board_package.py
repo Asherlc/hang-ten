@@ -808,11 +808,9 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             ihdr = payload
         elif chunk_type == b"PLTE":
-            if not 3 <= length <= 768 or length % 3:
+            if compressed_parts or not 3 <= length <= 768 or length % 3:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             has_palette = True
-            if compressed_parts:
-                ended_idat = True
         elif chunk_type == b"IDAT":
             if ended_idat:
                 raise BoardPackageError("package primary image must be a decodable PNG")
