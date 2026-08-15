@@ -20,7 +20,7 @@ from board_package import (
     BoardPackageError,
     discover_packages,
     editor_document,
-    open_registered_package,
+    open_package,
     primary_image_path,
     save_editor_document,
 )
@@ -161,7 +161,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         with self._mutation_error_response():
             document = self._read_json_object()
-            package = open_registered_package(self.server.library_root, unquote(board_path))
+            package = open_package(self.server.library_root, unquote(board_path))
             saved = save_editor_document(self.server.library_root, package.root.name, document)
             self._send_json(HTTPStatus.OK, {"ok": True, "board": _board_payload(saved, include_document=True)})
 
@@ -177,10 +177,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _get_boards(self) -> None:
         try:
-            boards = []
-            for entry in discover_packages(self.server.library_root):
-                package = open_registered_package(self.server.library_root, entry.board_id)
-                boards.append(_board_payload(package, include_document=False))
+            boards = [
+                _board_payload(package, include_document=False)
+                for package in discover_packages(self.server.library_root)
+            ]
         except BoardPackageError:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "could not load boards"})
             return
@@ -194,11 +194,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         try:
-            package = open_registered_package(self.server.library_root, board_id)
+            package = open_package(self.server.library_root, board_id)
             payload = _board_payload(package, include_document=True)
         except BoardPackageError as error:
             message = _safe_message(error, "could not load board")
-            status = HTTPStatus.NOT_FOUND if message == "board is not registered" else HTTPStatus.BAD_REQUEST
+            status = HTTPStatus.NOT_FOUND if message == "board is not available" else HTTPStatus.BAD_REQUEST
             self._send_json(status, {"ok": False, "error": message if status == HTTPStatus.NOT_FOUND else "could not load board"})
             return
         except OSError:
@@ -208,7 +208,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _get_image(self, board_id: str) -> None:
         try:
-            package = open_registered_package(self.server.library_root, board_id)
+            package = open_package(self.server.library_root, board_id)
             image = primary_image_path(package)
             self._send_file(image)
         except BoardPackageError:

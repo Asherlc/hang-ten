@@ -9,13 +9,31 @@ import pytest
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
+import board_geometry  # noqa: E402
 from board_geometry import (  # noqa: E402
     GeometryError,
+    NormalizedFrame,
     display_path_for_shape,
     normalized_frame_for_path,
     parse_closed_path,
     shape_for_path,
 )
+
+
+def test_unions_multiple_normalized_piece_frames() -> None:
+    frame = board_geometry.union_normalized_frames(
+        (
+            NormalizedFrame(x=0.05, y=0.2, width=0.1, height=0.3),
+            NormalizedFrame(x=0.35, y=0.1, width=0.1, height=0.2),
+        )
+    )
+
+    assert frame.to_json() == {
+        "x": 0.05,
+        "y": 0.1,
+        "width": 0.4,
+        "height": 0.4,
+    }
 
 
 def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:

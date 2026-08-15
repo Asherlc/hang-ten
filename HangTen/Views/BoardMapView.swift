@@ -9,25 +9,17 @@ struct BoardMapView: View {
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
-        GeometryReader { proxy in
+        GeometryReader { _ in
             ZStack {
                 BoardPresentationImage(board: board)
 
                 ForEach(board.holds) { hold in
-                    let frame = hold.frame.rect
-                    BoardHoldOverlay(
+                    PhysicalHoldVisual(
                         hold: hold,
                         isHighlighted: highlightedHoldIDs.contains(hold.id),
                         highlightMode: highlightMode,
+                        showsLabel: showsLabels,
                         onTap: onHoldTap
-                    )
-                    .frame(
-                        width: proxy.size.width * frame.width,
-                        height: proxy.size.height * frame.height
-                    )
-                    .position(
-                        x: proxy.size.width * frame.midX,
-                        y: proxy.size.height * frame.midY
                     )
                 }
             }
@@ -52,69 +44,24 @@ struct BoardPresentationImage: View {
     }
 }
 
-private struct BoardHoldOverlay: View {
-    let hold: BoardHold
-    let isHighlighted: Bool
-    let highlightMode: BoardHighlightMode
-    let onTap: ((BoardHold) -> Void)?
-
-    var body: some View {
-        ZStack {
-            if isHighlighted {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(highlightFill.opacity(0.38))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke(highlightStroke, lineWidth: 2)
-                    }
-            }
-
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    onTap?(hold)
-                }
-                .accessibilityLabel(hold.name)
-                .accessibilityAddTraits(.isButton)
-        }
-    }
-
-    private var highlightFill: Color {
-        switch highlightMode {
-        case .active:
-            .holdActive
-        case .preview:
-            .restBlue
-        }
-    }
-
-    private var highlightStroke: Color {
-        switch highlightMode {
-        case .active:
-            .holdActiveDeep
-        case .preview:
-            .restBlueDeep
-        }
-    }
-}
-
 private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
     let showsLabel: Bool
+    let onTap: ((BoardHold) -> Void)?
 
     var body: some View {
         let shape = BoardHoldPathShape(pieces: hold.geometry)
         ZStack {
             shape
-                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
+                .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
                 .overlay {
                     shape.stroke(
-                        isHighlighted ? highlightStroke : Color.hangWoodShadow,
-                        lineWidth: 1
+                        isHighlighted ? highlightStroke : Color.clear,
+                        lineWidth: 2
                     )
-            }
+                }
 
             if showsLabel {
                 GeometryReader { proxy in
@@ -134,6 +81,9 @@ private struct PhysicalHoldVisual: View {
             }
         }
         .contentShape(shape)
+        .onTapGesture {
+            onTap?(hold)
+        }
         .accessibilityLabel(hold.name)
         .accessibilityAddTraits(.isButton)
     }

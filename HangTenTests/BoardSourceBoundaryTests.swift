@@ -15,7 +15,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testEveryCatalogBoardUsesItsPackagePrimaryPNG() throws {
         let repositoryRoot = repositoryRootURL()
-        let packagePaths = try catalogPackagePaths(at: repositoryRoot)
+        let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
 
         for board in BoardCatalog.all {
             let packagePath = try XCTUnwrap(packagePaths[board.id])
@@ -91,33 +91,56 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
-    func testEveryCatalogPackageIncludesDirectArtworkGeometry() throws {
+    func testEveryCatalogPackageEmbedsPhysicalGeometryInBoardJSON() throws {
         let repositoryRoot = repositoryRootURL()
-        let packagePaths = try catalogPackagePaths(at: repositoryRoot)
+        let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+
+        XCTAssertFalse(
+            FileManager.default.fileExists(
+                atPath: hangboardsURL.appendingPathComponent("catalog.json").path
+            )
+        )
 
         for board in BoardCatalog.all {
             let packagePath = try XCTUnwrap(packagePaths[board.id])
-            let artworkURL = repositoryRoot
-                .appendingPathComponent("Hangboards", isDirectory: true)
+            let packageURL = hangboardsURL
                 .appendingPathComponent(packagePath, isDirectory: true)
-                .appendingPathComponent("artwork.json")
-            let artwork = try XCTUnwrap(
-                JSONSerialization.jsonObject(with: Data(contentsOf: artworkURL)) as? [String: Any]
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(
+                    with: Data(contentsOf: packageURL.appendingPathComponent("board.json"))
+                ) as? [String: Any]
+            )
+            let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
+            let packageEntries = try Set(
+                FileManager.default.contentsOfDirectory(atPath: packageURL.path)
+            )
+            let assetEntries = try Set(
+                FileManager.default.contentsOfDirectory(
+                    atPath: packageURL.appendingPathComponent("assets").path
+                )
             )
 
-            XCTAssertEqual(artwork["schemaVersion"] as? Int, 1)
-            XCTAssertEqual(artwork["boardID"] as? String, board.id)
-            XCTAssertNotNil(artwork["holdPieces"] as? [[String: Any]])
+            XCTAssertEqual(packageEntries, ["assets", "board.json"])
+            XCTAssertEqual(assetEntries, ["primary.png"])
+            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 1)
+            XCTAssertEqual(boardDocument["id"] as? String, board.id)
+            XCTAssertFalse(holds.isEmpty)
+            XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
+            XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
         }
     }
 
-    func testBoardMapUsesPackagePresentationImageWithGenericHoldOverlays() throws {
+    func testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting() throws {
         let repositoryRoot = repositoryRootURL()
         let sourceURL = repositoryRoot
             .appendingPathComponent("HangTen/Views/BoardMapView.swift")
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
+        XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: hold.geometry)"))
+        XCTAssertTrue(source.contains(".contentShape(shape)"))
+        XCTAssertFalse(source.contains("contentShape(Rectangle())"))
         XCTAssertFalse(source.contains("Canvas("))
         XCTAssertFalse(source.contains("BoardDesign"))
     }
@@ -150,7 +173,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
         ]
         let genericGeometryOwners: Set<String> = [
             "HangTen/Models/BoardPackageStore.swift",
-            "HangTen/Models/BoardStorage.swift"
+            "HangTen/Models/BoardStorage.swift",
+            "HangTen/Models/TrainingModels.swift"
         ]
 
         var findings: [String] = []
@@ -226,16 +250,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     private func packageOwnedLiterals(at repositoryRoot: URL) throws -> Set<String> {
         let hangboardsRoot = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let catalogURL = hangboardsRoot.appendingPathComponent("catalog.json")
-        let catalogObject = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: Data(contentsOf: catalogURL)) as? [String: Any]
-        )
-        let entries = try XCTUnwrap(catalogObject["boards"] as? [[String: Any]])
         var identifiers = Set<String>()
 
-        for entry in entries {
-            let boardID = try XCTUnwrap(entry["id"] as? String)
-            let packagePath = try XCTUnwrap(entry["path"] as? String)
+        for (boardID, packagePath) in try discoveredPackagePaths(at: repositoryRoot) {
             identifiers.insert(boardID)
 
             let packageURL = hangboardsRoot.appendingPathComponent(packagePath, isDirectory: true)
@@ -259,23 +276,29 @@ final class BoardSourceBoundaryTests: XCTestCase {
         return identifiers
     }
 
-    private func catalogPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
-        let catalogURL = repositoryRoot
-            .appendingPathComponent("Hangboards", isDirectory: true)
-            .appendingPathComponent("catalog.json")
-        let catalogObject = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: Data(contentsOf: catalogURL)) as? [String: Any]
+    private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let children = try FileManager.default.contentsOfDirectory(
+            at: hangboardsURL,
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey]
         )
-        let entries = try XCTUnwrap(catalogObject["boards"] as? [[String: Any]])
-
-        return try Dictionary(
-            uniqueKeysWithValues: entries.map { entry in
-                (
-                    try XCTUnwrap(entry["id"] as? String),
-                    try XCTUnwrap(entry["path"] as? String)
-                )
+        var paths: [String: String] = [:]
+        for child in children {
+            let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            guard values.isDirectory == true, values.isSymbolicLink != true else {
+                XCTFail("Hangboards must contain only non-symlinked direct child directories")
+                continue
             }
-        )
+            let boardURL = child.appendingPathComponent("board.json")
+            guard FileManager.default.fileExists(atPath: boardURL.path) else { continue }
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            let boardID = try XCTUnwrap(document["id"] as? String)
+            XCTAssertNil(paths[boardID], "Duplicate discovered board ID \(boardID)")
+            paths[boardID] = child.lastPathComponent
+        }
+        return paths
     }
 
     private func appSourceAndResourceURLs(at repositoryRoot: URL) throws -> [URL] {

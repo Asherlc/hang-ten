@@ -1,7 +1,7 @@
 # Hangboard Workbench
 
 Hangboard Workbench is the local authoring suite for direct board packages.
-It lists registered boards, opens the primary image and hold geometry together,
+It discovers completed boards, opens the primary image and hold geometry together,
 edits hold contours, validates the package, and saves the result atomically.
 
 ## Run from a checkout
@@ -12,7 +12,7 @@ From the repository root:
 rtk python3 Tools/HangboardWorkbench/server.py
 ```
 
-Open `http://127.0.0.1:4173`. The **Boards** button lists the registered
+Open `http://127.0.0.1:4173`. The **Boards** button lists the completed
 packages in `Hangboards/`. Selecting a board loads its image and all of its
 holds. **Save** writes directly to that board package; it does not commit or
 push your Git changes.
@@ -26,17 +26,18 @@ rtk python3 Tools/HangboardWorkbench/server.py \
 
 ## Board packages
 
-`Hangboards/catalog.json` registers each package. A registered package has
-`board.json`, `artwork.json`, `evidence.json`, `semantics.json`, and
-`assets/primary.png`.
+Every direct child of `Hangboards/` containing `board.json` is a completed
+package. Its exact inventory is `board.json` plus `assets/primary.png`; there
+is no root registry or package sidecar. A direct child containing only
+`assets/primary.png` is a migration draft and is excluded from the editor.
 
-Each physical hold has exactly one identifier and one closed, contiguous contour
-in `artwork.json`. Decorative artwork is not hold geometry. The frame in
-`board.json` is derived from that contour.
+Each physical hold has one identifier and one or more geometry pieces embedded
+in `board.json`; each piece has one closed, contiguous contour. The editor
+exposes each piece under a stable `<hold-id>-piece-<index>` key, and runtime
+bounds are the union of all pieces belonging to the physical hold.
 
 Save validates the complete package before replacing it. Invalid geometry,
-missing evidence, invalid image data, or an interrupted write leave the saved
-package and catalog unchanged.
+invalid image data, or an interrupted write leave the saved package unchanged.
 
 ## Run the Apple Silicon macOS release
 

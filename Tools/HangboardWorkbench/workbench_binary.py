@@ -72,7 +72,7 @@ def _run(
         print(_build_commit(root), flush=True)
         return 0
 
-    server, _catalog = server_factory(forwarded, editor_root=root)
+    server, _unused_state = server_factory(forwarded, editor_root=root)
     host, port = server.server_address[:2]
     url = f"http://{host}:{port}/"
     shutdown_requested = False
