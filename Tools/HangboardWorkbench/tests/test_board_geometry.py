@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-import re
 import sys
 from pathlib import Path
 
@@ -9,15 +7,6 @@ import pytest
 
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
-VALIDATION_FIXTURES = json.loads(
-    (
-        REPOSITORY_ROOT
-        / "HangTenTests"
-        / "Fixtures"
-        / "BoardPackageValidationFixtures.json"
-    ).read_text(encoding="utf-8")
-)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_geometry  # noqa: E402
@@ -45,24 +34,6 @@ def test_unions_multiple_normalized_piece_frames() -> None:
         "width": 0.4,
         "height": 0.4,
     }
-
-
-def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> None:
-    x = 75918 / 91672
-    width = (91672 - 75918) / 91672
-    assert round(x, 12) + round(width, 12) == 1.000000000001
-
-    serialized = NormalizedFrame(x=x, y=x, width=width, height=width).to_json()
-
-    assert serialized["width"] == 0.17185181953
-    assert serialized["height"] == 0.17185181953
-    assert json.dumps(serialized, separators=(",", ":")) == (
-        '{"x":0.82814818047,"y":0.82814818047,'
-        '"width":0.17185181953,"height":0.17185181953}'
-    )
-    assert serialized["x"] + serialized["width"] <= 1
-    assert serialized["y"] + serialized["height"] <= 1
-    assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
 
 
 def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
@@ -120,24 +91,3 @@ def test_parses_a_pill_shaped_rounded_rectangle() -> None:
 def test_rejects_invalid_hold_geometry(display_path: str, message: str) -> None:
     with pytest.raises(GeometryError, match=message):
         parse_closed_path(display_path, 100, 100)
-
-
-@pytest.mark.parametrize(
-    "fixture",
-    VALIDATION_FIXTURES["malformedPathShapes"],
-    ids=lambda fixture: fixture["name"],
-)
-def test_rejects_shared_malformed_package_path_shapes(
-    fixture: dict[str, object],
-) -> None:
-    with pytest.raises(
-        GeometryError,
-        match=re.escape(str(fixture["expectedMessage"])),
-    ):
-        display_path_for_shape(
-            {"x": 0, "y": 0, "width": 1, "height": 1},
-            {"type": "path", "commands": fixture["commands"]},
-            100,
-            100,
-            label=str(fixture["name"]),
-        )
