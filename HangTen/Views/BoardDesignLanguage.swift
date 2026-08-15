@@ -34,10 +34,8 @@ struct BoardDesign {
         holds.filter { $0.holdID == holdID }
     }
 
-    func holdPath(for holdID: String, in rect: CGRect) -> Path? {
-        let pieces = holdPieces(for: holdID)
-        guard !pieces.isEmpty else { return nil }
-        return BoardHoldPathShape(pieces: pieces).path(in: rect)
+    func renderPath(for hold: BoardHoldPiece, in rect: CGRect) -> Path {
+        hold.path(in: rect)
     }
 
     func draw(
@@ -99,7 +97,7 @@ struct BoardDesign {
         boardRect: CGRect
     ) {
         let rect = hold.rect(in: boardRect)
-        let outerPath = hold.path(in: boardRect)
+        let outerPath = renderPath(for: hold, in: boardRect)
 
         switch hold.treatment {
         case .surface:
