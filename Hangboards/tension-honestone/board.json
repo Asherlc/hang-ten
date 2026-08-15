@@ -18,7 +18,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": {"x": 0.036, "y": 0.112, "width": 0.25, "height": 0.166},
+          "frame": {"x": 0.036, "y": 0.338992561105207, "width": 0.25, "height": 0.064565356004251},
           "shape": {
             "type": "path",
             "commands": [
@@ -42,7 +42,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": {"x": 0.523, "y": 0.112, "width": 0.238, "height": 0.166},
+          "frame": {"x": 0.523, "y": 0.338992561105207, "width": 0.238, "height": 0.064565356004251},
           "shape": {
             "type": "path",
             "commands": [
@@ -66,7 +66,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": {"x": 0.286, "y": 0.032, "width": 0.237, "height": 0.246},
+          "frame": {"x": 0.286, "y": 0.307876726886291, "width": 0.237, "height": 0.095681190223167},
           "shape": {
             "type": "path",
             "commands": [
@@ -91,7 +91,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": {"x": 0.761, "y": 0.035, "width": 0.203, "height": 0.243},
+          "frame": {"x": 0.761, "y": 0.309043570669501, "width": 0.203, "height": 0.094514346439958},
           "shape": {
             "type": "path",
             "commands": [
@@ -117,7 +117,7 @@
       "fingerCapacity": 1,
       "geometry": [
         {
-          "frame": {"x": 0.027, "y": 0.345, "width": 0.054, "height": 0.36},
+          "frame": {"x": 0.027, "y": 0.429617428267800, "width": 0.054, "height": 0.140021253985122},
           "shape": {
             "type": "path",
             "commands": [
@@ -141,7 +141,7 @@
       "fingerCapacity": 1,
       "geometry": [
         {
-          "frame": {"x": 0.919, "y": 0.345, "width": 0.054, "height": 0.36},
+          "frame": {"x": 0.919, "y": 0.429617428267800, "width": 0.054, "height": 0.140021253985122},
           "shape": {
             "type": "path",
             "commands": [
@@ -164,7 +164,7 @@
       "sizeMillimeters": 20,
       "geometry": [
         {
-          "frame": {"x": 0.121, "y": 0.396, "width": 0.13, "height": 0.159},
+          "frame": {"x": 0.121, "y": 0.449453772582359, "width": 0.13, "height": 0.061842720510096},
           "shape": {
             "type": "path",
             "commands": [
@@ -187,7 +187,7 @@
       "sizeMillimeters": 20,
       "geometry": [
         {
-          "frame": {"x": 0.633, "y": 0.396, "width": 0.116, "height": 0.159},
+          "frame": {"x": 0.633, "y": 0.449453772582359, "width": 0.116, "height": 0.061842720510096},
           "shape": {
             "type": "path",
             "commands": [
@@ -210,7 +210,7 @@
       "sizeMillimeters": 15,
       "geometry": [
         {
-          "frame": {"x": 0.251, "y": 0.396, "width": 0.116, "height": 0.159},
+          "frame": {"x": 0.251, "y": 0.449453772582359, "width": 0.116, "height": 0.061842720510096},
           "shape": {
             "type": "path",
             "commands": [
@@ -233,7 +233,7 @@
       "sizeMillimeters": 15,
       "geometry": [
         {
-          "frame": {"x": 0.749, "y": 0.396, "width": 0.13, "height": 0.159},
+          "frame": {"x": 0.749, "y": 0.449453772582359, "width": 0.13, "height": 0.061842720510096},
           "shape": {
             "type": "path",
             "commands": [
@@ -256,7 +256,7 @@
       "sizeMillimeters": 25,
       "geometry": [
         {
-          "frame": {"x": 0.416, "y": 0.534, "width": 0.168, "height": 0.13},
+          "frame": {"x": 0.416, "y": 0.503128586609989, "width": 0.168, "height": 0.050563230605739},
           "shape": {
             "type": "path",
             "commands": [
@@ -280,7 +280,7 @@
       "sizeMillimeters": 10,
       "geometry": [
         {
-          "frame": {"x": 0.121, "y": 0.723, "width": 0.132, "height": 0.16},
+          "frame": {"x": 0.121, "y": 0.576639744952179, "width": 0.132, "height": 0.062231668437832},
           "shape": {
             "type": "path",
             "commands": [
@@ -303,7 +303,7 @@
       "sizeMillimeters": 10,
       "geometry": [
         {
-          "frame": {"x": 0.632, "y": 0.723, "width": 0.115, "height": 0.16},
+          "frame": {"x": 0.632, "y": 0.576639744952179, "width": 0.115, "height": 0.062231668437832},
           "shape": {
             "type": "path",
             "commands": [
@@ -326,7 +326,7 @@
       "sizeMillimeters": 8,
       "geometry": [
         {
-          "frame": {"x": 0.253, "y": 0.723, "width": 0.115, "height": 0.16},
+          "frame": {"x": 0.253, "y": 0.576639744952179, "width": 0.115, "height": 0.062231668437832},
           "shape": {
             "type": "path",
             "commands": [
@@ -349,7 +349,7 @@
       "sizeMillimeters": 8,
       "geometry": [
         {
-          "frame": {"x": 0.747, "y": 0.723, "width": 0.132, "height": 0.16},
+          "frame": {"x": 0.747, "y": 0.576639744952179, "width": 0.132, "height": 0.062231668437832},
           "shape": {
             "type": "path",
             "commands": [

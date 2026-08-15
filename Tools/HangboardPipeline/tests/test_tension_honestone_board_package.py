@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from hangboard_vectorizer.board_catalog import load_board_package
 
@@ -29,6 +30,23 @@ EXPECTED_HOLDS = (
     ("edge-8-left", "edge", 8),
     ("edge-8-right", "edge", 8),
 )
+EXPECTED_FULL_CANVAS_BOUNDS = {
+    "sloper-35-left": (60, 319, 478, 380),
+    "sloper-35-right": (874, 319, 1272, 380),
+    "sloper-45-left": (478, 290, 874, 380),
+    "sloper-45-right": (1272, 291, 1612, 380),
+    "pocket-25-one-left": (45, 404, 135, 536),
+    "pocket-25-one-right": (1537, 404, 1627, 536),
+    "edge-20-left": (202, 423, 420, 481),
+    "edge-20-right": (1058, 423, 1252, 481),
+    "edge-15-left": (420, 423, 614, 481),
+    "edge-15-right": (1252, 423, 1470, 481),
+    "center-edge-25": (696, 473, 976, 521),
+    "edge-10-left": (202, 543, 423, 601),
+    "edge-10-right": (1057, 543, 1249, 601),
+    "edge-8-left": (423, 543, 615, 601),
+    "edge-8-right": (1249, 543, 1470, 601),
+}
 
 
 def _points(command: object) -> tuple[tuple[float, float], ...]:
@@ -58,6 +76,30 @@ def _assert_exact_global_mirror(left: object, right: object) -> None:
         ):
             assert right_x == pytest.approx(1 - left_x, abs=1e-12)
             assert right_y == pytest.approx(left_y, abs=1e-12)
+
+
+def test_tension_honestone_geometry_uses_the_full_primary_canvas() -> None:
+    board = load_board_package(PACKAGE_ROOT).board
+    holds = {hold.id: hold for hold in board.holds}
+
+    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
+        width, height = presentation.size
+
+    assert (width, height) == (1672, 941)
+    assert board.facts["aspectRatio"] == 25 / 6
+
+    actual_bounds = {
+        hold_id: (
+            round(piece.frame.x * width),
+            round(piece.frame.y * height),
+            round((piece.frame.x + piece.frame.width) * width),
+            round((piece.frame.y + piece.frame.height) * height),
+        )
+        for hold_id, hold in holds.items()
+        for piece in hold.geometry
+    }
+
+    assert actual_bounds == EXPECTED_FULL_CANVAS_BOUNDS
 
 
 def test_tension_honestone_preserves_audited_contacts_and_asymmetric_zones() -> None:
