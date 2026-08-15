@@ -54,12 +54,15 @@ def test_escape_beta_22_audited_package_contract() -> None:
     assert {item.name for item in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
     with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as primary_image:
         assert primary_image.size == (1536, 1024)
+        primary_image_aspect_ratio = primary_image.width / primary_image.height
 
     assert board.id == "escape-beta-22"
     assert board.manufacturer == "Escape Climbing"
     assert board.name == "Beta Board"
     assert board.facts["dimensions"] == "26 × 6 × 2 in"
-    assert board.facts["aspectRatio"] == 26 / 6
+    assert board.facts["aspectRatio"] == pytest.approx(
+        primary_image_aspect_ratio, rel=0, abs=1e-12
+    )
     assert board.presentation_asset_path == "assets/primary.png"
     assert raw_board["productURL"] == "https://escapeclimbing.com/products/ec72100"
     assert tuple(
