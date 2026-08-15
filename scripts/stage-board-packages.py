@@ -140,11 +140,8 @@ def _replace_destination(staging: Path, destination: Path) -> None:
     if replaced_existing_destination:
         try:
             shutil.rmtree(backup)
-        except OSError as error:
-            print(
-                f"warning: could not remove backup directory {backup}: {error}",
-                file=sys.stderr,
-            )
+        except OSError:
+            pass
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
