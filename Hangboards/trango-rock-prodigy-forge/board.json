@@ -6,7 +6,7 @@
   "subtitle": "Two-piece hangboard",
   "productURL": "https://trango.com/products/rock-prodigy-forge",
   "dimensions": "Each piece: 12.75 × 5.25 in",
-  "aspectRatio": 4.857142857142857,
+  "aspectRatio": 1.5,
   "presentation": {"assetPath": "assets/primary.png"},
   "holds": [
     {
