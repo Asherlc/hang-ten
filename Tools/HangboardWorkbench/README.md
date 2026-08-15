@@ -56,8 +56,6 @@ Each physical hold has one identifier and one or more geometry pieces embedded
 in `board.json`; each piece has one closed, contiguous contour. The editor
 exposes each piece under a stable `<hold-id>-piece-<index>` key, and runtime
 bounds are the union of all pieces belonging to the physical hold.
-`aspectRatio` is the primary PNG's pixel width divided by height and must match
-the decoded image within 0.1% relative error.
 
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.

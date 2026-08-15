@@ -29,7 +29,6 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(firstHold.fingerCapacity)
         XCTAssertNil(firstHold.features)
         XCTAssertEqual(store.semantics(for: board.id), [:])
-        XCTAssertNil(store.design(for: board.id))
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), presentationBytes)
@@ -84,6 +83,23 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), relativePath)
+        }
+    }
+
+    func testStoreRejectsRootCatalogFiles() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try Data("{}".utf8).write(
+                to: hangboardsURL.appendingPathComponent("catalog.json")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(boardID, "catalog.json")
+            XCTAssertTrue(reason.contains("direct child directories"))
         }
     }
 
