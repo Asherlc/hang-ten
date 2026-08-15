@@ -337,11 +337,14 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 
 def validate_hang_ten_checkout(root: Path) -> Path:
     """Accept a checkout containing the direct Workbench and board library."""
-    resolved_root = _resolved_lexical_directory(
-        root,
-        unavailable_message="repository root must be a Hang Ten checkout",
-        symlink_message="repository root must be a Hang Ten checkout",
-    )
+    try:
+        resolved_root = _resolved_lexical_directory(
+            root,
+            unavailable_message="repository root must be a Hang Ten checkout",
+            symlink_message="repository root must be a Hang Ten checkout",
+        )
+    except EditorError:
+        raise EditorError("repository root must be a Hang Ten checkout")
     git_marker = resolved_root / ".git"
     hangboards = resolved_root / "Hangboards"
     workbench = resolved_root / "Tools" / "HangboardWorkbench"
