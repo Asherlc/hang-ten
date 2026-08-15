@@ -152,11 +152,29 @@ struct BoardPackageStore {
                 imageHeight: presentationSize.height,
                 boardID: boardDocument.id
             )
-            _ = try Self.validateHolds(in: boardDocument)
-            guard seenBoardIDs.insert(boardDocument.id).inserted else {
-                throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
-            }
-            let board = try boardDocument.trainingBoard()
+            try Self.validateBoardIDs(
+                catalogID: entry.id,
+                boardDocument: boardDocument,
+                artworkDocument: artworkDocument,
+                semanticsDocument: semanticsDocument,
+                evidenceDocument: evidenceDocument,
+                resourcePrefix: resourcePrefix
+            )
+
+            let holdIDs = try Self.validateHolds(in: boardDocument)
+            try Self.validateArtwork(
+                artworkDocument,
+                boardID: entry.id,
+                holds: boardDocument.holds,
+                holdIDs: holdIDs
+            )
+            try Self.validateSemantics(
+                semanticsDocument.semanticHolds,
+                boardID: entry.id,
+                holdIDs: holdIDs
+            )
+            let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
+            let board = try boardDocument.trainingBoard(semantics: semantics)
             loadedBoards.append(board)
             let assetURL = packageURL.appendingPathComponent("assets/primary.png")
             loadedPresentationURLs[board.id] = assetURL
@@ -474,22 +492,28 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an invalid finger capacity"
                 )
             }
-            let geometryValidation = BoardHoldGeometryValidator.validate(
-                hold.geometry.map(\.holdPieceDocument),
-                holdID: hold.id,
-                pieceID: { "\(hold.id)-piece-\($0)" }
-            )
-            guard !geometryValidation.isEmpty else {
+            guard !hold.geometry.isEmpty else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) geometry must include at least one piece"
                 )
             }
-            for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
-                if let failureReason = pieceValidation.packageFailureReason {
+            for (pieceIndex, piece) in hold.geometry.enumerated() {
+                guard piece.frame.isNormalized else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] \(failureReason)"
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] has an invalid frame"
+                    )
+                }
+                do {
+                    _ = try piece.boardHoldPiece(
+                        id: "\(hold.id)-piece-\(pieceIndex)",
+                        holdID: hold.id
+                    )
+                } catch {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] is invalid: \(error)"
                     )
                 }
             }
@@ -589,7 +613,9 @@ private struct BoardPackageBoardDocument: Decodable {
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
             holds: try holds.map { try $0.trainingBoardHold() },
-            semanticHolds: [:],
+            semanticHolds: semantics.mapValues {
+                SemanticHoldMappingDefinition(holdIDs: $0)
+            },
             productURL: productURL,
             photoAssetName: nil
         )
@@ -614,7 +640,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let id: String
     let name: String
     let kind: HoldKind
-    let geometry: [BoardPackageGeometryDocument]
+    let geometry: [BoardHoldPieceDocument]
     let sizeMillimeters: Int?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
     let gripType: GripType?
@@ -642,7 +668,7 @@ private struct BoardPackageHoldDocument: Decodable {
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
+        geometry = try container.decode([BoardHoldPieceDocument].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardPackageMillimeterRangeDocument.self,
@@ -654,11 +680,6 @@ private struct BoardPackageHoldDocument: Decodable {
     }
 
     func trainingBoardHold() throws -> BoardHold {
-        guard !geometry.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
-        }
         let pieces = try geometry.enumerated().map { index, document in
             try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
         }
@@ -674,41 +695,6 @@ private struct BoardPackageHoldDocument: Decodable {
                 $0.lowerBound...$0.upperBound
             },
             features: features.map(Set.init)
-        )
-    }
-}
-
-private struct BoardPackageGeometryDocument: Decodable {
-    let frame: BoardPackageFrameDocument
-    let shape: BoardGeometryShapeDocument
-    let treatment: BoardGeometryTreatmentDocument?
-
-    private enum CodingKeys: String, CodingKey {
-        case frame
-        case shape
-        case treatment
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["frame", "shape", "treatment"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
-        shape = try container.decode(BoardGeometryShapeDocument.self, forKey: .shape)
-        treatment = try container.decodeIfPresent(
-            BoardGeometryTreatmentDocument.self,
-            forKey: .treatment
-        )
-    }
-
-    func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
-        try holdPieceDocument.boardHoldPiece(id: id, holdID: holdID)
-    }
-
-    var holdPieceDocument: BoardHoldPieceDocument {
-        BoardHoldPieceDocument(
-            frame: frame,
-            shape: shape,
-            treatment: treatment
         )
     }
 }
@@ -1263,5 +1249,209 @@ private extension BoardGeometryTreatmentDocument {
 
     func invalidTreatment(pieceID: String) -> BoardGeometryAdaptationError {
         .invalid("hold piece \(pieceID) has an invalid \(type) treatment")
+    }
+}
+struct BoardArtworkDocument: Decodable {
+    let schemaVersion: Int
+    let boardID: String
+    let canvasFrame: BoardPackageFrameDocument
+    let palette: String
+    let silhouette: BoardArtworkShapeDocument
+    let layers: [BoardArtworkLayerDocument]
+    let holdPieces: [BoardArtworkHoldPieceDocument]
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion
+        case boardID
+        case canvasFrame
+        case palette
+        case silhouette
+        case layers
+        case holdPieces
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "schemaVersion", "boardID", "canvasFrame", "palette", "silhouette", "layers",
+            "holdPieces"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        canvasFrame = try container.decode(BoardPackageFrameDocument.self, forKey: .canvasFrame)
+        palette = try container.decode(String.self, forKey: .palette)
+        silhouette = try container.decode(BoardArtworkShapeDocument.self, forKey: .silhouette)
+        layers = try container.decode([BoardArtworkLayerDocument].self, forKey: .layers)
+        holdPieces = try container.decode([BoardArtworkHoldPieceDocument].self, forKey: .holdPieces)
+    }
+}
+
+struct BoardArtworkLayerDocument: Decodable {
+    let id: String
+    let role: String
+    let frame: BoardPackageFrameDocument
+    let shape: BoardArtworkShapeDocument
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case role
+        case frame
+        case shape
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "role", "frame", "shape"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        role = try container.decode(String.self, forKey: .role)
+        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+        shape = try container.decode(BoardArtworkShapeDocument.self, forKey: .shape)
+    }
+}
+
+struct BoardArtworkHoldPieceDocument: Decodable {
+    let id: String
+    let holdID: String
+    let frame: BoardPackageFrameDocument
+    let shape: BoardArtworkShapeDocument
+    let treatment: BoardArtworkTreatmentDocument
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case holdID
+        case frame
+        case shape
+        case treatment
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "holdID", "frame", "shape", "treatment"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        holdID = try container.decode(String.self, forKey: .holdID)
+        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+        shape = try container.decode(BoardArtworkShapeDocument.self, forKey: .shape)
+        treatment = try container.decode(BoardArtworkTreatmentDocument.self, forKey: .treatment)
+    }
+}
+
+struct BoardArtworkShapeDocument: Codable, Hashable {
+    let type: String
+    let commands: [BoardArtworkPathCommandDocument]?
+    let cornerRadiusFraction: Double?
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case commands
+        case cornerRadiusFraction
+    }
+
+    init(
+        type: String,
+        commands: [BoardArtworkPathCommandDocument]?,
+        cornerRadiusFraction: Double?
+    ) {
+        self.type = type
+        self.commands = commands
+        self.cornerRadiusFraction = cornerRadiusFraction
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "roundedRect":
+            try decoder.rejectUnknownKeys(["type", "cornerRadiusFraction"])
+            commands = nil
+            cornerRadiusFraction = try container.decode(Double.self, forKey: .cornerRadiusFraction)
+        case "path":
+            try decoder.rejectUnknownKeys(["type", "commands"])
+            commands = try container.decode([BoardArtworkPathCommandDocument].self, forKey: .commands)
+            cornerRadiusFraction = nil
+        default:
+            try decoder.rejectUnknownKeys(["type", "commands", "cornerRadiusFraction"])
+            commands = try container.decodeIfPresent(
+                [BoardArtworkPathCommandDocument].self,
+                forKey: .commands
+            )
+            cornerRadiusFraction = try container.decodeIfPresent(
+                Double.self,
+                forKey: .cornerRadiusFraction
+            )
+        }
+    }
+}
+
+struct BoardArtworkPathCommandDocument: Codable, Hashable {
+    let command: String
+    let to: [Double]?
+    let control: [Double]?
+    let control1: [Double]?
+    let control2: [Double]?
+
+    private enum CodingKeys: String, CodingKey {
+        case command
+        case to
+        case control
+        case control1
+        case control2
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        command = try container.decode(String.self, forKey: .command)
+        let allowedKeys: Set<String>
+        switch command {
+        case "move", "line":
+            allowedKeys = ["command", "to"]
+        case "quad":
+            allowedKeys = ["command", "to", "control"]
+        case "curve":
+            allowedKeys = ["command", "to", "control1", "control2"]
+        case "close":
+            allowedKeys = ["command"]
+        default:
+            allowedKeys = ["command", "to", "control", "control1", "control2"]
+        }
+        try decoder.rejectUnknownKeys(allowedKeys)
+        to = try container.decodeIfPresent([Double].self, forKey: .to)
+        control = try container.decodeIfPresent([Double].self, forKey: .control)
+        control1 = try container.decodeIfPresent([Double].self, forKey: .control1)
+        control2 = try container.decodeIfPresent([Double].self, forKey: .control2)
+    }
+}
+
+struct BoardArtworkTreatmentDocument: Codable, Hashable {
+    let type: String
+    let rimInsetFraction: Double?
+    let depth: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case rimInsetFraction
+        case depth
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "surface":
+            try decoder.rejectUnknownKeys(["type"])
+            rimInsetFraction = nil
+            depth = nil
+        case "shelf":
+            try decoder.rejectUnknownKeys(["type", "rimInsetFraction"])
+            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
+            depth = nil
+        case "recess":
+            try decoder.rejectUnknownKeys(["type", "rimInsetFraction", "depth"])
+            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
+            depth = try container.decode(String.self, forKey: .depth)
+        default:
+            try decoder.rejectUnknownKeys(["type", "rimInsetFraction", "depth"])
+            rimInsetFraction = try container.decodeIfPresent(Double.self, forKey: .rimInsetFraction)
+            depth = try container.decodeIfPresent(String.self, forKey: .depth)
+        }
     }
 }
