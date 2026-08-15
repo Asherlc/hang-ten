@@ -78,6 +78,19 @@ def _assert_piece_is_exact_global_mirror(left: object, right: object) -> None:
             assert right_y == pytest.approx(left_y, abs=1e-12)
 
 
+def test_tension_grindstone_aspect_ratio_matches_presentation_header() -> None:
+    board = load_board_package(PACKAGE_ROOT).board
+    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
+        presentation_aspect_ratio = presentation.width / presentation.height
+
+    assert math.isclose(
+        board.facts["aspectRatio"],
+        presentation_aspect_ratio,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    )
+
+
 def test_tension_grindstone_preserves_audited_asymmetric_depth_zones() -> None:
     with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
         presentation_size = presentation.size
@@ -94,7 +107,6 @@ def test_tension_grindstone_preserves_audited_asymmetric_depth_zones() -> None:
     assert board.manufacturer == "Tension Climbing"
     assert board.name == "Grindstone"
     assert board.facts["dimensions"] == "22 × 6 × 2.75 in"
-    assert math.isclose(board.facts["aspectRatio"], 22 / 6, abs_tol=1e-12)
     assert board.presentation_asset_path == "assets/primary.png"
     assert tuple(
         (hold.id, hold.kind, hold.size_millimeters, len(hold.geometry))
