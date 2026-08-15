@@ -66,9 +66,7 @@ def test_stoak_board_iii_preserves_official_inventory_and_exact_geometry() -> No
     assert board["name"] == "Stoak Board III"
     assert board["dimensions"] == "57 × 12 × 5.5 cm"
     image_width, image_height = _png_dimensions(PACKAGE_ROOT / "assets" / "primary.png")
-    assert math.isclose(
-        board["aspectRatio"], image_width / image_height, rel_tol=0.001
-    )
+    assert board["aspectRatio"] == image_width / image_height
     assert board["presentation"]["assetPath"] == "assets/primary.png"
     assert tuple(
         (hold["id"], hold["kind"], hold.get("sizeMillimeters"))
