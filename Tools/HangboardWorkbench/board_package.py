@@ -93,6 +93,7 @@ _HOLD_FEATURES = frozenset(
 _TREATMENT_TYPES = frozenset({"surface", "shelf", "recess"})
 _RECESS_DEPTHS = frozenset({"shallow", "deep"})
 _FRAME_EDGE_TOLERANCE = 0.0000005
+_RECOVERY_DIRECTORY_NAME = ".workbench-recovery"
 
 
 class BoardPackageError(ValueError):
@@ -301,6 +302,9 @@ def _discover_packages_unlocked(
             if child.is_symlink() or not child.is_file():
                 raise BoardPackageError("workbench lock must be a regular file")
             continue
+        if child.name == _RECOVERY_DIRECTORY_NAME:
+            _validate_recovery_directory(child)
+            continue
         if child.is_symlink():
             raise BoardPackageError("board library direct children must not be symlinks")
         if not child.is_dir():
@@ -383,13 +387,16 @@ def _replace_package_locked(
 
 def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
     live_package = root / slug
-    backup = root.parent / f".{root.name}.workbench-previous-{uuid.uuid4().hex}"
+    recovery: Path | None = None
+    backup: Path | None = None
     moved_live = False
     installed = False
     try:
         if live_package.exists():
             if live_package.is_symlink() or not live_package.is_dir():
                 raise BoardPackageError("existing board package is unsafe")
+            recovery = _prepare_recovery_directory(root)
+            backup = recovery / f"{slug}-previous-{uuid.uuid4().hex}"
             os.replace(live_package, backup)
             moved_live = True
         os.replace(staged_package, live_package)
@@ -400,21 +407,53 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
         try:
             if installed and live_package.exists():
                 shutil.rmtree(live_package)
-            if moved_live and backup.exists():
+            if moved_live and backup is not None and backup.exists():
                 os.replace(backup, live_package)
         except OSError as restore_error:
             raise BoardPackageError(
                 "could not restore the previous board package"
             ) from restore_error
+        _remove_empty_recovery_directory(recovery)
         raise BoardPackageError("could not save board package") from error
     # Installing the staged package is the commit point. A failed best-effort
     # cleanup must not report rollback semantics or hide the committed package;
-    # the sibling backup remains recoverable outside package discovery.
-    if moved_live:
+    # the internal backup remains recoverable outside direct package discovery.
+    if moved_live and backup is not None:
         try:
             shutil.rmtree(backup)
         except OSError:
             pass
+    _remove_empty_recovery_directory(recovery)
+
+
+def _prepare_recovery_directory(root: Path) -> Path:
+    recovery = root / _RECOVERY_DIRECTORY_NAME
+    try:
+        recovery.mkdir(mode=0o700)
+    except FileExistsError:
+        pass
+    except OSError as error:
+        raise BoardPackageError("workbench recovery directory is not accessible") from error
+    _validate_recovery_directory(recovery)
+    return recovery
+
+
+def _validate_recovery_directory(recovery: Path) -> None:
+    try:
+        mode = recovery.lstat().st_mode
+    except OSError as error:
+        raise BoardPackageError("workbench recovery directory is not accessible") from error
+    if not stat.S_ISDIR(mode):
+        raise BoardPackageError("workbench recovery path must be a directory")
+
+
+def _remove_empty_recovery_directory(recovery: Path | None) -> None:
+    if recovery is None:
+        return
+    try:
+        recovery.rmdir()
+    except OSError:
+        pass
 
 
 def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
