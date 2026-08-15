@@ -200,7 +200,7 @@ runs:
         PY
         )
         curl --fail --silent --show-error "${curl_timeout_args[@]}" "http://127.0.0.1:${port}/api/boards" \
-          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True; assert isinstance(payload["boards"], list); assert isinstance(payload["diagnostics"], list); assert all(isinstance(board.get("boardId"), str) and isinstance(board.get("status"), str) for board in payload["boards"])'
+          | python -c 'import json,sys; payload=json.load(sys.stdin); assert payload["ok"] is True; assert isinstance(payload["boards"], list); assert payload["boards"]; assert all(isinstance(board.get("boardId"), str) and board["boardId"] and isinstance(board.get("displayName"), str) and board["displayName"] and isinstance(board.get("holdCount"), int) and board["holdCount"] > 0 and board.get("href") == "/api/boards/" + board["boardId"] for board in payload["boards"])'
 
         app_child_pid="$(pgrep -P "$app_pid" || true)"
         if [[ -z "$app_child_pid" || "$app_child_pid" == *$'\n'* ]]; then
