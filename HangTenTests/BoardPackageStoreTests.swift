@@ -198,6 +198,47 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreAcceptsExactlySupportedPhysicalHoldKinds() throws {
+        let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
+        XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                let template = try XCTUnwrap(
+                    (board["holds"] as? [[String: Any]])?.first
+                )
+                board["holds"] = expectedKinds.map { kind in
+                    var hold = template
+                    hold["id"] = "hold-\(kind)"
+                    hold["name"] = "Fixture \(kind)"
+                    hold["kind"] = kind
+                    return hold
+                }
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.holds.map(\.kind.rawValue), expectedKinds)
+    }
+
+    func testStoreRejectsUnsupportedPhysicalHoldKind() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["kind"] = "unsupported"
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testStoreRejectsSharedMalformedPathShapes() throws {
         let validationFixtures = try validationFixtures()
         let shapes = try XCTUnwrap(
