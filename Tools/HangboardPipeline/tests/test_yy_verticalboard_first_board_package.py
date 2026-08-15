@@ -5,6 +5,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 
+from PIL import Image
 import pytest
 
 from hangboard_vectorizer.board_catalog import load_board_package
@@ -13,42 +14,42 @@ from hangboard_vectorizer.board_catalog import load_board_package
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "yy-verticalboard-first"
 EXPECTED_HOLDS = (
-    ("edge-45", "edge", 45, 2),
-    ("edge-33", "edge", 33, 2),
-    ("edge-25", "edge", 25, 2),
-    ("edge-22", "edge", 22, 2),
-    ("edge-20", "edge", 20, 2),
-    ("center-handle", "edge", None, 2),
-    ("sloper-35", "sloper", None, 2),
-    ("sloper-20", "sloper", None, 1),
-    ("jug-left", "jug", None, 1),
-    ("jug-right", "jug", None, 1),
+    ("pocket-45", "45 mm four-finger pocket", "pocket", 45, 4, 2),
+    ("pocket-33", "33 mm four-finger pocket", "pocket", 33, 4, 2),
+    ("pocket-25", "25 mm four-finger pocket", "pocket", 25, 4, 2),
+    ("pocket-22", "22 mm four-finger pocket", "pocket", 22, 4, 2),
+    ("pocket-20", "20 mm four-finger pocket", "pocket", 20, 4, 2),
+    ("center-handle", "40 / 24 mm center handle", "edge", None, None, 2),
+    ("sloper-35", "35° sloper", "sloper", None, None, 2),
+    ("sloper-20", "20° sloper", "sloper", None, None, 1),
+    ("jug-left", "Left jug", "jug", None, None, 1),
+    ("jug-right", "Right jug", "jug", None, None, 1),
 )
 # Literal review contract from the accepted numbered overlay and source audit. The
 # piece index is meaningful: paired holds are left then right, while the center
 # handle is specifically upper 40 mm then lower 24 mm.
 EXPECTED_PIECES = {
-    ("edge-45", 0): {
+    ("pocket-45", 0): {
         "frame": (0.089, 0.454, 0.147, 0.084),
         "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"},
         "pathDigest": "e25b71e3c57a8b0d8db6b33be0df032141a35e800446cd0c90b4b23356621952",
     },
-    ("edge-45", 1): {
+    ("pocket-45", 1): {
         "frame": (0.764, 0.454, 0.147, 0.084),
         "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"},
         "pathDigest": "bd8addd2817a7608a041627eb4751d4469f6319505708c6cb66f7de7b4510094",
     },
-    ("edge-33", 0): {
+    ("pocket-33", 0): {
         "frame": (0.249, 0.455, 0.143, 0.081),
         "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"},
         "pathDigest": "e25b71e3c57a8b0d8db6b33be0df032141a35e800446cd0c90b4b23356621952",
     },
-    ("edge-33", 1): {
+    ("pocket-33", 1): {
         "frame": (0.608, 0.455, 0.143, 0.081),
         "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"},
         "pathDigest": "bd8addd2817a7608a041627eb4751d4469f6319505708c6cb66f7de7b4510094",
     },
-    ("edge-25", 0): {
+    ("pocket-25", 0): {
         "frame": (0.09, 0.345, 0.145, 0.08),
         "treatment": {
             "type": "recess",
@@ -57,7 +58,7 @@ EXPECTED_PIECES = {
         },
         "pathDigest": "e25b71e3c57a8b0d8db6b33be0df032141a35e800446cd0c90b4b23356621952",
     },
-    ("edge-25", 1): {
+    ("pocket-25", 1): {
         "frame": (0.765, 0.345, 0.145, 0.08),
         "treatment": {
             "type": "recess",
@@ -66,7 +67,7 @@ EXPECTED_PIECES = {
         },
         "pathDigest": "bd8addd2817a7608a041627eb4751d4469f6319505708c6cb66f7de7b4510094",
     },
-    ("edge-22", 0): {
+    ("pocket-22", 0): {
         "frame": (0.285, 0.596, 0.14, 0.08),
         "treatment": {
             "type": "recess",
@@ -75,7 +76,7 @@ EXPECTED_PIECES = {
         },
         "pathDigest": "e25b71e3c57a8b0d8db6b33be0df032141a35e800446cd0c90b4b23356621952",
     },
-    ("edge-22", 1): {
+    ("pocket-22", 1): {
         "frame": (0.575, 0.596, 0.14, 0.08),
         "treatment": {
             "type": "recess",
@@ -84,7 +85,7 @@ EXPECTED_PIECES = {
         },
         "pathDigest": "bd8addd2817a7608a041627eb4751d4469f6319505708c6cb66f7de7b4510094",
     },
-    ("edge-20", 0): {
+    ("pocket-20", 0): {
         "frame": (0.138, 0.596, 0.14, 0.08),
         "treatment": {
             "type": "recess",
@@ -93,7 +94,7 @@ EXPECTED_PIECES = {
         },
         "pathDigest": "e25b71e3c57a8b0d8db6b33be0df032141a35e800446cd0c90b4b23356621952",
     },
-    ("edge-20", 1): {
+    ("pocket-20", 1): {
         "frame": (0.722, 0.596, 0.14, 0.08),
         "treatment": {
             "type": "recess",
@@ -145,11 +146,11 @@ EXPECTED_PIECES = {
     },
 }
 MIRRORED_MULTI_PIECE_HOLDS = (
-    "edge-45",
-    "edge-33",
-    "edge-25",
-    "edge-22",
-    "edge-20",
+    "pocket-45",
+    "pocket-33",
+    "pocket-25",
+    "pocket-22",
+    "pocket-20",
     "sloper-35",
 )
 
@@ -227,18 +228,42 @@ def test_yy_verticalboard_first_preserves_audited_logical_holds_and_contacts() -
     assert board.id == "yy.verticalboard-first"
     assert board.manufacturer == "YY Vertical"
     assert board.name == "VerticalBoard First"
+    assert board.facts["subtitle"] == (
+        "Ten-grip poplar hangboard with five four-finger pocket depths, two sloper "
+        "angles, two jugs, and a central handle."
+    )
+    assert board.facts["productURL"] == (
+        "https://www.yyvertical.com/en/products/verticalboard-first"
+    )
     assert board.facts["dimensions"] == "540 × 130 × 50 mm"
     assert board.facts["aspectRatio"] == pytest.approx(54 / 13, abs=1e-12)
     assert board.presentation_asset_path == "assets/primary.png"
+    source_asset = PACKAGE_ROOT / board.presentation_asset_path
+    assert sha256(source_asset.read_bytes()).hexdigest() == (
+        "e765f9ffad834127c96499008d5f99fa768bd11764e64cb96becc6d93d8a8011"
+    )
+    with Image.open(source_asset) as image:
+        assert image.size == (1774, 887)
     assert tuple(
-        (hold.id, hold.kind, hold.size_millimeters, len(hold.geometry))
+        (
+            hold.id,
+            hold.name,
+            hold.kind,
+            hold.size_millimeters,
+            hold.finger_capacity,
+            len(hold.geometry),
+        )
         for hold in board.holds
     ) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in board.holds) == {
-        "edge": 6,
+        "pocket": 5,
+        "edge": 1,
         "sloper": 2,
         "jug": 2,
     }
+    assert Counter(
+        hold.kind for hold in board.holds for _piece in hold.geometry
+    ) == {"pocket": 10, "edge": 2, "sloper": 3, "jug": 2}
     assert sum(len(hold.geometry) for hold in board.holds) == 17
 
     pieces = [piece for hold in board.holds for piece in hold.geometry]
@@ -309,7 +334,18 @@ def test_yy_verticalboard_first_preserves_audited_logical_holds_and_contacts() -
 
     assert all(hold.depth_range_millimeters is None for hold in board.holds)
     assert all(hold.grip_type is None for hold in board.holds)
-    assert all(hold.finger_capacity is None for hold in board.holds)
+    assert {hold.id: hold.finger_capacity for hold in board.holds} == {
+        "pocket-45": 4,
+        "pocket-33": 4,
+        "pocket-25": 4,
+        "pocket-22": 4,
+        "pocket-20": 4,
+        "center-handle": None,
+        "sloper-35": None,
+        "sloper-20": None,
+        "jug-left": None,
+        "jug-right": None,
+    }
     assert all(hold.features is None for hold in board.holds)
 
     raw_document = json.loads((PACKAGE_ROOT / "board.json").read_text())
@@ -322,7 +358,6 @@ def test_yy_verticalboard_first_preserves_audited_logical_holds_and_contacts() -
         "ui",
         "depthRangeMillimeters",
         "gripType",
-        "fingerCapacity",
         "features",
     }
 
