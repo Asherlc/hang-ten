@@ -139,14 +139,13 @@ def test_moon_armstrong_audited_inventory_offset_layout_and_contact_regions() ->
         jug = holds[f"incut-jug-{side}"].geometry[0].frame
         sloper = holds[f"sloper-35-{side}"].geometry[0].frame
         assert jug != sloper
-        assert _intersection_area(jug, sloper) < 0.2 * min(
-            jug.width * jug.height,
-            sloper.width * sloper.height,
-        )
+        assert _intersection_area(jug, sloper) == 0
 
         mono = holds[f"pocket-22-one-{side}"].geometry[0].frame
         two = holds[f"pocket-22-two-{side}"].geometry[0].frame
         assert _intersection_area(mono, two) == 0
+        assert 0.025 <= mono.width <= 0.029
+        assert 0.045 <= mono.height <= 0.051
 
     assert holds["sloper-35-left"].grip_type == "sloper"
     assert holds["sloper-35-right"].grip_type == "sloper"
@@ -186,7 +185,7 @@ def test_moon_armstrong_primary_contains_both_separate_through_monos() -> None:
     # and its surrounding rim remains visibly wooden rather than becoming a
     # broad background cut-out.
     backdrop = image.getpixel((0, 0))
-    for normalized_x, normalized_y in ((0.355, 0.657), (0.811, 0.657)):
+    for normalized_x, normalized_y in ((0.3475, 0.661), (0.8185, 0.661)):
         center_x = round(normalized_x * width)
         center_y = round(normalized_y * height)
         center = image.getpixel((center_x, center_y))
