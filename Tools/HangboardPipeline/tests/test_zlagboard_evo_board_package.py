@@ -138,7 +138,7 @@ def test_zlagboard_evo_preserves_audited_inventory_geometry_and_asset() -> None:
     assert board["name"] == "Zlagboard Evo"
     assert board["productURL"] == "https://www.zlagboard.com/hangboards"
     assert board["dimensions"] == "8 × 23 × 70.5 cm"
-    assert math.isclose(board["aspectRatio"], 2081 / 755, abs_tol=1e-12)
+    assert board["aspectRatio"] == 2.75629139072848
     assert board["presentation"] == {"assetPath": "assets/primary.png"}
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {
@@ -220,6 +220,7 @@ def test_zlagboard_evo_preserves_audited_inventory_geometry_and_asset() -> None:
         _png_ihdr(PRIMARY)
     )
     assert (width, height) == (2081, 755)
+    assert math.isclose(board["aspectRatio"], width / height, abs_tol=1e-12)
     assert (bit_depth, color_type, compression, filter_method, interlace) == (
         8,
         2,
