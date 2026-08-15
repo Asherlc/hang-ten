@@ -71,6 +71,7 @@ def test_metolius_climbers_edge_audited_inventory_and_exact_geometry() -> None:
         ">II", (PACKAGE_ROOT / "assets" / "primary.png").read_bytes()[16:24]
     )
     assert (image_width, image_height) == (1717, 916)
+    assert board["aspectRatio"] == 1.87445414847162
     assert board["aspectRatio"] == pytest.approx(1717 / 916)
     assert board["aspectRatio"] == pytest.approx(image_width / image_height)
     assert board["presentation"] == {"assetPath": "assets/primary.png"}
