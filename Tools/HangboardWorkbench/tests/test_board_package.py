@@ -19,6 +19,9 @@ WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_PACKAGE = (
     REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
 )
+EVOLV_KILTER_BASIC_LONG_PACKAGE = (
+    REPOSITORY_ROOT / "Hangboards" / "evolv-kilter-basic-long"
+)
 PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
 VALIDATION_FIXTURES = json.loads(
     (
@@ -29,6 +32,12 @@ VALIDATION_FIXTURES = json.loads(
     ).read_text(encoding="utf-8")
 )
 SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
+EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS = (
+    ("rounded-jug", "jug", None, (0.055, 0.391, 0.89, 0.117)),
+    ("rounded-edge-20", "edge", 20, (0.056, 0.535, 0.888, 0.028)),
+    ("rounded-edge-15", "edge", 15, (0.057, 0.594, 0.886, 0.027)),
+    ("rounded-edge-10", "edge", 10, (0.057, 0.655, 0.886, 0.031)),
+)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -188,6 +197,58 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
             assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
             assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
             assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+
+
+def test_evolv_kilter_basic_long_has_four_continuous_rounded_contacts() -> None:
+    package = board_package.load_board_package(EVOLV_KILTER_BASIC_LONG_PACKAGE)
+    board = package.board
+    image_header = (
+        EVOLV_KILTER_BASIC_LONG_PACKAGE / "assets" / "primary.png"
+    ).read_bytes()[:24]
+
+    assert image_header[:16] == b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"
+    assert struct.unpack(">II", image_header[16:24]) == (1537, 1023)
+    assert board["id"] == "evolv-kilter-basic-long"
+    assert board["manufacturer"] == "Evolv"
+    assert board["name"] == "Basic Training Board (Long)"
+    assert board["dimensions"] == "79 × 16 × 6 cm"
+    assert board["aspectRatio"] == 1.50244379276637
+    assert board["aspectRatio"] == pytest.approx(1537 / 1023, abs=1e-14)
+    assert board["presentation"]["assetPath"] == "assets/primary.png"
+    holds = board["holds"]
+    assert tuple(
+        (hold["id"], hold["kind"], hold.get("sizeMillimeters")) for hold in holds
+    ) == tuple(expected[:3] for expected in EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS)
+
+    for hold, expected in zip(
+        holds, EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS, strict=True
+    ):
+        assert len(hold["geometry"]) == 1
+        piece = hold["geometry"][0]
+        frame = piece["frame"]
+        assert (
+            frame["x"],
+            frame["y"],
+            frame["width"],
+            frame["height"],
+        ) == pytest.approx(expected[3], abs=1e-9)
+        assert piece["shape"]["type"] == "path"
+        assert piece["shape"]["commands"][0]["command"] == "move"
+        assert piece["shape"]["commands"][-1]["command"] == "close"
+        assert (
+            sum(
+                command["command"] == "curve"
+                for command in piece["shape"]["commands"]
+            )
+            >= 4
+        )
+        assert frame["width"] * frame["height"] > 0
+        assert frame["x"] == pytest.approx(1 - frame["x"] - frame["width"])
+        assert piece["treatment"] == {"type": "surface"}
+        assert "depthRangeMillimeters" not in hold
+        assert "gripType" not in hold
+        assert "fingerCapacity" not in hold
+        assert "features" not in hold
 
 
 def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
