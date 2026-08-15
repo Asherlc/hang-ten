@@ -18,7 +18,7 @@
       "features": ["jug"],
       "geometry": [
         {
-          "frame": {"x": 0.0, "y": 0.0, "width": 0.18, "height": 0.17},
+          "frame": {"x": 0.045095829, "y": 0.253664036, "width": 0.163765502, "height": 0.075817362},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.04, 1.0]},
             {"command": "curve", "control1": [0.0, 0.78], "control2": [0.0, 0.34], "to": [0.16, 0.16]},
@@ -30,7 +30,7 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.0, "y": 0.14, "width": 0.045, "height": 0.27},
+          "frame": {"x": 0.045095829, "y": 0.316101864, "width": 0.033000000, "height": 0.120415810},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.16, 0.0]},
             {"command": "curve", "control1": [0.02, 0.16], "control2": [0.0, 0.42], "to": [0.08, 0.63]},
@@ -42,7 +42,7 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.145, "y": 0.14, "width": 0.035, "height": 0.27},
+          "frame": {"x": 0.177018038, "y": 0.316101864, "width": 0.031843292, "height": 0.120415810},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.0, 0.0]},
             {"command": "line", "to": [0.84, 0.0]},
@@ -54,10 +54,10 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.035, "y": 0.295, "width": 0.11, "height": 0.115},
+          "frame": {"x": 0.076939121, "y": 0.385229458, "width": 0.100078918, "height": 0.051288215},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.0, 0.0]},
-            {"command": "curve", "control1": [0.24, 0.12], "control2": [0.72, 0.12], "to": [1.0, 0.0]},
+            {"command": "curve", "control1": [0.24, 0.2], "control2": [0.72, 0.2], "to": [1.0, 0.0]},
             {"command": "curve", "control1": [0.94, 0.48], "control2": [0.82, 0.82], "to": [0.68, 1.0]},
             {"command": "line", "to": [0.24, 1.0]},
             {"command": "curve", "control1": [0.1, 0.82], "control2": [0.02, 0.46], "to": [0.0, 0.0]},
@@ -74,7 +74,7 @@
       "features": ["jug"],
       "geometry": [
         {
-          "frame": {"x": 0.82, "y": 0.0, "width": 0.18, "height": 0.17},
+          "frame": {"x": 0.791138669, "y": 0.253664036, "width": 0.163765502, "height": 0.075817362},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.96, 1.0]},
             {"command": "curve", "control1": [1.0, 0.78], "control2": [1.0, 0.34], "to": [0.84, 0.16]},
@@ -86,7 +86,7 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.955, "y": 0.14, "width": 0.045, "height": 0.27},
+          "frame": {"x": 0.921904171, "y": 0.316101864, "width": 0.033000000, "height": 0.120415810},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [0.84, 0.0]},
             {"command": "curve", "control1": [0.98, 0.16], "control2": [1.0, 0.42], "to": [0.92, 0.63]},
@@ -98,7 +98,7 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.82, "y": 0.14, "width": 0.035, "height": 0.27},
+          "frame": {"x": 0.791138670, "y": 0.316101864, "width": 0.031843292, "height": 0.120415810},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [1.0, 0.0]},
             {"command": "line", "to": [0.16, 0.0]},
@@ -110,10 +110,10 @@
           "treatment": {"type": "surface"}
         },
         {
-          "frame": {"x": 0.855, "y": 0.295, "width": 0.11, "height": 0.115},
+          "frame": {"x": 0.822981961, "y": 0.385229458, "width": 0.100078918, "height": 0.051288215},
           "shape": {"type": "path", "commands": [
             {"command": "move", "to": [1.0, 0.0]},
-            {"command": "curve", "control1": [0.76, 0.12], "control2": [0.28, 0.12], "to": [0.0, 0.0]},
+            {"command": "curve", "control1": [0.76, 0.2], "control2": [0.28, 0.2], "to": [0.0, 0.0]},
             {"command": "curve", "control1": [0.06, 0.48], "control2": [0.18, 0.82], "to": [0.32, 1.0]},
             {"command": "line", "to": [0.76, 1.0]},
             {"command": "curve", "control1": [0.9, 0.82], "control2": [0.98, 0.46], "to": [1.0, 0.0]},
@@ -127,9 +127,10 @@
       "id": "sloper-flat-left",
       "name": "Left 55 mm flat sloper",
       "kind": "sloper",
+      "sizeMillimeters": 55,
       "gripType": "sloper",
       "geometry": [{
-        "frame": {"x": 0.18, "y": 0.09, "width": 0.17, "height": 0.32},
+        "frame": {"x": 0.208861331, "y": 0.293802639, "width": 0.154667418, "height": 0.142715034},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.0, 0.18]},
           {"command": "curve", "control1": [0.12, 0.08], "control2": [0.26, 0.04], "to": [0.42, 0.04]},
@@ -146,9 +147,10 @@
       "id": "sloper-flat-right",
       "name": "Right 55 mm flat sloper",
       "kind": "sloper",
+      "sizeMillimeters": 55,
       "gripType": "sloper",
       "geometry": [{
-        "frame": {"x": 0.65, "y": 0.09, "width": 0.17, "height": 0.32},
+        "frame": {"x": 0.636471251, "y": 0.293802639, "width": 0.154667418, "height": 0.142715034},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [1.0, 0.18]},
           {"command": "curve", "control1": [0.88, 0.08], "control2": [0.74, 0.04], "to": [0.58, 0.04]},
@@ -170,7 +172,7 @@
       "gripType": "threeFingerPocket",
       "features": ["pocket", "threeFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.037, "y": 0.165, "width": 0.11, "height": 0.145},
+        "frame": {"x": 0.078758737, "y": 0.327251476, "width": 0.100078918, "height": 0.064667750},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.13, 0.08]},
           {"command": "curve", "control1": [0.04, 0.16], "control2": [0.0, 0.34], "to": [0.0, 0.5]},
@@ -193,7 +195,7 @@
       "gripType": "threeFingerPocket",
       "features": ["pocket", "threeFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.853, "y": 0.165, "width": 0.11, "height": 0.145},
+        "frame": {"x": 0.821162345, "y": 0.327251476, "width": 0.100078918, "height": 0.064667750},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.87, 0.08]},
           {"command": "curve", "control1": [0.96, 0.16], "control2": [1.0, 0.34], "to": [1.0, 0.5]},
@@ -213,7 +215,7 @@
       "kind": "edge",
       "sizeMillimeters": 30,
       "geometry": [{
-        "frame": {"x": 0.071, "y": 0.415, "width": 0.15, "height": 0.185},
+        "frame": {"x": 0.109692221, "y": 0.438747596, "width": 0.136471251, "height": 0.082507129},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.07, 0.18]},
           {"command": "curve", "control1": [0.02, 0.28], "control2": [0.0, 0.45], "to": [0.02, 0.58]},
@@ -233,7 +235,7 @@
       "kind": "edge",
       "sizeMillimeters": 30,
       "geometry": [{
-        "frame": {"x": 0.779, "y": 0.415, "width": 0.15, "height": 0.185},
+        "frame": {"x": 0.753836528, "y": 0.438747596, "width": 0.136471251, "height": 0.082507129},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.93, 0.18]},
           {"command": "curve", "control1": [0.98, 0.28], "control2": [1.0, 0.45], "to": [0.98, 0.58]},
@@ -256,7 +258,7 @@
       "gripType": "twoFingerPocket",
       "features": ["pocket", "twoFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.245, "y": 0.42, "width": 0.06, "height": 0.145},
+        "frame": {"x": 0.267998873, "y": 0.440977518, "width": 0.054588501, "height": 0.064667750},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.2, 0.05]},
           {"command": "curve", "control1": [0.07, 0.13], "control2": [0.0, 0.32], "to": [0.0, 0.5]},
@@ -279,7 +281,7 @@
       "gripType": "twoFingerPocket",
       "features": ["pocket", "twoFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.695, "y": 0.42, "width": 0.06, "height": 0.145},
+        "frame": {"x": 0.677412626, "y": 0.440977518, "width": 0.054588501, "height": 0.064667750},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.8, 0.05]},
           {"command": "curve", "control1": [0.93, 0.13], "control2": [1.0, 0.32], "to": [1.0, 0.5]},
@@ -302,7 +304,7 @@
       "gripType": "threeFingerPocket",
       "features": ["pocket", "threeFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.108, "y": 0.72, "width": 0.112, "height": 0.17},
+        "frame": {"x": 0.143355130, "y": 0.574772863, "width": 0.101898534, "height": 0.075817362},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.12, 0.1]},
           {"command": "curve", "control1": [0.03, 0.2], "control2": [0.0, 0.42], "to": [0.02, 0.58]},
@@ -325,7 +327,7 @@
       "gripType": "threeFingerPocket",
       "features": ["pocket", "threeFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.78, "y": 0.72, "width": 0.112, "height": 0.17},
+        "frame": {"x": 0.754746336, "y": 0.574772863, "width": 0.101898534, "height": 0.075817362},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.88, 0.1]},
           {"command": "curve", "control1": [0.97, 0.2], "control2": [1.0, 0.42], "to": [0.98, 0.58]},
@@ -348,7 +350,7 @@
       "gripType": "twoFingerPocket",
       "features": ["pocket", "twoFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.245, "y": 0.71, "width": 0.06, "height": 0.155},
+        "frame": {"x": 0.267998873, "y": 0.570313018, "width": 0.054588501, "height": 0.069127595},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.2, 0.05]},
           {"command": "curve", "control1": [0.07, 0.13], "control2": [0.0, 0.32], "to": [0.0, 0.5]},
@@ -371,7 +373,7 @@
       "gripType": "twoFingerPocket",
       "features": ["pocket", "twoFingerPocket"],
       "geometry": [{
-        "frame": {"x": 0.695, "y": 0.71, "width": 0.06, "height": 0.155},
+        "frame": {"x": 0.677412626, "y": 0.570313018, "width": 0.054588501, "height": 0.069127595},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.8, 0.05]},
           {"command": "curve", "control1": [0.93, 0.13], "control2": [1.0, 0.32], "to": [1.0, 0.5]},
@@ -389,10 +391,11 @@
       "id": "sloper-round-center",
       "name": "Center 53 mm round sloper",
       "kind": "sloper",
+      "sizeMillimeters": 53,
       "gripType": "sloper",
       "features": ["roundSloper"],
       "geometry": [{
-        "frame": {"x": 0.35, "y": 0.08, "width": 0.3, "height": 0.33},
+        "frame": {"x": 0.363528749, "y": 0.289342795, "width": 0.272942502, "height": 0.147174879},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.0, 0.03]},
           {"command": "curve", "control1": [0.25, 0.0], "control2": [0.75, 0.0], "to": [1.0, 0.03]},
@@ -410,7 +413,7 @@
       "kind": "edge",
       "sizeMillimeters": 39,
       "geometry": [{
-        "frame": {"x": 0.325, "y": 0.405, "width": 0.35, "height": 0.205},
+        "frame": {"x": 0.340783540, "y": 0.434287751, "width": 0.318432920, "height": 0.091426819},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.025, 0.12]},
           {"command": "curve", "control1": [0.01, 0.25], "control2": [0.0, 0.42], "to": [0.005, 0.55]},
@@ -430,7 +433,7 @@
       "kind": "edge",
       "sizeMillimeters": 16,
       "geometry": [{
-        "frame": {"x": 0.325, "y": 0.69, "width": 0.35, "height": 0.19},
+        "frame": {"x": 0.340783540, "y": 0.561393328, "width": 0.318432920, "height": 0.084737052},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.025, 0.12]},
           {"command": "curve", "control1": [0.01, 0.25], "control2": [0.0, 0.42], "to": [0.005, 0.55]},

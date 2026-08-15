@@ -5,6 +5,8 @@ import json
 import math
 from pathlib import Path
 
+from PIL import Image
+
 from hangboard_vectorizer.board_catalog import load_board_package
 
 
@@ -13,8 +15,8 @@ PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "metolius-project"
 EXPECTED_HOLDS = (
     ("jug-left", "jug", None, None),
     ("jug-right", "jug", None, None),
-    ("sloper-flat-left", "sloper", None, None),
-    ("sloper-flat-right", "sloper", None, None),
+    ("sloper-flat-left", "sloper", 55, None),
+    ("sloper-flat-right", "sloper", 55, None),
     ("pocket-45-three-left", "pocket", 45, 3),
     ("pocket-45-three-right", "pocket", 45, 3),
     ("edge-30-left", "edge", 30, None),
@@ -25,7 +27,7 @@ EXPECTED_HOLDS = (
     ("pocket-22-three-right", "pocket", 22, 3),
     ("pocket-22-two-left", "pocket", 22, 2),
     ("pocket-22-two-right", "pocket", 22, 2),
-    ("sloper-round-center", "sloper", None, None),
+    ("sloper-round-center", "sloper", 53, None),
     ("edge-39-center", "edge", 39, None),
     ("edge-16-center", "edge", 16, None),
 )
@@ -38,6 +40,35 @@ MIRRORED_PAIRS = (
     ("pocket-22-three-left", "pocket-22-three-right"),
     ("pocket-22-two-left", "pocket-22-two-right"),
 )
+EXPECTED_PIXEL_FRAMES = {
+    "jug-left": (
+        (80.0, 225.0, 290.52, 67.25),
+        (80.0, 280.382353, 58.542, 106.808824),
+        (314.03, 280.382353, 56.49, 106.808824),
+        (136.49, 341.698529, 177.54, 45.492647),
+    ),
+    "jug-right": (
+        (1403.48, 225.0, 290.52, 67.25),
+        (1635.458, 280.382353, 58.542, 106.808824),
+        (1403.48, 280.382353, 56.49, 106.808824),
+        (1459.97, 341.698529, 177.54, 45.492647),
+    ),
+    "sloper-flat-left": ((370.52, 260.602941, 274.38, 126.588235),),
+    "sloper-flat-right": ((1129.10, 260.602941, 274.38, 126.588235),),
+    "pocket-45-three-left": ((139.718, 290.272059, 177.54, 57.360294),),
+    "pocket-45-three-right": ((1456.742, 290.272059, 177.54, 57.360294),),
+    "edge-30-left": ((194.594, 389.169118, 242.10, 73.183823),),
+    "edge-30-right": ((1337.306, 389.169118, 242.10, 73.183823),),
+    "pocket-40-two-left": ((475.43, 391.147058, 96.84, 57.360294),),
+    "pocket-40-two-right": ((1201.73, 391.147058, 96.84, 57.360294),),
+    "pocket-22-three-left": ((254.312, 509.823529, 180.768, 67.25),),
+    "pocket-22-three-right": ((1338.92, 509.823529, 180.768, 67.25),),
+    "pocket-22-two-left": ((475.43, 505.867647, 96.84, 61.316177),),
+    "pocket-22-two-right": ((1201.73, 505.867647, 96.84, 61.316177),),
+    "sloper-round-center": ((644.90, 256.647059, 484.20, 130.544118),),
+    "edge-39-center": ((604.55, 385.213235, 564.90, 81.095588),),
+    "edge-16-center": ((604.55, 497.955882, 564.90, 75.161765),),
+}
 
 
 def _points(command: object) -> tuple[tuple[float, float], ...]:
@@ -52,6 +83,9 @@ def test_metolius_project_preserves_audited_inventory_and_mirrored_contacts() ->
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
 
+    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
+        presentation_size = presentation.size
+
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
     assert board.id == "metolius.project"
@@ -60,6 +94,7 @@ def test_metolius_project_preserves_audited_inventory_and_mirrored_contacts() ->
     assert board.facts["dimensions"] == "622 × 152 mm"
     assert board.facts["aspectRatio"] == 4.08
     assert board.presentation_asset_path == "assets/primary.png"
+    assert presentation_size == (1774, 887)
     assert tuple(
         (hold.id, hold.kind, hold.size_millimeters, hold.finger_capacity)
         for hold in board.holds
@@ -80,6 +115,25 @@ def test_metolius_project_preserves_audited_inventory_and_mirrored_contacts() ->
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
             assert piece.frame.width * piece.frame.height > 0
+
+        # Canonical Workbench coordinates are normalized to the complete
+        # presentation image, including its intentional padding. A cropped
+        # inner-board coordinate system would shift every path on package open.
+        for piece, expected in zip(
+            hold.geometry,
+            EXPECTED_PIXEL_FRAMES[hold.id],
+            strict=True,
+        ):
+            actual = (
+                piece.frame.x * presentation_size[0],
+                piece.frame.y * presentation_size[1],
+                piece.frame.width * presentation_size[0],
+                piece.frame.height * presentation_size[1],
+            )
+            assert all(
+                math.isclose(value, target, abs_tol=0.001)
+                for value, target in zip(actual, expected, strict=True)
+            )
 
     for left_id, right_id in MIRRORED_PAIRS:
         left_pieces = holds[left_id].geometry
