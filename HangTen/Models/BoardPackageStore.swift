@@ -233,12 +233,6 @@ struct BoardPackageStore {
                 boardID: entry.id,
                 holdIDs: holdIDs
             )
-            try Self.validateArtworkEvidence(
-                evidenceDocument,
-                artworkDocument: artworkDocument,
-                semanticsDocument: semanticsDocument,
-                resource: "\(resourcePrefix)/evidence.json"
-            )
             let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
             let board = try boardDocument.trainingBoard(semantics: semantics)
 
@@ -269,6 +263,17 @@ struct BoardPackageStore {
                     reason: "presentation asset must be a decodable PNG"
                 )
             }
+            let assetPaths = try Self.packageAssetPaths(
+                boardID: board.id,
+                packageURL: packageURL
+            )
+            try Self.validateArtworkEvidence(
+                evidenceDocument,
+                artworkDocument: artworkDocument,
+                semanticsDocument: semanticsDocument,
+                assetPaths: assetPaths,
+                resource: "\(resourcePrefix)/evidence.json"
+            )
             loadedPresentationURLs[board.id] = assetURL
         }
 
@@ -354,6 +359,71 @@ struct BoardPackageStore {
             )
         }
         return url
+    }
+
+    private static func packageAssetPaths(
+        boardID: String,
+        packageURL: URL
+    ) throws -> Set<String> {
+        guard let assetsURL = confinedURL(relativePath: "assets", below: packageURL),
+              let assetsValues = try? assetsURL.resourceValues(forKeys: [.isDirectoryKey]),
+              assetsValues.isDirectory == true else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "package assets must be a directory"
+            )
+        }
+
+        let assetURLs: [URL]
+        do {
+            assetURLs = try FileManager.default.contentsOfDirectory(
+                at: assetsURL,
+                includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey],
+                options: []
+            )
+        } catch {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "package assets are not accessible"
+            )
+        }
+
+        let sourceExtensions: Set<String> = ["jpg", "jpeg", "webp", "heic"]
+        var assetPaths = Set<String>()
+        var sourceCount = 0
+        for assetURL in assetURLs {
+            guard let values = try? assetURL.resourceValues(
+                forKeys: [.isRegularFileKey, .isSymbolicLinkKey]
+            ),
+            values.isRegularFile == true,
+            values.isSymbolicLink != true else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "package assets must be flat regular files"
+                )
+            }
+
+            let filename = assetURL.lastPathComponent
+            if filename == "primary.png" {
+                assetPaths.insert("assets/primary.png")
+                continue
+            }
+            guard sourceExtensions.contains(assetURL.pathExtension.lowercased()) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "package source asset must be a supported image"
+                )
+            }
+            sourceCount += 1
+            guard sourceCount <= 1 else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "package may contain at most one original source image"
+                )
+            }
+            assetPaths.insert("assets/\(filename)")
+        }
+        return assetPaths
     }
 
     private static func isDecodablePresentationImage(at url: URL) -> Bool {
@@ -599,6 +669,7 @@ struct BoardPackageStore {
         _ evidence: BoardPackageEvidenceDocument,
         artworkDocument: BoardPackageArtworkDocument,
         semanticsDocument: BoardPackageSemanticsDocument,
+        assetPaths: Set<String>,
         resource: String
     ) throws {
         let expectedKeys = Set(
@@ -622,8 +693,7 @@ struct BoardPackageStore {
         guard evidence.checkedAt.isISOCalendarDate,
               evidence.fieldEvidence.validEvidenceMap(
                   expectedKeys: ["manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio"],
-                  sourceIDs: sourceIDs,
-                  allowExternalGeneration: false
+                  sourceIDs: sourceIDs
               ),
               evidence.holdEvidence.validEvidenceMap(
                   expectedKeys: Set(artworkDocument.holdPieces.flatMap { piece in
@@ -631,23 +701,20 @@ struct BoardPackageStore {
                           "\(piece.holdID).\($0)"
                       }
                   }),
-                  sourceIDs: sourceIDs,
-                  allowExternalGeneration: false
+                  sourceIDs: sourceIDs
               ),
               evidence.semanticEvidence.validEvidenceMap(
                   expectedKeys: Set(semanticsDocument.semanticHolds.keys),
-                  sourceIDs: sourceIDs,
-                  allowExternalGeneration: false
+                  sourceIDs: sourceIDs
               ),
               evidence.artworkEvidence.validEvidenceMap(
                   expectedKeys: expectedKeys,
-                  sourceIDs: sourceIDs,
-                  allowExternalGeneration: false
+                  sourceIDs: sourceIDs
               ),
               evidence.assetEvidence.validEvidenceMap(
-                  expectedKeys: ["assets/primary.png"],
+                  expectedKeys: assetPaths,
                   sourceIDs: sourceIDs,
-                  allowExternalGeneration: true
+                  externalGenerationKeys: ["assets/primary.png"]
               ) else {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
@@ -1241,7 +1308,7 @@ private struct BoardPackageArtworkTreatmentDocument: Decodable {
     var isValid: Bool {
         guard type != .surface else { return true }
         guard let rimInsetFraction else { return false }
-        return rimInsetFraction.isFinite && (0...1).contains(rimInsetFraction)
+        return rimInsetFraction.isFinite && (0...0.5).contains(rimInsetFraction)
     }
 }
 
@@ -1486,13 +1553,14 @@ private extension Dictionary where Key == String, Value == BoardPackageEvidenceM
     func validEvidenceMap(
         expectedKeys: Set<String>,
         sourceIDs: Set<String>,
-        allowExternalGeneration: Bool
+        externalGenerationKeys: Set<String> = []
     ) -> Bool {
         guard Set(keys) == expectedKeys else { return false }
-        for mapping in values {
+        for (key, mapping) in self {
             let methodAllowed = mapping.method == "manufacturer-measurement" ||
                 mapping.method == "reviewed-human-authored-normalization" ||
-                (allowExternalGeneration && mapping.method == "external-generative-adaptation")
+                (externalGenerationKeys.contains(key) &&
+                    mapping.method == "external-generative-adaptation")
             guard methodAllowed,
                   !mapping.sourceIDs.isEmpty,
                   Set(mapping.sourceIDs).count == mapping.sourceIDs.count,

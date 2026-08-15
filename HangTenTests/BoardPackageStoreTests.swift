@@ -81,6 +81,49 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRequiresEvidenceForEveryBundledPackageAsset() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try Data("fixture source".utf8).write(
+                to: packageURL.appendingPathComponent("assets/fixture-source.jpg")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/package-board/evidence.json")
+            )
+        }
+    }
+
+    func testStoreAcceptsEvidenceForEveryBundledPackageAsset() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try Data("fixture source".utf8).write(
+                to: packageURL.appendingPathComponent("assets/fixture-source.jpg")
+            )
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("evidence.json")) { evidence in
+                var assetEvidence = try XCTUnwrap(evidence["assetEvidence"] as? [String: Any])
+                assetEvidence["assets/fixture-source.jpg"] = [
+                    "sourceIDs": ["fixture-source"],
+                    "method": "reviewed-human-authored-normalization"
+                ]
+                evidence["assetEvidence"] = assetEvidence
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsHiddenPackageAssetsOutsideTheWorkbenchContract() throws {
+        try assertInvalidPackage { packageURL in
+            try Data("hidden asset".utf8).write(
+                to: packageURL.appendingPathComponent("assets/.fixture-metadata")
+            )
+        }
+    }
+
     func testStoreLoadsEveryCatalogPackageDataAndResources() throws {
         let fixture = try makeFixtureBundle()
         defer { fixture.remove() }
@@ -375,6 +418,16 @@ final class BoardPackageStoreTests: XCTestCase {
             var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
             pieces[0]["treatment"] = ["type": "recess", "rimInsetFraction": 0.1, "depth": "unknown"]
             artwork["holdPieces"] = pieces
+        }
+    }
+
+    func testStoreRejectsShelfRimInsetFractionAboveWorkbenchMaximum() throws {
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("artwork.json")) { artwork in
+                var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
+                pieces[0]["treatment"] = ["type": "shelf", "rimInsetFraction": 0.75]
+                artwork["holdPieces"] = pieces
+            }
         }
     }
 
