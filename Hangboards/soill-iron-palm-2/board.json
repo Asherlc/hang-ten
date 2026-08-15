@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "id": "soill.iron-palm-2",
+  "manufacturer": "So iLL",
+  "name": "Iron Palm 2.0",
+  "subtitle": "Urethane hangboard.",
+  "productURL": "https://soillholds.com/products/iron-palm-2-0",
+  "dimensions": "27 × 11.5 × 4 in",
+  "aspectRatio": 2.3478260869565215,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "sloper-left",
+      "name": "Left big sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.0546875, "y": 0.212890625, "width": 0.2506510416667, "height": 0.3544921875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.5, 0]},
+              {"command": "curve", "control1": [0.22, 0], "control2": [0.04, 0.16], "to": [0, 0.43]},
+              {"command": "curve", "control1": [0, 0.65], "control2": [0.08, 0.78], "to": [0.23, 0.86]},
+              {"command": "curve", "control1": [0.38, 0.89], "control2": [0.57, 0.9], "to": [0.7, 0.84]},
+              {"command": "curve", "control1": [0.89, 0.74], "control2": [1, 0.58], "to": [1, 0.43]},
+              {"command": "curve", "control1": [1, 0.18], "control2": [0.79, 0], "to": [0.5, 0]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "sloper-right",
+      "name": "Right big sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.6946614583333, "y": 0.212890625, "width": 0.2506510416667, "height": 0.3544921875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.5, 0]},
+              {"command": "curve", "control1": [0.78, 0], "control2": [0.96, 0.16], "to": [1, 0.43]},
+              {"command": "curve", "control1": [1, 0.65], "control2": [0.92, 0.78], "to": [0.77, 0.86]},
+              {"command": "curve", "control1": [0.62, 0.89], "control2": [0.43, 0.9], "to": [0.3, 0.84]},
+              {"command": "curve", "control1": [0.11, 0.74], "control2": [0, 0.58], "to": [0, 0.43]},
+              {"command": "curve", "control1": [0, 0.18], "control2": [0.21, 0], "to": [0.5, 0]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "pinch-left",
+      "name": "Left 3 in pinch",
+      "kind": "pinch",
+      "geometry": [
+        {
+          "frame": {"x": 0.02734375, "y": 0.5166015625, "width": 0.150390625, "height": 0.2822265625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.63, 0.06]},
+              {"command": "curve", "control1": [0.78, 0.07], "control2": [0.92, 0.17], "to": [0.98, 0.3]},
+              {"command": "curve", "control1": [1, 0.36], "control2": [0.95, 0.44], "to": [0.88, 0.53]},
+              {"command": "curve", "control1": [0.74, 0.71], "control2": [0.62, 0.89], "to": [0.52, 0.97]},
+              {"command": "curve", "control1": [0.45, 1], "control2": [0.36, 0.99], "to": [0.28, 0.94]},
+              {"command": "curve", "control1": [0.13, 0.86], "control2": [0.02, 0.77], "to": [0, 0.68]},
+              {"command": "curve", "control1": [0.02, 0.56], "control2": [0.19, 0.32], "to": [0.39, 0.12]},
+              {"command": "curve", "control1": [0.47, 0.1], "control2": [0.55, 0.06], "to": [0.63, 0.06]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        },
+        {
+          "frame": {"x": 0.09375, "y": 0.693359375, "width": 0.0904947916667, "height": 0.1435546875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.16, 0.02]},
+              {"command": "curve", "control1": [0.26, 0], "control2": [0.41, 0.06], "to": [0.55, 0.14]},
+              {"command": "curve", "control1": [0.74, 0.24], "control2": [0.93, 0.37], "to": [0.99, 0.51]},
+              {"command": "curve", "control1": [1, 0.62], "control2": [0.98, 0.8], "to": [0.91, 0.91]},
+              {"command": "curve", "control1": [0.78, 1], "control2": [0.31, 1], "to": [0.16, 0.92]},
+              {"command": "curve", "control1": [0.04, 0.86], "control2": [0, 0.75], "to": [0.02, 0.62]},
+              {"command": "curve", "control1": [0.05, 0.42], "control2": [0.09, 0.18], "to": [0.16, 0.02]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "pinch-right",
+      "name": "Right 3 in pinch",
+      "kind": "pinch",
+      "geometry": [
+        {
+          "frame": {"x": 0.822265625, "y": 0.5166015625, "width": 0.150390625, "height": 0.2822265625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.37, 0.06]},
+              {"command": "curve", "control1": [0.22, 0.07], "control2": [0.08, 0.17], "to": [0.02, 0.3]},
+              {"command": "curve", "control1": [0, 0.36], "control2": [0.05, 0.44], "to": [0.12, 0.53]},
+              {"command": "curve", "control1": [0.26, 0.71], "control2": [0.38, 0.89], "to": [0.48, 0.97]},
+              {"command": "curve", "control1": [0.55, 1], "control2": [0.64, 0.99], "to": [0.72, 0.94]},
+              {"command": "curve", "control1": [0.87, 0.86], "control2": [0.98, 0.77], "to": [1, 0.68]},
+              {"command": "curve", "control1": [0.98, 0.56], "control2": [0.81, 0.32], "to": [0.61, 0.12]},
+              {"command": "curve", "control1": [0.53, 0.1], "control2": [0.45, 0.06], "to": [0.37, 0.06]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        },
+        {
+          "frame": {"x": 0.8157552083333, "y": 0.693359375, "width": 0.0904947916667, "height": 0.1435546875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.84, 0.02]},
+              {"command": "curve", "control1": [0.74, 0], "control2": [0.59, 0.06], "to": [0.45, 0.14]},
+              {"command": "curve", "control1": [0.26, 0.24], "control2": [0.07, 0.37], "to": [0.01, 0.51]},
+              {"command": "curve", "control1": [0, 0.62], "control2": [0.02, 0.8], "to": [0.09, 0.91]},
+              {"command": "curve", "control1": [0.22, 1], "control2": [0.69, 1], "to": [0.84, 0.92]},
+              {"command": "curve", "control1": [0.96, 0.86], "control2": [1, 0.75], "to": [0.98, 0.62]},
+              {"command": "curve", "control1": [0.95, 0.42], "control2": [0.91, 0.18], "to": [0.84, 0.02]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "top-jug-rail",
+      "name": "Top incut jug rail",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {"x": 0.2825520833333, "y": 0.3720703125, "width": 0.4348958333333, "height": 0.0263671875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.015, 0.05]},
+              {"command": "curve", "control1": [0.005, 0.16], "control2": [0, 0.4], "to": [0.015, 0.7]},
+              {"command": "curve", "control1": [0.02, 0.92], "control2": [0.05, 1], "to": [0.09, 1]},
+              {"command": "curve", "control1": [0.3, 0.96], "control2": [0.7, 0.96], "to": [0.91, 1]},
+              {"command": "curve", "control1": [0.95, 1], "control2": [0.98, 0.92], "to": [0.985, 0.7]},
+              {"command": "curve", "control1": [1, 0.4], "control2": [0.995, 0.16], "to": [0.985, 0.05]},
+              {"command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.015, 0.05]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "shelf", "rimInsetFraction": 0.12}
+        }
+      ]
+    },
+    {
+      "id": "rounded-edge-40",
+      "name": "40 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 40,
+      "geometry": [
+        {
+          "frame": {"x": 0.28125, "y": 0.44140625, "width": 0.4375, "height": 0.046875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.025, 0]},
+              {"command": "curve", "control1": [0.01, 0.08], "control2": [0, 0.3], "to": [0, 0.55]},
+              {"command": "curve", "control1": [0, 0.78], "control2": [0.02, 0.94], "to": [0.055, 1]},
+              {"command": "curve", "control1": [0.31, 0.94], "control2": [0.69, 0.94], "to": [0.945, 1]},
+              {"command": "curve", "control1": [0.98, 0.94], "control2": [1, 0.78], "to": [1, 0.55]},
+              {"command": "curve", "control1": [1, 0.3], "control2": [0.99, 0.08], "to": [0.975, 0]},
+              {"command": "curve", "control1": [0.72, 0.025], "control2": [0.28, 0.025], "to": [0.025, 0]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "flat-edge-25",
+      "name": "25 mm flat edge",
+      "kind": "edge",
+      "sizeMillimeters": 25,
+      "geometry": [
+        {
+          "frame": {"x": 0.2395833333333, "y": 0.5419921875, "width": 0.5208333333333, "height": 0.044921875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.025, 0]},
+              {"command": "curve", "control1": [0.01, 0.08], "control2": [0, 0.3], "to": [0, 0.55]},
+              {"command": "curve", "control1": [0, 0.78], "control2": [0.02, 0.94], "to": [0.055, 1]},
+              {"command": "curve", "control1": [0.31, 0.97], "control2": [0.69, 0.97], "to": [0.945, 1]},
+              {"command": "curve", "control1": [0.98, 0.94], "control2": [1, 0.78], "to": [1, 0.55]},
+              {"command": "curve", "control1": [1, 0.3], "control2": [0.99, 0.08], "to": [0.975, 0]},
+              {"command": "curve", "control1": [0.72, 0.015], "control2": [0.28, 0.015], "to": [0.025, 0]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "flat-edge-15",
+      "name": "15 mm flat edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {"x": 0.208984375, "y": 0.6494140625, "width": 0.58203125, "height": 0.0712890625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.018, 0]},
+              {"command": "curve", "control1": [0.006, 0.08], "control2": [0, 0.25], "to": [0, 0.46]},
+              {"command": "curve", "control1": [0, 0.67], "control2": [0.015, 0.82], "to": [0.045, 0.86]},
+              {"command": "curve", "control1": [0.22, 0.64], "control2": [0.38, 0.95], "to": [0.5, 1]},
+              {"command": "curve", "control1": [0.62, 0.95], "control2": [0.78, 0.64], "to": [0.955, 0.86]},
+              {"command": "curve", "control1": [0.985, 0.82], "control2": [1, 0.67], "to": [1, 0.46]},
+              {"command": "curve", "control1": [1, 0.25], "control2": [0.994, 0.08], "to": [0.982, 0]},
+              {"command": "curve", "control1": [0.72, 0.02], "control2": [0.28, 0.02], "to": [0.018, 0]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    }
+  ]
+}
