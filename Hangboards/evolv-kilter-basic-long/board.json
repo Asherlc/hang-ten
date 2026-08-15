@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "id": "evolv-kilter-basic-long",
+  "manufacturer": "Evolv",
+  "name": "Basic Training Board (Long)",
+  "subtitle": "A resin training board designed in collaboration with Kilter.",
+  "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+  "dimensions": "79 × 16 × 6 cm",
+  "aspectRatio": 4.9375,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "rounded-jug",
+      "name": "Full-width rounded jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.055,
+            "y": 0.391,
+            "width": 0.89,
+            "height": 0.117
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.018, 0.18] },
+              { "command": "curve", "control1": [0.019, 0.07], "control2": [0.025, 0.015], "to": [0.04, 0] },
+              { "command": "curve", "control1": [0.29, 0.012], "control2": [0.71, 0.012], "to": [0.96, 0] },
+              { "command": "curve", "control1": [0.975, 0.015], "control2": [0.981, 0.07], "to": [0.982, 0.18] },
+              { "command": "curve", "control1": [0.994, 0.42], "control2": [1, 0.68], "to": [1, 0.84] },
+              { "command": "curve", "control1": [1, 0.94], "control2": [0.991, 0.99], "to": [0.977, 1] },
+              { "command": "curve", "control1": [0.72, 0.982], "control2": [0.28, 0.982], "to": [0.023, 1] },
+              { "command": "curve", "control1": [0.009, 0.99], "control2": [0, 0.94], "to": [0, 0.84] },
+              { "command": "curve", "control1": [0, 0.68], "control2": [0.006, 0.42], "to": [0.018, 0.18] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rounded-edge-20",
+      "name": "Full-width 20 mm rounded edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.056,
+            "y": 0.535,
+            "width": 0.888,
+            "height": 0.028
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.012, 0.13] },
+              { "command": "curve", "control1": [0.006, 0.05], "control2": [0.012, 0.012], "to": [0.026, 0] },
+              { "command": "curve", "control1": [0.3, 0.018], "control2": [0.7, 0.018], "to": [0.974, 0] },
+              { "command": "curve", "control1": [0.988, 0.012], "control2": [0.994, 0.05], "to": [0.988, 0.13] },
+              { "command": "curve", "control1": [0.997, 0.34], "control2": [1, 0.62], "to": [1, 0.77] },
+              { "command": "curve", "control1": [0.998, 0.9], "control2": [0.99, 0.98], "to": [0.978, 1] },
+              { "command": "curve", "control1": [0.72, 0.965], "control2": [0.28, 0.965], "to": [0.022, 1] },
+              { "command": "curve", "control1": [0.01, 0.98], "control2": [0.002, 0.9], "to": [0, 0.77] },
+              { "command": "curve", "control1": [0, 0.62], "control2": [0.003, 0.34], "to": [0.012, 0.13] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 20
+    },
+    {
+      "id": "rounded-edge-15",
+      "name": "Full-width 15 mm rounded edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.057,
+            "y": 0.594,
+            "width": 0.886,
+            "height": 0.027
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.01, 0.1] },
+              { "command": "curve", "control1": [0.005, 0.04], "control2": [0.012, 0.008], "to": [0.024, 0] },
+              { "command": "curve", "control1": [0.31, 0.012], "control2": [0.69, 0.012], "to": [0.976, 0] },
+              { "command": "curve", "control1": [0.988, 0.008], "control2": [0.995, 0.04], "to": [0.99, 0.1] },
+              { "command": "curve", "control1": [0.998, 0.31], "control2": [1, 0.59], "to": [1, 0.76] },
+              { "command": "curve", "control1": [0.998, 0.91], "control2": [0.99, 0.985], "to": [0.978, 1] },
+              { "command": "curve", "control1": [0.71, 0.972], "control2": [0.29, 0.972], "to": [0.022, 1] },
+              { "command": "curve", "control1": [0.01, 0.985], "control2": [0.002, 0.91], "to": [0, 0.76] },
+              { "command": "curve", "control1": [0, 0.59], "control2": [0.002, 0.31], "to": [0.01, 0.1] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 15
+    },
+    {
+      "id": "rounded-edge-10",
+      "name": "Full-width 10 mm rounded edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.057,
+            "y": 0.655,
+            "width": 0.886,
+            "height": 0.031
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.011, 0.08] },
+              { "command": "curve", "control1": [0.006, 0.03], "control2": [0.013, 0.006], "to": [0.025, 0] },
+              { "command": "curve", "control1": [0.32, 0.01], "control2": [0.68, 0.01], "to": [0.975, 0] },
+              { "command": "curve", "control1": [0.987, 0.006], "control2": [0.994, 0.03], "to": [0.989, 0.08] },
+              { "command": "curve", "control1": [0.997, 0.29], "control2": [1, 0.6], "to": [1, 0.78] },
+              { "command": "curve", "control1": [0.998, 0.92], "control2": [0.99, 0.988], "to": [0.977, 1] },
+              { "command": "curve", "control1": [0.7, 0.978], "control2": [0.3, 0.978], "to": [0.023, 1] },
+              { "command": "curve", "control1": [0.01, 0.988], "control2": [0.002, 0.92], "to": [0, 0.78] },
+              { "command": "curve", "control1": [0, 0.6], "control2": [0.003, 0.29], "to": [0.011, 0.08] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 10
+    }
+  ]
+}
