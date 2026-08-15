@@ -14,9 +14,13 @@ final class WorkbenchSheetPresenter {
 
     func present(
         _ panel: NSOpenPanel,
-        for window: NSWindow,
+        for window: NSWindow?,
         completion: @escaping Completion
     ) {
-        panel.beginSheetModal(for: window, completionHandler: completion)
+        if let window {
+            panel.beginSheetModal(for: window, completionHandler: completion)
+        } else {
+            panel.begin(completionHandler: completion)
+        }
     }
 }

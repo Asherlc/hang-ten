@@ -292,7 +292,6 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         panel.canCreateDirectories = false
         panel.directoryURL = selection.lastValidCheckout()
 
-        guard let window else { return }
         sheetPresenter.present(panel, for: window) { [weak self] response in
             guard let self else { return }
             panel.orderOut(nil)

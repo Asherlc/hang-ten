@@ -31,6 +31,20 @@ final class WorkbenchSheetPresenterTests: XCTestCase {
         panel.respond(with: .OK)
         XCTAssertEqual(receivedResponse, .OK)
     }
+
+    func testOpenPanelWithoutWindowWaitsForTheApplicationModalResponse() {
+        let presenter = WorkbenchSheetPresenter()
+        let panel = RecordingOpenPanel()
+        var receivedResponse: NSApplication.ModalResponse?
+
+        presenter.present(panel, for: nil) { response in
+            receivedResponse = response
+        }
+
+        XCTAssertNil(receivedResponse)
+        panel.respondToApplicationModal(with: .OK)
+        XCTAssertEqual(receivedResponse, .OK)
+    }
 }
 
 @MainActor
@@ -52,6 +66,7 @@ private final class RecordingAlert: NSAlert {
 @MainActor
 private final class RecordingOpenPanel: NSOpenPanel {
     private var sheetCompletion: ((NSApplication.ModalResponse) -> Void)?
+    private var applicationModalCompletion: ((NSApplication.ModalResponse) -> Void)?
 
     override func beginSheetModal(
         for window: NSWindow,
@@ -60,7 +75,17 @@ private final class RecordingOpenPanel: NSOpenPanel {
         sheetCompletion = handler
     }
 
+    override func begin(
+        completionHandler handler: @escaping (NSApplication.ModalResponse) -> Void
+    ) {
+        applicationModalCompletion = handler
+    }
+
     func respond(with response: NSApplication.ModalResponse) {
         sheetCompletion?(response)
+    }
+
+    func respondToApplicationModal(with response: NSApplication.ModalResponse) {
+        applicationModalCompletion?(response)
     }
 }
