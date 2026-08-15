@@ -4,16 +4,16 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-The first supported board is the Metolius Wood Grips Compact II. Its map is a
-deterministic, textureless vector illustration based on Metolius's product
-photography and hold-depth diagram. The same declared contact path renders a
-hold cavity, its active red highlight, and its interaction area, so a highlight
-cannot drift away from the hold.
+The first supported board is the Metolius Wood Grips Compact II. Its package
+ships one source-backed `assets/primary.png` board image and exact normalized
+contact geometry in `board.json`. The same piece paths render inactive and
+active overlays and define hit testing, so interaction cannot drift away from
+the packaged image.
 
 ## Included
 
-- A reusable hangboard design language with normalized geometry, mirrored
-  pairs, dimensional planes, recess depths, and exact-path highlights.
+- A directory-discovered, single-file hangboard schema with normalized
+  multi-piece geometry, optional physical metadata, and exact-path highlights.
 - An audited Compact II hold map covering its jugs, flat and round slopers,
   29/19 mm edges, and 2-, 3-, and 4-finger pockets.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
@@ -125,21 +125,23 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
-The hangboard guide uses the repository-local staged onboarding tool in
-`Tools/HangboardPipeline`. Run its accepted Compact II parity fixture without
-a model call before onboarding a new product:
+Hangboard Workbench owns local package discovery, geometry editing, and atomic
+`board.json` saves. Start it from a checkout with:
 
 ```sh
-scripts/hangboard-tools.sh benchmark
+python3 Tools/HangboardWorkbench/server.py
 ```
 
-The report is written under `.context/hangboard-onboarding/`; Python packages,
-caches, and generated board runs remain local and are not part of the app.
+Source images, audits, and other authoring artifacts belong under `.context/`;
+they are not package content and are never bundled into the app.
 
 Canonical hangboard package checks:
 
 ```sh
-scripts/hangboard-tools.sh packages validate --root Hangboards
+uv run --with pytest python -m pytest -q \
+  Tools/HangboardWorkbench/tests/test_board_geometry.py \
+  Tools/HangboardWorkbench/tests/test_board_package.py \
+  Tools/HangboardWorkbench/tests/test_server.py
 ```
 
 Complete source-backed packages contain exactly `board.json` and
@@ -149,21 +151,6 @@ image candidates are ignored by app staging. The Xcode build phase runs
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.
-
-For a reviewed Stage 2 hold-region run, use the local wrapper to inspect,
-compare, lint, preview, and accept the artifacts:
-
-```sh
-scripts/hangboard-tools.sh inspect --run .context/hangboard-onboarding/example
-scripts/hangboard-tools.sh compare --run .context/hangboard-onboarding/example --output .context/compare.html
-scripts/hangboard-tools.sh lint --run .context/hangboard-onboarding/example
-scripts/hangboard-tools.sh preview --run .context/hangboard-onboarding/example --output .context/preview
-scripts/hangboard-tools.sh accept --run .context/hangboard-onboarding/example --decision accepted --reviewer local-user --notes "Reviewed all holds"
-```
-
-For accepted decisions, `accept` persists the Stage 2 acceptance artifact and
-the current `lint-report.json`; it does not rewrite the automatic Stage 1 image
-or baseline Stage 2 JSON.
 
 Regenerate the bundled routine document after an audited plan change:
 
