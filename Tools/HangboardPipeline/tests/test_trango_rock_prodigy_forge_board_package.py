@@ -4,6 +4,7 @@ from collections import Counter
 import json
 import math
 from pathlib import Path
+import struct
 
 import pytest
 
@@ -69,7 +70,12 @@ def test_trango_rock_prodigy_forge_preserves_audited_physical_package() -> None:
     assert board.manufacturer == "Trango"
     assert board.name == "Rock Prodigy Forge"
     assert board.facts["dimensions"] == "Each piece: 12.75 × 5.25 in"
-    assert math.isclose(board.facts["aspectRatio"], 34 / 7, abs_tol=1e-12)
+    primary_header = (PACKAGE_ROOT / "assets" / "primary.png").read_bytes()[:24]
+    assert primary_header[:8] == b"\x89PNG\r\n\x1a\n"
+    assert primary_header[8:16] == b"\x00\x00\x00\rIHDR"
+    width, height = struct.unpack(">II", primary_header[16:24])
+    assert (width, height) == (1536, 1024)
+    assert board.facts["aspectRatio"] == width / height
     assert board.presentation_asset_path == "assets/primary.png"
 
     assert tuple(
