@@ -160,6 +160,34 @@ final class BoardStorageTests: XCTestCase {
         })
     }
 
+    func testBoardLibraryAcceptsEveryPhysicalHoldKindDuringDecoding() throws {
+        let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
+        XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            let template = try XCTUnwrap(
+                (board["holds"] as? [[String: Any]])?.first
+            )
+            board["holds"] = expectedKinds.map { kind in
+                var hold = template
+                hold["id"] = "fixture.\(kind)"
+                hold["name"] = "Fixture \(kind)"
+                hold["kind"] = kind
+                return hold
+            }
+            board["semanticHolds"] = [
+                "fixture-edge": ["holdIDs": ["fixture.edge"]]
+            ]
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        let board = try XCTUnwrap(BoardLibraryStore(data: data).boards.first)
+
+        XCTAssertEqual(board.holds.map(\.kind.rawValue), expectedKinds)
+    }
+
     func testBoardLibraryRejectsUnsupportedPhysicalHoldKindsDuringDecoding() throws {
         let data = try fixtureData { document in
             var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
