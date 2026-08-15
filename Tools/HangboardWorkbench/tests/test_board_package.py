@@ -260,6 +260,23 @@ def test_rejects_an_indexed_png_with_palette_after_image_data(
         board_package.load_board_package(package)
 
 
+def test_rejects_shared_indexed_png_with_duplicate_palette(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    invalid_png = base64.b64decode(
+        VALIDATION_FIXTURES["png"]["duplicatePaletteBase64"],
+        validate=True,
+    )
+    assert invalid_png.count(b"PLTE") == 2
+    (package / "assets" / "primary.png").write_bytes(invalid_png)
+    _mutate_board(package, lambda board: board.update(aspectRatio=1))
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.load_board_package(package)
+
+
 def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
     tmp_path: Path,
 ) -> None:
@@ -438,6 +455,15 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
 
     with pytest.raises(BoardPackageError, match=message):
         board_package.load_board_package(package)
+
+
+def test_rejects_shared_out_of_bounds_normalized_frames(tmp_path: Path) -> None:
+    for fixture in VALIDATION_FIXTURES["outOfBoundsFrames"]:
+        with pytest.raises(board_package.GeometryError, match="normalized canvas"):
+            board_package.NormalizedFrame.from_json(
+                fixture["frame"],
+                fixture["name"],
+            )
 
 
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
@@ -627,8 +653,8 @@ def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
             failures.append("install")
             raise OSError("injected package installation failure")
         if destination_path == live and (
-            source_path.name == ".previous"
-            or source_path.name.startswith(".workbench-previous-")
+            source_path.name.startswith(".workbench-previous-")
+            or source_path.name.startswith(".Hangboards.workbench-previous-")
         ):
             failures.append("restore")
             raise OSError("injected package restoration failure")
@@ -639,12 +665,55 @@ def test_replace_preserves_the_live_backup_when_install_and_restore_fail(
     with pytest.raises(BoardPackageError, match="could not restore"):
         board_package.replace_package(library, "fixture-board", candidate)
 
-    backups = sorted(library.glob(".workbench-previous-*"))
+    backups = sorted(library.parent.glob(".Hangboards.workbench-previous-*"))
     assert failures == ["install", "restore"]
     assert not live.exists()
     assert len(backups) == 1
     assert _package_snapshot(backups[0]) == before
     assert not any(path.name.startswith(".workbench-save-") for path in library.iterdir())
+
+
+def test_replace_commits_new_package_when_backup_cleanup_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    live = _write_finished_package(library, "fixture-board", "fixture.board")
+    candidate_library = tmp_path / "candidates"
+    candidate_library.mkdir()
+    candidate = _write_finished_package(
+        candidate_library,
+        "fixture-board",
+        "fixture.board",
+        name="Edited Fixture Board",
+    )
+    before = _package_snapshot(live)
+    real_rmtree = shutil.rmtree
+    cleanup_failures: list[Path] = []
+
+    def fail_backup_cleanup(path, *args, **kwargs):
+        cleanup_path = Path(path)
+        if (
+            cleanup_path.name.startswith(".workbench-previous-")
+            or cleanup_path.name.startswith(".Hangboards.workbench-previous-")
+        ):
+            cleanup_failures.append(cleanup_path)
+            raise OSError("injected backup cleanup failure")
+        return real_rmtree(path, *args, **kwargs)
+
+    monkeypatch.setattr(board_package.shutil, "rmtree", fail_backup_cleanup)
+
+    board_package.replace_package(library, "fixture-board", candidate)
+
+    backups = sorted(library.parent.glob(".Hangboards.workbench-previous-*"))
+    assert cleanup_failures == backups
+    assert board_package.open_package(library, "fixture.board").board["name"] == (
+        "Edited Fixture Board"
+    )
+    assert len(backups) == 1
+    assert _package_snapshot(backups[0]) == before
+    assert not any(
+        path.name.startswith(".workbench-previous-") for path in library.iterdir()
+    )
 
 
 def test_staging_copies_only_complete_direct_children_without_a_registry(
@@ -695,4 +764,63 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     )
     assert [hold["kind"] for hold in staged_board["holds"]] == list(
         SUPPORTED_HOLD_KINDS
+    )
+
+
+def test_staging_commits_new_destination_when_backup_cleanup_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    library = repository / "Hangboards"
+    library.mkdir(parents=True)
+    _write_finished_package(library, "finished-board", "finished.board")
+    workbench = repository / "Tools" / "HangboardWorkbench"
+    workbench.mkdir(parents=True)
+    for filename in ["board_package.py", "board_geometry.py"]:
+        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+
+    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
+    spec = importlib.util.spec_from_file_location(
+        "stage_board_packages_cleanup_test",
+        stage_path,
+    )
+    assert spec is not None and spec.loader is not None
+    stage_module = importlib.util.module_from_spec(spec)
+    previous_bytecode_setting = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(stage_module)
+    finally:
+        sys.dont_write_bytecode = previous_bytecode_setting
+
+    build_root = tmp_path / "build"
+    destination = build_root / "Resources" / "Hangboards"
+    destination.mkdir(parents=True)
+    (destination / "previous.txt").write_text("recoverable", encoding="utf-8")
+    monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
+    monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
+    real_rmtree = shutil.rmtree
+    cleanup_failures: list[Path] = []
+
+    def fail_backup_cleanup(path, *args, **kwargs):
+        cleanup_path = Path(path)
+        if cleanup_path.name.startswith(".Hangboards.previous-"):
+            cleanup_failures.append(cleanup_path)
+            raise OSError("injected staged backup cleanup failure")
+        return real_rmtree(path, *args, **kwargs)
+
+    monkeypatch.setattr(stage_module.shutil, "rmtree", fail_backup_cleanup)
+
+    staged = stage_module.stage_board_packages(repository, destination)
+
+    backups = sorted(destination.parent.glob(".Hangboards.previous-*"))
+    assert staged == (destination / "finished-board",)
+    assert cleanup_failures == backups
+    assert len(backups) == 1
+    assert (backups[0] / "previous.txt").read_text(encoding="utf-8") == "recoverable"
+    assert [package.board_id for package in board_package.discover_packages(destination)] == [
+        "finished.board"
+    ]
+    assert not any(
+        path.name.startswith(".Hangboards.previous-") for path in destination.iterdir()
     )
