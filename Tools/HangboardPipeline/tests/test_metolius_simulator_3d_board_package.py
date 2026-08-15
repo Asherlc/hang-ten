@@ -4,6 +4,8 @@ from collections import Counter
 import math
 from pathlib import Path
 
+from PIL import Image
+
 from hangboard_vectorizer.board_catalog import load_board_package
 
 
@@ -85,6 +87,39 @@ EXPECTED_SIZES = {
     "pocket-28-two-center": 28,
     "pocket-32-two-center": 32,
 }
+EXPECTED_PIXEL_FRAMES = {
+    "jug-outer-left": (33, 278, 220, 93),
+    "jug-outer-right": (1361, 278, 220, 93),
+    "sloper-flat-55-left": (253, 258, 235, 110),
+    "sloper-flat-55-right": (1126, 258, 235, 110),
+    "sloper-round-65-left": (488, 238, 211, 130),
+    "sloper-round-65-right": (915, 238, 211, 130),
+    "pocket-30-three-left": (85.5, 357, 120, 57),
+    "pocket-30-three-right": (1408.5, 357, 120, 57),
+    "edge-25-left": (128, 422, 184, 75),
+    "edge-25-right": (1302, 422, 184, 75),
+    "edge-19-left": (330, 392, 174, 66),
+    "edge-19-right": (1110, 392, 174, 66),
+    "edge-36-left": (523, 377, 168, 60),
+    "edge-36-right": (923, 377, 168, 60),
+    "pocket-15-three-left": (202, 521, 143, 65),
+    "pocket-15-three-right": (1269, 521, 143, 65),
+    "pocket-35-three-left": (381, 494, 143, 61),
+    "pocket-35-three-right": (1090, 494, 143, 61),
+    "pocket-17-three-left": (562, 482, 132, 52),
+    "pocket-17-three-right": (920, 482, 132, 52),
+    "edge-14-left": (281, 598, 180, 63),
+    "edge-14-right": (1153, 598, 180, 63),
+    "pocket-30-two-left": (499, 579, 85, 52),
+    "pocket-30-two-right": (1030, 579, 85, 52),
+    "pocket-14-two-left": (621, 572, 83, 49),
+    "pocket-14-two-right": (910, 572, 83, 49),
+    "jug-center": (699, 176, 216, 116),
+    "pocket-50-three-center": (743.5, 290, 127, 52),
+    "pocket-37-three-center": (746.5, 395, 121, 51),
+    "pocket-28-two-center": (751.5, 494, 111, 47),
+    "pocket-32-two-center": (760, 589, 94, 46),
+}
 
 
 def _points(command: object) -> tuple[tuple[float, float], ...]:
@@ -100,6 +135,9 @@ def test_metolius_simulator_3d_audited_inventory_and_geometry() -> None:
     board = package.board
     holds = {hold.id: hold for hold in board.holds}
 
+    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
+        presentation_size = presentation.size
+
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
     assert board.id == "metolius.simulator-3d"
@@ -108,6 +146,7 @@ def test_metolius_simulator_3d_audited_inventory_and_geometry() -> None:
     assert board.facts["dimensions"] == "28 × 8.75 in (711 × 222 mm)"
     assert board.facts["aspectRatio"] == 3.2
     assert board.presentation_asset_path == "assets/primary.png"
+    assert presentation_size == (1614, 975)
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "pocket": 16,
@@ -154,6 +193,25 @@ def test_metolius_simulator_3d_audited_inventory_and_geometry() -> None:
             assert piece.treatment is not None
             assert piece.treatment["type"] == "recess"
             assert piece.treatment["depth"] in {"deep", "shallow"}
+
+        # Frames are normalized to the complete presentation canvas. This
+        # prevents the canonical Workbench from applying them to an unstated
+        # inner board rectangle and shifting or clipping the rendered paths.
+        expected_x, expected_y, expected_width, expected_height = (
+            EXPECTED_PIXEL_FRAMES[hold_id]
+        )
+        assert math.isclose(
+            piece.frame.x * presentation_size[0], expected_x, abs_tol=1e-8
+        )
+        assert math.isclose(
+            piece.frame.y * presentation_size[1], expected_y, abs_tol=1e-8
+        )
+        assert math.isclose(
+            piece.frame.width * presentation_size[0], expected_width, abs_tol=1e-8
+        )
+        assert math.isclose(
+            piece.frame.height * presentation_size[1], expected_height, abs_tol=1e-8
+        )
 
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id].geometry[0]
