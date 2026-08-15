@@ -31,7 +31,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(store.semantics(for: board.id), [:])
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
-        XCTAssertEqual(try Data(contentsOf: imageURL), presentationBytes)
+        XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())
     }
 
     func testStoreRejectsDuplicateDiscoveredBoardIDs() throws {
@@ -71,6 +71,50 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreRejectsPlausiblePNGHeaderWithoutCompleteImageData() throws {
+        let truncated = try pngFixture(named: "plausibleHeaderTruncatedBase64")
+        XCTAssertEqual(truncated.count, 24)
+        XCTAssertEqual(
+            truncated.prefix(8),
+            Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+        )
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try truncated.write(
+                to: hangboardsURL.appendingPathComponent("fixture-model/assets/primary.png")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsAspectRatioMatchingPresentationPixels() throws {
+        let fixture = try makeFixtureBundle()
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.aspectRatio, 2)
+    }
+
+    func testStoreRejectsAspectRatioThatDoesNotMatchPresentationPixels() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["aspectRatio"] = 34.0 / 7.0
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("aspect ratio must match"), reason)
+        }
     }
 
     func testStoreRejectsSidecarsAndExtraAssets() throws {
@@ -154,6 +198,37 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsSharedMalformedPathShapes() throws {
+        let validationFixtures = try validationFixtures()
+        let shapes = try XCTUnwrap(
+            validationFixtures["malformedPathShapes"] as? [[String: Any]]
+        )
+        for shape in shapes {
+            let name = try XCTUnwrap(shape["name"] as? String)
+            let expectedMessage = try XCTUnwrap(shape["expectedMessage"] as? String)
+            let commands = try XCTUnwrap(shape["commands"] as? [[String: Any]])
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) {
+                    var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                    var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                    geometry[0]["shape"] = ["type": "path", "commands": commands]
+                    holds[0]["geometry"] = geometry
+                    $0["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
+                guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                    return XCTFail("Expected invalidPackage for \(name), got \(error)")
+                }
+                XCTAssertTrue(reason.contains(expectedMessage), reason)
+            }
+        }
+    }
+
     func testStoreRejectsUnknownKeysAtBoardHoldAndGeometryRoots() throws {
         for location in ["board", "hold", "geometry"] {
             let fixture = try makeFixtureBundle { hangboardsURL in
@@ -184,8 +259,24 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    private var presentationBytes: Data {
-        Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+    private func validationFixtures() throws -> [String: Any] {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/BoardPackageValidationFixtures.json")
+        return try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: fixtureURL)) as? [String: Any]
+        )
+    }
+
+    private func pngFixture(named name: String) throws -> Data {
+        let fixtures = try validationFixtures()
+        let png = try XCTUnwrap(fixtures["png"] as? [String: Any])
+        let encoded = try XCTUnwrap(png[name] as? String)
+        return try XCTUnwrap(Data(base64Encoded: encoded))
+    }
+
+    private func presentationBytes() throws -> Data {
+        try pngFixture(named: "validTwoByOneBase64")
     }
 
     private func makeFixtureBundle(
@@ -205,12 +296,12 @@ final class BoardPackageStoreTests: XCTestCase {
             let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
             try FileManager.default.createDirectory(at: assetsURL, withIntermediateDirectories: true)
             try boardData(for: package).write(to: packageURL.appendingPathComponent("board.json"))
-            try presentationBytes.write(to: assetsURL.appendingPathComponent("primary.png"))
+            try presentationBytes().write(to: assetsURL.appendingPathComponent("primary.png"))
         }
         for slug in draftSlugs {
             let assetsURL = hangboardsURL.appendingPathComponent("\(slug)/assets", isDirectory: true)
             try FileManager.default.createDirectory(at: assetsURL, withIntermediateDirectories: true)
-            try presentationBytes.write(to: assetsURL.appendingPathComponent("primary.png"))
+            try presentationBytes().write(to: assetsURL.appendingPathComponent("primary.png"))
         }
         try mutate?(hangboardsURL)
 
