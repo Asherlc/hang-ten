@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "id": "lattice-triple-rung",
+  "manufacturer": "Lattice Training",
+  "name": "Triple Rung",
+  "subtitle": "Three continuous rounded wooden edges.",
+  "productURL": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+  "dimensions": "55 × 13 × 5 cm",
+  "aspectRatio": 4.230769230769231,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "edge-45",
+      "name": "45 mm upper edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.046875,
+            "y": 0.328125,
+            "width": 0.90625,
+            "height": 0.044922
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.018, 0] },
+              { "command": "curve", "control1": [0.006, 0.07], "control2": [0, 0.24], "to": [0, 0.46] },
+              { "command": "curve", "control1": [0, 0.69], "control2": [0.004, 0.9], "to": [0.012, 0.97] },
+              { "command": "curve", "control1": [0.3, 0.93], "control2": [0.7, 0.93], "to": [0.988, 0.97] },
+              { "command": "curve", "control1": [0.996, 0.9], "control2": [1, 0.69], "to": [1, 0.46] },
+              { "command": "curve", "control1": [1, 0.24], "control2": [0.994, 0.07], "to": [0.982, 0] },
+              { "command": "curve", "control1": [0.72, 0.035], "control2": [0.28, 0.035], "to": [0.018, 0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 45
+    },
+    {
+      "id": "edge-10",
+      "name": "10 mm middle edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.035156,
+            "y": 0.467773,
+            "width": 0.929688,
+            "height": 0.054688
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.012, 0.03] },
+              { "command": "curve", "control1": [0.003, 0.12], "control2": [0, 0.3], "to": [0, 0.52] },
+              { "command": "curve", "control1": [0, 0.75], "control2": [0.004, 0.91], "to": [0.011, 0.97] },
+              { "command": "curve", "control1": [0.31, 0.94], "control2": [0.69, 0.94], "to": [0.989, 0.97] },
+              { "command": "curve", "control1": [0.996, 0.91], "control2": [1, 0.75], "to": [1, 0.52] },
+              { "command": "curve", "control1": [1, 0.3], "control2": [0.997, 0.12], "to": [0.988, 0.03] },
+              { "command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.012, 0.03] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 10
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm lower edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.029297,
+            "y": 0.594727,
+            "width": 0.941406,
+            "height": 0.06543
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.01, 0.04] },
+              { "command": "curve", "control1": [0.002, 0.14], "control2": [0, 0.32], "to": [0, 0.53] },
+              { "command": "curve", "control1": [0, 0.75], "control2": [0.004, 0.91], "to": [0.01, 0.97] },
+              { "command": "curve", "control1": [0.31, 0.94], "control2": [0.69, 0.94], "to": [0.99, 0.97] },
+              { "command": "curve", "control1": [0.996, 0.91], "control2": [1, 0.75], "to": [1, 0.53] },
+              { "command": "curve", "control1": [1, 0.32], "control2": [0.998, 0.14], "to": [0.99, 0.04] },
+              { "command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.01, 0.04] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 20
+    }
+  ]
+}
