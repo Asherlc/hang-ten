@@ -26,6 +26,9 @@ PRIMARY_IMAGE = (
 )
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
+import board_package  # noqa: E402
+import server as server_module  # noqa: E402
+from board_package import BoardPackageError  # noqa: E402
 from server import EditorError, create_server, validate_hang_ten_checkout  # noqa: E402
 
 
@@ -205,6 +208,43 @@ def test_load_failures_do_not_expose_library_paths(tmp_path: Path) -> None:
     assert status == 400
     assert result == {"ok": False, "error": "could not load board"}
     assert str(library) not in json.dumps(result)
+
+
+def test_get_board_routes_not_available_errors_by_type(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+    unavailable_error = getattr(
+        board_package, "BoardNotAvailableError", BoardPackageError
+    )
+
+    def raise_unavailable(*_args: object) -> object:
+        raise unavailable_error("unavailable details changed")
+
+    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 404
+    assert result == {"ok": False, "error": "board is not available"}
+
+
+def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+
+    def raise_base_error(*_args: object) -> object:
+        raise BoardPackageError("board is not available")
+
+    monkeypatch.setattr(server_module, "open_package", raise_base_error)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 400
+    assert result == {"ok": False, "error": "could not load board"}
 
 
 def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
