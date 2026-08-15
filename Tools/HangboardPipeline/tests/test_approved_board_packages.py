@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-import shutil
 
 import pytest
 
@@ -15,23 +14,6 @@ from conftest import load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
-RUNTIME_HOLD_FIELDS = frozenset(
-    {
-        "id",
-        "name",
-        "shortLabel",
-        "detail",
-        "kind",
-        "frame",
-        "sizeMillimeters",
-        "depthRangeMillimeters",
-        "gripType",
-        "fingerCapacity",
-        "cueStyle",
-        "features",
-    }
-)
-
 COMPACT_HOLDS = (
     ("jug-left", "Left outer jug"),
     ("sloper-flat-left", "Left 56 mm flat sloper"),
@@ -158,33 +140,6 @@ COMPACT_HOLD_PHYSICAL_FACTS = {
     "edge-19-right": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
 }
 
-COMPACT_SEMANTICS = {
-    "edge-19": ("edge-19-left", "edge-19-right"),
-    "edge-29": ("edge-29-left", "edge-29-right"),
-    "flat-slopers": ("sloper-flat-left", "sloper-flat-right"),
-    "outer-jugs": ("jug-left", "jug-right"),
-    "pocket-19-four": ("pocket-19-four-center",),
-    "pocket-19-three": ("pocket-19-three-left", "pocket-19-three-right"),
-    "pocket-19-two": ("pocket-19-two-left", "pocket-19-two-right"),
-    "pocket-29-four": ("pocket-29-four-center",),
-    "pocket-29-three": ("pocket-29-three-left", "pocket-29-three-right"),
-    "pocket-29-two": ("pocket-29-two-left", "pocket-29-two-right"),
-    "round-sloper": ("sloper-round-center",),
-}
-
-CANONICAL_PACKAGE_SIDECARS = {
-    "board.json",
-    "evidence.json",
-    "semantics.json",
-    "artwork.json",
-}
-SOURCE_PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".webp", ".heic"}
-
-
-def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
-    return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
-
-
 def _embedded_geometry_bounds(
     geometry: object,
 ) -> tuple[float, float, float, float] | None:
@@ -198,144 +153,34 @@ def _embedded_geometry_bounds(
     return (min_x, min_y, max_x - min_x, max_y - min_y)
 
 
-def test_registry_contains_only_the_fully_officially_sourced_runtime_board() -> None:
-    module = load_board_catalog_module()
-    catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
-    approved = {entry.id: entry.path for entry in catalog.entries}
+def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> None:
+    inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
 
-    assert approved == {
-        "metolius.wood-grips-compact-ii": "metolius-wood-grips-compact-ii",
+    assert [(package.board.id, package.root.name) for package in inventory.packages] == [
+        ("metolius.wood-grips-compact-ii", "metolius-wood-grips-compact-ii")
+    ]
+    assert len(inventory.drafts) == 32
+    assert not (HANGBOARDS_ROOT / "catalog.json").exists()
+
+
+def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -> None:
+    relative_paths = {
+        path.relative_to(COMPACT_ROOT).as_posix()
+        for path in COMPACT_ROOT.rglob("*")
     }
 
-
-def test_metolius_candidates_with_incomplete_hold_evidence_remain_primary_only() -> None:
-    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
-    registered_paths = {entry["path"] for entry in catalog["boards"]}
-
-    for slug in (
-        "metolius-climbers-edge",
-        "metolius-contact",
-        "metolius-project",
-        "metolius-simulator-3d",
-    ):
-        package_root = HANGBOARDS_ROOT / slug
-        assert slug not in registered_paths
-        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
-            "assets/primary.png"
-        }
+    assert relative_paths == {"assets", "assets/primary.png", "board.json"}
 
 
-def test_soill_and_tension_candidates_with_incomplete_hold_evidence_remain_primary_only() -> None:
-    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
-    registered_paths = {entry["path"] for entry in catalog["boards"]}
-
-    for slug in (
-        "soill-iron-palm-2",
-        "soill-split-palm",
-        "soill-training-tiles",
-        "tension-grindstone",
-        "tension-honestone",
-        "tension-whetstone",
-    ):
-        package_root = HANGBOARDS_ROOT / slug
-        assert slug not in registered_paths
-        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
-            "assets/primary.png"
-        }
-
-
-def test_trango_candidates_with_non_exhaustive_hold_guides_remain_primary_only() -> None:
-    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
-    registered_paths = {entry["path"] for entry in catalog["boards"]}
-
-    for slug in (
-        "trango-rock-prodigy-forge",
-        "trango-rock-prodigy-natural",
-        "trango-rock-prodigy-pivot",
-        "trango-rock-prodigy-training-center",
-    ):
-        package_root = HANGBOARDS_ROOT / slug
-        assert slug not in registered_paths
-        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
-            "assets/primary.png"
-        }
-
-
-def test_yy_vertical_candidates_without_individual_hold_maps_remain_primary_only() -> None:
-    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
-    registered_paths = {entry["path"] for entry in catalog["boards"]}
-
-    for slug in (
-        "yy-verticalboard-evo",
-        "yy-verticalboard-first",
-        "yy-verticalboard-light",
-        "yy-verticalboard-one",
-    ):
-        package_root = HANGBOARDS_ROOT / slug
-        assert slug not in registered_paths
-        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
-            "assets/primary.png"
-        }
-
-
-def test_zlagboard_candidates_without_model_specific_hold_maps_remain_primary_only() -> None:
-    catalog = json.loads((HANGBOARDS_ROOT / "catalog.json").read_text(encoding="utf-8"))
-    registered_paths = {entry["path"] for entry in catalog["boards"]}
-
-    for slug in ("zlagboard-evo", "zlagboard-pro"):
-        package_root = HANGBOARDS_ROOT / slug
-        assert slug not in registered_paths
-        assert {path.relative_to(package_root).as_posix() for path in package_root.rglob("*") if path.is_file()} == {
-            "assets/primary.png"
-        }
-
-
-def test_every_registered_package_has_one_presentation_and_complete_evidence() -> None:
-    module = load_board_catalog_module()
-    catalog = module.validate_catalog(HANGBOARDS_ROOT / "catalog.json")
-
-    for entry in catalog.entries:
-        package_root = HANGBOARDS_ROOT / entry.path
-        package = module.load_board_package(package_root)
-        assert package.board.presentation_asset_path == "assets/primary.png"
-        assert {path.name for path in package_root.glob("*.json")} == CANONICAL_PACKAGE_SIDECARS
-
-        asset_paths = {
-            path.relative_to(package_root).as_posix()
-            for path in (package_root / "assets").iterdir()
-        }
-        assert "assets/primary.png" in asset_paths
-        source_photos = asset_paths - {"assets/primary.png"}
-        assert len(source_photos) <= 1
-        assert all(Path(path).suffix.lower() in SOURCE_PHOTO_EXTENSIONS for path in source_photos)
-        assert set(package.evidence.asset_evidence) == asset_paths
-
-
-def test_compact_board_embeds_each_legacy_piece_under_its_unique_physical_hold(
-) -> None:
+def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
-    artwork = json.loads((COMPACT_ROOT / "artwork.json").read_text(encoding="utf-8"))
     holds = board["holds"]
     hold_ids = [hold["id"] for hold in holds]
-    pieces_by_hold: dict[str, list[dict[str, object]]] = {}
-    piece_ids: list[str] = []
 
-    for source_piece in artwork["holdPieces"]:
-        piece = dict(source_piece)
-        piece_ids.append(piece.pop("id"))
-        hold_id = piece.pop("holdID")
-        pieces_by_hold.setdefault(hold_id, []).append(piece)
-
-    assert board["id"] == artwork["boardID"] == "metolius.wood-grips-compact-ii"
+    assert board["id"] == "metolius.wood-grips-compact-ii"
     assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
     assert len(hold_ids) == len(set(hold_ids))
-    assert len(piece_ids) == len(set(piece_ids))
-    assert set(hold_ids) == set(pieces_by_hold)
     assert all(hold.get("geometry") for hold in holds)
-    assert {
-        hold["id"]: hold["geometry"]
-        for hold in holds
-    } == pieces_by_hold
 
 
 def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> None:
@@ -382,7 +227,7 @@ def test_compact_hold_bounds_are_derived_from_embedded_piece_unions() -> None:
         assert bounds_by_hold[hold_id] == pytest.approx(expected_bounds)
 
 
-def test_compact_package_uses_the_official_hold_inventory_semantics_and_artwork() -> None:
+def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> None:
     module = load_board_catalog_module()
     package = module.load_board_package(COMPACT_ROOT)
 
@@ -395,45 +240,10 @@ def test_compact_package_uses_the_official_hold_inventory_semantics_and_artwork(
         "dimensions": '24" × 6.2"',
         "aspectRatio": 3.88,
     }
-    assert set(package.evidence.hold_evidence) == {
-        f"{hold_id}.{field}"
-        for hold_id, _ in COMPACT_HOLDS
-        for field in RUNTIME_HOLD_FIELDS
-    }
-    assert all(
-        mapping.method == "reviewed-human-authored-normalization"
-        and "hold-depth-diagram" in mapping.source_ids
-        for mapping in package.evidence.hold_evidence.values()
-    )
-    assert all(
-        "training-board-manual" in mapping.source_ids
-        for key, mapping in package.evidence.hold_evidence.items()
-        if key.endswith(".gripType")
-    )
-    assert dict(package.semantics.semantic_holds) == COMPACT_SEMANTICS
-    assert _frame_tuple(package.artwork.canvas_frame) == (0.025, 0.005, 0.950, 0.965)
-    assert tuple(layer.id for layer in package.artwork.layers) == (
-        "top-plane",
-        "middle-separator",
-        "bottom-plane",
-        "left-top-seam",
-        "right-top-seam",
-    )
-    assert tuple(piece.id for piece in package.artwork.hold_pieces) == (
-        "jug-left-top-cap", "jug-right-top-cap",
-        "sloper-flat-left-top-surface", "sloper-flat-right-top-surface",
-        "sloper-round-center-surface",
-        "edge-29-left-upper-side-rail", "edge-29-right-upper-side-rail",
-        "pocket-29-three-left-upper", "pocket-29-three-right-upper",
-        "pocket-29-two-left-upper", "pocket-29-two-right-upper",
-        "pocket-29-four-center-upper",
-        "edge-19-left-lower-side-rail", "edge-19-right-lower-side-rail",
-        "pocket-19-three-left-lower", "pocket-19-three-right-lower",
-        "pocket-19-two-left-lower", "pocket-19-two-right-lower",
-        "pocket-19-four-center-lower",
-    )
-    assert package.artwork.hold_ids == {hold_id for hold_id, _ in COMPACT_HOLDS}
     assert package.board.presentation_asset_path == "assets/primary.png"
+    for hold in package.board.holds:
+        actual = (hold.frame.x, hold.frame.y, hold.frame.width, hold.frame.height)
+        assert actual == pytest.approx(COMPACT_HOLD_BOUNDS[hold.id])
 
 
 def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
@@ -442,30 +252,3 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
 
     assert repaired.size == (1774, 457)
     assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "7e39c41e0e3bfb3d61d2ba0c331281bc04c06e98817ecc0fa8e3180f7923216e"
-
-    evidence = json.loads((COMPACT_ROOT / "evidence.json").read_text(encoding="utf-8"))
-    assert evidence["assetEvidence"]["assets/primary.png"]["method"] == "external-generative-adaptation"
-
-
-def test_registered_packages_keep_only_canonical_presentation_assets() -> None:
-    compact_reference = COMPACT_ROOT / "assets" / "WoodGripsCompactII.jpg"
-    assert hashlib.sha256(compact_reference.read_bytes()).hexdigest() == "c101a319076448be38977c606b5be57f1f254e2fe273b0c56a69ca2f52bdb596"
-
-    assert {path.name for path in (COMPACT_ROOT / "assets").iterdir()} == {
-        "primary.png",
-        "WoodGripsCompactII.jpg",
-    }
-
-
-def test_source_photo_requires_its_exact_package_relative_evidence_path(tmp_path: Path) -> None:
-    module = load_board_catalog_module()
-    package_root = tmp_path / "compact"
-    shutil.copytree(COMPACT_ROOT, package_root)
-    evidence_path = package_root / "evidence.json"
-    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
-    assert (package_root / "assets" / "WoodGripsCompactII.jpg").is_file()
-    evidence["assetEvidence"].pop("assets/WoodGripsCompactII.jpg")
-    evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
-
-    with pytest.raises(ValueError, match="assetEvidence keys must equal package assets"):
-        module.load_board_package(package_root)
