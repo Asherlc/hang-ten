@@ -83,61 +83,6 @@ private struct PhysicalHoldVisual: View {
     }
 }
 
-private struct PhysicalHoldVisual: View {
-    let hold: BoardHold
-    let isHighlighted: Bool
-    let highlightMode: BoardHighlightMode
-    let showsLabel: Bool
-
-    var body: some View {
-        let shape = BoardHoldPathShape(pieces: hold.geometry)
-        ZStack {
-            shape
-                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
-                .overlay {
-                    shape.stroke(
-                        isHighlighted ? highlightStroke : Color.hangWoodShadow,
-                        lineWidth: 1
-                    )
-            }
-
-            if showsLabel {
-                GeometryReader { proxy in
-                    Text(hold.name)
-                        .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
-                        .minimumScaleFactor(0.6)
-                        .frame(
-                            width: max(1, hold.frame.width * proxy.size.width),
-                            height: max(1, hold.frame.height * proxy.size.height)
-                        )
-                        .position(
-                            x: hold.frame.rect.midX * proxy.size.width,
-                            y: hold.frame.rect.midY * proxy.size.height
-                        )
-                }
-            }
-        }
-        .contentShape(shape)
-        .accessibilityLabel(hold.name)
-        .accessibilityAddTraits(.isButton)
-    }
-
-    private var highlightFill: Color {
-        switch highlightMode {
-        case .active: .holdActive
-        case .preview: .restBlue
-        }
-    }
-
-    private var highlightStroke: Color {
-        switch highlightMode {
-        case .active: .holdActiveDeep
-        case .preview: .restBlueDeep
-        }
-    }
-}
-
 struct BoardLegend: View {
     var body: some View {
         HStack(spacing: 12) {

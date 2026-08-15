@@ -2,10 +2,6 @@ import XCTest
 @testable import HangTen
 
 final class BoardSourceBoundaryTests: XCTestCase {
-    private enum PackageDiscoveryError: Error {
-        case invalidRootChild(String)
-    }
-
     func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
             "metolius.wood-grips-compact-ii"
@@ -118,13 +114,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
-                    .filter { !$0.hasPrefix(".") }
             )
             let assetEntries = try Set(
                 FileManager.default.contentsOfDirectory(
                     atPath: packageURL.appendingPathComponent("assets").path
                 )
-                .filter { !$0.hasPrefix(".") }
             )
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
@@ -154,7 +148,34 @@ final class BoardSourceBoundaryTests: XCTestCase {
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
+        let genericCanonicalAssetPaths: Set<String> = [
+            "assets/primary.png"
+        ]
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
+        let legacyArtifactTokens = [
+            "GeneratedBoardCatalog",
+            "BoardLibrary.json",
+            "MetoliusCompactIIDesign",
+            "RockProdigyTrainingCenterDesign",
+            "CompactBoard.imageset",
+            "CompactBoardIllustration",
+            "BoardDesignLanguage"
+        ]
+        let hardcodedMappingPatterns = [
+            #"semanticHolds\s*:\s*\[\s*\""#,
+            #"(?:assetPath|photoAssetName)\s*:\s*\""#
+        ]
+        let boardSpecificGeometryConstructs = [
+            "TrainingBoard(",
+            "BoardHold(",
+            "HoldFrame(",
+            "BoardNormalizedPath(commands:"
+        ]
+        let genericGeometryOwners: Set<String> = [
+            "HangTen/Models/BoardPackageStore.swift",
+            "HangTen/Models/BoardStorage.swift",
+            "HangTen/Models/TrainingModels.swift"
+        ]
 
         var findings: [String] = []
         for sourceURL in sourceURLs {
@@ -162,14 +183,35 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 of: repositoryRoot.path + "/",
                 with: ""
             )
-            let source = (try? String(contentsOf: sourceURL, encoding: .utf8)) ?? ""
-            findings.append(
-                contentsOf: BoardSourceBoundaryAudit.findings(
-                    relativePath: relativePath,
-                    source: source,
-                    packageOwnedLiterals: packageOwnedLiterals
-                )
-            )
+            for token in legacyArtifactTokens where relativePath.contains(token) {
+                findings.append("\(relativePath): legacy artifact path \(token)")
+            }
+            for literal in packageOwnedLiterals where relativePath.contains(literal) {
+                findings.append("\(relativePath): package-owned path literal \(literal)")
+            }
+
+            guard let source = try? String(contentsOf: sourceURL, encoding: .utf8) else {
+                continue
+            }
+            for token in legacyArtifactTokens where source.contains(token) {
+                findings.append("\(relativePath): legacy artifact token \(token)")
+            }
+            for literal in packageOwnedLiterals
+            where !genericCanonicalAssetPaths.contains(literal)
+                && source.contains("\"\(literal)\"") {
+                findings.append("\(relativePath): package-owned literal \(literal)")
+            }
+            for pattern in hardcodedMappingPatterns where source.range(
+                of: pattern,
+                options: .regularExpression
+            ) != nil {
+                findings.append("\(relativePath): hardcoded mapping matching \(pattern)")
+            }
+            if !genericGeometryOwners.contains(relativePath) {
+                for construct in boardSpecificGeometryConstructs where source.contains(construct) {
+                    findings.append("\(relativePath): board geometry construct \(construct)")
+                }
+            }
         }
 
         XCTAssertEqual(
@@ -177,152 +219,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
             [],
             "Board metadata, mappings, assets, and concrete geometry belong only in approved Hangboards packages."
         )
-    }
-
-    func testBoundaryAuditAllowsPlanMappingsOnlyInDedicatedOwner() {
-        let mapping = """
-        enum LegacyPlanSeedBoardMappings {
-            static let all = [BoardMappingDefinition(
-                boardID: "metolius.wood-grips-compact-ii",
-                semanticHolds: [
-                    "edge-19": SemanticHoldMappingDefinition(
-                        holdIDs: ["edge-19-left", "edge-19-right"]
-                    )
-                ]
-            )]
-        }
-        """
-        let packageOwnedLiterals: Set<String> = [
-            "metolius.wood-grips-compact-ii",
-            "edge-19-left",
-            "edge-19-right"
-        ]
-
-        XCTAssertEqual(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
-            ),
-            []
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/UnauthorizedMappings.swift",
-                source: mapping,
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/TrainingModels.swift",
-                source: mapping + "\n" + mapping.replacingOccurrences(
-                    of: "LegacyPlanSeedBoardMappings",
-                    with: "UnauthorizedPlanMappings"
-                ),
-                packageOwnedLiterals: packageOwnedLiterals
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/TrainingModels.swift",
-                source: #"let image = BoardPresentation(assetPath: "assets/primary.png")"#,
-                packageOwnedLiterals: ["assets/primary.png"]
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/UnauthorizedGeometry.swift",
-                source: "let frame = HoldFrame(x: 0, y: 0, width: 1, height: 1)",
-                packageOwnedLiterals: []
-            ).isEmpty
-        )
-    }
-
-    func testBoundaryAuditAllowsCanonicalPresentationVocabularyOnlyInGenericLoader() {
-        let canonicalPresentationVocabulary: Set<String> = [
-            "assets/primary.png",
-            "primary.png",
-            "primary"
-        ]
-        let genericLoaderSource = """
-        let assetPath = "assets/primary.png"
-        let filename = "primary.png"
-        let stem = "primary"
-        """
-
-        XCTAssertEqual(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/BoardPackageStore.swift",
-                source: genericLoaderSource,
-                packageOwnedLiterals: canonicalPresentationVocabulary
-            ),
-            []
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/UnauthorizedLoader.swift",
-                source: genericLoaderSource,
-                packageOwnedLiterals: canonicalPresentationVocabulary
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/BoardPackageStore.swift",
-                source: #"let mapping = BoardPresentation(assetPath: "assets/primary.png")"#,
-                packageOwnedLiterals: canonicalPresentationVocabulary
-            ).isEmpty
-        )
-        XCTAssertFalse(
-            BoardSourceBoundaryAudit.findings(
-                relativePath: "HangTen/Models/BoardPackageStore.swift",
-                source: #"let packageID = "fixture.package-specific""#,
-                packageOwnedLiterals: ["fixture.package-specific"]
-            ).isEmpty
-        )
-    }
-
-    func testPackageDiscoveryAllowsOnlySafeWorkbenchLockOperationalFile() throws {
-        let repositoryRoot = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-        defer { try? FileManager.default.removeItem(at: repositoryRoot) }
-
-        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let packageURL = hangboardsURL.appendingPathComponent("fixture-board", isDirectory: true)
-        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let metadataURL = hangboardsURL.appendingPathComponent(".DS_Store")
-        let unexpectedFileURL = hangboardsURL.appendingPathComponent("unexpected.txt")
-        let outsideLockURL = repositoryRoot.appendingPathComponent("outside-lock")
-        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
-        try Data(#"{"id":"fixture.board"}"#.utf8).write(
-            to: packageURL.appendingPathComponent("board.json")
-        )
-
-        try Data().write(to: lockURL)
-        try Data().write(to: metadataURL)
-        XCTAssertEqual(
-            try discoveredPackagePaths(at: repositoryRoot),
-            ["fixture.board": "fixture-board"]
-        )
-
-        try FileManager.default.removeItem(at: lockURL)
-        try Data().write(to: outsideLockURL)
-        try FileManager.default.createSymbolicLink(
-            at: lockURL,
-            withDestinationURL: outsideLockURL
-        )
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: outsideLockURL)
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: lockURL)
-        try FileManager.default.createDirectory(at: lockURL, withIntermediateDirectories: false)
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: lockURL)
-        try Data().write(to: unexpectedFileURL)
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
     }
 
     func testBoundaryAuditIgnoresUntrackedAppScratchFiles() throws {
@@ -382,41 +278,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let lockIsSymbolicLink = (try? FileManager.default.destinationOfSymbolicLink(
-            atPath: lockURL.path
-        )) != nil
-        if lockIsSymbolicLink {
-            throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-        }
-        if FileManager.default.fileExists(atPath: lockURL.path) {
-            let values = try? lockURL.resourceValues(forKeys: [
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ])
-            guard values?.isRegularFile == true, values?.isSymbolicLink != true else {
-                throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-            }
-        }
-
         let children = try FileManager.default.contentsOfDirectory(
             at: hangboardsURL,
-            includingPropertiesForKeys: [
-                .isDirectoryKey,
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ],
-            options: [.skipsHiddenFiles]
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey]
         )
         var paths: [String: String] = [:]
         for child in children {
-            let values = try child.resourceValues(forKeys: [
-                .isDirectoryKey,
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ])
+            let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
             guard values.isDirectory == true, values.isSymbolicLink != true else {
-                throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
+                XCTFail("Hangboards must contain only non-symlinked direct child directories")
+                continue
             }
             let boardURL = child.appendingPathComponent("board.json")
             guard FileManager.default.fileExists(atPath: boardURL.path) else { continue }
