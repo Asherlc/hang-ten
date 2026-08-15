@@ -120,104 +120,21 @@ private struct GenericVectorBoardMap: View {
                     )
 
                 ForEach(board.holds) { hold in
-                    let frame = hold.frame.rect
                     let isHighlighted = highlightedHoldIDs.contains(hold.id)
 
-                    if hold.geometry.isEmpty {
-                        GenericHoldVisual(
-                            hold: hold,
-                            isHighlighted: isHighlighted,
-                            highlightMode: highlightMode,
-                            showsLabel: showsLabels
-                        )
-                        .frame(
-                            width: proxy.size.width * frame.width,
-                            height: proxy.size.height * frame.height
-                        )
-                        .position(
-                            x: proxy.size.width * frame.midX,
-                            y: proxy.size.height * frame.midY
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            onHoldTap?(hold)
-                        }
-                    } else {
-                        PhysicalHoldVisual(
-                            hold: hold,
-                            isHighlighted: isHighlighted,
-                            highlightMode: highlightMode,
-                            showsLabel: showsLabels
-                        )
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
-                        .onTapGesture {
-                            onHoldTap?(hold)
-                        }
+                    PhysicalHoldVisual(
+                        hold: hold,
+                        isHighlighted: isHighlighted,
+                        highlightMode: highlightMode,
+                        showsLabel: showsLabels
+                    )
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
+                    .onTapGesture {
+                        onHoldTap?(hold)
                     }
                 }
             }
-        }
-    }
-}
-
-private struct GenericHoldVisual: View {
-    let hold: BoardHold
-    let isHighlighted: Bool
-    let highlightMode: BoardHighlightMode
-    let showsLabel: Bool
-
-    var body: some View {
-        ZStack {
-            holdShape
-                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
-                .overlay {
-                    holdShape
-                        .stroke(
-                            isHighlighted ? highlightStroke : Color.hangWoodShadow,
-                            lineWidth: 1
-                        )
-                }
-
-            if showsLabel {
-                Text(hold.name)
-                    .font(.system(size: 10, weight: .heavy, design: .rounded))
-                    .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
-                    .minimumScaleFactor(0.6)
-            }
-        }
-    }
-
-    private var highlightFill: Color {
-        switch highlightMode {
-        case .active:
-            return .holdActive
-        case .preview:
-            return .restBlue
-        }
-    }
-
-    private var highlightStroke: Color {
-        switch highlightMode {
-        case .active:
-            return .holdActiveDeep
-        case .preview:
-            return .restBlueDeep
-        }
-    }
-
-    private var holdShape: AnyShape {
-        switch hold.kind {
-        case .jug:
-            AnyShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        case .edge:
-            AnyShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-        case .pocket:
-            AnyShape(Capsule())
-        case .pinch:
-            AnyShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-        case .sloper:
-            AnyShape(Ellipse())
         }
     }
 }
