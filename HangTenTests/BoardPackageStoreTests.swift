@@ -19,7 +19,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreLoadsPackageWithoutArtworkDocument() throws {
+    func testStoreLoadsPackageWithDirectArtworkEvidence() throws {
         let fixture = try makeFixtureBundle()
         defer { fixture.remove() }
 
@@ -29,6 +29,56 @@ final class BoardPackageStoreTests: XCTestCase {
             try XCTUnwrap(store.presentationImageURL(for: try XCTUnwrap(store.boards.first))).lastPathComponent,
             "primary.png"
         )
+    }
+
+    func testStoreRequiresDirectArtworkDocument() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try FileManager.default.removeItem(at: packageURL.appendingPathComponent("artwork.json"))
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .missingPackageSidecar(boardID: "package-board", filename: "artwork.json")
+            )
+        }
+    }
+
+    func testStoreRejectsArtworkEvidenceWithUnknownCanonicalKey() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("evidence.json")) { evidence in
+                var artworkEvidence = try XCTUnwrap(evidence["artworkEvidence"] as? [String: Any])
+                artworkEvidence["layers.unknown-layer"] = artworkEvidence["silhouette"]
+                evidence["artworkEvidence"] = artworkEvidence
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/package-board/evidence.json")
+            )
+        }
+    }
+
+    func testStoreRejectsMalformedArtworkEvidenceMapping() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("evidence.json")) { evidence in
+                var artworkEvidence = try XCTUnwrap(evidence["artworkEvidence"] as? [String: Any])
+                artworkEvidence["silhouette"] = ["sourceIDs": ["fixture-source"]]
+                evidence["artworkEvidence"] = artworkEvidence
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/package-board/evidence.json")
+            )
+        }
     }
 
     func testStoreLoadsEveryCatalogPackageDataAndResources() throws {
@@ -75,7 +125,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testStoreReportsEachMissingPackageSidecar() throws {
-        for filename in ["board.json", "evidence.json", "semantics.json"] {
+        for filename in ["board.json", "artwork.json", "evidence.json", "semantics.json"] {
             let fixture = try makeFixtureBundle { packageURL in
                 try FileManager.default.removeItem(at: packageURL.appendingPathComponent(filename))
             }
@@ -264,6 +314,7 @@ final class BoardPackageStoreTests: XCTestCase {
         for (relativePath, resource) in [
             ("../catalog.json", "Hangboards/catalog.json"),
             ("board.json", "Hangboards/package-board/board.json"),
+            ("artwork.json", "Hangboards/package-board/artwork.json"),
             ("evidence.json", "Hangboards/package-board/evidence.json"),
             ("semantics.json", "Hangboards/package-board/semantics.json")
         ] {
@@ -382,6 +433,7 @@ final class BoardPackageStoreTests: XCTestCase {
         try propertyListData().write(to: bundleURL.appendingPathComponent("Info.plist"))
         try catalogData.write(to: hangboardsURL.appendingPathComponent("catalog.json"))
         try boardData.write(to: packageURL.appendingPathComponent("board.json"))
+        try artworkData.write(to: packageURL.appendingPathComponent("artwork.json"))
         try evidenceData.write(to: packageURL.appendingPathComponent("evidence.json"))
         try semanticsData.write(to: packageURL.appendingPathComponent("semantics.json"))
         try presentationBytes.write(to: assetsURL.appendingPathComponent("primary.png"))
@@ -526,20 +578,85 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
-    private var evidenceData: Data {
+    private var artworkData: Data {
         Data(
             #"""
             {
               "schemaVersion": 1,
               "boardID": "package-board",
-              "checkedAt": "2026-08-14",
-              "sources": [],
-              "fieldEvidence": {},
-              "holdEvidence": {},
-              "semanticEvidence": {},
-              "assetEvidence": {}
+              "canvasFrame": { "x": 0, "y": 0, "width": 1, "height": 1 },
+              "palette": "sculptedWood",
+              "silhouette": { "type": "roundedRect", "cornerRadiusFraction": 0.1 },
+              "layers": [
+                {
+                  "id": "top-plane",
+                  "role": "topPlane",
+                  "frame": { "x": 0, "y": 0, "width": 1, "height": 1 },
+                  "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 }
+                }
+              ],
+              "holdPieces": [
+                {
+                  "id": "jug-left-outline",
+                  "holdID": "jug-left",
+                  "frame": { "x": 0.05, "y": 0.2, "width": 0.3, "height": 0.4 },
+                  "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 },
+                  "treatment": { "type": "surface" }
+                },
+                {
+                  "id": "jug-right-outline",
+                  "holdID": "jug-right",
+                  "frame": { "x": 0.65, "y": 0.2, "width": 0.3, "height": 0.4 },
+                  "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 },
+                  "treatment": { "type": "surface" }
+                }
+              ]
             }
             """#.utf8
+        )
+    }
+
+    private var evidenceData: Data {
+        let mapping: [String: Any] = [
+            "sourceIDs": ["fixture-source"],
+            "method": "reviewed-human-authored-normalization"
+        ]
+        let fieldEvidence = Dictionary(
+            uniqueKeysWithValues: [
+                "manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio"
+            ].map { ($0, mapping) }
+        )
+        let holdEvidence = Dictionary(
+            uniqueKeysWithValues: ["jug-left", "jug-right"].flatMap { holdID in
+                [
+                    "id", "name", "shortLabel", "detail", "kind", "frame", "sizeMillimeters",
+                    "depthRangeMillimeters", "gripType", "fingerCapacity", "cueStyle", "features"
+                ].map { field in ("\(holdID).\(field)", mapping) }
+            }
+        )
+        let artworkEvidence = Dictionary(
+            uniqueKeysWithValues: [
+                "silhouette", "layers.top-plane", "holdPieces.jug-left-outline",
+                "holdPieces.jug-right-outline"
+            ].map { ($0, mapping) }
+        )
+        return try! JSONSerialization.data(
+            withJSONObject: [
+                "schemaVersion": 1,
+                "boardID": "package-board",
+                "checkedAt": "2026-08-14",
+                "sources": [[
+                    "id": "fixture-source",
+                    "title": "Fixture source",
+                    "url": "https://example.com/source"
+                ]],
+                "fieldEvidence": fieldEvidence,
+                "holdEvidence": holdEvidence,
+                "semanticEvidence": ["outer-jugs": mapping],
+                "artworkEvidence": artworkEvidence,
+                "assetEvidence": ["assets/primary.png": mapping]
+            ],
+            options: [.sortedKeys]
         )
     }
 

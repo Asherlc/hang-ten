@@ -163,6 +163,12 @@ struct BoardPackageStore {
                 packageURL: packageURL,
                 resourcePrefix: resourcePrefix
             )
+            let artworkDocument: BoardPackageArtworkDocument = try Self.decodeSidecar(
+                named: "artwork.json",
+                boardID: entry.id,
+                packageURL: packageURL,
+                resourcePrefix: resourcePrefix
+            )
             let semanticsDocument: BoardPackageSemanticsDocument = try Self.decodeSidecar(
                 named: "semantics.json",
                 boardID: entry.id,
@@ -176,6 +182,7 @@ struct BoardPackageStore {
                 resourcePrefix: resourcePrefix
             )
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
+            try Self.validateSchema(artworkDocument.schemaVersion, resource: "\(resourcePrefix)/artwork.json")
             try Self.validateSchema(semanticsDocument.schemaVersion, resource: "\(resourcePrefix)/semantics.json")
             try Self.validateSchema(evidenceDocument.schemaVersion, resource: "\(resourcePrefix)/evidence.json")
             try Self.validateMetadata(
@@ -186,16 +193,27 @@ struct BoardPackageStore {
             try Self.validateBoardIDs(
                 catalogID: entry.id,
                 boardDocument: boardDocument,
+                artworkDocument: artworkDocument,
                 semanticsDocument: semanticsDocument,
                 evidenceDocument: evidenceDocument,
                 resourcePrefix: resourcePrefix
             )
 
             let holdIDs = try Self.validateHolds(in: boardDocument)
+            try Self.validateArtwork(
+                artworkDocument,
+                boardID: entry.id,
+                holdIDs: holdIDs
+            )
             try Self.validateSemantics(
                 semanticsDocument.semanticHolds,
                 boardID: entry.id,
                 holdIDs: holdIDs
+            )
+            try Self.validateArtworkEvidence(
+                evidenceDocument,
+                artworkDocument: artworkDocument,
+                resource: "\(resourcePrefix)/evidence.json"
             )
             let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
             let board = try boardDocument.trainingBoard(semantics: semantics)
@@ -370,12 +388,14 @@ struct BoardPackageStore {
     private static func validateBoardIDs(
         catalogID: String,
         boardDocument: BoardPackageBoardDocument,
+        artworkDocument: BoardPackageArtworkDocument,
         semanticsDocument: BoardPackageSemanticsDocument,
         evidenceDocument: BoardPackageEvidenceDocument,
         resourcePrefix: String
     ) throws {
         for (actual, filename) in [
             (boardDocument.id, "board.json"),
+            (artworkDocument.boardID, "artwork.json"),
             (semanticsDocument.boardID, "semantics.json"),
             (evidenceDocument.boardID, "evidence.json")
         ] where actual != catalogID {
@@ -484,6 +504,75 @@ struct BoardPackageStore {
             )
         }
         return holdIDs
+    }
+
+    private static func validateArtwork(
+        _ document: BoardPackageArtworkDocument,
+        boardID: String,
+        holdIDs: Set<String>
+    ) throws {
+        var layerIDs = Set<String>()
+        for layer in document.layers {
+            guard layer.id.isBoardPackageIdentifier,
+                  layerIDs.insert(layer.id).inserted else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "artwork layers must have unique identifiers"
+                )
+            }
+        }
+
+        var pieceIDs = Set<String>()
+        var artworkHoldIDs = Set<String>()
+        for piece in document.holdPieces {
+            guard piece.id.isBoardPackageIdentifier,
+                  piece.holdID.isBoardPackageIdentifier,
+                  pieceIDs.insert(piece.id).inserted,
+                  artworkHoldIDs.insert(piece.holdID).inserted else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "artwork hold pieces must have unique identifiers and hold IDs"
+                )
+            }
+        }
+        guard artworkHoldIDs == holdIDs else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "artwork hold IDs must exactly match board hold IDs"
+            )
+        }
+    }
+
+    private static func validateArtworkEvidence(
+        _ evidence: BoardPackageEvidenceDocument,
+        artworkDocument: BoardPackageArtworkDocument,
+        resource: String
+    ) throws {
+        let expectedKeys = Set(
+            ["silhouette"] +
+                artworkDocument.layers.map { "layers.\($0.id)" } +
+                artworkDocument.holdPieces.map { "holdPieces.\($0.id)" }
+        )
+        guard Set(evidence.artworkEvidence.keys) == expectedKeys else {
+            throw BoardPackageStoreError.malformedJSON(resource: resource)
+        }
+
+        let sourceIDs = Set(evidence.sources.map(\.id))
+        guard !sourceIDs.isEmpty,
+              sourceIDs.count == evidence.sources.count,
+              sourceIDs.allSatisfy(\.isBoardPackageIdentifier) else {
+            throw BoardPackageStoreError.malformedJSON(resource: resource)
+        }
+        for mapping in evidence.artworkEvidence.values {
+            guard mapping.method == "manufacturer-measurement" ||
+                    mapping.method == "reviewed-human-authored-normalization",
+                  !mapping.sourceIDs.isEmpty,
+                  Set(mapping.sourceIDs).count == mapping.sourceIDs.count,
+                  mapping.sourceIDs.allSatisfy(\.isBoardPackageIdentifier),
+                  Set(mapping.sourceIDs).isSubset(of: sourceIDs) else {
+                throw BoardPackageStoreError.malformedJSON(resource: resource)
+            }
+        }
     }
 
     private static func validateSemantics(
@@ -775,6 +864,111 @@ struct BoardPackageFrameDocument: Decodable {
     }
 }
 
+private struct BoardPackageArtworkDocument: Decodable {
+    let schemaVersion: Int
+    let boardID: String
+    let layers: [BoardPackageArtworkLayerDocument]
+    let holdPieces: [BoardPackageArtworkHoldPieceDocument]
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion
+        case boardID
+        case canvasFrame
+        case palette
+        case silhouette
+        case layers
+        case holdPieces
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "schemaVersion", "boardID", "canvasFrame", "palette", "silhouette", "layers", "holdPieces"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .canvasFrame)
+        _ = try container.decode(String.self, forKey: .palette)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .silhouette)
+        layers = try container.decode([BoardPackageArtworkLayerDocument].self, forKey: .layers)
+        holdPieces = try container.decode([BoardPackageArtworkHoldPieceDocument].self, forKey: .holdPieces)
+    }
+}
+
+private struct BoardPackageArtworkLayerDocument: Decodable {
+    let id: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case role
+        case frame
+        case shape
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "role", "frame", "shape"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        _ = try container.decode(String.self, forKey: .role)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .frame)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .shape)
+    }
+}
+
+private struct BoardPackageArtworkHoldPieceDocument: Decodable {
+    let id: String
+    let holdID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case holdID
+        case frame
+        case shape
+        case treatment
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "holdID", "frame", "shape", "treatment"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        holdID = try container.decode(String.self, forKey: .holdID)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .frame)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .shape)
+        _ = try container.decode(BoardPackageJSONValue.self, forKey: .treatment)
+    }
+}
+
+private indirect enum BoardPackageJSONValue: Decodable {
+    case null
+    case boolean(Bool)
+    case number(Double)
+    case string(String)
+    case array([BoardPackageJSONValue])
+    case object([String: BoardPackageJSONValue])
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if container.decodeNil() {
+            self = .null
+        } else if let boolean = try? container.decode(Bool.self) {
+            self = .boolean(boolean)
+        } else if let number = try? container.decode(Double.self) {
+            self = .number(number)
+        } else if let string = try? container.decode(String.self) {
+            self = .string(string)
+        } else if let array = try? container.decode([BoardPackageJSONValue].self) {
+            self = .array(array)
+        } else if let object = try? container.decode([String: BoardPackageJSONValue].self) {
+            self = .object(object)
+        } else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Expected a JSON value"
+            )
+        }
+    }
+}
+
 private struct BoardPackageSemanticsDocument: Decodable {
     let schemaVersion: Int
     let boardID: String
@@ -801,6 +995,8 @@ private struct BoardPackageSemanticsDocument: Decodable {
 private struct BoardPackageEvidenceDocument: Decodable {
     let schemaVersion: Int
     let boardID: String
+    let sources: [BoardPackageEvidenceSourceDocument]
+    let artworkEvidence: [String: BoardPackageEvidenceMappingDocument]
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion
@@ -810,27 +1006,34 @@ private struct BoardPackageEvidenceDocument: Decodable {
         case fieldEvidence
         case holdEvidence
         case semanticEvidence
+        case artworkEvidence
         case assetEvidence
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence",
-            "holdEvidence", "semanticEvidence", "assetEvidence"
+            "holdEvidence", "semanticEvidence", "artworkEvidence", "assetEvidence"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
         boardID = try container.decode(String.self, forKey: .boardID)
         _ = try container.decode(String.self, forKey: .checkedAt)
-        _ = try container.decode([BoardPackageEvidenceSourceDocument].self, forKey: .sources)
+        sources = try container.decode([BoardPackageEvidenceSourceDocument].self, forKey: .sources)
         _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .fieldEvidence)
         _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .holdEvidence)
         _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .semanticEvidence)
+        artworkEvidence = try container.decode(
+            [String: BoardPackageEvidenceMappingDocument].self,
+            forKey: .artworkEvidence
+        )
         _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .assetEvidence)
     }
 }
 
 private struct BoardPackageEvidenceSourceDocument: Decodable {
+    let id: String
+
     private enum CodingKeys: String, CodingKey {
         case id
         case title
@@ -840,15 +1043,15 @@ private struct BoardPackageEvidenceSourceDocument: Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["id", "title", "url"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        _ = try container.decode(String.self, forKey: .id)
+        id = try container.decode(String.self, forKey: .id)
         _ = try container.decode(String.self, forKey: .title)
         _ = try container.decode(String.self, forKey: .url)
     }
 }
 
-private enum BoardPackageEvidenceMappingDocument: Decodable {
-    case sourceIDs([String])
-    case sourced(sourceIDs: [String], method: String)
+private struct BoardPackageEvidenceMappingDocument: Decodable {
+    let sourceIDs: [String]
+    let method: String
 
     private enum CodingKeys: String, CodingKey {
         case sourceIDs
@@ -856,18 +1059,10 @@ private enum BoardPackageEvidenceMappingDocument: Decodable {
     }
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let sourceIDs = try? container.decode([String].self) {
-            self = .sourceIDs(sourceIDs)
-            return
-        }
-
         try decoder.rejectUnknownKeys(["sourceIDs", "method"])
         let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
-        self = .sourced(
-            sourceIDs: try keyedContainer.decode([String].self, forKey: .sourceIDs),
-            method: try keyedContainer.decode(String.self, forKey: .method)
-        )
+        sourceIDs = try keyedContainer.decode([String].self, forKey: .sourceIDs)
+        method = try keyedContainer.decode(String.self, forKey: .method)
     }
 }
 
