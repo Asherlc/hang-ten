@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -7,6 +8,15 @@ import pytest
 
 
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+VALIDATION_FIXTURES = json.loads(
+    (
+        REPOSITORY_ROOT
+        / "HangTenTests"
+        / "Fixtures"
+        / "BoardPackageValidationFixtures.json"
+    ).read_text(encoding="utf-8")
+)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_geometry  # noqa: E402
@@ -91,3 +101,21 @@ def test_parses_a_pill_shaped_rounded_rectangle() -> None:
 def test_rejects_invalid_hold_geometry(display_path: str, message: str) -> None:
     with pytest.raises(GeometryError, match=message):
         parse_closed_path(display_path, 100, 100)
+
+
+@pytest.mark.parametrize(
+    "fixture",
+    VALIDATION_FIXTURES["malformedPathShapes"],
+    ids=lambda fixture: fixture["name"],
+)
+def test_rejects_shared_malformed_package_path_shapes(
+    fixture: dict[str, object],
+) -> None:
+    with pytest.raises(GeometryError, match=str(fixture["expectedMessage"])):
+        display_path_for_shape(
+            {"x": 0, "y": 0, "width": 1, "height": 1},
+            {"type": "path", "commands": fixture["commands"]},
+            100,
+            100,
+            label=str(fixture["name"]),
+        )

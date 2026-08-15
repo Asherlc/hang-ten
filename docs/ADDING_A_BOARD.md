@@ -35,6 +35,11 @@ A primary-only directory is a migration draft. It is excluded from the
 Workbench and app staging until `board.json` is complete. Do not add a registry,
 sidecar JSON, source photo, README, review directory, or duplicate geometry.
 
+Set `aspectRatio` to the presentation canvas width divided by height. It is not
+the physical product or installation-spread ratio. The value must match the
+decoded `primary.png` pixel ratio within 0.1% relative error; two-decimal values
+are acceptable only when they satisfy that bound.
+
 `board.json` contains product identity and physical holds. Every hold requires
 `id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, or `sloper`, and a
 nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
