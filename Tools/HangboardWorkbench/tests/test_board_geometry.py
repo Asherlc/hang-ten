@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -111,7 +112,10 @@ def test_rejects_invalid_hold_geometry(display_path: str, message: str) -> None:
 def test_rejects_shared_malformed_package_path_shapes(
     fixture: dict[str, object],
 ) -> None:
-    with pytest.raises(GeometryError, match=str(fixture["expectedMessage"])):
+    with pytest.raises(
+        GeometryError,
+        match=re.escape(str(fixture["expectedMessage"])),
+    ):
         display_path_for_shape(
             {"x": 0, "y": 0, "width": 1, "height": 1},
             {"type": "path", "commands": fixture["commands"]},

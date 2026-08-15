@@ -10,6 +10,7 @@ import struct
 import sys
 import zlib
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
@@ -28,11 +29,29 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
+assert VALIDATION_FIXTURES["outOfBoundsFrames"], (
+    "outOfBoundsFrames must contain at least one fixture"
+)
 SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
+
+
+def _load_stage_module(module_name: str) -> ModuleType:
+    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
+    spec = importlib.util.spec_from_file_location(module_name, stage_path)
+    assert spec is not None
+    assert spec.loader is not None
+    stage_module = importlib.util.module_from_spec(spec)
+    previous_bytecode_setting = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(stage_module)
+    finally:
+        sys.dont_write_bytecode = previous_bytecode_setting
+    return stage_module
 
 
 def _board_document(
@@ -505,13 +524,19 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
         board_package.load_board_package(package)
 
 
-def test_rejects_shared_out_of_bounds_normalized_frames(tmp_path: Path) -> None:
-    for fixture in VALIDATION_FIXTURES["outOfBoundsFrames"]:
-        with pytest.raises(board_package.GeometryError, match="normalized canvas"):
-            board_package.NormalizedFrame.from_json(
-                fixture["frame"],
-                fixture["name"],
-            )
+@pytest.mark.parametrize(
+    "fixture",
+    VALIDATION_FIXTURES["outOfBoundsFrames"],
+    ids=lambda fixture: fixture["name"],
+)
+def test_rejects_shared_out_of_bounds_normalized_frames(
+    fixture: dict[str, object],
+) -> None:
+    with pytest.raises(board_package.GeometryError, match="normalized canvas"):
+        board_package.NormalizedFrame.from_json(
+            fixture["frame"],
+            fixture["name"],
+        )
 
 
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
@@ -834,16 +859,7 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     for filename in ["board_package.py", "board_geometry.py"]:
         shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
 
-    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
-    spec = importlib.util.spec_from_file_location("stage_board_packages_test", stage_path)
-    assert spec is not None and spec.loader is not None
-    stage_module = importlib.util.module_from_spec(spec)
-    previous_bytecode_setting = sys.dont_write_bytecode
-    sys.dont_write_bytecode = True
-    try:
-        spec.loader.exec_module(stage_module)
-    finally:
-        sys.dont_write_bytecode = previous_bytecode_setting
+    stage_module = _load_stage_module("stage_board_packages_test")
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
@@ -883,19 +899,7 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     for filename in ["board_package.py", "board_geometry.py"]:
         shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
 
-    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
-    spec = importlib.util.spec_from_file_location(
-        "stage_board_packages_cleanup_test",
-        stage_path,
-    )
-    assert spec is not None and spec.loader is not None
-    stage_module = importlib.util.module_from_spec(spec)
-    previous_bytecode_setting = sys.dont_write_bytecode
-    sys.dont_write_bytecode = True
-    try:
-        spec.loader.exec_module(stage_module)
-    finally:
-        sys.dont_write_bytecode = previous_bytecode_setting
+    stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
