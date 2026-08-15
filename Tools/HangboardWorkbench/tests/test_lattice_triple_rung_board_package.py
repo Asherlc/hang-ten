@@ -85,7 +85,7 @@ def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
     ):
         assert len(hold["geometry"]) == 1
         piece = hold["geometry"][0]
-        assert tuple(piece["frame"].values()) == pytest.approx(expected[3], abs=1e-9)
+        assert tuple(piece["frame"][key] for key in ("x", "y", "width", "height")) == pytest.approx(expected[3], abs=1e-9)
         assert piece["shape"]["type"] == "path"
         assert piece["shape"]["commands"] == expected_commands
         assert display_path_for_shape(
