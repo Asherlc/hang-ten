@@ -157,6 +157,7 @@ def test_zlagboard_pro_preserves_the_audited_physical_inventory() -> None:
     assert board["subtitle"] == "For all performance levels."
     assert board["productURL"] == "https://zlagboard.com/hangboards"
     assert board["dimensions"] == "25 × 8 × 70.5 cm"
+    assert board["aspectRatio"] == 2.83489932885906
     assert board["aspectRatio"] == pytest.approx(width / height, rel=0, abs=1e-15)
     assert board["presentation"] == {"assetPath": "assets/primary.png"}
     assert sha256(primary_path.read_bytes()).hexdigest() == EXPECTED_PRIMARY_SHA256
