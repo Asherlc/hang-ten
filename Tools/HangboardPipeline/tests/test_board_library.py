@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import shutil
+from subprocess import CompletedProcess
 
 import pytest
 
 from conftest import write_board_package
-from hangboard_vectorizer import board_library
+from hangboard_vectorizer import board_library, workbench_validation
 from hangboard_vectorizer.board_library import BoardLibraryError, RepositoryBoardLibrary
 from hangboard_vectorizer.onboarding_run import read_status
 
@@ -140,6 +141,73 @@ def test_snapshot_reports_unregistered_image_board_as_draft(tmp_path: Path) -> N
         ("metolius.wood-grips-compact-ii", "Wood Grips Compact II", "published"),
     ]
     assert snapshot.diagnostics == ()
+
+
+@pytest.mark.parametrize(
+    ("extra_path", "contents"),
+    (
+        ("notes.txt", b"not part of a draft"),
+        ("assets/alternate.png", b"not the primary image"),
+    ),
+)
+def test_snapshot_only_treats_exact_primary_only_directories_as_drafts(
+    tmp_path: Path, extra_path: str, contents: bytes
+) -> None:
+    repository = _repository(tmp_path)
+    draft = repository / "Hangboards" / "beastmaker-1000"
+    primary = draft / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    primary.write_bytes(b"draft image")
+    extra = draft / extra_path
+    extra.parent.mkdir(parents=True, exist_ok=True)
+    extra.write_bytes(contents)
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert "beastmaker-1000" not in {board.board_id for board in snapshot.boards}
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("beastmaker-1000", "missing_manifest")
+    ]
+
+
+def test_snapshot_uses_canonical_slug_and_board_identifier_grammars(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    hangboards = repository / "Hangboards"
+    write_board_package(
+        hangboards / "valid-package",
+        board_id="fixture.board_v2",
+    )
+    write_board_package(
+        hangboards / "invalid.package",
+        board_id="fixture.other",
+    )
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert [board.board_id for board in snapshot.boards] == ["fixture.board_v2"]
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("invalid.package", "invalid_board_id")
+    ]
+
+
+def test_snapshot_diagnoses_every_package_with_a_duplicate_published_board_id(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    hangboards = repository / "Hangboards"
+    write_board_package(hangboards / "first-package", board_id="fixture.duplicate")
+    write_board_package(hangboards / "second-package", board_id="fixture.duplicate")
+
+    snapshot = RepositoryBoardLibrary(repository).snapshot()
+
+    assert snapshot.boards == ()
+    assert [(item.path, item.code) for item in snapshot.diagnostics] == [
+        ("first-package", "identity_mismatch"),
+        ("second-package", "identity_mismatch"),
+    ]
+    assert all("duplicate board ID fixture.duplicate" in item.message for item in snapshot.diagnostics)
 
 
 def test_snapshot_rejects_draft_directory_with_invalid_board_id(tmp_path: Path) -> None:
@@ -317,6 +385,76 @@ def test_copy_current_run_materializes_an_editable_runtime_run(tmp_path: Path) -
         if region["key"] == rounded_hold["id"]
     )
     assert rounded_region["displayPath"].count(" Q ") == 4
+
+
+def test_copy_current_run_preserves_multi_piece_hold_geometry_and_validates(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "repository"
+    package = write_board_package(repository / "Hangboards" / "fixture-board")
+    board_path = package / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"] = [
+        {
+            "frame": {"x": 0.1, "y": 0.2, "width": 0.15, "height": 0.3},
+            "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+        },
+        {
+            "frame": {"x": 0.7, "y": 0.2, "width": 0.15, "height": 0.3},
+            "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+        },
+    ]
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+    scripts = repository / "scripts"
+    scripts.mkdir()
+    (scripts / "export-plan-library.sh").write_text("#!/bin/zsh\n", encoding="utf-8")
+    monkeypatch.setattr(
+        workbench_validation.subprocess,
+        "run",
+        lambda command, **_kwargs: CompletedProcess(command, 0, "matches\n", ""),
+    )
+    destination = tmp_path / ".context" / "runtime" / "run"
+
+    RepositoryBoardLibrary(repository).copy_current_run("fixture.board", destination)
+
+    documents = [
+        json.loads(next(destination.glob(pattern)).read_text(encoding="utf-8"))
+        for pattern in (
+            "stages/02/*/stage-2-regions.json",
+            "stages/03/*/stage-3-vector-regions.json",
+            "stages/04/*/stage-4-manifest.json",
+        )
+    ]
+    expected_keys = ["hold-left::piece:1", "hold-left::piece:2"]
+    for stage_document in documents:
+        assert [region["id"] for region in stage_document["regions"]] == [1, 2]
+        assert [region["key"] for region in stage_document["regions"]] == expected_keys
+        assert [region["pieceIndex"] for region in stage_document["regions"]] == [0, 1]
+        assert [region["metadata"]["holdID"] for region in stage_document["regions"]] == [
+            "hold-left",
+            "hold-left",
+        ]
+    highlights = json.loads(
+        next(destination.glob("stages/04/*/stage-4-highlights.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert [item["holdID"] for item in highlights["holds"]] == ["hold-left"]
+    assert len(highlights["holds"][0]["displayPaths"]) == 2
+
+    report = workbench_validation.build_validation_report(
+        destination,
+        repository,
+        board_id="fixture.board",
+        revision_id="fixture-revision",
+    )
+    assert report.overall_status == "passed"
+    assert [check.status for check in report.checks] == [
+        "passed",
+        "passed",
+        "passed",
+        "passed",
+    ]
 
 
 def test_copy_current_run_rejects_existing_destination(tmp_path: Path) -> None:
