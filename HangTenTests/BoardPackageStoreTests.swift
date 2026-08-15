@@ -90,6 +90,27 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
     }
 
+    func testStoreRejectsSharedIndexedPNGWithDuplicatePalette() throws {
+        let duplicatePalette = try pngFixture(named: "duplicatePaletteBase64")
+        XCTAssertEqual(
+            duplicatePalette.ranges(of: Data("PLTE".utf8)).count,
+            2
+        )
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try duplicatePalette.write(
+                to: hangboardsURL.appendingPathComponent("fixture-model/assets/primary.png")
+            )
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["aspectRatio"] = 1
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testStoreAcceptsAspectRatioMatchingPresentationPixels() throws {
         let fixture = try makeFixtureBundle()
         defer { fixture.remove() }
@@ -195,6 +216,31 @@ final class BoardPackageStoreTests: XCTestCase {
                 XCTAssertEqual(boardID, "fixture.board")
                 XCTAssertTrue(reason.contains("geometry"))
             }
+        }
+    }
+
+    func testStoreRejectsSharedOutOfBoundsNormalizedFrames() throws {
+        let validationFixtures = try validationFixtures()
+        let frames = try XCTUnwrap(
+            validationFixtures["outOfBoundsFrames"] as? [[String: Any]]
+        )
+        for frameFixture in frames {
+            let name = try XCTUnwrap(frameFixture["name"] as? String)
+            let frame = try XCTUnwrap(frameFixture["frame"] as? [String: Any])
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                    geometry[0]["frame"] = frame
+                    holds[0]["geometry"] = geometry
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
         }
     }
 
