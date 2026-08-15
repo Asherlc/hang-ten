@@ -44,7 +44,7 @@ AUDITED_LEFT_JUG_COMMANDS = (
     ("move", (0.5, 0.01), None, None),
     ("curve", (0.99, 0.46), (0.75, 0.01), (0.95, 0.21)),
     ("curve", (0.67, 0.98), (1, 0.67), (0.88, 0.9)),
-    ("curve", (0.22, 0.91), (0.55, 1), (0.35, 0.99)),
+    ("curve", (0.22, 0.91), (0.6175, 1), (0.35, 0.99)),
     ("curve", (0.02, 0.43), (0.05, 0.8), (0, 0.62)),
     ("curve", (0.5, 0.01), (0.06, 0.2), (0.25, 0.02)),
     ("close", None, None, None),
@@ -205,12 +205,12 @@ def test_soill_training_tiles_preserve_sixteen_discrete_mirrored_contacts() -> N
         assert previous.to is not None
         assert following.control1 is not None
         incoming = (
-            previous.to[0] - previous.control2[0],
-            previous.to[1] - previous.control2[1],
+            (previous.to[0] - previous.control2[0]) * left_jug.frame.width,
+            (previous.to[1] - previous.control2[1]) * left_jug.frame.height,
         )
         outgoing = (
-            following.control1[0] - previous.to[0],
-            following.control1[1] - previous.to[1],
+            (following.control1[0] - previous.to[0]) * left_jug.frame.width,
+            (following.control1[1] - previous.to[1]) * left_jug.frame.height,
         )
         incoming_length = math.hypot(*incoming)
         outgoing_length = math.hypot(*outgoing)
