@@ -193,10 +193,10 @@
       ]
     },
     {
-      "id": "flat-edge-25",
-      "name": "25 mm flat edge",
+      "id": "flat-edge-35",
+      "name": "35 mm flat edge",
       "kind": "edge",
-      "sizeMillimeters": 25,
+      "sizeMillimeters": 35,
       "geometry": [
         {
           "frame": {"x": 0.2395833333333, "y": 0.5419921875, "width": 0.5208333333333, "height": 0.044921875},
