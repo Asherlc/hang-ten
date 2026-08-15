@@ -150,7 +150,7 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
     _regular_directory(hangboards_root)
-    inventory = load_board_package_module(repository_root).discover_board_packages(
+    packages = load_board_package_module(repository_root).discover_packages(
         hangboards_root
     )
 
@@ -159,7 +159,7 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     try:
         staging.mkdir()
         staged_paths: list[Path] = []
-        for package in inventory.packages:
+        for package in packages:
             package_source = package.root
             package_destination = staging / package.root.name
             _copy_regular_tree(package_source, package_destination)
