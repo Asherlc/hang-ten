@@ -56,4 +56,3 @@ document; its semantics and evidence are not carried forward. The remaining
 boards are then authored in small image-audited batches. Each batch verifies
 model hold IDs equal geometry hold IDs and inspects inactive and active paths
 in portrait and landscape.
-
