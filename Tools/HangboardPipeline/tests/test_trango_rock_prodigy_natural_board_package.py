@@ -199,3 +199,91 @@ def test_trango_rock_prodigy_natural_preserves_audited_topology_and_mirrors() ->
         "catalog.json",
     ):
         assert not (PACKAGE_ROOT / forbidden_sidecar).exists()
+
+
+def test_trango_rock_prodigy_natural_preserves_audited_composite_contacts() -> None:
+    holds = {
+        hold.id: hold
+        for hold in load_board_package(PACKAGE_ROOT).board.holds
+    }
+
+    # These are full-canvas frames hand-audited against the official front,
+    # oblique, side, and manual evidence rather than derived from package data.
+    expected_pinch_thumb_frames = {
+        "wide-pinch-left": (0.205, 0.739, 0.145, 0.015),
+        "wide-pinch-right": (0.65, 0.739, 0.145, 0.015),
+        "medium-pinch-left": (0.205, 0.739, 0.145, 0.015),
+        "medium-pinch-right": (0.65, 0.739, 0.145, 0.015),
+    }
+    for side in ("left", "right"):
+        top_rail = holds[f"top-variable-rail-{side}"].geometry[0]
+        bottom_rail = holds[f"bottom-variable-rail-{side}"].geometry[0]
+        wide_finger, wide_thumb = holds[f"wide-pinch-{side}"].geometry
+        medium_finger, medium_thumb = holds[f"medium-pinch-{side}"].geometry
+
+        assert wide_finger == top_rail
+        assert medium_finger == bottom_rail
+        assert wide_thumb == medium_thumb
+        assert wide_finger != wide_thumb
+        assert medium_finger != medium_thumb
+
+    for hold_id, expected_frame in expected_pinch_thumb_frames.items():
+        thumb = holds[hold_id].geometry[1]
+        assert (
+            thumb.frame.x,
+            thumb.frame.y,
+            thumb.frame.width,
+            thumb.frame.height,
+        ) == expected_frame
+        assert thumb.treatment == {"type": "surface"}
+
+    expected_closed_crimp_pieces = {
+        "closed-crimp-left": (
+            ((0.043, 0.511, 0.2, 0.112), {"type": "shelf", "rimInsetFraction": 0.08}),
+            ((0.266, 0.511, 0.027, 0.112), {"type": "surface"}),
+        ),
+        "closed-crimp-right": (
+            ((0.757, 0.511, 0.2, 0.112), {"type": "shelf", "rimInsetFraction": 0.08}),
+            ((0.707, 0.511, 0.027, 0.112), {"type": "surface"}),
+        ),
+    }
+    for hold_id, expected_pieces in expected_closed_crimp_pieces.items():
+        finger, upright_thumb = holds[hold_id].geometry
+        actual_pieces = tuple(
+            (
+                (
+                    piece.frame.x,
+                    piece.frame.y,
+                    piece.frame.width,
+                    piece.frame.height,
+                ),
+                None if piece.treatment is None else dict(piece.treatment),
+            )
+            for piece in (finger, upright_thumb)
+        )
+        assert actual_pieces == expected_pieces
+        assert finger.shape != upright_thumb.shape
+
+    expected_supported_pocket_frames = {
+        "supported-pocket-left": (
+            (0.065, 0.657, 0.078, 0.081),
+            (0.148, 0.657, 0.046, 0.081),
+        ),
+        "supported-pocket-right": (
+            (0.857, 0.657, 0.078, 0.081),
+            (0.806, 0.657, 0.046, 0.081),
+        ),
+    }
+    for hold_id, expected_frames in expected_supported_pocket_frames.items():
+        pieces = holds[hold_id].geometry
+        assert tuple(
+            (piece.frame.x, piece.frame.y, piece.frame.width, piece.frame.height)
+            for piece in pieces
+        ) == expected_frames
+        assert pieces[0].frame != pieces[1].frame
+
+        left_piece, right_piece = sorted(pieces, key=lambda piece: piece.frame.x)
+        divider_width = right_piece.frame.x - (
+            left_piece.frame.x + left_piece.frame.width
+        )
+        assert divider_width == pytest.approx(0.005, abs=1e-12)
