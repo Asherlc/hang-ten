@@ -3,7 +3,7 @@
   "id": "yy.verticalboard-first",
   "manufacturer": "YY Vertical",
   "name": "VerticalBoard First",
-  "subtitle": "Ten-grip poplar hangboard with five edge depths, two sloper angles, two jugs, and a central handle.",
+  "subtitle": "Ten-grip poplar hangboard with five four-finger pocket depths, two sloper angles, two jugs, and a central handle.",
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-first",
   "dimensions": "540 × 130 × 50 mm",
   "aspectRatio": 4.153846153846154,
@@ -12,10 +12,11 @@
   },
   "holds": [
     {
-      "id": "edge-45",
-      "name": "45 mm edge",
-      "kind": "edge",
+      "id": "pocket-45",
+      "name": "45 mm four-finger pocket",
+      "kind": "pocket",
       "sizeMillimeters": 45,
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {"x": 0.089, "y": 0.454, "width": 0.147, "height": 0.084},
@@ -48,10 +49,11 @@
       ]
     },
     {
-      "id": "edge-33",
-      "name": "33 mm edge",
-      "kind": "edge",
+      "id": "pocket-33",
+      "name": "33 mm four-finger pocket",
+      "kind": "pocket",
       "sizeMillimeters": 33,
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {"x": 0.249, "y": 0.455, "width": 0.143, "height": 0.081},
@@ -84,10 +86,11 @@
       ]
     },
     {
-      "id": "edge-25",
-      "name": "25 mm edge",
-      "kind": "edge",
+      "id": "pocket-25",
+      "name": "25 mm four-finger pocket",
+      "kind": "pocket",
       "sizeMillimeters": 25,
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {"x": 0.09, "y": 0.345, "width": 0.145, "height": 0.08},
@@ -120,10 +123,11 @@
       ]
     },
     {
-      "id": "edge-22",
-      "name": "22 mm edge",
-      "kind": "edge",
+      "id": "pocket-22",
+      "name": "22 mm four-finger pocket",
+      "kind": "pocket",
       "sizeMillimeters": 22,
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {"x": 0.285, "y": 0.596, "width": 0.14, "height": 0.08},
@@ -156,10 +160,11 @@
       ]
     },
     {
-      "id": "edge-20",
-      "name": "20 mm edge",
-      "kind": "edge",
+      "id": "pocket-20",
+      "name": "20 mm four-finger pocket",
+      "kind": "pocket",
       "sizeMillimeters": 20,
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {"x": 0.138, "y": 0.596, "width": 0.14, "height": 0.08},
