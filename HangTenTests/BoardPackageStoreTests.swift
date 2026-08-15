@@ -140,10 +140,14 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.aspectRatio, 2)
         XCTAssertEqual(board.productURL.absoluteString, "https://example.com/package-board")
         XCTAssertEqual(board.holds.map(\.id), ["jug-left", "jug-right"])
-        XCTAssertEqual(board.holds.first?.gripType, .openHand)
-        XCTAssertEqual(board.holds.first?.fingerCapacity, 4)
-        XCTAssertEqual(board.holds.first?.cueStyle, .outerJug)
-        XCTAssertEqual(board.holds.first?.features, [.jug])
+        let firstHold = try XCTUnwrap(board.holds.first)
+        XCTAssertEqual(firstHold.geometry.count, 2)
+        XCTAssertEqual(firstHold.frame.rect, CGRect(x: 0.05, y: 0.2, width: 0.3, height: 0.4))
+        XCTAssertNil(firstHold.sizeMillimeters)
+        XCTAssertNil(firstHold.depthRangeMillimeters)
+        XCTAssertNil(firstHold.gripType)
+        XCTAssertNil(firstHold.fingerCapacity)
+        XCTAssertNil(firstHold.features)
         XCTAssertNil(board.photoAssetName)
         XCTAssertEqual(
             store.semantics(for: "package-board")["outer-jugs"],
@@ -151,6 +155,66 @@ final class BoardPackageStoreTests: XCTestCase {
         )
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), presentationBytes)
+    }
+
+    func testStoreRejectsEmptyPhysicalHoldGeometry() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["geometry"] = []
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(boardID, "package-board")
+            XCTAssertTrue(reason.contains("geometry"))
+        }
+    }
+
+    func testStoreRejectsOutOfRangePhysicalHoldGeometry() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                var frame = try XCTUnwrap(geometry[0]["frame"] as? [String: Any])
+                frame["x"] = -0.1
+                geometry[0]["frame"] = frame
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(boardID, "package-board")
+            XCTAssertTrue(reason.contains("geometry"))
+        }
+    }
+
+    func testStoreRejectsUnsupportedPhysicalHoldKindsDuringDecoding() throws {
+        let fixture = try makeFixtureBundle { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["kind"] = "unsupported"
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/package-board/board.json")
+            )
+        }
     }
 
     func testStoreReportsMalformedJSONResource() throws {
@@ -627,30 +691,26 @@ final class BoardPackageStoreTests: XCTestCase {
                 {
                   "id": "jug-left",
                   "name": "Left jug",
-                  "shortLabel": "JL",
-                  "detail": "Left fixture jug.",
                   "kind": "jug",
-                  "frame": { "x": 0.05, "y": 0.2, "width": 0.3, "height": 0.4 },
-                  "sizeMillimeters": null,
-                  "depthRangeMillimeters": null,
-                  "gripType": "openHand",
-                  "fingerCapacity": 4,
-                  "cueStyle": "outerJug",
-                  "features": ["jug"]
+                  "geometry": [
+                    {
+                      "frame": { "x": 0.05, "y": 0.2, "width": 0.1, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.2 }
+                    },
+                    {
+                      "frame": { "x": 0.25, "y": 0.25, "width": 0.1, "height": 0.3 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.2 }
+                    }
+                  ]
                 },
                 {
                   "id": "jug-right",
                   "name": "Right jug",
-                  "shortLabel": "JR",
-                  "detail": "Right fixture jug.",
                   "kind": "jug",
-                  "frame": { "x": 0.65, "y": 0.2, "width": 0.3, "height": 0.4 },
-                  "sizeMillimeters": null,
-                  "depthRangeMillimeters": null,
-                  "gripType": "openHand",
-                  "fingerCapacity": 4,
-                  "cueStyle": "outerJug",
-                  "features": ["jug"]
+                  "geometry": [{
+                    "frame": { "x": 0.65, "y": 0.2, "width": 0.3, "height": 0.4 },
+                    "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.2 }
+                  }]
                 }
               ]
             }

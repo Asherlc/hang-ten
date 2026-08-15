@@ -31,6 +31,10 @@ struct GripDiagramView: View {
                 Text(gripType.label)
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
+            } else {
+                Text("Grip not specified")
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.hangMuted)
             }
 
             HStack(spacing: 10) {
@@ -54,9 +58,10 @@ struct GripDiagramView: View {
     }
 
     private var cueLabel: String {
-        guard hold.cueStyle != .rounded else { return hold.name }
+        guard hold.kind != .sloper else { return hold.name }
 
-        if hold.cueStyle == .outerJug {
+        if hold.kind == .jug,
+           hold.name.localizedCaseInsensitiveContains("outer") {
             return "Outer jugs"
         }
 
@@ -73,7 +78,10 @@ struct GripDiagramView: View {
     }
 
     private var accessibilityCueLabel: String {
-        [gripType?.label, fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }]
+        [
+            gripType?.label ?? "Grip not specified",
+            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" }
+        ]
             .compactMap { $0 }
             .joined(separator: ", ")
     }
