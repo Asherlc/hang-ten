@@ -1000,14 +1000,6 @@ enum MetoliusCycleBuilder {
 
 /// Board-specific target vocabulary retained by the plan migration seed.
 /// Physical board packages intentionally contain no training-plan semantics.
-extension BoardMappingDefinition {
-    func unknownHoldIDs(on board: TrainingBoard) -> Set<String> {
-        let boardHoldIDs = Set(board.holds.map(\.id))
-        let mappedHoldIDs = Set(semanticHolds.values.flatMap(\.holdIDs))
-        return mappedHoldIDs.subtracting(boardHoldIDs)
-    }
-}
-
 enum LegacyPlanSeedBoardMappings {
     static let all = [
         BoardMappingDefinition(
