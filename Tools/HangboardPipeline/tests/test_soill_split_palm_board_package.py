@@ -137,6 +137,7 @@ def test_soill_split_palm_preserves_audited_inventory_and_mirror_geometry() -> N
         assert raw["aspectRatio"] == pytest.approx(
             image.width / image.height,
             abs=1e-9,
+            rel=0.0,
         )
         for hold_id, expected_frames in EXPECTED_PIXEL_FRAMES.items():
             assert len(holds[hold_id].geometry) == len(expected_frames)
@@ -208,10 +209,17 @@ def test_soill_split_palm_preserves_audited_inventory_and_mirror_geometry() -> N
                 right.frame.x,
                 1 - left.frame.x - left.frame.width,
                 abs_tol=1e-12,
+                rel_tol=0.0,
             )
-            assert math.isclose(right.frame.y, left.frame.y, abs_tol=1e-12)
-            assert math.isclose(right.frame.width, left.frame.width, abs_tol=1e-12)
-            assert math.isclose(right.frame.height, left.frame.height, abs_tol=1e-12)
+            assert math.isclose(
+                right.frame.y, left.frame.y, abs_tol=1e-12, rel_tol=0.0
+            )
+            assert math.isclose(
+                right.frame.width, left.frame.width, abs_tol=1e-12, rel_tol=0.0
+            )
+            assert math.isclose(
+                right.frame.height, left.frame.height, abs_tol=1e-12, rel_tol=0.0
+            )
             for left_command, right_command in zip(
                 left.shape.commands, right.shape.commands, strict=True
             ):
@@ -219,8 +227,12 @@ def test_soill_split_palm_preserves_audited_inventory_and_mirror_geometry() -> N
                 for (left_x, left_y), (right_x, right_y) in zip(
                     _points(left_command), _points(right_command), strict=True
                 ):
-                    assert math.isclose(right_x, 1 - left_x, abs_tol=1e-12)
-                    assert math.isclose(right_y, left_y, abs_tol=1e-12)
+                    assert math.isclose(
+                        right_x, 1 - left_x, abs_tol=1e-12, rel_tol=0.0
+                    )
+                    assert math.isclose(
+                        right_y, left_y, abs_tol=1e-12, rel_tol=0.0
+                    )
 
     forbidden = {"cueStyle", "semantics", "evidence", "claims", "ui"}
 
