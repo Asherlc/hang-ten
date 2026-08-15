@@ -18,8 +18,8 @@ PRIMARY_PATH = PACKAGE_ROOT / "assets" / "primary.png"
 RUNTIME_CANVAS_SIZE = (1680, 280)
 
 EXPECTED_HOLDS = (
-    ("outer-jug-left", "jug", None, 4),
-    ("outer-jug-right", "jug", None, 4),
+    ("outer-jug-left", "jug", None, 1),
+    ("outer-jug-right", "jug", None, 1),
     ("sloper-30-left", "sloper", None, 1),
     ("sloper-20-center", "sloper", None, 1),
     ("sloper-30-right", "sloper", None, 1),
@@ -161,31 +161,19 @@ def _bounds(piece: object) -> tuple[float, float, float, float]:
     return min(xs), min(ys), max(xs), max(ys)
 
 
-def _assert_jug_surrounds_edge(jug: object, edge: object) -> None:
-    top, outside, bottom, inside = jug.geometry
-    edge_left, edge_top, edge_right, edge_bottom = _bounds(edge.geometry[0])
+def _assert_jug_is_top_contact_above_edge(jug: object, edge: object) -> None:
+    assert len(jug.geometry) == 1, (
+        "an outer jug must contain only its usable top-cap contact, not unrelated "
+        "side or bottom face strips"
+    )
+    top = jug.geometry[0]
+    edge_left, edge_top, edge_right, _edge_bottom = _bounds(edge.geometry[0])
     top_left, _top_y, top_right, top_bottom = _bounds(top)
-    bottom_left, bottom_top, bottom_right, _bottom_y = _bounds(bottom)
-    left_side, right_side = sorted(
-        (_bounds(outside), _bounds(inside)), key=lambda bounds: bounds[0]
-    )
-    _left_x, left_top, left_right, left_bottom = left_side
-    right_left, right_top, _right_x, right_bottom = right_side
 
-    assert top_bottom < edge_top, "the top jug surface intrudes into its 20 mm edge"
-    assert bottom_top > edge_bottom, (
-        "the bottom jug surface intrudes into its 20 mm edge"
-    )
-    assert left_right < edge_left, (
-        "the outside jug surface intrudes into its 20 mm edge"
-    )
-    assert right_left > edge_right, (
-        "the inside jug surface intrudes into its 20 mm edge"
+    assert top_bottom < edge_top, (
+        "the outer jug is not the physical top-cap contact above its 20 mm edge"
     )
     assert top_left < edge_left and top_right > edge_right
-    assert bottom_left < edge_left and bottom_right > edge_right
-    assert left_top < edge_top and left_bottom > edge_bottom
-    assert right_top < edge_top and right_bottom > edge_bottom
 
 
 def _assert_no_piece_overlaps(board: object) -> None:
@@ -279,15 +267,15 @@ def test_yy_verticalboard_light_preserves_source_backed_package_contract() -> No
         (hold.id, hold.kind, hold.size_millimeters, len(hold.geometry))
         for hold in board.holds
     ) == EXPECTED_HOLDS, (
-        "the labeled twelve-contact layout or the split jug-piece inventory changed"
+        "the labeled twelve-contact layout or single-piece jug inventory changed"
     )
     assert Counter(hold.kind for hold in board.holds) == {
         "edge": 7,
         "sloper": 3,
         "jug": 2,
     }, "a physical contact was reclassified or silently added/removed"
-    assert sum(len(hold.geometry) for hold in board.holds) == 18, (
-        "the expected ten single-piece contacts plus two four-piece jugs changed"
+    assert sum(len(hold.geometry) for hold in board.holds) == 12, (
+        "every logical hold must have exactly one physical contact piece"
     )
     assert [
         hold.size_millimeters for hold in board.holds if hold.kind == "edge"
@@ -331,8 +319,12 @@ def test_yy_verticalboard_light_preserves_source_backed_package_contract() -> No
         ):
             _assert_exact_global_mirror(left_piece, right_piece)
 
-    _assert_jug_surrounds_edge(holds["outer-jug-left"], holds["edge-20-left"])
-    _assert_jug_surrounds_edge(holds["outer-jug-right"], holds["edge-20-right"])
+    _assert_jug_is_top_contact_above_edge(
+        holds["outer-jug-left"], holds["edge-20-left"]
+    )
+    _assert_jug_is_top_contact_above_edge(
+        holds["outer-jug-right"], holds["edge-20-right"]
+    )
     _assert_runtime_board_coordinate_contract(board)
     _assert_no_piece_overlaps(board)
 
