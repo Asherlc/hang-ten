@@ -18,6 +18,7 @@ struct BoardHoldPiece: Identifiable, Hashable {
     let holdID: String
     let frame: CGRect
     let shape: BoardShape
+    let treatment: BoardHoldTreatment
 
     func rect(in boardRect: CGRect) -> CGRect {
         CGRect(
@@ -42,6 +43,26 @@ struct BoardHoldPathShape: Shape {
             path.addPath(piece.path(in: rect))
         }
     }
+}
+
+enum BoardHoldTreatment: Hashable {
+    case recess(BoardRecessProfile)
+    case shelf(BoardShelfProfile)
+    case surface
+}
+
+struct BoardRecessProfile: Hashable {
+    let rimInsetFraction: CGFloat
+    let depth: BoardRecessDepth
+}
+
+enum BoardRecessDepth: Hashable {
+    case deep
+    case shallow
+}
+
+struct BoardShelfProfile: Hashable {
+    let rimInsetFraction: CGFloat
 }
 
 enum BoardShape: Hashable {
@@ -386,7 +407,6 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
-        cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {

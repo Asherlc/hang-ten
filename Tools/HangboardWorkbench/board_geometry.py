@@ -6,7 +6,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 import math
 import re
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
@@ -47,15 +47,11 @@ class NormalizedFrame:
         return cls(**numbers)
 
     def to_json(self) -> dict[str, float]:
-        x = round(self.x, 12)
-        y = round(self.y, 12)
-        width = round(min(round(self.width, 12), 1 - x), 12)
-        height = round(min(round(self.height, 12), 1 - y), 12)
         return {
-            "x": x,
-            "y": y,
-            "width": width,
-            "height": height,
+            "x": round(self.x, 12),
+            "y": round(self.y, 12),
+            "width": round(self.width, 12),
+            "height": round(self.height, 12),
         }
 
 
