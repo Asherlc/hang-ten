@@ -99,9 +99,19 @@ def _string(value: Any, source: str) -> str:
 
 def _identifier(value: Any, source: str) -> str:
     result = _string(value, source)
-    if not _IDENTIFIER.fullmatch(result):
+    if not is_board_identifier(result):
         raise ValueError(f"{source} must be identifier-shaped")
     return result
+
+
+def is_board_identifier(value: object) -> bool:
+    """Return whether *value* follows the canonical board/hold ID grammar."""
+    return isinstance(value, str) and _IDENTIFIER.fullmatch(value) is not None
+
+
+def is_board_package_slug(value: object) -> bool:
+    """Return whether *value* is a flat canonical package directory slug."""
+    return isinstance(value, str) and _PACKAGE_SLUG.fullmatch(value) is not None
 
 
 def _number(value: Any, source: str) -> float:
@@ -396,7 +406,8 @@ def load_board_package(package_root: Path) -> BoardPackage:
     return BoardPackage(root.resolve(), board)
 
 
-def _is_primary_only_draft(root: Path) -> bool:
+def is_primary_only_draft(root: Path) -> bool:
+    """Return whether *root* has exactly ``assets/primary.png`` and no manifest."""
     _require_no_symlinks(root)
     if {item.name for item in root.iterdir()} != {"assets"}:
         return False
@@ -437,7 +448,7 @@ def discover_board_packages(
             raise ValueError(f"Hangboards direct child must not be a symlink: {entry}")
         if not entry.is_dir():
             continue
-        if not _PACKAGE_SLUG.fullmatch(entry.name):
+        if not is_board_package_slug(entry.name):
             raise ValueError(f"Hangboards directory name is invalid: {entry.name}")
         board_path = entry / "board.json"
         if board_path.exists() or board_path.is_symlink():
@@ -447,7 +458,7 @@ def discover_board_packages(
             identifiers.add(package.board.id)
             packages.append(package)
             continue
-        if _is_primary_only_draft(entry):
+        if is_primary_only_draft(entry):
             if require_complete_inventory:
                 raise ValueError(f"Hangboards/{entry.name} is missing board.json")
             drafts.append(entry.resolve())
