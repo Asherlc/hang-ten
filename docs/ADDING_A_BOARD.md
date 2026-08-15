@@ -31,14 +31,9 @@ Hangboards/
       primary.png
 ```
 
-A primary-only directory is a migration draft. It is excluded from the
-Workbench and app staging until `board.json` is complete. Do not add a registry,
+A primary-only directory is a migration draft that the Workbench can open. It
+is ignored by app staging until `board.json` is complete. Do not add a registry,
 sidecar JSON, source photo, README, review directory, or duplicate geometry.
-
-Set `aspectRatio` to the presentation canvas width divided by height. It is not
-the physical product or installation-spread ratio. The value must match the
-decoded `primary.png` pixel ratio within 0.1% relative error; two-decimal values
-are acceptable only when they satisfy that bound.
 
 `board.json` contains product identity and physical holds. Every hold requires
 `id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, or `sloper`, and a
@@ -46,18 +41,14 @@ nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
 ranges, finger capacity, grip posture, and feature tags are optional.
 
-Validate direct discovery and the single-file package contract after every
-package change:
+Validate direct discovery after every package change:
 
 ```sh
-uv run --with pytest python -m pytest -q \
-  Tools/HangboardWorkbench/tests/test_board_geometry.py \
-  Tools/HangboardWorkbench/tests/test_board_package.py \
-  Tools/HangboardWorkbench/tests/test_server.py
+scripts/hangboard-tools.sh packages validate --root Hangboards
 ```
 
-The Python discovery API's `final_inventory=True` mode is reserved for the end
-of the migration; it rejects any direct child missing `board.json`.
+Use `--final-inventory` only when every primary-only draft has been authored;
+that mode rejects any directory missing `board.json`.
 
 ## 3. Bundle discovered packages directly
 
@@ -72,15 +63,17 @@ xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
   -destination 'generic/platform=iOS Simulator'
 ```
 
-## 4. Optional source preparation
+## 4. Optional onboarding work
 
 Onboarding artifacts belong under `.context/`. They can support later human
 authoring but are not package content and are never bundled directly.
 
-Keep source images and audit notes in a workspace-owned path such as
-`.context/hangboard-onboarding/manufacturer-model`. Author the reviewed result
-directly in the package's `board.json`; the retired pipeline is not part of the
-runtime or validation contract.
+```sh
+scripts/hangboard-tools.sh onboard \
+  --product-name "Manufacturer Model" \
+  --source /absolute/path/to/front-photo.jpg \
+  --output .context/hangboard-onboarding/manufacturer-model
+```
 
 ## Completion checklist
 
