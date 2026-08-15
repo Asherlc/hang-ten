@@ -202,10 +202,14 @@ def test_target10a_linebreaker_base_is_a_closed_direct_child_package() -> None:
 def test_target10a_linebreaker_base_keeps_32_5_slopers_on_the_visible_full_canvas_plane() -> None:
     package = board_package.load_board_package(PACKAGE_ROOT)
     raster_width, raster_height = _png_dimensions(PACKAGE_ROOT / "assets" / "primary.png")
+    document = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = {hold["id"]: hold for hold in package.board["holds"]}
 
     assert (raster_width, raster_height) == (1448, 1086)
-    assert raster_width / raster_height == pytest.approx(4 / 3, abs=1e-12)
+    assert document["aspectRatio"] == 1.33333333333333
+    assert document["aspectRatio"] == pytest.approx(
+        raster_width / raster_height, abs=1e-12
+    )
     for hold_id in ("sloper-32-5-left", "sloper-32-5-right"):
         frame = holds[hold_id]["geometry"][0]["frame"]
         assert round(frame["y"] * raster_height) == 387
