@@ -41,7 +41,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": { "x": 0.224, "y": 0.35, "width": 0.153, "height": 0.052 },
+          "frame": { "x": 0.224, "y": 0.356, "width": 0.153, "height": 0.050 },
           "shape": {
             "type": "path",
             "commands": [
@@ -94,7 +94,7 @@
       "gripType": "sloper",
       "geometry": [
         {
-          "frame": { "x": 0.623, "y": 0.35, "width": 0.153, "height": 0.052 },
+          "frame": { "x": 0.623, "y": 0.356, "width": 0.153, "height": 0.050 },
           "shape": {
             "type": "path",
             "commands": [

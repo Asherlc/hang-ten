@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from hangboard_vectorizer.board_catalog import load_board_package
 
@@ -158,3 +159,17 @@ def test_target10a_linebreaker_base_is_a_closed_direct_child_package() -> None:
         return set()
 
     assert forbidden_keys.isdisjoint(keys(document))
+
+
+def test_target10a_linebreaker_base_keeps_32_5_slopers_on_the_visible_full_canvas_plane() -> None:
+    board = load_board_package(PACKAGE_ROOT).board
+    raster_width, raster_height = Image.open(
+        PACKAGE_ROOT / "assets" / "primary.png"
+    ).size
+    holds = {hold.id: hold for hold in board.holds}
+
+    assert (raster_width, raster_height) == (1448, 1086)
+    for hold_id in ("sloper-32-5-left", "sloper-32-5-right"):
+        piece = holds[hold_id].geometry[0]
+        assert round(piece.frame.y * raster_height) == 387
+        assert round((piece.frame.y + piece.frame.height) * raster_height) == 441
