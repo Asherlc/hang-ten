@@ -80,7 +80,7 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingCatalog:
-            "The bundled Hangboards/catalog.json resource is missing."
+            "The bundled Hangboards resource directory is missing."
         case .malformedJSON(let resource):
             "The bundled board resource is malformed: \(resource)."
         case let .missingPackageSidecar(boardID, filename):
@@ -94,7 +94,7 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
         case let .boardIDMismatch(expected, actual, resource):
             "Expected board ID \(expected) in \(resource), got \(actual)."
         case .duplicateBoardID(let boardID):
-            "The bundled catalog contains duplicate board ID \(boardID)."
+            "The bundled board packages contain duplicate board ID \(boardID)."
         case let .duplicateHoldID(boardID, holdID):
             "Board \(boardID) contains duplicate hold ID \(holdID)."
         case let .unknownSemanticHoldID(boardID, holdID):
@@ -118,130 +118,63 @@ struct BoardPackageStore {
     private let presentationURLsByBoardID: [String: URL]
 
     init(bundle: Bundle = .main) throws {
-        guard let catalogURL = bundle.url(
-            forResource: "catalog",
-            withExtension: "json",
-            subdirectory: "Hangboards"
-        ) else {
+        guard let resourceURL = bundle.resourceURL else {
             throw BoardPackageStoreError.missingCatalog
         }
-
-        let hangboardsURL = catalogURL.deletingLastPathComponent()
-        let catalog: BoardPackageCatalogDocument = try Self.decode(
-            from: catalogURL,
-            resource: "Hangboards/catalog.json"
-        )
-        guard catalog.schemaVersion == 1 else {
-            throw BoardPackageStoreError.malformedJSON(resource: "Hangboards/catalog.json")
-        }
-
-        var seenCatalogIDs = Set<String>()
-        var seenCatalogPaths = Set<String>()
+        let hangboardsURL = resourceURL.appendingPathComponent("Hangboards", isDirectory: true)
+        try Self.validateHangboardsRoot(hangboardsURL)
         var loadedBoards: [TrainingBoard] = []
-        var loadedSemantics: [String: [String: [String]]] = [:]
-        var loadedDesigns: [String: BoardDesign] = [:]
         var loadedPresentationURLs: [String: URL] = [:]
+        var seenBoardIDs = Set<String>()
 
-        for entry in catalog.boards {
-            guard entry.id.isBoardPackageIdentifier,
-                  entry.path.isBoardPackageSlug else {
-                throw BoardPackageStoreError.malformedJSON(resource: "Hangboards/catalog.json")
-            }
-            guard seenCatalogIDs.insert(entry.id).inserted else {
-                throw BoardPackageStoreError.duplicateBoardID(entry.id)
-            }
-            guard seenCatalogPaths.insert(entry.path).inserted else {
-                throw BoardPackageStoreError.malformedJSON(resource: "Hangboards/catalog.json")
-            }
-            let packageURL = try Self.packageURL(
-                for: entry,
-                below: hangboardsURL
-            )
-            let resourcePrefix = "Hangboards/\(entry.path)"
-            let boardDocument: BoardPackageBoardDocument = try Self.decodeSidecar(
-                named: "board.json",
-                boardID: entry.id,
-                packageURL: packageURL,
-                resourcePrefix: resourcePrefix
-            )
-            let semanticsDocument: BoardPackageSemanticsDocument = try Self.decodeSidecar(
-                named: "semantics.json",
-                boardID: entry.id,
-                packageURL: packageURL,
-                resourcePrefix: resourcePrefix
-            )
-            let artworkDocument: BoardArtworkDocument = try Self.decodeSidecar(
-                named: "artwork.json",
-                boardID: entry.id,
-                packageURL: packageURL,
-                resourcePrefix: resourcePrefix
-            )
-
-            try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
-            try Self.validateSchema(semanticsDocument.schemaVersion, resource: "\(resourcePrefix)/semantics.json")
-            try Self.validateSchema(artworkDocument.schemaVersion, resource: "\(resourcePrefix)/artwork.json")
-            try Self.validateMetadata(
-                boardDocument: boardDocument,
-                semanticsDocument: semanticsDocument,
-                artworkDocument: artworkDocument,
-                boardID: entry.id
-            )
-            try Self.validateBoardIDs(
-                catalogID: entry.id,
-                boardDocument: boardDocument,
-                semanticsDocument: semanticsDocument,
-                artworkDocument: artworkDocument,
-                resourcePrefix: resourcePrefix
-            )
-
-            let holdIDs = try Self.validateHolds(in: boardDocument)
-            try Self.validateSemantics(
-                semanticsDocument.semanticHolds,
-                boardID: entry.id,
-                holdIDs: holdIDs
-            )
-            try Self.validateArtwork(
-                artworkDocument,
-                boardID: entry.id,
-                holdIDs: holdIDs
-            )
-
-            let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
-            let board = try boardDocument.trainingBoard(semantics: semantics)
-            let design: BoardDesign
-            do {
-                design = try artworkDocument.boardDesign(holds: board.holds)
-            } catch {
+        for packageURL in try Self.directChildDirectories(of: hangboardsURL) {
+            let slug = packageURL.lastPathComponent
+            guard slug.isBoardPackageSlug else {
                 throw BoardPackageStoreError.invalidPackage(
-                    boardID: entry.id,
-                    reason: String(describing: error)
+                    boardID: slug,
+                    reason: "directory name must be a package slug"
                 )
             }
-
-            loadedBoards.append(board)
-            loadedSemantics[board.id] = semantics
-            loadedDesigns[board.id] = design
-
-            if let assetPath = boardDocument.presentation?.assetPath {
-                let assetURL = try Self.presentationAssetURL(
-                    path: assetPath,
-                    boardID: board.id,
-                    packageURL: packageURL
-                )
-                guard FileManager.default.isReadableFile(atPath: assetURL.path) else {
-                    throw BoardPackageStoreError.missingPresentationAsset(
-                        boardID: board.id,
-                        path: assetPath
-                    )
+            let boardURL = packageURL.appendingPathComponent("board.json")
+            if !FileManager.default.fileExists(atPath: boardURL.path) {
+                if try Self.isPrimaryOnlyDraft(packageURL) {
+                    continue
                 }
-                loadedPresentationURLs[board.id] = assetURL
+                throw BoardPackageStoreError.missingPackageSidecar(
+                    boardID: slug,
+                    filename: "board.json"
+                )
+            }
+            try Self.validateFinishedPackage(packageURL, boardID: slug)
+            let resourcePrefix = "Hangboards/\(slug)"
+            let boardDocument: BoardPackageBoardDocument = try Self.decode(
+                from: boardURL,
+                resource: "\(resourcePrefix)/board.json"
+            )
+            try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
+            try Self.validateMetadata(boardDocument: boardDocument)
+            _ = try Self.validateHolds(in: boardDocument)
+            guard seenBoardIDs.insert(boardDocument.id).inserted else {
+                throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
+            }
+            let board = try boardDocument.trainingBoard()
+            loadedBoards.append(board)
+            let assetURL = packageURL.appendingPathComponent("assets/primary.png")
+            loadedPresentationURLs[board.id] = assetURL
+            if let assetPath = boardDocument.presentation?.assetPath,
+               assetPath != "assets/primary.png" {
+                throw BoardPackageStoreError.presentationAssetPathEscape(
+                    boardID: board.id,
+                    path: assetPath
+                )
             }
         }
 
+        loadedBoards.sort(by: Self.boardComesBefore)
         self.boards = loadedBoards
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
-        self.semanticsByBoardID = loadedSemantics
-        self.designsByBoardID = loadedDesigns
+        self.semanticsByBoardID = [:]
+        self.designsByBoardID = [:]
         self.presentationURLsByBoardID = loadedPresentationURLs
     }
 
@@ -261,27 +194,6 @@ struct BoardPackageStore {
         presentationURLsByBoardID[board.id]
     }
 
-    private static func decodeSidecar<Value: Decodable>(
-        named filename: String,
-        boardID: String,
-        packageURL: URL,
-        resourcePrefix: String
-    ) throws -> Value {
-        guard let url = confinedURL(relativePath: filename, below: packageURL) else {
-            throw BoardPackageStoreError.packagePathEscape(
-                boardID: boardID,
-                path: filename
-            )
-        }
-        guard FileManager.default.isReadableFile(atPath: url.path) else {
-            throw BoardPackageStoreError.missingPackageSidecar(
-                boardID: boardID,
-                filename: filename
-            )
-        }
-        return try decode(from: url, resource: "\(resourcePrefix)/\(filename)")
-    }
-
     private static func decode<Value: Decodable>(
         from url: URL,
         resource: String
@@ -294,60 +206,125 @@ struct BoardPackageStore {
         }
     }
 
-    private static func packageURL(
-        for entry: BoardPackageCatalogEntry,
-        below hangboardsURL: URL
-    ) throws -> URL {
-        guard let url = confinedURL(relativePath: entry.path, below: hangboardsURL) else {
-            throw BoardPackageStoreError.packagePathEscape(
-                boardID: entry.id,
-                path: entry.path
-            )
+    private static func validateHangboardsRoot(_ url: URL) throws {
+        let values = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+        guard values.isDirectory == true, values.isSymbolicLink != true else {
+            throw BoardPackageStoreError.missingCatalog
         }
-        return url
     }
 
-    private static func presentationAssetURL(
-        path: String,
-        boardID: String,
-        packageURL: URL
-    ) throws -> URL {
-        guard let url = confinedURL(relativePath: path, below: packageURL) else {
-            throw BoardPackageStoreError.presentationAssetPathEscape(
+    private static func directChildDirectories(of rootURL: URL) throws -> [URL] {
+        let children = try FileManager.default.contentsOfDirectory(
+            at: rootURL,
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
+            options: []
+        )
+        var directories: [URL] = []
+        for child in children {
+            let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            if values.isSymbolicLink == true {
+                throw BoardPackageStoreError.packagePathEscape(
+                    boardID: child.lastPathComponent,
+                    path: child.lastPathComponent
+                )
+            }
+            if values.isDirectory == true {
+                directories.append(child)
+            }
+        }
+        return directories.sorted { $0.lastPathComponent < $1.lastPathComponent }
+    }
+
+    private static func validateFinishedPackage(_ packageURL: URL, boardID: String) throws {
+        try validateNoSymlinks(below: packageURL, boardID: boardID)
+        let entries = try entryNames(in: packageURL)
+        guard entries == ["assets", "board.json"] else {
+            throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
-                path: path
+                reason: "finished package must contain exactly board.json and assets"
             )
         }
-        return url
+        let boardURL = packageURL.appendingPathComponent("board.json")
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        guard try isRegularFile(boardURL), try isRegularDirectory(assetsURL) else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "board.json and assets must be regular non-symlink paths"
+            )
+        }
+        guard try entryNames(in: assetsURL) == ["primary.png"] else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "assets must contain exactly primary.png"
+            )
+        }
+        let primaryURL = assetsURL.appendingPathComponent("primary.png")
+        guard try isRegularFile(primaryURL),
+              FileManager.default.isReadableFile(atPath: primaryURL.path) else {
+            throw BoardPackageStoreError.missingPresentationAsset(
+                boardID: boardID,
+                path: "assets/primary.png"
+            )
+        }
     }
 
-    private static func confinedURL(relativePath: String, below rootURL: URL) -> URL? {
-        guard !relativePath.isEmpty,
-              !relativePath.contains("\\"),
-              !(relativePath as NSString).isAbsolutePath else {
-            return nil
+    private static func isPrimaryOnlyDraft(_ packageURL: URL) throws -> Bool {
+        try validateNoSymlinks(below: packageURL, boardID: packageURL.lastPathComponent)
+        guard try entryNames(in: packageURL) == ["assets"] else { return false }
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        guard try isRegularDirectory(assetsURL),
+              try entryNames(in: assetsURL) == ["primary.png"] else { return false }
+        return try isRegularFile(assetsURL.appendingPathComponent("primary.png"))
+    }
+
+    private static func validateNoSymlinks(below rootURL: URL, boardID: String) throws {
+        guard let enumerator = FileManager.default.enumerator(
+            at: rootURL,
+            includingPropertiesForKeys: [.isSymbolicLinkKey],
+            options: []
+        ) else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "package cannot be enumerated"
+            )
         }
-
-        let components = relativePath.split(separator: "/", omittingEmptySubsequences: false)
-        guard !components.isEmpty,
-              components.allSatisfy({ !$0.isEmpty && $0 != "." && $0 != ".." }) else {
-            return nil
+        for case let itemURL as URL in enumerator {
+            if try itemURL.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink == true {
+                throw BoardPackageStoreError.packagePathEscape(
+                    boardID: boardID,
+                    path: itemURL.path
+                )
+            }
         }
+    }
 
-        let standardizedRoot = rootURL.standardizedFileURL
-        let candidate = rootURL.appendingPathComponent(relativePath).standardizedFileURL
-        let rootPath = standardizedRoot.path.hasSuffix("/")
-            ? standardizedRoot.path
-            : standardizedRoot.path + "/"
-        guard candidate.path.hasPrefix(rootPath) else { return nil }
+    private static func entryNames(in directoryURL: URL) throws -> Set<String> {
+        Set(
+            try FileManager.default.contentsOfDirectory(
+                at: directoryURL,
+                includingPropertiesForKeys: nil,
+                options: []
+            ).map(\.lastPathComponent)
+        )
+    }
 
-        let resolvedRoot = standardizedRoot.resolvingSymlinksInPath()
-        let resolvedCandidate = candidate.resolvingSymlinksInPath()
-        let resolvedRootPath = resolvedRoot.path.hasSuffix("/")
-            ? resolvedRoot.path
-            : resolvedRoot.path + "/"
-        guard resolvedCandidate.path.hasPrefix(resolvedRootPath) else { return nil }
-        return resolvedCandidate
+    private static func isRegularFile(_ url: URL) throws -> Bool {
+        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+        return values.isRegularFile == true && values.isSymbolicLink != true
+    }
+
+    private static func isRegularDirectory(_ url: URL) throws -> Bool {
+        let values = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+        return values.isDirectory == true && values.isSymbolicLink != true
+    }
+
+    private static func boardComesBefore(_ lhs: TrainingBoard, _ rhs: TrainingBoard) -> Bool {
+        let lhsKey = [lhs.manufacturer.lowercased(), lhs.manufacturer, lhs.name.lowercased(), lhs.name, lhs.id]
+        let rhsKey = [rhs.manufacturer.lowercased(), rhs.manufacturer, rhs.name.lowercased(), rhs.name, rhs.id]
+        for (left, right) in zip(lhsKey, rhsKey) where left != right {
+            return left < right
+        }
+        return false
     }
 
     private static func validateSchema(_ schemaVersion: Int, resource: String) throws {
@@ -356,31 +333,8 @@ struct BoardPackageStore {
         }
     }
 
-    private static func validateBoardIDs(
-        catalogID: String,
-        boardDocument: BoardPackageBoardDocument,
-        semanticsDocument: BoardPackageSemanticsDocument,
-        artworkDocument: BoardArtworkDocument,
-        resourcePrefix: String
-    ) throws {
-        for (actual, filename) in [
-            (boardDocument.id, "board.json"),
-            (semanticsDocument.boardID, "semantics.json"),
-            (artworkDocument.boardID, "artwork.json")
-        ] where actual != catalogID {
-            throw BoardPackageStoreError.boardIDMismatch(
-                expected: catalogID,
-                actual: actual,
-                resource: "\(resourcePrefix)/\(filename)"
-            )
-        }
-    }
-
     private static func validateMetadata(
-        boardDocument: BoardPackageBoardDocument,
-        semanticsDocument: BoardPackageSemanticsDocument,
-        artworkDocument: BoardArtworkDocument,
-        boardID: String
+        boardDocument: BoardPackageBoardDocument
     ) throws {
         let requiredStrings = [
             boardDocument.id,
@@ -388,29 +342,24 @@ struct BoardPackageStore {
             boardDocument.name,
             boardDocument.subtitle,
             boardDocument.dimensions,
-            boardDocument.productURL.absoluteString,
-            semanticsDocument.boardID,
-            artworkDocument.boardID,
-            artworkDocument.palette
+            boardDocument.productURL.absoluteString
         ]
         guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
             throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
+                boardID: boardDocument.id,
                 reason: "required metadata must not be empty"
             )
         }
-        guard boardDocument.id.isBoardPackageIdentifier,
-              semanticsDocument.boardID.isBoardPackageIdentifier,
-              artworkDocument.boardID.isBoardPackageIdentifier else {
+        guard boardDocument.id.isBoardPackageIdentifier else {
             throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "board IDs must be identifier-shaped"
+                boardID: boardDocument.id,
+                reason: "board ID must be identifier-shaped"
             )
         }
         if let assetPath = boardDocument.presentation?.assetPath,
            assetPath.isEmpty {
             throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
+                boardID: boardDocument.id,
                 reason: "presentation asset path must not be empty"
             )
         }
@@ -498,107 +447,6 @@ struct BoardPackageStore {
         return holdIDs
     }
 
-    private static func validateSemantics(
-        _ semantics: [String: BoardPackageSemanticMappingDocument],
-        boardID: String,
-        holdIDs: Set<String>
-    ) throws {
-        for (semanticID, mapping) in semantics {
-            guard semanticID.isBoardPackageIdentifier else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: boardID,
-                    reason: "semantic IDs must be identifier-shaped"
-                )
-            }
-            guard !mapping.holdIDs.isEmpty else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: boardID,
-                    reason: "semantic \(semanticID) hold IDs must not be empty"
-                )
-            }
-            guard mapping.holdIDs.allSatisfy(\.isBoardPackageIdentifier) else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: boardID,
-                    reason: "semantic \(semanticID) hold IDs must be identifier-shaped"
-                )
-            }
-            guard Set(mapping.holdIDs).count == mapping.holdIDs.count else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: boardID,
-                    reason: "semantic \(semanticID) hold IDs must be unique"
-                )
-            }
-            for holdID in mapping.holdIDs where !holdIDs.contains(holdID) {
-                throw BoardPackageStoreError.unknownSemanticHoldID(
-                    boardID: boardID,
-                    holdID: holdID
-                )
-            }
-        }
-    }
-
-    private static func validateArtwork(
-        _ artwork: BoardArtworkDocument,
-        boardID: String,
-        holdIDs: Set<String>
-    ) throws {
-        guard artwork.layers.allSatisfy({ !$0.id.isEmpty }),
-              artwork.holdPieces.allSatisfy({
-                  !$0.id.isEmpty && $0.holdID.isBoardPackageIdentifier
-              }) else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "artwork IDs must not be empty"
-            )
-        }
-        let artworkHoldIDs = Set(artwork.holdPieces.map(\.holdID))
-        if let unknownHoldID = artworkHoldIDs.subtracting(holdIDs).sorted().first {
-            throw BoardPackageStoreError.unknownArtworkHoldID(
-                boardID: boardID,
-                holdID: unknownHoldID
-            )
-        }
-        if let missingHoldID = holdIDs.subtracting(artworkHoldIDs).sorted().first {
-            throw BoardPackageStoreError.missingArtworkHoldID(
-                boardID: boardID,
-                holdID: missingHoldID
-            )
-        }
-    }
-}
-
-private struct BoardPackageCatalogDocument: Decodable {
-    let schemaVersion: Int
-    let boards: [BoardPackageCatalogEntry]
-
-    private enum CodingKeys: String, CodingKey {
-        case schemaVersion
-        case boards
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["schemaVersion", "boards"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
-        boards = try container.decode([BoardPackageCatalogEntry].self, forKey: .boards)
-    }
-}
-
-private struct BoardPackageCatalogEntry: Decodable {
-    let id: String
-    let path: String
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case path
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "path"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        path = try container.decode(String.self, forKey: .path)
-    }
 }
 
 private struct BoardPackageBoardDocument: Decodable {
@@ -647,7 +495,7 @@ private struct BoardPackageBoardDocument: Decodable {
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
     }
 
-    func trainingBoard(semantics: [String: [String]]) throws -> TrainingBoard {
+    func trainingBoard() throws -> TrainingBoard {
         guard aspectRatio.isFinite, aspectRatio > 0 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: id,
@@ -663,9 +511,7 @@ private struct BoardPackageBoardDocument: Decodable {
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
             holds: try holds.map { try $0.trainingBoardHold() },
-            semanticHolds: semantics.mapValues {
-                SemanticHoldMappingDefinition(holdIDs: $0)
-            },
+            semanticHolds: [:],
             productURL: productURL,
             photoAssetName: nil
         )
@@ -690,7 +536,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let id: String
     let name: String
     let kind: HoldKind
-    let geometry: [BoardHoldPieceDocument]
+    let geometry: [BoardPackageGeometryDocument]
     let sizeMillimeters: Int?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
     let gripType: GripType?
@@ -718,7 +564,7 @@ private struct BoardPackageHoldDocument: Decodable {
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        geometry = try container.decode([BoardHoldPieceDocument].self, forKey: .geometry)
+        geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardPackageMillimeterRangeDocument.self,
@@ -746,6 +592,37 @@ private struct BoardPackageHoldDocument: Decodable {
             },
             features: features.map(Set.init)
         )
+    }
+}
+
+private struct BoardPackageGeometryDocument: Decodable {
+    let frame: BoardPackageFrameDocument
+    let shape: BoardArtworkShapeDocument
+    let treatment: BoardArtworkTreatmentDocument?
+
+    private enum CodingKeys: String, CodingKey {
+        case frame
+        case shape
+        case treatment
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["frame", "shape", "treatment"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+        shape = try container.decode(BoardArtworkShapeDocument.self, forKey: .shape)
+        treatment = try container.decodeIfPresent(
+            BoardArtworkTreatmentDocument.self,
+            forKey: .treatment
+        )
+    }
+
+    func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
+        try BoardHoldPieceDocument(
+            frame: frame,
+            shape: shape,
+            treatment: treatment
+        ).boardHoldPiece(id: id, holdID: holdID)
     }
 }
 
