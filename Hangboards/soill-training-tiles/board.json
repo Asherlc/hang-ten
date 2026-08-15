@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "id": "soill.training-tiles",
+  "manufacturer": "So iLL",
+  "name": "Training Tiles • So iLL x Meagan Martin",
+  "subtitle": "Two independent urethane training tiles.",
+  "productURL": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
+  "dimensions": "Each tile: approximately 14 × 8 in",
+  "aspectRatio": 1.5,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "pocket-left",
+      "name": "Left 3 in pocket",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {"x": 0.0319010416666667, "y": 0.2841796875, "width": 0.1373697916666667, "height": 0.1494140625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.7, 0.02]},
+              {"command": "curve", "control1": [0.42, 0], "control2": [0.11, 0.09], "to": [0.02, 0.35]},
+              {"command": "curve", "control1": [0, 0.6], "control2": [0.08, 0.84], "to": [0.28, 0.95]},
+              {"command": "curve", "control1": [0.5, 1], "control2": [0.78, 0.94], "to": [0.96, 0.75]},
+              {"command": "curve", "control1": [1, 0.65], "control2": [0.99, 0.53], "to": [0.93, 0.48]},
+              {"command": "curve", "control1": [0.84, 0.62], "control2": [0.75, 0.72], "to": [0.63, 0.74]},
+              {"command": "curve", "control1": [0.52, 0.73], "control2": [0.43, 0.63], "to": [0.42, 0.49]},
+              {"command": "curve", "control1": [0.41, 0.3], "control2": [0.5, 0.1], "to": [0.7, 0.02]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        }
+      ]
+    },
+    {
+      "id": "pocket-right",
+      "name": "Right 3 in pocket",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {"x": 0.8307291666666666, "y": 0.2841796875, "width": 0.1373697916666667, "height": 0.1494140625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.3, 0.02]},
+              {"command": "curve", "control1": [0.58, 0], "control2": [0.89, 0.09], "to": [0.98, 0.35]},
+              {"command": "curve", "control1": [1, 0.6], "control2": [0.92, 0.84], "to": [0.72, 0.95]},
+              {"command": "curve", "control1": [0.5, 1], "control2": [0.22, 0.94], "to": [0.04, 0.75]},
+              {"command": "curve", "control1": [0, 0.65], "control2": [0.01, 0.53], "to": [0.07, 0.48]},
+              {"command": "curve", "control1": [0.16, 0.62], "control2": [0.25, 0.72], "to": [0.37, 0.74]},
+              {"command": "curve", "control1": [0.48, 0.73], "control2": [0.57, 0.63], "to": [0.58, 0.49]},
+              {"command": "curve", "control1": [0.59, 0.3], "control2": [0.5, 0.1], "to": [0.3, 0.02]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "recess", "rimInsetFraction": 0.1, "depth": "deep"}
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-outer-left",
+      "name": "Left outer top sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.1927083333333333, "y": 0.326171875, "width": 0.1653645833333333, "height": 0.1005859375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.04, 0.18]},
+              {"command": "curve", "control1": [0.03, 0.06], "control2": [0.08, 0], "to": [0.2, 0.04]},
+              {"command": "curve", "control1": [0.42, 0.1], "control2": [0.68, 0.03], "to": [0.9, 0.09]},
+              {"command": "curve", "control1": [0.98, 0.12], "control2": [1, 0.34], "to": [0.98, 0.56]},
+              {"command": "curve", "control1": [0.96, 0.78], "control2": [0.88, 0.94], "to": [0.72, 0.97]},
+              {"command": "curve", "control1": [0.49, 1], "control2": [0.26, 0.93], "to": [0.09, 0.78]},
+              {"command": "curve", "control1": [0.01, 0.65], "control2": [0, 0.36], "to": [0.04, 0.18]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-outer-right",
+      "name": "Right outer top sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.6419270833333334, "y": 0.326171875, "width": 0.1653645833333333, "height": 0.1005859375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.96, 0.18]},
+              {"command": "curve", "control1": [0.97, 0.06], "control2": [0.92, 0], "to": [0.8, 0.04]},
+              {"command": "curve", "control1": [0.58, 0.1], "control2": [0.32, 0.03], "to": [0.1, 0.09]},
+              {"command": "curve", "control1": [0.02, 0.12], "control2": [0, 0.34], "to": [0.02, 0.56]},
+              {"command": "curve", "control1": [0.04, 0.78], "control2": [0.12, 0.94], "to": [0.28, 0.97]},
+              {"command": "curve", "control1": [0.51, 1], "control2": [0.74, 0.93], "to": [0.91, 0.78]},
+              {"command": "curve", "control1": [0.99, 0.65], "control2": [1, 0.36], "to": [0.96, 0.18]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-inner-left",
+      "name": "Left inner top sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.3567708333333333, "y": 0.3408203125, "width": 0.115234375, "height": 0.1171875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.08, 0.1]},
+              {"command": "curve", "control1": [0.28, 0.02], "control2": [0.7, 0], "to": [0.9, 0.14]},
+              {"command": "curve", "control1": [1, 0.25], "control2": [1, 0.52], "to": [0.94, 0.7]},
+              {"command": "curve", "control1": [0.86, 0.92], "control2": [0.64, 1], "to": [0.38, 0.96]},
+              {"command": "curve", "control1": [0.15, 0.91], "control2": [0.02, 0.72], "to": [0.01, 0.45]},
+              {"command": "curve", "control1": [0, 0.27], "control2": [0.02, 0.14], "to": [0.08, 0.1]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-inner-right",
+      "name": "Right inner top sloper",
+      "kind": "sloper",
+      "gripType": "sloper",
+      "geometry": [
+        {
+          "frame": {"x": 0.5279947916666667, "y": 0.3408203125, "width": 0.115234375, "height": 0.1171875},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.92, 0.1]},
+              {"command": "curve", "control1": [0.72, 0.02], "control2": [0.3, 0], "to": [0.1, 0.14]},
+              {"command": "curve", "control1": [0, 0.25], "control2": [0, 0.52], "to": [0.06, 0.7]},
+              {"command": "curve", "control1": [0.14, 0.92], "control2": [0.36, 1], "to": [0.62, 0.96]},
+              {"command": "curve", "control1": [0.85, 0.91], "control2": [0.98, 0.72], "to": [0.99, 0.45]},
+              {"command": "curve", "control1": [1, 0.27], "control2": [0.98, 0.14], "to": [0.92, 0.1]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "middle-positive-edge-outer-left",
+      "name": "Left outer slightly positive edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.1328125, "y": 0.4599609375, "width": 0.1354166666666667, "height": 0.0830078125},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.04, 0.08]},
+              {"command": "curve", "control1": [0.27, 0], "control2": [0.7, 0.03], "to": [0.94, 0.12]},
+              {"command": "curve", "control1": [1, 0.24], "control2": [1, 0.52], "to": [0.95, 0.67]},
+              {"command": "curve", "control1": [0.78, 0.89], "control2": [0.48, 1], "to": [0.18, 0.94]},
+              {"command": "curve", "control1": [0.05, 0.86], "control2": [0, 0.65], "to": [0.01, 0.43]},
+              {"command": "curve", "control1": [0, 0.25], "control2": [0.01, 0.14], "to": [0.04, 0.08]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "shelf", "rimInsetFraction": 0.1}
+        }
+      ]
+    },
+    {
+      "id": "middle-positive-edge-outer-right",
+      "name": "Right outer slightly positive edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.7317708333333333, "y": 0.4599609375, "width": 0.1354166666666667, "height": 0.0830078125},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.96, 0.08]},
+              {"command": "curve", "control1": [0.73, 0], "control2": [0.3, 0.03], "to": [0.06, 0.12]},
+              {"command": "curve", "control1": [0, 0.24], "control2": [0, 0.52], "to": [0.05, 0.67]},
+              {"command": "curve", "control1": [0.22, 0.89], "control2": [0.52, 1], "to": [0.82, 0.94]},
+              {"command": "curve", "control1": [0.95, 0.86], "control2": [1, 0.65], "to": [0.99, 0.43]},
+              {"command": "curve", "control1": [1, 0.25], "control2": [0.99, 0.14], "to": [0.96, 0.08]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "shelf", "rimInsetFraction": 0.1}
+        }
+      ]
+    },
+    {
+      "id": "middle-positive-edge-inner-left",
+      "name": "Left inner slightly positive edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.2682291666666667, "y": 0.4541015625, "width": 0.1510416666666667, "height": 0.09375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.05, 0.08]},
+              {"command": "curve", "control1": [0.29, 0], "control2": [0.72, 0.02], "to": [0.94, 0.13]},
+              {"command": "curve", "control1": [1, 0.26], "control2": [0.99, 0.54], "to": [0.93, 0.71]},
+              {"command": "curve", "control1": [0.78, 0.94], "control2": [0.49, 1], "to": [0.2, 0.91]},
+              {"command": "curve", "control1": [0.07, 0.85], "control2": [0.01, 0.63], "to": [0.01, 0.39]},
+              {"command": "curve", "control1": [0, 0.23], "control2": [0.02, 0.12], "to": [0.05, 0.08]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "shelf", "rimInsetFraction": 0.1}
+        }
+      ]
+    },
+    {
+      "id": "middle-positive-edge-inner-right",
+      "name": "Right inner slightly positive edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.5807291666666666, "y": 0.4541015625, "width": 0.1510416666666667, "height": 0.09375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.95, 0.08]},
+              {"command": "curve", "control1": [0.71, 0], "control2": [0.28, 0.02], "to": [0.06, 0.13]},
+              {"command": "curve", "control1": [0, 0.26], "control2": [0.01, 0.54], "to": [0.07, 0.71]},
+              {"command": "curve", "control1": [0.22, 0.94], "control2": [0.51, 1], "to": [0.8, 0.91]},
+              {"command": "curve", "control1": [0.93, 0.85], "control2": [0.99, 0.63], "to": [0.99, 0.39]},
+              {"command": "curve", "control1": [1, 0.23], "control2": [0.98, 0.12], "to": [0.95, 0.08]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "shelf", "rimInsetFraction": 0.1}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-outer-left",
+      "name": "Left outer bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.029296875, "y": 0.55078125, "width": 0.1236979166666667, "height": 0.0771484375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.03, 0.26]},
+              {"command": "curve", "control1": [0.2, 0.1], "control2": [0.67, 0], "to": [0.92, 0.06]},
+              {"command": "curve", "control1": [0.99, 0.14], "control2": [1, 0.37], "to": [0.97, 0.58]},
+              {"command": "curve", "control1": [0.9, 0.82], "control2": [0.61, 0.98], "to": [0.3, 0.97]},
+              {"command": "curve", "control1": [0.1, 0.99], "control2": [0, 0.8], "to": [0.01, 0.55]},
+              {"command": "curve", "control1": [0, 0.41], "control2": [0.01, 0.31], "to": [0.03, 0.26]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-outer-right",
+      "name": "Right outer bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.8470052083333333, "y": 0.55078125, "width": 0.1236979166666667, "height": 0.0771484375},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.97, 0.26]},
+              {"command": "curve", "control1": [0.8, 0.1], "control2": [0.33, 0], "to": [0.08, 0.06]},
+              {"command": "curve", "control1": [0.01, 0.14], "control2": [0, 0.37], "to": [0.03, 0.58]},
+              {"command": "curve", "control1": [0.1, 0.82], "control2": [0.39, 0.98], "to": [0.7, 0.97]},
+              {"command": "curve", "control1": [0.9, 0.99], "control2": [1, 0.8], "to": [0.99, 0.55]},
+              {"command": "curve", "control1": [1, 0.41], "control2": [0.99, 0.31], "to": [0.97, 0.26]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-middle-left",
+      "name": "Left middle bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.1354166666666667, "y": 0.5751953125, "width": 0.171875, "height": 0.0673828125},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.04, 0.14]},
+              {"command": "curve", "control1": [0.25, 0.02], "control2": [0.69, 0], "to": [0.93, 0.1]},
+              {"command": "curve", "control1": [0.99, 0.2], "control2": [1, 0.48], "to": [0.96, 0.66]},
+              {"command": "curve", "control1": [0.88, 0.9], "control2": [0.62, 1], "to": [0.33, 0.96]},
+              {"command": "curve", "control1": [0.13, 0.95], "control2": [0.01, 0.79], "to": [0.01, 0.54]},
+              {"command": "curve", "control1": [0, 0.35], "control2": [0.01, 0.2], "to": [0.04, 0.14]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-middle-right",
+      "name": "Right middle bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.6927083333333333, "y": 0.5751953125, "width": 0.171875, "height": 0.0673828125},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.96, 0.14]},
+              {"command": "curve", "control1": [0.75, 0.02], "control2": [0.31, 0], "to": [0.07, 0.1]},
+              {"command": "curve", "control1": [0.01, 0.2], "control2": [0, 0.48], "to": [0.04, 0.66]},
+              {"command": "curve", "control1": [0.12, 0.9], "control2": [0.38, 1], "to": [0.67, 0.96]},
+              {"command": "curve", "control1": [0.87, 0.95], "control2": [0.99, 0.79], "to": [0.99, 0.54]},
+              {"command": "curve", "control1": [1, 0.35], "control2": [0.99, 0.2], "to": [0.96, 0.14]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-inner-left",
+      "name": "Left inner bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.2994791666666667, "y": 0.595703125, "width": 0.146484375, "height": 0.06640625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.04, 0.1]},
+              {"command": "curve", "control1": [0.28, 0], "control2": [0.73, 0.03], "to": [0.94, 0.16]},
+              {"command": "curve", "control1": [1, 0.28], "control2": [0.99, 0.56], "to": [0.93, 0.72]},
+              {"command": "curve", "control1": [0.78, 0.94], "control2": [0.47, 1], "to": [0.18, 0.91]},
+              {"command": "curve", "control1": [0.05, 0.84], "control2": [0, 0.63], "to": [0.01, 0.4]},
+              {"command": "curve", "control1": [0, 0.24], "control2": [0.01, 0.14], "to": [0.04, 0.1]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    },
+    {
+      "id": "bottom-flat-edge-inner-right",
+      "name": "Right inner bottom flat edge",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {"x": 0.5540364583333333, "y": 0.595703125, "width": 0.146484375, "height": 0.06640625},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.96, 0.1]},
+              {"command": "curve", "control1": [0.72, 0], "control2": [0.27, 0.03], "to": [0.06, 0.16]},
+              {"command": "curve", "control1": [0, 0.28], "control2": [0.01, 0.56], "to": [0.07, 0.72]},
+              {"command": "curve", "control1": [0.22, 0.94], "control2": [0.53, 1], "to": [0.82, 0.91]},
+              {"command": "curve", "control1": [0.95, 0.84], "control2": [1, 0.63], "to": [0.99, 0.4]},
+              {"command": "curve", "control1": [1, 0.24], "control2": [0.99, 0.14], "to": [0.96, 0.1]},
+              {"command": "close"}
+            ]
+          },
+          "treatment": {"type": "surface"}
+        }
+      ]
+    }
+  ]
+}
