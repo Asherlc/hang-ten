@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 import math
 import re
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
@@ -40,22 +39,18 @@ class NormalizedFrame:
             or numbers["y"] < 0
             or numbers["width"] <= 0
             or numbers["height"] <= 0
-            or numbers["x"] + numbers["width"] > 1
-            or numbers["y"] + numbers["height"] > 1
+            or numbers["x"] + numbers["width"] > 1 + _EPSILON
+            or numbers["y"] + numbers["height"] > 1 + _EPSILON
         ):
             raise GeometryError(f"{label} must stay inside the normalized canvas")
         return cls(**numbers)
 
     def to_json(self) -> dict[str, float]:
-        x = round(self.x, 12)
-        y = round(self.y, 12)
-        width = round(min(round(self.width, 12), 1 - x), 12)
-        height = round(min(round(self.height, 12), 1 - y), 12)
         return {
-            "x": x,
-            "y": y,
-            "width": width,
-            "height": height,
+            "x": round(self.x, 12),
+            "y": round(self.y, 12),
+            "width": round(self.width, 12),
+            "height": round(self.height, 12),
         }
 
 
