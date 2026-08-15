@@ -79,6 +79,41 @@ POCKET_FACTS = {
     "pocket-17-three": (17, 3, "threeFingerPocket"),
     "pocket-17-two": (17, 2, "twoFingerPocket"),
 }
+EXPECTED_HOLD_METADATA = {
+    "pinch-left": {"name": "Left variable-width pinch", "kind": "pinch"},
+    "pinch-right": {"name": "Right variable-width pinch", "kind": "pinch"},
+    "jug-left": {"name": "Left outer jug", "kind": "jug", "features": ["jug"]},
+    "jug-right": {"name": "Right outer jug", "kind": "jug", "features": ["jug"]},
+    "sloper-round-left": {"name": "Left 63 mm round sloper", "kind": "sloper", "gripType": "sloper", "features": ["roundSloper"]},
+    "sloper-round-right": {"name": "Right 63 mm round sloper", "kind": "sloper", "gripType": "sloper", "features": ["roundSloper"]},
+    "pocket-30-four-left": {"name": "Left 30 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-30-four-right": {"name": "Right 30 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-40-two-left": {"name": "Left 40 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 40, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-40-two-right": {"name": "Right 40 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 40, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-20-three-left": {"name": "Left 20 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-20-three-right": {"name": "Right 20 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-30-three-left": {"name": "Left 30 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-30-three-right": {"name": "Right 30 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-32-two-left": {"name": "Left 32 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 32, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-32-two-right": {"name": "Right 32 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 32, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-20-four-left": {"name": "Left 20 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-20-four-right": {"name": "Right 20 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-25-three-left": {"name": "Left 25 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-25-three-right": {"name": "Right 25 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-25-two-left": {"name": "Left 25 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-25-two-right": {"name": "Right 25 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-12-four-left": {"name": "Left 12 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 12, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-12-four-right": {"name": "Right 12 mm four-finger pocket", "kind": "pocket", "sizeMillimeters": 12, "fingerCapacity": 4, "gripType": "fourFingerPocket", "features": ["pocket", "fourFingerPocket"]},
+    "pocket-17-three-left": {"name": "Left 17 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 17, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-17-three-right": {"name": "Right 17 mm three-finger pocket", "kind": "pocket", "sizeMillimeters": 17, "fingerCapacity": 3, "gripType": "threeFingerPocket", "features": ["pocket", "threeFingerPocket"]},
+    "pocket-17-two-left": {"name": "Left 17 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 17, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "pocket-17-two-right": {"name": "Right 17 mm two-finger pocket", "kind": "pocket", "sizeMillimeters": 17, "fingerCapacity": 2, "gripType": "twoFingerPocket", "features": ["pocket", "twoFingerPocket"]},
+    "sloper-flat-center": {"name": "Center 53 mm flat sloper", "kind": "sloper", "gripType": "sloper"},
+    "edge-15-center": {"name": "Center 15 mm edge", "kind": "edge", "sizeMillimeters": 15},
+    "edge-35-center": {"name": "Center 35 mm edge", "kind": "edge", "sizeMillimeters": 35},
+    "edge-28-center": {"name": "Center 28 mm edge", "kind": "edge", "sizeMillimeters": 28},
+    "edge-23-center": {"name": "Center 23 mm edge", "kind": "edge", "sizeMillimeters": 23},
+}
 PRESENTATION_SIZE = (1774, 887)
 EXPECTED_PIXEL_FRAMES = {
     "pinch-left": (65.208, 213.06, 245.88084, 471.614),
@@ -158,6 +193,12 @@ def test_metolius_contact_preserves_all_physical_contacts_and_mirrors() -> None:
     assert board["presentation"]["assetPath"] == "assets/primary.png"
     assert presentation_size == PRESENTATION_SIZE
     assert tuple(holds) == EXPECTED_HOLDS
+    assert tuple(EXPECTED_HOLD_METADATA) == EXPECTED_HOLDS
+    for hold_id, expected_metadata in EXPECTED_HOLD_METADATA.items():
+        assert {key: value for key, value in holds[hold_id].items() if key != "geometry"} == {
+            "id": hold_id,
+            **expected_metadata,
+        }
     assert Counter(hold["kind"] for hold in holds.values()) == {
         "pocket": 22,
         "edge": 4,
