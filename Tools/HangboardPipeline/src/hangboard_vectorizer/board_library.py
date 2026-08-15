@@ -3,23 +3,32 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from contextlib import contextmanager
 from dataclasses import dataclass
+import fcntl
 from hashlib import sha256
 import json
 import os
 from pathlib import Path
-import re
 import shutil
 import stat
 import tempfile
+from typing import Iterator
 
 from .board_artwork import BoardShapeDocument, NormalizedFrame
-from .board_catalog import BoardGeometryPiece, BoardHold, BoardPackage, load_board_package
+from .board_catalog import (
+    BoardGeometryPiece,
+    BoardHold,
+    BoardPackage,
+    is_board_identifier,
+    is_board_package_slug,
+    is_primary_only_draft,
+    load_board_package,
+)
 from .generic_stage0 import StageCheckpoint
 from .onboarding_run import RunContext, approve_stage, resume_run, start_run
 
 
-_BOARD_ID = re.compile(r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\Z")
 _DIAGNOSTIC_CODES = {
     "invalid_path",
     "invalid_board_id",
@@ -28,6 +37,21 @@ _DIAGNOSTIC_CODES = {
     "invalid_run",
     "invalid_outputs",
 }
+
+
+@contextmanager
+def package_library_lock(
+    hangboards_root: Path, *, exclusive: bool
+) -> Iterator[None]:
+    """Coordinate cooperating readers and writers on the stable root inode."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    descriptor = os.open(hangboards_root, flags)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,9 +86,9 @@ class _CanonicalPackageRunner:
         self._package = package
         self._holds = package.board.holds
         self._pieces = tuple(
-            (hold, piece)
+            (hold, piece_index, piece)
             for hold in package.board.holds
-            for piece in hold.geometry
+            for piece_index, piece in enumerate(hold.geometry)
         )
 
     def run(self, context: RunContext, artifact_root: Path) -> StageCheckpoint:
@@ -103,7 +127,7 @@ class _CanonicalPackageRunner:
             shutil.copy2(self._asset, labels)
             candidate.update(
                 {
-                    "regionCount": len(self._holds),
+                    "regionCount": len(self._pieces),
                     "regions": {"fileSha256": self._hash(regions)},
                     "registered": {"fileSha256": self._hash(labels)},
                 }
@@ -116,13 +140,13 @@ class _CanonicalPackageRunner:
             svg.write_text(self._selectable_svg(document), encoding="utf-8")
             candidate.update(
                 {
-                    "regionCount": len(self._holds),
+                    "regionCount": len(self._pieces),
                     "vectorRegions": {"fileSha256": self._hash(regions)},
                     "vectorSvg": {"fileSha256": self._hash(svg)},
                 }
             )
         else:
-            candidate["regionCount"] = len(self._holds)
+            candidate["regionCount"] = len(self._pieces)
             files = {
                 "normal": root / "stage-4-normal.png",
                 "productSvg": root / "stage-4-product.svg",
@@ -144,7 +168,7 @@ class _CanonicalPackageRunner:
                             "holdID": hold.id,
                             "displayPaths": [
                                 self._piece_path(piece)
-                                for owner, piece in self._pieces
+                                for owner, _piece_index, piece in self._pieces
                                 if owner.id == hold.id
                             ],
                         }
@@ -173,40 +197,40 @@ class _CanonicalPackageRunner:
         regions = [
             {
                 "id": index,
-                "key": hold.id,
+                "key": self._region_key(hold, piece_index),
                 "type": hold.kind,
-                "pieceIndex": 0,
+                "pieceIndex": piece_index,
                 "displayPath": self._piece_path(piece, width, height),
                 "anchor": [
                     (
-                        hold.frame.x
-                        + hold.frame.width / 2
+                        piece.frame.x
+                        + piece.frame.width / 2
                     )
                     * width,
                     (
-                        hold.frame.y
-                        + hold.frame.height / 2
+                        piece.frame.y
+                        + piece.frame.height / 2
                     )
                     * height,
                 ],
                 "bounds": [
-                    hold.frame.x * width,
-                    hold.frame.y * height,
+                    piece.frame.x * width,
+                    piece.frame.y * height,
                     (
-                        hold.frame.x
-                        + hold.frame.width
+                        piece.frame.x
+                        + piece.frame.width
                     )
                     * width,
                     (
-                        hold.frame.y
-                        + hold.frame.height
+                        piece.frame.y
+                        + piece.frame.height
                     )
                     * height,
                 ],
                 "metadata": self._runtime_metadata(hold),
                 "symmetry": {},
             }
-            for index, (hold, piece) in enumerate(self._pieces, start=1)
+            for index, (hold, piece_index, piece) in enumerate(self._pieces, start=1)
         ]
         return {
             "schemaVersion": 1,
@@ -228,7 +252,7 @@ class _CanonicalPackageRunner:
 
     @staticmethod
     def _runtime_metadata(hold: BoardHold) -> dict[str, object]:
-        metadata: dict[str, object] = {}
+        metadata: dict[str, object] = {"holdID": hold.id}
         if hold.kind in {"edge", "pocket"} and hold.size_millimeters is not None:
             metadata["depthMm"] = hold.size_millimeters
         if hold.kind == "pocket":
@@ -239,6 +263,12 @@ class _CanonicalPackageRunner:
                 "round" if "roundSloper" in (hold.features or ()) else "flat"
             )
         return metadata
+
+    @staticmethod
+    def _region_key(hold: BoardHold, piece_index: int) -> str:
+        if len(hold.geometry) == 1:
+            return hold.id
+        return f"{hold.id}::piece:{piece_index + 1}"
 
     @staticmethod
     def _piece_path(
@@ -355,6 +385,19 @@ class RepositoryBoardLibrary:
                 "Hangboards", "invalid_path", "Hangboards: must be a directory"
             )
             return LibrarySnapshot((), (diagnostic,))
+        try:
+            with package_library_lock(self._boards_root, exclusive=False):
+                return self._snapshot_unlocked()
+        except OSError as error:
+            diagnostic = LibraryDiagnostic(
+                "Hangboards",
+                "invalid_path",
+                f"Hangboards: directory is not safely readable: {error}",
+            )
+            return LibrarySnapshot((), (diagnostic,))
+
+    def _snapshot_unlocked(self) -> LibrarySnapshot:
+        """Inspect packages while the caller holds the shared library lock."""
         boards: list[LibraryBoard] = []
         diagnostics: list[LibraryDiagnostic] = []
         for entry in sorted(self._boards_root.iterdir(), key=lambda path: path.name):
@@ -369,6 +412,15 @@ class RepositoryBoardLibrary:
                 continue
             if not entry.is_dir():
                 continue
+            if not is_board_package_slug(entry.name):
+                diagnostics.append(
+                    LibraryDiagnostic(
+                        entry.name,
+                        "invalid_board_id",
+                        f"Hangboards/{entry.name}: directory identifier is invalid",
+                    )
+                )
+                continue
             board_path = entry / "board.json"
             if board_path.exists() or board_path.is_symlink():
                 try:
@@ -381,15 +433,7 @@ class RepositoryBoardLibrary:
             assets = entry / "assets"
             primary = assets / "primary.png"
             try:
-                is_draft = (
-                    assets.is_dir()
-                    and not assets.is_symlink()
-                    and primary.is_file()
-                    and not primary.is_symlink()
-                    and primary.resolve(strict=True).is_relative_to(
-                        entry.resolve(strict=True)
-                    )
-                )
+                is_draft = is_primary_only_draft(entry)
                 if not is_draft:
                     diagnostics.append(
                         LibraryDiagnostic(
@@ -399,17 +443,8 @@ class RepositoryBoardLibrary:
                         )
                     )
                     continue
-                if not _BOARD_ID.fullmatch(entry.name):
-                    diagnostics.append(
-                        LibraryDiagnostic(
-                            entry.name,
-                            "invalid_board_id",
-                            f"Hangboards/{entry.name}: directory identifier is invalid",
-                        )
-                    )
-                    continue
                 revision_token = sha256(primary.read_bytes()).hexdigest()
-            except OSError as error:
+            except (OSError, ValueError) as error:
                 diagnostics.append(
                     LibraryDiagnostic(
                         entry.name,
@@ -429,7 +464,35 @@ class RepositoryBoardLibrary:
                         (entry.name.casefold(), entry.name, entry.name),
                     )
                 )
+        published_by_id: dict[str, list[LibraryBoard]] = {}
+        for board in boards:
+            if board.status == "published":
+                published_by_id.setdefault(board.board_id, []).append(board)
+        duplicate_ids = {
+            board_id
+            for board_id, matches in published_by_id.items()
+            if len(matches) > 1
+        }
+        if duplicate_ids:
+            boards = [
+                board
+                for board in boards
+                if board.status != "published" or board.board_id not in duplicate_ids
+            ]
+            for board_id in sorted(duplicate_ids):
+                matches = published_by_id[board_id]
+                slugs = ", ".join(sorted(board.run_path.name for board in matches))
+                for board in matches:
+                    diagnostics.append(
+                        LibraryDiagnostic(
+                            board.run_path.name,
+                            "identity_mismatch",
+                            f"Hangboards/{board.run_path.name}: duplicate board ID "
+                            f"{board_id} is published by {slugs}",
+                        )
+                    )
         boards.sort(key=lambda board: board.sort_key)
+        diagnostics.sort(key=lambda item: (item.path, item.code, item.message))
         return LibrarySnapshot(tuple(boards), tuple(diagnostics))
 
     def get_board(self, board_id: str) -> LibraryBoard:
@@ -533,7 +596,7 @@ class RepositoryBoardLibrary:
                 f"Hangboards/{package_root.name}: "
                 "must be a non-symlink directory",
             )
-        if not _BOARD_ID.fullmatch(package_root.name):
+        if not is_board_package_slug(package_root.name):
             raise _BoardDiagnosticError(
                 "invalid_board_id",
                 f"Hangboards/{package_root.name}: directory identifier is invalid",
@@ -608,8 +671,9 @@ class RepositoryBoardLibrary:
 
     @staticmethod
     def _board_id(value: object) -> str:
-        if not isinstance(value, str) or not _BOARD_ID.fullmatch(value):
+        if not is_board_identifier(value):
             raise BoardLibraryError("board identifier is invalid")
+        assert isinstance(value, str)
         return value
 
     @staticmethod
@@ -625,7 +689,7 @@ class RepositoryBoardLibrary:
             not path.is_absolute()
             and len(path.parts) == 1
             and path.parts[0] not in {".", ".."}
-            and bool(_BOARD_ID.fullmatch(value))
+            and is_board_package_slug(value)
         )
 
     @staticmethod
