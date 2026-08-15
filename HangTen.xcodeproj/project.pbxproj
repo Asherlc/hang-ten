@@ -520,7 +520,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/scripts/stage-board-packages.py\" \\\n  --repository-root \"${SRCROOT}\" \\\n  --destination \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards\"\n";
+			shellScript = "\"${SRCROOT}/scripts/run-supported-python.sh\" \\\n  \"${SRCROOT}/scripts/stage-board-packages.py\" \\\n  --repository-root \"${SRCROOT}\" \\\n  --destination \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

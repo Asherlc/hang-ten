@@ -6,6 +6,7 @@ ios:
 python:
   - 'Tools/HangboardWorkbench/**/*.py'
   - 'Tools/HangboardWorkbench/tests/**/*.py'
+  - 'scripts/run-supported-python.sh'
 workbench_web:
   - 'Tools/HangboardWorkbench/**/*.html'
   - 'Tools/HangboardWorkbench/**/*.css'
@@ -22,6 +23,7 @@ workbench:
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
   - 'scripts/stage-board-packages.py'
+  - 'scripts/run-supported-python.sh'
   - 'docs/hangboard-generative-catalog/**'
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
@@ -32,6 +34,7 @@ shared_board_content:
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
   - 'scripts/stage-board-packages.py'
+  - 'scripts/run-supported-python.sh'
   - 'docs/hangboard-generative-catalog/**'
 metadata:
   - 'metadata/**'
