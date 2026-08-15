@@ -30,6 +30,7 @@ from board_geometry import (
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
+_ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
 _BOARD_FIELDS = frozenset(
     {
         "schemaVersion",
@@ -375,16 +376,14 @@ def _replace_package_locked(
     try:
         shutil.copytree(candidate.root, staged_package)
         load_board_package(staged_package)
-        _replace_transaction(root, slug, staged_package, stage)
+        _replace_transaction(root, slug, staged_package)
     finally:
         shutil.rmtree(stage, ignore_errors=True)
 
 
-def _replace_transaction(
-    root: Path, slug: str, staged_package: Path, stage: Path
-) -> None:
+def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
     live_package = root / slug
-    backup = stage / ".previous"
+    backup = root / f".workbench-previous-{uuid.uuid4().hex}"
     moved_live = False
     installed = False
     try:
@@ -419,7 +418,15 @@ def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
     for field in ("manufacturer", "name", "subtitle", "dimensions"):
         _non_empty_string(board.get(field), f"board.json.{field}")
     _https_url(board.get("productURL"), "board.json.productURL")
-    _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
+    aspect_ratio = _positive_number(
+        board.get("aspectRatio"), "board.json.aspectRatio"
+    )
+    image_aspect_ratio = width / height
+    relative_error = abs(aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+    if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+        raise BoardPackageError(
+            "board.json.aspectRatio must match the primary image width/height within 0.1%"
+        )
     presentation = board.get("presentation")
     if presentation != {"assetPath": "assets/primary.png"}:
         raise BoardPackageError(
@@ -770,20 +777,122 @@ def _reject_symlinks(root: Path) -> None:
 
 def _png_header_dimensions(path: Path) -> tuple[int, int]:
     try:
-        with path.open("rb") as image:
-            data = image.read(33)
+        data = path.read_bytes()
     except OSError as error:
         raise BoardPackageError("package primary image is not readable") from error
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+
+    offset = 8
+    ihdr: bytes | None = None
+    compressed_parts: list[bytes] = []
+    has_palette = False
+    ended_idat = False
+    saw_iend = False
+    while offset < len(data):
+        if len(data) - offset < 12:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        length = int.from_bytes(data[offset : offset + 4], "big")
+        chunk_type = data[offset + 4 : offset + 8]
+        chunk_end = offset + 12 + length
+        if chunk_end > len(data):
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        payload = data[offset + 8 : offset + 8 + length]
+        expected_crc = int.from_bytes(data[offset + 8 + length : chunk_end], "big")
+        if zlib.crc32(chunk_type + payload) & 0xFFFFFFFF != expected_crc:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        if ihdr is None and chunk_type != b"IHDR":
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        if chunk_type == b"IHDR":
+            if ihdr is not None or length != 13:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            ihdr = payload
+        elif chunk_type == b"PLTE":
+            if not 3 <= length <= 768 or length % 3:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            has_palette = True
+            if compressed_parts:
+                ended_idat = True
+        elif chunk_type == b"IDAT":
+            if ended_idat:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            compressed_parts.append(payload)
+        elif chunk_type == b"IEND":
+            if length != 0 or chunk_end != len(data):
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            saw_iend = True
+            offset = chunk_end
+            break
+        else:
+            if compressed_parts:
+                ended_idat = True
+            if chunk_type and chunk_type[0] & 0x20 == 0:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+        offset = chunk_end
+
+    if ihdr is None or not compressed_parts or not saw_iend or offset != len(data):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    width = int.from_bytes(ihdr[0:4], "big")
+    height = int.from_bytes(ihdr[4:8], "big")
+    bit_depth, color_type, compression, filtering, interlace = ihdr[8:13]
+    valid_depths = {
+        0: {1, 2, 4, 8, 16},
+        2: {8, 16},
+        3: {1, 2, 4, 8},
+        4: {8, 16},
+        6: {8, 16},
+    }
+    channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
     if (
-        len(header) < 24
-        or header[:8] != b"\x89PNG\r\n\x1a\n"
-        or header[12:16] != b"IHDR"
+        width <= 0
+        or height <= 0
+        or bit_depth not in valid_depths.get(color_type, set())
+        or compression != 0
+        or filtering != 0
+        or interlace not in {0, 1}
+        or (color_type == 3 and not has_palette)
     ):
-        raise BoardPackageError("package primary image must be a PNG")
-    width = int.from_bytes(header[16:20], "big")
-    height = int.from_bytes(header[20:24], "big")
-    if width <= 0 or height <= 0:
-        raise BoardPackageError("package primary image has invalid dimensions")
+        raise BoardPackageError("package primary image must be a decodable PNG")
+
+    passes = (
+        ((0, 0, 1, 1),)
+        if interlace == 0
+        else (
+            (0, 0, 8, 8),
+            (4, 0, 8, 8),
+            (0, 4, 4, 8),
+            (2, 0, 4, 4),
+            (0, 2, 2, 4),
+            (1, 0, 2, 2),
+            (0, 1, 1, 2),
+        )
+    )
+    layouts: list[tuple[int, int]] = []
+    bits_per_pixel = channels[color_type] * bit_depth
+    for start_x, start_y, step_x, step_y in passes:
+        pass_width = max(0, (width - start_x + step_x - 1) // step_x)
+        pass_height = max(0, (height - start_y + step_y - 1) // step_y)
+        if pass_width and pass_height:
+            layouts.append(((pass_width * bits_per_pixel + 7) // 8 + 1, pass_height))
+    expected_size = sum(row_size * row_count for row_size, row_count in layouts)
+    try:
+        decompressor = zlib.decompressobj()
+        decoded = decompressor.decompress(b"".join(compressed_parts), expected_size + 1)
+    except zlib.error as error:
+        raise BoardPackageError("package primary image must be a decodable PNG") from error
+    if (
+        len(decoded) != expected_size
+        or not decompressor.eof
+        or decompressor.unconsumed_tail
+        or decompressor.unused_data
+    ):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    cursor = 0
+    for row_size, row_count in layouts:
+        for _ in range(row_count):
+            if decoded[cursor] > 4:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            cursor += row_size
     return width, height
 
 
