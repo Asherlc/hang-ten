@@ -27,8 +27,17 @@ struct BoardDesign {
             .map(\.frame)
 
         guard let first = frames.first else { return nil }
-        let union = frames.dropFirst().reduce(first) { $0.union($1) }
-        return union.insetBy(dx: -0.010, dy: -0.035)
+        return frames.dropFirst().reduce(first) { $0.union($1) }
+    }
+
+    func holdPieces(for holdID: String) -> [BoardHoldPiece] {
+        holds.filter { $0.holdID == holdID }
+    }
+
+    func holdPath(for holdID: String, in rect: CGRect) -> Path? {
+        let pieces = holdPieces(for: holdID)
+        guard !pieces.isEmpty else { return nil }
+        return BoardHoldPathShape(pieces: pieces).path(in: rect)
     }
 
     func draw(
@@ -89,8 +98,8 @@ struct BoardDesign {
         in context: inout GraphicsContext,
         boardRect: CGRect
     ) {
-        let rect = scaled(hold.frame, in: boardRect)
-        let outerPath = hold.shape.path(in: rect)
+        let rect = hold.rect(in: boardRect)
+        let outerPath = hold.path(in: boardRect)
 
         switch hold.treatment {
         case .surface:
@@ -101,48 +110,15 @@ struct BoardDesign {
                     : shading(for: .topPlane, pathRect: rect)
             )
 
-        case let .shelf(profile):
+        case .shelf:
             context.fill(
                 outerPath,
-                with: .linearGradient(
-                    Gradient(colors: [palette.bevelTop, palette.bevelBottom]),
-                    startPoint: CGPoint(x: rect.midX, y: rect.minY),
-                    endPoint: CGPoint(x: rect.midX, y: rect.maxY)
-                )
-            )
-
-            let inset = min(rect.width, rect.height) * profile.rimInsetFraction
-            let contactRect = rect.insetBy(dx: inset, dy: inset)
-            let contactPath = hold.shape.path(in: contactRect)
-            var shelfContext = context
-            shelfContext.addFilter(
-                .shadow(
-                    color: palette.recessShadow.opacity(0.88),
-                    radius: max(0.7, boardRect.height * 0.012),
-                    x: 0,
-                    y: boardRect.height * 0.010
-                )
-            )
-            shelfContext.fill(
-                contactPath,
                 with: highlighted
-                    ? highlightShading(mode: highlightMode, in: contactRect)
-                    : shading(for: .shelf, pathRect: contactRect)
+                    ? highlightShading(mode: highlightMode, in: rect)
+                    : shading(for: .shelf, pathRect: rect)
             )
 
         case let .recess(profile):
-            context.fill(
-                outerPath,
-                with: .linearGradient(
-                    Gradient(colors: [palette.bevelTop, palette.bevelBottom]),
-                    startPoint: CGPoint(x: rect.midX, y: rect.minY),
-                    endPoint: CGPoint(x: rect.midX, y: rect.maxY)
-                )
-            )
-
-            let inset = min(rect.width, rect.height) * profile.rimInsetFraction
-            let contactRect = rect.insetBy(dx: inset, dy: inset)
-            let contactPath = hold.shape.path(in: contactRect)
             let recessColors: [Color]
             switch profile.depth {
             case .deep:
@@ -161,13 +137,13 @@ struct BoardDesign {
                 )
             )
             wellContext.fill(
-                contactPath,
+                outerPath,
                 with: highlighted
-                    ? highlightShading(mode: highlightMode, in: contactRect)
+                    ? highlightShading(mode: highlightMode, in: rect)
                     : .linearGradient(
                         Gradient(colors: recessColors),
-                        startPoint: CGPoint(x: contactRect.midX, y: contactRect.minY),
-                        endPoint: CGPoint(x: contactRect.midX, y: contactRect.maxY)
+                        startPoint: CGPoint(x: rect.midX, y: rect.minY),
+                        endPoint: CGPoint(x: rect.midX, y: rect.maxY)
                     )
             )
         }
@@ -246,21 +222,46 @@ enum BoardSurfaceRole {
     case shelf
 }
 
-struct BoardHoldPiece: Identifiable {
+struct BoardHoldPiece: Identifiable, Hashable {
     let id: String
     let holdID: String
     let frame: CGRect
     let shape: BoardShape
     let treatment: BoardHoldTreatment
+
+    func rect(in boardRect: CGRect) -> CGRect {
+        CGRect(
+            x: boardRect.minX + boardRect.width * frame.minX,
+            y: boardRect.minY + boardRect.height * frame.minY,
+            width: boardRect.width * frame.width,
+            height: boardRect.height * frame.height
+        )
+    }
+
+    func path(in boardRect: CGRect) -> Path {
+        shape.path(in: rect(in: boardRect))
+    }
 }
 
-enum BoardHoldTreatment {
+struct BoardHoldPathShape: Shape {
+    let pieces: [BoardHoldPiece]
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        for piece in pieces {
+            path.addPath(piece.path(in: rect))
+        }
+        return path
+    }
+}
+
+enum BoardHoldTreatment: Hashable {
     case recess(BoardRecessProfile)
     case shelf(BoardShelfProfile)
     case surface
 }
 
-struct BoardRecessProfile {
+struct BoardRecessProfile: Hashable {
     let rimInsetFraction: CGFloat
     let depth: BoardRecessDepth
 
@@ -268,12 +269,12 @@ struct BoardRecessProfile {
     static let shallowSlot = BoardRecessProfile(rimInsetFraction: 0.090, depth: .shallow)
 }
 
-enum BoardRecessDepth {
+enum BoardRecessDepth: Hashable {
     case deep
     case shallow
 }
 
-struct BoardShelfProfile {
+struct BoardShelfProfile: Hashable {
     let rimInsetFraction: CGFloat
 
     static let broadJug = BoardShelfProfile(rimInsetFraction: 0.060)
@@ -326,7 +327,7 @@ struct BoardPalette {
     )
 }
 
-enum BoardShape {
+enum BoardShape: Hashable {
     case roundedRect(cornerRadiusFraction: CGFloat)
     case path(BoardNormalizedPath)
 
@@ -353,7 +354,7 @@ enum BoardShape {
     }
 }
 
-struct BoardNormalizedPath {
+struct BoardNormalizedPath: Hashable {
     let commands: [BoardPathCommand]
 
     func path(in rect: CGRect) -> Path {
@@ -391,7 +392,7 @@ struct BoardNormalizedPath {
     }
 }
 
-enum BoardPathCommand {
+enum BoardPathCommand: Hashable {
     case move(CGPoint)
     case line(CGPoint)
     case quad(to: CGPoint, control: CGPoint)
@@ -438,7 +439,7 @@ enum BoardArtworkAdaptationError: Error, CustomStringConvertible {
 }
 
 extension BoardArtworkDocument {
-    func boardDesign() throws -> BoardDesign {
+    func boardDesign(holds physicalHolds: [BoardHold]) throws -> BoardDesign {
         guard canvasFrame.isNormalized else {
             throw BoardArtworkAdaptationError.invalid("canvas frame must stay inside normalized bounds")
         }
@@ -457,7 +458,7 @@ extension BoardArtworkDocument {
             canvasFrame: canvasFrame.cgRect,
             silhouette: silhouette.boardShape(),
             layers: layers.map { try $0.boardLayer() },
-            holds: holdPieces.map { try $0.boardHoldPiece() },
+            holds: physicalHolds.flatMap(\.geometry),
             palette: .sculptedWood
         )
     }
@@ -500,6 +501,23 @@ private extension BoardArtworkHoldPieceDocument {
             frame: frame.cgRect,
             shape: shape.boardShape(),
             treatment: treatment.boardHoldTreatment(pieceID: id)
+        )
+    }
+}
+
+extension BoardHoldPieceDocument {
+    func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
+        guard frame.isNormalized else {
+            throw BoardArtworkAdaptationError.invalid("hold piece \(id) has an invalid frame")
+        }
+        return try BoardHoldPiece(
+            id: id,
+            holdID: holdID,
+            frame: frame.cgRect,
+            shape: shape.boardShape(),
+            treatment: treatment.map {
+                try $0.boardHoldTreatment(pieceID: id)
+            } ?? .surface
         )
     }
 }

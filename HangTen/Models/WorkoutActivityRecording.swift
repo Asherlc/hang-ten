@@ -85,10 +85,10 @@ internal enum BoardTargetResolver {
             return target.holdIDs.filter(available.contains)
         }
         if let feature = target.feature {
-            let exact = board.holds.filter { $0.features.contains(feature) }
+            let exact = board.holds.filter { $0.features?.contains(feature) == true }
             if !exact.isEmpty { return exact.map(\.id) }
             for fallback in target.fallbackFeatures {
-                let matches = board.holds.filter { $0.features.contains(fallback) }
+                let matches = board.holds.filter { $0.features?.contains(fallback) == true }
                 if !matches.isEmpty { return matches.map(\.id) }
             }
             return []

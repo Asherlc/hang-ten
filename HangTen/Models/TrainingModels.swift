@@ -239,74 +239,89 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
 struct BoardHold: Identifiable, Hashable {
     let id: String
     let name: String
-    let shortLabel: String
-    let detail: String
     let kind: HoldKind
-    let gripType: GripType
-    let fingerCapacity: Int
-    let cueStyle: HoldCueStyle
+    let geometry: [BoardHoldPiece]
+    let gripType: GripType?
+    let fingerCapacity: Int?
     let frame: HoldFrame
     let sizeMillimeters: Int?
     let depthRangeMillimeters: ClosedRange<Int>?
-    let features: Set<HoldFeature>
+    let features: Set<HoldFeature>?
 
     static let validFingerCapacityRange = 1...4
 
     init(
         id: String,
         name: String,
-        shortLabel: String,
-        detail: String,
         kind: HoldKind,
-        frame: HoldFrame,
+        geometry: [BoardHoldPiece],
         sizeMillimeters: Int? = nil,
-        gripType: GripType = .openHand,
-        fingerCapacity: Int = 4,
-        cueStyle: HoldCueStyle? = nil,
+        gripType: GripType? = nil,
+        fingerCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
-        precondition(
-            Self.validFingerCapacityRange.contains(fingerCapacity),
-            "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
-        )
+        precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
+        if let fingerCapacity {
+            precondition(
+                Self.validFingerCapacityRange.contains(fingerCapacity),
+                "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+            )
+        }
 
         self.id = id
         self.name = name
-        self.shortLabel = shortLabel
-        self.detail = detail
         self.kind = kind
+        self.geometry = geometry
         self.gripType = gripType
         self.fingerCapacity = fingerCapacity
-        self.cueStyle = cueStyle ?? (kind == .jug ? .outerJug : (kind == .sloper ? .rounded : (kind == .pinch ? .pinch : .slot)))
+        let firstFrame = geometry[0].frame
+        let union = geometry.dropFirst().reduce(firstFrame) { $0.union($1.frame) }
+        self.frame = HoldFrame(
+            x: union.minX,
+            y: union.minY,
+            width: union.width,
+            height: union.height
+        )
+        self.sizeMillimeters = sizeMillimeters
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.features = features
+    }
+
+    /// Narrow source compatibility for hand-built workout and test fixtures.
+    /// Package decoding uses the geometry initializer above and never reaches
+    /// this frame-only path or its retired presentation arguments.
+    init(
+        id: String,
+        name: String,
+        shortLabel _: String,
+        detail _: String,
+        kind: HoldKind,
+        frame: HoldFrame,
+        sizeMillimeters: Int? = nil,
+        gripType: GripType? = nil,
+        fingerCapacity: Int? = nil,
+        cueStyle _: HoldCueStyle? = nil,
+        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        features: Set<HoldFeature>? = nil
+    ) {
+        if let fingerCapacity {
+            precondition(
+                Self.validFingerCapacityRange.contains(fingerCapacity),
+                "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+            )
+        }
+
+        self.id = id
+        self.name = name
+        self.kind = kind
+        self.geometry = []
+        self.gripType = gripType
+        self.fingerCapacity = fingerCapacity
         self.frame = frame
         self.sizeMillimeters = sizeMillimeters
         self.depthRangeMillimeters = depthRangeMillimeters
-        self.features = features ?? Self.defaultFeatures(kind: kind, fingerCapacity: fingerCapacity)
-    }
-
-    private static func defaultFeatures(kind: HoldKind, fingerCapacity: Int) -> Set<HoldFeature> {
-        switch kind {
-        case .jug:
-            return [.jug]
-        case .edge:
-            return []
-        case .pocket:
-            switch fingerCapacity {
-            case 1:
-                return [.pocket]
-            case 2:
-                return [.pocket, .twoFingerPocket]
-            case 3:
-                return [.pocket, .threeFingerPocket]
-            default:
-                return [.pocket, .fourFingerPocket]
-            }
-        case .pinch:
-            return []
-        case .sloper:
-            return []
-        }
+        self.features = features
     }
 }
 
@@ -2063,7 +2078,7 @@ enum LegacyPlanSeedCatalog {
             if let feature = target.feature {
                 let acceptedFeatures = [feature] + target.fallbackFeatures
                 return board.holds.contains { hold in
-                    !hold.features.isDisjoint(with: acceptedFeatures)
+                    !(hold.features ?? []).isDisjoint(with: acceptedFeatures)
                 }
             }
             if let kind = target.kind {

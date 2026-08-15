@@ -2,7 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class BoardStorageTests: XCTestCase {
-    func testBoardLibraryDecodesCompactBoardMetadataAndHoldFrame() throws {
+    func testBoardLibraryPreservesUnknownPhysicalMetadataAndDerivesHoldFrameFromGeometry() throws {
         let store = try BoardLibraryStore(data: compactFixture)
         let board = try XCTUnwrap(store.boards.first)
         let hold = try XCTUnwrap(board.holds.first)
@@ -10,11 +10,13 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertEqual(board.id, "fixture.board")
         XCTAssertEqual(board.manufacturer, "Fixture Maker")
         XCTAssertEqual(hold.id, "fixture.hold")
-        XCTAssertEqual(hold.frame.rect, CGRect(x: 0.1, y: 0.2, width: 0.3, height: 0.4))
-        XCTAssertEqual(hold.gripType, .openHand)
-        XCTAssertEqual(hold.fingerCapacity, 4)
-        XCTAssertEqual(hold.cueStyle, .slot)
-        XCTAssertEqual(hold.features, [])
+        XCTAssertEqual(hold.geometry.count, 2)
+        XCTAssertEqual(hold.frame.rect, CGRect(x: 0.1, y: 0.2, width: 0.7, height: 0.4))
+        XCTAssertNil(hold.sizeMillimeters)
+        XCTAssertNil(hold.depthRangeMillimeters)
+        XCTAssertNil(hold.gripType)
+        XCTAssertNil(hold.fingerCapacity)
+        XCTAssertNil(hold.features)
     }
 
     func testBoardLibraryLoadsAndExportsDeterministicSortedJSON() throws {
@@ -94,22 +96,64 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertTrue(issues.contains { $0.path == "boards[0].holds[1].id" && $0.message.contains("Duplicate hold ID") })
     }
 
-    func testBoardLibraryRejectsOutOfRangeHoldFrames() throws {
+    func testBoardLibraryRejectsOutOfRangeHoldGeometry() throws {
         let issues = validationIssues(for: try fixtureData { document in
             var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
             var board = try XCTUnwrap(boards.first)
             var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
             var hold = try XCTUnwrap(holds.first)
-            var frame = try XCTUnwrap(hold["frame"] as? [String: Any])
+            var geometry = try XCTUnwrap(hold["geometry"] as? [[String: Any]])
+            var piece = try XCTUnwrap(geometry.first)
+            var frame = try XCTUnwrap(piece["frame"] as? [String: Any])
             frame["x"] = -0.1
-            hold["frame"] = frame
+            piece["frame"] = frame
+            geometry[0] = piece
+            hold["geometry"] = geometry
             holds[0] = hold
             board["holds"] = holds
             boards[0] = board
             document["boards"] = boards
         })
 
-        XCTAssertTrue(issues.contains { $0.path == "boards[0].holds[0].frame.x" && $0.message.contains("between 0 and 1") })
+        XCTAssertTrue(issues.contains {
+            $0.path == "boards[0].holds[0].geometry[0].frame.x" &&
+                $0.message.contains("between 0 and 1")
+        })
+    }
+
+    func testBoardLibraryRejectsEmptyHoldGeometry() throws {
+        let issues = validationIssues(for: try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            holds[0]["geometry"] = []
+            board["holds"] = holds
+            boards[0] = board
+            document["boards"] = boards
+        })
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "boards[0].holds[0].geometry" &&
+                $0.message.contains("at least one piece")
+        })
+    }
+
+    func testBoardLibraryRejectsUnsupportedPhysicalHoldKindsDuringDecoding() throws {
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            holds[0]["kind"] = "unsupported"
+            board["holds"] = holds
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        XCTAssertThrowsError(try BoardLibraryStore(data: data)) { error in
+            guard case BoardLibraryStoreError.decoding = error else {
+                return XCTFail("Expected a decoding error, got: \(error)")
+            }
+        }
     }
 
     func testBoardLibraryRejectsNonPositiveAspectRatios() throws {
@@ -239,10 +283,17 @@ final class BoardStorageTests: XCTestCase {
                 "holds": [{
                   "id": "fixture.hold",
                   "name": "Fixture edge",
-                  "shortLabel": "F",
-                  "detail": "A fixture edge.",
                   "kind": "edge",
-                  "frame": { "x": 0.1, "y": 0.2, "width": 0.3, "height": 0.4 }
+                  "geometry": [
+                    {
+                      "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 }
+                    },
+                    {
+                      "frame": { "x": 0.6, "y": 0.3, "width": 0.2, "height": 0.2 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 }
+                    }
+                  ]
                 }],
                 "semanticHolds": {
                   "fixture-edge": { "holdIDs": ["fixture.hold"] }
