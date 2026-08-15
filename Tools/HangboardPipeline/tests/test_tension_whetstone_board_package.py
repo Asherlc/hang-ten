@@ -44,12 +44,18 @@ def test_tension_whetstone_audited_inventory_and_contact_symmetry() -> None:
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
     with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
         assert presentation.size == PRESENTATION_SIZE
+        presentation_width, presentation_height = presentation.size
 
     assert board.id == "tension.whetstone"
     assert board.manufacturer == "Tension Climbing"
     assert board.name == "Whetstone"
     assert board.facts["dimensions"] == "25 × 6 × 2 in"
-    assert math.isclose(board.facts["aspectRatio"], 25 / 6, abs_tol=1e-12)
+    assert math.isclose(
+        board.facts["aspectRatio"],
+        presentation_width / presentation_height,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    )
     assert board.presentation_asset_path == "assets/primary.png"
     assert tuple(holds) == (
         "top-jug",
