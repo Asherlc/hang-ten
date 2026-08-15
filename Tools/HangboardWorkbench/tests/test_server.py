@@ -46,7 +46,7 @@ def _write_library(root: Path) -> Path:
         "subtitle": "A physical fixture board.",
         "productURL": "https://example.com/fixture.board",
         "dimensions": "20 × 10 cm",
-        "aspectRatio": 2,
+        "aspectRatio": 1774 / 457,
         "presentation": {"assetPath": "assets/primary.png"},
         "holds": [
             {
