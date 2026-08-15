@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 import math
 import re
-from typing import Any, Iterable, Mapping
+from typing import Any
 
 
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
