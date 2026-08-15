@@ -347,6 +347,47 @@ final class BoardPackageStoreTests: XCTestCase {
 
     }
 
+    func testStoreRejectsMalformedNestedArtworkGeometry() throws {
+        try assertMalformedJSON(
+            relativePath: "artwork.json",
+            resource: "Hangboards/package-board/artwork.json"
+        ) { artwork in
+            var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
+            var shape = try XCTUnwrap(pieces[0]["shape"] as? [String: Any])
+            shape["unexpected"] = true
+            pieces[0]["shape"] = shape
+            artwork["holdPieces"] = pieces
+        }
+
+        try assertMalformedJSON(
+            relativePath: "artwork.json",
+            resource: "Hangboards/package-board/artwork.json"
+        ) { artwork in
+            var layers = try XCTUnwrap(artwork["layers"] as? [[String: Any]])
+            layers[0]["role"] = "unsupported-role"
+            artwork["layers"] = layers
+        }
+
+        try assertMalformedJSON(
+            relativePath: "artwork.json",
+            resource: "Hangboards/package-board/artwork.json"
+        ) { artwork in
+            var pieces = try XCTUnwrap(artwork["holdPieces"] as? [[String: Any]])
+            pieces[0]["treatment"] = ["type": "recess", "rimInsetFraction": 0.1, "depth": "unknown"]
+            artwork["holdPieces"] = pieces
+        }
+    }
+
+    func testStoreRejectsBoardFrameThatDoesNotMatchArtworkOutline() throws {
+        try assertInvalidPackage { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["frame"] = ["x": 0.06, "y": 0.2, "width": 0.3, "height": 0.4]
+                board["holds"] = holds
+            }
+        }
+    }
+
     func testStoreRejectsEmptyDuplicateAndNonPositiveBoardMetadata() throws {
         try assertInvalidPackage { packageURL in
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in

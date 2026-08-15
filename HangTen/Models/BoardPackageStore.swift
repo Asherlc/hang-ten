@@ -67,6 +67,28 @@ private extension String {
     private static func isLowercaseASCIIOrDigit(_ scalar: Unicode.Scalar) -> Bool {
         (97...122).contains(scalar.value) || (48...57).contains(scalar.value)
     }
+
+    var isISOCalendarDate: Bool {
+        let parts = split(separator: "-", omittingEmptySubsequences: false)
+        guard parts.count == 3,
+              parts[0].count == 4,
+              parts[1].count == 2,
+              parts[2].count == 2,
+              let year = Int(parts[0]),
+              let month = Int(parts[1]),
+              let day = Int(parts[2]) else { return false }
+        var components = DateComponents()
+        components.calendar = Calendar(identifier: .gregorian)
+        components.timeZone = TimeZone(secondsFromGMT: 0)
+        components.year = year
+        components.month = month
+        components.day = day
+        guard let date = components.date,
+              let restored = components.calendar?.dateComponents([.year, .month, .day], from: date) else {
+            return false
+        }
+        return restored.year == year && restored.month == month && restored.day == day
+    }
 }
 
 enum BoardPackageStoreError: Error, Equatable, LocalizedError {
@@ -203,6 +225,7 @@ struct BoardPackageStore {
             try Self.validateArtwork(
                 artworkDocument,
                 boardID: entry.id,
+                holds: boardDocument.holds,
                 holdIDs: holdIDs
             )
             try Self.validateSemantics(
@@ -213,6 +236,7 @@ struct BoardPackageStore {
             try Self.validateArtworkEvidence(
                 evidenceDocument,
                 artworkDocument: artworkDocument,
+                semanticsDocument: semanticsDocument,
                 resource: "\(resourcePrefix)/evidence.json"
             )
             let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
@@ -509,15 +533,27 @@ struct BoardPackageStore {
     private static func validateArtwork(
         _ document: BoardPackageArtworkDocument,
         boardID: String,
+        holds: [BoardPackageHoldDocument],
         holdIDs: Set<String>
     ) throws {
+        guard document.canvasFrame.isNormalized,
+              document.palette == .sculptedWood,
+              document.silhouette.isValid(in: BoardPackageFrameDocument.fullCanvas) else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "artwork has invalid canvas or silhouette geometry"
+            )
+        }
+
         var layerIDs = Set<String>()
         for layer in document.layers {
             guard layer.id.isBoardPackageIdentifier,
-                  layerIDs.insert(layer.id).inserted else {
+                  layerIDs.insert(layer.id).inserted,
+                  layer.frame.isNormalized,
+                  layer.shape.isValid(in: layer.frame) else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: boardID,
-                    reason: "artwork layers must have unique identifiers"
+                    reason: "artwork layers must have valid unique identifiers and geometry"
                 )
             }
         }
@@ -528,10 +564,13 @@ struct BoardPackageStore {
             guard piece.id.isBoardPackageIdentifier,
                   piece.holdID.isBoardPackageIdentifier,
                   pieceIDs.insert(piece.id).inserted,
-                  artworkHoldIDs.insert(piece.holdID).inserted else {
+                  artworkHoldIDs.insert(piece.holdID).inserted,
+                  piece.frame.isNormalized,
+                  piece.shape.isValid(in: piece.frame),
+                  piece.treatment.isValid else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: boardID,
-                    reason: "artwork hold pieces must have unique identifiers and hold IDs"
+                    reason: "artwork hold pieces must have valid unique identifiers, geometry, and treatment"
                 )
             }
         }
@@ -541,11 +580,25 @@ struct BoardPackageStore {
                 reason: "artwork hold IDs must exactly match board hold IDs"
             )
         }
+
+        let piecesByHoldID = Dictionary(uniqueKeysWithValues: document.holdPieces.map {
+            ($0.holdID, $0)
+        })
+        for hold in holds {
+            guard let piece = piecesByHoldID[hold.id],
+                  hold.frame.matches(piece.shape.derivedFrame(in: piece.frame)) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "hold \(hold.id) frame must match its derived artwork outline"
+                )
+            }
+        }
     }
 
     private static func validateArtworkEvidence(
         _ evidence: BoardPackageEvidenceDocument,
         artworkDocument: BoardPackageArtworkDocument,
+        semanticsDocument: BoardPackageSemanticsDocument,
         resource: String
     ) throws {
         let expectedKeys = Set(
@@ -560,18 +613,43 @@ struct BoardPackageStore {
         let sourceIDs = Set(evidence.sources.map(\.id))
         guard !sourceIDs.isEmpty,
               sourceIDs.count == evidence.sources.count,
-              sourceIDs.allSatisfy(\.isBoardPackageIdentifier) else {
+              sourceIDs.allSatisfy(\.isBoardPackageIdentifier),
+              evidence.sources.allSatisfy({
+                  !$0.title.isEmpty && $0.url.scheme?.lowercased() == "https" && $0.url.host != nil
+              }) else {
             throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
-        for mapping in evidence.artworkEvidence.values {
-            guard mapping.method == "manufacturer-measurement" ||
-                    mapping.method == "reviewed-human-authored-normalization",
-                  !mapping.sourceIDs.isEmpty,
-                  Set(mapping.sourceIDs).count == mapping.sourceIDs.count,
-                  mapping.sourceIDs.allSatisfy(\.isBoardPackageIdentifier),
-                  Set(mapping.sourceIDs).isSubset(of: sourceIDs) else {
-                throw BoardPackageStoreError.malformedJSON(resource: resource)
-            }
+        guard evidence.checkedAt.isISOCalendarDate,
+              evidence.fieldEvidence.validEvidenceMap(
+                  expectedKeys: ["manufacturer", "name", "subtitle", "productURL", "dimensions", "aspectRatio"],
+                  sourceIDs: sourceIDs,
+                  allowExternalGeneration: false
+              ),
+              evidence.holdEvidence.validEvidenceMap(
+                  expectedKeys: Set(artworkDocument.holdPieces.flatMap { piece in
+                      ["id", "name", "shortLabel", "detail", "kind", "frame", "sizeMillimeters", "depthRangeMillimeters", "gripType", "fingerCapacity", "cueStyle", "features"].map {
+                          "\(piece.holdID).\($0)"
+                      }
+                  }),
+                  sourceIDs: sourceIDs,
+                  allowExternalGeneration: false
+              ),
+              evidence.semanticEvidence.validEvidenceMap(
+                  expectedKeys: Set(semanticsDocument.semanticHolds.keys),
+                  sourceIDs: sourceIDs,
+                  allowExternalGeneration: false
+              ),
+              evidence.artworkEvidence.validEvidenceMap(
+                  expectedKeys: expectedKeys,
+                  sourceIDs: sourceIDs,
+                  allowExternalGeneration: false
+              ),
+              evidence.assetEvidence.validEvidenceMap(
+                  expectedKeys: ["assets/primary.png"],
+                  sourceIDs: sourceIDs,
+                  allowExternalGeneration: true
+              ) else {
+            throw BoardPackageStoreError.malformedJSON(resource: resource)
         }
     }
 
@@ -840,6 +918,13 @@ struct BoardPackageFrameDocument: Decodable {
         case height
     }
 
+    init(x: Double, y: Double, width: Double, height: Double) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+    }
+
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["x", "y", "width", "height"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -862,11 +947,21 @@ struct BoardPackageFrameDocument: Decodable {
             x >= 0 && y >= 0 && width > 0 && height > 0 &&
             x + width <= 1 && y + height <= 1
     }
+
+    static let fullCanvas = BoardPackageFrameDocument(x: 0, y: 0, width: 1, height: 1)
+
+    func matches(_ other: BoardPackageFrameDocument, tolerance: Double = 0.0000005) -> Bool {
+        abs(x - other.x) <= tolerance && abs(y - other.y) <= tolerance &&
+            abs(width - other.width) <= tolerance && abs(height - other.height) <= tolerance
+    }
 }
 
 private struct BoardPackageArtworkDocument: Decodable {
     let schemaVersion: Int
     let boardID: String
+    let canvasFrame: BoardPackageFrameDocument
+    let palette: BoardPackageArtworkPalette
+    let silhouette: BoardPackageArtworkShapeDocument
     let layers: [BoardPackageArtworkLayerDocument]
     let holdPieces: [BoardPackageArtworkHoldPieceDocument]
 
@@ -887,9 +982,9 @@ private struct BoardPackageArtworkDocument: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
         boardID = try container.decode(String.self, forKey: .boardID)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .canvasFrame)
-        _ = try container.decode(String.self, forKey: .palette)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .silhouette)
+        canvasFrame = try container.decode(BoardPackageFrameDocument.self, forKey: .canvasFrame)
+        palette = try container.decode(BoardPackageArtworkPalette.self, forKey: .palette)
+        silhouette = try container.decode(BoardPackageArtworkShapeDocument.self, forKey: .silhouette)
         layers = try container.decode([BoardPackageArtworkLayerDocument].self, forKey: .layers)
         holdPieces = try container.decode([BoardPackageArtworkHoldPieceDocument].self, forKey: .holdPieces)
     }
@@ -897,6 +992,9 @@ private struct BoardPackageArtworkDocument: Decodable {
 
 private struct BoardPackageArtworkLayerDocument: Decodable {
     let id: String
+    let role: BoardPackageArtworkLayerRole
+    let frame: BoardPackageFrameDocument
+    let shape: BoardPackageArtworkShapeDocument
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -909,15 +1007,18 @@ private struct BoardPackageArtworkLayerDocument: Decodable {
         try decoder.rejectUnknownKeys(["id", "role", "frame", "shape"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        _ = try container.decode(String.self, forKey: .role)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .frame)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .shape)
+        role = try container.decode(BoardPackageArtworkLayerRole.self, forKey: .role)
+        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+        shape = try container.decode(BoardPackageArtworkShapeDocument.self, forKey: .shape)
     }
 }
 
 private struct BoardPackageArtworkHoldPieceDocument: Decodable {
     let id: String
     let holdID: String
+    let frame: BoardPackageFrameDocument
+    let shape: BoardPackageArtworkShapeDocument
+    let treatment: BoardPackageArtworkTreatmentDocument
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -932,40 +1033,347 @@ private struct BoardPackageArtworkHoldPieceDocument: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         holdID = try container.decode(String.self, forKey: .holdID)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .frame)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .shape)
-        _ = try container.decode(BoardPackageJSONValue.self, forKey: .treatment)
+        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+        shape = try container.decode(BoardPackageArtworkShapeDocument.self, forKey: .shape)
+        treatment = try container.decode(BoardPackageArtworkTreatmentDocument.self, forKey: .treatment)
     }
 }
 
-private indirect enum BoardPackageJSONValue: Decodable {
-    case null
-    case boolean(Bool)
-    case number(Double)
-    case string(String)
-    case array([BoardPackageJSONValue])
-    case object([String: BoardPackageJSONValue])
+private enum BoardPackageArtworkPalette: String, Decodable {
+    case sculptedWood
+}
+
+private enum BoardPackageArtworkLayerRole: String, Decodable {
+    case topPlane
+    case separator
+    case bottomPlane
+    case topSeam
+}
+
+private enum BoardPackageArtworkShapeType: String, Decodable {
+    case roundedRect
+    case path
+}
+
+private struct BoardPackageArtworkShapeDocument: Decodable {
+    let type: BoardPackageArtworkShapeType
+    let cornerRadiusFraction: Double?
+    let commands: [BoardPackageArtworkPathCommandDocument]?
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case cornerRadiusFraction
+        case commands
+    }
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if container.decodeNil() {
-            self = .null
-        } else if let boolean = try? container.decode(Bool.self) {
-            self = .boolean(boolean)
-        } else if let number = try? container.decode(Double.self) {
-            self = .number(number)
-        } else if let string = try? container.decode(String.self) {
-            self = .string(string)
-        } else if let array = try? container.decode([BoardPackageJSONValue].self) {
-            self = .array(array)
-        } else if let object = try? container.decode([String: BoardPackageJSONValue].self) {
-            self = .object(object)
-        } else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Expected a JSON value"
-            )
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(BoardPackageArtworkShapeType.self, forKey: .type)
+        switch type {
+        case .roundedRect:
+            try decoder.rejectUnknownKeys(["type", "cornerRadiusFraction"])
+            cornerRadiusFraction = try container.decode(Double.self, forKey: .cornerRadiusFraction)
+            commands = nil
+        case .path:
+            try decoder.rejectUnknownKeys(["type", "commands"])
+            cornerRadiusFraction = nil
+            commands = try container.decode([BoardPackageArtworkPathCommandDocument].self, forKey: .commands)
         }
+    }
+
+    func isValid(in frame: BoardPackageFrameDocument) -> Bool {
+        guard frame.isNormalized else { return false }
+        switch type {
+        case .roundedRect:
+            guard let radius = cornerRadiusFraction,
+                  radius.isFinite,
+                  (0...0.5).contains(radius) else { return false }
+            return true
+        case .path:
+            guard let commands else { return false }
+            return BoardPackageArtworkPathGeometry(commands: commands, frame: frame).isValid
+        }
+    }
+
+    func derivedFrame(in frame: BoardPackageFrameDocument) -> BoardPackageFrameDocument {
+        guard type == .path,
+              let commands,
+              !commands.isEmpty else { return frame }
+        let points = commands.flatMap(\.points).map { point in
+            (x: frame.x + point.x * frame.width, y: frame.y + point.y * frame.height)
+        }
+        guard let minimumX = points.map(\.x).min(),
+              let maximumX = points.map(\.x).max(),
+              let minimumY = points.map(\.y).min(),
+              let maximumY = points.map(\.y).max() else { return frame }
+        return BoardPackageFrameDocument(
+            x: minimumX,
+            y: minimumY,
+            width: maximumX - minimumX,
+            height: maximumY - minimumY
+        )
+    }
+}
+
+private enum BoardPackageArtworkPathCommand: String, Decodable {
+    case move
+    case line
+    case quad
+    case curve
+    case close
+}
+
+private struct BoardPackageArtworkPoint: Decodable {
+    let x: Double
+    let y: Double
+
+    init(x: Double, y: Double) {
+        self.x = x
+        self.y = y
+    }
+
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        x = try container.decode(Double.self)
+        y = try container.decode(Double.self)
+        guard container.isAtEnd else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Point must have two coordinates")
+        }
+    }
+
+    var isNormalized: Bool {
+        x.isFinite && y.isFinite && (0...1).contains(x) && (0...1).contains(y)
+    }
+}
+
+private struct BoardPackageArtworkPathCommandDocument: Decodable {
+    let command: BoardPackageArtworkPathCommand
+    let to: BoardPackageArtworkPoint?
+    let control: BoardPackageArtworkPoint?
+    let control1: BoardPackageArtworkPoint?
+    let control2: BoardPackageArtworkPoint?
+
+    private enum CodingKeys: String, CodingKey {
+        case command
+        case to
+        case control
+        case control1
+        case control2
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        command = try container.decode(BoardPackageArtworkPathCommand.self, forKey: .command)
+        switch command {
+        case .move, .line:
+            try decoder.rejectUnknownKeys(["command", "to"])
+            to = try container.decode(BoardPackageArtworkPoint.self, forKey: .to)
+            control = nil
+            control1 = nil
+            control2 = nil
+        case .quad:
+            try decoder.rejectUnknownKeys(["command", "control", "to"])
+            control = try container.decode(BoardPackageArtworkPoint.self, forKey: .control)
+            to = try container.decode(BoardPackageArtworkPoint.self, forKey: .to)
+            control1 = nil
+            control2 = nil
+        case .curve:
+            try decoder.rejectUnknownKeys(["command", "control1", "control2", "to"])
+            control1 = try container.decode(BoardPackageArtworkPoint.self, forKey: .control1)
+            control2 = try container.decode(BoardPackageArtworkPoint.self, forKey: .control2)
+            to = try container.decode(BoardPackageArtworkPoint.self, forKey: .to)
+            control = nil
+        case .close:
+            try decoder.rejectUnknownKeys(["command"])
+            to = nil
+            control = nil
+            control1 = nil
+            control2 = nil
+        }
+    }
+
+    var points: [BoardPackageArtworkPoint] {
+        [to, control, control1, control2].compactMap { $0 }
+    }
+}
+
+private enum BoardPackageArtworkTreatmentType: String, Decodable {
+    case surface
+    case shelf
+    case recess
+}
+
+private enum BoardPackageArtworkRecessDepth: String, Decodable {
+    case shallow
+    case deep
+}
+
+private struct BoardPackageArtworkTreatmentDocument: Decodable {
+    let type: BoardPackageArtworkTreatmentType
+    let rimInsetFraction: Double?
+    let depth: BoardPackageArtworkRecessDepth?
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case rimInsetFraction
+        case depth
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(BoardPackageArtworkTreatmentType.self, forKey: .type)
+        switch type {
+        case .surface:
+            try decoder.rejectUnknownKeys(["type"])
+            rimInsetFraction = nil
+            depth = nil
+        case .shelf:
+            try decoder.rejectUnknownKeys(["type", "rimInsetFraction"])
+            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
+            depth = nil
+        case .recess:
+            try decoder.rejectUnknownKeys(["type", "rimInsetFraction", "depth"])
+            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
+            depth = try container.decode(BoardPackageArtworkRecessDepth.self, forKey: .depth)
+        }
+    }
+
+    var isValid: Bool {
+        guard type != .surface else { return true }
+        guard let rimInsetFraction else { return false }
+        return rimInsetFraction.isFinite && (0...1).contains(rimInsetFraction)
+    }
+}
+
+private struct BoardPackageArtworkPathGeometry {
+    private let commands: [BoardPackageArtworkPathCommandDocument]
+    private let frame: BoardPackageFrameDocument
+    private let epsilon = 0.000000001
+
+    init(commands: [BoardPackageArtworkPathCommandDocument], frame: BoardPackageFrameDocument) {
+        self.commands = commands
+        self.frame = frame
+    }
+
+    var isValid: Bool {
+        guard !commands.isEmpty,
+              commands.first?.command == .move,
+              commands.last?.command == .close,
+              commands.filter({ $0.command == .move }).count == 1,
+              commands.filter({ $0.command == .close }).count == 1,
+              commands.dropLast().allSatisfy({ $0.command != .close }),
+              commands.allSatisfy({ $0.points.allSatisfy(\.isNormalized) }),
+              let start = commands.first?.to else { return false }
+
+        var current = start
+        var points = [absolute(start)]
+        for command in commands.dropFirst() {
+            switch command.command {
+            case .line:
+                guard let end = command.to else { return false }
+                current = end
+                points.append(absolute(end))
+            case .quad:
+                guard let control = command.control, let end = command.to else { return false }
+                let previous = current
+                for step in 1...32 {
+                    let t = Double(step) / 32
+                    points.append(absolute(interpolateQuadratic(previous, control, end, t)))
+                }
+                current = end
+            case .curve:
+                guard let control1 = command.control1,
+                      let control2 = command.control2,
+                      let end = command.to else { return false }
+                let previous = current
+                for step in 1...32 {
+                    let t = Double(step) / 32
+                    points.append(absolute(interpolateCubic(previous, control1, control2, end, t)))
+                }
+                current = end
+            case .close:
+                if !same(absolute(current), absolute(start)) {
+                    points.append(absolute(start))
+                }
+            case .move:
+                return false
+            }
+        }
+        return isSimpleClosedContour(points)
+    }
+
+    private func absolute(_ point: BoardPackageArtworkPoint) -> CGPoint {
+        CGPoint(x: frame.x + point.x * frame.width, y: frame.y + point.y * frame.height)
+    }
+
+    private func interpolateQuadratic(
+        _ start: BoardPackageArtworkPoint,
+        _ control: BoardPackageArtworkPoint,
+        _ end: BoardPackageArtworkPoint,
+        _ t: Double
+    ) -> BoardPackageArtworkPoint {
+        BoardPackageArtworkPoint(
+            x: (1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * control.x + t * t * end.x,
+            y: (1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * control.y + t * t * end.y
+        )
+    }
+
+    private func interpolateCubic(
+        _ start: BoardPackageArtworkPoint,
+        _ control1: BoardPackageArtworkPoint,
+        _ control2: BoardPackageArtworkPoint,
+        _ end: BoardPackageArtworkPoint,
+        _ t: Double
+    ) -> BoardPackageArtworkPoint {
+        BoardPackageArtworkPoint(
+            x: pow(1 - t, 3) * start.x + 3 * pow(1 - t, 2) * t * control1.x + 3 * (1 - t) * t * t * control2.x + t * t * t * end.x,
+            y: pow(1 - t, 3) * start.y + 3 * pow(1 - t, 2) * t * control1.y + 3 * (1 - t) * t * t * control2.y + t * t * t * end.y
+        )
+    }
+
+    private func isSimpleClosedContour(_ points: [CGPoint]) -> Bool {
+        guard points.count >= 4, same(points[0], points[points.count - 1]) else { return false }
+        let distinct = Set(points.dropLast().map { "\(Int(($0.x * 1_000_000_000_000).rounded())):\(Int(($0.y * 1_000_000_000_000).rounded()))" })
+        guard distinct.count >= 3 else { return false }
+        let segments = points.count - 1
+        for first in 0..<segments {
+            guard !same(points[first], points[first + 1]) else { return false }
+            for second in (first + 1)..<segments {
+                if second == first + 1 || (first == 0 && second == segments - 1) { continue }
+                guard !intersects(points[first], points[first + 1], points[second], points[second + 1]) else {
+                    return false
+                }
+            }
+        }
+        return abs(signedArea(points)) > epsilon
+    }
+
+    private func signedArea(_ points: [CGPoint]) -> Double {
+        zip(points, points.dropFirst()).reduce(0) { $0 + $1.0.x * $1.1.y - $1.1.x * $1.0.y } / 2
+    }
+
+    private func intersects(_ a: CGPoint, _ b: CGPoint, _ c: CGPoint, _ d: CGPoint) -> Bool {
+        let ac = orientation(a, b, c), ad = orientation(a, b, d)
+        let ca = orientation(c, d, a), cb = orientation(c, d, b)
+        if ((ac > epsilon && ad < -epsilon) || (ac < -epsilon && ad > epsilon)) &&
+            ((ca > epsilon && cb < -epsilon) || (ca < -epsilon && cb > epsilon)) { return true }
+        return (abs(ac) <= epsilon && onSegment(a, b, c)) ||
+            (abs(ad) <= epsilon && onSegment(a, b, d)) ||
+            (abs(ca) <= epsilon && onSegment(c, d, a)) ||
+            (abs(cb) <= epsilon && onSegment(c, d, b))
+    }
+
+    private func orientation(_ a: CGPoint, _ b: CGPoint, _ c: CGPoint) -> Double {
+        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
+    }
+
+    private func onSegment(_ a: CGPoint, _ b: CGPoint, _ point: CGPoint) -> Bool {
+        min(a.x, b.x) - epsilon <= point.x && point.x <= max(a.x, b.x) + epsilon &&
+            min(a.y, b.y) - epsilon <= point.y && point.y <= max(a.y, b.y) + epsilon
+    }
+
+    private func same(_ a: CGPoint, _ b: CGPoint) -> Bool {
+        abs(a.x - b.x) <= epsilon && abs(a.y - b.y) <= epsilon
     }
 }
 
@@ -995,8 +1403,13 @@ private struct BoardPackageSemanticsDocument: Decodable {
 private struct BoardPackageEvidenceDocument: Decodable {
     let schemaVersion: Int
     let boardID: String
+    let checkedAt: String
     let sources: [BoardPackageEvidenceSourceDocument]
+    let fieldEvidence: [String: BoardPackageEvidenceMappingDocument]
+    let holdEvidence: [String: BoardPackageEvidenceMappingDocument]
+    let semanticEvidence: [String: BoardPackageEvidenceMappingDocument]
     let artworkEvidence: [String: BoardPackageEvidenceMappingDocument]
+    let assetEvidence: [String: BoardPackageEvidenceMappingDocument]
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion
@@ -1018,21 +1431,24 @@ private struct BoardPackageEvidenceDocument: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
         boardID = try container.decode(String.self, forKey: .boardID)
-        _ = try container.decode(String.self, forKey: .checkedAt)
+        checkedAt = try container.decode(String.self, forKey: .checkedAt)
         sources = try container.decode([BoardPackageEvidenceSourceDocument].self, forKey: .sources)
-        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .fieldEvidence)
-        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .holdEvidence)
-        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .semanticEvidence)
+        fieldEvidence = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .fieldEvidence)
+        holdEvidence = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .holdEvidence)
+        semanticEvidence = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .semanticEvidence)
         artworkEvidence = try container.decode(
             [String: BoardPackageEvidenceMappingDocument].self,
             forKey: .artworkEvidence
         )
-        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .assetEvidence)
+        assetEvidence = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .assetEvidence)
     }
+
 }
 
 private struct BoardPackageEvidenceSourceDocument: Decodable {
     let id: String
+    let title: String
+    let url: URL
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -1044,8 +1460,8 @@ private struct BoardPackageEvidenceSourceDocument: Decodable {
         try decoder.rejectUnknownKeys(["id", "title", "url"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
-        _ = try container.decode(String.self, forKey: .title)
-        _ = try container.decode(String.self, forKey: .url)
+        title = try container.decode(String.self, forKey: .title)
+        url = try container.decode(URL.self, forKey: .url)
     }
 }
 
@@ -1063,6 +1479,27 @@ private struct BoardPackageEvidenceMappingDocument: Decodable {
         let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
         sourceIDs = try keyedContainer.decode([String].self, forKey: .sourceIDs)
         method = try keyedContainer.decode(String.self, forKey: .method)
+    }
+}
+
+private extension Dictionary where Key == String, Value == BoardPackageEvidenceMappingDocument {
+    func validEvidenceMap(
+        expectedKeys: Set<String>,
+        sourceIDs: Set<String>,
+        allowExternalGeneration: Bool
+    ) -> Bool {
+        guard Set(keys) == expectedKeys else { return false }
+        for mapping in values {
+            let methodAllowed = mapping.method == "manufacturer-measurement" ||
+                mapping.method == "reviewed-human-authored-normalization" ||
+                (allowExternalGeneration && mapping.method == "external-generative-adaptation")
+            guard methodAllowed,
+                  !mapping.sourceIDs.isEmpty,
+                  Set(mapping.sourceIDs).count == mapping.sourceIDs.count,
+                  mapping.sourceIDs.allSatisfy(\.isBoardPackageIdentifier),
+                  Set(mapping.sourceIDs).isSubset(of: sourceIDs) else { return false }
+        }
+        return true
     }
 }
 
