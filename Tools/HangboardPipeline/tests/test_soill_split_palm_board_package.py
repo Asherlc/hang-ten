@@ -75,6 +75,7 @@ def _cubic_joins(
     curves = commands[1:-1]
     assert curves
     assert all(command["command"] == "curve" for command in curves)
+    assert _raw_point(curves[-1], "to") == start
 
     joins = []
     for previous, following in zip(curves, [*curves[1:], curves[0]], strict=True):
