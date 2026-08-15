@@ -263,10 +263,10 @@ def test_package_publication_replaces_a_matching_canonical_package(
     ).read_bytes()
 
 
-def test_package_publication_atomically_updates_an_existing_revision(
+def test_package_publication_rollback_safely_updates_an_existing_revision(
     tmp_path: Path,
 ) -> None:
-    """An approved package can be revised without duplicating its registry entry."""
+    """An approved replacement keeps a recoverable prior package until validation."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     destination = hangboards / "compact-ii"
@@ -285,6 +285,59 @@ def test_package_publication_atomically_updates_an_existing_revision(
     assert json.loads((destination / "board.json").read_text())["subtitle"] == (
         "New candidate revision"
     )
+
+
+def test_repository_reader_waits_during_rollback_safe_package_replacement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A coordinating Workbench reader must not observe the rename-away window."""
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    destination = hangboards / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, destination)
+    _set_package_subtitle(destination, "Previous canonical revision")
+    candidate = tmp_path / "candidate" / "compact-ii"
+    shutil.copytree(_DIRECT_PACKAGE_SOURCE, candidate)
+    _set_package_subtitle(candidate, "New candidate revision")
+    library = RepositoryBoardLibrary(repository_root)
+    actual_replace = workbench_promotion.os.replace
+    previous_moved = Event()
+    release_replacement = Event()
+    reader_finished = Event()
+
+    def coordinated_replace(source: Path, target: Path) -> None:
+        actual_replace(source, target)
+        if Path(source) == destination:
+            previous_moved.set()
+            if not release_replacement.wait(timeout=5):
+                raise TimeoutError("replacement was not released")
+
+    def read_snapshot():
+        try:
+            return library.snapshot()
+        finally:
+            reader_finished.set()
+
+    monkeypatch.setattr(workbench_promotion.os, "replace", coordinated_replace)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        publication = executor.submit(
+            workbench_promotion.publish_package_candidate,
+            repository_root,
+            candidate,
+            board_id="metolius.wood-grips-compact-ii",
+        )
+        assert previous_moved.wait(timeout=2)
+        reader = executor.submit(read_snapshot)
+        reader_was_blocked = not reader_finished.wait(timeout=0.25)
+        release_replacement.set()
+        publication.result(timeout=5)
+        snapshot = reader.result(timeout=5)
+
+    assert reader_was_blocked
+    assert [board.board_id for board in snapshot.boards] == [
+        "metolius.wood-grips-compact-ii"
+    ]
+    assert snapshot.diagnostics == ()
 
 
 def test_failed_existing_package_revision_preserves_package(
