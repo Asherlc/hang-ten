@@ -12,98 +12,6 @@ struct HoldFrame: Hashable {
     }
 }
 
-/// One independently shaped contact surface belonging to a physical hold.
-struct BoardHoldPiece: Identifiable, Hashable {
-    let id: String
-    let holdID: String
-    let frame: CGRect
-    let shape: BoardShape
-
-    func rect(in boardRect: CGRect) -> CGRect {
-        CGRect(
-            x: boardRect.minX + boardRect.width * frame.minX,
-            y: boardRect.minY + boardRect.height * frame.minY,
-            width: boardRect.width * frame.width,
-            height: boardRect.height * frame.height
-        )
-    }
-
-    func path(in boardRect: CGRect) -> Path {
-        shape.path(in: rect(in: boardRect))
-    }
-}
-
-/// The one path source used for normal contact, highlighting, and hit testing.
-struct BoardHoldPathShape: Shape {
-    let pieces: [BoardHoldPiece]
-
-    func path(in rect: CGRect) -> Path {
-        pieces.reduce(into: Path()) { path, piece in
-            path.addPath(piece.path(in: rect))
-        }
-    }
-}
-
-enum BoardShape: Hashable {
-    case roundedRect(cornerRadiusFraction: CGFloat)
-    case path(BoardNormalizedPath)
-
-    func path(in rect: CGRect) -> Path {
-        switch self {
-        case .roundedRect(let fraction):
-            let radius = min(rect.width, rect.height) * fraction
-            return Path(
-                roundedRect: rect,
-                cornerSize: CGSize(width: radius, height: radius)
-            )
-        case .path(let normalizedPath):
-            return normalizedPath.path(in: rect)
-        }
-    }
-}
-
-struct BoardNormalizedPath: Hashable {
-    let commands: [BoardPathCommand]
-
-    func path(in rect: CGRect) -> Path {
-        func point(_ normalized: CGPoint) -> CGPoint {
-            CGPoint(
-                x: rect.minX + rect.width * normalized.x,
-                y: rect.minY + rect.height * normalized.y
-            )
-        }
-
-        var result = Path()
-        for command in commands {
-            switch command {
-            case .move(let destination):
-                result.move(to: point(destination))
-            case .line(let destination):
-                result.addLine(to: point(destination))
-            case let .quad(destination, control):
-                result.addQuadCurve(to: point(destination), control: point(control))
-            case let .curve(destination, control1, control2):
-                result.addCurve(
-                    to: point(destination),
-                    control1: point(control1),
-                    control2: point(control2)
-                )
-            case .close:
-                result.closeSubpath()
-            }
-        }
-        return result
-    }
-}
-
-enum BoardPathCommand: Hashable {
-    case move(CGPoint)
-    case line(CGPoint)
-    case quad(to: CGPoint, control: CGPoint)
-    case curve(to: CGPoint, control1: CGPoint, control2: CGPoint)
-    case close
-}
-
 enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case edge
@@ -132,6 +40,13 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .sloper: .holdTeal
         }
     }
+}
+
+enum HoldCueStyle: String, Codable, Hashable {
+    case outerJug
+    case slot
+    case pinch
+    case rounded
 }
 
 /// Manufacturer routines often name a hold by function instead of by board
@@ -386,27 +301,27 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
-        self.init(
-            id: id,
-            name: name,
-            kind: kind,
-            geometry: [
-                BoardHoldPiece(
-                    id: "\(id)-geometry-0",
-                    holdID: id,
-                    frame: frame.rect,
-                    shape: .roundedRect(cornerRadiusFraction: 0)
-                )
-            ],
-            sizeMillimeters: sizeMillimeters,
-            gripType: gripType,
-            fingerCapacity: fingerCapacity,
-            depthRangeMillimeters: depthRangeMillimeters,
-            features: features
-        )
+        if let fingerCapacity {
+            precondition(
+                Self.validFingerCapacityRange.contains(fingerCapacity),
+                "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
+            )
+        }
+
+        self.id = id
+        self.name = name
+        self.kind = kind
+        self.geometry = []
+        self.gripType = gripType
+        self.fingerCapacity = fingerCapacity
+        self.frame = frame
+        self.sizeMillimeters = sizeMillimeters
+        self.depthRangeMillimeters = depthRangeMillimeters
+        self.features = features
     }
 }
 
@@ -778,7 +693,7 @@ enum BoardCatalog {
 
     static let defaultBoard: TrainingBoard = {
         guard let board = all.first else {
-            fatalError("The bundled board library contains no completed boards.")
+            fatalError("The bundled board catalog contains no boards.")
         }
         return board
     }()
@@ -996,98 +911,31 @@ enum MetoliusCycleBuilder {
     }
 }
 
-/// Board-specific target vocabulary retained by the plan migration seed.
-/// Physical board packages intentionally contain no training-plan semantics.
-extension BoardMappingDefinition {
-    func unknownHoldIDs(on board: TrainingBoard) -> Set<String> {
-        let boardHoldIDs = Set(board.holds.map(\.id))
-        let mappedHoldIDs = Set(semanticHolds.values.flatMap(\.holdIDs))
-        return mappedHoldIDs.subtracting(boardHoldIDs)
-    }
-}
-
-enum LegacyPlanSeedBoardMappings {
-    static let all = [
-        BoardMappingDefinition(
-            boardID: "metolius.wood-grips-compact-ii",
-            semanticHolds: [
-                "edge-19": SemanticHoldMappingDefinition(
-                    holdIDs: ["edge-19-left", "edge-19-right"]
-                ),
-                "edge-29": SemanticHoldMappingDefinition(
-                    holdIDs: ["edge-29-left", "edge-29-right"]
-                ),
-                "flat-slopers": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-flat-left", "sloper-flat-right"]
-                ),
-                "outer-jugs": SemanticHoldMappingDefinition(
-                    holdIDs: ["jug-left", "jug-right"]
-                ),
-                "pocket-19-four": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-four-center"]
-                ),
-                "pocket-19-three": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-three-left", "pocket-19-three-right"]
-                ),
-                "pocket-19-two": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-19-two-left", "pocket-19-two-right"]
-                ),
-                "pocket-29-four": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-four-center"]
-                ),
-                "pocket-29-three": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-three-left", "pocket-29-three-right"]
-                ),
-                "pocket-29-two": SemanticHoldMappingDefinition(
-                    holdIDs: ["pocket-29-two-left", "pocket-29-two-right"]
-                ),
-                "round-sloper": SemanticHoldMappingDefinition(
-                    holdIDs: ["sloper-round-center"]
-                )
-            ]
-        )
-    ]
-
-    static func required(containingSemantic semanticID: String) -> BoardMappingDefinition {
-        let matches = all.filter { $0.semanticHolds[semanticID] != nil }
-        precondition(
-            matches.count == 1,
-            "Expected exactly one plan mapping with \(semanticID) semantics."
-        )
-        return matches[0]
-    }
-}
-
 enum LegacyPlanSeedCatalog {
     static let repeaterStepIDPrefix = "repeaters-grip-"
 
-    private static let exactTargetMapping = LegacyPlanSeedBoardMappings.required(
-        containingSemantic: "edge-19"
-    )
-    private static let exactTargetBoard = requiredBoard(id: exactTargetMapping.boardID)
+    private static let exactTargetBoard = requiredBoard(containingSemantic: "edge-19")
 
-    private static func requiredBoard(id boardID: String) -> TrainingBoard {
-        let matches = BoardCatalog.all.filter { $0.id == boardID }
+    private static func requiredBoard(containingSemantic semanticID: String) -> TrainingBoard {
+        let matches = BoardCatalog.all.filter {
+            BoardCatalog.packageStore.semantics(for: $0.id)[semanticID] != nil
+        }
         precondition(
             matches.count == 1,
-            "Expected exactly one discovered board with ID \(boardID)."
+            "Expected exactly one board package with \(semanticID) semantics."
         )
-        let board = matches[0]
-        let missingHoldIDs = exactTargetMapping.unknownHoldIDs(on: board)
-        precondition(
-            missingHoldIDs.isEmpty,
-            "Plan mapping for board \(boardID) references unknown hold IDs: \(missingHoldIDs.sorted())."
-        )
-        return board
+        return matches[0]
     }
 
     private static func exactTarget(
         _ semanticID: String,
         holdIndex: Int? = nil
     ) -> HoldTarget {
-        guard let holdIDs = exactTargetMapping.semanticHolds[semanticID]?.holdIDs else {
+        guard let holdIDs = BoardCatalog.packageStore.semantics(
+            for: exactTargetBoard.id
+        )[semanticID] else {
             preconditionFailure(
-                "The plan seed mapping is missing \(semanticID) semantics."
+                "The board package is missing \(semanticID) semantics."
             )
         }
         if let holdIndex {
