@@ -121,7 +121,7 @@ def test_tension_whetstone_audited_inventory_and_contact_symmetry() -> None:
             piece.frame.height * PRESENTATION_SIZE[1],
         )
         for actual, expected in zip(actual_frame, expected_frame, strict=True):
-            assert math.isclose(actual, expected, abs_tol=1e-8)
+            assert math.isclose(actual, expected, rel_tol=0.0, abs_tol=1e-8)
 
     # The asymmetric depth labels are translated across otherwise mirrored zones.
     for left_id, right_id in (
