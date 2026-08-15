@@ -43,7 +43,7 @@ def _write_library(root: Path) -> Path:
         "subtitle": "A physical fixture board.",
         "productURL": "https://example.com/fixture.board",
         "dimensions": "20 × 10 cm",
-        "aspectRatio": 2,
+        "aspectRatio": 1774 / 457,
         "presentation": {"assetPath": "assets/primary.png"},
         "holds": [
             {
@@ -283,6 +283,41 @@ def test_checkout_validation_requires_only_the_direct_workbench_layout(
 
     assert validate_hang_ten_checkout(checkout) == checkout.resolve()
     (workbench / "board_geometry.py").unlink()
+
+    with pytest.raises(EditorError, match="Hang Ten checkout"):
+        validate_hang_ten_checkout(checkout)
+
+
+def test_server_rejects_a_symlinked_library_before_resolving_it(
+    tmp_path: Path,
+) -> None:
+    real_library = _write_library(tmp_path / "real")
+    linked_library = tmp_path / "linked-hangboards"
+    linked_library.symlink_to(real_library, target_is_directory=True)
+    httpd = None
+    try:
+        with pytest.raises(EditorError, match="symlink"):
+            httpd = create_server(linked_library, port=0)
+    finally:
+        if httpd is not None:
+            httpd.server_close()
+
+
+def test_checkout_rejects_a_hangboards_symlink_that_escapes_the_checkout(
+    tmp_path: Path,
+) -> None:
+    checkout = tmp_path / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    outside_library = _write_library(tmp_path / "outside")
+    (checkout / "Hangboards").symlink_to(
+        outside_library,
+        target_is_directory=True,
+    )
+    workbench = checkout / "Tools" / "HangboardWorkbench"
+    workbench.mkdir(parents=True)
+    (workbench / "server.py").touch()
+    (workbench / "board_package.py").touch()
+    (workbench / "board_geometry.py").touch()
 
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
