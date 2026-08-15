@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "id": "escape-unlimited-7",
+  "manufacturer": "Escape Climbing",
+  "name": "Unlimited Board",
+  "subtitle": "Continuous sloper above three paired edge tiers.",
+  "productURL": "https://escapeclimbing.com/products/ec72000",
+  "dimensions": "23.75 × 7.25 × 1.875 in",
+  "aspectRatio": 2.0,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "top-sloper-60",
+      "name": "60 mm Top Sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 60,
+      "geometry": [
+        {
+          "frame": {"x": 0.075, "y": 0.251, "width": 0.85, "height": 0.062},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.012, 0.92]},
+              {"command": "curve", "control1": [0, 0.82], "control2": [0.015, 0.45], "to": [0.06, 0.1]},
+              {"command": "curve", "control1": [0.16, 0.01], "control2": [0.33, 0], "to": [0.5, 0]},
+              {"command": "curve", "control1": [0.67, 0], "control2": [0.84, 0.01], "to": [0.94, 0.1]},
+              {"command": "curve", "control1": [0.985, 0.45], "control2": [1, 0.82], "to": [0.988, 0.92]},
+              {"command": "curve", "control1": [0.83, 0.98], "control2": [0.66, 1], "to": [0.5, 1]},
+              {"command": "curve", "control1": [0.34, 1], "control2": [0.17, 0.98], "to": [0.012, 0.92]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-45-left",
+      "name": "Left 45 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 45,
+      "geometry": [
+        {
+          "frame": {"x": 0.075, "y": 0.43864, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.01, 0.0851063829787234], "control2": [0, 0.2872340425531915], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.7446808510638298], "control2": [0.01, 0.9361702127659575], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.3, 0.9468085106382979], "control2": [0.7, 0.9468085106382979], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.99, 0.9361702127659575], "control2": [1, 0.7446808510638298], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.2872340425531915], "control2": [0.99, 0.0851063829787234], "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.025, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-45-right",
+      "name": "Right 45 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 45,
+      "geometry": [
+        {
+          "frame": {"x": 0.517, "y": 0.43864, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.99, 0.0851063829787234], "control2": [1, 0.2872340425531915], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.7446808510638298], "control2": [0.99, 0.9361702127659575], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.7, 0.9468085106382979], "control2": [0.3, 0.9468085106382979], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.01, 0.9361702127659575], "control2": [0, 0.7446808510638298], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.2872340425531915], "control2": [0.01, 0.0851063829787234], "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.28, 0], "control2": [0.72, 0], "to": [0.975, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-20-left",
+      "name": "Left 20 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {"x": 0.075, "y": 0.60264, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.01, 0.0851063829787234], "control2": [0, 0.2872340425531915], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.7446808510638298], "control2": [0.01, 0.9361702127659575], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.3, 0.9468085106382979], "control2": [0.7, 0.9468085106382979], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.99, 0.9361702127659575], "control2": [1, 0.7446808510638298], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.2872340425531915], "control2": [0.99, 0.0851063829787234], "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.025, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-20-right",
+      "name": "Right 20 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {"x": 0.517, "y": 0.60264, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.99, 0.0851063829787234], "control2": [1, 0.2872340425531915], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.7446808510638298], "control2": [0.99, 0.9361702127659575], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.7, 0.9468085106382979], "control2": [0.3, 0.9468085106382979], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.01, 0.9361702127659575], "control2": [0, 0.7446808510638298], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.2872340425531915], "control2": [0.01, 0.0851063829787234], "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.28, 0], "control2": [0.72, 0], "to": [0.975, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15-left",
+      "name": "Left 15 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {"x": 0.075, "y": 0.71464, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.01, 0.0851063829787234], "control2": [0, 0.2872340425531915], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.7446808510638298], "control2": [0.01, 0.9361702127659575], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.3, 0.9468085106382979], "control2": [0.7, 0.9468085106382979], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.99, 0.9361702127659575], "control2": [1, 0.7446808510638298], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.2872340425531915], "control2": [0.99, 0.0851063829787234], "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.72, 0], "control2": [0.28, 0], "to": [0.025, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15-right",
+      "name": "Right 15 mm Edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {"x": 0.517, "y": 0.71464, "width": 0.408, "height": 0.03008},
+          "shape": {
+            "type": "path",
+            "commands": [
+              {"command": "move", "to": [0.975, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.99, 0.0851063829787234], "control2": [1, 0.2872340425531915], "to": [1, 0.5106382978723404]},
+              {"command": "curve", "control1": [1, 0.7446808510638298], "control2": [0.99, 0.9361702127659575], "to": [0.975, 1]},
+              {"command": "curve", "control1": [0.7, 0.9468085106382979], "control2": [0.3, 0.9468085106382979], "to": [0.025, 1]},
+              {"command": "curve", "control1": [0.01, 0.9361702127659575], "control2": [0, 0.7446808510638298], "to": [0, 0.5106382978723404]},
+              {"command": "curve", "control1": [0, 0.2872340425531915], "control2": [0.01, 0.0851063829787234], "to": [0.025, 0.0425531914893617]},
+              {"command": "curve", "control1": [0.28, 0], "control2": [0.72, 0], "to": [0.975, 0.0425531914893617]},
+              {"command": "close"}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
