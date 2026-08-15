@@ -4,9 +4,9 @@ from collections import Counter
 import json
 import math
 from pathlib import Path
+import struct
 
 import pytest
-from PIL import Image
 
 from hangboard_vectorizer.board_catalog import load_board_package
 
@@ -57,6 +57,15 @@ def _points(command: object) -> tuple[tuple[float, float], ...]:
     )
 
 
+def _primary_image_dimensions() -> tuple[int, int]:
+    header = (PACKAGE_ROOT / "assets" / "primary.png").read_bytes()[:24]
+
+    assert header[:8] == b"\x89PNG\r\n\x1a\n"
+    assert header[12:16] == b"IHDR"
+
+    return struct.unpack(">II", header[16:24])
+
+
 def _assert_exact_global_mirror(left: object, right: object) -> None:
     assert right.frame.x == pytest.approx(
         1 - left.frame.x - left.frame.width, abs=1e-12
@@ -82,11 +91,12 @@ def test_tension_honestone_geometry_uses_the_full_primary_canvas() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
 
-    with Image.open(PACKAGE_ROOT / "assets" / "primary.png") as presentation:
-        width, height = presentation.size
+    width, height = _primary_image_dimensions()
 
     assert (width, height) == (1672, 941)
-    assert board.facts["aspectRatio"] == 25 / 6
+    assert math.isclose(
+        board.facts["aspectRatio"], width / height, rel_tol=0, abs_tol=1e-12
+    )
 
     actual_bounds = {
         hold_id: (
@@ -105,12 +115,16 @@ def test_tension_honestone_geometry_uses_the_full_primary_canvas() -> None:
 def test_tension_honestone_preserves_audited_contacts_and_asymmetric_zones() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    width, height = _primary_image_dimensions()
 
     assert board.id == "tension.honestone"
     assert board.manufacturer == "Tension Climbing"
     assert board.name == "Honestone"
     assert board.facts["dimensions"] == "25 × 6 × 2.5 in"
-    assert math.isclose(board.facts["aspectRatio"], 25 / 6, abs_tol=1e-12)
+    assert (width, height) == (1672, 941)
+    assert math.isclose(
+        board.facts["aspectRatio"], width / height, rel_tol=0, abs_tol=1e-12
+    )
     assert board.presentation_asset_path == "assets/primary.png"
     assert tuple(
         (hold.id, hold.kind, hold.size_millimeters) for hold in board.holds
