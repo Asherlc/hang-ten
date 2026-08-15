@@ -103,9 +103,11 @@ def _semantic_routine_resolution_check(
 ) -> ValidationCheck:
     """Prove each deterministic semantic target resolves to an approved Stage 4 hold."""
     try:
-        known_stage4_hold_ids = set(
-            _keyed_regions(_regions(stage4, "Stage 4"), "Stage 4")
-        )
+        stage4_regions = _regions(stage4, "Stage 4")
+        _keyed_regions(stage4_regions, "Stage 4")
+        known_stage4_hold_ids = {
+            _physical_hold_id(region, "Stage 4") for region in stage4_regions
+        }
         semantic_holds = _semantic_holds(regions)
         if not semantic_holds:
             raise ValueError("no semantic routine mappings were derived")
@@ -304,12 +306,14 @@ def _merge_regions(
             width,
             height,
         )
+        metadata = _object(region.get("metadata", {}), f"metadata for {key}")
         result.append(
             {
                 "id": region["id"],
-                "key": key,
+                "key": _physical_hold_id(region, "Stage 2"),
+                "regionKey": key,
                 "kind": kind,
-                "metadata": _object(region.get("metadata", {}), f"metadata for {key}"),
+                "metadata": metadata,
                 "path": path,
                 "frame": (
                     left / width,
@@ -329,6 +333,7 @@ def _semantic_holds(
     regions: Iterable[Mapping[str, Any]],
 ) -> dict[str, tuple[str, ...]]:
     result: dict[str, list[str]] = {}
+    semantic_by_hold_id: dict[str, str] = {}
     for region in regions:
         key = _string(region["key"], "hold key")
         kind = _string(region["kind"], "hold kind")
@@ -353,8 +358,20 @@ def _semantic_holds(
             semantic = f"pocket-{depth}-{word}"
         else:
             raise ValueError(f"cannot derive a semantic mapping for {key}")
-        result.setdefault(semantic, []).append(key)
+        previous = semantic_by_hold_id.setdefault(key, semantic)
+        if previous != semantic:
+            raise ValueError(f"physical hold {key} has inconsistent semantic metadata")
+        hold_ids = result.setdefault(semantic, [])
+        if key not in hold_ids:
+            hold_ids.append(key)
     return {key: tuple(value) for key, value in result.items()}
+
+
+def _physical_hold_id(region: Mapping[str, Any], label: str) -> str:
+    region_key = _string(region.get("key"), f"{label} region key")
+    metadata = _object(region.get("metadata", {}), f"metadata for {region_key}")
+    value = metadata.get("holdID", region_key)
+    return _string(value, f"physical hold ID for {region_key}")
 
 
 def _regions(
