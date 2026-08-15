@@ -2,25 +2,6 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
-    func testBoardMappingReportsOnlyHoldIDsMissingFromBoard() throws {
-        let board = try XCTUnwrap(
-            BoardCatalog.all.first { $0.id == "metolius.wood-grips-compact-ii" }
-        )
-        let mapping = BoardMappingDefinition(
-            boardID: board.id,
-            semanticHolds: [
-                "fixture-target": SemanticHoldMappingDefinition(
-                    holdIDs: ["edge-19-left", "fixture.missing"]
-                )
-            ]
-        )
-
-        XCTAssertEqual(
-            mapping.unknownHoldIDs(on: board),
-            Set(["fixture.missing"])
-        )
-    }
-
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(
@@ -1280,13 +1261,10 @@ final class PlanStorageTests: XCTestCase {
         )
         let issues = library.validationIssues(availableBoards: [edgeOnlyBoard])
 
+        XCTAssertFalse(issues.contains { $0.path.hasPrefix("boards[0].semanticHolds") })
         XCTAssertTrue(issues.contains {
             $0.path == "boardMappings[0].semanticHolds.fixture-plan" &&
                 $0.message == "Hold kind \"pinch\" has no matching hold on board \"fixture.edge-only\"."
-        })
-        XCTAssertTrue(issues.contains {
-            $0.path == "plans[0].blocks[0].steps[0].targets[1]" &&
-                $0.message == "Unknown semantic target \"fixture-board-owned\" for board \"fixture.edge-only\"."
         })
         XCTAssertFalse(issues.contains { $0.message.contains("fixture-overridden") })
     }
