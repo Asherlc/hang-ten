@@ -207,13 +207,29 @@ def test_load_failures_do_not_expose_library_paths(tmp_path: Path) -> None:
     assert str(library) not in json.dumps(result)
 
 
-def test_a_clean_checkout_lists_and_opens_the_migrated_compact_ii_package(
+def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
     tmp_path: Path,
 ) -> None:
     checkout = tmp_path / "checkout"
     library = checkout / "Hangboards"
     editor_root = checkout / "Tools" / "HangboardWorkbench"
     shutil.copytree(REPOSITORY_ROOT / "Hangboards", library)
+    second_package = library / "fixture-second-completed"
+    shutil.copytree(
+        library / "metolius-wood-grips-compact-ii",
+        second_package,
+    )
+    second_board_path = second_package / "board.json"
+    second_board = json.loads(second_board_path.read_text(encoding="utf-8"))
+    second_board.update(
+        id="fixture.second-completed",
+        manufacturer="Fixture Maker",
+        name="Second Completed Board",
+    )
+    second_board_path.write_text(
+        json.dumps(second_board, indent=2) + "\n",
+        encoding="utf-8",
+    )
     shutil.copytree(
         WORKBENCH_ROOT,
         editor_root,
@@ -236,8 +252,22 @@ thread.start()
 base = f'http://{httpd.server_address[0]}:{httpd.server_address[1]}'
 try:
     listed = json.loads(urlopen(base + '/api/boards').read())
-    assert [board['boardId'] for board in listed['boards']] == ['metolius.wood-grips-compact-ii']
-    opened = json.loads(urlopen(base + listed['boards'][0]['href']).read())
+    completed_packages = [
+        child
+        for child in (root / 'Hangboards').iterdir()
+        if child.is_dir() and (child / 'board.json').is_file()
+    ]
+    expected_ids = sorted(
+        json.loads((package / 'board.json').read_text())['id']
+        for package in completed_packages
+    )
+    assert sorted(board['boardId'] for board in listed['boards']) == expected_ids
+    compact_ii = next(
+        board
+        for board in listed['boards']
+        if board['boardId'] == 'metolius.wood-grips-compact-ii'
+    )
+    opened = json.loads(urlopen(base + compact_ii['href']).read())
     assert len(opened['board']['document']['regions']) == 19
 finally:
     httpd.shutdown()
