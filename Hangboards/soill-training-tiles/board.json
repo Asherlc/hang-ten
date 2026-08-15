@@ -5,30 +5,28 @@
   "name": "Training Tiles • So iLL x Meagan Martin",
   "subtitle": "Two independent urethane training tiles.",
   "productURL": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-  "dimensions": "Each tile: approximately 14 × 8 in",
+  "dimensions": "Not published by manufacturer",
   "aspectRatio": 1.5,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
     {
-      "id": "pocket-left",
-      "name": "Left 3 in pocket",
-      "kind": "pocket",
+      "id": "jug-left",
+      "name": "Left jug",
+      "kind": "jug",
       "geometry": [
         {
-          "frame": {"x": 0.0319010416666667, "y": 0.2841796875, "width": 0.1373697916666667, "height": 0.1494140625},
+          "frame": {"x": 0.11, "y": 0.315, "width": 0.045, "height": 0.08},
           "shape": {
             "type": "path",
             "commands": [
-              {"command": "move", "to": [0.7, 0.02]},
-              {"command": "curve", "control1": [0.42, 0], "control2": [0.11, 0.09], "to": [0.02, 0.35]},
-              {"command": "curve", "control1": [0, 0.6], "control2": [0.08, 0.84], "to": [0.28, 0.95]},
-              {"command": "curve", "control1": [0.5, 1], "control2": [0.78, 0.94], "to": [0.96, 0.75]},
-              {"command": "curve", "control1": [1, 0.65], "control2": [0.99, 0.53], "to": [0.93, 0.48]},
-              {"command": "curve", "control1": [0.84, 0.62], "control2": [0.75, 0.72], "to": [0.63, 0.74]},
-              {"command": "curve", "control1": [0.52, 0.73], "control2": [0.43, 0.63], "to": [0.42, 0.49]},
-              {"command": "curve", "control1": [0.41, 0.3], "control2": [0.5, 0.1], "to": [0.7, 0.02]},
+              {"command": "move", "to": [0.5, 0.01]},
+              {"command": "curve", "control1": [0.75, 0.01], "control2": [0.95, 0.21], "to": [0.99, 0.46]},
+              {"command": "curve", "control1": [1, 0.67], "control2": [0.88, 0.9], "to": [0.67, 0.98]},
+              {"command": "curve", "control1": [0.55, 1], "control2": [0.35, 0.99], "to": [0.22, 0.91]},
+              {"command": "curve", "control1": [0.05, 0.8], "control2": [0, 0.62], "to": [0.02, 0.43]},
+              {"command": "curve", "control1": [0.06, 0.2], "control2": [0.25, 0.02], "to": [0.5, 0.01]},
               {"command": "close"}
             ]
           },
@@ -37,23 +35,21 @@
       ]
     },
     {
-      "id": "pocket-right",
-      "name": "Right 3 in pocket",
-      "kind": "pocket",
+      "id": "jug-right",
+      "name": "Right jug",
+      "kind": "jug",
       "geometry": [
         {
-          "frame": {"x": 0.8307291666666666, "y": 0.2841796875, "width": 0.1373697916666667, "height": 0.1494140625},
+          "frame": {"x": 0.845, "y": 0.315, "width": 0.045, "height": 0.08},
           "shape": {
             "type": "path",
             "commands": [
-              {"command": "move", "to": [0.3, 0.02]},
-              {"command": "curve", "control1": [0.58, 0], "control2": [0.89, 0.09], "to": [0.98, 0.35]},
-              {"command": "curve", "control1": [1, 0.6], "control2": [0.92, 0.84], "to": [0.72, 0.95]},
-              {"command": "curve", "control1": [0.5, 1], "control2": [0.22, 0.94], "to": [0.04, 0.75]},
-              {"command": "curve", "control1": [0, 0.65], "control2": [0.01, 0.53], "to": [0.07, 0.48]},
-              {"command": "curve", "control1": [0.16, 0.62], "control2": [0.25, 0.72], "to": [0.37, 0.74]},
-              {"command": "curve", "control1": [0.48, 0.73], "control2": [0.57, 0.63], "to": [0.58, 0.49]},
-              {"command": "curve", "control1": [0.59, 0.3], "control2": [0.5, 0.1], "to": [0.3, 0.02]},
+              {"command": "move", "to": [0.5, 0.01]},
+              {"command": "curve", "control1": [0.25, 0.01], "control2": [0.05, 0.21], "to": [0.01, 0.46]},
+              {"command": "curve", "control1": [0, 0.67], "control2": [0.12, 0.9], "to": [0.33, 0.98]},
+              {"command": "curve", "control1": [0.45, 1], "control2": [0.65, 0.99], "to": [0.78, 0.91]},
+              {"command": "curve", "control1": [0.95, 0.8], "control2": [1, 0.62], "to": [0.98, 0.43]},
+              {"command": "curve", "control1": [0.94, 0.2], "control2": [0.75, 0.02], "to": [0.5, 0.01]},
               {"command": "close"}
             ]
           },

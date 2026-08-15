@@ -4,6 +4,7 @@ from collections import Counter
 import json
 import math
 from pathlib import Path
+import struct
 
 from hangboard_vectorizer.board_catalog import load_board_package
 
@@ -11,8 +12,8 @@ from hangboard_vectorizer.board_catalog import load_board_package
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "soill-training-tiles"
 EXPECTED_HOLDS = (
-    ("pocket-left", "pocket"),
-    ("pocket-right", "pocket"),
+    ("jug-left", "jug"),
+    ("jug-right", "jug"),
     ("top-sloper-outer-left", "sloper"),
     ("top-sloper-outer-right", "sloper"),
     ("top-sloper-inner-left", "sloper"),
@@ -29,7 +30,7 @@ EXPECTED_HOLDS = (
     ("bottom-flat-edge-inner-right", "edge"),
 )
 MIRRORED_PAIRS = (
-    ("pocket-left", "pocket-right"),
+    ("jug-left", "jug-right"),
     ("top-sloper-outer-left", "top-sloper-outer-right"),
     ("top-sloper-inner-left", "top-sloper-inner-right"),
     ("middle-positive-edge-outer-left", "middle-positive-edge-outer-right"),
@@ -55,8 +56,15 @@ def test_soill_training_tiles_preserve_sixteen_discrete_mirrored_contacts() -> N
     assert board.id == "soill.training-tiles"
     assert board.manufacturer == "So iLL"
     assert board.name == "Training Tiles • So iLL x Meagan Martin"
-    assert board.facts["dimensions"] == "Each tile: approximately 14 × 8 in"
-    assert math.isclose(board.facts["aspectRatio"], 1.5, abs_tol=1e-12)
+    assert board.facts["dimensions"] == "Not published by manufacturer"
+    primary = PACKAGE_ROOT / "assets" / "primary.png"
+    png = primary.read_bytes()
+    assert png[:8] == b"\x89PNG\r\n\x1a\n"
+    assert png[12:16] == b"IHDR"
+    width, height = struct.unpack(">II", png[16:24])
+    assert math.isclose(
+        board.facts["aspectRatio"], width / height, abs_tol=1e-12
+    )
     assert board.presentation_asset_path == "assets/primary.png"
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"assets", "board.json"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {
@@ -67,7 +75,7 @@ def test_soill_training_tiles_preserve_sixteen_discrete_mirrored_contacts() -> N
     assert Counter(hold.kind for hold in board.holds) == {
         "edge": 10,
         "sloper": 4,
-        "pocket": 2,
+        "jug": 2,
     }
 
     for hold in board.holds:
@@ -86,12 +94,12 @@ def test_soill_training_tiles_preserve_sixteen_discrete_mirrored_contacts() -> N
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
         assert piece.frame.width * piece.frame.height > 0
 
-    assert holds["pocket-left"].geometry[0].treatment == {
+    assert holds["jug-left"].geometry[0].treatment == {
         "type": "recess",
         "rimInsetFraction": 0.1,
         "depth": "deep",
     }
-    assert holds["pocket-right"].geometry[0].treatment == {
+    assert holds["jug-right"].geometry[0].treatment == {
         "type": "recess",
         "rimInsetFraction": 0.1,
         "depth": "deep",
@@ -106,6 +114,14 @@ def test_soill_training_tiles_preserve_sixteen_discrete_mirrored_contacts() -> N
             "middle-positive-edge-inner-right",
         )
     )
+
+    left_jug_frame = holds["jug-left"].geometry[0].frame
+    assert 0.10 <= left_jug_frame.x <= 0.16
+    assert 0.30 <= left_jug_frame.y <= 0.36
+    assert left_jug_frame.width < 0.07
+    assert left_jug_frame.height < 0.10
+    assert left_jug_frame.x <= 0.132 <= left_jug_frame.x + left_jug_frame.width
+    assert left_jug_frame.y <= 0.355 <= left_jug_frame.y + left_jug_frame.height
     assert all(
         holds[hold_id].geometry[0].treatment == {"type": "surface"}
         for hold_id in (
