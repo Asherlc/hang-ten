@@ -54,6 +54,110 @@ COMPACT_HOLDS = (
     ("edge-19-right", "Right 19 mm edge"),
 )
 
+COMPACT_HOLD_BOUNDS = {
+    "jug-left": (0.000, 0.000, 0.165, 0.255),
+    "sloper-flat-left": (0.158, 0.035, 0.190, 0.128),
+    "sloper-round-center": (0.352, 0.035, 0.296, 0.128),
+    "sloper-flat-right": (0.652, 0.035, 0.190, 0.128),
+    "jug-right": (0.835, 0.000, 0.165, 0.255),
+    "edge-29-left": (0.021, 0.245, 0.165, 0.270),
+    "pocket-29-three-left": (0.199, 0.365, 0.109, 0.148),
+    "pocket-29-two-left": (0.328, 0.370, 0.077, 0.147),
+    "pocket-29-four-center": (0.425, 0.365, 0.150, 0.148),
+    "pocket-29-two-right": (0.595, 0.370, 0.077, 0.147),
+    "pocket-29-three-right": (0.692, 0.365, 0.109, 0.148),
+    "edge-29-right": (0.814, 0.245, 0.165, 0.270),
+    "edge-19-left": (0.035, 0.620, 0.160, 0.245),
+    "pocket-19-three-left": (0.216, 0.733, 0.104, 0.140),
+    "pocket-19-three-right": (0.680, 0.733, 0.104, 0.140),
+    "pocket-19-two-left": (0.336, 0.733, 0.073, 0.140),
+    "pocket-19-two-right": (0.591, 0.733, 0.073, 0.140),
+    "pocket-19-four-center": (0.425, 0.733, 0.150, 0.140),
+    "edge-19-right": (0.805, 0.620, 0.160, 0.245),
+}
+
+COMPACT_HOLD_PHYSICAL_FACTS = {
+    "jug-left": ("jug", None, "openHand", 4, ("jug",)),
+    "sloper-flat-left": ("sloper", 56, "sloper", 4, ("largeSlope",)),
+    "sloper-round-center": ("sloper", 56, "sloper", 4, ("roundSloper",)),
+    "sloper-flat-right": ("sloper", 56, "sloper", 4, ("largeSlope",)),
+    "jug-right": ("jug", None, "openHand", 4, ("jug",)),
+    "edge-29-left": ("edge", 29, "openHand", 4, ("largeEdge",)),
+    "pocket-29-three-left": (
+        "pocket",
+        29,
+        "threeFingerPocket",
+        3,
+        ("pocket", "threeFingerPocket"),
+    ),
+    "pocket-29-two-left": (
+        "pocket",
+        29,
+        "twoFingerPocket",
+        2,
+        ("pocket", "twoFingerPocket"),
+    ),
+    "pocket-29-four-center": (
+        "pocket",
+        29,
+        "fourFingerPocket",
+        4,
+        ("pocket", "fourFingerPocket"),
+    ),
+    "pocket-29-two-right": (
+        "pocket",
+        29,
+        "twoFingerPocket",
+        2,
+        ("pocket", "twoFingerPocket"),
+    ),
+    "pocket-29-three-right": (
+        "pocket",
+        29,
+        "threeFingerPocket",
+        3,
+        ("pocket", "threeFingerPocket"),
+    ),
+    "edge-29-right": ("edge", 29, "openHand", 4, ("largeEdge",)),
+    "edge-19-left": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
+    "pocket-19-three-left": (
+        "pocket",
+        19,
+        "threeFingerPocket",
+        3,
+        ("pocket", "threeFingerPocket"),
+    ),
+    "pocket-19-three-right": (
+        "pocket",
+        19,
+        "threeFingerPocket",
+        3,
+        ("pocket", "threeFingerPocket"),
+    ),
+    "pocket-19-two-left": (
+        "pocket",
+        19,
+        "twoFingerPocket",
+        2,
+        ("pocket", "twoFingerPocket"),
+    ),
+    "pocket-19-two-right": (
+        "pocket",
+        19,
+        "twoFingerPocket",
+        2,
+        ("pocket", "twoFingerPocket"),
+    ),
+    "pocket-19-four-center": (
+        "pocket",
+        19,
+        "fourFingerPocket",
+        4,
+        ("pocket", "fourFingerPocket"),
+    ),
+    "edge-19-right": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
+}
+
 COMPACT_SEMANTICS = {
     "edge-19": ("edge-19-left", "edge-19-right"),
     "edge-29": ("edge-29-left", "edge-29-right"),
@@ -79,6 +183,19 @@ SOURCE_PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".webp", ".heic"}
 
 def _frame_tuple(frame: object) -> tuple[float, float, float, float]:
     return (frame.x, frame.y, frame.width, frame.height)  # type: ignore[attr-defined]
+
+
+def _embedded_geometry_bounds(
+    geometry: object,
+) -> tuple[float, float, float, float] | None:
+    if not isinstance(geometry, list) or not geometry:
+        return None
+    frames = [piece["frame"] for piece in geometry]
+    min_x = min(frame["x"] for frame in frames)
+    min_y = min(frame["y"] for frame in frames)
+    max_x = max(frame["x"] + frame["width"] for frame in frames)
+    max_y = max(frame["y"] + frame["height"] for frame in frames)
+    return (min_x, min_y, max_x - min_x, max_y - min_y)
 
 
 def test_registry_contains_only_the_fully_officially_sourced_runtime_board() -> None:
@@ -192,6 +309,77 @@ def test_every_registered_package_has_one_presentation_and_complete_evidence() -
         assert len(source_photos) <= 1
         assert all(Path(path).suffix.lower() in SOURCE_PHOTO_EXTENSIONS for path in source_photos)
         assert set(package.evidence.asset_evidence) == asset_paths
+
+
+def test_compact_board_embeds_each_legacy_piece_under_its_unique_physical_hold(
+) -> None:
+    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    artwork = json.loads((COMPACT_ROOT / "artwork.json").read_text(encoding="utf-8"))
+    holds = board["holds"]
+    hold_ids = [hold["id"] for hold in holds]
+    pieces_by_hold: dict[str, list[dict[str, object]]] = {}
+    piece_ids: list[str] = []
+
+    for source_piece in artwork["holdPieces"]:
+        piece = dict(source_piece)
+        piece_ids.append(piece.pop("id"))
+        hold_id = piece.pop("holdID")
+        pieces_by_hold.setdefault(hold_id, []).append(piece)
+
+    assert board["id"] == artwork["boardID"] == "metolius.wood-grips-compact-ii"
+    assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
+    assert len(hold_ids) == len(set(hold_ids))
+    assert len(piece_ids) == len(set(piece_ids))
+    assert set(hold_ids) == set(pieces_by_hold)
+    assert all(hold.get("geometry") for hold in holds)
+    assert {
+        hold["id"]: hold["geometry"]
+        for hold in holds
+    } == pieces_by_hold
+
+
+def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> None:
+    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = board["holds"]
+    retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
+    supported_fields = {
+        "id",
+        "name",
+        "kind",
+        "geometry",
+        "sizeMillimeters",
+        "depthRangeMillimeters",
+        "gripType",
+        "fingerCapacity",
+        "features",
+    }
+
+    assert all(not (set(hold) & retired_fields) for hold in holds)
+    assert all({"id", "name", "kind", "geometry"} <= set(hold) for hold in holds)
+    assert all(set(hold) <= supported_fields for hold in holds)
+    assert all("depthRangeMillimeters" not in hold for hold in holds)
+    assert {
+        hold["id"]: (
+            hold.get("kind"),
+            hold.get("sizeMillimeters"),
+            hold.get("gripType"),
+            hold.get("fingerCapacity"),
+            tuple(hold.get("features", ())),
+        )
+        for hold in holds
+    } == COMPACT_HOLD_PHYSICAL_FACTS
+
+
+def test_compact_hold_bounds_are_derived_from_embedded_piece_unions() -> None:
+    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    bounds_by_hold = {
+        hold["id"]: _embedded_geometry_bounds(hold.get("geometry"))
+        for hold in board["holds"]
+    }
+
+    assert set(bounds_by_hold) == set(COMPACT_HOLD_BOUNDS)
+    for hold_id, expected_bounds in COMPACT_HOLD_BOUNDS.items():
+        assert bounds_by_hold[hold_id] == pytest.approx(expected_bounds)
 
 
 def test_compact_package_uses_the_official_hold_inventory_semantics_and_artwork() -> None:
