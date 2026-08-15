@@ -641,34 +641,7 @@ enum PlanLibraryValidator {
             }
         }
 
-        var mappingByBoardID: [String: BoardMappingDefinition] = [:]
-        var semanticMappingPathByBoardID: [String: [String: String]] = [:]
-        for (index, board) in availableBoards.enumerated() where mappingByBoardID[board.id] == nil {
-            mappingByBoardID[board.id] = BoardMappingDefinition(
-                boardID: board.id,
-                semanticHolds: board.semanticHolds
-            )
-            semanticMappingPathByBoardID[board.id] = Dictionary(
-                uniqueKeysWithValues: board.semanticHolds.keys.map {
-                    ($0, "boards[\(index)].semanticHolds.\($0)")
-                }
-            )
-        }
-        for (boardID, mapping) in mappingByBoardID {
-            guard let board = boardByID[boardID]?.first else { continue }
-            for (semanticID, target) in mapping.semanticHolds {
-                guard let kind = target.kind,
-                      !board.holds.contains(where: { $0.kind == kind }) else {
-                    continue
-                }
-                issues.append(
-                    PlanValidationIssue(
-                        path: semanticMappingPathByBoardID[boardID]?[semanticID] ?? "semanticHolds.\(semanticID)",
-                        message: "Hold kind \"\(kind.rawValue)\" has no matching hold on board \"\(boardID)\"."
-                    )
-                )
-            }
-        }
+        let mappingByBoardID = planMappingByBoardID
 
         var blockByID: [String: WorkoutBlockDefinition] = [:]
         for (index, block) in library.blocks.enumerated() {
@@ -1041,7 +1014,7 @@ enum PlanLibraryValidator {
                 let acceptedFeatures = [feature] + fallbacks
                 let hasCompatibleBoard = boardIDs.contains { boardID in
                     boardByID[boardID]?.first?.holds.contains { hold in
-                        hold.features.contains { acceptedFeatures.contains($0) }
+                        hold.features?.contains { acceptedFeatures.contains($0) } == true
                     } == true
                 }
                 if !hasCompatibleBoard {
@@ -1117,10 +1090,7 @@ struct PlanDefinitionResolver {
 
         let board = availableBoards.first { $0.id == definition.boardID }
             ?? BoardCatalog.board(for: definition.boardID)
-        let mapping = BoardMappingDefinition(
-            boardID: board.id,
-            semanticHolds: board.semanticHolds
-        )
+        let mapping = library.boardMappings.first { $0.boardID == board.id }
 
         for reference in definition.blocks {
             guard let block = blocks[reference.blockID] else {
@@ -1344,23 +1314,8 @@ struct PlanLibraryStore {
         builtInDefinition definition: PlanLibraryDefinition,
         packageStore: BoardPackageStore = BoardCatalog.packageStore
     ) throws {
-        let packageMappings = packageStore.boards.map { board in
-            BoardMappingDefinition(
-                boardID: board.id,
-                semanticHolds: packageStore.semantics(for: board.id).mapValues {
-                    SemanticHoldMappingDefinition(holdIDs: $0)
-                }
-            )
-        }
-        let packageBackedDefinition = PlanLibraryDefinition(
-            schemaVersion: definition.schemaVersion,
-            metadata: definition.metadata,
-            boardMappings: packageMappings,
-            blocks: definition.blocks,
-            plans: definition.plans
-        )
         try self.init(
-            definition: packageBackedDefinition,
+            definition: definition,
             availableBoards: packageStore.boards
         )
     }
@@ -1447,14 +1402,7 @@ private final class PlanLibraryBundleToken {}
 /// compare the resolved plans against the legacy catalog while the storage
 /// format is introduced, and avoids silently changing any routine timing.
 enum BuiltInPlanLibraryDefinition {
-    private static let boardMappings: [BoardMappingDefinition] = BoardCatalog.all.map { board in
-        BoardMappingDefinition(
-            boardID: board.id,
-            semanticHolds: BoardCatalog.packageStore.semantics(for: board.id).mapValues {
-                SemanticHoldMappingDefinition(holdIDs: $0)
-            }
-        )
-    }
+    private static let boardMappings = LegacyPlanSeedBoardMappings.all
 
     static let document: PlanLibraryDefinition = makeDocument()
 

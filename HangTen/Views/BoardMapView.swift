@@ -9,25 +9,17 @@ struct BoardMapView: View {
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
-        GeometryReader { proxy in
+        GeometryReader { _ in
             ZStack {
                 BoardPresentationImage(board: board)
 
                 ForEach(board.holds) { hold in
-                    let frame = hold.frame.rect
-                    BoardHoldOverlay(
+                    PhysicalHoldVisual(
                         hold: hold,
                         isHighlighted: highlightedHoldIDs.contains(hold.id),
                         highlightMode: highlightMode,
+                        showsLabel: showsLabels,
                         onTap: onHoldTap
-                    )
-                    .frame(
-                        width: proxy.size.width * frame.width,
-                        height: proxy.size.height * frame.height
-                    )
-                    .position(
-                        x: proxy.size.width * frame.midX,
-                        y: proxy.size.height * frame.midY
                     )
                 }
             }
@@ -52,48 +44,61 @@ struct BoardPresentationImage: View {
     }
 }
 
-private struct BoardHoldOverlay: View {
+private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
+    let showsLabel: Bool
     let onTap: ((BoardHold) -> Void)?
 
     var body: some View {
+        let shape = BoardHoldPathShape(pieces: hold.geometry)
         ZStack {
-            if isHighlighted {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(highlightFill.opacity(0.38))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke(highlightStroke, lineWidth: 2)
-                    }
-            }
-
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    onTap?(hold)
+            shape
+                .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
+                .overlay {
+                    shape.stroke(
+                        isHighlighted ? highlightStroke : Color.clear,
+                        lineWidth: 2
+                    )
                 }
-                .accessibilityLabel(hold.name)
-                .accessibilityAddTraits(.isButton)
+
+            if showsLabel {
+                GeometryReader { proxy in
+                    Text(hold.name)
+                        .font(.system(size: 10, weight: .heavy, design: .rounded))
+                        .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
+                        .minimumScaleFactor(0.6)
+                        .frame(
+                            width: max(1, hold.frame.width * proxy.size.width),
+                            height: max(1, hold.frame.height * proxy.size.height)
+                        )
+                        .position(
+                            x: hold.frame.rect.midX * proxy.size.width,
+                            y: hold.frame.rect.midY * proxy.size.height
+                        )
+                }
+            }
         }
+        .contentShape(shape)
+        .onTapGesture {
+            onTap?(hold)
+        }
+        .accessibilityLabel(hold.name)
+        .accessibilityAddTraits(.isButton)
     }
 
     private var highlightFill: Color {
         switch highlightMode {
-        case .active:
-            .holdActive
-        case .preview:
-            .restBlue
+        case .active: .holdActive
+        case .preview: .restBlue
         }
     }
 
     private var highlightStroke: Color {
         switch highlightMode {
-        case .active:
-            .holdActiveDeep
-        case .preview:
-            .restBlueDeep
+        case .active: .holdActiveDeep
+        case .preview: .restBlueDeep
         }
     }
 }

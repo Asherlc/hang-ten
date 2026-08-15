@@ -354,7 +354,9 @@ enum CustomRoutineValidator {
             return board.holds.contains { $0.kind == kind }
         case let .feature(feature, fallbacks):
             let acceptedFeatures = Set([feature] + fallbacks)
-            return board.holds.contains { !$0.features.isDisjoint(with: acceptedFeatures) }
+            return board.holds.contains {
+                !($0.features ?? []).isDisjoint(with: acceptedFeatures)
+            }
         }
     }
 }

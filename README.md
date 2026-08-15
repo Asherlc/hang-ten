@@ -5,14 +5,15 @@ athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
 The first supported board is the Metolius Wood Grips Compact II. Its package
-ships one source-backed `assets/primary.png` board visual. Factual normalized
-hold frames in `board.json` drive the generic tap, active-highlight, and
-preview-overlay behavior, so interaction stays aligned to the packaged image.
+ships one source-backed `assets/primary.png` board image and exact normalized
+contact geometry in `board.json`. The same piece paths render inactive and
+active overlays and define hit testing, so interaction cannot drift away from
+the packaged image.
 
 ## Included
 
-- A reusable hangboard package contract with normalized hold frames, mirrored
-  pairs, dimensional metadata, and generic image overlays.
+- A directory-discovered, single-file hangboard schema with normalized
+  multi-piece geometry, optional physical metadata, and exact-path highlights.
 - An audited Compact II hold map covering its jugs, flat and round slopers,
   29/19 mm edges, and 2-, 3-, and 4-finger pockets.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
@@ -38,9 +39,10 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in `Hangboards/catalog.json` and flat
-`Hangboards/<board-folder>/` packages. The app loads the staged package bytes
-from its resource bundle; no Swift board catalog is generated or hand-authored.
+and hold metadata lives in directly discovered
+`Hangboards/<board-folder>/board.json` packages. The app loads the staged
+package bytes from its resource bundle; no registry or Swift board catalog is
+generated or hand-authored.
 
 ## Run
 
@@ -123,18 +125,29 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
-The Hangboard Workbench owns direct package validation and editing. Check the
-canonical board library with its focused test suite:
+Hangboard Workbench owns local package discovery, geometry editing, and atomic
+`board.json` saves. Start it from a checkout with:
 
 ```sh
-uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests/test_board_package.py
+python3 Tools/HangboardWorkbench/server.py
 ```
 
-The registry lists only complete source-backed packages with exactly an `id`
-and flat `path`; Git branches are the in-progress mechanism. Unregistered
-image candidates contain only `assets/primary.png` and are not app content.
-The Xcode build phase runs `scripts/stage-board-packages.py`, which
-bundles only registered packages and the registry into the app resource bundle.
+Source images, audits, and other authoring artifacts belong under `.context/`;
+they are not package content and are never bundled into the app.
+
+Canonical hangboard package checks:
+
+```sh
+uv run --with pytest python -m pytest -q \
+  Tools/HangboardWorkbench/tests/test_board_geometry.py \
+  Tools/HangboardWorkbench/tests/test_board_package.py \
+  Tools/HangboardWorkbench/tests/test_server.py
+```
+
+Complete source-backed packages contain exactly `board.json` and
+`assets/primary.png`; Git branches are the in-progress mechanism. Primary-only
+image candidates are ignored by app staging. The Xcode build phase runs
+`scripts/stage-board-packages.py`, which bundles validated complete packages.
 
 Matching repo skills live under `.codex/skills/` and load these guides before
 making changes.

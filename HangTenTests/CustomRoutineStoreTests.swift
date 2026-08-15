@@ -21,7 +21,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(fourFingerPocket.gripType, .fourFingerPocket)
     }
 
-    func testPocketDefaultFeaturesRespectCapacityBoundaries() {
+    func testPocketCapacityDoesNotManufacturePhysicalFeatures() {
         let oneFingerPocket = BoardHold(
             id: "one-finger",
             name: "One finger",
@@ -42,10 +42,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertEqual(oneFingerPocket.features, [.pocket])
-        XCTAssertFalse(oneFingerPocket.features.contains(.fourFingerPocket))
+        XCTAssertNil(oneFingerPocket.features)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertEqual(fourFingerPocket.features, [.pocket, .fourFingerPocket])
+        XCTAssertNil(fourFingerPocket.features)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {

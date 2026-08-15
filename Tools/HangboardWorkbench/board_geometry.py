@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 import math
 import re
-from typing import Any, Mapping
+from typing import Any
 
 
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
@@ -39,14 +40,23 @@ class NormalizedFrame:
             or numbers["y"] < 0
             or numbers["width"] <= 0
             or numbers["height"] <= 0
-            or numbers["x"] + numbers["width"] > 1 + _EPSILON
-            or numbers["y"] + numbers["height"] > 1 + _EPSILON
+            or numbers["x"] + numbers["width"] > 1
+            or numbers["y"] + numbers["height"] > 1
         ):
             raise GeometryError(f"{label} must stay inside the normalized canvas")
         return cls(**numbers)
 
     def to_json(self) -> dict[str, float]:
-        return {"x": self.x, "y": self.y, "width": self.width, "height": self.height}
+        x = round(self.x, 12)
+        y = round(self.y, 12)
+        width = round(min(round(self.width, 12), 1 - x), 12)
+        height = round(min(round(self.height, 12), 1 - y), 12)
+        return {
+            "x": x,
+            "y": y,
+            "width": width,
+            "height": height,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -127,10 +137,27 @@ def normalized_frame_for_path(path: ClosedPath, width: int, height: int) -> Norm
     )
 
 
+def union_normalized_frames(frames: Iterable[NormalizedFrame]) -> NormalizedFrame:
+    """Return the normalized bounds containing every physical piece frame."""
+    values = tuple(frames)
+    if not values:
+        raise GeometryError("hold geometry must be non-empty")
+    minimum_x = min(frame.x for frame in values)
+    minimum_y = min(frame.y for frame in values)
+    maximum_x = max(frame.x + frame.width for frame in values)
+    maximum_y = max(frame.y + frame.height for frame in values)
+    return NormalizedFrame(
+        minimum_x,
+        minimum_y,
+        maximum_x - minimum_x,
+        maximum_y - minimum_y,
+    )
+
+
 def display_path_for_shape(
     frame: Mapping[str, Any], shape: Mapping[str, Any], width: int, height: int, *, label: str
 ) -> ClosedPath:
-    """Translate canonical normalized artwork shape data into editor pixels."""
+    """Translate canonical normalized physical geometry into editor pixels."""
     normalized = NormalizedFrame.from_json(frame, f"{label}.frame")
     shape_type = shape.get("type") if isinstance(shape, Mapping) else None
     if shape_type == "roundedRect":

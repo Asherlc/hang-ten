@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage validated, registered hangboard packages into an app resource bundle."""
+"""Stage validated direct-child hangboard packages into an app resource bundle."""
 
 from __future__ import annotations
 
@@ -135,12 +135,17 @@ def _replace_destination(staging: Path, destination: Path) -> None:
         if replaced_existing_destination and not destination.exists():
             os.replace(backup, destination)
         raise
+    # Installing staging is the commit point. Keep a sibling recovery backup
+    # when best-effort cleanup fails instead of reporting that staging failed.
     if replaced_existing_destination:
-        shutil.rmtree(backup)
+        try:
+            shutil.rmtree(backup)
+        except OSError:
+            pass
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
-    """Copy the validated catalog and every listed package tree into *destination*."""
+    """Copy every validated direct-child package tree into *destination*."""
     repository_root = _absolute_lexical(Path(repository_root))
     destination = _absolute_lexical(Path(destination))
     _reject_symlinked_ancestors(repository_root, "repository root")
@@ -150,22 +155,20 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
     _regular_directory(hangboards_root)
-    catalog_path = hangboards_root / "catalog.json"
-    _regular_file(catalog_path)
-    board_packages = load_board_package_module(repository_root)
-    catalog = board_packages.discover_packages(hangboards_root)
+    packages = load_board_package_module(repository_root).discover_packages(
+        hangboards_root
+    )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
     try:
         staging.mkdir()
-        _copy_regular_file(catalog_path, staging / "catalog.json")
-        staged_paths: list[Path] = [destination / "catalog.json"]
-        for entry in catalog:
-            package_source = catalog_path.parent / entry.slug
-            package_destination = staging / entry.slug
+        staged_paths: list[Path] = []
+        for package in packages:
+            package_source = package.root
+            package_destination = staging / package.root.name
             _copy_regular_tree(package_source, package_destination)
-            staged_paths.append(destination / entry.slug)
+            staged_paths.append(destination / package.root.name)
         _replace_destination(staging, destination)
         return tuple(staged_paths)
     except BaseException:

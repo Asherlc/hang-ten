@@ -29,80 +29,186 @@ struct BoardLibraryMetadata: Codable, Hashable {
     }
 }
 
+struct BoardHoldPieceDocument: Codable, Hashable {
+    let frame: BoardPackageFrameDocument
+    let shape: BoardGeometryShapeDocument
+    let treatment: BoardGeometryTreatmentDocument?
+}
+
+enum BoardHoldFrameComponent: CaseIterable, Hashable {
+    case x
+    case y
+    case width
+    case height
+}
+
+struct BoardHoldPieceValidationResult {
+    let invalidFrameComponents: Set<BoardHoldFrameComponent>
+    let conversionFailureReason: String?
+    let usesDeclaredFrame: Bool
+
+    var packageFailureReason: String? {
+        if !invalidFrameComponents.isEmpty {
+            return "has an invalid frame"
+        }
+        if let conversionFailureReason {
+            return "is invalid: \(conversionFailureReason)"
+        }
+        if !usesDeclaredFrame {
+            return "frame must match its shape bounds"
+        }
+        return nil
+    }
+}
+
+struct BoardHoldGeometryValidationResult {
+    let isEmpty: Bool
+    let pieces: [BoardHoldPieceValidationResult]
+}
+
+enum BoardHoldGeometryValidator {
+    static func validate(
+        _ geometry: [BoardHoldPieceDocument],
+        holdID: String,
+        pieceID: (Int) -> String
+    ) -> BoardHoldGeometryValidationResult {
+        BoardHoldGeometryValidationResult(
+            isEmpty: geometry.isEmpty,
+            pieces: geometry.enumerated().map { index, piece in
+                var invalidFrameComponents = Set<BoardHoldFrameComponent>()
+                let frame = piece.frame
+                if !frame.x.isFinite || !(0...1).contains(frame.x) {
+                    invalidFrameComponents.insert(.x)
+                }
+                if !frame.y.isFinite || !(0...1).contains(frame.y) {
+                    invalidFrameComponents.insert(.y)
+                }
+                if !frame.width.isFinite || frame.width <= 0 || frame.x + frame.width > 1 {
+                    invalidFrameComponents.insert(.width)
+                }
+                if !frame.height.isFinite || frame.height <= 0 || frame.y + frame.height > 1 {
+                    invalidFrameComponents.insert(.height)
+                }
+
+                let conversionFailureReason: String?
+                do {
+                    _ = try piece.boardHoldPiece(id: pieceID(index), holdID: holdID)
+                    conversionFailureReason = nil
+                } catch {
+                    conversionFailureReason = String(describing: error)
+                }
+
+                return BoardHoldPieceValidationResult(
+                    invalidFrameComponents: invalidFrameComponents,
+                    conversionFailureReason: conversionFailureReason,
+                    usesDeclaredFrame: piece.shape.usesDeclaredFrame
+                )
+            }
+        )
+    }
+}
+
 struct BoardHoldDefinition: Codable, Hashable {
-    struct Frame: Codable, Hashable {
-        let x: Double
-        let y: Double
-        let width: Double
-        let height: Double
-
-        init(x: Double, y: Double, width: Double, height: Double) {
-            self.x = x
-            self.y = y
-            self.width = width
-            self.height = height
-        }
-
-        var holdFrame: HoldFrame {
-            HoldFrame(
-                x: CGFloat(x),
-                y: CGFloat(y),
-                width: CGFloat(width),
-                height: CGFloat(height)
-            )
-        }
+    struct MillimeterRange: Codable, Hashable {
+        let lowerBound: Int
+        let upperBound: Int
     }
 
     let id: String
     let name: String
-    let shortLabel: String
-    let detail: String
     let kind: HoldKind
-    let frame: Frame
+    let geometry: [BoardHoldPieceDocument]
     let sizeMillimeters: Int?
+    let depthRangeMillimeters: MillimeterRange?
     let gripType: GripType?
     let fingerCapacity: Int?
-    let cueStyle: String?
     let features: [HoldFeature]?
 
-    init(
-        id: String,
-        name: String,
-        shortLabel: String,
-        detail: String,
-        kind: HoldKind,
-        frame: Frame,
-        sizeMillimeters: Int? = nil,
-        gripType: GripType? = nil,
-        fingerCapacity: Int? = nil,
-        cueStyle: String? = nil,
-        features: [HoldFeature]? = nil
-    ) {
-        self.id = id
-        self.name = name
-        self.shortLabel = shortLabel
-        self.detail = detail
-        self.kind = kind
-        self.frame = frame
-        self.sizeMillimeters = sizeMillimeters
-        self.gripType = gripType
-        self.fingerCapacity = fingerCapacity
-        self.cueStyle = cueStyle
-        self.features = features
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case kind
+        case geometry
+        case sizeMillimeters
+        case depthRangeMillimeters
+        case gripType
+        case fingerCapacity
+        case features
+        case frame
     }
 
-    func trainingBoardHold() -> BoardHold {
-        BoardHold(
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        kind = try container.decode(HoldKind.self, forKey: .kind)
+
+        if let pieces = try container.decodeIfPresent(
+            [BoardHoldPieceDocument].self,
+            forKey: .geometry
+        ) {
+            geometry = pieces
+        } else {
+            // Temporary compatibility for frame-only generated-library and
+            // hand-built fixtures. Canonical package documents require
+            // geometry and use their own closed decoder.
+            let frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
+            geometry = [
+                BoardHoldPieceDocument(
+                    frame: frame,
+                    shape: BoardGeometryShapeDocument(
+                        type: "roundedRect",
+                        commands: nil,
+                        cornerRadiusFraction: 0
+                    ),
+                    treatment: nil
+                )
+            ]
+        }
+
+        sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
+        depthRangeMillimeters = try container.decodeIfPresent(
+            MillimeterRange.self,
+            forKey: .depthRangeMillimeters
+        )
+        gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
+        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(kind, forKey: .kind)
+        try container.encode(geometry, forKey: .geometry)
+        try container.encodeIfPresent(sizeMillimeters, forKey: .sizeMillimeters)
+        try container.encodeIfPresent(depthRangeMillimeters, forKey: .depthRangeMillimeters)
+        try container.encodeIfPresent(gripType, forKey: .gripType)
+        try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+        try container.encodeIfPresent(features, forKey: .features)
+    }
+
+    func trainingBoardHold() throws -> BoardHold {
+        guard !geometry.isEmpty else {
+            throw BoardGeometryAdaptationError.invalid(
+                "hold \(id) geometry must include at least one piece"
+            )
+        }
+        let pieces = try geometry.enumerated().map { index, document in
+            try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
+        }
+        return BoardHold(
             id: id,
             name: name,
-            shortLabel: shortLabel,
-            detail: detail,
             kind: kind,
-            frame: frame.holdFrame,
+            geometry: pieces,
             sizeMillimeters: sizeMillimeters,
-            gripType: gripType ?? .openHand,
-            fingerCapacity: fingerCapacity ?? 4,
-            cueStyle: cueStyle.flatMap(HoldCueStyle.init(rawValue:)),
+            gripType: gripType,
+            fingerCapacity: fingerCapacity,
+            depthRangeMillimeters: depthRangeMillimeters.map {
+                $0.lowerBound...$0.upperBound
+            },
             features: features.map(Set.init)
         )
     }
@@ -144,7 +250,7 @@ struct BoardDefinition: Codable, Hashable {
         self.photoAssetName = photoAssetName
     }
 
-    func trainingBoard() -> TrainingBoard {
+    func trainingBoard() throws -> TrainingBoard {
         TrainingBoard(
             id: id,
             manufacturer: manufacturer,
@@ -152,7 +258,7 @@ struct BoardDefinition: Codable, Hashable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
-            holds: holds.map { $0.trainingBoardHold() },
+            holds: try holds.map { try $0.trainingBoardHold() },
             semanticHolds: semanticHolds,
             productURL: productURL,
             photoAssetName: photoAssetName
@@ -331,24 +437,55 @@ enum BoardLibraryValidator {
     ) {
         validateNonEmpty(hold.id, path: "\(path).id", label: "Hold ID", issues: &issues)
         validateNonEmpty(hold.name, path: "\(path).name", label: "Hold name", issues: &issues)
-        validateNonEmpty(hold.shortLabel, path: "\(path).shortLabel", label: "Hold short label", issues: &issues)
 
-        let frame = hold.frame
-        if !frame.x.isFinite || !(0...1).contains(frame.x) {
-            issues.append(BoardLibraryValidationIssue(path: "\(path).frame.x", message: "Frame x must be between 0 and 1."))
-        }
-        if !frame.y.isFinite || !(0...1).contains(frame.y) {
-            issues.append(BoardLibraryValidationIssue(path: "\(path).frame.y", message: "Frame y must be between 0 and 1."))
-        }
-        if !frame.width.isFinite || frame.width <= 0 || frame.x + frame.width > 1 {
-            issues.append(BoardLibraryValidationIssue(path: "\(path).frame.width", message: "Frame width must fit within normalized bounds."))
-        }
-        if !frame.height.isFinite || frame.height <= 0 || frame.y + frame.height > 1 {
-            issues.append(BoardLibraryValidationIssue(path: "\(path).frame.height", message: "Frame height must fit within normalized bounds."))
+        let geometryValidation = BoardHoldGeometryValidator.validate(
+            hold.geometry,
+            holdID: hold.id,
+            pieceID: { _ in "validation-piece" }
+        )
+        if geometryValidation.isEmpty {
+            issues.append(
+                BoardLibraryValidationIssue(
+                    path: "\(path).geometry",
+                    message: "Hold geometry must include at least one piece."
+                )
+            )
         }
 
-        let fingerCapacity = hold.fingerCapacity ?? 4
-        if !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+        for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
+            let piecePath = "\(path).geometry[\(pieceIndex)]"
+            if pieceValidation.invalidFrameComponents.contains(.x) {
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.x", message: "Frame x must be between 0 and 1."))
+            }
+            if pieceValidation.invalidFrameComponents.contains(.y) {
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.y", message: "Frame y must be between 0 and 1."))
+            }
+            if pieceValidation.invalidFrameComponents.contains(.width) {
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.width", message: "Frame width must fit within normalized bounds."))
+            }
+            if pieceValidation.invalidFrameComponents.contains(.height) {
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.height", message: "Frame height must fit within normalized bounds."))
+            }
+            if let conversionFailureReason = pieceValidation.conversionFailureReason {
+                issues.append(
+                    BoardLibraryValidationIssue(
+                        path: piecePath,
+                        message: "Invalid hold geometry: \(conversionFailureReason)"
+                    )
+                )
+            }
+            if !pieceValidation.usesDeclaredFrame {
+                issues.append(
+                    BoardLibraryValidationIssue(
+                        path: piecePath,
+                        message: "Hold geometry frame must match its shape bounds."
+                    )
+                )
+            }
+        }
+
+        if let fingerCapacity = hold.fingerCapacity,
+           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
             issues.append(
                 BoardLibraryValidationIssue(
                     path: "\(path).fingerCapacity",
@@ -357,11 +494,22 @@ enum BoardLibraryValidator {
             )
         }
 
-        if let cueStyle = hold.cueStyle, HoldCueStyle(rawValue: cueStyle) == nil {
+        if let size = hold.sizeMillimeters, size <= 0 {
             issues.append(
                 BoardLibraryValidationIssue(
-                    path: "\(path).cueStyle",
-                    message: "Unknown hold cue style \"\(cueStyle)\"."
+                    path: "\(path).sizeMillimeters",
+                    message: "Hold size must be positive."
+                )
+            )
+        }
+
+        if let depth = hold.depthRangeMillimeters,
+           depth.lowerBound <= 0 || depth.upperBound <= 0 ||
+           depth.lowerBound > depth.upperBound {
+            issues.append(
+                BoardLibraryValidationIssue(
+                    path: "\(path).depthRangeMillimeters",
+                    message: "Hold depth range must be positive and ordered."
                 )
             )
         }
@@ -399,7 +547,7 @@ struct BoardLibraryStore {
         }
 
         self.definition = definition
-        self.boards = definition.boards.map { $0.trainingBoard() }
+        self.boards = try definition.boards.map { try $0.trainingBoard() }
     }
 
     init(data: Data, decoder: JSONDecoder = JSONDecoder()) throws {

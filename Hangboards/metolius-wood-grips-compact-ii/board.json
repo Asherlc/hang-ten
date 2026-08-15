@@ -14,20 +14,103 @@
     {
       "id": "jug-left",
       "name": "Left outer jug",
-      "shortLabel": "J",
-      "detail": "Open-hand jug",
       "kind": "jug",
-      "frame": {
-        "x": 0.0,
-        "y": 0.0,
-        "width": 0.165,
-        "height": 0.23715
-      },
-      "sizeMillimeters": null,
-      "depthRangeMillimeters": null,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 0.165,
+            "height": 0.23715
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.36,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  1,
+                  0.193548387096774
+                ],
+                "control1": [
+                  0.96,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.086021505376344
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0,
+                  0.494623655913978
+                ],
+                "control1": [
+                  0.07,
+                  0.946236559139785
+                ],
+                "control2": [
+                  0,
+                  0.720430107526882
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.36,
+                  0
+                ],
+                "control1": [
+                  0,
+                  0.172043010752688
+                ],
+                "control2": [
+                  0.15,
+                  0.010752688172043
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "outerJug",
       "features": [
         "jug"
       ]
@@ -35,20 +118,27 @@
     {
       "id": "sloper-flat-left",
       "name": "Left 56 mm flat sloper",
-      "shortLabel": "56F",
-      "detail": "Flat open-hand sloper",
       "kind": "sloper",
-      "frame": {
-        "x": 0.158,
-        "y": 0.035,
-        "width": 0.19,
-        "height": 0.128
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.158,
+            "y": 0.035,
+            "width": 0.19,
+            "height": 0.128
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.025
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
       "sizeMillimeters": 56,
-      "depthRangeMillimeters": null,
       "gripType": "sloper",
       "fingerCapacity": 4,
-      "cueStyle": "rounded",
       "features": [
         "largeSlope"
       ]
@@ -56,20 +146,27 @@
     {
       "id": "sloper-round-center",
       "name": "Center 56 mm round sloper",
-      "shortLabel": "56R",
-      "detail": "Round open-hand sloper",
       "kind": "sloper",
-      "frame": {
-        "x": 0.352,
-        "y": 0.035,
-        "width": 0.296,
-        "height": 0.128
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.352,
+            "y": 0.035,
+            "width": 0.296,
+            "height": 0.128
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.025
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
       "sizeMillimeters": 56,
-      "depthRangeMillimeters": null,
       "gripType": "sloper",
       "fingerCapacity": 4,
-      "cueStyle": "rounded",
       "features": [
         "roundSloper"
       ]
@@ -77,20 +174,27 @@
     {
       "id": "sloper-flat-right",
       "name": "Right 56 mm flat sloper",
-      "shortLabel": "56F",
-      "detail": "Flat open-hand sloper",
       "kind": "sloper",
-      "frame": {
-        "x": 0.652,
-        "y": 0.035,
-        "width": 0.19,
-        "height": 0.128
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.652,
+            "y": 0.035,
+            "width": 0.19,
+            "height": 0.128
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.025
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
       "sizeMillimeters": 56,
-      "depthRangeMillimeters": null,
       "gripType": "sloper",
       "fingerCapacity": 4,
-      "cueStyle": "rounded",
       "features": [
         "largeSlope"
       ]
@@ -98,20 +202,103 @@
     {
       "id": "jug-right",
       "name": "Right outer jug",
-      "shortLabel": "J",
-      "detail": "Open-hand jug",
       "kind": "jug",
-      "frame": {
-        "x": 0.835,
-        "y": 0.0,
-        "width": 0.165,
-        "height": 0.23715
-      },
-      "sizeMillimeters": null,
-      "depthRangeMillimeters": null,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.835,
+            "y": 0,
+            "width": 0.165,
+            "height": 0.23715
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.64,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.12,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0,
+                  0.193548387096774
+                ],
+                "control1": [
+                  0.04,
+                  0
+                ],
+                "control2": [
+                  0,
+                  0.086021505376344
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.82,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  1,
+                  0.494623655913978
+                ],
+                "control1": [
+                  0.93,
+                  0.946236559139785
+                ],
+                "control2": [
+                  1,
+                  0.720430107526882
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.64,
+                  0
+                ],
+                "control1": [
+                  1,
+                  0.172043010752688
+                ],
+                "control2": [
+                  0.85,
+                  0.010752688172043
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "outerJug",
       "features": [
         "jug"
       ]
@@ -119,20 +306,111 @@
     {
       "id": "edge-29-left",
       "name": "Left 29 mm edge",
-      "shortLabel": "29E",
-      "detail": "Large edge",
       "kind": "edge",
-      "frame": {
-        "x": 0.021,
-        "y": 0.2531,
-        "width": 0.165,
-        "height": 0.2538
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.021,
+            "y": 0.2531,
+            "width": 0.165,
+            "height": 0.2538
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.065,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.875,
+                  0
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  1,
+                  0.127659574468085
+                ],
+                "control": [
+                  0.97,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.995,
+                  0.856382978723404
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.875,
+                  1
+                ],
+                "control": [
+                  0.985,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.085,
+                  0.978723404255319
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0,
+                  0.808510638297872
+                ],
+                "control": [
+                  0.015,
+                  0.968085106382979
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.015,
+                  0.191489361702128
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.065,
+                  0
+                ],
+                "control": [
+                  0.02,
+                  0.042553191489362
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "shelf",
+            "rimInsetFraction": 0.06
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "largeEdge"
       ]
@@ -140,20 +418,29 @@
     {
       "id": "pocket-29-three-left",
       "name": "Left 29 mm three-finger pocket",
-      "shortLabel": "29·3",
-      "detail": "Three-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.199,
-        "y": 0.365,
-        "width": 0.109,
-        "height": 0.148
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.199,
+            "y": 0.365,
+            "width": 0.109,
+            "height": 0.148
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "deep"
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "threeFingerPocket"
@@ -162,20 +449,29 @@
     {
       "id": "pocket-29-two-left",
       "name": "Left 29 mm two-finger pocket",
-      "shortLabel": "29·2",
-      "detail": "Two-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.328,
-        "y": 0.37,
-        "width": 0.077,
-        "height": 0.147
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.328,
+            "y": 0.37,
+            "width": 0.077,
+            "height": 0.147
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.44
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "deep"
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "twoFingerPocket"
@@ -184,20 +480,29 @@
     {
       "id": "pocket-29-four-center",
       "name": "Center 29 mm four-finger pocket",
-      "shortLabel": "29·4",
-      "detail": "Four-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.425,
-        "y": 0.365,
-        "width": 0.15,
-        "height": 0.148
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.425,
+            "y": 0.365,
+            "width": 0.15,
+            "height": 0.148
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.35
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "deep"
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "fourFingerPocket",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "fourFingerPocket"
@@ -206,20 +511,29 @@
     {
       "id": "pocket-29-two-right",
       "name": "Right 29 mm two-finger pocket",
-      "shortLabel": "29·2",
-      "detail": "Two-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.595,
-        "y": 0.37,
-        "width": 0.077,
-        "height": 0.147
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.595,
+            "y": 0.37,
+            "width": 0.077,
+            "height": 0.147
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.44
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "deep"
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "twoFingerPocket"
@@ -228,20 +542,29 @@
     {
       "id": "pocket-29-three-right",
       "name": "Right 29 mm three-finger pocket",
-      "shortLabel": "29·3",
-      "detail": "Three-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.692,
-        "y": 0.365,
-        "width": 0.109,
-        "height": 0.148
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.692,
+            "y": 0.365,
+            "width": 0.109,
+            "height": 0.148
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "deep"
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "threeFingerPocket"
@@ -250,20 +573,111 @@
     {
       "id": "edge-29-right",
       "name": "Right 29 mm edge",
-      "shortLabel": "29E",
-      "detail": "Large edge",
       "kind": "edge",
-      "frame": {
-        "x": 0.814,
-        "y": 0.2531,
-        "width": 0.165,
-        "height": 0.2538
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.814,
+            "y": 0.2531,
+            "width": 0.165,
+            "height": 0.2538
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.935,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.125,
+                  0
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0,
+                  0.127659574468085
+                ],
+                "control": [
+                  0.03,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.005,
+                  0.856382978723404
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.125,
+                  1
+                ],
+                "control": [
+                  0.015,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.915,
+                  0.978723404255319
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  1,
+                  0.808510638297872
+                ],
+                "control": [
+                  0.985,
+                  0.968085106382979
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.985,
+                  0.191489361702128
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.935,
+                  0
+                ],
+                "control": [
+                  0.98,
+                  0.042553191489362
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "shelf",
+            "rimInsetFraction": 0.06
+          }
+        }
+      ],
       "sizeMillimeters": 29,
-      "depthRangeMillimeters": null,
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "largeEdge"
       ]
@@ -271,20 +685,111 @@
     {
       "id": "edge-19-left",
       "name": "Left 19 mm edge",
-      "shortLabel": "19E",
-      "detail": "Small edge",
       "kind": "edge",
-      "frame": {
-        "x": 0.035,
-        "y": 0.626125,
-        "width": 0.16,
-        "height": 0.231525
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.035,
+            "y": 0.626125,
+            "width": 0.16,
+            "height": 0.231525
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.05,
+                  0.021164021164021
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.89,
+                  0
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  1,
+                  0.142857142857143
+                ],
+                "control": [
+                  0.985,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.985,
+                  0.857142857142857
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.86,
+                  1
+                ],
+                "control": [
+                  0.975,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.075,
+                  0.978835978835979
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0,
+                  0.804232804232804
+                ],
+                "control": [
+                  0.015,
+                  0.968253968253968
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.01,
+                  0.185185185185185
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.05,
+                  0.021164021164021
+                ],
+                "control": [
+                  0.015,
+                  0.052910052910053
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "shelf",
+            "rimInsetFraction": 0.06
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "mediumEdge",
         "smallEdge"
@@ -293,20 +798,29 @@
     {
       "id": "pocket-19-three-left",
       "name": "Left 19 mm three-finger pocket",
-      "shortLabel": "19·3",
-      "detail": "Three-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.216,
-        "y": 0.733,
-        "width": 0.104,
-        "height": 0.14
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.216,
+            "y": 0.733,
+            "width": 0.104,
+            "height": 0.14
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "shallow"
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "threeFingerPocket"
@@ -315,20 +829,29 @@
     {
       "id": "pocket-19-three-right",
       "name": "Right 19 mm three-finger pocket",
-      "shortLabel": "19·3",
-      "detail": "Three-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.68,
-        "y": 0.733,
-        "width": 0.104,
-        "height": 0.14
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.68,
+            "y": 0.733,
+            "width": 0.104,
+            "height": 0.14
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "shallow"
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "threeFingerPocket"
@@ -337,20 +860,29 @@
     {
       "id": "pocket-19-two-left",
       "name": "Left 19 mm two-finger pocket",
-      "shortLabel": "19·2",
-      "detail": "Two-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.336,
-        "y": 0.733,
-        "width": 0.073,
-        "height": 0.14
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.336,
+            "y": 0.733,
+            "width": 0.073,
+            "height": 0.14
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.44
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "shallow"
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "twoFingerPocket"
@@ -359,20 +891,29 @@
     {
       "id": "pocket-19-two-right",
       "name": "Right 19 mm two-finger pocket",
-      "shortLabel": "19·2",
-      "detail": "Two-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.591,
-        "y": 0.733,
-        "width": 0.073,
-        "height": 0.14
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.591,
+            "y": 0.733,
+            "width": 0.073,
+            "height": 0.14
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.44
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "shallow"
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "twoFingerPocket"
@@ -381,20 +922,29 @@
     {
       "id": "pocket-19-four-center",
       "name": "Center 19 mm four-finger pocket",
-      "shortLabel": "19·4",
-      "detail": "Four-finger pocket",
       "kind": "pocket",
-      "frame": {
-        "x": 0.425,
-        "y": 0.733,
-        "width": 0.15,
-        "height": 0.14
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.425,
+            "y": 0.733,
+            "width": 0.15,
+            "height": 0.14
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.35
+          },
+          "treatment": {
+            "type": "recess",
+            "rimInsetFraction": 0.09,
+            "depth": "shallow"
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "fourFingerPocket",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "pocket",
         "fourFingerPocket"
@@ -403,20 +953,111 @@
     {
       "id": "edge-19-right",
       "name": "Right 19 mm edge",
-      "shortLabel": "19E",
-      "detail": "Small edge",
       "kind": "edge",
-      "frame": {
-        "x": 0.805,
-        "y": 0.626125,
-        "width": 0.16,
-        "height": 0.231525
-      },
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.805,
+            "y": 0.626125,
+            "width": 0.16,
+            "height": 0.231525
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.95,
+                  0.021164021164021
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.11,
+                  0
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0,
+                  0.142857142857143
+                ],
+                "control": [
+                  0.015,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.015,
+                  0.857142857142857
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.14,
+                  1
+                ],
+                "control": [
+                  0.025,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.925,
+                  0.978835978835979
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  1,
+                  0.804232804232804
+                ],
+                "control": [
+                  0.985,
+                  0.968253968253968
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.99,
+                  0.185185185185185
+                ]
+              },
+              {
+                "command": "quad",
+                "to": [
+                  0.95,
+                  0.021164021164021
+                ],
+                "control": [
+                  0.985,
+                  0.052910052910053
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "shelf",
+            "rimInsetFraction": 0.06
+          }
+        }
+      ],
       "sizeMillimeters": 19,
-      "depthRangeMillimeters": null,
       "gripType": "openHand",
       "fingerCapacity": 4,
-      "cueStyle": "slot",
       "features": [
         "mediumEdge",
         "smallEdge"

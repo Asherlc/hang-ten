@@ -84,6 +84,7 @@
 		AA0000000000000000000086 /* BoardPackageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000086 /* BoardPackageStore.swift */; };
 		AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000087 /* BoardPackageStoreTests.swift */; };
 		AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */; };
+		AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */; };
 		AA0000000000000000000070 /* BoardStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000070 /* BoardStorageTests.swift */; };
 		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
@@ -179,6 +180,7 @@
 		BB0000000000000000000086 /* BoardPackageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000087 /* BoardPackageStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryAudit.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 				BB0000000000000000000070 /* BoardStorageTests.swift */,
 				BB0000000000000000000087 /* BoardPackageStoreTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
+				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 			);
 			path = HangTenTests;
@@ -516,7 +519,7 @@
 			);
 			name = "Stage Board Packages";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards/catalog.json",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -613,6 +616,7 @@
 				AA0000000000000000000070 /* BoardStorageTests.swift in Sources */,
 				AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
+				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

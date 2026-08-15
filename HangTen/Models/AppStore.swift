@@ -269,7 +269,7 @@ final class AppStore: ObservableObject {
         plan.steps.flatMap(\.targets).contains { target in
             guard let feature = target.feature,
                   !target.fallbackFeatures.isEmpty else { return false }
-            let hasExactMatch = board.holds.contains { $0.features.contains(feature) }
+            let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
             return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
         }
     }

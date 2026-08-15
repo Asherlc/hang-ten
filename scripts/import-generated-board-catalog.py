@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 import shutil
 
@@ -41,43 +40,13 @@ def _copy(source: Path, destination: Path) -> None:
     shutil.copyfile(source, destination)
 
 
-def _load_catalog(catalog_path: Path) -> dict[str, object]:
-    if not catalog_path.exists():
-        return {"schemaVersion": 1, "boards": []}
-    payload = json.loads(catalog_path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or set(payload) != {"schemaVersion", "boards"}:
-        raise ValueError("catalog.json must contain only schemaVersion and boards")
-    if payload["schemaVersion"] != 1 or not isinstance(payload["boards"], list):
-        raise ValueError("catalog.json must use schemaVersion 1 with a boards array")
-    if not all(isinstance(entry, dict) for entry in payload["boards"]):
-        raise ValueError("catalog.json boards entries must be objects")
-    normalized_entries: list[dict[str, object]] = []
-    for entry in payload["boards"]:
-        if set(entry) != {"id", "path"}:
-            raise ValueError("catalog.json boards entries must use id and path")
-        if not isinstance(entry["id"], str) or not entry["id"]:
-            raise ValueError("catalog.json board id must be a non-empty string")
-        if not isinstance(entry["path"], str) or not entry["path"]:
-            raise ValueError("catalog.json board path must be a non-empty string")
-        normalized_entries.append(dict(entry))
-    return {"schemaVersion": 1, "boards": normalized_entries}
-
-
-def _write_catalog(catalog_path: Path, boards: list[dict[str, object]]) -> None:
-    catalog = {"schemaVersion": 1, "boards": boards}
-    catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
-
-
 def import_generated_catalog(source_root: Path, destination_root: Path) -> None:
-    """Copy an existing generated catalog into flat board packages."""
+    """Copy generated primary images into primary-only board-package drafts."""
     source_root = Path(source_root)
     destination_root = Path(destination_root)
     primary = _primary_sources(source_root)
-    catalog_path = destination_root / "catalog.json"
-    # Generated artwork has no factual package sidecars. It stays available in
-    # its package directory but is not registered for the shipped runtime
-    # catalog until a factual package is authored on its own branch.
-    _load_catalog(catalog_path)
+    # Generated artwork has no physical board document. It stays primary-only
+    # until a complete board.json is authored and direct discovery can load it.
 
     for slug in sorted(primary):
         package_root = destination_root / slug
