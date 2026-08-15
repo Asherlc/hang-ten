@@ -22,14 +22,14 @@ cue treatment, or semantic target.
 ## Evidence-key readiness
 
 A registered package needs exact mappings for every board field, all physical
-hold fields, each semantic target, every artwork element/hold piece, and each
-retained asset. The source sets below only support broad board-level claims and
+hold fields and frames, each semantic target, and each retained asset. The
+source sets below only support broad board-level claims and
 visible imagery; they cannot supply the required per-hold key set.
 
 | candidate | official facts established | missing required evidence | result |
 | --- | --- | --- | --- |
-| `zlagboard.evo` | Product identity; compact form factor; aggregate grip categories of crimps, pockets, slopers, and jugs; official front image. | Exhaustive named contact inventory; each contact's boundary, size/depth, finger capacity, grip classification, cue/feature fields; source-backed semantic targets; one-to-one artwork/hold-piece mapping. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
-| `zlagboard.pro` | Product-family identity; general ergonomic-hold description; official front image; evidence that Pro 1.0 and Pro 2.0 are distinct app-compatible boards. | Exact model version of the candidate; exhaustive named contact inventory; each contact's boundary, size/depth, finger capacity, grip classification, cue/feature fields; source-backed semantic targets; one-to-one artwork/hold-piece mapping. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
+| `zlagboard.evo` | Product identity; compact form factor; aggregate grip categories of crimps, pockets, slopers, and jugs; official front image. | Exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
+| `zlagboard.pro` | Product-family identity; general ergonomic-hold description; official front image; evidence that Pro 1.0 and Pro 2.0 are distinct app-compatible boards. | Exact model version of the candidate; exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
 
 ## Exact blockers
 
@@ -39,7 +39,7 @@ Zlagboard describes the Evo's aggregate categories but supplies no
 model-specific, exhaustive mapping of its physical contact regions. The
 official product image is evidence for visible presentation only and cannot
 turn those categories into complete per-hold records. No source establishes
-the full hold-boundary, capacity, classification, semantic, or artwork evidence
+the full hold-frame, capacity, classification, or semantic evidence
 required by a canonical package.
 
 ### `zlagboard-pro`
@@ -56,7 +56,7 @@ and an official complete hold map.
 Obtain a manufacturer-issued, model-specific numbered hold diagram or data
 sheet for Evo and for the exact Pro version. It must map every physical contact
 region and its boundary to its measurements, finger capacity, grip
-classification, and documented training target. Only then create all four
+classification, and documented training target. Only then create all three
 sidecars and add the package to the catalog in the same change. Do not use the
 generated primary image, a broad product description, or evidence from one Pro
 version for another.

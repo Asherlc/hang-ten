@@ -8,8 +8,9 @@ six candidates is registered in `Hangboards/catalog.json`.
 The package schema requires a cited, model-specific source for every physical
 hold and every runtime hold field (`id`, name, label, detail, kind, normalized
 frame, size/depth, grip type, finger capacity, cue style, and features).
-Product photos can support reviewed artwork normalization of visible boundaries,
-but cannot supply unlabelled physical semantics or app-specific fields. The
+Product photos can support selection of a retained primary image, but cannot
+supply source-backed hold frames, unlabelled physical semantics, or app-specific
+fields. The
 tables below identify the exact official source keys reviewed for each
 independent model; source keys are not shared between models.
 

@@ -24,7 +24,7 @@ located. Several retailer pages repeat a Woodbord product description and
 dimensions, but they are not manufacturer evidence and are intentionally not
 used for package facts. In particular, the repeated list of 4-finger and
 2-finger pocket depths cannot establish which visible physical pocket has each
-depth, nor supply an official artwork/semantics mapping.
+depth, nor supply official frame or semantics mappings.
 
 ## Evidence-key readiness matrix
 
@@ -34,9 +34,9 @@ an exact key in its `evidence.json`.
 
 | candidate | required evidence-key rows | authoritative coverage found | result |
 | --- | --- | --- | --- |
-| `dewoodstok.woodbord` | board facts; every `holds[].{id,name,shortLabel,detail,kind,frame,sizeMillimeters,depthRangeMillimeters,gripType,fingerCapacity,cueStyle,features}`; every semantic ID; every artwork element and hold piece; `assets/primary.png` | No manufacturer source for product facts, hold inventory/boundaries, per-hold measurements, semantics, or artwork | blocked |
-| `escape.beta` | board facts; every `holds[]` field above; every semantic ID; every artwork element and hold piece; `assets/primary.png` | Product identity, overall dimensions, dual texture, and official gallery images only | blocked |
-| `escape.unlimited` | board facts; every `holds[]` field above; every semantic ID; every artwork element and hold piece; `assets/primary.png` | Product identity, overall dimensions, generic rung-depth ordering in finger pads, and official gallery images only | blocked |
+| `dewoodstok.woodbord` | board facts; every `holds[].{id,name,shortLabel,detail,kind,frame,sizeMillimeters,depthRangeMillimeters,gripType,fingerCapacity,cueStyle,features}`; every semantic ID; `assets/primary.png` | No manufacturer source for product facts, hold inventory/frames, per-hold measurements, or semantics | blocked |
+| `escape.beta` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, dual texture, and official gallery images only | blocked |
+| `escape.unlimited` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, generic rung-depth ordering in finger pads, and official gallery images only | blocked |
 
 ## Retained assets
 
@@ -52,8 +52,8 @@ an exact key in its `evidence.json`.
 
 Missing official manufacturer evidence for the product URL, front and oblique
 reference images, the physical hold inventory and boundaries, every per-hold
-depth and size, finger capacity, grip type, semantic targets, and artwork
-elements. The candidate remains primary-only and unregistered; no sidecars or
+depth and size, finger capacity, grip type, semantic targets, and normalized
+frames. The candidate remains primary-only and unregistered; no sidecars or
 catalog entry are permitted.
 
 ### `escape-beta`
@@ -68,6 +68,6 @@ remains primary-only and unregistered.
 
 Missing official manufacturer evidence mapping each physical rung/hold to a
 measured depth, its boundaries, size, finger capacity, grip type, semantic
-targets, and artwork elements. The product copy's finger-pad sequence is not a
+targets, and normalized frames. The product copy's finger-pad sequence is not a
 millimetre measurement or a per-hold map, and it explicitly leaves mono/crimp
 placement to the climber. The candidate remains primary-only and unregistered.

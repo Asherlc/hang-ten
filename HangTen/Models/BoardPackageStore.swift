@@ -1,4 +1,11 @@
 import Foundation
+import ImageIO
+import UniformTypeIdentifiers
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 private struct BoardPackageAnyCodingKey: CodingKey {
     let stringValue: String
@@ -73,8 +80,6 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     case duplicateBoardID(String)
     case duplicateHoldID(boardID: String, holdID: String)
     case unknownSemanticHoldID(boardID: String, holdID: String)
-    case unknownArtworkHoldID(boardID: String, holdID: String)
-    case missingArtworkHoldID(boardID: String, holdID: String)
     case invalidPackage(boardID: String, reason: String)
 
     var errorDescription: String? {
@@ -99,10 +104,6 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
             "Board \(boardID) contains duplicate hold ID \(holdID)."
         case let .unknownSemanticHoldID(boardID, holdID):
             "Board \(boardID) semantics reference unknown hold ID \(holdID)."
-        case let .unknownArtworkHoldID(boardID, holdID):
-            "Board \(boardID) artwork references unknown hold ID \(holdID)."
-        case let .missingArtworkHoldID(boardID, holdID):
-            "Board \(boardID) artwork is missing hold ID \(holdID)."
         case let .invalidPackage(boardID, reason):
             "Board \(boardID) is invalid: \(reason)"
         }
@@ -114,7 +115,6 @@ struct BoardPackageStore {
 
     private let boardsByID: [String: TrainingBoard]
     private let semanticsByBoardID: [String: [String: [String]]]
-    private let designsByBoardID: [String: BoardDesign]
     private let presentationURLsByBoardID: [String: URL]
 
     init(bundle: Bundle = .main) throws {
@@ -139,7 +139,6 @@ struct BoardPackageStore {
         var seenCatalogPaths = Set<String>()
         var loadedBoards: [TrainingBoard] = []
         var loadedSemantics: [String: [String: [String]]] = [:]
-        var loadedDesigns: [String: BoardDesign] = [:]
         var loadedPresentationURLs: [String: URL] = [:]
 
         for entry in catalog.boards {
@@ -170,27 +169,25 @@ struct BoardPackageStore {
                 packageURL: packageURL,
                 resourcePrefix: resourcePrefix
             )
-            let artworkDocument: BoardArtworkDocument = try Self.decodeSidecar(
-                named: "artwork.json",
+            let evidenceDocument: BoardPackageEvidenceDocument = try Self.decodeSidecar(
+                named: "evidence.json",
                 boardID: entry.id,
                 packageURL: packageURL,
                 resourcePrefix: resourcePrefix
             )
-
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateSchema(semanticsDocument.schemaVersion, resource: "\(resourcePrefix)/semantics.json")
-            try Self.validateSchema(artworkDocument.schemaVersion, resource: "\(resourcePrefix)/artwork.json")
+            try Self.validateSchema(evidenceDocument.schemaVersion, resource: "\(resourcePrefix)/evidence.json")
             try Self.validateMetadata(
                 boardDocument: boardDocument,
                 semanticsDocument: semanticsDocument,
-                artworkDocument: artworkDocument,
                 boardID: entry.id
             )
             try Self.validateBoardIDs(
                 catalogID: entry.id,
                 boardDocument: boardDocument,
                 semanticsDocument: semanticsDocument,
-                artworkDocument: artworkDocument,
+                evidenceDocument: evidenceDocument,
                 resourcePrefix: resourcePrefix
             )
 
@@ -200,48 +197,42 @@ struct BoardPackageStore {
                 boardID: entry.id,
                 holdIDs: holdIDs
             )
-            try Self.validateArtwork(
-                artworkDocument,
-                boardID: entry.id,
-                holdIDs: holdIDs
-            )
-
             let semantics = semanticsDocument.semanticHolds.mapValues(\.holdIDs)
             let board = try boardDocument.trainingBoard(semantics: semantics)
-            let design: BoardDesign
-            do {
-                design = try artworkDocument.boardDesign()
-            } catch {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: entry.id,
-                    reason: String(describing: error)
-                )
-            }
 
             loadedBoards.append(board)
             loadedSemantics[board.id] = semantics
-            loadedDesigns[board.id] = design
 
-            if let assetPath = boardDocument.presentation?.assetPath {
-                let assetURL = try Self.presentationAssetURL(
-                    path: assetPath,
+            guard let presentation = boardDocument.presentation else {
+                throw BoardPackageStoreError.invalidPackage(
                     boardID: board.id,
-                    packageURL: packageURL
+                    reason: "presentation declaration is required"
                 )
-                guard FileManager.default.isReadableFile(atPath: assetURL.path) else {
-                    throw BoardPackageStoreError.missingPresentationAsset(
-                        boardID: board.id,
-                        path: assetPath
-                    )
-                }
-                loadedPresentationURLs[board.id] = assetURL
             }
+            let assetURL = try Self.presentationAssetURL(
+                path: presentation.assetPath,
+                boardID: board.id,
+                packageURL: packageURL
+            )
+            guard FileManager.default.isReadableFile(atPath: assetURL.path) else {
+                throw BoardPackageStoreError.missingPresentationAsset(
+                    boardID: board.id,
+                    path: presentation.assetPath
+                )
+            }
+            guard Self.isPNGPresentationImage(at: assetURL),
+                  Self.isDecodablePresentationImage(at: assetURL) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: board.id,
+                    reason: "presentation asset must be a decodable PNG"
+                )
+            }
+            loadedPresentationURLs[board.id] = assetURL
         }
 
         self.boards = loadedBoards
         self.boardsByID = Dictionary(uniqueKeysWithValues: loadedBoards.map { ($0.id, $0) })
         self.semanticsByBoardID = loadedSemantics
-        self.designsByBoardID = loadedDesigns
         self.presentationURLsByBoardID = loadedPresentationURLs
     }
 
@@ -251,10 +242,6 @@ struct BoardPackageStore {
 
     func semantics(for boardID: String) -> [String: [String]] {
         semanticsByBoardID[boardID] ?? [:]
-    }
-
-    func design(for boardID: String) -> BoardDesign? {
-        designsByBoardID[boardID]
     }
 
     func presentationImageURL(for board: TrainingBoard) -> URL? {
@@ -318,7 +305,31 @@ struct BoardPackageStore {
                 path: path
             )
         }
+        guard path == "assets/primary.png" else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "presentation asset path must be assets/primary.png"
+            )
+        }
         return url
+    }
+
+    private static func isDecodablePresentationImage(at url: URL) -> Bool {
+#if canImport(UIKit)
+        UIImage(contentsOfFile: url.path) != nil
+#elseif canImport(AppKit)
+        NSImage(contentsOf: url) != nil
+#else
+        false
+#endif
+    }
+
+    private static func isPNGPresentationImage(at url: URL) -> Bool {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let imageType = CGImageSourceGetType(source) else {
+            return false
+        }
+        return imageType as String == UTType.png.identifier
     }
 
     private static func confinedURL(relativePath: String, below rootURL: URL) -> URL? {
@@ -360,13 +371,13 @@ struct BoardPackageStore {
         catalogID: String,
         boardDocument: BoardPackageBoardDocument,
         semanticsDocument: BoardPackageSemanticsDocument,
-        artworkDocument: BoardArtworkDocument,
+        evidenceDocument: BoardPackageEvidenceDocument,
         resourcePrefix: String
     ) throws {
         for (actual, filename) in [
             (boardDocument.id, "board.json"),
             (semanticsDocument.boardID, "semantics.json"),
-            (artworkDocument.boardID, "artwork.json")
+            (evidenceDocument.boardID, "evidence.json")
         ] where actual != catalogID {
             throw BoardPackageStoreError.boardIDMismatch(
                 expected: catalogID,
@@ -379,7 +390,6 @@ struct BoardPackageStore {
     private static func validateMetadata(
         boardDocument: BoardPackageBoardDocument,
         semanticsDocument: BoardPackageSemanticsDocument,
-        artworkDocument: BoardArtworkDocument,
         boardID: String
     ) throws {
         let requiredStrings = [
@@ -389,9 +399,7 @@ struct BoardPackageStore {
             boardDocument.subtitle,
             boardDocument.dimensions,
             boardDocument.productURL.absoluteString,
-            semanticsDocument.boardID,
-            artworkDocument.boardID,
-            artworkDocument.palette
+            semanticsDocument.boardID
         ]
         guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
             throw BoardPackageStoreError.invalidPackage(
@@ -400,8 +408,7 @@ struct BoardPackageStore {
             )
         }
         guard boardDocument.id.isBoardPackageIdentifier,
-              semanticsDocument.boardID.isBoardPackageIdentifier,
-              artworkDocument.boardID.isBoardPackageIdentifier else {
+              semanticsDocument.boardID.isBoardPackageIdentifier else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "board IDs must be identifier-shaped"
@@ -518,34 +525,6 @@ struct BoardPackageStore {
         }
     }
 
-    private static func validateArtwork(
-        _ artwork: BoardArtworkDocument,
-        boardID: String,
-        holdIDs: Set<String>
-    ) throws {
-        guard artwork.layers.allSatisfy({ !$0.id.isEmpty }),
-              artwork.holdPieces.allSatisfy({
-                  !$0.id.isEmpty && $0.holdID.isBoardPackageIdentifier
-              }) else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "artwork IDs must not be empty"
-            )
-        }
-        let artworkHoldIDs = Set(artwork.holdPieces.map(\.holdID))
-        if let unknownHoldID = artworkHoldIDs.subtracting(holdIDs).sorted().first {
-            throw BoardPackageStoreError.unknownArtworkHoldID(
-                boardID: boardID,
-                holdID: unknownHoldID
-            )
-        }
-        if let missingHoldID = holdIDs.subtracting(artworkHoldIDs).sorted().first {
-            throw BoardPackageStoreError.missingArtworkHoldID(
-                boardID: boardID,
-                holdID: missingHoldID
-            )
-        }
-    }
 }
 
 private struct BoardPackageCatalogDocument: Decodable {
@@ -819,6 +798,79 @@ private struct BoardPackageSemanticsDocument: Decodable {
     }
 }
 
+private struct BoardPackageEvidenceDocument: Decodable {
+    let schemaVersion: Int
+    let boardID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion
+        case boardID
+        case checkedAt
+        case sources
+        case fieldEvidence
+        case holdEvidence
+        case semanticEvidence
+        case assetEvidence
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "schemaVersion", "boardID", "checkedAt", "sources", "fieldEvidence",
+            "holdEvidence", "semanticEvidence", "assetEvidence"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        boardID = try container.decode(String.self, forKey: .boardID)
+        _ = try container.decode(String.self, forKey: .checkedAt)
+        _ = try container.decode([BoardPackageEvidenceSourceDocument].self, forKey: .sources)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .fieldEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .holdEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .semanticEvidence)
+        _ = try container.decode([String: BoardPackageEvidenceMappingDocument].self, forKey: .assetEvidence)
+    }
+}
+
+private struct BoardPackageEvidenceSourceDocument: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case url
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id", "title", "url"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        _ = try container.decode(String.self, forKey: .id)
+        _ = try container.decode(String.self, forKey: .title)
+        _ = try container.decode(String.self, forKey: .url)
+    }
+}
+
+private enum BoardPackageEvidenceMappingDocument: Decodable {
+    case sourceIDs([String])
+    case sourced(sourceIDs: [String], method: String)
+
+    private enum CodingKeys: String, CodingKey {
+        case sourceIDs
+        case method
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let sourceIDs = try? container.decode([String].self) {
+            self = .sourceIDs(sourceIDs)
+            return
+        }
+
+        try decoder.rejectUnknownKeys(["sourceIDs", "method"])
+        let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
+        self = .sourced(
+            sourceIDs: try keyedContainer.decode([String].self, forKey: .sourceIDs),
+            method: try keyedContainer.decode(String.self, forKey: .method)
+        )
+    }
+}
+
 private struct BoardPackageSemanticMappingDocument: Decodable {
     let holdIDs: [String]
 
@@ -830,200 +882,5 @@ private struct BoardPackageSemanticMappingDocument: Decodable {
         try decoder.rejectUnknownKeys(["holdIDs"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         holdIDs = try container.decode([String].self, forKey: .holdIDs)
-    }
-}
-
-struct BoardArtworkDocument: Decodable {
-    let schemaVersion: Int
-    let boardID: String
-    let canvasFrame: BoardPackageFrameDocument
-    let palette: String
-    let silhouette: BoardArtworkShapeDocument
-    let layers: [BoardArtworkLayerDocument]
-    let holdPieces: [BoardArtworkHoldPieceDocument]
-
-    private enum CodingKeys: String, CodingKey {
-        case schemaVersion
-        case boardID
-        case canvasFrame
-        case palette
-        case silhouette
-        case layers
-        case holdPieces
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys([
-            "schemaVersion", "boardID", "canvasFrame", "palette", "silhouette", "layers",
-            "holdPieces"
-        ])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
-        boardID = try container.decode(String.self, forKey: .boardID)
-        canvasFrame = try container.decode(BoardPackageFrameDocument.self, forKey: .canvasFrame)
-        palette = try container.decode(String.self, forKey: .palette)
-        silhouette = try container.decode(BoardArtworkShapeDocument.self, forKey: .silhouette)
-        layers = try container.decode([BoardArtworkLayerDocument].self, forKey: .layers)
-        holdPieces = try container.decode([BoardArtworkHoldPieceDocument].self, forKey: .holdPieces)
-    }
-}
-
-struct BoardArtworkLayerDocument: Decodable {
-    let id: String
-    let role: String
-    let frame: BoardPackageFrameDocument
-    let shape: BoardArtworkShapeDocument
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case role
-        case frame
-        case shape
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "role", "frame", "shape"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        role = try container.decode(String.self, forKey: .role)
-        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
-        shape = try container.decode(BoardArtworkShapeDocument.self, forKey: .shape)
-    }
-}
-
-struct BoardArtworkHoldPieceDocument: Decodable {
-    let id: String
-    let holdID: String
-    let frame: BoardPackageFrameDocument
-    let shape: BoardArtworkShapeDocument
-    let treatment: BoardArtworkTreatmentDocument
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case holdID
-        case frame
-        case shape
-        case treatment
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "holdID", "frame", "shape", "treatment"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        holdID = try container.decode(String.self, forKey: .holdID)
-        frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
-        shape = try container.decode(BoardArtworkShapeDocument.self, forKey: .shape)
-        treatment = try container.decode(BoardArtworkTreatmentDocument.self, forKey: .treatment)
-    }
-}
-
-struct BoardArtworkShapeDocument: Decodable {
-    let type: String
-    let commands: [BoardArtworkPathCommandDocument]?
-    let cornerRadiusFraction: Double?
-
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case commands
-        case cornerRadiusFraction
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        type = try container.decode(String.self, forKey: .type)
-        switch type {
-        case "roundedRect":
-            try decoder.rejectUnknownKeys(["type", "cornerRadiusFraction"])
-            commands = nil
-            cornerRadiusFraction = try container.decode(Double.self, forKey: .cornerRadiusFraction)
-        case "path":
-            try decoder.rejectUnknownKeys(["type", "commands"])
-            commands = try container.decode([BoardArtworkPathCommandDocument].self, forKey: .commands)
-            cornerRadiusFraction = nil
-        default:
-            try decoder.rejectUnknownKeys(["type", "commands", "cornerRadiusFraction"])
-            commands = try container.decodeIfPresent(
-                [BoardArtworkPathCommandDocument].self,
-                forKey: .commands
-            )
-            cornerRadiusFraction = try container.decodeIfPresent(
-                Double.self,
-                forKey: .cornerRadiusFraction
-            )
-        }
-    }
-}
-
-struct BoardArtworkPathCommandDocument: Decodable {
-    let command: String
-    let to: [Double]?
-    let control: [Double]?
-    let control1: [Double]?
-    let control2: [Double]?
-
-    private enum CodingKeys: String, CodingKey {
-        case command
-        case to
-        case control
-        case control1
-        case control2
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        command = try container.decode(String.self, forKey: .command)
-        let allowedKeys: Set<String>
-        switch command {
-        case "move", "line":
-            allowedKeys = ["command", "to"]
-        case "quad":
-            allowedKeys = ["command", "to", "control"]
-        case "curve":
-            allowedKeys = ["command", "to", "control1", "control2"]
-        case "close":
-            allowedKeys = ["command"]
-        default:
-            allowedKeys = ["command", "to", "control", "control1", "control2"]
-        }
-        try decoder.rejectUnknownKeys(allowedKeys)
-        to = try container.decodeIfPresent([Double].self, forKey: .to)
-        control = try container.decodeIfPresent([Double].self, forKey: .control)
-        control1 = try container.decodeIfPresent([Double].self, forKey: .control1)
-        control2 = try container.decodeIfPresent([Double].self, forKey: .control2)
-    }
-}
-
-struct BoardArtworkTreatmentDocument: Decodable {
-    let type: String
-    let rimInsetFraction: Double?
-    let depth: String?
-
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case rimInsetFraction
-        case depth
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        type = try container.decode(String.self, forKey: .type)
-        switch type {
-        case "surface":
-            try decoder.rejectUnknownKeys(["type"])
-            rimInsetFraction = nil
-            depth = nil
-        case "shelf":
-            try decoder.rejectUnknownKeys(["type", "rimInsetFraction"])
-            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
-            depth = nil
-        case "recess":
-            try decoder.rejectUnknownKeys(["type", "rimInsetFraction", "depth"])
-            rimInsetFraction = try container.decode(Double.self, forKey: .rimInsetFraction)
-            depth = try container.decode(String.self, forKey: .depth)
-        default:
-            try decoder.rejectUnknownKeys(["type", "rimInsetFraction", "depth"])
-            rimInsetFraction = try container.decodeIfPresent(Double.self, forKey: .rimInsetFraction)
-            depth = try container.decodeIfPresent(String.self, forKey: .depth)
-        }
     }
 }

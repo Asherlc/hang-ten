@@ -1514,6 +1514,21 @@
       "method": "reviewed-human-authored-normalization"
     }
   },
+  "assetEvidence": {
+    "assets/primary.png": {
+      "sourceIDs": [
+        "product-page",
+        "hold-depth-diagram"
+      ],
+      "method": "external-generative-adaptation"
+    },
+    "assets/WoodGripsCompactII.jpg": {
+      "sourceIDs": [
+        "product-page"
+      ],
+      "method": "reviewed-human-authored-normalization"
+    }
+  },
   "artworkEvidence": {
     "silhouette": {
       "sourceIDs": [
@@ -1687,21 +1702,6 @@
       "sourceIDs": [
         "product-page",
         "hold-depth-diagram"
-      ],
-      "method": "reviewed-human-authored-normalization"
-    }
-  },
-  "assetEvidence": {
-    "assets/primary.png": {
-      "sourceIDs": [
-        "product-page",
-        "hold-depth-diagram"
-      ],
-      "method": "external-generative-adaptation"
-    },
-    "assets/WoodGripsCompactII.jpg": {
-      "sourceIDs": [
-        "product-page"
       ],
       "method": "reviewed-human-authored-normalization"
     }

@@ -59,7 +59,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "HangTen/Views/MetoliusCompactIIDesign.swift",
             "HangTen/Views/RockProdigyTrainingCenterDesign.swift",
             "HangTen/Resources/Assets.xcassets/CompactBoard.imageset",
-            "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset"
+            "HangTen/Resources/Assets.xcassets/CompactBoardIllustration.imageset",
+            "HangTen/Views/BoardDesignLanguage.swift",
+            "Hangboards/metolius-wood-grips-compact-ii/artwork.json"
         ]
 
         for relativePath in forbiddenRelativePaths {
@@ -80,7 +82,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "GeneratedBoardCatalog.swift",
             "BoardLibrary.json",
             "MetoliusCompactIIDesign.swift",
-            "RockProdigyTrainingCenterDesign.swift"
+            "RockProdigyTrainingCenterDesign.swift",
+            "BoardDesignLanguage.swift"
         ] {
             XCTAssertFalse(
                 project?.contains(artifactName) == true,
@@ -89,9 +92,23 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    func testBoardMapUsesPackagePresentationImageWithGenericHoldOverlays() throws {
+        let repositoryRoot = repositoryRootURL()
+        let sourceURL = repositoryRoot
+            .appendingPathComponent("HangTen/Views/BoardMapView.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("BoardPresentationImage"))
+        XCTAssertFalse(source.contains("Canvas("))
+        XCTAssertFalse(source.contains("BoardDesign"))
+    }
+
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
+        let genericCanonicalAssetPaths: Set<String> = [
+            "assets/primary.png"
+        ]
         let sourceURLs = try appSourceAndResourceURLs(at: repositoryRoot)
         let legacyArtifactTokens = [
             "GeneratedBoardCatalog",
@@ -99,7 +116,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "MetoliusCompactIIDesign",
             "RockProdigyTrainingCenterDesign",
             "CompactBoard.imageset",
-            "CompactBoardIllustration"
+            "CompactBoardIllustration",
+            "BoardDesignLanguage"
         ]
         let hardcodedMappingPatterns = [
             #"semanticHolds\s*:\s*\[\s*\""#,
@@ -109,13 +127,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "TrainingBoard(",
             "BoardHold(",
             "HoldFrame(",
-            "BoardDesign(",
             "BoardNormalizedPath(commands:"
         ]
         let genericGeometryOwners: Set<String> = [
             "HangTen/Models/BoardPackageStore.swift",
-            "HangTen/Models/BoardStorage.swift",
-            "HangTen/Views/BoardDesignLanguage.swift"
+            "HangTen/Models/BoardStorage.swift"
         ]
 
         var findings: [String] = []
@@ -137,7 +153,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             for token in legacyArtifactTokens where source.contains(token) {
                 findings.append("\(relativePath): legacy artifact token \(token)")
             }
-            for literal in packageOwnedLiterals where source.contains("\"\(literal)\"") {
+            for literal in packageOwnedLiterals
+            where !genericCanonicalAssetPaths.contains(literal)
+                && source.contains("\"\(literal)\"") {
                 findings.append("\(relativePath): package-owned literal \(literal)")
             }
             for pattern in hardcodedMappingPatterns where source.range(
@@ -217,11 +235,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
             }
 
-            let artworkURL = packageURL.appendingPathComponent("artwork.json")
-            let artworkObject = try JSONSerialization.jsonObject(
-                with: Data(contentsOf: artworkURL)
-            )
-            collectArtifactIdentifiers(from: artworkObject, into: &identifiers)
         }
 
         return identifiers
@@ -244,23 +257,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 )
             }
         )
-    }
-
-    private func collectArtifactIdentifiers(from value: Any, into identifiers: inout Set<String>) {
-        if let dictionary = value as? [String: Any] {
-            for key in ["id", "holdID"] {
-                if let identifier = dictionary[key] as? String {
-                    identifiers.insert(identifier)
-                }
-            }
-            for child in dictionary.values {
-                collectArtifactIdentifiers(from: child, into: &identifiers)
-            }
-        } else if let array = value as? [Any] {
-            for child in array {
-                collectArtifactIdentifiers(from: child, into: &identifiers)
-            }
-        }
     }
 
     private func appSourceAndResourceURLs(at repositoryRoot: URL) throws -> [URL] {
