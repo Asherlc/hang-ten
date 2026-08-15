@@ -55,11 +55,26 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(design.holds.map(\.holdID), ["jug-left", "jug-left", "jug-right"])
         XCTAssertEqual(design.interactionFrame(for: firstHold.id), firstHold.frame.rect)
         let boardRect = CGRect(x: 0, y: 0, width: 200, height: 100)
-        let drawnPath = try XCTUnwrap(design.holdPath(for: firstHold.id, in: boardRect))
+        let pieces = design.holdPieces(for: firstHold.id)
+        let drawnPaths = pieces.map { design.renderPath(for: $0, in: boardRect) }
         let interactionPath = BoardHoldPathShape(
-            pieces: design.holdPieces(for: firstHold.id)
+            pieces: pieces
         ).path(in: boardRect)
-        XCTAssertEqual(drawnPath, interactionPath)
+
+        let firstPieceCenter = CGPoint(x: 20, y: 40)
+        let roundedCornerOutside = CGPoint(x: 10.5, y: 20.5)
+        let secondPieceCenter = CGPoint(x: 60, y: 40)
+        let gapBetweenPieces = CGPoint(x: 40, y: 40)
+
+        XCTAssertTrue(drawnPaths[0].contains(firstPieceCenter))
+        XCTAssertFalse(drawnPaths[0].contains(roundedCornerOutside))
+        XCTAssertTrue(drawnPaths[1].contains(secondPieceCenter))
+        XCTAssertFalse(drawnPaths[1].contains(gapBetweenPieces))
+
+        XCTAssertTrue(interactionPath.contains(firstPieceCenter))
+        XCTAssertFalse(interactionPath.contains(roundedCornerOutside))
+        XCTAssertTrue(interactionPath.contains(secondPieceCenter))
+        XCTAssertFalse(interactionPath.contains(gapBetweenPieces))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), presentationBytes)
     }
