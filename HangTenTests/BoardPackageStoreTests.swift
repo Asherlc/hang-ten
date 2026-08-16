@@ -366,12 +366,18 @@ final class BoardPackageStoreTests: XCTestCase {
                 geometry[0]["shape"] = [
                     "type": "path",
                     "commands": [
-                        ["command": "move", "to": [0.8, 0.2]],
-                        ["command": "line", "to": [0.8, 0.8]],
-                        ["command": "line", "to": [0.2, 0.8]],
-                        ["command": "line", "to": [0.2, 0.2]],
+                        ["command": "move", "to": [1.0, 0.0]],
+                        ["command": "line", "to": [1.0, 1.0]],
+                        ["command": "line", "to": [0.0, 1.0]],
+                        ["command": "line", "to": [0.0, 0.0]],
                         ["command": "close"]
                     ]
+                ]
+                geometry[0]["frame"] = [
+                    "x": 0.2,
+                    "y": 0.2,
+                    "width": 0.6,
+                    "height": 0.6
                 ]
                 holds[0]["geometry"] = geometry
                 $0["holds"] = holds
