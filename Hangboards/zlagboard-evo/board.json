@@ -1,0 +1,34 @@
+{
+  "aspectRatio": 2.7562913907284767,
+  "dimensions": "Unknown",
+  "holds": [
+    {
+      "geometry": [
+        {
+          "frame": {
+            "height": 1.0,
+            "width": 1.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "shape": {
+            "cornerRadiusFraction": 0.0,
+            "type": "roundedRect"
+          }
+        }
+      ],
+      "id": "placeholder",
+      "kind": "sloper",
+      "name": "Placeholder hold"
+    }
+  ],
+  "id": "zlagboard-evo",
+  "manufacturer": "Draft Board",
+  "name": "Zlagboard Evo",
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "productURL": "https://example.com/zlagboard-evo",
+  "schemaVersion": 1,
+  "subtitle": "Marked live from migration draft metadata."
+}

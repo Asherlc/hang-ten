@@ -1,0 +1,34 @@
+{
+  "aspectRatio": 1.5,
+  "dimensions": "Unknown",
+  "holds": [
+    {
+      "geometry": [
+        {
+          "frame": {
+            "height": 1.0,
+            "width": 1.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "shape": {
+            "cornerRadiusFraction": 0.0,
+            "type": "roundedRect"
+          }
+        }
+      ],
+      "id": "placeholder",
+      "kind": "sloper",
+      "name": "Placeholder hold"
+    }
+  ],
+  "id": "trango-rock-prodigy-natural",
+  "manufacturer": "Draft Board",
+  "name": "Trango Rock Prodigy Natural",
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "productURL": "https://example.com/trango-rock-prodigy-natural",
+  "schemaVersion": 1,
+  "subtitle": "Marked live from migration draft metadata."
+}
