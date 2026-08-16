@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action || github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -231,6 +231,7 @@ jobs:
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           BUILD_RESULT: ${{ needs.build-ios.result }}
+          BUILD_RUN_ATTEMPT: ${{ github.run_attempt }}
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
@@ -239,6 +240,10 @@ jobs:
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
+            if [[ "$BUILD_RESULT" == "cancelled" && "$BUILD_RUN_ATTEMPT" -gt 1 ]]; then
+              echo "Required iOS build was cancelled in a prior run attempt; evaluating only the latest attempt."
+              exit 0
+            fi
             if [[ "$BUILD_RESULT" != "success" ]]; then
               echo "Required iOS build did not succeed: $BUILD_RESULT" >&2
               exit 1
