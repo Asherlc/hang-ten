@@ -100,6 +100,11 @@ class BoardPackageError(ValueError):
     """Raised for invalid or unsafe direct board-package operations."""
 
 
+class BoardNotAvailableError(BoardPackageError):
+    """Raised when a valid board ID is not present in the library."""
+
+
+
 @dataclass(frozen=True, slots=True)
 class BoardPackage:
     root: Path
@@ -153,7 +158,7 @@ def open_package(library_root: Path, board_id: str) -> BoardPackage:
             None,
         )
         if package is None:
-            raise BoardPackageError("board is not available")
+            raise BoardNotAvailableError("board is not available")
         return package
 
 
