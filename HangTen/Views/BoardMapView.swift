@@ -5,7 +5,6 @@ struct BoardMapView: View {
     let board: TrainingBoard
     var highlightedHoldIDs: Set<String> = []
     var highlightMode: BoardHighlightMode = .active
-    var showsLabels = true
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
@@ -18,7 +17,6 @@ struct BoardMapView: View {
                         hold: hold,
                         isHighlighted: highlightedHoldIDs.contains(hold.id),
                         highlightMode: highlightMode,
-                        showsLabel: showsLabels,
                         onTap: onHoldTap
                     )
                 }
@@ -48,7 +46,6 @@ private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
-    let showsLabel: Bool
     let onTap: ((BoardHold) -> Void)?
 
     var body: some View {
@@ -56,28 +53,11 @@ private struct PhysicalHoldVisual: View {
         ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
-                .overlay {
-                    shape.stroke(
-                        isHighlighted ? highlightStroke : Color.clear,
-                        lineWidth: 2
-                    )
-                }
-
-            if showsLabel {
-                GeometryReader { proxy in
-                    Text(hold.name)
-                        .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
-                        .minimumScaleFactor(0.6)
-                        .frame(
-                            width: max(1, hold.frame.width * proxy.size.width),
-                            height: max(1, hold.frame.height * proxy.size.height)
-                        )
-                        .position(
-                            x: hold.frame.rect.midX * proxy.size.width,
-                            y: hold.frame.rect.midY * proxy.size.height
-                        )
-                }
+            .overlay {
+                shape.stroke(
+                    isHighlighted ? highlightStroke : Color.clear,
+                    lineWidth: 2
+                )
             }
         }
         .contentShape(shape)
