@@ -124,10 +124,9 @@ jobs:
             --destination "$resource_root/build/Resources/Hangboards"
 
       - name: Run pytest suite
-        working-directory: ../..
         env:
-          PYTHONPATH: Tools/HangboardWorkbench/tests
-        run: python -m pytest Tools/HangboardPipeline/tests/test_generated_catalog_import.py -q --junitxml=Tools/HangboardWorkbench/pytest-results.xml
+          PYTHONPATH: ../HangboardWorkbench/tests
+        run: python -m pytest ../HangboardPipeline/tests/test_generated_catalog_import.py -q --junitxml=pytest-results.xml
 
       # actions/upload-artifact v4.6.2
       - name: Upload pytest report on failure
