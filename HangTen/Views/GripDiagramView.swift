@@ -59,22 +59,7 @@ struct GripDiagramView: View {
 
     private var cueLabel: String {
         guard hold.kind != .sloper else { return hold.name }
-
-        if hold.kind == .jug,
-           hold.name.localizedCaseInsensitiveContains("outer") {
-            return "Outer jugs"
-        }
-
-        let undirected = hold.name
-            .replacingOccurrences(of: "Left ", with: "")
-            .replacingOccurrences(of: "Right ", with: "")
-            .replacingOccurrences(of: ", left", with: "")
-            .replacingOccurrences(of: ", right", with: "")
-
-        if undirected.hasSuffix(" edge") || undirected.hasSuffix(" pocket") {
-            return undirected + "s"
-        }
-        return undirected
+        return hold.kind.label
     }
 
     private var accessibilityCueLabel: String {

@@ -176,6 +176,21 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreIgnoresHiddenFilesInPackagesAndDirectoryEnumeration() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try Data("cache".utf8).write(to: hangboardsURL.appendingPathComponent(".DS_Store"))
+            try Data("cache".utf8).write(
+                to: hangboardsURL.appendingPathComponent("fixture-model/.DS_Store")
+            )
+            try Data("cache".utf8).write(
+                to: hangboardsURL.appendingPathComponent("fixture-model/assets/.DS_Store")
+            )
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testStoreRejectsRootCatalogFiles() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try Data("{}".utf8).write(

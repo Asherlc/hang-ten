@@ -146,6 +146,14 @@ def discover_packages(
         return _discover_packages_unlocked(root, final_inventory=final_inventory)
 
 
+def discover_packages_without_lock(
+    library_root: Path, *, final_inventory: bool = False
+) -> tuple[BoardPackage, ...]:
+    """Discover completed packages without taking the lock for read-only use-cases."""
+    root = _library_root(library_root)
+    return _discover_packages_unlocked(root, final_inventory=final_inventory)
+
+
 def open_package(library_root: Path, board_id: str) -> BoardPackage:
     """Open one discovered board by stable ID under a coherent library lock."""
     root = _library_root(library_root)
@@ -412,7 +420,6 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
     recovery: Path | None = None
     backup: Path | None = None
     moved_live = False
-    installed = False
     try:
         if live_package.exists():
             if live_package.is_symlink() or not live_package.is_dir():
@@ -422,13 +429,10 @@ def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
             os.replace(live_package, backup)
             moved_live = True
         os.replace(staged_package, live_package)
-        installed = True
     except BoardPackageError:
         raise
     except OSError as error:
         try:
-            if installed and live_package.exists():
-                shutil.rmtree(live_package)
             if moved_live and backup is not None and backup.exists():
                 os.replace(backup, live_package)
         except OSError as restore_error:
@@ -873,7 +877,22 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         raise BoardPackageError("package primary image is not readable") from error
     if not data.startswith(b"\x89PNG\r\n\x1a\n"):
         raise BoardPackageError("package primary image must be a decodable PNG")
+    ihdr, compressed_parts, has_palette = _scan_png_chunks(data)
+    width, height, bit_depth, color_type, interlace = _validate_png_ihdr(ihdr)
+    if color_type == 3 and not has_palette:
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    _validate_png_scanlines(
+        compressed_parts,
+        width,
+        height,
+        bit_depth,
+        color_type,
+        interlace,
+    )
+    return width, height
 
+
+def _scan_png_chunks(data: bytes) -> tuple[bytes, list[bytes], bool]:
     offset = 8
     ihdr: bytes | None = None
     compressed_parts: list[bytes] = []
@@ -921,10 +940,17 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
 
     if ihdr is None or not compressed_parts or not saw_iend or offset != len(data):
         raise BoardPackageError("package primary image must be a decodable PNG")
-    width, height, bit_depth, color_type, interlace = _validate_png_ihdr(ihdr)
-    if color_type == 3 and not has_palette:
-        raise BoardPackageError("package primary image must be a decodable PNG")
+    return ihdr, compressed_parts, has_palette
 
+
+def _validate_png_scanlines(
+    compressed_parts: list[bytes],
+    width: int,
+    height: int,
+    bit_depth: int,
+    color_type: int,
+    interlace: int,
+) -> None:
     channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
     passes = (
         ((0, 0, 1, 1),)
@@ -965,7 +991,6 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
             if decoded[cursor] > 4:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             cursor += row_size
-    return width, height
 
 
 def _validate_png_ihdr(ihdr: bytes) -> tuple[int, int, int, int, int]:
