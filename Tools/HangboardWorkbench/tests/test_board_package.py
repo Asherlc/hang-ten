@@ -17,10 +17,6 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_PACKAGE = (
-    REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
-)
-PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
 VALIDATION_FIXTURES = json.loads(
     (
         REPOSITORY_ROOT
@@ -37,6 +33,11 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
+from workbench_fixtures import (  # noqa: E402
+    CANONICAL_PACKAGE,
+    PRIMARY_IMAGE,
+    board_document,
+)
 
 
 def _load_stage_module(module_name: str) -> ModuleType:
@@ -52,43 +53,6 @@ def _load_stage_module(module_name: str) -> ModuleType:
     finally:
         sys.dont_write_bytecode = previous_bytecode_setting
     return stage_module
-
-
-def _board_document(
-    board_id: str,
-    *,
-    manufacturer: str = "Fixture Maker",
-    name: str = "Fixture Board",
-) -> dict[str, object]:
-    return {
-        "schemaVersion": 1,
-        "id": board_id,
-        "manufacturer": manufacturer,
-        "name": name,
-        "subtitle": "A physical fixture board.",
-        "productURL": f"https://example.com/{board_id}",
-        "dimensions": "20 × 10 cm",
-        "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "geometry": [
-                    {
-                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                    },
-                    {
-                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
-                        "treatment": {"type": "surface"},
-                    },
-                ],
-            }
-        ],
-    }
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -136,7 +100,7 @@ def _write_finished_package(
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
     _write_json(
         package / "board.json",
-        _board_document(board_id, manufacturer=manufacturer, name=name),
+        board_document(board_id, manufacturer=manufacturer, name=name),
     )
     return package
 
@@ -997,7 +961,7 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
-def test_staging_copies_only_complete_direct_children_without_a_registry(
+def test_staging_rejects_primary_only_drafts_from_the_final_inventory(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository = tmp_path / "repository"
@@ -1018,25 +982,10 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
 
-    staged = stage_module.stage_board_packages(repository, destination)
+    with pytest.raises(ValueError, match="draft-board.*board.json"):
+        stage_module.stage_board_packages(repository, destination)
 
-    assert staged == (destination / "finished-board",)
-    assert sorted(
-        path.relative_to(destination).as_posix()
-        for path in destination.rglob("*")
-    ) == [
-        "finished-board",
-        "finished-board/assets",
-        "finished-board/assets/primary.png",
-        "finished-board/board.json",
-    ]
-    assert not (destination / "catalog.json").exists()
-    staged_board = json.loads(
-        (destination / "finished-board" / "board.json").read_text(encoding="utf-8")
-    )
-    assert [hold["kind"] for hold in staged_board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
+    assert not destination.exists()
 
 
 def test_staging_commits_new_destination_when_backup_cleanup_fails(
