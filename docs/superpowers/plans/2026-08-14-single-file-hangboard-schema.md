@@ -39,15 +39,15 @@
 - Produces: `BoardHold` values whose measurement, capacity, grip posture, and features remain optional when absent.
 - Produces: geometry-derived bounds and one path source for normal, active, and interactive states.
 
-- [ ] **Step 1: Write failing model tests.**
+- [x] **Step 1: Write failing model tests.**
   Add fixtures omitting all optional physical metadata; assert decoded runtime values remain `nil` rather than becoming open-hand/four-finger defaults. Add tests that empty geometry and invalid kinds fail.
-- [ ] **Step 2: Verify RED.**
+- [x] **Step 2: Verify RED.**
   Run `xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:HangTenTests/BoardStorageTests -only-testing:HangTenTests/BoardPackageStoreTests` and confirm the new expectations fail for the missing schema.
-- [ ] **Step 3: Implement the minimal physical model.**
+- [x] **Step 3: Implement the minimal physical model.**
   Remove package-facing cue/label/detail fields, preserve optionals end to end, embed piece documents on holds, and derive the runtime frame from their union. Keep compatibility only where non-package test fixtures require it.
-- [ ] **Step 4: Make rendering and hit testing share geometry.**
+- [x] **Step 4: Make rendering and hit testing share geometry.**
   Route normal fill, active fill, and interactions through the same piece paths. Derive display cue behavior inside app views and show neutral UI when physical metadata is absent.
-- [ ] **Step 5: Verify GREEN, commit, and push.**
+- [x] **Step 5: Verify GREEN, commit, and push.**
   Re-run the focused tests, commit as `refactor: model physical hangboard holds`, and run `git push -u origin HEAD`.
 
 ### Task 2: Replace catalog loading with directory discovery
@@ -65,15 +65,15 @@
 - Produces: direct-child discovery for repositories, staged bundles, and `BoardPackageStore`.
 - Produces: deterministic manufacturer/name/ID ordering and fail-closed validation.
 
-- [ ] **Step 1: Write failing discovery tests.**
+- [x] **Step 1: Write failing discovery tests.**
   Cover multiple direct-child packages without a catalog, primary-only draft exclusion, duplicate board IDs, malformed completed packages, missing `primary.png`, symlinks/path escapes, and deterministic sorting.
-- [ ] **Step 2: Verify RED.**
+- [x] **Step 2: Verify RED.**
   Run `rtk uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests/test_board_package.py Tools/HangboardWorkbench/tests/test_server.py` and the focused `BoardPackageStoreTests` target.
-- [ ] **Step 3: Implement directory discovery.**
+- [x] **Step 3: Implement directory discovery.**
   Remove catalog decoding and sidecar requirements from the Workbench and iOS store. Enumerate only direct children, load `board.json`, validate the exact package shape, expose the same packages through the direct server API, and stage completed directories without generating a registry.
-- [ ] **Step 4: Preserve migration and final modes.**
+- [x] **Step 4: Preserve migration and final modes.**
   Keep a validator mode that ignores primary-only drafts during migration and add a final-inventory mode that rejects them. Maintain all symlink and traversal protections.
-- [ ] **Step 5: Verify GREEN, commit, and push.**
+- [x] **Step 5: Verify GREEN, commit, and push.**
   Re-run Python and Swift-focused tests, commit as `refactor: discover hangboards by directory`, and run `git push origin HEAD`.
 
 ### Task 3: Migrate the Compact II reference package
@@ -93,15 +93,15 @@
 - Consumes: the current Compact II physical holds and artwork paths.
 - Produces: the first complete single-file package and an end-to-end fixture for later batches.
 
-- [ ] **Step 1: Write the failing migrated-package assertions.**
+- [x] **Step 1: Write the failing migrated-package assertions.**
   Assert the directory contains only `board.json` and `assets/primary.png`, every hold has geometry, optional facts preserve their current sourced values, and no removed sidecar/root catalog remains.
-- [ ] **Step 2: Verify RED.**
+- [x] **Step 2: Verify RED.**
   Run the focused Workbench package/geometry/server tests plus the Swift source-boundary and package-store tests.
-- [ ] **Step 3: Merge physical data and exact paths.**
+- [x] **Step 3: Merge physical data and exact paths.**
   Move each current hold's pieces into its board record, remove UI-only fields, preserve multiple pieces where applicable, and delete obsolete sidecars and root catalog.
-- [ ] **Step 4: Validate visual invariants.**
+- [x] **Step 4: Validate visual invariants.**
   Assert hold IDs are unique, each geometry set is nonempty, mirrored pairs remain exact mirrors where applicable, and interaction bounds equal piece unions.
-- [ ] **Step 5: Verify GREEN, commit, and push.**
+- [x] **Step 5: Verify GREEN, commit, and push.**
   Run focused Python/Swift tests plus `xcodebuild build -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`, commit as `refactor: migrate Compact II board package`, and run `git push origin HEAD`.
 
 ### Task 4: Author every remaining board in audited batches
