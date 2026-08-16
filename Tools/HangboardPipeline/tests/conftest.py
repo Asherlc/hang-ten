@@ -17,7 +17,6 @@ class _BoardCatalogInventory:
 
 def _discover_board_packages(root: Path) -> _BoardCatalogInventory:
     """Return discoverable board packages in a catalog root directory."""
-
     packages = [
         _BoardCatalogPackage(package)
         for package in sorted(Path(root).iterdir())
@@ -28,5 +27,4 @@ def _discover_board_packages(root: Path) -> _BoardCatalogInventory:
 
 def load_board_catalog_module() -> SimpleNamespace:
     """Return a tiny object exposing ``discover_board_packages`` for tests."""
-
     return SimpleNamespace(discover_board_packages=_discover_board_packages)
