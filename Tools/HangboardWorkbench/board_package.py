@@ -871,27 +871,13 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         data = path.read_bytes()
     except OSError as error:
         raise BoardPackageError("package primary image is not readable") from error
-    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
-        raise BoardPackageError("package primary image must be a decodable PNG")
 
-    offset = 8
     ihdr: bytes | None = None
     compressed_parts: list[bytes] = []
     has_palette = False
     ended_idat = False
-    saw_iend = False
-    while offset < len(data):
-        if len(data) - offset < 12:
-            raise BoardPackageError("package primary image must be a decodable PNG")
-        length = int.from_bytes(data[offset : offset + 4], "big")
-        chunk_type = data[offset + 4 : offset + 8]
-        chunk_end = offset + 12 + length
-        if chunk_end > len(data):
-            raise BoardPackageError("package primary image must be a decodable PNG")
-        payload = data[offset + 8 : offset + 8 + length]
-        expected_crc = int.from_bytes(data[offset + 8 + length : chunk_end], "big")
-        if zlib.crc32(chunk_type + payload) & 0xFFFFFFFF != expected_crc:
-            raise BoardPackageError("package primary image must be a decodable PNG")
+    for chunk_type, payload in _png_chunks(data):
+        length = len(payload)
         if ihdr is None and chunk_type != b"IHDR":
             raise BoardPackageError("package primary image must be a decodable PNG")
         if chunk_type == b"IHDR":
@@ -907,24 +893,72 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             compressed_parts.append(payload)
         elif chunk_type == b"IEND":
-            if length != 0 or chunk_end != len(data):
+            if length != 0:
                 raise BoardPackageError("package primary image must be a decodable PNG")
-            saw_iend = True
-            offset = chunk_end
             break
         else:
             if compressed_parts:
                 ended_idat = True
             if chunk_type and chunk_type[0] & 0x20 == 0:
                 raise BoardPackageError("package primary image must be a decodable PNG")
-        offset = chunk_end
-
-    if ihdr is None or not compressed_parts or not saw_iend or offset != len(data):
+    if ihdr is None or not compressed_parts:
         raise BoardPackageError("package primary image must be a decodable PNG")
     width, height, bit_depth, color_type, interlace = _validate_png_ihdr(ihdr)
     if color_type == 3 and not has_palette:
         raise BoardPackageError("package primary image must be a decodable PNG")
 
+    layouts = _png_scanline_layouts(
+        width,
+        height,
+        bit_depth,
+        color_type,
+        interlace,
+    )
+    decoded = _png_inflate_exact(compressed_parts, layouts)
+    cursor = 0
+    for row_size, row_count in layouts:
+        for _ in range(row_count):
+            if decoded[cursor] > 4:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            cursor += row_size
+    return width, height
+
+
+def _png_chunks(data: bytes) -> tuple[tuple[bytes, bytes], ...]:
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+
+    chunks: list[tuple[bytes, bytes]] = []
+    offset = 8
+    while offset < len(data):
+        if len(data) - offset < 12:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        length = int.from_bytes(data[offset : offset + 4], "big")
+        chunk_type = data[offset + 4 : offset + 8]
+        chunk_end = offset + 12 + length
+        if chunk_end > len(data):
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        payload = data[offset + 8 : offset + 8 + length]
+        expected_crc = int.from_bytes(data[offset + 8 + length : chunk_end], "big")
+        if zlib.crc32(chunk_type + payload) & 0xFFFFFFFF != expected_crc:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        chunks.append((chunk_type, payload))
+        offset = chunk_end
+        if chunk_type == b"IEND":
+            if offset != len(data):
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            return tuple(chunks)
+
+    raise BoardPackageError("package primary image must be a decodable PNG")
+
+
+def _png_scanline_layouts(
+    width: int,
+    height: int,
+    bit_depth: int,
+    color_type: int,
+    interlace: int,
+) -> tuple[tuple[int, int], ...]:
     channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
     passes = (
         ((0, 0, 1, 1),)
@@ -946,6 +980,13 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         pass_height = max(0, (height - start_y + step_y - 1) // step_y)
         if pass_width and pass_height:
             layouts.append(((pass_width * bits_per_pixel + 7) // 8 + 1, pass_height))
+    return tuple(layouts)
+
+
+def _png_inflate_exact(
+    compressed_parts: list[bytes],
+    layouts: tuple[tuple[int, int], ...],
+) -> bytes:
     expected_size = sum(row_size * row_count for row_size, row_count in layouts)
     try:
         decompressor = zlib.decompressobj()
@@ -959,13 +1000,7 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         or decompressor.unused_data
     ):
         raise BoardPackageError("package primary image must be a decodable PNG")
-    cursor = 0
-    for row_size, row_count in layouts:
-        for _ in range(row_count):
-            if decoded[cursor] > 4:
-                raise BoardPackageError("package primary image must be a decodable PNG")
-            cursor += row_size
-    return width, height
+    return decoded
 
 
 def _validate_png_ihdr(ihdr: bytes) -> tuple[int, int, int, int, int]:

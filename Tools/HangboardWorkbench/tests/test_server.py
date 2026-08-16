@@ -17,19 +17,13 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-PRIMARY_IMAGE = (
-    REPOSITORY_ROOT
-    / "Hangboards"
-    / "metolius-wood-grips-compact-ii"
-    / "assets"
-    / "primary.png"
-)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 import server as server_module  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
 from server import EditorError, create_server, validate_hang_ten_checkout  # noqa: E402
+from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
 
 
 def _write_library(root: Path) -> Path:
@@ -38,35 +32,7 @@ def _write_library(root: Path) -> Path:
     assets = package / "assets"
     assets.mkdir(parents=True)
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
-    board = {
-        "schemaVersion": 1,
-        "id": "fixture.board",
-        "manufacturer": "Fixture Maker",
-        "name": "Fixture Board",
-        "subtitle": "A physical fixture board.",
-        "productURL": "https://example.com/fixture.board",
-        "dimensions": "20 × 10 cm",
-        "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "geometry": [
-                    {
-                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                    },
-                    {
-                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
-                        "treatment": {"type": "surface"},
-                    },
-                ],
-            }
-        ],
-    }
+    board = board_document("fixture.board")
     (package / "board.json").write_text(
         json.dumps(board, indent=2) + "\n", encoding="utf-8"
     )
@@ -245,6 +211,23 @@ def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
 
     assert status == 400
     assert result == {"ok": False, "error": "could not load board"}
+
+
+def test_save_routes_not_available_errors_to_404(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+
+    def raise_unavailable(*_args: object) -> object:
+        raise board_package.BoardNotAvailableError("unavailable details changed")
+
+    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "PUT", "/api/boards/fixture.board", {})
+
+    assert status == 404
+    assert result == {"ok": False, "error": "board is not available"}
 
 
 def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
