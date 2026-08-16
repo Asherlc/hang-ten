@@ -38,7 +38,6 @@ jobs:
       shared_board_content: ${{ steps.filter.outputs.shared_board_content }}
       metadata: ${{ steps.filter.outputs.metadata }}
       workflow: ${{ steps.filter.outputs.workflow }}
-      board_only_shared_board_content: ${{ steps.board_only_shared_board_content.outputs.board_only_shared_board_content }}
     steps:
       # actions/checkout v4.2.2
       - name: Check out source
@@ -50,38 +49,6 @@ jobs:
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
         with:
           filters: .github/ci-paths.yml
-
-      - id: board_only_shared_board_content
-        name: Detect board-only shared board content updates
-        run: |
-          set -euo pipefail
-
-          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
-            echo "board_only_shared_board_content=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          base_sha="${{ github.event.pull_request.base.sha }}"
-          head_sha="${{ github.event.pull_request.head.sha }}"
-
-          git fetch --no-tags --depth=1 origin "$base_sha"
-
-          board_only=true
-          changed_files="$(git diff --name-only "$base_sha" "$head_sha" --)"
-          while IFS= read -r file; do
-            case "$file" in
-              "" )
-                continue
-                ;;
-              Hangboards/*|scripts/mark-boards-live.py)
-                ;;
-              *)
-                board_only=false
-                ;;
-            esac
-          done <<< "$changed_files"
-
-          echo "board_only_shared_board_content=$board_only" >> "$GITHUB_OUTPUT"
 
   metadata:
     name: Validate App Store metadata
@@ -178,7 +145,7 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true' ||
-      (needs.changes.outputs.shared_board_content == 'true' && needs.changes.outputs.board_only_shared_board_content != 'true')
+      needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
     timeout-minutes: 30
     strategy:
@@ -264,7 +231,7 @@ jobs:
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           BUILD_RESULT: ${{ needs.build-ios.result }}
-          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || (needs.changes.outputs.shared_board_content == 'true' && needs.changes.outputs.board_only_shared_board_content != 'true') }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" != "success" ]]; then
