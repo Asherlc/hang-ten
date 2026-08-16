@@ -309,7 +309,7 @@ struct HomeView: View {
                 .accessibilityLabel("Choose hangboard")
             }
 
-            BoardMapView(board: store.selectedBoard, showsLabels: false)
+            BoardMapView(board: store.selectedBoard)
                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
 
             HStack(spacing: 7) {

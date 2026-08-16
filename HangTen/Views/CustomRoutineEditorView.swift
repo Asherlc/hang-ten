@@ -320,7 +320,6 @@ private struct CustomRoutineStepEditor: View {
                 BoardMapView(
                     board: board,
                     highlightedHoldIDs: selectedHoldIDs,
-                    showsLabels: false,
                     onHoldTap: toggleHold
                 )
             }
