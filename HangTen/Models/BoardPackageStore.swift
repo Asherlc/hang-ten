@@ -1069,8 +1069,8 @@ private extension Array where Element == BoardPathCommand {
                     second.minY > first.maxY + Self.contourEpsilon {
                     continue
                 }
-                if second.index == first.index + 1 ||
-                    (first.index == 0 && second.index == segmentCount - 1) {
+                let indexDistance = abs(first.index - second.index)
+                if indexDistance == 1 || indexDistance == segmentCount - 1 {
                     continue
                 }
                 if Self.segmentsIntersect(
