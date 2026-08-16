@@ -70,7 +70,7 @@ def test_repository_generated_packages_are_primary_only_and_unregistered() -> No
     assert {package.root.name for package in inventory.packages} == registered
     CANDIDATE_SLUGS = documented_blockers & unregistered
     assert package_directories == CANDIDATE_SLUGS | registered
-    assert len(package_directories) == 33
+    assert len(package_directories) == len(candidate_slugs | registered)
     assert unregistered == CANDIDATE_SLUGS
 
     for slug in package_directories:
