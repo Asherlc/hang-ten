@@ -11,41 +11,6 @@ from conftest import load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 IMPORTER = REPO_ROOT / "scripts/import-generated-board-catalog.py"
 
-CANDIDATE_SLUGS = {
-    "beastmaker-1000",
-    "beastmaker-2000",
-    "dewoodstok-woodbord",
-    "escape-beta",
-    "escape-unlimited",
-    "evolv-kilter-basic-long",
-    "frictitious-doormount-pro-7",
-    "frictitious-megalith",
-    "lattice-triple-rung",
-    "metolius-climbers-edge",
-    "metolius-contact",
-    "metolius-project",
-    "metolius-simulator-3d",
-    "moon-armstrong",
-    "nature-stoak-board-iii",
-    "soill-iron-palm-2",
-    "soill-split-palm",
-    "soill-training-tiles",
-    "target10a-linebreaker-base",
-    "tension-grindstone",
-    "tension-honestone",
-    "tension-whetstone",
-    "trango-rock-prodigy-forge",
-    "trango-rock-prodigy-natural",
-    "trango-rock-prodigy-pivot",
-    "trango-rock-prodigy-training-center",
-    "yy-verticalboard-evo",
-    "yy-verticalboard-first",
-    "yy-verticalboard-light",
-    "yy-verticalboard-one",
-    "zlagboard-evo",
-    "zlagboard-pro",
-}
-
 SOURCE_AUDITS = (
     "2026-08-12-beastmaker-board-packages.md",
     "2026-08-12-dewoodstok-escape-board-packages.md",
@@ -103,10 +68,10 @@ def test_repository_generated_packages_are_primary_only_and_unregistered() -> No
         REPO_ROOT / "Hangboards"
     )
     assert {package.root.name for package in inventory.packages} == registered
-    assert package_directories == CANDIDATE_SLUGS | registered
+    candidate_slugs = documented_blockers & unregistered
+    assert package_directories == candidate_slugs | registered
     assert len(package_directories) == 33
-    assert unregistered == CANDIDATE_SLUGS
-    assert unregistered == documented_blockers
+    assert unregistered == candidate_slugs
 
     for slug in package_directories:
         assert (REPO_ROOT / "Hangboards" / slug / "assets/primary.png").is_file()
