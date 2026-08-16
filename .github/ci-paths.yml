@@ -29,6 +29,7 @@ workbench:
   - '.github/ci-paths.yml'
   - '.github/actions/**'
 shared_board_content:
+  - 'Hangboards/**'
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
