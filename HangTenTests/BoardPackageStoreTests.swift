@@ -286,7 +286,7 @@ final class BoardPackageStoreTests: XCTestCase {
             guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
                 return XCTFail("Expected packagePathEscape, got \(error)")
             }
-            XCTAssertEqual(boardID, "fixture.board")
+            XCTAssertEqual(boardID, "fixture-model")
             XCTAssertTrue(path.hasSuffix("/outside-board.json"), path)
         }
     }
