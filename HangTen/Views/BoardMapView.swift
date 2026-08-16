@@ -60,11 +60,13 @@ private struct PhysicalHoldVisual: View {
                 )
             }
         }
-        .contentShape(shape)
+        .contentShape(.interaction, shape)
+        .contentShape(.accessibility, shape)
         .onTapGesture {
             onTap?(hold)
         }
         .accessibilityLabel(hold.name)
+        .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
     }
 

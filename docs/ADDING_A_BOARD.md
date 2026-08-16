@@ -46,6 +46,9 @@ nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
 ranges, finger capacity, grip posture, and feature tags are optional.
 
+Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
+rejected by the loader.
+
 Validate direct discovery and the single-file package contract after every
 package change:
 
