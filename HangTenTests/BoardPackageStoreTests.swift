@@ -315,7 +315,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
                     return XCTFail("Expected invalidPackage, got \(error)")
                 }
-                XCTAssertEqual(boardID, "fixture.board")
+                XCTAssertEqual(boardID, "fixture-model")
                 XCTAssertTrue(reason.contains("geometry"))
             }
         }
