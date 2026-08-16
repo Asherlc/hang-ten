@@ -961,7 +961,7 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
-def test_staging_ignores_primary_only_drafts_when_staging_packages(
+def test_staging_rejects_primary_only_drafts_from_the_final_inventory(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository = tmp_path / "repository"
@@ -982,11 +982,10 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     monkeypatch.setenv("TARGET_BUILD_DIR", str(build_root))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", "Resources")
 
-    staged = stage_module.stage_board_packages(repository, destination)
+    with pytest.raises(ValueError, match="draft-board.*board.json"):
+        stage_module.stage_board_packages(repository, destination)
 
-    assert staged == (destination / "finished-board",)
-    assert (destination / "finished-board").is_dir()
-    assert (destination / "draft-board").is_dir() is False
+    assert not destination.exists()
 
 
 def test_staging_commits_new_destination_when_backup_cleanup_fails(
