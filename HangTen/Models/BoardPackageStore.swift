@@ -864,8 +864,8 @@ struct BoardGeometryShapeDocument: Codable, Hashable {
             return false
         }
         guard let points = try? pathCommands.flattenedContour() else { return false }
-        let xValues = points.map(\.x)
-        let yValues = points.map(\.y)
+        let xValues = points.map { point in point.x }
+        let yValues = points.map { point in point.y }
         let tolerance = 0.0000005
         return xValues.min()! <= tolerance && yValues.min()! <= tolerance &&
             xValues.max()! >= 1 - tolerance && yValues.max()! >= 1 - tolerance
@@ -1060,7 +1060,7 @@ private extension BoardGeometryPathCommandDocument {
     }
 }
 
-private extension Array where Element == BoardPathCommand {
+extension Array where Element == BoardPathCommand {
     func validateSimpleContour() throws {
         let points = try flattenedContour()
         guard points.count >= 4, points.first == points.last else {
@@ -1108,7 +1108,7 @@ private extension Array where Element == BoardPathCommand {
         }
     }
 
-    private func flattenedContour() throws -> [CGPoint] {
+    fileprivate func flattenedContour() throws -> [CGPoint] {
         guard case .move(let start)? = first else {
             throw BoardGeometryAdaptationError.invalid("path must begin with move")
         }
