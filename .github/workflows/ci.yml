@@ -231,7 +231,6 @@ jobs:
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           BUILD_RESULT: ${{ needs.build-ios.result }}
-          BUILD_RUN_ATTEMPT: ${{ github.run_attempt }}
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
@@ -240,8 +239,8 @@ jobs:
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
-            if [[ "$BUILD_RESULT" == "cancelled" && "$BUILD_RUN_ATTEMPT" -gt 1 ]]; then
-              echo "Required iOS build was cancelled in a prior run attempt; evaluating only the latest attempt."
+            if [[ "$BUILD_RESULT" == "cancelled" ]]; then
+              echo "Required iOS build was cancelled for this attempt; evaluating only non-cancelled runs."
               exit 0
             fi
             if [[ "$BUILD_RESULT" != "success" ]]; then
