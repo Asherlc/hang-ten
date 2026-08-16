@@ -152,9 +152,10 @@ struct BoardHoldDefinition: Codable, Hashable {
         ) {
             if container.contains(.frame) {
                 throw DecodingError.dataCorrupted(
-                    forKey: .geometry,
-                    in: container,
-                    debugDescription: "hold \(id) declares both geometry and legacy frame"
+                    .init(
+                        codingPath: container.codingPath + [CodingKeys.geometry],
+                        debugDescription: "hold \(id) declares both geometry and legacy frame"
+                    )
                 )
             }
             geometry = pieces
