@@ -125,7 +125,7 @@ jobs:
 
       - name: Run pytest suite
         env:
-          PYTHONPATH: ../HangboardWorkbench/tests
+          PYTHONPATH: ../HangboardPipeline/tests:../HangboardWorkbench/tests
         run: python -m pytest ../HangboardPipeline/tests/test_generated_catalog_import.py -q --junitxml=pytest-results.xml
 
       # actions/upload-artifact v4.6.2
