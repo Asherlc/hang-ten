@@ -275,12 +275,20 @@ final class BoardPackageStoreTests: XCTestCase {
         let linkedMemberFixture = try makeFixtureBundle { hangboardsURL in
             let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
             let boardURL = packageURL.appendingPathComponent("board.json")
-            let outsideURL = hangboardsURL.appendingPathComponent("outside-board.json")
+            let outsideURL = hangboardsURL
+                .deletingLastPathComponent()
+                .appendingPathComponent("outside-board.json")
             try FileManager.default.moveItem(at: boardURL, to: outsideURL)
             try FileManager.default.createSymbolicLink(at: boardURL, withDestinationURL: outsideURL)
         }
         defer { linkedMemberFixture.remove() }
-        XCTAssertThrowsError(try BoardPackageStore(bundle: linkedMemberFixture.bundle))
+        XCTAssertThrowsError(try BoardPackageStore(bundle: linkedMemberFixture.bundle)) { error in
+            guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected packagePathEscape, got \(error)")
+            }
+            XCTAssertEqual(boardID, "fixture.board")
+            XCTAssertTrue(path.hasSuffix("/outside-board.json"), path)
+        }
     }
 
     func testStoreRejectsEmptyAndOutOfRangeGeometry() throws {
