@@ -203,21 +203,6 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         }
     }
 
-    var activeFingers: Set<FingerSlot> {
-        switch self {
-        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
-            Set(FingerSlot.allCases)
-        case .threeFingerPocket:
-            [.index, .middle, .ring]
-        case .twoFingerPocket:
-            [.middle, .ring]
-        }
-    }
-
-    var thumbEngaged: Bool {
-        self == .fullCrimp
-    }
-
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)
@@ -367,9 +352,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.photoAssetName = photoAssetName
     }
 
-    var displayName: String {
-        "\(manufacturer) \(name)"
-    }
+
 }
 
 struct HoldTarget: Hashable {
@@ -561,10 +544,6 @@ struct WorkoutStep: Identifiable, Hashable {
         duration > activeDuration
     }
 
-    var restDuration: TimeInterval {
-        max(0, duration - activeDuration)
-    }
-
     var durationLabel: String {
         let seconds = Int(duration)
         let minutes = seconds / 60
@@ -577,6 +556,10 @@ struct WorkoutStep: Identifiable, Hashable {
             return "\(minutes)m"
         }
         return "\(remainder)s"
+    }
+
+    var restDuration: TimeInterval {
+        max(0, duration - activeDuration)
     }
 
     func withNumber(_ number: Int) -> WorkoutStep {

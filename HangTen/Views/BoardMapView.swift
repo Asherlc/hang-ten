@@ -193,20 +193,3 @@ private struct PhysicalHoldVisual: View {
         }
     }
 }
-
-struct BoardLegend: View {
-    var body: some View {
-        HStack(spacing: 12) {
-            ForEach(HoldKind.allCases) { kind in
-                HStack(spacing: 5) {
-                    Circle()
-                        .fill(kind.tint)
-                        .frame(width: 7, height: 7)
-                    Text(kind.label)
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
-            }
-        }
-    }
-}
