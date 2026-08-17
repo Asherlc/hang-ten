@@ -395,7 +395,9 @@ jobs:
 
           echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$simulator_udid"
-          xcrun simctl bootstatus "$simulator_udid" -b
+          if ! timeout 90 xcrun simctl bootstatus "$simulator_udid" -b; then
+            echo "Simulator boot status check timed out; continuing anyway." >&2
+          fi
 
       - name: Run XCTest suite
         env:
