@@ -619,6 +619,16 @@ def test_remote_request_without_session_returns_401(tmp_path: Path) -> None:
     assert payload["login_url"] == "/auth/login"
 
 
+def test_health_check_without_session_returns_200(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 200
+    assert payload["ok"] is True
+
+
 def test_auth_status_returns_unauthenticated_by_default(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 

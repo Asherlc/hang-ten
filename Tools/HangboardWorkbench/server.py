@@ -177,10 +177,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/auth/status":
             self._handle_auth_status()
             return
-        if not self._allow_request(mutation=False):
-            return
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
+            return
+        if not self._allow_request(mutation=False):
             return
         if path == "/api/git/status":
             self._get_git_status()
