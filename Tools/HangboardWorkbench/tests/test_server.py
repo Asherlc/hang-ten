@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+import http.cookiejar
 import json
 import os
+import secrets
 import shutil
 import subprocess
 import sys
 import threading
+import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Iterator
 from urllib.error import HTTPError
@@ -26,7 +31,15 @@ PRIMARY_IMAGE = (
 )
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
-from server import EditorError, create_server, validate_hang_ten_checkout  # noqa: E402
+import board_package  # noqa: E402
+import server as server_module  # noqa: E402
+from board_package import BoardPackageError  # noqa: E402
+from server import (  # noqa: E402
+    EditorError,
+    _Session,
+    create_server,
+    validate_hang_ten_checkout,
+)
 
 
 def _write_library(root: Path) -> Path:
@@ -70,6 +83,62 @@ def _write_library(root: Path) -> Path:
     return library
 
 
+def _git_checkout(root: Path) -> Path:
+    checkout = root / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    (checkout / "Hangboards").mkdir(parents=True)
+    workbench = checkout / "Tools" / "HangboardWorkbench"
+    workbench.mkdir(parents=True)
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "server.py",
+        workbench / "server.py",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_package.py",
+        workbench / "board_package.py",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_geometry.py",
+        workbench / "board_geometry.py",
+    )
+    subprocess.run(
+        ["git", "init", "-b", "main"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Hangboard Workbench"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "workbench@example.com"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "add", "."],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "Initialize hang-ten checkout"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    return checkout
+
+
 @contextmanager
 def running_server(library: Path) -> Iterator[str]:
     httpd = create_server(library, port=0)
@@ -81,6 +150,28 @@ def running_server(library: Path) -> Iterator[str]:
         httpd.shutdown()
         httpd.server_close()
         thread.join(timeout=5)
+
+
+@contextmanager
+def running_server_with_oauth(
+    library: Path, *, fake_token: str = "ghp_test_token_123"
+) -> Iterator[tuple[str, str]]:
+    """Start a server with OAuth configured. Yields (base_url, fake_token)."""
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+    )
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{httpd.server_port}", fake_token
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+        httpd.server_close()
 
 
 def request_json(
@@ -351,3 +442,311 @@ def test_checkout_rejects_a_hangboards_symlink_that_escapes_the_checkout(
 
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
+
+
+def test_git_status_reports_branch_and_worktree_state(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "workbench-note.txt").write_text("working tree", encoding="utf-8")
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "currentBranch": "main",
+        "dirty": True,
+        "statusLines": ["?? workbench-note.txt"],
+        "branches": ["main"],
+    }
+
+
+def test_git_status_reports_null_branch_in_detached_head_state(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "currentBranch": None,
+        "dirty": False,
+        "statusLines": [],
+        "branches": ["main"],
+    }
+
+
+def test_git_checkout_switches_branch(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    subprocess.run([
+        "git",
+        "switch",
+        "-c",
+        "feature",
+    ], cwd=checkout, check=True, text=True, capture_output=True)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main"},
+        )
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "branch": "main",
+    }
+
+
+def test_git_commit_refuses_when_nothing_to_commit(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/commit",
+            {"message": "No-op"},
+        )
+
+    assert status == 409
+    assert payload == {
+        "ok": False,
+        "error": "no changes to commit",
+    }
+
+
+def test_git_checkout_rejects_branch_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "--exec=rm -rf /"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]
+
+
+def test_git_commit_rejects_message_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "new-file.txt").write_text("hello", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "new-file.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/commit",
+            {"message": "--allow-empty"},
+        )
+
+    assert status == 400
+    assert "message" in payload["error"]
+
+
+def test_git_push_rejects_remote_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "push-me.txt").write_text("data", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "push-me.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "add file"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/push",
+            {"remote": "--all"},
+        )
+
+    assert status == 400
+    assert "remote" in payload["error"]
+
+
+def test_git_checkout_rejects_branch_with_null_byte(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main\x00evil"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]
+
+
+def test_remote_request_without_session_returns_401(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 401
+    assert payload["error"] == "authentication required"
+    assert payload["login_url"] == "/auth/login"
+
+
+def test_root_without_session_redirects_to_login(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        request = urllib.request.Request(f"{base}/")
+        opener = urllib.request.build_opener(_NoRedirectHandler)
+        try:
+            opener.open(request)
+            pytest.fail("expected a redirect to raise HTTPError")
+        except urllib.error.HTTPError as error:
+            assert error.code == 302
+            assert error.headers.get("Location") == "/auth/login"
+
+
+def test_health_check_without_session_returns_200(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 200
+    assert payload["ok"] is True
+
+
+def test_local_mode_health_check_still_enforces_loopback_origin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+    monkeypatch.setattr(server_module, "_loopback_peer", lambda _value: False)
+
+    with running_server(library) as base:
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 403
+    assert payload["error"] == "request origin is not allowed"
+
+
+def test_auth_status_returns_unauthenticated_by_default(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/auth/status")
+
+    assert status == 200
+    assert payload["authenticated"] is False
+
+
+def test_auth_status_returns_username_with_valid_session(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    httpd = create_server(
+        checkout / "Hangboards",
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+    )
+    session_id = secrets.token_hex(32)
+    httpd.sessions[session_id] = _Session(token="ghp_fake", username="testuser")
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        base = f"http://127.0.0.1:{httpd.server_port}"
+        cookie_jar = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(cookie_jar)
+        )
+        cookie = http.cookiejar.Cookie(
+            version=0,
+            name="wb_session",
+            value=session_id,
+            port=None,
+            port_specified=False,
+            domain="127.0.0.1",
+            domain_specified=True,
+            domain_initial_dot=False,
+            path="/",
+            path_specified=True,
+            secure=False,
+            expires=int(time.time()) + 3600,
+            discard=False,
+            comment=None,
+            comment_url=None,
+            rest={},
+            rfc2109=False,
+        )
+        cookie_jar.set_cookie(cookie)
+        request = urllib.request.Request(f"{base}/api/auth/status")
+        with opener.open(request) as response:
+            payload = json.loads(response.read())
+        assert payload["authenticated"] is True
+        assert payload["username"] == "testuser"
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+        httpd.server_close()
+
+
+class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Raise HTTPError instead of following redirects, so tests can inspect
+    the redirect response without making an outbound network call."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D102, N802
+        raise urllib.error.HTTPError(req.full_url, code, msg, headers, fp)
+
+
+def test_login_redirects_to_github(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        request = urllib.request.Request(f"{base}/auth/login")
+        opener = urllib.request.build_opener(_NoRedirectHandler)
+        try:
+            opener.open(request)
+            pytest.fail("expected a redirect to raise HTTPError")
+        except urllib.error.HTTPError as error:
+            assert error.code == 302
+            location = error.headers.get("Location", "")
+            assert "github.com/login/oauth/authorize" in location
+            assert "client_id=test-client-id" in location
+            assert "scope=repo,read:org" in location
+
+
+def test_login_without_oauth_configured_returns_404(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/auth/login")
+
+    assert status == 404
