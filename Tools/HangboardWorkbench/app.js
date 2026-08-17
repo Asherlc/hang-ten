@@ -9,6 +9,9 @@
     validateEditorDocument,
   } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
+  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = (() => {
+    try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
+  })();
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const state = { boards: [], board: null, document: null, image: null, selectedKey: null, busy: false, dirty: false };
   const el = Object.fromEntries([
@@ -72,6 +75,7 @@
     const selected = selectedHold();
     el["empty-state"].classList.toggle("hidden", Boolean(documentValue));
     el["hold-overlay"].replaceChildren();
+    el["editor-svg"].querySelector(".path-editor-overlay")?.remove();
     if (!documentValue) {
       el["board-name"].textContent = "No board selected";
       el["board-image"].removeAttribute("href");
@@ -96,6 +100,63 @@
       shape.addEventListener("click", () => { state.selectedKey = hold.key; render(); });
       el["hold-overlay"].append(shape);
     }
+    if (selected) {
+      renderPathHandles(selected);
+    }
+  }
+
+  function renderPathHandles(hold) {
+    if (!parsePath) return;
+    const overlay = document.createElementNS(svgNS, "g");
+    overlay.classList.add("path-editor-overlay");
+    let commands;
+    try { commands = parsePath(hold.displayPath); } catch { return; }
+    for (let i = 0; i < commands.length; i++) {
+      const cmd = commands[i];
+      if (cmd.type === "Z") continue;
+      const endpoint = cmd.points[cmd.points.length - 1];
+      const circle = document.createElementNS(svgNS, "circle");
+      circle.setAttribute("cx", String(endpoint.x));
+      circle.setAttribute("cy", String(endpoint.y));
+      circle.setAttribute("r", "6");
+      circle.setAttribute("fill", TYPE_COLORS[hold.type] || "#ff754f");
+      circle.setAttribute("stroke", "#fff7dc");
+      circle.setAttribute("stroke-width", "1.5");
+      circle.classList.add("path-editor-vertex");
+      circle.dataset.index = String(i);
+      overlay.append(circle);
+      for (let j = 0; j < cmd.controls.length; j++) {
+        const cp = cmd.controls[j];
+        const prevCmd = i > 0 ? commands[i - 1] : null;
+        const anchor = j === 0
+          ? (prevCmd && prevCmd.type !== "Z" ? prevCmd.points[prevCmd.points.length - 1] : cmd.points[0])
+          : cmd.points[0];
+        if (anchor) {
+          const line = document.createElementNS(svgNS, "line");
+          line.setAttribute("x1", String(anchor.x));
+          line.setAttribute("y1", String(anchor.y));
+          line.setAttribute("x2", String(cp.x));
+          line.setAttribute("y2", String(cp.y));
+          line.setAttribute("stroke", "#888");
+          line.setAttribute("stroke-width", "1");
+          line.setAttribute("stroke-dasharray", "4 2");
+          line.classList.add("path-editor-line");
+          overlay.append(line);
+        }
+        const cc = document.createElementNS(svgNS, "circle");
+        cc.setAttribute("cx", String(cp.x));
+        cc.setAttribute("cy", String(cp.y));
+        cc.setAttribute("r", "3");
+        cc.setAttribute("fill", "#888");
+        cc.setAttribute("stroke", "#fff");
+        cc.setAttribute("stroke-width", "1");
+        cc.classList.add("path-editor-control");
+        cc.dataset.index = String(i);
+        cc.dataset.control = String(j);
+        overlay.append(cc);
+      }
+    }
+    el["editor-svg"].append(overlay);
   }
 
   function renderInspector() {

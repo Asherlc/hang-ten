@@ -24,7 +24,7 @@ button { color: inherit; }
 .brand-block p, .save-state, .eyebrow { margin: 0; color: var(--muted); }
 .brand-block p { font-size: 11px; }
 .eyebrow { font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-.toolbar, .canvas-actions { display: flex; align-items: center; gap: 8px; }
+.toolbar { display: flex; align-items: center; gap: 8px; }
 .tool-button { height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; background: #20231f; cursor: pointer; }
 .tool-button:hover { border-color: #555b50; background: #282b26; }
 .tool-button.accent { border-color: var(--accent); background: var(--accent); color: #21130f; font-weight: 750; }
@@ -60,8 +60,13 @@ button:disabled { cursor: default; opacity: .4; }
 .inspector-form input, .inspector-form textarea { width: 100%; padding: 9px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #131512; color: var(--text); resize: vertical; }
 .inspector-form input:focus, .inspector-form textarea:focus { border-color: var(--accent); }
 
+.path-editor-vertex { cursor: grab; }
+.path-editor-vertex:active { cursor: grabbing; }
+.path-editor-control { cursor: move; }
+.path-editor-line { pointer-events: none; }
+
 @media (max-width: 900px) {
   .workspace-grid { grid-template-columns: 210px minmax(0, 1fr); }
   .inspector-panel { display: none; }
-  .brand-block p, .canvas-actions { display: none; }
+  .brand-block p { display: none; }
 }
