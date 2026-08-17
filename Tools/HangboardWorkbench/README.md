@@ -24,6 +24,59 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --repository-root /absolute/path/to/hang-ten
 ```
 
+### Hosted server mode (same editor, remote access)
+
+If you want to use Workbench through a hosted server without downloading
+the app, run:
+
+```sh
+rtk python3 Tools/HangboardWorkbench/server.py \
+  --repository-root /absolute/path/to/hang-ten \
+  --host 0.0.0.0 \
+  --port 4173 \
+  --allow-remote \
+  --github-client-id <id> \
+  --github-client-secret <secret>
+```
+
+Host this process with HTTPS in front (for example via a reverse proxy or your
+provider’s platform TLS), then point browsers to your public URL.
+`--allow-remote` is intentionally opt-in, because it allows non-loopback
+clients, and it requires `--github-client-id`/`--github-client-secret` from a
+GitHub OAuth App so that remote clients must sign in before mutating the
+repository. See "Repository workflow actions from the editor UI" below for how
+to set up the OAuth App.
+
+### Repository workflow actions from the editor UI
+
+From the hosted editor toolbar you can:
+
+- Switch branches.
+- Commit current repository changes with a message.
+- Push the current branch to a remote (`origin` by default).
+- Open a pull request from the current branch using the authenticated `gh` CLI.
+
+In local (loopback-only) mode, the PR action expects `gh` to be available in
+the server environment and logged into GitHub with permission to create pull
+requests. If `gh` is not available, the `/api/git/open-pr` endpoint returns an
+explanatory 4xx error.
+
+Hosted deployments (`--allow-remote`) instead require a GitHub OAuth App:
+start the server with `--github-client-id` and `--github-client-secret` to
+enable browser-based login. Once a user logs in, `git push` and
+`gh pr create` automatically use that user's GitHub token instead of any
+server-side `gh` credentials, and expired or insufficient-permission tokens
+surface as a 401 asking the user to log in again.
+
+To set up a GitHub OAuth App:
+1. On GitHub, go to **Settings > Developer settings > OAuth Apps** and register a new app.
+2. Set its callback URL to `http://<your-host>/auth/callback`.
+3. Start the server with `--allow-remote --github-client-id <id> --github-client-secret <secret>`.
+
+Security note: this still writes directly to the repository checkout. For
+production use, place it behind authentication/authorization and only expose
+trusted users.
+
 ## Board packages
 
 Every direct child of `Hangboards/` containing `board.json` is a completed
@@ -58,7 +111,9 @@ On first launch the native window asks you to **Choose Hang Ten Checkout…**.
 The app remembers the last valid checkout and uses the selected checkout on
 later launches; choose **Choose Another Checkout…** from the app menu to
 switch. All edits remain ordinary local Git changes for normal Git review.
-Remote hosting is not yet shipped.
+
+Local editor users can continue to use the packaged app; hosted deployment uses
+an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 
 ## Verification
 

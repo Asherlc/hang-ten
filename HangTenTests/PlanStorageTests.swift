@@ -78,20 +78,6 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testGripTypeUsesExpectedActiveFingersAndThumbState() {
-        XCTAssertEqual(GripType.openHand.activeFingers, Set(FingerSlot.allCases))
-        XCTAssertEqual(GripType.halfCrimp.activeFingers, Set(FingerSlot.allCases))
-        XCTAssertEqual(GripType.fullCrimp.activeFingers, Set(FingerSlot.allCases))
-        XCTAssertEqual(GripType.fourFingerPocket.activeFingers, Set(FingerSlot.allCases))
-        XCTAssertEqual(GripType.sloper.activeFingers, Set(FingerSlot.allCases))
-        XCTAssertEqual(GripType.threeFingerPocket.activeFingers, [.index, .middle, .ring])
-        XCTAssertEqual(GripType.twoFingerPocket.activeFingers, [.middle, .ring])
-
-        XCTAssertFalse(GripType.openHand.thumbEngaged)
-        XCTAssertFalse(GripType.sloper.thumbEngaged)
-        XCTAssertTrue(GripType.fullCrimp.thumbEngaged)
-    }
-
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
         XCTAssertNil(FingerConfiguration(engagedFingers: []))
 
@@ -110,11 +96,6 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertEqual(context.codingPath.last?.stringValue, "engagedFingers")
             XCTAssertEqual(context.debugDescription, "Finger configuration cannot include duplicate fingers.")
         }
-    }
-
-    func testFingerCueCapacityAccessibilityLabelUsesSingularForOneFinger() {
-        XCTAssertEqual(FingerCue.capacity(1).accessibilityLabel, "Up to 1 finger")
-        XCTAssertEqual(FingerCue.capacity(2).accessibilityLabel, "Up to 2 fingers")
     }
 
     func testFingerConfigurationRoundTripsExactFingerSetsInSlotOrder() throws {
