@@ -836,13 +836,15 @@ def _argument_parser() -> ArgumentParser:
     )
     parser.add_argument(
         "--github-client-id",
-        default="",
-        help="GitHub OAuth App client ID (required for --allow-remote auth)",
+        default=os.environ.get("GITHUB_CLIENT_ID", ""),
+        help="GitHub OAuth App client ID (required for --allow-remote auth; "
+        "falls back to the GITHUB_CLIENT_ID environment variable)",
     )
     parser.add_argument(
         "--github-client-secret",
-        default="",
-        help="GitHub OAuth App client secret (required for --allow-remote auth)",
+        default=os.environ.get("GITHUB_CLIENT_SECRET", ""),
+        help="GitHub OAuth App client secret (required for --allow-remote auth; "
+        "falls back to the GITHUB_CLIENT_SECRET environment variable)",
     )
     return parser
 
