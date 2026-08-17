@@ -7,6 +7,7 @@ import json
 import mimetypes
 import re
 import stat
+import subprocess
 from argparse import ArgumentParser
 from contextlib import contextmanager
 from http import HTTPStatus
@@ -59,6 +60,17 @@ def _safe_message(error: Exception, fallback: str) -> str:
     return fallback if not message or _ABSOLUTE_PATH_IN_TEXT.search(message) else message
 
 
+def _validate_git_arg(value: str, name: str) -> str:
+    """Reject user-provided values that could be interpreted as flags."""
+    if not value:
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} is required")
+    if value.startswith("-"):
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} must not start with a dash")
+    if "\0" in value:
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} contains invalid characters")
+    return value
+
+
 def _display_name(package: BoardPackage) -> str:
     manufacturer = package.board["manufacturer"]
     name = package.board["name"]
@@ -106,6 +118,7 @@ def create_server(
         editor_root=resolved_editor_root,
         library_root=resolved_library_root,
         allow_remote=allow_remote,
+        repository_root=resolved_library_root.parent,
     )
 
 
@@ -120,10 +133,12 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         editor_root: Path,
         library_root: Path,
         allow_remote: bool,
+        repository_root: Path,
     ) -> None:
         self.editor_root = editor_root
         self.library_root = library_root
         self.allow_remote = allow_remote
+        self.repository_root = repository_root
         super().__init__(server_address, request_handler)
 
 
@@ -135,6 +150,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         path = request.path
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
+            return
+        if path == "/api/git/status":
+            self._get_git_status()
             return
         if path == "/api/boards":
             self._get_boards()
@@ -172,6 +190,30 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         if not self._allow_request(mutation=True):
+            return
+        request = urlsplit(self.path)
+        if request.path == "/api/git/checkout":
+            with self._mutation_error_response():
+                body = self._read_json_object()
+                self._post_checkout(body)
+            return
+        if request.path == "/api/git/commit":
+            with self._mutation_error_response():
+                body = self._read_json_object()
+                self._post_commit(body)
+            return
+        if request.path == "/api/git/push":
+            with self._mutation_error_response():
+                body = self._read_json_object()
+                self._post_push(body)
+            return
+        if request.path == "/api/git/open-pr":
+            with self._mutation_error_response():
+                body = self._read_json_object()
+                self._post_open_pull_request(body)
+            return
+        if request.path == "/api/boards":
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
 
@@ -218,6 +260,111 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(HTTPStatus.OK, {"ok": True, "board": payload})
 
+    def _get_git_status(self) -> None:
+        branch = self._git_current_branch()
+        status_lines = self._git_status_lines()
+        branches = self._git_branches()
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "currentBranch": branch,
+                "dirty": bool(status_lines),
+                "statusLines": status_lines,
+                "branches": branches,
+            },
+        )
+
+    def _post_checkout(self, body: dict[str, Any]) -> None:
+        branch = body.get("branch")
+        if not isinstance(branch, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
+        sanitized_branch = _validate_git_arg(branch.strip(), "branch")
+        self._run_git(["git", "check-ref-format", "--branch", sanitized_branch])
+        self._run_git(["git", "switch", "--", sanitized_branch])
+        self._send_json(HTTPStatus.OK, {"ok": True, "branch": sanitized_branch})
+
+    def _post_commit(self, body: dict[str, Any]) -> None:
+        message = body.get("message")
+        if not isinstance(message, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "message must be a string")
+        message = _validate_git_arg(message.strip(), "message")
+        if not self._git_status_lines():
+            raise RequestError(HTTPStatus.CONFLICT, "no changes to commit")
+        self._run_git(["git", "add", "-A"])
+        self._run_git(
+            ["git", "commit", "--message", message],
+            fallback="could not create commit",
+        )
+        commit = self._run_git(["git", "rev-parse", "HEAD"]).stdout.strip()
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "branch": self._git_current_branch(),
+                "commit": commit,
+                "message": message,
+            },
+        )
+
+    def _post_push(self, body: dict[str, Any]) -> None:
+        remote = body.get("remote", "origin")
+        if not isinstance(remote, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "remote must be a string")
+        remote = remote.strip() or "origin"
+        _validate_git_arg(remote, "remote")
+        branch = self._git_current_branch()
+        self._run_git(
+            ["git", "push", "--set-upstream", remote, branch],
+            fallback="could not push branch",
+        )
+        self._send_json(HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote})
+
+    def _post_open_pull_request(self, body: dict[str, Any]) -> None:
+        branch = body.get("branch")
+        if branch is None:
+            branch = self._git_current_branch()
+        if not isinstance(branch, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
+        branch = branch.strip() or self._git_current_branch()
+        _validate_git_arg(branch, "branch")
+        title = body.get("title")
+        if not isinstance(title, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "title must be a string")
+        title = _validate_git_arg(title.strip(), "title")
+        body_text = body.get("body", "")
+        base = body.get("base", "main")
+        if not isinstance(body_text, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "body must be a string")
+        if not isinstance(base, str):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "base must be a string")
+        base = _validate_git_arg(base.strip() or "main", "base")
+        command = [
+            "gh",
+            "pr",
+            "create",
+            "--title",
+            title,
+            "--head",
+            branch,
+            "--base",
+            base,
+        ]
+        if body_text:
+            command.extend(["--body", body_text])
+        pr_url = self._run_git(
+            command,
+            fallback="could not create pull request",
+        ).stdout.strip()
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "branch": branch,
+                "url": pr_url,
+            },
+        )
+
     def _get_image(self, board_id: str) -> None:
         try:
             package = open_package(self.server.library_root, board_id)
@@ -230,6 +377,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     @contextmanager
     def _mutation_error_response(self) -> Iterator[None]:
+        scope = self._mutation_scope()
+        board_error_message = "could not save board"
+        operation_error_message = (
+            "could not perform repository operation" if scope == "git" else "could not save board"
+        )
         try:
             yield
         except RequestError as error:
@@ -240,11 +392,33 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {"ok": False, "error": "board is not available"},
             )
         except BoardPackageError as error:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": _safe_message(error, "could not save board")})
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {
+                    "ok": False,
+                    "error": _safe_message(
+                        error,
+                        operation_error_message if scope == "git" else board_error_message,
+                    ),
+                },
+            )
         except OSError:
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not save board"})
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": operation_error_message if scope == "git" else board_error_message},
+            )
         except Exception:
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not save board"})
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": operation_error_message if scope == "git" else board_error_message},
+            )
+
+    def _mutation_scope(self) -> str:
+        if self.path.startswith("/api/git/"):
+            return "git"
+        if self.path.startswith("/api/boards"):
+            return "board"
+        return "other"
 
     def _read_json_object(self) -> dict[str, Any]:
         if self.headers.get_content_type() != "application/json":
@@ -267,6 +441,52 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if length > MAX_REQUEST_BYTES:
             raise RequestError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "request exceeds 10 MiB")
         return self.rfile.read(length)
+
+    def _git_current_branch(self) -> str:
+        branch = self._run_git([
+            "git",
+            "rev-parse",
+            "--abbrev-ref",
+            "HEAD",
+        ], fallback="could not detect current branch").stdout.strip()
+        if branch == "HEAD":
+            raise RequestError(HTTPStatus.CONFLICT, "repository is in detached HEAD state")
+        if not branch:
+            raise RequestError(HTTPStatus.CONFLICT, "repository branch is unknown")
+        return branch
+
+    def _git_status_lines(self) -> list[str]:
+        output = self._run_git([
+            "git",
+            "status",
+            "--short",
+        ], fallback="could not read git status").stdout
+        return [line for line in output.splitlines() if line.strip()]
+
+    def _git_branches(self) -> list[str]:
+        output = self._run_git(
+            ["git", "branch", "--format=%(refname:short)"],
+            fallback="could not list branches",
+        ).stdout
+        return [line for line in output.splitlines() if line.strip()]
+
+    def _run_git(self, args: list[str], *, fallback: str = "command failed") -> subprocess.CompletedProcess[str]:
+        try:
+            process = subprocess.run(
+                args,
+                cwd=self.server.repository_root,
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+            )
+        except OSError as error:
+            raise RequestError(HTTPStatus.INTERNAL_SERVER_ERROR, fallback) from error
+        if process.returncode != 0:
+            message = process.stderr.strip() or process.stdout.strip() or fallback
+            raise RequestError(HTTPStatus.BAD_REQUEST, _safe_message(RuntimeError(message), fallback))
+        return process
 
     def _allow_request(self, *, mutation: bool) -> bool:
         if self.server.allow_remote:

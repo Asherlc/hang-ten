@@ -56,6 +56,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path", "apply-hold-button",
+    "git-status", "git-branch-select", "git-refresh-button", "git-switch-button", "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
   ];
   const elements = {};
   const document = {
@@ -120,6 +121,53 @@ test("the browser client saves one direct editor document with PUT", async () =>
   assert.equal(calls[0][0], "/api/boards/compact");
   assert.equal(calls[0][1].method, "PUT");
   assert.deepEqual(JSON.parse(calls[0][1].body), document);
+});
+
+test("the browser client can read git status and run git operations", async () => {
+  const calls = [];
+  global.fetch = async (request, options) => {
+    calls.push([request, options]);
+    if (request === "/api/git/status") {
+      return response({
+        ok: true,
+        currentBranch: "main",
+        branches: ["main", "feature"],
+        dirty: false,
+      });
+    }
+    if (request === "/api/git/checkout") {
+      return response({ ok: true, branch: "feature" });
+    }
+    if (request === "/api/git/commit") {
+      return response({ ok: true, commit: "a".repeat(40), branch: "main", message: "Update board" });
+    }
+    if (request === "/api/git/push") {
+      return response({ ok: true, branch: "main", remote: "origin" });
+    }
+    if (request === "/api/git/open-pr") {
+      return response({ ok: true, branch: "main", url: "https://example.com/pull/1" });
+    }
+    throw new Error(`unexpected endpoint ${request}`);
+  };
+
+  const client = freshClient();
+
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main", "feature"],
+    dirty: false,
+    statusLines: [],
+  });
+  assert.equal(await client.listBranches().then((payload) => payload.branches.join(",")), "main,feature");
+  assert.equal(await client.switchBranch("feature"), "feature");
+  const commit = await client.commitBoardChanges("Update board");
+  assert.equal(commit.commit, "a".repeat(40));
+  const pushed = await client.pushBranch();
+  assert.equal(pushed.remote, "origin");
+  const opened = await client.openPullRequest({ title: "Update board", body: "", base: "main" });
+  assert.equal(opened.url, "https://example.com/pull/1");
+  assert.equal(calls.length, 6);
 });
 
 test("direct board loading commits image and holds together and preserves the prior editor on failure", async () => {

@@ -70,5 +70,77 @@
     return payload.board;
   }
 
-  return Object.freeze({ getBoard, listBoards, saveBoard });
+  async function getGitStatus() {
+    return request("/api/git/status");
+  }
+
+  async function listBranches() {
+    const payload = await request("/api/git/status");
+    if (!Array.isArray(payload.branches)) throw new Error("Workbench returned an invalid branch list");
+    return {
+      currentBranch: payload.currentBranch || null,
+      branches: payload.branches,
+      dirty: Boolean(payload.dirty),
+      statusLines: Array.isArray(payload.statusLines) ? payload.statusLines : [],
+    };
+  }
+
+  async function switchBranch(branchName) {
+    if (typeof branchName !== "string" || !branchName.trim()) {
+      throw new Error("A branch name is required");
+    }
+    const payload = await request("/api/git/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ branch: branchName.trim() }),
+    });
+    return payload.branch;
+  }
+
+  async function commitBoardChanges(message) {
+    if (typeof message !== "string") throw new Error("A commit message is required");
+    const payload = await request("/api/git/commit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: message.trim() }),
+    });
+    return payload;
+  }
+
+  async function pushBranch(options = {}) {
+    const remote = typeof options.remote === "string" ? options.remote.trim() : "origin";
+    const payload = await request("/api/git/push", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ remote }),
+    });
+    return payload;
+  }
+
+  async function openPullRequest({ title, body = "", base = "main", branch = null }) {
+    if (typeof title !== "string" || !title.trim()) throw new Error("A pull request title is required");
+    const payload = await request("/api/git/open-pr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: title.trim(),
+        body: typeof body === "string" ? body : "",
+        base: typeof base === "string" ? base.trim() || "main" : "main",
+        branch: branch === null ? undefined : String(branch),
+      }),
+    });
+    return payload;
+  }
+
+  return Object.freeze({
+    getBoard,
+    listBoards,
+    saveBoard,
+    getGitStatus,
+    listBranches,
+    switchBranch,
+    commitBoardChanges,
+    pushBranch,
+    openPullRequest,
+  });
 }));
