@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { parsePath, serializePath, moveVertex } = require("../path-editor.js");
+const { parsePath, serializePath, moveVertex, addVertex } = require("../path-editor.js");
 
 test("parsePath splits an SVG path string into commands", () => {
   const commands = parsePath("M 10 20 L 30 40 Q 50 60 70 80 C 10 20 30 40 50 60 Z");
@@ -66,4 +66,34 @@ test("moveVertex on M shifts the start point", () => {
   const commands = parsePath("M 10 10 L 50 50 Z");
   moveVertex(commands, 0, 5, 5);
   assert.deepEqual(commands[0].points, [{ x: 15, y: 15 }]);
+});
+
+test("addVertex on an L segment inserts a new L at the midpoint", () => {
+  const commands = parsePath("M 0 0 L 100 0 L 100 100 Z");
+  addVertex(commands, 1, 50, 0);
+  assert.equal(commands.length, 5);
+  assert.equal(commands[1].type, "L");
+  assert.deepEqual(commands[1].points, [{ x: 50, y: 0 }]);
+  assert.equal(commands[2].type, "L");
+  assert.deepEqual(commands[2].points, [{ x: 100, y: 0 }]);
+});
+
+test("addVertex on a Q segment subdivides the bezier", () => {
+  const commands = parsePath("M 0 0 Q 50 100 100 0 Z");
+  addVertex(commands, 0, 50, 50);
+  assert.equal(commands.length, 4);
+  assert.equal(commands[0].type, "M");
+  assert.equal(commands[1].type, "Q");
+  assert.equal(commands[2].type, "Q");
+  assert.equal(commands[3].type, "Z");
+  assert.deepEqual(commands[1].points, [{ x: 50, y: 50 }]);
+  assert.deepEqual(commands[2].points, [{ x: 100, y: 0 }]);
+});
+
+test("addVertex on a C segment subdivides the cubic bezier", () => {
+  const commands = parsePath("M 0 0 C 25 100 75 100 100 0 Z");
+  addVertex(commands, 0, 50, 50);
+  assert.equal(commands.length, 4);
+  assert.equal(commands[1].type, "C");
+  assert.equal(commands[2].type, "C");
 });

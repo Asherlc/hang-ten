@@ -53,4 +53,86 @@ function moveVertex(commands, index, dx, dy) {
   }
 }
 
-module.exports = { parsePath, serializePath, moveVertex };
+function addVertex(commands, afterIndex, x, y) {
+  const cmd = commands[afterIndex];
+  if (!cmd || cmd.type === "Z") return;
+  const nextIndex = (afterIndex + 1) % commands.length;
+  const next = commands[nextIndex];
+
+  if (cmd.type === "M") {
+    if (next.type === "Q") {
+      const p0 = cmd.points[0];
+      const c = next.controls[0];
+      const p1 = next.points[0];
+      const mid = bezierQuad(p0, c, p1, 0.5);
+      const newCmd1 = { type: "Q", points: [mid], controls: [lerp2(p0, c, 0.5)] };
+      const newCmd2 = { type: "Q", points: [p1], controls: [lerp2(c, p1, 0.5)] };
+      commands.splice(nextIndex, 1, newCmd1, newCmd2);
+    } else if (next.type === "C") {
+      const p0 = cmd.points[0];
+      const c1 = next.controls[0];
+      const c2 = next.controls[1];
+      const p1 = next.points[0];
+      const { left, right } = subdivideCubic(p0, c1, c2, p1);
+      commands.splice(nextIndex, 1, left, right);
+    } else {
+      commands.splice(nextIndex, 0, { type: "L", points: [{ x, y }], controls: [] });
+    }
+    return;
+  }
+
+  if (cmd.type === "L") {
+    commands.splice(afterIndex, 0, { type: "L", points: [{ x, y }], controls: [] });
+    return;
+  }
+
+  if (cmd.type === "Q") {
+    const prevIndex = afterIndex - 1;
+    const prev = prevIndex >= 0 ? commands[prevIndex] : null;
+    const p0 = prev && prev.points.length > 0 ? prev.points[prev.points.length - 1] : cmd.controls[0];
+    const c = cmd.controls[0];
+    const p1 = cmd.points[0];
+    const mid = bezierQuad(p0, c, p1, 0.5);
+    const newCmd1 = { type: "Q", points: [mid], controls: [lerp2(p0, c, 0.5)] };
+    const newCmd2 = { type: "Q", points: [p1], controls: [lerp2(c, p1, 0.5)] };
+    commands.splice(afterIndex, 1, newCmd1, newCmd2);
+    return;
+  }
+
+  if (cmd.type === "C") {
+    const prevIndex = afterIndex - 1;
+    const prev = prevIndex >= 0 ? commands[prevIndex] : null;
+    const p0 = prev && prev.points.length > 0 ? prev.points[prev.points.length - 1] : cmd.controls[0];
+    const c1 = cmd.controls[0];
+    const c2 = cmd.controls[1];
+    const p1 = cmd.points[0];
+    const { left, right } = subdivideCubic(p0, c1, c2, p1);
+    commands.splice(afterIndex, 1, left, right);
+    return;
+  }
+}
+
+function lerp2(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+
+function bezierQuad(p0, c, p1, t) {
+  const u = 1 - t;
+  return {
+    x: u * u * p0.x + 2 * u * t * c.x + t * t * p1.x,
+    y: u * u * p0.y + 2 * u * t * c.y + t * t * p1.y,
+  };
+}
+
+function subdivideCubic(p0, c1, c2, p3) {
+  const m01 = lerp2(p0, c1, 0.5);
+  const m12 = lerp2(c1, c2, 0.5);
+  const m23 = lerp2(c2, p3, 0.5);
+  const m012 = lerp2(m01, m12, 0.5);
+  const m123 = lerp2(m12, m23, 0.5);
+  const mid = lerp2(m012, m123, 0.5);
+  return {
+    left: { type: "C", points: [mid], controls: [m01, m012] },
+    right: { type: "C", points: [p3], controls: [m123, m23] },
+  };
+}
+
+module.exports = { parsePath, serializePath, moveVertex, addVertex };
