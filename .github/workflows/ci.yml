@@ -395,7 +395,13 @@ jobs:
 
           echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$simulator_udid"
-          if ! timeout 90 xcrun simctl bootstatus "$simulator_udid" -b; then
+          for _ in $(seq 1 90); do
+            if xcrun simctl list devices | grep -q "$simulator_udid (Booted)"; then
+              break
+            fi
+            sleep 1
+          done
+          if ! xcrun simctl list devices | grep -q "$simulator_udid (Booted)"; then
             echo "Simulator boot status check timed out; continuing anyway." >&2
           fi
 
