@@ -23,6 +23,8 @@
     dirty: false,
     busyBoard: false,
     busyGit: false,
+    authenticated: false,
+    username: null,
   };
 
   const el = Object.fromEntries([
@@ -46,6 +48,7 @@
     "hold-key",
     "hold-path",
     "apply-hold-button",
+    "git-auth-status",
     "git-status",
     "git-branch-select",
     "git-refresh-button",
@@ -261,6 +264,26 @@
     }
   }
 
+  async function refreshAuthState() {
+    try {
+      const status = await client.getAuthStatus();
+      state.authenticated = Boolean(status.authenticated);
+      state.username = status.username || null;
+    } catch {
+      state.authenticated = false;
+      state.username = null;
+    }
+    renderAuthState();
+  }
+
+  function renderAuthState() {
+    if (state.authenticated && state.username) {
+      el["git-auth-status"].textContent = `Logged in as ${state.username}`;
+    } else {
+      el["git-auth-status"].innerHTML = '<a href="/auth/login">Log in with GitHub</a>';
+    }
+  }
+
   async function selectBoard(boardId) {
     if (isBusy()) return;
     setValidation();
@@ -449,6 +472,7 @@
   el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
 
   void (async () => {
+    await refreshAuthState();
     await gitOperations.perform(async () => {
       await refreshGitState();
     });
