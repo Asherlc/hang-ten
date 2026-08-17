@@ -71,7 +71,8 @@
   }
 
   async function getGitStatus() {
-    return request("/api/git/status");
+    const payload = await request("/api/git/status");
+    return { ...payload, statusLines: Array.isArray(payload.statusLines) ? payload.statusLines : [] };
   }
 
   async function getAuthStatus() {
