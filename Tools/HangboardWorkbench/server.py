@@ -536,7 +536,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             raise RequestError(HTTPStatus.INTERNAL_SERVER_ERROR, fallback) from error
         if process.returncode != 0:
             message = process.stderr.strip() or process.stdout.strip() or fallback
-            if auth_token and ("Authentication failed" in message or "401" in message):
+            if auth_token and (
+                "Authentication failed" in message or "401" in message or "403" in message
+            ):
                 raise RequestError(HTTPStatus.UNAUTHORIZED, "GitHub authentication expired or insufficient permissions")
             raise RequestError(HTTPStatus.BAD_REQUEST, _safe_message(RuntimeError(message), fallback))
         return process
