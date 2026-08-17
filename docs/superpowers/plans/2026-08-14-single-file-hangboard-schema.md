@@ -134,7 +134,8 @@
 - Produces: fresh automated, build, and screenshot evidence for the whole catalog.
 
 - [ ] **Step 1: Run complete package verification.**
-  Run `python3 -m pytest Tools/HangboardPipeline/tests -q` and the final directory/package validator.
+  Run `python3 -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q`
+  and the final directory/package validator.
 - [ ] **Step 2: Run complete iOS verification.**
   Run `xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro'` and `xcodebuild build -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`.
 - [ ] **Step 3: Capture owned-simulator screenshots.**

@@ -1,30 +1,16 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+import sys
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType
+
+_SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 
 
-@dataclass(frozen=True)
-class _BoardCatalogPackage:
-    root: Path
+def load_board_catalog_module() -> ModuleType:
+    """Return the real ``hangboard_vectorizer.board_catalog`` module."""
+    if str(_SRC_ROOT) not in sys.path:
+        sys.path.insert(0, str(_SRC_ROOT))
+    from hangboard_vectorizer import board_catalog
 
-
-@dataclass(frozen=True)
-class _BoardCatalogInventory:
-    packages: tuple[_BoardCatalogPackage, ...]
-
-
-def _discover_board_packages(root: Path) -> _BoardCatalogInventory:
-    """Return discoverable board packages in a catalog root directory."""
-    packages = [
-        _BoardCatalogPackage(package)
-        for package in sorted(Path(root).iterdir())
-        if package.is_dir() and (package / "board.json").is_file()
-    ]
-    return _BoardCatalogInventory(tuple(packages))
-
-
-def load_board_catalog_module() -> SimpleNamespace:
-    """Return a tiny object exposing ``discover_board_packages`` for tests."""
-    return SimpleNamespace(discover_board_packages=_discover_board_packages)
+    return board_catalog

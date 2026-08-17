@@ -131,7 +131,7 @@ def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
     """The documented staging command must use the script's Xcode destination contract."""
     testing = TESTING.read_text(encoding="utf-8")
 
-    assert 'stage_root="$(mktemp -d .context/stage-board-packages.XXXXXX)"' in testing
+    assert 'stage_root="$(mktemp -d)"' in testing
     assert 'TARGET_BUILD_DIR="$stage_root"' in testing
     assert 'UNLOCALIZED_RESOURCES_FOLDER_PATH="HangTen.app"' in testing
     assert 'destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"' in testing

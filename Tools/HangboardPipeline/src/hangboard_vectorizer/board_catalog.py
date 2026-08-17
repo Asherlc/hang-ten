@@ -11,6 +11,8 @@ import re
 from types import MappingProxyType
 from typing import Any, Mapping
 
+from PIL import Image
+
 try:  # Standard package import, plus direct-file loading used by pipeline tests.
     from .board_artwork import BoardShapeDocument, NormalizedFrame
 except ImportError:  # pragma: no cover - exercised by direct module consumers
@@ -395,6 +397,13 @@ def _validate_finished_shape(root: Path) -> None:
     primary = assets / "primary.png"
     if primary.is_symlink() or not primary.is_file():
         raise ValueError("assets/primary.png must be a regular non-symlink file")
+    try:
+        with Image.open(primary) as image:
+            if image.format != "PNG":
+                raise ValueError("assets/primary.png must be a PNG image")
+            image.verify()
+    except (OSError, Image.DecompressionBombError) as error:
+        raise ValueError("assets/primary.png must be a decodable PNG image") from error
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
