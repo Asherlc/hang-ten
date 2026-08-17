@@ -22,6 +22,7 @@
     selectedKey: null,
     branches: [],
     currentBranch: null,
+    gitStatusKnown: false,
     hasUncommittedChanges: false,
     dirty: false,
     busyBoard: false,
@@ -90,7 +91,9 @@
 
     el["git-status"].textContent = state.currentBranch
       ? `${state.currentBranch}${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}`
-      : "Repository status unavailable";
+      : state.gitStatusKnown
+        ? `Detached HEAD${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}`
+        : "Repository status unavailable";
 
     el["git-refresh-button"].disabled = isBusy();
     el["git-branch-select"].disabled = isBusy() || state.branches.length === 0;
@@ -102,7 +105,9 @@
 
     el["board-status"].textContent = state.currentBranch
       ? `Current branch: ${state.currentBranch}`
-      : "No branch detected";
+      : state.gitStatusKnown
+        ? "Detached HEAD"
+        : "No branch detected";
   }
 
   function syncBranches(activeBranch) {
@@ -503,11 +508,13 @@
       state.currentBranch = status.currentBranch || null;
       state.branches = branches;
       state.hasUncommittedChanges = Boolean(status.dirty);
+      state.gitStatusKnown = true;
       syncBranches(state.currentBranch);
     } catch (error) {
       state.branches = [];
       state.currentBranch = null;
       state.hasUncommittedChanges = false;
+      state.gitStatusKnown = false;
       syncBranches(null);
       console.error(error);
     }
