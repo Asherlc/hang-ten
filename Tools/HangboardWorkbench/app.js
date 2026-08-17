@@ -159,6 +159,168 @@
     el["editor-svg"].append(overlay);
   }
 
+  const drag = { active: false, type: null, holdKey: null, commandIndex: -1, controlIndex: -1, startX: 0, startY: 0, commands: null, originalPath: null };
+
+  function svgPoint(event) {
+    const svg = el["editor-svg"];
+    const rect = svg.getBoundingClientRect();
+    const vb = svg.getAttribute("viewBox").split(" ").map(Number);
+    const scaleX = vb[2] / rect.width;
+    const scaleY = vb[3] / rect.height;
+    return { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY };
+  }
+
+  function handlePointerDown(event) {
+    const target = event.target;
+    if (target.classList.contains("path-editor-vertex")) {
+      event.preventDefault();
+      const hold = selectedHold();
+      if (!hold) return;
+      const idx = parseInt(target.dataset.index, 10);
+      const pt = svgPoint(event);
+      drag.active = true;
+      drag.type = "vertex";
+      drag.holdKey = hold.key;
+      drag.commandIndex = idx;
+      drag.startX = pt.x;
+      drag.startY = pt.y;
+      drag.commands = parsePath(hold.displayPath);
+      drag.originalPath = hold.displayPath;
+    } else if (target.classList.contains("path-editor-control")) {
+      event.preventDefault();
+      const hold = selectedHold();
+      if (!hold) return;
+      const pt = svgPoint(event);
+      drag.active = true;
+      drag.type = "control";
+      drag.holdKey = hold.key;
+      drag.commandIndex = parseInt(target.dataset.index, 10);
+      drag.controlIndex = parseInt(target.dataset.control, 10);
+      drag.startX = pt.x;
+      drag.startY = pt.y;
+      drag.commands = parsePath(hold.displayPath);
+      drag.originalPath = hold.displayPath;
+    } else if (target.classList.contains("region-shape") && state.selectedKey) {
+      event.preventDefault();
+      const hold = selectedHold();
+      if (!hold || hold.key !== state.selectedKey) return;
+      const pt = svgPoint(event);
+      drag.active = true;
+      drag.type = "body";
+      drag.holdKey = hold.key;
+      drag.startX = pt.x;
+      drag.startY = pt.y;
+      drag.commands = parsePath(hold.displayPath);
+      drag.originalPath = hold.displayPath;
+    }
+  }
+
+  function handlePointerMove(event) {
+    if (!drag.active) return;
+    event.preventDefault();
+    const pt = svgPoint(event);
+    const dx = pt.x - drag.startX;
+    const dy = pt.y - drag.startY;
+    const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
+    if (!hold) { drag.active = false; return; }
+    const cmds = drag.commands.map((c) => ({
+      ...c,
+      points: c.points.map((p) => ({ ...p })),
+      controls: c.controls.map((p) => ({ ...p })),
+    }));
+    if (drag.type === "vertex") {
+      moveVertex(cmds, drag.commandIndex, dx, dy);
+    } else if (drag.type === "control") {
+      const cmd = cmds[drag.commandIndex];
+      if (cmd && cmd.controls[drag.controlIndex]) {
+        cmd.controls[drag.controlIndex].x += dx;
+        cmd.controls[drag.controlIndex].y += dy;
+      }
+    } else if (drag.type === "body") {
+      for (const cmd of cmds) {
+        if (cmd.type === "Z") continue;
+        for (const p of cmd.points) { p.x += dx; p.y += dy; }
+        for (const c of cmd.controls) { c.x += dx; c.y += dy; }
+      }
+    }
+    const newPath = serializePath(cmds);
+    hold.displayPath = newPath;
+    drag.startX = pt.x;
+    drag.startY = pt.y;
+    drag.commands = cmds;
+    state.dirty = true;
+    render();
+  }
+
+  function handlePointerUp() {
+    if (!drag.active) return;
+    drag.active = false;
+    const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
+    if (!hold) return;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Contour updated. Save when ready.");
+    } catch (error) {
+      hold.displayPath = drag.originalPath;
+      setValidation(error.message || "Contour is invalid.");
+      setStatus("Edit reverted — contour is invalid.");
+    }
+    render();
+  }
+
+  function handleDoubleClick(event) {
+    if (event.target.classList.contains("path-editor-vertex") || event.target.classList.contains("path-editor-control")) return;
+    const hold = selectedHold();
+    if (!hold) return;
+    const pt = svgPoint(event);
+    let commands;
+    try { commands = parsePath(hold.displayPath); } catch { return; }
+    for (let i = 0; i < commands.length; i++) {
+      const cmd = commands[i];
+      if (cmd.type === "Z") continue;
+      const nextIdx = (i + 1) % commands.length;
+      const next = commands[nextIdx];
+      if (next.type === "Z" && cmd.type === "M") continue;
+      const start = cmd.points[cmd.points.length - 1];
+      const end = next.type === "Z" ? commands[0].points[0] : next.points[0];
+      if (closestPointOnSegment(start, end, pt) < 15) {
+        addVertex(commands, i, pt.x, pt.y);
+        hold.displayPath = serializePath(commands);
+        state.dirty = true;
+        try { validateEditorDocument(state.document); setValidation(); } catch (e) { setValidation(e.message); }
+        render();
+        return;
+      }
+    }
+  }
+
+  function handleContextMenu(event) {
+    if (!event.target.classList.contains("path-editor-vertex")) return;
+    event.preventDefault();
+    const hold = selectedHold();
+    if (!hold) return;
+    const idx = parseInt(event.target.dataset.index, 10);
+    let commands;
+    try { commands = parsePath(hold.displayPath); } catch { return; }
+    if (idx === 0) return;
+    deleteVertex(commands, idx);
+    hold.displayPath = serializePath(commands);
+    state.dirty = true;
+    try { validateEditorDocument(state.document); setValidation(); } catch (e) { setValidation(e.message); }
+    render();
+  }
+
+  function closestPointOnSegment(a, b, p) {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq === 0) return Math.hypot(p.x - a.x, p.y - a.y);
+    let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+  }
+
   function renderInspector() {
     const hold = selectedHold();
     el["apply-hold-button"].disabled = state.busy || !hold;
@@ -293,5 +455,11 @@
   el["refresh-boards-button"].addEventListener("click", () => { void refreshBoards(); });
   el["hold-form"].addEventListener("submit", applyHold);
   el["save-button"].addEventListener("click", () => { void saveBoard(); });
+  el["editor-svg"].addEventListener("pointerdown", handlePointerDown);
+  el["editor-svg"].addEventListener("pointermove", handlePointerMove);
+  el["editor-svg"].addEventListener("pointerup", handlePointerUp);
+  el["editor-svg"].addEventListener("dblclick", handleDoubleClick);
+  el["editor-svg"].addEventListener("contextmenu", handleContextMenu);
+
   void refreshBoards();
 })();
