@@ -116,24 +116,22 @@ function deleteVertex(commands, index) {
   if (index === 0 || commands[index].type === "Z" || commands.length <= 3) return;
   const prev = commands[(index - 1 + commands.length) % commands.length];
   const next = commands[(index + 1) % commands.length];
-  if (next.type === "Z") {
-    commands.splice(index, 1);
-    return;
-  }
   const prevIsCurve = prev.type === "Q" || prev.type === "C";
-  const nextIsCurve = next.type === "Q" || next.type === "C";
 
   commands.splice(index, 1);
 
   if (prevIsCurve) {
     const idx = (index - 1 + commands.length) % commands.length;
-    const p = commands[idx].points[commands[idx].points.length - 1];
-    commands[idx] = { type: "L", points: [p], controls: [] };
+    const closePoint = commands[0].points[0];
+    commands[idx] = { type: "L", points: [{ x: closePoint.x, y: closePoint.y }], controls: [] };
   }
-  if (nextIsCurve) {
-    const idx = index % commands.length;
-    const p = commands[idx].points[commands[idx].points.length - 1];
-    commands[idx] = { type: "L", points: [p], controls: [] };
+  if (next.type !== "Z") {
+    const nextIsCurve = next.type === "Q" || next.type === "C";
+    if (nextIsCurve) {
+      const idx = index % commands.length;
+      const p = commands[idx].points[commands[idx].points.length - 1];
+      commands[idx] = { type: "L", points: [p], controls: [] };
+    }
   }
 }
 
