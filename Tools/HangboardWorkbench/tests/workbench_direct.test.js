@@ -86,7 +86,8 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
-    "git-status", "git-branch-select", "git-refresh-button", "git-switch-button", "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
+    "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
+    "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
   ];
   const elements = {};
   const document = {

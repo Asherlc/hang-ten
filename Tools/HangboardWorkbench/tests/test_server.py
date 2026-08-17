@@ -2,12 +2,17 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from contextlib import contextmanager
+import http.cookiejar
 import json
 import os
+import secrets
 import shutil
 import subprocess
 import sys
 import threading
+import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -30,7 +35,12 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 import board_package  # noqa: E402
 import server as server_module  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
-from server import EditorError, create_server, validate_hang_ten_checkout  # noqa: E402
+from server import (  # noqa: E402
+    EditorError,
+    _Session,
+    create_server,
+    validate_hang_ten_checkout,
+)
 
 
 def _write_library(root: Path) -> Path:
@@ -106,6 +116,28 @@ def running_server(library: Path) -> Iterator[str]:
     thread.start()
     try:
         yield f"http://127.0.0.1:{httpd.server_port}"
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+        httpd.server_close()
+
+
+@contextmanager
+def running_server_with_oauth(
+    library: Path, *, fake_token: str = "ghp_test_token_123"
+) -> Iterator[tuple[str, str]]:
+    """Start a server with OAuth configured. Yields (base_url, fake_token)."""
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+    )
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{httpd.server_port}", fake_token
     finally:
         httpd.shutdown()
         thread.join(timeout=5)
@@ -574,3 +606,109 @@ def test_git_checkout_rejects_branch_with_null_byte(tmp_path: Path) -> None:
 
     assert status == 400
     assert "branch" in payload["error"]
+
+
+def test_remote_request_without_session_returns_401(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 401
+    assert payload["error"] == "authentication required"
+    assert payload["login_url"] == "/auth/login"
+
+
+def test_auth_status_returns_unauthenticated_by_default(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/auth/status")
+
+    assert status == 200
+    assert payload["authenticated"] is False
+
+
+def test_auth_status_returns_username_with_valid_session(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    httpd = create_server(
+        checkout / "Hangboards",
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+    )
+    session_id = secrets.token_hex(32)
+    httpd.sessions[session_id] = _Session(token="ghp_fake", username="testuser")
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        base = f"http://127.0.0.1:{httpd.server_port}"
+        cookie_jar = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(cookie_jar)
+        )
+        cookie = http.cookiejar.Cookie(
+            version=0,
+            name="wb_session",
+            value=session_id,
+            port=None,
+            port_specified=False,
+            domain="127.0.0.1",
+            domain_specified=True,
+            domain_initial_dot=False,
+            path="/",
+            path_specified=True,
+            secure=False,
+            expires=int(time.time()) + 3600,
+            discard=False,
+            comment=None,
+            comment_url=None,
+            rest={},
+            rfc2109=False,
+        )
+        cookie_jar.set_cookie(cookie)
+        request = urllib.request.Request(f"{base}/api/auth/status")
+        with opener.open(request) as response:
+            payload = json.loads(response.read())
+        assert payload["authenticated"] is True
+        assert payload["username"] == "testuser"
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+        httpd.server_close()
+
+
+class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Raise HTTPError instead of following redirects, so tests can inspect
+    the redirect response without making an outbound network call."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D102, N802
+        raise urllib.error.HTTPError(req.full_url, code, msg, headers, fp)
+
+
+def test_login_redirects_to_github(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        request = urllib.request.Request(f"{base}/auth/login")
+        opener = urllib.request.build_opener(_NoRedirectHandler)
+        try:
+            opener.open(request)
+            pytest.fail("expected a redirect to raise HTTPError")
+        except urllib.error.HTTPError as error:
+            assert error.code == 302
+            location = error.headers.get("Location", "")
+            assert "github.com/login/oauth/authorize" in location
+            assert "client_id=test-client-id" in location
+            assert "scope=repo,read:org" in location
+
+
+def test_login_without_oauth_configured_returns_404(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/auth/login")
+
+    assert status == 404
