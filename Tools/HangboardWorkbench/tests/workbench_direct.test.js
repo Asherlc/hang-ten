@@ -443,6 +443,42 @@ test("selecting a hold repeatedly does not duplicate the path editor overlay", a
   assert.equal(overlayCount(), 1);
 });
 
+test("the browser shows detached HEAD instead of unavailable when the repository has no branch", async () => {
+  const controller = require("../workbench-controller.js");
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        return { ok: true, currentBranch: null, branches: ["main"], dirty: true, statusLines: ["?? note.txt"] };
+      },
+    },
+    controller,
+  });
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["git-status"].textContent, "Detached HEAD (uncommitted changes)");
+  assert.equal(app.elements["board-status"].textContent, "Detached HEAD");
+});
+
+test("the browser reports repository status unavailable only when the status fetch itself fails", async () => {
+  const controller = require("../workbench-controller.js");
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { throw new Error("network error"); },
+    },
+    controller,
+  });
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["git-status"].textContent, "Repository status unavailable");
+  assert.equal(app.elements["board-status"].textContent, "No branch detected");
+});
+
 test("browser source contains only direct board vocabulary", () => {
   const root = path.join(__dirname, "..");
   const files = ["app.js", "index.html", "workbench-client.js", "workbench-controller.js"];
