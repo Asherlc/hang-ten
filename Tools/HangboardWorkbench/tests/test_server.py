@@ -43,6 +43,62 @@ def _write_library(root: Path) -> Path:
     return library
 
 
+def _git_checkout(root: Path) -> Path:
+    checkout = root / "checkout"
+    (checkout / ".git").mkdir(parents=True)
+    (checkout / "Hangboards").mkdir(parents=True)
+    workbench = checkout / "Tools" / "HangboardWorkbench"
+    workbench.mkdir(parents=True)
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "server.py",
+        workbench / "server.py",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_package.py",
+        workbench / "board_package.py",
+    )
+    shutil.copy2(
+        REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_geometry.py",
+        workbench / "board_geometry.py",
+    )
+    subprocess.run(
+        ["git", "init", "-b", "main"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Hangboard Workbench"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.email", "workbench@example.com"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "add", "."],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "Initialize hang-ten checkout"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    return checkout
+
+
 @contextmanager
 def running_server(library: Path) -> Iterator[str]:
     httpd = create_server(library, port=0)
@@ -376,3 +432,145 @@ def test_checkout_rejects_a_hangboards_symlink_that_escapes_the_checkout(
 
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
+
+
+def test_git_status_reports_branch_and_worktree_state(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "workbench-note.txt").write_text("working tree", encoding="utf-8")
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "currentBranch": "main",
+        "dirty": True,
+        "statusLines": [" M workbench-note.txt"],
+        "branches": ["main"],
+    }
+
+
+def test_git_checkout_switches_branch(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    subprocess.run([
+        "git",
+        "switch",
+        "-c",
+        "feature",
+    ], cwd=checkout, check=True, text=True, capture_output=True)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main"},
+        )
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "branch": "main",
+    }
+
+
+def test_git_commit_refuses_when_nothing_to_commit(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/commit",
+            {"message": "No-op"},
+        )
+
+    assert status == 409
+    assert payload == {
+        "ok": False,
+        "error": "no changes to commit",
+    }
+
+
+def test_git_checkout_rejects_branch_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "--exec=rm -rf /"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]
+
+
+def test_git_commit_rejects_message_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "new-file.txt").write_text("hello", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "new-file.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/commit",
+            {"message": "--allow-empty"},
+        )
+
+    assert status == 400
+    assert "message" in payload["error"]
+
+
+def test_git_push_rejects_remote_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "push-me.txt").write_text("data", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "push-me.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "add file"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/push",
+            {"remote": "--all"},
+        )
+
+    assert status == 400
+    assert "remote" in payload["error"]
+
+
+def test_git_checkout_rejects_branch_with_null_byte(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main\x00evil"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]

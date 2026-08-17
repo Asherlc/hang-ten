@@ -41,6 +41,18 @@ Host this process with HTTPS in front (for example via a reverse proxy or your
 provider’s platform TLS), then point browsers to your public URL.
 `--allow-remote` is intentionally opt-in, because it allows non-loopback clients.
 
+### Repository workflow actions from the editor UI
+
+From the hosted editor toolbar you can:
+
+- Switch branches.
+- Commit current repository changes with a message.
+- Push the current branch to a remote (`origin` by default).
+- Open a pull request from the current branch using the authenticated `gh` CLI.
+
+The PR action expects `gh` to be available in the server environment and logged
+into GitHub with permission to create pull requests. If `gh` is not available,
+the `/api/git/open-pr` endpoint returns an explanatory 4xx error.
 Security note: this still writes directly to the repository checkout. For
 production use, place it behind authentication/authorization and only expose
 trusted users.

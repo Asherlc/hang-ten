@@ -13,26 +13,58 @@
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
-  const state = { boards: [], board: null, document: null, image: null, selectedKey: null, busy: false, dirty: false };
+
+  const state = {
+    boards: [],
+    board: null,
+    document: null,
+    image: null,
+    selectedKey: null,
+    branches: [],
+    currentBranch: null,
+    hasUncommittedChanges: false,
+    dirty: false,
+    busyBoard: false,
+    busyGit: false,
+  };
+
   const el = Object.fromEntries([
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
+    "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
+    "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
   ].map((id) => [id, document.getElementById(id)]));
+
   const boardOperations = createBoardOperationCoordinator({
     onBusyChange: (busy) => {
-      state.busy = busy;
+      state.busyBoard = busy;
       render();
     },
   });
 
-  function clone(value) { return JSON.parse(JSON.stringify(value)); }
+  const gitOperations = createBoardOperationCoordinator({
+    onBusyChange: (busy) => {
+      state.busyGit = busy;
+      render();
+    },
+  });
+
+  function isBusy() {
+    return state.busyBoard || state.busyGit;
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
 
   function selectedHold() {
     return state.document?.regions.find((region) => region.key === state.selectedKey) || null;
   }
 
-  function setStatus(message) { el["editor-status"].textContent = message; }
+  function setStatus(message) {
+    el["editor-status"].textContent = message;
+  }
 
   function setValidation(error = "") {
     el["validation-list"].replaceChildren();
@@ -44,9 +76,53 @@
   }
 
   function renderSaveState() {
-    el["save-button"].disabled = !state.board || state.busy;
-    el["refresh-boards-button"].disabled = state.busy;
-    el["save-state"].textContent = !state.board ? "No board selected" : state.busy ? "Working…" : state.dirty ? "Unsaved changes" : "Saved";
+    el["save-button"].disabled = !state.board || isBusy();
+    el["refresh-boards-button"].disabled = isBusy();
+    el["save-state"].textContent = !state.board
+      ? "No board selected"
+      : isBusy()
+        ? "Working…"
+        : state.dirty
+          ? "Unsaved changes"
+          : "Saved";
+
+    el["git-status"].textContent = state.currentBranch
+      ? `${state.currentBranch}${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}`
+      : "Repository status unavailable";
+
+    el["git-refresh-button"].disabled = isBusy();
+    el["git-branch-select"].disabled = isBusy() || state.branches.length === 0;
+    el["git-switch-button"].disabled = isBusy() || !state.currentBranch || !el["git-branch-select"].value || el["git-branch-select"].value === state.currentBranch;
+    el["git-commit-message"].disabled = isBusy();
+    el["git-commit-button"].disabled = isBusy() || !state.currentBranch;
+    el["git-push-button"].disabled = isBusy() || !state.currentBranch;
+    el["git-open-pr-button"].disabled = isBusy() || !state.currentBranch;
+
+    el["board-status"].textContent = state.currentBranch
+      ? `Current branch: ${state.currentBranch}`
+      : "No branch detected";
+  }
+
+  function syncBranches(activeBranch) {
+    el["git-branch-select"].replaceChildren();
+    const ordered = [...state.branches].sort();
+    if (ordered.length === 0) {
+      const fallback = document.createElement("option");
+      fallback.value = "";
+      fallback.textContent = "No branches detected";
+      el["git-branch-select"].append(fallback);
+      return;
+    }
+    for (const branch of ordered) {
+      const option = document.createElement("option");
+      option.value = branch;
+      option.textContent = branch;
+      option.selected = branch === activeBranch;
+      el["git-branch-select"].append(option);
+    }
+    if (activeBranch && ordered.includes(activeBranch)) {
+      el["git-branch-select"].value = activeBranch;
+    }
   }
 
   function renderBoards() {
@@ -57,14 +133,14 @@
       const detail = document.createElement("small");
       button.type = "button";
       button.className = `region-item${state.board?.boardId === board.boardId ? " selected" : ""}`;
-      button.disabled = state.busy;
+      button.disabled = isBusy();
       title.className = "region-key";
       title.textContent = board.displayName;
       detail.className = "region-type";
       detail.textContent = `${board.holdCount} holds`;
       button.append(title, detail);
       button.addEventListener("click", () => {
-        if (!state.busy) void selectBoard(board.boardId);
+        if (!isBusy()) void selectBoard(board.boardId);
       });
       el["board-list"].append(button);
     }
@@ -397,7 +473,7 @@
   }
 
   async function refreshBoards() {
-    if (state.busy) return;
+    if (state.busyBoard || state.busyGit) return;
     el["boards-error"].classList.add("hidden");
     await boardOperations.perform(async () => {
       try {
@@ -412,8 +488,25 @@
     });
   }
 
+  async function refreshGitState() {
+    try {
+      const status = await client.getGitStatus();
+      const branches = Array.isArray(status.branches) ? status.branches : [];
+      state.currentBranch = status.currentBranch || null;
+      state.branches = branches;
+      state.hasUncommittedChanges = Boolean(status.dirty);
+      syncBranches(state.currentBranch);
+    } catch (error) {
+      state.branches = [];
+      state.currentBranch = null;
+      state.hasUncommittedChanges = false;
+      syncBranches(null);
+      console.error(error);
+    }
+  }
+
   async function selectBoard(boardId) {
-    if (state.busy) return;
+    if (isBusy()) return;
     setValidation();
     await boardOperations.perform(async ({ isCurrent }) => {
       let committed = false;
@@ -444,7 +537,7 @@
   }
 
   async function saveBoard() {
-    if (state.busy || !state.board || !state.document) return;
+    if (isBusy() || !state.board || !state.document) return;
     try {
       validateEditorDocument(state.document);
     } catch (error) {
@@ -480,6 +573,93 @@
     });
   }
 
+  async function switchBranch() {
+    const branch = el["git-branch-select"].value;
+    if (!branch || isBusy()) return;
+    await gitOperations.perform(async () => {
+      if (state.dirty) {
+        const proceed = window.confirm("You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?");
+        if (!proceed) return;
+      }
+      try {
+        await client.switchBranch(branch);
+        state.board = null;
+        state.document = null;
+        state.image = null;
+        state.selectedKey = null;
+        state.dirty = false;
+        await boardOperations.perform(async () => {
+          state.boards = await client.listBoards();
+        });
+        await refreshGitState();
+        setValidation("");
+        setStatus(`Switched to ${branch}.`);
+        render();
+      } catch (error) {
+        setValidation(error.message || "Could not switch branch.");
+        setStatus("Could not switch branch.");
+      }
+    });
+  }
+
+  async function commitChanges() {
+    const message = el["git-commit-message"].value.trim();
+    if (!message) {
+      setValidation("Commit message is required.");
+      return;
+    }
+    if (isBusy()) return;
+    await gitOperations.perform(async () => {
+      try {
+        const result = await client.commitBoardChanges(message);
+        el["git-commit-message"].value = "";
+        await refreshGitState();
+        setValidation("");
+        setStatus(`Committed ${result.commit?.slice(0, 7) || "changes"}.`);
+      } catch (error) {
+        setValidation(error.message || "Could not commit changes.");
+        setStatus("Could not commit changes.");
+      }
+    });
+  }
+
+  async function pushBranch() {
+    if (isBusy()) return;
+    await gitOperations.perform(async () => {
+      try {
+        await client.pushBranch();
+        await refreshGitState();
+        setValidation("");
+        setStatus(`Pushed ${state.currentBranch || "current branch"}.`);
+      } catch (error) {
+        setValidation(error.message || "Could not push branch.");
+        setStatus("Could not push branch.");
+      }
+    });
+  }
+
+  async function openPullRequest() {
+    if (isBusy()) return;
+    const defaultTitle = `Update ${state.currentBranch || "branch"}`;
+    const title = window.prompt("Pull request title:", defaultTitle);
+    if (!title) return;
+    const bodyText = window.prompt("Pull request description (optional):", "") || "";
+    await gitOperations.perform(async () => {
+      try {
+        const result = await client.openPullRequest({
+          title: title.trim(),
+          body: bodyText.trim(),
+          base: "main",
+        });
+        setValidation("");
+        setStatus(`Opened PR: ${result.url || "created"}`);
+      } catch (error) {
+        setValidation(error.message || "Could not open pull request.");
+        setStatus("Could not open pull request.");
+      }
+    });
+  }
+
   el["refresh-boards-button"].addEventListener("click", () => { void refreshBoards(); });
   el["save-button"].addEventListener("click", () => { void saveBoard(); });
   el["editor-svg"].addEventListener("pointerdown", handlePointerDown);
@@ -487,6 +667,20 @@
   el["editor-svg"].addEventListener("pointerup", handlePointerUp);
   el["editor-svg"].addEventListener("dblclick", handleDoubleClick);
   el["editor-svg"].addEventListener("contextmenu", handleContextMenu);
+  el["git-refresh-button"].addEventListener("click", () => {
+    void gitOperations.perform(async () => {
+      await refreshGitState();
+    });
+  });
+  el["git-switch-button"].addEventListener("click", () => { void switchBranch(); });
+  el["git-commit-button"].addEventListener("click", () => { void commitChanges(); });
+  el["git-push-button"].addEventListener("click", () => { void pushBranch(); });
+  el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
 
-  void refreshBoards();
+  void (async () => {
+    await gitOperations.perform(async () => {
+      await refreshGitState();
+    });
+    await refreshBoards();
+  })();
 })();
