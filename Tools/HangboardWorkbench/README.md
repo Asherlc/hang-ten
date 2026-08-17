@@ -53,7 +53,6 @@ From the hosted editor toolbar you can:
 The PR action expects `gh` to be available in the server environment and logged
 into GitHub with permission to create pull requests. If `gh` is not available,
 the `/api/git/open-pr` endpoint returns an explanatory 4xx error.
-
 Security note: this still writes directly to the repository checkout. For
 production use, place it behind authentication/authorization and only expose
 trusted users.
