@@ -5,6 +5,7 @@ struct BoardMapView: View {
     let board: TrainingBoard
     var highlightedHoldIDs: Set<String> = []
     var highlightMode: BoardHighlightMode = .active
+    var showsLabels = true
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {

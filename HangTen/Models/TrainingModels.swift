@@ -1072,6 +1072,14 @@ enum LegacyPlanSeedBoardMappings {
     }
 }
 
+extension BoardMappingDefinition {
+    func unknownHoldIDs(on board: TrainingBoard) -> Set<String> {
+        let boardHoldIDs = Set(board.holds.map(\.id))
+        let mappedHoldIDs = Set(semanticHolds.values.flatMap(\.holdIDs))
+        return mappedHoldIDs.subtracting(boardHoldIDs)
+    }
+}
+
 enum LegacyPlanSeedCatalog {
     static let repeaterStepIDPrefix = "repeaters-grip-"
 
