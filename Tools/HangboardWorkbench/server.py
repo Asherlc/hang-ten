@@ -168,10 +168,21 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
 
 class EditorRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
-        if not self._allow_request(mutation=False):
-            return
         request = urlsplit(self.path)
         path = request.path
+        if path == "/auth/login":
+            self._handle_login()
+            return
+        if path == "/auth/callback":
+            self._handle_callback()
+            return
+        if path == "/api/auth/status":
+            if not self._allow_request(mutation=False):
+                return
+            self._handle_auth_status()
+            return
+        if not self._allow_request(mutation=False):
+            return
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
             return
@@ -532,6 +543,113 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return True
         self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "request origin is not allowed"})
         return False
+
+    def _get_cookie(self, name: str) -> str | None:
+        cookie_header = self.headers.get("Cookie", "")
+        cookie = SimpleCookie()
+        cookie.load(cookie_header)
+        morsel = cookie.get(name)
+        return morsel.value if morsel else None
+
+    def _get_session(self) -> _Session | None:
+        session_id = self._get_cookie("wb_session")
+        if not session_id:
+            return None
+        return self.server.sessions.get(session_id)
+
+    def _set_session_cookie(self, session_id: str) -> None:
+        cookie = SimpleCookie()
+        cookie["wb_session"] = session_id
+        cookie["wb_session"]["path"] = "/"
+        cookie["wb_session"]["httponly"] = True
+        cookie["wb_session"]["samesite"] = "Lax"
+        self.send_header("Set-Cookie", cookie["wb_session"].OutputString())
+
+    def _handle_login(self) -> None:
+        if not self.server.github_client_id:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "GitHub OAuth is not configured"})
+            return
+        state = secrets.token_hex(32)
+        redirect_url = (
+            f"https://github.com/login/oauth/authorize"
+            f"?client_id={self.server.github_client_id}"
+            f"&scope=repo,read:org"
+            f"&state={state}"
+        )
+        self.send_response(HTTPStatus.FOUND)
+        self.send_header("Location", redirect_url)
+        cookie = SimpleCookie()
+        cookie["oauth_state"] = state
+        cookie["oauth_state"]["path"] = "/"
+        cookie["oauth_state"]["httponly"] = True
+        cookie["oauth_state"]["samesite"] = "Lax"
+        cookie["oauth_state"]["max_age"] = "600"
+        self.send_header("Set-Cookie", cookie["oauth_state"].OutputString())
+        self.end_headers()
+
+    def _handle_callback(self) -> None:
+        request = urlsplit(self.path)
+        params = dict(part.split("=", 1) for part in request.query.split("&") if "=" in part)
+        code = params.get("code", "")
+        state = params.get("state", "")
+        if not code or not state:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Missing code or state"})
+            return
+        stored_state = self._get_cookie("oauth_state")
+        if not stored_state or not secrets.compare_digest(stored_state, state):
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Invalid or expired OAuth state"})
+            return
+        token_data = json.dumps({
+            "client_id": self.server.github_client_id,
+            "client_secret": self.server.github_client_secret,
+            "code": code,
+        }).encode("utf-8")
+        token_request = urllib.request.Request(
+            "https://github.com/login/oauth/access_token",
+            data=token_data,
+            headers={
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(token_request) as response:
+                token_payload = json.loads(response.read())
+        except (urllib.error.URLError, json.JSONDecodeError):
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": "Failed to exchange OAuth code"})
+            return
+        access_token = token_payload.get("access_token", "")
+        if not access_token:
+            error_desc = token_payload.get("error_description", "GitHub did not return an access token")
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": error_desc})
+            return
+        user_request = urllib.request.Request(
+            "https://api.github.com/user",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(user_request) as response:
+                user_payload = json.loads(response.read())
+        except (urllib.error.URLError, json.JSONDecodeError):
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": "Failed to fetch GitHub user info"})
+            return
+        username = user_payload.get("login", "unknown")
+        session_id = secrets.token_hex(32)
+        self.server.sessions[session_id] = _Session(token=access_token, username=username)
+        self.send_response(HTTPStatus.FOUND)
+        self.send_header("Location", "/")
+        self._set_session_cookie(session_id)
+        self.end_headers()
+
+    def _handle_auth_status(self) -> None:
+        session = self._get_session()
+        if session:
+            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": True, "username": session.username})
+        else:
+            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": False})
 
     def _send_json(self, status: HTTPStatus, value: object) -> None:
         body = json.dumps(value, separators=(",", ":"), allow_nan=False).encode("utf-8")
