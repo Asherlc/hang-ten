@@ -67,41 +67,31 @@ def _git_checkout(root: Path) -> Path:
         REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_geometry.py",
         workbench / "board_geometry.py",
     )
-    subprocess.run(
-        ["git", "init", "-b", "main"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.name", "Hangboard Workbench"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.email", "workbench@example.com"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "add", "."],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "commit", "-m", "Initialize hang-ten checkout"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
+    # Isolate this fixture from the developer's own global/system git config
+    # (commit.gpgsign, core.hooksPath, init.templateDir, ...), any of which
+    # could make these commands fail or behave unexpectedly.
+    git_environment = {
+        **os.environ,
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_SYSTEM": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+    }
+
+    def run(*args: str) -> None:
+        subprocess.run(
+            ["git", *args],
+            cwd=checkout,
+            check=True,
+            text=True,
+            capture_output=True,
+            env=git_environment,
+        )
+
+    run("init", "-b", "main")
+    run("config", "user.name", "Hangboard Workbench")
+    run("config", "user.email", "workbench@example.com")
+    run("add", ".")
+    run("commit", "-m", "Initialize hang-ten checkout")
     return checkout
 
 

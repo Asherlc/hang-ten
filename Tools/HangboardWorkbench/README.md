@@ -58,8 +58,9 @@ From the hosted editor toolbar you can:
 
 In local (loopback-only) mode, the PR action expects `gh` to be available in
 the server environment and logged into GitHub with permission to create pull
-requests. If `gh` is not available, the `/api/git/open-pr` endpoint returns an
-explanatory 4xx error.
+requests. If `gh` is missing, the `/api/git/open-pr` endpoint returns a 500
+error. If `gh` runs and fails, the endpoint returns a 400 error with the
+reported reason.
 
 Hosted deployments (`--allow-remote`) instead require a GitHub OAuth App:
 start the server with `--github-client-id` and `--github-client-secret` to

@@ -16,7 +16,6 @@
 - `sizeMillimeters`, `depthRangeMillimeters`, `fingerCapacity`, `gripType`, and `features` are optional and omitted when unknown. Runtime code must not supply invented defaults.
 - `cueStyle`, `shortLabel`, coaching detail, palettes, colors, shadows, and gradients are not board data.
 - The same geometry piece paths draw normal contact, active contact, and hit-testing geometry. Runtime bounds are the union of a hold's pieces.
-- `aspectRatio` is the presentation PNG's pixel width divided by height and must match it within 0.1% relative error.
 - Board packages contain no routine semantic mappings or source/provenance metadata.
 - Direct-child packages sort deterministically by manufacturer, name, then ID; duplicates, malformed packages, unsafe paths, and symlinks fail closed.
 - Primary-only directories may be ignored during migration. Final inventory validation requires every `Hangboards/` board directory to contain a valid `board.json`.
@@ -29,6 +28,7 @@
 **Files:**
 - Modify: `HangTen/Models/TrainingModels.swift`
 - Modify: `HangTen/Models/BoardStorage.swift`
+- Modify: `HangTen/Views/BoardDesignLanguage.swift`
 - Modify: `HangTen/Views/BoardMapView.swift`
 - Modify: `HangTen/Views/GripDiagramView.swift`
 - Test: `HangTenTests/BoardStorageTests.swift`
@@ -54,12 +54,13 @@
 
 **Files:**
 - Modify: `HangTen/Models/BoardPackageStore.swift`
-- Modify: `Tools/HangboardWorkbench/board_package.py`
-- Modify: `Tools/HangboardWorkbench/server.py`
+- Modify: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_catalog.py`
 - Modify: `scripts/stage-board-packages.py`
+- Modify: `scripts/hangboard-tools.sh`
 - Test: `HangTenTests/BoardPackageStoreTests.swift`
-- Test: `Tools/HangboardWorkbench/tests/test_board_package.py`
-- Test: `Tools/HangboardWorkbench/tests/test_server.py`
+- Test: `Tools/HangboardPipeline/tests/test_board_catalog.py`
+- Test: `Tools/HangboardPipeline/tests/test_board_package_staging.py`
+- Test: `Tools/HangboardPipeline/tests/test_generated_catalog_import.py`
 
 **Interfaces:**
 - Produces: direct-child discovery for repositories, staged bundles, and `BoardPackageStore`.
@@ -84,9 +85,7 @@
 - Delete: `Hangboards/metolius-wood-grips-compact-ii/semantics.json`
 - Delete: `Hangboards/metolius-wood-grips-compact-ii/evidence.json`
 - Delete: `Hangboards/catalog.json`
-- Modify: `Tools/HangboardWorkbench/tests/test_board_package.py`
-- Modify: `Tools/HangboardWorkbench/tests/test_board_geometry.py`
-- Modify: `Tools/HangboardWorkbench/tests/test_server.py`
+- Modify: `Tools/HangboardPipeline/tests/test_approved_board_packages.py`
 - Modify: `HangTenTests/BoardSourceBoundaryTests.swift`
 
 **Interfaces:**
@@ -108,9 +107,7 @@
 
 **Files:**
 - Create: `Hangboards/<board>/board.json` for every primary-only board directory.
-- Modify: batch expectations in `Tools/HangboardWorkbench/tests/test_board_package.py`.
-- Modify when API behavior changes: `Tools/HangboardWorkbench/tests/test_server.py`.
-- Modify: `HangTenTests/BoardSourceBoundaryTests.swift`.
+- Modify: batch expectations in `Tools/HangboardPipeline/tests/test_approved_board_packages.py` and `Tools/HangboardPipeline/tests/test_generated_catalog_import.py`.
 
 **Interfaces:**
 - Consumes: each board's `assets/primary.png`, current manufacturer documentation, supplemental geometry imagery, and `.context/hangboard-audits/group-*.md` research.
@@ -121,7 +118,7 @@
 - [ ] **Step 2: Author geometry from silhouette to contact pieces.**
   Define mirrored geometry once where supported, omit screws/branding, keep continuous rails continuous, split genuinely distinct contacts, and use smooth paths with normalized coordinates.
 - [ ] **Step 3: Validate and review each batch.**
-  Run focused Workbench package/geometry tests, the real staging script into an owned temporary resource directory, and board-specific ID/geometry assertions. Dispatch an independent reviewer for spec compliance and geometry/data quality; fix every Critical/Important finding before the next batch.
+  Run focused Python package tests and board-specific ID/geometry assertions. Dispatch an independent reviewer for spec compliance and geometry/data quality; fix every Critical/Important finding before the next batch.
 - [ ] **Step 4: Commit and push each accepted batch.**
   Use a manufacturer/batch-specific commit message and run `git push origin HEAD` after every new commit.
 - [ ] **Step 5: Close the migration gate.**
@@ -137,7 +134,8 @@
 - Produces: fresh automated, build, and screenshot evidence for the whole catalog.
 
 - [ ] **Step 1: Run complete package verification.**
-  Run `rtk uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests`, run `rtk node --test Tools/HangboardWorkbench/tests/workbench*.test.js`, and invoke `scripts/stage-board-packages.py` against the final directory inventory in an owned temporary Xcode resource destination.
+  Run `python3 -m pytest Tools/HangboardPipeline/tests Tools/HangboardWorkbench/tests -q`
+  and the final directory/package validator.
 - [ ] **Step 2: Run complete iOS verification.**
   Run `xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro'` and `xcodebuild build -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`.
 - [ ] **Step 3: Capture owned-simulator screenshots.**

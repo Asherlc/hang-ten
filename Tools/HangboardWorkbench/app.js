@@ -12,6 +12,10 @@
   const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
+  const dialogs = globalThis.HoldWorkbenchDialogs || {
+    confirm: (message) => window.confirm(message),
+    prompt: (message, defaultValue) => window.prompt(message, defaultValue),
+  };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
 
   const state = {
@@ -510,13 +514,16 @@
       state.hasUncommittedChanges = Boolean(status.dirty);
       state.gitStatusKnown = true;
       syncBranches(state.currentBranch);
+      return true;
     } catch (error) {
       state.branches = [];
       state.currentBranch = null;
       state.hasUncommittedChanges = false;
       state.gitStatusKnown = false;
       syncBranches(null);
-      console.error(error);
+      setValidation(error.message || "Could not read repository status.");
+      setStatus("Could not read repository status.");
+      return false;
     }
   }
 
@@ -613,27 +620,38 @@
     if (!branch || isBusy()) return;
     await gitOperations.perform(async () => {
       if (state.dirty) {
-        const proceed = window.confirm("You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?");
+        const proceed = dialogs.confirm("You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?");
         if (!proceed) return;
       }
       try {
         await client.switchBranch(branch);
-        state.board = null;
-        state.document = null;
-        state.image = null;
-        state.selectedKey = null;
-        state.dirty = false;
-        await boardOperations.perform(async () => {
-          state.boards = await client.listBoards();
-        });
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Switched to ${branch}.`);
-        render();
       } catch (error) {
         setValidation(error.message || "Could not switch branch.");
         setStatus("Could not switch branch.");
+        return;
       }
+      state.board = null;
+      state.document = null;
+      state.image = null;
+      state.selectedKey = null;
+      state.dirty = false;
+      const gitStateRefreshed = await refreshGitState();
+      if (gitStateRefreshed) {
+        setValidation("");
+        setStatus(`Switched to ${branch}.`);
+      } else {
+        setStatus(`Switched to ${branch}. Repository status unavailable.`);
+      }
+      try {
+        await boardOperations.perform(async () => {
+          state.boards = await client.listBoards();
+        });
+      } catch (error) {
+        state.boards = [];
+        setValidation(error.message || "Could not reload boards for the new branch.");
+        setStatus(`Switched to ${branch}. Could not reload boards.`);
+      }
+      render();
     });
   }
 
@@ -648,9 +666,14 @@
       try {
         const result = await client.commitBoardChanges(message);
         el["git-commit-message"].value = "";
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Committed ${result.commit?.slice(0, 7) || "changes"}.`);
+        const commitLabel = `Committed ${result.commit?.slice(0, 7) || "changes"}.`;
+        const gitStateRefreshed = await refreshGitState();
+        if (gitStateRefreshed) {
+          setValidation("");
+          setStatus(commitLabel);
+        } else {
+          setStatus(`${commitLabel} Repository status unavailable.`);
+        }
       } catch (error) {
         setValidation(error.message || "Could not commit changes.");
         setStatus("Could not commit changes.");
@@ -662,10 +685,16 @@
     if (isBusy()) return;
     await gitOperations.perform(async () => {
       try {
+        const pushedBranch = state.currentBranch || "current branch";
         await client.pushBranch();
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Pushed ${state.currentBranch || "current branch"}.`);
+        const pushLabel = `Pushed ${pushedBranch}.`;
+        const gitStateRefreshed = await refreshGitState();
+        if (gitStateRefreshed) {
+          setValidation("");
+          setStatus(pushLabel);
+        } else {
+          setStatus(`${pushLabel} Repository status unavailable.`);
+        }
       } catch (error) {
         setValidation(error.message || "Could not push branch.");
         setStatus("Could not push branch.");
@@ -676,9 +705,9 @@
   async function openPullRequest() {
     if (isBusy()) return;
     const defaultTitle = `Update ${state.currentBranch || "branch"}`;
-    const title = window.prompt("Pull request title:", defaultTitle);
+    const title = dialogs.prompt("Pull request title:", defaultTitle);
     if (!title) return;
-    const bodyText = window.prompt("Pull request description (optional):", "") || "";
+    const bodyText = dialogs.prompt("Pull request description (optional):", "") || "";
     await gitOperations.perform(async () => {
       try {
         const result = await client.openPullRequest({
@@ -707,6 +736,7 @@
       await refreshGitState();
     });
   });
+  el["git-branch-select"].addEventListener("change", () => { render(); });
   el["git-switch-button"].addEventListener("click", () => { void switchBranch(); });
   el["git-commit-button"].addEventListener("click", () => { void commitChanges(); });
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });

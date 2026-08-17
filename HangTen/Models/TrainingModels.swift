@@ -155,6 +155,13 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum HoldCueStyle: String, Codable, Hashable {
+    case outerJug
+    case slot
+    case pinch
+    case rounded
+}
+
 /// Manufacturer routines often name a hold by function instead of by board
 /// ID. Features let a board declare the closest physical match once, keeping
 /// routine content unchanged as more boards are added.
@@ -392,6 +399,7 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
@@ -781,9 +789,16 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
+    /// Generic plans (`boardID: nil`) are authored against the same board as
+    /// the legacy semantic-hold mappings. Crashes rather than falling back to
+    /// an unrelated board, since silently resolving generic targets against
+    /// the wrong board would misrepresent every hold callout in those plans.
     static let defaultBoard: TrainingBoard = {
-        guard let board = all.first else {
-            fatalError("The bundled board library contains no completed boards.")
+        guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
+            fatalError("LegacyPlanSeedBoardMappings.all is empty.")
+        }
+        guard let board = packageStore.board(id: boardID) else {
+            fatalError("The bundled board catalog is missing the legacy default board '\(boardID)'.")
         }
         return board
     }()
@@ -1003,14 +1018,6 @@ enum MetoliusCycleBuilder {
 
 /// Board-specific target vocabulary retained by the plan migration seed.
 /// Physical board packages intentionally contain no training-plan semantics.
-extension BoardMappingDefinition {
-    func unknownHoldIDs(on board: TrainingBoard) -> Set<String> {
-        let boardHoldIDs = Set(board.holds.map(\.id))
-        let mappedHoldIDs = Set(semanticHolds.values.flatMap(\.holdIDs))
-        return mappedHoldIDs.subtracting(boardHoldIDs)
-    }
-}
-
 enum LegacyPlanSeedBoardMappings {
     static let all = [
         BoardMappingDefinition(
@@ -1077,13 +1084,7 @@ enum LegacyPlanSeedCatalog {
             matches.count == 1,
             "Expected exactly one discovered board with ID \(boardID)."
         )
-        let board = matches[0]
-        let missingHoldIDs = exactTargetMapping.unknownHoldIDs(on: board)
-        precondition(
-            missingHoldIDs.isEmpty,
-            "Plan mapping for board \(boardID) references unknown hold IDs: \(missingHoldIDs.sorted())."
-        )
-        return board
+        return matches[0]
     }
 
     private static func exactTarget(

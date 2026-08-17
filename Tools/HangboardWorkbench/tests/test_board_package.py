@@ -17,6 +17,9 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+PIPELINE_MODULE_ROOT = (
+    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+)
 VALIDATION_FIXTURES = json.loads(
     (
         REPOSITORY_ROOT
@@ -970,10 +973,12 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_test")
 
@@ -996,10 +1001,12 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     _write_finished_package(library, "finished-board", "finished.board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 

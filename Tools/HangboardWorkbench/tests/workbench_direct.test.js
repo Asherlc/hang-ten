@@ -79,9 +79,12 @@ class FakeElement {
   click() {
     if (!this.disabled) this.listeners.get("click")?.({ currentTarget: this, target: this });
   }
+  change() {
+    this.listeners.get("change")?.({ currentTarget: this, target: this });
+  }
 }
 
-function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }) {
+function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), dialogs }) {
   const ids = [
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
@@ -99,6 +102,10 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
   const context = {
     HoldWorkbenchClient: client,
     HoldWorkbenchController: controller,
+    HoldWorkbenchDialogs: dialogs || {
+      confirm: () => { throw new Error("dialogs.confirm was not stubbed for this test"); },
+      prompt: () => { throw new Error("dialogs.prompt was not stubbed for this test"); },
+    },
     HoldPathEditor: require("../path-editor.js"),
     Image: class {
       set src(href) {
@@ -477,6 +484,122 @@ test("the browser reports repository status unavailable only when the status fet
 
   assert.equal(app.elements["git-status"].textContent, "Repository status unavailable");
   assert.equal(app.elements["board-status"].textContent, "No branch detected");
+});
+
+test("switching branches does not prompt for confirmation when there are no unsaved hold edits", async () => {
+  const controller = require("../workbench-controller.js");
+  const switchedTo = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "main", branches: ["main", "feature"], dirty: false }; },
+      async switchBranch(branch) { switchedTo.push(branch); return { ok: true }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm must not be called without unsaved edits"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-branch-select"].value = "feature";
+  app.elements["git-branch-select"].change();
+  app.elements["git-switch-button"].click();
+  await settle();
+  await settle();
+
+  assert.deepEqual(switchedTo, ["feature"]);
+});
+
+test("switching branches reports success plus a status warning when the post-switch status refresh fails", async () => {
+  const controller = require("../workbench-controller.js");
+  let statusCalls = 0;
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        statusCalls += 1;
+        if (statusCalls === 1) return { ok: true, currentBranch: "main", branches: ["main", "feature"], dirty: false };
+        throw new Error("status backend unavailable");
+      },
+      async switchBranch(branch) { return { ok: true }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-branch-select"].value = "feature";
+  app.elements["git-branch-select"].change();
+  app.elements["git-switch-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["editor-status"].textContent, "Switched to feature. Repository status unavailable.");
+  assert.equal(app.elements["validation-panel"].classList.values.has("hidden"), false);
+});
+
+test("opening a pull request cancels when the title prompt is dismissed", async () => {
+  const controller = require("../workbench-controller.js");
+  let opened = false;
+  const prompts = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "feature", branches: ["main", "feature"], dirty: false }; },
+      async openPullRequest() { opened = true; return { url: "https://example.com/pr/1" }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: (message, defaultValue) => { prompts.push(message); return null; },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-open-pr-button"].click();
+  await settle();
+
+  assert.equal(prompts.length, 1);
+  assert.equal(opened, false);
+});
+
+test("opening a pull request sends the prompted title and body", async () => {
+  const controller = require("../workbench-controller.js");
+  const requests = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "feature", branches: ["main", "feature"], dirty: false }; },
+      async openPullRequest(request) { requests.push(request); return { url: "https://example.com/pr/1" }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: (message) => (message.startsWith("Pull request title") ? "My title" : "My body"),
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-open-pr-button"].click();
+  await settle();
+
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].title, "My title");
+  assert.equal(requests[0].body, "My body");
+  assert.equal(requests[0].base, "main");
 });
 
 test("browser source contains only direct board vocabulary", () => {
