@@ -790,17 +790,15 @@ enum BoardCatalog {
     static let all = packageStore.boards
 
     /// Generic plans (`boardID: nil`) are authored against the same board as
-    /// the legacy semantic-hold mappings; falls back to the first discovered
-    /// board if it is ever unavailable so a missing package fails loudly
-    /// instead of silently resolving generic targets against an unrelated
-    /// board.
+    /// the legacy semantic-hold mappings. Crashes rather than falling back to
+    /// an unrelated board, since silently resolving generic targets against
+    /// the wrong board would misrepresent every hold callout in those plans.
     static let defaultBoard: TrainingBoard = {
-        if let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID,
-           let board = packageStore.board(id: boardID) {
-            return board
+        guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
+            fatalError("LegacyPlanSeedBoardMappings.all is empty.")
         }
-        guard let board = all.first else {
-            fatalError("The bundled board catalog contains no boards.")
+        guard let board = packageStore.board(id: boardID) else {
+            fatalError("The bundled board catalog is missing the legacy default board '\(boardID)'.")
         }
         return board
     }()

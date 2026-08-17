@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
-import shutil
-import subprocess
 
-import pytest
+import yaml
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -17,23 +14,7 @@ _UV_ACTION = "astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff"
 
 
 def _ci_workflow() -> dict[str, object]:
-    if shutil.which("ruby") is None:
-        pytest.skip("Ruby is required to parse the CI workflow")
-    result = subprocess.run(
-        [
-            "ruby",
-            "-ryaml",
-            "-rjson",
-            "-e",
-            "print JSON.generate(YAML.load_file(ARGV.fetch(0)))",
-            str(CI_WORKFLOW),
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    document = json.loads(result.stdout)
+    document = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
     assert isinstance(document, dict)
     return document
 

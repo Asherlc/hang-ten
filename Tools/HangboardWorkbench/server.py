@@ -37,6 +37,13 @@ from board_package import (
 )
 from workbench_assets import STATIC_ASSET_ROUTES
 
+_GIT_MUTATION_HANDLERS = {
+    "/api/git/checkout": "_post_checkout",
+    "/api/git/commit": "_post_commit",
+    "/api/git/push": "_post_push",
+    "/api/git/open-pr": "_post_open_pull_request",
+}
+
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
@@ -235,28 +242,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not self._allow_request(mutation=True):
             return
         request = urlsplit(self.path)
-        if request.path == "/api/git/checkout":
+        handler_name = _GIT_MUTATION_HANDLERS.get(request.path)
+        if handler_name is not None:
             with self.server.git_lock, self._mutation_error_response():
                 body = self._read_json_object()
-                self._post_checkout(body)
-            return
-        if request.path == "/api/git/commit":
-            with self.server.git_lock, self._mutation_error_response():
-                body = self._read_json_object()
-                self._post_commit(body)
-            return
-        if request.path == "/api/git/push":
-            with self.server.git_lock, self._mutation_error_response():
-                body = self._read_json_object()
-                self._post_push(body)
-            return
-        if request.path == "/api/git/open-pr":
-            with self.server.git_lock, self._mutation_error_response():
-                body = self._read_json_object()
-                self._post_open_pull_request(body)
-            return
-        if request.path == "/api/boards":
-            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
+                getattr(self, handler_name)(body)
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
 

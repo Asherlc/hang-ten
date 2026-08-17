@@ -12,6 +12,10 @@
   const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
+  const dialogs = globalThis.HoldWorkbenchDialogs || {
+    confirm: (message) => window.confirm(message),
+    prompt: (message, defaultValue) => window.prompt(message, defaultValue),
+  };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
 
   const state = {
@@ -614,7 +618,7 @@
     if (!branch || isBusy()) return;
     await gitOperations.perform(async () => {
       if (state.dirty) {
-        const proceed = window.confirm("You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?");
+        const proceed = dialogs.confirm("You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?");
         if (!proceed) return;
       }
       try {
@@ -684,9 +688,9 @@
   async function openPullRequest() {
     if (isBusy()) return;
     const defaultTitle = `Update ${state.currentBranch || "branch"}`;
-    const title = window.prompt("Pull request title:", defaultTitle);
+    const title = dialogs.prompt("Pull request title:", defaultTitle);
     if (!title) return;
-    const bodyText = window.prompt("Pull request description (optional):", "") || "";
+    const bodyText = dialogs.prompt("Pull request description (optional):", "") || "";
     await gitOperations.perform(async () => {
       try {
         const result = await client.openPullRequest({
@@ -715,6 +719,7 @@
       await refreshGitState();
     });
   });
+  el["git-branch-select"].addEventListener("change", () => { render(); });
   el["git-switch-button"].addEventListener("click", () => { void switchBranch(); });
   el["git-commit-button"].addEventListener("click", () => { void commitChanges(); });
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });

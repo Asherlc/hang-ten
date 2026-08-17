@@ -8,10 +8,10 @@ import json
 import math
 from pathlib import Path
 import re
+import struct
 from types import MappingProxyType
 from typing import Any, Mapping
-
-from PIL import Image
+import zlib
 
 try:  # Standard package import, plus direct-file loading used by pipeline tests.
     from .board_artwork import BoardShapeDocument, NormalizedFrame
@@ -397,13 +397,61 @@ def _validate_finished_shape(root: Path) -> None:
     primary = assets / "primary.png"
     if primary.is_symlink() or not primary.is_file():
         raise ValueError("assets/primary.png must be a regular non-symlink file")
+    _validate_png_structure(primary)
+
+
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def _validate_png_structure(path: Path) -> None:
+    """Validate PNG framing without depending on a third-party image library.
+
+    This module is loaded by a bare system interpreter during Xcode's board
+    staging build phase, which installs no dependencies, so validation stays
+    within the standard library rather than requiring Pillow.
+    """
     try:
-        with Image.open(primary) as image:
-            if image.format != "PNG":
-                raise ValueError("assets/primary.png must be a PNG image")
-            image.verify()
-    except (OSError, Image.DecompressionBombError) as error:
+        data = path.read_bytes()
+    except OSError as error:
+        raise ValueError("assets/primary.png must be a readable file") from error
+
+    if data[:8] != _PNG_SIGNATURE:
+        raise ValueError("assets/primary.png must be a PNG image")
+
+    offset = 8
+    seen_ihdr = False
+    width = height = None
+    try:
+        while offset < len(data):
+            if offset + 8 > len(data):
+                raise ValueError("assets/primary.png has a truncated chunk header")
+            length, chunk_type = struct.unpack_from(">I4s", data, offset)
+            body_start = offset + 8
+            body_end = body_start + length
+            crc_end = body_end + 4
+            if crc_end > len(data):
+                raise ValueError("assets/primary.png has a truncated chunk body")
+            body = data[body_start:body_end]
+            (declared_crc,) = struct.unpack_from(">I", data, body_end)
+            actual_crc = zlib.crc32(chunk_type + body) & 0xFFFFFFFF
+            if declared_crc != actual_crc:
+                raise ValueError("assets/primary.png has a corrupt chunk checksum")
+            if not seen_ihdr:
+                if chunk_type != b"IHDR":
+                    raise ValueError("assets/primary.png must start with an IHDR chunk")
+                if len(body) != 13:
+                    raise ValueError("assets/primary.png has a malformed IHDR chunk")
+                width, height = struct.unpack_from(">II", body, 0)
+                seen_ihdr = True
+            if chunk_type == b"IEND":
+                if width is None or height is None or width <= 0 or height <= 0:
+                    raise ValueError("assets/primary.png must declare positive dimensions")
+                return
+            offset = crc_end
+    except struct.error as error:
         raise ValueError("assets/primary.png must be a decodable PNG image") from error
+
+    raise ValueError("assets/primary.png is missing its IEND chunk")
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
