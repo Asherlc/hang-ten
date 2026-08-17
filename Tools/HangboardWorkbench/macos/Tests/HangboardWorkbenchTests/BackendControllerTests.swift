@@ -66,7 +66,7 @@ final class BackendControllerTests: XCTestCase {
         await controller.stop()
     }
 
-    func testStartRejectsKnownRuntimeAndCheckoutIdentityMismatch() async throws {
+    func testStartAllowsKnownRuntimeAndCheckoutIdentityMismatch() async throws {
         let runtime = try makeRuntime(commit: String(repeating: "a", count: 40))
         let checkout = try makeCheckout(head: String(repeating: "b", count: 40))
         let process = FakeBackendProcess()
@@ -78,13 +78,11 @@ final class BackendControllerTests: XCTestCase {
             portSelector: { 4173 }
         )
 
-        do {
-            _ = try await backend.start(repositoryRoot: checkout, port: 4173)
-            XCTFail("Expected known runtime and checkout mismatch to prevent startup")
-        } catch {
-            XCTAssertEqual(error as? BackendController.Error, .runtimeCheckoutMismatch)
-        }
-        XCTAssertEqual(process.runCount, 0)
+        let session = try await backend.start(repositoryRoot: checkout, port: 4173)
+
+        XCTAssertEqual(process.runCount, 1)
+        XCTAssertEqual(session.runtimeIdentity, String(repeating: "a", count: 40))
+        XCTAssertEqual(session.checkoutIdentity, String(repeating: "b", count: 40))
     }
 
     func testCheckoutIdentityReadsSymbolicAndDetachedHeadsWithoutRunningGit() throws {

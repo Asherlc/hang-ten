@@ -4,6 +4,6 @@ services:
     runtime: python
     plan: free
     branch: main
-    buildCommand: "true"
+    buildCommand: ""
     startCommand: "python3 Tools/HangboardWorkbench/server.py --repository-root . --host 0.0.0.0 --port $PORT --allow-remote"
     healthCheckPath: /api/health
