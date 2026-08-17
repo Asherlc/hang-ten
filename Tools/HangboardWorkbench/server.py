@@ -350,6 +350,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._run_git(
             ["git", "push", "--set-upstream", remote, branch],
             fallback="could not push branch",
+            auth_token=self._get_auth_token(),
         )
         self._send_json(HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote})
 
@@ -388,6 +389,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         pr_url = self._run_git(
             command,
             fallback="could not create pull request",
+            auth_token=self._get_auth_token(),
         ).stdout.strip()
         self._send_json(
             HTTPStatus.OK,
@@ -503,7 +505,22 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         ).stdout
         return [line for line in output.splitlines() if line.strip()]
 
-    def _run_git(self, args: list[str], *, fallback: str = "command failed") -> subprocess.CompletedProcess[str]:
+    def _run_git(
+        self,
+        args: list[str],
+        *,
+        fallback: str = "command failed",
+        auth_token: str | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        env = None
+        if auth_token:
+            env = os.environ.copy()
+            if args[0] == "git" and len(args) > 1 and args[1] == "push":
+                env["GIT_CONFIG_COUNT"] = "1"
+                env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
+                env["GIT_CONFIG_VALUE_0"] = f"Authorization: Bearer {auth_token}"
+            elif args[0] == "gh":
+                env["GH_TOKEN"] = auth_token
         try:
             process = subprocess.run(
                 args,
@@ -513,11 +530,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 stderr=subprocess.PIPE,
                 text=True,
                 encoding="utf-8",
+                env=env,
             )
         except OSError as error:
             raise RequestError(HTTPStatus.INTERNAL_SERVER_ERROR, fallback) from error
         if process.returncode != 0:
             message = process.stderr.strip() or process.stdout.strip() or fallback
+            if auth_token and ("Authentication failed" in message or "401" in message):
+                raise RequestError(HTTPStatus.UNAUTHORIZED, "GitHub authentication expired or insufficient permissions")
             raise RequestError(HTTPStatus.BAD_REQUEST, _safe_message(RuntimeError(message), fallback))
         return process
 
@@ -562,6 +582,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not session_id:
             return None
         return self.server.sessions.get(session_id)
+
+    def _get_auth_token(self) -> str | None:
+        session = self._get_session()
+        return session.token if session else None
 
     def _set_session_cookie(self, session_id: str) -> None:
         cookie = SimpleCookie()
