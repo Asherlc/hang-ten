@@ -3,14 +3,22 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import mimetypes
+import os
 import re
+import secrets
 import stat
 import subprocess
+import time
+import urllib.error
+import urllib.request
 from argparse import ArgumentParser
 from contextlib import contextmanager
+from dataclasses import dataclass, field
 from http import HTTPStatus
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
@@ -71,6 +79,13 @@ def _validate_git_arg(value: str, name: str) -> str:
     return value
 
 
+@dataclass
+class _Session:
+    token: str
+    username: str
+    created_at: float = field(default_factory=time.time)
+
+
 def _display_name(package: BoardPackage) -> str:
     manufacturer = package.board["manufacturer"]
     name = package.board["name"]
@@ -101,6 +116,8 @@ def create_server(
     *,
     allow_remote: bool = False,
     editor_root: Path = EDITOR_ROOT,
+    github_client_id: str = "",
+    github_client_secret: str = "",
 ) -> "WorkbenchHTTPServer":
     """Create a direct board-package server with no workspace lifecycle state."""
     resolved_editor_root = Path(editor_root).resolve(strict=False)
@@ -119,6 +136,8 @@ def create_server(
         library_root=resolved_library_root,
         allow_remote=allow_remote,
         repository_root=resolved_library_root.parent,
+        github_client_id=github_client_id,
+        github_client_secret=github_client_secret,
     )
 
 
@@ -134,11 +153,16 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         library_root: Path,
         allow_remote: bool,
         repository_root: Path,
+        github_client_id: str = "",
+        github_client_secret: str = "",
     ) -> None:
         self.editor_root = editor_root
         self.library_root = library_root
         self.allow_remote = allow_remote
         self.repository_root = repository_root
+        self.github_client_id = github_client_id
+        self.github_client_secret = github_client_secret
+        self.sessions: dict[str, _Session] = {}
         super().__init__(server_address, request_handler)
 
 
@@ -657,12 +681,24 @@ def _argument_parser() -> ArgumentParser:
         action="store_true",
         help="Allow non-loopback web clients (for hosted deployment only)",
     )
+    parser.add_argument(
+        "--github-client-id",
+        default="",
+        help="GitHub OAuth App client ID (required for --allow-remote auth)",
+    )
+    parser.add_argument(
+        "--github-client-secret",
+        default="",
+        help="GitHub OAuth App client secret (required for --allow-remote auth)",
+    )
     return parser
 
 
 def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
+    if parsed.allow_remote and (not parsed.github_client_id or not parsed.github_client_secret):
+        parser.error("--allow-remote requires --github-client-id and --github-client-secret")
     try:
         root = validate_hang_ten_checkout(parsed.repository_root) if parsed.repository_root is not None else _discover_repository_root(Path.cwd())
     except EditorError as error:
@@ -674,6 +710,8 @@ def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = 
             parsed.port,
             allow_remote=parsed.allow_remote,
             editor_root=editor_root,
+            github_client_id=parsed.github_client_id,
+            github_client_secret=parsed.github_client_secret,
         )
     except OSError as error:
         raise ServerBindError(f"could not bind to {parsed.host}:{parsed.port}") from error
