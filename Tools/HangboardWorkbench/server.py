@@ -371,6 +371,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     @contextmanager
     def _mutation_error_response(self) -> Iterator[None]:
+        scope = self._mutation_scope()
+        board_error_message = "could not save board"
+        operation_error_message = (
+            "could not perform repository operation" if scope == "git" else "could not save board"
+        )
         try:
             yield
         except RequestError as error:
@@ -381,11 +386,33 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {"ok": False, "error": "board is not available"},
             )
         except BoardPackageError as error:
-            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": _safe_message(error, "could not save board")})
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {
+                    "ok": False,
+                    "error": _safe_message(
+                        error,
+                        operation_error_message if scope == "git" else board_error_message,
+                    ),
+                },
+            )
         except OSError:
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not save board"})
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": operation_error_message if scope == "git" else board_error_message},
+            )
         except Exception:
-            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not save board"})
+            self._send_json(
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+                {"ok": False, "error": operation_error_message if scope == "git" else board_error_message},
+            )
+
+    def _mutation_scope(self) -> str:
+        if self.path.startswith("/api/git/"):
+            return "git"
+        if self.path.startswith("/api/boards"):
+            return "board"
+        return "other"
 
     def _read_json_object(self) -> dict[str, Any]:
         if self.headers.get_content_type() != "application/json":
