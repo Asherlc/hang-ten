@@ -8,7 +8,12 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
-            "metolius.wood-grips-compact-ii"
+            "beastmaker-1000",
+            "beastmaker-2000",
+            "dewoodstok-woodbord",
+            "escape-beta-22",
+            "lattice-triple-rung",
+            "metolius.wood-grips-compact-ii",
         ]
 
         XCTAssertEqual(

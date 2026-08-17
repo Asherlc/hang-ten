@@ -676,7 +676,14 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
+    /// Generic plans (`boardID: nil`) are authored against this board's hold
+    /// vocabulary; falls back to the first discovered board if it is ever
+    /// unavailable so a missing package fails loudly instead of silently
+    /// resolving generic targets against an unrelated board.
     static let defaultBoard: TrainingBoard = {
+        if let board = packageStore.board(id: "metolius.wood-grips-compact-ii") {
+            return board
+        }
         guard let board = all.first else {
             fatalError("The bundled board catalog contains no boards.")
         }
