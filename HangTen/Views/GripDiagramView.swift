@@ -164,25 +164,6 @@ struct GripHandCueCard: View {
     }
 }
 
-enum FingerCue {
-    case capacity(Int)
-    case exact(FingerConfiguration)
-
-    var shortLabel: String {
-        switch self {
-        case let .capacity(count): "Up to \(count)"
-        case let .exact(configuration): configuration.orderedFingers.map(\.shortLabel).joined(separator: "+")
-        }
-    }
-
-    var accessibilityLabel: String {
-        switch self {
-        case let .capacity(count): "Up to \(count) \(count == 1 ? "finger" : "fingers")"
-        case let .exact(configuration): "Exact fingers: \(configuration.orderedFingers.namedList)"
-        }
-    }
-}
-
 private struct FingerCueGlyph: View {
     let fingerConfiguration: FingerConfiguration
 
