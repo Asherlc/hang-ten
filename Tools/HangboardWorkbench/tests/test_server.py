@@ -478,7 +478,7 @@ def test_git_status_reports_branch_and_worktree_state(tmp_path: Path) -> None:
         "ok": True,
         "currentBranch": "main",
         "dirty": True,
-        "statusLines": [" M workbench-note.txt"],
+        "statusLines": ["?? workbench-note.txt"],
         "branches": ["main"],
     }
 
@@ -617,6 +617,29 @@ def test_remote_request_without_session_returns_401(tmp_path: Path) -> None:
     assert status == 401
     assert payload["error"] == "authentication required"
     assert payload["login_url"] == "/auth/login"
+
+
+def test_health_check_without_session_returns_200(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server_with_oauth(checkout / "Hangboards") as (base, _token):
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 200
+    assert payload["ok"] is True
+
+
+def test_local_mode_health_check_still_enforces_loopback_origin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+    monkeypatch.setattr(server_module, "_loopback_peer", lambda _value: False)
+
+    with running_server(library) as base:
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 403
+    assert payload["error"] == "request origin is not allowed"
 
 
 def test_auth_status_returns_unauthenticated_by_default(tmp_path: Path) -> None:

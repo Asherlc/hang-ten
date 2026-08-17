@@ -177,6 +177,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/auth/status":
             self._handle_auth_status()
             return
+        if path == "/api/health" and self.server.allow_remote:
+            self._send_json(HTTPStatus.OK, {"ok": True})
+            return
         if not self._allow_request(mutation=False):
             return
         if path == "/api/health":
