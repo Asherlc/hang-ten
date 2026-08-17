@@ -74,6 +74,15 @@
     return request("/api/git/status");
   }
 
+  async function getAuthStatus() {
+    try {
+      const payload = await request("/api/auth/status");
+      return payload;
+    } catch {
+      return { ok: true, authenticated: false };
+    }
+  }
+
   async function listBranches() {
     const payload = await request("/api/git/status");
     if (!Array.isArray(payload.branches)) throw new Error("Workbench returned an invalid branch list");
@@ -142,5 +151,6 @@
     commitBoardChanges,
     pushBranch,
     openPullRequest,
+    getAuthStatus,
   });
 }));
