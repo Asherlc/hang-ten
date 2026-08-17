@@ -22,14 +22,6 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-TEST_ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(TEST_ROOT))
-import conftest as shared_fixtures  # noqa: E402
-
-REPOSITORY_ROOT = shared_fixtures.REPOSITORY_ROOT
-WORKBENCH_ROOT = shared_fixtures.WORKBENCH_ROOT
-PRIMARY_IMAGE = shared_fixtures.PRIMARY_IMAGE
-
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -41,14 +33,18 @@ from server import (  # noqa: E402
     create_server,
     validate_hang_ten_checkout,
 )
+from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
 
 
 def _write_library(root: Path) -> Path:
     library = root / "Hangboards"
-    shared_fixtures.write_finished_package(
-        library,
-        "fixture-board",
-        "fixture.board",
+    package = library / "fixture-board"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    board = board_document("fixture.board")
+    (package / "board.json").write_text(
+        json.dumps(board, indent=2) + "\n", encoding="utf-8"
     )
     return library
 
@@ -118,8 +114,8 @@ def running_server(library: Path) -> Iterator[str]:
         yield f"http://127.0.0.1:{httpd.server_port}"
     finally:
         httpd.shutdown()
-        thread.join(timeout=5)
         httpd.server_close()
+        thread.join(timeout=5)
 
 
 @contextmanager
@@ -288,21 +284,6 @@ def test_get_board_routes_not_available_errors_by_type(
     assert result == {"ok": False, "error": "board is not available"}
 
 
-def test_save_unknown_board_on_put_returns_404(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    library = _write_library(tmp_path)
-
-    def unavailable(_library: Path, _board_id: str) -> board_package.BoardPackage:
-        raise board_package.BoardNotAvailableError("board is not available")
-
-    monkeypatch.setattr(server_module, "open_package", unavailable)
-
-    with running_server(library) as base:
-        status, result = request_json(base, "PUT", "/api/boards/fixture.board", {"regions": []})
-
-    assert status == 404
-    assert result == {"ok": False, "error": "board is not available"}
-
-
 def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -318,6 +299,23 @@ def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
 
     assert status == 400
     assert result == {"ok": False, "error": "could not load board"}
+
+
+def test_save_routes_not_available_errors_to_404(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+
+    def raise_unavailable(*_args: object) -> object:
+        raise board_package.BoardNotAvailableError("unavailable details changed")
+
+    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "PUT", "/api/boards/fixture.board", {})
+
+    assert status == 404
+    assert result == {"ok": False, "error": "board is not available"}
 
 
 def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(
