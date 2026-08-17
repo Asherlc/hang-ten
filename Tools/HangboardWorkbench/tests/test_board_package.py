@@ -20,6 +20,9 @@ import conftest as shared_fixtures  # noqa: E402
 
 REPOSITORY_ROOT = shared_fixtures.REPOSITORY_ROOT
 WORKBENCH_ROOT = shared_fixtures.WORKBENCH_ROOT
+PIPELINE_MODULE_ROOT = (
+    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+)
 CANONICAL_PACKAGE = shared_fixtures.CANONICAL_PACKAGE
 PRIMARY_IMAGE = shared_fixtures.PRIMARY_IMAGE
 VALIDATION_FIXTURES = json.loads(
@@ -946,18 +949,14 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_test")
-    discovered_module = stage_module.load_board_package_module(repository)
-
-    def fail_lock(*_args: object, **_kwargs: object) -> object:
-        raise AssertionError("workbench lock must not be taken in staging path")
-
-    discovered_module._library_lock = fail_lock
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
@@ -992,10 +991,12 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     _write_finished_package(library, "finished-board", "finished.board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 
