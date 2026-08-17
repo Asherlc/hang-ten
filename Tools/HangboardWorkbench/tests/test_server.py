@@ -483,6 +483,29 @@ def test_git_status_reports_branch_and_worktree_state(tmp_path: Path) -> None:
     }
 
 
+def test_git_status_reports_null_branch_in_detached_head_state(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    subprocess.run(
+        ["git", "checkout", "--detach", "HEAD"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(base, "GET", "/api/git/status")
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "currentBranch": None,
+        "dirty": False,
+        "statusLines": [],
+        "branches": ["main"],
+    }
+
+
 def test_git_checkout_switches_branch(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
     subprocess.run([

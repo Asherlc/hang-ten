@@ -296,7 +296,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, {"ok": True, "board": payload})
 
     def _get_git_status(self) -> None:
-        branch = self._git_current_branch()
+        try:
+            branch = self._git_current_branch()
+        except RequestError:
+            # Render (and other deploy-by-commit hosts) check out a detached
+            # HEAD, not a branch. Status is still readable in that state;
+            # only branch-dependent mutations (checkout/commit/push/PR)
+            # require a real branch and should keep raising.
+            branch = None
         status_lines = self._git_status_lines()
         branches = self._git_branches()
         self._send_json(
@@ -501,8 +508,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         return [line for line in output.splitlines() if line.strip()]
 
     def _git_branches(self) -> list[str]:
+        # for-each-ref (unlike `git branch`) only lists real refs/heads, so it
+        # never emits the synthetic "(HEAD detached at ...)" pseudo-entry.
         output = self._run_git(
-            ["git", "branch", "--format=%(refname:short)"],
+            ["git", "for-each-ref", "refs/heads", "--format=%(refname:short)"],
             fallback="could not list branches",
         ).stdout
         return [line for line in output.splitlines() if line.strip()]
