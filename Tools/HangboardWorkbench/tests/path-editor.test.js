@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { parsePath, serializePath, moveVertex, addVertex } = require("../path-editor.js");
+const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = require("../path-editor.js");
 
 test("parsePath splits an SVG path string into commands", () => {
   const commands = parsePath("M 10 20 L 30 40 Q 50 60 70 80 C 10 20 30 40 50 60 Z");
@@ -96,4 +96,36 @@ test("addVertex on a C segment subdivides the cubic bezier", () => {
   assert.equal(commands.length, 4);
   assert.equal(commands[1].type, "C");
   assert.equal(commands[2].type, "C");
+});
+
+test("deleteVertex removes a vertex and converts adjacent curves to lines", () => {
+  const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50 Z");
+  deleteVertex(commands, 2);
+  assert.equal(commands.length, 4);
+  assert.equal(commands[2].type, "L");
+  assert.deepEqual(commands[2].points, [{ x: 75, y: 50 }]);
+});
+
+test("deleteVertex on an L between Q segments converts to a single L", () => {
+  const commands = parsePath("M 0 0 Q 25 50 50 0 L 75 50 Q 100 100 125 0 Z");
+  deleteVertex(commands, 2);
+  assert.equal(commands.length, 4);
+  assert.equal(commands[1].type, "L");
+  assert.equal(commands[2].type, "L");
+});
+
+test("deleteVertex refuses to delete the M vertex", () => {
+  const commands = parsePath("M 0 0 L 50 0 Z");
+  deleteVertex(commands, 0);
+  assert.equal(commands.length, 3);
+  assert.equal(commands[0].type, "M");
+});
+
+test("deleteVertex on the vertex before Z wraps correctly", () => {
+  const commands = parsePath("M 0 0 L 50 0 L 100 50 Z");
+  deleteVertex(commands, 2);
+  assert.equal(commands.length, 3);
+  assert.equal(commands[0].type, "M");
+  assert.equal(commands[1].type, "L");
+  assert.equal(commands[2].type, "Z");
 });

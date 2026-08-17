@@ -112,6 +112,31 @@ function addVertex(commands, afterIndex, x, y) {
   }
 }
 
+function deleteVertex(commands, index) {
+  if (index === 0 || commands[index].type === "Z" || commands.length <= 3) return;
+  const prev = commands[(index - 1 + commands.length) % commands.length];
+  const next = commands[(index + 1) % commands.length];
+  if (next.type === "Z") {
+    commands.splice(index, 1);
+    return;
+  }
+  const prevIsCurve = prev.type === "Q" || prev.type === "C";
+  const nextIsCurve = next.type === "Q" || next.type === "C";
+
+  commands.splice(index, 1);
+
+  if (prevIsCurve) {
+    const idx = (index - 1 + commands.length) % commands.length;
+    const p = commands[idx].points[commands[idx].points.length - 1];
+    commands[idx] = { type: "L", points: [p], controls: [] };
+  }
+  if (nextIsCurve) {
+    const idx = index % commands.length;
+    const p = commands[idx].points[commands[idx].points.length - 1];
+    commands[idx] = { type: "L", points: [p], controls: [] };
+  }
+}
+
 function lerp2(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
 
 function bezierQuad(p0, c, p1, t) {
@@ -135,4 +160,4 @@ function subdivideCubic(p0, c1, c2, p3) {
   };
 }
 
-module.exports = { parsePath, serializePath, moveVertex, addVertex };
+module.exports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex };
