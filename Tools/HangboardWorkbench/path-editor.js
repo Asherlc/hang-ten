@@ -16,8 +16,11 @@ function parsePath(pathString) {
     const arity = ARITY[cmd];
     const points = [];
     for (let j = 0; j < arity; j++) {
-      const x = parseFloat(tokens[i++]);
-      const y = parseFloat(tokens[i++]);
+      const x = Number(tokens[i++]);
+      const y = Number(tokens[i++]);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        throw new Error("expected a finite coordinate pair");
+      }
       points.push({ x, y });
     }
     const controls = cmd === "Q" ? [points[0]] : cmd === "C" ? [points[0], points[1]] : [];
@@ -58,80 +61,42 @@ function addVertex(commands, afterIndex, x, y) {
   if (!cmd || cmd.type === "Z") return;
   const nextIndex = (afterIndex + 1) % commands.length;
   const next = commands[nextIndex];
+  if (!next || next.type === "M") return;
+  const p0 = cmd.points[cmd.points.length - 1];
 
-  if (cmd.type === "M") {
-    if (next.type === "Q") {
-      const p0 = cmd.points[0];
-      const c = next.controls[0];
-      const p1 = next.points[0];
-      const mid = bezierQuad(p0, c, p1, 0.5);
-      const newCmd1 = { type: "Q", points: [mid], controls: [lerp2(p0, c, 0.5)] };
-      const newCmd2 = { type: "Q", points: [p1], controls: [lerp2(c, p1, 0.5)] };
-      commands.splice(nextIndex, 1, newCmd1, newCmd2);
-    } else if (next.type === "C") {
-      const p0 = cmd.points[0];
-      const c1 = next.controls[0];
-      const c2 = next.controls[1];
-      const p1 = next.points[0];
-      const { left, right } = subdivideCubic(p0, c1, c2, p1);
-      commands.splice(nextIndex, 1, left, right);
-    } else {
-      commands.splice(nextIndex, 0, { type: "L", points: [{ x, y }], controls: [] });
-    }
-    return;
-  }
-
-  if (cmd.type === "L") {
-    commands.splice(afterIndex, 0, { type: "L", points: [{ x, y }], controls: [] });
-    return;
-  }
-
-  if (cmd.type === "Q") {
-    const prevIndex = afterIndex - 1;
-    const prev = prevIndex >= 0 ? commands[prevIndex] : null;
-    const p0 = prev && prev.points.length > 0 ? prev.points[prev.points.length - 1] : cmd.controls[0];
-    const c = cmd.controls[0];
-    const p1 = cmd.points[0];
+  if (next.type === "Q") {
+    const c = next.controls[0];
+    const p1 = next.points[0];
     const mid = bezierQuad(p0, c, p1, 0.5);
     const newCmd1 = { type: "Q", points: [mid], controls: [lerp2(p0, c, 0.5)] };
     const newCmd2 = { type: "Q", points: [p1], controls: [lerp2(c, p1, 0.5)] };
-    commands.splice(afterIndex, 1, newCmd1, newCmd2);
+    commands.splice(nextIndex, 1, newCmd1, newCmd2);
     return;
   }
 
-  if (cmd.type === "C") {
-    const prevIndex = afterIndex - 1;
-    const prev = prevIndex >= 0 ? commands[prevIndex] : null;
-    const p0 = prev && prev.points.length > 0 ? prev.points[prev.points.length - 1] : cmd.controls[0];
-    const c1 = cmd.controls[0];
-    const c2 = cmd.controls[1];
-    const p1 = cmd.points[0];
+  if (next.type === "C") {
+    const c1 = next.controls[0];
+    const c2 = next.controls[1];
+    const p1 = next.points[0];
     const { left, right } = subdivideCubic(p0, c1, c2, p1);
-    commands.splice(afterIndex, 1, left, right);
+    commands.splice(nextIndex, 1, left, right);
     return;
   }
+
+  commands.splice(nextIndex, 0, { type: "L", points: [{ x, y }], controls: [] });
 }
 
 function deleteVertex(commands, index) {
   if (index === 0 || commands[index].type === "Z" || commands.length <= 3) return;
-  const prev = commands[(index - 1 + commands.length) % commands.length];
   const next = commands[(index + 1) % commands.length];
-  const prevIsCurve = prev.type === "Q" || prev.type === "C";
 
   commands.splice(index, 1);
 
-  if (prevIsCurve) {
-    const idx = (index - 1 + commands.length) % commands.length;
-    const closePoint = commands[0].points[0];
-    commands[idx] = { type: "L", points: [{ x: closePoint.x, y: closePoint.y }], controls: [] };
-  }
-  if (next.type !== "Z") {
-    const nextIsCurve = next.type === "Q" || next.type === "C";
-    if (nextIsCurve) {
-      const idx = index % commands.length;
-      const p = commands[idx].points[commands[idx].points.length - 1];
-      commands[idx] = { type: "L", points: [p], controls: [] };
-    }
+  const nextIsCurve = next.type === "Q" || next.type === "C";
+  if (nextIsCurve) {
+    const idx = index % commands.length;
+    const p = commands[idx].points[commands[idx].points.length - 1];
+    commands[idx] = { type: "L", points: [p], controls: [] };
   }
 }
 

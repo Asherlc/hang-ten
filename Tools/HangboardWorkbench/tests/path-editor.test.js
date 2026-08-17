@@ -42,6 +42,12 @@ test("parsePath throws on malformed input", () => {
   assert.throws(() => parsePath("not a path"), /command/);
 });
 
+test("parsePath rejects incomplete or non-finite coordinate pairs", () => {
+  assert.throws(() => parsePath("M 0"), /finite coordinate/);
+  assert.throws(() => parsePath("M 0 10px"), /finite coordinate/);
+  assert.throws(() => parsePath("M NaN 0"), /finite coordinate/);
+});
+
 test("moveVertex translates an anchor point and its dependent controls", () => {
   const commands = parsePath("M 0 0 L 50 50 Q 60 60 100 100 Z");
   moveVertex(commands, 1, 10, 10);
@@ -70,7 +76,7 @@ test("moveVertex on M shifts the start point", () => {
 
 test("addVertex on an L segment inserts a new L at the midpoint", () => {
   const commands = parsePath("M 0 0 L 100 0 L 100 100 Z");
-  addVertex(commands, 1, 50, 0);
+  addVertex(commands, 0, 50, 0);
   assert.equal(commands.length, 5);
   assert.equal(commands[1].type, "L");
   assert.deepEqual(commands[1].points, [{ x: 50, y: 0 }]);
@@ -98,6 +104,40 @@ test("addVertex on a C segment subdivides the cubic bezier", () => {
   assert.equal(commands[2].type, "C");
 });
 
+test("addVertex inserts on the segment after afterIndex, not before it", () => {
+  const commands = parsePath("M 0 0 L 50 0 L 100 0 L 100 100 Z");
+  addVertex(commands, 1, 75, 0);
+  assert.equal(commands.length, 6);
+  assert.equal(commands[1].type, "L");
+  assert.deepEqual(commands[1].points, [{ x: 50, y: 0 }]);
+  assert.equal(commands[2].type, "L");
+  assert.deepEqual(commands[2].points, [{ x: 75, y: 0 }]);
+  assert.equal(commands[3].type, "L");
+  assert.deepEqual(commands[3].points, [{ x: 100, y: 0 }]);
+});
+
+test("addVertex subdivides a Q segment after a non-M command, leaving the preceding segment unchanged", () => {
+  const commands = parsePath("M 0 0 L 20 0 Q 60 100 100 0 Z");
+  addVertex(commands, 1, 60, 50);
+  assert.equal(commands.length, 5);
+  assert.equal(commands[1].type, "L");
+  assert.deepEqual(commands[1].points, [{ x: 20, y: 0 }]);
+  assert.equal(commands[2].type, "Q");
+  assert.equal(commands[3].type, "Q");
+  assert.deepEqual(commands[3].points, [{ x: 100, y: 0 }]);
+});
+
+test("addVertex subdivides a C segment after a non-M command, leaving the preceding segment unchanged", () => {
+  const commands = parsePath("M 0 0 L 20 0 C 40 100 80 100 100 0 Z");
+  addVertex(commands, 1, 60, 50);
+  assert.equal(commands.length, 5);
+  assert.equal(commands[1].type, "L");
+  assert.deepEqual(commands[1].points, [{ x: 20, y: 0 }]);
+  assert.equal(commands[2].type, "C");
+  assert.equal(commands[3].type, "C");
+  assert.deepEqual(commands[3].points, [{ x: 100, y: 0 }]);
+});
+
 test("deleteVertex removes a vertex and converts adjacent curves to lines", () => {
   const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50 Z");
   deleteVertex(commands, 2);
@@ -106,12 +146,14 @@ test("deleteVertex removes a vertex and converts adjacent curves to lines", () =
   assert.deepEqual(commands[2].points, [{ x: 75, y: 50 }]);
 });
 
-test("deleteVertex on an L between Q segments converts to a single L", () => {
+test("deleteVertex on an L between Q segments leaves the preceding curve untouched", () => {
   const commands = parsePath("M 0 0 Q 25 50 50 0 L 75 50 Q 100 100 125 0 Z");
   deleteVertex(commands, 2);
   assert.equal(commands.length, 4);
-  assert.equal(commands[1].type, "L");
+  assert.equal(commands[1].type, "Q");
+  assert.deepEqual(commands[1].points, [{ x: 50, y: 0 }]);
   assert.equal(commands[2].type, "L");
+  assert.deepEqual(commands[2].points, [{ x: 125, y: 0 }]);
 });
 
 test("deleteVertex refuses to delete the M vertex", () => {
@@ -127,5 +169,16 @@ test("deleteVertex on the vertex before Z wraps correctly", () => {
   assert.equal(commands.length, 3);
   assert.equal(commands[0].type, "M");
   assert.equal(commands[1].type, "L");
+  assert.equal(commands[2].type, "Z");
+});
+
+test("deleteVertex on the vertex before Z leaves a curved prev segment untouched", () => {
+  const commands = parsePath("M 0 0 Q 40 80 80 0 L 120 40 Z");
+  deleteVertex(commands, 2);
+  assert.equal(commands.length, 3);
+  assert.equal(commands[0].type, "M");
+  assert.equal(commands[1].type, "Q");
+  assert.deepEqual(commands[1].points, [{ x: 80, y: 0 }]);
+  assert.deepEqual(commands[1].controls, [{ x: 40, y: 80 }]);
   assert.equal(commands[2].type, "Z");
 });

@@ -122,15 +122,23 @@ c2x c2y x y Z`.
 
 ### Module boundary
 
-The path editor is a self-contained module within `app.js` (not a separate
-file), following the existing pattern of single-file browser modules. It
-exposes:
+The path parsing/mutation logic lives in a standalone module,
+`Tools/HangboardWorkbench/path-editor.js`, separate from `app.js`. It exports
+plain helper functions operating on a parsed command array:
 
-- `createPathEditor(svgElement, options)` — initializes the editor on an SVG
-- `setPath(pathString)` — sets the current path to edit
-- `getPath()` — returns the current (possibly edited) path string
-- `onEdit(callback)` — called on every valid edit with the new path string
-- `destroy()` — removes all handles and event listeners
+- `parsePath(pathString)` — parses a `displayPath` string into a command array
+- `serializePath(commands)` — serializes a command array back to a path string
+- `moveVertex(commands, index, dx, dy)` — translates an anchor and its
+  dependent control points
+- `addVertex(commands, afterIndex, x, y)` — inserts a vertex on the segment
+  after `afterIndex`, subdividing Q/C curves via De Casteljau
+- `deleteVertex(commands, index)` — removes a vertex, converting an adjacent
+  curve to a line where its start point shifted
+
+The module supports both Node (`module.exports`, used by its test suite) and
+the browser (`globalThis.HoldPathEditor`, since it's loaded via a plain
+`<script>` tag before `app.js`). `app.js` itself owns SVG handle rendering
+and pointer-event wiring, calling into these helpers on each edit.
 
 ### SVG structure
 

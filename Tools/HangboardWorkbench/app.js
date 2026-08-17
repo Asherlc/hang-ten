@@ -97,6 +97,7 @@
       shape.setAttribute("stroke", hold.key === selected?.key ? "#fff7dc" : TYPE_COLORS[hold.type] || "#ff754f");
       shape.setAttribute("stroke-width", hold.key === selected?.key ? "2.2" : "1.4");
       shape.classList.add("region-shape");
+      shape.dataset.holdKey = hold.key;
       shape.addEventListener("click", () => { state.selectedKey = hold.key; render(); });
       el["hold-overlay"].append(shape);
     }
@@ -159,7 +160,7 @@
     el["editor-svg"].append(overlay);
   }
 
-  const drag = { active: false, type: null, holdKey: null, commandIndex: -1, controlIndex: -1, startX: 0, startY: 0, commands: null, originalPath: null };
+  const drag = { active: false, type: null, holdKey: null, commandIndex: -1, controlIndex: -1, startX: 0, startY: 0, commands: null, originalPath: null, originalDirty: false };
 
   function svgPoint(event) {
     const svg = el["editor-svg"];
@@ -186,6 +187,7 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
+      drag.originalDirty = state.dirty;
     } else if (target.classList.contains("path-editor-control")) {
       event.preventDefault();
       const hold = selectedHold();
@@ -200,10 +202,11 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
-    } else if (target.classList.contains("region-shape") && state.selectedKey) {
+      drag.originalDirty = state.dirty;
+    } else if (target.classList.contains("region-shape") && target.dataset.holdKey === state.selectedKey) {
       event.preventDefault();
       const hold = selectedHold();
-      if (!hold || hold.key !== state.selectedKey) return;
+      if (!hold) return;
       const pt = svgPoint(event);
       drag.active = true;
       drag.type = "body";
@@ -212,6 +215,7 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
+      drag.originalDirty = state.dirty;
     }
   }
 
@@ -263,6 +267,7 @@
       setStatus("Contour updated. Save when ready.");
     } catch (error) {
       hold.displayPath = drag.originalPath;
+      state.dirty = drag.originalDirty;
       setValidation(error.message || "Contour is invalid.");
       setStatus("Edit reverted — contour is invalid.");
     }
@@ -283,12 +288,21 @@
       const next = commands[nextIdx];
       if (next.type === "Z" && cmd.type === "M") continue;
       const start = cmd.points[cmd.points.length - 1];
-      const end = next.type === "Z" ? commands[0].points[0] : next.points[0];
-      if (closestPointOnSegment(start, end, pt) < 15) {
+      const segment = next.type === "Z" ? { type: "L", points: [commands[0].points[0]], controls: [] } : next;
+      if (closestDistanceOnSegment(start, segment, pt) < 15) {
+        const originalPath = hold.displayPath;
+        const originalDirty = state.dirty;
         addVertex(commands, i, pt.x, pt.y);
         hold.displayPath = serializePath(commands);
         state.dirty = true;
-        try { validateEditorDocument(state.document); setValidation(); } catch (e) { setValidation(e.message); }
+        try {
+          validateEditorDocument(state.document);
+          setValidation();
+        } catch (error) {
+          hold.displayPath = originalPath;
+          state.dirty = originalDirty;
+          setValidation(error.message || "Contour is invalid.");
+        }
         render();
         return;
       }
@@ -304,10 +318,19 @@
     let commands;
     try { commands = parsePath(hold.displayPath); } catch { return; }
     if (idx === 0) return;
+    const originalPath = hold.displayPath;
+    const originalDirty = state.dirty;
     deleteVertex(commands, idx);
     hold.displayPath = serializePath(commands);
     state.dirty = true;
-    try { validateEditorDocument(state.document); setValidation(); } catch (e) { setValidation(e.message); }
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+    } catch (error) {
+      hold.displayPath = originalPath;
+      state.dirty = originalDirty;
+      setValidation(error.message || "Contour is invalid.");
+    }
     render();
   }
 
@@ -319,6 +342,33 @@
     let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq;
     t = Math.max(0, Math.min(1, t));
     return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+  }
+
+  function bezierPointAt(p0, cmd, t) {
+    const u = 1 - t;
+    if (cmd.type === "Q") {
+      const c = cmd.controls[0], p1 = cmd.points[0];
+      return { x: u * u * p0.x + 2 * u * t * c.x + t * t * p1.x, y: u * u * p0.y + 2 * u * t * c.y + t * t * p1.y };
+    }
+    if (cmd.type === "C") {
+      const c1 = cmd.controls[0], c2 = cmd.controls[1], p1 = cmd.points[0];
+      return {
+        x: u * u * u * p0.x + 3 * u * u * t * c1.x + 3 * u * t * t * c2.x + t * t * t * p1.x,
+        y: u * u * u * p0.y + 3 * u * u * t * c1.y + 3 * u * t * t * c2.y + t * t * t * p1.y,
+      };
+    }
+    return { x: p0.x + (cmd.points[0].x - p0.x) * t, y: p0.y + (cmd.points[0].y - p0.y) * t };
+  }
+
+  function closestDistanceOnSegment(p0, cmd, point, samples = 20) {
+    let min = Infinity;
+    let prev = p0;
+    for (let s = 1; s <= samples; s++) {
+      const cur = bezierPointAt(p0, cmd, s / samples);
+      min = Math.min(min, closestPointOnSegment(prev, cur, point));
+      prev = cur;
+    }
+    return min;
   }
 
   function renderInspector() {

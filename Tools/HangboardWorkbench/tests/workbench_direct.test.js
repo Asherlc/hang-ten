@@ -32,21 +32,50 @@ class FakeElement {
     this.tagName = tagName;
     this.ownerDocument = ownerDocument;
     this.children = [];
+    this.parent = null;
     this.classList = new FakeClassList();
     this.listeners = new Map();
     this.attributes = new Map();
+    this.dataset = {};
     this.disabled = false;
     this.textContent = "";
     this.value = "";
   }
 
-  append(...children) { this.children.push(...children); }
-  appendChild(child) { this.children.push(child); return child; }
-  replaceChildren(...children) { this.children = children; this.textContent = ""; }
+  append(...children) {
+    this.children.push(...children);
+    for (const child of children) { if (child instanceof FakeElement) child.parent = this; }
+  }
+  appendChild(child) {
+    this.children.push(child);
+    if (child instanceof FakeElement) child.parent = this;
+    return child;
+  }
+  replaceChildren(...children) {
+    this.children = children;
+    for (const child of children) { if (child instanceof FakeElement) child.parent = this; }
+    this.textContent = "";
+  }
+  remove() {
+    if (!this.parent) return;
+    this.parent.children = this.parent.children.filter((child) => child !== this);
+    this.parent = null;
+  }
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
   removeAttribute(name) { this.attributes.delete(name); }
   addEventListener(name, listener) { this.listeners.set(name, listener); }
-  querySelector() { return null; }
+  querySelector(selector) {
+    if (typeof selector !== "string" || !selector.startsWith(".")) return null;
+    const className = selector.slice(1);
+    const stack = [...this.children];
+    while (stack.length) {
+      const node = stack.shift();
+      if (!(node instanceof FakeElement)) continue;
+      if (node.classList.values.has(className)) return node;
+      stack.push(...node.children);
+    }
+    return null;
+  }
   click() {
     if (!this.disabled) this.listeners.get("click")?.({ currentTarget: this, target: this });
   }
@@ -68,6 +97,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
   const context = {
     HoldWorkbenchClient: client,
     HoldWorkbenchController: controller,
+    HoldPathEditor: require("../path-editor.js"),
     Image: class {
       set src(href) {
         imageLoader(href).then(
@@ -303,6 +333,37 @@ test("a pending browser save cannot reset a newer board document", async () => {
   await settle();
   await settle();
   assert.equal(app.elements["board-name"].textContent, "Board A");
+});
+
+test("selecting a hold repeatedly does not duplicate the path editor overlay", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [{ key: "a", displayPath: "M 1 1 L 20 1 L 20 20 Z" }] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+
+  function overlayCount() {
+    return app.elements["editor-svg"].children.filter((child) => child.classList.values.has("path-editor-overlay")).length;
+  }
+
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(overlayCount(), 1);
+
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(overlayCount(), 1);
 });
 
 test("browser source contains only direct board vocabulary", () => {

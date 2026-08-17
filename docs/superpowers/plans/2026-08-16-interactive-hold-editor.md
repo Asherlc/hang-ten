@@ -4,7 +4,7 @@
 
 **Goal:** Add interactive SVG path editing to the Hangboard Workbench so users can visually refine AI-generated hold contours by dragging vertices, adjusting bezier curves, and repositioning holds.
 
-**Architecture:** A self-contained path editor module within `app.js` that parses `displayPath` strings into a structured command array, renders vertex/control point handles on the SVG, handles pointer events for dragging, and serializes back to `displayPath` on edit. No changes to the backend data model or save flow.
+**Architecture:** A standalone `path-editor.js` module (exported both as CommonJS and `globalThis.HoldPathEditor`) parses `displayPath` strings into a structured command array and exposes pure mutation helpers (`moveVertex`, `addVertex`, `deleteVertex`). `app.js` renders vertex/control point handles on the SVG, wires pointer events for dragging, and calls into `path-editor.js` on each edit before serializing back to `displayPath`. No changes to the backend data model or save flow.
 
 **Tech Stack:** Dependency-free vanilla JavaScript, SVG DOM, Node test runner.
 
