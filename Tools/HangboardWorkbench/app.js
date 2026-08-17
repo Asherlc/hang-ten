@@ -368,9 +368,10 @@
       const start = cmd.points[cmd.points.length - 1];
       const segment = next.type === "Z" ? { type: "L", points: [commands[0].points[0]], controls: [] } : next;
       if (closestDistanceOnSegment(start, segment, pt) < 15) {
+        const insertPoint = segment.type === "L" ? closestPointOnLine(start, segment.points[0], pt) : pt;
         const originalPath = hold.displayPath;
         const originalDirty = state.dirty;
-        addVertex(commands, i, pt.x, pt.y);
+        addVertex(commands, i, insertPoint.x, insertPoint.y);
         hold.displayPath = serializePath(commands);
         state.dirty = true;
         try {
@@ -412,14 +413,19 @@
     render();
   }
 
-  function closestPointOnSegment(a, b, p) {
+  function closestPointOnLine(a, b, p) {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const lenSq = dx * dx + dy * dy;
-    if (lenSq === 0) return Math.hypot(p.x - a.x, p.y - a.y);
+    if (lenSq === 0) return { x: a.x, y: a.y };
     let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq;
     t = Math.max(0, Math.min(1, t));
-    return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+    return { x: a.x + t * dx, y: a.y + t * dy };
+  }
+
+  function closestPointOnSegment(a, b, p) {
+    const proj = closestPointOnLine(a, b, p);
+    return Math.hypot(p.x - proj.x, p.y - proj.y);
   }
 
   function bezierPointAt(p0, cmd, t) {

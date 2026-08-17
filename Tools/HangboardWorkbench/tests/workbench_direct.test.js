@@ -202,6 +202,34 @@ test("the browser client can read git status and run git operations", async () =
   assert.equal(calls.length, 6);
 });
 
+test("getGitStatus falls back to an empty statusLines array for null or non-array values", async () => {
+  let statusLines = null;
+  global.fetch = async (request) => {
+    if (request === "/api/git/status") {
+      return response({ ok: true, currentBranch: "main", branches: ["main"], dirty: true, statusLines });
+    }
+    throw new Error(`unexpected endpoint ${request}`);
+  };
+  const client = freshClient();
+
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main"],
+    dirty: true,
+    statusLines: [],
+  });
+
+  statusLines = "not an array";
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main"],
+    dirty: true,
+    statusLines: [],
+  });
+});
+
 test("direct board loading commits image and holds together and preserves the prior editor on failure", async () => {
   const { loadBoardAtomically } = require("../workbench-controller.js");
   const prior = { boardId: "prior", image: { href: "prior.png" }, document: { regions: [{ key: "prior" }] } };
