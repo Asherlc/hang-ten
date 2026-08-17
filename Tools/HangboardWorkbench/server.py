@@ -523,6 +523,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _allow_request(self, *, mutation: bool) -> bool:
         if self.server.allow_remote:
+            if self.server.github_client_id:
+                session = self._get_session()
+                if session is None:
+                    self._send_json(
+                        HTTPStatus.UNAUTHORIZED,
+                        {"ok": False, "error": "authentication required", "login_url": "/auth/login"},
+                    )
+                    return False
             return True
         if not _loopback_peer(self.client_address):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "request origin is not allowed"})
