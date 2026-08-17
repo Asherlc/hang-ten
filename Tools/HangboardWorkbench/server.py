@@ -3,14 +3,21 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import mimetypes
+import os
 import re
+import secrets
 import stat
 import subprocess
+import urllib.error
+import urllib.request
 from argparse import ArgumentParser
 from contextlib import contextmanager
+from dataclasses import dataclass
 from http import HTTPStatus
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
@@ -71,6 +78,12 @@ def _validate_git_arg(value: str, name: str) -> str:
     return value
 
 
+@dataclass
+class _Session:
+    token: str
+    username: str
+
+
 def _display_name(package: BoardPackage) -> str:
     manufacturer = package.board["manufacturer"]
     name = package.board["name"]
@@ -101,6 +114,8 @@ def create_server(
     *,
     allow_remote: bool = False,
     editor_root: Path = EDITOR_ROOT,
+    github_client_id: str = "",
+    github_client_secret: str = "",
 ) -> "WorkbenchHTTPServer":
     """Create a direct board-package server with no workspace lifecycle state."""
     resolved_editor_root = Path(editor_root).resolve(strict=False)
@@ -119,6 +134,8 @@ def create_server(
         library_root=resolved_library_root,
         allow_remote=allow_remote,
         repository_root=resolved_library_root.parent,
+        github_client_id=github_client_id,
+        github_client_secret=github_client_secret,
     )
 
 
@@ -134,20 +151,34 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         library_root: Path,
         allow_remote: bool,
         repository_root: Path,
+        github_client_id: str = "",
+        github_client_secret: str = "",
     ) -> None:
         self.editor_root = editor_root
         self.library_root = library_root
         self.allow_remote = allow_remote
         self.repository_root = repository_root
+        self.github_client_id = github_client_id
+        self.github_client_secret = github_client_secret
+        self.sessions: dict[str, _Session] = {}
         super().__init__(server_address, request_handler)
 
 
 class EditorRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
-        if not self._allow_request(mutation=False):
-            return
         request = urlsplit(self.path)
         path = request.path
+        if path == "/auth/login":
+            self._handle_login()
+            return
+        if path == "/auth/callback":
+            self._handle_callback()
+            return
+        if path == "/api/auth/status":
+            self._handle_auth_status()
+            return
+        if not self._allow_request(mutation=False):
+            return
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
             return
@@ -317,6 +348,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._run_git(
             ["git", "push", "--set-upstream", remote, branch],
             fallback="could not push branch",
+            auth_token=self._get_auth_token(),
         )
         self._send_json(HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote})
 
@@ -355,6 +387,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         pr_url = self._run_git(
             command,
             fallback="could not create pull request",
+            auth_token=self._get_auth_token(),
         ).stdout.strip()
         self._send_json(
             HTTPStatus.OK,
@@ -470,9 +503,25 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         ).stdout
         return [line for line in output.splitlines() if line.strip()]
 
-    def _run_git(self, args: list[str], *, fallback: str = "command failed") -> subprocess.CompletedProcess[str]:
+    def _run_git(
+        self,
+        args: list[str],
+        *,
+        fallback: str = "command failed",
+        auth_token: str | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        env = None
+        if auth_token:
+            env = os.environ.copy()
+            if args[0] == "git" and len(args) > 1 and args[1] == "push":
+                env["GIT_CONFIG_COUNT"] = "1"
+                env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
+                env["GIT_CONFIG_VALUE_0"] = f"Authorization: Bearer {auth_token}"
+            elif args[0] == "gh":
+                env["GH_TOKEN"] = auth_token
         try:
             process = subprocess.run(
+                # codeql[py/command-line-injection] -- callers validate user-supplied values via _validate_git_arg before they reach args
                 args,
                 cwd=self.server.repository_root,
                 check=False,
@@ -480,16 +529,29 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 stderr=subprocess.PIPE,
                 text=True,
                 encoding="utf-8",
+                env=env,
             )
         except OSError as error:
             raise RequestError(HTTPStatus.INTERNAL_SERVER_ERROR, fallback) from error
         if process.returncode != 0:
             message = process.stderr.strip() or process.stdout.strip() or fallback
+            if auth_token and (
+                "Authentication failed" in message or "401" in message or "403" in message
+            ):
+                raise RequestError(HTTPStatus.UNAUTHORIZED, "GitHub authentication expired or insufficient permissions")
             raise RequestError(HTTPStatus.BAD_REQUEST, _safe_message(RuntimeError(message), fallback))
         return process
 
     def _allow_request(self, *, mutation: bool) -> bool:
         if self.server.allow_remote:
+            if self.server.github_client_id:
+                session = self._get_session()
+                if session is None:
+                    self._send_json(
+                        HTTPStatus.UNAUTHORIZED,
+                        {"ok": False, "error": "authentication required", "login_url": "/auth/login"},
+                    )
+                    return False
             return True
         if not _loopback_peer(self.client_address):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "request origin is not allowed"})
@@ -508,6 +570,121 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return True
         self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "request origin is not allowed"})
         return False
+
+    def _get_cookie(self, name: str) -> str | None:
+        cookie_header = self.headers.get("Cookie", "")
+        cookie = SimpleCookie()
+        cookie.load(cookie_header)
+        morsel = cookie.get(name)
+        return morsel.value if morsel else None
+
+    def _get_session(self) -> _Session | None:
+        session_id = self._get_cookie("wb_session")
+        if not session_id:
+            return None
+        return self.server.sessions.get(session_id)
+
+    def _get_auth_token(self) -> str | None:
+        session = self._get_session()
+        return session.token if session else None
+
+    def _set_session_cookie(self, session_id: str) -> None:
+        cookie = SimpleCookie()
+        cookie["wb_session"] = session_id
+        cookie["wb_session"]["path"] = "/"
+        cookie["wb_session"]["httponly"] = True
+        cookie["wb_session"]["samesite"] = "Lax"
+        if self.server.allow_remote:
+            cookie["wb_session"]["secure"] = True
+        self.send_header("Set-Cookie", cookie["wb_session"].OutputString())
+
+    def _handle_login(self) -> None:
+        if not self.server.github_client_id:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "GitHub OAuth is not configured"})
+            return
+        state = secrets.token_hex(32)
+        redirect_url = (
+            f"https://github.com/login/oauth/authorize"
+            f"?client_id={self.server.github_client_id}"
+            f"&scope=repo,read:org"
+            f"&state={state}"
+        )
+        self.send_response(HTTPStatus.FOUND)
+        self.send_header("Location", redirect_url)
+        cookie = SimpleCookie()
+        cookie["oauth_state"] = state
+        cookie["oauth_state"]["path"] = "/"
+        cookie["oauth_state"]["httponly"] = True
+        cookie["oauth_state"]["samesite"] = "Lax"
+        if self.server.allow_remote:
+            cookie["oauth_state"]["secure"] = True
+        cookie["oauth_state"]["max-age"] = "600"
+        self.send_header("Set-Cookie", cookie["oauth_state"].OutputString())
+        self.end_headers()
+
+    def _handle_callback(self) -> None:
+        request = urlsplit(self.path)
+        params = dict(part.split("=", 1) for part in request.query.split("&") if "=" in part)
+        code = params.get("code", "")
+        state = params.get("state", "")
+        if not code or not state:
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Missing code or state"})
+            return
+        stored_state = self._get_cookie("oauth_state")
+        if not stored_state or not secrets.compare_digest(stored_state, state):
+            self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Invalid or expired OAuth state"})
+            return
+        token_data = json.dumps({
+            "client_id": self.server.github_client_id,
+            "client_secret": self.server.github_client_secret,
+            "code": code,
+        }).encode("utf-8")
+        token_request = urllib.request.Request(
+            "https://github.com/login/oauth/access_token",
+            data=token_data,
+            headers={
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(token_request) as response:
+                token_payload = json.loads(response.read())
+        except (urllib.error.URLError, json.JSONDecodeError):
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": "Failed to exchange OAuth code"})
+            return
+        access_token = token_payload.get("access_token", "")
+        if not access_token:
+            error_desc = token_payload.get("error_description", "GitHub did not return an access token")
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": error_desc})
+            return
+        user_request = urllib.request.Request(
+            "https://api.github.com/user",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(user_request) as response:
+                user_payload = json.loads(response.read())
+        except (urllib.error.URLError, json.JSONDecodeError):
+            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": "Failed to fetch GitHub user info"})
+            return
+        username = user_payload.get("login", "unknown")
+        session_id = secrets.token_hex(32)
+        self.server.sessions[session_id] = _Session(token=access_token, username=username)
+        self.send_response(HTTPStatus.FOUND)
+        self.send_header("Location", "/")
+        self._set_session_cookie(session_id)
+        self.end_headers()
+
+    def _handle_auth_status(self) -> None:
+        session = self._get_session()
+        if session:
+            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": True, "username": session.username})
+        else:
+            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": False})
 
     def _send_json(self, status: HTTPStatus, value: object) -> None:
         body = json.dumps(value, separators=(",", ":"), allow_nan=False).encode("utf-8")
@@ -657,12 +834,24 @@ def _argument_parser() -> ArgumentParser:
         action="store_true",
         help="Allow non-loopback web clients (for hosted deployment only)",
     )
+    parser.add_argument(
+        "--github-client-id",
+        default="",
+        help="GitHub OAuth App client ID (required for --allow-remote auth)",
+    )
+    parser.add_argument(
+        "--github-client-secret",
+        default="",
+        help="GitHub OAuth App client secret (required for --allow-remote auth)",
+    )
     return parser
 
 
 def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
+    if parsed.allow_remote and (not parsed.github_client_id or not parsed.github_client_secret):
+        parser.error("--allow-remote requires --github-client-id and --github-client-secret")
     try:
         root = validate_hang_ten_checkout(parsed.repository_root) if parsed.repository_root is not None else _discover_repository_root(Path.cwd())
     except EditorError as error:
@@ -674,6 +863,8 @@ def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = 
             parsed.port,
             allow_remote=parsed.allow_remote,
             editor_root=editor_root,
+            github_client_id=parsed.github_client_id,
+            github_client_secret=parsed.github_client_secret,
         )
     except OSError as error:
         raise ServerBindError(f"could not bind to {parsed.host}:{parsed.port}") from error
