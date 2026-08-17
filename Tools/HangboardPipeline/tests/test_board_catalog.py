@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from conftest import (
+    PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
     write_board_package,
@@ -84,6 +85,16 @@ def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
         (lambda root: (root / "assets" / "primary.png").unlink(), "primary.png"),
         (lambda root: (root / "semantics.json").write_text("{}"), "unknown package entry"),
         (lambda root: (root / "assets" / "extra.png").write_bytes(b"extra"), "unknown asset"),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(b"not a png"),
+            "must be a PNG image",
+        ),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(
+                PRIMARY_PNG_BYTES[:-1] + bytes([PRIMARY_PNG_BYTES[-1] ^ 0xFF])
+            ),
+            "corrupt chunk checksum",
+        ),
     ],
 )
 def test_completed_package_requires_the_exact_finished_shape(

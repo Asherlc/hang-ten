@@ -27,7 +27,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     )
 
     assert "packages validate --root Hangboards" in ci_workflow
-    assert "test_generated_catalog_import.py" in ci_workflow
+    assert "pytest tests -q" in ci_workflow
     assert "stage-board-packages.py" in ci_workflow
     assert "BoardPackageStoreTests" in ci_workflow
     assert "status: draft" not in active_docs
