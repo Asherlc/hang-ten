@@ -44,4 +44,13 @@ function serializePath(commands) {
 
 function fmt(n) { return Number.isInteger(n) ? String(n) : String(Math.round(n * 1e6) / 1e6); }
 
-module.exports = { parsePath, serializePath };
+function moveVertex(commands, index, dx, dy) {
+  const cmd = commands[index];
+  if (!cmd || cmd.type === "Z") return;
+  for (const p of cmd.points) { p.x += dx; p.y += dy; }
+  if (cmd.type === "Q" || cmd.type === "C") {
+    for (const c of cmd.controls) { c.x += dx; c.y += dy; }
+  }
+}
+
+module.exports = { parsePath, serializePath, moveVertex };
