@@ -17,7 +17,7 @@
   const el = Object.fromEntries([
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
-    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path", "apply-hold-button",
+    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
   ].map((id) => [id, document.getElementById(id)]));
   const boardOperations = createBoardOperationCoordinator({
     onBusyChange: (busy) => {
@@ -323,14 +323,11 @@
 
   function renderInspector() {
     const hold = selectedHold();
-    el["apply-hold-button"].disabled = state.busy || !hold;
-    el["hold-path"].disabled = state.busy || !hold;
     el["hold-empty"].classList.toggle("hidden", Boolean(hold));
     el["hold-form"].classList.toggle("hidden", !hold);
     el["hold-heading"].textContent = hold ? hold.key : "No selection";
     if (!hold) return;
     el["hold-key"].value = hold.key;
-    el["hold-path"].value = hold.displayPath;
   }
 
   function render() {
@@ -396,25 +393,6 @@
     });
   }
 
-  function applyHold(event) {
-    event.preventDefault();
-    if (state.busy) return;
-    const hold = selectedHold();
-    if (!hold) return;
-    const candidate = clone(state.document);
-    candidate.regions.find((region) => region.key === hold.key).displayPath = el["hold-path"].value.trim();
-    try {
-      validateEditorDocument(candidate);
-      state.document = candidate;
-      state.dirty = true;
-      setValidation();
-      setStatus("Contour updated. Save when ready.");
-      render();
-    } catch (error) {
-      setValidation(error.message || "Contour is invalid.");
-    }
-  }
-
   async function saveBoard() {
     if (state.busy || !state.board || !state.document) return;
     try {
@@ -453,7 +431,6 @@
   }
 
   el["refresh-boards-button"].addEventListener("click", () => { void refreshBoards(); });
-  el["hold-form"].addEventListener("submit", applyHold);
   el["save-button"].addEventListener("click", () => { void saveBoard(); });
   el["editor-svg"].addEventListener("pointerdown", handlePointerDown);
   el["editor-svg"].addEventListener("pointermove", handlePointerMove);

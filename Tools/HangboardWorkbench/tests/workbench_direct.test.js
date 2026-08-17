@@ -46,6 +46,7 @@ class FakeElement {
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
   removeAttribute(name) { this.attributes.delete(name); }
   addEventListener(name, listener) { this.listeners.set(name, listener); }
+  querySelector() { return null; }
   click() {
     if (!this.disabled) this.listeners.get("click")?.({ currentTarget: this, target: this });
   }
@@ -55,7 +56,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
   const ids = [
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
-    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path", "apply-hold-button",
+    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
   ];
   const elements = {};
   const document = {
@@ -302,7 +303,6 @@ test("a pending browser save cannot reset a newer board document", async () => {
   await settle();
   await settle();
   assert.equal(app.elements["board-name"].textContent, "Board A");
-  assert.equal(app.elements["hold-path"].value, "");
 });
 
 test("browser source contains only direct board vocabulary", () => {

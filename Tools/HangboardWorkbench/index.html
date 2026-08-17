@@ -42,12 +42,7 @@
               <span class="eyebrow">Board</span>
               <strong id="board-name">No board selected</strong>
             </div>
-            <div class="canvas-actions">
-              <span class="eyebrow">Image</span>
-              <span class="eyebrow">Holds</span>
-              <span class="eyebrow">Validation</span>
-              <span class="eyebrow">Save</span>
-            </div>
+
           </div>
           <div class="editor-views">
             <div class="canvas-viewport" id="canvas-viewport">
@@ -78,14 +73,13 @@
           <div class="inspector-empty" id="hold-empty">Select a hold to edit its closed contour.</div>
           <form class="inspector-form hidden" id="hold-form">
             <label>Hold key <input id="hold-key" type="text" readonly /></label>
-            <label>Closed contour <textarea id="hold-path" rows="8" spellcheck="false"></textarea></label>
-            <button class="tool-button" id="apply-hold-button" type="submit">Apply contour</button>
           </form>
         </aside>
       </section>
     </main>
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
+    <script src="path-editor.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
