@@ -514,6 +514,39 @@ test("switching branches does not prompt for confirmation when there are no unsa
   assert.deepEqual(switchedTo, ["feature"]);
 });
 
+test("switching branches reports success plus a status warning when the post-switch status refresh fails", async () => {
+  const controller = require("../workbench-controller.js");
+  let statusCalls = 0;
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        statusCalls += 1;
+        if (statusCalls === 1) return { ok: true, currentBranch: "main", branches: ["main", "feature"], dirty: false };
+        throw new Error("status backend unavailable");
+      },
+      async switchBranch(branch) { return { ok: true }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-branch-select"].value = "feature";
+  app.elements["git-branch-select"].change();
+  app.elements["git-switch-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["editor-status"].textContent, "Switched to feature. Repository status unavailable.");
+  assert.equal(app.elements["validation-panel"].classList.values.has("hidden"), false);
+});
+
 test("opening a pull request cancels when the title prompt is dismissed", async () => {
   const controller = require("../workbench-controller.js");
   let opened = false;

@@ -420,6 +420,7 @@ def _validate_png_structure(path: Path) -> None:
 
     offset = 8
     seen_ihdr = False
+    seen_idat = False
     width = height = None
     try:
         while offset < len(data):
@@ -443,7 +444,15 @@ def _validate_png_structure(path: Path) -> None:
                     raise ValueError("assets/primary.png has a malformed IHDR chunk")
                 width, height = struct.unpack_from(">II", body, 0)
                 seen_ihdr = True
+            if chunk_type == b"IDAT":
+                seen_idat = True
             if chunk_type == b"IEND":
+                if body:
+                    raise ValueError("assets/primary.png has a malformed IEND chunk")
+                if not seen_idat:
+                    raise ValueError("assets/primary.png must contain image data")
+                if crc_end != len(data):
+                    raise ValueError("assets/primary.png has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
                     raise ValueError("assets/primary.png must declare positive dimensions")
                 return

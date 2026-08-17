@@ -514,6 +514,7 @@
       state.hasUncommittedChanges = Boolean(status.dirty);
       state.gitStatusKnown = true;
       syncBranches(state.currentBranch);
+      return true;
     } catch (error) {
       state.branches = [];
       state.currentBranch = null;
@@ -522,6 +523,7 @@
       syncBranches(null);
       setValidation(error.message || "Could not read repository status.");
       setStatus("Could not read repository status.");
+      return false;
     }
   }
 
@@ -633,9 +635,13 @@
       state.image = null;
       state.selectedKey = null;
       state.dirty = false;
-      await refreshGitState();
-      setValidation("");
-      setStatus(`Switched to ${branch}.`);
+      const gitStateRefreshed = await refreshGitState();
+      if (gitStateRefreshed) {
+        setValidation("");
+        setStatus(`Switched to ${branch}.`);
+      } else {
+        setStatus(`Switched to ${branch}. Repository status unavailable.`);
+      }
       try {
         await boardOperations.perform(async () => {
           state.boards = await client.listBoards();
@@ -660,9 +666,14 @@
       try {
         const result = await client.commitBoardChanges(message);
         el["git-commit-message"].value = "";
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Committed ${result.commit?.slice(0, 7) || "changes"}.`);
+        const commitLabel = `Committed ${result.commit?.slice(0, 7) || "changes"}.`;
+        const gitStateRefreshed = await refreshGitState();
+        if (gitStateRefreshed) {
+          setValidation("");
+          setStatus(commitLabel);
+        } else {
+          setStatus(`${commitLabel} Repository status unavailable.`);
+        }
       } catch (error) {
         setValidation(error.message || "Could not commit changes.");
         setStatus("Could not commit changes.");
@@ -674,10 +685,16 @@
     if (isBusy()) return;
     await gitOperations.perform(async () => {
       try {
+        const pushedBranch = state.currentBranch || "current branch";
         await client.pushBranch();
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Pushed ${state.currentBranch || "current branch"}.`);
+        const pushLabel = `Pushed ${pushedBranch}.`;
+        const gitStateRefreshed = await refreshGitState();
+        if (gitStateRefreshed) {
+          setValidation("");
+          setStatus(pushLabel);
+        } else {
+          setStatus(`${pushLabel} Repository status unavailable.`);
+        }
       } catch (error) {
         setValidation(error.message || "Could not push branch.");
         setStatus("Could not push branch.");
