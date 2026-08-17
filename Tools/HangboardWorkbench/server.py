@@ -521,7 +521,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 env["GH_TOKEN"] = auth_token
         try:
             process = subprocess.run(
-                args,
+                args,  # lgtm[py/command-line-injection] -- callers validate user-supplied values via _validate_git_arg before they reach args
                 cwd=self.server.repository_root,
                 check=False,
                 stdout=subprocess.PIPE,
