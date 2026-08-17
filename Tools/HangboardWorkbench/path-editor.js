@@ -158,4 +158,6 @@ function subdivideCubic(p0, c1, c2, p3) {
   };
 }
 
-module.exports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex };
+const pathEditorExports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex };
+if (typeof module !== "undefined") module.exports = pathEditorExports;
+if (typeof globalThis !== "undefined") globalThis.HoldPathEditor = pathEditorExports;
