@@ -516,7 +516,8 @@
       state.hasUncommittedChanges = false;
       state.gitStatusKnown = false;
       syncBranches(null);
-      console.error(error);
+      setValidation(error.message || "Could not read repository status.");
+      setStatus("Could not read repository status.");
     }
   }
 
@@ -618,22 +619,29 @@
       }
       try {
         await client.switchBranch(branch);
-        state.board = null;
-        state.document = null;
-        state.image = null;
-        state.selectedKey = null;
-        state.dirty = false;
-        await boardOperations.perform(async () => {
-          state.boards = await client.listBoards();
-        });
-        await refreshGitState();
-        setValidation("");
-        setStatus(`Switched to ${branch}.`);
-        render();
       } catch (error) {
         setValidation(error.message || "Could not switch branch.");
         setStatus("Could not switch branch.");
+        return;
       }
+      state.board = null;
+      state.document = null;
+      state.image = null;
+      state.selectedKey = null;
+      state.dirty = false;
+      await refreshGitState();
+      setValidation("");
+      setStatus(`Switched to ${branch}.`);
+      try {
+        await boardOperations.perform(async () => {
+          state.boards = await client.listBoards();
+        });
+      } catch (error) {
+        state.boards = [];
+        setValidation(error.message || "Could not reload boards for the new branch.");
+        setStatus(`Switched to ${branch}. Could not reload boards.`);
+      }
+      render();
     });
   }
 

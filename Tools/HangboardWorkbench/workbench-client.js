@@ -72,7 +72,14 @@
 
   async function getGitStatus() {
     const payload = await request("/api/git/status");
-    return { ...payload, statusLines: Array.isArray(payload.statusLines) ? payload.statusLines : [] };
+    if (!Array.isArray(payload.branches)) throw new Error("Workbench returned an invalid branch list");
+    return {
+      ...payload,
+      currentBranch: payload.currentBranch || null,
+      branches: payload.branches,
+      dirty: Boolean(payload.dirty),
+      statusLines: Array.isArray(payload.statusLines) ? payload.statusLines : [],
+    };
   }
 
   async function getAuthStatus() {
@@ -85,14 +92,7 @@
   }
 
   async function listBranches() {
-    const payload = await request("/api/git/status");
-    if (!Array.isArray(payload.branches)) throw new Error("Workbench returned an invalid branch list");
-    return {
-      currentBranch: payload.currentBranch || null,
-      branches: payload.branches,
-      dirty: Boolean(payload.dirty),
-      statusLines: Array.isArray(payload.statusLines) ? payload.statusLines : [],
-    };
+    return getGitStatus();
   }
 
   async function switchBranch(branchName) {
@@ -127,7 +127,7 @@
     return payload;
   }
 
-  async function openPullRequest({ title, body = "", base = "main", branch = null }) {
+  async function openPullRequest({ title, body = "", base = "main", branch = null } = {}) {
     if (typeof title !== "string" || !title.trim()) throw new Error("A pull request title is required");
     const payload = await request("/api/git/open-pr", {
       method: "POST",

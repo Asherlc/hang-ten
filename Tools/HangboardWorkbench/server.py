@@ -11,6 +11,7 @@ import re
 import secrets
 import stat
 import subprocess
+import threading
 import urllib.error
 import urllib.request
 from argparse import ArgumentParser
@@ -40,6 +41,7 @@ from workbench_assets import STATIC_ASSET_ROUTES
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
 PAGE_ROUTES = frozenset({"/", "/index.html"})
+_GIT_COMMAND_TIMEOUT_SECONDS = 30
 _ABSOLUTE_PATH_IN_TEXT = re.compile(r"(?:(?<![A-Za-z0-9/])/(?!/)[^\s/]|[A-Za-z]:[\\/])")
 
 
@@ -162,6 +164,11 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         self.github_client_id = github_client_id
         self.github_client_secret = github_client_secret
         self.sessions: dict[str, _Session] = {}
+        # ThreadingHTTPServer runs every request on its own thread against
+        # the same working tree; without this, concurrent git operations can
+        # interleave (one request committing another's staged files) or race
+        # on index.lock.
+        self.git_lock = threading.Lock()
         super().__init__(server_address, request_handler)
 
 
@@ -187,7 +194,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.OK, {"ok": True})
             return
         if path == "/api/git/status":
-            self._get_git_status()
+            with self.server.git_lock, self._mutation_error_response():
+                self._get_git_status()
             return
         if path == "/api/boards":
             self._get_boards()
@@ -228,22 +236,22 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         request = urlsplit(self.path)
         if request.path == "/api/git/checkout":
-            with self._mutation_error_response():
+            with self.server.git_lock, self._mutation_error_response():
                 body = self._read_json_object()
                 self._post_checkout(body)
             return
         if request.path == "/api/git/commit":
-            with self._mutation_error_response():
+            with self.server.git_lock, self._mutation_error_response():
                 body = self._read_json_object()
                 self._post_commit(body)
             return
         if request.path == "/api/git/push":
-            with self._mutation_error_response():
+            with self.server.git_lock, self._mutation_error_response():
                 body = self._read_json_object()
                 self._post_push(body)
             return
         if request.path == "/api/git/open-pr":
-            with self._mutation_error_response():
+            with self.server.git_lock, self._mutation_error_response():
                 body = self._read_json_object()
                 self._post_open_pull_request(body)
             return
@@ -333,7 +341,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         message = _validate_git_arg(message.strip(), "message")
         if not self._git_status_lines():
             raise RequestError(HTTPStatus.CONFLICT, "no changes to commit")
-        self._run_git(["git", "add", "-A"])
+        # Stage only the board library, not every locally-modified file in
+        # the checkout -- a commit made from the editor UI should only ever
+        # contain the board content the editor actually saved.
+        self._run_git(["git", "add", "-A", "--", "Hangboards"])
         self._run_git(
             ["git", "commit", "--message", message],
             fallback="could not create commit",
@@ -355,6 +366,17 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             raise RequestError(HTTPStatus.BAD_REQUEST, "remote must be a string")
         remote = remote.strip() or "origin"
         _validate_git_arg(remote, "remote")
+        # `remote` reaches `git push` in the remote-name position, which git
+        # also accepts as a raw URL (including `ext::` transports that run an
+        # arbitrary local command). Restricting it to an already-configured
+        # remote closes that off.
+        configured_remotes = {
+            line.strip()
+            for line in self._run_git(["git", "remote"], fallback="could not list remotes").stdout.splitlines()
+            if line.strip()
+        }
+        if remote not in configured_remotes:
+            raise RequestError(HTTPStatus.BAD_REQUEST, "remote is not configured")
         branch = self._git_current_branch()
         self._run_git(
             ["git", "push", "--set-upstream", remote, branch],
@@ -364,12 +386,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote})
 
     def _post_open_pull_request(self, body: dict[str, Any]) -> None:
-        branch = body.get("branch")
-        if branch is None:
-            branch = self._git_current_branch()
-        if not isinstance(branch, str):
+        requested = body.get("branch")
+        if requested is not None and not isinstance(requested, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
-        branch = branch.strip() or self._git_current_branch()
+        branch = (requested or "").strip() or self._git_current_branch()
         _validate_git_arg(branch, "branch")
         title = body.get("title")
         if not isinstance(title, str):
@@ -523,9 +543,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         fallback: str = "command failed",
         auth_token: str | None = None,
     ) -> subprocess.CompletedProcess[str]:
-        env = None
+        # A hung git/gh credential prompt would block this request thread
+        # forever; disable interactive prompts and close stdin so a missing
+        # or expired token fails fast instead of hanging.
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        env["GIT_ASKPASS"] = ""
+        env["GCM_INTERACTIVE"] = "never"
         if auth_token:
-            env = os.environ.copy()
             if args[0] == "git" and len(args) > 1 and args[1] == "push":
                 env["GIT_CONFIG_COUNT"] = "1"
                 env["GIT_CONFIG_KEY_0"] = "http.extraHeader"
@@ -538,12 +563,16 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 args,
                 cwd=self.server.repository_root,
                 check=False,
+                stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
                 encoding="utf-8",
                 env=env,
+                timeout=_GIT_COMMAND_TIMEOUT_SECONDS,
             )
+        except subprocess.TimeoutExpired as error:
+            raise RequestError(HTTPStatus.GATEWAY_TIMEOUT, fallback) from error
         except OSError as error:
             raise RequestError(HTTPStatus.INTERNAL_SERVER_ERROR, fallback) from error
         if process.returncode != 0:
