@@ -629,6 +629,19 @@ def test_health_check_without_session_returns_200(tmp_path: Path) -> None:
     assert payload["ok"] is True
 
 
+def test_local_mode_health_check_still_enforces_loopback_origin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+    monkeypatch.setattr(server_module, "_loopback_peer", lambda _value: False)
+
+    with running_server(library) as base:
+        status, payload = request_json(base, "GET", "/api/health")
+
+    assert status == 403
+    assert payload["error"] == "request origin is not allowed"
+
+
 def test_auth_status_returns_unauthenticated_by_default(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 
