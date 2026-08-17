@@ -39,6 +39,7 @@ from workbench_assets import STATIC_ASSET_ROUTES
 
 MAX_REQUEST_BYTES = 10 * 1024 * 1024
 EDITOR_ROOT = Path(__file__).resolve().parent
+PAGE_ROUTES = frozenset({"/", "/index.html"})
 _ABSOLUTE_PATH_IN_TEXT = re.compile(r"(?:(?<![A-Za-z0-9/])/(?!/)[^\s/]|[A-Za-z]:[\\/])")
 
 
@@ -180,7 +181,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/health" and self.server.allow_remote:
             self._send_json(HTTPStatus.OK, {"ok": True})
             return
-        if not self._allow_request(mutation=False):
+        if not self._allow_request(mutation=False, redirect_unauthenticated=path in PAGE_ROUTES):
             return
         if path == "/api/health":
             self._send_json(HTTPStatus.OK, {"ok": True})
@@ -545,15 +546,20 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             raise RequestError(HTTPStatus.BAD_REQUEST, _safe_message(RuntimeError(message), fallback))
         return process
 
-    def _allow_request(self, *, mutation: bool) -> bool:
+    def _allow_request(self, *, mutation: bool, redirect_unauthenticated: bool = False) -> bool:
         if self.server.allow_remote:
             if self.server.github_client_id:
                 session = self._get_session()
                 if session is None:
-                    self._send_json(
-                        HTTPStatus.UNAUTHORIZED,
-                        {"ok": False, "error": "authentication required", "login_url": "/auth/login"},
-                    )
+                    if redirect_unauthenticated:
+                        self.send_response(HTTPStatus.FOUND)
+                        self.send_header("Location", "/auth/login")
+                        self.end_headers()
+                    else:
+                        self._send_json(
+                            HTTPStatus.UNAUTHORIZED,
+                            {"ok": False, "error": "authentication required", "login_url": "/auth/login"},
+                        )
                     return False
             return True
         if not _loopback_peer(self.client_address):
