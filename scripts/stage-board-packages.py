@@ -140,11 +140,8 @@ def _replace_destination(staging: Path, destination: Path) -> None:
     if replaced_existing_destination:
         try:
             shutil.rmtree(backup)
-        except OSError as error:
-            print(
-                f"warning: could not remove backup directory {backup}: {error}",
-                file=sys.stderr,
-            )
+        except OSError:
+            pass
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
@@ -158,9 +155,7 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
     _regular_directory(hangboards_root)
-    packages = load_board_package_module(repository_root).discover_packages_without_lock(
-        hangboards_root
-    )
+    packages = load_board_package_module(repository_root).discover_packages(hangboards_root)
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")

@@ -46,6 +46,7 @@ struct BoardHoldPieceValidationResult {
     let invalidFrameComponents: Set<BoardHoldFrameComponent>
     let conversionFailureReason: String?
     let usesDeclaredFrame: Bool
+    let piece: BoardHoldPiece?
 
     var packageFailureReason: String? {
         if !invalidFrameComponents.isEmpty {
@@ -90,9 +91,10 @@ enum BoardHoldGeometryValidator {
                     invalidFrameComponents.insert(.height)
                 }
 
-                let conversionFailureReason: String?
+                var conversionFailureReason: String?
+                var validatedPiece: BoardHoldPiece?
                 do {
-                    _ = try piece.boardHoldPiece(id: pieceID(index), holdID: holdID)
+                    validatedPiece = try piece.boardHoldPiece(id: pieceID(index), holdID: holdID)
                     conversionFailureReason = nil
                 } catch {
                     conversionFailureReason = String(describing: error)
@@ -101,7 +103,8 @@ enum BoardHoldGeometryValidator {
                 return BoardHoldPieceValidationResult(
                     invalidFrameComponents: invalidFrameComponents,
                     conversionFailureReason: conversionFailureReason,
-                    usesDeclaredFrame: piece.shape.usesDeclaredFrame
+                    usesDeclaredFrame: piece.shape.usesDeclaredFrame,
+                    piece: validatedPiece
                 )
             }
         )
@@ -147,6 +150,14 @@ struct BoardHoldDefinition: Codable, Hashable {
             [BoardHoldPieceDocument].self,
             forKey: .geometry
         ) {
+            if container.contains(.frame) {
+                throw DecodingError.dataCorrupted(
+                    .init(
+                        codingPath: container.codingPath + [CodingKeys.geometry],
+                        debugDescription: "hold \(id) declares both geometry and legacy frame"
+                    )
+                )
+            }
             geometry = pieces
         } else {
             // Temporary compatibility for frame-only generated-library and
@@ -190,6 +201,12 @@ struct BoardHoldDefinition: Codable, Hashable {
     }
 
     func trainingBoardHold() throws -> BoardHold {
+        if let fingerCapacity,
+           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+            throw BoardGeometryAdaptationError.invalid(
+                "hold \(id) has an invalid finger capacity"
+            )
+        }
         guard !geometry.isEmpty else {
             throw BoardGeometryAdaptationError.invalid(
                 "hold \(id) geometry must include at least one piece"
@@ -441,7 +458,7 @@ enum BoardLibraryValidator {
         let geometryValidation = BoardHoldGeometryValidator.validate(
             hold.geometry,
             holdID: hold.id,
-            pieceID: { _ in "validation-piece" }
+            pieceID: { "\(hold.id)-piece-\($0)" }
         )
         if geometryValidation.isEmpty {
             issues.append(

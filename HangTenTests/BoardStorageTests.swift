@@ -178,6 +178,28 @@ final class BoardStorageTests: XCTestCase {
         }
     }
 
+    func testBoardHoldDefinitionRejectsGeometryAndLegacyFrameTogether() throws {
+        let data = Data(
+            #"{"id":"fixture.ambiguous","name":"Ambiguous","kind":"edge","frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"geometry":[{"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"shape":{"type":"roundedRect","cornerRadiusFraction":0.1}}]}"#.utf8
+        )
+
+        XCTAssertThrowsError(try JSONDecoder().decode(BoardHoldDefinition.self, from: data))
+    }
+
+    func testDirectHoldConversionRejectsInvalidFingerCapacityByThrowing() throws {
+        let data = Data(
+            #"{"id":"fixture.capacity","name":"Capacity","kind":"edge","fingerCapacity":0,"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2}}"#.utf8
+        )
+        let definition = try JSONDecoder().decode(BoardHoldDefinition.self, from: data)
+
+        XCTAssertThrowsError(try definition.trainingBoardHold()) { error in
+            XCTAssertEqual(
+                String(describing: error),
+                "hold fixture.capacity has an invalid finger capacity"
+            )
+        }
+    }
+
     func testBoardLibraryAcceptsEveryPhysicalHoldKindDuringDecoding() throws {
         let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
         XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)

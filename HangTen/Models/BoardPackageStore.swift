@@ -146,26 +146,25 @@ struct BoardPackageStore {
             )
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateMetadata(boardDocument: boardDocument)
+            try Self.validatePresentationAssetPath(
+                boardDocument.presentation.assetPath,
+                boardID: boardDocument.id,
+                in: packageURL
+            )
             try Self.validatePresentationAspectRatio(
                 boardDocument.aspectRatio,
                 imageWidth: presentationSize.width,
                 imageHeight: presentationSize.height,
                 boardID: boardDocument.id
             )
-            _ = try Self.validateHolds(in: boardDocument)
+            let holds = try Self.validateHolds(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
             }
-            let board = try boardDocument.trainingBoard()
+            let board = try boardDocument.trainingBoard(holds: holds)
             loadedBoards.append(board)
             let assetURL = packageURL.appendingPathComponent("assets/primary.png")
             loadedPresentationURLs[board.id] = assetURL
-            if boardDocument.presentation.assetPath != "assets/primary.png" {
-                throw BoardPackageStoreError.presentationAssetPathEscape(
-                    boardID: board.id,
-                    path: boardDocument.presentation.assetPath
-                )
-            }
         }
 
         loadedBoards.sort(by: Self.boardComesBefore)
@@ -213,22 +212,18 @@ struct BoardPackageStore {
         )
         var directories: [URL] = []
         for child in children {
-            let name = child.lastPathComponent
-            if name.hasPrefix(".") {
-                continue
-            }
             let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
             if values.isSymbolicLink == true {
                 throw BoardPackageStoreError.packagePathEscape(
-                    boardID: name,
-                    path: name
+                    boardID: child.lastPathComponent,
+                    path: child.lastPathComponent
                 )
             }
             if values.isDirectory == true {
                 directories.append(child)
             } else {
                 throw BoardPackageStoreError.invalidPackage(
-                    boardID: name,
+                    boardID: child.lastPathComponent,
                     reason: "Hangboards must contain only direct child directories"
                 )
             }
@@ -241,7 +236,8 @@ struct BoardPackageStore {
         boardID: String
     ) throws -> (width: Int, height: Int) {
         try validateNoSymlinks(below: packageURL, boardID: boardID)
-        guard try entryNames(in: packageURL, filteringHiddenEntries: true) == ["assets", "board.json"] else {
+        let entries = try entryNames(in: packageURL)
+        guard entries == ["assets", "board.json"] else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "finished package must contain exactly board.json and assets"
@@ -255,7 +251,7 @@ struct BoardPackageStore {
                 reason: "board.json and assets must be regular non-symlink paths"
             )
         }
-        guard try entryNames(in: assetsURL, filteringHiddenEntries: true) == ["primary.png"] else {
+        guard try entryNames(in: assetsURL) == ["primary.png"] else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "assets must contain exactly primary.png"
@@ -278,10 +274,10 @@ struct BoardPackageStore {
 
     private static func isPrimaryOnlyDraft(_ packageURL: URL) throws -> Bool {
         try validateNoSymlinks(below: packageURL, boardID: packageURL.lastPathComponent)
-        guard try entryNames(in: packageURL, filteringHiddenEntries: true) == ["assets"] else { return false }
+        guard try entryNames(in: packageURL) == ["assets"] else { return false }
         let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
         guard try isRegularDirectory(assetsURL),
-              try entryNames(in: assetsURL, filteringHiddenEntries: true) == ["primary.png"] else { return false }
+              try entryNames(in: assetsURL) == ["primary.png"] else { return false }
         let primaryURL = assetsURL.appendingPathComponent("primary.png")
         guard try isRegularFile(primaryURL) else { return false }
         _ = try validatePNG(
@@ -306,22 +302,29 @@ struct BoardPackageStore {
                 reason: "\(label) must be a decodable PNG"
             )
         }
-        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard data.starts(with: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-              let source = CGImageSourceCreateWithData(data as CFData, sourceOptions),
+              let source = CGImageSourceCreateWithData(
+                  data as CFData,
+                  [kCGImageSourceShouldCache: false] as CFDictionary
+              ),
               CGImageSourceGetType(source) as String? == UTType.png.identifier,
               CGImageSourceGetCount(source) == 1,
               CGImageSourceGetStatus(source) == .statusComplete,
               CGImageSourceGetStatusAtIndex(source, 0) == .statusComplete,
-              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
-              let width = properties[kCGImagePropertyPixelWidth] as? Int,
-              let height = properties[kCGImagePropertyPixelHeight] as? Int else {
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any] else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "\(label) must be a decodable PNG"
             )
         }
-        return (width, height)
+        guard let width = properties[kCGImagePropertyPixelWidth] as? NSNumber,
+              let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "\(label) must be a decodable PNG"
+            )
+        }
+        return (width.intValue, height.intValue)
     }
 
     private static func validatePresentationAspectRatio(
@@ -367,23 +370,14 @@ struct BoardPackageStore {
         }
     }
 
-    private static func entryNames(
-        in directoryURL: URL,
-        filteringHiddenEntries: Bool = true
-    ) throws -> Set<String> {
-        var names = Set<String>()
-        for candidate in try FileManager.default.contentsOfDirectory(
-            at: directoryURL,
-            includingPropertiesForKeys: nil,
-            options: []
-        ) {
-            let name = candidate.lastPathComponent
-            if filteringHiddenEntries && name.hasPrefix(".") {
-                continue
-            }
-            names.insert(name)
-        }
-        return names
+    private static func entryNames(in directoryURL: URL) throws -> Set<String> {
+        Set(
+            try FileManager.default.contentsOfDirectory(
+                at: directoryURL,
+                includingPropertiesForKeys: nil,
+                options: []
+            ).map(\.lastPathComponent)
+        )
     }
 
     private static func isRegularFile(_ url: URL) throws -> Bool {
@@ -449,10 +443,34 @@ struct BoardPackageStore {
         }
     }
 
+    private static func validatePresentationAssetPath(
+        _ assetPath: String,
+        boardID: String,
+        in packageURL: URL
+    ) throws {
+        guard assetPath == "assets/primary.png" else {
+            let resolvedPath = packageURL
+                .appendingPathComponent(assetPath)
+                .standardized
+            let packageBase = packageURL.standardized.path
+            if resolvedPath.path.hasPrefix("\(packageBase)/") {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "presentation.assetPath must be assets/primary.png"
+                )
+            }
+            throw BoardPackageStoreError.presentationAssetPathEscape(
+                boardID: boardID,
+                path: assetPath
+            )
+        }
+    }
+
     private static func validateHolds(
         in document: BoardPackageBoardDocument
-    ) throws -> Set<String> {
+    ) throws -> [BoardHold] {
         var holdIDs = Set<String>()
+        var holds: [BoardHold] = []
         for hold in document.holds {
             guard hold.id.isBoardPackageIdentifier,
                   !hold.name.isEmpty else {
@@ -493,6 +511,16 @@ struct BoardPackageStore {
                     )
                 }
             }
+            let geometryPieces = geometryValidation.pieces.compactMap(\.piece)
+            guard geometryPieces.count == geometryValidation.pieces.count else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has an invalid geometry"
+                )
+            }
+            holds.append(
+                try hold.trainingBoardHold(geometryPieces: geometryPieces)
+            )
             if let size = hold.sizeMillimeters, size <= 0 {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
@@ -522,7 +550,7 @@ struct BoardPackageStore {
                 reason: "holds must not be empty"
             )
         }
-        return holdIDs
+        return holds
     }
 
 }
@@ -573,7 +601,7 @@ private struct BoardPackageBoardDocument: Decodable {
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
     }
 
-    func trainingBoard() throws -> TrainingBoard {
+    func trainingBoard(holds: [BoardHold]) throws -> TrainingBoard {
         guard aspectRatio.isFinite, aspectRatio > 0 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: id,
@@ -588,7 +616,7 @@ private struct BoardPackageBoardDocument: Decodable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
-            holds: try holds.map { try $0.trainingBoardHold() },
+            holds: holds,
             semanticHolds: [:],
             productURL: productURL,
             photoAssetName: nil
@@ -659,14 +687,24 @@ private struct BoardPackageHoldDocument: Decodable {
                 "hold \(id) geometry must include at least one piece"
             )
         }
-        let pieces = try geometry.enumerated().map { index, document in
-            try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
+        return try trainingBoardHold(
+            geometryPieces: geometry.enumerated().map { index, document in
+                try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
+            }
+        )
+    }
+
+    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {
+        guard !geometryPieces.isEmpty else {
+            throw BoardGeometryAdaptationError.invalid(
+                "hold \(id) geometry must include at least one piece"
+            )
         }
         return BoardHold(
             id: id,
             name: name,
             kind: kind,
-            geometry: pieces,
+            geometry: geometryPieces,
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
@@ -822,15 +860,12 @@ struct BoardGeometryShapeDocument: Codable, Hashable {
 
     var usesDeclaredFrame: Bool {
         guard type == "path", let commands else { return type == "roundedRect" }
-        let points = commands.flatMap { command in
-            [command.to, command.control, command.control1, command.control2].compactMap { $0 }
+        guard let pathCommands = try? commands.map({ try $0.boardPathCommand() }) else {
+            return false
         }
-        guard !points.isEmpty,
-              points.allSatisfy({
-                  $0.count == 2 && $0.allSatisfy { $0.isFinite && (0...1).contains($0) }
-              }) else { return false }
-        let xValues = points.map { $0[0] }
-        let yValues = points.map { $0[1] }
+        guard let points = try? pathCommands.flattenedContour() else { return false }
+        let xValues = points.map { point in point.x }
+        let yValues = points.map { point in point.y }
         let tolerance = 0.0000005
         return xValues.min()! <= tolerance && yValues.min()! <= tolerance &&
             xValues.max()! >= 1 - tolerance && yValues.max()! >= 1 - tolerance
@@ -928,12 +963,14 @@ extension BoardHoldPieceDocument {
                 "hold piece \(id) has an invalid frame"
             )
         }
-        try treatment?.validate(pieceID: id)
         return try BoardHoldPiece(
             id: id,
             holdID: holdID,
             frame: frame.cgRect,
-            shape: shape.boardShape()
+            shape: shape.boardShape(),
+            treatment: treatment.map {
+                try $0.boardHoldTreatment(pieceID: id)
+            } ?? .surface
         )
     }
 }
@@ -1023,7 +1060,7 @@ private extension BoardGeometryPathCommandDocument {
     }
 }
 
-private extension Array where Element == BoardPathCommand {
+extension Array where Element == BoardPathCommand {
     func validateSimpleContour() throws {
         let points = try flattenedContour()
         guard points.count >= 4, points.first == points.last else {
@@ -1038,52 +1075,24 @@ private extension Array where Element == BoardPathCommand {
             )
         }
         let segmentCount = points.count - 1
-        let segments = (0..<segmentCount).map { index in
-            let start = points[index]
-            let end = points[index + 1]
-            return CandidateSegment(
-                index: index,
-                start: start,
-                end: end,
-                minX: Swift.min(start.x, end.x),
-                maxX: Swift.max(start.x, end.x),
-                minY: Swift.min(start.y, end.y),
-                maxY: Swift.max(start.y, end.y)
-            )
-        }
-        let ordered = segments.sorted(by: { $0.minX < $1.minX })
-        for firstOrder in 0..<ordered.count {
-            let first = ordered[firstOrder]
-            guard !Self.samePoint(first.start, first.end) else {
+        for firstIndex in 0..<segmentCount {
+            let first = points[firstIndex]
+            let second = points[firstIndex + 1]
+            guard !Self.samePoint(first, second) else {
                 throw BoardGeometryAdaptationError.invalid(
                     "path contains a zero-length segment"
                 )
             }
-            for secondOrder in (firstOrder + 1)..<ordered.count {
-                let second = ordered[secondOrder]
-                if second.minX > first.maxX + Self.contourEpsilon {
-                    break
-                }
-                if second.maxX < first.minX - Self.contourEpsilon ||
-                    second.maxY < first.minY - Self.contourEpsilon ||
-                    second.minY > first.maxY + Self.contourEpsilon {
-                    continue
-                }
-                if Self.samePoint(first.start, second.start) ||
-                    Self.samePoint(first.start, second.end) ||
-                    Self.samePoint(first.end, second.start) ||
-                    Self.samePoint(first.end, second.end) {
-                    continue
-                }
-                let indexDistance = abs(first.index - second.index)
-                if indexDistance == 1 || indexDistance == segmentCount - 1 {
+            for otherIndex in (firstIndex + 1)..<segmentCount {
+                if otherIndex == firstIndex + 1 ||
+                    (firstIndex == 0 && otherIndex == segmentCount - 1) {
                     continue
                 }
                 if Self.segmentsIntersect(
-                    first.start,
-                    first.end,
-                    second.start,
-                    second.end
+                    first,
+                    second,
+                    points[otherIndex],
+                    points[otherIndex + 1]
                 ) {
                     throw BoardGeometryAdaptationError.invalid(
                         "path must not self-intersect"
@@ -1099,7 +1108,7 @@ private extension Array where Element == BoardPathCommand {
         }
     }
 
-    private func flattenedContour() throws -> [CGPoint] {
+    fileprivate func flattenedContour() throws -> [CGPoint] {
         guard case .move(let start)? = first else {
             throw BoardGeometryAdaptationError.invalid("path must begin with move")
         }
@@ -1216,38 +1225,32 @@ private struct QuantizedBoardPoint: Hashable {
     }
 }
 
-private struct CandidateSegment {
-    let index: Int
-    let start: CGPoint
-    let end: CGPoint
-    let minX: CGFloat
-    let maxX: CGFloat
-    let minY: CGFloat
-    let maxY: CGFloat
-}
-
 private extension BoardGeometryTreatmentDocument {
-    func validate(pieceID: String) throws {
+    func boardHoldTreatment(pieceID: String) throws -> BoardHoldTreatment {
         switch type {
         case "surface":
             guard rimInsetFraction == nil, depth == nil else {
                 throw invalidTreatment(pieceID: pieceID)
             }
+            return .surface
         case "shelf":
             guard depth == nil, let inset = try validatedInset(pieceID: pieceID) else {
                 throw invalidTreatment(pieceID: pieceID)
             }
-            _ = inset
+            return .shelf(BoardShelfProfile(rimInsetFraction: inset))
         case "recess":
             guard let inset = try validatedInset(pieceID: pieceID) else {
                 throw invalidTreatment(pieceID: pieceID)
             }
+            let recessDepth: BoardRecessDepth
             switch depth {
-            case "deep", "shallow":
-                break
+            case "deep": recessDepth = .deep
+            case "shallow": recessDepth = .shallow
             default: throw invalidTreatment(pieceID: pieceID)
             }
-            _ = inset
+            return .recess(
+                BoardRecessProfile(rimInsetFraction: inset, depth: recessDepth)
+            )
         default:
             throw invalidTreatment(pieceID: pieceID)
         }
