@@ -33,7 +33,11 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertEqual(board.manufacturer, "Fixture Maker")
         XCTAssertEqual(hold.id, "fixture.hold")
         XCTAssertEqual(hold.geometry.count, 2)
-        XCTAssertEqual(hold.frame.rect, CGRect(x: 0.1, y: 0.2, width: 0.7, height: 0.4))
+        let unionedFrame = hold.frame.rect
+        XCTAssertEqual(unionedFrame.minX, 0.1, accuracy: 1e-9)
+        XCTAssertEqual(unionedFrame.minY, 0.2, accuracy: 1e-9)
+        XCTAssertEqual(unionedFrame.width, 0.7, accuracy: 1e-9)
+        XCTAssertEqual(unionedFrame.height, 0.4, accuracy: 1e-9)
         XCTAssertNil(hold.sizeMillimeters)
         XCTAssertNil(hold.depthRangeMillimeters)
         XCTAssertNil(hold.gripType)

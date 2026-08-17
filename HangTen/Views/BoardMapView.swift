@@ -9,25 +9,13 @@ struct BoardMapView: View {
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
-        Group {
-            if let design = BoardCatalog.packageStore.design(for: board.id) {
-                DesignedBoardMap(
-                    board: board,
-                    design: design,
-                    highlightedHoldIDs: highlightedHoldIDs,
-                    highlightMode: highlightMode,
-                    onHoldTap: onHoldTap
-                )
-            } else {
-                GenericVectorBoardMap(
-                    board: board,
-                    highlightedHoldIDs: highlightedHoldIDs,
-                    highlightMode: highlightMode,
-                    showsLabels: showsLabels,
-                    onHoldTap: onHoldTap
-                )
-            }
-        }
+        PhysicalBoardMap(
+            board: board,
+            highlightedHoldIDs: highlightedHoldIDs,
+            highlightMode: highlightMode,
+            showsLabels: showsLabels,
+            onHoldTap: onHoldTap
+        )
         .aspectRatio(board.aspectRatio, contentMode: .fit)
     }
 }
@@ -47,60 +35,10 @@ struct BoardPresentationImage: View {
     }
 }
 
-/// A thin SwiftUI adapter over the shared board design language. The design's
-/// resolved hold geometry drives the recess, highlight, and interaction region.
-private struct DesignedBoardMap: View {
-    let board: TrainingBoard
-    let design: BoardDesign
-    let highlightedHoldIDs: Set<String>
-    let highlightMode: BoardHighlightMode
-    let onHoldTap: ((BoardHold) -> Void)?
-
-    var body: some View {
-        GeometryReader { proxy in
-            let boardRect = design.boardRect(in: proxy.size)
-
-            ZStack {
-                Canvas(opaque: false, rendersAsynchronously: true) { context, size in
-                    design.draw(
-                        in: &context,
-                        size: size,
-                        highlightedHoldIDs: highlightedHoldIDs,
-                        highlightMode: highlightMode
-                    )
-                }
-
-                ForEach(board.holds) { hold in
-                    let pieces = design.holdPieces(for: hold.id)
-                    if !pieces.isEmpty {
-                        let hitShape = BoardHoldPathShape(pieces: pieces)
-                        hitShape
-                            .fill(Color.clear)
-                            .contentShape(hitShape)
-                            .frame(
-                                width: boardRect.width,
-                                height: boardRect.height
-                            )
-                            .position(
-                                x: boardRect.midX,
-                                y: boardRect.midY
-                            )
-                            .onTapGesture {
-                                onHoldTap?(hold)
-                            }
-                            .accessibilityLabel(hold.name)
-                            .accessibilityAddTraits(.isButton)
-                    }
-                }
-            }
-        }
-        .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
-    }
-}
-
-// MARK: - Generic fallback for boards awaiting bespoke geometry
-
-private struct GenericVectorBoardMap: View {
+/// Renders a board's real presentation photo with each hold's own geometry
+/// driving both its highlight overlay and its tap/hit-testing region, so the
+/// interactive area always matches what the photo actually shows.
+private struct PhysicalBoardMap: View {
     let board: TrainingBoard
     let highlightedHoldIDs: Set<String>
     let highlightMode: BoardHighlightMode
@@ -110,14 +48,7 @@ private struct GenericVectorBoardMap: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [.hangWoodLight, .hangWood],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                BoardPresentationImage(board: board)
 
                 ForEach(board.holds) { hold in
                     let isHighlighted = highlightedHoldIDs.contains(hold.id)
@@ -136,6 +67,7 @@ private struct GenericVectorBoardMap: View {
                 }
             }
         }
+        .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
     }
 }
 
@@ -148,21 +80,22 @@ private struct PhysicalHoldVisual: View {
     var body: some View {
         let shape = BoardHoldPathShape(pieces: hold.geometry)
         ZStack {
-            shape
-                .fill(isHighlighted ? highlightFill : Color.hangWoodDeep)
-                .overlay {
-                    shape.stroke(
-                        isHighlighted ? highlightStroke : Color.hangWoodShadow,
-                        lineWidth: 1
-                    )
+            if isHighlighted {
+                shape
+                    .fill(highlightFill.opacity(0.6))
+                    .overlay {
+                        shape.stroke(highlightStroke, lineWidth: 2)
+                    }
             }
 
             if showsLabel {
                 GeometryReader { proxy in
                     Text(hold.name)
                         .font(.system(size: 10, weight: .heavy, design: .rounded))
-                        .foregroundStyle(isHighlighted ? Color.white : Color.hangCream)
+                        .foregroundStyle(Color.white)
                         .minimumScaleFactor(0.6)
+                        .padding(.horizontal, 4)
+                        .background(Color.black.opacity(0.35), in: Capsule())
                         .frame(
                             width: max(1, hold.frame.width * proxy.size.width),
                             height: max(1, hold.frame.height * proxy.size.height)
@@ -191,5 +124,17 @@ private struct PhysicalHoldVisual: View {
         case .active: .holdActiveDeep
         case .preview: .restBlueDeep
         }
+    }
+}
+
+struct BoardHoldPathShape: Shape {
+    let pieces: [BoardHoldPiece]
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        for piece in pieces {
+            path.addPath(piece.path(in: rect))
+        }
+        return path
     }
 }

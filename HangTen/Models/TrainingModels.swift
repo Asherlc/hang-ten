@@ -221,6 +221,166 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+// MARK: - Physical hold geometry
+
+/// One normalized geometric piece of a physical hold. A hold with more than
+/// one piece (e.g. a symmetric pair of slots) unions its pieces' frames to
+/// derive the hold's overall `HoldFrame`.
+struct BoardHoldPiece: Identifiable, Hashable {
+    let id: String
+    let holdID: String
+    let frame: CGRect
+    let shape: BoardShape
+    let treatment: BoardHoldTreatment
+
+    func rect(in boardRect: CGRect) -> CGRect {
+        CGRect(
+            x: boardRect.minX + boardRect.width * frame.minX,
+            y: boardRect.minY + boardRect.height * frame.minY,
+            width: boardRect.width * frame.width,
+            height: boardRect.height * frame.height
+        )
+    }
+
+    func path(in boardRect: CGRect) -> Path {
+        shape.path(in: rect(in: boardRect))
+    }
+}
+
+enum BoardHoldTreatment: Hashable {
+    case recess(BoardRecessProfile)
+    case shelf(BoardShelfProfile)
+    case surface
+}
+
+struct BoardRecessProfile: Hashable {
+    let rimInsetFraction: CGFloat
+    let depth: BoardRecessDepth
+
+    static let deepSlot = BoardRecessProfile(rimInsetFraction: 0.090, depth: .deep)
+    static let shallowSlot = BoardRecessProfile(rimInsetFraction: 0.090, depth: .shallow)
+}
+
+enum BoardRecessDepth: Hashable {
+    case deep
+    case shallow
+}
+
+struct BoardShelfProfile: Hashable {
+    let rimInsetFraction: CGFloat
+
+    static let broadJug = BoardShelfProfile(rimInsetFraction: 0.060)
+}
+
+enum BoardShape: Hashable {
+    case roundedRect(cornerRadiusFraction: CGFloat)
+    case path(BoardNormalizedPath)
+
+    func path(in rect: CGRect) -> Path {
+        switch self {
+        case let .roundedRect(fraction):
+            let radius = min(rect.width, rect.height) * fraction
+            return Path(
+                roundedRect: rect,
+                cornerSize: CGSize(width: radius, height: radius)
+            )
+        case let .path(normalizedPath):
+            return normalizedPath.path(in: rect)
+        }
+    }
+
+    var mirroredHorizontally: BoardShape {
+        switch self {
+        case .roundedRect:
+            return self
+        case let .path(path):
+            return .path(path.mirroredHorizontally)
+        }
+    }
+}
+
+struct BoardNormalizedPath: Hashable {
+    let commands: [BoardPathCommand]
+
+    func path(in rect: CGRect) -> Path {
+        func point(_ normalized: CGPoint) -> CGPoint {
+            CGPoint(
+                x: rect.minX + rect.width * normalized.x,
+                y: rect.minY + rect.height * normalized.y
+            )
+        }
+
+        var result = Path()
+        for command in commands {
+            switch command {
+            case let .move(to):
+                result.move(to: point(to))
+            case let .line(to):
+                result.addLine(to: point(to))
+            case let .quad(to, control):
+                result.addQuadCurve(to: point(to), control: point(control))
+            case let .curve(to, control1, control2):
+                result.addCurve(
+                    to: point(to),
+                    control1: point(control1),
+                    control2: point(control2)
+                )
+            case .close:
+                result.closeSubpath()
+            }
+        }
+        return result
+    }
+
+    var mirroredHorizontally: BoardNormalizedPath {
+        BoardNormalizedPath(commands: commands.map(\.mirroredHorizontally))
+    }
+}
+
+enum BoardPathCommand: Hashable {
+    case move(CGPoint)
+    case line(CGPoint)
+    case quad(to: CGPoint, control: CGPoint)
+    case curve(to: CGPoint, control1: CGPoint, control2: CGPoint)
+    case close
+
+    var mirroredHorizontally: BoardPathCommand {
+        func mirror(_ point: CGPoint) -> CGPoint {
+            CGPoint(x: 1 - point.x, y: point.y)
+        }
+
+        switch self {
+        case let .move(to):
+            return .move(mirror(to))
+        case let .line(to):
+            return .line(mirror(to))
+        case let .quad(to, control):
+            return .quad(to: mirror(to), control: mirror(control))
+        case let .curve(to, control1, control2):
+            return .curve(to: mirror(to), control1: mirror(control1), control2: mirror(control2))
+        case .close:
+            return .close
+        }
+    }
+}
+
+extension CGRect {
+    var mirroredHorizontally: CGRect {
+        CGRect(x: 1 - maxX, y: minY, width: width, height: height)
+    }
+}
+
+enum BoardArtworkAdaptationError: Error, CustomStringConvertible {
+    case invalid(String)
+
+    var description: String {
+        switch self {
+        case .invalid(let reason):
+            reason
+        }
+    }
+}
+
 struct BoardHold: Identifiable, Hashable {
     let id: String
     let name: String
@@ -676,12 +836,14 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
-    /// Generic plans (`boardID: nil`) are authored against this board's hold
-    /// vocabulary; falls back to the first discovered board if it is ever
-    /// unavailable so a missing package fails loudly instead of silently
-    /// resolving generic targets against an unrelated board.
+    /// Generic plans (`boardID: nil`) are authored against the same board as
+    /// the legacy semantic-hold mappings; falls back to the first discovered
+    /// board if it is ever unavailable so a missing package fails loudly
+    /// instead of silently resolving generic targets against an unrelated
+    /// board.
     static let defaultBoard: TrainingBoard = {
-        if let board = packageStore.board(id: "metolius.wood-grips-compact-ii") {
+        if let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID,
+           let board = packageStore.board(id: boardID) {
             return board
         }
         guard let board = all.first else {
