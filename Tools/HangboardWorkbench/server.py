@@ -60,6 +60,17 @@ def _safe_message(error: Exception, fallback: str) -> str:
     return fallback if not message or _ABSOLUTE_PATH_IN_TEXT.search(message) else message
 
 
+def _validate_git_arg(value: str, name: str) -> str:
+    """Reject user-provided values that could be interpreted as flags."""
+    if not value:
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} is required")
+    if value.startswith("-"):
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} must not start with a dash")
+    if "\0" in value:
+        raise RequestError(HTTPStatus.BAD_REQUEST, f"{name} contains invalid characters")
+    return value
+
+
 def _display_name(package: BoardPackage) -> str:
     manufacturer = package.board["manufacturer"]
     name = package.board["name"]
@@ -268,9 +279,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         branch = body.get("branch")
         if not isinstance(branch, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
-        sanitized_branch = branch.strip()
-        if not sanitized_branch:
-            raise RequestError(HTTPStatus.BAD_REQUEST, "branch is required")
+        sanitized_branch = _validate_git_arg(branch.strip(), "branch")
         self._run_git(["git", "check-ref-format", "--branch", sanitized_branch])
         self._run_git(["git", "switch", "--", sanitized_branch])
         self._send_json(HTTPStatus.OK, {"ok": True, "branch": sanitized_branch})
@@ -279,9 +288,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         message = body.get("message")
         if not isinstance(message, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "message must be a string")
-        message = message.strip()
-        if not message:
-            raise RequestError(HTTPStatus.BAD_REQUEST, "commit message is required")
+        message = _validate_git_arg(message.strip(), "message")
         if not self._git_status_lines():
             raise RequestError(HTTPStatus.CONFLICT, "no changes to commit")
         self._run_git(["git", "add", "-A"])
@@ -305,6 +312,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(remote, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "remote must be a string")
         remote = remote.strip() or "origin"
+        _validate_git_arg(remote, "remote")
         branch = self._git_current_branch()
         self._run_git(
             ["git", "push", "--set-upstream", remote, branch],
@@ -319,20 +327,18 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(branch, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
         branch = branch.strip() or self._git_current_branch()
-        if not isinstance(branch, str) or not branch:
-            raise RequestError(HTTPStatus.BAD_REQUEST, "branch is required")
+        _validate_git_arg(branch, "branch")
         title = body.get("title")
         if not isinstance(title, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "title must be a string")
-        title = title.strip()
-        if not title:
-            raise RequestError(HTTPStatus.BAD_REQUEST, "title is required")
+        title = _validate_git_arg(title.strip(), "title")
         body_text = body.get("body", "")
         base = body.get("base", "main")
         if not isinstance(body_text, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "body must be a string")
         if not isinstance(base, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "base must be a string")
+        base = _validate_git_arg(base.strip() or "main", "base")
         command = [
             "gh",
             "pr",
@@ -342,7 +348,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             "--head",
             branch,
             "--base",
-            base.strip() or "main",
+            base,
         ]
         if body_text:
             command.extend(["--body", body_text])

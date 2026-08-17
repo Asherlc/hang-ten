@@ -491,3 +491,86 @@ def test_git_commit_refuses_when_nothing_to_commit(tmp_path: Path) -> None:
         "ok": False,
         "error": "no changes to commit",
     }
+
+
+def test_git_checkout_rejects_branch_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "--exec=rm -rf /"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]
+
+
+def test_git_commit_rejects_message_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "new-file.txt").write_text("hello", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "new-file.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/commit",
+            {"message": "--allow-empty"},
+        )
+
+    assert status == 400
+    assert "message" in payload["error"]
+
+
+def test_git_push_rejects_remote_starting_with_dash(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+    (checkout / "push-me.txt").write_text("data", encoding="utf-8")
+    subprocess.run(
+        ["git", "add", "push-me.txt"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "commit", "-m", "add file"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/push",
+            {"remote": "--all"},
+        )
+
+    assert status == 400
+    assert "remote" in payload["error"]
+
+
+def test_git_checkout_rejects_branch_with_null_byte(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main\x00evil"},
+        )
+
+    assert status == 400
+    assert "branch" in payload["error"]
