@@ -175,8 +175,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             self._handle_callback()
             return
         if path == "/api/auth/status":
-            if not self._allow_request(mutation=False):
-                return
             self._handle_auth_status()
             return
         if not self._allow_request(mutation=False):
@@ -619,7 +617,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         cookie["oauth_state"]["samesite"] = "Lax"
         if self.server.allow_remote:
             cookie["oauth_state"]["secure"] = True
-        cookie["oauth_state"]["max_age"] = "600"
+        cookie["oauth_state"]["max-age"] = "600"
         self.send_header("Set-Cookie", cookie["oauth_state"].OutputString())
         self.end_headers()
 
