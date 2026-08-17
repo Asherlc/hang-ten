@@ -478,7 +478,7 @@ def test_git_status_reports_branch_and_worktree_state(tmp_path: Path) -> None:
         "ok": True,
         "currentBranch": "main",
         "dirty": True,
-        "statusLines": [" M workbench-note.txt"],
+        "statusLines": ["?? workbench-note.txt"],
         "branches": ["main"],
     }
 
