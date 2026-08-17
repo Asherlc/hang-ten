@@ -11,12 +11,11 @@ import re
 import secrets
 import stat
 import subprocess
-import time
 import urllib.error
 import urllib.request
 from argparse import ArgumentParser
 from contextlib import contextmanager
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -83,7 +82,6 @@ def _validate_git_arg(value: str, name: str) -> str:
 class _Session:
     token: str
     username: str
-    created_at: float = field(default_factory=time.time)
 
 
 def _display_name(package: BoardPackage) -> str:
@@ -563,6 +561,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         cookie["wb_session"]["path"] = "/"
         cookie["wb_session"]["httponly"] = True
         cookie["wb_session"]["samesite"] = "Lax"
+        if self.server.allow_remote:
+            cookie["wb_session"]["secure"] = True
         self.send_header("Set-Cookie", cookie["wb_session"].OutputString())
 
     def _handle_login(self) -> None:
@@ -583,6 +583,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         cookie["oauth_state"]["path"] = "/"
         cookie["oauth_state"]["httponly"] = True
         cookie["oauth_state"]["samesite"] = "Lax"
+        if self.server.allow_remote:
+            cookie["oauth_state"]["secure"] = True
         cookie["oauth_state"]["max_age"] = "600"
         self.send_header("Set-Cookie", cookie["oauth_state"].OutputString())
         self.end_headers()
