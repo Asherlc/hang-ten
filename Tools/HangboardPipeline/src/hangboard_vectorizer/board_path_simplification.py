@@ -268,24 +268,139 @@ def _boundary_deviation(before: list[Point], after: list[Point]) -> float:
 
 
 def _maximum_distance_to_segments(source: list[Point], target: list[Point]) -> float:
-    maximum = 0.0
     target_segments = list(_segments(target))
+    maximum = 0.0
     for start, end in _segments(source):
-        length = math.dist(start, end)
-        for sample in range(max(1, math.ceil(length * _SUPER_SAMPLE)) + 1):
-            fraction = sample / max(1, math.ceil(length * _SUPER_SAMPLE))
-            point = (start[0] + (end[0] - start[0]) * fraction, start[1] + (end[1] - start[1]) * fraction)
-            maximum = max(maximum, min(_point_to_segment_distance(point, *segment) for segment in target_segments))
+        maximum = max(maximum, _directed_segment_hausdorff(start, end, target_segments))
     return maximum
 
 
+def _directed_segment_hausdorff(
+    start: Point, end: Point, target_segments: list[tuple[Point, Point]]
+) -> float:
+    """Return the exact maximum distance from one segment to a segment union.
+
+    On a source segment, squared distance to each target segment is piecewise
+    quadratic. Its minimum can reach a maximum only at a projection-region
+    boundary, an intersection between two such quadratics, or a source endpoint.
+    Evaluating those finite candidates yields the directed Hausdorff distance
+    without an unsafe sample interval.
+    """
+    breakpoints = {0.0, 1.0}
+    vector = _subtract(end, start)
+    for target_start, target_end in target_segments:
+        target_vector = _subtract(target_end, target_start)
+        target_length_squared = _dot(target_vector, target_vector)
+        if target_length_squared <= _EPSILON:
+            continue
+        offset = _subtract(start, target_start)
+        projection_start = _dot(offset, target_vector) / target_length_squared
+        projection_slope = _dot(vector, target_vector) / target_length_squared
+        if abs(projection_slope) <= _EPSILON:
+            continue
+        for target_projection in (0.0, 1.0):
+            location = (target_projection - projection_start) / projection_slope
+            if _EPSILON < location < 1.0 - _EPSILON:
+                breakpoints.add(location)
+
+    locations = sorted(breakpoints)
+    maximum_squared = 0.0
+    for lower, upper in zip(locations, locations[1:]):
+        midpoint = (lower + upper) / 2
+        quadratics = [
+            _squared_distance_quadratic(start, vector, segment, midpoint)
+            for segment in target_segments
+        ]
+        candidates = {lower, upper}
+        for first_index, first in enumerate(quadratics):
+            for second in quadratics[first_index + 1 :]:
+                candidates.update(
+                    root
+                    for root in _quadratic_roots(
+                        first[0] - second[0],
+                        first[1] - second[1],
+                        first[2] - second[2],
+                    )
+                    if lower < root < upper
+                )
+        for location in candidates:
+            point = _add(start, _scale(vector, location))
+            maximum_squared = max(
+                maximum_squared,
+                min(_squared_point_to_segment_distance(point, *segment) for segment in target_segments),
+            )
+    return math.sqrt(maximum_squared)
+
+
+def _squared_distance_quadratic(
+    start: Point, vector: Point, target: tuple[Point, Point], sample_location: float
+) -> tuple[float, float, float]:
+    target_start, target_end = target
+    target_vector = _subtract(target_end, target_start)
+    target_length_squared = _dot(target_vector, target_vector)
+    offset = _subtract(start, target_start)
+    projection = _dot(_add(offset, _scale(vector, sample_location)), target_vector) / target_length_squared
+    if projection <= 0.0:
+        return _squared_length_quadratic(offset, vector)
+    if projection >= 1.0:
+        return _squared_length_quadratic(_subtract(start, target_end), vector)
+    cross_start = _cross(offset, target_vector)
+    cross_vector = _cross(vector, target_vector)
+    return (
+        cross_vector * cross_vector / target_length_squared,
+        2 * cross_start * cross_vector / target_length_squared,
+        cross_start * cross_start / target_length_squared,
+    )
+
+
+def _squared_length_quadratic(offset: Point, vector: Point) -> tuple[float, float, float]:
+    return _dot(vector, vector), 2 * _dot(offset, vector), _dot(offset, offset)
+
+
+def _quadratic_roots(first: float, second: float, third: float) -> tuple[float, ...]:
+    if abs(first) <= _EPSILON:
+        if abs(second) <= _EPSILON:
+            return ()
+        return (-third / second,)
+    discriminant = second * second - 4 * first * third
+    if discriminant < -_EPSILON:
+        return ()
+    root = math.sqrt(max(0.0, discriminant))
+    return ((-second - root) / (2 * first), (-second + root) / (2 * first))
+
+
 def _point_to_segment_distance(point: Point, start: Point, end: Point) -> float:
+    return math.sqrt(_squared_point_to_segment_distance(point, start, end))
+
+
+def _squared_point_to_segment_distance(point: Point, start: Point, end: Point) -> float:
     dx, dy = end[0] - start[0], end[1] - start[1]
     length_squared = dx * dx + dy * dy
     if length_squared <= _EPSILON:
-        return math.dist(point, start)
+        return _dot(_subtract(point, start), _subtract(point, start))
     fraction = max(0.0, min(1.0, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / length_squared))
-    return math.dist(point, (start[0] + dx * fraction, start[1] + dy * fraction))
+    offset = (point[0] - start[0] - dx * fraction, point[1] - start[1] - dy * fraction)
+    return _dot(offset, offset)
+
+
+def _add(first: Point, second: Point) -> Point:
+    return first[0] + second[0], first[1] + second[1]
+
+
+def _subtract(first: Point, second: Point) -> Point:
+    return first[0] - second[0], first[1] - second[1]
+
+
+def _scale(point: Point, scalar: float) -> Point:
+    return point[0] * scalar, point[1] * scalar
+
+
+def _dot(first: Point, second: Point) -> float:
+    return first[0] * second[0] + first[1] * second[1]
+
+
+def _cross(first: Point, second: Point) -> float:
+    return first[0] * second[1] - first[1] * second[0]
 
 
 def _symmetric_difference_ratio(before: list[Point], after: list[Point], *, width: int, height: int) -> float:
