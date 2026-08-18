@@ -11,6 +11,7 @@ on:
       - reopened
       - ready_for_review
       - edited
+      - closed
   push:
     branches:
       - main
@@ -20,12 +21,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action || github.event_name }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   changes:
     name: Classify changed components
+    # Closing (or merging) a pull request only needs to enter the
+    # concurrency group above so it cancels any stale runs still queued or
+    # in progress for this ref; it does no other work.
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -227,7 +232,7 @@ jobs:
     needs:
       - changes
       - build-ios
-    if: always()
+    if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Report required build status
