@@ -146,25 +146,26 @@ struct BoardPackageStore {
             )
             try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateMetadata(boardDocument: boardDocument)
-            try Self.validatePresentationAssetPath(
-                boardDocument.presentation.assetPath,
-                boardID: boardDocument.id,
-                in: packageURL
-            )
             try Self.validatePresentationAspectRatio(
                 boardDocument.aspectRatio,
                 imageWidth: presentationSize.width,
                 imageHeight: presentationSize.height,
                 boardID: boardDocument.id
             )
-            let holds = try Self.validateHolds(in: boardDocument)
+            _ = try Self.validateHolds(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
             }
-            let board = try boardDocument.trainingBoard(holds: holds)
+            let board = try boardDocument.trainingBoard()
             loadedBoards.append(board)
             let assetURL = packageURL.appendingPathComponent("assets/primary.png")
             loadedPresentationURLs[board.id] = assetURL
+            if boardDocument.presentation.assetPath != "assets/primary.png" {
+                throw BoardPackageStoreError.presentationAssetPathEscape(
+                    boardID: board.id,
+                    path: boardDocument.presentation.assetPath
+                )
+            }
         }
 
         loadedBoards.sort(by: Self.boardComesBefore)
@@ -302,29 +303,21 @@ struct BoardPackageStore {
                 reason: "\(label) must be a decodable PNG"
             )
         }
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        let decodeOptions = [kCGImageSourceShouldCacheImmediately: true] as CFDictionary
         guard data.starts(with: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-              let source = CGImageSourceCreateWithData(
-                  data as CFData,
-                  [kCGImageSourceShouldCache: false] as CFDictionary
-              ),
+              let source = CGImageSourceCreateWithData(data as CFData, sourceOptions),
               CGImageSourceGetType(source) as String? == UTType.png.identifier,
               CGImageSourceGetCount(source) == 1,
               CGImageSourceGetStatus(source) == .statusComplete,
               CGImageSourceGetStatusAtIndex(source, 0) == .statusComplete,
-              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any] else {
+              let image = CGImageSourceCreateImageAtIndex(source, 0, decodeOptions) else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "\(label) must be a decodable PNG"
             )
         }
-        guard let width = properties[kCGImagePropertyPixelWidth] as? NSNumber,
-              let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {
-            throw BoardPackageStoreError.invalidPackage(
-                boardID: boardID,
-                reason: "\(label) must be a decodable PNG"
-            )
-        }
-        return (width.intValue, height.intValue)
+        return (image.width, image.height)
     }
 
     private static func validatePresentationAspectRatio(
@@ -443,34 +436,10 @@ struct BoardPackageStore {
         }
     }
 
-    private static func validatePresentationAssetPath(
-        _ assetPath: String,
-        boardID: String,
-        in packageURL: URL
-    ) throws {
-        guard assetPath == "assets/primary.png" else {
-            let resolvedPath = packageURL
-                .appendingPathComponent(assetPath)
-                .standardized
-            let packageBase = packageURL.standardized.path
-            if resolvedPath.path.hasPrefix("\(packageBase)/") {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: boardID,
-                    reason: "presentation.assetPath must be assets/primary.png"
-                )
-            }
-            throw BoardPackageStoreError.presentationAssetPathEscape(
-                boardID: boardID,
-                path: assetPath
-            )
-        }
-    }
-
     private static func validateHolds(
         in document: BoardPackageBoardDocument
-    ) throws -> [BoardHold] {
+    ) throws -> Set<String> {
         var holdIDs = Set<String>()
-        var holds: [BoardHold] = []
         for hold in document.holds {
             guard hold.id.isBoardPackageIdentifier,
                   !hold.name.isEmpty else {
@@ -492,35 +461,37 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an invalid finger capacity"
                 )
             }
-            let geometryValidation = BoardHoldGeometryValidator.validate(
-                hold.geometry.map(\.holdPieceDocument),
-                holdID: hold.id,
-                pieceID: { "\(hold.id)-piece-\($0)" }
-            )
-            guard !geometryValidation.isEmpty else {
+            guard !hold.geometry.isEmpty else {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) geometry must include at least one piece"
                 )
             }
-            for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
-                if let failureReason = pieceValidation.packageFailureReason {
+            for (pieceIndex, piece) in hold.geometry.enumerated() {
+                guard piece.frame.isNormalized else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "hold \(hold.id) geometry[\(pieceIndex)] \(failureReason)"
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] has an invalid frame"
+                    )
+                }
+                do {
+                    _ = try piece.boardHoldPiece(
+                        id: "\(hold.id)-piece-\(pieceIndex)",
+                        holdID: hold.id
+                    )
+                } catch {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] is invalid: \(error)"
+                    )
+                }
+                guard piece.shape.usesDeclaredFrame else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "hold \(hold.id) geometry[\(pieceIndex)] frame must match its shape bounds"
                     )
                 }
             }
-            let geometryPieces = geometryValidation.pieces.compactMap(\.piece)
-            guard geometryPieces.count == geometryValidation.pieces.count else {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid geometry"
-                )
-            }
-            holds.append(
-                try hold.trainingBoardHold(geometryPieces: geometryPieces)
-            )
             if let size = hold.sizeMillimeters, size <= 0 {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
@@ -550,7 +521,7 @@ struct BoardPackageStore {
                 reason: "holds must not be empty"
             )
         }
-        return holds
+        return holdIDs
     }
 
 }
@@ -601,7 +572,7 @@ private struct BoardPackageBoardDocument: Decodable {
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
     }
 
-    func trainingBoard(holds: [BoardHold]) throws -> TrainingBoard {
+    func trainingBoard() throws -> TrainingBoard {
         guard aspectRatio.isFinite, aspectRatio > 0 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: id,
@@ -616,7 +587,7 @@ private struct BoardPackageBoardDocument: Decodable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
-            holds: holds,
+            holds: try holds.map { try $0.trainingBoardHold() },
             semanticHolds: [:],
             productURL: productURL,
             photoAssetName: nil
@@ -682,29 +653,14 @@ private struct BoardPackageHoldDocument: Decodable {
     }
 
     func trainingBoardHold() throws -> BoardHold {
-        guard !geometry.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
-        }
-        return try trainingBoardHold(
-            geometryPieces: geometry.enumerated().map { index, document in
-                try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
-            }
-        )
-    }
-
-    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {
-        guard !geometryPieces.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
+        let pieces = try geometry.enumerated().map { index, document in
+            try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
         }
         return BoardHold(
             id: id,
             name: name,
             kind: kind,
-            geometry: geometryPieces,
+            geometry: pieces,
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
@@ -739,15 +695,11 @@ private struct BoardPackageGeometryDocument: Decodable {
     }
 
     func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
-        try holdPieceDocument.boardHoldPiece(id: id, holdID: holdID)
-    }
-
-    var holdPieceDocument: BoardHoldPieceDocument {
-        BoardHoldPieceDocument(
+        try BoardHoldPieceDocument(
             frame: frame,
             shape: shape,
             treatment: treatment
-        )
+        ).boardHoldPiece(id: id, holdID: holdID)
     }
 }
 
@@ -860,12 +812,15 @@ struct BoardGeometryShapeDocument: Codable, Hashable {
 
     var usesDeclaredFrame: Bool {
         guard type == "path", let commands else { return type == "roundedRect" }
-        guard let pathCommands = try? commands.map({ try $0.boardPathCommand() }) else {
-            return false
+        let points = commands.flatMap { command in
+            [command.to, command.control, command.control1, command.control2].compactMap { $0 }
         }
-        guard let points = try? pathCommands.flattenedContour() else { return false }
-        let xValues = points.map { point in point.x }
-        let yValues = points.map { point in point.y }
+        guard !points.isEmpty,
+              points.allSatisfy({
+                  $0.count == 2 && $0.allSatisfy { $0.isFinite && (0...1).contains($0) }
+              }) else { return false }
+        let xValues = points.map { $0[0] }
+        let yValues = points.map { $0[1] }
         let tolerance = 0.0000005
         return xValues.min()! <= tolerance && yValues.min()! <= tolerance &&
             xValues.max()! >= 1 - tolerance && yValues.max()! >= 1 - tolerance
@@ -1060,7 +1015,7 @@ private extension BoardGeometryPathCommandDocument {
     }
 }
 
-extension Array where Element == BoardPathCommand {
+private extension Array where Element == BoardPathCommand {
     func validateSimpleContour() throws {
         let points = try flattenedContour()
         guard points.count >= 4, points.first == points.last else {
@@ -1108,7 +1063,7 @@ extension Array where Element == BoardPathCommand {
         }
     }
 
-    fileprivate func flattenedContour() throws -> [CGPoint] {
+    private func flattenedContour() throws -> [CGPoint] {
         guard case .move(let start)? = first else {
             throw BoardGeometryAdaptationError.invalid("path must begin with move")
         }
