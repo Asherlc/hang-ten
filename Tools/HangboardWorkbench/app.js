@@ -212,7 +212,7 @@
     const overlay = document.createElementNS(svgNS, "g");
     overlay.classList.add("path-editor-overlay");
     const pivot = holdCentroid(holdSiblings(hold));
-    const handleY = pivot.y - 24;
+    const handleY = Math.max(0, pivot.y - 24);
     const rotationConnector = document.createElementNS(svgNS, "line");
     rotationConnector.setAttribute("x1", String(pivot.x));
     rotationConnector.setAttribute("y1", String(pivot.y));

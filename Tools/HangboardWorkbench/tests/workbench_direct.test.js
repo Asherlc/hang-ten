@@ -959,6 +959,34 @@ test("the selected physical hold renders a rotation handle and connector above i
   assert.equal(connector.attributes.get("y2"), handle.attributes.get("cy"));
 });
 
+test("a top-edge hold keeps its above-hold rotation handle inside the SVG coordinate space", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 0 L 20 0 L 20 10 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+    ] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const connector = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-handle")[0];
+  assert.ok(connector);
+  assert.ok(handle);
+  assert.equal(Number(connector.attributes.get("y1")), 10 / 3);
+  assert.equal(Number(handle.attributes.get("cy")), 0);
+  assert.ok(Number(handle.attributes.get("cy")) < Number(connector.attributes.get("y1")));
+});
+
 test("dragging the rotation handle rotates every piece from its pointer-down paths around the shared centroid", async () => {
   const controller = require("../workbench-controller.js");
   const board = multiPieceHoldBoard();
