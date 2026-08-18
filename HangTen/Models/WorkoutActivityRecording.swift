@@ -174,7 +174,7 @@ struct WorkoutActivityRecorder {
                 }
                 guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holdsByTarget = segment.targets.map {
-                    BoardTargetResolver.resolveHolds(for: $0, on: board)
+                    BoardTargetResolver.substituteHolds(for: $0, on: board)
                 }
                 guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holds = holdsByTarget.flatMap { $0 }
