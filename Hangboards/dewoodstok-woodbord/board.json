@@ -5,8 +5,8 @@
   "name": "Woodbord",
   "subtitle": "FSC-certified bamboo hangboard.",
   "productURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
-  "dimensions": "590 × 148 × 40 mm",
-  "aspectRatio": 2.0,
+  "dimensions": "590 \u00d7 148 \u00d7 40 mm",
+  "aspectRatio": 3.6236559139784945,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
@@ -17,18 +17,99 @@
       "kind": "sloper",
       "geometry": [
         {
-          "frame": { "x": 0.036077, "y": 0.261556, "width": 0.927847, "height": 0.054115 },
+          "frame": {
+            "x": 0.011276319287833826,
+            "y": 0.0365595096774194,
+            "width": 0.9768549424332343,
+            "height": 0.10322581720430107
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.035, 1.0] },
-              { "command": "curve", "control1": [0.012, 0.98], "control2": [0.0, 0.83], "to": [0.0, 0.68] },
-              { "command": "curve", "control1": [0.0, 0.38], "control2": [0.014, 0.13], "to": [0.045, 0.0] },
-              { "command": "line", "to": [0.955, 0.0] },
-              { "command": "curve", "control1": [0.986, 0.13], "control2": [1.0, 0.38], "to": [1.0, 0.68] },
-              { "command": "curve", "control1": [1.0, 0.83], "control2": [0.988, 0.98], "to": [0.965, 1.0] },
-              { "command": "line", "to": [0.035, 1.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.035,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.012,
+                  0.98
+                ],
+                "control2": [
+                  0.0,
+                  0.83
+                ],
+                "to": [
+                  0.0,
+                  0.68
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.38
+                ],
+                "control2": [
+                  0.014,
+                  0.13
+                ],
+                "to": [
+                  0.045,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.955,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.986,
+                  0.13
+                ],
+                "control2": [
+                  1.0,
+                  0.38
+                ],
+                "to": [
+                  1.0,
+                  0.68
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.83
+                ],
+                "control2": [
+                  0.988,
+                  0.98
+                ],
+                "to": [
+                  0.965,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.035,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -40,18 +121,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.063134, "y": 0.323563, "width": 0.142616, "height": 0.081172 },
+          "frame": {
+            "x": 0.03976244272997032,
+            "y": 0.15483952903225806,
+            "width": 0.15014883323442135,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -64,18 +226,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.236189, "y": 0.322435, "width": 0.066516, "height": 0.0823 },
+          "frame": {
+            "x": 0.2219580332344214,
+            "y": 0.15268783870967753,
+            "width": 0.07002930801186943,
+            "height": 0.15698946236559141
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.3, 0.0] },
-              { "command": "line", "to": [0.7, 0.0] },
-              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
-              { "command": "line", "to": [0.3, 1.0] },
-              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.87,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.87,
+                  1.0
+                ],
+                "to": [
+                  0.7,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.3,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.13,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.13,
+                  0.0
+                ],
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -88,18 +331,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.334837, "y": 0.323563, "width": 0.147689, "height": 0.080045 },
+          "frame": {
+            "x": 0.32581652106824927,
+            "y": 0.15483952903225806,
+            "width": 0.1554897839762611,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -112,18 +436,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.517474, "y": 0.323563, "width": 0.147689, "height": 0.080045 },
+          "frame": {
+            "x": 0.5181002231454006,
+            "y": 0.15483952903225806,
+            "width": 0.1554897839762611,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -136,18 +541,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.697295, "y": 0.322435, "width": 0.066516, "height": 0.0823 },
+          "frame": {
+            "x": 0.7074191869436202,
+            "y": 0.15268783870967753,
+            "width": 0.07002930801186943,
+            "height": 0.15698946236559141
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.3, 0.0] },
-              { "command": "line", "to": [0.7, 0.0] },
-              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
-              { "command": "line", "to": [0.3, 1.0] },
-              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.87,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.87,
+                  1.0
+                ],
+                "to": [
+                  0.7,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.3,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.13,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.13,
+                  0.0
+                ],
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -160,18 +646,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.79425, "y": 0.323563, "width": 0.142616, "height": 0.081172 },
+          "frame": {
+            "x": 0.8094952522255193,
+            "y": 0.15483952903225806,
+            "width": 0.15014883323442135,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -184,18 +751,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.063134, "y": 0.462232, "width": 0.142616, "height": 0.080045 },
+          "frame": {
+            "x": 0.03976244272997032,
+            "y": 0.4193543741935483,
+            "width": 0.15014883323442135,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -208,18 +856,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.236189, "y": 0.462232, "width": 0.139797, "height": 0.080045 },
+          "frame": {
+            "x": 0.2219580332344214,
+            "y": 0.4193543741935483,
+            "width": 0.14718093649851632,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -232,18 +961,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.624014, "y": 0.462232, "width": 0.139797, "height": 0.080045 },
+          "frame": {
+            "x": 0.6302675584569732,
+            "y": 0.4193543741935483,
+            "width": 0.14718093649851632,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -256,18 +1066,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.79425, "y": 0.462232, "width": 0.142616, "height": 0.080045 },
+          "frame": {
+            "x": 0.8094952522255193,
+            "y": 0.4193543741935483,
+            "width": 0.15014883323442135,
+            "height": 0.15268798924731183
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -280,18 +1171,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.063134, "y": 0.599775, "width": 0.142616, "height": 0.081172 },
+          "frame": {
+            "x": 0.03976244272997032,
+            "y": 0.6817213440860214,
+            "width": 0.15014883323442135,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -304,18 +1276,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.236189, "y": 0.598647, "width": 0.066516, "height": 0.083427 },
+          "frame": {
+            "x": 0.2219580332344214,
+            "y": 0.679569653763441,
+            "width": 0.07002930801186943,
+            "height": 0.1591392451612903
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.3, 0.0] },
-              { "command": "line", "to": [0.7, 0.0] },
-              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
-              { "command": "line", "to": [0.3, 1.0] },
-              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.87,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.87,
+                  1.0
+                ],
+                "to": [
+                  0.7,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.3,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.13,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.13,
+                  0.0
+                ],
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -328,18 +1381,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.334837, "y": 0.599775, "width": 0.148253, "height": 0.081172 },
+          "frame": {
+            "x": 0.32581652106824927,
+            "y": 0.6817213440860214,
+            "width": 0.15608357388724034,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -352,18 +1486,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.51691, "y": 0.599775, "width": 0.148253, "height": 0.081172 },
+          "frame": {
+            "x": 0.5175064332344214,
+            "y": 0.6817213440860214,
+            "width": 0.15608357388724034,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -376,18 +1591,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.697295, "y": 0.598647, "width": 0.066516, "height": 0.083427 },
+          "frame": {
+            "x": 0.7074191869436202,
+            "y": 0.679569653763441,
+            "width": 0.07002930801186943,
+            "height": 0.1591392451612903
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.3, 0.0] },
-              { "command": "line", "to": [0.7, 0.0] },
-              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
-              { "command": "line", "to": [0.3, 1.0] },
-              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.87,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.87,
+                  1.0
+                ],
+                "to": [
+                  0.7,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.3,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.13,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.13,
+                  0.0
+                ],
+                "to": [
+                  0.3,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
@@ -400,18 +1696,99 @@
       "kind": "pocket",
       "geometry": [
         {
-          "frame": { "x": 0.79425, "y": 0.599775, "width": 0.142616, "height": 0.081172 },
+          "frame": {
+            "x": 0.8094952522255193,
+            "y": 0.6817213440860214,
+            "width": 0.15014883323442135,
+            "height": 0.15483777204301075
+          },
           "shape": {
             "type": "path",
             "commands": [
-              { "command": "move", "to": [0.14, 0.0] },
-              { "command": "line", "to": [0.86, 0.0] },
-              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
-              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
-              { "command": "line", "to": [0.14, 1.0] },
-              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
-              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
-              { "command": "close" }
+              {
+                "command": "move",
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.86,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.94,
+                  1.0
+                ],
+                "to": [
+                  0.86,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.14,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.06,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.06,
+                  0.0
+                ],
+                "to": [
+                  0.14,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
             ]
           }
         }
