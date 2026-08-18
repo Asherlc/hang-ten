@@ -14,6 +14,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "escape-beta-22",
             "lattice-triple-rung",
             "metolius.wood-grips-compact-ii",
+            "trango.rock-prodigy-pivot",
             "trango.rock-prodigy-training-center",
         ]
 
