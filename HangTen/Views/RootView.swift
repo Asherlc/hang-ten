@@ -2704,7 +2704,6 @@ struct ProgressDashboardView: View {
                         settings: motherboardSettingsStore
                     )
                     healthCard
-                    recoveryCard
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
@@ -2840,25 +2839,6 @@ struct ProgressDashboardView: View {
             }
         }
         .hangCard()
-    }
-
-    private var recoveryCard: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "moon.stars.fill")
-                .font(.system(size: 17, weight: .bold))
-                .foregroundStyle(Color.coolDownPurple)
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Recovery matters")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("Train only when you feel recovered. If your warm-up feels unusually hard, take the rest day.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .padding(16)
-        .background(Color.coolDownPurple.opacity(0.11), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
     private var healthCard: some View {
