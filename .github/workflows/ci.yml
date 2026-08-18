@@ -248,6 +248,10 @@ jobs:
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
+            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
             exit 1

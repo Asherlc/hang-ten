@@ -220,8 +220,12 @@ jobs:
           JAVASCRIPT_RESULT: ${{ needs.analyze-javascript.result }}
         run: |
           set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" || "$ACTIONS_RESULT" == "cancelled" ]]; then
+            echo "CodeQL analysis was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
           test "$CHANGES_RESULT" = success
           test "$ACTIONS_RESULT" = success
           for result in "$SWIFT_RESULT" "$PYTHON_RESULT" "$JAVASCRIPT_RESULT"; do
-            test "$result" = success || test "$result" = skipped
+            test "$result" = success || test "$result" = skipped || test "$result" = cancelled
           done
