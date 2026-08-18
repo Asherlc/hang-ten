@@ -592,6 +592,39 @@ test("creating a branch switches to it and clears the new-branch input", async (
   assert.equal(app.elements["editor-status"].textContent, "Created and switched to feature.");
 });
 
+test("creating a branch is available from detached HEAD", async () => {
+  const controller = require("../workbench-controller.js");
+  const created = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        return { ok: true, currentBranch: null, branches: ["main"], dirty: false };
+      },
+      async createBranch(branch) { created.push(branch); return branch; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm must not be called without unsaved edits"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-new-branch-name"].value = "recovered";
+  app.elements["git-new-branch-name"].input();
+
+  assert.equal(app.elements["git-new-branch-button"].disabled, false);
+
+  app.elements["git-new-branch-button"].click();
+  await settle();
+  await settle();
+
+  assert.deepEqual(created, ["recovered"]);
+});
+
 test("opening a pull request cancels when the title prompt is dismissed", async () => {
   const controller = require("../workbench-controller.js");
   let opened = false;

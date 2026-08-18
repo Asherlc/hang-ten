@@ -105,7 +105,7 @@
     el["git-branch-select"].disabled = isBusy() || state.branches.length === 0;
     el["git-switch-button"].disabled = isBusy() || !state.currentBranch || !el["git-branch-select"].value || el["git-branch-select"].value === state.currentBranch;
     el["git-new-branch-name"].disabled = isBusy();
-    el["git-new-branch-button"].disabled = isBusy() || !state.currentBranch || !el["git-new-branch-name"].value.trim();
+    el["git-new-branch-button"].disabled = isBusy() || !el["git-new-branch-name"].value.trim();
     el["git-commit-message"].disabled = isBusy();
     el["git-commit-button"].disabled = isBusy() || !state.currentBranch;
     el["git-push-button"].disabled = isBusy() || !state.currentBranch;
