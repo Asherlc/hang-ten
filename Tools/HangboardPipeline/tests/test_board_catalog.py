@@ -1,16 +1,35 @@
 from __future__ import annotations
 
 import json
+import struct
+import zlib
 from pathlib import Path
 
 import pytest
 
 from conftest import (
+    PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
     write_board_package,
     write_primary_only_draft,
 )
+
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
+    return (
+        struct.pack(">I", len(body))
+        + chunk_type
+        + body
+        + struct.pack(">I", zlib.crc32(chunk_type + body) & 0xFFFFFFFF)
+    )
+
+
+def _png_without_idat() -> bytes:
+    ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0)
+    return _PNG_SIGNATURE + _png_chunk(b"IHDR", ihdr) + _png_chunk(b"IEND")
 
 
 def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
@@ -84,6 +103,26 @@ def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
         (lambda root: (root / "assets" / "primary.png").unlink(), "primary.png"),
         (lambda root: (root / "semantics.json").write_text("{}"), "unknown package entry"),
         (lambda root: (root / "assets" / "extra.png").write_bytes(b"extra"), "unknown asset"),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(b"not a png"),
+            "must be a PNG image",
+        ),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(
+                PRIMARY_PNG_BYTES[:-1] + bytes([PRIMARY_PNG_BYTES[-1] ^ 0xFF])
+            ),
+            "corrupt chunk checksum",
+        ),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(_png_without_idat()),
+            "must contain image data",
+        ),
+        (
+            lambda root: (root / "assets" / "primary.png").write_bytes(
+                PRIMARY_PNG_BYTES + b"trailing"
+            ),
+            "trailing data after IEND",
+        ),
     ],
 )
 def test_completed_package_requires_the_exact_finished_shape(

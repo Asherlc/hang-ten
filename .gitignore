@@ -28,3 +28,8 @@ xcuserdata/
 
 # Developer-specific PostHog project token override
 /HangTen/Config/PostHog.local.xcconfig
+
+# Python editable-install and bytecode cache artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
