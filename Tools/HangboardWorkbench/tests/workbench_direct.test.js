@@ -974,13 +974,13 @@ test("the selected physical hold renders a separated rotation handle and connect
   assert.equal(connector.attributes.get("y2"), handle.attributes.get("cy"));
 });
 
-test("a top-edge hold keeps its horizontally offset rotation handle separated and inside the SVG viewBox", async () => {
+test("a top-edge hold keeps its rotation handle separated and inside a narrow SVG viewBox", async () => {
   const controller = require("../workbench-controller.js");
   const board = {
     boardId: "board-a",
     displayName: "Board A",
     imageUrl: "/api/boards/board-a/image",
-    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+    document: { schemaVersion: 1, canvas: { width: 20, height: 100 }, regions: [
       { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 0 L 20 0 L 20 10 Z", metadata: { holdID: "a", pieceIndex: 0 } },
     ] },
   };
@@ -1007,7 +1007,6 @@ test("a top-edge hold keeps its horizontally offset rotation handle separated an
 
   assert.equal(Number(connector.attributes.get("x1")), pivot.x);
   assert.equal(Number(connector.attributes.get("y1")), pivot.y);
-  assert.ok(Math.abs(handleCenter.x - pivot.x) >= 24);
   assert.ok(Math.hypot(handleCenter.x - pivot.x, handleCenter.y - pivot.y) >= 24);
   assert.ok(handleCenter.x - handleRadius >= viewBoxX);
   assert.ok(handleCenter.x + handleRadius <= viewBoxX + viewBoxWidth);

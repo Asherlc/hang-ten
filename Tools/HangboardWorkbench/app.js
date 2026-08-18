@@ -215,33 +215,44 @@
     overlay.classList.add("path-editor-overlay");
     const pivot = holdCentroid(holdSiblings(hold));
     const { width, height } = state.document.canvas;
-    const maxHandleX = width - ROTATION_HANDLE_RADIUS;
-    const maxHandleY = height - ROTATION_HANDLE_RADIUS;
-    let handleX = Math.min(Math.max(pivot.x, ROTATION_HANDLE_RADIUS), maxHandleX);
-    let handleY = pivot.y - ROTATION_HANDLE_OFFSET;
-    if (handleY < ROTATION_HANDLE_RADIUS) {
-      handleY = Math.min(Math.max(pivot.y, ROTATION_HANDLE_RADIUS), maxHandleY);
-      const rightHandleX = pivot.x + ROTATION_HANDLE_OFFSET;
-      const leftHandleX = pivot.x - ROTATION_HANDLE_OFFSET;
-      handleX = rightHandleX <= maxHandleX
-        ? rightHandleX
-        : leftHandleX >= ROTATION_HANDLE_RADIUS
-          ? leftHandleX
-          : Math.min(Math.max(rightHandleX, ROTATION_HANDLE_RADIUS), maxHandleX);
-    }
+    const minHandleX = Math.min(ROTATION_HANDLE_RADIUS, width / 2);
+    const maxHandleX = Math.max(width - ROTATION_HANDLE_RADIUS, width / 2);
+    const minHandleY = Math.min(ROTATION_HANDLE_RADIUS, height / 2);
+    const maxHandleY = Math.max(height - ROTATION_HANDLE_RADIUS, height / 2);
+    const clampHandlePosition = (value, min, max) => Math.min(Math.max(value, min), max);
+    const centeredHandleX = clampHandlePosition(pivot.x, minHandleX, maxHandleX);
+    const centeredHandleY = clampHandlePosition(pivot.y, minHandleY, maxHandleY);
+    const horizontalOffset = Math.sqrt(Math.max(0, ROTATION_HANDLE_OFFSET ** 2 - (centeredHandleY - pivot.y) ** 2));
+    const candidates = [
+      { x: centeredHandleX, y: pivot.y - ROTATION_HANDLE_OFFSET },
+      { x: pivot.x + horizontalOffset, y: centeredHandleY },
+      { x: pivot.x - horizontalOffset, y: centeredHandleY },
+      { x: centeredHandleX, y: pivot.y + ROTATION_HANDLE_OFFSET },
+    ];
+    const isInHandleBounds = ({ x, y }) => x >= minHandleX && x <= maxHandleX && y >= minHandleY && y <= maxHandleY;
+    const handlePosition = candidates.find(isInHandleBounds) || [
+      { x: minHandleX, y: minHandleY },
+      { x: minHandleX, y: maxHandleY },
+      { x: maxHandleX, y: minHandleY },
+      { x: maxHandleX, y: maxHandleY },
+    ].reduce((furthest, candidate) => (
+      Math.hypot(candidate.x - pivot.x, candidate.y - pivot.y) > Math.hypot(furthest.x - pivot.x, furthest.y - pivot.y)
+        ? candidate
+        : furthest
+    ));
     const rotationConnector = document.createElementNS(svgNS, "line");
     rotationConnector.setAttribute("x1", String(pivot.x));
     rotationConnector.setAttribute("y1", String(pivot.y));
-    rotationConnector.setAttribute("x2", String(handleX));
-    rotationConnector.setAttribute("y2", String(handleY));
+    rotationConnector.setAttribute("x2", String(handlePosition.x));
+    rotationConnector.setAttribute("y2", String(handlePosition.y));
     rotationConnector.setAttribute("stroke", "#fff7dc");
     rotationConnector.setAttribute("stroke-width", "1.5");
     rotationConnector.setAttribute("stroke-dasharray", "4 3");
     rotationConnector.classList.add("path-editor-rotation-connector");
     overlay.append(rotationConnector);
     const rotationHandle = document.createElementNS(svgNS, "circle");
-    rotationHandle.setAttribute("cx", String(handleX));
-    rotationHandle.setAttribute("cy", String(handleY));
+    rotationHandle.setAttribute("cx", String(handlePosition.x));
+    rotationHandle.setAttribute("cy", String(handlePosition.y));
     rotationHandle.setAttribute("r", String(ROTATION_HANDLE_RADIUS));
     rotationHandle.setAttribute("fill", "#fff7dc");
     rotationHandle.setAttribute("stroke", TYPE_COLORS[hold.type] || "#ff754f");
