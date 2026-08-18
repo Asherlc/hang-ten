@@ -33,7 +33,11 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertEqual(board.manufacturer, "Fixture Maker")
         XCTAssertEqual(hold.id, "fixture.hold")
         XCTAssertEqual(hold.geometry.count, 2)
-        XCTAssertEqual(hold.frame.rect, CGRect(x: 0.1, y: 0.2, width: 0.7, height: 0.4))
+        let expectedFrame = CGRect(x: 0.1, y: 0.2, width: 0.7, height: 0.4)
+        XCTAssertEqual(hold.frame.rect.origin.x, expectedFrame.origin.x, accuracy: 1e-12)
+        XCTAssertEqual(hold.frame.rect.origin.y, expectedFrame.origin.y, accuracy: 1e-12)
+        XCTAssertEqual(hold.frame.rect.size.width, expectedFrame.size.width, accuracy: 1e-12)
+        XCTAssertEqual(hold.frame.rect.size.height, expectedFrame.size.height, accuracy: 1e-12)
         XCTAssertNil(hold.sizeMillimeters)
         XCTAssertNil(hold.depthRangeMillimeters)
         XCTAssertNil(hold.gripType)
@@ -158,6 +162,70 @@ final class BoardStorageTests: XCTestCase {
             $0.path == "boards[0].holds[0].geometry" &&
                 $0.message.contains("at least one piece")
         })
+    }
+
+    func testDirectHoldConversionRejectsEmptyGeometryByThrowing() throws {
+        let definition = try JSONDecoder().decode(
+            BoardHoldDefinition.self,
+            from: Data(#"{"id":"fixture.empty","name":"Empty","kind":"edge","geometry":[]}"#.utf8)
+        )
+
+        XCTAssertThrowsError(try definition.trainingBoardHold()) { error in
+            XCTAssertEqual(
+                String(describing: error),
+                "hold fixture.empty geometry must include at least one piece"
+            )
+        }
+    }
+
+    func testBoardHoldDefinitionRejectsGeometryAndLegacyFrameTogether() throws {
+        let data = Data(
+            #"{"id":"fixture.ambiguous","name":"Ambiguous","kind":"edge","frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"geometry":[{"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"shape":{"type":"roundedRect","cornerRadiusFraction":0.1}}]}"#.utf8
+        )
+
+        XCTAssertThrowsError(try JSONDecoder().decode(BoardHoldDefinition.self, from: data))
+    }
+
+    func testDirectHoldConversionRejectsInvalidFingerCapacityByThrowing() throws {
+        let data = Data(
+            #"{"id":"fixture.capacity","name":"Capacity","kind":"edge","fingerCapacity":0,"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2}}"#.utf8
+        )
+        let definition = try JSONDecoder().decode(BoardHoldDefinition.self, from: data)
+
+        XCTAssertThrowsError(try definition.trainingBoardHold()) { error in
+            XCTAssertEqual(
+                String(describing: error),
+                "hold fixture.capacity has an invalid finger capacity"
+            )
+        }
+    }
+
+    func testBoardLibraryAcceptsEveryPhysicalHoldKindDuringDecoding() throws {
+        let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
+        XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            let template = try XCTUnwrap(
+                (board["holds"] as? [[String: Any]])?.first
+            )
+            board["holds"] = expectedKinds.map { kind in
+                var hold = template
+                hold["id"] = "fixture.\(kind)"
+                hold["name"] = "Fixture \(kind)"
+                hold["kind"] = kind
+                return hold
+            }
+            board["semanticHolds"] = [
+                "fixture-edge": ["holdIDs": ["fixture.edge"]]
+            ]
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        let board = try XCTUnwrap(BoardLibraryStore(data: data).boards.first)
+
+        XCTAssertEqual(board.holds.map(\.kind.rawValue), expectedKinds)
     }
 
     func testBoardLibraryRejectsUnsupportedPhysicalHoldKindsDuringDecoding() throws {
