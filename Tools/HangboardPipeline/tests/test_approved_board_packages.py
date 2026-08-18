@@ -37,25 +37,28 @@ COMPACT_HOLDS = (
 )
 
 COMPACT_HOLD_BOUNDS = {
-    "jug-left": (0.000, 0.000, 0.165, 0.255),
+    # jug-left/right, edge-29-*, and edge-19-* were retightened so their
+    # declared frame exactly matches their path's flattened bounds; see
+    # "Fix hold geometry bounds and aspect-ratio metadata mismatches".
+    "jug-left": (0.000, 0.000, 0.165, 0.23715),
     "sloper-flat-left": (0.158, 0.035, 0.190, 0.128),
     "sloper-round-center": (0.352, 0.035, 0.296, 0.128),
     "sloper-flat-right": (0.652, 0.035, 0.190, 0.128),
-    "jug-right": (0.835, 0.000, 0.165, 0.255),
-    "edge-29-left": (0.021, 0.245, 0.165, 0.270),
+    "jug-right": (0.835, 0.000, 0.165, 0.23715),
+    "edge-29-left": (0.021, 0.2531, 0.165, 0.2538),
     "pocket-29-three-left": (0.199, 0.365, 0.109, 0.148),
     "pocket-29-two-left": (0.328, 0.370, 0.077, 0.147),
     "pocket-29-four-center": (0.425, 0.365, 0.150, 0.148),
     "pocket-29-two-right": (0.595, 0.370, 0.077, 0.147),
     "pocket-29-three-right": (0.692, 0.365, 0.109, 0.148),
-    "edge-29-right": (0.814, 0.245, 0.165, 0.270),
-    "edge-19-left": (0.035, 0.620, 0.160, 0.245),
+    "edge-29-right": (0.814, 0.2531, 0.165, 0.2538),
+    "edge-19-left": (0.035, 0.626125, 0.160, 0.231525),
     "pocket-19-three-left": (0.216, 0.733, 0.104, 0.140),
     "pocket-19-three-right": (0.680, 0.733, 0.104, 0.140),
     "pocket-19-two-left": (0.336, 0.733, 0.073, 0.140),
     "pocket-19-two-right": (0.591, 0.733, 0.073, 0.140),
     "pocket-19-four-center": (0.425, 0.733, 0.150, 0.140),
-    "edge-19-right": (0.805, 0.620, 0.160, 0.245),
+    "edge-19-right": (0.805, 0.626125, 0.160, 0.231525),
 }
 
 COMPACT_HOLD_PHYSICAL_FACTS = {
@@ -156,10 +159,15 @@ def _embedded_geometry_bounds(
 def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> None:
     inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
 
-    assert [(package.board.id, package.root.name) for package in inventory.packages] == [
-        ("metolius.wood-grips-compact-ii", "metolius-wood-grips-compact-ii")
-    ]
-    assert len(inventory.drafts) == 32
+    assert {(package.board.id, package.root.name) for package in inventory.packages} == {
+        ("metolius.wood-grips-compact-ii", "metolius-wood-grips-compact-ii"),
+        ("beastmaker-1000", "beastmaker-1000"),
+        ("beastmaker-2000", "beastmaker-2000"),
+        ("dewoodstok-woodbord", "dewoodstok-woodbord"),
+        ("escape-beta-22", "escape-beta-22"),
+        ("lattice-triple-rung", "lattice-triple-rung"),
+    }
+    assert len(inventory.drafts) == 28
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
 
 
