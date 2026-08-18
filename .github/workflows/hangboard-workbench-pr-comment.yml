@@ -51,7 +51,7 @@ jobs:
           head_owner="${HEAD_REPOSITORY%%/*}"
           pulls="$(gh api --method GET --paginate --slurp \
             "repos/$REPOSITORY/pulls" \
-            -f state=open \
+            -f state=all \
             -f base="$BASE_BRANCH" \
             -f head="$head_owner:$HEAD_BRANCH" \
             -f per_page=100)"
@@ -62,7 +62,6 @@ jobs:
             --arg repository "$REPOSITORY" \
             --arg base_branch "$BASE_BRANCH" \
             '[.[][] | select(
-              .state == "open" and
               .head.repo.full_name == $head_repository and
               .head.ref == $head_branch and
               .head.sha == $head_sha and
@@ -71,11 +70,20 @@ jobs:
             )]' \
             <<<"$pulls")"
           candidate_count="$(jq 'length' <<<"$matching_prs")"
+          if [[ "$candidate_count" -eq 0 ]]; then
+            echo "No pull request found for $HEAD_REPOSITORY:$HEAD_BRANCH@$HEAD_SHA against $BASE_BRANCH; nothing to comment on." >&2
+            exit 0
+          fi
           if [[ "$candidate_count" -ne 1 ]]; then
-            echo "Expected exactly one open base-repository pull request for $HEAD_REPOSITORY:$HEAD_BRANCH@$HEAD_SHA, found $candidate_count." >&2
+            echo "Expected exactly one base-repository pull request for $HEAD_REPOSITORY:$HEAD_BRANCH@$HEAD_SHA, found $candidate_count." >&2
             exit 1
           fi
           PR_NUMBER="$(jq -r '.[0].number' <<<"$matching_prs")"
+          PR_STATE="$(jq -r '.[0].state' <<<"$matching_prs")"
+          if [[ "$PR_STATE" != "open" ]]; then
+            echo "Ignoring run $RUN_ID because pull request $PR_NUMBER is no longer open (state=$PR_STATE)."
+            exit 0
+          fi
 
           current_head_matches() {
             local current_pr
