@@ -856,8 +856,12 @@ struct PlanDetailView: View {
         store.board(for: currentPlan)
     }
 
+    private var firstStep: WorkoutStep? {
+        currentPlan.steps.first
+    }
+
     private var firstStepHoldIDs: Set<String> {
-        guard let firstStep = currentPlan.steps.first else { return [] }
+        guard let firstStep else { return [] }
         return store.holdIDs(for: firstStep, on: board)
     }
 
@@ -867,7 +871,7 @@ struct PlanDetailView: View {
 
     private var firstStepHoldCue: WorkoutHoldCue? {
         WorkoutHoldCuePolicy.resolve(
-            step: currentPlan.steps.first,
+            step: firstStep,
             hold: firstStepHold,
             on: board
         )
@@ -877,7 +881,9 @@ struct PlanDetailView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 21) {
                 titleBlock
-                boardPreview
+                if let firstStep, !firstStep.targets.isEmpty {
+                    boardPreview
+                }
                 stepsCard
                 sourceCard
                 safetyNote
