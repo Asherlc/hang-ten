@@ -17,7 +17,7 @@ without writing into the app source tree:
 scripts/hangboard-tools.sh packages validate --root Hangboards
 .context/hangboard-onboarding-venv/bin/python -m pytest \
   Tools/HangboardPipeline/tests/test_generated_catalog_import.py -q
-stage_root="$(mktemp -d .context/stage-board-packages.XXXXXX)"
+stage_root="$(mktemp -d)"
 TARGET_BUILD_DIR="$stage_root"
 UNLOCALIZED_RESOURCES_FOLDER_PATH="HangTen.app"
 destination="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Hangboards"

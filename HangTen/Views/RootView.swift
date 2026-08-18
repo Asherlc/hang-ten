@@ -1190,7 +1190,6 @@ struct WorkoutAudioMoment: Hashable {
 enum WorkoutAudioCueAction: Equatable {
 	case none
 	case speak(WorkoutAudioMoment)
-	case stop
 }
 
 enum WorkoutCountdownKind: Equatable {
@@ -1642,14 +1641,12 @@ struct WorkoutView: View {
 						return
 					}
 
-					switch WorkoutAudioCuePolicy.action(for: moment) {
-					case .none:
-						break
-					case .speak(let moment):
-						audioCoach.speak(moment.phrase)
-					case .stop:
-						audioCoach.stop()
-					}
+				switch WorkoutAudioCuePolicy.action(for: moment) {
+				case .none:
+					break
+				case .speak(let moment):
+					audioCoach.speak(moment.phrase)
+				}
 				}
 				.onChange(of: countdown, initial: true) { _, countdown in
 					guard countdown == 0 else { return }
