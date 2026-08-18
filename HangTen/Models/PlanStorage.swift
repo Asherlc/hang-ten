@@ -1017,9 +1017,7 @@ enum PlanLibraryValidator {
                 let acceptedFeatures = [feature] + fallbacks
                 let hasCompatibleBoard = boardIDs.contains { boardID in
                     boardByID[boardID]?.first?.holds.contains { hold in
-                        guard hold.features?.contains(where: acceptedFeatures.contains) == true else { return false }
-                        guard let fingerCapacity else { return true }
-                        return hold.fingerCapacity == fingerCapacity
+                        hold.matches(anyOf: acceptedFeatures, fingerCapacity: fingerCapacity)
                     } == true
                 }
                 if !hasCompatibleBoard {

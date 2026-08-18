@@ -471,6 +471,15 @@ struct BoardHold: Identifiable, Hashable {
             features: features
         )
     }
+
+    /// True when this hold declares any of `features`, and (when specified)
+    /// also has the exact `fingerCapacity`. Shared by plan and custom-routine
+    /// validation so their matching rules can't drift apart.
+    func matches(anyOf features: some Collection<HoldFeature>, fingerCapacity: Int?) -> Bool {
+        guard self.features?.contains(where: features.contains) == true else { return false }
+        guard let fingerCapacity else { return true }
+        return self.fingerCapacity == fingerCapacity
+    }
 }
 
 struct TrainingBoard: Identifiable, Hashable {
@@ -526,6 +535,26 @@ struct HoldTarget: Hashable {
     /// from `feature`'s name (see e.g. `.pocket`, which covers holds of any
     /// finger count on its own).
     let fingerCapacity: Int?
+
+    init(
+        holdIDs: [String],
+        kind: HoldKind?,
+        feature: HoldFeature?,
+        fallbackFeatures: [HoldFeature],
+        fingerCapacity: Int?
+    ) {
+        if let fingerCapacity {
+            precondition(
+                BoardHold.validFingerCapacityRange.contains(fingerCapacity),
+                "HoldTarget fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+            )
+        }
+        self.holdIDs = holdIDs
+        self.kind = kind
+        self.feature = feature
+        self.fallbackFeatures = fallbackFeatures
+        self.fingerCapacity = fingerCapacity
+    }
 
     static func ids(_ holdIDs: String...) -> HoldTarget {
         HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
