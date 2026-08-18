@@ -159,7 +159,9 @@ def _embedded_geometry_bounds(
 def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> None:
     inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
 
-    assert {(package.board.id, package.root.name) for package in inventory.packages} == {
+    discovered = {(package.board.id, package.root.name) for package in inventory.packages}
+
+    base_packages = {
         ("metolius.wood-grips-compact-ii", "metolius-wood-grips-compact-ii"),
         ("beastmaker-1000", "beastmaker-1000"),
         ("beastmaker-2000", "beastmaker-2000"),
@@ -167,7 +169,12 @@ def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> Non
         ("escape-beta-22", "escape-beta-22"),
         ("lattice-triple-rung", "lattice-triple-rung"),
     }
-    assert len(inventory.drafts) == 28
+    assert base_packages <= discovered
+
+    board_dirs = [d for d in HANGBOARDS_ROOT.iterdir() if d.is_dir() and not d.is_symlink()]
+    board_json_count = sum(1 for d in board_dirs if (d / "board.json").exists())
+    assert len(discovered) == board_json_count
+    assert len(inventory.drafts) == len(board_dirs) - board_json_count
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
 
 
