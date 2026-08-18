@@ -100,6 +100,22 @@ function deleteVertex(commands, index) {
   }
 }
 
+function rotatePoint(point, pivot, angleRadians) {
+  const cos = Math.cos(angleRadians);
+  const sin = Math.sin(angleRadians);
+  const dx = point.x - pivot.x;
+  const dy = point.y - pivot.y;
+  return { x: pivot.x + dx * cos - dy * sin, y: pivot.y + dx * sin + dy * cos };
+}
+
+function rotatePath(commands, angleRadians, pivot) {
+  for (const cmd of commands) {
+    if (cmd.type === "Z") continue;
+    for (const p of cmd.points) Object.assign(p, rotatePoint(p, pivot, angleRadians));
+    for (const c of cmd.controls) Object.assign(c, rotatePoint(c, pivot, angleRadians));
+  }
+}
+
 function lerp2(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
 
 function bezierQuad(p0, c, p1, t) {
@@ -123,6 +139,6 @@ function subdivideCubic(p0, c1, c2, p3) {
   };
 }
 
-const pathEditorExports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex };
+const pathEditorExports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath };
 if (typeof module !== "undefined") module.exports = pathEditorExports;
 if (typeof globalThis !== "undefined") globalThis.HoldPathEditor = pathEditorExports;

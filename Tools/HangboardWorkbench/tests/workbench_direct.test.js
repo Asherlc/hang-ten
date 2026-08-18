@@ -96,7 +96,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
-    "delete-hold-button",
+    "delete-hold-button", "rotate-ccw-button", "rotate-cw-button",
   ];
   const elements = {};
   const document = {
@@ -789,6 +789,76 @@ test("the add hold button adds a new hold centered on the canvas and selects it"
   assert.notEqual(app.elements["hold-heading"].textContent, "No selection");
   assert.equal(app.elements["hold-type-select"].value, "edge");
   assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+});
+
+test("the rotate buttons spin the selected hold around its own centroid, leaving other holds untouched", async () => {
+  const controller = require("../workbench-controller.js");
+  const pathEditor = require("../path-editor.js");
+  const board = twoHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+
+  app.elements["rotate-cw-button"].click();
+
+  const pivot = { x: 50 / 3, y: 40 / 3 };
+  const cwCommands = pathEditor.parsePath("M 10 10 L 20 10 L 20 20 Z");
+  pathEditor.rotatePath(cwCommands, (15 * Math.PI) / 180, pivot);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), pathEditor.serializePath(cwCommands));
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+
+  app.elements["rotate-ccw-button"].click();
+
+  const roundTripCommands = pathEditor.parsePath(pathEditor.serializePath(cwCommands));
+  pathEditor.rotatePath(roundTripCommands, (-15 * Math.PI) / 180, pivot);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), pathEditor.serializePath(roundTripCommands));
+});
+
+test("bracket keys rotate the selected hold by 15 and 45 degrees with shift", async () => {
+  const controller = require("../workbench-controller.js");
+  const pathEditor = require("../path-editor.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 L 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+    ] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+
+  app.document.dispatchEvent({ key: "]", shiftKey: false, type: "keydown", preventDefault() {} });
+  const pivot = { x: 50 / 3, y: 40 / 3 };
+  const commands = pathEditor.parsePath("M 10 10 L 20 10 L 20 20 Z");
+  pathEditor.rotatePath(commands, (15 * Math.PI) / 180, pivot);
+  const afterFirstRotation = pathEditor.serializePath(commands);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), afterFirstRotation);
+
+  app.document.dispatchEvent({ key: "[", shiftKey: true, type: "keydown", preventDefault() {} });
+  const roundTripCommands = pathEditor.parsePath(afterFirstRotation);
+  pathEditor.rotatePath(roundTripCommands, (-45 * Math.PI) / 180, pivot);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), pathEditor.serializePath(roundTripCommands));
 });
 
 test("browser source contains only direct board vocabulary", () => {

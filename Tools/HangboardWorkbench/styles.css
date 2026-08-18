@@ -65,6 +65,9 @@ button:disabled { cursor: default; opacity: .4; }
 .inspector-form label { display: grid; gap: 7px; color: var(--muted); font-size: 10px; font-weight: 700; }
 .inspector-form input, .inspector-form textarea, .inspector-form select { width: 100%; padding: 9px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #131512; color: var(--text); resize: vertical; }
 .inspector-form input:focus, .inspector-form textarea:focus, .inspector-form select:focus { border-color: var(--accent); }
+.rotate-controls { display: grid; gap: 7px; }
+.button-row { display: flex; gap: 8px; }
+.button-row .tool-button { flex: 1; }
 
 .path-editor-vertex { cursor: grab; }
 .path-editor-vertex:active { cursor: grabbing; }
