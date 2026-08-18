@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "id": "dewoodstok-woodbord",
+  "manufacturer": "deWoodstok",
+  "name": "Woodbord",
+  "subtitle": "FSC-certified bamboo hangboard.",
+  "productURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+  "dimensions": "590 × 148 × 40 mm",
+  "aspectRatio": 2.0,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "top-rim",
+      "name": "Top rim",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": { "x": 0.036077, "y": 0.261556, "width": 0.927847, "height": 0.054115 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.035, 1.0] },
+              { "command": "curve", "control1": [0.012, 0.98], "control2": [0.0, 0.83], "to": [0.0, 0.68] },
+              { "command": "curve", "control1": [0.0, 0.38], "control2": [0.014, 0.13], "to": [0.045, 0.0] },
+              { "command": "line", "to": [0.955, 0.0] },
+              { "command": "curve", "control1": [0.986, 0.13], "control2": [1.0, 0.38], "to": [1.0, 0.68] },
+              { "command": "curve", "control1": [1.0, 0.83], "control2": [0.988, 0.98], "to": [0.965, 1.0] },
+              { "command": "line", "to": [0.035, 1.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-upper-1",
+      "name": "Upper pocket 1",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.063134, "y": 0.323563, "width": 0.142616, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-upper-2",
+      "name": "Upper pocket 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.236189, "y": 0.322435, "width": 0.066516, "height": 0.0823 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.3, 0.0] },
+              { "command": "line", "to": [0.7, 0.0] },
+              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
+              { "command": "line", "to": [0.3, 1.0] },
+              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 2
+    },
+    {
+      "id": "front-upper-3",
+      "name": "Upper pocket 3",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.334837, "y": 0.323563, "width": 0.147689, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-upper-4",
+      "name": "Upper pocket 4",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.517474, "y": 0.323563, "width": 0.147689, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-upper-5",
+      "name": "Upper pocket 5",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.697295, "y": 0.322435, "width": 0.066516, "height": 0.0823 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.3, 0.0] },
+              { "command": "line", "to": [0.7, 0.0] },
+              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
+              { "command": "line", "to": [0.3, 1.0] },
+              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 2
+    },
+    {
+      "id": "front-upper-6",
+      "name": "Upper pocket 6",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.79425, "y": 0.323563, "width": 0.142616, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-middle-1",
+      "name": "Middle pocket 1",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.063134, "y": 0.462232, "width": 0.142616, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-middle-2",
+      "name": "Middle pocket 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.236189, "y": 0.462232, "width": 0.139797, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-middle-3",
+      "name": "Middle pocket 3",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.624014, "y": 0.462232, "width": 0.139797, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-middle-4",
+      "name": "Middle pocket 4",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.79425, "y": 0.462232, "width": 0.142616, "height": 0.080045 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-lower-1",
+      "name": "Lower pocket 1",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.063134, "y": 0.599775, "width": 0.142616, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-lower-2",
+      "name": "Lower pocket 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.236189, "y": 0.598647, "width": 0.066516, "height": 0.083427 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.3, 0.0] },
+              { "command": "line", "to": [0.7, 0.0] },
+              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
+              { "command": "line", "to": [0.3, 1.0] },
+              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 2
+    },
+    {
+      "id": "front-lower-3",
+      "name": "Lower pocket 3",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.334837, "y": 0.599775, "width": 0.148253, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-lower-4",
+      "name": "Lower pocket 4",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.51691, "y": 0.599775, "width": 0.148253, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    },
+    {
+      "id": "front-lower-5",
+      "name": "Lower pocket 5",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.697295, "y": 0.598647, "width": 0.066516, "height": 0.083427 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.3, 0.0] },
+              { "command": "line", "to": [0.7, 0.0] },
+              { "command": "curve", "control1": [0.87, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.87, 1.0], "to": [0.7, 1.0] },
+              { "command": "line", "to": [0.3, 1.0] },
+              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.13, 0.0], "to": [0.3, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 2
+    },
+    {
+      "id": "front-lower-6",
+      "name": "Lower pocket 6",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": { "x": 0.79425, "y": 0.599775, "width": 0.142616, "height": 0.081172 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.14, 0.0] },
+              { "command": "line", "to": [0.86, 0.0] },
+              { "command": "curve", "control1": [0.94, 0.0], "control2": [1.0, 0.22], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.94, 1.0], "to": [0.86, 1.0] },
+              { "command": "line", "to": [0.14, 1.0] },
+              { "command": "curve", "control1": [0.06, 1.0], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.06, 0.0], "to": [0.14, 0.0] },
+              { "command": "close" }
+            ]
+          }
+        }
+      ],
+      "fingerCapacity": 4
+    }
+  ]
+}

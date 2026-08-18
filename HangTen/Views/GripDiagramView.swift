@@ -61,7 +61,7 @@ struct GripDiagramView: View {
         guard hold.kind != .sloper else { return hold.name }
 
         if hold.kind == .jug,
-           hold.name.localizedCaseInsensitiveContains("outer") {
+           hold.features?.contains(.jug) == true {
             return "Outer jugs"
         }
 
@@ -176,25 +176,6 @@ struct GripHandCueCard: View {
         ]
         .compactMap { $0 }
         .joined(separator: ", ")
-    }
-}
-
-enum FingerCue {
-    case capacity(Int)
-    case exact(FingerConfiguration)
-
-    var shortLabel: String {
-        switch self {
-        case let .capacity(count): "Up to \(count)"
-        case let .exact(configuration): configuration.orderedFingers.map(\.shortLabel).joined(separator: "+")
-        }
-    }
-
-    var accessibilityLabel: String {
-        switch self {
-        case let .capacity(count): "Up to \(count) \(count == 1 ? "finger" : "fingers")"
-        case let .exact(configuration): "Exact fingers: \(configuration.orderedFingers.namedList)"
-        }
     }
 }
 
