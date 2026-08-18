@@ -19,6 +19,7 @@
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const HOLD_KINDS = Object.keys(TYPE_COLORS);
   const ROTATION_HANDLE_RADIUS = 6;
+  const ROTATION_HANDLE_OFFSET = 24;
 
   const state = {
     boards: [],
@@ -213,11 +214,25 @@
     const overlay = document.createElementNS(svgNS, "g");
     overlay.classList.add("path-editor-overlay");
     const pivot = holdCentroid(holdSiblings(hold));
-    const handleY = Math.max(ROTATION_HANDLE_RADIUS, pivot.y - 24);
+    const { width, height } = state.document.canvas;
+    const maxHandleX = width - ROTATION_HANDLE_RADIUS;
+    const maxHandleY = height - ROTATION_HANDLE_RADIUS;
+    let handleX = Math.min(Math.max(pivot.x, ROTATION_HANDLE_RADIUS), maxHandleX);
+    let handleY = pivot.y - ROTATION_HANDLE_OFFSET;
+    if (handleY < ROTATION_HANDLE_RADIUS) {
+      handleY = Math.min(Math.max(pivot.y, ROTATION_HANDLE_RADIUS), maxHandleY);
+      const rightHandleX = pivot.x + ROTATION_HANDLE_OFFSET;
+      const leftHandleX = pivot.x - ROTATION_HANDLE_OFFSET;
+      handleX = rightHandleX <= maxHandleX
+        ? rightHandleX
+        : leftHandleX >= ROTATION_HANDLE_RADIUS
+          ? leftHandleX
+          : Math.min(Math.max(rightHandleX, ROTATION_HANDLE_RADIUS), maxHandleX);
+    }
     const rotationConnector = document.createElementNS(svgNS, "line");
     rotationConnector.setAttribute("x1", String(pivot.x));
     rotationConnector.setAttribute("y1", String(pivot.y));
-    rotationConnector.setAttribute("x2", String(pivot.x));
+    rotationConnector.setAttribute("x2", String(handleX));
     rotationConnector.setAttribute("y2", String(handleY));
     rotationConnector.setAttribute("stroke", "#fff7dc");
     rotationConnector.setAttribute("stroke-width", "1.5");
@@ -225,7 +240,7 @@
     rotationConnector.classList.add("path-editor-rotation-connector");
     overlay.append(rotationConnector);
     const rotationHandle = document.createElementNS(svgNS, "circle");
-    rotationHandle.setAttribute("cx", String(pivot.x));
+    rotationHandle.setAttribute("cx", String(handleX));
     rotationHandle.setAttribute("cy", String(handleY));
     rotationHandle.setAttribute("r", String(ROTATION_HANDLE_RADIUS));
     rotationHandle.setAttribute("fill", "#fff7dc");

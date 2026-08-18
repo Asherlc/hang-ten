@@ -948,7 +948,7 @@ test("the Rotate by Apply action rejects non-finite values without changing the 
   assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
 });
 
-test("the selected physical hold renders a rotation handle and connector above its shared centroid", async () => {
+test("the selected physical hold renders a separated rotation handle and connector from its shared centroid", async () => {
   const controller = require("../workbench-controller.js");
   const board = multiPieceHoldBoard();
   const app = loadApp({
@@ -966,13 +966,15 @@ test("the selected physical hold renders a rotation handle and connector above i
   assert.ok(handle);
   assert.equal(Number(connector.attributes.get("x1")), 80 / 3);
   assert.equal(Number(connector.attributes.get("y1")), 40 / 3);
-  assert.equal(Number(handle.attributes.get("cx")), 80 / 3);
-  assert.ok(Number(handle.attributes.get("cy")) < 40 / 3);
+  assert.ok(Math.hypot(
+    Number(handle.attributes.get("cx")) - 80 / 3,
+    Number(handle.attributes.get("cy")) - 40 / 3,
+  ) >= 24);
   assert.equal(connector.attributes.get("x2"), handle.attributes.get("cx"));
   assert.equal(connector.attributes.get("y2"), handle.attributes.get("cy"));
 });
 
-test("a top-edge hold keeps its above-hold rotation handle inside the SVG coordinate space", async () => {
+test("a top-edge hold keeps its horizontally offset rotation handle separated and inside the SVG viewBox", async () => {
   const controller = require("../workbench-controller.js");
   const board = {
     boardId: "board-a",
@@ -995,9 +997,24 @@ test("a top-edge hold keeps its above-hold rotation handle inside the SVG coordi
   const handle = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-handle")[0];
   assert.ok(connector);
   assert.ok(handle);
-  assert.equal(Number(connector.attributes.get("y1")), 10 / 3);
-  assert.equal(Number(handle.attributes.get("cy")), 6);
-  assert.ok(Number(handle.attributes.get("cy")) - Number(handle.attributes.get("r")) >= 0);
+  const [viewBoxX, viewBoxY, viewBoxWidth, viewBoxHeight] = app.elements["editor-svg"].attributes.get("viewBox").split(" ").map(Number);
+  const pivot = { x: 50 / 3, y: 10 / 3 };
+  const handleCenter = {
+    x: Number(handle.attributes.get("cx")),
+    y: Number(handle.attributes.get("cy")),
+  };
+  const handleRadius = Number(handle.attributes.get("r"));
+
+  assert.equal(Number(connector.attributes.get("x1")), pivot.x);
+  assert.equal(Number(connector.attributes.get("y1")), pivot.y);
+  assert.ok(Math.abs(handleCenter.x - pivot.x) >= 24);
+  assert.ok(Math.hypot(handleCenter.x - pivot.x, handleCenter.y - pivot.y) >= 24);
+  assert.ok(handleCenter.x - handleRadius >= viewBoxX);
+  assert.ok(handleCenter.x + handleRadius <= viewBoxX + viewBoxWidth);
+  assert.ok(handleCenter.y - handleRadius >= viewBoxY);
+  assert.ok(handleCenter.y + handleRadius <= viewBoxY + viewBoxHeight);
+  assert.equal(Number(connector.attributes.get("x2")), handleCenter.x);
+  assert.equal(Number(connector.attributes.get("y2")), handleCenter.y);
 });
 
 test("dragging the rotation handle rotates every piece from its pointer-down paths around the shared centroid", async () => {
@@ -1019,14 +1036,18 @@ test("dragging the rotation handle rotates every piece from its pointer-down pat
   const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
   const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
   const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const startAngle = Math.atan2(start.y - pivot.y, start.x - pivot.x);
+  const pointAt = (angle) => ({ x: pivot.x + radius * Math.cos(angle), y: pivot.y + radius * Math.sin(angle) });
+  const halfTurn = pointAt(startAngle + Math.PI / 4);
+  const quarterTurn = pointAt(startAngle + Math.PI / 2);
   const pointerEvent = (target, x, y) => ({ target, pointerId: 7, clientX: x, clientY: y, preventDefault() {} });
   const svg = app.elements["editor-svg"];
 
   svg.listeners.get("pointerdown")(pointerEvent(handle, start.x, start.y));
   assert.equal(svg.capturedPointerId, 7);
-  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius / Math.sqrt(2), pivot.y - radius / Math.sqrt(2)));
-  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius, pivot.y));
-  svg.listeners.get("pointerup")(pointerEvent(handle, pivot.x + radius, pivot.y));
+  svg.listeners.get("pointermove")(pointerEvent(handle, halfTurn.x, halfTurn.y));
+  svg.listeners.get("pointermove")(pointerEvent(handle, quarterTurn.x, quarterTurn.y));
+  svg.listeners.get("pointerup")(pointerEvent(handle, quarterTurn.x, quarterTurn.y));
 
   assert.equal(svg.capturedPointerId, null);
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
@@ -1057,12 +1078,17 @@ test("rotation drag uses the screen CTM when the SVG is letterboxed", async () =
   const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
   const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
   const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const startAngle = Math.atan2(start.y - pivot.y, start.x - pivot.x);
+  const quarterTurn = {
+    x: pivot.x + radius * Math.cos(startAngle + Math.PI / 2),
+    y: pivot.y + radius * Math.sin(startAngle + Math.PI / 2),
+  };
   const screenPoint = (point) => ({ x: point.x * 2 + 10, y: point.y * 2 + 70 });
   const pointerEvent = (target, point) => ({ target, pointerId: 7, clientX: point.x, clientY: point.y, preventDefault() {} });
 
   svg.listeners.get("pointerdown")(pointerEvent(handle, screenPoint(start)));
-  svg.listeners.get("pointermove")(pointerEvent(handle, screenPoint({ x: pivot.x + radius, y: pivot.y })));
-  svg.listeners.get("pointerup")(pointerEvent(handle, screenPoint({ x: pivot.x + radius, y: pivot.y })));
+  svg.listeners.get("pointermove")(pointerEvent(handle, screenPoint(quarterTurn)));
+  svg.listeners.get("pointerup")(pointerEvent(handle, screenPoint(quarterTurn)));
 
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
   assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), rotateDisplayPath("M 30 10 L 40 10 L 40 20 Z", 90, pivot));
@@ -1174,6 +1200,11 @@ test("a rotation drag ignores a second pointer until its initiating pointer comp
   const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
   const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
   const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const startAngle = Math.atan2(start.y - pivot.y, start.x - pivot.x);
+  const quarterTurn = {
+    x: pivot.x + radius * Math.cos(startAngle + Math.PI / 2),
+    y: pivot.y + radius * Math.sin(startAngle + Math.PI / 2),
+  };
   const pointerEvent = (pointerId, x, y) => ({ target: handle, pointerId, clientX: x, clientY: y, preventDefault() {} });
 
   svg.listeners.get("pointerdown")(pointerEvent(7, start.x, start.y));
@@ -1181,10 +1212,10 @@ test("a rotation drag ignores a second pointer until its initiating pointer comp
   assert.equal(svg.capturedPointerId, 7);
   svg.listeners.get("pointermove")(pointerEvent(8, pivot.x - radius, pivot.y));
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
-  svg.listeners.get("pointermove")(pointerEvent(7, pivot.x + radius, pivot.y));
-  svg.listeners.get("pointerup")(pointerEvent(8, pivot.x + radius, pivot.y));
+  svg.listeners.get("pointermove")(pointerEvent(7, quarterTurn.x, quarterTurn.y));
+  svg.listeners.get("pointerup")(pointerEvent(8, quarterTurn.x, quarterTurn.y));
   assert.equal(svg.capturedPointerId, 7);
-  svg.listeners.get("pointerup")(pointerEvent(7, pivot.x + radius, pivot.y));
+  svg.listeners.get("pointerup")(pointerEvent(7, quarterTurn.x, quarterTurn.y));
 
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
 });
