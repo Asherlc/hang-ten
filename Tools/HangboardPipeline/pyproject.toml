@@ -14,23 +14,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=9.1.1"]
+dev = ["pytest>=9.1.1", "PyYAML>=6.0.2"]
 
 [project.scripts]
 hangboard-packages = "hangboard_vectorizer.board_catalog_cli:main"
-hangboard-onboard = "hangboard_vectorizer.onboard_cli:main"
-hangboard-release-check = "hangboard_vectorizer.release_check_cli:main"
-hangboard-promote = "hangboard_vectorizer.promotion_cli:main"
-hangboard-review = "hangboard_vectorizer.review_cli:main"
-hangboard-semantic-benchmark = "hangboard_vectorizer.semantic_benchmark:main"
-hangboard-to-svg = "hangboard_vectorizer.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-"hangboard_vectorizer.evidence" = ["*.json"]
-"hangboard_vectorizer.products" = ["*.json", "*.png"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
