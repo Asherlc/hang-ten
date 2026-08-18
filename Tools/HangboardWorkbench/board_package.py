@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as _dataclass_replace
 import fcntl
 import json
 import math
@@ -19,6 +19,7 @@ import uuid
 import zlib
 
 from board_geometry import (
+    ClosedPath,
     GeometryError,
     NormalizedFrame,
     display_path_for_shape,
@@ -200,7 +201,13 @@ def _load_board_package(
         else _png_dimensions(image)
     )
     board = _load_json(root / "board.json", "board.json")
-    _validate_board(board, width, height)
+    # Discovery (header-only PNG inspection) only needs enough validation to
+    # list a board safely -- it doesn't read hold geometry, so skip the
+    # O(pieces^2) self-intersection check there too. The specific board a
+    # caller opens or saves is always reloaded through this function with
+    # inspect_png_header_only=False, which still validates its geometry in
+    # full before anyone reads or writes it.
+    _validate_board(board, width, height, validate_geometry=not inspect_png_header_only)
     return BoardPackage(root, board, width, height)
 
 
@@ -274,7 +281,13 @@ def save_editor_document(
             pieces.sort(key=lambda item: item[0])
 
         current_holds = {hold["id"]: hold for hold in live.board["holds"]}
-        if not _editor_document_is_dirty(pieces_by_hold, current_holds, width, height):
+        # Every kept piece's current display path is derived here once and
+        # reused below when building the candidate -- each derivation re-runs
+        # an O(pieces^2) self-intersection check, so computing it twice per
+        # piece (once to detect dirtiness, once to decide what to rewrite)
+        # measurably slows down saves on boards with many curve-heavy holds.
+        current_paths = _current_display_paths(pieces_by_hold, current_holds, width, height)
+        if not _editor_document_is_dirty(pieces_by_hold, current_holds, current_paths):
             return live
 
         candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
@@ -298,11 +311,8 @@ def save_editor_document(
                     existing_geometry = existing["geometry"] if existing is not None else []
                     if piece_index < len(existing_geometry):
                         piece = existing_geometry[piece_index]
-                        current_path = display_path_for_shape(
-                            piece["frame"], piece["shape"], width, height,
-                            label=f"hold {_piece_key(hold_id, piece_index)}",
-                        )
-                        if path.data != current_path.data:
+                        current_path = current_paths.get((hold_id, piece_index))
+                        if current_path is None or path.data != current_path.data:
                             frame, shape = shape_for_path(path, width, height)
                             piece["frame"] = frame.to_json()
                             piece["shape"] = _rounded_json(shape)
@@ -322,18 +332,41 @@ def save_editor_document(
                 updated_holds.append(hold_json)
             board["holds"] = updated_holds
             _write_json(board_path, board)
-            load_board_package(candidate)
-            _replace_package_locked(root, slug, candidate, inventory=inventory)
-            return load_board_package(root / slug)
+            # _replace_package_locked already fully validates `candidate` (the
+            # PNG included) before installing it, and returns that validated
+            # package -- re-decoding the same never-modified PNG here or after
+            # install would just repeat that work for no additional safety.
+            return _replace_package_locked(root, slug, candidate, inventory=inventory)
         finally:
             shutil.rmtree(candidate_parent, ignore_errors=True)
+
+
+def _current_display_paths(
+    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    current_holds: Mapping[str, Any],
+    width: int,
+    height: int,
+) -> dict[tuple[str, int], ClosedPath]:
+    """Derive each currently-saved piece's display path exactly once, keyed
+    by (holdID, pieceIndex), for both the dirty check and the update loop."""
+    paths: dict[tuple[str, int], ClosedPath] = {}
+    for hold_id, pieces in pieces_by_hold.items():
+        hold = current_holds.get(hold_id)
+        geometry = hold["geometry"] if hold is not None else []
+        for piece_index, _kind, _path in pieces:
+            if piece_index < len(geometry):
+                piece = geometry[piece_index]
+                paths[(hold_id, piece_index)] = display_path_for_shape(
+                    piece["frame"], piece["shape"], width, height,
+                    label=f"hold {_piece_key(hold_id, piece_index)}",
+                )
+    return paths
 
 
 def _editor_document_is_dirty(
     pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
     current_holds: Mapping[str, Any],
-    width: int,
-    height: int,
+    current_paths: Mapping[tuple[str, int], ClosedPath],
 ) -> bool:
     if set(pieces_by_hold) != set(current_holds):
         return True
@@ -342,12 +375,8 @@ def _editor_document_is_dirty(
         if hold["kind"] != pieces[0][1] or len(hold["geometry"]) != len(pieces):
             return True
         for piece_index, _kind, path in pieces:
-            piece = hold["geometry"][piece_index]
-            current_path = display_path_for_shape(
-                piece["frame"], piece["shape"], width, height,
-                label=f"hold {_piece_key(hold_id, piece_index)}",
-            )
-            if path.data != current_path.data:
+            current_path = current_paths.get((hold_id, piece_index))
+            if current_path is None or path.data != current_path.data:
                 return True
     return False
 
@@ -439,7 +468,7 @@ def _replace_package_locked(
     candidate_root: Path,
     *,
     inventory: tuple[BoardPackage, ...] | None = None,
-) -> None:
+) -> BoardPackage:
     candidate = load_board_package(candidate_root)
     packages = inventory if inventory is not None else _discover_packages_unlocked(root)
     previous = next((package for package in packages if package.root.name == slug), None)
@@ -455,10 +484,13 @@ def _replace_package_locked(
     staged_package = stage / slug
     try:
         shutil.copytree(candidate.root, staged_package)
-        load_board_package(staged_package)
+        # `staged_package` is a byte-for-byte copy of `candidate_root`, which
+        # was just fully validated above (PNG included); re-decoding it here
+        # would only repeat that work, not catch anything new.
         _replace_transaction(root, slug, staged_package)
     finally:
         shutil.rmtree(stage, ignore_errors=True)
+    return _dataclass_replace(candidate, root=root / slug)
 
 
 def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
@@ -532,7 +564,9 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
         pass
 
 
-def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
+def _validate_board(
+    board: Mapping[str, Any], width: int, height: int, *, validate_geometry: bool = True
+) -> None:
     _exact_keys(board, _BOARD_FIELDS, "board.json")
     _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
     _identifier(board.get("id"), "board.json.id")
@@ -559,13 +593,15 @@ def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
     identifiers: set[str] = set()
     for index, hold in enumerate(holds):
         label = f"board.json.holds[{index}]"
-        hold_id = _validate_hold(hold, width, height, label)
+        hold_id = _validate_hold(hold, width, height, label, validate_geometry=validate_geometry)
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
 
 
-def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
+def _validate_hold(
+    hold: object, width: int, height: int, label: str, *, validate_geometry: bool = True
+) -> str:
     if not isinstance(hold, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
@@ -586,6 +622,7 @@ def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
             width,
             height,
             f"{label}.geometry[{piece_index}]",
+            validate_geometry=validate_geometry,
         )
     if "sizeMillimeters" in hold:
         _positive_integer(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
@@ -616,7 +653,9 @@ def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
     return hold_id
 
 
-def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
+def _validate_piece(
+    piece: object, width: int, height: int, label: str, *, validate_geometry: bool = True
+) -> None:
     if not isinstance(piece, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
@@ -624,9 +663,10 @@ def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
     )
     try:
         NormalizedFrame.from_json(piece["frame"], f"{label}.frame")
-        display_path_for_shape(
-            piece["frame"], piece["shape"], width, height, label=label
-        )
+        if validate_geometry:
+            display_path_for_shape(
+                piece["frame"], piece["shape"], width, height, label=label
+            )
     except (GeometryError, KeyError, TypeError) as error:
         raise BoardPackageError(str(error)) from error
     if not _shape_fills_declared_frame(piece["shape"]):
@@ -647,8 +687,11 @@ def _shape_fills_declared_frame(shape: object) -> bool:
         points.extend(value for key, value in command.items() if key != "command")
     if not points:
         return False
-    xs = [float(point[0]) for point in points]
-    ys = [float(point[1]) for point in points]
+    try:
+        xs = [float(point[0]) for point in points]
+        ys = [float(point[1]) for point in points]
+    except (TypeError, ValueError, IndexError):
+        return False
     return (
         min(xs) <= _FRAME_EDGE_TOLERANCE
         and min(ys) <= _FRAME_EDGE_TOLERANCE
