@@ -21,7 +21,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  # A PR-edited event (title/description only, no new commits) must not
+  # cancel a real code build still running for that ref, so it gets its own
+  # suffix. Every other trigger -- including close/merge -- shares one
+  # group per ref so a new commit or a closed PR cancels the stale run.
+  group: >-
+    ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action ==
+    'edited' && 'edited' || 'code' }}
   cancel-in-progress: true
 
 jobs:

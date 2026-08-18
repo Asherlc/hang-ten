@@ -81,7 +81,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     assert " ".join(ios_build["if"].split()) == expected_predicate
     assert required_check["name"] == required_name
     assert required_check["needs"] == ["changes", "build-ios"]
-    assert required_check["if"] == "always()"
+    assert required_check["if"] == "always() && github.event.action != 'closed'"
     assert required_check["runs-on"] == "ubuntu-latest"
 
     report_step = next(
@@ -103,9 +103,18 @@ def test_ci_concurrency_does_not_cancel_a_pull_request_edited_run() -> None:
 
     assert concurrency["group"] == (
         "ci-${{ github.workflow }}-${{ github.ref }}-"
-        "${{ github.event.action || github.event_name }}"
+        "${{ github.event.action == 'edited' && 'edited' || 'code' }}"
     )
     assert concurrency["cancel-in-progress"] is True
+
+
+def test_ci_concurrency_cancels_a_stale_synchronize_run() -> None:
+    """A new push (or PR close) must cancel a build still running for that ref."""
+    workflow = _ci_workflow()
+    group = workflow["concurrency"]["group"]
+
+    assert "|| github.event_name" not in group
+    assert "'edited'" in group
 
 
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:
