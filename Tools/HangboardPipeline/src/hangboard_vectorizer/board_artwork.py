@@ -80,14 +80,16 @@ class PathCommand:
     control2: tuple[float, float] | None = None
 
     @staticmethod
-    def _point(value: Any, label: str) -> tuple[float, float]:
+    def _point(value: Any, label: str, *, constrain: bool = True) -> tuple[float, float]:
         if not isinstance(value, Sequence) or isinstance(value, str):
             raise ValueError(f"{label} must be a point")
         if len(value) != 2:
             raise ValueError(f"{label} must contain exactly two numbers")
+        minimum = 0 if constrain else None
+        maximum = 1 if constrain else None
         return (
-            _float(value[0], label=f"{label}[0]", minimum=0, maximum=1),
-            _float(value[1], label=f"{label}[1]", minimum=0, maximum=1),
+            _float(value[0], label=f"{label}[0]", minimum=minimum, maximum=maximum),
+            _float(value[1], label=f"{label}[1]", minimum=minimum, maximum=maximum),
         )
 
     @classmethod
@@ -104,13 +106,13 @@ class PathCommand:
             return cls(command="line", to=to)
         if command == "quad":
             _closed(payload, label, required={"command", "control", "to"})
-            control = cls._point(payload["control"], f"{label}.control")
+            control = cls._point(payload["control"], f"{label}.control", constrain=False)
             to = cls._point(payload["to"], f"{label}.to")
             return cls(command="quad", control=control, to=to)
         if command == "curve":
             _closed(payload, label, required={"command", "control1", "control2", "to"})
-            control1 = cls._point(payload["control1"], f"{label}.control1")
-            control2 = cls._point(payload["control2"], f"{label}.control2")
+            control1 = cls._point(payload["control1"], f"{label}.control1", constrain=False)
+            control2 = cls._point(payload["control2"], f"{label}.control2", constrain=False)
             to = cls._point(payload["to"], f"{label}.to")
             return cls(command="curve", control1=control1, control2=control2, to=to)
         if command == "close":
