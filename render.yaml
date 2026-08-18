@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: hangboard-workbench
+    runtime: python
+    plan: free
+    branch: main
+    buildCommand: ""
+    startCommand: "python3 Tools/HangboardWorkbench/server.py --repository-root . --host 0.0.0.0 --port $PORT --allow-remote --github-client-id $GITHUB_CLIENT_ID --github-client-secret $GITHUB_CLIENT_SECRET"
+    healthCheckPath: /api/health
+    envVars:
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
