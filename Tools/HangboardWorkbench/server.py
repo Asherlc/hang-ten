@@ -441,10 +441,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
         except BoardNotAvailableError:
-            self._send_json(
-                HTTPStatus.NOT_FOUND,
-                {"ok": False, "error": "board is not available"},
-            )
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
         except BoardPackageError as error:
             self._send_json(
                 HTTPStatus.BAD_REQUEST,
