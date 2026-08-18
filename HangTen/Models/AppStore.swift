@@ -156,7 +156,7 @@ final class AppStore: ObservableObject {
 
     var plans: [TrainingPlan] {
         (PlanCatalog.all + customPlans).filter { plan in
-            isCompatible(plan, with: selectedBoard)
+            plan.boardID == nil || plan.boardID == selectedBoard.id
         }
     }
 
@@ -261,7 +261,7 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
-        let ids = step.targets.flatMap { BoardTargetResolver.resolveHoldIDs(for: $0, on: board) }
+        let ids = step.targets.flatMap { BoardTargetResolver.substituteHoldIDs(for: $0, on: board) }
         return Set(ids)
     }
 
@@ -272,14 +272,6 @@ final class AppStore: ObservableObject {
             let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
             return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
         }
-    }
-
-    private func isCompatible(_ plan: TrainingPlan, with board: TrainingBoard) -> Bool {
-        guard plan.boardID == nil || plan.boardID == board.id else { return false }
-
-        return plan.steps
-            .flatMap(\.targets)
-            .allSatisfy { !BoardTargetResolver.resolveHoldIDs(for: $0, on: board).isEmpty }
     }
 
     private func reloadCustomRoutines() {
