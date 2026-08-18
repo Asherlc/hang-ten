@@ -63,8 +63,8 @@ button:disabled { cursor: default; opacity: .4; }
 .inspector-empty { margin-top: 26px; padding: 18px 12px; border: 1px dashed var(--line); border-radius: 9px; color: var(--muted); line-height: 1.6; text-align: center; }
 .inspector-form { display: grid; gap: 14px; margin-top: 22px; }
 .inspector-form label { display: grid; gap: 7px; color: var(--muted); font-size: 10px; font-weight: 700; }
-.inspector-form input, .inspector-form textarea { width: 100%; padding: 9px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #131512; color: var(--text); resize: vertical; }
-.inspector-form input:focus, .inspector-form textarea:focus { border-color: var(--accent); }
+.inspector-form input, .inspector-form textarea, .inspector-form select { width: 100%; padding: 9px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #131512; color: var(--text); resize: vertical; }
+.inspector-form input:focus, .inspector-form textarea:focus, .inspector-form select:focus { border-color: var(--accent); }
 
 .path-editor-vertex { cursor: grab; }
 .path-editor-vertex:active { cursor: grabbing; }

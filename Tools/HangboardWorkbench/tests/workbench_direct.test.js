@@ -92,6 +92,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
+    "hold-type-select", "add-hold-button",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
@@ -708,17 +709,21 @@ test("arrow keys nudge the selected hold by 1px and 10px with shift", async () =
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 21 10 L 31 10 L 31 20 Z");
 });
 
-test("the delete button removes the selected hold from the document", async () => {
-  const controller = require("../workbench-controller.js");
-  const board = {
+function twoHoldBoard() {
+  return {
     boardId: "board-a",
     displayName: "Board A",
     imageUrl: "/api/boards/board-a/image",
     document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
-      { key: "a", displayPath: "M 10 10 L 20 10 L 20 20 Z" },
-      { key: "b", displayPath: "M 30 10 L 40 10 L 40 20 Z" },
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 L 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+      { id: 2, key: "b-piece-0", type: "edge", displayPath: "M 30 10 L 40 10 L 40 20 Z", metadata: { holdID: "b", pieceIndex: 0 } },
     ] },
   };
+}
+
+test("the delete button removes the selected hold from the document", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = twoHoldBoard();
   const app = loadApp({
     client: {
       async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
@@ -737,6 +742,53 @@ test("the delete button removes the selected hold from the document", async () =
   assert.equal(app.elements["hold-overlay"].children.length, 1);
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
   assert.equal(app.elements["hold-heading"].textContent, "No selection");
+});
+
+test("the hold type select recategorizes the selected hold", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = twoHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(app.elements["hold-type-select"].value, "jug");
+
+  app.elements["hold-type-select"].value = "pinch";
+  app.elements["hold-type-select"].change();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("fill"), "#f2c94c");
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+});
+
+test("the add hold button adds a new hold centered on the canvas and selects it", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = twoHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+
+  app.elements["add-hold-button"].click();
+
+  assert.equal(app.elements["hold-overlay"].children.length, 3);
+  assert.notEqual(app.elements["hold-heading"].textContent, "No selection");
+  assert.equal(app.elements["hold-type-select"].value, "edge");
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
 });
 
 test("browser source contains only direct board vocabulary", () => {
