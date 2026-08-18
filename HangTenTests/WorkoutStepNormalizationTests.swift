@@ -73,11 +73,11 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "8s work · 4s rest",
             duration: 12,
             phase: .hang,
-            targets: [.feature(.threeFingerPocket)],
+            targets: [.feature(.pocket, fingerCapacity: 3)],
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.threeFingerPocket),
+                    target: .feature(.pocket, fingerCapacity: 3),
                     timing: .fixed,
                     duration: 8
                 ),

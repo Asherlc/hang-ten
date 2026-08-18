@@ -132,7 +132,7 @@ enum WorkoutTargetDefinition: Codable, Hashable {
     case semantics([String])
     case holdIDs([String])
     case kind(HoldKind)
-    case feature(HoldFeature, fallbacks: [HoldFeature])
+    case feature(HoldFeature, fallbacks: [HoldFeature], fingerCapacity: Int? = nil)
 
     private enum CodingKeys: String, CodingKey {
         case semantic
@@ -141,6 +141,7 @@ enum WorkoutTargetDefinition: Codable, Hashable {
         case kind
         case feature
         case fallbackFeatures
+        case fingerCapacity
     }
 
     init(from decoder: Decoder) throws {
@@ -167,7 +168,8 @@ enum WorkoutTargetDefinition: Codable, Hashable {
                 [HoldFeature].self,
                 forKey: .fallbackFeatures
             ) ?? []
-            self = .feature(value, fallbacks: fallbacks)
+            let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+            self = .feature(value, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
             return
         }
 
@@ -190,11 +192,12 @@ enum WorkoutTargetDefinition: Codable, Hashable {
             try container.encode(values, forKey: .holdIDs)
         case .kind(let value):
             try container.encode(value, forKey: .kind)
-        case let .feature(value, fallbacks):
+        case let .feature(value, fallbacks, fingerCapacity):
             try container.encode(value, forKey: .feature)
             if !fallbacks.isEmpty {
                 try container.encode(fallbacks, forKey: .fallbackFeatures)
             }
+            try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
         }
     }
 }
@@ -378,7 +381,7 @@ extension WorkoutTargetDefinition {
             return .kind(kind)
         }
         if let feature = target.feature {
-            return .feature(feature, fallbacks: target.fallbackFeatures)
+            return .feature(feature, fallbacks: target.fallbackFeatures, fingerCapacity: target.fingerCapacity)
         }
         if let semanticID = semanticHoldID?(target.holdIDs) {
             return .semantic(semanticID)
@@ -1010,11 +1013,13 @@ enum PlanLibraryValidator {
                 }
             case .kind:
                 break
-            case let .feature(feature, fallbacks):
+            case let .feature(feature, fallbacks, fingerCapacity):
                 let acceptedFeatures = [feature] + fallbacks
                 let hasCompatibleBoard = boardIDs.contains { boardID in
                     boardByID[boardID]?.first?.holds.contains { hold in
-                        hold.features?.contains { acceptedFeatures.contains($0) } == true
+                        guard hold.features?.contains(where: acceptedFeatures.contains) == true else { return false }
+                        guard let fingerCapacity else { return true }
+                        return hold.fingerCapacity == fingerCapacity
                     } == true
                 }
                 if !hasCompatibleBoard {
@@ -1169,13 +1174,14 @@ struct PlanDefinitionResolver {
                 // original fallback behavior used by AppStore.holdIDs(for:on:).
                 _ = board
                 resolved.append(.kind(kind))
-            case let .feature(feature, fallbacks):
+            case let .feature(feature, fallbacks, fingerCapacity):
                 resolved.append(
                     HoldTarget(
                         holdIDs: [],
                         kind: nil,
                         feature: feature,
-                        fallbackFeatures: fallbacks
+                        fallbackFeatures: fallbacks,
+                        fingerCapacity: fingerCapacity
                     )
                 )
             }

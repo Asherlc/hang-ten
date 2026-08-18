@@ -173,15 +173,11 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case mediumEdge
     case smallEdge
     case pocket
-    case twoFingerPocket
-    case threeFingerPocket
-    case fourFingerPocket
-    case fourFingerFlatEdge
-    case fourFingerIncutEdge
+    case flatEdge
+    case incutEdge
     case largeOpenHandRail
-    case deepTwoFingerPocket
     case thinCrimp
-    case shallowThreeFingerSlot
+    case slot
     case widePinch
     case mediumPinch
     case smallPinch
@@ -197,15 +193,11 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         case .mediumEdge: "Medium edge"
         case .smallEdge: "Small edge"
         case .pocket: "Pocket"
-        case .twoFingerPocket: "Two-finger pocket"
-        case .threeFingerPocket: "Three-finger pocket"
-        case .fourFingerPocket: "Four-finger pocket"
-        case .fourFingerFlatEdge: "Four-finger flat edge"
-        case .fourFingerIncutEdge: "Four-finger incut edge"
+        case .flatEdge: "Flat edge"
+        case .incutEdge: "Incut edge"
         case .largeOpenHandRail: "Large open-hand rail"
-        case .deepTwoFingerPocket: "Deep two-finger pocket"
         case .thinCrimp: "Thin crimp"
-        case .shallowThreeFingerSlot: "Shallow three-finger slot"
+        case .slot: "Slot"
         case .widePinch: "Wide pinch"
         case .mediumPinch: "Medium pinch"
         case .smallPinch: "Small pinch"
@@ -220,54 +212,53 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         case other
     }
 
-    var featureGroup: FeatureGroup {
-        switch self {
-        case .smallEdge, .mediumEdge, .largeEdge,
-             .fourFingerFlatEdge, .fourFingerIncutEdge,
-             .thinCrimp, .shallowThreeFingerSlot:
-            .edge
-        case .pocket, .twoFingerPocket, .threeFingerPocket,
-             .fourFingerPocket, .deepTwoFingerPocket:
-            .pocket
-        case .roundSloper, .largeSlope:
-            .sloper
-        case .widePinch, .mediumPinch, .smallPinch:
-            .pinch
-        case .jug, .largeOpenHandRail:
-            .other
-        }
+    /// One canonical row per case: physical kind and cross-kind substitution
+    /// group, kept together so adding a case can't leave the two properties
+    /// out of sync with each other. Finger count is real per-hold/per-target
+    /// data (`BoardHold.fingerCapacity`, `HoldTarget.fingerCapacity`), not
+    /// something derived from a feature's identity.
+    private struct Physicality {
+        let holdKind: HoldKind
+        let featureGroup: FeatureGroup
     }
 
-    var holdKind: HoldKind {
+    private var physicality: Physicality {
         switch self {
         case .jug:
-            .jug
-        case .roundSloper, .largeSlope:
-            .sloper
-        case .largeEdge, .mediumEdge, .smallEdge,
-             .fourFingerFlatEdge, .fourFingerIncutEdge,
-             .thinCrimp, .shallowThreeFingerSlot, .largeOpenHandRail:
-            .edge
-        case .pocket, .twoFingerPocket, .threeFingerPocket,
-             .fourFingerPocket, .deepTwoFingerPocket:
-            .pocket
-        case .widePinch, .mediumPinch, .smallPinch:
-            .pinch
+            Physicality(holdKind: .jug, featureGroup: .other)
+        case .roundSloper:
+            Physicality(holdKind: .sloper, featureGroup: .sloper)
+        case .largeSlope:
+            Physicality(holdKind: .sloper, featureGroup: .sloper)
+        case .largeEdge:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .mediumEdge:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .smallEdge:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .pocket:
+            Physicality(holdKind: .pocket, featureGroup: .pocket)
+        case .flatEdge:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .incutEdge:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .largeOpenHandRail:
+            Physicality(holdKind: .edge, featureGroup: .other)
+        case .thinCrimp:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .slot:
+            Physicality(holdKind: .edge, featureGroup: .edge)
+        case .widePinch:
+            Physicality(holdKind: .pinch, featureGroup: .pinch)
+        case .mediumPinch:
+            Physicality(holdKind: .pinch, featureGroup: .pinch)
+        case .smallPinch:
+            Physicality(holdKind: .pinch, featureGroup: .pinch)
         }
     }
 
-    var impliedFingerCapacity: Int? {
-        switch self {
-        case .twoFingerPocket, .deepTwoFingerPocket:
-            2
-        case .threeFingerPocket, .shallowThreeFingerSlot:
-            3
-        case .fourFingerPocket, .fourFingerFlatEdge, .fourFingerIncutEdge:
-            4
-        default:
-            nil
-        }
-    }
+    var featureGroup: FeatureGroup { physicality.featureGroup }
+    var holdKind: HoldKind { physicality.holdKind }
 }
 
 enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
@@ -530,28 +521,35 @@ struct HoldTarget: Hashable {
     let kind: HoldKind?
     let feature: HoldFeature?
     let fallbackFeatures: [HoldFeature]
+    /// The finger count this target wants, matched against
+    /// `BoardHold.fingerCapacity`. Real, author-specified data — not derived
+    /// from `feature`'s name (see e.g. `.pocket`, which covers holds of any
+    /// finger count on its own).
+    let fingerCapacity: Int?
 
     static func ids(_ holdIDs: String...) -> HoldTarget {
-        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [])
+        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
     }
 
     static func ids(_ holdIDs: [String]) -> HoldTarget {
-        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [])
+        HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
     }
 
     static func kind(_ kind: HoldKind) -> HoldTarget {
-        HoldTarget(holdIDs: [], kind: kind, feature: nil, fallbackFeatures: [])
+        HoldTarget(holdIDs: [], kind: kind, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
     }
 
     static func feature(
         _ feature: HoldFeature,
+        fingerCapacity: Int? = nil,
         fallback fallbackFeatures: HoldFeature...
     ) -> HoldTarget {
         HoldTarget(
             holdIDs: [],
             kind: nil,
             feature: feature,
-            fallbackFeatures: fallbackFeatures
+            fallbackFeatures: fallbackFeatures,
+            fingerCapacity: fingerCapacity
         )
     }
 }
@@ -1284,7 +1282,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Four-finger flat-edge pull-ups",
                     instruction: "Do 3 pull-ups on a four-finger flat edge.",
                     phase: .pull,
-                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
                 )
             ],
             [
@@ -1311,7 +1309,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Three-finger-pocket pull-ups",
                     instruction: "Do 5 pull-ups on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.threeFingerPocket)],
+                    targets: [.feature(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 ),
                 MetoliusCycleBuilder.fixed(
@@ -1319,7 +1317,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
                     duration: 25,
                     phase: .hang,
-                    targets: [.feature(.threeFingerPocket)],
+                    targets: [.feature(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 )
             ],
@@ -1338,14 +1336,14 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hang one-armed from a four-finger flat edge for 20 seconds.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Single-arm flat-edge hang · other hand",
                     instruction: "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.fourFingerFlatEdge, fallback: .largeEdge)]
+                    targets: [.feature(.flatEdge, fingerCapacity: 4, fallback: .largeEdge)]
                 )
             ],
             [
@@ -1354,14 +1352,14 @@ enum LegacyPlanSeedCatalog {
                     title: "Offset pull-ups",
                     instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+                    targets: [.feature(.largeSlope), .feature(.pocket, fingerCapacity: 3)]
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 5,
                     title: "Offset pull-ups · other side",
                     instruction: "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.largeSlope), .feature(.threeFingerPocket)]
+                    targets: [.feature(.largeSlope), .feature(.pocket, fingerCapacity: 3)]
                 )
             ],
             [
@@ -1370,14 +1368,14 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
                     duration: 30,
                     phase: .hang,
-                    targets: [.feature(.fourFingerIncutEdge, fallback: .largeEdge)]
+                    targets: [.feature(.incutEdge, fingerCapacity: 4, fallback: .largeEdge)]
                 ),
                 MetoliusCycleBuilder.fixed(
                     title: "Straight-arm three-finger-pocket hang",
                     instruction: "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
                     duration: 15,
                     phase: .hang,
-                    targets: [.feature(.threeFingerPocket)],
+                    targets: [.feature(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 )
             ],
@@ -1405,7 +1403,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.threeFingerPocket)],
+                    targets: [.feature(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 ),
                 MetoliusCycleBuilder.pullUps(
@@ -1413,7 +1411,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Power pull-ups",
                     instruction: "Then do 3 power pull-ups with weight or helper resistance.",
                     phase: .pull,
-                    targets: [.feature(.threeFingerPocket)]
+                    targets: [.feature(.pocket, fingerCapacity: 3)]
                 )
             ],
             [
@@ -1795,7 +1793,7 @@ enum LegacyPlanSeedCatalog {
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm half crimp", [exactTarget("edge-29")], .halfCrimp),
                 ("19 mm open edge", [exactTarget("edge-19")], .openHand),
-                ("Two-finger pocket", [.feature(.twoFingerPocket)], .openHand)
+                ("Two-finger pocket", [.feature(.pocket, fingerCapacity: 2)], .openHand)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1882,7 +1880,7 @@ enum LegacyPlanSeedCatalog {
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [exactTarget("edge-29")], .openHand),
-                ("Four-finger pocket", [.feature(.fourFingerPocket)], .openHand)
+                ("Four-finger pocket", [.feature(.pocket, fingerCapacity: 4)], .openHand)
             ]
 
             for (holdIndex, grip) in grips.enumerated() {
@@ -2162,11 +2160,11 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered([
             emomMinute(id: "method-emom-minute-1", title: "Minute 1 · 20mm hang", instruction: "Hang for 20 seconds on 20mm, then rest for the remainder of the minute.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp)], rest: 40),
-            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs. The app defaults to 5 seconds per pull-up before the remainder-minute rest.", work: [(.feature(.threeFingerPocket), 15, .hang, .openHand), (.feature(.jug), 15, .pull, nil)], rest: 30),
+            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs. The app defaults to 5 seconds per pull-up before the remainder-minute rest.", work: [(.feature(.pocket, fingerCapacity: 3), 15, .hang, .openHand), (.feature(.jug), 15, .pull, nil)], rest: 30),
             emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs. The app uses 1 second per knee raise as a guided default; rest for the remainder.", work: [(.feature(.mediumEdge), 10, .hang, .halfCrimp), (.feature(.jug), 5, .pull, nil)], rest: 45),
             emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(.feature(.smallEdge), 15, .hang, .halfCrimp)], rest: 45),
             emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs. The app defaults to 5 seconds per pull-up before the remainder-minute rest.", work: [(.feature(.largeSlope, fallback: .roundSloper), 10, .hang, .openHand), (.feature(.jug), 15, .pull, nil)], rest: 35),
-            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(.feature(.threeFingerPocket), 10, .hang, .openHand)], rest: 50),
+            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(.feature(.pocket, fingerCapacity: 3), 10, .hang, .openHand)], rest: 50),
             emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge. The app defaults to 5 seconds per pull-up before the remainder-minute rest.", work: [(.feature(.jug), 15, .pull, nil), (.feature(.smallEdge), 15, .pull, nil)], rest: 30),
             emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(.feature(.smallEdge), 25, .hang, .halfCrimp)], rest: 35),
             emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs. The app uses 1 second per knee raise as a guided default; rest for the remainder.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp), (.feature(.jug), 10, .pull, nil)], rest: 30),
@@ -2210,7 +2208,7 @@ enum LegacyPlanSeedCatalog {
             ]
             let grips: [(title: String, target: HoldTarget, grip: GripType)] = [
                 ("Jug", .feature(.jug), .openHand),
-                ("Three-finger pocket", .feature(.threeFingerPocket), .openHand),
+                ("Three-finger pocket", .feature(.pocket, fingerCapacity: 3), .openHand),
                 ("Medium edge", .feature(.mediumEdge), .openHand),
                 ("Medium pinch", .feature(.mediumPinch, fallback: .mediumEdge), .openHand),
                 ("Large sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)

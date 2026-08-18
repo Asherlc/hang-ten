@@ -56,7 +56,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2)
         ])
-        let target = HoldTarget.feature(.twoFingerPocket)
+        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertEqual(result, ["e2"])
     }
@@ -65,9 +65,19 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "e4", kind: .edge, feature: nil, fingerCapacity: 4)
         ])
-        let target = HoldTarget.feature(.twoFingerPocket)
+        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertTrue(result.isEmpty)
+    }
+
+    func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
+        let board = board(holds: [
+            hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2),
+            hold(id: "e4", kind: .edge, feature: nil, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.feature(.incutEdge, fingerCapacity: 4)
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+        XCTAssertEqual(result, ["e4"])
     }
 
     func testSameKindNoFeatureMatch() {

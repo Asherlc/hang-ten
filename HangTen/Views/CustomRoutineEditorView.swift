@@ -348,7 +348,7 @@ private struct CustomRoutineStepEditor: View {
                 switch target {
                 case let .kind(kind):
                     return .kind(kind)
-                case let .feature(feature, _):
+                case let .feature(feature, _, _):
                     return .feature(feature)
                 default:
                     return nil
