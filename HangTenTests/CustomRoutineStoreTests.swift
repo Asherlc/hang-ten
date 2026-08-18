@@ -363,7 +363,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.incutEdge, fallbacks: [])])
+        let definition = genericDefinition(targets: [.feature(.flatEdge, fallbacks: [])])
 
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
 
