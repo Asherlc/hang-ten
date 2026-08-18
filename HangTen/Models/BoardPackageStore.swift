@@ -1028,13 +1028,13 @@ private extension BoardGeometryPathCommandDocument {
             return .line(try point(to))
         case "quad":
             guard control1 == nil, control2 == nil else { throw invalidCommand() }
-            return .quad(to: try point(to), control: try point(control))
+            return .quad(to: try point(to), control: try controlPoint(control))
         case "curve":
             guard control == nil else { throw invalidCommand() }
             return .curve(
                 to: try point(to),
-                control1: try point(control1),
-                control2: try point(control2)
+                control1: try controlPoint(control1),
+                control2: try controlPoint(control2)
             )
         case "close":
             guard to == nil, control == nil, control1 == nil, control2 == nil else {
@@ -1046,10 +1046,24 @@ private extension BoardGeometryPathCommandDocument {
         }
     }
 
+    /// A point the curve actually passes through (move/line/quad-to/curve-to)
+    /// must lie within the piece's own normalized frame.
     func point(_ coordinates: [Double]?) throws -> CGPoint {
         guard let coordinates,
               coordinates.count == 2,
               coordinates.allSatisfy({ $0.isFinite && (0...1).contains($0) }) else {
+            throw invalidCommand()
+        }
+        return CGPoint(x: coordinates[0], y: coordinates[1])
+    }
+
+    /// A Bezier control point only shapes the curve between two points the
+    /// curve passes through; it routinely falls outside the frame that
+    /// tightly bounds the rendered curve, so only finiteness is required.
+    func controlPoint(_ coordinates: [Double]?) throws -> CGPoint {
+        guard let coordinates,
+              coordinates.count == 2,
+              coordinates.allSatisfy({ $0.isFinite }) else {
             throw invalidCommand()
         }
         return CGPoint(x: coordinates[0], y: coordinates[1])

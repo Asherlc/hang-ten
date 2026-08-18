@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import Counter
 import json
-import math
 from pathlib import Path
 import sys
 
@@ -127,11 +126,11 @@ def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geom
             assert commands[-1] == {"command": "close"}
             assert len(commands[1:-1]) >= 4
             assert {command["command"] for command in commands[1:-1]} == {"curve"}
-            points = tuple(point for command in commands for point in _command_points(command))
-            assert min(point[0] for point in points) == pytest.approx(0, abs=5e-7)
-            assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
-            assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
-            assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+            min_x, max_x, min_y, max_y = board_geometry.flattened_shape_bounds(commands)
+            assert min_x == pytest.approx(0, abs=5e-7)
+            assert min_y == pytest.approx(0, abs=5e-7)
+            assert max_x == pytest.approx(1, abs=5e-7)
+            assert max_y == pytest.approx(1, abs=5e-7)
             path = board_geometry.display_path_for_shape(
                 piece["frame"], piece["shape"], width, height, label=label
             )

@@ -94,14 +94,24 @@ def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
     }
 
 
-def test_round_trips_two_cubic_segments_with_controls_outside_the_visual_bounds() -> None:
+def test_round_trips_two_cubic_segments_whose_controls_fall_outside_the_frame() -> None:
     path = parse_closed_path(
         "M 20 20 C 0 20 0 80 20 80 C 100 80 100 20 20 20 Z", 100, 100
     )
 
     frame, shape = shape_for_path(path, 100, 100)
 
-    assert frame.to_json() == {"x": 0.0, "y": 0.2, "width": 1.0, "height": 0.6}
+    # The frame tightly bounds the rendered curve (which never reaches the
+    # control points' x=0/x=100), not the control points themselves; those
+    # legitimately serialize outside [0, 1] local coordinates.
+    assert frame.to_json() == {"x": 0.05, "y": 0.2, "width": 0.75, "height": 0.6}
+    control_points = [
+        point
+        for command in shape["commands"]
+        for key, point in command.items()
+        if key in ("control", "control1", "control2")
+    ]
+    assert any(not 0 <= point[0] <= 1 for point in control_points)
     assert display_path_for_shape(frame.to_json(), shape, 100, 100, label="hold").data == path.data
 
 

@@ -22,6 +22,7 @@ from board_geometry import (
     GeometryError,
     NormalizedFrame,
     display_path_for_shape,
+    flattened_shape_bounds,
     parse_closed_path,
     shape_for_path,
     union_normalized_frames,
@@ -640,20 +641,19 @@ def _shape_fills_declared_frame(shape: object) -> bool:
         return True
     if shape.get("type") != "path" or not isinstance(shape.get("commands"), list):
         return False
-    points: list[list[object]] = []
     for command in shape["commands"]:
         if not isinstance(command, Mapping):
             return False
-        points.extend(value for key, value in command.items() if key != "command")
-    if not points:
+    if not shape["commands"]:
         return False
-    xs = [float(point[0]) for point in points]
-    ys = [float(point[1]) for point in points]
+    # Bounds of the rendered curve, not of its (routinely wider) control
+    # points, must reach every edge of the declared frame.
+    min_x, max_x, min_y, max_y = flattened_shape_bounds(shape["commands"])
     return (
-        min(xs) <= _FRAME_EDGE_TOLERANCE
-        and min(ys) <= _FRAME_EDGE_TOLERANCE
-        and max(xs) >= 1 - _FRAME_EDGE_TOLERANCE
-        and max(ys) >= 1 - _FRAME_EDGE_TOLERANCE
+        min_x <= _FRAME_EDGE_TOLERANCE
+        and min_y <= _FRAME_EDGE_TOLERANCE
+        and max_x >= 1 - _FRAME_EDGE_TOLERANCE
+        and max_y >= 1 - _FRAME_EDGE_TOLERANCE
     )
 
 
