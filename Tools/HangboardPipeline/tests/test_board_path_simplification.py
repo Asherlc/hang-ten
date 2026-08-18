@@ -183,6 +183,29 @@ def test_rejects_candidate_when_exact_reverse_boundary_distance_exceeds_one_pixe
     assert result.pieces[0].changed is False
 
 
+def test_fails_closed_and_reports_when_exact_measurement_exceeds_the_complexity_cap(tmp_path: Path, capsys) -> None:
+    source = [
+        (0.5 + 0.4 * math.cos(2 * math.pi * index / 16), 0.5 + 0.4 * math.sin(2 * math.pi * index / 16))
+        for index in range(16)
+    ]
+    package = _write_package(tmp_path / "board", [_hold("many-anchors", _path(source))])
+
+    result = simplify_package_hold_paths(package, write=False)
+
+    change = result.pieces[0]
+    assert (change.before_editable_points, change.after_editable_points, change.changed) == (16, 16, False)
+    assert change.complexity_capped is True
+    assert main(["simplify-hold-paths", "--root", str(tmp_path)]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["boards"][0]["skippedPieces"] == [{
+        "afterEditablePoints": 16,
+        "beforeEditablePoints": 16,
+        "holdId": "many-anchors",
+        "pieceIndex": 0,
+        "reason": "exactHausdorffComplexityCap",
+    }]
+
+
 def test_preserves_curve_when_its_polygon_approximation_is_not_cheaper(tmp_path: Path) -> None:
     curve = {
         "type": "path",

@@ -18,6 +18,7 @@ from .board_catalog import load_board_package
 _SUPER_SAMPLE = 4
 _MAX_BOUNDARY_DEVIATION_PIXELS = 1.0
 _MAX_SYMMETRIC_DIFFERENCE_RATIO = 0.0025
+_MAX_EXACT_HAUSDORFF_WORK = 1_000_000
 _EPSILON = 1e-9
 
 Point = tuple[float, float]
@@ -32,6 +33,7 @@ class HoldPieceSimplification:
     maximum_boundary_deviation_pixels: float
     symmetric_difference_ratio: float
     changed: bool
+    complexity_capped: bool
 
 
 @dataclass(frozen=True)
@@ -98,7 +100,9 @@ def _simplify_piece(
 
     frame = piece["frame"]
     positioned = _position(points, frame, width=width, height=height)
-    simplified = _reduce_line_polygon(points, frame, width=width, height=height)
+    simplified, complexity_capped = _reduce_line_polygon(points, frame, width=width, height=height)
+    if complexity_capped:
+        return _unchanged(before, complexity_capped=True), None
     candidate = _position(simplified, frame, width=width, height=height)
     replacement = _path_shape(simplified)
     after = _editable_point_count(replacement)
@@ -118,16 +122,18 @@ def _simplify_piece(
         "maximum_boundary_deviation_pixels": deviation,
         "symmetric_difference_ratio": difference,
         "changed": True,
+        "complexity_capped": False,
     }, replacement
 
 
-def _unchanged(points: int) -> dict[str, Any]:
+def _unchanged(points: int, *, complexity_capped: bool = False) -> dict[str, Any]:
     return {
         "before_editable_points": points,
         "after_editable_points": points,
         "maximum_boundary_deviation_pixels": 0.0,
         "symmetric_difference_ratio": 0.0,
         "changed": False,
+        "complexity_capped": complexity_capped,
     }
 
 
@@ -173,7 +179,7 @@ def _point(value: Sequence[object]) -> Point:
 
 def _reduce_line_polygon(
     original: list[Point], frame: Mapping[str, Any], *, width: int, height: int
-) -> list[Point]:
+) -> tuple[list[Point], bool]:
     current = list(original)
     while len(current) > 3:
         removed = False
@@ -183,6 +189,8 @@ def _reduce_line_polygon(
                 continue
             before = _position(original, frame, width=width, height=height)
             after = _position(candidate, frame, width=width, height=height)
+            if not _within_exact_hausdorff_work_cap(before, after):
+                return original, True
             if (
                 _boundary_deviation(before, after) <= _MAX_BOUNDARY_DEVIATION_PIXELS
                 and _symmetric_difference_ratio(before, after, width=width, height=height)
@@ -193,7 +201,7 @@ def _reduce_line_polygon(
                 break
         if not removed:
             break
-    return current
+    return current, False
 
 
 def _path_shape(points: Iterable[Point]) -> dict[str, Any]:
@@ -265,6 +273,28 @@ def _boundary_deviation(before: list[Point], after: list[Point]) -> float:
         _maximum_distance_to_segments(before, after),
         _maximum_distance_to_segments(after, before),
     )
+
+
+def _within_exact_hausdorff_work_cap(before: list[Point], after: list[Point]) -> bool:
+    """Bound exact lower-envelope work before evaluating a candidate.
+
+    The exact solver considers each source segment, every target projection
+    interval, pairwise target-quadratic intersections, and target distances at
+    each candidate location. This product is a conservative upper bound, so
+    rejected paths never enter the potentially superlinear routine.
+    """
+    return (
+        _directed_hausdorff_work(len(before), len(after))
+        + _directed_hausdorff_work(len(after), len(before))
+        <= _MAX_EXACT_HAUSDORFF_WORK
+    )
+
+
+def _directed_hausdorff_work(source_segments: int, target_segments: int) -> int:
+    projection_intervals = 2 * target_segments + 1
+    quadratic_intersections = target_segments * (target_segments - 1) // 2
+    candidate_locations = 2 + quadratic_intersections
+    return source_segments * projection_intervals * candidate_locations * target_segments
 
 
 def _maximum_distance_to_segments(source: list[Point], target: list[Point]) -> float:

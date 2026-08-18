@@ -102,6 +102,17 @@ def _simplification_payload(inventory: BoardInventory, *, write: bool) -> str:
                     for piece in result.pieces
                     if piece.changed
                 ],
+                "skippedPieces": [
+                    {
+                        "holdId": piece.hold_id,
+                        "pieceIndex": piece.piece_index,
+                        "beforeEditablePoints": piece.before_editable_points,
+                        "afterEditablePoints": piece.after_editable_points,
+                        "reason": "exactHausdorffComplexityCap",
+                    }
+                    for piece in result.pieces
+                    if piece.complexity_capped
+                ],
             }
         )
     return json.dumps(
