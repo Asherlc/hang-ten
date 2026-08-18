@@ -107,6 +107,18 @@
     return payload.branch;
   }
 
+  async function createBranch(branchName) {
+    if (typeof branchName !== "string" || !branchName.trim()) {
+      throw new Error("A branch name is required");
+    }
+    const payload = await request("/api/git/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ branch: branchName.trim(), create: true }),
+    });
+    return payload.branch;
+  }
+
   async function commitBoardChanges(message) {
     if (typeof message !== "string") throw new Error("A commit message is required");
     const payload = await request("/api/git/commit", {
@@ -149,6 +161,7 @@
     getGitStatus,
     listBranches,
     switchBranch,
+    createBranch,
     commitBoardChanges,
     pushBranch,
     openPullRequest,
