@@ -44,7 +44,6 @@ actor BackendController: BackendControlling {
         case childExited(Int32, String)
         case startupTimedOut(String)
         case couldNotSelectPort
-        case runtimeCheckoutMismatch
 
         var errorDescription: String? {
             switch self {
@@ -61,8 +60,6 @@ actor BackendController: BackendControlling {
                 return Self.message("The Hangboard Workbench backend did not become ready in time.", detail: detail)
             case .couldNotSelectPort:
                 return "A local port could not be selected for the Hangboard Workbench backend."
-            case .runtimeCheckoutMismatch:
-                return "The installed direct Hangboard Workbench version does not match the selected checkout. Install a direct Workbench build that matches the selected checkout, then try again."
             }
         }
 
@@ -145,9 +142,6 @@ actor BackendController: BackendControlling {
 
         let root = try CheckoutSelection.validatedURL(repositoryRoot)
         let checkoutIdentity = Self.readCheckoutIdentity(at: root)
-        guard runtimeIdentity == "unknown" || checkoutIdentity == "unknown" || runtimeIdentity == checkoutIdentity else {
-            throw Error.runtimeCheckoutMismatch
-        }
         let port = requestedPort == 0 ? try portSelector() : requestedPort
         let editorURL = try Self.editorURL(port: port)
         let healthURL = editorURL.appending(path: "api/health")
