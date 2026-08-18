@@ -155,6 +155,13 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum HoldCueStyle: String, Codable, Hashable {
+    case outerJug
+    case slot
+    case pinch
+    case rounded
+}
+
 /// Manufacturer routines often name a hold by function instead of by board
 /// ID. Features let a board declare the closest physical match once, keeping
 /// routine content unchanged as more boards are added.
@@ -309,21 +316,6 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         }
     }
 
-    var activeFingers: Set<FingerSlot> {
-        switch self {
-        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
-            Set(FingerSlot.allCases)
-        case .threeFingerPocket:
-            [.index, .middle, .ring]
-        case .twoFingerPocket:
-            [.middle, .ring]
-        }
-    }
-
-    var thumbEngaged: Bool {
-        self == .fullCrimp
-    }
-
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)
@@ -407,6 +399,7 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
@@ -472,9 +465,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.photoAssetName = photoAssetName
     }
 
-    var displayName: String {
-        "\(manufacturer) \(name)"
-    }
+
 }
 
 struct HoldTarget: Hashable {
@@ -666,10 +657,6 @@ struct WorkoutStep: Identifiable, Hashable {
         duration > activeDuration
     }
 
-    var restDuration: TimeInterval {
-        max(0, duration - activeDuration)
-    }
-
     var durationLabel: String {
         let seconds = Int(duration)
         let minutes = seconds / 60
@@ -682,6 +669,10 @@ struct WorkoutStep: Identifiable, Hashable {
             return "\(minutes)m"
         }
         return "\(remainder)s"
+    }
+
+    var restDuration: TimeInterval {
+        max(0, duration - activeDuration)
     }
 
     func withNumber(_ number: Int) -> WorkoutStep {
@@ -798,9 +789,16 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
+    /// Generic plans (`boardID: nil`) are authored against the same board as
+    /// the legacy semantic-hold mappings. Crashes rather than falling back to
+    /// an unrelated board, since silently resolving generic targets against
+    /// the wrong board would misrepresent every hold callout in those plans.
     static let defaultBoard: TrainingBoard = {
-        guard let board = all.first else {
-            fatalError("The bundled board library contains no completed boards.")
+        guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
+            fatalError("LegacyPlanSeedBoardMappings.all is empty.")
+        }
+        guard let board = packageStore.board(id: boardID) else {
+            fatalError("The bundled board catalog is missing the legacy default board '\(boardID)'.")
         }
         return board
     }()
@@ -1094,13 +1092,7 @@ enum LegacyPlanSeedCatalog {
             matches.count == 1,
             "Expected exactly one discovered board with ID \(boardID)."
         )
-        let board = matches[0]
-        let missingHoldIDs = exactTargetMapping.unknownHoldIDs(on: board)
-        precondition(
-            missingHoldIDs.isEmpty,
-            "Plan mapping for board \(boardID) references unknown hold IDs: \(missingHoldIDs.sorted())."
-        )
-        return board
+        return matches[0]
     }
 
     private static func exactTarget(
