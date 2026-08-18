@@ -47,10 +47,18 @@ class NormalizedFrame:
         return cls(**numbers)
 
     def to_json(self) -> dict[str, float]:
-        x = round(self.x, 12)
-        y = round(self.y, 12)
-        width = round(min(round(self.width, 12), 1 - x), 12)
-        height = round(min(round(self.height, 12), 1 - y), 12)
+        precision = 12
+        minimum_dimension = 10**-precision
+        x = min(round(self.x, precision), 1 - minimum_dimension)
+        y = min(round(self.y, precision), 1 - minimum_dimension)
+        width = round(
+            min(max(round(self.width, precision), minimum_dimension), 1 - x),
+            precision,
+        )
+        height = round(
+            min(max(round(self.height, precision), minimum_dimension), 1 - y),
+            precision,
+        )
         return {
             "x": x,
             "y": y,
