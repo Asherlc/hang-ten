@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "trango-rock-prodigy-natural",
+  "manufacturer": "Trango",
+  "name": "Rock Prodigy Natural",
+  "subtitle": "Two-piece wooden hangboard with rounded edge rails, an incut crimp ledge, and finger pockets.",
+  "productURL": "https://trango.com/products/rock-prodigy-natural",
+  "dimensions": "5.25 × 12.75 in (per side)",
+  "aspectRatio": 1.5,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    {
+      "id": "edge-top-rail-left",
+      "name": "Left top edge rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": ["largeOpenHandRail"],
+      "geometry": [
+        { "frame": {"x": 0.0635, "y": 0.2534, "width": 0.3682, "height": 0.0434}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+      ]
+    },
+    {
+      "id": "edge-top-rail-right",
+      "name": "Right top edge rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": ["largeOpenHandRail"],
+      "geometry": [
+        { "frame": {"x": 0.5550, "y": 0.2534, "width": 0.3681, "height": 0.0434}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+      ]
+    },
+    {
+      "id": "edge-second-rail-left",
+      "name": "Left second edge rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": ["mediumEdge"],
+      "geometry": [
+        { "frame": {"x": 0.0635, "y": 0.3292, "width": 0.3682, "height": 0.0434}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+      ]
+    },
+    {
+      "id": "edge-second-rail-right",
+      "name": "Right second edge rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": ["mediumEdge"],
+      "geometry": [
+        { "frame": {"x": 0.5550, "y": 0.3292, "width": 0.3681, "height": 0.0434}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+      ]
+    },
+    {
+      "id": "pocket-outer-left",
+      "name": "Left outer pocket",
+      "kind": "pocket",
+      "gripType": "threeFingerPocket",
+      "fingerCapacity": 3,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.0635, "y": 0.4160, "width": 0.0973, "height": 0.0542}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    },
+    {
+      "id": "pocket-outer-right",
+      "name": "Right outer pocket",
+      "kind": "pocket",
+      "gripType": "threeFingerPocket",
+      "fingerCapacity": 3,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.8385, "y": 0.4160, "width": 0.0973, "height": 0.0542}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    },
+    {
+      "id": "edge-hook-left",
+      "name": "Left incut crimp ledge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": ["incutEdge"],
+      "geometry": [
+        { "frame": {"x": 0.1777, "y": 0.4051, "width": 0.2539, "height": 0.0759}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+      ]
+    },
+    {
+      "id": "edge-hook-right",
+      "name": "Right incut crimp ledge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": ["incutEdge"],
+      "geometry": [
+        { "frame": {"x": 0.5677, "y": 0.4051, "width": 0.2539, "height": 0.0759}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+      ]
+    },
+    {
+      "id": "pocket-bottom-inner-left",
+      "name": "Left inner bottom pocket",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.0635, "y": 0.5460, "width": 0.0973, "height": 0.0650}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    },
+    {
+      "id": "pocket-bottom-outer-left",
+      "name": "Left outer bottom pocket",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.1862, "y": 0.5460, "width": 0.1016, "height": 0.0650}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    },
+    {
+      "id": "pocket-bottom-inner-right",
+      "name": "Right inner bottom pocket",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.8385, "y": 0.5460, "width": 0.0973, "height": 0.0650}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    },
+    {
+      "id": "pocket-bottom-outer-right",
+      "name": "Right outer bottom pocket",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": ["pocket"],
+      "geometry": [
+        { "frame": {"x": 0.7116, "y": 0.5460, "width": 0.1015, "height": 0.0650}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      ]
+    }
+  ]
+}
