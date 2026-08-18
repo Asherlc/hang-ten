@@ -94,16 +94,23 @@ _TREATMENT_TYPES = frozenset({"surface", "shelf", "recess"})
 _RECESS_DEPTHS = frozenset({"shallow", "deep"})
 _FRAME_EDGE_TOLERANCE = 0.0000005
 _RECOVERY_DIRECTORY_NAME = ".workbench-recovery"
+_STAGING_DIRECTORY_PREFIXES = (".workbench-edit-", ".workbench-save-")
 
 
 class BoardPackageError(ValueError):
     """Raised for invalid or unsafe direct board-package operations."""
 
 
+class BoardNotAvailableError(BoardPackageError):
+    """Raised when a valid board ID is not present in the library."""
+
+
 @dataclass(frozen=True, slots=True)
 class BoardPackage:
     root: Path
     board: dict[str, Any]
+    image_width: int
+    image_height: int
 
     @property
     def board_id(self) -> str:
@@ -133,7 +140,7 @@ class BoardPackage:
 def discover_packages(
     library_root: Path, *, final_inventory: bool = False
 ) -> tuple[BoardPackage, ...]:
-    """Discover validated completed packages among the library's direct children."""
+    """Discover completed packages using lightweight primary-image inspection."""
     root = _library_root(library_root)
     with _library_lock(root, shared=True):
         return _discover_packages_unlocked(root, final_inventory=final_inventory)
@@ -153,12 +160,18 @@ def open_package(library_root: Path, board_id: str) -> BoardPackage:
             None,
         )
         if package is None:
-            raise BoardPackageError("board is not available")
-        return package
+            raise BoardNotAvailableError("board is not available")
+        return load_board_package(package.root)
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
     """Load one completed package without accepting links or extra files."""
+    return _load_board_package(package_root, inspect_png_header_only=False)
+
+
+def _load_board_package(
+    package_root: Path, *, inspect_png_header_only: bool
+) -> BoardPackage:
     raw_root = Path(package_root)
     if raw_root.is_symlink():
         raise BoardPackageError("board package must not be a symlink")
@@ -185,10 +198,14 @@ def load_board_package(package_root: Path) -> BoardPackage:
     image = assets / "primary.png"
     if not image.is_file() or image.is_symlink():
         raise BoardPackageError("package primary image is missing")
-    width, height = _png_dimensions(image)
+    width, height = (
+        _png_header_dimensions(image)
+        if inspect_png_header_only
+        else _png_dimensions(image)
+    )
     board = _load_json(root / "board.json", "board.json")
     _validate_board(board, width, height)
-    return BoardPackage(root, board)
+    return BoardPackage(root, board, width, height)
 
 
 def primary_image_path(package: BoardPackage) -> Path:
@@ -202,7 +219,7 @@ def primary_image_path(package: BoardPackage) -> Path:
 
 def editor_document(package: BoardPackage) -> dict[str, object]:
     """Expose every geometry piece as an independently keyed editable region."""
-    width, height = _png_dimensions(primary_image_path(package))
+    width, height = package.image_width, package.image_height
     regions: list[dict[str, object]] = []
     region_id = 1
     for hold in package.board["holds"]:
@@ -249,7 +266,8 @@ def save_editor_document(
         )
         if live is None:
             raise BoardPackageError("board package is not available")
-        width, height = _png_dimensions(primary_image_path(live))
+        live = load_board_package(live.root)
+        width, height = live.image_width, live.image_height
         parsed_regions = _validate_editor_document(document, live, width, height)
         changes: list[tuple[str, int, Any]] = []
         for hold in live.board["holds"]:
@@ -309,10 +327,14 @@ def _discover_packages_unlocked(
             raise BoardPackageError("board library direct children must not be symlinks")
         if not child.is_dir():
             raise BoardPackageError("board library must contain only direct child directories")
+        if child.name.startswith(_STAGING_DIRECTORY_PREFIXES):
+            continue
         _slug(child.name)
         names = {item.name for item in child.iterdir()}
         if "board.json" in names:
-            packages.append(load_board_package(child))
+            packages.append(
+                _load_board_package(child, inspect_png_header_only=True)
+            )
             continue
         if _is_primary_only_draft(child):
             if final_inventory:
@@ -331,11 +353,11 @@ def _discover_packages_unlocked(
         identifiers.add(package.board_id)
     packages.sort(
         key=lambda package: (
-            package.board["manufacturer"].casefold(),
+            package.board["manufacturer"].lower(),
             package.board["manufacturer"],
-            package.board["name"].casefold(),
+            package.board["name"].lower(),
             package.board["name"],
-            package.board_id.casefold(),
+            package.board_id.lower(),
             package.board_id,
         )
     )
@@ -353,7 +375,7 @@ def _is_primary_only_draft(root: Path) -> bool:
     image = assets / "primary.png"
     if image.is_symlink() or not image.is_file():
         raise BoardPackageError(f"{root.name} draft primary image must be regular")
-    _png_dimensions(image)
+    _png_header_dimensions(image)
     return True
 
 
@@ -483,56 +505,61 @@ def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
     identifiers: set[str] = set()
     for index, hold in enumerate(holds):
         label = f"board.json.holds[{index}]"
-        if not isinstance(hold, Mapping):
-            raise BoardPackageError(f"{label} must be an object")
-        _required_and_allowed_keys(
-            hold,
-            _HOLD_REQUIRED_FIELDS,
-            _HOLD_REQUIRED_FIELDS | _HOLD_OPTIONAL_FIELDS,
-            label,
-        )
-        hold_id = _identifier(hold.get("id"), f"{label}.id")
+        hold_id = _validate_hold(hold, width, height, label)
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
-        _non_empty_string(hold.get("name"), f"{label}.name")
-        _enum(hold.get("kind"), _HOLD_KINDS, f"{label}.kind")
-        geometry = hold.get("geometry")
-        if not isinstance(geometry, list) or not geometry:
-            raise BoardPackageError(f"{label}.geometry must be non-empty")
-        for piece_index, piece in enumerate(geometry):
-            _validate_piece(
-                piece,
-                width,
-                height,
-                f"{label}.geometry[{piece_index}]",
-            )
-        if "sizeMillimeters" in hold:
-            _positive_integer(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
-        if "depthRangeMillimeters" in hold:
-            _millimeter_range(
-                hold["depthRangeMillimeters"], f"{label}.depthRangeMillimeters"
-            )
-        if "gripType" in hold:
-            _enum(hold["gripType"], _GRIP_TYPES, f"{label}.gripType")
-        if "fingerCapacity" in hold:
-            capacity = hold["fingerCapacity"]
-            if (
-                isinstance(capacity, bool)
-                or not isinstance(capacity, int)
-                or capacity not in range(1, 5)
-            ):
-                raise BoardPackageError(f"{label}.fingerCapacity must be in 1...4")
-        if "features" in hold:
-            features = hold["features"]
-            if not isinstance(features, list):
-                raise BoardPackageError(f"{label}.features must be an array")
-            parsed = [
-                _enum(feature, _HOLD_FEATURES, f"{label}.features[{feature_index}]")
-                for feature_index, feature in enumerate(features)
-            ]
-            if len(parsed) != len(set(parsed)):
-                raise BoardPackageError(f"{label}.features must be unique")
+
+
+def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
+    if not isinstance(hold, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _required_and_allowed_keys(
+        hold,
+        _HOLD_REQUIRED_FIELDS,
+        _HOLD_REQUIRED_FIELDS | _HOLD_OPTIONAL_FIELDS,
+        label,
+    )
+    hold_id = _identifier(hold.get("id"), f"{label}.id")
+    _non_empty_string(hold.get("name"), f"{label}.name")
+    _enum(hold.get("kind"), _HOLD_KINDS, f"{label}.kind")
+    geometry = hold.get("geometry")
+    if not isinstance(geometry, list) or not geometry:
+        raise BoardPackageError(f"{label}.geometry must be non-empty")
+    for piece_index, piece in enumerate(geometry):
+        _validate_piece(
+            piece,
+            width,
+            height,
+            f"{label}.geometry[{piece_index}]",
+        )
+    if "sizeMillimeters" in hold:
+        _positive_integer(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
+    if "depthRangeMillimeters" in hold:
+        _millimeter_range(
+            hold["depthRangeMillimeters"], f"{label}.depthRangeMillimeters"
+        )
+    if "gripType" in hold:
+        _enum(hold["gripType"], _GRIP_TYPES, f"{label}.gripType")
+    if "fingerCapacity" in hold:
+        capacity = hold["fingerCapacity"]
+        if (
+            isinstance(capacity, bool)
+            or not isinstance(capacity, int)
+            or capacity not in range(1, 5)
+        ):
+            raise BoardPackageError(f"{label}.fingerCapacity must be in 1...4")
+    if "features" in hold:
+        features = hold["features"]
+        if not isinstance(features, list):
+            raise BoardPackageError(f"{label}.features must be an array")
+        parsed = [
+            _enum(feature, _HOLD_FEATURES, f"{label}.features[{feature_index}]")
+            for feature_index, feature in enumerate(features)
+        ]
+        if len(parsed) != len(set(parsed)):
+            raise BoardPackageError(f"{label}.features must be unique")
+    return hold_id
 
 
 def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
@@ -542,7 +569,7 @@ def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
         piece, {"frame", "shape"}, {"frame", "shape", "treatment"}, label
     )
     try:
-        frame = NormalizedFrame.from_json(piece["frame"], f"{label}.frame")
+        NormalizedFrame.from_json(piece["frame"], f"{label}.frame")
         display_path_for_shape(
             piece["frame"], piece["shape"], width, height, label=label
         )
@@ -552,8 +579,6 @@ def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
         raise BoardPackageError(f"{label}.frame must match its derived shape bounds")
     if "treatment" in piece:
         _validate_treatment(piece["treatment"], f"{label}.treatment")
-    # Constructing the frame above is part of the validation contract.
-    _ = frame
 
 
 def _shape_fills_declared_frame(shape: object) -> bool:
@@ -820,32 +845,39 @@ def _reject_symlinks(root: Path) -> None:
         raise BoardPackageError("board package must not contain symlinks")
 
 
+def _png_header_dimensions(path: Path) -> tuple[int, int]:
+    try:
+        with path.open("rb") as image:
+            data = image.read(33)
+    except OSError as error:
+        raise BoardPackageError("package primary image is not readable") from error
+    if (
+        len(data) != 33
+        or data[:8] != b"\x89PNG\r\n\x1a\n"
+        or int.from_bytes(data[8:12], "big") != 13
+        or data[12:16] != b"IHDR"
+        or zlib.crc32(data[12:29]) & 0xFFFFFFFF
+        != int.from_bytes(data[29:33], "big")
+    ):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    width, height, _bit_depth, _color_type, _interlace = _validate_png_ihdr(
+        data[16:29]
+    )
+    return width, height
+
+
 def _png_dimensions(path: Path) -> tuple[int, int]:
     try:
         data = path.read_bytes()
     except OSError as error:
         raise BoardPackageError("package primary image is not readable") from error
-    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
-        raise BoardPackageError("package primary image must be a decodable PNG")
 
-    offset = 8
     ihdr: bytes | None = None
     compressed_parts: list[bytes] = []
     has_palette = False
     ended_idat = False
-    saw_iend = False
-    while offset < len(data):
-        if len(data) - offset < 12:
-            raise BoardPackageError("package primary image must be a decodable PNG")
-        length = int.from_bytes(data[offset : offset + 4], "big")
-        chunk_type = data[offset + 4 : offset + 8]
-        chunk_end = offset + 12 + length
-        if chunk_end > len(data):
-            raise BoardPackageError("package primary image must be a decodable PNG")
-        payload = data[offset + 8 : offset + 8 + length]
-        expected_crc = int.from_bytes(data[offset + 8 + length : chunk_end], "big")
-        if zlib.crc32(chunk_type + payload) & 0xFFFFFFFF != expected_crc:
-            raise BoardPackageError("package primary image must be a decodable PNG")
+    for chunk_type, payload in _png_chunks(data):
+        length = len(payload)
         if ihdr is None and chunk_type != b"IHDR":
             raise BoardPackageError("package primary image must be a decodable PNG")
         if chunk_type == b"IHDR":
@@ -861,42 +893,73 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
                 raise BoardPackageError("package primary image must be a decodable PNG")
             compressed_parts.append(payload)
         elif chunk_type == b"IEND":
-            if length != 0 or chunk_end != len(data):
+            if length != 0:
                 raise BoardPackageError("package primary image must be a decodable PNG")
-            saw_iend = True
-            offset = chunk_end
             break
         else:
             if compressed_parts:
                 ended_idat = True
             if chunk_type and chunk_type[0] & 0x20 == 0:
                 raise BoardPackageError("package primary image must be a decodable PNG")
+    if ihdr is None or not compressed_parts:
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    width, height, bit_depth, color_type, interlace = _validate_png_ihdr(ihdr)
+    if color_type == 3 and not has_palette:
+        raise BoardPackageError("package primary image must be a decodable PNG")
+
+    layouts = _png_scanline_layouts(
+        width,
+        height,
+        bit_depth,
+        color_type,
+        interlace,
+    )
+    decoded = _png_inflate_exact(compressed_parts, layouts)
+    cursor = 0
+    for row_size, row_count in layouts:
+        for _ in range(row_count):
+            if decoded[cursor] > 4:
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            cursor += row_size
+    return width, height
+
+
+def _png_chunks(data: bytes) -> tuple[tuple[bytes, bytes], ...]:
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+
+    chunks: list[tuple[bytes, bytes]] = []
+    offset = 8
+    while offset < len(data):
+        if len(data) - offset < 12:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        length = int.from_bytes(data[offset : offset + 4], "big")
+        chunk_type = data[offset + 4 : offset + 8]
+        chunk_end = offset + 12 + length
+        if chunk_end > len(data):
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        payload = data[offset + 8 : offset + 8 + length]
+        expected_crc = int.from_bytes(data[offset + 8 + length : chunk_end], "big")
+        if zlib.crc32(chunk_type + payload) & 0xFFFFFFFF != expected_crc:
+            raise BoardPackageError("package primary image must be a decodable PNG")
+        chunks.append((chunk_type, payload))
         offset = chunk_end
+        if chunk_type == b"IEND":
+            if offset != len(data):
+                raise BoardPackageError("package primary image must be a decodable PNG")
+            return tuple(chunks)
 
-    if ihdr is None or not compressed_parts or not saw_iend or offset != len(data):
-        raise BoardPackageError("package primary image must be a decodable PNG")
-    width = int.from_bytes(ihdr[0:4], "big")
-    height = int.from_bytes(ihdr[4:8], "big")
-    bit_depth, color_type, compression, filtering, interlace = ihdr[8:13]
-    valid_depths = {
-        0: {1, 2, 4, 8, 16},
-        2: {8, 16},
-        3: {1, 2, 4, 8},
-        4: {8, 16},
-        6: {8, 16},
-    }
+    raise BoardPackageError("package primary image must be a decodable PNG")
+
+
+def _png_scanline_layouts(
+    width: int,
+    height: int,
+    bit_depth: int,
+    color_type: int,
+    interlace: int,
+) -> tuple[tuple[int, int], ...]:
     channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
-    if (
-        width <= 0
-        or height <= 0
-        or bit_depth not in valid_depths.get(color_type, set())
-        or compression != 0
-        or filtering != 0
-        or interlace not in {0, 1}
-        or (color_type == 3 and not has_palette)
-    ):
-        raise BoardPackageError("package primary image must be a decodable PNG")
-
     passes = (
         ((0, 0, 1, 1),)
         if interlace == 0
@@ -917,6 +980,13 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         pass_height = max(0, (height - start_y + step_y - 1) // step_y)
         if pass_width and pass_height:
             layouts.append(((pass_width * bits_per_pixel + 7) // 8 + 1, pass_height))
+    return tuple(layouts)
+
+
+def _png_inflate_exact(
+    compressed_parts: list[bytes],
+    layouts: tuple[tuple[int, int], ...],
+) -> bytes:
     expected_size = sum(row_size * row_count for row_size, row_count in layouts)
     try:
         decompressor = zlib.decompressobj()
@@ -930,10 +1000,27 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         or decompressor.unused_data
     ):
         raise BoardPackageError("package primary image must be a decodable PNG")
-    cursor = 0
-    for row_size, row_count in layouts:
-        for _ in range(row_count):
-            if decoded[cursor] > 4:
-                raise BoardPackageError("package primary image must be a decodable PNG")
-            cursor += row_size
-    return width, height
+    return decoded
+
+
+def _validate_png_ihdr(ihdr: bytes) -> tuple[int, int, int, int, int]:
+    width = int.from_bytes(ihdr[0:4], "big")
+    height = int.from_bytes(ihdr[4:8], "big")
+    bit_depth, color_type, compression, filtering, interlace = ihdr[8:13]
+    valid_depths = {
+        0: {1, 2, 4, 8, 16},
+        2: {8, 16},
+        3: {1, 2, 4, 8},
+        4: {8, 16},
+        6: {8, 16},
+    }
+    if (
+        width <= 0
+        or height <= 0
+        or bit_depth not in valid_depths.get(color_type, set())
+        or compression != 0
+        or filtering != 0
+        or interlace not in {0, 1}
+    ):
+        raise BoardPackageError("package primary image must be a decodable PNG")
+    return width, height, bit_depth, color_type, interlace
