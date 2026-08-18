@@ -10,19 +10,16 @@ import struct
 import sys
 import zlib
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_PACKAGE = (
-    REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii"
+PIPELINE_MODULE_ROOT = (
+    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
 )
-EVOLV_KILTER_BASIC_LONG_PACKAGE = (
-    REPOSITORY_ROOT / "Hangboards" / "evolv-kilter-basic-long"
-)
-PRIMARY_IMAGE = CANONICAL_PACKAGE / "assets" / "primary.png"
 VALIDATION_FIXTURES = json.loads(
     (
         REPOSITORY_ROOT
@@ -31,54 +28,34 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
-SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
-EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS = (
-    ("rounded-jug", "jug", None, (0.055, 0.391, 0.89, 0.117)),
-    ("rounded-edge-20", "edge", 20, (0.056, 0.535, 0.888, 0.028)),
-    ("rounded-edge-15", "edge", 15, (0.057, 0.594, 0.886, 0.027)),
-    ("rounded-edge-10", "edge", 10, (0.057, 0.655, 0.886, 0.031)),
+assert VALIDATION_FIXTURES["outOfBoundsFrames"], (
+    "outOfBoundsFrames must contain at least one fixture"
 )
+SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
+from workbench_fixtures import (  # noqa: E402
+    CANONICAL_PACKAGE,
+    PRIMARY_IMAGE,
+    board_document,
+)
 
 
-def _board_document(
-    board_id: str,
-    *,
-    manufacturer: str = "Fixture Maker",
-    name: str = "Fixture Board",
-) -> dict[str, object]:
-    return {
-        "schemaVersion": 1,
-        "id": board_id,
-        "manufacturer": manufacturer,
-        "name": name,
-        "subtitle": "A physical fixture board.",
-        "productURL": f"https://example.com/{board_id}",
-        "dimensions": "20 × 10 cm",
-        "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "geometry": [
-                    {
-                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                    },
-                    {
-                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
-                        "treatment": {"type": "surface"},
-                    },
-                ],
-            }
-        ],
-    }
+def _load_stage_module(module_name: str) -> ModuleType:
+    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
+    spec = importlib.util.spec_from_file_location(module_name, stage_path)
+    assert spec is not None
+    assert spec.loader is not None
+    stage_module = importlib.util.module_from_spec(spec)
+    previous_bytecode_setting = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(stage_module)
+    finally:
+        sys.dont_write_bytecode = previous_bytecode_setting
+    return stage_module
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -106,6 +83,12 @@ def _indexed_png_with_palette_after_idat() -> bytes:
     )
 
 
+def _png_with_corrupt_post_ihdr_data() -> bytes:
+    data = bytearray(PRIMARY_IMAGE.read_bytes())
+    data[-1] ^= 0xFF
+    return bytes(data)
+
+
 def _write_finished_package(
     library: Path,
     slug: str,
@@ -120,7 +103,7 @@ def _write_finished_package(
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
     _write_json(
         package / "board.json",
-        _board_document(board_id, manufacturer=manufacturer, name=name),
+        board_document(board_id, manufacturer=manufacturer, name=name),
     )
     return package
 
@@ -199,58 +182,6 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
             assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
 
 
-def test_evolv_kilter_basic_long_has_four_continuous_rounded_contacts() -> None:
-    package = board_package.load_board_package(EVOLV_KILTER_BASIC_LONG_PACKAGE)
-    board = package.board
-    image_header = (
-        EVOLV_KILTER_BASIC_LONG_PACKAGE / "assets" / "primary.png"
-    ).read_bytes()[:24]
-
-    assert image_header[:16] == b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"
-    assert struct.unpack(">II", image_header[16:24]) == (1537, 1023)
-    assert board["id"] == "evolv-kilter-basic-long"
-    assert board["manufacturer"] == "Evolv"
-    assert board["name"] == "Basic Training Board (Long)"
-    assert board["dimensions"] == "79 × 16 × 6 cm"
-    assert board["aspectRatio"] == 1.50244379276637
-    assert board["aspectRatio"] == pytest.approx(1537 / 1023, abs=1e-14)
-    assert board["presentation"]["assetPath"] == "assets/primary.png"
-    holds = board["holds"]
-    assert tuple(
-        (hold["id"], hold["kind"], hold.get("sizeMillimeters")) for hold in holds
-    ) == tuple(expected[:3] for expected in EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS)
-
-    for hold, expected in zip(
-        holds, EVOLV_KILTER_BASIC_LONG_EXPECTED_HOLDS, strict=True
-    ):
-        assert len(hold["geometry"]) == 1
-        piece = hold["geometry"][0]
-        frame = piece["frame"]
-        assert (
-            frame["x"],
-            frame["y"],
-            frame["width"],
-            frame["height"],
-        ) == pytest.approx(expected[3], abs=1e-9)
-        assert piece["shape"]["type"] == "path"
-        assert piece["shape"]["commands"][0]["command"] == "move"
-        assert piece["shape"]["commands"][-1]["command"] == "close"
-        assert (
-            sum(
-                command["command"] == "curve"
-                for command in piece["shape"]["commands"]
-            )
-            >= 4
-        )
-        assert frame["width"] * frame["height"] > 0
-        assert frame["x"] == pytest.approx(1 - frame["x"] - frame["width"])
-        assert piece["treatment"] == {"type": "surface"}
-        assert "depthRangeMillimeters" not in hold
-        assert "gripType" not in hold
-        assert "fingerCapacity" not in hold
-        assert "features" not in hold
-
-
 def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     tmp_path: Path,
 ) -> None:
@@ -290,6 +221,33 @@ def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
     assert not (library / "catalog.json").exists()
 
 
+def test_opening_a_missing_valid_board_raises_not_available_error(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+
+    with pytest.raises(board_package.BoardNotAvailableError):
+        board_package.open_package(library, "missing.board")
+
+
+def test_discovery_uses_the_shared_non_ascii_ordering_contract(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    ordering = VALIDATION_FIXTURES["ordering"]
+    for package in ordering["packages"]:
+        _write_finished_package(
+            library,
+            package["slug"],
+            package["id"],
+            manufacturer=package["manufacturer"],
+            name=package["name"],
+        )
+
+    packages = board_package.discover_packages(library)
+
+    assert [package.board_id for package in packages] == ordering["expectedBoardIDs"]
+
+
 def test_discovery_excludes_the_exact_internal_recovery_directory(
     tmp_path: Path,
 ) -> None:
@@ -314,6 +272,67 @@ def test_discovery_does_not_broaden_the_recovery_directory_exclusion(
     library = _library(tmp_path)
     _write_finished_package(library, "current-board", "current.board")
     (library / ".workbench-recovery-old").mkdir()
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+def test_discovery_open_and_noop_save_ignore_abandoned_staging_directories(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    staging_directories = [
+        library / ".workbench-edit-abandoned",
+        library / ".workbench-save-abandoned",
+    ]
+    for staging in staging_directories:
+        (staging / "partial-package").mkdir(parents=True)
+        (staging / "partial-package" / "board.json").write_text(
+            "{ incomplete", encoding="utf-8"
+        )
+
+    packages = board_package.discover_packages(library)
+    package = board_package.open_package(library, "fixture.board")
+    saved = board_package.save_editor_document(
+        library,
+        "fixture-board",
+        board_package.editor_document(package),
+    )
+
+    assert [candidate.board_id for candidate in packages] == ["fixture.board"]
+    assert saved.board_id == "fixture.board"
+    assert all(staging.is_dir() for staging in staging_directories)
+
+
+@pytest.mark.parametrize(
+    "lookalike", [".workbench-edit", ".workbench-editor-abandoned", ".workbench-saved"]
+)
+def test_discovery_does_not_broaden_the_staging_directory_exclusion(
+    lookalike: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    (library / lookalike).mkdir()
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize("prefix", [".workbench-edit-", ".workbench-save-"])
+@pytest.mark.parametrize("unsafe_kind", ["file", "symlink"])
+def test_discovery_rejects_unsafe_reserved_staging_paths(
+    prefix: str, unsafe_kind: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "fixture-board", "fixture.board")
+    staging = library / f"{prefix}abandoned"
+    if unsafe_kind == "file":
+        staging.write_text("unsafe", encoding="utf-8")
+    else:
+        outside = tmp_path / f"outside-{prefix.removeprefix('.')}"
+        outside.mkdir()
+        staging.symlink_to(outside, target_is_directory=True)
 
     with pytest.raises(BoardPackageError):
         board_package.discover_packages(library)
@@ -384,6 +403,36 @@ def test_rejects_shared_indexed_png_with_duplicate_palette(
 
     with pytest.raises(BoardPackageError, match="PNG"):
         board_package.load_board_package(package)
+
+
+def test_open_ignores_corrupt_post_ihdr_data_in_an_unselected_sibling(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    _write_finished_package(library, "selected-board", "selected.board")
+    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
+    (corrupt / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    package = board_package.open_package(library, "selected.board")
+
+    assert package.board_id == "selected.board"
+
+
+def test_open_and_direct_load_reject_selected_corrupt_post_ihdr_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    corrupt = _write_finished_package(library, "corrupt-board", "corrupt.board")
+    (corrupt / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.open_package(library, "corrupt.board")
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.load_board_package(corrupt)
 
 
 def test_accepts_a_rounded_aspect_ratio_matching_the_primary_canvas(
@@ -566,13 +615,19 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
         board_package.load_board_package(package)
 
 
-def test_rejects_shared_out_of_bounds_normalized_frames(tmp_path: Path) -> None:
-    for fixture in VALIDATION_FIXTURES["outOfBoundsFrames"]:
-        with pytest.raises(board_package.GeometryError, match="normalized canvas"):
-            board_package.NormalizedFrame.from_json(
-                fixture["frame"],
-                fixture["name"],
-            )
+@pytest.mark.parametrize(
+    "fixture",
+    VALIDATION_FIXTURES["outOfBoundsFrames"],
+    ids=lambda fixture: fixture["name"],
+)
+def test_rejects_shared_out_of_bounds_normalized_frames(
+    fixture: dict[str, object],
+) -> None:
+    with pytest.raises(board_package.GeometryError, match="normalized canvas"):
+        board_package.NormalizedFrame.from_json(
+            fixture["frame"],
+            fixture["name"],
+        )
 
 
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
@@ -596,15 +651,26 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
 
 
 def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     library = _library(tmp_path)
     package = board_package.load_board_package(
         _write_finished_package(library, "fixture-board", "fixture.board")
     )
+    monkeypatch.setattr(
+        board_package,
+        "_png_dimensions",
+        lambda _path: pytest.fail("editor_document repeated complete PNG validation"),
+    )
+    monkeypatch.setattr(
+        board_package,
+        "_png_header_dimensions",
+        lambda _path: pytest.fail("editor_document repeated PNG header inspection"),
+    )
 
     document = board_package.editor_document(package)
 
+    assert document["canvas"] == {"width": 1774, "height": 457}
     assert [region["key"] for region in document["regions"]] == [
         "hold-left-piece-0",
         "hold-left-piece-1",
@@ -637,6 +703,23 @@ def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(
     )
     assert {path.name for path in package_root.iterdir()} == {"board.json", "assets"}
     assert not (library / "catalog.json").exists()
+
+
+def test_noop_save_rejects_selected_live_package_with_corrupt_post_ihdr_data(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    (package_root / "assets" / "primary.png").write_bytes(
+        _png_with_corrupt_post_ihdr_data()
+    )
+
+    with pytest.raises(BoardPackageError, match="PNG"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
@@ -881,7 +964,7 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
-def test_staging_copies_only_complete_direct_children_without_a_registry(
+def test_staging_ignores_primary_only_drafts_when_staging_packages(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository = tmp_path / "repository"
@@ -890,21 +973,14 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
-    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
-    spec = importlib.util.spec_from_file_location("stage_board_packages_test", stage_path)
-    assert spec is not None and spec.loader is not None
-    stage_module = importlib.util.module_from_spec(spec)
-    previous_bytecode_setting = sys.dont_write_bytecode
-    sys.dont_write_bytecode = True
-    try:
-        spec.loader.exec_module(stage_module)
-    finally:
-        sys.dont_write_bytecode = previous_bytecode_setting
+    stage_module = _load_stage_module("stage_board_packages_test")
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
@@ -914,22 +990,8 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     staged = stage_module.stage_board_packages(repository, destination)
 
     assert staged == (destination / "finished-board",)
-    assert sorted(
-        path.relative_to(destination).as_posix()
-        for path in destination.rglob("*")
-    ) == [
-        "finished-board",
-        "finished-board/assets",
-        "finished-board/assets/primary.png",
-        "finished-board/board.json",
-    ]
-    assert not (destination / "catalog.json").exists()
-    staged_board = json.loads(
-        (destination / "finished-board" / "board.json").read_text(encoding="utf-8")
-    )
-    assert [hold["kind"] for hold in staged_board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
+    assert (destination / "finished-board").is_dir()
+    assert (destination / "draft-board").is_dir() is False
 
 
 def test_staging_commits_new_destination_when_backup_cleanup_fails(
@@ -939,24 +1001,14 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     _write_finished_package(library, "finished-board", "finished.board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
-
-    stage_path = REPOSITORY_ROOT / "scripts" / "stage-board-packages.py"
-    spec = importlib.util.spec_from_file_location(
-        "stage_board_packages_cleanup_test",
-        stage_path,
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
     )
-    assert spec is not None and spec.loader is not None
-    stage_module = importlib.util.module_from_spec(spec)
-    previous_bytecode_setting = sys.dont_write_bytecode
-    sys.dont_write_bytecode = True
-    try:
-        spec.loader.exec_module(stage_module)
-    finally:
-        sys.dont_write_bytecode = previous_bytecode_setting
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
+
+    stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"

@@ -294,7 +294,8 @@ def test_release_readmes_document_the_native_checkout_workflow():
             "selected checkout",
             "normal Git review",
             "**Choose Another Checkout…**",
-            "Remote hosting is not yet shipped",
+            "hosted deployment uses",
+            "--allow-remote",
         ):
             assert required_fragment in quick_start, path
 
