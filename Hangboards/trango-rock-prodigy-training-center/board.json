@@ -225,7 +225,7 @@
       "kind": "pocket",
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "features": ["shallowThreeFingerSlot"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.335725677830941, "y": 0.481658692185008, "width": 0.090111642743222, "height": 0.027910685805423},
@@ -248,7 +248,7 @@
       "kind": "pocket",
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "features": ["shallowThreeFingerSlot"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.574162679425837, "y": 0.481658692185008, "width": 0.090111642743222, "height": 0.027910685805423},
@@ -271,7 +271,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["deepTwoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.203349282296651, "y": 0.543062200956938, "width": 0.078149920255183, "height": 0.027113237639553},
@@ -294,7 +294,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["deepTwoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.718500797448166, "y": 0.543062200956938, "width": 0.078149920255183, "height": 0.027113237639553},
@@ -317,7 +317,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["deepTwoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.311004784688995, "y": 0.54066985645933, "width": 0.054226475279107, "height": 0.029505582137161},
@@ -340,7 +340,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["deepTwoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.634768740031898, "y": 0.54066985645933, "width": 0.054226475279107, "height": 0.029505582137161},
@@ -363,7 +363,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["twoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.240031897926635, "y": 0.598883572567783, "width": 0.050239234449761, "height": 0.027113237639553},
@@ -386,7 +386,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["twoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.709728867623604, "y": 0.598883572567783, "width": 0.050239234449761, "height": 0.027113237639553},
@@ -409,7 +409,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["twoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.311004784688995, "y": 0.596491228070175, "width": 0.054226475279107, "height": 0.028708133971292},
@@ -432,7 +432,7 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["twoFingerPocket"],
+      "features": ["pocket"],
       "geometry": [
         {
           "frame": {"x": 0.634768740031898, "y": 0.596491228070175, "width": 0.054226475279107, "height": 0.028708133971292},
