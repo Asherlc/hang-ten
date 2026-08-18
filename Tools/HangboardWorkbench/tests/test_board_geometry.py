@@ -65,6 +65,23 @@ def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> Non
     assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
 
 
+def test_serialized_normalized_frame_keeps_tiny_edge_dimensions_positive() -> None:
+    serialized = NormalizedFrame(
+        x=0.9999999999996,
+        y=0.9999999999996,
+        width=0.0000000000004,
+        height=0.0000000000004,
+    ).to_json()
+
+    assert serialized == {
+        "x": 0.999999999999,
+        "y": 0.999999999999,
+        "width": 0.000000000001,
+        "height": 0.000000000001,
+    }
+    assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
+
+
 def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
     path = parse_closed_path("M 10 20 L 50 20 L 50 60 L 10 60 Z", 100, 100)
 
