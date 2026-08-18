@@ -38,6 +38,27 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())
     }
 
+    func testStoreUsesSharedNonASCIIOrderingContract() throws {
+        let fixtures = try validationFixtures()
+        let ordering = try XCTUnwrap(fixtures["ordering"] as? [String: Any])
+        let packageFixtures = try XCTUnwrap(ordering["packages"] as? [[String: String]])
+        let expectedBoardIDs = try XCTUnwrap(ordering["expectedBoardIDs"] as? [String])
+        let packages = try packageFixtures.map { package in
+            PackageSpec(
+                slug: try XCTUnwrap(package["slug"]),
+                id: try XCTUnwrap(package["id"]),
+                manufacturer: try XCTUnwrap(package["manufacturer"]),
+                name: try XCTUnwrap(package["name"])
+            )
+        }
+        let fixture = try makeFixtureBundle(packages: packages)
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+
+        XCTAssertEqual(store.boards.map(\.id), expectedBoardIDs)
+    }
+
     func testStoreRejectsDuplicateDiscoveredBoardIDs() throws {
         let fixture = try makeFixtureBundle(packages: [
             PackageSpec(slug: "first-model", id: "duplicate.board"),
