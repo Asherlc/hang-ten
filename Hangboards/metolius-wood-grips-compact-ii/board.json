@@ -181,8 +181,7 @@
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
       "features": [
-        "pocket",
-        "threeFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -212,8 +211,7 @@
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
       "features": [
-        "pocket",
-        "twoFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -243,8 +241,7 @@
       "gripType": "fourFingerPocket",
       "fingerCapacity": 4,
       "features": [
-        "pocket",
-        "fourFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -274,8 +271,7 @@
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
       "features": [
-        "pocket",
-        "twoFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -305,8 +301,7 @@
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
       "features": [
-        "pocket",
-        "threeFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -379,8 +374,7 @@
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
       "features": [
-        "pocket",
-        "threeFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -410,8 +404,7 @@
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
       "features": [
-        "pocket",
-        "threeFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -441,8 +434,7 @@
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
       "features": [
-        "pocket",
-        "twoFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -472,8 +464,7 @@
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
       "features": [
-        "pocket",
-        "twoFingerPocket"
+        "pocket"
       ]
     },
     {
@@ -503,8 +494,7 @@
       "gripType": "fourFingerPocket",
       "fingerCapacity": 4,
       "features": [
-        "pocket",
-        "fourFingerPocket"
+        "pocket"
       ]
     },
     {
