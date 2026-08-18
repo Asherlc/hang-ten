@@ -83,7 +83,19 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
                 assert right_x == pytest.approx(1 - left_x)
                 assert right_y == pytest.approx(left_y)
 
-    assert all(hold.grip_type is None for hold in board.holds)
-    assert all(hold.finger_capacity is None for hold in board.holds)
-    assert all(hold.depth_range_millimeters is None for hold in board.holds)
-    assert all(hold.features is None for hold in board.holds)
+    # Jugs and edges have sourced sizeMillimeters, so they also carry
+    # derived gripType/fingerCapacity/features; pinches and slopers have no
+    # sourced measurement and stay geometry-only. See "Add sourced hold
+    # depth/feature metadata for 4 new boards".
+    measured_kinds = {"jug", "edge"}
+    for hold in board.holds:
+        kind = next(kind for hold_id, kind in EXPECTED_HOLDS if hold_id == hold.id)
+        if kind in measured_kinds:
+            assert hold.grip_type == "openHand"
+            assert hold.finger_capacity == 4
+            assert hold.features
+        else:
+            assert hold.grip_type is None
+            assert hold.finger_capacity is None
+            assert hold.features is None
+        assert hold.depth_range_millimeters is None
