@@ -9,7 +9,7 @@
     validateEditorDocument,
   } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
-  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = (() => {
+  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
   const dialogs = globalThis.HoldWorkbenchDialogs || {
@@ -44,7 +44,7 @@
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
-    "delete-hold-button",
+    "delete-hold-button", "rotate-ccw-button", "rotate-cw-button",
   ].map((id) => [id, document.getElementById(id)]));
 
   for (const kind of HOLD_KINDS) {
@@ -800,8 +800,66 @@
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });
   el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
 
+  function holdSiblings(hold) {
+    const holdId = hold.metadata.holdID;
+    return state.document.regions.filter((region) => region.metadata.holdID === holdId);
+  }
+
+  function holdCentroid(regions) {
+    let sumX = 0, sumY = 0, count = 0;
+    for (const region of regions) {
+      let commands;
+      try { commands = parsePath(region.displayPath); } catch { continue; }
+      for (const cmd of commands) {
+        if (cmd.type === "Z") continue;
+        const p = cmd.points[cmd.points.length - 1];
+        sumX += p.x;
+        sumY += p.y;
+        count++;
+      }
+    }
+    return count ? { x: sumX / count, y: sumY / count } : { x: 0, y: 0 };
+  }
+
+  function rotateHold(angleDegrees) {
+    const hold = selectedHold();
+    if (!hold) return;
+    const siblings = holdSiblings(hold);
+    const pivot = holdCentroid(siblings);
+    const angleRadians = (angleDegrees * Math.PI) / 180;
+    const originalPaths = siblings.map((region) => region.displayPath);
+    const originalDirty = state.dirty;
+    for (const region of siblings) {
+      let commands;
+      try { commands = parsePath(region.displayPath); } catch { continue; }
+      rotatePath(commands, angleRadians, pivot);
+      region.displayPath = serializePath(commands);
+    }
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Hold rotated. Save when ready.");
+    } catch (error) {
+      siblings.forEach((region, index) => { region.displayPath = originalPaths[index]; });
+      state.dirty = originalDirty;
+      setValidation(error.message || "Contour is invalid.");
+      setStatus("Rotation reverted — contour is invalid.");
+    }
+    render();
+  }
+
+  el["rotate-ccw-button"].addEventListener("click", (event) => { rotateHold(event.shiftKey ? -45 : -15); });
+  el["rotate-cw-button"].addEventListener("click", (event) => { rotateHold(event.shiftKey ? 45 : 15); });
+
   function handleKeyDown(event) {
     const key = event.key;
+    if (key === "[" || key === "]") {
+      if (!selectedHold()) return;
+      event.preventDefault();
+      rotateHold(key === "]" ? (event.shiftKey ? 45 : 15) : (event.shiftKey ? -45 : -15));
+      return;
+    }
     if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
     const hold = selectedHold();
     if (!hold) return;
