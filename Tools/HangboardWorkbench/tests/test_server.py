@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 import http.cookiejar
 import json
@@ -13,7 +14,6 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
-from typing import Iterator
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -22,13 +22,6 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-PRIMARY_IMAGE = (
-    REPOSITORY_ROOT
-    / "Hangboards"
-    / "metolius-wood-grips-compact-ii"
-    / "assets"
-    / "primary.png"
-)
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -40,6 +33,7 @@ from server import (  # noqa: E402
     create_server,
     validate_hang_ten_checkout,
 )
+from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
 
 
 def _write_library(root: Path) -> Path:
@@ -48,35 +42,7 @@ def _write_library(root: Path) -> Path:
     assets = package / "assets"
     assets.mkdir(parents=True)
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
-    board = {
-        "schemaVersion": 1,
-        "id": "fixture.board",
-        "manufacturer": "Fixture Maker",
-        "name": "Fixture Board",
-        "subtitle": "A physical fixture board.",
-        "productURL": "https://example.com/fixture.board",
-        "dimensions": "20 × 10 cm",
-        "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
-        "holds": [
-            {
-                "id": "hold-left",
-                "name": "Left hold",
-                "kind": "jug",
-                "geometry": [
-                    {
-                        "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
-                    },
-                    {
-                        "frame": {"x": 0.35, "y": 0.1, "width": 0.1, "height": 0.2},
-                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.1},
-                        "treatment": {"type": "surface"},
-                    },
-                ],
-            }
-        ],
-    }
+    board = board_document("fixture.board")
     (package / "board.json").write_text(
         json.dumps(board, indent=2) + "\n", encoding="utf-8"
     )
@@ -101,41 +67,31 @@ def _git_checkout(root: Path) -> Path:
         REPOSITORY_ROOT / "Tools" / "HangboardWorkbench" / "board_geometry.py",
         workbench / "board_geometry.py",
     )
-    subprocess.run(
-        ["git", "init", "-b", "main"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.name", "Hangboard Workbench"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.email", "workbench@example.com"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "add", "."],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "commit", "-m", "Initialize hang-ten checkout"],
-        cwd=checkout,
-        check=True,
-        text=True,
-        capture_output=True,
-    )
+    # Isolate this fixture from the developer's own global/system git config
+    # (commit.gpgsign, core.hooksPath, init.templateDir, ...), any of which
+    # could make these commands fail or behave unexpectedly.
+    git_environment = {
+        **os.environ,
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_SYSTEM": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+    }
+
+    def run(*args: str) -> None:
+        subprocess.run(
+            ["git", *args],
+            cwd=checkout,
+            check=True,
+            text=True,
+            capture_output=True,
+            env=git_environment,
+        )
+
+    run("init", "-b", "main")
+    run("config", "user.name", "Hangboard Workbench")
+    run("config", "user.email", "workbench@example.com")
+    run("add", ".")
+    run("commit", "-m", "Initialize hang-ten checkout")
     return checkout
 
 
@@ -296,6 +252,60 @@ def test_load_failures_do_not_expose_library_paths(tmp_path: Path) -> None:
     assert status == 400
     assert result == {"ok": False, "error": "could not load board"}
     assert str(library) not in json.dumps(result)
+
+
+def test_get_board_routes_not_available_errors_by_type(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+    unavailable_error = getattr(
+        board_package, "BoardNotAvailableError", BoardPackageError
+    )
+
+    def raise_unavailable(*_args: object) -> object:
+        raise unavailable_error("unavailable details changed")
+
+    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 404
+    assert result == {"ok": False, "error": "board is not available"}
+
+
+def test_get_board_keeps_base_package_error_with_old_sentinel_at_generic_400(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+
+    def raise_base_error(*_args: object) -> object:
+        raise BoardPackageError("board is not available")
+
+    monkeypatch.setattr(server_module, "open_package", raise_base_error)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 400
+    assert result == {"ok": False, "error": "could not load board"}
+
+
+def test_save_routes_not_available_errors_to_404(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _write_library(tmp_path)
+
+    def raise_unavailable(*_args: object) -> object:
+        raise board_package.BoardNotAvailableError("unavailable details changed")
+
+    monkeypatch.setattr(server_module, "open_package", raise_unavailable)
+
+    with running_server(library) as base:
+        status, result = request_json(base, "PUT", "/api/boards/fixture.board", {})
+
+    assert status == 404
+    assert result == {"ok": False, "error": "board is not available"}
 
 
 def test_checkout_lists_every_completed_package_and_opens_reference_compact_ii(

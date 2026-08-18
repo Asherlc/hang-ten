@@ -61,7 +61,7 @@ struct GripDiagramView: View {
         guard hold.kind != .sloper else { return hold.name }
 
         if hold.kind == .jug,
-           hold.name.localizedCaseInsensitiveContains("outer") {
+           hold.features?.contains(.jug) == true {
             return "Outer jugs"
         }
 
