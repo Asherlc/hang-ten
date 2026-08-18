@@ -86,6 +86,7 @@ def create_server(
     host: str = "127.0.0.1",
     port: int = 4173,
     *,
+    allow_remote: bool = False,
     editor_root: Path = EDITOR_ROOT,
 ) -> "WorkbenchHTTPServer":
     """Create a direct board-package server with no workspace lifecycle state."""
@@ -103,6 +104,7 @@ def create_server(
         EditorRequestHandler,
         editor_root=resolved_editor_root,
         library_root=resolved_library_root,
+        allow_remote=allow_remote,
     )
 
 
@@ -116,9 +118,11 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         *,
         editor_root: Path,
         library_root: Path,
+        allow_remote: bool,
     ) -> None:
         self.editor_root = editor_root
         self.library_root = library_root
+        self.allow_remote = allow_remote
         super().__init__(server_address, request_handler)
 
 
@@ -252,6 +256,8 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         return self.rfile.read(length)
 
     def _allow_request(self, *, mutation: bool) -> bool:
+        if self.server.allow_remote:
+            return True
         if not _loopback_peer(self.client_address):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "request origin is not allowed"})
             return False
@@ -416,6 +422,11 @@ def _argument_parser() -> ArgumentParser:
     parser.add_argument("--repository-root", type=Path, help="Checkout containing Hangboards/")
     parser.add_argument("--host", default="127.0.0.1", help="Listen address (default: 127.0.0.1)")
     parser.add_argument("--port", default=4173, type=int, help="Listen port (default: 4173)")
+    parser.add_argument(
+        "--allow-remote",
+        action="store_true",
+        help="Allow non-loopback web clients (for hosted deployment only)",
+    )
     return parser
 
 
@@ -427,7 +438,13 @@ def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = 
     except EditorError as error:
         parser.error(str(error))
     try:
-        httpd = create_server(root / "Hangboards", parsed.host, parsed.port, editor_root=editor_root)
+        httpd = create_server(
+            root / "Hangboards",
+            parsed.host,
+            parsed.port,
+            allow_remote=parsed.allow_remote,
+            editor_root=editor_root,
+        )
     except OSError as error:
         raise ServerBindError(f"could not bind to {parsed.host}:{parsed.port}") from error
     return httpd, None

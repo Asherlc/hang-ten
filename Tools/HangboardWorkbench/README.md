@@ -24,6 +24,27 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --repository-root /absolute/path/to/hang-ten
 ```
 
+### Hosted server mode (same editor, remote access)
+
+If you want to use Workbench through a hosted server without downloading
+the app, run:
+
+```sh
+rtk python3 Tools/HangboardWorkbench/server.py \
+  --repository-root /absolute/path/to/hang-ten \
+  --host 0.0.0.0 \
+  --port 4173 \
+  --allow-remote
+```
+
+Host this process with HTTPS in front (for example via a reverse proxy or your
+provider’s platform TLS), then point browsers to your public URL.
+`--allow-remote` is intentionally opt-in, because it allows non-loopback clients.
+
+Security note: this still writes directly to the repository checkout. For
+production use, place it behind authentication/authorization and only expose
+trusted users.
+
 ## Board packages
 
 Every direct child of `Hangboards/` containing `board.json` is a completed
@@ -58,7 +79,9 @@ On first launch the native window asks you to **Choose Hang Ten Checkout…**.
 The app remembers the last valid checkout and uses the selected checkout on
 later launches; choose **Choose Another Checkout…** from the app menu to
 switch. All edits remain ordinary local Git changes for normal Git review.
-Remote hosting is not yet shipped.
+
+Local editor users can continue to use the packaged app; hosted deployment uses
+an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 
 ## Verification
 
