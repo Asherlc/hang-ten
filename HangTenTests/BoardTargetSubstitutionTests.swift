@@ -94,4 +94,13 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertTrue(result.isEmpty)
     }
+
+    func testOtherGroupDoesNotCrossKindMatchJugToOpenHandRail() {
+        let board = board(holds: [
+            hold(id: "r1", kind: .edge, feature: .largeOpenHandRail)
+        ])
+        let target = HoldTarget.feature(.jug)
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+        XCTAssertTrue(result.isEmpty)
+    }
 }

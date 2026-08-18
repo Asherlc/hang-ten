@@ -114,13 +114,10 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         BoardHold(
             id: id,
             name: id,
+            shortLabel: id,
+            detail: id,
             kind: kind,
-            geometry: [BoardHoldPiece(
-                id: "\(id)-piece",
-                path: "M 0 0 L 10 0 L 10 10 L 0 10 Z",
-                frame: HoldFrame(x: 0, y: 0, width: 10, height: 10)
-            )],
-            gripType: nil,
+            frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1),
             fingerCapacity: fingerCapacity,
             features: feature.map { [$0] }
         )

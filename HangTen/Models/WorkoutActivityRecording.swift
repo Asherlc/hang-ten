@@ -126,7 +126,8 @@ internal enum BoardTargetResolver {
         let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
 
         let sameGroup = board.holds.filter { hold in
-            guard let features = hold.features else { return false }
+            guard hold.kind == feature.holdKind,
+                  let features = hold.features else { return false }
             return !features.isDisjoint(with: groupFeatures)
         }
         if !sameGroup.isEmpty { return sameGroup.map(\.id) }
