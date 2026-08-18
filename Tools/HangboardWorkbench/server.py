@@ -313,7 +313,13 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
         sanitized_branch = _validate_git_arg(branch.strip(), "branch")
         self._run_git(["git", "check-ref-format", "--branch", sanitized_branch])
-        self._run_git(["git", "switch", "--", sanitized_branch])
+        create = body.get("create", False)
+        if not isinstance(create, bool):
+            raise RequestError(HTTPStatus.BAD_REQUEST, "create must be a boolean")
+        if create:
+            self._run_git(["git", "switch", "-c", sanitized_branch], fallback="could not create branch")
+        else:
+            self._run_git(["git", "switch", "--", sanitized_branch])
         self._send_json(HTTPStatus.OK, {"ok": True, "branch": sanitized_branch})
 
     def _post_commit(self, body: dict[str, Any]) -> None:

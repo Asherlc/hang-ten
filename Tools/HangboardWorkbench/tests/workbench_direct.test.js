@@ -82,6 +82,9 @@ class FakeElement {
   change() {
     this.listeners.get("change")?.({ currentTarget: this, target: this });
   }
+  input() {
+    this.listeners.get("input")?.({ currentTarget: this, target: this });
+  }
 }
 
 function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), dialogs }) {
@@ -90,6 +93,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
+    "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
     "delete-hold-button",
   ];
@@ -209,13 +213,15 @@ test("the browser client can read git status and run git operations", async () =
   });
   assert.equal(await client.listBranches().then((payload) => payload.branches.join(",")), "main,feature");
   assert.equal(await client.switchBranch("feature"), "feature");
+  assert.equal(await client.createBranch("feature"), "feature");
+  assert.equal(JSON.parse(calls.at(-1)[1].body).create, true);
   const commit = await client.commitBoardChanges("Update board");
   assert.equal(commit.commit, "a".repeat(40));
   const pushed = await client.pushBranch();
   assert.equal(pushed.remote, "origin");
   const opened = await client.openPullRequest({ title: "Update board", body: "", base: "main" });
   assert.equal(opened.url, "https://example.com/pull/1");
-  assert.equal(calls.length, 6);
+  assert.equal(calls.length, 7);
 });
 
 test("getGitStatus falls back to an empty statusLines array for null or non-array values", async () => {
@@ -554,6 +560,69 @@ test("switching branches reports success plus a status warning when the post-swi
 
   assert.equal(app.elements["editor-status"].textContent, "Switched to feature. Repository status unavailable.");
   assert.equal(app.elements["validation-panel"].classList.values.has("hidden"), false);
+});
+
+test("creating a branch switches to it and clears the new-branch input", async () => {
+  const controller = require("../workbench-controller.js");
+  const created = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "feature", branches: ["main", "feature"], dirty: false }; },
+      async createBranch(branch) { created.push(branch); return branch; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm must not be called without unsaved edits"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-new-branch-name"].value = "feature";
+  app.elements["git-new-branch-name"].input();
+  app.elements["git-new-branch-button"].click();
+  await settle();
+  await settle();
+
+  assert.deepEqual(created, ["feature"]);
+  assert.equal(app.elements["git-new-branch-name"].value, "");
+  assert.equal(app.elements["editor-status"].textContent, "Created and switched to feature.");
+});
+
+test("creating a branch is available from detached HEAD", async () => {
+  const controller = require("../workbench-controller.js");
+  const created = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        return { ok: true, currentBranch: null, branches: ["main"], dirty: false };
+      },
+      async createBranch(branch) { created.push(branch); return branch; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm must not be called without unsaved edits"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-new-branch-name"].value = "recovered";
+  app.elements["git-new-branch-name"].input();
+
+  assert.equal(app.elements["git-new-branch-button"].disabled, false);
+
+  app.elements["git-new-branch-button"].click();
+  await settle();
+  await settle();
+
+  assert.deepEqual(created, ["recovered"]);
 });
 
 test("opening a pull request cancels when the title prompt is dismissed", async () => {
