@@ -142,6 +142,75 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsPresentationPathOtherThanPrimaryAsset() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["presentation"] = ["assetPath": "assets/alternate.png"]
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(reason, "presentation.assetPath must be assets/primary.png")
+        }
+    }
+
+    func testStoreRejectsPresentationPathThatEscapesPackage() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["presentation"] = ["assetPath": "../outside/primary.png"]
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .presentationAssetPathEscape(
+                    boardID: "fixture.board",
+                    path: "../outside/primary.png"
+                )
+            )
+        }
+    }
+
+    func testStoreRejectsPathWithMatchingControlPointsButNotContourUseDeclaredFrame() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = [
+                    "type": "path",
+                    "commands": [
+                        ["command": "move", "to": [0.25, 0.25]],
+                        ["command": "curve", "to": [0.75, 0.25], "control1": [0.0, 0.0], "control2": [1.0, 0.0]],
+                        ["command": "curve", "to": [0.25, 0.75], "control1": [1.0, 1.0], "control2": [0.0, 1.0]],
+                        ["command": "close"]
+                    ]
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("frame must match its shape bounds"), reason)
+        }
+    }
+
     func testStoreRejectsSidecarsAndExtraAssets() throws {
         for relativePath in ["semantics.json", "assets/alternate.png"] {
             let fixture = try makeFixtureBundle { hangboardsURL in
@@ -185,12 +254,20 @@ final class BoardPackageStoreTests: XCTestCase {
         let linkedMemberFixture = try makeFixtureBundle { hangboardsURL in
             let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
             let boardURL = packageURL.appendingPathComponent("board.json")
-            let outsideURL = hangboardsURL.appendingPathComponent("outside-board.json")
+            let outsideURL = hangboardsURL
+                .deletingLastPathComponent()
+                .appendingPathComponent("outside-board.json")
             try FileManager.default.moveItem(at: boardURL, to: outsideURL)
             try FileManager.default.createSymbolicLink(at: boardURL, withDestinationURL: outsideURL)
         }
         defer { linkedMemberFixture.remove() }
-        XCTAssertThrowsError(try BoardPackageStore(bundle: linkedMemberFixture.bundle))
+        XCTAssertThrowsError(try BoardPackageStore(bundle: linkedMemberFixture.bundle)) { error in
+            guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected packagePathEscape, got \(error)")
+            }
+            XCTAssertEqual(boardID, "fixture-model")
+            XCTAssertTrue(path.hasSuffix("/fixture-model/board.json"), path)
+        }
     }
 
     func testStoreRejectsEmptyAndOutOfRangeGeometry() throws {
