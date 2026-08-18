@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
 from .board_path_simplification import simplify_package_hold_paths
+from .board_presentation import normalize_package_presentation
 
 
 class _CliError(ValueError):
@@ -29,6 +30,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         if arguments.command == "simplify-hold-paths":
             inventory = discover_board_packages(arguments.root)
             print(_simplification_payload(inventory, write=arguments.write))
+            return 0
+        if arguments.command == "normalize-presentations":
+            inventory = discover_board_packages(arguments.root)
+            print(_presentation_payload(inventory, write=arguments.write))
             return 0
         raise _CliError("unknown command")
     except SystemExit as error:
@@ -62,6 +67,12 @@ def _parser() -> argparse.ArgumentParser:
     )
     simplify.add_argument("--root", type=Path, required=True)
     simplify.add_argument("--write", action="store_true", help="atomically update changed board.json files")
+    normalize = subcommands.add_parser(
+        "normalize-presentations",
+        help="tightly crop presentation canvases and exactly reproject hold frames",
+    )
+    normalize.add_argument("--root", type=Path, required=True)
+    normalize.add_argument("--write", action="store_true", help="atomically update changed board packages")
     return parser
 
 
@@ -113,6 +124,33 @@ def _simplification_payload(inventory: BoardInventory, *, write: bool) -> str:
                     for piece in result.pieces
                     if piece.complexity_capped
                 ],
+            }
+        )
+    return json.dumps(
+        {
+            "boards": boards,
+            "draftCount": len(inventory.drafts),
+            "drafts": [path.name for path in inventory.drafts],
+            "write": write,
+        },
+        indent=2,
+        sort_keys=True,
+    )
+
+
+def _presentation_payload(inventory: BoardInventory, *, write: bool) -> str:
+    boards = []
+    for package in inventory.packages:
+        result = normalize_package_presentation(package.root, write=write)
+        boards.append(
+            {
+                "id": result.board_id,
+                "path": package.root.name,
+                "originalDimensions": [result.original_width, result.original_height],
+                "newDimensions": [result.width, result.height],
+                "crop": list(result.crop),
+                "holdCount": result.hold_count,
+                "changed": result.changed,
             }
         )
     return json.dumps(
