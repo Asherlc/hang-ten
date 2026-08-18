@@ -9,6 +9,7 @@ STATIC_ASSET_ROUTES = (
     ("/styles.css", "styles.css"),
     ("/workbench-client.js", "workbench-client.js"),
     ("/workbench-controller.js", "workbench-controller.js"),
+    ("/path-editor.js", "path-editor.js"),
     ("/app.js", "app.js"),
 )
 
