@@ -52,6 +52,20 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["a"])
     }
 
+    func testSameKindEdgeCandidateOutranksPocketSubstitution() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge, feature: .mediumEdge),
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.smallEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["edge"])
+    }
+
     func testCrossKindMatchingFingerCapacity() {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2)
