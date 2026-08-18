@@ -33,6 +33,21 @@ jobs:
         with:
           filters: .github/ci-paths.yml
 
+  test-js:
+    name: Test Workbench JavaScript
+    needs: changes
+    if: needs.changes.outputs.workbench == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Run Node suite
+        run: node --test Tools/HangboardWorkbench/tests/*.test.js
+
   build:
     name: Build verified arm64 workbench
     needs: changes

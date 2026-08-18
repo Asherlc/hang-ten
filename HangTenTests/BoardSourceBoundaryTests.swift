@@ -8,7 +8,12 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
-            "metolius.wood-grips-compact-ii"
+            "beastmaker-1000",
+            "beastmaker-2000",
+            "dewoodstok-woodbord",
+            "escape-beta-22",
+            "lattice-triple-rung",
+            "metolius.wood-grips-compact-ii",
         ]
 
         XCTAssertEqual(
@@ -143,7 +148,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("BoardPresentationImage"))
         XCTAssertTrue(source.contains("BoardHoldPathShape(pieces: hold.geometry)"))
-        XCTAssertTrue(source.contains(".contentShape(shape)"))
+        XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
+        XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
+        XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
         XCTAssertFalse(source.contains("contentShape(Rectangle())"))
         XCTAssertFalse(source.contains("Canvas("))
         XCTAssertFalse(source.contains("BoardDesign"))
