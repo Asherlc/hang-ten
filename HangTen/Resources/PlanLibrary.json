@@ -1080,7 +1080,8 @@
                 "fallbackFeatures" : [
                   "largeEdge"
                 ],
-                "feature" : "fourFingerFlatEdge"
+                "feature" : "flatEdge",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
@@ -1090,7 +1091,8 @@
               "fallbackFeatures" : [
                 "largeEdge"
               ],
-              "feature" : "fourFingerFlatEdge"
+              "feature" : "flatEdge",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Four-finger flat-edge pull-ups"
@@ -1191,14 +1193,16 @@
               "duration" : 25,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger-pocket pull-ups"
@@ -1215,14 +1219,16 @@
               "duration" : 25,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Straight-arm three-finger-pocket hang"
@@ -1322,7 +1328,8 @@
                 "fallbackFeatures" : [
                   "largeEdge"
                 ],
-                "feature" : "fourFingerFlatEdge"
+                "feature" : "flatEdge",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
@@ -1332,7 +1339,8 @@
               "fallbackFeatures" : [
                 "largeEdge"
               ],
-              "feature" : "fourFingerFlatEdge"
+              "feature" : "flatEdge",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Single-arm flat-edge hang"
@@ -1352,7 +1360,8 @@
                 "fallbackFeatures" : [
                   "largeEdge"
                 ],
-                "feature" : "fourFingerFlatEdge"
+                "feature" : "flatEdge",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
@@ -1362,7 +1371,8 @@
               "fallbackFeatures" : [
                 "largeEdge"
               ],
-              "feature" : "fourFingerFlatEdge"
+              "feature" : "flatEdge",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Single-arm flat-edge hang · other hand"
@@ -1401,7 +1411,8 @@
                   "feature" : "largeSlope"
                 },
                 {
-                  "feature" : "threeFingerPocket"
+                  "feature" : "pocket",
+                  "fingerCapacity" : 3
                 }
               ],
               "timing" : "fixed"
@@ -1412,7 +1423,8 @@
               "feature" : "largeSlope"
             },
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Offset pull-ups"
@@ -1433,7 +1445,8 @@
                   "feature" : "largeSlope"
                 },
                 {
-                  "feature" : "threeFingerPocket"
+                  "feature" : "pocket",
+                  "fingerCapacity" : 3
                 }
               ],
               "timing" : "fixed"
@@ -1444,7 +1457,8 @@
               "feature" : "largeSlope"
             },
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Offset pull-ups · other side"
@@ -1482,7 +1496,8 @@
                 "fallbackFeatures" : [
                   "largeEdge"
                 ],
-                "feature" : "fourFingerIncutEdge"
+                "feature" : "incutEdge",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
@@ -1492,7 +1507,8 @@
               "fallbackFeatures" : [
                 "largeEdge"
               ],
-              "feature" : "fourFingerIncutEdge"
+              "feature" : "incutEdge",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Incut-edge bent-arm hang"
@@ -1509,14 +1525,16 @@
               "duration" : 15,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Straight-arm three-finger-pocket hang"
@@ -1615,14 +1633,16 @@
               "duration" : 20,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Two-finger three-finger-pocket hang"
@@ -1639,14 +1659,16 @@
               "duration" : 15,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Power pull-ups"
@@ -7553,7 +7575,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 2
               },
               "timing" : "fixed"
             },
@@ -7565,7 +7588,8 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 2
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 1"
@@ -7583,7 +7607,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 2
               },
               "timing" : "fixed"
             },
@@ -7595,7 +7620,8 @@
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 2
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 2"
@@ -7613,14 +7639,16 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "twoFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 2
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "twoFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 2
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 3"
@@ -8143,7 +8171,8 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             },
@@ -8155,7 +8184,8 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 1"
@@ -8172,7 +8202,8 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             },
@@ -8184,7 +8215,8 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 2"
@@ -8201,14 +8233,16 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 3"
@@ -8243,7 +8277,8 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             },
@@ -8255,7 +8290,8 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 1"
@@ -8272,7 +8308,8 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             },
@@ -8284,7 +8321,8 @@
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 2"
@@ -8301,14 +8339,16 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "feature" : "fourFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 4
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "fourFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 4
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 3"
@@ -11050,7 +11090,8 @@
               "duration" : 15,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11070,7 +11111,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             },
             {
               "feature" : "jug"
@@ -11205,7 +11247,8 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11217,7 +11260,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Minute 6 · medium three-finger pocket"
@@ -11725,7 +11769,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11737,7 +11782,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 1"
@@ -11755,7 +11801,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11767,7 +11814,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 2"
@@ -11785,7 +11833,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11797,7 +11846,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 3"
@@ -11815,7 +11865,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11827,7 +11878,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 4"
@@ -11845,7 +11897,8 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             },
@@ -11857,7 +11910,8 @@
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 5"
@@ -11875,14 +11929,16 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "feature" : "threeFingerPocket"
+                "feature" : "pocket",
+                "fingerCapacity" : 3
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "feature" : "threeFingerPocket"
+              "feature" : "pocket",
+              "fingerCapacity" : 3
             }
           ],
           "title" : "Three-finger pocket · rep 6"

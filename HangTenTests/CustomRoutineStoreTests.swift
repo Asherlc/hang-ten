@@ -56,7 +56,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             accessory: "10s",
             duration: 10,
             phase: .hang,
-            targets: [.feature(.threeFingerPocket, fallbacks: [])],
+            targets: [.feature(.pocket, fallbacks: [], fingerCapacity: 3)],
             gripType: .openHand,
             fingerConfiguration: expectedConfiguration,
             activeDuration: 10
@@ -114,10 +114,10 @@ final class CustomRoutineStoreTests: XCTestCase {
                       "accessory": "10s",
                       "duration": 10,
                       "phase": "hang",
-                      "targets": [{ "feature": "threeFingerPocket" }],
+                      "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
                       "segments": [{
                         "kind": "work",
-                        "targets": [{ "feature": "threeFingerPocket" }],
+                        "targets": [{ "feature": "pocket", "fingerCapacity": 3 }],
                         "timing": "fixed",
                         "duration": 10
                       }],
@@ -363,7 +363,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.fourFingerIncutEdge, fallbacks: [])])
+        let definition = genericDefinition(targets: [.feature(.incutEdge, fallbacks: [])])
 
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
 

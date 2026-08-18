@@ -352,10 +352,10 @@ enum CustomRoutineValidator {
             return !holdIDs.isEmpty && Set(holdIDs).isSubset(of: Set(board.holds.map(\.id)))
         case let .kind(kind):
             return board.holds.contains { $0.kind == kind }
-        case let .feature(feature, fallbacks):
-            let acceptedFeatures = Set([feature] + fallbacks)
-            return board.holds.contains {
-                !($0.features ?? []).isDisjoint(with: acceptedFeatures)
+        case let .feature(feature, fallbacks, fingerCapacity):
+            let acceptedFeatures = [feature] + fallbacks
+            return board.holds.contains { hold in
+                hold.matches(anyOf: acceptedFeatures, fingerCapacity: fingerCapacity)
             }
         }
     }

@@ -251,7 +251,8 @@ struct HomeView: View {
                     FavoritePlanCard(
                         plan: plan,
                         board: store.board(for: plan),
-                        isFavorite: store.isFavorite(plan)
+                        isFavorite: store.isFavorite(plan),
+                        isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                     ) {
                         store.toggleFavorite(plan)
                     }
@@ -399,7 +400,7 @@ struct PlansView: View {
                         Text("Choose your session.")
                             .font(.system(size: 31, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.hangInk)
-                        Text("Official manufacturer sequences and source-linked adapted protocols, matched to your board.")
+                        Text("Official manufacturer sequences and source-linked adapted protocols. Hold targets are matched to your board.")
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
@@ -451,7 +452,8 @@ struct PlansView: View {
                                 FavoritePlanCard(
                                     plan: plan,
                                     board: store.board(for: plan),
-                                    isFavorite: store.isFavorite(plan)
+                                    isFavorite: store.isFavorite(plan),
+                                    isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                                 ) {
                                     store.toggleFavorite(plan)
                                 }
@@ -478,7 +480,8 @@ struct PlansView: View {
                             FavoritePlanCard(
                                 plan: plan,
                                 board: store.board(for: plan),
-                                isFavorite: store.isFavorite(plan)
+                                isFavorite: store.isFavorite(plan),
+                                isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                             ) {
                                 store.toggleFavorite(plan)
                             }
@@ -740,6 +743,7 @@ private struct NoMatchingPlansCard: View {
 private struct PlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
+    var isIncompatible: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -750,6 +754,9 @@ private struct PlanCard: View {
                     tint: Color.hangGreenDark,
                     fill: Color.hangGreen.opacity(0.16)
                 )
+                if isIncompatible {
+                    Pill(title: "Not on this board", tint: .orange, fill: Color.orange.opacity(0.12))
+                }
                 Spacer()
                 Text(plan.durationLabel)
                     .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -784,12 +791,13 @@ private struct FavoritePlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
     let isFavorite: Bool
+    var isIncompatible: Bool = false
     let onToggle: () -> Void
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
             NavigationLink(destination: PlanDetailView(plan: plan)) {
-                PlanCard(plan: plan, board: board)
+                PlanCard(plan: plan, board: board, isIncompatible: isIncompatible)
             }
             .buttonStyle(.plain)
             .frame(maxWidth: .infinity)
