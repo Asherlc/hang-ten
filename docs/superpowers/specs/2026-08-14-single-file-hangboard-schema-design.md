@@ -2,9 +2,9 @@
 
 ## Decision
 
-Every direct child of `Hangboards/` that contains `board.json` is an app board.
-There is no root catalog and no package-side artwork, semantics, or evidence
-document. A finished board directory contains exactly:
+Every direct child of `Hangboards/` that matches the finished-package contract is an
+app board candidate. There is no root catalog and no package-side artwork,
+semantics, or evidence document. A finished board directory contains exactly:
 
 ```text
 manufacturer-model/
@@ -14,7 +14,7 @@ manufacturer-model/
 ```
 
 Primary-only directories remain non-runtime drafts during migration. Final
-inventory validation requires every board directory to contain `board.json`.
+inventory validation requires every board directory to contain a finished package.
 
 ## Physical board document
 
@@ -33,9 +33,8 @@ piece paths draw normal contact, active contact, and hit-testing geometry.
 
 `aspectRatio` is the presentation canvas width divided by height, not the
 physical product-envelope or multi-piece installation ratio. It must match the
-decoded pixel dimensions of `assets/primary.png` within 0.1% relative error;
-this permits established two-decimal metadata while preventing visible global
-stretching in the runtime image-and-geometry canvas.
+decoded pixel dimensions of `assets/primary.png` within 0.1% relative error.
+Two-decimal metadata is valid only when it remains within that bound.
 
 `cueStyle`, `shortLabel`, coaching detail, palettes, colors, shadows, and
 gradients are app presentation concerns and are not board fields. The app owns
@@ -62,3 +61,4 @@ document; its semantics and evidence are not carried forward. The remaining
 boards are then authored in small image-audited batches. Each batch verifies
 model hold IDs equal geometry hold IDs and inspects inactive and active paths
 in portrait and landscape.
+
