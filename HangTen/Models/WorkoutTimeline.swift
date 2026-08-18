@@ -110,7 +110,7 @@ enum WorkoutHoldCuePolicy {
               step.targets.count == 1,
               let target = step.targets.first,
               let hold,
-              BoardTargetResolver.resolveHoldIDs(for: target, on: board).contains(hold.id),
+              BoardTargetResolver.substituteHoldIDs(for: target, on: board).contains(hold.id),
               step.gripType != nil || step.fingerConfiguration != nil
         else {
             return nil
