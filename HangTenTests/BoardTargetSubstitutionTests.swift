@@ -98,6 +98,71 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["e1"])
     }
 
+    func testEdgeFeatureSubstitutesUnknownCapacityPocketsWhenBoardHasNoEdges() {
+        let board = board(holds: [
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.smallEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["pocket"])
+    }
+
+    func testEdgeKindSubstitutesPocketsWhenBoardHasNoEdges() {
+        let board = board(holds: [
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .kind(.edge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["pocket"])
+    }
+
+    func testEdgeFeatureCapacitySubstitutesOnlyMatchingPocketCapacity() {
+        let board = board(holds: [
+            hold(id: "two-finger", kind: .pocket, feature: .pocket, fingerCapacity: 2),
+            hold(id: "three-finger", kind: .pocket, feature: .pocket, fingerCapacity: 3)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.smallEdge, fingerCapacity: 2),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["two-finger"])
+    }
+
+    func testPinchDoesNotSubstitutePockets() {
+        let board = board(holds: [
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.mediumPinch),
+            on: board
+        )
+
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    @MainActor
+    func testBeastmaker1000SupportsGenericEdgeRoutineButNotUnsupportedREIPinchRoutine() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
+        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.methodRepeaters, on: board))
+        XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.reiHangboardSample, on: board))
+    }
+
     func testEmptyBoardReturnsEmpty() {
         let board = board(holds: [])
         let target = HoldTarget.feature(.smallEdge)
