@@ -274,6 +274,12 @@ final class AppStore: ObservableObject {
         }
     }
 
+    func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
+        plan.steps.flatMap(\.targets).contains { target in
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
+        }
+    }
+
     private func reloadCustomRoutines() {
         let definitions = customRoutineStore.routines
         var plans: [TrainingPlan] = []
