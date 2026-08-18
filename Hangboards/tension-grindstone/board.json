@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "tension-grindstone",
+  "manufacturer": "Tension Climbing",
+  "name": "Grindstone",
+  "subtitle": "Wooden training board with three rows of open-hand edge rails split by a center jug.",
+  "productURL": "https://tensionclimbing.com/products/grindstone",
+  "dimensions": "580 × 150 mm",
+  "aspectRatio": 1.7768331562167907,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    { "id": "edge-row1-left", "name": "Row 1 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.05, "y": 0.275, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row1-right", "name": "Row 1 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.59, "y": 0.275, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row2-left", "name": "Row 2 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.05, "y": 0.40, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row2-right", "name": "Row 2 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.59, "y": 0.40, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
+      { "frame": {"x": 0.435, "y": 0.415, "width": 0.13, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
+    ]},
+    { "id": "edge-row3-left", "name": "Row 3 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.05, "y": 0.525, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row3-right", "name": "Row 3 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.59, "y": 0.525, "width": 0.36, "height": 0.075}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]}
+  ]
+}

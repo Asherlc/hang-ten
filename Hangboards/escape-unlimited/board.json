@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "escape-unlimited",
+  "manufacturer": "Escape Climbing",
+  "name": "Unlimited",
+  "subtitle": "Wooden training board with three rows of open-hand edge rails.",
+  "productURL": "https://escapeclimbing.com/products/unlimited",
+  "dimensions": "600 × 300 mm",
+  "aspectRatio": 2.0,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    { "id": "edge-row1-left", "name": "Row 1 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.07, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-row1-right", "name": "Row 1 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.53, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-row2-left", "name": "Row 2 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.07, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-row2-right", "name": "Row 2 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.53, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-row3-left", "name": "Row 3 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.07, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-row3-right", "name": "Row 3 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.53, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]}
+  ]
+}

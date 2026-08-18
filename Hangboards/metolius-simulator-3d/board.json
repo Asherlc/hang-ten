@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "metolius-simulator-3d",
+  "manufacturer": "Metolius",
+  "name": "Simulator 3-D",
+  "subtitle": "Chevron-shaped molded training board with a center jug and angled hold wings.",
+  "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-3-d",
+  "dimensions": "34\" × 9\"",
+  "aspectRatio": 1.6553846153846155,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
+      { "frame": {"x": 0.40, "y": 0.19, "width": 0.20, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+    ]},
+    { "id": "edge-left-upper", "name": "Left wing upper row", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.06, "y": 0.32, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-right-upper", "name": "Right wing upper row", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.64, "y": 0.32, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-left-lower", "name": "Left wing lower row", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.06, "y": 0.46, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-right-lower", "name": "Right wing lower row", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.64, "y": 0.46, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "pocket-left-bottom", "name": "Left bottom pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.10, "y": 0.62, "width": 0.20, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "pocket-right-bottom", "name": "Right bottom pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.70, "y": 0.62, "width": 0.20, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]}
+  ]
+}
