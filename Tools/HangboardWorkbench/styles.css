@@ -28,6 +28,8 @@ button { color: inherit; }
 .tool-button { height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; background: #20231f; cursor: pointer; }
 .tool-button:hover { border-color: #555b50; background: #282b26; }
 .tool-button.accent { border-color: var(--accent); background: var(--accent); color: #21130f; font-weight: 750; }
+.tool-button.danger { border-color: var(--danger); color: var(--danger); }
+.tool-button.danger:hover { background: #3a1e21; }
 .tool-input, .tool-select { height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; background: #131512; color: var(--text); }
 .tool-input { width: 170px; }
 .tool-select { min-width: 170px; }

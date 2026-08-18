@@ -41,6 +41,7 @@
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
+    "delete-hold-button",
   ].map((id) => [id, document.getElementById(id)]));
 
   const boardOperations = createBoardOperationCoordinator({
@@ -741,6 +742,61 @@
   el["git-commit-button"].addEventListener("click", () => { void commitChanges(); });
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });
   el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
+
+  function handleKeyDown(event) {
+    const key = event.key;
+    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
+    const hold = selectedHold();
+    if (!hold) return;
+    event.preventDefault();
+    const step = event.shiftKey ? 10 : 1;
+    const dx = key === "ArrowRight" ? step : key === "ArrowLeft" ? -step : 0;
+    const dy = key === "ArrowDown" ? step : key === "ArrowUp" ? -step : 0;
+    let commands;
+    try { commands = parsePath(hold.displayPath); } catch { return; }
+    const originalPath = hold.displayPath;
+    const originalDirty = state.dirty;
+    for (const cmd of commands) {
+      if (cmd.type === "Z") continue;
+      for (const p of cmd.points) { p.x += dx; p.y += dy; }
+      for (const c of cmd.controls) { c.x += dx; c.y += dy; }
+    }
+    hold.displayPath = serializePath(commands);
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Hold nudged. Save when ready.");
+    } catch (error) {
+      hold.displayPath = originalPath;
+      state.dirty = originalDirty;
+      setValidation(error.message || "Contour is invalid.");
+      setStatus("Nudge reverted — contour is invalid.");
+    }
+    render();
+  }
+
+  document.addEventListener("keydown", handleKeyDown);
+
+  el["delete-hold-button"].addEventListener("click", () => {
+    const hold = selectedHold();
+    if (!hold) return;
+    const proceed = dialogs.confirm(`Delete hold "${hold.key}"?`);
+    if (!proceed) return;
+    const idx = state.document.regions.findIndex((r) => r.key === hold.key);
+    if (idx === -1) return;
+    state.document.regions.splice(idx, 1);
+    state.selectedKey = null;
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+    } catch (error) {
+      setValidation(error.message || "Document is invalid after deletion.");
+    }
+    setStatus("Hold deleted. Save when ready.");
+    render();
+  });
 
   void (async () => {
     await refreshAuthState();
