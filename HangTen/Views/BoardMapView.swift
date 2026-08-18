@@ -60,11 +60,13 @@ private struct PhysicalHoldVisual: View {
                 )
             }
         }
-        .contentShape(shape)
+        .contentShape(.interaction, shape)
+        .contentShape(.accessibility, shape)
         .onTapGesture {
             onTap?(hold)
         }
         .accessibilityLabel(hold.name)
+        .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
     }
 
@@ -79,23 +81,6 @@ private struct PhysicalHoldVisual: View {
         switch highlightMode {
         case .active: .holdActiveDeep
         case .preview: .restBlueDeep
-        }
-    }
-}
-
-struct BoardLegend: View {
-    var body: some View {
-        HStack(spacing: 12) {
-            ForEach(HoldKind.allCases) { kind in
-                HStack(spacing: 5) {
-                    Circle()
-                        .fill(kind.tint)
-                        .frame(width: 7, height: 7)
-                    Text(kind.label)
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
-            }
         }
     }
 }
