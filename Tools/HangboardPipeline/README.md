@@ -31,7 +31,9 @@ to the selected checkout, where they remain ordinary changes for normal Git
 review. If the selected folder is invalid or startup fails, the native window
 explains the problem and offers **Choose Another Checkout…** so you can retry.
 
-Remote hosting is not yet shipped; it remains a future deployment option.
+Remote hosting is available through the Workbench server's `--allow-remote`
+mode (see `Tools/HangboardWorkbench/README.md`), not through this packaged
+native app.
 
 The release is Developer ID signed and notarized, so it is accepted by
 Gatekeeper without a Finder override.
@@ -145,8 +147,6 @@ symlink-free candidates. Validate the direct-child inventory before publishing:
 scripts/hangboard-tools.sh packages validate --root Hangboards
 scripts/hangboard-tools.sh packages status --root Hangboards
 ```
-
-Start a persisted onboarding run from one local image or HTTP(S) source:
 
 For the complete guided local workflow, start the server from the repository
 root with its repository and transient-workspace defaults:
