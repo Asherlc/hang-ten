@@ -22,6 +22,17 @@
           <span class="save-state" id="save-state" aria-live="polite">No board selected</span>
           <button class="tool-button accent" id="save-button" type="button" disabled>Save</button>
         </div>
+        <div class="toolbar git-toolbar" aria-label="Repository tools">
+          <span class="eyebrow" id="git-auth-status"></span>
+          <span class="eyebrow" id="git-status">Repository status</span>
+          <select class="tool-select" id="git-branch-select" aria-label="Repository branch"></select>
+          <button class="tool-button" id="git-refresh-button" type="button">Refresh</button>
+          <button class="tool-button" id="git-switch-button" type="button">Switch</button>
+          <input class="tool-input" id="git-commit-message" type="text" aria-label="Commit message" placeholder="Commit message" />
+          <button class="tool-button" id="git-commit-button" type="button">Commit</button>
+          <button class="tool-button" id="git-push-button" type="button">Push</button>
+          <button class="tool-button accent" id="git-open-pr-button" type="button">Open PR</button>
+        </div>
       </header>
 
       <section class="workspace-grid">
@@ -42,12 +53,7 @@
               <span class="eyebrow">Board</span>
               <strong id="board-name">No board selected</strong>
             </div>
-            <div class="canvas-actions">
-              <span class="eyebrow">Image</span>
-              <span class="eyebrow">Holds</span>
-              <span class="eyebrow">Validation</span>
-              <span class="eyebrow">Save</span>
-            </div>
+
           </div>
           <div class="editor-views">
             <div class="canvas-viewport" id="canvas-viewport">
@@ -78,14 +84,14 @@
           <div class="inspector-empty" id="hold-empty">Select a hold to edit its closed contour.</div>
           <form class="inspector-form hidden" id="hold-form">
             <label>Hold key <input id="hold-key" type="text" readonly /></label>
-            <label>Closed contour <textarea id="hold-path" rows="8" spellcheck="false"></textarea></label>
-            <button class="tool-button" id="apply-hold-button" type="submit">Apply contour</button>
+            <button type="button" id="delete-hold-button" class="tool-button danger">Delete hold</button>
           </form>
         </aside>
       </section>
     </main>
     <script src="workbench-client.js"></script>
     <script src="workbench-controller.js"></script>
+    <script src="path-editor.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
