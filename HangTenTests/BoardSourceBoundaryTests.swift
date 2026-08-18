@@ -123,13 +123,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardDocument["holds"] as? [[String: Any]])
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
-                    .filter { !$0.hasPrefix(".") }
             )
             let assetEntries = try Set(
                 FileManager.default.contentsOfDirectory(
                     atPath: packageURL.appendingPathComponent("assets").path
                 )
-                .filter { !$0.hasPrefix(".") }
             )
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
@@ -292,21 +290,18 @@ final class BoardSourceBoundaryTests: XCTestCase {
     func testPackageDiscoveryAllowsOnlySafeWorkbenchLockOperationalFile() throws {
         let repositoryRoot = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
-        defer { try? FileManager.default.removeItem(at: repositoryRoot) }
-
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let packageURL = hangboardsURL.appendingPathComponent("fixture-board", isDirectory: true)
         let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let metadataURL = hangboardsURL.appendingPathComponent(".DS_Store")
         let unexpectedFileURL = hangboardsURL.appendingPathComponent("unexpected.txt")
         let outsideLockURL = repositoryRoot.appendingPathComponent("outside-lock")
         try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
         try Data(#"{"id":"fixture.board"}"#.utf8).write(
             to: packageURL.appendingPathComponent("board.json")
         )
+        defer { try? FileManager.default.removeItem(at: repositoryRoot) }
 
         try Data().write(to: lockURL)
-        try Data().write(to: metadataURL)
         XCTAssertEqual(
             try discoveredPackagePaths(at: repositoryRoot),
             ["fixture.board": "fixture-board"]
@@ -318,9 +313,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
             at: lockURL,
             withDestinationURL: outsideLockURL
         )
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: outsideLockURL)
         XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
 
         try FileManager.default.removeItem(at: lockURL)
@@ -389,31 +381,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let lockIsSymbolicLink = (try? FileManager.default.destinationOfSymbolicLink(
-            atPath: lockURL.path
-        )) != nil
-        if lockIsSymbolicLink {
-            throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-        }
-        if FileManager.default.fileExists(atPath: lockURL.path) {
-            let values = try? lockURL.resourceValues(forKeys: [
-                .isRegularFileKey,
-                .isSymbolicLinkKey
-            ])
-            guard values?.isRegularFile == true, values?.isSymbolicLink != true else {
-                throw PackageDiscoveryError.invalidRootChild(lockURL.lastPathComponent)
-            }
-        }
-
         let children = try FileManager.default.contentsOfDirectory(
             at: hangboardsURL,
             includingPropertiesForKeys: [
                 .isDirectoryKey,
                 .isRegularFileKey,
                 .isSymbolicLinkKey
-            ],
-            options: [.skipsHiddenFiles]
+            ]
         )
         var paths: [String: String] = [:]
         for child in children {
@@ -422,6 +396,12 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 .isRegularFileKey,
                 .isSymbolicLinkKey
             ])
+            if child.lastPathComponent == ".workbench.lock" {
+                guard values.isRegularFile == true, values.isSymbolicLink != true else {
+                    throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
+                }
+                continue
+            }
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }

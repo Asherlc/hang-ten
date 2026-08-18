@@ -26,7 +26,6 @@ from typing import Any, Iterator
 from urllib.parse import unquote, urlsplit
 
 from board_package import (
-    BoardNotAvailableError,
     BoardPackage,
     BoardPackageError,
     discover_packages,
@@ -276,17 +275,10 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             package = open_package(self.server.library_root, board_id)
             payload = _board_payload(package, include_document=True)
-        except BoardNotAvailableError:
-            self._send_json(
-                HTTPStatus.NOT_FOUND,
-                {"ok": False, "error": "board is not available"},
-            )
-            return
-        except BoardPackageError:
-            self._send_json(
-                HTTPStatus.BAD_REQUEST,
-                {"ok": False, "error": "could not load board"},
-            )
+        except BoardPackageError as error:
+            message = _safe_message(error, "could not load board")
+            status = HTTPStatus.NOT_FOUND if message == "board is not available" else HTTPStatus.BAD_REQUEST
+            self._send_json(status, {"ok": False, "error": message if status == HTTPStatus.NOT_FOUND else "could not load board"})
             return
         except OSError:
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "could not load board"})
@@ -446,11 +438,6 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             yield
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
-        except BoardNotAvailableError:
-            self._send_json(
-                HTTPStatus.NOT_FOUND,
-                {"ok": False, "error": "board is not available"},
-            )
         except BoardPackageError as error:
             self._send_json(
                 HTTPStatus.BAD_REQUEST,
@@ -790,11 +777,14 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 
 def validate_hang_ten_checkout(root: Path) -> Path:
     """Accept a checkout containing the direct Workbench and board library."""
-    resolved_root = _resolved_lexical_directory(
-        root,
-        unavailable_message="repository root must be a Hang Ten checkout",
-        symlink_message="repository root must be a Hang Ten checkout",
-    )
+    try:
+        resolved_root = _resolved_lexical_directory(
+            root,
+            unavailable_message="repository root must be a Hang Ten checkout",
+            symlink_message="repository root must be a Hang Ten checkout",
+        )
+    except EditorError:
+        raise EditorError("repository root must be a Hang Ten checkout")
     git_marker = resolved_root / ".git"
     hangboards = resolved_root / "Hangboards"
     workbench = resolved_root / "Tools" / "HangboardWorkbench"
