@@ -12,12 +12,12 @@ extension Color {
     static let hangWoodLight = Color(red: 0.925, green: 0.820, blue: 0.625)
     static let hangWoodDeep = Color(red: 0.250, green: 0.165, blue: 0.095)
     static let hangWoodShadow = Color(red: 0.420, green: 0.275, blue: 0.155)
+
     static let holdBlue = Color(red: 0.250, green: 0.545, blue: 0.785)
     static let holdOrange = Color(red: 0.900, green: 0.425, blue: 0.205)
     static let holdPurple = Color(red: 0.535, green: 0.380, blue: 0.740)
     static let holdRed = Color(red: 0.820, green: 0.300, blue: 0.260)
     static let holdTeal = Color(red: 0.170, green: 0.625, blue: 0.595)
-    static let holdHighlight = Color(red: 0.775, green: 0.950, blue: 0.420)
     static let holdActive = Color(red: 0.985, green: 0.275, blue: 0.105)
     static let holdActiveDeep = Color(red: 0.665, green: 0.105, blue: 0.055)
     static let warmUp = Color(red: 0.900, green: 0.590, blue: 0.230)
