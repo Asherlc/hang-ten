@@ -856,9 +856,15 @@ struct PlanDetailView: View {
         store.board(for: currentPlan)
     }
 
+    /// The plan's first step to actually target a hold, skipping any leading
+    /// conditioning/rest steps (e.g. warm-up pull-ups) that have no targets.
+    private var firstHoldStep: WorkoutStep? {
+        currentPlan.steps.first { !$0.targets.isEmpty }
+    }
+
     private var firstStepHoldIDs: Set<String> {
-        guard let firstStep = currentPlan.steps.first else { return [] }
-        return store.holdIDs(for: firstStep, on: board)
+        guard let firstHoldStep else { return [] }
+        return store.holdIDs(for: firstHoldStep, on: board)
     }
 
     private var firstStepHold: BoardHold? {
@@ -867,7 +873,7 @@ struct PlanDetailView: View {
 
     private var firstStepHoldCue: WorkoutHoldCue? {
         WorkoutHoldCuePolicy.resolve(
-            step: currentPlan.steps.first,
+            step: firstHoldStep,
             hold: firstStepHold,
             on: board
         )
