@@ -518,6 +518,47 @@ def test_git_checkout_switches_branch(tmp_path: Path) -> None:
     }
 
 
+def test_git_checkout_creates_and_switches_to_a_new_branch(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "feature", "create": True},
+        )
+
+    assert status == 200
+    assert payload == {
+        "ok": True,
+        "branch": "feature",
+    }
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=checkout,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout.strip()
+    assert branch == "feature"
+
+
+def test_git_checkout_create_rejects_an_existing_branch_name(tmp_path: Path) -> None:
+    checkout = _git_checkout(tmp_path)
+
+    with running_server(checkout / "Hangboards") as base:
+        status, payload = request_json(
+            base,
+            "POST",
+            "/api/git/checkout",
+            {"branch": "main", "create": True},
+        )
+
+    assert status == 400
+    assert payload["ok"] is False
+
+
 def test_git_commit_refuses_when_nothing_to_commit(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 

@@ -40,6 +40,7 @@
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
+    "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
     "delete-hold-button",
   ].map((id) => [id, document.getElementById(id)]));
@@ -103,6 +104,8 @@
     el["git-refresh-button"].disabled = isBusy();
     el["git-branch-select"].disabled = isBusy() || state.branches.length === 0;
     el["git-switch-button"].disabled = isBusy() || !state.currentBranch || !el["git-branch-select"].value || el["git-branch-select"].value === state.currentBranch;
+    el["git-new-branch-name"].disabled = isBusy();
+    el["git-new-branch-button"].disabled = isBusy() || !el["git-new-branch-name"].value.trim();
     el["git-commit-message"].disabled = isBusy();
     el["git-commit-button"].disabled = isBusy() || !state.currentBranch;
     el["git-push-button"].disabled = isBusy() || !state.currentBranch;
@@ -656,6 +659,47 @@
     });
   }
 
+  async function createBranch() {
+    const branchName = el["git-new-branch-name"].value.trim();
+    if (!branchName || isBusy()) return;
+    await gitOperations.perform(async () => {
+      if (state.dirty) {
+        const proceed = dialogs.confirm("You have unsaved hold edits. Creating a branch will keep those edits in memory only. Continue?");
+        if (!proceed) return;
+      }
+      try {
+        await client.createBranch(branchName);
+      } catch (error) {
+        setValidation(error.message || "Could not create branch.");
+        setStatus("Could not create branch.");
+        return;
+      }
+      el["git-new-branch-name"].value = "";
+      state.board = null;
+      state.document = null;
+      state.image = null;
+      state.selectedKey = null;
+      state.dirty = false;
+      const gitStateRefreshed = await refreshGitState();
+      if (gitStateRefreshed) {
+        setValidation("");
+        setStatus(`Created and switched to ${branchName}.`);
+      } else {
+        setStatus(`Created ${branchName}. Repository status unavailable.`);
+      }
+      try {
+        await boardOperations.perform(async () => {
+          state.boards = await client.listBoards();
+        });
+      } catch (error) {
+        state.boards = [];
+        setValidation(error.message || "Could not reload boards for the new branch.");
+        setStatus(`Created ${branchName}. Could not reload boards.`);
+      }
+      render();
+    });
+  }
+
   async function commitChanges() {
     const message = el["git-commit-message"].value.trim();
     if (!message) {
@@ -739,6 +783,8 @@
   });
   el["git-branch-select"].addEventListener("change", () => { render(); });
   el["git-switch-button"].addEventListener("click", () => { void switchBranch(); });
+  el["git-new-branch-name"].addEventListener("input", () => { render(); });
+  el["git-new-branch-button"].addEventListener("click", () => { void createBranch(); });
   el["git-commit-button"].addEventListener("click", () => { void commitChanges(); });
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });
   el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
