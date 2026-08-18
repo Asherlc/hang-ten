@@ -4,6 +4,11 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
   push:
     branches:
       - main
@@ -25,6 +30,10 @@ concurrency:
 jobs:
   changes:
     name: Detect changed languages
+    # Closing (or merging) a pull request only needs to enter the
+    # concurrency group above so it cancels any stale runs still queued or
+    # in progress for this ref; it does no other work.
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     outputs:
       swift: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || steps.filter.outputs.swift == 'true' }}
@@ -73,6 +82,7 @@ jobs:
 
   analyze-actions:
     name: Analyze (GitHub Actions)
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -197,7 +207,7 @@ jobs:
   codeql-gate:
     name: CodeQL gate
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    if: always() && github.event.action != 'closed'
     needs: [changes, analyze-actions, analyze-swift, analyze-python, analyze-javascript]
 
     steps:
@@ -210,8 +220,12 @@ jobs:
           JAVASCRIPT_RESULT: ${{ needs.analyze-javascript.result }}
         run: |
           set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" || "$ACTIONS_RESULT" == "cancelled" ]]; then
+            echo "CodeQL analysis was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
           test "$CHANGES_RESULT" = success
           test "$ACTIONS_RESULT" = success
           for result in "$SWIFT_RESULT" "$PYTHON_RESULT" "$JAVASCRIPT_RESULT"; do
-            test "$result" = success || test "$result" = skipped
+            test "$result" = success || test "$result" = skipped || test "$result" = cancelled
           done

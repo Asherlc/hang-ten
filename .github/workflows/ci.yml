@@ -11,6 +11,7 @@ on:
       - reopened
       - ready_for_review
       - edited
+      - closed
   push:
     branches:
       - main
@@ -20,12 +21,22 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action || github.event_name }}
+  # A PR-edited event (title/description only, no new commits) must not
+  # cancel a real code build still running for that ref, so it gets its own
+  # suffix. Every other trigger -- including close/merge -- shares one
+  # group per ref so a new commit or a closed PR cancels the stale run.
+  group: >-
+    ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action ==
+    'edited' && 'edited' || 'code' }}
   cancel-in-progress: true
 
 jobs:
   changes:
     name: Classify changed components
+    # Closing (or merging) a pull request only needs to enter the
+    # concurrency group above so it cancels any stale runs still queued or
+    # in progress for this ref; it does no other work.
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -227,7 +238,7 @@ jobs:
     needs:
       - changes
       - build-ios
-    if: always()
+    if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Report required build status
@@ -237,6 +248,10 @@ jobs:
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
+            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
             exit 1
