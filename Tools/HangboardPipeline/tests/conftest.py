@@ -1,43 +1,43 @@
 from __future__ import annotations
 
-import importlib.util
-import json
+import io
 import sys
-from io import BytesIO
 from pathlib import Path
+from types import ModuleType
+from typing import Any
 
 from PIL import Image
 
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
-
-
-def _primary_png_bytes() -> bytes:
-    output = BytesIO()
-    Image.new("RGB", (512, 256), color=(180, 140, 90)).save(output, format="PNG")
-    return output.getvalue()
+_SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 
 
-PRIMARY_PNG_BYTES = _primary_png_bytes()
+def load_board_catalog_module() -> ModuleType:
+    """Return the real ``hangboard_vectorizer.board_catalog`` module."""
+    if str(_SRC_ROOT) not in sys.path:
+        sys.path.insert(0, str(_SRC_ROOT))
+    from hangboard_vectorizer import board_catalog
+
+    return board_catalog
 
 
-def load_board_catalog_module():
-    module_path = REPO_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer" / "board_catalog.py"
-    spec = importlib.util.spec_from_file_location("board_catalog_under_test", module_path)
-    if spec is None or spec.loader is None:  # pragma: no cover - defensive
-        raise AssertionError("unable to load hangboard_vectorizer.board_catalog")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+def _encode_png(width: int, height: int) -> bytes:
+    buffer = io.BytesIO()
+    Image.new("RGB", (width, height), color=(255, 255, 255)).save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+PRIMARY_PNG_WIDTH = 40
+PRIMARY_PNG_HEIGHT = 20
+PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT)
+ALTERNATE_PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH + 2, PRIMARY_PNG_HEIGHT + 2)
 
 
 def board_document(
-    *,
     board_id: str = "fixture.board",
+    *,
     manufacturer: str = "Fixture Maker",
     name: str = "Fixture Board",
-) -> dict[str, object]:
+) -> dict[str, Any]:
     return {
         "schemaVersion": 1,
         "id": board_id,
@@ -45,8 +45,8 @@ def board_document(
         "name": name,
         "subtitle": "A physical fixture board.",
         "productURL": f"https://example.com/{board_id}",
-        "dimensions": "20 × 10 cm",
-        "aspectRatio": 2,
+        "dimensions": "20 x 10 cm",
+        "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
         "presentation": {"assetPath": "assets/primary.png"},
         "holds": [
             {
@@ -55,17 +55,8 @@ def board_document(
                 "kind": "jug",
                 "geometry": [
                     {
-                        "frame": {
-                            "x": 0.1,
-                            "y": 0.2,
-                            "width": 0.2,
-                            "height": 0.3,
-                        },
-                        "shape": {
-                            "type": "roundedRect",
-                            "cornerRadiusFraction": 0.2,
-                        },
-                        "treatment": {"type": "surface"},
+                        "frame": {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.4},
+                        "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
                     }
                 ],
             }
@@ -80,23 +71,19 @@ def write_board_package(
     manufacturer: str = "Fixture Maker",
     name: str = "Fixture Board",
 ) -> Path:
+    """Write a complete direct-child board package at *root* and return it."""
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
+    document = board_document(board_id, manufacturer=manufacturer, name=name)
     (root / "board.json").write_text(
-        json.dumps(
-            board_document(
-                board_id=board_id,
-                manufacturer=manufacturer,
-                name=name,
-            )
-        ),
-        encoding="utf-8",
+        __import__("json").dumps(document, indent=2) + "\n", encoding="utf-8"
     )
     return root
 
 
 def write_primary_only_draft(root: Path) -> Path:
+    """Write a primary-only migration draft at *root* and return it."""
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
