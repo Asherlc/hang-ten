@@ -71,6 +71,15 @@ class NormalizedFrame:
         return cls(x, y, width, height)
 
 
+# A control point only needs to be finite, but the app quantizes flattened
+# contour coordinates into an Int64 by scaling by 1e12 (see
+# BoardPackageStore.swift's QuantizedBoardPoint), which traps for values
+# outside Int64's range (roughly +/-9.2e6 once scaled back down). Bounding
+# control points well inside that margin keeps a malformed board.json from
+# being accepted here only to crash the app later.
+_MAX_CONTROL_COORDINATE = 1_000_000.0
+
+
 @dataclass(frozen=True)
 class PathCommand:
     command: str
@@ -85,8 +94,8 @@ class PathCommand:
             raise ValueError(f"{label} must be a point")
         if len(value) != 2:
             raise ValueError(f"{label} must contain exactly two numbers")
-        minimum = 0 if constrain else None
-        maximum = 1 if constrain else None
+        minimum = 0 if constrain else -_MAX_CONTROL_COORDINATE
+        maximum = 1 if constrain else _MAX_CONTROL_COORDINATE
         return (
             _float(value[0], label=f"{label}[0]", minimum=minimum, maximum=maximum),
             _float(value[1], label=f"{label}[1]", minimum=minimum, maximum=maximum),

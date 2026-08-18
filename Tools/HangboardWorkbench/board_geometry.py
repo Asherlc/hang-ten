@@ -13,6 +13,14 @@ _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
 _TOKEN = re.compile(r"[MLQCZ]|[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
 _EPSILON = 1e-9
 
+# The app quantizes flattened contour coordinates into an Int64 by scaling
+# by 1e12 (see BoardPackageStore.swift's QuantizedBoardPoint), which traps
+# outside Int64's range (roughly +/-9.2e6 once scaled back down). A control
+# point only needs to be finite, but a pathologically thin declared frame can
+# still blow up its frame-local coordinate here, so reject it well inside
+# that margin before it reaches board.json.
+_MAX_CONTROL_COORDINATE = 1_000_000.0
+
 
 class GeometryError(ValueError):
     """Raised when hold geometry is not one safe contiguous outline."""
@@ -256,10 +264,21 @@ def shape_for_path(path: ClosedPath, width: int, height: int) -> tuple[Normalize
         if command in {"M", "L"}:
             commands.append({"command": "move" if command == "M" else "line", "to": points[0]})
         elif command == "Q":
-            commands.append({"command": "quad", "control": points[0], "to": points[1]})
+            commands.append({"command": "quad", "control": _bounded_control(points[0]), "to": points[1]})
         else:
-            commands.append({"command": "curve", "control1": points[0], "control2": points[1], "to": points[2]})
+            commands.append({
+                "command": "curve",
+                "control1": _bounded_control(points[0]),
+                "control2": _bounded_control(points[1]),
+                "to": points[2],
+            })
     return frame, {"type": "path", "commands": commands}
+
+
+def _bounded_control(point: list[float]) -> list[float]:
+    if any(abs(value) > _MAX_CONTROL_COORDINATE for value in point):
+        raise GeometryError("shape control point is too far outside its frame")
+    return point
 
 
 def _tokenize(raw: str, label: str) -> list[str]:
@@ -393,9 +412,13 @@ def _shape_commands(frame: NormalizedFrame, raw_commands: list[Any], width: int,
             local_y = _finite_number(point[1], f"{label}.shape.commands[{index}].{key}[1]")
             # Only a point the curve actually passes through ("to") must lie
             # within the frame; a Bezier control point only shapes the curve
-            # between two such points and routinely falls outside it.
-            if key == "to" and (not 0 <= local_x <= 1 or not 0 <= local_y <= 1):
-                raise GeometryError(f"{label}.shape commands must stay inside their frame")
+            # between two such points and routinely falls outside it, but it
+            # still must stay within the app's Int64 quantization range.
+            if key == "to":
+                if not 0 <= local_x <= 1 or not 0 <= local_y <= 1:
+                    raise GeometryError(f"{label}.shape commands must stay inside their frame")
+            elif abs(local_x) > _MAX_CONTROL_COORDINATE or abs(local_y) > _MAX_CONTROL_COORDINATE:
+                raise GeometryError(f"{label}.shape control point is too far outside its frame")
             values.extend(((frame.x + local_x * frame.width) * width, (frame.y + local_y * frame.height) * height))
         commands.append((command, tuple(values)))
     return commands

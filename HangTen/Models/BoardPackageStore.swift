@@ -1080,9 +1080,15 @@ extension Array where Element == BoardPathCommand {
         guard points.count >= 4, points.first == points.last else {
             throw BoardGeometryAdaptationError.invalid("path must be a closed contour")
         }
-        let uniquePoints = Set(points.dropLast().map { point in
-            QuantizedBoardPoint(point)
-        })
+        let quantizedPoints = try points.dropLast().map { point -> QuantizedBoardPoint in
+            guard let quantized = QuantizedBoardPoint(point) else {
+                throw BoardGeometryAdaptationError.invalid(
+                    "path coordinates are too large to represent"
+                )
+            }
+            return quantized
+        }
+        let uniquePoints = Set(quantizedPoints)
         guard uniquePoints.count >= 3 else {
             throw BoardGeometryAdaptationError.invalid(
                 "path must contain at least three unique points"
@@ -1233,9 +1239,25 @@ private struct QuantizedBoardPoint: Hashable {
     let x: Int64
     let y: Int64
 
-    init(_ point: CGPoint) {
-        x = Int64((Double(point.x) * 1_000_000_000_000).rounded())
-        y = Int64((Double(point.y) * 1_000_000_000_000).rounded())
+    init?(_ point: CGPoint) {
+        guard let x = Self.quantized(point.x), let y = Self.quantized(point.y) else {
+            return nil
+        }
+        self.x = x
+        self.y = y
+    }
+
+    /// `Int64(Double)` traps for values outside its representable range, and a
+    /// Bezier control point (unlike a "to" point) is only required to be
+    /// finite, so an oversized-but-finite control can flatten into a
+    /// contour point that would otherwise trap here instead of failing
+    /// validation.
+    private static func quantized(_ value: CGFloat) -> Int64? {
+        let scaled = (Double(value) * 1_000_000_000_000).rounded()
+        guard scaled.isFinite, scaled >= -0x1p63, scaled < 0x1p63 else {
+            return nil
+        }
+        return Int64(scaled)
     }
 }
 

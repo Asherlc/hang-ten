@@ -115,6 +115,35 @@ def test_round_trips_two_cubic_segments_whose_controls_fall_outside_the_frame() 
     assert display_path_for_shape(frame.to_json(), shape, 100, 100, label="hold").data == path.data
 
 
+def test_rejects_a_control_point_too_far_outside_its_frame() -> None:
+    # A control point only needs to be finite, but the app quantizes
+    # flattened contour coordinates into an Int64 by scaling by 1e12, which
+    # traps outside Int64's range. Reject an oversized-but-finite control
+    # here instead of writing a board.json that would crash the app later.
+    with pytest.raises(GeometryError, match="too far outside its frame"):
+        display_path_for_shape(
+            {"x": 0, "y": 0, "width": 1, "height": 1},
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "line", "to": [1, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [2_000_000, 0.5],
+                        "control2": [0.5, 0.5],
+                        "to": [1, 1],
+                    },
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+            100,
+            100,
+            label="hold",
+        )
+
+
 def test_parses_a_pill_shaped_rounded_rectangle() -> None:
     path = display_path_for_shape(
         {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.8},

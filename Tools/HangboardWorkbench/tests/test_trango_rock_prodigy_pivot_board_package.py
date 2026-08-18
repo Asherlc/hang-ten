@@ -66,12 +66,19 @@ def _all_keys(value: object) -> set[str]:
     return set()
 
 
-def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geometry() -> None:
-    package = board_package.load_board_package(PACKAGE_ROOT)
+@pytest.fixture(scope="module")
+def package() -> board_package.BoardPackage:
+    return board_package.load_board_package(PACKAGE_ROOT)
+
+
+@pytest.fixture(scope="module")
+def pixel_size() -> tuple[int, int]:
+    return board_package._png_dimensions(PACKAGE_ROOT / "assets" / "primary.png")
+
+
+def test_package_contents_and_metadata(package: board_package.BoardPackage, pixel_size: tuple[int, int]) -> None:
     board = package.board
-    holds = {hold["id"]: hold for hold in board["holds"]}
-    image_path = PACKAGE_ROOT / "assets" / "primary.png"
-    width, height = board_package._png_dimensions(image_path)
+    width, height = pixel_size
 
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"assets", "board.json"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
@@ -82,6 +89,11 @@ def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geom
     assert board["presentation"] == {"assetPath": "assets/primary.png"}
     assert (width, height) == EXPECTED_PIXEL_SIZE
     assert board["aspectRatio"] == width / height
+
+
+def test_hold_inventory_and_kinds(package: board_package.BoardPackage) -> None:
+    board = package.board
+
     assert board_package._HOLD_KINDS == ALLOWED_KINDS
     assert all(hold["kind"] in ALLOWED_KINDS for hold in board["holds"])
     assert Counter(hold["kind"] for hold in board["holds"]) == EXPECTED_KIND_COUNTS
@@ -115,7 +127,12 @@ def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geom
         "lower-sloper-right": 2,
     }
 
-    for hold in board["holds"]:
+
+def test_piece_geometry_fills_declared_frames(
+    package: board_package.BoardPackage, pixel_size: tuple[int, int]
+) -> None:
+    width, height = pixel_size
+    for hold in package.board["holds"]:
         assert {"sizeMillimeters", "gripType", "features"}.isdisjoint(hold)
         for piece_index, piece in enumerate(hold["geometry"]):
             label = f"{hold['id']}.geometry[{piece_index}]"
@@ -138,6 +155,9 @@ def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geom
             assert path.commands[-1][0] == "Z"
             assert path.data.endswith(" Z")
 
+
+def test_left_and_right_geometry_are_mirrored(package: board_package.BoardPackage) -> None:
+    holds = {hold["id"]: hold for hold in package.board["holds"]}
     for left_id, right_id in MIRRORED_PAIRS:
         left_geometry = holds[left_id]["geometry"]
         right_geometry = holds[right_id]["geometry"]
@@ -164,5 +184,7 @@ def test_trango_rock_prodigy_pivot_package_preserves_reviewed_inventory_and_geom
                     assert right_x == pytest.approx(1 - left_x, abs=1e-12)
                     assert right_y == pytest.approx(left_y, abs=1e-12)
 
+
+def test_board_document_omits_forbidden_keys() -> None:
     raw = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
     assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(raw))

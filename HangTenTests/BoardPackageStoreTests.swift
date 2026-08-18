@@ -421,6 +421,41 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    /// A Bezier control point only needs to be finite, but flattening it
+    /// still quantizes into an Int64 (`QuantizedBoardPoint`) by scaling by
+    /// 1e12, which traps for values outside Int64's range. An oversized
+    /// finite control must fail validation instead of crashing the app.
+    func testStoreRejectsControlPointsTooLargeToQuantize() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = [
+                    "type": "path",
+                    "commands": [
+                        ["command": "move", "to": [0, 0]],
+                        ["command": "line", "to": [1, 0]],
+                        ["command": "curve", "control1": [100_000_000, 0.5], "control2": [0.5, 0.5], "to": [1, 1]],
+                        ["command": "line", "to": [0, 1]],
+                        ["command": "close"]
+                    ]
+                ]
+                holds[0]["geometry"] = geometry
+                $0["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("too large to represent"), reason)
+        }
+    }
+
     func testStoreRejectsUnknownKeysAtBoardHoldAndGeometryRoots() throws {
         for location in ["board", "hold", "geometry"] {
             let fixture = try makeFixtureBundle { hangboardsURL in
