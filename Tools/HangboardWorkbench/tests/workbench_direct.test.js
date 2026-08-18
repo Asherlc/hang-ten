@@ -91,12 +91,21 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
+    "delete-hold-button",
   ];
   const elements = {};
   const document = {
     getElementById(id) { return elements[id]; },
     createElement(tagName) { return new FakeElement(tagName, document); },
     createElementNS(_namespace, tagName) { return new FakeElement(tagName, document); },
+    listeners: new Map(),
+    addEventListener(name, listener) {
+      if (!this.listeners.has(name)) this.listeners.set(name, []);
+      this.listeners.get(name).push(listener);
+    },
+    dispatchEvent(event) {
+      for (const listener of this.listeners.get(event.type) || []) listener(event);
+    },
   };
   for (const id of ids) elements[id] = new FakeElement("div", document);
   const context = {
@@ -120,7 +129,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
   };
   context.globalThis = context;
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "app.js"), "utf8"), context);
-  return { elements };
+  return { elements, document };
 }
 
 test("the browser client lists and opens direct boards", async () => {
@@ -600,6 +609,65 @@ test("opening a pull request sends the prompted title and body", async () => {
   assert.equal(requests[0].title, "My title");
   assert.equal(requests[0].body, "My body");
   assert.equal(requests[0].base, "main");
+});
+
+test("arrow keys nudge the selected hold by 1px and 10px with shift", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [{ key: "a", displayPath: "M 10 10 L 20 10 L 20 20 Z" }] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+
+  app.document.dispatchEvent({ key: "ArrowRight", shiftKey: false, type: "keydown", preventDefault() {} });
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 11 10 L 21 10 L 21 20 Z");
+
+  app.document.dispatchEvent({ key: "ArrowRight", shiftKey: true, type: "keydown", preventDefault() {} });
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 21 10 L 31 10 L 31 20 Z");
+});
+
+test("the delete button removes the selected hold from the document", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { key: "a", displayPath: "M 10 10 L 20 10 L 20 20 Z" },
+      { key: "b", displayPath: "M 30 10 L 40 10 L 40 20 Z" },
+    ] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+    dialogs: { confirm: () => true, prompt: () => { throw new Error("prompt should not be called"); } },
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+
+  app.elements["delete-hold-button"].click();
+  assert.equal(app.elements["hold-overlay"].children.length, 1);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+  assert.equal(app.elements["hold-heading"].textContent, "No selection");
 });
 
 test("browser source contains only direct board vocabulary", () => {
