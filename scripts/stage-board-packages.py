@@ -137,7 +137,13 @@ def _replace_destination(staging: Path, destination: Path) -> None:
             os.replace(backup, destination)
         raise
     if replaced_existing_destination:
-        shutil.rmtree(backup)
+        # Installing the staged directory is the commit point. A failed
+        # best-effort cleanup must not undo or hide the committed destination;
+        # the backup remains recoverable alongside it.
+        try:
+            shutil.rmtree(backup)
+        except OSError:
+            pass
 
 
 def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
