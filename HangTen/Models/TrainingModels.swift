@@ -12,6 +12,119 @@ struct HoldFrame: Hashable {
     }
 }
 
+/// One independently shaped contact surface belonging to a physical hold.
+struct BoardHoldPiece: Identifiable, Hashable {
+    let id: String
+    let holdID: String
+    let frame: CGRect
+    let shape: BoardShape
+    let treatment: BoardHoldTreatment
+
+    func rect(in boardRect: CGRect) -> CGRect {
+        CGRect(
+            x: boardRect.minX + boardRect.width * frame.minX,
+            y: boardRect.minY + boardRect.height * frame.minY,
+            width: boardRect.width * frame.width,
+            height: boardRect.height * frame.height
+        )
+    }
+
+    func path(in boardRect: CGRect) -> Path {
+        shape.path(in: rect(in: boardRect))
+    }
+}
+
+/// The one path source used for normal contact, highlighting, and hit testing.
+struct BoardHoldPathShape: Shape {
+    let pieces: [BoardHoldPiece]
+
+    func path(in rect: CGRect) -> Path {
+        pieces.reduce(into: Path()) { path, piece in
+            path.addPath(piece.path(in: rect))
+        }
+    }
+}
+
+enum BoardHoldTreatment: Hashable {
+    case recess(BoardRecessProfile)
+    case shelf(BoardShelfProfile)
+    case surface
+}
+
+struct BoardRecessProfile: Hashable {
+    let rimInsetFraction: CGFloat
+    let depth: BoardRecessDepth
+}
+
+enum BoardRecessDepth: Hashable {
+    case deep
+    case shallow
+}
+
+struct BoardShelfProfile: Hashable {
+    let rimInsetFraction: CGFloat
+}
+
+enum BoardShape: Hashable {
+    case roundedRect(cornerRadiusFraction: CGFloat)
+    case path(BoardNormalizedPath)
+
+    func path(in rect: CGRect) -> Path {
+        switch self {
+        case .roundedRect(let fraction):
+            let radius = min(rect.width, rect.height) * fraction
+            return Path(
+                roundedRect: rect,
+                cornerSize: CGSize(width: radius, height: radius)
+            )
+        case .path(let normalizedPath):
+            return normalizedPath.path(in: rect)
+        }
+    }
+}
+
+struct BoardNormalizedPath: Hashable {
+    let commands: [BoardPathCommand]
+
+    func path(in rect: CGRect) -> Path {
+        func point(_ normalized: CGPoint) -> CGPoint {
+            CGPoint(
+                x: rect.minX + rect.width * normalized.x,
+                y: rect.minY + rect.height * normalized.y
+            )
+        }
+
+        var result = Path()
+        for command in commands {
+            switch command {
+            case .move(let destination):
+                result.move(to: point(destination))
+            case .line(let destination):
+                result.addLine(to: point(destination))
+            case let .quad(destination, control):
+                result.addQuadCurve(to: point(destination), control: point(control))
+            case let .curve(destination, control1, control2):
+                result.addCurve(
+                    to: point(destination),
+                    control1: point(control1),
+                    control2: point(control2)
+                )
+            case .close:
+                result.closeSubpath()
+            }
+        }
+        return result
+    }
+}
+
+enum BoardPathCommand: Hashable {
+    case move(CGPoint)
+    case line(CGPoint)
+    case quad(to: CGPoint, control: CGPoint)
+    case curve(to: CGPoint, control1: CGPoint, control2: CGPoint)
+    case close
+}
+
 enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case jug
     case edge
@@ -203,21 +316,6 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
         }
     }
 
-    var activeFingers: Set<FingerSlot> {
-        switch self {
-        case .openHand, .halfCrimp, .fullCrimp, .fourFingerPocket, .sloper:
-            Set(FingerSlot.allCases)
-        case .threeFingerPocket:
-            [.index, .middle, .ring]
-        case .twoFingerPocket:
-            [.middle, .ring]
-        }
-    }
-
-    var thumbEngaged: Bool {
-        self == .fullCrimp
-    }
-
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let rawValue = try container.decode(String.self)
@@ -367,9 +465,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.photoAssetName = photoAssetName
     }
 
-    var displayName: String {
-        "\(manufacturer) \(name)"
-    }
+
 }
 
 struct HoldTarget: Hashable {
@@ -561,10 +657,6 @@ struct WorkoutStep: Identifiable, Hashable {
         duration > activeDuration
     }
 
-    var restDuration: TimeInterval {
-        max(0, duration - activeDuration)
-    }
-
     var durationLabel: String {
         let seconds = Int(duration)
         let minutes = seconds / 60
@@ -577,6 +669,10 @@ struct WorkoutStep: Identifiable, Hashable {
             return "\(minutes)m"
         }
         return "\(remainder)s"
+    }
+
+    var restDuration: TimeInterval {
+        max(0, duration - activeDuration)
     }
 
     func withNumber(_ number: Int) -> WorkoutStep {
@@ -693,9 +789,16 @@ enum BoardCatalog {
 
     static let all = packageStore.boards
 
+    /// Generic plans (`boardID: nil`) are authored against the same board as
+    /// the legacy semantic-hold mappings. Crashes rather than falling back to
+    /// an unrelated board, since silently resolving generic targets against
+    /// the wrong board would misrepresent every hold callout in those plans.
     static let defaultBoard: TrainingBoard = {
-        guard let board = all.first else {
-            fatalError("The bundled board catalog contains no boards.")
+        guard let boardID = LegacyPlanSeedBoardMappings.all.first?.boardID else {
+            fatalError("LegacyPlanSeedBoardMappings.all is empty.")
+        }
+        guard let board = packageStore.board(id: boardID) else {
+            fatalError("The bundled board catalog is missing the legacy default board '\(boardID)'.")
         }
         return board
     }()
