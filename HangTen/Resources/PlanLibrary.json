@@ -12708,7 +12708,6 @@
       "id" : "metolius.generic-ten-minute.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12740,7 +12739,6 @@
       "id" : "metolius.generic-ten-minute.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12772,7 +12770,6 @@
       "id" : "metolius.generic-ten-minute.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12805,7 +12802,6 @@
       "id" : "research.max-hangs",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12837,7 +12833,6 @@
       "id" : "research.force-feedback-f80",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12869,7 +12864,6 @@
       "id" : "research.force-feedback-f100",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12901,7 +12895,6 @@
       "id" : "research.eva-int-hangs",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12933,7 +12926,6 @@
       "id" : "research.seven-three-repeaters",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12965,7 +12957,6 @@
       "id" : "research.abrahangs",
       "metadata" : {
         "category" : "research",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -12997,7 +12988,6 @@
       "id" : "coach.horst-seven-fifty-three",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13029,7 +13019,6 @@
       "id" : "coach.bechtel-three-six-nine",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13061,7 +13050,6 @@
       "id" : "coach.density-hangs",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13093,7 +13081,6 @@
       "id" : "device.zlagboard-sixty-sixty",
       "metadata" : {
         "category" : "device",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13124,7 +13111,6 @@
       "id" : "lattice.lite-home-adaptations",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13156,7 +13142,6 @@
       "id" : "hoopers-beta.introductory-home-hangboard",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13188,7 +13173,6 @@
       "id" : "method.intermediate-hangboarding.repeaters",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13220,7 +13204,6 @@
       "id" : "method.intermediate-hangboarding.emom",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13252,7 +13235,6 @@
       "id" : "lattice.beginner-climbers-training-guide",
       "metadata" : {
         "category" : "coach",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
@@ -13284,7 +13266,6 @@
       "id" : "rei.hangboard-sample-workout",
       "metadata" : {
         "category" : "retailer",
-        "disclaimer" : "Warm up thoroughly, keep the board secure, and stop if you feel pain.",
         "equipment" : [
           "hangboard"
         ],
