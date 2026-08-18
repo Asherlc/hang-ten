@@ -63,6 +63,7 @@
 		AA0000000000000000000046 /* PlanStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000046 /* PlanStorageTests.swift */; };
 		AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000047 /* WorkoutActivityRecording.swift */; };
 		AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */; };
+		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
@@ -157,6 +158,7 @@
 		BB0000000000000000000046 /* PlanStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorageTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000047 /* WorkoutActivityRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecording.swift; sourceTree = "<group>"; };
 		BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecordingTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
@@ -343,6 +345,7 @@
 				BB0000000000000000000045 /* WorkoutSegmentTests.swift */,
 				BB0000000000000000000046 /* PlanStorageTests.swift */,
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
+				BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
 				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
 				BB0000000000000000000055 /* WorkoutHistoryTests.swift */,
@@ -618,6 +621,7 @@
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
+				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

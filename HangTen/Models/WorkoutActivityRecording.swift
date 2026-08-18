@@ -3,13 +3,15 @@ import Foundation
 extension HoldTarget {
     static func feature(
         _ feature: HoldFeature,
-        fallbacks: [HoldFeature]
+        fallbacks: [HoldFeature],
+        fingerCapacity: Int? = nil
     ) -> HoldTarget {
         HoldTarget(
             holdIDs: [],
             kind: nil,
             feature: feature,
-            fallbackFeatures: fallbacks
+            fallbackFeatures: fallbacks,
+            fingerCapacity: fingerCapacity
         )
     }
 }
@@ -85,10 +87,10 @@ internal enum BoardTargetResolver {
             return target.holdIDs.filter(available.contains)
         }
         if let feature = target.feature {
-            let exact = board.holds.filter { $0.features?.contains(feature) == true }
+            let exact = matching(feature, fingerCapacity: target.fingerCapacity, on: board)
             if !exact.isEmpty { return exact.map(\.id) }
             for fallback in target.fallbackFeatures {
-                let matches = board.holds.filter { $0.features?.contains(fallback) == true }
+                let matches = matching(fallback, fingerCapacity: target.fingerCapacity, on: board)
                 if !matches.isEmpty { return matches.map(\.id) }
             }
             return []
@@ -100,6 +102,68 @@ internal enum BoardTargetResolver {
     static func resolveHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
         let ids = Set(resolveHoldIDs(for: target, on: board))
         return board.holds.filter { ids.contains($0.id) }
+    }
+
+    static func substituteHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+        let primary = resolveHoldIDs(for: target, on: board)
+        if !primary.isEmpty { return primary }
+        return closestMatch(for: target, on: board)
+    }
+
+    static func substituteHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
+        let ids = Set(substituteHoldIDs(for: target, on: board))
+        return board.holds.filter { ids.contains($0.id) }
+    }
+
+    /// A target's feature must match exactly; its finger count (when
+    /// specified) must too, since `.pocket` alone no longer implies a count.
+    private static func matching(_ feature: HoldFeature, fingerCapacity: Int?, on board: TrainingBoard) -> [BoardHold] {
+        board.holds.filter { hold in
+            guard hold.features?.contains(feature) == true else { return false }
+            guard let fingerCapacity else { return true }
+            return hold.fingerCapacity == fingerCapacity
+        }
+    }
+
+    private static func closestMatch(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+        if let feature = target.feature {
+            return byFeatureGroup(feature, target: target, on: board)
+        }
+        guard let kind = target.kind else { return [] }
+        return preferringFingerCapacity(board.holds.filter { $0.kind == kind }, target: target).map(\.id)
+    }
+
+    private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
+        let group = feature.featureGroup
+        let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
+
+        let sameGroup = board.holds.filter { hold in
+            guard hold.kind == feature.holdKind,
+                  let features = hold.features else { return false }
+            return !features.isDisjoint(with: groupFeatures)
+        }
+        let preferredSameGroup = preferringFingerCapacity(sameGroup, target: target)
+        if !preferredSameGroup.isEmpty { return preferredSameGroup.map(\.id) }
+
+        let sameKind = board.holds.filter { $0.kind == feature.holdKind }
+        let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
+        if !preferredSameKind.isEmpty { return preferredSameKind.map(\.id) }
+
+        if let capacity = target.fingerCapacity {
+            let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
+            if !crossKind.isEmpty { return crossKind.map(\.id) }
+        }
+
+        return []
+    }
+
+    /// When the target specifies a finger count, prefer candidates that
+    /// match it; if none do, fall back to the unfiltered set rather than
+    /// losing the substitution entirely over a capacity mismatch.
+    private static func preferringFingerCapacity(_ holds: [BoardHold], target: HoldTarget) -> [BoardHold] {
+        guard let capacity = target.fingerCapacity else { return holds }
+        let matching = holds.filter { $0.fingerCapacity == capacity }
+        return matching.isEmpty ? holds : matching
     }
 }
 
@@ -134,7 +198,7 @@ struct WorkoutActivityRecorder {
                 }
                 guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holdsByTarget = segment.targets.map {
-                    BoardTargetResolver.resolveHolds(for: $0, on: board)
+                    BoardTargetResolver.substituteHolds(for: $0, on: board)
                 }
                 guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holds = holdsByTarget.flatMap { $0 }
