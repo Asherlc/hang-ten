@@ -41,7 +41,11 @@ nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
 ranges, finger capacity, grip posture, and feature tags are optional.
 
-Validate direct discovery after every package change:
+Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
+rejected by the loader.
+
+Validate direct discovery and the single-file package contract after every
+package change:
 
 ```sh
 scripts/hangboard-tools.sh packages validate --root Hangboards
