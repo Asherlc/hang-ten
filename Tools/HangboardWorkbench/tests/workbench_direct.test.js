@@ -21,6 +21,7 @@ class FakeClassList {
   constructor() { this.values = new Set(); }
   add(value) { this.values.add(value); }
   remove(value) { this.values.delete(value); }
+  contains(value) { return this.values.has(value); }
   toggle(value, enabled) {
     if (enabled === undefined ? !this.values.has(value) : enabled) this.values.add(value);
     else this.values.delete(value);
@@ -40,6 +41,7 @@ class FakeElement {
     this.disabled = false;
     this.textContent = "";
     this.value = "";
+    this.capturedPointerId = null;
   }
 
   append(...children) {
@@ -62,6 +64,7 @@ class FakeElement {
     this.parent = null;
   }
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
+  getAttribute(name) { return this.attributes.get(name) || null; }
   removeAttribute(name) { this.attributes.delete(name); }
   addEventListener(name, listener) { this.listeners.set(name, listener); }
   querySelector(selector) {
@@ -85,6 +88,11 @@ class FakeElement {
   input() {
     this.listeners.get("input")?.({ currentTarget: this, target: this });
   }
+  getBoundingClientRect() { return { left: 0, top: 0, width: 100, height: 50 }; }
+  setPointerCapture(pointerId) { this.capturedPointerId = pointerId; }
+  releasePointerCapture(pointerId) {
+    if (this.capturedPointerId === pointerId) this.capturedPointerId = null;
+  }
 }
 
 function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), dialogs }) {
@@ -96,7 +104,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
-    "delete-hold-button", "rotate-ccw-button", "rotate-cw-button",
+    "delete-hold-button", "rotate-ccw-button", "rotate-cw-button", "rotate-by-input", "rotate-by-apply-button",
   ];
   const elements = {};
   const document = {
@@ -822,6 +830,168 @@ test("the rotate buttons spin the selected hold around its own centroid, leaving
   const roundTripCommands = pathEditor.parsePath(pathEditor.serializePath(cwCommands));
   pathEditor.rotatePath(roundTripCommands, (-15 * Math.PI) / 180, pivot);
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), pathEditor.serializePath(roundTripCommands));
+});
+
+function multiPieceHoldBoard() {
+  return {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 L 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+      { id: 2, key: "a-piece-1", type: "jug", displayPath: "M 30 10 L 40 10 L 40 20 Z", metadata: { holdID: "a", pieceIndex: 1 } },
+      { id: 3, key: "b-piece-0", type: "edge", displayPath: "M 70 10 L 80 10 L 80 20 Z", metadata: { holdID: "b", pieceIndex: 0 } },
+    ] },
+  };
+}
+
+async function selectFirstHold(app) {
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+}
+
+function descendantsWithClass(element, className) {
+  const descendants = [];
+  const pending = [...element.children];
+  while (pending.length) {
+    const child = pending.shift();
+    if (!child || typeof child !== "object") continue;
+    if (child.classList?.contains(className)) descendants.push(child);
+    pending.push(...child.children);
+  }
+  return descendants;
+}
+
+function rotateDisplayPath(pathValue, degrees, pivot) {
+  const pathEditor = require("../path-editor.js");
+  const commands = pathEditor.parsePath(pathValue);
+  pathEditor.rotatePath(commands, (degrees * Math.PI) / 180, pivot);
+  return pathEditor.serializePath(commands);
+}
+
+test("the Rotate by Apply action accepts a decimal degree value for every piece of the selected hold", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["rotate-by-input"].value = "23.5";
+  app.elements["rotate-by-apply-button"].click();
+
+  const pivot = { x: 80 / 3, y: 40 / 3 };
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 23.5, pivot));
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), rotateDisplayPath("M 30 10 L 40 10 L 40 20 Z", 23.5, pivot));
+  assert.equal(app.elements["hold-overlay"].children[2].attributes.get("d"), "M 70 10 L 80 10 L 80 20 Z");
+});
+
+test("the Rotate by Apply action rejects an empty value without changing the selected hold", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["rotate-by-input"].value = "";
+  app.elements["rotate-by-apply-button"].click();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+  assert.match(app.elements["editor-status"].textContent, /finite, non-zero rotation/i);
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
+});
+
+test("the Rotate by Apply action rejects non-finite values without changing the selected hold", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["rotate-by-input"].value = "Infinity";
+  app.elements["rotate-by-apply-button"].click();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+  assert.match(app.elements["editor-status"].textContent, /finite, non-zero rotation/i);
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
+});
+
+test("the selected physical hold renders a rotation handle and connector above its shared centroid", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const connector = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-handle")[0];
+  assert.ok(connector);
+  assert.ok(handle);
+  assert.equal(Number(connector.attributes.get("x1")), 80 / 3);
+  assert.equal(Number(connector.attributes.get("y1")), 40 / 3);
+  assert.equal(Number(handle.attributes.get("cx")), 80 / 3);
+  assert.ok(Number(handle.attributes.get("cy")) < 40 / 3);
+  assert.equal(connector.attributes.get("x2"), handle.attributes.get("cx"));
+  assert.equal(connector.attributes.get("y2"), handle.attributes.get("cy"));
+});
+
+test("dragging the rotation handle rotates every piece from its pointer-down paths around the shared centroid", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const connector = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(app.elements["editor-svg"], "path-editor-rotation-handle")[0];
+  assert.ok(connector);
+  assert.ok(handle);
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const pointerEvent = (target, x, y) => ({ target, pointerId: 7, clientX: x, clientY: y, preventDefault() {} });
+  const svg = app.elements["editor-svg"];
+
+  svg.listeners.get("pointerdown")(pointerEvent(handle, start.x, start.y));
+  assert.equal(svg.capturedPointerId, 7);
+  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius / Math.sqrt(2), pivot.y - radius / Math.sqrt(2)));
+  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius, pivot.y));
+  svg.listeners.get("pointerup")(pointerEvent(handle, pivot.x + radius, pivot.y));
+
+  assert.equal(svg.capturedPointerId, null);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), rotateDisplayPath("M 30 10 L 40 10 L 40 20 Z", 90, pivot));
+  assert.equal(app.elements["hold-overlay"].children[2].attributes.get("d"), "M 70 10 L 80 10 L 80 20 Z");
+  assert.match(app.elements["editor-status"].textContent, /hold rotated/i);
 });
 
 test("bracket keys rotate the selected hold by 15 and 45 degrees with shift", async () => {
