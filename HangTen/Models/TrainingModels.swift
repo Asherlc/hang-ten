@@ -211,6 +211,32 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         case .smallPinch: "Small pinch"
         }
     }
+
+    enum FeatureGroup: Hashable {
+        case edge
+        case pocket
+        case sloper
+        case pinch
+        case other
+    }
+
+    var featureGroup: FeatureGroup {
+        switch self {
+        case .smallEdge, .mediumEdge, .largeEdge,
+             .fourFingerFlatEdge, .fourFingerIncutEdge,
+             .thinCrimp, .shallowThreeFingerSlot:
+            .edge
+        case .pocket, .twoFingerPocket, .threeFingerPocket,
+             .fourFingerPocket, .deepTwoFingerPocket:
+            .pocket
+        case .roundSloper, .largeSlope:
+            .sloper
+        case .widePinch, .mediumPinch, .smallPinch:
+            .pinch
+        case .jug, .largeOpenHandRail:
+            .other
+        }
+    }
 }
 
 enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
