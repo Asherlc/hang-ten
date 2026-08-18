@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import copy
 import errno
 import importlib.util
 import json
@@ -180,6 +181,41 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
             assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
             assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
             assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+
+
+def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
+    image = PRIMARY_IMAGE.read_bytes()
+
+    assert board_package._png_header_dimensions_from_bytes(image[:33]) == (1774, 457)
+    assert board_package._png_dimensions_from_bytes(image) == (1774, 457)
+
+
+def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:
+    package = board_package.load_board_package(CANONICAL_PACKAGE)
+    document = board_package.editor_document(package)
+    parsed = board_package._validate_editor_document(
+        document, package.image_width, package.image_height
+    )
+    pieces_by_hold: dict[str, list[tuple[int, str, object]]] = {}
+    for hold_id, piece_index, kind, path in parsed.values():
+        pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+    for pieces in pieces_by_hold.values():
+        pieces.sort(key=lambda item: item[0])
+    first_hold_id = next(iter(pieces_by_hold))
+    first_piece = pieces_by_hold[first_hold_id][0]
+    pieces_by_hold[first_hold_id][0] = (first_piece[0], "sloper", first_piece[2])
+    original = copy.deepcopy(package.board)
+
+    updated = board_package._apply_editor_document(
+        package.board, pieces_by_hold, package.image_width, package.image_height
+    )
+
+    assert package.board == original
+    updated_hold = next(hold for hold in updated["holds"] if hold["id"] == first_hold_id)
+    assert updated_hold["name"] == next(
+        hold["name"] for hold in original["holds"] if hold["id"] == first_hold_id
+    )
+    assert updated_hold["kind"] == "sloper"
 
 
 def test_discovers_direct_children_without_a_catalog_and_sorts_physical_boards(
@@ -753,6 +789,33 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
         "height": 0.2,
     }
     assert not (library / "catalog.json").exists()
+
+
+def test_changed_save_derives_current_display_paths_once_per_piece(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+    )
+    original_display_path_for_shape = board_package.display_path_for_shape
+    calls = 0
+
+    def counted_display_path_for_shape(*args: object, **kwargs: object):
+        nonlocal calls
+        calls += 1
+        return original_display_path_for_shape(*args, **kwargs)
+
+    monkeypatch.setattr(
+        board_package, "display_path_for_shape", counted_display_path_for_shape
+    )
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    assert calls == 6
 
 
 def test_invalid_save_leaves_the_live_single_file_package_unchanged(

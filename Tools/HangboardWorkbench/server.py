@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
+import hmac
 import json
 import mimetypes
 import os
@@ -15,25 +17,36 @@ import threading
 import urllib.error
 import urllib.request
 from argparse import ArgumentParser
-from contextlib import contextmanager
+from collections.abc import Iterator
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 from urllib.parse import unquote, urlsplit
 
+import github_board_store
 from board_package import (
     BoardNotAvailableError,
     BoardPackage,
     BoardPackageError,
+    BoardSaveConflictError,
     discover_packages,
     editor_document,
     open_package,
     primary_image_path,
     save_editor_document,
+)
+from github_client import (
+    GitHubAuthError,
+    GitHubClient,
+    GitHubForbiddenError,
+    GitHubNotFoundError,
+    GitHubRateLimitError,
+    GitHubTransportError,
 )
 from workbench_assets import STATIC_ASSET_ROUTES
 
@@ -92,6 +105,51 @@ def _validate_git_arg(value: str, name: str) -> str:
 class _Session:
     token: str
     username: str
+    branch: str
+
+
+def _encode_session(secret: bytes, session: _Session) -> str:
+    payload = json.dumps(
+        {
+            "token": session.token,
+            "username": session.username,
+            "branch": session.branch,
+        },
+        separators=(",", ":"),
+    ).encode("utf-8")
+    payload_b64 = base64.urlsafe_b64encode(payload).decode("ascii")
+    signature = hmac.new(
+        secret, payload_b64.encode("ascii"), hashlib.sha256
+    ).hexdigest()
+    return f"{payload_b64}.{signature}"
+
+
+def _decode_session(secret: bytes, value: str) -> _Session | None:
+    try:
+        payload_b64, separator, signature = value.partition(".")
+        if not separator or not payload_b64 or not signature:
+            return None
+        expected_signature = hmac.new(
+            secret, payload_b64.encode("ascii"), hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(expected_signature, signature):
+            return None
+        payload = base64.b64decode(payload_b64, altchars=b"-_", validate=True)
+        session = json.loads(payload)
+        if not isinstance(session, dict) or set(session) != {
+            "token",
+            "username",
+            "branch",
+        }:
+            return None
+        if not all(
+            isinstance(session[field], str)
+            for field in ("token", "username", "branch")
+        ):
+            return None
+        return _Session(**session)
+    except (TypeError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
 
 
 def _display_name(package: BoardPackage) -> str:
@@ -126,6 +184,10 @@ def create_server(
     editor_root: Path = EDITOR_ROOT,
     github_client_id: str = "",
     github_client_secret: str = "",
+    session_secret: str = "",
+    github_owner: str = "",
+    github_repo: str = "",
+    github_client: GitHubClient | None = None,
 ) -> "WorkbenchHTTPServer":
     """Create a direct board-package server with no workspace lifecycle state."""
     resolved_editor_root = Path(editor_root).resolve(strict=False)
@@ -146,6 +208,10 @@ def create_server(
         repository_root=resolved_library_root.parent,
         github_client_id=github_client_id,
         github_client_secret=github_client_secret,
+        session_secret=session_secret,
+        github_owner=github_owner,
+        github_repo=github_repo,
+        github_client=github_client,
     )
 
 
@@ -163,6 +229,10 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         repository_root: Path,
         github_client_id: str = "",
         github_client_secret: str = "",
+        session_secret: str = "",
+        github_owner: str = "",
+        github_repo: str = "",
+        github_client: GitHubClient | None = None,
     ) -> None:
         self.editor_root = editor_root
         self.library_root = library_root
@@ -170,12 +240,19 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         self.repository_root = repository_root
         self.github_client_id = github_client_id
         self.github_client_secret = github_client_secret
-        self.sessions: dict[str, _Session] = {}
+        self.session_secret = (session_secret or secrets.token_hex(32)).encode("utf-8")
+        self.github_client = (
+            github_client
+            if github_client is not None
+            else GitHubClient(github_owner, github_repo)
+            if allow_remote
+            else None
+        )
         # ThreadingHTTPServer runs every request on its own thread against
         # the same working tree; without this, concurrent git operations can
         # interleave (one request committing another's staged files) or race
         # on index.lock.
-        self.git_lock = threading.Lock()
+        self.git_lock = nullcontext() if allow_remote else threading.Lock()
         super().__init__(server_address, request_handler)
 
 
@@ -205,15 +282,18 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 self._get_git_status()
             return
         if path == "/api/boards":
-            self._get_boards()
+            with self._mutation_error_response():
+                self._get_boards()
             return
         if path.startswith("/api/boards/"):
             board_path = path.removeprefix("/api/boards/")
             if board_path.endswith("/image") and "/" not in board_path.removesuffix("/image"):
-                self._get_image(unquote(board_path.removesuffix("/image")))
+                with self._mutation_error_response():
+                    self._get_image(unquote(board_path.removesuffix("/image")))
                 return
             if "/" not in board_path:
-                self._get_board(unquote(board_path))
+                with self._mutation_error_response():
+                    self._get_board(unquote(board_path))
                 return
         filename = next((asset for route, asset in STATIC_ASSET_ROUTES if route == path), None)
         if filename is not None:
@@ -234,9 +314,39 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         with self._mutation_error_response():
             document = self._read_json_object()
-            package = open_package(self.server.library_root, unquote(board_path))
-            saved = save_editor_document(self.server.library_root, package.root.name, document)
-            self._send_json(HTTPStatus.OK, {"ok": True, "board": _board_payload(saved, include_document=True)})
+            if self.server.allow_remote:
+                session = self._github_session()
+                package = github_board_store.open_package(
+                    self.server.github_client,
+                    session.token,
+                    session.branch,
+                    unquote(board_path),
+                )
+                saved, commit_sha = github_board_store.save_editor_document(
+                    self.server.github_client,
+                    session.token,
+                    session.branch,
+                    package.slug,
+                    document,
+                    expected_board_id=unquote(board_path),
+                )
+                self._send_json(
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "board": _board_payload(saved, include_document=True),
+                        "commit": commit_sha,
+                    },
+                )
+            else:
+                package = open_package(self.server.library_root, unquote(board_path))
+                saved = save_editor_document(
+                    self.server.library_root, package.root.name, document
+                )
+                self._send_json(
+                    HTTPStatus.OK,
+                    {"ok": True, "board": _board_payload(saved, include_document=True)},
+                )
 
     def do_POST(self) -> None:  # noqa: N802
         if not self._allow_request(mutation=True):
@@ -245,7 +355,13 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         handler_name = _GIT_MUTATION_HANDLERS.get(request.path)
         if handler_name is not None:
             with self.server.git_lock, self._mutation_error_response():
-                body = self._read_json_object()
+                if self.server.allow_remote and request.path in {
+                    "/api/git/commit",
+                    "/api/git/push",
+                }:
+                    body = {}
+                else:
+                    body = self._read_json_object()
                 getattr(self, handler_name)(body)
             return
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
@@ -257,9 +373,15 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _get_boards(self) -> None:
         try:
+            if self.server.allow_remote:
+                session = self._github_session()
+                packages = github_board_store.discover_packages(
+                    self.server.github_client, session.token, session.branch
+                )
+            else:
+                packages = discover_packages(self.server.library_root)
             boards = [
-                _board_payload(package, include_document=False)
-                for package in discover_packages(self.server.library_root)
+                _board_payload(package, include_document=False) for package in packages
             ]
         except BoardPackageError:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "could not load boards"})
@@ -274,7 +396,16 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         try:
-            package = open_package(self.server.library_root, board_id)
+            if self.server.allow_remote:
+                session = self._github_session()
+                package = github_board_store.open_package(
+                    self.server.github_client,
+                    session.token,
+                    session.branch,
+                    board_id,
+                )
+            else:
+                package = open_package(self.server.library_root, board_id)
             payload = _board_payload(package, include_document=True)
         except BoardNotAvailableError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
@@ -288,16 +419,22 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self._send_json(HTTPStatus.OK, {"ok": True, "board": payload})
 
     def _get_git_status(self) -> None:
-        try:
-            branch = self._git_current_branch()
-        except RequestError:
-            # Render (and other deploy-by-commit hosts) check out a detached
-            # HEAD, not a branch. Status is still readable in that state;
-            # only branch-dependent mutations (checkout/commit/push/PR)
-            # require a real branch and should keep raising.
-            branch = None
-        status_lines = self._git_status_lines()
-        branches = self._git_branches()
+        if self.server.allow_remote:
+            session = self._github_session()
+            branch = session.branch
+            status_lines: list[str] = []
+            branches = self.server.github_client.list_branches(session.token)
+        else:
+            try:
+                branch = self._git_current_branch()
+            except RequestError:
+                # Render (and other deploy-by-commit hosts) check out a detached
+                # HEAD, not a branch. Status is still readable in that state;
+                # only branch-dependent mutations (checkout/commit/push/PR)
+                # require a real branch and should keep raising.
+                branch = None
+            status_lines = self._git_status_lines()
+            branches = self._git_branches()
         self._send_json(
             HTTPStatus.OK,
             {
@@ -314,72 +451,117 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(branch, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
         sanitized_branch = _validate_git_arg(branch.strip(), "branch")
-        self._run_git(["git", "check-ref-format", "--branch", sanitized_branch])
         create = body.get("create", False)
         if not isinstance(create, bool):
             raise RequestError(HTTPStatus.BAD_REQUEST, "create must be a boolean")
-        if create:
-            self._run_git(["git", "switch", "-c", sanitized_branch], fallback="could not create branch")
+        if self.server.allow_remote:
+            session = self._github_session()
+            if create:
+                from_sha = self.server.github_client.get_branch_head_sha(
+                    session.token, session.branch
+                )
+                self.server.github_client.create_branch(
+                    session.token, sanitized_branch, from_sha
+                )
+            else:
+                self.server.github_client.get_branch_head_sha(
+                    session.token, sanitized_branch
+                )
+            updated_session = _Session(
+                token=session.token,
+                username=session.username,
+                branch=sanitized_branch,
+            )
+            self._send_json(
+                HTTPStatus.OK,
+                {"ok": True, "branch": sanitized_branch},
+                session=updated_session,
+            )
         else:
-            self._run_git(["git", "switch", "--", sanitized_branch])
-        self._send_json(HTTPStatus.OK, {"ok": True, "branch": sanitized_branch})
+            self._run_git(["git", "check-ref-format", "--branch", sanitized_branch])
+            if create:
+                self._run_git(
+                    ["git", "switch", "-c", sanitized_branch],
+                    fallback="could not create branch",
+                )
+            else:
+                self._run_git(["git", "switch", "--", sanitized_branch])
+            self._send_json(HTTPStatus.OK, {"ok": True, "branch": sanitized_branch})
 
     def _post_commit(self, body: dict[str, Any]) -> None:
-        message = body.get("message")
-        if not isinstance(message, str):
-            raise RequestError(HTTPStatus.BAD_REQUEST, "message must be a string")
-        message = _validate_git_arg(message.strip(), "message")
-        if not self._git_status_lines():
-            raise RequestError(HTTPStatus.CONFLICT, "no changes to commit")
-        # Stage only the board library, not every locally-modified file in
-        # the checkout -- a commit made from the editor UI should only ever
-        # contain the board content the editor actually saved.
-        self._run_git(["git", "add", "-A", "--", "Hangboards"])
-        self._run_git(
-            ["git", "commit", "--message", message],
-            fallback="could not create commit",
-        )
-        commit = self._run_git(["git", "rev-parse", "HEAD"]).stdout.strip()
-        self._send_json(
-            HTTPStatus.OK,
-            {
-                "ok": True,
-                "branch": self._git_current_branch(),
-                "commit": commit,
-                "message": message,
-            },
-        )
+        if self.server.allow_remote:
+            self._send_json(
+                HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}
+            )
+        else:
+            message = body.get("message")
+            if not isinstance(message, str):
+                raise RequestError(HTTPStatus.BAD_REQUEST, "message must be a string")
+            message = _validate_git_arg(message.strip(), "message")
+            if not self._git_status_lines():
+                raise RequestError(HTTPStatus.CONFLICT, "no changes to commit")
+            # Stage only the board library, not every locally-modified file in
+            # the checkout -- a commit made from the editor UI should only ever
+            # contain the board content the editor actually saved.
+            self._run_git(["git", "add", "-A", "--", "Hangboards"])
+            self._run_git(
+                ["git", "commit", "--message", message],
+                fallback="could not create commit",
+            )
+            commit = self._run_git(["git", "rev-parse", "HEAD"]).stdout.strip()
+            self._send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "branch": self._git_current_branch(),
+                    "commit": commit,
+                    "message": message,
+                },
+            )
 
     def _post_push(self, body: dict[str, Any]) -> None:
-        remote = body.get("remote", "origin")
-        if not isinstance(remote, str):
-            raise RequestError(HTTPStatus.BAD_REQUEST, "remote must be a string")
-        remote = remote.strip() or "origin"
-        _validate_git_arg(remote, "remote")
-        # `remote` reaches `git push` in the remote-name position, which git
-        # also accepts as a raw URL (including `ext::` transports that run an
-        # arbitrary local command). Restricting it to an already-configured
-        # remote closes that off.
-        configured_remotes = {
-            line.strip()
-            for line in self._run_git(["git", "remote"], fallback="could not list remotes").stdout.splitlines()
-            if line.strip()
-        }
-        if remote not in configured_remotes:
-            raise RequestError(HTTPStatus.BAD_REQUEST, "remote is not configured")
-        branch = self._git_current_branch()
-        self._run_git(
-            ["git", "push", "--set-upstream", remote, branch],
-            fallback="could not push branch",
-            auth_token=self._get_auth_token(),
-        )
-        self._send_json(HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote})
+        if self.server.allow_remote:
+            self._send_json(
+                HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}
+            )
+        else:
+            remote = body.get("remote", "origin")
+            if not isinstance(remote, str):
+                raise RequestError(HTTPStatus.BAD_REQUEST, "remote must be a string")
+            remote = remote.strip() or "origin"
+            _validate_git_arg(remote, "remote")
+            # `remote` reaches `git push` in the remote-name position, which git
+            # also accepts as a raw URL (including `ext::` transports that run an
+            # arbitrary local command). Restricting it to an already-configured
+            # remote closes that off.
+            configured_remotes = {
+                line.strip()
+                for line in self._run_git(
+                    ["git", "remote"], fallback="could not list remotes"
+                ).stdout.splitlines()
+                if line.strip()
+            }
+            if remote not in configured_remotes:
+                raise RequestError(HTTPStatus.BAD_REQUEST, "remote is not configured")
+            branch = self._git_current_branch()
+            self._run_git(
+                ["git", "push", "--set-upstream", remote, branch],
+                fallback="could not push branch",
+                auth_token=self._get_auth_token(),
+            )
+            self._send_json(
+                HTTPStatus.OK, {"ok": True, "branch": branch, "remote": remote}
+            )
 
     def _post_open_pull_request(self, body: dict[str, Any]) -> None:
         requested = body.get("branch")
         if requested is not None and not isinstance(requested, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "branch must be a string")
-        branch = (requested or "").strip() or self._git_current_branch()
+        if self.server.allow_remote:
+            session = self._github_session()
+            branch = (requested or "").strip() or session.branch
+        else:
+            branch = (requested or "").strip() or self._git_current_branch()
         _validate_git_arg(branch, "branch")
         title = body.get("title")
         if not isinstance(title, str):
@@ -392,24 +574,29 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(base, str):
             raise RequestError(HTTPStatus.BAD_REQUEST, "base must be a string")
         base = _validate_git_arg(base.strip() or "main", "base")
-        command = [
-            "gh",
-            "pr",
-            "create",
-            "--title",
-            title,
-            "--head",
-            branch,
-            "--base",
-            base,
-        ]
-        if body_text:
-            command.extend(["--body", body_text])
-        pr_url = self._run_git(
-            command,
-            fallback="could not create pull request",
-            auth_token=self._get_auth_token(),
-        ).stdout.strip()
+        if self.server.allow_remote:
+            pr_url = self.server.github_client.create_pull_request(
+                session.token, title, branch, base, body_text
+            )
+        else:
+            command = [
+                "gh",
+                "pr",
+                "create",
+                "--title",
+                title,
+                "--head",
+                branch,
+                "--base",
+                base,
+            ]
+            if body_text:
+                command.extend(["--body", body_text])
+            pr_url = self._run_git(
+                command,
+                fallback="could not create pull request",
+                auth_token=self._get_auth_token(),
+            ).stdout.strip()
         self._send_json(
             HTTPStatus.OK,
             {
@@ -421,9 +608,19 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
 
     def _get_image(self, board_id: str) -> None:
         try:
-            package = open_package(self.server.library_root, board_id)
-            image = primary_image_path(package)
-            self._send_file(image)
+            if self.server.allow_remote:
+                session = self._github_session()
+                image = github_board_store.primary_image_bytes(
+                    self.server.github_client,
+                    session.token,
+                    session.branch,
+                    board_id,
+                )
+                self._send_bytes(image, "primary.png")
+            else:
+                package = open_package(self.server.library_root, board_id)
+                image = primary_image_path(package)
+                self._send_file(image)
         except BoardPackageError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board image is unavailable"})
         except OSError:
@@ -440,6 +637,29 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             yield
         except RequestError as error:
             self._send_json(error.status, {"ok": False, "error": str(error)})
+        except GitHubNotFoundError as error:
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
+        except BoardSaveConflictError as error:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": str(error)})
+        except GitHubRateLimitError as error:
+            self._send_json(
+                HTTPStatus.TOO_MANY_REQUESTS, {"ok": False, "error": str(error)}
+            )
+        except GitHubForbiddenError as error:
+            self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": str(error)})
+        except GitHubAuthError:
+            self._send_json(
+                HTTPStatus.UNAUTHORIZED,
+                {
+                    "ok": False,
+                    "error": "GitHub authentication expired or insufficient permissions",
+                },
+            )
+        except GitHubTransportError:
+            self._send_json(
+                HTTPStatus.BAD_GATEWAY,
+                {"ok": False, "error": "could not reach GitHub"},
+            )
         except BoardNotAvailableError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
         except BoardPackageError as error:
@@ -613,18 +833,24 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         return morsel.value if morsel else None
 
     def _get_session(self) -> _Session | None:
-        session_id = self._get_cookie("wb_session")
-        if not session_id:
+        session_value = self._get_cookie("wb_session")
+        if not session_value:
             return None
-        return self.server.sessions.get(session_id)
+        return _decode_session(self.server.session_secret, session_value)
 
     def _get_auth_token(self) -> str | None:
         session = self._get_session()
         return session.token if session else None
 
-    def _set_session_cookie(self, session_id: str) -> None:
+    def _github_session(self) -> _Session:
+        session = self._get_session()
+        if session is None:
+            raise RequestError(HTTPStatus.UNAUTHORIZED, "authentication required")
+        return session
+
+    def _set_session_cookie(self, session: _Session) -> None:
         cookie = SimpleCookie()
-        cookie["wb_session"] = session_id
+        cookie["wb_session"] = _encode_session(self.server.session_secret, session)
         cookie["wb_session"]["path"] = "/"
         cookie["wb_session"]["httponly"] = True
         cookie["wb_session"]["samesite"] = "Lax"
@@ -692,37 +918,97 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             error_desc = token_payload.get("error_description", "GitHub did not return an access token")
             self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": error_desc})
             return
-        user_request = urllib.request.Request(
-            "https://api.github.com/user",
-            headers={
-                "Authorization": f"Bearer {access_token}",
-                "Accept": "application/json",
-            },
-        )
-        try:
-            with urllib.request.urlopen(user_request) as response:
-                user_payload = json.loads(response.read())
-        except (urllib.error.URLError, json.JSONDecodeError):
-            self._send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": "Failed to fetch GitHub user info"})
-            return
-        username = user_payload.get("login", "unknown")
-        session_id = secrets.token_hex(32)
-        self.server.sessions[session_id] = _Session(token=access_token, username=username)
+        if self.server.allow_remote:
+            try:
+                username = self.server.github_client.get_authenticated_user(
+                    access_token
+                )
+                branch = self.server.github_client.get_default_branch(access_token)
+            except GitHubNotFoundError as error:
+                self._send_json(
+                    HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)}
+                )
+                return
+            except GitHubRateLimitError as error:
+                self._send_json(
+                    HTTPStatus.TOO_MANY_REQUESTS,
+                    {"ok": False, "error": str(error)},
+                )
+                return
+            except GitHubForbiddenError as error:
+                self._send_json(
+                    HTTPStatus.FORBIDDEN, {"ok": False, "error": str(error)}
+                )
+                return
+            except GitHubAuthError:
+                self._send_json(
+                    HTTPStatus.UNAUTHORIZED,
+                    {
+                        "ok": False,
+                        "error": "GitHub authentication expired or insufficient permissions",
+                    },
+                )
+                return
+            except GitHubTransportError:
+                self._send_json(
+                    HTTPStatus.BAD_GATEWAY,
+                    {"ok": False, "error": "could not reach GitHub"},
+                )
+                return
+        else:
+            user_request = urllib.request.Request(
+                "https://api.github.com/user",
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                    "Accept": "application/json",
+                },
+            )
+            try:
+                with urllib.request.urlopen(user_request) as response:
+                    user_payload = json.loads(response.read())
+            except (urllib.error.URLError, json.JSONDecodeError):
+                self._send_json(
+                    HTTPStatus.BAD_GATEWAY,
+                    {"ok": False, "error": "Failed to fetch GitHub user info"},
+                )
+                return
+            username = user_payload.get("login", "unknown")
+            branch = "main"
+        session = _Session(token=access_token, username=username, branch=branch)
         self.send_response(HTTPStatus.FOUND)
         self.send_header("Location", "/")
-        self._set_session_cookie(session_id)
+        self._set_session_cookie(session)
         self.end_headers()
 
     def _handle_auth_status(self) -> None:
         session = self._get_session()
         if session:
-            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": True, "username": session.username})
+            self._send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "authenticated": True,
+                    "username": session.username,
+                    "hostedStorage": self.server.allow_remote,
+                },
+            )
         else:
-            self._send_json(HTTPStatus.OK, {"ok": True, "authenticated": False})
+            self._send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "authenticated": False,
+                    "hostedStorage": self.server.allow_remote,
+                },
+            )
 
-    def _send_json(self, status: HTTPStatus, value: object) -> None:
+    def _send_json(
+        self, status: HTTPStatus, value: object, *, session: _Session | None = None
+    ) -> None:
         body = json.dumps(value, separators=(",", ":"), allow_nan=False).encode("utf-8")
         self.send_response(status)
+        if session is not None:
+            self._set_session_cookie(session)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
@@ -730,9 +1016,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _send_file(self, path: Path) -> None:
-        body = path.read_bytes()
+        self._send_bytes(path.read_bytes(), path.name)
+
+    def _send_bytes(self, body: bytes, filename: str) -> None:
         self.send_response(HTTPStatus.OK)
-        self.send_header("Content-Type", mimetypes.guess_type(path.name)[0] or "application/octet-stream")
+        self.send_header(
+            "Content-Type",
+            mimetypes.guess_type(filename)[0] or "application/octet-stream",
+        )
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
@@ -858,6 +1149,47 @@ def _discover_repository_root(start: Path) -> Path:
             candidate = candidate.parent
 
 
+def _github_repository_from_remote(remote_url: str) -> tuple[str, str] | None:
+    remote_url = remote_url.strip()
+    scp_match = re.fullmatch(
+        r"git@github\.com:([^/\s]+)/([^/\s]+?)(?:\.git)?", remote_url
+    )
+    if scp_match:
+        return scp_match.group(1), scp_match.group(2)
+    parsed = urlsplit(remote_url)
+    if (
+        parsed.scheme not in {"https", "ssh"}
+        or parsed.hostname != "github.com"
+        or parsed.query
+        or parsed.fragment
+    ):
+        return None
+    parts = parsed.path.removesuffix(".git").strip("/").split("/")
+    if len(parts) != 2 or not all(parts):
+        return None
+    return parts[0], parts[1]
+
+
+def _autodetect_github_repository(root: Path) -> tuple[str, str] | None:
+    try:
+        process = subprocess.run(
+            ["git", "config", "--get", "remote.origin.url"],
+            cwd=root,
+            check=False,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            encoding="utf-8",
+            timeout=_GIT_COMMAND_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if process.returncode != 0:
+        return None
+    return _github_repository_from_remote(process.stdout)
+
+
 def _argument_parser() -> ArgumentParser:
     parser = ArgumentParser(description="Serve the direct Hangboard Workbench tools")
     parser.add_argument("--repository-root", type=Path, help="Checkout containing Hangboards/")
@@ -880,18 +1212,58 @@ def _argument_parser() -> ArgumentParser:
         help="GitHub OAuth App client secret (required for --allow-remote auth; "
         "falls back to the GITHUB_CLIENT_SECRET environment variable)",
     )
+    parser.add_argument(
+        "--session-secret",
+        default=os.environ.get("SESSION_SECRET", ""),
+        help=(
+            "Session signing secret (required for --allow-remote; falls back to "
+            "the SESSION_SECRET environment variable)"
+        ),
+    )
+    parser.add_argument(
+        "--github-owner",
+        default=os.environ.get("GITHUB_OWNER", ""),
+        help=(
+            "GitHub repository owner (required for --allow-remote; falls back "
+            "to GITHUB_OWNER or remote.origin.url)"
+        ),
+    )
+    parser.add_argument(
+        "--github-repo",
+        default=os.environ.get("GITHUB_REPO", ""),
+        help=(
+            "GitHub repository name (required for --allow-remote; falls back "
+            "to GITHUB_REPO or remote.origin.url)"
+        ),
+    )
     return parser
 
 
 def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
-    if parsed.allow_remote and (not parsed.github_client_id or not parsed.github_client_secret):
-        parser.error("--allow-remote requires --github-client-id and --github-client-secret")
+    if parsed.allow_remote and (
+        not parsed.github_client_id
+        or not parsed.github_client_secret
+        or not parsed.session_secret
+    ):
+        parser.error("--allow-remote requires --github-client-id, --github-client-secret, and --session-secret")
     try:
         root = validate_hang_ten_checkout(parsed.repository_root) if parsed.repository_root is not None else _discover_repository_root(Path.cwd())
     except EditorError as error:
         parser.error(str(error))
+    github_owner = parsed.github_owner
+    github_repo = parsed.github_repo
+    if parsed.allow_remote and (not github_owner or not github_repo):
+        detected = _autodetect_github_repository(root)
+        if detected is not None:
+            detected_owner, detected_repo = detected
+            github_owner = github_owner or detected_owner
+            github_repo = github_repo or detected_repo
+    if parsed.allow_remote and (not github_owner or not github_repo):
+        parser.error(
+            "--allow-remote requires --github-owner and --github-repo or a GitHub remote.origin.url"
+        )
     try:
         httpd = create_server(
             root / "Hangboards",
@@ -901,6 +1273,9 @@ def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = 
             editor_root=editor_root,
             github_client_id=parsed.github_client_id,
             github_client_secret=parsed.github_client_secret,
+            session_secret=parsed.session_secret,
+            github_owner=github_owner,
+            github_repo=github_repo,
         )
     except OSError as error:
         raise ServerBindError(f"could not bind to {parsed.host}:{parsed.port}") from error

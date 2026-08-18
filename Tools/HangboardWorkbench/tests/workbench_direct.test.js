@@ -160,6 +160,19 @@ test("the browser client lists and opens direct boards", async () => {
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
 });
 
+test("the browser client navigates to login when an API request is unauthenticated", async () => {
+  global.location = { href: "" };
+  global.fetch = async () => response(
+    { ok: false, error: "authentication required", login_url: "/auth/login" },
+    { ok: false, status: 401 },
+  );
+  const client = freshClient();
+
+  await assert.rejects(client.getGitStatus(), /authentication required/);
+
+  assert.equal(global.location.href, "/auth/login");
+});
+
 test("the browser client saves one direct editor document with PUT", async () => {
   const calls = [];
   global.fetch = async (request, options) => {
@@ -500,6 +513,54 @@ test("the browser reports repository status unavailable only when the status fet
 
   assert.equal(app.elements["git-status"].textContent, "Repository status unavailable");
   assert.equal(app.elements["board-status"].textContent, "No branch detected");
+});
+
+test("hosted storage hides and disables commit and push controls while leaving Save visible", async () => {
+  const controller = require("../workbench-controller.js");
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat", hostedStorage: true }; },
+      async getGitStatus() { return { ok: true, currentBranch: "main", branches: ["main"], dirty: false }; },
+    },
+    controller,
+  });
+  await settle();
+  await settle();
+  await settle();
+
+  for (const id of ["git-commit-message", "git-commit-button", "git-push-button"]) {
+    assert.equal(app.elements[id].classList.values.has("hidden"), true, `${id} must be hidden`);
+    assert.equal(app.elements[id].disabled, true, `${id} must be disabled`);
+  }
+  assert.equal(app.elements["save-button"].classList.values.has("hidden"), false);
+});
+
+test("local or legacy auth status preserves the existing commit and push flow", async (t) => {
+  const controller = require("../workbench-controller.js");
+  for (const [name, authStatus] of [
+    ["explicit false", { authenticated: true, username: "octocat", hostedStorage: false }],
+    ["absent field", { authenticated: true, username: "octocat" }],
+  ]) {
+    await t.test(name, async () => {
+      const app = loadApp({
+        client: {
+          async listBoards() { return []; },
+          async getAuthStatus() { return authStatus; },
+          async getGitStatus() { return { ok: true, currentBranch: "main", branches: ["main"], dirty: false }; },
+        },
+        controller,
+      });
+      await settle();
+      await settle();
+      await settle();
+
+      for (const id of ["git-commit-message", "git-commit-button", "git-push-button"]) {
+        assert.equal(app.elements[id].classList.values.has("hidden"), false, `${id} must remain visible`);
+        assert.equal(app.elements[id].disabled, false, `${id} must remain enabled`);
+      }
+    });
+  }
 });
 
 test("switching branches does not prompt for confirmation when there are no unsaved hold edits", async () => {
