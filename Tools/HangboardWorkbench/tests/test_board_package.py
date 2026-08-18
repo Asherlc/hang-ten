@@ -777,6 +777,110 @@ def test_invalid_save_leaves_the_live_single_file_package_unchanged(
     assert not (library / "catalog.json").exists()
 
 
+def test_save_recategorizes_a_hold_across_all_its_pieces(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert _read_board(package_root)["holds"][0]["kind"] == "edge"
+    assert saved.board["holds"][0]["kind"] == "edge"
+
+
+def test_save_rejects_a_hold_with_pieces_of_mixed_kinds(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0]["type"] = "edge"
+
+    with pytest.raises(BoardPackageError, match="share one kind"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_an_unsupported_hold_kind(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0]["type"] = "crimp"
+    document["regions"][1]["type"] = "crimp"
+
+    with pytest.raises(BoardPackageError, match="must be one of"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_adds_a_new_hold(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"].append(
+        {
+            "id": 99,
+            "key": "hold-right-piece-0",
+            "type": "pinch",
+            "displayPath": "M 900 100 L 950 100 L 950 150 Z",
+            "metadata": {"holdID": "hold-right", "pieceIndex": 0},
+        }
+    )
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    holds = _read_board(package_root)["holds"]
+
+    assert [hold["id"] for hold in holds] == ["hold-left", "hold-right"]
+    new_hold = holds[1]
+    assert new_hold["kind"] == "pinch"
+    assert new_hold["name"]
+    assert len(new_hold["geometry"]) == 1
+    assert saved.hold_ids == ("hold-left", "hold-right")
+
+
+def test_save_rejects_deleting_the_only_hold(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"] = []
+
+    with pytest.raises(BoardPackageError, match="non-empty"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_deletes_one_of_several_holds(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, _replace_holds_with_supported_kinds)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"] = [
+        region
+        for region in document["regions"]
+        if region["metadata"]["holdID"] != "hold-jug"
+    ]
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    expected_ids = {f"hold-{kind}" for kind in SUPPORTED_HOLD_KINDS if kind != "jug"}
+    assert set(saved.hold_ids) == expected_ids
+    assert "hold-jug" not in {hold["id"] for hold in _read_board(package_root)["holds"]}
+
+
+def test_save_rejects_non_contiguous_piece_indices(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][1]["metadata"]["pieceIndex"] = 5
+
+    with pytest.raises(BoardPackageError, match="indexed contiguously"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
 def test_replace_rolls_back_the_live_package_when_installation_fails(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

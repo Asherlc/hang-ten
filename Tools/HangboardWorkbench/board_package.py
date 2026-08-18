@@ -252,7 +252,8 @@ def editor_document(package: BoardPackage) -> dict[str, object]:
 def save_editor_document(
     library_root: Path, slug: str, document: Mapping[str, Any]
 ) -> BoardPackage:
-    """Atomically save edited piece paths back into the package's board.json."""
+    """Atomically save added, removed, recategorized, or reshaped holds back
+    into the package's board.json."""
     root = _library_root(library_root)
     slug = _slug(slug)
     with _library_lock(root):
@@ -264,19 +265,16 @@ def save_editor_document(
             raise BoardPackageError("board package is not available")
         live = load_board_package(live.root)
         width, height = live.image_width, live.image_height
-        parsed_regions = _validate_editor_document(document, live, width, height)
-        changes: list[tuple[str, int, Any]] = []
-        for hold in live.board["holds"]:
-            hold_id = hold["id"]
-            for piece_index, piece in enumerate(hold["geometry"]):
-                key = _piece_key(hold_id, piece_index)
-                current = display_path_for_shape(
-                    piece["frame"], piece["shape"], width, height, label=f"hold {key}"
-                )
-                edited = parsed_regions[key]
-                if edited.data != current.data:
-                    changes.append((hold_id, piece_index, edited))
-        if not changes:
+        parsed_regions = _validate_editor_document(document, width, height)
+
+        pieces_by_hold: dict[str, list[tuple[int, str, Any]]] = {}
+        for hold_id, piece_index, kind, path in parsed_regions.values():
+            pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+        for pieces in pieces_by_hold.values():
+            pieces.sort(key=lambda item: item[0])
+
+        current_holds = {hold["id"]: hold for hold in live.board["holds"]}
+        if not _editor_document_is_dirty(pieces_by_hold, current_holds, width, height):
             return live
 
         candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
@@ -285,18 +283,78 @@ def save_editor_document(
             shutil.copytree(live.root, candidate)
             board_path = candidate / "board.json"
             board = _load_json(board_path, "board.json")
-            holds = {hold["id"]: hold for hold in board["holds"]}
-            for hold_id, piece_index, path in changes:
-                frame, shape = shape_for_path(path, width, height)
-                piece = holds[hold_id]["geometry"][piece_index]
-                piece["frame"] = frame.to_json()
-                piece["shape"] = _rounded_json(shape)
+            existing_by_id = {hold["id"]: hold for hold in board["holds"]}
+            order = [
+                hold_id for hold_id in existing_by_id if hold_id in pieces_by_hold
+            ] + [
+                hold_id for hold_id in pieces_by_hold if hold_id not in existing_by_id
+            ]
+            updated_holds: list[dict[str, Any]] = []
+            for hold_id in order:
+                pieces = pieces_by_hold[hold_id]
+                existing = existing_by_id.get(hold_id)
+                geometry: list[dict[str, Any]] = []
+                for piece_index, _kind, path in pieces:
+                    existing_geometry = existing["geometry"] if existing is not None else []
+                    if piece_index < len(existing_geometry):
+                        piece = existing_geometry[piece_index]
+                        current_path = display_path_for_shape(
+                            piece["frame"], piece["shape"], width, height,
+                            label=f"hold {_piece_key(hold_id, piece_index)}",
+                        )
+                        if path.data != current_path.data:
+                            frame, shape = shape_for_path(path, width, height)
+                            piece["frame"] = frame.to_json()
+                            piece["shape"] = _rounded_json(shape)
+                        geometry.append(piece)
+                    else:
+                        frame, shape = shape_for_path(path, width, height)
+                        geometry.append(
+                            {"frame": frame.to_json(), "shape": _rounded_json(shape)}
+                        )
+                hold_json = (
+                    existing
+                    if existing is not None
+                    else {"id": hold_id, "name": _default_hold_name(hold_id)}
+                )
+                hold_json["kind"] = pieces[0][1]
+                hold_json["geometry"] = geometry
+                updated_holds.append(hold_json)
+            board["holds"] = updated_holds
             _write_json(board_path, board)
             load_board_package(candidate)
             _replace_package_locked(root, slug, candidate, inventory=inventory)
             return load_board_package(root / slug)
         finally:
             shutil.rmtree(candidate_parent, ignore_errors=True)
+
+
+def _editor_document_is_dirty(
+    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    current_holds: Mapping[str, Any],
+    width: int,
+    height: int,
+) -> bool:
+    if set(pieces_by_hold) != set(current_holds):
+        return True
+    for hold_id, pieces in pieces_by_hold.items():
+        hold = current_holds[hold_id]
+        if hold["kind"] != pieces[0][1] or len(hold["geometry"]) != len(pieces):
+            return True
+        for piece_index, _kind, path in pieces:
+            piece = hold["geometry"][piece_index]
+            current_path = display_path_for_shape(
+                piece["frame"], piece["shape"], width, height,
+                label=f"hold {_piece_key(hold_id, piece_index)}",
+            )
+            if path.data != current_path.data:
+                return True
+    return False
+
+
+def _default_hold_name(hold_id: str) -> str:
+    words = [word for word in re.split(r"[-_.]+", hold_id) if word]
+    return " ".join(word.capitalize() for word in words) or hold_id
 
 
 def replace_package(library_root: Path, slug: str, candidate_root: Path) -> None:
@@ -615,8 +673,10 @@ def _validate_treatment(value: object, label: str) -> None:
 
 
 def _validate_editor_document(
-    document: Mapping[str, Any], package: BoardPackage, width: int, height: int
-) -> dict[str, Any]:
+    document: Mapping[str, Any], width: int, height: int
+) -> dict[str, tuple[str, int, str, Any]]:
+    """Parse and cross-validate an editor document, allowing added/removed/
+    recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _exact_keys(document, {"schemaVersion", "canvas", "regions"}, "editor document")
@@ -624,22 +684,12 @@ def _validate_editor_document(
     if document.get("canvas") != {"width": width, "height": height}:
         raise BoardPackageError("editor document canvas does not match the primary image")
     regions = document.get("regions")
-    if not isinstance(regions, list):
-        raise BoardPackageError("editor document regions must be an array")
+    if not isinstance(regions, list) or not regions:
+        raise BoardPackageError("editor document regions must be a non-empty array")
 
-    expected: dict[str, tuple[int, str, dict[str, object]]] = {}
-    region_id = 1
-    for hold in package.board["holds"]:
-        for piece_index, _piece in enumerate(hold["geometry"]):
-            key = _piece_key(hold["id"], piece_index)
-            expected[key] = (
-                region_id,
-                hold["kind"],
-                {"holdID": hold["id"], "pieceIndex": piece_index},
-            )
-            region_id += 1
-
-    parsed: dict[str, Any] = {}
+    parsed: dict[str, tuple[str, int, str, Any]] = {}
+    pieces_by_hold: dict[str, dict[int, str]] = {}
+    kind_by_hold: dict[str, str] = {}
     for region in regions:
         if not isinstance(region, Mapping):
             raise BoardPackageError("editor document contains an invalid hold piece")
@@ -649,27 +699,50 @@ def _validate_editor_document(
             "editor region",
         )
         key = region.get("key")
-        if not isinstance(key, str) or key not in expected:
-            raise BoardPackageError("editor document contains an unknown hold piece")
+        if not isinstance(key, str) or not key:
+            raise BoardPackageError("editor document contains an invalid hold piece")
         if key in parsed:
             raise BoardPackageError("duplicate hold piece key")
-        expected_id, expected_type, expected_metadata = expected[key]
+        if isinstance(region.get("id"), bool) or not isinstance(region.get("id"), int):
+            raise BoardPackageError(f"editor region {key}.id must be an integer")
+        kind = _enum(region.get("type"), _HOLD_KINDS, f"editor region {key}.type")
+        metadata = region.get("metadata")
+        if not isinstance(metadata, Mapping):
+            raise BoardPackageError(f"editor region {key}.metadata must be an object")
+        _exact_keys(metadata, {"holdID", "pieceIndex"}, f"editor region {key}.metadata")
+        hold_id = _identifier(metadata.get("holdID"), f"editor region {key}.metadata.holdID")
+        piece_index = metadata.get("pieceIndex")
         if (
-            region.get("id") != expected_id
-            or region.get("type") != expected_type
-            or region.get("metadata") != expected_metadata
+            isinstance(piece_index, bool)
+            or not isinstance(piece_index, int)
+            or piece_index < 0
         ):
-            raise BoardPackageError(f"editor region {key} metadata does not match its hold piece")
+            raise BoardPackageError(
+                f"editor region {key}.metadata.pieceIndex must be a non-negative integer"
+            )
         try:
-            parsed[key] = parse_closed_path(
+            parsed_path = parse_closed_path(
                 region.get("displayPath"), width, height, label=f"hold {key}"
             )
         except GeometryError as error:
             raise BoardPackageError(str(error)) from error
-    if set(parsed) != set(expected):
-        raise BoardPackageError(
-            "editor document hold pieces must exactly match board geometry"
-        )
+
+        pieces = pieces_by_hold.setdefault(hold_id, {})
+        if piece_index in pieces:
+            raise BoardPackageError(f"hold {hold_id} has duplicate piece index {piece_index}")
+        pieces[piece_index] = key
+        existing_kind = kind_by_hold.get(hold_id)
+        if existing_kind is not None and existing_kind != kind:
+            raise BoardPackageError(f"hold {hold_id} pieces must share one kind")
+        kind_by_hold[hold_id] = kind
+        parsed[key] = (hold_id, piece_index, kind, parsed_path)
+
+    for hold_id, pieces in pieces_by_hold.items():
+        if set(pieces) != set(range(len(pieces))):
+            raise BoardPackageError(
+                f"hold {hold_id} pieces must be indexed contiguously from 0"
+            )
+
     return parsed
 
 
