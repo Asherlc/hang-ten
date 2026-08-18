@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .board_path_simplification import simplify_package_hold_paths
 
 
 class _CliError(ValueError):
@@ -24,6 +25,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 require_complete_inventory=arguments.final_inventory,
             )
             print(_status_payload(inventory))
+            return 0
+        if arguments.command == "simplify-hold-paths":
+            inventory = discover_board_packages(arguments.root)
+            print(_simplification_payload(inventory, write=arguments.write))
             return 0
         raise _CliError("unknown command")
     except SystemExit as error:
@@ -51,6 +56,12 @@ def _parser() -> argparse.ArgumentParser:
             action="store_true",
             help="reject primary-only draft directories",
         )
+    simplify = subcommands.add_parser(
+        "simplify-hold-paths",
+        help="reduce validated hold-path editable points within native-pixel error limits",
+    )
+    simplify.add_argument("--root", type=Path, required=True)
+    simplify.add_argument("--write", action="store_true", help="atomically update changed board.json files")
     return parser
 
 
@@ -67,6 +78,42 @@ def _board_status(package: BoardPackage) -> dict[str, object]:
         "id": package.board.id,
         "path": package.root.name,
     }
+
+
+def _simplification_payload(inventory: BoardInventory, *, write: bool) -> str:
+    boards = []
+    for package in inventory.packages:
+        result = simplify_package_hold_paths(package.root, write=write)
+        boards.append(
+            {
+                "id": result.board_id,
+                "path": package.root.name,
+                "changed": result.changed,
+                "pieces": [
+                    {
+                        "holdId": piece.hold_id,
+                        "pieceIndex": piece.piece_index,
+                        "beforeEditablePoints": piece.before_editable_points,
+                        "afterEditablePoints": piece.after_editable_points,
+                        "maximumBoundaryDeviationPixels": piece.maximum_boundary_deviation_pixels,
+                        "symmetricDifferenceRatio": piece.symmetric_difference_ratio,
+                        "changed": piece.changed,
+                    }
+                    for piece in result.pieces
+                    if piece.changed
+                ],
+            }
+        )
+    return json.dumps(
+        {
+            "boards": boards,
+            "draftCount": len(inventory.drafts),
+            "drafts": [path.name for path in inventory.drafts],
+            "write": write,
+        },
+        indent=2,
+        sort_keys=True,
+    )
 
 
 if __name__ == "__main__":
