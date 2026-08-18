@@ -101,6 +101,46 @@ internal enum BoardTargetResolver {
         let ids = Set(resolveHoldIDs(for: target, on: board))
         return board.holds.filter { ids.contains($0.id) }
     }
+
+    static func substituteHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+        let primary = resolveHoldIDs(for: target, on: board)
+        if !primary.isEmpty { return primary }
+        return closestMatch(for: target, on: board)
+    }
+
+    static func substituteHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
+        let ids = Set(substituteHoldIDs(for: target, on: board))
+        return board.holds.filter { ids.contains($0.id) }
+    }
+
+    private static func closestMatch(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+        if let feature = target.feature {
+            return byFeatureGroup(feature, on: board)
+        }
+        guard let kind = target.kind else { return [] }
+        return board.holds.filter { $0.kind == kind }.map(\.id)
+    }
+
+    private static func byFeatureGroup(_ feature: HoldFeature, on board: TrainingBoard) -> [String] {
+        let group = feature.featureGroup
+        let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
+
+        let sameGroup = board.holds.filter { hold in
+            guard let features = hold.features else { return false }
+            return !features.isDisjoint(with: groupFeatures)
+        }
+        if !sameGroup.isEmpty { return sameGroup.map(\.id) }
+
+        let sameKind = board.holds.filter { $0.kind == feature.holdKind }
+        if !sameKind.isEmpty { return sameKind.map(\.id) }
+
+        if let capacity = feature.impliedFingerCapacity {
+            let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
+            if !crossKind.isEmpty { return crossKind.map(\.id) }
+        }
+
+        return []
+    }
 }
 
 struct WorkoutActivityRecorder {

@@ -237,6 +237,37 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
             .other
         }
     }
+
+    var holdKind: HoldKind {
+        switch self {
+        case .jug:
+            .jug
+        case .roundSloper, .largeSlope:
+            .sloper
+        case .largeEdge, .mediumEdge, .smallEdge,
+             .fourFingerFlatEdge, .fourFingerIncutEdge,
+             .thinCrimp, .shallowThreeFingerSlot, .largeOpenHandRail:
+            .edge
+        case .pocket, .twoFingerPocket, .threeFingerPocket,
+             .fourFingerPocket, .deepTwoFingerPocket:
+            .pocket
+        case .widePinch, .mediumPinch, .smallPinch:
+            .pinch
+        }
+    }
+
+    var impliedFingerCapacity: Int? {
+        switch self {
+        case .twoFingerPocket, .deepTwoFingerPocket:
+            2
+        case .threeFingerPocket, .shallowThreeFingerSlot:
+            3
+        case .fourFingerPocket, .fourFingerFlatEdge, .fourFingerIncutEdge:
+            4
+        default:
+            nil
+        }
+    }
 }
 
 enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
