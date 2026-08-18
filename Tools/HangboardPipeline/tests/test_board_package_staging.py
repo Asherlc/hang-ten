@@ -8,7 +8,12 @@ from pathlib import Path
 
 import pytest
 
-from conftest import PRIMARY_PNG_BYTES, write_board_package, write_primary_only_draft
+from conftest import (
+    ALTERNATE_PRIMARY_PNG_BYTES,
+    PRIMARY_PNG_BYTES,
+    write_board_package,
+    write_primary_only_draft,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -97,15 +102,15 @@ def test_repeated_staging_refreshes_nested_package_bytes(
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
     primary = packages[0] / "assets" / "primary.png"
-    primary.write_bytes(b"first")
+    primary.write_bytes(PRIMARY_PNG_BYTES)
     module.stage_board_packages(repository_root, destination)
     staged_primary = destination / packages[0].name / "assets" / "primary.png"
-    assert staged_primary.read_bytes() == b"first"
+    assert staged_primary.read_bytes() == PRIMARY_PNG_BYTES
 
-    primary.write_bytes(b"second")
+    primary.write_bytes(ALTERNATE_PRIMARY_PNG_BYTES)
     module.stage_board_packages(repository_root, destination)
 
-    assert staged_primary.read_bytes() == b"second"
+    assert staged_primary.read_bytes() == ALTERNATE_PRIMARY_PNG_BYTES
 
 
 def test_staging_fails_closed_for_a_malformed_completed_package(
