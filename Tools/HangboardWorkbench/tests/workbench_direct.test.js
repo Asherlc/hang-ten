@@ -32,30 +32,65 @@ class FakeElement {
     this.tagName = tagName;
     this.ownerDocument = ownerDocument;
     this.children = [];
+    this.parent = null;
     this.classList = new FakeClassList();
     this.listeners = new Map();
     this.attributes = new Map();
+    this.dataset = {};
     this.disabled = false;
     this.textContent = "";
     this.value = "";
   }
 
-  append(...children) { this.children.push(...children); }
-  appendChild(child) { this.children.push(child); return child; }
-  replaceChildren(...children) { this.children = children; this.textContent = ""; }
+  append(...children) {
+    this.children.push(...children);
+    for (const child of children) { if (child instanceof FakeElement) child.parent = this; }
+  }
+  appendChild(child) {
+    this.children.push(child);
+    if (child instanceof FakeElement) child.parent = this;
+    return child;
+  }
+  replaceChildren(...children) {
+    this.children = children;
+    for (const child of children) { if (child instanceof FakeElement) child.parent = this; }
+    this.textContent = "";
+  }
+  remove() {
+    if (!this.parent) return;
+    this.parent.children = this.parent.children.filter((child) => child !== this);
+    this.parent = null;
+  }
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
   removeAttribute(name) { this.attributes.delete(name); }
   addEventListener(name, listener) { this.listeners.set(name, listener); }
+  querySelector(selector) {
+    if (typeof selector !== "string" || !selector.startsWith(".")) return null;
+    const className = selector.slice(1);
+    const stack = [...this.children];
+    while (stack.length) {
+      const node = stack.shift();
+      if (!(node instanceof FakeElement)) continue;
+      if (node.classList.values.has(className)) return node;
+      stack.push(...node.children);
+    }
+    return null;
+  }
   click() {
     if (!this.disabled) this.listeners.get("click")?.({ currentTarget: this, target: this });
   }
+  change() {
+    this.listeners.get("change")?.({ currentTarget: this, target: this });
+  }
 }
 
-function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }) {
+function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), dialogs }) {
   const ids = [
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
-    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key", "hold-path", "apply-hold-button",
+    "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
+    "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
+    "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
   ];
   const elements = {};
   const document = {
@@ -67,6 +102,11 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}) }
   const context = {
     HoldWorkbenchClient: client,
     HoldWorkbenchController: controller,
+    HoldWorkbenchDialogs: dialogs || {
+      confirm: () => { throw new Error("dialogs.confirm was not stubbed for this test"); },
+      prompt: () => { throw new Error("dialogs.prompt was not stubbed for this test"); },
+    },
+    HoldPathEditor: require("../path-editor.js"),
     Image: class {
       set src(href) {
         imageLoader(href).then(
@@ -120,6 +160,81 @@ test("the browser client saves one direct editor document with PUT", async () =>
   assert.equal(calls[0][0], "/api/boards/compact");
   assert.equal(calls[0][1].method, "PUT");
   assert.deepEqual(JSON.parse(calls[0][1].body), document);
+});
+
+test("the browser client can read git status and run git operations", async () => {
+  const calls = [];
+  global.fetch = async (request, options) => {
+    calls.push([request, options]);
+    if (request === "/api/git/status") {
+      return response({
+        ok: true,
+        currentBranch: "main",
+        branches: ["main", "feature"],
+        dirty: false,
+      });
+    }
+    if (request === "/api/git/checkout") {
+      return response({ ok: true, branch: "feature" });
+    }
+    if (request === "/api/git/commit") {
+      return response({ ok: true, commit: "a".repeat(40), branch: "main", message: "Update board" });
+    }
+    if (request === "/api/git/push") {
+      return response({ ok: true, branch: "main", remote: "origin" });
+    }
+    if (request === "/api/git/open-pr") {
+      return response({ ok: true, branch: "main", url: "https://example.com/pull/1" });
+    }
+    throw new Error(`unexpected endpoint ${request}`);
+  };
+
+  const client = freshClient();
+
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main", "feature"],
+    dirty: false,
+    statusLines: [],
+  });
+  assert.equal(await client.listBranches().then((payload) => payload.branches.join(",")), "main,feature");
+  assert.equal(await client.switchBranch("feature"), "feature");
+  const commit = await client.commitBoardChanges("Update board");
+  assert.equal(commit.commit, "a".repeat(40));
+  const pushed = await client.pushBranch();
+  assert.equal(pushed.remote, "origin");
+  const opened = await client.openPullRequest({ title: "Update board", body: "", base: "main" });
+  assert.equal(opened.url, "https://example.com/pull/1");
+  assert.equal(calls.length, 6);
+});
+
+test("getGitStatus falls back to an empty statusLines array for null or non-array values", async () => {
+  let statusLines = null;
+  global.fetch = async (request) => {
+    if (request === "/api/git/status") {
+      return response({ ok: true, currentBranch: "main", branches: ["main"], dirty: true, statusLines });
+    }
+    throw new Error(`unexpected endpoint ${request}`);
+  };
+  const client = freshClient();
+
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main"],
+    dirty: true,
+    statusLines: [],
+  });
+
+  statusLines = "not an array";
+  assert.deepEqual(await client.getGitStatus(), {
+    ok: true,
+    currentBranch: "main",
+    branches: ["main"],
+    dirty: true,
+    statusLines: [],
+  });
 });
 
 test("direct board loading commits image and holds together and preserves the prior editor on failure", async () => {
@@ -302,7 +417,189 @@ test("a pending browser save cannot reset a newer board document", async () => {
   await settle();
   await settle();
   assert.equal(app.elements["board-name"].textContent, "Board A");
-  assert.equal(app.elements["hold-path"].value, "");
+});
+
+test("selecting a hold repeatedly does not duplicate the path editor overlay", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [{ key: "a", displayPath: "M 1 1 L 20 1 L 20 20 Z" }] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+
+  function overlayCount() {
+    return app.elements["editor-svg"].children.filter((child) => child.classList.values.has("path-editor-overlay")).length;
+  }
+
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(overlayCount(), 1);
+
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(overlayCount(), 1);
+});
+
+test("the browser shows detached HEAD instead of unavailable when the repository has no branch", async () => {
+  const controller = require("../workbench-controller.js");
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        return { ok: true, currentBranch: null, branches: ["main"], dirty: true, statusLines: ["?? note.txt"] };
+      },
+    },
+    controller,
+  });
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["git-status"].textContent, "Detached HEAD (uncommitted changes)");
+  assert.equal(app.elements["board-status"].textContent, "Detached HEAD");
+});
+
+test("the browser reports repository status unavailable only when the status fetch itself fails", async () => {
+  const controller = require("../workbench-controller.js");
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { throw new Error("network error"); },
+    },
+    controller,
+  });
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["git-status"].textContent, "Repository status unavailable");
+  assert.equal(app.elements["board-status"].textContent, "No branch detected");
+});
+
+test("switching branches does not prompt for confirmation when there are no unsaved hold edits", async () => {
+  const controller = require("../workbench-controller.js");
+  const switchedTo = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "main", branches: ["main", "feature"], dirty: false }; },
+      async switchBranch(branch) { switchedTo.push(branch); return { ok: true }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm must not be called without unsaved edits"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-branch-select"].value = "feature";
+  app.elements["git-branch-select"].change();
+  app.elements["git-switch-button"].click();
+  await settle();
+  await settle();
+
+  assert.deepEqual(switchedTo, ["feature"]);
+});
+
+test("switching branches reports success plus a status warning when the post-switch status refresh fails", async () => {
+  const controller = require("../workbench-controller.js");
+  let statusCalls = 0;
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() {
+        statusCalls += 1;
+        if (statusCalls === 1) return { ok: true, currentBranch: "main", branches: ["main", "feature"], dirty: false };
+        throw new Error("status backend unavailable");
+      },
+      async switchBranch(branch) { return { ok: true }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: () => { throw new Error("prompt was not stubbed for this test"); },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-branch-select"].value = "feature";
+  app.elements["git-branch-select"].change();
+  app.elements["git-switch-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(app.elements["editor-status"].textContent, "Switched to feature. Repository status unavailable.");
+  assert.equal(app.elements["validation-panel"].classList.values.has("hidden"), false);
+});
+
+test("opening a pull request cancels when the title prompt is dismissed", async () => {
+  const controller = require("../workbench-controller.js");
+  let opened = false;
+  const prompts = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "feature", branches: ["main", "feature"], dirty: false }; },
+      async openPullRequest() { opened = true; return { url: "https://example.com/pr/1" }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: (message, defaultValue) => { prompts.push(message); return null; },
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-open-pr-button"].click();
+  await settle();
+
+  assert.equal(prompts.length, 1);
+  assert.equal(opened, false);
+});
+
+test("opening a pull request sends the prompted title and body", async () => {
+  const controller = require("../workbench-controller.js");
+  const requests = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return []; },
+      async getAuthStatus() { return { authenticated: true, username: "octocat" }; },
+      async getGitStatus() { return { ok: true, currentBranch: "feature", branches: ["main", "feature"], dirty: false }; },
+      async openPullRequest(request) { requests.push(request); return { url: "https://example.com/pr/1" }; },
+    },
+    controller,
+    dialogs: {
+      confirm: () => { throw new Error("confirm was not stubbed for this test"); },
+      prompt: (message) => (message.startsWith("Pull request title") ? "My title" : "My body"),
+    },
+  });
+  await settle();
+  await settle();
+
+  app.elements["git-open-pr-button"].click();
+  await settle();
+
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].title, "My title");
+  assert.equal(requests[0].body, "My body");
+  assert.equal(requests[0].base, "main");
 });
 
 test("browser source contains only direct board vocabulary", () => {

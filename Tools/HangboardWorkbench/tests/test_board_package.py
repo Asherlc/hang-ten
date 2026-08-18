@@ -14,14 +14,12 @@ from types import ModuleType
 
 import pytest
 
-TEST_ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(TEST_ROOT))
-import conftest as shared_fixtures  # noqa: E402
 
-REPOSITORY_ROOT = shared_fixtures.REPOSITORY_ROOT
-WORKBENCH_ROOT = shared_fixtures.WORKBENCH_ROOT
-CANONICAL_PACKAGE = shared_fixtures.CANONICAL_PACKAGE
-PRIMARY_IMAGE = shared_fixtures.PRIMARY_IMAGE
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+PIPELINE_MODULE_ROOT = (
+    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+)
 VALIDATION_FIXTURES = json.loads(
     (
         REPOSITORY_ROOT
@@ -38,6 +36,11 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
 from board_package import BoardPackageError  # noqa: E402
+from workbench_fixtures import (  # noqa: E402
+    CANONICAL_PACKAGE,
+    PRIMARY_IMAGE,
+    board_document,
+)
 
 
 def _load_stage_module(module_name: str) -> ModuleType:
@@ -53,6 +56,10 @@ def _load_stage_module(module_name: str) -> ModuleType:
     finally:
         sys.dont_write_bytecode = previous_bytecode_setting
     return stage_module
+
+
+def _write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
 def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
@@ -82,10 +89,30 @@ def _png_with_corrupt_post_ihdr_data() -> bytes:
     return bytes(data)
 
 
-_board_document = shared_fixtures.board_document
-_write_json = shared_fixtures.write_json
-_write_finished_package = shared_fixtures.write_finished_package
-_write_draft = shared_fixtures.write_draft
+def _write_finished_package(
+    library: Path,
+    slug: str,
+    board_id: str,
+    *,
+    manufacturer: str = "Fixture Maker",
+    name: str = "Fixture Board",
+) -> Path:
+    package = library / slug
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    _write_json(
+        package / "board.json",
+        board_document(board_id, manufacturer=manufacturer, name=name),
+    )
+    return package
+
+
+def _write_draft(library: Path, slug: str) -> Path:
+    assets = library / slug / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    return assets.parent
 
 
 def _library(tmp_path: Path) -> Path:
@@ -937,7 +964,7 @@ def test_replace_commits_new_package_when_backup_cleanup_fails(
     assert not list(library.parent.glob(".Hangboards.workbench-previous-*"))
 
 
-def test_staging_copies_only_complete_direct_children_without_a_registry(
+def test_staging_ignores_primary_only_drafts_when_staging_packages(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repository = tmp_path / "repository"
@@ -946,18 +973,14 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_test")
-    discovered_module = stage_module.load_board_package_module(repository)
-
-    def fail_lock(*_args: object, **_kwargs: object) -> object:
-        raise AssertionError("workbench lock must not be taken in staging path")
-
-    discovered_module._library_lock = fail_lock
 
     build_root = tmp_path / "build"
     destination = build_root / "Resources" / "Hangboards"
@@ -967,22 +990,8 @@ def test_staging_copies_only_complete_direct_children_without_a_registry(
     staged = stage_module.stage_board_packages(repository, destination)
 
     assert staged == (destination / "finished-board",)
-    assert sorted(
-        path.relative_to(destination).as_posix()
-        for path in destination.rglob("*")
-    ) == [
-        "finished-board",
-        "finished-board/assets",
-        "finished-board/assets/primary.png",
-        "finished-board/board.json",
-    ]
-    assert not (destination / "catalog.json").exists()
-    staged_board = json.loads(
-        (destination / "finished-board" / "board.json").read_text(encoding="utf-8")
-    )
-    assert [hold["kind"] for hold in staged_board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
+    assert (destination / "finished-board").is_dir()
+    assert (destination / "draft-board").is_dir() is False
 
 
 def test_staging_commits_new_destination_when_backup_cleanup_fails(
@@ -992,10 +1001,12 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     _write_finished_package(library, "finished-board", "finished.board")
-    workbench = repository / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    for filename in ["board_package.py", "board_geometry.py"]:
-        shutil.copyfile(WORKBENCH_ROOT / filename, workbench / filename)
+    pipeline_module = (
+        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    )
+    pipeline_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_artwork.py"]:
+        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 

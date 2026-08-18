@@ -41,7 +41,7 @@ runs:
 
     - name: Run focused Node suite
       shell: bash
-      run: node --test Tools/HangboardWorkbench/tests/workbench*.test.js
+      run: node --test Tools/HangboardWorkbench/tests/*.test.js
 
     - name: Run native shell tests
       shell: bash

@@ -85,7 +85,10 @@ class PathCommand:
             raise ValueError(f"{label} must be a point")
         if len(value) != 2:
             raise ValueError(f"{label} must contain exactly two numbers")
-        return (_float(value[0], label=f"{label}[0]"), _float(value[1], label=f"{label}[1]"))
+        return (
+            _float(value[0], label=f"{label}[0]", minimum=0, maximum=1),
+            _float(value[1], label=f"{label}[1]", minimum=0, maximum=1),
+        )
 
     @classmethod
     def from_json(cls, value: Any, label: str) -> "PathCommand":
@@ -146,5 +149,9 @@ class BoardShapeDocument:
             )
             if not commands:
                 raise ValueError(f"{source}.commands must be a non-empty array")
+            if commands[0].command != "move":
+                raise ValueError(f"{source}.commands must start with move")
+            if commands[-1].command != "close":
+                raise ValueError(f"{source}.commands must end with close")
             return cls(type="path", commands=commands)
         raise ValueError(f"{source}.type must be roundedRect or path")
