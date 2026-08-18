@@ -17,6 +17,7 @@
     prompt: (message, defaultValue) => window.prompt(message, defaultValue),
   };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
+  const HOLD_KINDS = Object.keys(TYPE_COLORS);
 
   const state = {
     boards: [],
@@ -39,11 +40,19 @@
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
+    "hold-type-select", "add-hold-button",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
     "delete-hold-button",
   ].map((id) => [id, document.getElementById(id)]));
+
+  for (const kind of HOLD_KINDS) {
+    const option = document.createElement("option");
+    option.value = kind;
+    option.textContent = kind;
+    el["hold-type-select"].append(option);
+  }
 
   const boardOperations = createBoardOperationCoordinator({
     onBusyChange: (busy) => {
@@ -86,6 +95,7 @@
 
   function renderSaveState() {
     el["save-button"].disabled = !state.board || isBusy();
+    el["add-hold-button"].disabled = !state.document || isBusy();
     el["refresh-boards-button"].disabled = isBusy();
     el["save-state"].textContent = !state.board
       ? "No board selected"
@@ -475,6 +485,7 @@
     el["hold-heading"].textContent = hold ? hold.key : "No selection";
     if (!hold) return;
     el["hold-key"].value = hold.key;
+    el["hold-type-select"].value = hold.type;
   }
 
   function render() {
@@ -829,9 +840,8 @@
     if (!hold) return;
     const proceed = dialogs.confirm(`Delete hold "${hold.key}"?`);
     if (!proceed) return;
-    const idx = state.document.regions.findIndex((r) => r.key === hold.key);
-    if (idx === -1) return;
-    state.document.regions.splice(idx, 1);
+    const holdId = hold.metadata.holdID;
+    state.document.regions = state.document.regions.filter((r) => r.metadata.holdID !== holdId);
     state.selectedKey = null;
     state.dirty = true;
     try {
@@ -841,6 +851,69 @@
       setValidation(error.message || "Document is invalid after deletion.");
     }
     setStatus("Hold deleted. Save when ready.");
+    render();
+  });
+
+  el["hold-type-select"].addEventListener("change", () => {
+    const hold = selectedHold();
+    if (!hold) return;
+    const type = el["hold-type-select"].value;
+    const holdId = hold.metadata.holdID;
+    const siblings = state.document.regions.filter((r) => r.metadata.holdID === holdId);
+    const originalTypes = siblings.map((r) => r.type);
+    const originalDirty = state.dirty;
+    for (const region of siblings) region.type = type;
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Hold recategorized. Save when ready.");
+    } catch (error) {
+      siblings.forEach((region, index) => { region.type = originalTypes[index]; });
+      state.dirty = originalDirty;
+      setValidation(error.message || "Hold type is invalid.");
+    }
+    render();
+  });
+
+  function nextHoldId() {
+    const ids = new Set((state.document?.regions || []).map((region) => region.metadata.holdID));
+    let n = ids.size + 1;
+    while (ids.has(`hold-${n}`)) n++;
+    return `hold-${n}`;
+  }
+
+  function nextRegionId() {
+    const ids = (state.document?.regions || []).map((region) => region.id);
+    return ids.length ? Math.max(...ids) + 1 : 1;
+  }
+
+  el["add-hold-button"].addEventListener("click", () => {
+    if (!state.document) return;
+    const { width, height } = state.document.canvas;
+    const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
+    const cx = width / 2;
+    const cy = height / 2;
+    const holdId = nextHoldId();
+    const region = {
+      id: nextRegionId(),
+      key: `${holdId}-piece-0`,
+      type: "edge",
+      displayPath: `M ${cx - size} ${cy - size} L ${cx + size} ${cy - size} L ${cx + size} ${cy + size} L ${cx - size} ${cy + size} Z`,
+      metadata: { holdID: holdId, pieceIndex: 0 },
+    };
+    state.document.regions.push(region);
+    state.selectedKey = region.key;
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Hold added. Drag it into place and save when ready.");
+    } catch (error) {
+      state.document.regions.pop();
+      state.selectedKey = null;
+      setValidation(error.message || "Could not add hold.");
+    }
     render();
   });
 

@@ -55,7 +55,7 @@
               <span class="eyebrow">Board</span>
               <strong id="board-name">No board selected</strong>
             </div>
-
+            <button class="tool-button accent" id="add-hold-button" type="button" disabled>Add hold</button>
           </div>
           <div class="editor-views">
             <div class="canvas-viewport" id="canvas-viewport">
@@ -86,6 +86,9 @@
           <div class="inspector-empty" id="hold-empty">Select a hold to edit its closed contour.</div>
           <form class="inspector-form hidden" id="hold-form">
             <label>Hold key <input id="hold-key" type="text" readonly /></label>
+            <label>Hold type
+              <select id="hold-type-select"></select>
+            </label>
             <button type="button" id="delete-hold-button" class="tool-button danger">Delete hold</button>
           </form>
         </aside>
