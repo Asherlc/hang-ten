@@ -78,7 +78,7 @@ final class BackendControllerTests: XCTestCase {
             portSelector: { 4173 }
         )
 
-        let session = try await backend.start(repositoryRoot: checkout, port: 4173)
+        let session = try await backend.startSession(repositoryRoot: checkout, port: 4173)
 
         XCTAssertEqual(process.runCount, 1)
         XCTAssertEqual(session.runtimeIdentity, String(repeating: "a", count: 40))
