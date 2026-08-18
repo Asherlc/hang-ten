@@ -18,6 +18,7 @@
   };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const HOLD_KINDS = Object.keys(TYPE_COLORS);
+  const ROTATION_HANDLE_RADIUS = 6;
 
   const state = {
     boards: [],
@@ -212,7 +213,7 @@
     const overlay = document.createElementNS(svgNS, "g");
     overlay.classList.add("path-editor-overlay");
     const pivot = holdCentroid(holdSiblings(hold));
-    const handleY = Math.max(0, pivot.y - 24);
+    const handleY = Math.max(ROTATION_HANDLE_RADIUS, pivot.y - 24);
     const rotationConnector = document.createElementNS(svgNS, "line");
     rotationConnector.setAttribute("x1", String(pivot.x));
     rotationConnector.setAttribute("y1", String(pivot.y));
@@ -226,7 +227,7 @@
     const rotationHandle = document.createElementNS(svgNS, "circle");
     rotationHandle.setAttribute("cx", String(pivot.x));
     rotationHandle.setAttribute("cy", String(handleY));
-    rotationHandle.setAttribute("r", "6");
+    rotationHandle.setAttribute("r", String(ROTATION_HANDLE_RADIUS));
     rotationHandle.setAttribute("fill", "#fff7dc");
     rotationHandle.setAttribute("stroke", TYPE_COLORS[hold.type] || "#ff754f");
     rotationHandle.setAttribute("stroke-width", "2");
@@ -304,12 +305,67 @@
     const svg = el["editor-svg"];
     const rect = svg.getBoundingClientRect();
     const vb = svg.getAttribute("viewBox").split(" ").map(Number);
-    const scaleX = vb[2] / rect.width;
-    const scaleY = vb[3] / rect.height;
-    return { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY };
+    const ctm = svg.getScreenCTM?.();
+    if (ctm) {
+      try {
+        const inverse = ctm.inverse();
+        if (typeof DOMPoint === "function") {
+          const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(inverse);
+          return { x: point.x, y: point.y };
+        }
+        return {
+          x: inverse.a * event.clientX + inverse.c * event.clientY + inverse.e,
+          y: inverse.b * event.clientX + inverse.d * event.clientY + inverse.f,
+        };
+      } catch {}
+    }
+    const preserveAspectRatio = svg.getAttribute("preserveAspectRatio") || "xMidYMid meet";
+    if (preserveAspectRatio.includes("none")) {
+      return {
+        x: vb[0] + (event.clientX - rect.left) * (vb[2] / rect.width),
+        y: vb[1] + (event.clientY - rect.top) * (vb[3] / rect.height),
+      };
+    }
+    const scale = Math.min(rect.width / vb[2], rect.height / vb[3]);
+    const contentWidth = vb[2] * scale;
+    const contentHeight = vb[3] * scale;
+    const offsetX = rect.left + (rect.width - contentWidth) / 2;
+    const offsetY = rect.top + (rect.height - contentHeight) / 2;
+    return { x: vb[0] + (event.clientX - offsetX) / scale, y: vb[1] + (event.clientY - offsetY) / scale };
+  }
+
+  function restoreDragPaths() {
+    if (drag.type === "rotation") {
+      for (const original of drag.originalPaths) {
+        const region = state.document?.regions.find((candidate) => candidate.key === original.key);
+        if (region) region.displayPath = original.path;
+      }
+    } else {
+      const hold = state.document?.regions.find((region) => region.key === drag.holdKey);
+      if (hold) hold.displayPath = drag.originalPath;
+    }
+    state.dirty = drag.originalDirty;
+  }
+
+  function releaseDragPointer() {
+    const pointerId = drag.pointerId;
+    drag.pointerId = null;
+    if (pointerId == null) return;
+    try { el["editor-svg"].releasePointerCapture?.(pointerId); } catch {}
+  }
+
+  function cancelDrag(message) {
+    if (!drag.active) return;
+    restoreDragPaths();
+    drag.active = false;
+    releaseDragPointer();
+    setValidation();
+    setStatus(message);
+    render();
   }
 
   function handlePointerDown(event) {
+    if (drag.active) return;
     const target = event.target;
     if (target.classList.contains("path-editor-rotation-handle")) {
       event.preventDefault();
@@ -377,11 +433,14 @@
   }
 
   function handlePointerMove(event) {
-    if (!drag.active) return;
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
     const pt = svgPoint(event);
     const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
-    if (!hold) { drag.active = false; return; }
+    if (!hold) {
+      cancelDrag("Edit cancelled because the selected hold is no longer available.");
+      return;
+    }
     if (drag.type === "rotation") {
       const angle = Math.atan2(pt.y - drag.pivot.y, pt.x - drag.pivot.x);
       let angleDelta = angle - drag.lastAngle;
@@ -433,12 +492,9 @@
   }
 
   function handlePointerUp(event) {
-    if (!drag.active) return;
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
     drag.active = false;
-    if (drag.pointerId != null) {
-      el["editor-svg"].releasePointerCapture?.(drag.pointerId);
-      drag.pointerId = null;
-    }
+    releaseDragPointer();
     const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
     if (!hold) return;
     try {
@@ -446,18 +502,25 @@
       setValidation();
       setStatus(drag.type === "rotation" ? "Hold rotated. Save when ready." : "Contour updated. Save when ready.");
     } catch (error) {
-      if (drag.type === "rotation") {
-        for (const original of drag.originalPaths) {
-          const region = state.document.regions.find((candidate) => candidate.key === original.key);
-          if (region) region.displayPath = original.path;
-        }
-      } else {
-        hold.displayPath = drag.originalPath;
-      }
-      state.dirty = drag.originalDirty;
+      restoreDragPaths();
       setValidation(error.message || "Contour is invalid.");
       setStatus(drag.type === "rotation" ? "Rotation reverted — contour is invalid." : "Edit reverted — contour is invalid.");
     }
+    render();
+  }
+
+  function handlePointerCancel(event) {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    cancelDrag(drag.type === "rotation" ? "Rotation cancelled. Changes reverted." : "Edit cancelled. Changes reverted.");
+  }
+
+  function handleLostPointerCapture(event) {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    restoreDragPaths();
+    drag.active = false;
+    drag.pointerId = null;
+    setValidation();
+    setStatus(drag.type === "rotation" ? "Rotation cancelled. Changes reverted." : "Edit cancelled. Changes reverted.");
     render();
   }
 
@@ -871,6 +934,8 @@
   el["editor-svg"].addEventListener("pointerdown", handlePointerDown);
   el["editor-svg"].addEventListener("pointermove", handlePointerMove);
   el["editor-svg"].addEventListener("pointerup", handlePointerUp);
+  el["editor-svg"].addEventListener("pointercancel", handlePointerCancel);
+  el["editor-svg"].addEventListener("lostpointercapture", handleLostPointerCapture);
   el["editor-svg"].addEventListener("dblclick", handleDoubleClick);
   el["editor-svg"].addEventListener("contextmenu", handleContextMenu);
   el["git-refresh-button"].addEventListener("click", () => {
@@ -913,7 +978,7 @@
     if (!hold) return;
     const siblings = holdSiblings(hold);
     const pivot = holdCentroid(siblings);
-    const angleRadians = (angleDegrees * Math.PI) / 180;
+    const angleRadians = ((angleDegrees % 360) * Math.PI) / 180;
     const originalPaths = siblings.map((region) => region.displayPath);
     const originalDirty = state.dirty;
     for (const region of siblings) {
@@ -950,6 +1015,9 @@
   });
 
   function handleKeyDown(event) {
+    const target = event.target;
+    const tagName = target?.tagName?.toLowerCase();
+    if (target?.isContentEditable || target?.getAttribute?.("contenteditable") === "true" || ["input", "select", "textarea"].includes(tagName)) return;
     const key = event.key;
     if (key === "[" || key === "]") {
       if (!selectedHold()) return;

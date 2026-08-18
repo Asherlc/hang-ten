@@ -42,6 +42,9 @@ class FakeElement {
     this.textContent = "";
     this.value = "";
     this.capturedPointerId = null;
+    this.boundingClientRect = null;
+    this.screenCTM = null;
+    this.isContentEditable = false;
   }
 
   append(...children) {
@@ -88,7 +91,8 @@ class FakeElement {
   input() {
     this.listeners.get("input")?.({ currentTarget: this, target: this });
   }
-  getBoundingClientRect() { return { left: 0, top: 0, width: 100, height: 50 }; }
+  getBoundingClientRect() { return this.boundingClientRect || { left: 0, top: 0, width: 100, height: 50 }; }
+  getScreenCTM() { return this.screenCTM; }
   setPointerCapture(pointerId) { this.capturedPointerId = pointerId; }
   releasePointerCapture(pointerId) {
     if (this.capturedPointerId === pointerId) this.capturedPointerId = null;
@@ -129,6 +133,15 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
       prompt: () => { throw new Error("dialogs.prompt was not stubbed for this test"); },
     },
     HoldPathEditor: require("../path-editor.js"),
+    DOMPoint: class {
+      constructor(x, y) { this.x = x; this.y = y; }
+      matrixTransform(matrix) {
+        return {
+          x: matrix.a * this.x + matrix.c * this.y + matrix.e,
+          y: matrix.b * this.x + matrix.d * this.y + matrix.f,
+        };
+      }
+    },
     Image: class {
       set src(href) {
         imageLoader(href).then(
@@ -983,8 +996,8 @@ test("a top-edge hold keeps its above-hold rotation handle inside the SVG coordi
   assert.ok(connector);
   assert.ok(handle);
   assert.equal(Number(connector.attributes.get("y1")), 10 / 3);
-  assert.equal(Number(handle.attributes.get("cy")), 0);
-  assert.ok(Number(handle.attributes.get("cy")) < Number(connector.attributes.get("y1")));
+  assert.equal(Number(handle.attributes.get("cy")), 6);
+  assert.ok(Number(handle.attributes.get("cy")) - Number(handle.attributes.get("r")) >= 0);
 });
 
 test("dragging the rotation handle rotates every piece from its pointer-down paths around the shared centroid", async () => {
@@ -1020,6 +1033,182 @@ test("dragging the rotation handle rotates every piece from its pointer-down pat
   assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), rotateDisplayPath("M 30 10 L 40 10 L 40 20 Z", 90, pivot));
   assert.equal(app.elements["hold-overlay"].children[2].attributes.get("d"), "M 70 10 L 80 10 L 80 20 Z");
   assert.match(app.elements["editor-status"].textContent, /hold rotated/i);
+});
+
+test("rotation drag uses the screen CTM when the SVG is letterboxed", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 10, top: 20, width: 200, height: 200 };
+  svg.screenCTM = {
+    inverse() { return { a: 0.5, b: 0, c: 0, d: 0.5, e: -5, f: -35 }; },
+  };
+  const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const screenPoint = (point) => ({ x: point.x * 2 + 10, y: point.y * 2 + 70 });
+  const pointerEvent = (target, point) => ({ target, pointerId: 7, clientX: point.x, clientY: point.y, preventDefault() {} });
+
+  svg.listeners.get("pointerdown")(pointerEvent(handle, screenPoint(start)));
+  svg.listeners.get("pointermove")(pointerEvent(handle, screenPoint({ x: pivot.x + radius, y: pivot.y })));
+  svg.listeners.get("pointerup")(pointerEvent(handle, screenPoint({ x: pivot.x + radius, y: pivot.y })));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), rotateDisplayPath("M 30 10 L 40 10 L 40 20 Z", 90, pivot));
+});
+
+test("degree input arrow keys keep the selected hold unchanged and preserve native behavior", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const degreeInput = app.elements["rotate-by-input"];
+  degreeInput.tagName = "input";
+  let prevented = false;
+  app.document.dispatchEvent({
+    type: "keydown",
+    key: "ArrowUp",
+    target: degreeInput,
+    preventDefault() { prevented = true; },
+  });
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+  assert.equal(prevented, false);
+});
+
+test("pointercancel rolls a rotation drag back to its pointer-down paths", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const svg = app.elements["editor-svg"];
+  const cancel = svg.listeners.get("pointercancel");
+  assert.equal(typeof cancel, "function");
+  const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const pointerEvent = (target, x, y) => ({ target, pointerId: 7, clientX: x, clientY: y, preventDefault() {} });
+
+  svg.listeners.get("pointerdown")(pointerEvent(handle, start.x, start.y));
+  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius, pivot.y));
+  cancel(pointerEvent(handle, pivot.x + radius, pivot.y));
+
+  assert.equal(svg.capturedPointerId, null);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+});
+
+test("lostpointercapture rolls a rotation drag back to its pointer-down paths", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const svg = app.elements["editor-svg"];
+  const lostCapture = svg.listeners.get("lostpointercapture");
+  assert.equal(typeof lostCapture, "function");
+  const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const pointerEvent = (target, x, y) => ({ target, pointerId: 7, clientX: x, clientY: y, preventDefault() {} });
+
+  svg.listeners.get("pointerdown")(pointerEvent(handle, start.x, start.y));
+  svg.listeners.get("pointermove")(pointerEvent(handle, pivot.x + radius, pivot.y));
+  lostCapture(pointerEvent(svg, pivot.x + radius, pivot.y));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 30 10 L 40 10 L 40 20 Z");
+});
+
+test("a rotation drag ignores a second pointer until its initiating pointer completes", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const svg = app.elements["editor-svg"];
+  const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const pointerEvent = (pointerId, x, y) => ({ target: handle, pointerId, clientX: x, clientY: y, preventDefault() {} });
+
+  svg.listeners.get("pointerdown")(pointerEvent(7, start.x, start.y));
+  svg.listeners.get("pointerdown")(pointerEvent(8, start.x, start.y));
+  assert.equal(svg.capturedPointerId, 7);
+  svg.listeners.get("pointermove")(pointerEvent(8, pivot.x - radius, pivot.y));
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 10 10 L 20 10 L 20 20 Z");
+  svg.listeners.get("pointermove")(pointerEvent(7, pivot.x + radius, pivot.y));
+  svg.listeners.get("pointerup")(pointerEvent(8, pivot.x + radius, pivot.y));
+  assert.equal(svg.capturedPointerId, 7);
+  svg.listeners.get("pointerup")(pointerEvent(7, pivot.x + radius, pivot.y));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", 90, pivot));
+});
+
+test("the Rotate by Apply action normalizes extreme finite degrees before serializing geometry", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["rotate-by-input"].value = "1e308";
+  app.elements["rotate-by-apply-button"].click();
+
+  const pivot = { x: 80 / 3, y: 40 / 3 };
+  const expectedDegrees = 1e308 % 360;
+  const firstPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  assert.equal(firstPath, rotateDisplayPath("M 10 10 L 20 10 L 20 20 Z", expectedDegrees, pivot));
+  assert.doesNotMatch(firstPath, /NaN|Infinity/);
 });
 
 test("bracket keys rotate the selected hold by 15 and 45 degrees with shift", async () => {
