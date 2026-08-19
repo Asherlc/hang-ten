@@ -100,6 +100,21 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["fallback-edge"])
     }
 
+    func testSubstitutionUsesClosestMatchForExplicitEdgeFallback() {
+        let board = board(holds: [
+            hold(id: "generic-edge", kind: .edge, feature: nil)
+        ])
+        let target = HoldTarget.feature(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .mediumEdge
+        )
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["generic-edge"])
+    }
+
     func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2),
